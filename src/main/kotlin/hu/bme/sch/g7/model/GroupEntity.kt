@@ -34,6 +34,6 @@ data class GroupEntity(
     @Column(nullable = false)
     var lastTimeLocationChanged: Long = 0,
 
-    // FIXME: connect with users
-
+    @OneToMany(targetEntity = UserEntity::class, mappedBy = "id")
+    var members: List<UserEntity?> = listOf()
 )

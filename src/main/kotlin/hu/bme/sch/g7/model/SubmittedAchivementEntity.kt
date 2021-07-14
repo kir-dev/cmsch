@@ -10,7 +10,7 @@ data class SubmittedAchivementEntity(
     @Column(nullable = false)
     var id: Int = 0,
 
-    @Column(nullable = false)
+    @ManyToOne(targetEntity = AchievementEntity::class)
     var achievement: AchievementEntity? = null,
 
     @Column(nullable = false)

@@ -14,6 +14,9 @@ data class ProductEntity(
     var name: String = "",
 
     @Column(nullable = false)
+    var price: Int = 0,
+
+    @Column(nullable = false)
     var description: String = "",
 
     @Column(nullable = false)
