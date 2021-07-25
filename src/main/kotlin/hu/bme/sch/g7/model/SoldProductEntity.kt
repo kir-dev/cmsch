@@ -10,13 +10,13 @@ data class SoldProductEntity(
     @Column(nullable = false)
     var id: Int = 0,
 
-    @Column(nullable = false)
+    @ManyToOne
     var product: ProductEntity? = null,
 
-    @Column(nullable = false)
+    @ManyToOne
     var seller: UserEntity? = null,
 
-    @Column(nullable = false)
+    @ManyToOne
     var owner: UserEntity? = null,
 
     @Column(nullable = false)

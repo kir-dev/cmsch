@@ -1,0 +1,97 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <title>G7 Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../static/style.css" th:href="@{/style.css}">
+    <meta name="theme-color" content="#444444">
+    <meta name="msapplication-navbutton-color" content="#444444"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#444444"/>
+    <meta name="msapplication-tap-highlight" content="no">
+</head>
+<body>
+    <div class="content">
+        <div class="split">
+            <div class="menu" th:fragment="menu">
+                <h1>G7 admin</h1>
+                <a href="#" th:href="@{/admin/control/basics}">Alap adatok</a>
+                <a href="#" th:href="@{/admin/control/news}">Hírek</a>
+                <a href="#" th:href="@{/admin/control/events}">Programok</a>
+                <a href="#" th:href="@{/admin/control/products}">Termékek</a>
+                <a href="#" th:href="@{/admin/control/groups}">Tankörök</a>
+                <a href="#" th:href="@{/admin/control/users}">Felhasználók</a>
+                <a href="#" th:href="@{/admin/control/achievements}">Bucketlist</a>
+                <a href="#" th:href="@{/admin/control/extra-pages}">Extra oldalak</a>
+                <div class="separate"></div>
+                <a href="#"th:href="@{/admin/logout}">Kijelentkezés</a>
+            </div>
+            <div class="payload">
+                <div class="page">
+                    <h2>Lorem ipsum</h2>
+                    <p class="highlight">
+                        Curabitur faucibus neque eget diam elementum molestie. Duis dui magna, venenatis eget sapien vel, dignissim iaculis sapien. Fusce ut risus iaculis, rhoncus mi eu, laoreet turpis. Donec rhoncus elit eu enim convallis mattis.
+                    </p>
+                    <p>
+                        Vestibulum fringilla erat <a href="/site">malesuada metus</a> laoreet, non lacinia ante posuere. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed commodo velit porttitor metus gravida, non egestas purus laoreet. Nulla nec eros sit amet nunc imperdiet condimentum. Quisque at dignissim odio, sed tincidunt libero. Curabitur semper eu odio a efficitur.
+                    </p>
+                    <p>
+                        Vestibulum a massa lorem. Maecenas finibus efficitur magna at egestas. Integer ac mi egestas neque dapibus sollicitudin. Praesent non placerat odio. Donec ac ante ut justo malesuada mollis at sit amet felis. Fusce ultricies et sem faucibus mattis. Morbi vel accumsan dolor, sed dapibus lectus. Morbi tristique leo eu augue mollis dapibus. Pellentesque commodo fringilla auctor. Aliquam vel felis nec turpis placerat sollicitudin.
+                    </p>
+
+                    <table>
+                        <tr>
+                            <th>Név</th>
+                            <th>Neptun</th>
+                            <th>Column3</th>
+                            <th>Column4</th>
+                            <th>Column5</th>
+                            <th>Column6</th>
+                            <th>Column7</th>
+                        </tr>
+                        <tr>
+                            <td>Név</td>
+                            <td>Neptun</td>
+                            <td>Column3</td>
+                            <td>Column4</td>
+                            <td>Column5</td>
+                            <td>Column6</td>
+                            <td><a href="#"><span class="material-icons">edit</span></a></td>
+                        </tr>
+                        <tr>
+                            <td>Név</td>
+                            <td>Neptun</td>
+                            <td>Column3</td>
+                            <td>Column4</td>
+                            <td>Column5</td>
+                            <td>Column6</td>
+                            <td>Column7</td>
+                        </tr>
+                        <tr>
+                            <td>Név</td>
+                            <td>Neptun</td>
+                            <td>Column3</td>
+                            <td>Column4</td>
+                            <td>Column5</td>
+                            <td>Column6</td>
+                            <td>Column7</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="#">kir-dev</a> :: <a href="#">Schámi</a>
+    </div>
+</body>
+</html>
+
+
+

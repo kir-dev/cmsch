@@ -3,7 +3,7 @@ package hu.bme.sch.g7.controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @RequestMapping("/api/user")
-class UserController {
+class MainController {
 
     // GET /profile
 

@@ -1,0 +1,375 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+object {
+    display: none;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #cbcbcb;
+    overflow-x: hidden;
+    letter-spacing: 1px;
+    width: 100%;
+}
+
+input, button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+:focus,
+input:focus,
+button:focus,
+textarea:focus {
+    outline: 0 !important;
+}
+
+p {
+    line-height: 1.5;
+    text-align: justify;
+    margin: 0 0 20px 0;
+    font-weight: 300;
+}
+
+p.highlight {
+    font-weight: normal;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+.content {
+    max-width: 1200px;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+.content h1 {
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.content .split {
+    display: table-row;
+}
+
+.content .split .menu {
+    display: table-cell;
+    max-width: 200px;
+    min-width: 200px;
+    width: 200px;
+    font-weight: 400;
+    border-right: 4px solid #bbbbbb;
+    padding: 40px 20px 40px 0;
+}
+
+.content .split .menu a {
+    display: block;
+    padding: 6px 12px;
+    text-decoration: none;
+    color: #000000;
+    background-color: #d6d6d6;
+    border-radius: 4px;
+    margin: 10px 10px 10px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: box-shadow 0.3s cubic-bezier(.25,.8,.25,1), background-color 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.content .split .menu a:hover {
+    background-color: #e8e7e7;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.content .split .menu .separate {
+    padding-top: 20px;
+}
+
+.content .split .payload {
+    display: table-cell;
+    padding: 40px 30px;
+    width: 100%;
+}
+
+.content .split .payload .page {
+    width: 100%;
+}
+
+.content .split .payload h2 {
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.footer {
+    text-align: center;
+    color: #444444;
+}
+
+.footer a {
+    color: #222222;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.content .split .payload p a {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    border-bottom: 2px dashed #000000;
+    transition: background-color ease 0.2s;
+    padding: 0 4px;
+}
+
+.content .split .payload p a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-bottom: 2px solid #000000;
+}
+
+table {
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background-color: #e8e7e7;
+    border-radius: 4px;
+    border-spacing: 0;
+    border-collapse: collapse;
+    line-height: 2;
+}
+
+table i {
+    line-height: 1.5;
+}
+
+table .actions {
+    text-align: right;
+}
+
+div.centered,
+table .centered {
+    text-align: center;
+}
+
+table tr th,
+table tr td {
+    border-bottom: 1px solid #666666;
+    padding: 10px 20px;
+    text-align: left;
+}
+
+table tr:last-of-type td {
+    border: 0;
+}
+
+table tr td {
+    font-weight: 300;
+}
+
+table tr th {
+    color: #000000;
+    font-weight: 500;
+}
+
+table a {
+    color: #666666;
+    transition: color ease 0.2s;
+}
+
+table a span {
+    position: relative;
+    top: 4px;
+    display: inline-block;
+}
+
+table a:hover {
+    color: #888888;
+}
+
+.icon {
+    top: 4px;
+    vertical-align: center;
+}
+
+form label {
+    display: block;
+    font-weight: 300;
+    margin-bottom: 2px;
+    font-size: 16px;
+    padding: 0 4px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select,
+form textarea {
+    background-color: transparent;
+    border-bottom: 2px solid #888;
+    padding: 10px 14px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #444;
+    font-weight: 300;
+    width: 500px;
+    max-width: 100%;
+    resize: vertical;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form select:focus,
+form textarea:focus {
+    background-color: #EEE;
+    border-bottom: 2px solid #444;
+    color: #000;
+}
+
+form select {
+    width: 200px;
+}
+
+form span.note {
+    display: block;
+    font-size: 12px;
+    color: #444;
+    margin-bottom: 20px;
+    margin-top: 2px;
+    padding: 0 4px;
+}
+
+form .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    padding: 0;
+    margin: 4px 0;
+}
+
+form .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+form .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #444;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+form .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+form input:checked + .slider {
+    background-color: #00cb78;
+}
+
+form input:focus + .slider {
+    box-shadow: 0 0 1px #00cb78;
+}
+
+form input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+form .file-input {
+    color: transparent;
+    max-width: 550px;
+    width: 100%;
+    margin: 4px 0;
+}
+
+form .file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+form .file-input::before {
+    font-family: 'Roboto', sans-serif;
+    content: 'Fájl tallózása';
+    display: inline-block;
+    background: transparent;
+    border: 2px dashed #666;
+    color: #444;
+    border-radius: 4px;
+    padding: 10px 14px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    font-weight: 300;
+    font-size: 16px;
+    transition: color ease 0.2s, border-color ease 0.2s;
+    width: 496px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+form .file-input:hover::before {
+    border-color: #111;
+    color: #111;
+}
+
+form .file-input:active {
+    outline: 0;
+}
+
+form .file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+form input[type="submit"],
+a.btn {
+    font-family: 'Roboto', sans-serif;
+    display: inline-block;
+    padding: 6px 24px;
+    text-decoration: none;
+    color: #000000;
+    background-color: #d6d6d6;
+    border-radius: 4px;
+    margin: 10px 10px 10px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: box-shadow 0.3s cubic-bezier(.25,.8,.25,1), background-color 0.3s cubic-bezier(.25,.8,.25,1);
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+a.btn:hover,
+form input[type="submit"]:hover {
+    background-color: #e8e7e7;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+a.btn-secondary {
+    background-color: #bbbbbb;
+}
+
+a.btn-secondary:hover {
+    background-color: #cbcaca;
+}
+
+.button-group {
+    margin-bottom: 20px;
+}

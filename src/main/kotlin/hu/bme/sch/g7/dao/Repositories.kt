@@ -25,6 +25,10 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
 }
 
 @Repository
+interface ExtraPageRepository : CrudRepository<ExtraPageEntity, Int> {
+}
+
+@Repository
 interface ProductRepository : CrudRepository<ProductEntity, Int> {
 }
 

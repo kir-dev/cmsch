@@ -1,0 +1,44 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout :: head">
+</head>
+<body>
+<div class="content">
+    <div class="split">
+        <div th:replace="layout :: menu">
+        </div>
+        <div class="payload">
+            <div class="page">
+                <h2 th:text="${title}">Lorem ipsum</h2>
+                <p class="highlight" th:text="${description}">
+                    Curabitur faucibus neque eget diam elementum molestie. Duis dui magna, venenatis eget sapien vel, dignissim iaculis sapien. Fusce ut risus iaculis, rhoncus mi eu, laoreet turpis. Donec rhoncus elit eu enim convallis mattis.
+                </p>
+
+                <div class="centered button-group">
+                    <a href="#" class="btn" th:text="|Új ${titleSingular}|" th:href="|@{/admin/control}/${view}/create|"></a>
+                </div>
+
+                <table>
+                    <tr>
+                        <th th:each="col,iter : ${columns}" th:text="${col}"
+                            th:class="${fields[iter.index].second.centered ? 'centered' : ''}">
+                            Column
+                        </th>
+                        <th class="actions"></th>
+                    </tr>
+                    <tr th:each="row : ${rows}">
+                        <td th:each="field : ${fields}"
+                            th:text="${field.first.get(row)}"
+                            th:class="${field.second.centered ? 'centered' : ''}">
+                            Value
+                        </td>
+                        <td class="actions">
+                            <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
+                            <a href="#" th:href="|@{/admin/control}/${view}/delete/${row.id}|"><span class="material-icons">delete</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+</body>
+</html>
