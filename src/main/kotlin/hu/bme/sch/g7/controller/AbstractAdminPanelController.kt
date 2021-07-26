@@ -3,14 +3,10 @@ package hu.bme.sch.g7.controller
 import hu.bme.sch.g7.admin.INPUT_TYPE_FILE
 import hu.bme.sch.g7.admin.INTERPRETER_INHERIT
 import hu.bme.sch.g7.admin.OverviewBuilder
-import hu.bme.sch.g7.dao.NewsRepository
 import hu.bme.sch.g7.model.ManagedEntity
-import hu.bme.sch.g7.model.NewsEntity
 import hu.bme.sch.g7.uploadFile
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.CrudRepository
-import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -91,7 +87,9 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @PostMapping("/delete/{id}")
     fun delete(@PathVariable id: Int): String {
-        repo.deleteById(id)
+        val entity = repo.findById(id).orElseThrow()
+        repo.delete(entity)
+        onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
     }
 
@@ -104,6 +102,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         updateEntity(descriptor, entity, dto, file0, file1)
         entity.id = 0
         repo.save(entity)
+        onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
     }
 
@@ -121,8 +120,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         updateEntity(descriptor, entity.get(), dto, file0, file1)
         entity.get().id = id
         repo.save(entity.get())
+        onEntityChanged(entity.get())
         return "redirect:/admin/control/$view"
-
     }
 
     private fun updateEntity(descriptor: OverviewBuilder, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
@@ -161,5 +160,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             }
         }
     }
+
+    open fun onEntityChanged(entity: T) { }
 
 }

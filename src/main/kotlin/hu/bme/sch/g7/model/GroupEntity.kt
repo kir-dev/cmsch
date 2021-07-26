@@ -55,6 +55,11 @@ data class GroupEntity(
     @property:GenerateOverview(visible = false)
     var lastTimeLocationChanged: Long = 0,
 
+    @Column(nullable = false)
+    @property:GenerateInput(maxLength = 64, order = 9, label = "Helyzetet frissítő felhasználó", note = "Helymeghatározás feature")
+    @property:GenerateOverview(visible = false)
+    var lastTimeUpdatedUser: String = "",
+
     // FIXME: add tankör listázása
     @OneToMany(targetEntity = UserEntity::class, mappedBy = "id")
     var members: List<UserEntity?> = listOf()

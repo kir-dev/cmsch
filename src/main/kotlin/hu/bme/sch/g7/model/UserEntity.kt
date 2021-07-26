@@ -1,5 +1,6 @@
 package hu.bme.sch.g7.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.admin.*
 import hu.bme.sch.g7.dto.Edit
@@ -118,7 +119,7 @@ data class UserEntity(
     // FIXME: set tankör | ez látszódjon is | order 6
     var groupName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @JsonIgnore
     @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.LAZY)
     // FIXME: set tankör
     var group: GroupEntity? = null,

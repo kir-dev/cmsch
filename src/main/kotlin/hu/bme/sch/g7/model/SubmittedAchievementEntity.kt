@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name="submittedAchievements")
-data class SubmittedAchivementEntity(
+data class SubmittedAchievementEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
