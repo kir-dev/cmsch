@@ -27,7 +27,8 @@ data class NewsEntity(
     @Lob
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Hír szövege")
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Hír szövege",
+            note = "Ez egyelőre nincs használva")
     @property:GenerateOverview(visible = false)
     var content: String = "",
 
@@ -39,7 +40,7 @@ data class NewsEntity(
     @property:GenerateOverview(visible = false)
     var brief: String = "",
 
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_FILE, order = 4, label = "Kép a hír mellé")
     @property:GenerateOverview(visible = false)
@@ -51,13 +52,13 @@ data class NewsEntity(
     @property:GenerateOverview(columnName = "Látható", order = 2, centered = true)
     var visible: Boolean = false,
 
-    @JsonView(value = [ Edit::class ])
+    @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Kiemelt hír")
     @property:GenerateOverview(columnName = "Kiemelt", order = 3, centered = true)
     var highlighted: Boolean = false,
 
-    @JsonView(value = [ Edit::class ])
+    @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, order = 7, visible = false, interpreter = "timestamp")
     @property:GenerateOverview(visible = false)
@@ -65,19 +66,19 @@ data class NewsEntity(
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 8, label = "OG:Title")
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 8, label = "OG:Title", note = "Ez egyelőre nincs használva")
     @property:GenerateOverview(visible = false)
     var ogTitle: String = "",
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 9, label = "OG:Image")
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 9, label = "OG:Image", note = "Ez egyelőre nincs használva")
     @property:GenerateOverview(visible = false)
     var ogImage: String = "",
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 10, label = "OG:Description")
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 10, label = "OG:Description", note = "Ez egyelőre nincs használva")
     @property:GenerateOverview(visible = false)
     var ogDescription: String = ""
 

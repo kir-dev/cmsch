@@ -453,7 +453,7 @@ class TestConfig(
                         "> és futsz a pénz után\n> Élnek még az álmaink\n> Hogy minket várt a föld\n> Törjük össze hát, mi téged már megölt\n> Mert mi vagyunk a hurrikán\n> Ezer éves út után mindent felkavar\n> Készülj fel most mi jövünk\n> Minden fejre áll holnap\n> Ránk már senki sem szólhat\n> Nem kell többé a szentbeszéd,\n> Ez egy másik nemzedék\n> Mondtuk szépen és durván,\n> Lelkünk ébredő vulkán\n> Kitörni kész s ami régi mind elég\n> S jön az újabb nemzedék\n" +
                         "> Ez egy másik nemzedék\n> Mert mi vagyunk a hurrikán,\n> Ezeréves út után mindent felkavar\n> Készülj fel, most mi jövünk!\n> Minden fejre áll holnap,\n> Ránk már senki sem szólhat\n> Nem kell többé a szentbeszéd\n> Ez egy másik nemzedék\n> Mondtuk szépen és durván\n> Lelkünk ébredő vulkán kitörni kész s ami régi mind elég,\n> S jön az újabb nemzedék\n> Minden fejre áll holnap\n> Ránk már senki sem szólhat\n> Nem kell többé a szent beszéd\n" +
                         "> Ez egy másik nemzedék\n> Mondtuk szépen és durván lelkünk ébredő vulkán\n> Kitörni kész s ami régi mind elég\n> S jön az újabb nemzedék\n> Minden fejre áll holnap\n> Ránk már senki sem szólhat\n> Nem kell többé a szent beszéd,\n> Ez egy másik nemzedék\n> Mondtuk szépen és durván\n> Lelkünk ébredő vulkán\n> Kitörni kész s ami régi mind elég\n> S jön az újabb nemzedék\n> Minden fejre áll holnap,\n> Ránk már senki sem szólhat\n" +
-                        "> Nem kell többé a szent beszéd\n> Ez egy másik nemzedék"
+                        "> Nem kell többé a szent beszéd\n> Ez egy másik nemzedék\n"
         ))
 
         extraPages.save(ExtraPageEntity(
