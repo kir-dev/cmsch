@@ -31,10 +31,11 @@ data class NewsEntity(
     @property:GenerateOverview(visible = false)
     var content: String = "",
 
+    @Lob
     @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 2, label = "Rövid összefoglaló",
-            note = "Ez a szöveg fog a főoldalon megjelenni", maxLength = 255)
+            note = "Ez a szöveg fog a főoldalon megjelenni")
     @property:GenerateOverview(visible = false)
     var brief: String = "",
 

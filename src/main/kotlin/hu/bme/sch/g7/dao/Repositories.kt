@@ -14,6 +14,8 @@ interface EventRepository : CrudRepository<EventEntity, Int> {
 
     override fun findAll(): List<EventEntity>
 
+    fun findByUrl(url: String): Optional<EventEntity>
+
 }
 
 @Repository

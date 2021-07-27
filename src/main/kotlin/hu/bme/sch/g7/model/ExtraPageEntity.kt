@@ -27,6 +27,7 @@ data class ExtraPageEntity(
     @property:GenerateOverview(columnName = "Cím", order = 1)
     var title: String = "",
 
+    @Lob
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Termék leírása")
     @property:GenerateOverview(visible = false)

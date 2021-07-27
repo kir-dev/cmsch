@@ -28,11 +28,13 @@ data class AchievementEntity(
     @property:GenerateOverview(columnName = "Kategória", order = 2)
     var category: String = "",
 
+    @Lob
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Leírás")
     @property:GenerateOverview(visible = false)
     var description: String = "",
 
+    @Lob
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Beadandó formátum",
             note = "Ez a beadó mező mellett jelenik meg, külön a leírástól")

@@ -227,6 +227,10 @@ form textarea:focus {
     color: #000;
 }
 
+form textarea {
+    min-height: 200px;
+}
+
 form select {
     width: 200px;
 }

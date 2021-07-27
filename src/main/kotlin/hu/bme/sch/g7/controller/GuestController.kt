@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.dao.EventRepository
 import hu.bme.sch.g7.dao.NewsRepository
 import hu.bme.sch.g7.dto.FullDetails
+import hu.bme.sch.g7.dto.GroupEntityDto
 import hu.bme.sch.g7.dto.Preview
 import hu.bme.sch.g7.dto.view.*
 import hu.bme.sch.g7.model.UserEntity
@@ -63,9 +64,9 @@ class GuestController(
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/events/{eventId}")
-    fun event(@PathVariable eventId: Int): SingleEventView {
-        val event = eventsRepository.findById(eventId)
+    @GetMapping("/events/{path}")
+    fun event(@PathVariable path: String): SingleEventView {
+        val event = eventsRepository.findByUrl(path)
         return SingleEventView(
                 userPreview = supplyUserInformation(),
                 event = event.orElse(null)
@@ -80,7 +81,7 @@ class GuestController(
         return ProfileView(
                 userPreview = supplyUserInformation(),
                 user = user,
-                group = user.group
+                group = user.group?.let { GroupEntityDto(it) }
         )
     }
 

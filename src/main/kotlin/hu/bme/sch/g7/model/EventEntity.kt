@@ -61,12 +61,14 @@ data class EventEntity(
     @property:GenerateOverview(visible = false)
     var place: String = "",
 
+    @Lob
     @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 8, label = "Rövid leírás")
     @property:GenerateOverview(visible = false)
     var previewDescription: String = "",
 
+    @Lob
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 9, label = "Hosszú leírás")
