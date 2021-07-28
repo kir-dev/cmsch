@@ -1,8 +1,13 @@
 package hu.bme.sch.g7.dto.view
 
-import hu.bme.sch.g7.model.SoldProductEntity
+import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.g7.dto.DebtDto
+import hu.bme.sch.g7.dto.FullDetails
 
 data class DebtsView(
+    @JsonView(FullDetails::class)
     val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
-    val debts: List<SoldProductEntity>
+
+    @JsonView(FullDetails::class)
+    val debts: List<DebtDto>
 )

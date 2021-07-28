@@ -2,7 +2,7 @@ package hu.bme.sch.g7.service
 
 import hu.bme.sch.g7.dao.AchievementRepository
 import hu.bme.sch.g7.dao.SubmittedAchievementRepository
-import hu.bme.sch.g7.dto.ToplistEntryDto
+import hu.bme.sch.g7.dto.TopListEntryDto
 import hu.bme.sch.g7.model.GroupEntity
 import org.springframework.stereotype.Service
 
@@ -13,12 +13,12 @@ class LeaderBoardService(
         val config: RealtimeConfigService
 ) {
 
-    fun getBoard(): List<ToplistEntryDto> {
+    fun getBoard(): List<TopListEntryDto> {
         // FIXME: only mocked for now
         return if (config.isLeaderBoardEnabled()) {
-            listOf(ToplistEntryDto("I16", 2000),
-                    ToplistEntryDto("I09", 1870),
-                    ToplistEntryDto("V10", 69))
+            listOf(TopListEntryDto("I16", 2000),
+                    TopListEntryDto("I09", 1870),
+                    TopListEntryDto("V10", 69))
         } else {
             listOf()
         }

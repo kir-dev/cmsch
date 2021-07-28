@@ -1,10 +1,19 @@
 package hu.bme.sch.g7.dto.view
 
+import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.g7.dto.FullDetails
 import hu.bme.sch.g7.model.AchievementEntity
 import hu.bme.sch.g7.model.SubmittedAchievementEntity
 
 data class SingleAchievementView(
-    val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
-    val achievement: AchievementEntity,
-    val submission: SubmittedAchievementEntity? = null
+        @JsonView(FullDetails::class)
+        val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
+
+        @JsonView(FullDetails::class)
+        // If null: achievement not found
+        val achievement: AchievementEntity? = null,
+
+        @JsonView(FullDetails::class)
+        // If null: no submission
+        val submission: SubmittedAchievementEntity? = null
 )

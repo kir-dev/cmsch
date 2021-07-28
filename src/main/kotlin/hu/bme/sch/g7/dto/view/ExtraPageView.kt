@@ -1,8 +1,13 @@
 package hu.bme.sch.g7.dto.view
 
+import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.g7.dto.FullDetails
 import hu.bme.sch.g7.model.ExtraPageEntity
 
 data class ExtraPageView(
+        @JsonView(FullDetails::class)
         val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
-        val page: ExtraPageEntity
+
+        @JsonView(FullDetails::class)
+        val page: ExtraPageEntity?
 )

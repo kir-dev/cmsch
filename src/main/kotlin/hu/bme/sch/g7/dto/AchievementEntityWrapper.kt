@@ -1,5 +1,6 @@
 package hu.bme.sch.g7.dto
 
+import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.model.AchievementEntity
 
 enum class AchievementStatus {
@@ -10,6 +11,9 @@ enum class AchievementStatus {
 }
 
 data class AchievementEntityWrapper(
-    val achhievement: AchievementEntity,
-    val status: AchievementStatus
+        @JsonView(value = [ Preview::class, FullDetails::class ])
+        val achhievement: AchievementEntity,
+
+        @JsonView(value = [ Preview::class, FullDetails::class ])
+        val status: AchievementStatus
 )

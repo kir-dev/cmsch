@@ -13,12 +13,25 @@ class StaffController {
 
     // POST /share-location
 
-    // achis srácok:
+    // TSZ:
+    // gólyái tartozása
+    // location sharing
+    // tartozás kiírása
+
+    // achis srácok: -> ez megy adminba
     // create achievement
     // rate achievement
+    // manage achievements
 
     // infópult:
     // list accounts
     // modify accounts
     // set product sold
+    // hol vannak tankörök
+    // sell merch
+
+    // kajáltatás:
+    // QR olvasás vagy neptun alapján kaja fizetés
+
+
 }

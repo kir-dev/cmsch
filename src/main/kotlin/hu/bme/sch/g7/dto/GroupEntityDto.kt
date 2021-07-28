@@ -1,17 +1,36 @@
 package hu.bme.sch.g7.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.model.GroupEntity
 import hu.bme.sch.g7.model.MajorType
 
 data class GroupEntityDto(
+        @JsonIgnore
         val id: Int,
+
+        @JsonView(FullDetails::class)
         val name: String,
+
+        @JsonView(FullDetails::class)
         val major: MajorType,
+
+        @JsonView(FullDetails::class)
         val staffs: List<GroupStaffDto>,
+
+        @JsonView(FullDetails::class)
         val coverImageUrl: String,
+
+        @JsonView(FullDetails::class)
         val lastLongitude: String,
+
+        @JsonView(FullDetails::class)
         val lastLatitude: String,
+
+        @JsonView(FullDetails::class)
         val lastTimeLocationChanged: Long,
+
+        @JsonView(FullDetails::class)
         val lastTimeUpdatedUser: String
 ) {
 

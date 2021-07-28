@@ -1,13 +1,15 @@
 package hu.bme.sch.g7.controller
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.g7.dao.EventRepository
-import hu.bme.sch.g7.dao.NewsRepository
+import hu.bme.sch.g7.dao.*
+import hu.bme.sch.g7.dto.DebtDto
 import hu.bme.sch.g7.dto.FullDetails
 import hu.bme.sch.g7.dto.GroupEntityDto
 import hu.bme.sch.g7.dto.Preview
 import hu.bme.sch.g7.dto.view.*
+import hu.bme.sch.g7.model.ProductType
 import hu.bme.sch.g7.model.UserEntity
+import hu.bme.sch.g7.service.AchievementsService
 import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.RealtimeConfigService
 import org.springframework.beans.factory.annotation.Value
@@ -20,7 +22,7 @@ import java.time.ZoneId
 
 @RestController
 @RequestMapping("/api")
-class GuestController(
+class MainController(
         val config: RealtimeConfigService,
 
         val newsRepository: NewsRepository,
@@ -31,7 +33,11 @@ class GuestController(
         val eventsRepository: EventRepository,
         @Value("\${g7web.zone-id:CET}") zoneId: String,
 
-        val leaderBoardService: LeaderBoardService
+        val leaderBoardService: LeaderBoardService,
+        val achievements: AchievementsService,
+        val extraPagesRepository: ExtraPageRepository,
+        val debtsRepository: SoldProductRepository,
+        val productsRepository: ProductRepository
 ) {
 
     private val timeZone = ZoneId.of(zoneId)
@@ -86,6 +92,34 @@ class GuestController(
     }
 
     @JsonView(FullDetails::class)
+    @GetMapping("/products")
+    fun products(): ProductsView {
+        return ProductsView(
+                userPreview = supplyUserInformation(),
+                products = productsRepository.findAllByTypeAndVisibleTrue(ProductType.MERCH)
+        )
+    }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/debts")
+    fun debts(): DebtsView {
+        val user = fetchUser()
+
+        return DebtsView(
+                userPreview = supplyUserInformation(),
+                debts = debtsRepository.findAllByOwner_Id(user.id)
+                        .map { DebtDto(
+                                it.product?.name ?: "n/a",
+                                it.seller?.fullName ?: "n/a",
+                                "TODO Representative", // FIXME: This feature is not implemented
+                                it.payed,
+                                it.shipped,
+                                it.log
+                        ) }
+        )
+    }
+
+    @JsonView(Preview::class)
     @GetMapping("/achievements")
     fun achievements(): AchievementsView {
         val user = fetchUser()
@@ -98,7 +132,25 @@ class GuestController(
                 userPreview = supplyUserInformation(),
                 groupScore = leaderBoardService.getScoreOfGroup(group),
                 leaderBoard = leaderBoardService.getBoard(),
-                // FIXME: add more fields
+                highlighted = achievements.getHighlightedOnes(group),
+                achievements = achievements.getAllAchievements(group)
+        )
+    }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/achievement/{achievementId}")
+    fun achievement(@PathVariable achievementId: Int): SingleAchievementView {
+        val user = fetchUser()
+        val achievement = achievements.getById(achievementId)
+        val group = user.group ?: return SingleAchievementView(
+                userPreview = supplyUserInformation(),
+                achievement = achievement.orElse(null),
+                submission = null)
+
+        return SingleAchievementView(
+                userPreview = supplyUserInformation(),
+                achievement = achievement.orElse(null),
+                submission = achievements.getSubmissionOrNull(group, achievement)
         )
     }
 
@@ -109,4 +161,14 @@ class GuestController(
     private fun fetchUser(): UserEntity {
         return UserEntity()
     }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/extra-page/{path}")
+    fun extraPage(@PathVariable path: String): ExtraPageView {
+        return ExtraPageView(
+                userPreview = supplyUserInformation(),
+                page = extraPagesRepository.findByUrl(path).orElse(null)
+        )
+    }
+
 }

@@ -2,22 +2,22 @@ package hu.bme.sch.g7.dto.view
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.dto.AchievementEntityWrapper
-import hu.bme.sch.g7.dto.FullDetails
-import hu.bme.sch.g7.dto.ToplistEntryDto
+import hu.bme.sch.g7.dto.Preview
+import hu.bme.sch.g7.dto.TopListEntryDto
 
 data class AchievementsView(
-        @JsonView(FullDetails::class)
+        @JsonView(Preview::class)
         val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
 
-        @JsonView(FullDetails::class)
+        @JsonView(Preview::class)
         val groupScore: Int?,
 
-        @JsonView(FullDetails::class)
+        @JsonView(Preview::class)
         val highlighted: List<AchievementEntityWrapper> = listOf(),
 
-        @JsonView(FullDetails::class)
+        @JsonView(Preview::class)
         val achievements: List<AchievementEntityWrapper> = listOf(),
 
-        @JsonView(FullDetails::class)
-        val leaderBoard: List<ToplistEntryDto>
+        @JsonView(Preview::class)
+        val leaderBoard: List<TopListEntryDto>
 )

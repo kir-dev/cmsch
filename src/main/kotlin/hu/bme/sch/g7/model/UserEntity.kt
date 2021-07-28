@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.admin.*
 import hu.bme.sch.g7.dto.Edit
+import hu.bme.sch.g7.dto.FullDetails
 import hu.bme.sch.g7.dto.Preview
 import javax.persistence.*
 
@@ -48,13 +49,13 @@ data class UserEntity(
     @property:GenerateOverview(visible = false)
     var pekId: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 2, label = "Neptun kód", enabled = true, note = "Ez módosítható eseti hiba kezelésre")
     @property:GenerateOverview(columnName = "Neptun", order = 2)
     var neptun: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 3, label = "Teljes név", enabled = true)
     @property:GenerateOverview(columnName = "Név", order = 1)
@@ -114,7 +115,7 @@ data class UserEntity(
     @property:GenerateOverview(visible = false)
     var grantListUsers: Boolean = false,
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     // FIXME: set tankör | ez látszódjon is | order 6
     var groupName: String = "",
@@ -124,13 +125,13 @@ data class UserEntity(
     // FIXME: set tankör
     var group: GroupEntity? = null,
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7, label = "Típus", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 3)
     var guild: GuildType = GuildType.UNKNOWN,
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(visible = false)
