@@ -2,6 +2,7 @@ package hu.bme.sch.g7.config
 
 import hu.bme.sch.g7.dao.*
 import hu.bme.sch.g7.model.*
+import hu.bme.sch.g7.service.UserProfileGeneratorService
 import org.springframework.context.annotation.Configuration
 import java.util.*
 import javax.annotation.PostConstruct
@@ -27,7 +28,8 @@ class TestConfig(
         val users: UserRepository,
         val extraPages: ExtraPageRepository,
         val groups: GroupRepository,
-        val products: ProductRepository
+        val products: ProductRepository,
+        val profileService: UserProfileGeneratorService
 ) {
 
     private var now = System.currentTimeMillis()
@@ -322,7 +324,7 @@ class TestConfig(
     }
 
     private fun addUsers() {
-        users.save(UserEntity(
+        val u1 = UserEntity(
                 pekId = UUID.randomUUID().toString(),
                 neptun = "HITMAN",
                 email = "hitman@beme.hu",
@@ -330,9 +332,11 @@ class TestConfig(
                 role = RoleType.BASIC,
                 fullName = "Hitman János",
                 guild = GuildType.YELLOW
-        ))
+        )
+        profileService.generateProfileForUser(u1)
+        users.save(u1)
 
-        users.save(UserEntity(
+        val u2 = UserEntity(
                 pekId = UUID.randomUUID().toString(),
                 neptun = "BATMAN",
                 email = "batman@beme.hu",
@@ -340,9 +344,11 @@ class TestConfig(
                 role = RoleType.BASIC,
                 fullName = "Bat Man",
                 guild = GuildType.RED
-        ))
+        )
+        profileService.generateProfileForUser(u2)
+        users.save(u2)
 
-        users.save(UserEntity(
+        val u3 = UserEntity(
                 pekId = UUID.randomUUID().toString(),
                 neptun = "FITYMA",
                 email = "fityma@beme.hu",
@@ -350,7 +356,9 @@ class TestConfig(
                 role = RoleType.BASIC,
                 fullName = "Fitty Mátyás",
                 guild = GuildType.BLACK
-        ))
+        )
+        profileService.generateProfileForUser(u3)
+        users.save(u3)
     }
 
     private fun addProducts() {

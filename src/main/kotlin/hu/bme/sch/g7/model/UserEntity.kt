@@ -45,73 +45,82 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 1, label = "Pék internal id", enabled = false)
+    @property:GenerateInput(order = 1, label = "PéK internal id",
+            note = "Ez módosítható eseti hiba kezelésre", enabled = true)
     @property:GenerateOverview(visible = false)
     var pekId: String = "",
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 2, label = "Neptun kód", enabled = true, note = "Ez módosítható eseti hiba kezelésre")
+    @property:GenerateInput(order = 2, label = "Neptun kód", enabled = true,
+            note = "Ez módosítható eseti hiba kezelésre", maxLength = 6)
     @property:GenerateOverview(columnName = "Neptun", order = 2)
     var neptun: String = "",
 
+    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 3, label = "Gólyahét id", enabled = false,
+            note = "Automatikusan generálódik a PéK ID-ből")
+    @property:GenerateOverview(visible = false)
+    var g7id: String = "",
+
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 3, label = "Teljes név", enabled = true)
+    @property:GenerateInput(order = 4, label = "Teljes név", enabled = true)
     @property:GenerateOverview(columnName = "Név", order = 1)
     var fullName: String = "",
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 4, label = "Email cím")
+    @property:GenerateInput(order = 5, label = "Email cím")
     @property:GenerateOverview(visible = false)
     var email: String = "",
 
     @JsonView(value = [ Edit::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus", source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Típus", source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     var role: RoleType = RoleType.GUEST,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "JOG: Merch eladása")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "JOG: Merch eladása")
     @property:GenerateOverview(visible = false)
     var grantSellProduct: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "JOG: Kaja eladása")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "JOG: Kaja eladása")
     @property:GenerateOverview(visible = false)
     var grantSellFood: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "JOG: PR")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "JOG: PR")
     @property:GenerateOverview(visible = false)
     var grantMedia: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "JOG: Bucketlist értékelés")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "JOG: Bucketlist értékelés")
     @property:GenerateOverview(visible = false)
     var grantRateAchievement: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "JOG: Bucketlist létrehozása")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "JOG: Bucketlist létrehozása")
     @property:GenerateOverview(visible = false)
     var grantCreateAchievement: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "JOG: Felhasználó kezelés")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "JOG: Felhasználó kezelés")
     @property:GenerateOverview(visible = false)
     var grantManageUsers: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "JOG: Infópult")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "JOG: Infópult")
     @property:GenerateOverview(visible = false)
     var grantListUsers: Boolean = false,
 
@@ -127,13 +136,13 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7, label = "Típus", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Típus", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 3)
     var guild: GuildType = GuildType.UNKNOWN,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(visible = false)
     var major: MajorType = MajorType.UNKNOWN
 

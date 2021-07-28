@@ -38,6 +38,8 @@ dependencies {
 //    testImplementation("org.springframework.security:spring-security-test")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
+    implementation("com.google.zxing:core:3.3.0")
+    implementation("com.google.zxing:javase:3.3.0")
 }
 
 tasks.withType<KotlinCompile> {

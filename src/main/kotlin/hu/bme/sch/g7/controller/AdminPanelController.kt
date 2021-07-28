@@ -3,6 +3,7 @@ package hu.bme.sch.g7.controller
 import hu.bme.sch.g7.dao.*
 import hu.bme.sch.g7.model.*
 import hu.bme.sch.g7.service.RealtimeConfigService
+import hu.bme.sch.g7.service.UserProfileGeneratorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -54,12 +55,19 @@ class GroupController(repo: GroupRepository) : AbstractAdminPanelController<Grou
 
 @Controller
 @RequestMapping("/admin/control/users")
-class UserController(repo: UserRepository) : AbstractAdminPanelController<UserEntity>(
+class UserController(
+        repo: UserRepository,
+        val profileService: UserProfileGeneratorService
+) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",
         "Az összes felhasznéló (gólyák és seniorok egyaránt) kezelése.",
         UserEntity::class, ::UserEntity
-)
+) {
+    override fun onEntityPreSave(entity: UserEntity) {
+        profileService.generateProfileForUser(entity)
+    }
+}
 
 @Controller
 @RequestMapping("/admin/control/extra-pages")

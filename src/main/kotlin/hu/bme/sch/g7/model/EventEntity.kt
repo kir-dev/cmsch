@@ -120,7 +120,7 @@ data class EventEntity(
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 3)
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true)
     var visible: Boolean = false
 
 ): ManagedEntity {

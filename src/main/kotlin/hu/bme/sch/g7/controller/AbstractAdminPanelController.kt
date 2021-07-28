@@ -4,7 +4,7 @@ import hu.bme.sch.g7.admin.INPUT_TYPE_FILE
 import hu.bme.sch.g7.admin.INTERPRETER_INHERIT
 import hu.bme.sch.g7.admin.OverviewBuilder
 import hu.bme.sch.g7.model.ManagedEntity
-import hu.bme.sch.g7.uploadFile
+import hu.bme.sch.g7.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.ui.Model
@@ -101,6 +101,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         val entity = supplier.get()
         updateEntity(descriptor, entity, dto, file0, file1)
         entity.id = 0
+        onEntityPreSave(entity)
         repo.save(entity)
         onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
@@ -119,6 +120,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
         updateEntity(descriptor, entity.get(), dto, file0, file1)
         entity.get().id = id
+        onEntityPreSave(entity.get())
         repo.save(entity.get())
         onEntityChanged(entity.get())
         return "redirect:/admin/control/$view"
@@ -161,6 +163,12 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         }
     }
 
-    open fun onEntityChanged(entity: T) { }
+    open fun onEntityChanged(entity: T) {
+        // Overridden when notification is required
+    }
+
+    open fun onEntityPreSave(entity: T) {
+        // Overridden when notification is required
+    }
 
 }
