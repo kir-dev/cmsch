@@ -13,15 +13,13 @@ import hu.bme.sch.g7.service.AchievementsService
 import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.RealtimeConfigService
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 import java.time.ZoneId
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "true")
 class MainController(
         val config: RealtimeConfigService,
 
