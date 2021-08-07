@@ -46,7 +46,7 @@ data class EventEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 5, label = "Melyik nap lesz?")
-    @property:GenerateOverview(columnName = "Nap", order = 2)
+    @property:GenerateOverview(columnName = "Nap", order = 2, centered = true)
     var heldDay: String = "",
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])

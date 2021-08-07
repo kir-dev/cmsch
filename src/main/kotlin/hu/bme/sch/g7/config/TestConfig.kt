@@ -29,7 +29,10 @@ class TestConfig(
         val extraPages: ExtraPageRepository,
         val groups: GroupRepository,
         val products: ProductRepository,
-        val profileService: UserProfileGeneratorService
+        val profileService: UserProfileGeneratorService,
+        val groupToUserMapping: GroupToUserMappingRepository,
+        val guildToUserMapping: GuildToUserMappingRepository,
+        val submittedAchievements: SubmittedAchievementRepository
 ) {
 
     private var now = System.currentTimeMillis()
@@ -38,11 +41,13 @@ class TestConfig(
     fun init() {
         addNews()
         addEvents()
-        addAchievements()
         addUsers()
         addGroups()
+        addAchievements()
         addProducts()
         addExtraPages()
+        addGroupMapping()
+        addGuildMappings()
     }
 
     private fun addGroups() {
@@ -230,7 +235,7 @@ class TestConfig(
     }
 
     private fun addAchievements() {
-        achievements.save(AchievementEntity(
+        val achi1 = AchievementEntity(
                 title = "Merre van balra?",
                 expectedResultDescription = "Egy kép arról mere van balra",
                 category = "HÉTFŐ",
@@ -241,9 +246,10 @@ class TestConfig(
                 type = AchievementType.TEXT,
                 maxScore = 50,
                 description = LOREM_IPSUM_LONG_1
-        ))
+        )
+        achievements.save(achi1)
 
-        achievements.save(AchievementEntity(
+        val achi2 = AchievementEntity(
                 title = "Milyen 'Jé' a kamion?",
                 expectedResultDescription = "Egy fotó a kamilyonról",
                 category = "BARANGOLÓS",
@@ -254,9 +260,10 @@ class TestConfig(
                 type = AchievementType.IMAGE,
                 maxScore = 150,
                 description = LOREM_IPSUM_LONG_2
-        ))
+        )
+        achievements.save(achi2)
 
-        achievements.save(AchievementEntity(
+        val achi3 = AchievementEntity(
                 title = "Valami vicces megjegyzés az egyik gólyalányról",
                 expectedResultDescription = "Milyen szinű és miért kék?",
                 category = "EZ SOK",
@@ -267,7 +274,8 @@ class TestConfig(
                 type = AchievementType.TEXT,
                 maxScore = 69,
                 description = "Úgy sem látszik"
-        ))
+        )
+        achievements.save(achi3)
 
         achievements.save(AchievementEntity(
                 title = "Milyen lóról nevezték el a lóvagtermet?",
@@ -295,7 +303,7 @@ class TestConfig(
                 description = "Ez lejárt"
         ))
 
-        achievements.save(AchievementEntity(
+        val achi4 = AchievementEntity(
                 title = "Mit mér a mérnök?",
                 expectedResultDescription = "asszem sört, na mérjetek sört",
                 category = "HÉTFŐ",
@@ -306,12 +314,13 @@ class TestConfig(
                 type = AchievementType.IMAGE,
                 maxScore = 150,
                 description = LOREM_IPSUM_LONG_4
-        ))
+        )
+        achievements.save(achi4)
 
 
         achievements.save(AchievementEntity(
-                title = "MIlye van a fának?",
-                expectedResultDescription = "asszem sört, na mérjetek sört",
+                title = "Milye van a fának?",
+                expectedResultDescription = "gráfelméleti tézis",
                 category = "HÉTFŐ",
                 visible = true,
                 order = 4,
@@ -320,6 +329,75 @@ class TestConfig(
                 type = AchievementType.TEXT,
                 maxScore = 150,
                 description = "Levele van, vagy egyel több csúcsa mint éle?"
+        ))
+
+        val groupI16 = groups.findByName("I16").orElseThrow()
+        val groupI09 = groups.findByName("I09").orElseThrow()
+        val groupV10 = groups.findByName("V10").orElseThrow()
+
+        submittedAchievements.save(SubmittedAchievementEntity(
+                0,
+                achi1,
+                groupI16.id,
+                "I16",
+                "Ezt adtuk be xd",
+                "",
+                "Hát kár volt bazdmeg",
+                false,
+                true,
+                0
+        ))
+
+        submittedAchievements.save(SubmittedAchievementEntity(
+                0,
+                achi1,
+                groupI09.id,
+                "I09",
+                "Szia Lajos!",
+                "",
+                "Szia Bazdmeg!",
+                true,
+                false,
+                20
+        ))
+
+        submittedAchievements.save(SubmittedAchievementEntity(
+                0,
+                achi1,
+                groupV10.id,
+                "V10",
+                "Jobbra",
+                "",
+                "",
+                false,
+                false,
+                0
+        ))
+
+        submittedAchievements.save(SubmittedAchievementEntity(
+                0,
+                achi2,
+                groupI16.id,
+                "I16",
+                "Ellipszilonos",
+                "",
+                "",
+                false,
+                false,
+                0
+        ))
+
+        submittedAchievements.save(SubmittedAchievementEntity(
+                0,
+                achi2,
+                groupI09.id,
+                "I09",
+                "",
+                "achievements/test.png",
+                "",
+                false,
+                false,
+                0
         ))
     }
 
@@ -475,4 +553,17 @@ class TestConfig(
                         "Ja persze, majd ideírjuk...\n"
         ))
     }
+
+    private fun addGroupMapping() {
+        groupToUserMapping.save(GroupToUserMappingEntity(0, "HITMAN", "V10", MajorType.EE))
+        groupToUserMapping.save(GroupToUserMappingEntity(0, "BATMAN", "V10", MajorType.EE))
+        groupToUserMapping.save(GroupToUserMappingEntity(0, "RZPZTT", "I09", MajorType.IT))
+    }
+
+    private fun addGuildMappings() {
+        guildToUserMapping.save(GuildToUserMappingEntity(0, "RZPZTT", GuildType.RED))
+        guildToUserMapping.save(GuildToUserMappingEntity(0, "HITMAN", GuildType.WHITE))
+        guildToUserMapping.save(GuildToUserMappingEntity(0, "BATMAN", GuildType.BLACK))
+    }
+
 }

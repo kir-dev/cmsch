@@ -37,3 +37,4 @@ out/
 .vscode/
 
 temp/
+src/main/resources/config/application-local.properties

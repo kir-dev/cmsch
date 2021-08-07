@@ -1,11 +1,14 @@
 package hu.bme.sch.g7.util
 
+import hu.bme.sch.g7.controller.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
+import hu.bme.sch.g7.model.UserEntity
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @Component
 class DI {
@@ -42,4 +45,12 @@ fun MultipartFile.uploadFile(target: String): String? {
         return null
     }
     return fileName
+}
+
+fun HttpServletRequest.getUser(): UserEntity {
+    return this.getSession(true).getAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME) as UserEntity
+}
+
+fun HttpServletRequest.getUserOrNull(): UserEntity? {
+    return this.getSession(true).getAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME) as UserEntity?
 }

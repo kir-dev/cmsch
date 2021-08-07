@@ -20,13 +20,22 @@ G7 Web Backend
 For develpment:
 
 ```bash
-  docker run --rm -p 80:80 g7-web-backend
+  docker run --rm -p 8080:80 \
+        -e AUTHSCH_CLIENT_ID=20_CHARS \
+        -e AUTHSCH_CLIENT_KEY=80_CHARS \
+        -e PROFILE_SALT=RANDOM_STRING \
+        g7-web-backend
 ```
 
 or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 
 ```bash
-docker run --rm -p 80:80 registry.k8s.sch.bme.hu/g7-web/g7-web-backend
+  docker pull registry.k8s.sch.bme.hu/g7-web/g7-web-backend
+  docker run --rm -p 8080:80 \
+        -e AUTHSCH_CLIENT_ID=20_CHARS \
+        -e AUTHSCH_CLIENT_KEY=80_CHARS \
+        -e PROFILE_SALT=RANDOM_STRING \
+        registry.k8s.sch.bme.hu/g7-web/g7-web-backend
 ```
 
 ## Where to start?

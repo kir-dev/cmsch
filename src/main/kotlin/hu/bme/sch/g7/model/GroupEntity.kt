@@ -90,10 +90,12 @@ data class GroupEntity(
     @property:GenerateOverview(visible = false)
     var lastTimeUpdatedUser: String = "",
 
-    // FIXME: add tankör listázása
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = UserEntity::class, mappedBy = "id")
-    var members: List<UserEntity?> = listOf()
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = UserEntity::class, mappedBy = "group")
+    @property:GenerateInput(type = INPUT_TYPE_LIST_ENTITIES, order = 12, label = "Tankör tagjai",
+            ignore = true, enabled = false, entitySource = "UserEntity")
+    @property:GenerateOverview(visible = false)
+    var members: List<UserEntity> = listOf()
 
 ): ManagedEntity {
     override fun toString(): String {

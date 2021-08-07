@@ -4,6 +4,7 @@ import hu.bme.sch.g7.admin.INPUT_TYPE_FILE
 import hu.bme.sch.g7.admin.INTERPRETER_INHERIT
 import hu.bme.sch.g7.admin.OverviewBuilder
 import hu.bme.sch.g7.model.ManagedEntity
+import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
@@ -11,10 +12,12 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.function.Supplier
+import javax.servlet.http.HttpServletRequest
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 
 const val INVALID_ID_ERROR = "INVALID_ID"
+const val CONTROL_MODE_EDIT_DELETE = "edit,delete"
 
 open class AbstractAdminPanelController<T : ManagedEntity>(
         val repo: CrudRepository<T, Int>,
@@ -23,14 +26,16 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         val titlePlural: String,
         val description: String,
         classType: KClass<T>,
-        val supplier: Supplier<T>
+        val supplier: Supplier<T>,
+        val entitySourceMapping: Map<String, (T?) -> List<String>> =
+                mapOf(Nothing::class.simpleName!! to { listOf() }),
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val descriptor = OverviewBuilder(classType)
 
     @GetMapping("")
-    fun view(model: Model): String {
+    fun view(model: Model, request: HttpServletRequest): String {
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -38,17 +43,22 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("columns", descriptor.getColumns())
         model.addAttribute("fields", descriptor.getColumnDefinitions())
         model.addAttribute("rows", repo.findAll())
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_EDIT_DELETE)
 
         return "overview"
     }
 
     @GetMapping("/edit/{id}")
-    fun edit(@PathVariable id: Int, model: Model): String {
+    fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
         model.addAttribute("inputs", descriptor.getInputs())
+        model.addAttribute("mappings", entitySourceMapping)
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_EDIT_DELETE)
 
         val entity = repo.findById(id)
         if (entity.isEmpty) {
@@ -60,21 +70,26 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @GetMapping("/create")
-    fun create(model: Model): String {
+    fun create(model: Model, request: HttpServletRequest): String {
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", false)
         model.addAttribute("view", view)
         model.addAttribute("inputs", descriptor.getInputs())
+        model.addAttribute("mappings", entitySourceMapping)
+        model.addAttribute("data", null)
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_EDIT_DELETE)
 
         return "details"
     }
 
     @GetMapping("/delete/{id}")
-    fun deleteConfirm(@PathVariable id: Int, model: Model): String {
+    fun deleteConfirm(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         model.addAttribute("title", titleSingular)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
         model.addAttribute("inputs", descriptor.getInputs())
+        model.addAttribute("user", request.getUser())
 
         val entity = repo.findById(id)
         if (entity.isEmpty) {
@@ -153,7 +168,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                     it.second.interpreter == "path" -> {
                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, it.first.getter.call(dto)
                                 .toString()
-                                .toLowerCase()
+                                .lowercase()
                                 .replace(" ", "-")
                                 .replace(Regex("[^a-z0-9-.]"), ""))
                     }

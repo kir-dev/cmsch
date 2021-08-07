@@ -18,17 +18,18 @@ interface EventRepository : CrudRepository<EventEntity, Int> {
 
 @Repository
 interface GroupRepository : CrudRepository<GroupEntity, Int> {
+    fun findByName(name: String): Optional<GroupEntity>
 }
 
 @Repository
 interface NewsRepository : CrudRepository<NewsEntity, Int> {
-
     fun findTop4ByOrderByTimestamp(): List<NewsEntity>
-
 }
 
 @Repository
 interface UserRepository : CrudRepository<UserEntity, Int> {
+    fun findByPekId(pekId: String): Optional<UserEntity>
+    fun existsByPekId(pekId: String): Boolean
 }
 
 @Repository
@@ -49,9 +50,21 @@ interface SoldProductRepository : CrudRepository<SoldProductEntity, Int> {
 @Repository
 interface SubmittedAchievementRepository : CrudRepository<SubmittedAchievementEntity, Int> {
     fun findByAchievement_IdAndGroupId(achievementId: Int, groupId: Int): Optional<SubmittedAchievementEntity>
+    fun findByAchievement_Id(achievementId: Int): List<SubmittedAchievementEntity>
+    fun findByAchievement_IdAndRejectedIsFalseAndApprovedIsFalse(achievementId: Int): List<SubmittedAchievementEntity>
 }
 
 @Repository
 interface RealtimeConfigRepository : CrudRepository<RealtimeConfigEntity, Int> {
     fun findByKey(key: String): Optional<RealtimeConfigEntity>
+}
+
+@Repository
+interface GuildToUserMappingRepository : CrudRepository<GuildToUserMappingEntity, Int> {
+    fun findByNeptun(neptun: String): Optional<GuildToUserMappingEntity>
+}
+
+@Repository
+interface GroupToUserMappingRepository : CrudRepository<GroupToUserMappingEntity, Int> {
+    fun findByNeptun(neptun: String): Optional<GroupToUserMappingEntity>
 }

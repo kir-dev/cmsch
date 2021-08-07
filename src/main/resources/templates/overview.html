@@ -5,7 +5,7 @@
 <body>
 <div class="content">
     <div class="split">
-        <div th:replace="layout :: menu">
+        <div th:replace="layout :: menu(${user})">
         </div>
         <div class="payload">
             <div class="page">
@@ -15,7 +15,7 @@
                 </p>
 
                 <div class="centered button-group">
-                    <a href="#" class="btn" th:text="|Új ${titleSingular}|" th:href="|@{/admin/control}/${view}/create|"></a>
+                    <a href="#" class="btn" th:if="${controlMode == 'edit,delete'}" th:text="|Új ${titleSingular}|" th:href="|@{/admin/control}/${view}/create|"></a>
                 </div>
 
                 <table>
@@ -33,11 +33,24 @@
                             Value
                         </td>
                         <td class="actions">
-                            <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
-                            <a href="#" th:href="|@{/admin/control}/${view}/delete/${row.id}|"><span class="material-icons">delete</span></a>
+                            <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
+                                <a href="#" th:href="|@{/admin/control}/${view}/delete/${row.id}|"><span class="material-icons">delete</span></a>
+                            </object>
+                            <object th:if="${controlMode == 'rate'}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/${view}/view/${row.id}|"><span class="material-icons">visibility</span></a>
+                                <a href="#" th:href="|@{/admin/control}/${view}/rate/${row.id}|"><span class="material-icons">thumbs_up_down</span></a>
+                            </object>
+                            <object th:if="${controlMode == 'grade'}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/${view}/grade/${row.id}|"><span class="material-icons">grade</span></a>
+                            </object>
                         </td>
                     </tr>
                 </table>
+
+                <object th:if="${controlMode == 'toplist'}" th:remove="tag">
+                    <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn">Toplista újraszámítása</a>
+                </object>
             </div>
         </div>
     </div>

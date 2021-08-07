@@ -2,6 +2,7 @@ package hu.bme.sch.g7.service
 
 import hu.bme.sch.g7.dao.RealtimeConfigRepository
 import hu.bme.sch.g7.model.RealtimeConfigEntity
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -14,6 +15,7 @@ class RealtimeConfigService(
         val realtimeConfig: RealtimeConfigRepository
 ) {
 
+    private val log = LoggerFactory.getLogger(javaClass)
     private val cache: MutableMap<String, String> = mutableMapOf()
 
     @PostConstruct
@@ -26,6 +28,7 @@ class RealtimeConfigService(
     }
 
     fun resetCache() {
+        log.info("Clearing realtime config cache")
         cache.clear()
     }
 

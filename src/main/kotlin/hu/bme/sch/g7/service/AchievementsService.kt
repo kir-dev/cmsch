@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
+@Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
-class AchievementsService(
+open class AchievementsService(
         val achievements: AchievementRepository,
         val submitted: SubmittedAchievementRepository
 ) {

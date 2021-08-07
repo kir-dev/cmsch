@@ -12,14 +12,16 @@ import hu.bme.sch.g7.model.UserEntity
 import hu.bme.sch.g7.service.AchievementsService
 import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.RealtimeConfigService
+import hu.bme.sch.g7.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 import java.time.ZoneId
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "true")
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 class MainController(
         val config: RealtimeConfigService,
 
@@ -42,9 +44,9 @@ class MainController(
 
     @JsonView(Preview::class)
     @GetMapping("/news")
-    fun news(): NewsView {
+    fun news(request: HttpServletRequest): NewsView {
         return NewsView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 title = title,
                 interval = interval,
                 warningMessage = config.getWarningMessage(),
@@ -55,12 +57,12 @@ class MainController(
 
     @JsonView(Preview::class)
     @GetMapping("/events")
-    fun events(): EventsView {
+    fun events(request: HttpServletRequest): EventsView {
         val events = eventsRepository.findAll()
         val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
         val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
         return EventsView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 eventsToday = events.filter { it.heldTimestamp > dayStart && it.heldTimestamp < dayEnd },
                 allEvents = events
@@ -69,21 +71,21 @@ class MainController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/events/{path}")
-    fun event(@PathVariable path: String): SingleEventView {
+    fun event(@PathVariable path: String, request: HttpServletRequest): SingleEventView {
         val event = eventsRepository.findByUrl(path)
         return SingleEventView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 event = event.orElse(null)
         )
     }
 
     @JsonView(FullDetails::class)
     @GetMapping("/profile")
-    fun profile(): ProfileView {
+    fun profile(request: HttpServletRequest): ProfileView {
         val user = fetchUser()
 
         return ProfileView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 user = user,
                 group = user.group?.let { GroupEntityDto(it) }
         )
@@ -91,20 +93,20 @@ class MainController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/products")
-    fun products(): ProductsView {
+    fun products(request: HttpServletRequest): ProductsView {
         return ProductsView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 products = productsRepository.findAllByTypeAndVisibleTrue(ProductType.MERCH)
         )
     }
 
     @JsonView(FullDetails::class)
     @GetMapping("/debts")
-    fun debts(): DebtsView {
+    fun debts(request: HttpServletRequest): DebtsView {
         val user = fetchUser()
 
         return DebtsView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 debts = debtsRepository.findAllByOwner_Id(user.id)
                         .map { DebtDto(
                                 it.product?.name ?: "n/a",
@@ -119,15 +121,14 @@ class MainController(
 
     @JsonView(Preview::class)
     @GetMapping("/achievements")
-    fun achievements(): AchievementsView {
-        val user = fetchUser()
-        val group = user.group ?: return AchievementsView(
-                        userPreview = supplyUserInformation(),
-                        groupScore = null,
-                        leaderBoard = leaderBoardService.getBoard())
+    fun achievements(request: HttpServletRequest): AchievementsView {
+        val group = request.getUserOrNull()?.group ?: return AchievementsView(
+                userPreview = supplyUserInformation(request),
+                groupScore = null,
+                leaderBoard = leaderBoardService.getBoard())
 
         return AchievementsView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 groupScore = leaderBoardService.getScoreOfGroup(group),
                 leaderBoard = leaderBoardService.getBoard(),
                 highlighted = achievements.getHighlightedOnes(group),
@@ -137,23 +138,24 @@ class MainController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/achievement/{achievementId}")
-    fun achievement(@PathVariable achievementId: Int): SingleAchievementView {
+    fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
         val user = fetchUser()
         val achievement = achievements.getById(achievementId)
         val group = user.group ?: return SingleAchievementView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 achievement = achievement.orElse(null),
                 submission = null)
 
         return SingleAchievementView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 achievement = achievement.orElse(null),
                 submission = achievements.getSubmissionOrNull(group, achievement)
         )
     }
 
-    private fun supplyUserInformation(): UserEntityPreview {
-        return UserEntityPreview(false)
+    private fun supplyUserInformation(request: HttpServletRequest): UserEntityPreview {
+        val user = request.getUserOrNull() ?: return UserEntityPreview(false)
+        return UserEntityPreview(true, user.fullName, user.groupName, user.role)
     }
 
     private fun fetchUser(): UserEntity {
@@ -162,9 +164,9 @@ class MainController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/extra-page/{path}")
-    fun extraPage(@PathVariable path: String): ExtraPageView {
+    fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
         return ExtraPageView(
-                userPreview = supplyUserInformation(),
+                userPreview = supplyUserInformation(request),
                 page = extraPagesRepository.findByUrl(path).orElse(null)
         )
     }

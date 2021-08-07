@@ -5,14 +5,14 @@
 <body>
 <div class="content">
     <div class="split">
-        <div th:replace="layout :: menu">
+        <div th:replace="layout :: menu(${user})">
         </div>
         <div class="payload">
             <div class="page">
                 <h2 th:text="|${title} szerkesztése|" th:if="${editMode}">View edit</h2>
                 <h2 th:text="|${title} létrehozása|" th:unless="${editMode}">View create</h2>
 
-                <form th:action="|@{/admin/control}/${view}/${editMode ? ('edit/' + id) : 'create'}|"
+                <form th:action="|@{/admin/control}/${view}/${editMode ? ((controlMode == 'grade' ? 'grade/' : 'edit/') + id) : 'create'}|"
                       method="post"
                       enctype="multipart/form-data">
                     <object th:each="input,iter : ${inputs}" th:remove="tag">
@@ -31,6 +31,10 @@
                                    th:autocomplete="${input.second.autocomplete}"
                             />
                             <span class="note" th:text="${input.second.note}"></span>
+                        </object>
+
+                        <object th:if="${input.second.type == 'text' && input.first.name == 'g7id'}" th:remove="tag">
+                            <img src="#" th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|" height="180px" alt="QR code preview" class="qr-preview">
                         </object>
 
                         <object th:if="${input.second.type == 'number'}" th:remove="tag">
@@ -67,6 +71,38 @@
                                         th:value="${opt}"
                                         th:text="${opt}"></option>
                             </select>
+                            <span class="note" th:text="${input.second.note}"></span>
+                        </object>
+
+                        <object th:if="${input.second.type == 'entity-select'}" th:remove="tag">
+                            <label th:for="|input${iter.index}|"
+                                   th:text="${input.second.label}">
+                            </label>
+                            <select th:id="|input${iter.index}|"
+                                    th:name="${input.first.name}"
+                                    th:disabled="${!input.second.enabled}">
+                                <option th:if="${editMode}"
+                                        th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
+                                        th:value="${opt}"
+                                        th:text="${opt}"
+                                        th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
+                                <option th:unless="${editMode}"
+                                        th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
+                                        th:value="${opt}"
+                                        th:text="${opt}"></option>
+                            </select>
+                            <span class="note" th:text="${input.second.note}"></span>
+                        </object>
+
+                        <object th:if="${input.second.type == 'list-entities'}" th:remove="tag">
+                            <label th:text="${input.second.label}">
+                            </label>
+                            <ul>
+                                <li th:each="ent : ${mappings.get(input.second.entitySource).invoke(data)}"
+                                        th:value="${ent}"
+                                        th:text="${ent}">
+                                </li>
+                            </ul>
                             <span class="note" th:text="${input.second.note}"></span>
                         </object>
 
@@ -116,12 +152,51 @@
                             </label>
                             <span class="note" th:text="${input.second.note}"></span>
                         </object>
+
+                        <object th:if="${input.second.type == 'image-preview' && editMode}" th:remove="tag">
+                            <label th:text="${input.second.label}">
+                            </label>
+                            <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">
+                                <a href="#"
+                                   target="_blank"
+                                   th:href="|@{/cdn/}${input.first.get(data)}|">
+                                <img src="#"
+                                     alt="Image preview"
+                                     height="400"
+                                     th:id="|input${iter.index}|"
+                                     th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
+                                     th:src="|@{/cdn/}${input.first.get(data)}|"/>
+                                </a>
+                                <br>
+                                <a href="#"
+                                   target="_blank"
+                                   th:href="|@{/cdn/}${input.first.get(data)}|"
+                                   class="btn btn-secondary">
+                                    Megnyitás nagyban (új lapon)
+                                </a>
+                            </object>
+                            <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
+                                Nincs kép feltöltve
+                            </p>
+                            <span class="note" th:text="${input.second.note}"></span>
+                        </object>
+
                     </object>
 
 <!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
 
+                    <object th:if="${comment != null}" th:remove="tag">
+                        <label>Csatolt információ</label>
+                        <p th:text="${comment}"></p>
+                    </object>
+
                     <input type="submit" value="Mentés"/>
-                    <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
+                    <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">
+                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
+                    </object>
+                    <object th:if="${controlMode == 'grade'}" th:remove="tag">
+
+                    </object>
                 </form>
             </div>
         </div>

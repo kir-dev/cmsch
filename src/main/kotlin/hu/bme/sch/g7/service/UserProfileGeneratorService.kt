@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service
 import java.io.File
 import java.io.IOException
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.nio.file.Path
 import javax.annotation.PostConstruct
 
@@ -54,6 +55,10 @@ class UserProfileGeneratorService(
     fun generateProfileForUser(user: UserEntity) {
         user.g7id = (prefix + (user.pekId + salt).sha256().substring(prefix.length, 40))
         val fullPath = rootPath + File.separator + user.g7id + ".png"
+        if (Files.exists(Path.of(fullPath))) {
+            log.info("QR code already exists for user ${user.fullName}")
+            return
+        }
         createQR(user.g7id, fullPath)
         log.info("New QR code was generated to $fullPath for user ${user.fullName}")
     }

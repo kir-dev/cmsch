@@ -12,7 +12,7 @@ enum class AchievementStatus {
 
 data class AchievementEntityWrapper(
         @JsonView(value = [ Preview::class, FullDetails::class ])
-        val achhievement: AchievementEntity,
+        val achievement: AchievementEntity,
 
         @JsonView(value = [ Preview::class, FullDetails::class ])
         val status: AchievementStatus

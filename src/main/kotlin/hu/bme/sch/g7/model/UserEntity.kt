@@ -114,30 +114,30 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "JOG: Felhasználó kezelés")
-    @property:GenerateOverview(visible = false)
-    var grantManageUsers: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "JOG: Infópult")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "JOG: Infópult")
     @property:GenerateOverview(visible = false)
     var grantListUsers: Boolean = false,
 
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "JOG: Gárdatanköris")
+    @property:GenerateOverview(visible = false)
+    var grantGroupManager: Boolean = false,
+
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    // FIXME: set tankör | ez látszódjon is | order 6
+    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 7, label = "Tankör", entitySource = "GroupEntity")
+    @property:GenerateOverview(columnName = "Tankör", centered = true, order = 3)
     var groupName: String = "",
 
     @JsonIgnore
-    @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.LAZY)
-    // FIXME: set tankör
+    @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.EAGER)
     var group: GroupEntity? = null,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Típus", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
-    @property:GenerateOverview(columnName = "Gárda", centered = true, order = 3)
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
+    @property:GenerateOverview(columnName = "Gárda", centered = true, order = 4)
     var guild: GuildType = GuildType.UNKNOWN,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -149,5 +149,9 @@ data class UserEntity(
 ): ManagedEntity {
     override fun toString(): String {
         return "[$id]: $fullName neptun:$neptun pek:$pekId"
+    }
+
+    fun isAdmin(): Boolean {
+        return role == RoleType.ADMIN /*|| role == RoleType.SUPERUSER*/
     }
 }

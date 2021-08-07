@@ -22,6 +22,10 @@ input, button {
     appearance: none;
 }
 
+ul {
+    margin: 20px 40px;
+}
+
 :focus,
 input:focus,
 button:focus,
@@ -376,4 +380,15 @@ a.btn-secondary:hover {
 
 .button-group {
     margin-bottom: 20px;
+}
+
+form p {
+    margin: 10px 40px 0 40px;
+    color: #444444;
+}
+
+.qr-preview {
+    margin: 10px auto;
+    position: relative;
+    top: -10px;
 }
