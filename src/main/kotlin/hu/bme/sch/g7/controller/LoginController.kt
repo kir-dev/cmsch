@@ -68,7 +68,7 @@ open class LoginController(
                         RoleType.BASIC,
                         false, false, false,
                         true, true,  false,
-                        false, "", null, GuildType.UNKNOWN, MajorType.UNKNOWN
+                        true, "", null, GuildType.UNKNOWN, MajorType.UNKNOWN
                 )
                 log.info("Logging in with new user ${user.fullName} pekId: ${user.pekId}")
             }
@@ -103,8 +103,8 @@ open class LoginController(
         }
         if (profile.eduPersonEntitlements != null && user.role == RoleType.BASIC) {
             profile.eduPersonEntitlements
-                    .filter { it.end != null }
-                    .filter { it.name == grantStaffGroupName }
+                    .filter { it.end == null }
+                    .filter { it.name.equals(grantStaffGroupName) }
                     .forEach {
                         log.info("Granting STAFF for ${user.fullName}")
                         user.role = RoleType.STAFF
@@ -115,21 +115,6 @@ open class LoginController(
         }
         users.save(user)
     }
-
-//    private fun getOwnedCircleIds(profile: ProfileDataResponse): List<Long> {
-//        return profile.eduPersonEntitlements
-//                .filter { it.status == "körvezető" }
-//                .mapNotNull { circles.findByVirGroupId(it.id)?.id }
-//    }
-
-//    private fun getCirclePermissionList(circles: List<Long>): MutableSet<String> {
-//        val permissions = mutableSetOf<String>()
-//        if (circles.isNotEmpty()) {
-//            permissions.add("ROLE_LEADER")
-//            permissions.addAll(circles.map { "CIRCLE_${it}" })
-//        }
-//        return permissions
-//    }
 
     private fun getAuthorities(user: UserEntity): List<GrantedAuthority> {
         val authorities: MutableList<GrantedAuthority> = ArrayList()

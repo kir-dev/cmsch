@@ -8,12 +8,12 @@ import hu.bme.sch.g7.dto.FullDetails
 import hu.bme.sch.g7.dto.Preview
 import javax.persistence.*
 
-enum class RoleType {
-    GUEST,    // anyone without login
-    BASIC,    // has auth.sch but not member of SSSL
-    STAFF,    // member of the SSSL
-    ADMIN,    // the organizers of the event
-    SUPERUSER // advanced user management (able to grant admin access)
+enum class RoleType(val value: Int) {
+    GUEST(0),      // anyone without login
+    BASIC(1),      // has auth.sch but not member of SSSL
+    STAFF(100),    // member of the SSSL
+    ADMIN(200),    // the organizers of the event
+    SUPERUSER(500) // advanced user management (able to grant admin access)
 }
 
 enum class GuildType {
@@ -78,55 +78,56 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Típus", source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Típus",
+            source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var role: RoleType = RoleType.GUEST,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "JOG: Merch eladása")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "JOG: Merch eladása", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var grantSellProduct: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "JOG: Kaja eladása")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "JOG: Kaja eladása", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var grantSellFood: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "JOG: PR")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "JOG: PR", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var grantMedia: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "JOG: Bucketlist értékelés")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "JOG: Bucketlist értékelés", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var grantRateAchievement: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "JOG: Bucketlist létrehozása")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "JOG: Bucketlist létrehozása", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var grantCreateAchievement: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "JOG: Infópult")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "JOG: Infópult", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var grantListUsers: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "JOG: Gárdatanköris")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "JOG: Gárdatanköris", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(visible = false)
     var grantGroupManager: Boolean = false,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 7, label = "Tankör", entitySource = "GroupEntity")
+    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 7, label = "Tankör", entitySource = "GroupEntity", minimumRole = RoleType.ADMIN)
     @property:GenerateOverview(columnName = "Tankör", centered = true, order = 3)
     var groupName: String = "",
 

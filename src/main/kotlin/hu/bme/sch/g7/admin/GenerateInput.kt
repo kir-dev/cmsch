@@ -1,5 +1,7 @@
 package hu.bme.sch.g7.admin
 
+import hu.bme.sch.g7.model.RoleType
+
 const val INPUT_TYPE_TEXT = "text"
 const val INPUT_TYPE_NUMBER = "number"
 const val INPUT_TYPE_BLOCK_TEXT = "textarea"
@@ -33,5 +35,6 @@ annotation class GenerateInput(
         val fileId: String = "0",
         val fileType: String = "image",
         val source: Array<String> = [],
-        val entitySource: String = "Nothing"
+        val entitySource: String = "Nothing",
+        val minimumRole: RoleType = RoleType.STAFF
 )

@@ -17,168 +17,172 @@
                       enctype="multipart/form-data">
                     <object th:each="input,iter : ${inputs}" th:remove="tag">
 
-                        <object th:if="${input.second.type == 'text'}" th:remove="tag">
-                            <label th:for="|input${iter.index}|"
-                                   th:text="${input.second.label}">
-                            </label>
-                            <input th:type="${input.second.type}"
-                                   th:name="${input.first.name}"
-                                   th:id="|input${iter.index}|"
-                                   th:maxlength="${input.second.maxLength}"
-                                   th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
-                                   th:placeholder="${input.second.placeholder}"
-                                   th:disabled="${!input.second.enabled}"
-                                   th:autocomplete="${input.second.autocomplete}"
-                            />
-                            <span class="note" th:text="${input.second.note}"></span>
-                        </object>
+                        <object th:if="${user.role.value >= input.second.minimumRole.value}" th:remove="tag">
 
-                        <object th:if="${input.second.type == 'text' && input.first.name == 'g7id'}" th:remove="tag">
-                            <img src="#" th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|" height="180px" alt="QR code preview" class="qr-preview">
-                        </object>
-
-                        <object th:if="${input.second.type == 'number'}" th:remove="tag">
-                            <label th:for="|input${iter.index}|"
-                                   th:text="${input.second.label}">
-                            </label>
-                            <input th:type="${input.second.type}"
-                                   th:name="${input.first.name}"
-                                   th:id="|input${iter.index}|"
-                                   th:max="${input.second.max}"
-                                   th:min="${input.second.min}"
-                                   th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
-                                   th:placeholder="${input.second.placeholder}"
-                                   th:disabled="${!input.second.enabled}"
-                                   th:autocomplete="${input.second.autocomplete}"
-                            />
-                            <span class="note" th:text="${input.second.note}"></span>
-                        </object>
-
-                        <object th:if="${input.second.type == 'select'}" th:remove="tag">
-                            <label th:for="|input${iter.index}|"
-                                   th:text="${input.second.label}">
-                            </label>
-                            <select th:id="|input${iter.index}|"
-                                    th:name="${input.first.name}"
-                                    th:disabled="${!input.second.enabled}">
-                                <option th:if="${editMode}"
-                                        th:each="opt : ${input.second.source}"
-                                        th:value="${opt}"
-                                        th:text="${opt}"
-                                        th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
-                                <option th:unless="${editMode}"
-                                        th:each="opt : ${input.second.source}"
-                                        th:value="${opt}"
-                                        th:text="${opt}"></option>
-                            </select>
-                            <span class="note" th:text="${input.second.note}"></span>
-                        </object>
-
-                        <object th:if="${input.second.type == 'entity-select'}" th:remove="tag">
-                            <label th:for="|input${iter.index}|"
-                                   th:text="${input.second.label}">
-                            </label>
-                            <select th:id="|input${iter.index}|"
-                                    th:name="${input.first.name}"
-                                    th:disabled="${!input.second.enabled}">
-                                <option th:if="${editMode}"
-                                        th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
-                                        th:value="${opt}"
-                                        th:text="${opt}"
-                                        th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
-                                <option th:unless="${editMode}"
-                                        th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
-                                        th:value="${opt}"
-                                        th:text="${opt}"></option>
-                            </select>
-                            <span class="note" th:text="${input.second.note}"></span>
-                        </object>
-
-                        <object th:if="${input.second.type == 'list-entities'}" th:remove="tag">
-                            <label th:text="${input.second.label}">
-                            </label>
-                            <ul>
-                                <li th:each="ent : ${mappings.get(input.second.entitySource).invoke(data)}"
-                                        th:value="${ent}"
-                                        th:text="${ent}">
-                                </li>
-                            </ul>
-                            <span class="note" th:text="${input.second.note}"></span>
-                        </object>
-
-                        <object th:if="${input.second.type == 'textarea'}" th:remove="tag">
-                            <label th:for="|input${iter.index}|"
-                                   th:text="${input.second.label}">
-                            </label>
-                            <textarea
-                                   th:name="${input.first.name}"
-                                   th:id="|input${iter.index}|"
-                                   th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
-                                   th:disabled="${!input.second.enabled}"
-                                   th:autocomplete="${input.second.autocomplete}">
-                            </textarea>
-                            <span class="note" th:text="${input.second.note}"></span>
-                        </object>
-
-                        <object th:if="${input.second.type == 'file'}" th:remove="tag">
-                            <label th:for="|input${iter.index}|"
-                                   th:text="${input.second.label}">
-                            </label>
-                            <input type="file"
-                                   class="file-input"
-                                   th:name="|file${input.second.fileId}|"
-                                   th:id="|input${iter.index}|"
-                                   th:disabled="${!input.second.enabled}"
-                            />
-                            <span class="note" th:text="${input.second.note}"></span>
-<!--                            <img alt="Preview image"-->
-<!--                                 height="200px"-->
-<!--                                 th:if="${input.second.fileType == 'image'}"-->
-<!--                                 th:src="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"-->
-<!--                            />-->
-                        </object>
-
-                        <object th:if="${input.second.type == 'checkbox'}" th:remove="tag">
-                            <label th:for="|input${iter.index}|"
-                                   th:text="${input.second.label}">
-                            </label>
-                            <label class="switch">
-                                <input type="checkbox"
-                                       th:checked="${(!editMode) ? (input.second.defaultValue == 'true') : (input.first.get(data))}"
+                            <object th:if="${input.second.type == 'text'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <input th:type="${input.second.type}"
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
-                                       th:disabled="${!input.second.enabled}" />
-                                <span class="slider"></span>
-                            </label>
-                            <span class="note" th:text="${input.second.note}"></span>
-                        </object>
-
-                        <object th:if="${input.second.type == 'image-preview' && editMode}" th:remove="tag">
-                            <label th:text="${input.second.label}">
-                            </label>
-                            <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">
-                                <a href="#"
-                                   target="_blank"
-                                   th:href="|@{/cdn/}${input.first.get(data)}|">
-                                <img src="#"
-                                     alt="Image preview"
-                                     height="400"
-                                     th:id="|input${iter.index}|"
-                                     th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
-                                     th:src="|@{/cdn/}${input.first.get(data)}|"/>
-                                </a>
-                                <br>
-                                <a href="#"
-                                   target="_blank"
-                                   th:href="|@{/cdn/}${input.first.get(data)}|"
-                                   class="btn btn-secondary">
-                                    Megnyitás nagyban (új lapon)
-                                </a>
+                                       th:maxlength="${input.second.maxLength}"
+                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:placeholder="${input.second.placeholder}"
+                                       th:disabled="${!input.second.enabled}"
+                                       th:autocomplete="${input.second.autocomplete}"
+                                />
+                                <span class="note" th:text="${input.second.note}"></span>
                             </object>
-                            <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
-                                Nincs kép feltöltve
-                            </p>
-                            <span class="note" th:text="${input.second.note}"></span>
+
+                            <object th:if="${input.second.type == 'text' && input.first.name == 'g7id'}" th:remove="tag">
+                                <img src="#" th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|" height="180px" alt="QR code preview" class="qr-preview">
+                            </object>
+
+                            <object th:if="${input.second.type == 'number'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <input th:type="${input.second.type}"
+                                       th:name="${input.first.name}"
+                                       th:id="|input${iter.index}|"
+                                       th:max="${input.second.max}"
+                                       th:min="${input.second.min}"
+                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:placeholder="${input.second.placeholder}"
+                                       th:disabled="${!input.second.enabled}"
+                                       th:autocomplete="${input.second.autocomplete}"
+                                />
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
+                            <object th:if="${input.second.type == 'select'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <select th:id="|input${iter.index}|"
+                                        th:name="${input.first.name}"
+                                        th:disabled="${!input.second.enabled}">
+                                    <option th:if="${editMode}"
+                                            th:each="opt : ${input.second.source}"
+                                            th:value="${opt}"
+                                            th:text="${opt}"
+                                            th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
+                                    <option th:unless="${editMode}"
+                                            th:each="opt : ${input.second.source}"
+                                            th:value="${opt}"
+                                            th:text="${opt}"></option>
+                                </select>
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
+                            <object th:if="${input.second.type == 'entity-select'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <select th:id="|input${iter.index}|"
+                                        th:name="${input.first.name}"
+                                        th:disabled="${!input.second.enabled}">
+                                    <option th:if="${editMode}"
+                                            th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
+                                            th:value="${opt}"
+                                            th:text="${opt}"
+                                            th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
+                                    <option th:unless="${editMode}"
+                                            th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
+                                            th:value="${opt}"
+                                            th:text="${opt}"></option>
+                                </select>
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
+                            <object th:if="${input.second.type == 'list-entities'}" th:remove="tag">
+                                <label th:text="${input.second.label}">
+                                </label>
+                                <ul>
+                                    <li th:each="ent : ${mappings.get(input.second.entitySource).invoke(data)}"
+                                            th:value="${ent}"
+                                            th:text="${ent}">
+                                    </li>
+                                </ul>
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
+                            <object th:if="${input.second.type == 'textarea'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <textarea
+                                       th:name="${input.first.name}"
+                                       th:id="|input${iter.index}|"
+                                       th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:disabled="${!input.second.enabled}"
+                                       th:autocomplete="${input.second.autocomplete}">
+                                </textarea>
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
+                            <object th:if="${input.second.type == 'file'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <input type="file"
+                                       class="file-input"
+                                       th:name="|file${input.second.fileId}|"
+                                       th:id="|input${iter.index}|"
+                                       th:disabled="${!input.second.enabled}"
+                                />
+                                <span class="note" th:text="${input.second.note}"></span>
+    <!--                            <img alt="Preview image"-->
+    <!--                                 height="200px"-->
+    <!--                                 th:if="${input.second.fileType == 'image'}"-->
+    <!--                                 th:src="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"-->
+    <!--                            />-->
+                            </object>
+
+                            <object th:if="${input.second.type == 'checkbox'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <label class="switch">
+                                    <input type="checkbox"
+                                           th:checked="${(!editMode) ? (input.second.defaultValue == 'true') : (input.first.get(data))}"
+                                           th:name="${input.first.name}"
+                                           th:id="|input${iter.index}|"
+                                           th:disabled="${!input.second.enabled}" />
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
+                            <object th:if="${input.second.type == 'image-preview' && editMode}" th:remove="tag">
+                                <label th:text="${input.second.label}">
+                                </label>
+                                <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">
+                                    <a href="#"
+                                       target="_blank"
+                                       th:href="|@{/cdn/}${input.first.get(data)}|">
+                                    <img src="#"
+                                         alt="Image preview"
+                                         height="400"
+                                         th:id="|input${iter.index}|"
+                                         th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
+                                         th:src="|@{/cdn/}${input.first.get(data)}|"/>
+                                    </a>
+                                    <br>
+                                    <a href="#"
+                                       target="_blank"
+                                       th:href="|@{/cdn/}${input.first.get(data)}|"
+                                       class="btn btn-secondary">
+                                        Megnyitás nagyban (új lapon)
+                                    </a>
+                                </object>
+                                <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
+                                    Nincs kép feltöltve
+                                </p>
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
                         </object>
 
                     </object>

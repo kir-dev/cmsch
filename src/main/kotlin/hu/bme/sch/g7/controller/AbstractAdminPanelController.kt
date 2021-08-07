@@ -4,6 +4,7 @@ import hu.bme.sch.g7.admin.INPUT_TYPE_FILE
 import hu.bme.sch.g7.admin.INTERPRETER_INHERIT
 import hu.bme.sch.g7.admin.OverviewBuilder
 import hu.bme.sch.g7.model.ManagedEntity
+import hu.bme.sch.g7.model.UserEntity
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.uploadFile
 import org.slf4j.LoggerFactory
@@ -111,10 +112,11 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @PostMapping("/create")
     fun create(@ModelAttribute(binding = false) dto: T,
                @RequestParam(required = false) file0: MultipartFile?,
-               @RequestParam(required = false) file1: MultipartFile?
+               @RequestParam(required = false) file1: MultipartFile?,
+               request: HttpServletRequest
     ): String {
         val entity = supplier.get()
-        updateEntity(descriptor, entity, dto, file0, file1)
+        updateEntity(descriptor, request.getUser(), entity, dto, file0, file1)
         entity.id = 0
         onEntityPreSave(entity)
         repo.save(entity)
@@ -126,14 +128,15 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     fun edit(@PathVariable id: Int,
              @ModelAttribute(binding = false) dto: T,
              @RequestParam(required = false) file0: MultipartFile?,
-             @RequestParam(required = false) file1: MultipartFile?
+             @RequestParam(required = false) file1: MultipartFile?,
+             request: HttpServletRequest
     ): String {
         val entity = repo.findById(id)
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"
         }
 
-        updateEntity(descriptor, entity.get(), dto, file0, file1)
+        updateEntity(descriptor, request.getUser(), entity.get(), dto, file0, file1)
         entity.get().id = id
         onEntityPreSave(entity.get())
         repo.save(entity.get())
@@ -141,9 +144,9 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         return "redirect:/admin/control/$view"
     }
 
-    private fun updateEntity(descriptor: OverviewBuilder, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
+    private fun updateEntity(descriptor: OverviewBuilder, user: UserEntity, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
         descriptor.getInputs().forEach {
-            if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore) {
+            if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
                 when {
                     it.second.interpreter == INTERPRETER_INHERIT && it.second.type == INPUT_TYPE_FILE -> {
                         when {
