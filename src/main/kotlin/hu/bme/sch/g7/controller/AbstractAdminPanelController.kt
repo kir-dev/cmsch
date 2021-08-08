@@ -19,6 +19,8 @@ import kotlin.reflect.KMutableProperty1
 
 const val INVALID_ID_ERROR = "INVALID_ID"
 const val CONTROL_MODE_EDIT_DELETE = "edit,delete"
+const val CONTROL_MODE_EDIT = "edit"
+const val CONTROL_MODE_VIEW = "view"
 
 open class AbstractAdminPanelController<T : ManagedEntity>(
         val repo: CrudRepository<T, Int>,
@@ -30,6 +32,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         val supplier: Supplier<T>,
         val entitySourceMapping: Map<String, (T?) -> List<String>> =
                 mapOf(Nothing::class.simpleName!! to { listOf() }),
+        val controlMode: String = CONTROL_MODE_EDIT_DELETE
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -45,7 +48,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("fields", descriptor.getColumnDefinitions())
         model.addAttribute("rows", repo.findAll())
         model.addAttribute("user", request.getUser())
-        model.addAttribute("controlMode", CONTROL_MODE_EDIT_DELETE)
+        model.addAttribute("controlMode", controlMode)
 
         return "overview"
     }
@@ -59,7 +62,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("user", request.getUser())
-        model.addAttribute("controlMode", CONTROL_MODE_EDIT_DELETE)
+        model.addAttribute("controlMode", controlMode)
 
         val entity = repo.findById(id)
         if (entity.isEmpty) {
@@ -79,7 +82,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("data", null)
         model.addAttribute("user", request.getUser())
-        model.addAttribute("controlMode", CONTROL_MODE_EDIT_DELETE)
+        model.addAttribute("controlMode", controlMode)
 
         return "details"
     }
@@ -89,7 +92,6 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("title", titleSingular)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
-        model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("user", request.getUser())
 
         val entity = repo.findById(id)
@@ -118,7 +120,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         val entity = supplier.get()
         updateEntity(descriptor, request.getUser(), entity, dto, file0, file1)
         entity.id = 0
-        onEntityPreSave(entity)
+        onEntityPreSave(entity, request)
         repo.save(entity)
         onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
@@ -138,7 +140,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
         updateEntity(descriptor, request.getUser(), entity.get(), dto, file0, file1)
         entity.get().id = id
-        onEntityPreSave(entity.get())
+        onEntityPreSave(entity.get(), request)
         repo.save(entity.get())
         onEntityChanged(entity.get())
         return "redirect:/admin/control/$view"
@@ -152,7 +154,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                         when {
                             it.second.fileId == "0" -> {
                                 file0?.uploadFile(view).let { file ->
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "cdn/$view/$file")
+                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
                                 }
                             }
                             it.second.fileId == "1" -> {
@@ -185,7 +187,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         // Overridden when notification is required
     }
 
-    open fun onEntityPreSave(entity: T) {
+    open fun onEntityPreSave(entity: T, request: HttpServletRequest) {
         // Overridden when notification is required
     }
 

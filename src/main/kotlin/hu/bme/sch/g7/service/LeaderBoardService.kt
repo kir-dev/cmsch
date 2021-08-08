@@ -40,8 +40,8 @@ open class LeaderBoardService(
     }
 
     @Transactional(readOnly = true)
-    @Scheduled(fixedDelay = 1000L * 60 * 60 * 10)
-    fun recalculate() {
+    @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
+    open fun recalculate() {
         log.info("Recalculating top list cache")
         cachedTopList = submissions.findAll()
                 .asSequence()

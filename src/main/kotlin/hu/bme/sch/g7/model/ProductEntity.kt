@@ -33,7 +33,7 @@ data class ProductEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Ár")
-    @property:GenerateOverview(columnName = "Ár", order = 1)
+    @property:GenerateOverview(columnName = "Ár", order = 1, centered = true)
     var price: Int = 0,
 
     @Enumerated(EnumType.STRING)

@@ -4,8 +4,11 @@ import hu.bme.sch.g7.dao.*
 import hu.bme.sch.g7.model.*
 import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.service.UserProfileGeneratorService
+import hu.bme.sch.g7.util.getUser
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
+import java.time.Instant
+import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control/news")
@@ -44,6 +47,22 @@ class ProductController(repo: ProductRepository) : AbstractAdminPanelController<
 )
 
 @Controller
+@RequestMapping("/admin/control/debts")
+class SoldProductController(repo: SoldProductRepository) : AbstractAdminPanelController<SoldProductEntity>(
+        repo,
+        "debts", "Tranzakció", "Tranzakciók",
+        "Az összes eladásból származó tranzakciók.",
+        SoldProductEntity::class, ::SoldProductEntity,
+        controlMode = CONTROL_MODE_EDIT
+) {
+    override fun onEntityPreSave(entity: SoldProductEntity, request: HttpServletRequest) {
+        val date = Instant.now().toEpochMilli()
+        val user = request.getUser()
+        entity.log = "${entity.log} '${user.fullName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finsihed: ${entity.finsihed}] at $date;"
+    }
+}
+
+@Controller
 @RequestMapping("/admin/control/groups")
 class GroupController(
         repo: GroupRepository
@@ -70,7 +89,7 @@ class UserController(
         UserEntity::class, ::UserEntity,
         mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() })
 ) {
-    override fun onEntityPreSave(entity: UserEntity) {
+    override fun onEntityPreSave(entity: UserEntity, request: HttpServletRequest) {
         profileService.generateProfileForUser(entity)
         if (entity.groupName.isNotBlank()) {
             groups.findByName(entity.groupName).ifPresentOrElse({

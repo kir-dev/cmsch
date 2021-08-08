@@ -10,6 +10,9 @@ data class AchievementsView(
         val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
 
         @JsonView(Preview::class)
+        val warningMessage: String = "",
+
+        @JsonView(Preview::class)
         val groupScore: Int?,
 
         @JsonView(Preview::class)

@@ -12,14 +12,14 @@ open class UserService(
 ) {
 
     @Transactional
-    fun save(user: UserEntity) {
+    open fun save(user: UserEntity) {
         users.save(user)
     }
 
     @Transactional(readOnly = true)
-    fun getById(id: String): UserEntity = users.findByPekId(id).orElseThrow()
+    open fun getById(id: String): UserEntity = users.findByPekId(id).orElseThrow()
 
     @Transactional(readOnly = true)
-    fun exists(id: String) = users.existsByPekId(id)
+    open fun exists(id: String) = users.existsByPekId(id)
 
 }

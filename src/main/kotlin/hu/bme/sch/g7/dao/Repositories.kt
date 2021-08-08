@@ -30,6 +30,8 @@ interface NewsRepository : CrudRepository<NewsEntity, Int> {
 interface UserRepository : CrudRepository<UserEntity, Int> {
     fun findByPekId(pekId: String): Optional<UserEntity>
     fun existsByPekId(pekId: String): Boolean
+    fun findByG7id(g7id: String): Optional<UserEntity>
+    fun findByNeptun(neptun: String): Optional<UserEntity>
 }
 
 @Repository
@@ -39,18 +41,28 @@ interface ExtraPageRepository : CrudRepository<ExtraPageEntity, Int> {
 
 @Repository
 interface ProductRepository : CrudRepository<ProductEntity, Int> {
+    override fun findAll(): List<ProductEntity>
+    fun findAllByType(type: ProductType): List<ProductEntity>
     fun findAllByTypeAndVisibleTrue(type: ProductType): List<ProductEntity>
 }
 
 @Repository
 interface SoldProductRepository : CrudRepository<SoldProductEntity, Int> {
-    fun findAllByOwner_Id(id: Int): List<SoldProductEntity>
+    fun findAllByOwnerId(id: Int): List<SoldProductEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
+    fun findAllByResponsibleGroupId(id: Int): List<SoldProductEntity>
 }
 
 @Repository
 interface SubmittedAchievementRepository : CrudRepository<SubmittedAchievementEntity, Int> {
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByAchievement_IdAndGroupId(achievementId: Int, groupId: Int): Optional<SubmittedAchievementEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByAchievement_Id(achievementId: Int): List<SubmittedAchievementEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByAchievement_IdAndRejectedIsFalseAndApprovedIsFalse(achievementId: Int): List<SubmittedAchievementEntity>
 }
 

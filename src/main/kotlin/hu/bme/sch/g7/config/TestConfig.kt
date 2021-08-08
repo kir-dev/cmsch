@@ -2,6 +2,7 @@ package hu.bme.sch.g7.config
 
 import hu.bme.sch.g7.dao.*
 import hu.bme.sch.g7.model.*
+import hu.bme.sch.g7.service.ProductService
 import hu.bme.sch.g7.service.UserProfileGeneratorService
 import org.springframework.context.annotation.Configuration
 import java.util.*
@@ -32,7 +33,8 @@ class TestConfig(
         val profileService: UserProfileGeneratorService,
         val groupToUserMapping: GroupToUserMappingRepository,
         val guildToUserMapping: GuildToUserMappingRepository,
-        val submittedAchievements: SubmittedAchievementRepository
+        val submittedAchievements: SubmittedAchievementRepository,
+        val productsService: ProductService
 ) {
 
     private var now = System.currentTimeMillis()
@@ -41,8 +43,8 @@ class TestConfig(
     fun init() {
         addNews()
         addEvents()
-        addUsers()
         addGroups()
+        addUsers()
         addAchievements()
         addProducts()
         addExtraPages()
@@ -409,7 +411,9 @@ class TestConfig(
                 major = MajorType.EE,
                 role = RoleType.BASIC,
                 fullName = "Hitman János",
-                guild = GuildType.YELLOW
+                guild = GuildType.YELLOW,
+                groupName = "V10",
+                group = groups.findByName("V10").orElse(null)
         )
         profileService.generateProfileForUser(u1)
         users.save(u1)
@@ -421,7 +425,9 @@ class TestConfig(
                 major = MajorType.IT,
                 role = RoleType.BASIC,
                 fullName = "Bat Man",
-                guild = GuildType.RED
+                guild = GuildType.RED,
+                groupName = "V10",
+                group = groups.findByName("V10").orElse(null)
         )
         profileService.generateProfileForUser(u2)
         users.save(u2)
@@ -440,14 +446,15 @@ class TestConfig(
     }
 
     private fun addProducts() {
-        products.save(ProductEntity(
+        val product1 = ProductEntity(
                 name = "G7 Repohár",
                 description = "Feelinges repohár, amiből lehet inni is meg enni is.",
                 price = 300,
                 type = ProductType.MERCH,
                 available = true,
                 visible = true,
-        ))
+        )
+        products.save(product1)
 
         products.save(ProductEntity(
                 name = "G7 Traktorgumi",
@@ -485,14 +492,15 @@ class TestConfig(
                 visible = false,
         ))
 
-        products.save(ProductEntity(
+        val product2 = ProductEntity(
                 name = "Keddi kaja",
                 description = "Chili con carne",
                 price = 550,
                 type = ProductType.FOOD,
                 available = true,
                 visible = false,
-        ))
+        )
+        products.save(product2)
 
         products.save(ProductEntity(
                 name = "Szerdai kaja",
@@ -502,6 +510,16 @@ class TestConfig(
                 available = true,
                 visible = false,
         ))
+
+        val user1 = users.findByNeptun("BATMAN").orElseThrow()
+        val user2 = users.findByNeptun("HITMAN").orElseThrow()
+        val merchant = users.findByNeptun("FITYMA").orElseThrow()
+
+        println(productsService.sellProductByG7Id(product1.id, merchant, user1.g7id))
+        println(productsService.sellProductByNeptun(product2.id, merchant, user1.neptun))
+        productsService.sellProductByG7Id(product1.id, merchant, user2.g7id)
+        productsService.sellProductByNeptun(product1.id, merchant, user2.neptun)
+        productsService.sellProductByG7Id(product1.id, merchant, user2.g7id)
     }
 
     private fun addExtraPages() {

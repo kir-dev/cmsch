@@ -14,6 +14,10 @@
     <meta name="msapplication-navbutton-color" content="#444444"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="#444444"/>
     <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}" />
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/apple-touch-icon.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}" />
 </head>
 <body>
     <div class="content">
@@ -38,8 +42,16 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/rate-achievements}">Bucketlist értékelés</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/toplist}">Toplista</a>
 
-                <!-- Core ADMIN -->
+                <!-- Products -->
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/products}">Termékek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellProduct()}" th:href="@{/admin/control/sell-products}">Termék árusítás</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellFood()}" th:href="@{/admin/control/sell-food}">Étel árusítás</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellMerch()}" th:href="@{/admin/control/sell-merch}">Merch árusítás</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}" th:href="@{/admin/control/debts-of-my-group}">Tanköröm tartozásai</a>
+
+                <!-- Core ADMIN -->
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts}">Tartozások</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
 
                 <div class="separate"></div>

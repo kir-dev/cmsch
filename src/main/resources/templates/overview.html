@@ -37,12 +37,24 @@
                                 <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
                                 <a href="#" th:href="|@{/admin/control}/${view}/delete/${row.id}|"><span class="material-icons">delete</span></a>
                             </object>
+                            <object th:if="${controlMode == 'view'}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/${view}/view/${row.id}|"><span class="material-icons">edit</span></a>
+                            </object>
+                            <object th:if="${controlMode == 'edit'}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
+                            </object>
                             <object th:if="${controlMode == 'rate'}" th:remove="tag">
                                 <a href="#" th:href="|@{/admin/control}/${view}/view/${row.id}|"><span class="material-icons">visibility</span></a>
                                 <a href="#" th:href="|@{/admin/control}/${view}/rate/${row.id}|"><span class="material-icons">thumbs_up_down</span></a>
                             </object>
                             <object th:if="${controlMode == 'grade'}" th:remove="tag">
                                 <a href="#" th:href="|@{/admin/control}/${view}/grade/${row.id}|"><span class="material-icons">grade</span></a>
+                            </object>
+                            <object th:if="${controlMode == 'sell'}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/sell/${row.id}|"><span class="material-icons">sell</span></a>
+                            </object>
+                            <object th:if="${controlMode == 'payed'}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/${view}/payed/${row.id}|"><span class="material-icons">check_circle_outline</span></a>
                             </object>
                         </td>
                     </tr>

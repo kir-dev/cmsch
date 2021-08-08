@@ -26,12 +26,12 @@ open class AchievementsService(
     }
 
     @Transactional(readOnly = true)
-    fun getById(id: Int): Optional<AchievementEntity> {
+    open fun getById(id: Int): Optional<AchievementEntity> {
         return achievements.findById(id)
     }
 
     @Transactional(readOnly = true)
-    fun getSubmissionOrNull(group: GroupEntity, achievement: Optional<AchievementEntity>): SubmittedAchievementEntity? {
+    open fun getSubmissionOrNull(group: GroupEntity, achievement: Optional<AchievementEntity>): SubmittedAchievementEntity? {
         if (achievement.isEmpty)
             return null
 
@@ -41,14 +41,14 @@ open class AchievementsService(
 
     // FIXME: Optimize
     @Transactional(readOnly = true)
-    fun getHighlightedOnes(group: GroupEntity): List<AchievementEntityWrapper> {
+    open fun getHighlightedOnes(group: GroupEntity): List<AchievementEntityWrapper> {
         return achievements.findAllByHighlightedTrue()
                 .map { AchievementEntityWrapper(it, findSubmissionStatus(it, group)) }
     }
 
     // FIXME: Optimize
     @Transactional(readOnly = true)
-    fun getAllAchievements(group: GroupEntity): List<AchievementEntityWrapper> {
+    open fun getAllAchievements(group: GroupEntity): List<AchievementEntityWrapper> {
         return achievements.findAll()
                 .map { AchievementEntityWrapper(it, findSubmissionStatus(it, group)) }
     }
@@ -67,7 +67,7 @@ open class AchievementsService(
     }
 
     @Transactional
-    fun submitAchievement(
+    open fun submitAchievement(
             answer: AchievementSubmissionDto,
             file: MultipartFile?,
             user: UserEntity

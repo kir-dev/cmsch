@@ -73,6 +73,7 @@ class MainController(
         val event = eventsRepository.findByUrl(path)
         return SingleEventView(
                 userPreview = supplyUserInformation(request),
+                warningMessage = config.getWarningMessage(),
                 event = event.orElse(null)
         )
     }
@@ -84,6 +85,7 @@ class MainController(
 
         return ProfileView(
                 userPreview = supplyUserInformation(request),
+                warningMessage = config.getWarningMessage(),
                 user = user,
                 group = user.group?.let { GroupEntityDto(it) }
         )
@@ -101,15 +103,14 @@ class MainController(
     @JsonView(FullDetails::class)
     @GetMapping("/debts")
     fun debts(request: HttpServletRequest): DebtsView {
-        val user = request.getUser()
-
         return DebtsView(
                 userPreview = supplyUserInformation(request),
-                debts = debtsRepository.findAllByOwner_Id(user.id)
+                debts = debtsRepository.findAllByOwnerId(request.getUser().id)
                         .map { DebtDto(
-                                it.product?.name ?: "n/a",
-                                it.seller?.fullName ?: "n/a",
-                                "TODO Representative", // FIXME: This feature is not implemented
+                                it.product,
+                                it.price,
+                                it.sellerName,
+                                it.responsibleName,
                                 it.payed,
                                 it.shipped,
                                 it.log
@@ -122,11 +123,13 @@ class MainController(
     fun achievements(request: HttpServletRequest): AchievementsView {
         val group = request.getUserOrNull()?.group ?: return AchievementsView(
                 userPreview = supplyUserInformation(request),
+                warningMessage = config.getWarningMessage(),
                 groupScore = null,
                 leaderBoard = leaderBoardService.getBoard())
 
         return AchievementsView(
                 userPreview = supplyUserInformation(request),
+                warningMessage = config.getWarningMessage(),
                 groupScore = leaderBoardService.getScoreOfGroup(group),
                 leaderBoard = leaderBoardService.getBoard(),
                 highlighted = achievements.getHighlightedOnes(group),
@@ -140,11 +143,13 @@ class MainController(
         val achievement = achievements.getById(achievementId)
         val group = request.getUserOrNull()?.group ?: return SingleAchievementView(
                 userPreview = supplyUserInformation(request),
+                warningMessage = config.getWarningMessage(),
                 achievement = achievement.orElse(null),
                 submission = null)
 
         return SingleAchievementView(
                 userPreview = supplyUserInformation(request),
+                warningMessage = config.getWarningMessage(),
                 achievement = achievement.orElse(null),
                 submission = achievements.getSubmissionOrNull(group, achievement)
         )
@@ -169,6 +174,7 @@ class MainController(
     fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
         return ExtraPageView(
                 userPreview = supplyUserInformation(request),
+                warningMessage = config.getWarningMessage(),
                 page = extraPagesRepository.findByUrl(path).orElse(null)
         )
     }

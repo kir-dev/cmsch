@@ -7,6 +7,9 @@ data class DebtDto(
     var product: String,
 
     @JsonView(FullDetails::class)
+    var price: Int,
+
+    @JsonView(FullDetails::class)
     var sellerName: String,
 
     @JsonView(FullDetails::class)

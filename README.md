@@ -24,6 +24,7 @@ For develpment:
         -e AUTHSCH_CLIENT_ID=20_CHARS \
         -e AUTHSCH_CLIENT_KEY=80_CHARS \
         -e PROFILE_SALT=RANDOM_STRING \
+        -e SYSADMINS=YOUR_AUTH_SCH_UUID \
         g7-web-backend
 ```
 
@@ -35,6 +36,7 @@ or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
         -e AUTHSCH_CLIENT_ID=20_CHARS \
         -e AUTHSCH_CLIENT_KEY=80_CHARS \
         -e PROFILE_SALT=RANDOM_STRING \
+        -e SYSADMINS=YOUR_AUTH_SCH_UUID \
         registry.k8s.sch.bme.hu/g7-web/g7-web-backend
 ```
 
