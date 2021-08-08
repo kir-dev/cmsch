@@ -153,6 +153,6 @@ data class UserEntity(
     }
 
     fun isAdmin(): Boolean {
-        return role == RoleType.ADMIN /*|| role == RoleType.SUPERUSER*/
+        return role == RoleType.ADMIN || role == RoleType.SUPERUSER
     }
 }

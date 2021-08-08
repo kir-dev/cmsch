@@ -27,6 +27,7 @@ class DI {
 fun MultipartFile.uploadFile(target: String): String? {
     if (this.isEmpty || this.contentType == null)
         return null
+
     var path = if (!DI.instance.uploadPath.startsWith("/")) {
         System.getProperty("user.dir") + "/" + DI.instance.uploadPath
     } else {

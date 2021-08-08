@@ -2,19 +2,17 @@ package hu.bme.sch.g7.controller
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.dao.*
-import hu.bme.sch.g7.dto.DebtDto
-import hu.bme.sch.g7.dto.FullDetails
-import hu.bme.sch.g7.dto.GroupEntityDto
-import hu.bme.sch.g7.dto.Preview
+import hu.bme.sch.g7.dto.*
 import hu.bme.sch.g7.dto.view.*
 import hu.bme.sch.g7.model.ProductType
-import hu.bme.sch.g7.model.UserEntity
 import hu.bme.sch.g7.service.AchievementsService
 import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.RealtimeConfigService
+import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.servlet.http.HttpServletRequest
@@ -82,7 +80,7 @@ class MainController(
     @JsonView(FullDetails::class)
     @GetMapping("/profile")
     fun profile(request: HttpServletRequest): ProfileView {
-        val user = fetchUser()
+        val user = request.getUser()
 
         return ProfileView(
                 userPreview = supplyUserInformation(request),
@@ -103,7 +101,7 @@ class MainController(
     @JsonView(FullDetails::class)
     @GetMapping("/debts")
     fun debts(request: HttpServletRequest): DebtsView {
-        val user = fetchUser()
+        val user = request.getUser()
 
         return DebtsView(
                 userPreview = supplyUserInformation(request),
@@ -139,9 +137,8 @@ class MainController(
     @JsonView(FullDetails::class)
     @GetMapping("/achievement/{achievementId}")
     fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
-        val user = fetchUser()
         val achievement = achievements.getById(achievementId)
-        val group = user.group ?: return SingleAchievementView(
+        val group = request.getUserOrNull()?.group ?: return SingleAchievementView(
                 userPreview = supplyUserInformation(request),
                 achievement = achievement.orElse(null),
                 submission = null)
@@ -158,10 +155,6 @@ class MainController(
         return UserEntityPreview(true, user.fullName, user.groupName, user.role)
     }
 
-    private fun fetchUser(): UserEntity {
-        return UserEntity()
-    }
-
     @JsonView(FullDetails::class)
     @GetMapping("/extra-page/{path}")
     fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
@@ -169,6 +162,15 @@ class MainController(
                 userPreview = supplyUserInformation(request),
                 page = extraPagesRepository.findByUrl(path).orElse(null)
         )
+    }
+
+    @PostMapping("/achievement")
+    fun submitAchievement(
+            @ModelAttribute(binding = false) answer: AchievementSubmissionDto,
+            @RequestParam(required = false) file: MultipartFile?,
+            request: HttpServletRequest
+    ): AchievementSubmissionResponseDto {
+        return AchievementSubmissionResponseDto(achievements.submitAchievement(answer, file, request.getUser()))
     }
 
 }

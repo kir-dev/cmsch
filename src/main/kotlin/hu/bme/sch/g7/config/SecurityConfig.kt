@@ -9,9 +9,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.config.annotation.web.builders.WebSecurity
-
-
 
 
 @EnableWebSecurity
@@ -21,8 +18,12 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/", "/cdn/**", "/h2-console/**", "/loggedin", "/login", "/api/**").permitAll()
-                .antMatchers("/admin/**").hasAnyRole(RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
+                .antMatchers("/", "/cdn/**", "/h2-console/**", "/loggedin", "/login", "/api/**") // FIXME_ Check if api/** does not override the ones below
+                    .permitAll()
+                .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile", "/api/debts")
+                    .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
+                .antMatchers("/admin/**")
+                    .hasAnyRole(RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
                 .and()
                 .formLogin()
                 .loginPage("/login")

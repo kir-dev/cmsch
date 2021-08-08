@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
@@ -43,6 +44,17 @@ open class LoginController(
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+
+    @GetMapping("/")
+    fun root(): String {
+        return "redirect:/login"
+    }
+
+    @ResponseBody
+    @GetMapping("/logged-out")
+    fun loggedOut(): String {
+        return "Sikeres kijelentkezés!"
+    }
 
     @ApiOperation("Login re-entry point")
     @GetMapping("/auth/authsch/callback")
@@ -153,7 +165,7 @@ open class LoginController(
         request.session.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
         request.session.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)
         request.changeSessionId()
-        return "redirect:/?logged-out"
+        return "redirect:/logged-out"
     }
 
 }
