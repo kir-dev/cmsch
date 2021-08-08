@@ -18,12 +18,16 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/", "/cdn/**", "/h2-console/**", "/loggedin", "/login", "/api/**") // FIXME_ Check if api/** does not override the ones below
+                .antMatchers("/", "/cdn/profiles/**", "/loggedin", "/login", "/logged-out", "/api/news",
+                        "/api/events", "/api/events/**", "/api/products", "/api/extra-page/**")
                     .permitAll()
+
                 .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile", "/api/debts")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
-                .antMatchers("/admin/**")
+
+                .antMatchers("/admin/**", "/cdn/**")
                     .hasAnyRole(RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
+
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -36,7 +40,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Bean
     @ConfigurationProperties(prefix = "authsch")
-    open fun authSchApi(): AuthSchAPI {
+    fun authSchApi(): AuthSchAPI {
         return AuthSchAPI()
     }
 }

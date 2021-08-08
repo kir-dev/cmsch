@@ -73,6 +73,7 @@ open class AchievementsService(
             user: UserEntity
     ): AchievementSubmissionStatus {
         val groupId = user.group?.id ?: return AchievementSubmissionStatus.NO_ASSOCIATE_GROUP
+        println(answer)
         val achievement = achievements.findById(answer.achievementId).orElse(null)
                 ?: return AchievementSubmissionStatus.INVALID_ACHIEVEMENT_ID
 

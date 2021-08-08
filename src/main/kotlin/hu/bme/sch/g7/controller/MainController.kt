@@ -155,15 +155,6 @@ class MainController(
         return UserEntityPreview(true, user.fullName, user.groupName, user.role)
     }
 
-    @JsonView(FullDetails::class)
-    @GetMapping("/extra-page/{path}")
-    fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
-        return ExtraPageView(
-                userPreview = supplyUserInformation(request),
-                page = extraPagesRepository.findByUrl(path).orElse(null)
-        )
-    }
-
     @PostMapping("/achievement")
     fun submitAchievement(
             @ModelAttribute(binding = false) answer: AchievementSubmissionDto,
@@ -171,6 +162,15 @@ class MainController(
             request: HttpServletRequest
     ): AchievementSubmissionResponseDto {
         return AchievementSubmissionResponseDto(achievements.submitAchievement(answer, file, request.getUser()))
+    }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/extra-page/{path}")
+    fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
+        return ExtraPageView(
+                userPreview = supplyUserInformation(request),
+                page = extraPagesRepository.findByUrl(path).orElse(null)
+        )
     }
 
 }
