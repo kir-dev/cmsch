@@ -51,13 +51,13 @@ data class SubmittedAchievementEntity(
         @Column(nullable = false)
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Elfogadva", note = "Ha ez igaz az felülírja az elutasított státuszt")
-        @property:GenerateOverview(columnName = "Elfogadva", order = 2, centered = true)
+        @property:GenerateOverview(columnName = "Elfogadva", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var approved: Boolean = false,
 
         @Column(nullable = false)
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Elutasítva")
-        @property:GenerateOverview(columnName = "Elutasítva", order = 3, centered = true)
+        @property:GenerateOverview(columnName = "Elutasítva", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var rejected: Boolean = false,
 
         @Column(nullable = false)

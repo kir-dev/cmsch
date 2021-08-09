@@ -49,18 +49,18 @@ data class NewsEntity(
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Látható a hír")
-    @property:GenerateOverview(columnName = "Látható", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Látható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var visible: Boolean = false,
 
     @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Kiemelt hír")
-    @property:GenerateOverview(columnName = "Kiemelt", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "Kiemelt", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var highlighted: Boolean = false,
 
     @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, order = 7, visible = false, interpreter = "timestamp")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja")
     @property:GenerateOverview(visible = false)
     var timestamp: Long = 0,
 

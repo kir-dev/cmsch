@@ -19,7 +19,7 @@ const val LOREM_IPSUM_LONG_2 = "Pellentesque non interdum leo. Mauris egestas au
 const val LOREM_IPSUM_LONG_3 = "Donec rutrum enim elit, sed facilisis lectus varius sit amet. Ut vel imperdiet ligula. Phasellus id ullamcorper augue, et varius sapien. Nulla suscipit, nibh nec tristique dapibus, lorem libero facilisis mi, sit amet mattis ligula erat vel massa. Donec laoreet tortor non turpis molestie vestibulum. Suspendisse neque orci, placerat at porta vitae, ultricies ut libero. Quisque vel arcu ac magna interdum rutrum eget vitae velit. In tempus nunc ligula, ac euismod nisl mollis sit amet. Mauris congue auctor enim et venenatis. Maecenas bibendum erat a egestas auctor. Integer quis efficitur ipsum."
 const val LOREM_IPSUM_LONG_4 = "Duis et lacus ac tellus volutpat lobortis. Curabitur ac sapien vel nibh vestibulum congue vel in purus. In eget leo in nisi lacinia lacinia. Sed tempus arcu non mi iaculis lobortis. Vivamus ultricies sed odio sit amet placerat. Praesent turpis est, finibus sit amet malesuada vitae, rhoncus et velit. Vestibulum convallis nibh metus, dictum posuere augue facilisis vel. Aliquam viverra mauris sapien, sed pharetra ante ullamcorper quis. Sed scelerisque nisi nibh, rutrum malesuada elit scelerisque ac. Cras rhoncus magna eu risus mattis, vitae eleifend justo lacinia."
 
-const val A_DAY = 1000 * 60 * 60 * 24
+const val A_DAY = 60 * 60 * 24
 
 @Configuration
 class TestConfig(
@@ -37,7 +37,7 @@ class TestConfig(
         private val productsService: ProductService
 ) {
 
-    private var now = System.currentTimeMillis()
+    private var now = System.currentTimeMillis() / 1000
 
     @PostConstruct
     fun init() {
@@ -137,7 +137,7 @@ class TestConfig(
                 heldDay = "Hétfő",
                 heldInterval = "13:00 - 16:00",
                 place = "Schönherz",
-                heldTimestamp = now - A_DAY + (3600 * 1000),
+                heldTimestamp = now - A_DAY + (3600),
                 previewDescription = LOREM_IPSUM_SHORT_2,
                 description = LOREM_IPSUM_LONG_2,
                 visible = true,
@@ -152,7 +152,7 @@ class TestConfig(
                 heldDay = "Hétfő",
                 heldInterval = "21:00 - 22:00",
                 place = "Lovagterem",
-                heldTimestamp = now - A_DAY + (5 * 3600 * 1000),
+                heldTimestamp = now - A_DAY + (5 * 3600),
                 previewDescription = "Ennek nem kellene látszani",
                 description = "Ennek nem kellene látszani (full leírás)",
                 visible = false,
@@ -167,7 +167,7 @@ class TestConfig(
                 heldDay = "Kedd",
                 heldInterval = "08:30 - 09:00",
                 place = "Schönherz",
-                heldTimestamp = now - (3600 * 1000),
+                heldTimestamp = now - (3600),
                 previewDescription = LOREM_IPSUM_SHORT_2,
                 description = LOREM_IPSUM_LONG_2,
                 visible = true,
@@ -197,7 +197,7 @@ class TestConfig(
                 heldDay = "Kedd",
                 heldInterval = "21:00 - 24:00",
                 place = "Schönherz",
-                heldTimestamp = now + (4 * 3600 * 1000),
+                heldTimestamp = now + (4 * 3600),
                 previewDescription = LOREM_IPSUM_SHORT_3,
                 description = LOREM_IPSUM_LONG_3,
                 visible = true,
@@ -227,7 +227,7 @@ class TestConfig(
                 heldDay = "Szerda",
                 heldInterval = "17:00 - 23:00",
                 place = "Bikás park",
-                heldTimestamp = now - A_DAY + (3600 * 1000),
+                heldTimestamp = now - A_DAY + (3600),
                 previewDescription = LOREM_IPSUM_SHORT_2,
                 description = LOREM_IPSUM_LONG_2,
                 visible = true,

@@ -208,6 +208,7 @@ form label {
 
 form input[type="text"],
 form input[type="number"],
+form input[type="datetime-local"],
 form select,
 form textarea {
     background-color: transparent;
@@ -224,6 +225,7 @@ form textarea {
 
 form input[type="text"]:focus,
 form input[type="number"]:focus,
+form input[type="datetime-local"]:focus,
 form select:focus,
 form textarea:focus {
     background-color: #EEE;
@@ -391,4 +393,9 @@ form p {
     margin: 10px auto;
     position: relative;
     top: -10px;
+}
+
+.fix-icons {
+    position: relative;
+    top: 6px;
 }

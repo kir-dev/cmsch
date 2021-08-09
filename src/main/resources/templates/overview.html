@@ -27,11 +27,25 @@
                         <th class="actions"></th>
                     </tr>
                     <tr th:each="row : ${rows}">
-                        <td th:each="field : ${fields}"
-                            th:text="${field.first.get(row)}"
-                            th:class="${field.second.centered ? 'centered' : ''}">
-                            Value
-                        </td>
+                        <object th:each="field : ${fields}" th:remove="tag">
+                            <object th:if="${field.second.renderer == 'text'}" th:remove="tag">
+                                <td th:text="${field.first.get(row)}"
+                                    th:class="${field.second.centered ? 'centered' : ''}">
+                                    Value
+                                </td>
+                            </object>
+                            <object th:if="${field.second.renderer == 'boolean'}" th:remove="tag">
+                                <td th:class="${field.second.centered ? 'centered' : ''}">
+                                    <span th:unless="${field.first.get(row)}" class="material-icons fix-icons">close</span>
+                                    <span th:if="${field.first.get(row)}" class="material-icons fix-icons">done</span>
+                                </td>
+                            </object>
+                            <object th:if="${field.second.renderer == 'date'}" th:remove="tag">
+                                <td th:text="${#dates.format(new java.util.Date(field.first.get(row) * 1000), 'yyyy&#8209;MM&#8209;dd HH:mm')}"
+                                    th:class="${field.second.centered ? 'centered' : ''}">
+                                </td>
+                            </object>
+                        </object>
                         <td class="actions">
                             <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">
                                 <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
@@ -66,5 +80,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

@@ -39,7 +39,7 @@ data class EventEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 4, label = "Mikor lesz a program?", note = "Unix timestamp (ms)")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Mikor lesz a program?", note = "Unix timestamp (ms)")
     @property:GenerateOverview(visible = false)
     var heldTimestamp: Long = 0,
 
@@ -120,7 +120,7 @@ data class EventEntity(
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var visible: Boolean = false
 
 ): ManagedEntity {

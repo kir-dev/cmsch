@@ -56,6 +56,20 @@
                                 <span class="note" th:text="${input.second.note}"></span>
                             </object>
 
+                            <object th:if="${input.second.type == 'date'}" th:remove="tag">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <input type="text"
+                                       class="datetime-picker"
+                                       th:name="${input.first.name}"
+                                       th:id="|input${iter.index}|"
+                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:disabled="${!input.second.enabled}"
+                                />
+                                <span class="note" th:text="${input.second.note}"></span>
+                            </object>
+
                             <object th:if="${input.second.type == 'select'}" th:remove="tag">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
@@ -205,5 +219,16 @@
             </div>
         </div>
     </div>
+</div>
+
+<script>
+    flatpickr(".datetime-picker", {
+        enableTime: true,
+        altInput: true,
+        altFormat: "Y-m-d H:i",
+        dateFormat: "U"
+    });
+</script>
+
 </body>
 </html>

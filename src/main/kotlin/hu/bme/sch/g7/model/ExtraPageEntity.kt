@@ -41,13 +41,13 @@ data class ExtraPageEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Látható", note = "Listázott az oldal")
-    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var visible: Boolean = false,
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Elérhető", note = "Meg lehet nyitni az oldalt")
-    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var open: Boolean = false,
 
     @Column(nullable = false)

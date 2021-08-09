@@ -77,10 +77,9 @@ data class GroupEntity(
     @property:GenerateOverview(visible = false)
     var lastLatitude: String = "0",
 
-    // FIXME: date input
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 10, label = "Helyzet frissült ekkor", note = "Helymeghatározás feature")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Helyzet frissült ekkor", note = "Helymeghatározás feature")
     @property:GenerateOverview(visible = false)
     var lastTimeLocationChanged: Long = 0,
 

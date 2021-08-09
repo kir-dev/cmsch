@@ -4,6 +4,7 @@ import hu.bme.sch.g7.model.RoleType
 
 const val INPUT_TYPE_TEXT = "text"
 const val INPUT_TYPE_NUMBER = "number"
+const val INPUT_TYPE_DATE = "date"
 const val INPUT_TYPE_BLOCK_TEXT = "textarea"
 const val INPUT_TYPE_FILE = "file"
 const val INPUT_TYPE_SWITCH = "checkbox"

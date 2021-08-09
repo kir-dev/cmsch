@@ -58,13 +58,13 @@ data class ProductEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Elérhető")
-    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var available: Boolean = false,
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var visible: Boolean = false,
 
 ): ManagedEntity {

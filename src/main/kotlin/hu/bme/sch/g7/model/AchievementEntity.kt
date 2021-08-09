@@ -58,14 +58,14 @@ data class AchievementEntity(
 
         @Column(nullable = false)
         @JsonView(value = [ Edit::class, FullDetails::class ])
-        @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 6, label = "Beadható ekkortól")
+        @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Beadható ekkortól")
         @property:GenerateOverview(visible = false)
         var availableFrom: Long = 0,
 
         @Column(nullable = false)
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-        @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 7, label = "Beadható eddig")
-        @property:GenerateOverview(columnName = "Eddig", order = 4)
+        @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Beadható eddig")
+        @property:GenerateOverview(columnName = "Eddig", order = 4, renderer = OVERVIEW_TYPE_DATE)
         var availableTo: Long = 0,
 
         @Column(nullable = false)
@@ -77,14 +77,14 @@ data class AchievementEntity(
         @Column(nullable = false)
         @JsonView(value = [ Edit::class ])
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Látható")
-        @property:GenerateOverview(columnName = "Látható", order = 6, centered = true)
+        @property:GenerateOverview(columnName = "Látható", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var visible: Boolean = false,
 
         @Column(nullable = false)
         @JsonView(value = [ Edit::class ])
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "Kiemelt",
                 note = "Olyan szöveggel jelenik meg, hogy hamarosan lejár")
-        @property:GenerateOverview(columnName = "Kiemelt", order = 7, centered = true)
+        @property:GenerateOverview(columnName = "Kiemelt", order = 7, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var highlighted: Boolean = false,
 
         @Column(nullable = false, name = "`order`")

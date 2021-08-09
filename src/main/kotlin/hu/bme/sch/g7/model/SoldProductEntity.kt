@@ -58,21 +58,21 @@ data class SoldProductEntity(
         var shipped: Boolean = false,
 
         @Column(nullable = false)
-        @property:GenerateInput(order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
+        @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
         var shippedAt: Long = 0,
 
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve", minimumRole = RoleType.ADMIN)
-        @property:GenerateOverview(columnName = "Fizetve", order = 4, centered = true)
+        @property:GenerateOverview(columnName = "Fizetve", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var payed: Boolean = false,
 
         @Column(nullable = false)
-        @property:GenerateInput(order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
+        @property:GenerateInput(type = INPUT_TYPE_DATE, order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
         var payedAt: Long = 0,
 
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Lezárva", minimumRole = RoleType.ADMIN)
-        @property:GenerateOverview(columnName = "Lezárva", order = 5, centered = true)
+        @property:GenerateOverview(columnName = "Lezárva", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var finsihed: Boolean = false,
 
         @Lob
