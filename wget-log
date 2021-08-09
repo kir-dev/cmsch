@@ -1,11 +1,0 @@
---2021-08-08 19:32:22--  https://media1.giphy.com/media/FSqYDfsdaiG9W/giphy.gif?cid=ecf05e47nm9p0yxaz4ls5ksw7ngm0pdkruj79gr9uhloptxh
-Resolving media1.giphy.com (media1.giphy.com)... 199.232.18.2
-Connecting to media1.giphy.com (media1.giphy.com)|199.232.18.2|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 755823 (738K) [image/gif]
-Saving to: ‘giphy.gif?cid=ecf05e47nm9p0yxaz4ls5ksw7ngm0pdkruj79gr9uhloptxh’
-
-                       giphy.gif?cid=ecf05e47n   0%[                                                                                                   ]       0  --.-KB/s               giphy.gif?cid=ecf05e47nm9p0yxaz4ls5ksw7ngm0pdk 100%[==================================================================================================>] 738.11K  --.-KB/s    in 0.03s   
-
-2021-08-08 19:32:22 (27.2 MB/s) - ‘giphy.gif?cid=ecf05e47nm9p0yxaz4ls5ksw7ngm0pdkruj79gr9uhloptxh’ saved [755823/755823]
-
