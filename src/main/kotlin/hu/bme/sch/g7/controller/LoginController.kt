@@ -78,9 +78,9 @@ open class LoginController(
                         profile.surname + " " + profile.givenName,
                         "",
                         RoleType.BASIC,
-                        true, true, true, false,
+                        false, false, false, false,
                         false, false,  false,
-                        false, true,
+                        false, false,
                         "", null, GuildType.UNKNOWN, MajorType.UNKNOWN
                 )
                 log.info("Logging in with new user ${user.fullName} pekId: ${user.pekId}")
@@ -124,6 +124,7 @@ open class LoginController(
                     }
         }
         if (systemAdmins.split(",").contains(user.pekId)) {
+            log.info("Granting SUPERUSER for ${user.fullName}")
             user.role = RoleType.SUPERUSER
         }
         users.save(user)
@@ -144,8 +145,7 @@ open class LoginController(
 
     fun buildUniqueState(request: HttpServletRequest): String {
         return (request.session.id
-                + request.localAddr
-                + request.localPort).sha256()
+                + request.localAddr).sha256()
     }
 
     @ApiOperation("Logout user")

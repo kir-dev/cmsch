@@ -179,4 +179,8 @@ class MainController(
         )
     }
 
+    @ResponseBody
+    @GetMapping("/version")
+    fun version(): String = "v1.0.8"
+
 }

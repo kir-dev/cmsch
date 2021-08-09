@@ -515,8 +515,8 @@ class TestConfig(
         val user2 = users.findByNeptun("HITMAN").orElseThrow()
         val merchant = users.findByNeptun("FITYMA").orElseThrow()
 
-        println(productsService.sellProductByG7Id(product1.id, merchant, user1.g7id))
-        println(productsService.sellProductByNeptun(product2.id, merchant, user1.neptun))
+        productsService.sellProductByG7Id(product1.id, merchant, user1.g7id)
+        productsService.sellProductByNeptun(product2.id, merchant, user1.neptun)
         productsService.sellProductByG7Id(product1.id, merchant, user2.g7id)
         productsService.sellProductByNeptun(product1.id, merchant, user2.neptun)
         productsService.sellProductByG7Id(product1.id, merchant, user2.g7id)

@@ -38,3 +38,4 @@ out/
 
 temp/
 src/main/resources/config/application-local.properties
+keystore/

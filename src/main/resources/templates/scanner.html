@@ -1,0 +1,186 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <title>G7 Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../static/scanner.css" th:href="@{/scanner.css}">
+    <meta name="theme-color" content="#444444">
+    <meta name="msapplication-navbutton-color" content="#444444"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#444444"/>
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}" />
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/apple-touch-icon.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}" />
+    <style>
+        #flash-toggle {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <video id="qr-video" class="background"></video>
+        <div class="cover"></div>
+    </div>
+    <div class="info">
+        <h1 id="item-name"></h1>
+        <h2 id="item-price"></h2>
+    </div>
+    <div class="controls">
+        <button id="exit"><span class="material-icons">arrow_back</span></button>
+        <button id="flash-toggle"><span id="flash-state" class="material-icons">flashlight_off</span></button>
+        <button id="start-button"><span class="material-icons">play_arrow</span></button>
+        <button id="stop-button"><span class="material-icons">close</span></button>
+        <button id="enter-neptun"><span class="material-icons">school</span></button>
+
+        <div class="hidden">
+            <b>Device has camera: </b><span id="cam-has-camera"></span><br>
+            <b>Device has flash: </b><span id="cam-has-flash"></span><br>
+            <b>Last detected at: </b><span id="cam-qr-result-timestamp"></span><br>
+        </div>
+    </div>
+
+    <div class="display">
+        <span id="cam-qr-result"></span><br>
+        <span id="prompt-name"></span>
+    </div>
+
+<script type="module" th:inline="javascript">
+
+    import QrScanner from "/js/qr-scanner.min.js";
+    QrScanner.WORKER_PATH = '/js/qr-scanner-worker.min.js';
+
+    const codePrefix = "G7_";
+    const itemName = "Keddi kaja";
+    const itemPrice = "550 JMF";
+    const itemId = 38;
+    const parentUrl = "/admin/control/sell-food";
+    const baseUrl = /*[[@{/scan}]]*/ "https://192.168.0.60:8080/scan";
+    // const baseUrl = "https://127.0.0.1:8080/scan";
+
+    let lastReading = "n/a";
+    let lastSuccessful = 0;
+
+    const video = document.getElementById('qr-video');
+    const camHasCamera = document.getElementById('cam-has-camera');
+    const camHasFlash = document.getElementById('cam-has-flash');
+    const flashToggle = document.getElementById('flash-toggle');
+    const flashState = document.getElementById('flash-state');
+    const camQrResult = document.getElementById('cam-qr-result');
+    const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
+
+    function showPaymentPrompt(g7id) {
+        setTimeout(async () => {
+            const name = await httpFetchData('POST', baseUrl + '/resolve', {
+                "g7id": g7id
+            });
+            if (confirm(`TRANZAKCIÓ JÓVÁHAGYÁSA\nTermék: ${itemName} (${itemPrice})\nVevő: ${name}`)) {
+                const result = await httpFetchData('POST', baseUrl + '/buy-g7id', {
+                    "productId": itemId,
+                    "g7id": g7id
+                });
+                if (result === '"SOLD"') {
+                    alert(`SIKERES TRANZAKCIÓ!`);
+                } else {
+                    alert(`HIBA!\n${result}`)
+                }
+            } else {
+                alert("Fizetés megszakítva");
+            }
+        }, 0)
+    }
+
+    function setResult(label, result) {
+        if (!result.startsWith(codePrefix))
+            return;
+        if (result === lastReading && (Date.now() - lastSuccessful) < 5000)
+            return;
+
+        lastReading = result;
+        lastSuccessful = Date.now();
+
+        showPaymentPrompt(result);
+
+        label.textContent = result;
+        camQrResultTimestamp.textContent = new Date().toString();
+        label.style.color = '#00FF00';
+        clearTimeout(label.highlightTimeout);
+        label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
+    }
+
+    QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
+
+    const scanner = new QrScanner(video, result => setResult(camQrResult, result), error => {
+        camQrResult.textContent = error;
+        camQrResult.style.color = 'inherit';
+    });
+    scanner.start().then(() => {
+        document.getElementById('item-name').innerText = itemName;
+        document.getElementById('item-price').innerText = itemPrice;
+
+        scanner.hasFlash().then(hasFlash => {
+            camHasFlash.textContent = hasFlash;
+            if (hasFlash) {
+                flashToggle.style.display = 'inline-block';
+                flashToggle.addEventListener('click', () => {
+                    scanner.toggleFlash().then(() => flashState.textContent = scanner.isFlashOn() ? 'flashlight_on' : 'flashlight_off');
+                });
+            }
+        });
+    });
+
+    // for debugging
+    window.scanner = scanner;
+
+    document.getElementById('start-button').addEventListener('click', () => {
+        scanner.start();
+    });
+
+    document.getElementById('stop-button').addEventListener('click', () => {
+        scanner.stop();
+    });
+
+    document.getElementById('exit').addEventListener('click', () => {
+        document.location.href = parentUrl;
+    });
+
+    document.getElementById('enter-neptun').addEventListener('click', async () => {
+        let neptun = prompt(`FIZETÉS NEPTUN MEGADÁSÁVAL\n${itemName} (${itemPrice})`, "");
+        if (neptun == null || neptun == "") {
+            alert("Fizetés megszakítva");
+        } else {
+            const result = await httpFetchData('POST', baseUrl + '/buy-neptun', {
+                "productId": itemId,
+                "neptun": neptun
+            });
+            if (result === '"SOLD"') {
+                alert(`SIKERES TRANZAKCIÓ!`);
+            } else {
+                alert(`HIBA!\n${result}`)
+            }
+        }
+    });
+
+    async function httpFetchData(method = 'POST', url = '', data = {}) {
+        const response = await fetch(url, {
+            method: method,
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify(data)
+        });
+        return response.text();
+    }
+
+</script>
+</body>
+</html>
