@@ -53,6 +53,12 @@ open class AchievementsService(
                 .map { AchievementEntityWrapper(it, findSubmissionStatus(it, group)) }
     }
 
+    @Transactional(readOnly = true)
+    open fun getAllAchievementsForGuests(): List<AchievementEntityWrapper> {
+        return achievements.findAll()
+                .map { AchievementEntityWrapper(it, AchievementStatus.NOT_LOGGED_IN) }
+    }
+
     private fun findSubmissionStatus(
             achievementEntity: AchievementEntity,
             group: GroupEntity

@@ -8,9 +8,6 @@ import hu.bme.sch.g7.model.SubmittedAchievementEntity
 
 data class SingleAchievementView(
         @JsonView(FullDetails::class)
-        val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
-
-        @JsonView(FullDetails::class)
         val warningMessage: String = "",
 
         @JsonView(FullDetails::class)

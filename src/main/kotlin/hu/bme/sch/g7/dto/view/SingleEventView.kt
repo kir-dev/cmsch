@@ -7,9 +7,6 @@ import hu.bme.sch.g7.model.EventEntity
 
 data class SingleEventView(
         @JsonView(FullDetails::class)
-        val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
-
-        @JsonView(FullDetails::class)
         val warningMessage: String = "",
 
         @JsonView(FullDetails::class)

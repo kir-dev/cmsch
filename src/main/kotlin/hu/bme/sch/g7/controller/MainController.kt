@@ -22,15 +22,9 @@ import javax.servlet.http.HttpServletRequest
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 class MainController(
         private val config: RealtimeConfigService,
-
         private val newsRepository: NewsRepository,
-        @Value("\${g7web.home.title:}") private val title: String,
-        @Value("\${g7web.home.interval:}") private val interval: String,
-        @Value("\${g7web.home.startsAt:0}") private val startsAt: Long,
-
         private val eventsRepository: EventRepository,
         @Value("\${g7web.zone-id:CET}") zoneId: String,
-
         private val leaderBoardService: LeaderBoardService,
         private val achievements: AchievementsService,
         private val extraPagesRepository: ExtraPageRepository,
@@ -44,11 +38,7 @@ class MainController(
     @GetMapping("/news")
     fun news(request: HttpServletRequest): NewsView {
         return NewsView(
-                userPreview = supplyUserInformation(request),
-                title = title,
-                interval = interval,
                 warningMessage = config.getWarningMessage(),
-                startsAt = startsAt,
                 news = newsRepository.findByOrderByTimestamp()
         )
     }
@@ -60,10 +50,25 @@ class MainController(
         val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
         val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
         return EventsView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 eventsToday = events.filter { it.heldTimestamp > dayStart && it.heldTimestamp < dayEnd },
                 allEvents = events
+        )
+    }
+
+    @JsonView(Preview::class)
+    @GetMapping("/home")
+    fun home(request: HttpServletRequest): HomeView {
+        val events = eventsRepository.findAll()
+        val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
+        val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
+        return HomeView(
+                warningMessage = config.getWarningMessage(),
+                news = newsRepository.findTop4ByOrderByTimestamp(),
+                eventsToday = events.filter { it.heldTimestamp > dayStart && it.heldTimestamp < dayEnd },
+                achievements = request.getUserOrNull()?.group?.let { achievements.getAllAchievements(it) }
+                        ?: achievements.getAllAchievementsForGuests(),
+                leaderBoard = leaderBoardService.getBoard()
         )
     }
 
@@ -72,7 +77,6 @@ class MainController(
     fun event(@PathVariable path: String, request: HttpServletRequest): SingleEventView {
         val event = eventsRepository.findByUrl(path)
         return SingleEventView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 event = event.orElse(null)
         )
@@ -84,7 +88,6 @@ class MainController(
         val user = request.getUser()
 
         return ProfileView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 user = user,
                 group = user.group?.let { GroupEntityDto(it) }
@@ -95,7 +98,6 @@ class MainController(
     @GetMapping("/products")
     fun products(request: HttpServletRequest): ProductsView {
         return ProductsView(
-                userPreview = supplyUserInformation(request),
                 products = productsRepository.findAllByTypeAndVisibleTrue(ProductType.MERCH)
         )
     }
@@ -104,7 +106,6 @@ class MainController(
     @GetMapping("/debts")
     fun debts(request: HttpServletRequest): DebtsView {
         return DebtsView(
-                userPreview = supplyUserInformation(request),
                 debts = debtsRepository.findAllByOwnerId(request.getUser().id)
                         .map { DebtDto(
                                 it.product,
@@ -122,13 +123,11 @@ class MainController(
     @GetMapping("/achievements")
     fun achievements(request: HttpServletRequest): AchievementsView {
         val group = request.getUserOrNull()?.group ?: return AchievementsView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 groupScore = null,
                 leaderBoard = leaderBoardService.getBoard())
 
         return AchievementsView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 groupScore = leaderBoardService.getScoreOfGroup(group),
                 leaderBoard = leaderBoardService.getBoard(),
@@ -142,13 +141,11 @@ class MainController(
     fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
         val achievement = achievements.getById(achievementId)
         val group = request.getUserOrNull()?.group ?: return SingleAchievementView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 achievement = achievement.orElse(null),
                 submission = null)
 
         return SingleAchievementView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 achievement = achievement.orElse(null),
                 submission = achievements.getSubmissionOrNull(group, achievement)
@@ -173,7 +170,6 @@ class MainController(
     @GetMapping("/extra-page/{path}")
     fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
         return ExtraPageView(
-                userPreview = supplyUserInformation(request),
                 warningMessage = config.getWarningMessage(),
                 page = extraPagesRepository.findByUrl(path).orElse(null)
         )

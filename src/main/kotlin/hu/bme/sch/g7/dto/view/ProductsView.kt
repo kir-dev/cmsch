@@ -6,8 +6,5 @@ import hu.bme.sch.g7.model.ProductEntity
 
 data class ProductsView(
         @JsonView(FullDetails::class)
-        val userPreview: UserEntityPreview, // FIXME: ezt mindig le kell küldeni?
-
-        @JsonView(FullDetails::class)
         val products: List<ProductEntity>
 )

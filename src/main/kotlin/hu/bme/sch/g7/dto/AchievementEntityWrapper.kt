@@ -7,7 +7,8 @@ enum class AchievementStatus {
     NOT_SUBMITTED,
     SUBMITTED,
     REJECTED,
-    ACCEPTED
+    ACCEPTED,
+    NOT_LOGGED_IN
 }
 
 data class AchievementEntityWrapper(
