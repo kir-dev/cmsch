@@ -22,9 +22,9 @@ import javax.annotation.PostConstruct
 @Service
 class UserProfileGeneratorService(
         @Value("\${g7web.profile.qr-prefix:G7_}") val prefix: String,
-        @Value("\${g7web.profile.salt:60_LONG_STRING}") val salt: String,
-        @Value("\${g7web.profile.generation-target:/etc/g7web/external/profiles}") val rootPath: String,
-        @Value("\${g7web.profile.qr-code-size:360}") val size: Int
+        @Value("\${g7web.profile.salt:60_LONG_STRING}") private val salt: String,
+        @Value("\${g7web.profile.generation-target:/etc/g7web/external/profiles}") private val rootPath: String,
+        @Value("\${g7web.profile.qr-code-size:360}") private val size: Int
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

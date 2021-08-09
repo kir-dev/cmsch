@@ -14,9 +14,9 @@ import java.time.Instant
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class ProductService(
-        val productRepository: ProductRepository,
-        val soldProductRepository: SoldProductRepository,
-        val userRepository: UserRepository
+        private val productRepository: ProductRepository,
+        private val soldProductRepository: SoldProductRepository,
+        private val userRepository: UserRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -85,5 +85,7 @@ open class ProductService(
         val groupId = user.group?.id ?: return listOf()
         return soldProductRepository.findAllByResponsibleGroupId(groupId)
     }
+
+    fun getProductById(id: Int) = productRepository.findById(id)
 
 }

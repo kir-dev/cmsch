@@ -80,8 +80,8 @@ class GroupController(
 @RequestMapping("/admin/control/users")
 class UserController(
         repo: UserRepository,
-        val profileService: UserProfileGeneratorService,
-        val groups: GroupRepository,
+        private val profileService: UserProfileGeneratorService,
+        private val groups: GroupRepository,
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",
@@ -115,7 +115,7 @@ class ExtraPageController(repo: ExtraPageRepository) : AbstractAdminPanelControl
 @RequestMapping("/admin/control/config")
 class RealtimeConfigController(
         repo: RealtimeConfigRepository,
-        val config: RealtimeConfigService
+        private val config: RealtimeConfigService
 ) : AbstractAdminPanelController<RealtimeConfigEntity>(
         repo,
         "config", "Beállítás", "Beállítások",
@@ -142,7 +142,7 @@ class GuildToUserMappingController(
 @RequestMapping("/admin/control/group-to-user")
 class GroupToUserMappingController(
         repo: GroupToUserMappingRepository,
-        val groups: GroupRepository,
+        private val groups: GroupRepository,
 ) : AbstractAdminPanelController<GroupToUserMappingEntity>(
         repo,
         "group-to-user", "Tankör Tagság", "Tankör Tagságok",

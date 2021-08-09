@@ -23,16 +23,16 @@ import kotlin.reflect.KMutableProperty1
 @Controller
 @RequestMapping("/admin/control/debts-by-group")
 class DebtsByGroupController(
-        val soldProductController: SoldProductRepository,
-        val groupRepository: GroupRepository
+        private val soldProductController: SoldProductRepository,
+        private val groupRepository: GroupRepository
 ) {
 
-    val view = "debts-by-group"
-    val titleSingular = "Értékelés"
-    val titlePlural = "Értékelések"
-    val description = "A tankörök által beadott értékelések"
+    private val view = "debts-by-group"
+    private val titleSingular = "Értékelés"
+    private val titlePlural = "Értékelések"
+    private val description = "A tankörök által beadott értékelések"
 
-    val entitySourceMapping: Map<String, (SoldProductEntity) -> List<String>> =
+    private val entitySourceMapping: Map<String, (SoldProductEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
 
     private val overviewDescriptor = OverviewBuilder(DebtsByGroup::class)

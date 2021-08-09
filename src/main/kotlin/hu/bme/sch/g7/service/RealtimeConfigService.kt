@@ -12,7 +12,7 @@ const val LEADER_BOARD_ENABLED = "LEADER_BOARD_ENABLED"
 
 @Service
 class RealtimeConfigService(
-        val realtimeConfig: RealtimeConfigRepository
+        private val realtimeConfig: RealtimeConfigRepository
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

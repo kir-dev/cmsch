@@ -51,7 +51,7 @@
                                 <a href="#" th:href="|@{/admin/control}/${view}/grade/${row.id}|"><span class="material-icons">grade</span></a>
                             </object>
                             <object th:if="${controlMode == 'sell'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/control}/sell/${row.id}|"><span class="material-icons">sell</span></a>
+                                <a href="#" th:href="|@{/admin/sell}/${row.id}|"><span class="material-icons">sell</span></a>
                             </object>
                             <object th:if="${controlMode == 'payed'}" th:remove="tag">
                                 <a href="#" th:href="|@{/admin/control}/${view}/payed/${row.id}|"><span class="material-icons">check_circle_outline</span></a>

@@ -24,6 +24,7 @@ interface GroupRepository : CrudRepository<GroupEntity, Int> {
 @Repository
 interface NewsRepository : CrudRepository<NewsEntity, Int> {
     fun findTop4ByOrderByTimestamp(): List<NewsEntity>
+    fun findByOrderByTimestamp(): List<NewsEntity>
 }
 
 @Repository

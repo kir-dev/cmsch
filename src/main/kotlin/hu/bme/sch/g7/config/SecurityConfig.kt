@@ -20,7 +20,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
         http.authorizeRequests()
                 .antMatchers("/", "/cdn/profiles/**", "/loggedin", "/login", "/logged-out", "/api/news",
                         "/api/events", "/api/events/**", "/api/products", "/api/extra-page/**", "/api/version",
-                        "/style.css", "/images/**", "/js/**", "/scan/**", "/admin/logout")
+                        "/style.css", "/images/**", "/js/**", "/admin/logout")
                     .permitAll()
 
                 .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile", "/api/debts")
@@ -32,7 +32,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-        http.csrf().ignoringAntMatchers("/api/**", "/scan/**")
+        http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**")
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {

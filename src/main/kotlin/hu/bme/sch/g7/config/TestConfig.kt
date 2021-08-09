@@ -23,18 +23,18 @@ const val A_DAY = 1000 * 60 * 60 * 24
 
 @Configuration
 class TestConfig(
-        val news: NewsRepository,
-        val events: EventRepository,
-        val achievements: AchievementRepository,
-        val users: UserRepository,
-        val extraPages: ExtraPageRepository,
-        val groups: GroupRepository,
-        val products: ProductRepository,
-        val profileService: UserProfileGeneratorService,
-        val groupToUserMapping: GroupToUserMappingRepository,
-        val guildToUserMapping: GuildToUserMappingRepository,
-        val submittedAchievements: SubmittedAchievementRepository,
-        val productsService: ProductService
+        private val news: NewsRepository,
+        private val events: EventRepository,
+        private val achievements: AchievementRepository,
+        private val users: UserRepository,
+        private val extraPages: ExtraPageRepository,
+        private val groups: GroupRepository,
+        private val products: ProductRepository,
+        private val profileService: UserProfileGeneratorService,
+        private val groupToUserMapping: GroupToUserMappingRepository,
+        private val guildToUserMapping: GuildToUserMappingRepository,
+        private val submittedAchievements: SubmittedAchievementRepository,
+        private val productsService: ProductService
 ) {
 
     private var now = System.currentTimeMillis()

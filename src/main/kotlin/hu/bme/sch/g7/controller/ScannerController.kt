@@ -5,6 +5,8 @@ import hu.bme.sch.g7.dto.scan.NeptunBuyRequest
 import hu.bme.sch.g7.dto.scan.ResolveRequest
 import hu.bme.sch.g7.dto.view.SellStatus
 import hu.bme.sch.g7.service.ProductService
+import hu.bme.sch.g7.service.RealtimeConfigService
+import hu.bme.sch.g7.service.UserProfileGeneratorService
 import hu.bme.sch.g7.service.UserService
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
@@ -19,15 +21,19 @@ import javax.servlet.http.HttpServletRequest
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 class ScannerController(
         val userService: UserService,
-        val productService: ProductService
+        val productService: ProductService,
+        val profileService: UserProfileGeneratorService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/{id}")
     fun sell(@PathVariable id: Int, model: Model): String {
-//        val product = productService.getProduct
-//        model.addAttribute("itemName", )
+        val product = productService.getProductById(id)
+        model.addAttribute("itemName", product.map { it.name }.orElse("Hibás termék azonosító"))
+        model.addAttribute("itemPrice", "${product.map { it.price }.orElse(0)} JMF")
+        model.addAttribute("itemId", id)
+        model.addAttribute("prefix", profileService.prefix)
         return "scanner"
     }
 

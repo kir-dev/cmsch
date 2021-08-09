@@ -33,14 +33,14 @@ const val CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME = "circles"
 
 @Controller
 open class LoginController(
-        val authSch: AuthSchAPI,
-        val users: UserService,
-        val profileService: UserProfileGeneratorService,
-        val groupToUserMapping: GroupToUserMappingRepository,
-        val guildToUserMapping: GuildToUserMappingRepository,
-        val groups: GroupRepository,
-        @Value("\${g7web.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") val grantStaffGroupName: String,
-        @Value("\${g7web.sysadmins:}") val systemAdmins: String
+        private val authSch: AuthSchAPI,
+        private val users: UserService,
+        private val profileService: UserProfileGeneratorService,
+        private val groupToUserMapping: GroupToUserMappingRepository,
+        private val guildToUserMapping: GuildToUserMappingRepository,
+        private val groups: GroupRepository,
+        @Value("\${g7web.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") private val grantStaffGroupName: String,
+        @Value("\${g7web.sysadmins:}") private val systemAdmins: String
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

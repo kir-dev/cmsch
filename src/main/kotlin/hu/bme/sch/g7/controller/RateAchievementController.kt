@@ -21,15 +21,15 @@ const val CONTROL_MODE_GRADE = "grade"
 @Controller
 @RequestMapping("/admin/control/rate-achievements")
 class RateAchievementController(
-        val submittedRepository: SubmittedAchievementRepository
+        private val submittedRepository: SubmittedAchievementRepository
 ) {
 
-    val view = "rate-achievements"
-    val titleSingular = "Értékelés"
-    val titlePlural = "Értékelések"
-    val description = "A tankörök által beadott értékelések"
+    private val view = "rate-achievements"
+    private val titleSingular = "Értékelés"
+    private val titlePlural = "Értékelések"
+    private val description = "A tankörök által beadott értékelések"
 
-    val entitySourceMapping: Map<String, (SubmittedAchievementEntity) -> List<String>> =
+    private val entitySourceMapping: Map<String, (SubmittedAchievementEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
 
     private val overviewDescriptor = OverviewBuilder(GradedAchievementGroup::class)

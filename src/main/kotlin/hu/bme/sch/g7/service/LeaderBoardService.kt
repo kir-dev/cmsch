@@ -14,9 +14,9 @@ import javax.annotation.PostConstruct
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class LeaderBoardService(
-        val submissions: SubmittedAchievementRepository,
-        val achievements: AchievementRepository,
-        val config: RealtimeConfigService
+        private val submissions: SubmittedAchievementRepository,
+        private val achievements: AchievementRepository,
+        private val config: RealtimeConfigService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

@@ -23,16 +23,16 @@ const val CONTROL_MODE_EDIT = "edit"
 const val CONTROL_MODE_VIEW = "view"
 
 open class AbstractAdminPanelController<T : ManagedEntity>(
-        val repo: CrudRepository<T, Int>,
-        val view: String,
-        val titleSingular: String,
-        val titlePlural: String,
-        val description: String,
+        private val repo: CrudRepository<T, Int>,
+        private val view: String,
+        private val titleSingular: String,
+        private val titlePlural: String,
+        private val description: String,
         classType: KClass<T>,
-        val supplier: Supplier<T>,
-        val entitySourceMapping: Map<String, (T?) -> List<String>> =
+        private val supplier: Supplier<T>,
+        private val entitySourceMapping: Map<String, (T?) -> List<String>> =
                 mapOf(Nothing::class.simpleName!! to { listOf() }),
-        val controlMode: String = CONTROL_MODE_EDIT_DELETE
+        private val controlMode: String = CONTROL_MODE_EDIT_DELETE
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

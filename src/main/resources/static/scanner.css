@@ -63,6 +63,8 @@ body {
     display: inline-block;
     color: #FFFFFF;
     font-size: 24px;
+    margin: 0 6px;
+    opacity: 1;
 }
 
 .controls button span {
@@ -105,4 +107,12 @@ h2 {
     text-shadow: 2px 2px 0 #000;
     z-index: 10;
     width: 100%;
+}
+
+#start-button {
+    display: none;
+}
+
+#debug-box {
+    display: none;
 }

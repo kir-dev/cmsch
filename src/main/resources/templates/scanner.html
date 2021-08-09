@@ -10,9 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../static/scanner.css" th:href="@{/scanner.css}">
-    <meta name="theme-color" content="#444444">
-    <meta name="msapplication-navbutton-color" content="#444444"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="#444444"/>
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-navbutton-color" content="#000000"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#000000"/>
     <meta name="msapplication-tap-highlight" content="no">
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}" />
     <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/apple-touch-icon.png}" />
@@ -30,14 +30,14 @@
         <div class="cover"></div>
     </div>
     <div class="info">
-        <h1 id="item-name"></h1>
-        <h2 id="item-price"></h2>
+        <h1 id="item-name" ondblclick="document.getElementById('debug-box').style.display = 'none'"></h1>
+        <h2 id="item-price" ondblclick="document.getElementById('debug-box').style.display = 'block'"></h2>
     </div>
     <div class="controls">
         <button id="exit"><span class="material-icons">arrow_back</span></button>
         <button id="flash-toggle"><span id="flash-state" class="material-icons">flashlight_off</span></button>
-        <button id="start-button"><span class="material-icons">play_arrow</span></button>
-        <button id="stop-button"><span class="material-icons">close</span></button>
+        <button id="start-button"><span class="material-icons">videocam_off</span></button>
+        <button id="stop-button"><span class="material-icons">videocam</span></button>
         <button id="enter-neptun"><span class="material-icons">school</span></button>
 
         <div class="hidden">
@@ -47,9 +47,10 @@
         </div>
     </div>
 
-    <div class="display">
+    <div class="display" id="debug-box">
         <span id="cam-qr-result"></span><br>
-        <span id="prompt-name"></span>
+        <span id="prompt-name"></span><br>
+        <span id="debug"></span>
     </div>
 
 <script type="module" th:inline="javascript">
@@ -57,16 +58,16 @@
     import QrScanner from "/js/qr-scanner.min.js";
     QrScanner.WORKER_PATH = '/js/qr-scanner-worker.min.js';
 
-    const codePrefix = "G7_";
-    const itemName = "Keddi kaja";
-    const itemPrice = "550 JMF";
-    const itemId = 38;
-    const parentUrl = "/admin/control/sell-food";
-    const baseUrl = /*[[@{/scan}]]*/ "https://192.168.0.60:8080/scan";
-    // const baseUrl = "https://127.0.0.1:8080/scan";
+    const codePrefix = /*[[${prefix}]]*/ "G7_";
+    const itemName = /*[[${itemName}]]*/ "Keddi kaja";
+    const itemPrice = /*[[${itemPrice}]]*/ "550 JMF";
+    const itemId = /*[[${itemId}]]*/ 38;
+    const parentUrl = "/admin/control";
+    const baseUrl = /*[[@{/admin/sell}]]*/ "https://192.168.0.60:8080/scan";
 
     let lastReading = "n/a";
     let lastSuccessful = 0;
+    let scanning = true;
 
     const video = document.getElementById('qr-video');
     const camHasCamera = document.getElementById('cam-has-camera');
@@ -81,6 +82,7 @@
             const name = await httpFetchData('POST', baseUrl + '/resolve', {
                 "g7id": g7id
             });
+            document.getElementById('prompt-name').innerText = name;
             if (confirm(`TRANZAKCIÓ JÓVÁHAGYÁSA\nTermék: ${itemName} (${itemPrice})\nVevő: ${name}`)) {
                 const result = await httpFetchData('POST', baseUrl + '/buy-g7id', {
                     "productId": itemId,
@@ -98,11 +100,16 @@
     }
 
     function setResult(label, result) {
-        if (!result.startsWith(codePrefix))
+        if (!result.startsWith(codePrefix)) {
+            document.getElementById('debug').innerText = "Nem G7 QR kód!";
             return;
-        if (result === lastReading && (Date.now() - lastSuccessful) < 5000)
+        }
+        if (result === lastReading && (Date.now() - lastSuccessful) < 5000) {
+            document.getElementById('debug').innerText = "Cooldown nem járt le!";
             return;
+        }
 
+        document.getElementById('debug').innerText = "Feloldás";
         lastReading = result;
         lastSuccessful = Date.now();
 
@@ -122,8 +129,6 @@
         camQrResult.style.color = 'inherit';
     });
     scanner.start().then(() => {
-        document.getElementById('item-name').innerText = itemName;
-        document.getElementById('item-price').innerText = itemPrice;
 
         scanner.hasFlash().then(hasFlash => {
             camHasFlash.textContent = hasFlash;
@@ -135,16 +140,26 @@
             }
         });
     });
+    document.getElementById('item-name').innerText = itemName;
+    document.getElementById('item-price').innerText = itemPrice;
+    document.getElementById('stop-button').style.display = 'inline-block';
+    document.getElementById('start-button').style.display = 'none';
 
     // for debugging
     window.scanner = scanner;
 
     document.getElementById('start-button').addEventListener('click', () => {
         scanner.start();
+        document.getElementById('stop-button').style.display = 'inline-block';
+        document.getElementById('start-button').style.display = 'none';
+        scanning = true;
     });
 
     document.getElementById('stop-button').addEventListener('click', () => {
         scanner.stop();
+        document.getElementById('start-button').style.display = 'inline-block';
+        document.getElementById('stop-button').style.display = 'none';
+        scanning = false;
     });
 
     document.getElementById('exit').addEventListener('click', () => {
@@ -180,6 +195,13 @@
         });
         return response.text();
     }
+
+    window.addEventListener("orientationchange", function() {
+        if (scanning) {
+            scanner.stop();
+            setTimeout(() => scanner.start(), 200);
+        }
+    }, false);
 
 </script>
 </body>

@@ -21,21 +21,21 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/api")
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 class MainController(
-        val config: RealtimeConfigService,
+        private val config: RealtimeConfigService,
 
-        val newsRepository: NewsRepository,
-        @Value("\${g7web.home.title:}") val title: String,
-        @Value("\${g7web.home.interval:}") val interval: String,
-        @Value("\${g7web.home.startsAt:0}") val startsAt: Long,
+        private val newsRepository: NewsRepository,
+        @Value("\${g7web.home.title:}") private val title: String,
+        @Value("\${g7web.home.interval:}") private val interval: String,
+        @Value("\${g7web.home.startsAt:0}") private val startsAt: Long,
 
-        val eventsRepository: EventRepository,
+        private val eventsRepository: EventRepository,
         @Value("\${g7web.zone-id:CET}") zoneId: String,
 
-        val leaderBoardService: LeaderBoardService,
-        val achievements: AchievementsService,
-        val extraPagesRepository: ExtraPageRepository,
-        val debtsRepository: SoldProductRepository,
-        val productsRepository: ProductRepository
+        private val leaderBoardService: LeaderBoardService,
+        private val achievements: AchievementsService,
+        private val extraPagesRepository: ExtraPageRepository,
+        private val debtsRepository: SoldProductRepository,
+        private val productsRepository: ProductRepository
 ) {
 
     private val timeZone = ZoneId.of(zoneId)
@@ -49,7 +49,7 @@ class MainController(
                 interval = interval,
                 warningMessage = config.getWarningMessage(),
                 startsAt = startsAt,
-                news = newsRepository.findTop4ByOrderByTimestamp()
+                news = newsRepository.findByOrderByTimestamp()
         )
     }
 
@@ -181,6 +181,6 @@ class MainController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.9"
+    fun version(): String = "v1.0.10"
 
 }

@@ -16,14 +16,14 @@ const val CONTROL_MODE_SELL = "sell"
 @Controller
 @RequestMapping("/admin/control")
 class SellProductsController(
-        val productService: ProductService
+        private val productService: ProductService
 ) {
 
     private val descriptor = OverviewBuilder(ProductEntity::class)
 
-    val titleSingular = "Termék"
-    val titlePlural = "Termékek"
-    val description = "Válassz terméket az eladáshoz"
+    private val titleSingular = "Termék"
+    private val titlePlural = "Termékek"
+    private val description = "Válassz terméket az eladáshoz"
 
     @GetMapping("/sell-food")
     fun sellFood(model: Model, request: HttpServletRequest): String {

@@ -20,8 +20,8 @@ const val CONTROL_MODE_PAYED = "payed"
 @Controller
 @RequestMapping("/admin/control")
 class AdminPanelCustomController(
-        val leaderBoardService: LeaderBoardService,
-        val productService: ProductService
+        private val leaderBoardService: LeaderBoardService,
+        private val productService: ProductService
 ) {
 
     private val topListDescriptor = OverviewBuilder(TopListEntryDto::class)
