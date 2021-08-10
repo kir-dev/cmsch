@@ -23,7 +23,8 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/style.css", "/images/**", "/js/**", "/admin/logout")
                     .permitAll()
 
-                .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile", "/api/debts")
+                .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile",
+                        "/api/debts", "/entrypoint")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")

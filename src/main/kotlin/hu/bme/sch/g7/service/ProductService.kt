@@ -16,7 +16,8 @@ import java.time.Instant
 open class ProductService(
         private val productRepository: ProductRepository,
         private val soldProductRepository: SoldProductRepository,
-        private val userRepository: UserRepository
+        private val userRepository: UserRepository,
+        private val clock: ClockService
 ) {
 
     @Transactional(readOnly = true)
@@ -45,7 +46,7 @@ open class ProductService(
         if (product.available.not())
             return SellStatus.ITEM_NOT_AVAILABLE
         val groupId = buyer.group?.id ?: return SellStatus.NOT_IN_GROUP
-        val date = Instant.now().toEpochMilli()
+        val date = clock.getTimeInSeconds()
 
         soldProductRepository.save(SoldProductEntity(
                 0,
@@ -70,7 +71,7 @@ open class ProductService(
             if (it.payed)
                 return@ifPresent
 
-            val date = Instant.now().toEpochMilli()
+            val date = clock.getTimeInSeconds()
             it.payed = true
             it.payedAt = date
             it.responsibleId = responsibleUser.id

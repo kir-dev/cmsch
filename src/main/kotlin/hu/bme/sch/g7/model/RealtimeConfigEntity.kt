@@ -24,9 +24,10 @@ data class RealtimeConfigEntity(
     @property:GenerateOverview(columnName = "Kulcs", order = 1)
     var key: String = "",
 
+    @Lob
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 255, order = 2, label = "Érték")
+    @property:GenerateInput(order = 2, label = "Érték")
     @property:GenerateOverview(columnName = "Érték", order = 2)
     var value: String = ""
 

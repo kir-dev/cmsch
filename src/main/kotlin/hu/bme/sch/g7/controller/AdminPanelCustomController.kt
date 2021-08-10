@@ -5,6 +5,7 @@ import hu.bme.sch.g7.dto.TopListEntryDto
 import hu.bme.sch.g7.model.SoldProductEntity
 import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.ProductService
+import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.util.getUser
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
+import kotlin.random.Random
+import kotlin.random.asJavaRandom
 
 const val CONTROL_MODE_TOPLIST = "toplist"
 const val CONTROL_MODE_PAYED = "payed"
@@ -21,7 +24,8 @@ const val CONTROL_MODE_PAYED = "payed"
 @RequestMapping("/admin/control")
 class AdminPanelCustomController(
         private val leaderBoardService: LeaderBoardService,
-        private val productService: ProductService
+        private val productService: ProductService,
+        private val config: RealtimeConfigService
 ) {
 
     private val topListDescriptor = OverviewBuilder(TopListEntryDto::class)
@@ -35,6 +39,10 @@ class AdminPanelCustomController(
     @GetMapping("/basics")
     fun dashboard(model: Model, request: HttpServletRequest): String {
         model.addAttribute("user", request.getUser())
+        model.addAttribute("motd", config.getMotd())
+        model.addAttribute("website", config.getWebsiteUrl())
+        model.addAttribute("staffMessage", config.getStaffMessage())
+
         return "admin"
     }
 

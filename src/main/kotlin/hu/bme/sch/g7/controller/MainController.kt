@@ -46,12 +46,12 @@ class MainController(
     @JsonView(Preview::class)
     @GetMapping("/events")
     fun events(request: HttpServletRequest): EventsView {
-        val events = eventsRepository.findAll()
+        val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
         val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
         val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
         return EventsView(
                 warningMessage = config.getWarningMessage(),
-                eventsToday = events.filter { it.heldTimestamp > dayStart && it.heldTimestamp < dayEnd },
+                eventsToday = events.filter { it.timestampStart > dayStart && it.timestampStart < dayEnd },
                 allEvents = events
         )
     }
@@ -59,16 +59,17 @@ class MainController(
     @JsonView(Preview::class)
     @GetMapping("/home")
     fun home(request: HttpServletRequest): HomeView {
-        val events = eventsRepository.findAll()
+        val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
         val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
         val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
         return HomeView(
                 warningMessage = config.getWarningMessage(),
                 news = newsRepository.findTop4ByOrderByTimestamp(),
-                eventsToday = events.filter { it.heldTimestamp > dayStart && it.heldTimestamp < dayEnd },
+                eventsToday = events.filter { it.timestampStart > dayStart && it.timestampStart < dayEnd },
                 achievements = request.getUserOrNull()?.group?.let { achievements.getAllAchievements(it) }
                         ?: achievements.getAllAchievementsForGuests(),
-                leaderBoard = leaderBoardService.getBoard()
+                leaderBoard = leaderBoardService.getBoard(),
+                leaderBoardVisible = config.isLeaderBoardEnabled()
         )
     }
 
@@ -177,6 +178,6 @@ class MainController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.10"
+    fun version(): String = "v1.0.11"
 
 }

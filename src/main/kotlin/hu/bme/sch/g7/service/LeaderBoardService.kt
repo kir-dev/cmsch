@@ -1,6 +1,7 @@
 package hu.bme.sch.g7.service
 
 import hu.bme.sch.g7.dao.AchievementRepository
+import hu.bme.sch.g7.dao.GroupRepository
 import hu.bme.sch.g7.dao.SubmittedAchievementRepository
 import hu.bme.sch.g7.dto.TopListEntryDto
 import hu.bme.sch.g7.model.GroupEntity
@@ -16,6 +17,7 @@ import javax.annotation.PostConstruct
 open class LeaderBoardService(
         private val submissions: SubmittedAchievementRepository,
         private val achievements: AchievementRepository,
+        private val groups: GroupRepository,
         private val config: RealtimeConfigService
 ) {
 
@@ -46,6 +48,7 @@ open class LeaderBoardService(
         cachedTopList = submissions.findAll()
                 .asSequence()
                 .groupBy { it.groupName }
+                .filter { groups.findByName(it.key).map { it.races }.orElse(false) }
                 .map { TopListEntryDto(it.key, it.value.sumOf { it.score }) }
                 .sortedByDescending { it.score }
 

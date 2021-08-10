@@ -13,6 +13,18 @@
                 <p class="highlight">
                     A G7 weboldalának beállításaihoz válassz a menüből.
                 </p>
+
+                <span>és ne felejtsétek:</span>
+                <p th:text="${motd}"></p>
+
+                <div th:if="${staffMessage != ''}"  class="hr"></div>
+
+                <h3 th:if="${staffMessage != ''}" class="centered-text">SZOLGÁLATI KÖZLEMÉNY</h3>
+                <p th:if="${staffMessage != ''}"  th:text="${staffMessage}" class="centered-text"></p>
+
+                <div th:if="${staffMessage != ''}"  class="hr"></div>
+
+                <a th:href="${website ?: '#'}" class="btn">Vissza a G7.SCH-ra</a>
             </div>
         </div>
     </div>

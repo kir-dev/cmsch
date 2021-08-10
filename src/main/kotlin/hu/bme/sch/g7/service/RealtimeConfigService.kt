@@ -9,6 +9,9 @@ import javax.annotation.PostConstruct
 
 const val WARNING_MESSAGE = "WARNING_MESSAGE"
 const val LEADER_BOARD_ENABLED = "LEADER_BOARD_ENABLED"
+const val MESSAGE_OF_THE_DAY = "MESSAGE_OF_THE_DAY"
+const val WEBSITE_URL = "WEBSITE_URL"
+const val STAFF_MESSAGE = "STAFF_MESSAGE"
 
 @Service
 class RealtimeConfigService(
@@ -25,6 +28,15 @@ class RealtimeConfigService(
 
         if (realtimeConfig.findByKey(LEADER_BOARD_ENABLED).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_ENABLED, "true"))
+
+        if (realtimeConfig.findByKey(MESSAGE_OF_THE_DAY).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, MESSAGE_OF_THE_DAY, "Jobb ma egy túzok, mint holnap egy veréb!"))
+
+        if (realtimeConfig.findByKey(STAFF_MESSAGE).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, STAFF_MESSAGE, "Szorgos népünk győzni fog!"))
+
+        if (realtimeConfig.findByKey(WEBSITE_URL).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, "https://g7.sch.bme.hu/"))
     }
 
     fun resetCache() {
@@ -34,6 +46,30 @@ class RealtimeConfigService(
 
     fun getWarningMessage(): String {
         return cache.computeIfAbsent(WARNING_MESSAGE) { key ->
+            realtimeConfig.findByKey(key)
+                    .map { it.value }
+                    .orElse("")
+        }
+    }
+
+    fun getMotd(): String {
+        return cache.computeIfAbsent(MESSAGE_OF_THE_DAY) { key ->
+            realtimeConfig.findByKey(key)
+                    .map { it.value }
+                    .orElse("")
+        }
+    }
+
+    fun getWebsiteUrl(): String {
+        return cache.computeIfAbsent(WEBSITE_URL) { key ->
+            realtimeConfig.findByKey(key)
+                    .map { it.value }
+                    .orElse("")
+        }
+    }
+
+    fun getStaffMessage(): String {
+        return cache.computeIfAbsent(STAFF_MESSAGE) { key ->
             realtimeConfig.findByKey(key)
                     .map { it.value }
                     .orElse("")

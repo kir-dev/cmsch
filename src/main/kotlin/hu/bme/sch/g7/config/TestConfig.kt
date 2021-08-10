@@ -63,7 +63,8 @@ class TestConfig(
                 lastLatitude = "19.42324",
                 lastLongitude = "41.53634",
                 lastTimeLocationChanged = now,
-                lastTimeUpdatedUser = "Kelep Elek"
+                lastTimeUpdatedUser = "Kelep Elek",
+                races = true
         ))
 
         groups.save(GroupEntity(
@@ -76,7 +77,8 @@ class TestConfig(
                 lastLatitude = "19.6633",
                 lastLongitude = "41.420",
                 lastTimeLocationChanged = now,
-                lastTimeUpdatedUser = "Tony Stork"
+                lastTimeUpdatedUser = "Tony Stork",
+                races = true
         ))
 
         groups.save(GroupEntity(
@@ -89,7 +91,8 @@ class TestConfig(
                 lastLatitude = "19.6633",
                 lastLongitude = "41.420",
                 lastTimeLocationChanged = now,
-                lastTimeUpdatedUser = "Tony Stork"
+                lastTimeUpdatedUser = "Tony Stork",
+                races = true
         ))
     }
 
@@ -119,10 +122,9 @@ class TestConfig(
                 url = "hetfoi-elso-program",
                 title = "Hétfői Első Program",
                 category = "Egyetemi",
-                heldDay = "Hétfő",
-                heldInterval = "09:00 - 12:00",
                 place = "Schönherz",
-                heldTimestamp = now - A_DAY,
+                timestampStart = now - A_DAY,
+                timestampEnd = now - A_DAY + (3 * 3600),
                 previewDescription = LOREM_IPSUM_SHORT_1,
                 description = LOREM_IPSUM_LONG_1,
                 visible = true,
@@ -134,10 +136,9 @@ class TestConfig(
                 url = "hetfoi-masodik-program",
                 title = "Hétfői Második Program",
                 category = "Szórakozás",
-                heldDay = "Hétfő",
-                heldInterval = "13:00 - 16:00",
                 place = "Schönherz",
-                heldTimestamp = now - A_DAY + (3600),
+                timestampStart = now - A_DAY + (3600),
+                timestampEnd = now - A_DAY + (3 * 3600),
                 previewDescription = LOREM_IPSUM_SHORT_2,
                 description = LOREM_IPSUM_LONG_2,
                 visible = true,
@@ -149,10 +150,9 @@ class TestConfig(
                 url = "hetfoi-tiltott-program",
                 title = "Hétfői Tiltott Program",
                 category = "Öhömm",
-                heldDay = "Hétfő",
-                heldInterval = "21:00 - 22:00",
                 place = "Lovagterem",
-                heldTimestamp = now - A_DAY + (5 * 3600),
+                timestampStart = now - A_DAY + (5 * 3600),
+                timestampEnd = now - A_DAY + (12 * 3600),
                 previewDescription = "Ennek nem kellene látszani",
                 description = "Ennek nem kellene látszani (full leírás)",
                 visible = false,
@@ -164,10 +164,9 @@ class TestConfig(
                 url = "kedd-elso-program",
                 title = "Kedden Volt",
                 category = "Szórakozás",
-                heldDay = "Kedd",
-                heldInterval = "08:30 - 09:00",
                 place = "Schönherz",
-                heldTimestamp = now - (3600),
+                timestampStart = now - (3600),
+                timestampEnd = now - (100),
                 previewDescription = LOREM_IPSUM_SHORT_2,
                 description = LOREM_IPSUM_LONG_2,
                 visible = true,
@@ -179,10 +178,8 @@ class TestConfig(
                 url = "fene-kedd",
                 title = "Fene Kedd",
                 category = "Szórakozás",
-                heldDay = "Kedd",
-                heldInterval = "10:00 - 16:00",
                 place = "Feneketlen tó",
-                heldTimestamp = now,
+                timestampStart = now,
                 previewDescription = LOREM_IPSUM_SHORT_3,
                 description = LOREM_IPSUM_LONG_3,
                 visible = true,
@@ -194,10 +191,8 @@ class TestConfig(
                 url = "kopa-szi-get",
                 title = "Kopa-Sziget",
                 category = "Bulika",
-                heldDay = "Kedd",
-                heldInterval = "21:00 - 24:00",
                 place = "Schönherz",
-                heldTimestamp = now + (4 * 3600),
+                timestampStart = now + (4 * 3600),
                 previewDescription = LOREM_IPSUM_SHORT_3,
                 description = LOREM_IPSUM_LONG_3,
                 visible = true,
@@ -209,10 +204,8 @@ class TestConfig(
                 url = "watt-fesztivál",
                 title = "Watt",
                 category = "Egyetemi",
-                heldDay = "Szerda",
-                heldInterval = "09:00 - 16:00",
                 place = "Drop-szerda klub",
-                heldTimestamp = now + A_DAY,
+                timestampStart = now + A_DAY,
                 previewDescription = LOREM_IPSUM_SHORT_1,
                 description = LOREM_IPSUM_LONG_1,
                 visible = true,
@@ -224,10 +217,8 @@ class TestConfig(
                 url = "bika-sound",
                 title = "Bika Sound",
                 category = "Szórakozás",
-                heldDay = "Szerda",
-                heldInterval = "17:00 - 23:00",
                 place = "Bikás park",
-                heldTimestamp = now - A_DAY + (3600),
+                timestampStart = now - A_DAY + (3600),
                 previewDescription = LOREM_IPSUM_SHORT_2,
                 description = LOREM_IPSUM_LONG_2,
                 visible = true,

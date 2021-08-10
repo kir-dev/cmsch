@@ -13,6 +13,7 @@ interface AchievementRepository : CrudRepository<AchievementEntity, Int> {
 @Repository
 interface EventRepository : CrudRepository<EventEntity, Int> {
     override fun findAll(): List<EventEntity>
+    fun findAllByVisibleTrueOrderByTimestampStart(): List<EventEntity>
     fun findByUrl(url: String): Optional<EventEntity>
 }
 

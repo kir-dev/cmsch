@@ -2,6 +2,7 @@ package hu.bme.sch.g7.controller
 
 import hu.bme.sch.g7.dao.*
 import hu.bme.sch.g7.model.*
+import hu.bme.sch.g7.service.ClockService
 import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.service.UserProfileGeneratorService
 import hu.bme.sch.g7.util.getUser
@@ -48,7 +49,10 @@ class ProductController(repo: ProductRepository) : AbstractAdminPanelController<
 
 @Controller
 @RequestMapping("/admin/control/debts")
-class SoldProductController(repo: SoldProductRepository) : AbstractAdminPanelController<SoldProductEntity>(
+class SoldProductController(
+        repo: SoldProductRepository,
+        private val clock: ClockService
+) : AbstractAdminPanelController<SoldProductEntity>(
         repo,
         "debts", "Tranzakció", "Tranzakciók",
         "Az összes eladásból származó tranzakciók.",
@@ -56,7 +60,7 @@ class SoldProductController(repo: SoldProductRepository) : AbstractAdminPanelCon
         controlMode = CONTROL_MODE_EDIT
 ) {
     override fun onEntityPreSave(entity: SoldProductEntity, request: HttpServletRequest) {
-        val date = Instant.now().toEpochMilli()
+        val date = clock.getTimeInSeconds()
         val user = request.getUser()
         entity.log = "${entity.log} '${user.fullName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finsihed: ${entity.finsihed}] at $date;"
     }

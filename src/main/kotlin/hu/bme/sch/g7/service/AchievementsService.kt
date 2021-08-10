@@ -12,13 +12,16 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.lang.IllegalStateException
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.*
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class AchievementsService(
         val achievements: AchievementRepository,
-        val submitted: SubmittedAchievementRepository
+        val submitted: SubmittedAchievementRepository,
+        val clock: ClockService
 ) {
 
     companion object {
@@ -82,6 +85,11 @@ open class AchievementsService(
         println(answer)
         val achievement = achievements.findById(answer.achievementId).orElse(null)
                 ?: return AchievementSubmissionStatus.INVALID_ACHIEVEMENT_ID
+
+        if (achievement.availableFrom > clock.getTimeInSeconds()
+                || achievement.availableTo < clock.getTimeInSeconds()) {
+            return AchievementSubmissionStatus.TOO_EARLY_OR_LATE
+        }
 
         val previous = submitted.findByAchievement_IdAndGroupId(answer.achievementId, groupId)
         if (previous.isPresent) {

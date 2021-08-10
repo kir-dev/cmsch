@@ -39,21 +39,15 @@ data class EventEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Mikor lesz a program?", note = "Unix timestamp (ms)")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Mikor lesz a program?")
     @property:GenerateOverview(visible = false)
-    var heldTimestamp: Long = 0,
+    var timestampStart: Long = 0,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 5, label = "Melyik nap lesz?")
-    @property:GenerateOverview(columnName = "Nap", order = 2, centered = true)
-    var heldDay: String = "",
-
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(order = 6, label = "Program időtartama")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Meddig tart a program?")
     @property:GenerateOverview(visible = false)
-    var heldInterval: String = "",
+    var timestampEnd: Long = 0,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)

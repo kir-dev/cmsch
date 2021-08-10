@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout :: head">
+</head>
+<body>
+<div class="content">
+    <div class="greetings">
+        <h2 th:text="${greetings ?: 'n/a'}">Hey!</h2>
+        <span>és ne felejtsétek:</span>
+        <h3 th:text="${motd ?: 'n/a'}">Don't forget to open the banana before eating it!</h3>
+
+        <a href="#" th:href="${website ?: '#'}" class="big-btn">Vissza a weblapra</a>
+        <a href="#" th:href="@{/admin/control/basics}" class="big-btn">Tovább az admin panelbe</a>
+    </div>
+</div>
+
+<script>
+    flatpickr(".datetime-picker", {
+        enableTime: true,
+        altInput: true,
+        altFormat: "Y-m-d H:i",
+        dateFormat: "U"
+    });
+</script>
+
+</body>
+</html>

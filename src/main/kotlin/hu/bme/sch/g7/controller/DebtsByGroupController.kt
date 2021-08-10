@@ -5,18 +5,13 @@ import hu.bme.sch.g7.admin.INTERPRETER_INHERIT
 import hu.bme.sch.g7.admin.OverviewBuilder
 import hu.bme.sch.g7.dao.GroupRepository
 import hu.bme.sch.g7.dao.SoldProductRepository
-import hu.bme.sch.g7.dao.SubmittedAchievementRepository
 import hu.bme.sch.g7.dto.virtual.DebtsByGroup
-import hu.bme.sch.g7.dto.virtual.GradedAchievementGroup
 import hu.bme.sch.g7.model.SoldProductEntity
-import hu.bme.sch.g7.model.SubmittedAchievementEntity
+import hu.bme.sch.g7.service.ClockService
 import hu.bme.sch.g7.util.getUser
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
-import java.time.Instant
 import javax.servlet.http.HttpServletRequest
 import kotlin.reflect.KMutableProperty1
 
@@ -24,7 +19,8 @@ import kotlin.reflect.KMutableProperty1
 @RequestMapping("/admin/control/debts-by-group")
 class DebtsByGroupController(
         private val soldProductController: SoldProductRepository,
-        private val groupRepository: GroupRepository
+        private val groupRepository: GroupRepository,
+        private val clock: ClockService
 ) {
 
     private val view = "debts-by-group"
@@ -115,7 +111,7 @@ class DebtsByGroupController(
         }
 
         val user = request.getUser()
-        val date = Instant.now().toEpochMilli()
+        val date = clock.getTimeInSeconds()
         val transaction = entity.get()
         updateEntity(submittedDescriptor, transaction, dto)
         transaction.log = "${transaction.log} '${user.fullName}'(${user.id}) changed [shipped: ${transaction.shipped}, payed: ${transaction.payed}, finsihed: ${transaction.finsihed}] at $date;"

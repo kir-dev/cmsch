@@ -94,7 +94,13 @@ data class GroupEntity(
     @property:GenerateInput(type = INPUT_TYPE_LIST_ENTITIES, order = 12, label = "Tankör tagjai",
             ignore = true, enabled = false, entitySource = "UserEntity")
     @property:GenerateOverview(visible = false)
-    var members: List<UserEntity> = listOf()
+    var members: List<UserEntity> = listOf(),
+
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Játszik a tankör versenyben?")
+    @property:GenerateOverview(visible = false)
+    var races: Boolean = false
 
 ): ManagedEntity {
     override fun toString(): String {
