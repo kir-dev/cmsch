@@ -42,7 +42,7 @@ data class NewsEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 4, label = "Kép a hír mellé")
+    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 4, label = "Kép a hír mellé", fileType = "image")
     @property:GenerateOverview(visible = false)
     var imageUrl: String = "",
 
@@ -60,7 +60,7 @@ data class NewsEntity(
 
     @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     var timestamp: Long = 0,
 

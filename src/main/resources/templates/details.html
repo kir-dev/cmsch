@@ -146,12 +146,34 @@
                                        th:id="|input${iter.index}|"
                                        th:disabled="${!input.second.enabled}"
                                 />
+
+                                <object th:if="${input.second.fileType == 'image' && editMode}" th:remove="tag">
+                                    <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">
+                                        <a href="#"
+                                           target="_blank"
+                                           th:href="|@{/cdn/}${input.first.get(data)}|">
+                                            <img src="#"
+                                                 alt="Image preview"
+                                                 width="528"
+                                                 th:id="|input${iter.index}|"
+                                                 th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
+                                                 th:src="|@{/cdn/}${input.first.get(data)}|"/>
+                                        </a>
+                                        <br>
+                                        <a href="#"
+                                           target="_blank"
+                                           th:href="|@{/cdn/}${input.first.get(data)}|"
+                                           class="btn btn-secondary">
+                                            Megnyitás nagyban (új lapon)
+                                        </a>
+                                    </object>
+                                    <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
+                                        Nincs kép feltöltve
+                                    </p>
+                                </object>
+
                                 <span class="note" th:text="${input.second.note}"></span>
-    <!--                            <img alt="Preview image"-->
-    <!--                                 height="200px"-->
-    <!--                                 th:if="${input.second.fileType == 'image'}"-->
-    <!--                                 th:src="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"-->
-    <!--                            />-->
+
                             </object>
 
                             <object th:if="${input.second.type == 'checkbox'}" th:remove="tag">
