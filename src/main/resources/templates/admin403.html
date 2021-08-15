@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout :: head">
+</head>
+<body>
+<div class="content">
+    <div class="split">
+        <div th:replace="layout :: mobile"></div>
+        <div th:replace="layout :: menu(${user})">
+        </div>
+        <div class="payload">
+            <div class="page">
+                <h2>BELÉPÉS MEGTAGADVA</h2>
+                <p class="highlight">
+                    Neked nincs jogod ezt az oldalt megnyitni!
+                    Ha szerinted ez egy hiba a rendszerben, akkor keresd meg az oldal adminisztrtorát.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

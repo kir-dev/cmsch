@@ -6,6 +6,7 @@ import hu.bme.sch.g7.admin.OverviewBuilder
 import hu.bme.sch.g7.model.ManagedEntity
 import hu.bme.sch.g7.model.UserEntity
 import hu.bme.sch.g7.util.getUser
+import hu.bme.sch.g7.util.getUserOrNull
 import hu.bme.sch.g7.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
@@ -32,7 +33,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val supplier: Supplier<T>,
         private val entitySourceMapping: Map<String, (T?) -> List<String>> =
                 mapOf(Nothing::class.simpleName!! to { listOf() }),
-        private val controlMode: String = CONTROL_MODE_EDIT_DELETE
+        private val controlMode: String = CONTROL_MODE_EDIT_DELETE,
+        private val permissionControl: (UserEntity?) -> Boolean = { false }
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -40,6 +42,11 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
+        if (permissionControl(request.getUserOrNull()).not()) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -55,6 +62,11 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("/edit/{id}")
     fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (permissionControl(request.getUserOrNull()).not()) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
         model.addAttribute("view", view)
@@ -75,6 +87,11 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("/create")
     fun create(model: Model, request: HttpServletRequest): String {
+        if (permissionControl(request.getUserOrNull()).not()) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", false)
         model.addAttribute("view", view)
@@ -89,6 +106,11 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("/delete/{id}")
     fun deleteConfirm(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (permissionControl(request.getUserOrNull()).not()) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
@@ -104,7 +126,12 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @PostMapping("/delete/{id}")
-    fun delete(@PathVariable id: Int): String {
+    fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (permissionControl(request.getUserOrNull()).not()) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         val entity = repo.findById(id).orElseThrow()
         repo.delete(entity)
         onEntityChanged(entity)
@@ -115,8 +142,14 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     fun create(@ModelAttribute(binding = false) dto: T,
                @RequestParam(required = false) file0: MultipartFile?,
                @RequestParam(required = false) file1: MultipartFile?,
+               model: Model,
                request: HttpServletRequest
     ): String {
+        if (permissionControl(request.getUserOrNull()).not()) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         val entity = supplier.get()
         updateEntity(descriptor, request.getUser(), entity, dto, file0, file1)
         entity.id = 0
@@ -131,8 +164,14 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
              @ModelAttribute(binding = false) dto: T,
              @RequestParam(required = false) file0: MultipartFile?,
              @RequestParam(required = false) file1: MultipartFile?,
+             model: Model,
              request: HttpServletRequest
     ): String {
+        if (permissionControl(request.getUserOrNull()).not()) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         val entity = repo.findById(id)
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"
@@ -151,13 +190,13 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
                 when {
                     it.second.interpreter == INTERPRETER_INHERIT && it.second.type == INPUT_TYPE_FILE -> {
-                        when {
-                            it.second.fileId == "0" -> {
+                        when (it.second.fileId) {
+                            "0" -> {
                                 file0?.uploadFile(view).let { file ->
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
                                 }
                             }
-                            it.second.fileId == "1" -> {
+                            "1" -> {
                                 file1?.uploadFile(view).let { file ->
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "cdn/$view/$file")
                                 }

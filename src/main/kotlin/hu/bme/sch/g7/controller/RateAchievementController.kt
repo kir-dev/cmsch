@@ -7,6 +7,7 @@ import hu.bme.sch.g7.dao.SubmittedAchievementRepository
 import hu.bme.sch.g7.dto.virtual.GradedAchievementGroup
 import hu.bme.sch.g7.model.SubmittedAchievementEntity
 import hu.bme.sch.g7.util.getUser
+import hu.bme.sch.g7.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -37,6 +38,11 @@ class RateAchievementController(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantRateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -68,6 +74,11 @@ class RateAchievementController(
 
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantRateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -83,6 +94,11 @@ class RateAchievementController(
 
     @GetMapping("/rate/{id}")
     fun rate(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantRateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -98,6 +114,11 @@ class RateAchievementController(
 
     @GetMapping("/grade/{id}")
     fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantRateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
         model.addAttribute("view", view)
@@ -119,8 +140,15 @@ class RateAchievementController(
 
     @PostMapping("/grade/{id}")
     fun edit(@PathVariable id: Int,
-             @ModelAttribute(binding = false) dto: SubmittedAchievementEntity
+             @ModelAttribute(binding = false) dto: SubmittedAchievementEntity,
+             model: Model,
+             request: HttpServletRequest
     ): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantRateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         val entity = submittedRepository.findById(id)
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/grade/$id"

@@ -17,7 +17,8 @@ class NewsController(repo: NewsRepository) : AbstractAdminPanelController<NewsEn
         repo,
         "news", "Hír", "Hírek",
         "A kezdőlapon megjelenő hírek kezelése.",
-        NewsEntity::class, ::NewsEntity
+        NewsEntity::class, ::NewsEntity,
+        permissionControl = { it?.isAdmin() ?: false || it?.grantMedia ?: false }
 )
 
 @Controller
@@ -26,7 +27,8 @@ class EventsController(repo: EventRepository) : AbstractAdminPanelController<Eve
         repo,
         "events", "Esemény", "Események",
         "A Gólyahét teljes (publikus) esemény listájának kezelse.",
-        EventEntity::class, ::EventEntity
+        EventEntity::class, ::EventEntity,
+        permissionControl = { it?.isAdmin() ?: false || it?.grantMedia ?: false }
 )
 
 @Controller
@@ -35,7 +37,8 @@ class AchievementController(repo: AchievementRepository) : AbstractAdminPanelCon
         repo,
         "achievements", "Feladat", "Feladatok",
         "Bucketlist feladatok kezelése. A feladatok javítására használd a Javítások menüt!",
-        AchievementEntity::class, ::AchievementEntity
+        AchievementEntity::class, ::AchievementEntity,
+        permissionControl = { it?.isAdmin() ?: false || it?.grantCreateAchievement ?: false }
 )
 
 @Controller
@@ -44,7 +47,8 @@ class ProductController(repo: ProductRepository) : AbstractAdminPanelController<
         repo,
         "products", "Termék", "Termékek",
         "Az összes vásárolható termék kezelése. Az eladáshoz külön felület tartozik!",
-        ProductEntity::class, ::ProductEntity
+        ProductEntity::class, ::ProductEntity,
+        permissionControl = { it?.isAdmin() ?: false }
 )
 
 @Controller
@@ -57,7 +61,8 @@ class SoldProductController(
         "debts", "Tranzakció", "Tranzakciók",
         "Az összes eladásból származó tranzakciók.",
         SoldProductEntity::class, ::SoldProductEntity,
-        controlMode = CONTROL_MODE_EDIT
+        controlMode = CONTROL_MODE_EDIT,
+        permissionControl = { it?.isAdmin() ?: false }
 ) {
     override fun onEntityPreSave(entity: SoldProductEntity, request: HttpServletRequest) {
         val date = clock.getTimeInSeconds()
@@ -77,7 +82,8 @@ class GroupController(
         GroupEntity::class, ::GroupEntity,
         mapOf("UserEntity" to { it?.members?.map {
             member -> "${member.fullName} (${member.role.name})"
-        }?.toList() ?: listOf("Üres") })
+        }?.toList() ?: listOf("Üres") }),
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false }
 )
 
 @Controller
@@ -91,7 +97,8 @@ class UserController(
         "users", "Felhasználó", "Felhasználók",
         "Az összes felhasználó (gólyák és seniorok egyaránt) kezelése.",
         UserEntity::class, ::UserEntity,
-        mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() })
+        mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false }
 ) {
     override fun onEntityPreSave(entity: UserEntity, request: HttpServletRequest) {
         profileService.generateProfileForUser(entity)
@@ -112,7 +119,8 @@ class ExtraPageController(repo: ExtraPageRepository) : AbstractAdminPanelControl
         repo,
         "extra-pages", "Extra Oldal", "Extra Oldalak",
         "Egyedi oldalak kezelése.",
-        ExtraPageEntity::class, ::ExtraPageEntity
+        ExtraPageEntity::class, ::ExtraPageEntity,
+        permissionControl = { it?.isAdmin() ?: false || it?.grantMedia ?: false }
 )
 
 @Controller
@@ -124,7 +132,8 @@ class RealtimeConfigController(
         repo,
         "config", "Beállítás", "Beállítások",
         "Beállítások szerkesztése. Kérlek ne törölj ki olyat amit nem tudsz, hogy ki szabad törölni!",
-        RealtimeConfigEntity::class, ::RealtimeConfigEntity
+        RealtimeConfigEntity::class, ::RealtimeConfigEntity,
+        permissionControl = { it?.isAdmin() ?: false }
 ) {
     override fun onEntityChanged(entity: RealtimeConfigEntity) {
         config.resetCache()
@@ -139,7 +148,8 @@ class GuildToUserMappingController(
         repo,
         "guild-to-user", "Gárda Tagság", "Gárda Tagságok",
         "Felhasználók neptun kód alapján gárdába rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
-        GuildToUserMappingEntity::class, ::GuildToUserMappingEntity
+        GuildToUserMappingEntity::class, ::GuildToUserMappingEntity,
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false }
 )
 
 @Controller
@@ -152,5 +162,6 @@ class GroupToUserMappingController(
         "group-to-user", "Tankör Tagság", "Tankör Tagságok",
         "Felhasználók neptun kód alapján tankörbe és szakra rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
         GroupToUserMappingEntity::class, ::GroupToUserMappingEntity,
-        mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() })
+        mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false }
 )

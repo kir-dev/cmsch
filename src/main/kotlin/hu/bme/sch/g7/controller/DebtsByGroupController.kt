@@ -9,6 +9,7 @@ import hu.bme.sch.g7.dto.virtual.DebtsByGroup
 import hu.bme.sch.g7.model.SoldProductEntity
 import hu.bme.sch.g7.service.ClockService
 import hu.bme.sch.g7.util.getUser
+import hu.bme.sch.g7.util.getUserOrNull
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -36,6 +37,11 @@ class DebtsByGroupController(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -67,6 +73,11 @@ class DebtsByGroupController(
 
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -82,6 +93,11 @@ class DebtsByGroupController(
 
     @GetMapping("/edit/{id}")
     fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
         model.addAttribute("view", view)
@@ -103,8 +119,14 @@ class DebtsByGroupController(
     @PostMapping("/edit/{id}")
     fun edit(@PathVariable id: Int,
              @ModelAttribute(binding = false) dto: SoldProductEntity,
+             model: Model,
              request: HttpServletRequest
     ): String {
+        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         val entity = soldProductController.findById(id)
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"

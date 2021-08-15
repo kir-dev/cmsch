@@ -34,32 +34,28 @@
                 <div class="separate"></div>
                 <a href="#" th:href="@{/admin/control/basics}">Alap adatok</a>
 
-                <!-- PR -->
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/news}">Hírek</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/events}">Események</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/extra-pages}">Extra oldalak</a>
 
-                <!-- Infopult, Gárdatanköris -->
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager()}" th:href="@{/admin/control/groups}">Tankörök</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/users}">Felhasználók</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/group-to-user}">Tankör tagságok</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/guild-to-user}">Gárda tagságok</a>
 
-                <!-- Bucketlist -->
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/achievements}">Bucketlist feladatok</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/rate-achievements}">Bucketlist értékelés</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/toplist}">Toplista</a>
 
-                <!-- Products -->
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/products}">Termékek</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellProduct()}" th:href="@{/admin/control/sell-products}">Termék árusítás</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellFood()}" th:href="@{/admin/control/sell-food}">Étel árusítás</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellMerch()}" th:href="@{/admin/control/sell-merch}">Merch árusítás</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}" th:href="@{/admin/control/debts-of-my-group}">Tanköröm tartozásai</a>
 
-                <!-- Core ADMIN -->
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts}">Tartozások</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-user}">Tartozások felhasználónként</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
 
                 <div class="separate"></div>

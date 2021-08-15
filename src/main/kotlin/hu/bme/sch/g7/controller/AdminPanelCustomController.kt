@@ -7,6 +7,7 @@ import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.ProductService
 import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.util.getUser
+import hu.bme.sch.g7.util.getUserOrNull
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -48,6 +49,11 @@ class AdminPanelCustomController(
 
     @GetMapping("/toplist")
     fun toplist(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", "Toplista")
         model.addAttribute("description", "Tankörök helyezése a pontversenyben. " +
                 "A pontok 10 percenként számítódnak újra. " +
@@ -63,13 +69,23 @@ class AdminPanelCustomController(
     }
 
     @GetMapping("/toplist/refresh")
-    fun refreshTopList(): String {
+    fun refreshTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         leaderBoardService.recalculate()
         return "redirect:/admin/control/toplist"
     }
 
     @GetMapping("/debts-of-my-group")
     fun debtsOfMyGroup(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", "Tanköröm tartozásai")
         model.addAttribute("titleSingular", "Tartozás")
         model.addAttribute("description", "Ha a tartozáshoz a pénzt odaadta neked a kolléga, akkor pipáld ki itt. " +
@@ -86,6 +102,11 @@ class AdminPanelCustomController(
 
     @GetMapping("/debts-of-my-group/payed/{id}")
     fun setDebtsStatus(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         model.addAttribute("title", "Tartozás")
         model.addAttribute("view", "debts-of-my-group")
         model.addAttribute("id", id)
@@ -101,7 +122,12 @@ class AdminPanelCustomController(
     }
 
     @PostMapping("/debts-of-my-group/payed/{id}")
-    fun delete(@PathVariable id: Int, request: HttpServletRequest): String {
+    fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
         productService.setTransactionPayed(id, request.getUser())
         return "redirect:/admin/control/debts-of-my-group"
     }
