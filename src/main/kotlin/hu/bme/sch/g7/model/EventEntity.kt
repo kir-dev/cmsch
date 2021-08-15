@@ -115,7 +115,15 @@ data class EventEntity(
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "Látható")
         @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-        var visible: Boolean = false
+        var visible: Boolean = false,
+
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class ])
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Minimum rang a megtekintéshez",
+                note = "GUEST = kijelentkezett, BASIC = gólya, STAFF = senior ",
+                source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
+        @property:GenerateOverview(visible = false)
+        var minRole: RoleType = RoleType.GUEST
 
 ): ManagedEntity {
     override fun toString(): String {

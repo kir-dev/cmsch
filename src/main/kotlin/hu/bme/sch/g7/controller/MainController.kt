@@ -5,6 +5,8 @@ import hu.bme.sch.g7.dao.*
 import hu.bme.sch.g7.dto.*
 import hu.bme.sch.g7.dto.view.*
 import hu.bme.sch.g7.model.ProductType
+import hu.bme.sch.g7.model.RoleType
+import hu.bme.sch.g7.model.UserEntity
 import hu.bme.sch.g7.service.AchievementsService
 import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.RealtimeConfigService
@@ -16,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.servlet.http.HttpServletRequest
+
+val UNKNOWN_USER = UserEntity(0, fullName = "Feature Not Available")
 
 @RestController
 @RequestMapping("/api")
@@ -37,16 +41,21 @@ class MainController(
     @JsonView(Preview::class)
     @GetMapping("/news")
     fun news(request: HttpServletRequest): NewsView {
+        val user = request.getUserOrNull()
         return NewsView(
                 warningMessage = config.getWarningMessage(),
-                news = newsRepository.findByOrderByTimestamp()
+                news = newsRepository.findAllByVisibleTrueOrderByTimestamp()
+                        .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
         )
     }
 
     @JsonView(Preview::class)
     @GetMapping("/events")
     fun events(request: HttpServletRequest): EventsView {
+        val user = request.getUserOrNull()
         val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
+                .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
+
         val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
         val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
         return EventsView(
@@ -59,13 +68,22 @@ class MainController(
     @JsonView(Preview::class)
     @GetMapping("/home")
     fun home(request: HttpServletRequest): HomeView {
+        val user = request.getUserOrNull()
         val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
+                .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
+
         val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
         val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
+        var upcomingEvents = events.filter { it.timestampStart > dayStart && it.timestampStart < dayEnd }
+        if (upcomingEvents.isEmpty())
+            upcomingEvents = events.filter { it.timestampStart >= dayStart }.take(6)
+
         return HomeView(
                 warningMessage = config.getWarningMessage(),
-                news = newsRepository.findTop4ByOrderByTimestamp(),
-                eventsToday = events.filter { it.timestampStart > dayStart && it.timestampStart < dayEnd },
+                news = newsRepository.findAllByVisibleTrueOrderByTimestamp()
+                        .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
+                        .take(4),
+                upcomingEvents = upcomingEvents,
                 achievements = request.getUserOrNull()?.group?.let { achievements.getAllAchievements(it) }
                         ?: achievements.getAllAchievementsForGuests(),
                 leaderBoard = leaderBoardService.getBoard(),
@@ -76,10 +94,13 @@ class MainController(
     @JsonView(FullDetails::class)
     @GetMapping("/events/{path}")
     fun event(@PathVariable path: String, request: HttpServletRequest): SingleEventView {
-        val event = eventsRepository.findByUrl(path)
+        val event = eventsRepository.findByUrl(path).orElse(null)
+        if (event?.visible?.not() ?: true || config.isSiteLowProfile())
+            return SingleEventView(config.getWarningMessage(), null)
+
         return SingleEventView(
                 warningMessage = config.getWarningMessage(),
-                event = event.orElse(null)
+                event = event
         )
     }
 
@@ -87,6 +108,8 @@ class MainController(
     @GetMapping("/profile")
     fun profile(request: HttpServletRequest): ProfileView {
         val user = request.getUser()
+        if (config.isSiteLowProfile())
+            return ProfileView(warningMessage = config.getWarningMessage(), UNKNOWN_USER, group = null)
 
         return ProfileView(
                 warningMessage = config.getWarningMessage(),
@@ -98,14 +121,18 @@ class MainController(
     @JsonView(FullDetails::class)
     @GetMapping("/products")
     fun products(request: HttpServletRequest): ProductsView {
-        return ProductsView(
-                products = productsRepository.findAllByTypeAndVisibleTrue(ProductType.MERCH)
-        )
+        if (config.isSiteLowProfile())
+            return ProductsView(products = listOf())
+
+        return ProductsView(products = productsRepository.findAllByTypeAndVisibleTrue(ProductType.MERCH))
     }
 
     @JsonView(FullDetails::class)
     @GetMapping("/debts")
     fun debts(request: HttpServletRequest): DebtsView {
+        if (config.isSiteLowProfile())
+            return DebtsView(debts = listOf())
+
         return DebtsView(
                 debts = debtsRepository.findAllByOwnerId(request.getUser().id)
                         .map { DebtDto(
@@ -123,6 +150,13 @@ class MainController(
     @JsonView(Preview::class)
     @GetMapping("/achievements")
     fun achievements(request: HttpServletRequest): AchievementsView {
+        if (config.isSiteLowProfile()) {
+            return AchievementsView(
+                    warningMessage = config.getWarningMessage(),
+                    groupScore = null,
+                    leaderBoard = listOf())
+        }
+
         val group = request.getUserOrNull()?.group ?: return AchievementsView(
                 warningMessage = config.getWarningMessage(),
                 groupScore = null,
@@ -141,6 +175,9 @@ class MainController(
     @GetMapping("/achievement/{achievementId}")
     fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
         val achievement = achievements.getById(achievementId)
+        if (achievement.orElse(null)?.visible ?: false || config.isSiteLowProfile())
+            return SingleAchievementView(warningMessage = config.getWarningMessage(), achievement = null, submission = null)
+
         val group = request.getUserOrNull()?.group ?: return SingleAchievementView(
                 warningMessage = config.getWarningMessage(),
                 achievement = achievement.orElse(null),
@@ -153,31 +190,32 @@ class MainController(
         )
     }
 
-    private fun supplyUserInformation(request: HttpServletRequest): UserEntityPreview {
-        val user = request.getUserOrNull() ?: return UserEntityPreview(false)
-        return UserEntityPreview(true, user.fullName, user.groupName, user.role)
-    }
-
     @PostMapping("/achievement")
     fun submitAchievement(
             @ModelAttribute(binding = false) answer: AchievementSubmissionDto,
             @RequestParam(required = false) file: MultipartFile?,
             request: HttpServletRequest
     ): AchievementSubmissionResponseDto {
+        if (config.isSiteLowProfile())
+            return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
+
         return AchievementSubmissionResponseDto(achievements.submitAchievement(answer, file, request.getUser()))
     }
 
     @JsonView(FullDetails::class)
     @GetMapping("/extra-page/{path}")
     fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
+        if (config.isSiteLowProfile())
+            return ExtraPageView(warningMessage = config.getWarningMessage(), page = null)
+
         return ExtraPageView(
                 warningMessage = config.getWarningMessage(),
-                page = extraPagesRepository.findByUrl(path).orElse(null)
+                page = extraPagesRepository.findByUrlAndVisibleTrue(path).orElse(null)
         )
     }
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.11"
+    fun version(): String = "v1.0.12"
 
 }

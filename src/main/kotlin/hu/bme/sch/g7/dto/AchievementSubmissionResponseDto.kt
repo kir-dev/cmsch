@@ -8,7 +8,8 @@ enum class AchievementSubmissionStatus {
     ALREADY_APPROVED,
     NO_ASSOCIATE_GROUP,
     INVALID_ACHIEVEMENT_ID,
-    TOO_EARLY_OR_LATE
+    TOO_EARLY_OR_LATE,
+    NO_PERMISSION
 }
 
 class AchievementSubmissionResponseDto(

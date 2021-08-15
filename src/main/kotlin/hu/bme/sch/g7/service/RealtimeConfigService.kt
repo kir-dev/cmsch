@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct
 
 const val WARNING_MESSAGE = "WARNING_MESSAGE"
 const val LEADER_BOARD_ENABLED = "LEADER_BOARD_ENABLED"
+const val SITE_LOW_PROFILE = "SITE_LOW_PROFILE"
 const val MESSAGE_OF_THE_DAY = "MESSAGE_OF_THE_DAY"
 const val WEBSITE_URL = "WEBSITE_URL"
 const val STAFF_MESSAGE = "STAFF_MESSAGE"
@@ -28,6 +29,9 @@ class RealtimeConfigService(
 
         if (realtimeConfig.findByKey(LEADER_BOARD_ENABLED).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_ENABLED, "true"))
+
+        if (realtimeConfig.findByKey(SITE_LOW_PROFILE).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, SITE_LOW_PROFILE, "false"))
 
         if (realtimeConfig.findByKey(MESSAGE_OF_THE_DAY).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, MESSAGE_OF_THE_DAY, "Jobb ma egy túzok, mint holnap egy veréb!"))
@@ -78,6 +82,14 @@ class RealtimeConfigService(
 
     fun isLeaderBoardEnabled(): Boolean {
         return cache.computeIfAbsent(LEADER_BOARD_ENABLED) { key ->
+            realtimeConfig.findByKey(key)
+                    .map { it.value }
+                    .orElse("false")
+        }.equals("true", ignoreCase = true)
+    }
+
+    fun isSiteLowProfile(): Boolean {
+        return cache.computeIfAbsent(SITE_LOW_PROFILE) { key ->
             realtimeConfig.findByKey(key)
                     .map { it.value }
                     .orElse("false")

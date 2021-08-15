@@ -16,7 +16,7 @@ data class HomeView(
         val news: List<NewsEntity> = listOf(),
 
         @JsonView(Preview::class)
-        val eventsToday: List<EventEntity> = listOf(),
+        val upcomingEvents: List<EventEntity> = listOf(),
 
         @JsonView(Preview::class)
         val achievements: List<AchievementEntityWrapper> = listOf(),

@@ -24,8 +24,8 @@ interface GroupRepository : CrudRepository<GroupEntity, Int> {
 
 @Repository
 interface NewsRepository : CrudRepository<NewsEntity, Int> {
-    fun findTop4ByOrderByTimestamp(): List<NewsEntity>
-    fun findByOrderByTimestamp(): List<NewsEntity>
+    fun findTop4ByVisibleTrueOrderByTimestamp(): List<NewsEntity>
+    fun findAllByVisibleTrueOrderByTimestamp(): List<NewsEntity>
 }
 
 @Repository
@@ -38,7 +38,7 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
 
 @Repository
 interface ExtraPageRepository : CrudRepository<ExtraPageEntity, Int> {
-    fun findByUrl(path: String): Optional<ExtraPageEntity>
+    fun findByUrlAndVisibleTrue(path: String): Optional<ExtraPageEntity>
 }
 
 @Repository

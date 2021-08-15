@@ -18,9 +18,9 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/", "/cdn/profiles/**", "/loggedin", "/login", "/logged-out", "/api/news",
-                        "/api/events", "/api/events/**", "/api/products", "/api/extra-page/**", "/api/version",
-                        "/style.css", "/images/**", "/js/**", "/admin/logout")
+                .antMatchers("/", "/loggedin", "/login", "/logged-out", "/api/news", "/api/events",
+                        "/api/events/**", "/api/products", "/api/extra-page/**", "/api/version", "/style.css",
+                        "/images/**", "/js/**", "/admin/logout", "/cdn/profiles/**", "/cdn/events/**", "/cdn/news/**")
                     .permitAll()
 
                 .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile",

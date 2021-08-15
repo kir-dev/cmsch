@@ -32,7 +32,7 @@ data class ProductEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Ár")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Ár", min = 1, defaultValue = "100", note = "JMF-ben természetesen")
     @property:GenerateOverview(columnName = "Ár", order = 1, centered = true)
     var price: Int = 0,
 
@@ -65,7 +65,7 @@ data class ProductEntity(
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható")
     @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    var visible: Boolean = false,
+    var visible: Boolean = false
 
 ): ManagedEntity {
     override fun toString(): String {
