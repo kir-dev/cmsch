@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout :: head">
+</head>
+<body>
+<div class="content">
+    <div class="split">
+        <div th:replace="layout :: menu(${user})">
+        </div>
+        <div class="payload">
+            <div class="page">
+                <h2 th:text="|${title} importálása/exportálása|">View import export</h2>
+
+                <p>
+                    A fájl oszlopai pontosvesszővel ';' legyenek elválasztva. Mintához nyomj egy exportot.
+                    A hibás rekord esetén az egész importálás rollbackelve lesz.
+                </p>
+                <form th:action="|@{/admin/control}/${view}/import/csv|" method="post">
+                    <label for="file">Importálás</label>
+                    <input type="file" class="file-input" name="file" id="file" /><br />
+                    <input type="submit" value="Importálás (.csv)"/>
+                </form>
+
+                <div class="hr"></div>
+
+                <form th:action="|@{/admin/control}/${view}/export/csv|" method="get">
+                    <label>Exportálás</label>
+                    <input type="submit" value="Exportálás (.csv)"/>
+                </form>
+
+                <div class="hr"></div>
+
+                <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -10,11 +10,15 @@ import hu.bme.sch.g7.util.getUserOrNull
 import hu.bme.sch.g7.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
+import org.springframework.http.MediaType
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.lang.IllegalStateException
+import java.lang.RuntimeException
 import java.util.function.Supplier
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 
@@ -34,7 +38,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val entitySourceMapping: Map<String, (T?) -> List<String>> =
                 mapOf(Nothing::class.simpleName!! to { listOf() }),
         private val controlMode: String = CONTROL_MODE_EDIT_DELETE,
-        private val permissionControl: (UserEntity?) -> Boolean = { false }
+        private val permissionControl: (UserEntity?) -> Boolean = { false },
+        private val importable: Boolean = false
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -56,6 +61,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("rows", repo.findAll())
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", controlMode)
+        model.addAttribute("importable", importable)
 
         return "overview"
     }
@@ -220,6 +226,30 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                 }
             }
         }
+    }
+
+    @GetMapping("/resource")
+    fun resource(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        model.addAttribute("title", titlePlural)
+        model.addAttribute("view", view)
+        model.addAttribute("user", request.getUser())
+
+        return "resource"
+    }
+
+    @ResponseBody
+    @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun export(model: Model, request: HttpServletRequest, response: HttpServletResponse): ByteArray {
+        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+            throw IllegalStateException("Insufficient permission")
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
+        return descriptor.exportToCsv(repo.findAll().toList()).toByteArray()
     }
 
     open fun onEntityChanged(entity: T) {

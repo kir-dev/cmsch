@@ -16,56 +16,56 @@ enum class ProductType {
 @Entity
 @Table(name="products")
 data class ProductEntity(
-    @Id
-    @GeneratedValue
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(visible = false)
-    override var id: Int = 0,
+        @Id
+        @GeneratedValue
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class ])
+        @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+        @property:GenerateOverview(visible = false)
+        override var id: Int = 0,
 
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 64, order = 1, label = "Név")
-    @property:GenerateOverview(columnName = "Név", order = 1)
-    var name: String = "",
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+        @property:GenerateInput(maxLength = 64, order = 1, label = "Név")
+        @property:GenerateOverview(columnName = "Név", order = 1)
+        var name: String = "",
 
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Ár", min = 1, defaultValue = "100", note = "JMF-ben természetesen")
-    @property:GenerateOverview(columnName = "Ár", order = 1, centered = true)
-    var price: Int = 0,
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+        @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Ár", min = 1, defaultValue = "100", note = "JMF-ben természetesen")
+        @property:GenerateOverview(columnName = "Ár", order = 1, centered = true)
+        var price: Int = 0,
 
-    @Enumerated(EnumType.STRING)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Típus", source = [ "MERCH", "FOOD", "OTHER" ])
-    @property:GenerateOverview(visible = false)
-    var type: ProductType = ProductType.OTHER,
+        @Enumerated(EnumType.STRING)
+        @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+        @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Típus", source = [ "MERCH", "FOOD", "OTHER" ])
+        @property:GenerateOverview(visible = false)
+        var type: ProductType = ProductType.OTHER,
 
-    @Lob
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Termék leírása")
-    @property:GenerateOverview(visible = false)
-    var description: String = "",
+        @Lob
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+        @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Termék leírása")
+        @property:GenerateOverview(visible = false)
+        var description: String = "",
 
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 5, label = "Kép a termékről")
-    @property:GenerateOverview(visible = false)
-    var imageUrl: String = "",
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+        @property:GenerateInput(type = INPUT_TYPE_FILE, order = 5, label = "Kép a termékről")
+        @property:GenerateOverview(visible = false)
+        var imageUrl: String = "",
 
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Elérhető")
-    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    var available: Boolean = false,
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class, FullDetails::class ])
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Elérhető")
+        @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+        var available: Boolean = false,
 
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    var visible: Boolean = false
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class, FullDetails::class ])
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható")
+        @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+        var visible: Boolean = false
 
 ): ManagedEntity {
     override fun toString(): String {

@@ -80,6 +80,10 @@
                 <object th:if="${controlMode == 'toplist'}" th:remove="tag">
                     <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn">Toplista újraszámítása</a>
                 </object>
+
+                <object th:if="${importable != null && importable && user.isAdmin()}" th:remove="tag">
+                    <a href="#" th:href="|@{/admin/control}/${view}/resource|" class="btn">Import és export</a>
+                </object>
             </div>
         </div>
     </div>

@@ -28,7 +28,8 @@ class EventsController(repo: EventRepository) : AbstractAdminPanelController<Eve
         "events", "Esemény", "Események",
         "A Gólyahét teljes (publikus) esemény listájának kezelse.",
         EventEntity::class, ::EventEntity,
-        permissionControl = { it?.isAdmin() ?: false || it?.grantMedia ?: false }
+        permissionControl = { it?.isAdmin() ?: false || it?.grantMedia ?: false },
+        importable = true
 )
 
 @Controller
@@ -83,7 +84,8 @@ class GroupController(
         mapOf("UserEntity" to { it?.members?.map {
             member -> "${member.fullName} (${member.role.name})"
         }?.toList() ?: listOf("Üres") }),
-        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false }
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false },
+        importable = true
 )
 
 @Controller
@@ -98,7 +100,8 @@ class UserController(
         "Az összes felhasználó (gólyák és seniorok egyaránt) kezelése.",
         UserEntity::class, ::UserEntity,
         mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
-        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false }
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false },
+        importable = true
 ) {
     override fun onEntityPreSave(entity: UserEntity, request: HttpServletRequest) {
         profileService.generateProfileForUser(entity)
@@ -149,7 +152,8 @@ class GuildToUserMappingController(
         "guild-to-user", "Gárda Tagság", "Gárda Tagságok",
         "Felhasználók neptun kód alapján gárdába rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
         GuildToUserMappingEntity::class, ::GuildToUserMappingEntity,
-        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false }
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false },
+        importable = true
 )
 
 @Controller
@@ -163,5 +167,6 @@ class GroupToUserMappingController(
         "Felhasználók neptun kód alapján tankörbe és szakra rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
         GroupToUserMappingEntity::class, ::GroupToUserMappingEntity,
         mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
-        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false }
+        permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false },
+        importable = true
 )
