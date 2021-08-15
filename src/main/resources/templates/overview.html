@@ -5,8 +5,9 @@
 <body>
 <div class="content">
     <div class="split">
-        <div th:replace="layout :: menu(${user})">
-        </div>
+        <div th:replace="layout :: mobile"></div>
+        <div th:replace="layout :: menu(${user})"></div>
+
         <div class="payload">
             <div class="page">
                 <h2 th:text="${title}">Lorem ipsum</h2>
@@ -18,61 +19,63 @@
                     <a href="#" class="btn" th:if="${controlMode == 'edit,delete'}" th:text="|Új ${titleSingular}|" th:href="|@{/admin/control}/${view}/create|"></a>
                 </div>
 
-                <table>
-                    <tr>
-                        <th th:each="col,iter : ${columns}" th:text="${col}"
-                            th:class="${fields[iter.index].second.centered ? 'centered' : ''}">
-                            Column
-                        </th>
-                        <th class="actions"></th>
-                    </tr>
-                    <tr th:each="row : ${rows}">
-                        <object th:each="field : ${fields}" th:remove="tag">
-                            <object th:if="${field.second.renderer == 'text'}" th:remove="tag">
-                                <td th:text="${field.first.get(row)}"
-                                    th:class="${field.second.centered ? 'centered' : ''}">
-                                    Value
-                                </td>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th th:each="col,iter : ${columns}" th:text="${col}"
+                                th:class="${fields[iter.index].second.centered ? 'centered' : ''}">
+                                Column
+                            </th>
+                            <th class="actions"></th>
+                        </tr>
+                        <tr th:each="row : ${rows}">
+                            <object th:each="field : ${fields}" th:remove="tag">
+                                <object th:if="${field.second.renderer == 'text'}" th:remove="tag">
+                                    <td th:text="${field.first.get(row)}"
+                                        th:class="${field.second.centered ? 'centered' : ''}">
+                                        Value
+                                    </td>
+                                </object>
+                                <object th:if="${field.second.renderer == 'boolean'}" th:remove="tag">
+                                    <td th:class="${field.second.centered ? 'centered' : ''}">
+                                        <span th:unless="${field.first.get(row)}" class="material-icons fix-icons">close</span>
+                                        <span th:if="${field.first.get(row)}" class="material-icons fix-icons">done</span>
+                                    </td>
+                                </object>
+                                <object th:if="${field.second.renderer == 'date'}" th:remove="tag">
+                                    <td th:text="${#dates.format(new java.util.Date(field.first.get(row) * 1000), 'yyyy&#8209;MM&#8209;dd HH:mm')}"
+                                        th:class="${field.second.centered ? 'centered' : ''}">
+                                    </td>
+                                </object>
                             </object>
-                            <object th:if="${field.second.renderer == 'boolean'}" th:remove="tag">
-                                <td th:class="${field.second.centered ? 'centered' : ''}">
-                                    <span th:unless="${field.first.get(row)}" class="material-icons fix-icons">close</span>
-                                    <span th:if="${field.first.get(row)}" class="material-icons fix-icons">done</span>
-                                </td>
-                            </object>
-                            <object th:if="${field.second.renderer == 'date'}" th:remove="tag">
-                                <td th:text="${#dates.format(new java.util.Date(field.first.get(row) * 1000), 'yyyy&#8209;MM&#8209;dd HH:mm')}"
-                                    th:class="${field.second.centered ? 'centered' : ''}">
-                                </td>
-                            </object>
-                        </object>
-                        <td class="actions">
-                            <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
-                                <a href="#" th:href="|@{/admin/control}/${view}/delete/${row.id}|"><span class="material-icons">delete</span></a>
-                            </object>
-                            <object th:if="${controlMode == 'view'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/control}/${view}/view/${row.id}|"><span class="material-icons">edit</span></a>
-                            </object>
-                            <object th:if="${controlMode == 'edit'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
-                            </object>
-                            <object th:if="${controlMode == 'rate'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/control}/${view}/view/${row.id}|"><span class="material-icons">visibility</span></a>
-                                <a href="#" th:href="|@{/admin/control}/${view}/rate/${row.id}|"><span class="material-icons">thumbs_up_down</span></a>
-                            </object>
-                            <object th:if="${controlMode == 'grade'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/control}/${view}/grade/${row.id}|"><span class="material-icons">grade</span></a>
-                            </object>
-                            <object th:if="${controlMode == 'sell'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/sell}/${row.id}|"><span class="material-icons">sell</span></a>
-                            </object>
-                            <object th:if="${controlMode == 'payed'}" th:remove="tag">
-                                <a href="#" th:href="|@{/admin/control}/${view}/payed/${row.id}|"><span class="material-icons">check_circle_outline</span></a>
-                            </object>
-                        </td>
-                    </tr>
-                </table>
+                            <td class="actions">
+                                <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
+                                    <a href="#" th:href="|@{/admin/control}/${view}/delete/${row.id}|"><span class="material-icons">delete</span></a>
+                                </object>
+                                <object th:if="${controlMode == 'view'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/control}/${view}/view/${row.id}|"><span class="material-icons">edit</span></a>
+                                </object>
+                                <object th:if="${controlMode == 'edit'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/control}/${view}/edit/${row.id}|"><span class="material-icons">edit</span></a>
+                                </object>
+                                <object th:if="${controlMode == 'rate'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/control}/${view}/view/${row.id}|"><span class="material-icons">visibility</span></a>
+                                    <a href="#" th:href="|@{/admin/control}/${view}/rate/${row.id}|"><span class="material-icons">thumbs_up_down</span></a>
+                                </object>
+                                <object th:if="${controlMode == 'grade'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/control}/${view}/grade/${row.id}|"><span class="material-icons">grade</span></a>
+                                </object>
+                                <object th:if="${controlMode == 'sell'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/sell}/${row.id}|"><span class="material-icons">sell</span></a>
+                                </object>
+                                <object th:if="${controlMode == 'payed'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/control}/${view}/payed/${row.id}|"><span class="material-icons">check_circle_outline</span></a>
+                                </object>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
                 <object th:if="${controlMode == 'toplist'}" th:remove="tag">
                     <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn">Toplista újraszámítása</a>

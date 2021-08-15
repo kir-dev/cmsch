@@ -461,3 +461,113 @@ form p {
 .centered-text {
     text-align: center;
 }
+
+.menu .exit {
+    display: none;
+}
+
+.header {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #222222;
+    color: #FFFFFF;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.header span {
+    vertical-align: top;
+}
+
+.header .menu-icon {
+    position: absolute;
+    top: 8px;
+    right: 40px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1200px) {
+    .content .split {
+        display: block;
+    }
+
+    .content .split .menu {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        max-width: 100vw;
+        background-color: #656565;
+        color: #FFFFFF;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        padding: 0;
+        box-sizing: border-box;
+        border: 0;
+    }
+
+    .content .menu h1 {
+        display: none;
+    }
+
+    .content .split .menu a {
+        margin: 10px 20px;
+        color: #FFFFFF;
+        background-color: rgba(0,0,0,0.5);
+        text-align: center;
+        padding: 8px 16px;
+    }
+
+    .content .split .menu a:hover {
+        background-color: rgba(0,0,0,0.9);
+    }
+
+    .content .split .payload {
+        display: block;
+        padding: 0;
+        margin: 0;
+    }
+
+    .content .table-container {
+        overflow-x: scroll;
+        width: 100%;
+    }
+
+    .menu .exit {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 0;
+        padding: 0 20px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .content .split .menu .separate {
+        padding-top: 40px;
+    }
+
+    .content .split {
+        padding-top: 40px;
+    }
+
+    .header {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="datetime-local"],
+    form select,
+    form textarea {
+        max-width: calc(100vw - 65px);
+    }
+}

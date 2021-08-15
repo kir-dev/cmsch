@@ -5,8 +5,9 @@
 <body>
 <div class="content">
     <div class="split">
-        <div th:replace="layout :: menu(${user})">
-        </div>
+        <div th:replace="layout :: mobile"></div>
+        <div th:replace="layout :: menu(${user})"></div>
+
         <div class="payload">
             <div class="page">
                 <h2 th:text="|${title} szerkesztése|" th:if="${editMode}">View edit</h2>

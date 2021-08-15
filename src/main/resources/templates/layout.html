@@ -24,8 +24,14 @@
 <body>
     <div class="content">
         <div class="split">
-            <div class="menu" th:fragment="menu(userEntity)">
-                <h1>G7 admin</h1>
+            <div class="header" th:fragment="mobile">
+                <span>G7 ADMIN</span>
+                <span class="material-icons fix-icons menu-icon" onclick="document.getElementById('menu').style.display = 'block'">menu</span>
+            </div>
+            <div class="menu" th:fragment="menu(userEntity)" id="menu">
+                <h1>G7 ADMIN</h1>
+                <div class="exit" onclick="document.getElementById('menu').style.display = 'none'">X</div>
+                <div class="separate"></div>
                 <a href="#" th:href="@{/admin/control/basics}">Alap adatok</a>
 
                 <!-- PR -->
@@ -58,6 +64,7 @@
 
                 <div class="separate"></div>
                 <a href="#" th:href="@{/admin/logout}">Kijelentkezés</a>
+                <div class="separate"></div>
             </div>
             <div class="payload">
                 <div class="page">
@@ -116,7 +123,10 @@
     </div>
 
     <div class="footer">
-        <a href="#">kir-dev</a> :: <a href="#">Schámi</a>
+        A G7 web projekt backendjét a kir-dev, a látogatói lapot pedig az schdesign készítette<br />
+        <a href="https://kir-dev.sch.bme.hu/">kir-dev</a> :: <a href="https://pek.sch.bme.hu/profiles/Gerviba">Schámi</a>,
+        <a href="https://schdesign.hu/">schdesign</a> :: <a href="https://pek.sch.bme.hu/profiles/andrisborbas">Andris</a><br />
+        2021
     </div>
 </body>
 </html>
