@@ -25,7 +25,7 @@ class EntrypointController(
 ) {
 
     @ResponseBody
-    @GetMapping("")
+    @GetMapping("/")
     fun index(): String {
         return "POV: Rossz helyen vagy!"
     }

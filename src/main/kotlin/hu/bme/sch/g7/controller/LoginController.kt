@@ -45,11 +45,6 @@ open class LoginController(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @GetMapping("/")
-    fun root(): String {
-        return "redirect:/login"
-    }
-
     @ResponseBody
     @GetMapping("/logged-out")
     fun loggedOut(): String {
