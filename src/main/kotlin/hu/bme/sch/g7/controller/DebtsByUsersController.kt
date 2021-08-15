@@ -6,6 +6,7 @@ import hu.bme.sch.g7.admin.OverviewBuilder
 import hu.bme.sch.g7.dao.GroupRepository
 import hu.bme.sch.g7.dao.SoldProductRepository
 import hu.bme.sch.g7.dto.virtual.DebtsByGroup
+import hu.bme.sch.g7.dto.virtual.DebtsByUser
 import hu.bme.sch.g7.model.SoldProductEntity
 import hu.bme.sch.g7.service.ClockService
 import hu.bme.sch.g7.util.getUser
@@ -17,22 +18,22 @@ import javax.servlet.http.HttpServletRequest
 import kotlin.reflect.KMutableProperty1
 
 @Controller
-@RequestMapping("/admin/control/debts-by-group")
-class DebtsByGroupController(
+@RequestMapping("/admin/control/debts-by-users")
+class DebtsByUsersController(
         private val soldProductController: SoldProductRepository,
         private val groupRepository: GroupRepository,
         private val clock: ClockService
 ) {
 
-    private val view = "debts-by-group"
+    private val view = "debts-by-users"
     private val titleSingular = "Tartozás"
     private val titlePlural = "Tartozások"
-    private val description = "Tartozások tankörönként csoportosítva"
+    private val description = "Tartozások felhasználónként csoportosítva"
 
     private val entitySourceMapping: Map<String, (SoldProductEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
 
-    private val overviewDescriptor = OverviewBuilder(DebtsByGroup::class)
+    private val overviewDescriptor = OverviewBuilder(DebtsByUser::class)
     private val submittedDescriptor = OverviewBuilder(SoldProductEntity::class)
 
     @GetMapping("")
@@ -55,14 +56,15 @@ class DebtsByGroupController(
         return "overview"
     }
 
-    private fun fetchOverview(): List<DebtsByGroup> {
-        return soldProductController.findAll().groupBy { it.responsibleGroupId }
+    private fun fetchOverview(): List<DebtsByUser> {
+        return soldProductController.findAll().groupBy { it.ownerId }
                 .map { it.value }
                 .filter { !it.isEmpty() }
                 .map {
                     val groupName = groupRepository.findById(it[0].responsibleGroupId).map { it.name }.orElse("n/a")
-                    DebtsByGroup(
-                            it[0].responsibleGroupId,
+                    DebtsByUser(
+                            it[0].ownerId,
+                            it[0].ownerName,
                             groupName,
                             it.sumOf { it.price },
                             it.filter { !it.payed }.sumOf { it.price },
@@ -84,7 +86,7 @@ class DebtsByGroupController(
         model.addAttribute("view", view)
         model.addAttribute("columns", submittedDescriptor.getColumns())
         model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", soldProductController.findAllByResponsibleGroupId(id))
+        model.addAttribute("rows", soldProductController.findAllByOwnerId(id))
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_EDIT)
 

@@ -52,7 +52,6 @@ interface ProductRepository : CrudRepository<ProductEntity, Int> {
 interface SoldProductRepository : CrudRepository<SoldProductEntity, Int> {
     fun findAllByOwnerId(id: Int): List<SoldProductEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByResponsibleGroupId(id: Int): List<SoldProductEntity>
 }
 

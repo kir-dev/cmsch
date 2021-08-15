@@ -55,11 +55,13 @@
 
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts}">Tartozások</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-user}">Tartozások felhasználónként</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-users}">Tartozások felhasználónként</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
 
                 <div class="separate"></div>
+
                 <a href="#" th:href="@{/admin/logout}">Kijelentkezés</a>
+
                 <div class="separate"></div>
             </div>
             <div class="payload">
