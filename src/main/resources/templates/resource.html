@@ -5,6 +5,7 @@
 <body>
 <div class="content">
     <div class="split">
+        <div th:replace="layout :: mobile"></div>
         <div th:replace="layout :: menu(${user})">
         </div>
         <div class="payload">
@@ -13,26 +14,37 @@
 
                 <p>
                     A fájl oszlopai pontosvesszővel ';' legyenek elválasztva. Mintához nyomj egy exportot.
-                    A hibás rekord esetén az egész importálás rollbackelve lesz.
+                    A hibás rekord esetén az egész importálás rollbackelve lesz. A csv első sora ignorálva lesz.
                 </p>
-                <form th:action="|@{/admin/control}/${view}/import/csv|" method="post">
+
+                <p th:if="${importedCount != null}">
+                    Beimportált sorok száma: <b th:text="${importedCount}"></b>
+                </p>
+
+                <div class="hr-invisible"></div>
+
+                <form th:action="|@{/admin/control}/${view}/import/csv|"
+                      method="post"
+                      enctype="multipart/form-data">
+
                     <label for="file">Importálás</label>
                     <input type="file" class="file-input" name="file" id="file" /><br />
                     <input type="submit" value="Importálás (.csv)"/>
                 </form>
 
-                <div class="hr"></div>
+                <div class="hr-invisible"></div>
 
                 <form th:action="|@{/admin/control}/${view}/export/csv|" method="get">
                     <label>Exportálás</label>
                     <input type="submit" value="Exportálás (.csv)"/>
                 </form>
 
-                <div class="hr"></div>
+                <div class="hr-invisible"></div>
 
                 <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

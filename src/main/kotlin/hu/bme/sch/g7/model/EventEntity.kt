@@ -123,7 +123,7 @@ data class EventEntity(
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "Látható")
         @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-        @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
+        @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_BOOLEAN)
         var visible: Boolean = false,
 
         @Column(nullable = false)

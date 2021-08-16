@@ -5,6 +5,7 @@
 <body>
 <div class="content">
     <div class="split">
+        <div th:replace="layout :: mobile"></div>
         <div th:replace="layout :: menu(${user})">
         </div>
         <div class="payload">
@@ -23,5 +24,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

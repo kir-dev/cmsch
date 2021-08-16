@@ -5,6 +5,7 @@ import hu.bme.sch.g7.admin.INTERPRETER_INHERIT
 import hu.bme.sch.g7.admin.OverviewBuilder
 import hu.bme.sch.g7.model.ManagedEntity
 import hu.bme.sch.g7.model.UserEntity
+import hu.bme.sch.g7.service.ImportService
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
 import hu.bme.sch.g7.util.uploadFile
@@ -14,13 +15,14 @@ import org.springframework.http.MediaType
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.io.ByteArrayOutputStream
 import java.lang.IllegalStateException
-import java.lang.RuntimeException
 import java.util.function.Supplier
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
+import kotlin.streams.toList
 
 const val INVALID_ID_ERROR = "INVALID_ID"
 const val CONTROL_MODE_EDIT_DELETE = "edit,delete"
@@ -35,6 +37,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val description: String,
         classType: KClass<T>,
         private val supplier: Supplier<T>,
+        private val importService: ImportService,
         private val entitySourceMapping: Map<String, (T?) -> List<String>> =
                 mapOf(Nothing::class.simpleName!! to { listOf() }),
         private val controlMode: String = CONTROL_MODE_EDIT_DELETE,
@@ -238,7 +241,6 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
         model.addAttribute("user", request.getUser())
-
         return "resource"
     }
 
@@ -246,10 +248,34 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(model: Model, request: HttpServletRequest, response: HttpServletResponse): ByteArray {
         if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
-            throw IllegalStateException("Insufficient permission")
+            throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
         return descriptor.exportToCsv(repo.findAll().toList()).toByteArray()
+    }
+
+    @PostMapping("/import/csv")
+    fun import(file: MultipartFile?, model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+
+        val out = ByteArrayOutputStream()
+        file?.inputStream?.transferTo(out)
+        val rawEntities = out.toString().split("\n").stream()
+                .map { it.split(";").map { it.trim() } }
+                .skip(1)
+                .toList()
+        log.info("Importing {} bytes ({} lines) into {}", out.size(), rawEntities.size, view)
+        val before = repo.count()
+        importService.importEntities(repo, rawEntities, supplier, descriptor.getImportModifiers())
+        val after = repo.count()
+
+        model.addAttribute("title", titlePlural)
+        model.addAttribute("view", view)
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("importedCount", after - before)
+        return "resource"
     }
 
     open fun onEntityChanged(entity: T) {

@@ -5,6 +5,7 @@ import hu.bme.sch.g7.model.*
 import hu.bme.sch.g7.service.ProductService
 import hu.bme.sch.g7.service.UserProfileGeneratorService
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import java.util.*
 import javax.annotation.PostConstruct
 import kotlin.reflect.typeOf
@@ -21,6 +22,7 @@ const val LOREM_IPSUM_LONG_4 = "Duis et lacus ac tellus volutpat lobortis. Curab
 
 const val A_DAY = 60 * 60 * 24
 
+@Profile("test")
 @Configuration
 class TestConfig(
         private val news: NewsRepository,

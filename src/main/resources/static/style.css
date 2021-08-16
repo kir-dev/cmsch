@@ -416,6 +416,10 @@ form p {
     border-top: 4px solid #a0a0a0;
 }
 
+.hr-invisible {
+    padding-top: 40px;
+}
+
 .content .split .payload span,
 .greetings span {
     font-weight: 300;
