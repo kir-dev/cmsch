@@ -34,6 +34,7 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     fun existsByPekId(pekId: String): Boolean
     fun findByG7id(g7id: String): Optional<UserEntity>
     fun findByNeptun(neptun: String): Optional<UserEntity>
+    fun findAllByGroupName(groupName: String): List<UserEntity>
 }
 
 @Repository
@@ -80,4 +81,5 @@ interface GuildToUserMappingRepository : CrudRepository<GuildToUserMappingEntity
 @Repository
 interface GroupToUserMappingRepository : CrudRepository<GroupToUserMappingEntity, Int> {
     fun findByNeptun(neptun: String): Optional<GroupToUserMappingEntity>
+    fun findAllByGroupName(groupName: String): List<GroupToUserMappingEntity>
 }

@@ -10,7 +10,10 @@ data class GroupMemberVirtualEntity (
         @property:GenerateOverview(columnName = "Név", order = 1)
         val name: String,
 
-        @property:GenerateOverview(columnName = "", order = 2, centered = true)
+        @property:GenerateOverview(columnName = "Neptun kód", order = 2, centered = true)
+        val neptun: String,
+
+        @property:GenerateOverview(columnName = "", order = 3, centered = true)
         val roleName: String,
 
 )

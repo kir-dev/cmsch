@@ -566,9 +566,9 @@ class TestConfig(
     }
 
     private fun addGroupMapping() {
-        groupToUserMapping.save(GroupToUserMappingEntity(0, "HITMAN", "V10", MajorType.EE))
-        groupToUserMapping.save(GroupToUserMappingEntity(0, "BATMAN", "V10", MajorType.EE))
-        groupToUserMapping.save(GroupToUserMappingEntity(0, "RZPZTT", "I09", MajorType.IT))
+        groupToUserMapping.save(GroupToUserMappingEntity(0, "HITMAN", "Hitman Lajos", "V10", MajorType.EE))
+        groupToUserMapping.save(GroupToUserMappingEntity(0, "BATMAN", "Batman Bálint", "V10", MajorType.EE))
+        groupToUserMapping.save(GroupToUserMappingEntity(0, "RZPZTT", "Mottomén Kiez", "I09", MajorType.IT))
     }
 
     private fun addGuildMappings() {
