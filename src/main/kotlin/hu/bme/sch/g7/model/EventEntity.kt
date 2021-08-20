@@ -128,7 +128,7 @@ data class EventEntity(
 
         @Column(nullable = false)
         @JsonView(value = [ Edit::class ])
-        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Minimum rang a megtekintéshez",
+        @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 18, label = "Minimum rang a megtekintéshez",
                 note = "GUEST = kijelentkezett, BASIC = gólya, STAFF = senior ",
                 source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
         @property:GenerateOverview(visible = false)

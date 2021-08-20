@@ -20,6 +20,7 @@ import kotlin.random.asJavaRandom
 
 const val CONTROL_MODE_TOPLIST = "toplist"
 const val CONTROL_MODE_PAYED = "payed"
+const val CONTROL_MODE_NONE = "none"
 
 @Controller
 @RequestMapping("/admin/control")
@@ -31,6 +32,7 @@ class AdminPanelCustomController(
 
     private val topListDescriptor = OverviewBuilder(TopListEntryDto::class)
     private val debtsDescriptor = OverviewBuilder(SoldProductEntity::class)
+    private val membersDescriptor = OverviewBuilder(GroupMembersVirtualEntity::class)
 
     @GetMapping("")
     fun index(): String {
@@ -122,7 +124,7 @@ class AdminPanelCustomController(
     }
 
     @PostMapping("/debts-of-my-group/payed/{id}")
-    fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
+    fun payed(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
@@ -130,6 +132,22 @@ class AdminPanelCustomController(
 
         productService.setTransactionPayed(id, request.getUser())
         return "redirect:/admin/control/debts-of-my-group"
+    }
+
+    @GetMapping("/members-of-my-group")
+    fun membersOfMyGroup(model: Model, request: HttpServletRequest): String {
+
+        model.addAttribute("title", "Tanköröm tagjai")
+        model.addAttribute("description", "Ha a tartozáshoz a pénzt odaadta neked a kolléga, akkor pipáld ki itt. " +
+                "Onnantól a te felelősséged lesz majd elszámolni a gazdaságisnak.")
+        model.addAttribute("view", "debts-of-my-group")
+        model.addAttribute("columns", membersDescriptor.getColumns())
+        model.addAttribute("fields", membersDescriptor.getColumnDefinitions())
+        model.addAttribute("rows", productService.getAllDebtsByGroup(request.getUser()))
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_NONE)
+
+        return "overview"
     }
 
 }

@@ -56,11 +56,8 @@ class MainController(
         val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
 
-        val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
-        val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
         return EventsView(
                 warningMessage = config.getWarningMessage(),
-                eventsToday = events.filter { it.timestampStart > dayStart && it.timestampStart < dayEnd },
                 allEvents = events
         )
     }
@@ -72,8 +69,8 @@ class MainController(
         val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
 
-        val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond() * 1000
-        val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond() * 1000
+        val dayStart = LocalDate.now(timeZone).atStartOfDay(timeZone).toEpochSecond()
+        val dayEnd = LocalDate.now(timeZone).plusDays(1).atStartOfDay(timeZone).toEpochSecond()
         var upcomingEvents = events.filter { it.timestampStart > dayStart && it.timestampStart < dayEnd }
         if (upcomingEvents.isEmpty())
             upcomingEvents = events.filter { it.timestampStart >= dayStart }.take(6)
@@ -95,8 +92,6 @@ class MainController(
     @GetMapping("/events/{path}")
     fun event(@PathVariable path: String, request: HttpServletRequest): SingleEventView {
         val event = eventsRepository.findByUrl(path).orElse(null)
-        if (event?.visible?.not() ?: true || config.isSiteLowProfile())
-            return SingleEventView(config.getWarningMessage(), null)
 
         return SingleEventView(
                 warningMessage = config.getWarningMessage(),
@@ -216,6 +211,6 @@ class MainController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.13"
+    fun version(): String = "v1.0.17"
 
 }

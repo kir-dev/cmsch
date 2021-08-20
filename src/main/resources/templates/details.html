@@ -53,6 +53,7 @@
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled}"
                                        th:autocomplete="${input.second.autocomplete}"
+                                       required
                                 />
                                 <span class="note" th:text="${input.second.note}"></span>
                             </object>
@@ -67,6 +68,7 @@
                                        th:id="|input${iter.index}|"
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:disabled="${!input.second.enabled}"
+                                       required
                                 />
                                 <span class="note" th:text="${input.second.note}"></span>
                             </object>

@@ -55,7 +55,10 @@ class OverviewBuilder(val type: KClass<*>) {
                 .map {
                     val result = mutableListOf<String>()
                     for (detail in details)
-                        result.add(detail.first.getter.call(it)?.toString() ?: detail.second.defaultValue)
+                        result.add((detail.first.getter.call(it)?.toString() ?: detail.second.defaultValue)
+                                .replace(";", "")
+                                .replace("\n", " ")
+                                .replace("\r", ""))
                     result.joinToString(";")
                 }
                 .joinToString("\n")

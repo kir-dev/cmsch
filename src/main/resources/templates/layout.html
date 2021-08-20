@@ -52,10 +52,12 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellFood()}" th:href="@{/admin/control/sell-food}">Étel árusítás</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellMerch()}" th:href="@{/admin/control/sell-merch}">Merch árusítás</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}" th:href="@{/admin/control/debts-of-my-group}">Tanköröm tartozásai</a>
+                <a href="#" th:href="@{/admin/control/members-of-my-group}">Tanköröm tagjai</a>
 
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts}">Tartozások</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-users}">Tartozások felhasználónként</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/files}">Fájlok</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
 
                 <div class="separate"></div>

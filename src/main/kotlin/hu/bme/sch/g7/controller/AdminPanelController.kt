@@ -49,7 +49,8 @@ class AchievementController(
         "achievements", "Feladat", "Feladatok",
         "Bucketlist feladatok kezelése. A feladatok javítására használd a Javítások menüt!",
         AchievementEntity::class, ::AchievementEntity, importService,
-        permissionControl = { it?.isAdmin() ?: false || it?.grantCreateAchievement ?: false }
+        permissionControl = { it?.isAdmin() ?: false || it?.grantCreateAchievement ?: false },
+        importable = true
 )
 
 @Controller
@@ -62,7 +63,8 @@ class ProductController(
         "products", "Termék", "Termékek",
         "Az összes vásárolható termék kezelése. Az eladáshoz külön felület tartozik!",
         ProductEntity::class, ::ProductEntity, importService,
-        permissionControl = { it?.isAdmin() ?: false }
+        permissionControl = { it?.isAdmin() ?: false },
+        importable = true
 )
 
 @Controller

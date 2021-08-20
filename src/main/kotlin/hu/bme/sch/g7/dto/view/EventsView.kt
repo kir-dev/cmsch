@@ -9,8 +9,5 @@ data class EventsView(
         val warningMessage: String = "",
 
         @JsonView(Preview::class)
-        val eventsToday: List<EventEntity> = listOf(),
-
-        @JsonView(Preview::class)
         val allEvents: List<EventEntity> = listOf(),
 )

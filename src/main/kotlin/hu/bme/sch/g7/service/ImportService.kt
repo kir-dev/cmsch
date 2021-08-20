@@ -48,6 +48,9 @@ open class ImportService {
                                 IMPORT_LONG -> {
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toLong())
                                 }
+                                IMPORT_INT -> {
+                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toInt())
+                                }
                             }
                         }
                     }

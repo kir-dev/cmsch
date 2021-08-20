@@ -72,6 +72,10 @@
                                 <object th:if="${controlMode == 'payed'}" th:remove="tag">
                                     <a href="#" th:href="|@{/admin/control}/${view}/payed/${row.id}|"><span class="material-icons">check_circle_outline</span></a>
                                 </object>
+                                <object th:if="${controlMode == 'file'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/cdn}/${id}/${row.id}|" target="_blank"><span class="material-icons">visibility</span></a>
+                                    <a href="#" th:href="|@{/admin/control}/${view}/delete/${id}/${row.id}|"><span class="material-icons">delete</span></a>
+                                </object>
                             </td>
                         </tr>
                     </table>

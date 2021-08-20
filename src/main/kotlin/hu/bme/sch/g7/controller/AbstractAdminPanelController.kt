@@ -201,13 +201,13 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                     it.second.interpreter == INTERPRETER_INHERIT && it.second.type == INPUT_TYPE_FILE -> {
                         when (it.second.fileId) {
                             "0" -> {
-                                file0?.uploadFile(view).let { file ->
+                                file0?.uploadFile(view)?.let { file ->
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
                                 }
                             }
                             "1" -> {
-                                file1?.uploadFile(view).let { file ->
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "cdn/$view/$file")
+                                file1?.uploadFile(view)?.let { file ->
+                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
                                 }
                             }
                             else -> {
