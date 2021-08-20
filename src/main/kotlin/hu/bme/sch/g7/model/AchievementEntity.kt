@@ -9,7 +9,8 @@ import javax.persistence.*
 
 enum class AchievementType {
     TEXT,
-    IMAGE
+    IMAGE,
+    BOTH
 }
 
 @Entity
@@ -56,7 +57,7 @@ data class AchievementEntity(
 
         @Enumerated(EnumType.STRING)
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-        @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus", source = [ "TEXT", "IMAGE" ])
+        @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus", source = [ "TEXT", "IMAGE", "BOTH" ])
         @property:GenerateOverview(visible = false)
         @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = AchievementType::class)
         var type: AchievementType = AchievementType.TEXT,

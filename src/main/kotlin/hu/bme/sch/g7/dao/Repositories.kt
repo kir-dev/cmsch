@@ -66,6 +66,8 @@ interface SubmittedAchievementRepository : CrudRepository<SubmittedAchievementEn
 
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByAchievement_IdAndRejectedIsFalseAndApprovedIsFalse(achievementId: Int): List<SubmittedAchievementEntity>
+
+    fun findAllByScoreGreaterThanAndApprovedIsTrue(zero: Int): List<SubmittedAchievementEntity>
 }
 
 @Repository

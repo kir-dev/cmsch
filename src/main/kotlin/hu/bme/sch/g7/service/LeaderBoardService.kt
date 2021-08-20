@@ -35,6 +35,10 @@ open class LeaderBoardService(
         return listOf()
     }
 
+    fun getBoardAnyways(): List<TopListEntryDto> {
+        return cachedTopList
+    }
+
     fun getScoreOfGroup(group: GroupEntity): Int? {
         if (config.isLeaderBoardEnabled())
             return cachedTopList.find { it.name == group.name }?.score ?: 0
@@ -44,6 +48,15 @@ open class LeaderBoardService(
     @Transactional(readOnly = true)
     @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
     open fun recalculate() {
+        if (!config.isLeaderBoardUpdates()) {
+            log.info("Recalculating is disabled now")
+            return
+        }
+        forceRecalculate()
+    }
+
+    @Transactional(readOnly = true)
+    open fun forceRecalculate() {
         log.info("Recalculating top list cache")
         cachedTopList = submissions.findAll()
                 .asSequence()
@@ -51,7 +64,6 @@ open class LeaderBoardService(
                 .filter { groups.findByName(it.key).map { it.races }.orElse(false) }
                 .map { TopListEntryDto(it.key, it.value.sumOf { it.score }) }
                 .sortedByDescending { it.score }
-
     }
 
 }

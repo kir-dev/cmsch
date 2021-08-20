@@ -83,6 +83,18 @@
 
                 <object th:if="${controlMode == 'toplist'}" th:remove="tag">
                     <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn">Toplista újraszámítása</a>
+                    <a href="#" th:href="|@{/admin/control}/${view}/refresh-enable|" class="btn">Toplista frisítés bekapcsolása</a>
+                    <a href="#" th:href="|@{/admin/control}/${view}/refresh-disable|" class="btn">Toplista frisítés kikapcsolása</a>
+                    <p>
+                        Látható (bárki számára):
+                            <b th:if="${leaderboardEnabled}">igen</b>
+                            <b th:unless="${leaderboardEnabled}">nem</b>
+                    </p>
+                    <p>
+                        Frissítés (minden 10p):
+                        <b th:if="${leaderboardUpdates}">bekapcsolva</b>
+                        <b th:unless="${leaderboardUpdates}">kikapcsolva</b>
+                    </p>
                 </object>
 
                 <object th:if="${importable != null && importable && user.isAdmin()}" th:remove="tag">

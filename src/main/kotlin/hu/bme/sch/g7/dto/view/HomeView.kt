@@ -25,5 +25,9 @@ data class HomeView(
         val leaderBoard: List<TopListEntryDto>,
 
         @JsonView(Preview::class)
-        val leaderBoardVisible: Boolean
+        val leaderBoardVisible: Boolean,
+
+        @JsonView(Preview::class)
+        val leaderBoardFrozen: Boolean,
+
 )

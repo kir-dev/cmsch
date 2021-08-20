@@ -84,7 +84,8 @@ class MainController(
                 achievements = request.getUserOrNull()?.group?.let { achievements.getAllAchievements(it) }
                         ?: achievements.getAllAchievementsForGuests(),
                 leaderBoard = leaderBoardService.getBoard(),
-                leaderBoardVisible = config.isLeaderBoardEnabled()
+                leaderBoardVisible = config.isLeaderBoardEnabled(),
+                leaderBoardFrozen = !config.isLeaderBoardUpdates()
         )
     }
 
@@ -149,20 +150,26 @@ class MainController(
             return AchievementsView(
                     warningMessage = config.getWarningMessage(),
                     groupScore = null,
-                    leaderBoard = listOf())
+                    leaderBoard = listOf(),
+                    leaderBoardVisible = config.isLeaderBoardEnabled(),
+                    leaderBoardFrozen = !config.isLeaderBoardUpdates())
         }
 
         val group = request.getUserOrNull()?.group ?: return AchievementsView(
                 warningMessage = config.getWarningMessage(),
                 groupScore = null,
-                leaderBoard = leaderBoardService.getBoard())
+                leaderBoard = leaderBoardService.getBoard(),
+                leaderBoardVisible = config.isLeaderBoardEnabled(),
+                leaderBoardFrozen = !config.isLeaderBoardUpdates())
 
         return AchievementsView(
                 warningMessage = config.getWarningMessage(),
                 groupScore = leaderBoardService.getScoreOfGroup(group),
                 leaderBoard = leaderBoardService.getBoard(),
                 highlighted = achievements.getHighlightedOnes(group),
-                achievements = achievements.getAllAchievements(group)
+                achievements = achievements.getAllAchievements(group),
+                leaderBoardVisible = config.isLeaderBoardEnabled(),
+                leaderBoardFrozen = !config.isLeaderBoardUpdates()
         )
     }
 
@@ -185,6 +192,7 @@ class MainController(
         )
     }
 
+    @ResponseBody
     @PostMapping("/achievement")
     fun submitAchievement(
             @ModelAttribute(binding = false) answer: AchievementSubmissionDto,

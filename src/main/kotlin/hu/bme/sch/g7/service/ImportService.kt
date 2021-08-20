@@ -22,7 +22,7 @@ open class ImportService {
     )
 
     @Transactional(rollbackFor = [Throwable::class])
-    fun <T> importEntities(
+    open fun <T> importEntities(
             repo: CrudRepository<T, Int>,
             raw: List<List<String>>,
             supplier: Supplier<T>,

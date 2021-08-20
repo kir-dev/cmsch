@@ -137,6 +137,16 @@ open class AchievementsService(
             ))
             return AchievementSubmissionStatus.OK
 
+        } else if (achievement.type == AchievementType.BOTH) {
+            val fileName = file?.uploadFile(target) ?: ""
+
+            submitted.save(SubmittedAchievementEntity(
+                    0, achievement, groupId, user.group?.name ?: "",
+                    answer.textAnswer, "$target/$fileName",
+                    "", false, false, 0
+            ))
+            return AchievementSubmissionStatus.OK
+
         } else {
             throw IllegalStateException("Invalid achievement type: " + achievement.type)
         }

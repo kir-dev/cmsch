@@ -1,9 +1,12 @@
 package hu.bme.sch.g7.controller
 
 import hu.bme.sch.g7.admin.OverviewBuilder
+import hu.bme.sch.g7.dao.SubmittedAchievementRepository
 import hu.bme.sch.g7.dto.TopListEntryDto
+import hu.bme.sch.g7.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.g7.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.g7.model.SoldProductEntity
+import hu.bme.sch.g7.model.SubmittedAchievementEntity
 import hu.bme.sch.g7.service.LeaderBoardService
 import hu.bme.sch.g7.service.ProductService
 import hu.bme.sch.g7.service.RealtimeConfigService
@@ -28,12 +31,14 @@ class AdminPanelCustomController(
         private val leaderBoardService: LeaderBoardService,
         private val productService: ProductService,
         private val userService: UserService,
-        private val config: RealtimeConfigService
+        private val config: RealtimeConfigService,
+        private val submittedRepository: SubmittedAchievementRepository
 ) {
 
     private val topListDescriptor = OverviewBuilder(TopListEntryDto::class)
     private val debtsDescriptor = OverviewBuilder(SoldProductEntity::class)
     private val membersDescriptor = OverviewBuilder(GroupMemberVirtualEntity::class)
+    private val submittedDescriptor = OverviewBuilder(CheckRatingVirtualEntity::class)
 
     @GetMapping("")
     fun index(): String {
@@ -64,9 +69,11 @@ class AdminPanelCustomController(
         model.addAttribute("view", "toplist")
         model.addAttribute("columns", topListDescriptor.getColumns())
         model.addAttribute("fields", topListDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", leaderBoardService.getBoard())
+        model.addAttribute("rows", leaderBoardService.getBoardAnyways())
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_TOPLIST)
+        model.addAttribute("leaderboardEnabled", config.isLeaderBoardEnabled())
+        model.addAttribute("leaderboardUpdates", config.isLeaderBoardUpdates())
 
         return "overview"
     }
@@ -78,8 +85,55 @@ class AdminPanelCustomController(
             return "admin403"
         }
 
-        leaderBoardService.recalculate()
+        leaderBoardService.forceRecalculate()
         return "redirect:/admin/control/toplist"
+    }
+
+    @GetMapping("/toplist/refresh-enable")
+    fun enableRefreshTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        config.setLeaderboardUpdates(true)
+        return "redirect:/admin/control/toplist"
+    }
+
+    @GetMapping("/toplist/refresh-disable")
+    fun disableRefreshTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        config.setLeaderboardUpdates(false)
+        return "redirect:/admin/control/toplist"
+    }
+
+    @GetMapping("/check-ratings")
+    fun viewAll(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantRateAchievement }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        model.addAttribute("title", "Pontok ellenőrzése")
+        model.addAttribute("description", "Itt azok a beadások láthatóak amik eltérnek a beadásra adható max ponttól vagy a 0 ponttól.")
+        model.addAttribute("view", "rate-achievements")
+        model.addAttribute("columns", submittedDescriptor.getColumns())
+        model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
+        model.addAttribute("rows", fetchSubmittedChecks())
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_GRADE)
+
+        return "overview"
+    }
+
+    private fun fetchSubmittedChecks(): List<CheckRatingVirtualEntity> {
+        return submittedRepository.findAllByScoreGreaterThanAndApprovedIsTrue(0)
+                .filter { it.score != it.achievement?.maxScore ?: 0 }
+                .map { CheckRatingVirtualEntity(it.id, it.groupName, it.score, it.achievement?.maxScore ?: 0) }
     }
 
     @GetMapping("/debts-of-my-group")

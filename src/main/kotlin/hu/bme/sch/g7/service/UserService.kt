@@ -28,12 +28,12 @@ open class UserService(
     open fun exists(id: String) = users.existsByPekId(id)
 
     @Transactional(readOnly = true)
-    fun searchByG7Id(g7id: String): Optional<UserEntity> {
+    open fun searchByG7Id(g7id: String): Optional<UserEntity> {
         return users.findByG7id(g7id)
     }
 
     @Transactional(readOnly = true)
-    fun allMembersOfGroup(groupName: String): Collection<GroupMemberVirtualEntity> {
+    open fun allMembersOfGroup(groupName: String): Collection<GroupMemberVirtualEntity> {
         val mappings = groupMapping.findAllByGroupName(groupName)
                 .asSequence()
                 .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, "-") }

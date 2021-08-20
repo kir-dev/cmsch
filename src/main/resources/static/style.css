@@ -64,6 +64,14 @@ h1 {
     display: table-row;
 }
 
+.content .split .menu h2 {
+    font-weight: 400;
+    padding-top: 14px;
+    padding-bottom: 4px;
+    font-size: 18px;
+    text-align: center;
+}
+
 .content .split .menu {
     display: table-cell;
     max-width: 200px;

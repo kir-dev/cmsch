@@ -19,5 +19,11 @@ data class AchievementsView(
         val achievements: List<AchievementEntityWrapper> = listOf(),
 
         @JsonView(Preview::class)
-        val leaderBoard: List<TopListEntryDto>
+        val leaderBoard: List<TopListEntryDto>,
+
+        @JsonView(Preview::class)
+        val leaderBoardVisible: Boolean,
+
+        @JsonView(Preview::class)
+        val leaderBoardFrozen: Boolean,
 )

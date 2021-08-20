@@ -87,6 +87,7 @@ open class ProductService(
         return soldProductRepository.findAllByResponsibleGroupId(groupId)
     }
 
-    fun getProductById(id: Int) = productRepository.findById(id)
+    @Transactional(readOnly = true)
+    open fun getProductById(id: Int) = productRepository.findById(id)
 
 }
