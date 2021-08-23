@@ -1,0 +1,120 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <title>Tankör Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../static/tracker.css" th:href="@{/tracker.css}">
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-navbutton-color" content="#000000"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#000000"/>
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}" />
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/apple-touch-icon.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}" />
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.6.1/css/ol.css" type="text/css">
+
+</head>
+<body>
+
+<div id="map" style="width: 100%; height: 100vh"></div>
+
+<div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+</div>
+
+<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.6.1/build/ol.js"></script>
+
+<script>
+    var attribution = new ol.control.Attribution({
+        collapsible: false
+    });
+
+    var map = new ol.Map({
+        controls: ol.control.defaults({attribution: false}).extend([attribution]),
+        layers: [
+            // new ol.layer.Tile({
+            //     source: new ol.source.OSM()
+            // })
+            new ol.layer.Tile({
+                title:'terrain-background',
+                source: new ol.source.Stamen({ layer: 'terrain' })
+            })
+        ],
+        target: 'map',
+        view: new ol.View({
+            center: ol.proj.fromLonLat([19.056076, 47.476683]),
+            maxZoom: 20,
+            zoom: 16
+        })
+    });
+
+
+    var iconStyle = new ol.style.Style({
+        image:  new ol.style.Circle({
+            radius: 3,
+            stroke: new ol.style.Stroke({
+                color: '#fff'
+            }),
+            fill: new ol.style.Fill({
+                color: '#DD0000'
+            })
+        })
+    });
+    var labelStyle = new ol.style.Style({
+        text: new ol.style.Text({
+            font: '12px Calibri,sans-serif',
+            overflow: true,
+            textAlign: 'center',
+            offsetY: -8,
+            fill: new ol.style.Fill({
+                color: '#000'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#fff',
+                width: 3
+            })
+        })
+    });
+    var style = [iconStyle, labelStyle];
+
+
+    var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            features: [
+                new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([19.0533177, 47.4728981])),
+                    name: "I16",
+                    category: 1
+                }),
+                new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([19.0539376, 47.4728981])),
+                    name: "V10",
+                    category: 1
+                }),
+                new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([19.0540475, 47.4738981])),
+                    name: "I09",
+                    category: 1
+                }),
+
+            ]
+        }),
+        style: function(feature) {
+            labelStyle.getText().setText(feature.get('name'));
+            return style;
+        }
+    });
+    map.addLayer(layer);
+
+</script>
+
+</body>
+</html>

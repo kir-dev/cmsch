@@ -85,3 +85,8 @@ interface GroupToUserMappingRepository : CrudRepository<GroupToUserMappingEntity
     fun findByNeptun(neptun: String): Optional<GroupToUserMappingEntity>
     fun findAllByGroupName(groupName: String): List<GroupToUserMappingEntity>
 }
+
+@Repository
+interface LocationRepository : CrudRepository<LocationEntity, Int> {
+    fun findByUserId(userId: Int): Optional<LocationEntity>
+}

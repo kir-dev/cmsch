@@ -1,0 +1,20 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+object {
+    display: none;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #000;
+    overflow-x: hidden;
+    letter-spacing: 1px;
+    width: 100%;
+    color: #FFF;
+    height: 100%;
+    font-size: 0;
+}

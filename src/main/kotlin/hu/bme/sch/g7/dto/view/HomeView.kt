@@ -9,7 +9,7 @@ import hu.bme.sch.g7.model.EventEntity
 import hu.bme.sch.g7.model.NewsEntity
 
 data class HomeView(
-        @JsonView(FullDetails::class)
+        @JsonView(Preview::class)
         val warningMessage: String = "",
 
         @JsonView(Preview::class)

@@ -20,7 +20,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
         http.authorizeRequests()
                 .antMatchers("/", "/loggedin", "/login", "/logged-out", "/api/news", "/api/events",
                         "/api/events/**", "/api/products", "/api/extra-page/**", "/api/version", "/style.css",
-                        "/images/**", "/js/**", "/admin/logout", "/cdn/profiles/**", "/cdn/events/**", "/cdn/news/**",
+                        "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/profiles/**", "/cdn/events/**", "/cdn/news/**",
                         "/countdown")
                     .permitAll()
 

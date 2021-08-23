@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.dao.*
 import hu.bme.sch.g7.dto.*
 import hu.bme.sch.g7.dto.view.*
+import hu.bme.sch.g7.g7mobile.LocationResponse
 import hu.bme.sch.g7.model.ProductType
 import hu.bme.sch.g7.model.RoleType
 import hu.bme.sch.g7.model.UserEntity
 import hu.bme.sch.g7.service.AchievementsService
 import hu.bme.sch.g7.service.LeaderBoardService
+import hu.bme.sch.g7.service.LocationService
 import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
@@ -33,7 +35,8 @@ class MainController(
         private val achievements: AchievementsService,
         private val extraPagesRepository: ExtraPageRepository,
         private val debtsRepository: SoldProductRepository,
-        private val productsRepository: ProductRepository
+        private val productsRepository: ProductRepository,
+        private val locationService: LocationService
 ) {
 
     private val timeZone = ZoneId.of(zoneId)
@@ -218,7 +221,14 @@ class MainController(
     }
 
     @ResponseBody
+    @PostMapping("/location")
+    fun pushLocation(@RequestBody payload: LocationDto): LocationResponse {
+        println(payload)
+        return locationService.pushLocation(payload)
+    }
+
+    @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.17"
+    fun version(): String = "v1.0.18"
 
 }

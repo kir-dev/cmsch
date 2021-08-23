@@ -28,6 +28,7 @@ const val INVALID_ID_ERROR = "INVALID_ID"
 const val CONTROL_MODE_EDIT_DELETE = "edit,delete"
 const val CONTROL_MODE_EDIT = "edit"
 const val CONTROL_MODE_VIEW = "view"
+const val CONTROL_MODE_LOCATION = "location"
 
 open class AbstractAdminPanelController<T : ManagedEntity>(
         private val repo: CrudRepository<T, Int>,

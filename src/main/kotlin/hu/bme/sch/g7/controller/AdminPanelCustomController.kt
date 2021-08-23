@@ -13,6 +13,7 @@ import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.service.UserService
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -32,7 +33,8 @@ class AdminPanelCustomController(
         private val productService: ProductService,
         private val userService: UserService,
         private val config: RealtimeConfigService,
-        private val submittedRepository: SubmittedAchievementRepository
+        private val submittedRepository: SubmittedAchievementRepository,
+        @Value("\${g7web.profile.qr-prefix:G7_}") private val prefix: String
 ) {
 
     private val topListDescriptor = OverviewBuilder(TopListEntryDto::class)
@@ -202,6 +204,15 @@ class AdminPanelCustomController(
         model.addAttribute("controlMode", CONTROL_MODE_NONE)
 
         return "overview"
+    }
+
+    @GetMapping("/share-location")
+    fun shareLocation(model: Model, request: HttpServletRequest): String {
+
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("accessToken", request.getUser().g7id.substring(prefix.length))
+
+        return "shareLocation"
     }
 
 }

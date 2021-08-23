@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout :: head">
+</head>
+<body>
+<div class="content">
+    <div class="split">
+        <div th:replace="layout :: mobile"></div>
+        <div th:replace="layout :: menu(${user})">
+        </div>
+        <div class="payload">
+            <div class="page">
+                <h2>Helymeghatározás</h2>
+                <p class="highlight">
+                    Annak érdekében, hogy a tanköröd elveszett tagjai és a gárdatankörisek is mindig megtaláljanak
+                    egyszerűen, létre hoztunk egy helymegosztási lehetőséget. A használatához le kell töltened egy
+                    Android appot.
+                </p>
+
+                <p>Tokened: <b th:text="${accessToken}"></b> (A tokenedet ne oszd meg mással!)</p>
+
+                <a th:href="@{/files/g7-app-1.0.0.apk}" class="btn" target="_blank">G7 Android app letöltése</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

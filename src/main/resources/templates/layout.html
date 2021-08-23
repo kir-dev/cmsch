@@ -59,7 +59,8 @@
 
                 <h2 th:if="${userEntity.isAdmin()}">Tankör</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}" th:href="@{/admin/control/debts-of-my-group}">Tanköröm tartozásai</a>
-                <a href="#" th:href="@{/admin/control/members-of-my-group}">Tanköröm tagjai</a>
+                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/members-of-my-group}">Tanköröm tagjai</a>
+                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/share-location}">Helymeghatározás</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Gazdaságis</h2>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts}">Tartozások</a>
@@ -68,6 +69,7 @@
 
                 <h2 th:if="${userEntity.isAdmin()}">Admin</h2>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/files}">Fájlok</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/locations}">Pozíciók</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
 
                 <div class="separate"></div>
