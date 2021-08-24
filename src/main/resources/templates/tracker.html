@@ -21,14 +21,11 @@
     <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.6.1/css/ol.css" type="text/css">
 
 </head>
-<body>
+<body onload="onInit();">
+
+<div class="all-tracker"></div>
 
 <div id="map" style="width: 100%; height: 100vh"></div>
-
-<div id="popup" class="ol-popup">
-    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-    <div id="popup-content"></div>
-</div>
 
 <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.6.1/build/ol.js"></script>
 
@@ -57,23 +54,48 @@
     });
 
 
-    var iconStyle = new ol.style.Style({
+    var iconStyle1 = new ol.style.Style({
         image:  new ol.style.Circle({
-            radius: 3,
+            radius: 4,
             stroke: new ol.style.Stroke({
                 color: '#fff'
             }),
             fill: new ol.style.Fill({
-                color: '#DD0000'
+                color: '#FF0000'
             })
         })
     });
+
+    var iconStyle2 = new ol.style.Style({
+        image:  new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({
+                color: '#fff'
+            }),
+            fill: new ol.style.Fill({
+                color: '#FF00FF'
+            })
+        })
+    });
+
+    var iconStyle3 = new ol.style.Style({
+        image:  new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({
+                color: '#fff'
+            }),
+            fill: new ol.style.Fill({
+                color: '#00AAAA'
+            })
+        })
+    });
+
     var labelStyle = new ol.style.Style({
         text: new ol.style.Text({
-            font: '12px Calibri,sans-serif',
+            font: '16px Calibri,sans-serif',
             overflow: true,
             textAlign: 'center',
-            offsetY: -8,
+            offsetY: -12,
             fill: new ol.style.Fill({
                 color: '#000'
             }),
@@ -83,36 +105,106 @@
             })
         })
     });
-    var style = [iconStyle, labelStyle];
 
+    var iconStyle4 = new ol.style.Style({
+        image:  new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({
+                color: '#fff'
+            }),
+            fill: new ol.style.Fill({
+                color: '#444444'
+            })
+        })
+    });
+
+    var style = [iconStyle1, labelStyle];
+    var styleAdmin = [iconStyle2, labelStyle];
+    var styleGroup = [iconStyle3, labelStyle];
+    var styleSupport = [iconStyle4, labelStyle];
 
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector({
             features: [
-                new ol.Feature({
-                    geometry: new ol.geom.Point(ol.proj.fromLonLat([19.0533177, 47.4728981])),
-                    name: "I16",
-                    category: 1
-                }),
-                new ol.Feature({
-                    geometry: new ol.geom.Point(ol.proj.fromLonLat([19.0539376, 47.4728981])),
-                    name: "V10",
-                    category: 1
-                }),
-                new ol.Feature({
-                    geometry: new ol.geom.Point(ol.proj.fromLonLat([19.0540475, 47.4738981])),
-                    name: "I09",
-                    category: 1
-                }),
 
             ]
         }),
         style: function(feature) {
             labelStyle.getText().setText(feature.get('name'));
-            return style;
+            if (feature.get('category') === 3) {
+                return styleAdmin;
+            } else if (feature.get('category') === 2) {
+                return styleGroup;
+            } else if (feature.get('category') === 4) {
+                return styleSupport;
+            } else {
+                return style;
+            }
         }
     });
     map.addLayer(layer);
+
+    async function httpFetchData(method = 'POST', url = '') {
+        const response = await fetch(url, {
+            method: method,
+            mode: 'no-cors',
+            cache: 'no-cache'
+        });
+        return response.text();
+    }
+
+    async function refreshAll() {
+        await fetch("https://api.g7.sch-bme.hu/api/track", {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin'
+        }).then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw `error with status ${response.status}`;
+            }
+        }).then(data => {
+            layer.getSource().refresh();
+            for (feature in data) {
+                if (data[feature].groupName === "LEAD") {
+                    layer.getSource().addFeature(new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                        name: data[feature].alias,
+                        category: 3
+                    }));
+                } else if (data[feature].groupName === "MANAGER") {
+                    layer.getSource().addFeature(new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                        name: data[feature].alias,
+                        category: 2
+                    }));
+                } else if (data[feature].groupName === "SUPPORT") {
+                    layer.getSource().addFeature(new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                        name: data[feature].alias,
+                        category: 4
+                    }));
+                } else {
+                    layer.getSource().addFeature(new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                        name: data[feature].groupName,
+                        category: 1
+                    }));
+                }
+            }
+        }).catch((error) => {
+                console.log(error);
+        });
+    }
+
+    function onInit() {
+        setTimeout(async () => refreshAll(), 0);
+        setInterval(async () => {
+            await refreshAll();
+        }, 10000);
+    }
 
 </script>
 

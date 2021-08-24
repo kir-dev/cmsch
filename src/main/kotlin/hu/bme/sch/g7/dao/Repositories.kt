@@ -89,4 +89,5 @@ interface GroupToUserMappingRepository : CrudRepository<GroupToUserMappingEntity
 @Repository
 interface LocationRepository : CrudRepository<LocationEntity, Int> {
     fun findByUserId(userId: Int): Optional<LocationEntity>
+    override fun findAll(): List<LocationEntity>
 }

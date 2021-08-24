@@ -1,6 +1,6 @@
 package hu.bme.sch.g7.service
 
-import hu.bme.sch.g7.dao.LocationRepository
+ import hu.bme.sch.g7.dao.LocationRepository
 import hu.bme.sch.g7.dao.UserRepository
 import hu.bme.sch.g7.dto.LocationDto
 import hu.bme.sch.g7.g7mobile.LocationResponse
@@ -28,7 +28,7 @@ class LocationService(
                 if (user.get().role.value >= RoleType.STAFF.value) {
                     tokenToUserIdMapping.put(locationDto.token, user.get().id)
                     if (locationRepository.findByUserId(user.get().id).isEmpty) {
-                        locationRepository.save(LocationEntity(0, user.get().id, user.get().fullName, user.get().groupName))
+                        locationRepository.save(LocationEntity(0, user.get().id, user.get().fullName,  user.get().alias, user.get().groupName))
                     }
                 } else {
                     return LocationResponse("jogosulatlan", "n/a")
@@ -59,7 +59,7 @@ class LocationService(
     }
 
     @Transactional(readOnly = true)
-    fun findAllLocation(): Iterable<LocationEntity> {
+    fun findAllLocation(): List<LocationEntity> {
         return locationRepository.findAll()
     }
 

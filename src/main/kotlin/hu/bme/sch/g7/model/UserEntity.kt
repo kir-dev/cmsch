@@ -76,6 +76,11 @@ data class UserEntity(
 
         @JsonView(value = [ Edit::class ])
         @Column(nullable = false)
+        @property:GenerateInput(order = 19, label = "Becenév", enabled = true)
+        var alias: String = "",
+
+        @JsonView(value = [ Edit::class ])
+        @Column(nullable = false)
         @property:GenerateInput(order = 5, label = "Email cím", note = "Nem kell egyik funkcióhoz sem")
         @property:GenerateOverview(visible = false)
         var email: String = "",
@@ -153,7 +158,7 @@ data class UserEntity(
 
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
         @Column(nullable = false)
-        @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 7, label = "Tankör", entitySource = "GroupEntity", minimumRole = RoleType.ADMIN)
+        @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 7, label = "Tankör", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
         @property:GenerateOverview(columnName = "Tankör", centered = true, order = 3)
         var groupName: String = "",
 
