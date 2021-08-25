@@ -38,7 +38,7 @@ class DebtsByUsersController(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -75,7 +75,7 @@ class DebtsByUsersController(
 
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -95,7 +95,7 @@ class DebtsByUsersController(
 
     @GetMapping("/edit/{id}")
     fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -124,7 +124,7 @@ class DebtsByUsersController(
              model: Model,
              request: HttpServletRequest
     ): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }

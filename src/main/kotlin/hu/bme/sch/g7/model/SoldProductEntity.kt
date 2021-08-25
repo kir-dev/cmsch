@@ -39,6 +39,7 @@ data class SoldProductEntity(
 
         @Column(nullable = false)
         @property:GenerateInput(order = 4, label = "Vevő neve", enabled = false, ignore = true)
+        @property:GenerateOverview(columnName = "Vevő", order = 3)
         var ownerName: String = "",
 
         @Column(nullable = false)
@@ -50,7 +51,7 @@ data class SoldProductEntity(
         var responsibleId: Int? = null,
 
         @Column(nullable = false)
-        @property:GenerateOverview(columnName = "Kezelő neve", order = 3)
+        @property:GenerateOverview(columnName = "Kezelő neve", order = 4)
         var responsibleName: String = "",
 
         @Column(nullable = false)
@@ -63,7 +64,7 @@ data class SoldProductEntity(
 
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve", minimumRole = RoleType.ADMIN)
-        @property:GenerateOverview(columnName = "Fizetve", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+        @property:GenerateOverview(columnName = "Fizetve", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var payed: Boolean = false,
 
         @Column(nullable = false)
@@ -72,7 +73,7 @@ data class SoldProductEntity(
 
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Lezárva", minimumRole = RoleType.ADMIN)
-        @property:GenerateOverview(columnName = "Lezárva", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+        @property:GenerateOverview(columnName = "Lezárva", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         var finsihed: Boolean = false,
 
         @Lob

@@ -1,6 +1,5 @@
 package hu.bme.sch.g7.service
 
- import hu.bme.sch.g7.dao.LocationRepository
 import hu.bme.sch.g7.dao.UserRepository
 import hu.bme.sch.g7.dto.LocationDto
 import hu.bme.sch.g7.g7mobile.LocationResponse
@@ -8,28 +7,23 @@ import hu.bme.sch.g7.model.LocationEntity
 import hu.bme.sch.g7.model.RoleType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class LocationService(
         private val clock: ClockService,
-        private val locationRepository: LocationRepository,
         private val userRepository: UserRepository,
         @Value("\${g7web.profile.qr-prefix:G7_}") val prefix: String
 ) {
 
-    private val tokenToUserIdMapping = mutableMapOf<String, Int>()
+    private val tokenToLocationMapping = ConcurrentHashMap<String, LocationEntity>()
 
-    @Transactional
     fun pushLocation(locationDto: LocationDto): LocationResponse {
-        if (!tokenToUserIdMapping.containsKey(locationDto.token)) {
+        if (!tokenToLocationMapping.containsKey(locationDto.token)) {
             val user = userRepository.findByG7id(prefix + locationDto.token)
             if (user.isPresent) {
                 if (user.get().role.value >= RoleType.STAFF.value) {
-                    tokenToUserIdMapping.put(locationDto.token, user.get().id)
-                    if (locationRepository.findByUserId(user.get().id).isEmpty) {
-                        locationRepository.save(LocationEntity(0, user.get().id, user.get().fullName,  user.get().alias, user.get().groupName))
-                    }
+                    tokenToLocationMapping.put(locationDto.token, LocationEntity(0, user.get().id, user.get().fullName,  user.get().alias, user.get().groupName))
                 } else {
                     return LocationResponse("jogosulatlan", "n/a")
                 }
@@ -38,18 +32,14 @@ class LocationService(
             }
         }
 
-        val groupName = locationRepository.findByUserId(tokenToUserIdMapping
-                .getOrDefault(locationDto.token, 0))
-                .map {
-                    it.longitude = locationDto.longitude
-                    it.latitude = locationDto.latitude
-                    it.altitude = locationDto.altitude
-                    it.accuracy = locationDto.accuracy
-                    it.timestamp = clock.getTimeInSeconds()
-                    locationRepository.save(it)
-                    it.groupName
-                }
-                .orElse(null)
+        val groupName = tokenToLocationMapping[locationDto.token]?.let {
+            it.longitude = locationDto.longitude
+            it.latitude = locationDto.latitude
+            it.altitude = locationDto.altitude
+            it.accuracy = locationDto.accuracy
+            it.timestamp = clock.getTimeInSeconds()
+            return@let it.groupName
+        }
 
         return if (groupName != null)
             LocationResponse("OK", groupName)
@@ -58,9 +48,36 @@ class LocationService(
 
     }
 
-    @Transactional(readOnly = true)
     fun findAllLocation(): List<LocationEntity> {
-        return locationRepository.findAll()
+        return tokenToLocationMapping.values.toList()
+                .sortedBy { it -> it.groupName.length.toString() + it.groupName }
+    }
+
+    fun clean() {
+        return tokenToLocationMapping.clear()
+    }
+
+    fun refresh() {
+        return tokenToLocationMapping.keys()
+                .asSequence()
+                .forEach { token ->
+                    tokenToLocationMapping[token]?.let { it ->
+                        val user = userRepository.findByG7id(prefix + token)
+                        it.userId = user.get().id
+                        it.userName = user.get().fullName
+                        it.alias = user.get().alias
+                        it.groupName = user.get().groupName
+                    }
+                }
+    }
+
+    fun findLocationsOfGroup(groupName: String): List<LocationEntity> {
+        return tokenToLocationMapping.values.filter { it.groupName == groupName }
+    }
+
+    fun getRecents(): List<LocationEntity> {
+        val range = clock.getTimeInSeconds() + 600;
+        return tokenToLocationMapping.values.filter { it.timestamp < range }
     }
 
 }

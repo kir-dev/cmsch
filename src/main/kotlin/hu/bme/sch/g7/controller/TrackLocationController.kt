@@ -1,9 +1,7 @@
 package hu.bme.sch.g7.controller
 
 import hu.bme.sch.g7.admin.OverviewBuilder
-import hu.bme.sch.g7.dto.LocationDto
 import hu.bme.sch.g7.model.LocationEntity
-import hu.bme.sch.g7.model.SoldProductEntity
 import hu.bme.sch.g7.service.LocationService
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
@@ -12,12 +10,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-@RequestMapping("/api")
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 class TrackLocationController(
         private val locationService: LocationService
@@ -26,26 +23,54 @@ class TrackLocationController(
     private val overviewDescriptor = OverviewBuilder(LocationEntity::class)
 
     @ResponseBody
-    @GetMapping("/track")
+    @GetMapping("/api/track")
     fun api(request: HttpServletRequest): List<LocationEntity> {
-//        return listOf(
-//                LocationEntity(0, 1, "Szabó Gergely", "VINYÓ", "LEAD", 19.0539376, 47.4728981, 20f, 183.0, System.currentTimeMillis() / 1000L),
-//                LocationEntity(0, 1, "Szabó Gergely", "DOMA", "LEAD", 19.0549376, 47.4738981, 20f, 183.0, System.currentTimeMillis() / 1000L),
-//                LocationEntity(0, 1, "Szabó Gergely", "SCHÁMI", "SUPPORT", 19.0529376, 47.4738981, 20f, 183.0, System.currentTimeMillis() / 1000L),
-//                LocationEntity(1, 1, "Szabó Gergely 2", "PIROS", "MANAGER", 19.0539376, 47.4748981, 20f, 183.0, System.currentTimeMillis() / 1000L),
-//                LocationEntity(2, 3, "Szabó Gergely 3", "", "I22", 19.0529376, 47.4728981, 20f, 183.0, System.currentTimeMillis() / 1000L),
-//
-//        );
-
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantTracker }?.not() ?: true) {
             return listOf();
         }
         return locationService.findAllLocation()
     }
 
-    @GetMapping("/tracking")
-    fun view(): String {
+    @ResponseBody
+    @GetMapping("/api/track/{groupName}")
+    fun apiGroup(@PathVariable groupName: String, request: HttpServletRequest): List<LocationEntity> {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantTracker || it.grantListUsers || it.grantGroupManager }?.not() ?: true) {
+            return listOf();
+        }
+        return locationService.findLocationsOfGroup(groupName)
+    }
+
+    @GetMapping("/admin/control/tracking")
+    fun view(request: HttpServletRequest, model: Model): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantTracker }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403";
+        }
+
+        model.addAttribute("url", "/api/track")
         return "tracker"
     }
 
+    @GetMapping("/admin/control/tracking/{groupName}")
+    fun viewGroup(@PathVariable groupName: String, request: HttpServletRequest, model: Model): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantTracker }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403";
+        }
+
+        model.addAttribute("url", "/api/track/${groupName}")
+        return "tracker"
+    }
+
+    @GetMapping("/admin/control/locations/clean")
+    fun clean(): String {
+        locationService.clean()
+        return "redirect:/admin/control/locations"
+    }
+
+    @GetMapping("/admin/control/locations/refresh")
+    fun refresh(): String {
+        locationService.refresh()
+        return "redirect:/admin/control/locations"
+    }
 }

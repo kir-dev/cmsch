@@ -79,7 +79,7 @@ class SoldProductController(
         "Az összes eladásból származó tranzakciók.",
         SoldProductEntity::class, ::SoldProductEntity, importService,
         controlMode = CONTROL_MODE_EDIT,
-        permissionControl = { it?.isAdmin() ?: false }
+        permissionControl = { it?.isAdmin() ?: false || it?.grantFinance ?: false }
 ) {
     override fun onEntityPreSave(entity: SoldProductEntity, request: HttpServletRequest) {
         val date = clock.getTimeInSeconds()

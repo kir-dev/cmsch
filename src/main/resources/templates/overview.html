@@ -76,6 +76,9 @@
                                     <a href="#" th:href="|@{/cdn}/${id}/${row.id}|" target="_blank"><span class="material-icons">visibility</span></a>
                                     <a href="#" th:href="|@{/admin/control}/${view}/delete/${id}/${row.id}|"><span class="material-icons">delete</span></a>
                                 </object>
+                                <object th:if="${controlMode == 'track'}" th:remove="tag">
+                                    <a href="#" th:href="|@{/admin/control}/tracking/${id}|" target="_blank"><span class="material-icons">map</span></a>
+                                </object>
                             </td>
                         </tr>
                     </table>
@@ -99,6 +102,11 @@
 
                 <object th:if="${importable != null && importable && user.isAdmin()}" th:remove="tag">
                     <a href="#" th:href="|@{/admin/control}/${view}/resource|" class="btn">Import és export</a>
+                </object>
+
+                <object th:if="${controlMode == 'location'}" th:remove="tag">
+                    <a href="#" th:href="|@{/admin/control}/${view}/clean|" class="btn">Törlés</a>
+                    <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn">Frissítés</a>
                 </object>
             </div>
         </div>

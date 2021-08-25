@@ -19,19 +19,7 @@ data class GroupEntityDto(
         val staffs: List<GroupStaffDto>,
 
         @JsonView(FullDetails::class)
-        val coverImageUrl: String,
-
-        @JsonView(FullDetails::class)
-        val lastLongitude: String,
-
-        @JsonView(FullDetails::class)
-        val lastLatitude: String,
-
-        @JsonView(FullDetails::class)
-        val lastTimeLocationChanged: Long,
-
-        @JsonView(FullDetails::class)
-        val lastTimeUpdatedUser: String
+        val coverImageUrl: String
 ) {
 
     constructor(entity: GroupEntity) : this(
@@ -48,11 +36,7 @@ data class GroupEntityDto(
                                 if (it.size > 2) it[2].trim() else "")
                     }
                     .toList(),
-        entity.coverImageUrl,
-        entity.lastLongitude,
-        entity.lastLatitude,
-        entity.lastTimeLocationChanged,
-        entity.lastTimeUpdatedUser,
+        entity.coverImageUrl
     )
 
 }

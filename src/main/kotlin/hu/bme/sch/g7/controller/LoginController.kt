@@ -77,6 +77,7 @@ open class LoginController(
                         false, false, false, false,
                         false, false,  false,
                         false, false,
+                        false, false,
                         "", null, GuildType.UNKNOWN, MajorType.UNKNOWN
                 )
                 log.info("Logging in with new user ${user.fullName} pekId: ${user.pekId}")

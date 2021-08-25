@@ -19,17 +19,44 @@
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon-32x32.png}" />
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}" />
     <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.6.1/css/ol.css" type="text/css">
-
 </head>
 <body onload="onInit();">
 
-<div class="all-tracker"></div>
+<div class="buttons">
+    <button onclick="document.getElementById('table').style.display = 'block'">&forall;</button>
+    <button onclick="document.getElementById('table').style.display = 'none'">X</button>
+</div>
+
+<div class="all-tracker" id="table">
+    <table>
+        <thead>
+            <tr>
+                <td></td>
+                <td>Név</td>
+                <td>Friss.</td>
+                <td>Pontos.</td>
+                <td>Magasság</td>
+            </tr>
+        </thead>
+        <tbody id="data">
+            <!--<tr>
+                <td><div class="cat cat-1"></div></td>
+                <td>I12</td>
+                <td>5s</td>
+                <td>20</td>
+                <td>147.01</td>
+            </tr>-->
+        </tbody>
+    </table>
+</div>
 
 <div id="map" style="width: 100%; height: 100vh"></div>
 
 <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.6.1/build/ol.js"></script>
 
-<script>
+<script th:inline="javascript">
+    const apiUrl = /*[[${url}]]*/ "/api/track";
+
     var attribution = new ol.control.Attribution({
         collapsible: false
     });
@@ -154,7 +181,7 @@
     }
 
     async function refreshAll() {
-        await fetch("https://api.g7.sch-bme.hu/api/track", {
+        await fetch(apiUrl, {
             method: 'GET',
             mode: 'cors',
             cache: 'no-cache',
@@ -167,35 +194,50 @@
             }
         }).then(data => {
             layer.getSource().refresh();
+            let tableData = "";
             for (feature in data) {
-                if (data[feature].groupName === "LEAD") {
-                    layer.getSource().addFeature(new ol.Feature({
-                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                        name: data[feature].alias,
-                        category: 3
-                    }));
-                } else if (data[feature].groupName === "MANAGER") {
-                    layer.getSource().addFeature(new ol.Feature({
-                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                        name: data[feature].alias,
-                        category: 2
-                    }));
-                } else if (data[feature].groupName === "SUPPORT") {
-                    layer.getSource().addFeature(new ol.Feature({
-                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                        name: data[feature].alias,
-                        category: 4
-                    }));
-                } else {
-                    layer.getSource().addFeature(new ol.Feature({
-                        geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                        name: data[feature].groupName,
-                        category: 1
-                    }));
+                let elapsed = (Date.now() / 1000) - parseInt(data[feature].timestamp);
+                let elapsedStr = elapsed.toFixed(0) + "s";
+                console.log(data[feature].altitude.toFixed(2));
+                if (elapsed > 120) {
+                    elapsed = elapsed / 60;
+                    elapsedStr = elapsed.toFixed(0) + "m";
+                }
+                if (((Date.now() / 1000) - parseInt(data[feature].timestamp)) <= 600) {
+                    if (data[feature].groupName === "LEAD") {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: data[feature].alias,
+                            category: 3
+                        }));
+                        tableData += `<tr><td><div class="cat cat-3"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === "MANAGER") {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: data[feature].alias,
+                            category: 2
+                        }));
+                        tableData += `<tr><td><div class="cat cat-2"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === "SUPPORT") {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: data[feature].alias,
+                            category: 4
+                        }));
+                        tableData += `<tr><td><div class="cat cat-4"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: data[feature].groupName,
+                            category: 1
+                        }));
+                        tableData += `<tr><td><div class="cat cat-1"></td><td>${data[feature].groupName}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    }
                 }
             }
+            document.getElementById('data').innerHTML = tableData;
         }).catch((error) => {
-                console.log(error);
+            console.log(error);
         });
     }
 
@@ -203,7 +245,7 @@
         setTimeout(async () => refreshAll(), 0);
         setInterval(async () => {
             await refreshAll();
-        }, 10000);
+        }, 5000);
     }
 
 </script>

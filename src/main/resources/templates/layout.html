@@ -44,6 +44,7 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/users}">Felhasználók</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/group-to-user}">Tankör tagságok</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/guild-to-user}">Gárda tagságok</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers() || userEntity.getGrantTracking()}" th:href="@{/admin/control/track-group}">Tankör követése</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Bucketlist</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/achievements}">Bucketlist feladatok</a>
@@ -63,13 +64,14 @@
                 <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/share-location}">Helymeghatározás</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Gazdaságis</h2>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts}">Tartozások</a>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/debts-by-users}">Tartozások felhasználónként</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts}">Tartozások</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-users}">Tartozások felhasználónként</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Admin</h2>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/files}">Fájlok</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/locations}">Pozíciók</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantTracking()}" th:href="@{/admin/control/tracking}">Követés (térkép)</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
 
                 <div class="separate"></div>

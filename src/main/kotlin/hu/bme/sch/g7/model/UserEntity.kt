@@ -76,7 +76,7 @@ data class UserEntity(
 
         @JsonView(value = [ Edit::class ])
         @Column(nullable = false)
-        @property:GenerateInput(order = 19, label = "Becenév", enabled = true)
+        @property:GenerateInput(order = 21, label = "Becenév", enabled = true)
         var alias: String = "",
 
         @JsonView(value = [ Edit::class ])
@@ -155,6 +155,20 @@ data class UserEntity(
         @property:GenerateOverview(visible = false)
         @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_BOOLEAN)
         var grantGroupDebtsMananger: Boolean = false,
+
+        @JsonView(value = [ Edit::class ])
+        @Column(nullable = false)
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 19, label = "JOG: Gazdaságis", minimumRole = RoleType.ADMIN)
+        @property:GenerateOverview(visible = false)
+        @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
+        var grantFinance: Boolean = false,
+
+        @JsonView(value = [ Edit::class ])
+        @Column(nullable = false)
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 20, label = "JOG: Térkép figyelő", minimumRole = RoleType.ADMIN)
+        @property:GenerateOverview(visible = false)
+        @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
+        var grantTracker: Boolean = false,
 
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
         @Column(nullable = false)

@@ -71,30 +71,6 @@ data class GroupEntity(
         @property:GenerateOverview(visible = false)
         var coverImageUrl: String = "",
 
-        @Column(nullable = false)
-        @JsonView(value = [ Edit::class, FullDetails::class ])
-        @property:GenerateInput(maxLength = 32, order = 8, label = "Longitude", note = "Helymeghatározás feature")
-        @property:GenerateOverview(visible = false)
-        var lastLongitude: String = "0",
-
-        @Column(nullable = false)
-        @JsonView(value = [ Edit::class, FullDetails::class ])
-        @property:GenerateInput(maxLength = 32, order = 9, label = "Latitude", note = "Helymeghatározás feature")
-        @property:GenerateOverview(visible = false)
-        var lastLatitude: String = "0",
-
-        @Column(nullable = false)
-        @JsonView(value = [ Edit::class, FullDetails::class ])
-        @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Helyzet frissült ekkor", note = "Helymeghatározás feature")
-        @property:GenerateOverview(visible = false)
-        var lastTimeLocationChanged: Long = 0,
-
-        @Column(nullable = false)
-        @JsonView(value = [ Edit::class, FullDetails::class ])
-        @property:GenerateInput(maxLength = 64, order = 11, label = "Helyzetet frissítő felhasználó", note = "Helymeghatározás feature")
-        @property:GenerateOverview(visible = false)
-        var lastTimeUpdatedUser: String = "",
-
         @JsonIgnore
         @OneToMany(fetch = FetchType.LAZY, targetEntity = UserEntity::class, mappedBy = "group")
         @property:GenerateInput(type = INPUT_TYPE_LIST_ENTITIES, order = 12, label = "Tankör tagjai",

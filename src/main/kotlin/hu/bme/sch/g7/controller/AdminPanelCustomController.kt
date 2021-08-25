@@ -5,12 +5,10 @@ import hu.bme.sch.g7.dao.SubmittedAchievementRepository
 import hu.bme.sch.g7.dto.TopListEntryDto
 import hu.bme.sch.g7.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.g7.dto.virtual.GroupMemberVirtualEntity
+import hu.bme.sch.g7.dto.virtual.TrackGroupVirtualEntity
 import hu.bme.sch.g7.model.SoldProductEntity
 import hu.bme.sch.g7.model.SubmittedAchievementEntity
-import hu.bme.sch.g7.service.LeaderBoardService
-import hu.bme.sch.g7.service.ProductService
-import hu.bme.sch.g7.service.RealtimeConfigService
-import hu.bme.sch.g7.service.UserService
+import hu.bme.sch.g7.service.*
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
@@ -25,6 +23,7 @@ import javax.servlet.http.HttpServletRequest
 const val CONTROL_MODE_TOPLIST = "toplist"
 const val CONTROL_MODE_PAYED = "payed"
 const val CONTROL_MODE_NONE = "none"
+const val CONTROL_MODE_TRACK = "track"
 
 @Controller
 @RequestMapping("/admin/control")
@@ -34,6 +33,7 @@ class AdminPanelCustomController(
         private val userService: UserService,
         private val config: RealtimeConfigService,
         private val submittedRepository: SubmittedAchievementRepository,
+        private val locationService: LocationService,
         @Value("\${g7web.profile.qr-prefix:G7_}") private val prefix: String
 ) {
 
@@ -41,6 +41,7 @@ class AdminPanelCustomController(
     private val debtsDescriptor = OverviewBuilder(SoldProductEntity::class)
     private val membersDescriptor = OverviewBuilder(GroupMemberVirtualEntity::class)
     private val submittedDescriptor = OverviewBuilder(CheckRatingVirtualEntity::class)
+    private val trackDescriptor = OverviewBuilder(TrackGroupVirtualEntity::class)
 
     @GetMapping("")
     fun index(): String {
@@ -140,7 +141,7 @@ class AdminPanelCustomController(
 
     @GetMapping("/debts-of-my-group")
     fun debtsOfMyGroup(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger || it.grantFinance }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -161,7 +162,7 @@ class AdminPanelCustomController(
 
     @GetMapping("/debts-of-my-group/payed/{id}")
     fun setDebtsStatus(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger || it.grantFinance }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -182,7 +183,7 @@ class AdminPanelCustomController(
 
     @PostMapping("/debts-of-my-group/payed/{id}")
     fun payed(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger || it.grantFinance }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -202,6 +203,25 @@ class AdminPanelCustomController(
         model.addAttribute("rows", userService.allMembersOfGroup(request.getUser().groupName))
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_NONE)
+
+        return "overview"
+    }
+
+    @GetMapping("/track-group")
+    fun trackGroup(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantListUsers || it.grantGroupManager }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        model.addAttribute("title", "Tankör követése")
+        model.addAttribute("description", "A tankörben lévő emberek követése a térképen")
+        model.addAttribute("view", "track-group")
+        model.addAttribute("columns", trackDescriptor.getColumns())
+        model.addAttribute("fields", trackDescriptor.getColumnDefinitions())
+        model.addAttribute("rows", locationService.getRecents())
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_TRACK)
 
         return "overview"
     }
