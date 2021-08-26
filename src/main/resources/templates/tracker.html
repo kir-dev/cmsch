@@ -145,10 +145,23 @@
         })
     });
 
+    var iconStyle5 = new ol.style.Style({
+        image:  new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({
+                color: '#fff'
+            }),
+            fill: new ol.style.Fill({
+                color: '#2B2E88'
+            })
+        })
+    });
+
     var style = [iconStyle1, labelStyle];
     var styleAdmin = [iconStyle2, labelStyle];
     var styleGroup = [iconStyle3, labelStyle];
     var styleSupport = [iconStyle4, labelStyle];
+    var styleSenior = [iconStyle5, labelStyle];
 
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector({
@@ -164,6 +177,8 @@
                 return styleGroup;
             } else if (feature.get('category') === 4) {
                 return styleSupport;
+            } else if (feature.get('category') === 5) {
+                return styleSenior;
             } else {
                 return style;
             }
@@ -195,15 +210,16 @@
         }).then(data => {
             layer.getSource().refresh();
             let tableData = "";
+            const currentTime = new Date(Date.now()+(-new Date().getTimezoneOffset()*60000)).getTime()/1000|0;
             for (feature in data) {
-                let elapsed = (Date.now() / 1000) - parseInt(data[feature].timestamp);
+                let elapsed = currentTime - parseInt(data[feature].timestamp);
                 let elapsedStr = elapsed.toFixed(0) + "s";
-                console.log(data[feature].altitude.toFixed(2));
+
                 if (elapsed > 120) {
                     elapsed = elapsed / 60;
                     elapsedStr = elapsed.toFixed(0) + "m";
                 }
-                if (((Date.now() / 1000) - parseInt(data[feature].timestamp)) <= 600) {
+                if (currentTime - parseInt(data[feature].timestamp) <= 600) {
                     if (data[feature].groupName === "LEAD") {
                         layer.getSource().addFeature(new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
@@ -223,6 +239,13 @@
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
                             name: data[feature].alias,
                             category: 4
+                        }));
+                        tableData += `<tr><td><div class="cat cat-4"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === "SENIOR") {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: data[feature].alias,
+                            category: 5
                         }));
                         tableData += `<tr><td><div class="cat cat-4"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
                     } else {

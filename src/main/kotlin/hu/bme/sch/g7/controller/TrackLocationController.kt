@@ -20,8 +20,6 @@ class TrackLocationController(
         private val locationService: LocationService
 ) {
 
-    private val overviewDescriptor = OverviewBuilder(LocationEntity::class)
-
     @ResponseBody
     @GetMapping("/api/track")
     fun api(request: HttpServletRequest): List<LocationEntity> {

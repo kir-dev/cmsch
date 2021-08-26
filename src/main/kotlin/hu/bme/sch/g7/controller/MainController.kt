@@ -8,10 +8,7 @@ import hu.bme.sch.g7.g7mobile.LocationResponse
 import hu.bme.sch.g7.model.ProductType
 import hu.bme.sch.g7.model.RoleType
 import hu.bme.sch.g7.model.UserEntity
-import hu.bme.sch.g7.service.AchievementsService
-import hu.bme.sch.g7.service.LeaderBoardService
-import hu.bme.sch.g7.service.LocationService
-import hu.bme.sch.g7.service.RealtimeConfigService
+import hu.bme.sch.g7.service.*
 import hu.bme.sch.g7.util.getUser
 import hu.bme.sch.g7.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
@@ -36,7 +33,8 @@ class MainController(
         private val extraPagesRepository: ExtraPageRepository,
         private val debtsRepository: SoldProductRepository,
         private val productsRepository: ProductRepository,
-        private val locationService: LocationService
+        private val locationService: LocationService,
+        private val clock: ClockService
 ) {
 
     private val timeZone = ZoneId.of(zoneId)
@@ -47,7 +45,7 @@ class MainController(
         val user = request.getUserOrNull()
         return NewsView(
                 warningMessage = config.getWarningMessage(),
-                news = newsRepository.findAllByVisibleTrueOrderByTimestamp()
+                news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
                         .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
         )
     }
@@ -80,7 +78,7 @@ class MainController(
 
         return HomeView(
                 warningMessage = config.getWarningMessage(),
-                news = newsRepository.findAllByVisibleTrueOrderByTimestamp()
+                news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
                         .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
                         .take(4),
                 upcomingEvents = upcomingEvents,
@@ -110,10 +108,20 @@ class MainController(
         if (config.isSiteLowProfile())
             return ProfileView(warningMessage = config.getWarningMessage(), UNKNOWN_USER, group = null)
 
+        val group = user.group?.let { GroupEntityDto(it) }
         return ProfileView(
                 warningMessage = config.getWarningMessage(),
                 user = user,
-                group = user.group?.let { GroupEntityDto(it) }
+                group = group,
+                locations = locationService.findLocationsOfGroup(group?.name ?: "")
+                        .filter { it.timestamp + 600 > clock.getTimeInSeconds() }
+                        .map { GroupMemberLocationDto(
+                                if (it.alias.isNotBlank()) it.alias else it.userName,
+                                it.longitude,
+                                it.latitude,
+                                it.accuracy,
+                                it.timestamp
+                        ) }
         )
     }
 
@@ -223,12 +231,11 @@ class MainController(
     @ResponseBody
     @PostMapping("/location")
     fun pushLocation(@RequestBody payload: LocationDto): LocationResponse {
-        println(payload)
         return locationService.pushLocation(payload)
     }
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.18"
+    fun version(): String = "v1.0.19"
 
 }

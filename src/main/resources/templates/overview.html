@@ -77,7 +77,7 @@
                                     <a href="#" th:href="|@{/admin/control}/${view}/delete/${id}/${row.id}|"><span class="material-icons">delete</span></a>
                                 </object>
                                 <object th:if="${controlMode == 'track'}" th:remove="tag">
-                                    <a href="#" th:href="|@{/admin/control}/tracking/${id}|" target="_blank"><span class="material-icons">map</span></a>
+                                    <a href="#" th:href="|@{/admin/control}/tracking/${row.id}|" target="_blank"><span class="material-icons">map</span></a>
                                 </object>
                             </td>
                         </tr>

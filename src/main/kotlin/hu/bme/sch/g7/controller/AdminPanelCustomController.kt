@@ -219,7 +219,7 @@ class AdminPanelCustomController(
         model.addAttribute("view", "track-group")
         model.addAttribute("columns", trackDescriptor.getColumns())
         model.addAttribute("fields", trackDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", locationService.getRecents())
+        model.addAttribute("rows", locationService.getRecents().map { TrackGroupVirtualEntity(it.groupName) }.distinct())
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_TRACK)
 

@@ -6,6 +6,7 @@ import hu.bme.sch.g7.model.GuildType
 import hu.bme.sch.g7.model.MajorType
 import hu.bme.sch.g7.model.RoleType
 import hu.bme.sch.g7.model.UserEntity
+import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.service.UserProfileGeneratorService
 import hu.bme.sch.g7.service.UserService
 import hu.bme.sch.g7.util.sha256
@@ -40,7 +41,9 @@ open class LoginController(
         private val guildToUserMapping: GuildToUserMappingRepository,
         private val groups: GroupRepository,
         @Value("\${g7web.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") private val grantStaffGroupName: String,
-        @Value("\${g7web.sysadmins:}") private val systemAdmins: String
+        @Value("\${g7web.sysadmins:}") private val systemAdmins: String,
+        @Value("\${g7web.default-staff-group-name:SENIOR}") private val staffGroupName: String,
+        private val config: RealtimeConfigService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -118,6 +121,13 @@ open class LoginController(
                     .forEach {
                         log.info("Granting STAFF for ${user.fullName}")
                         user.role = RoleType.STAFF
+
+                        if (user.groupName.isBlank()) {
+                            groups.findByName(staffGroupName).ifPresent {
+                                user.groupName = it.name
+                                user.group = it
+                            }
+                        }
                     }
         }
         if (systemAdmins.split(",").contains(user.pekId)) {
@@ -146,24 +156,28 @@ open class LoginController(
     }
 
     @ApiOperation("Logout user")
-    @GetMapping("/admin/logout")
+    @GetMapping("/logout")
     fun logout(request: HttpServletRequest): String {
-        request.getSession(false)
-        SecurityContextHolder.clearContext()
-        val session = request.getSession(false)
-        session?.invalidate()
-        for (cookie in request.cookies) {
-            cookie.maxAge = 0
-        }
+        try {
+            request.getSession(false)
+            SecurityContextHolder.clearContext()
+            val session = request.getSession(false)
+            session?.invalidate()
+            for (cookie in request.cookies) {
+                cookie.maxAge = 0
+            }
 
-        request.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)
-        request.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
-        request.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)
-        request.session.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)
-        request.session.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
-        request.session.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)
-        request.changeSessionId()
-        return "redirect:/logged-out"
+            request.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)
+            request.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
+            request.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)
+            request.session.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)
+            request.session.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
+            request.session.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)
+            request.changeSessionId()
+        } catch (e: Exception) {
+            // Ignore it for now
+        }
+        return "redirect:${config.getWebsiteUrl()}"
     }
 
 }

@@ -21,7 +21,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/", "/loggedin", "/login", "/logged-out", "/api/news", "/api/events",
                         "/api/events/**", "/api/products", "/api/extra-page/**", "/api/version", "/style.css",
                         "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/profiles/**", "/cdn/events/**", "/cdn/news/**",
-                        "/countdown")
+                        "/countdown", "/logout")
                     .permitAll()
 
                 .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile",
