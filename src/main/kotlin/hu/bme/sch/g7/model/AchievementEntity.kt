@@ -33,10 +33,10 @@ data class AchievementEntity(
 
         @Column(nullable = false)
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-        @property:GenerateInput(maxLength = 64, order = 2, label = "Kategória")
+        @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je")
         @property:GenerateOverview(columnName = "Kategória", order = 2)
-        @property:ImportFormat(ignore = false, columnId = 1)
-        var category: String = "",
+        @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+        var categoryId: Int = 0,
 
         @Lob
         @Column(nullable = false)
@@ -77,7 +77,7 @@ data class AchievementEntity(
         var availableTo: Long = 0,
 
         @Column(nullable = false)
-        @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+        @JsonView(value = [ Edit::class ])
         @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 8, label = "Max pont")
         @property:GenerateOverview(columnName = "Max pont", order = 5, centered = true)
         @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_INT)

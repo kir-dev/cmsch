@@ -16,13 +16,13 @@ enum class RoleType(val value: Int) {
     SUPERUSER(500) // advanced user management (able to grant admin access)
 }
 
-enum class GuildType {
-    UNKNOWN,
-    BLACK,
-    BLUE,
-    RED,
-    WHITE,
-    YELLOW
+enum class GuildType(val displayName: String) {
+    UNKNOWN("n/a"),
+    BLACK("fekete"),
+    BLUE("kék"),
+    RED("piros"),
+    WHITE("fehér"),
+    YELLOW("sárga")
 }
 
 enum class MajorType {
@@ -85,7 +85,7 @@ data class UserEntity(
         @property:GenerateOverview(visible = false)
         var email: String = "",
 
-        @JsonView(value = [ Edit::class ])
+        @JsonView(value = [ Edit::class, FullDetails::class ])
         @Enumerated(EnumType.STRING)
         @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Jogkör",
                 source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
@@ -192,7 +192,11 @@ data class UserEntity(
         @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
         @property:GenerateOverview(visible = false)
         @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
-        var major: MajorType = MajorType.UNKNOWN
+        var major: MajorType = MajorType.UNKNOWN,
+
+        @Transient
+        @JsonIgnore
+        var token: String = ""
 
 ): ManagedEntity {
     override fun toString(): String {

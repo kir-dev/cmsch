@@ -1,10 +1,9 @@
 package hu.bme.sch.g7.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.admin.*
-import hu.bme.sch.g7.dto.Edit
-import hu.bme.sch.g7.dto.FullDetails
-import hu.bme.sch.g7.dto.Preview
+import hu.bme.sch.g7.dto.*
 import javax.persistence.*
 
 @Entity
@@ -29,6 +28,9 @@ data class SubmittedAchievementEntity(
         @property:GenerateInput(order = 1, label = "Beadó tankör", enabled = false, ignore = true)
         @property:GenerateOverview(columnName = "Tankör", order = 1)
         var groupName: String = "",
+
+        @Column(nullable = false)
+        var categoryId: Int = 0,
 
         @Column(nullable = false)
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])

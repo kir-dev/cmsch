@@ -4,6 +4,7 @@ import hu.bme.sch.g7.dao.AchievementRepository
 import hu.bme.sch.g7.dao.GroupRepository
 import hu.bme.sch.g7.dao.SubmittedAchievementRepository
 import hu.bme.sch.g7.dto.TopListEntryDto
+import hu.bme.sch.g7.model.AchievementCategoryEntity
 import hu.bme.sch.g7.model.GroupEntity
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled

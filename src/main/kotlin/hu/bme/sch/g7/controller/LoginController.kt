@@ -6,9 +6,11 @@ import hu.bme.sch.g7.model.GuildType
 import hu.bme.sch.g7.model.MajorType
 import hu.bme.sch.g7.model.RoleType
 import hu.bme.sch.g7.model.UserEntity
+import hu.bme.sch.g7.service.NextJsSessionService
 import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.service.UserProfileGeneratorService
 import hu.bme.sch.g7.service.UserService
+import hu.bme.sch.g7.util.getUserOrNull
 import hu.bme.sch.g7.util.sha256
 import hu.gerviba.authsch.AuthSchAPI
 import hu.gerviba.authsch.response.ProfileDataResponse
@@ -43,7 +45,8 @@ open class LoginController(
         @Value("\${g7web.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") private val grantStaffGroupName: String,
         @Value("\${g7web.sysadmins:}") private val systemAdmins: String,
         @Value("\${g7web.default-staff-group-name:SENIOR}") private val staffGroupName: String,
-        private val config: RealtimeConfigService
+        private val config: RealtimeConfigService,
+        private val sessions: NextJsSessionService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -87,6 +90,7 @@ open class LoginController(
             }
             updateFields(user, profile)
             auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
+            sessions.storeUser(user)
 
             request.getSession(true).setAttribute(USER_SESSION_ATTRIBUTE_NAME, user.pekId)
             request.getSession(true).setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, user)
@@ -160,6 +164,10 @@ open class LoginController(
     fun logout(request: HttpServletRequest): String {
         try {
             request.getSession(false)
+            request.getUserOrNull()?.let {
+                sessions.invalidate(it.token)
+            }
+
             SecurityContextHolder.clearContext()
             val session = request.getSession(false)
             session?.invalidate()
@@ -179,5 +187,15 @@ open class LoginController(
         }
         return "redirect:${config.getWebsiteUrl()}"
     }
+
+    @GetMapping("/test")
+    fun test() = "test"
+
+    @GetMapping("/open-site")
+    fun openSite(request: HttpServletRequest): String {
+        val token = (request.getUserOrNull() ?: return "redirect:/login").token
+        return "redirect:" + config.getWebsiteUrl() + "api/auth/callback?accessToken=$token"
+    }
+
 
 }

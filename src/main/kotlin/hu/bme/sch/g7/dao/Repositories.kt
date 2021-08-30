@@ -7,7 +7,13 @@ import java.util.*
 
 @Repository
 interface AchievementRepository : CrudRepository<AchievementEntity, Int> {
-    fun findAllByHighlightedTrue(): List<AchievementEntity>
+    fun findAllByHighlightedTrueAndVisibleTrue(): List<AchievementEntity>
+    fun findAllByVisibleTrue(): List<AchievementEntity>
+}
+
+@Repository
+interface AchievementCategoryRepository : CrudRepository<AchievementCategoryEntity, Int> {
+    fun findAllByCategoryId(categoryId: Int): List<AchievementCategoryEntity>
 }
 
 @Repository
@@ -68,6 +74,8 @@ interface SubmittedAchievementRepository : CrudRepository<SubmittedAchievementEn
     fun findByAchievement_IdAndRejectedIsFalseAndApprovedIsFalse(achievementId: Int): List<SubmittedAchievementEntity>
 
     fun findAllByScoreGreaterThanAndApprovedIsTrue(zero: Int): List<SubmittedAchievementEntity>
+
+    fun findAllByGroupId(groupId: Int): List<SubmittedAchievementEntity>
 }
 
 @Repository

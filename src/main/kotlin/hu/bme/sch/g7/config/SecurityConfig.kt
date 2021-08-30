@@ -9,6 +9,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
 @EnableWebSecurity
@@ -21,11 +25,10 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/", "/loggedin", "/login", "/logged-out", "/api/news", "/api/events",
                         "/api/events/**", "/api/products", "/api/extra-page/**", "/api/version", "/style.css",
                         "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/profiles/**", "/cdn/events/**", "/cdn/news/**",
-                        "/countdown", "/logout")
+                        "/countdown", "/logout", "/test", "/api/profile/profile/**", "/api/achievement/**", "/open-site")
                     .permitAll()
 
-                .antMatchers("/api/achievement", "/api/achievement/**", "/api/achievements", "/api/profile",
-                        "/api/debts", "/entrypoint")
+                .antMatchers("/api/debts", "/entrypoint")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")

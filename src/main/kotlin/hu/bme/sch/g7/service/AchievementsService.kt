@@ -1,19 +1,15 @@
 package hu.bme.sch.g7.service
 
+import hu.bme.sch.g7.dao.AchievementCategoryRepository
 import hu.bme.sch.g7.dao.AchievementRepository
 import hu.bme.sch.g7.dao.SubmittedAchievementRepository
-import hu.bme.sch.g7.dto.AchievementEntityWrapper
-import hu.bme.sch.g7.dto.AchievementStatus
-import hu.bme.sch.g7.dto.AchievementSubmissionDto
-import hu.bme.sch.g7.dto.AchievementSubmissionStatus
+import hu.bme.sch.g7.dto.*
 import hu.bme.sch.g7.model.*
 import hu.bme.sch.g7.util.uploadFile
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.lang.IllegalStateException
-import java.time.Instant
-import java.time.ZonedDateTime
 import java.util.*
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
@@ -21,6 +17,7 @@ import java.util.*
 open class AchievementsService(
         val achievements: AchievementRepository,
         val submitted: SubmittedAchievementRepository,
+        val categories: AchievementCategoryRepository,
         val clock: ClockService
 ) {
 
@@ -42,36 +39,34 @@ open class AchievementsService(
                 .orElse(null)
     }
 
-    // FIXME: Optimize
     @Transactional(readOnly = true)
     open fun getHighlightedOnes(group: GroupEntity): List<AchievementEntityWrapper> {
-        return achievements.findAllByHighlightedTrue()
-                .map { AchievementEntityWrapper(it, findSubmissionStatus(it, group)) }
+        return achievements.findAllByHighlightedTrueAndVisibleTrue()
+                .map { findSubmissionStatus(it, group) }
     }
 
-    // FIXME: Optimize
     @Transactional(readOnly = true)
     open fun getAllAchievements(group: GroupEntity): List<AchievementEntityWrapper> {
         return achievements.findAll()
-                .map { AchievementEntityWrapper(it, findSubmissionStatus(it, group)) }
+                .map { findSubmissionStatus(it, group) }
     }
 
     @Transactional(readOnly = true)
     open fun getAllAchievementsForGuests(): List<AchievementEntityWrapper> {
         return achievements.findAll()
-                .map { AchievementEntityWrapper(it, AchievementStatus.NOT_LOGGED_IN) }
+                .map { AchievementEntityWrapper(it, AchievementStatus.NOT_LOGGED_IN, "") }
     }
 
     private fun findSubmissionStatus(
             achievementEntity: AchievementEntity,
             group: GroupEntity
-    ): AchievementStatus {
+    ): AchievementEntityWrapper {
         val submission = submitted.findByAchievement_IdAndGroupId(achievementEntity.id, group.id)
         return when {
-            submission.isEmpty -> AchievementStatus.NOT_SUBMITTED
-            submission.get().rejected -> AchievementStatus.REJECTED
-            submission.get().approved -> AchievementStatus.ACCEPTED
-            else -> AchievementStatus.SUBMITTED
+            submission.isEmpty -> AchievementEntityWrapper(achievementEntity, AchievementStatus.NOT_SUBMITTED, "")
+            submission.get().rejected -> AchievementEntityWrapper(achievementEntity, AchievementStatus.REJECTED, submission.get().response)
+            submission.get().approved -> AchievementEntityWrapper(achievementEntity, AchievementStatus.ACCEPTED, submission.get().response)
+            else -> AchievementEntityWrapper(achievementEntity, AchievementStatus.SUBMITTED, submission.get().response)
         }
     }
 
@@ -119,7 +114,7 @@ open class AchievementsService(
 
             submitted.save(SubmittedAchievementEntity(
                     0, achievement, groupId, user.group?.name ?: "",
-                    answer.textAnswer, "",
+                    achievement.categoryId, answer.textAnswer, "",
                     "", false, false, 0
             ))
             return AchievementSubmissionStatus.OK
@@ -132,7 +127,7 @@ open class AchievementsService(
 
             submitted.save(SubmittedAchievementEntity(
                     0, achievement, groupId, user.group?.name ?: "",
-                    "", "$target/$fileName",
+                    achievement.categoryId, "", "$target/$fileName",
                     "", false, false, 0
             ))
             return AchievementSubmissionStatus.OK
@@ -142,7 +137,7 @@ open class AchievementsService(
 
             submitted.save(SubmittedAchievementEntity(
                     0, achievement, groupId, user.group?.name ?: "",
-                    answer.textAnswer, "$target/$fileName",
+                    achievement.categoryId, answer.textAnswer, "$target/$fileName",
                     "", false, false, 0
             ))
             return AchievementSubmissionStatus.OK
@@ -178,6 +173,16 @@ open class AchievementsService(
             submitted.save(submission)
             return AchievementSubmissionStatus.OK
 
+        } else if (achievement.type == AchievementType.BOTH) {
+            if (file != null && !fileNameInvalid(file)) {
+                val fileName = file.uploadFile(target)
+                submission.imageUrlAnswer = "$target/$fileName"
+            }
+            submission.textAnswer = answer.textAnswer
+            submission.rejected = false
+            submitted.save(submission)
+            return AchievementSubmissionStatus.OK
+
         } else {
             throw IllegalStateException("Invalid achievement type: " + achievement.type)
         }
@@ -191,5 +196,37 @@ open class AchievementsService(
                 )
     }
 
+    @Transactional(readOnly = true)
+    fun getCategories(groupId: Int): List<AchievementCategoryDto> {
+        val submissionByCategory = submitted.findAllByGroupId(groupId)
+                .groupBy { it.categoryId }
+
+        val achievementByCategory = achievements.findAllByVisibleTrue()
+
+        return categories.findAll()
+                .map { category ->
+                    return@map AchievementCategoryDto(
+                            name = category.name,
+                            categoryId = category.categoryId,
+                            availableFrom = category.availableFrom,
+                            availableTo = category.availableTo,
+
+                            sum = achievementByCategory.count { it.categoryId == category.categoryId },
+                            approved = submissionByCategory[category.id]?.count { it.approved } ?: 0,
+                            rejected = submissionByCategory[category.id]?.count { it.rejected } ?: 0,
+                            notGraded = submissionByCategory[category.id]?.count { !it.approved && !it.rejected } ?: 0
+                    )
+                }
+    }
+
+    @Transactional(readOnly = true)
+    fun getCategoryName(categoryId: Int): String {
+        return categories.findAllByCategoryId(categoryId).map { it.name }.firstOrNull() ?: "Nincs ilyen"
+    }
+
+    @Transactional(readOnly = true)
+    fun getCategoryAvailableFrom(categoryId: Int): Long {
+        return categories.findAllByCategoryId(categoryId).map { it.availableFrom }.firstOrNull() ?: 0
+    }
 
 }

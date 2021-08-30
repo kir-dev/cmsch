@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.g7.model.GroupEntity
 import hu.bme.sch.g7.model.MajorType
+import java.util.*
 
 data class GroupEntityDto(
         @JsonIgnore

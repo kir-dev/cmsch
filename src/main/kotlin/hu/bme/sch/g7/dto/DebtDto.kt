@@ -1,5 +1,6 @@
 package hu.bme.sch.g7.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 
 data class DebtDto(
@@ -21,6 +22,6 @@ data class DebtDto(
     @JsonView(FullDetails::class)
     var shipped: Boolean,
 
-    @JsonView(FullDetails::class)
+    @JsonIgnore
     var log: String
 )

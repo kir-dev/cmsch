@@ -9,7 +9,7 @@
         <span>ne felejtsétek:</span>
         <h3 th:text="${motd ?: 'n/a'}">Don't forget to open the banana before eating it!</h3>
 
-        <a href="#" th:href="${website ?: '#'}" class="big-btn">Vissza a weblapra</a>
+        <a href="#" th:href="@{/open-site}" class="big-btn">Vissza a weblapra</a>
         <a href="#" th:href="@{/admin/control/basics}" class="big-btn">Tovább az admin panelbe</a>
     </div>
 </div>

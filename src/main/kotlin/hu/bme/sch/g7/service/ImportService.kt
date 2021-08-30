@@ -37,19 +37,44 @@ open class ImportService {
                         if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore) {
                             when (it.second.type) {
                                 IMPORT_RAW_TEXT -> {
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId])
+                                    try {
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId])
+                                    } catch (e: IllegalArgumentException) {
+                                        println("Invalid field ${it.first.name} as type ${it.second.type} (TEXT) with value ${dto[it.second.columnId]}")
+                                        throw e
+                                    }
                                 }
                                 IMPORT_BOOLEAN -> {
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].equals("true", ignoreCase = true))
+                                    try {
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].equals("true", ignoreCase = true))
+                                    } catch (e: IllegalArgumentException) {
+                                        println("Invalid field ${it.first.name} as type ${it.second.type} (BOOL) with value ${dto[it.second.columnId]}")
+                                        throw e
+                                    }
                                 }
                                 IMPORT_ENUM -> {
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, mappings[it.second.enumSource]?.invoke(dto[it.second.columnId])!!)
+                                    try {
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, mappings[it.second.enumSource]?.invoke(dto[it.second.columnId])!!)
+                                    } catch (e: IllegalArgumentException) {
+                                        println("Invalid field ${it.first.name} as type ${it.second.type} (ENUM) with value ${dto[it.second.columnId]}")
+                                        throw e
+                                    }
                                 }
                                 IMPORT_LONG -> {
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toLong())
+                                    try {
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toLong())
+                                    } catch (e: IllegalArgumentException) {
+                                        println("Invalid field ${it.first.name} as type ${it.second.type} (LONG) with value ${dto[it.second.columnId]}")
+                                        throw e
+                                    }
                                 }
                                 IMPORT_INT -> {
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toInt())
+                                    try {
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toInt())
+                                    } catch (e: IllegalArgumentException) {
+                                        println("Invalid field ${it.first.name} as type ${it.second.type} (INT) with value ${dto[it.second.columnId]}")
+                                        throw e
+                                    }
                                 }
                             }
                         }

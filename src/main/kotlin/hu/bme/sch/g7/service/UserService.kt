@@ -1,6 +1,7 @@
 package hu.bme.sch.g7.service
 
 import hu.bme.sch.g7.dao.GroupToUserMappingRepository
+import hu.bme.sch.g7.dao.GuildToUserMappingRepository
 import hu.bme.sch.g7.dao.UserRepository
 import hu.bme.sch.g7.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.g7.model.RoleType
@@ -13,7 +14,8 @@ import java.util.*
 @Service
 open class UserService(
         val users: UserRepository,
-        val groupMapping: GroupToUserMappingRepository
+        val groupMapping: GroupToUserMappingRepository,
+        val guildMapping: GuildToUserMappingRepository
 ) {
 
     @Transactional
@@ -36,10 +38,10 @@ open class UserService(
     open fun allMembersOfGroup(groupName: String): Collection<GroupMemberVirtualEntity> {
         val mappings = groupMapping.findAllByGroupName(groupName)
                 .asSequence()
-                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, "-") }
+                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, findGuildFor(it.neptun), "-") }
         val users = users.findAllByGroupName(groupName)
                 .asSequence()
-                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, if (it.role.value <= RoleType.BASIC.value) "Gólya" else "Rendező" ) }
+                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, it.guild.displayName, if (it.role.value <= RoleType.BASIC.value) "Gólya" else "Rendező" ) }
 
         return (mappings + users)
                 .groupBy { it.neptun }
@@ -47,6 +49,10 @@ open class UserService(
                 .values
                 .sortedBy { it.name }
 
+    }
+
+    private fun findGuildFor(neptun: String): String {
+        return guildMapping.findByNeptun(neptun).map { it.guild.displayName }.orElse("-")
     }
 
 }

@@ -54,6 +54,20 @@ class AchievementController(
 )
 
 @Controller
+@RequestMapping("/admin/control/categories")
+class AchievementCategoryController(
+        repo: AchievementCategoryRepository,
+        importService: ImportService
+) : AbstractAdminPanelController<AchievementCategoryEntity>(
+        repo,
+        "categories", "Feladat kategória", "Feladat kategóriák",
+        "Bucketlist feladatok kategóriájának kezelése. A feladatok javítására használd a Javítások menüt!",
+        AchievementCategoryEntity::class, ::AchievementCategoryEntity, importService,
+        permissionControl = { it?.isAdmin() ?: false || it?.grantCreateAchievement ?: false },
+        importable = true
+)
+
+@Controller
 @RequestMapping("/admin/control/products")
 class ProductController(
         repo: ProductRepository,

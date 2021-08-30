@@ -34,7 +34,7 @@ class EntrypointController(
     fun entrypoint(model: Model, request: HttpServletRequest): String {
         val user = request.getUserOrNull() ?: return "redirect:/logged-out?error=invalid-permissions"
         if (user.role.value < RoleType.STAFF.value)
-            return "redirect:${config.getWebsiteUrl()}"
+            return "redirect:${config.getWebsiteUrl()}api/auth/callback?accessToken=${user.token}"
 
         model.addAttribute("greetings", GREETINGS.get(Random.nextInt(GREETINGS.size)))
         model.addAttribute("motd", config.getMotd())

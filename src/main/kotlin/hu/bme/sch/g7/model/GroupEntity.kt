@@ -30,7 +30,7 @@ data class GroupEntity(
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
         @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 2, label = "Típus", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
         @property:GenerateOverview(visible = false)
-        @property:ImportFormat(ignore = false, columnId = 1)
+        @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_ENUM, enumSource = MajorType::class)
         var major: MajorType = MajorType.UNKNOWN,
 
         @Column(nullable = false)
@@ -82,7 +82,7 @@ data class GroupEntity(
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Játszik a tankör versenyben?")
         @property:GenerateOverview(visible = false)
-        @property:ImportFormat(ignore = false, columnId = 2)
+        @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
         var races: Boolean = false
 
 ): ManagedEntity {

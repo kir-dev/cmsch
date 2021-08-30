@@ -22,7 +22,7 @@ val UNKNOWN_USER = UserEntity(0, fullName = "Feature Not Available")
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
+//@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "true")
 class MainController(
         private val config: RealtimeConfigService,
         private val newsRepository: NewsRepository,
@@ -34,7 +34,8 @@ class MainController(
         private val debtsRepository: SoldProductRepository,
         private val productsRepository: ProductRepository,
         private val locationService: LocationService,
-        private val clock: ClockService
+        private val clock: ClockService,
+        private val sessionService: NextJsSessionService
 ) {
 
     private val timeZone = ZoneId.of(zoneId)
@@ -102,15 +103,15 @@ class MainController(
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/profile")
-    fun profile(request: HttpServletRequest): ProfileView {
-        val user = request.getUser()
+    @GetMapping("/profile/{accessToken}")
+    fun profile(@PathVariable accessToken: String, request: HttpServletRequest): ProfileView {
+        val user = sessionService.getUser(accessToken) ?: return ProfileView(false, UNKNOWN_USER, group = null)
         if (config.isSiteLowProfile())
-            return ProfileView(warningMessage = config.getWarningMessage(), UNKNOWN_USER, group = null)
+            return ProfileView(false, UNKNOWN_USER, group = null)
 
         val group = user.group?.let { GroupEntityDto(it) }
         return ProfileView(
-                warningMessage = config.getWarningMessage(),
+                loggedin = true,
                 user = user,
                 group = group,
                 locations = locationService.findLocationsOfGroup(group?.name ?: "")
@@ -121,12 +122,22 @@ class MainController(
                                 it.latitude,
                                 it.accuracy,
                                 it.timestamp
+                        ) },
+                debts = debtsRepository.findAllByOwnerId(user.id)
+                        .map { DebtDto(
+                                it.product,
+                                it.price,
+                                it.sellerName,
+                                it.responsibleName,
+                                it.payed,
+                                it.shipped,
+                                it.log
                         ) }
         )
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/products")
+//    @GetMapping("/products")
     fun products(request: HttpServletRequest): ProductsView {
         if (config.isSiteLowProfile())
             return ProductsView(products = listOf())
@@ -135,7 +146,7 @@ class MainController(
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/debts")
+//    @GetMapping("/debts")
     fun debts(request: HttpServletRequest): DebtsView {
         if (config.isSiteLowProfile())
             return DebtsView(debts = listOf())
@@ -155,65 +166,93 @@ class MainController(
     }
 
     @JsonView(Preview::class)
-    @GetMapping("/achievements")
-    fun achievements(request: HttpServletRequest): AchievementsView {
+    @GetMapping("/achievement/{accessToken}")
+    fun achievements(@PathVariable accessToken: String, request: HttpServletRequest): AchievementsView {
         if (config.isSiteLowProfile()) {
             return AchievementsView(
-                    warningMessage = config.getWarningMessage(),
                     groupScore = null,
                     leaderBoard = listOf(),
                     leaderBoardVisible = config.isLeaderBoardEnabled(),
                     leaderBoardFrozen = !config.isLeaderBoardUpdates())
         }
 
-        val group = request.getUserOrNull()?.group ?: return AchievementsView(
-                warningMessage = config.getWarningMessage(),
+        val group = sessionService.getUser(accessToken)?.group ?: return AchievementsView(
                 groupScore = null,
                 leaderBoard = leaderBoardService.getBoard(),
                 leaderBoardVisible = config.isLeaderBoardEnabled(),
                 leaderBoardFrozen = !config.isLeaderBoardUpdates())
 
         return AchievementsView(
-                warningMessage = config.getWarningMessage(),
                 groupScore = leaderBoardService.getScoreOfGroup(group),
+                categories = achievements.getCategories(group.id)
+                        .filter { it.availableFrom < clock.getTimeInSeconds() },
                 leaderBoard = leaderBoardService.getBoard(),
-                highlighted = achievements.getHighlightedOnes(group),
-                achievements = achievements.getAllAchievements(group),
                 leaderBoardVisible = config.isLeaderBoardEnabled(),
                 leaderBoardFrozen = !config.isLeaderBoardUpdates()
         )
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/achievement/{achievementId}")
-    fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
+    @GetMapping("/achievement/{accessToken}/category/{categoryId}")
+    fun achievementCategory(@PathVariable accessToken: String, @PathVariable categoryId: Int, request: HttpServletRequest): AchievementCategoryView {
+        if (config.isSiteLowProfile() || achievements.getCategoryAvailableFrom(categoryId) > clock.getTimeInSeconds()) {
+            return AchievementCategoryView(
+                categoryName = "Még nem publikus O.o",
+                achievements = listOf()
+            )
+        }
+
+        val group = sessionService.getUser(accessToken)?.group ?: return AchievementCategoryView(
+                categoryName = "Nem található",
+                achievements = listOf()
+        )
+
+        return AchievementCategoryView(
+                categoryName = achievements.getCategoryName(categoryId),
+                achievements = achievements.getAllAchievements(group).filter { it.achievement.categoryId == categoryId }
+        )
+    }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/achievement/{accessToken}/submit/{achievementId}")
+    fun achievement(@PathVariable accessToken: String, @PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
         val achievement = achievements.getById(achievementId)
-        if (achievement.orElse(null)?.visible ?: false || config.isSiteLowProfile())
+        if (achievement.orElse(null)?.visible?.not() ?: false || config.isSiteLowProfile())
             return SingleAchievementView(warningMessage = config.getWarningMessage(), achievement = null, submission = null)
 
-        val group = request.getUserOrNull()?.group ?: return SingleAchievementView(
+        val group = sessionService.getUser(accessToken)?.group ?: return SingleAchievementView(
                 warningMessage = config.getWarningMessage(),
                 achievement = achievement.orElse(null),
-                submission = null)
+                submission = null,
+                status = AchievementStatus.NOT_SUBMITTED
+        )
 
+        val submission = achievements.getSubmissionOrNull(group, achievement)
         return SingleAchievementView(
                 warningMessage = config.getWarningMessage(),
                 achievement = achievement.orElse(null),
-                submission = achievements.getSubmissionOrNull(group, achievement)
+                submission = submission,
+                status = if (submission?.approved ?: false) AchievementStatus.ACCEPTED
+                    else if (submission?.rejected ?: false) AchievementStatus.REJECTED
+                    else if (!(submission?.approved ?: true) && !(submission?.rejected ?: true)) AchievementStatus.SUBMITTED
+                    else AchievementStatus.NOT_SUBMITTED
         )
     }
 
     @ResponseBody
-    @PostMapping("/achievement")
+    @PostMapping("/achievement/{accessToken}/submit")
     fun submitAchievement(
             @ModelAttribute(binding = false) answer: AchievementSubmissionDto,
             @RequestParam(required = false) file: MultipartFile?,
+            @PathVariable accessToken: String,
             request: HttpServletRequest
     ): AchievementSubmissionResponseDto {
         if (config.isSiteLowProfile())
             return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
 
-        return AchievementSubmissionResponseDto(achievements.submitAchievement(answer, file, request.getUser()))
+        val user = sessionService.getUser(accessToken) ?:
+            return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
+        return AchievementSubmissionResponseDto(achievements.submitAchievement(answer, file, user))
     }
 
     @JsonView(FullDetails::class)
@@ -236,6 +275,6 @@ class MainController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.19"
+    fun version(): String = "v1.0.22"
 
 }
