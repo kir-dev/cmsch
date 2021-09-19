@@ -24,10 +24,9 @@ class EntrypointController(
         private val config: RealtimeConfigService
 ) {
 
-    @ResponseBody
     @GetMapping("/")
     fun index(): String {
-        return "POV: Rossz helyen vagy!"
+        return if (config.isEventFinished()) "eventFinished" else "index"
     }
 
     @GetMapping("/entrypoint")

@@ -15,6 +15,8 @@ const val SITE_LOW_PROFILE = "SITE_LOW_PROFILE"
 const val MESSAGE_OF_THE_DAY = "MESSAGE_OF_THE_DAY"
 const val WEBSITE_URL = "WEBSITE_URL"
 const val STAFF_MESSAGE = "STAFF_MESSAGE"
+const val EVENT_FINISHED = "EVENT_FINISHED"
+const val REQUEST_FOR_NEPTUN = "REQUEST_FOR_NEPTUN"
 
 @Service
 class RealtimeConfigService(
@@ -35,6 +37,9 @@ class RealtimeConfigService(
         if (realtimeConfig.findByKey(LEADER_BOARD_UPDATES).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_UPDATES, "true"))
 
+        if (realtimeConfig.findByKey(EVENT_FINISHED).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, EVENT_FINISHED, "false"))
+
         if (realtimeConfig.findByKey(SITE_LOW_PROFILE).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, SITE_LOW_PROFILE, "false"))
 
@@ -46,6 +51,9 @@ class RealtimeConfigService(
 
         if (realtimeConfig.findByKey(WEBSITE_URL).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, "https://g7.sch.bme.hu/"))
+
+        if (realtimeConfig.findByKey(REQUEST_FOR_NEPTUN).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, "false"))
     }
 
     fun resetCache() {
@@ -101,6 +109,14 @@ class RealtimeConfigService(
         }.equals("true", ignoreCase = true)
     }
 
+    fun isEventFinished(): Boolean {
+        return cache.computeIfAbsent(EVENT_FINISHED) { key ->
+            realtimeConfig.findByKey(key)
+                    .map { it.value }
+                    .orElse("false")
+        }.equals("true", ignoreCase = true)
+    }
+
     fun isSiteLowProfile(): Boolean {
         return cache.computeIfAbsent(SITE_LOW_PROFILE) { key ->
             realtimeConfig.findByKey(key)
@@ -118,6 +134,14 @@ class RealtimeConfigService(
                     return@map it
                 }
                 .ifPresent { realtimeConfig.save(it) }
+    }
+
+    fun isRequestForNeptun(): Boolean {
+        return cache.computeIfAbsent(REQUEST_FOR_NEPTUN) { key ->
+            realtimeConfig.findByKey(key)
+                    .map { it.value }
+                    .orElse("false")
+        }.equals("true", ignoreCase = true)
     }
 
 }

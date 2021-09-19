@@ -49,7 +49,7 @@ class TrackLocationController(
 
     @GetMapping("/admin/control/tracking/{groupName}")
     fun viewGroup(@PathVariable groupName: String, request: HttpServletRequest, model: Model): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantTracker }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantTracker || it.grantListUsers || it.grantGroupManager }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }

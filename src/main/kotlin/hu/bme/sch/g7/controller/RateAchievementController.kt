@@ -133,6 +133,8 @@ class RateAchievementController(
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
             model.addAttribute("data", entity.orElseThrow())
+            model.addAttribute("taskTitle", entity.orElseThrow().achievement?.title)
+            model.addAttribute("taskDescription", entity.orElseThrow().achievement?.description)
             model.addAttribute("comment", "Feladványhoz tartozó max pont: " + (entity.orElseThrow().achievement?.maxScore ?: "n/a"))
         }
         return "details"
@@ -159,7 +161,7 @@ class RateAchievementController(
             entity.get().rejected = false
         entity.get().id = id
         submittedRepository.save(entity.get())
-        return "redirect:/admin/control/$view"
+        return "redirect:/admin/control/$view/rate/${entity.get().achievement?.id ?: ""}"
     }
 
     private fun updateEntity(

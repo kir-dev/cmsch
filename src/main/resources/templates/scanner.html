@@ -163,7 +163,7 @@
     });
 
     document.getElementById('exit').addEventListener('click', () => {
-        document.location.href = parentUrl;
+        document.location.href = document.referrer;
     });
 
     document.getElementById('enter-neptun').addEventListener('click', async () => {

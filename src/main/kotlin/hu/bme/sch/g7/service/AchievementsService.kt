@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile
 import java.lang.IllegalStateException
 import java.util.*
 
+const val HOUR = 60 * 60
+
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class AchievementsService(
@@ -80,8 +82,8 @@ open class AchievementsService(
         val achievement = achievements.findById(answer.achievementId).orElse(null)
                 ?: return AchievementSubmissionStatus.INVALID_ACHIEVEMENT_ID
 
-        if (achievement.availableFrom > clock.getTimeInSeconds()
-                || achievement.availableTo < clock.getTimeInSeconds()) {
+        if (achievement.availableFrom - (4 * HOUR) > clock.getTimeInSeconds()
+                || achievement.availableTo + (4 * HOUR) < clock.getTimeInSeconds()) {
             return AchievementSubmissionStatus.TOO_EARLY_OR_LATE
         }
 
@@ -192,6 +194,7 @@ open class AchievementsService(
         return file.originalFilename == null || (
                 !file.originalFilename!!.lowercase().endsWith(".png")
                         && !file.originalFilename!!.lowercase().endsWith(".jpg")
+                        && !file.originalFilename!!.lowercase().endsWith(".jpeg")
                         && !file.originalFilename!!.lowercase().endsWith(".gif")
                 )
     }
@@ -227,6 +230,11 @@ open class AchievementsService(
     @Transactional(readOnly = true)
     fun getCategoryAvailableFrom(categoryId: Int): Long {
         return categories.findAllByCategoryId(categoryId).map { it.availableFrom }.firstOrNull() ?: 0
+    }
+
+    @Transactional(readOnly = true)
+    fun getCategory(categoryId: Int): AchievementCategoryEntity? {
+        return categories.findAllByCategoryId(categoryId).firstOrNull()
     }
 
 }

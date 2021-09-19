@@ -28,7 +28,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/countdown", "/logout", "/test", "/api/profile/profile/**", "/api/achievement/**", "/open-site")
                     .permitAll()
 
-                .antMatchers("/api/debts", "/entrypoint")
+                .antMatchers("/api/debts", "/entrypoint", "/pay")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")

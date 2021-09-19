@@ -57,7 +57,8 @@ open class ProductService(
                 true, date,
                 false, 0,
                 false,
-                " '${seller.fullName}'(${seller.id}) sold '${product.name}'(${product.price} JMF) to '${buyer.fullName}'(${buyer.id}) at $date;"
+                " '${seller.fullName}'(${seller.id}) sold '${product.name}'(${product.price} JMF) to '${buyer.fullName}'(${buyer.id}) at $date;",
+                product.materialIcon
         ))
         return SellStatus.SOLD
     }
@@ -85,6 +86,11 @@ open class ProductService(
     open fun getAllDebtsByGroup(user: UserEntity): List<SoldProductEntity> {
         val groupId = user.group?.id ?: return listOf()
         return soldProductRepository.findAllByResponsibleGroupId(groupId)
+    }
+
+    @Transactional(readOnly = true)
+    open fun getAllDebtsByUser(user: UserEntity): List<SoldProductEntity> {
+        return soldProductRepository.findAllByOwnerId(user.id)
     }
 
     @Transactional(readOnly = true)

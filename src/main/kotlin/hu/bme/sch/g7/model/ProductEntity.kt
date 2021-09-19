@@ -71,7 +71,14 @@ data class ProductEntity(
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható")
         @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
         @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
-        var visible: Boolean = false
+        var visible: Boolean = false,
+
+        @Column(nullable = false)
+        @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+        @property:GenerateInput(order = 8, label = "Material Ikon", note = "Innen kell kimásolni a nevét az ikonnak: https://fonts.google.com/icons")
+        @property:GenerateOverview(visible = false)
+        @property:ImportFormat(ignore = false, columnId = 6)
+        var materialIcon: String = "payments"
 
 ): ManagedEntity {
     override fun toString(): String {

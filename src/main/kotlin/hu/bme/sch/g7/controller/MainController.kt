@@ -131,7 +131,8 @@ class MainController(
                                 it.responsibleName,
                                 it.payed,
                                 it.shipped,
-                                it.log
+                                it.log,
+                                it.materialIcon
                         ) }
         )
     }
@@ -160,7 +161,8 @@ class MainController(
                                 it.responsibleName,
                                 it.payed,
                                 it.shipped,
-                                it.log
+                                it.log,
+                                it.materialIcon
                         ) }
         )
     }
@@ -185,7 +187,7 @@ class MainController(
         return AchievementsView(
                 groupScore = leaderBoardService.getScoreOfGroup(group),
                 categories = achievements.getCategories(group.id)
-                        .filter { it.availableFrom < clock.getTimeInSeconds() },
+                        .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
                 leaderBoard = leaderBoardService.getBoard(),
                 leaderBoardVisible = config.isLeaderBoardEnabled(),
                 leaderBoardFrozen = !config.isLeaderBoardUpdates()
@@ -195,7 +197,13 @@ class MainController(
     @JsonView(FullDetails::class)
     @GetMapping("/achievement/{accessToken}/category/{categoryId}")
     fun achievementCategory(@PathVariable accessToken: String, @PathVariable categoryId: Int, request: HttpServletRequest): AchievementCategoryView {
-        if (config.isSiteLowProfile() || achievements.getCategoryAvailableFrom(categoryId) > clock.getTimeInSeconds()) {
+        val category = achievements.getCategory(categoryId) ?:
+            return AchievementCategoryView(
+                    categoryName = "Nem található O.o",
+                    achievements = listOf()
+            )
+
+        if (config.isSiteLowProfile() || category.availableFrom > clock.getTimeInSeconds() || category.availableTo < clock.getTimeInSeconds()) {
             return AchievementCategoryView(
                 categoryName = "Még nem publikus O.o",
                 achievements = listOf()
@@ -208,7 +216,7 @@ class MainController(
         )
 
         return AchievementCategoryView(
-                categoryName = achievements.getCategoryName(categoryId),
+                categoryName = category.name,
                 achievements = achievements.getAllAchievements(group).filter { it.achievement.categoryId == categoryId }
         )
     }
@@ -275,6 +283,6 @@ class MainController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.0.22"
+    fun version(): String = "v1.0.27"
 
 }

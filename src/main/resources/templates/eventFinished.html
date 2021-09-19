@@ -1,0 +1,47 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <title>BME VIK Gólyahét 2021</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;300;700&display=swap" rel="stylesheet">
+    <style>
+        * { border: 0; padding: 0; margin: 0; box-sizing: border-box; }
+        body { width: 100%; background-color: #000; color: #FFF; font-family: 'Roboto Mono', monospace;
+            text-shadow: 0 4px 3px rgba(0, 0, 0, 0.4), 0 8px 13px rgba(0, 0, 0, 0.1), 0 18px 23px rgba(0, 0, 0, 0.1);
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        h1 { font-weight: bold; text-align: center; font-size: 6vmin; margin: 10vh 3vw 0 3vw; }
+        h2 { font-weight: 300; text-align: center; font-size: 18px; margin: 0 3vw 4vh 3vw; }
+        .background { background-image: url("/images/background.svg"); filter: blur(3px) opacity(0.8); -webkit-filter: blur(3px) opacity(0.8); height: 100vh;
+            width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; position: fixed; }
+        .content { position: fixed; top: 0; left: 0; height: 100vh; width: 100%; z-index: 2; }
+        iframe { margin: 40px auto; max-width: 100vw; }
+        a { display: inline-block; text-decoration: none; border-bottom: 2px solid #FFF; color: #FFF; }
+    </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YTTKMXXM14"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-YTTKMXXM14');
+    </script>
+</head>
+<body>
+    <div class="background"></div>
+
+    <div class="content">
+        <h1>KÖSZÖNJÜK, HOGY VELÜNK TARTOTTATOK!</h1>
+
+        <iframe width="100%" height="60%" src="https://www.youtube.com/embed/jNERSokQAbE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        <h2 th:if="${loggedin}"><a href="https://api.g7.sch.bme.hu/login">Jelentkezz be</a>, hogy megtekinthesd a tanköröd összes beadott bucketlistjét!</h2>
+
+        <h2 th:unless="${loggedin}"><a href="bucketlist">A TANKÖRÖM BEADÁSAI</a></h2>
+
+    </div>
+</body>
+</html>

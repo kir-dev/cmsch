@@ -23,5 +23,8 @@ data class DebtDto(
     var shipped: Boolean,
 
     @JsonIgnore
-    var log: String
+    var log: String,
+
+    @JsonView(FullDetails::class)
+    var materialIcon: String
 )

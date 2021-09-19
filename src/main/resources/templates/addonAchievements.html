@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <title>Fizetési rendszer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * { border: 0; padding: 0; margin: 0; box-sizing: border-box; }
+        body {
+            width: 100%; background-color: #16171B; color: #929498; font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+        .content {
+            max-width: 500px;
+            margin: 1rem auto;
+            width: 100%;
+            padding-bottom: 1rem;
+        }
+        .qr-frame {
+            padding: 3rem;
+            background: #3870b8;
+            background: -webkit-linear-gradient(to bottom left, #5691c8, #3063a5);
+            background: linear-gradient(to bottom left, #5691c8, #3063a5);
+            width: 100%;
+            text-align: center;
+        }
+        .qr {
+            border: 0.5rem solid #FFFFFF;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            border-radius: 0.4rem;
+            max-width: calc(100vw - 6rem);
+        }
+        h1 {
+            padding: 1rem;
+            text-align: center;
+            color: #FFFFFF;
+            text-transform: uppercase;
+        }
+        h2 {
+            margin-bottom: 0.5rem;
+        }
+        .info {
+            background-color: #1f3b56;
+            padding: 1rem;
+            margin: 1rem;
+            border-left: 4px solid #5691c8;
+            color: #5691c8;
+        }
+        .profile {
+            background-color: #1F2125;
+            padding: 1rem;
+            margin: 1rem;
+            font-weight: 300;
+        }
+        .profile table td {
+            color: #5F6165;
+        }
+        .profile table td:nth-of-type(2) {
+            color: #5F6165;
+            font-weight: normal;
+            padding-left: 2rem;
+        }
+        .transactions {
+            background-color: #1F2125;
+            padding: 1rem;
+            margin: 1rem;
+            font-weight: 300;
+        }
+        .transactions table span {
+            font-weight: normal;
+        }
+        .transactions table td {
+            color: #5F6165;
+            padding-bottom: 0.5rem;
+        }
+        .transactions table td:first-of-type span {
+            font-size: 2em;
+            color: #5791C5;
+            background-color: #1F3B55;
+            border-radius: 200px;
+            padding: 8px;
+        }
+        .transactions table td:nth-of-type(2) {
+            padding-left: 1rem;
+        }
+        .transactions table tr.closed td:first-of-type span {
+            color: #5F6165;
+            background-color: #2E2F37;
+        }
+        .transactions table tr.closed td:nth-of-type(2) span {
+            text-decoration: line-through;
+        }
+        .admin-panel {
+            display: block;
+            margin: 0 auto;
+            color: #929498;
+            text-decoration: none;
+            width: 100%;
+            text-align: center;
+            background-color: #16171B;
+            padding: 0.4rem;
+            margin-top: 1rem;
+        }
+        .admin-panel:hover {
+            color: #FFFFFF;
+        }
+    </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YTTKMXXM14"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-YTTKMXXM14');
+    </script>
+</head>
+<body>
+    <div class="qr-frame">
+        <img class="qr" src="https://api.g7.sch.bme.hu/cdn/profiles/G7_EB701F7AC76E61E238F2952A209AFE85B5153.png" />
+    </div>
+
+    <div class="content">
+
+        <h1>Villany-Vegyész Alapozó Gála</h1>
+
+        <div class="info">
+            Tájékoztató a tartozás rendezéséről. Ide meg lehet adni mind a két karon az összefogót.
+        </div>
+
+        <div class="profile">
+            <h2>Profil</h2>
+            <table>
+                <tr>
+                    <td>Név</td>
+                    <td>Teszt Elek</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>test.elek@sch.bme.hu</td>
+                </tr>
+                <tr>
+                    <td>Tartozás</td>
+                    <td>2000 JMF</td>
+                </tr>
+            </table>
+            <a class="admin-panel" href="#" th:href="@{/admin/control}">ADMIN PANEL MEGNYITÁSA</a>
+
+        </div>
+        <div class="transactions">
+            <h2>Tranzakciók</h2>
+            <table>
+                <tr>
+                    <td><span class="material-icons">fastfood</span></td>
+                    <td>
+                        Záróest: 40L Popcorn<br>
+                        <span>1050 JMF</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="material-icons">sports_bar</span></td>
+                    <td>
+                        Vártúra: Sör<br>
+                        <span>200 JMF</span>
+                    </td>
+                </tr>
+                <tr class="closed">
+                    <td><span class="material-icons">local_bar</span></td>
+                    <td>
+                        Gólyabuli: napimenü<br>
+                        <span>750 JMF</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="material-icons">payments</span></td>
+                    <td>
+                        Világító basz<br>
+                        <span>300 JMF</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

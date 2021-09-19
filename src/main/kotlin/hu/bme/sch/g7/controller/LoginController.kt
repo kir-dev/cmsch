@@ -45,6 +45,7 @@ open class LoginController(
         @Value("\${g7web.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") private val grantStaffGroupName: String,
         @Value("\${g7web.sysadmins:}") private val systemAdmins: String,
         @Value("\${g7web.default-staff-group-name:SENIOR}") private val staffGroupName: String,
+        @Value("\${g7web.default-group-name:DEFAULT}") private val defaultGroupName: String,
         private val config: RealtimeConfigService,
         private val sessions: NextJsSessionService
 ) {
@@ -74,11 +75,11 @@ open class LoginController(
             } else {
                 user = UserEntity(0,
                         profile.internalId.toString(),
-                        profile.neptun,
+                        profile.neptun ?: "N/A",
                         "",
                         profile.surname + " " + profile.givenName,
                         "",
-                        "",
+                        profile.mail ?: "",
                         RoleType.BASIC,
                         false, false, false, false,
                         false, false,  false,
@@ -138,6 +139,12 @@ open class LoginController(
             log.info("Granting SUPERUSER for ${user.fullName}")
             user.role = RoleType.SUPERUSER
         }
+        if (user.groupName.isBlank()) {
+            groups.findByName(defaultGroupName).ifPresent {
+                user.groupName = it.name
+                user.group = it
+            }
+        }
         users.save(user)
     }
 
@@ -150,8 +157,12 @@ open class LoginController(
     @ApiOperation("Redirection to the auth provider")
     @GetMapping("/login")
     fun items(request: HttpServletRequest): String {
+        if (config.isRequestForNeptun()) {
+            return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
+                    Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
+        }
         return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
+                Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
     }
 
     fun buildUniqueState(request: HttpServletRequest): String {
@@ -189,11 +200,13 @@ open class LoginController(
     }
 
     @GetMapping("/test")
-    fun test() = "test"
+    fun test() = "eventFinished"
 
     @GetMapping("/open-site")
     fun openSite(request: HttpServletRequest): String {
         val token = (request.getUserOrNull() ?: return "redirect:/login").token
+        if (config.isEventFinished())
+            return "redirect:/"
         return "redirect:" + config.getWebsiteUrl() + "api/auth/callback?accessToken=$token"
     }
 

@@ -15,7 +15,7 @@ class NextJsSessionService {
 
     private fun generateNewId(): String {
         var id = ""
-        for (x in 0..64)
+        for (x in 0..32)
             id += CHARS[random.nextInt(CHARS.length)]
         return id
     }

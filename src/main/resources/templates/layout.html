@@ -69,12 +69,16 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts}">Tartozások</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-users}">Tartozások felhasználónként</a>
+                <a href="#" th:href="@{/admin/control/my-debts}">Saját tartozásaim</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Admin</h2>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/files}">Fájlok</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/locations}">Pozíciók</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantTracker()}" th:href="@{/admin/control/tracking}">Követés (térkép)</a>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
+
+                <h2 th:if="${userEntity.isSuperuser()}">Experimental</h2>
+                <a href="#" th:if="${userEntity.isSuperuser()}" th:href="@{/admin/control/import-debts-complete}">Tranzakció import</a>
 
                 <div class="separate"></div>
 

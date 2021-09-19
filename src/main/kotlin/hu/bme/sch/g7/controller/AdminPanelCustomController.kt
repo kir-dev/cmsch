@@ -160,6 +160,21 @@ class AdminPanelCustomController(
         return "overview"
     }
 
+    @GetMapping("/my-debts")
+    fun myDebts(model: Model, request: HttpServletRequest): String {
+        model.addAttribute("title", "Saját tartozásaim")
+        model.addAttribute("titleSingular", "Saját tartozásaim")
+        model.addAttribute("description", "Ezekkel a tételekkel a reszortgdaságisnak kell elszámolnod. A pontos módról emailben értesülhetsz.")
+        model.addAttribute("view", "my-debts")
+        model.addAttribute("columns", debtsDescriptor.getColumns())
+        model.addAttribute("fields", debtsDescriptor.getColumnDefinitions())
+        model.addAttribute("rows", productService.getAllDebtsByUser(request.getUser()))
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_NONE)
+
+        return "overview"
+    }
+
     @GetMapping("/debts-of-my-group/payed/{id}")
     fun setDebtsStatus(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         if (request.getUserOrNull()?.let { it.isAdmin() || it.grantGroupDebtsMananger || it.grantFinance }?.not() ?: true) {
@@ -187,6 +202,8 @@ class AdminPanelCustomController(
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
+
+        // TODO: Check group here
 
         productService.setTransactionPayed(id, request.getUser())
         return "redirect:/admin/control/debts-of-my-group"
