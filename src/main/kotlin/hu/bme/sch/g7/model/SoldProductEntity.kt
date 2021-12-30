@@ -103,10 +103,10 @@ data class SoldProductEntity(
         @property:ImportFormat(ignore = false, columnId = 15)
         var log: String = "",
 
-        @Column(nullable = false)
+        @Column(nullable = false, columnDefinition = "varchar(255) default 'payments'")
         @property:GenerateInput(order = 11, label = "Material Icon")
         @property:ImportFormat(ignore = false, columnId = 16)
-        var materialIcon: String = "payments",
+        var materialIcon: String = "",
 
 ): ManagedEntity {
         override fun toString(): String {

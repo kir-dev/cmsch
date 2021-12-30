@@ -73,7 +73,7 @@ data class ProductEntity(
         @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
         var visible: Boolean = false,
 
-        @Column(nullable = false)
+        @Column(nullable = false, columnDefinition = "varchar(255) default 'payments'")
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
         @property:GenerateInput(order = 8, label = "Material Ikon", note = "Innen kell kimásolni a nevét az ikonnak: https://fonts.google.com/icons")
         @property:GenerateOverview(visible = false)

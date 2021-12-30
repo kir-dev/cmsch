@@ -159,7 +159,7 @@ open class LoginController(
     fun items(request: HttpServletRequest): String {
         if (config.isRequestForNeptun()) {
             return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
-                    Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
+                    Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
         }
         return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
                 Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
@@ -204,6 +204,8 @@ open class LoginController(
 
     @GetMapping("/open-site")
     fun openSite(request: HttpServletRequest): String {
+        if (config.getWebsiteUrl().endsWith("#"))
+            "redirect:" + config.getWebsiteUrl()
         val token = (request.getUserOrNull() ?: return "redirect:/login").token
         if (config.isEventFinished())
             return "redirect:/"

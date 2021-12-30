@@ -13,6 +13,7 @@ interface AchievementRepository : CrudRepository<AchievementEntity, Int> {
 
 @Repository
 interface AchievementCategoryRepository : CrudRepository<AchievementCategoryEntity, Int> {
+    override fun findAll(): List<AchievementCategoryEntity>
     fun findAllByCategoryId(categoryId: Int): List<AchievementCategoryEntity>
 }
 

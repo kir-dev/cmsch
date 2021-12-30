@@ -158,7 +158,7 @@
         <div class="transactions">
             <h2>Tranzakciók</h2>
             <table>
-                <tr th:each="item : ${debts}">
+                <tr th:each="item : ${debts}" th:class="${item.payed ? 'closed' : ''}">
                     <td><span class="material-icons" th:text="${item.materialIcon}">fastfood</span></td>
                     <td>
                         <ins th:text="${item.product}">Záróest: 40L Popcorn</ins><br>

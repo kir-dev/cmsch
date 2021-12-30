@@ -28,6 +28,7 @@ class TestConfig(
         private val news: NewsRepository,
         private val events: EventRepository,
         private val achievements: AchievementRepository,
+        private val categories: AchievementCategoryRepository,
         private val users: UserRepository,
         private val extraPages: ExtraPageRepository,
         private val groups: GroupRepository,
@@ -387,6 +388,8 @@ class TestConfig(
                 false,
                 0
         ))
+
+        categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
     }
 
     private fun addUsers() {

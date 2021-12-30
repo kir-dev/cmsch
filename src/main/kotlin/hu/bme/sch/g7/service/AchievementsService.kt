@@ -237,4 +237,14 @@ open class AchievementsService(
         return categories.findAllByCategoryId(categoryId).firstOrNull()
     }
 
+    @Transactional(readOnly = true)
+    fun getAllSubmissions(it: GroupEntity): List<SubmittedAchievementEntity> {
+        return submitted.findAllByGroupId(it.id)
+    }
+
+    @Transactional(readOnly = true)
+    fun getAllCategories(): List<AchievementCategoryEntity> {
+        return categories.findAll()
+    }
+
 }

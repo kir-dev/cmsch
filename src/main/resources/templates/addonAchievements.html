@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="hu">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
-    <title>Fizetési rendszer</title>
+    <title th:text="|BucketList_${groupName}|">Bucketlist_G07</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;400;600&display=swap" rel="stylesheet">
@@ -12,175 +12,135 @@
     <style>
         * { border: 0; padding: 0; margin: 0; box-sizing: border-box; }
         body {
-            width: 100%; background-color: #16171B; color: #929498; font-family: 'Be Vietnam Pro', sans-serif;
+            width: 100%; background-color: #cbcbcb; color: #2E2F37; font-family: 'Be Vietnam Pro', sans-serif;
             -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
         }
         .content {
-            max-width: 500px;
+            max-width: 800px;
             margin: 1rem auto;
             width: 100%;
             padding-bottom: 1rem;
         }
-        .qr-frame {
-            padding: 3rem;
-            background: #3870b8;
-            background: -webkit-linear-gradient(to bottom left, #5691c8, #3063a5);
-            background: linear-gradient(to bottom left, #5691c8, #3063a5);
-            width: 100%;
-            text-align: center;
-        }
-        .qr {
-            border: 0.5rem solid #FFFFFF;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-            border-radius: 0.4rem;
-            max-width: calc(100vw - 6rem);
-        }
         h1 {
-            padding: 1rem;
             text-align: center;
-            color: #FFFFFF;
             text-transform: uppercase;
         }
-        h2 {
-            margin-bottom: 0.5rem;
+        h3 {
+            text-align: center;
+            margin-bottom: 2rem;
         }
-        .info {
-            background-color: #1f3b56;
-            padding: 1rem;
-            margin: 1rem;
-            border-left: 4px solid #5691c8;
-            color: #5691c8;
-        }
-        .profile {
-            background-color: #1F2125;
-            padding: 1rem;
-            margin: 1rem;
+        h4 {
+            text-align: center;
             font-weight: 300;
         }
-        .profile table td {
-            color: #5F6165;
+        .submission {
+            margin: 3rem 0;
+            border-bottom: 2px solid #2E2F37;
         }
-        .profile table td:nth-of-type(2) {
-            color: #5F6165;
-            font-weight: normal;
+        td:nth-of-type(2) {
+            font-weight: 300;
             padding-left: 2rem;
         }
-        .transactions {
-            background-color: #1F2125;
-            padding: 1rem;
-            margin: 1rem;
-            font-weight: 300;
+        table {
+            margin: 1rem 3rem;
         }
-        .transactions table span {
-            font-weight: normal;
-        }
-        .transactions table td {
-            color: #5F6165;
-            padding-bottom: 0.5rem;
-        }
-        .transactions table td:first-of-type span {
-            font-size: 2em;
-            color: #5791C5;
-            background-color: #1F3B55;
-            border-radius: 200px;
-            padding: 8px;
-        }
-        .transactions table td:nth-of-type(2) {
-            padding-left: 1rem;
-        }
-        .transactions table tr.closed td:first-of-type span {
-            color: #5F6165;
-            background-color: #2E2F37;
-        }
-        .transactions table tr.closed td:nth-of-type(2) span {
-            text-decoration: line-through;
-        }
-        .admin-panel {
-            display: block;
-            margin: 0 auto;
-            color: #929498;
-            text-decoration: none;
-            width: 100%;
+        blockquote {
+            margin-top: 3rem;
+            color: #880000;
             text-align: center;
-            background-color: #16171B;
-            padding: 0.4rem;
-            margin-top: 1rem;
         }
-        .admin-panel:hover {
-            color: #FFFFFF;
+        h2 span.material-icons {
+            position: relative;
+            top: 4px;
+        }
+        img {
+            border: 2px solid #2E2F37;
+            max-width: 700px;
+            max-height: 700px;
+            margin-bottom: 2rem;
+        }
+        .image-holder {
+            text-align: center;
         }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YTTKMXXM14"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-YTTKMXXM14');
-    </script>
+    <style media="print">
+        blockquote {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="qr-frame">
-        <img class="qr" src="https://api.g7.sch.bme.hu/cdn/profiles/G7_EB701F7AC76E61E238F2952A209AFE85B5153.png" />
-    </div>
-
     <div class="content">
 
-        <h1>Villany-Vegyész Alapozó Gála</h1>
+        <h1 th:text="|A ${groupName} BucketList beadásai|">A G07 BucketList beadásai</h1>
+        <h3>2021-es gólyahét folyamán</h3>
+        <h4>Gratulálunk a tankörnek az elért helyezéséért, reméljük jól éreztétek magatokat!</h4>
 
-        <div class="info">
-            Tájékoztató a tartozás rendezéséről. Ide meg lehet adni mind a két karon az összefogót.
-        </div>
+        <blockquote>Nyomj Ctrl+P-t és mentsd el PDF-be, mert csak korlátozott ideig elérhető itt az oldalon!</blockquote>
 
-        <div class="profile">
-            <h2>Profil</h2>
+        <div class="submission" th:each="achi : ${achievements}">
+            <h2><span class="material-icons">emoji_events</span> <span th:text="|${categories[achi.achievement.categoryId]?.get(0)?.name ?: 'N/A'} - ${achi.achievement.title}|">Kategória - Feladat neve</span></h2>
             <table>
                 <tr>
-                    <td>Név</td>
-                    <td>Teszt Elek</td>
+                    <td>Feladat:</td>
+                    <td th:text="${achi.achievement.description}">Feladat szövege</td>
                 </tr>
                 <tr>
-                    <td>Email</td>
-                    <td>test.elek@sch.bme.hu</td>
+                    <td>Státusz:</td>
+                    <td th:text="|${achi.approved ? 'Elfogadva' : (achi.rejected ? 'Visszautasítva' : 'Nincs értékelve')}|">Elfogadva</td>
                 </tr>
                 <tr>
-                    <td>Tartozás</td>
-                    <td>2000 JMF</td>
+                    <td>Kapott pontok:</td>
+                    <td th:text="|${achi.score}/${achi.achievement.maxScore}|">5/5</td>
+                </tr>
+                <tr th:if="${achi.achievement.type.name != 'IMAGE'}">
+                    <td>Beadás:</td>
+                    <td th:text="${achi.textAnswer}">Szöveges beadás</td>
+                </tr>
+                <tr>
+                    <td>Értékelés:</td>
+                    <td th:text="${achi.response}">Jó lett</td>
                 </tr>
             </table>
-            <a class="admin-panel" href="#" th:href="@{/admin/control}">ADMIN PANEL MEGNYITÁSA</a>
-
+            <div class="image-holder" th:if="${achi.achievement.type.name != 'TEXT'}" >
+                <img src="" th:src="|@{/cdn}/${achi.imageUrlAnswer}|" alt="Beadás képe">
+            </div>
         </div>
-        <div class="transactions">
-            <h2>Tranzakciók</h2>
+
+        <div class="submission" th:remove="all">
+            <h2>Kategória - Feladat neve</h2>
             <table>
                 <tr>
-                    <td><span class="material-icons">fastfood</span></td>
-                    <td>
-                        Záróest: 40L Popcorn<br>
-                        <span>1050 JMF</span>
-                    </td>
+                    <td>Feladat:</td>
+                    <td>Feladat szövege</td>
                 </tr>
                 <tr>
-                    <td><span class="material-icons">sports_bar</span></td>
-                    <td>
-                        Vártúra: Sör<br>
-                        <span>200 JMF</span>
-                    </td>
-                </tr>
-                <tr class="closed">
-                    <td><span class="material-icons">local_bar</span></td>
-                    <td>
-                        Gólyabuli: napimenü<br>
-                        <span>750 JMF</span>
-                    </td>
+                    <td>Kapott pontok:</td>
+                    <td>5</td>
                 </tr>
                 <tr>
-                    <td><span class="material-icons">payments</span></td>
-                    <td>
-                        Világító basz<br>
-                        <span>300 JMF</span>
-                    </td>
+                    <td>Beadás:</td>
+                    <td>Szöveges beadás</td>
+                </tr>
+            </table>
+            <img src="" width="750" alt="Beadás képe">
+        </div>
+
+
+        <div class="submission" th:remove="all">
+            <h2>Kategória - Feladat neve</h2>
+            <table>
+                <tr>
+                    <td>Feladat:</td>
+                    <td>Feladat szövege</td>
+                </tr>
+                <tr>
+                    <td>Beadás:</td>
+                    <td>Szöveges beadás</td>
+                </tr>
+                <tr>
+                    <td>Kapott pontok:</td>
+                    <td>5</td>
                 </tr>
             </table>
         </div>

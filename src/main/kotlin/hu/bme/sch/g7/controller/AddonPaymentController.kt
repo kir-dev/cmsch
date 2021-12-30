@@ -1,23 +1,14 @@
 package hu.bme.sch.g7.controller
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.g7.dao.*
-import hu.bme.sch.g7.dto.*
-import hu.bme.sch.g7.dto.view.*
-import hu.bme.sch.g7.g7mobile.LocationResponse
-import hu.bme.sch.g7.model.ProductType
-import hu.bme.sch.g7.model.RoleType
-import hu.bme.sch.g7.model.UserEntity
-import hu.bme.sch.g7.service.*
+import hu.bme.sch.g7.dao.SoldProductRepository
+import hu.bme.sch.g7.dto.DebtDto
+import hu.bme.sch.g7.dto.FullDetails
+import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.util.getUser
-import hu.bme.sch.g7.util.getUserOrNull
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
-import java.time.LocalDate
-import java.time.ZoneId
+import org.springframework.web.bind.annotation.GetMapping
 import javax.servlet.http.HttpServletRequest
 
 @Controller
