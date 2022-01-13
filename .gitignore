@@ -33,9 +33,6 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
-
 temp/
 src/main/resources/config/application-local.properties
 keystore/

@@ -45,3 +45,12 @@ or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 - Api docs: BASE_URL/swagger-ui.html
 - Admin UI: BASE_URL/admin/control/basics
 - API: BASE_URL/api/... (see swagger for more)
+
+
+## Client side solutions
+
+Uses
+- React + TS
+- ChakraUI
+
+React is integrated into Spring, so that its running with the backend application.
