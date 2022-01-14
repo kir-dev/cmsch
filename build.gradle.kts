@@ -23,7 +23,7 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 tasks {
     bootJar {
-        archiveFileName.set("g7.jar")
+        archiveFileName.set("cmsch.jar")
     }
 }
 

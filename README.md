@@ -4,15 +4,15 @@ CMSch web backend with in-built frontend
 ## Build docker
 
 ```bash
-  docker build -t g7-web-backend .
+  docker build -t cmsch .
 ```
 
 ## Publish
 
 ```bash
   docker login registry.k8s.sch.bme.hu
-  docker image tag g7-web-backend:latest registry.k8s.sch.bme.hu/g7-web/g7-web-backend:latest
-  docker image push registry.k8s.sch.bme.hu/g7-web/g7-web-backend
+  docker image tag cmsch:latest registry.k8s.sch.bme.hu/kir-dev/cmsch:latest
+  docker image push registry.k8s.sch.bme.hu/kir-dev/cmsch
 ```
 
 ## Run (you can start here)
@@ -25,19 +25,19 @@ For develpment:
         -e AUTHSCH_CLIENT_KEY=80_CHARS \
         -e PROFILE_SALT=RANDOM_STRING \
         -e SYSADMINS=YOUR_AUTH_SCH_UUID \
-        g7-web-backend
+        cmsch
 ```
 
 or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 
 ```bash
-  docker pull registry.k8s.sch.bme.hu/g7-web/g7-web-backend
+  docker pull registry.k8s.sch.bme.hu/kir-dev/cmsch
   docker run --rm -p 8080:80 \
         -e AUTHSCH_CLIENT_ID=20_CHARS \
         -e AUTHSCH_CLIENT_KEY=80_CHARS \
         -e PROFILE_SALT=RANDOM_STRING \
         -e SYSADMINS=YOUR_AUTH_SCH_UUID \
-        registry.k8s.sch.bme.hu/g7-web/g7-web-backend
+        registry.k8s.sch.bme.hu/kir-dev/cmsch
 ```
 
 ## Where to start?
@@ -55,8 +55,8 @@ and fill the file with these configurations (using your credentials):
 authsch.client-identifier=<insert the shorter key>
 authsch.client-key=<insert the long key>
 
-g7web.default-group-name=I16
-g7web.frontend.production-url=http://localhost:3000
+cmsch.default-group-name=I16
+cmsch.frontend.production-url=http://localhost:3000
 ```
 
 Once created, edit the run config's Spring Boot Active Profiles to use 
@@ -74,7 +74,7 @@ Running both the React dev-server and Spring server will NOT trigger CORS relate
 the dev-server to make requests to the Spring server with this annotation:
 
 ```kotlin
-@CrossOrigin(origins = ["\${g7web.frontend.production-url}"], allowedHeaders = ["*"])
+@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @RestController
 @RequestMapping("/api")
 class MainController() {  ...  }
