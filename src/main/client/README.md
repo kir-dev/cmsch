@@ -24,7 +24,15 @@ Instead, you open a VSCode in the client project's root (`src/main/client`) and 
 Once the client server is running on preferably [localhost:3000](http://localhost:3000), you need to open this url, where
 you can see your frontend modifications in development mode with the React dev-server watching for your code alterations.
 Running both of the servers parallel will not trigger CORS related problems, as you are running both of the apps on
-your localhost and this is allowed.
+your localhost and this is programmed in the backend to be allowed, with the help of this annotation before every endpoint
+method (see [in this stackoverflow thread](https://stackoverflow.com/questions/23238876)):
+
+```kotlin
+@PreAuthorize("#request.getRemoteAddr().equals(#request.getLocalAddr())")
+fun news(request: HttpServletRequest): NewsView { ... }
+```
+
+Never forget the request param out of the paramlist in endpoints!
 
 As this is a reusable template CMS project, don't forget to set a custom theme of the app in the `utils/customTheme.ts`
 file.
@@ -35,9 +43,11 @@ The gradle building task will build the react app's files into the static direct
 Spring backend app will serve the built js files, they will access easily the spring app backend through fetch API. This
 will not induce CORS related problems, both the backend and these static files will be served in web domain.
 
-If you're using the Spring backend's baseUrl (from `utils/configuration.ts`: `BACKEND_BASE_URL`) in the client app,
-you can change the `backendBaseUrl` constant variable in the `build.gradle.kts` file, as it is going to be built into
-the `.env` file by the building gradle task.
+If you need to declare a new environment variable, create it in the `src/main/resources/configurations/application.properties` 
+file and modify the `build.gradle.kts` script (approx. line 97) to include the new property in the built .env file.
+
+When in development mode, you can freely change the .env file. **WARNING**: Gradle build will override the existing .env
+file so always have an .env.development file in the client repo as a backup.
 
 ## Other notes
 

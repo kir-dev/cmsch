@@ -22,7 +22,7 @@ val UNKNOWN_USER = UserEntity(0, fullName = "Feature Not Available")
 
 @RestController
 @RequestMapping("/api")
-//@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "true")
+@CrossOrigin(origins = ["\${g7web.frontend.production-url}"], allowedHeaders = ["*"])
 class MainController(
         private val config: RealtimeConfigService,
         private val newsRepository: NewsRepository,
