@@ -24,15 +24,18 @@ Instead, you open a VSCode in the client project's root (`src/main/client`) and 
 Once the client server is running on preferably [localhost:3000](http://localhost:3000), you need to open this url, where
 you can see your frontend modifications in development mode with the React dev-server watching for your code alterations.
 Running both of the servers parallel will not trigger CORS related problems, as you are running both of the apps on
-your localhost and this is programmed in the backend to be allowed, with the help of this annotation before every endpoint
-method (see [in this stackoverflow thread](https://stackoverflow.com/questions/23238876)):
+your localhost and this is programmed in the backend to be allowed, with the help of this annotation before every controller
+used by the frontend:
 
 ```kotlin
-@PreAuthorize("#request.getRemoteAddr().equals(#request.getLocalAddr())")
-fun news(request: HttpServletRequest): NewsView { ... }
+@CrossOrigin(origins = ["\${g7web.frontend.production-url}"], allowedHeaders = ["*"])
+@RestController
+@RequestMapping("/api")
+class MainController() {  ...  }
 ```
 
-Never forget the request param out of the paramlist in endpoints!
+Never forget the request param out of the paramlist in endpoint methods! Don't forget to include the `g7web.frontend.production-url`
+property in the `application-local.properties` file with the value of `http://localhost:3000` (see main README in project root).
 
 As this is a reusable template CMS project, don't forget to set a custom theme of the app in the `utils/customTheme.ts`
 file.
