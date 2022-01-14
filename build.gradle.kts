@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.gradle.node.yarn.task.YarnTask
 
 plugins {
     id("org.springframework.boot") version "2.5.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.github.node-gradle.node") version "3.1.1"
     kotlin("jvm") version "1.5.20"
     kotlin("plugin.spring") version "1.5.20"
     kotlin("plugin.jpa") version "1.5.20"
@@ -51,4 +53,38 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+node {
+    version.set("16.13.2")
+    distBaseUrl.set("https://nodejs.org/dist")
+    download.set(false)
+    workDir.set(file("${project.projectDir}/.gradle/nodejs"))
+    npmWorkDir.set(file("${project.projectDir}/.gradle/npm"))
+    yarnWorkDir.set(file("${project.projectDir}/.gradle/yarn"))
+    nodeProjectDir.set(file("${project.projectDir}/src/main/client"))
+}
+
+tasks.withType<ProcessResources> {
+    dependsOn("copyFrontendToBuild")
+}
+
+tasks.register<Copy>("copyFrontendToBuild") {
+    from("$projectDir/src/main/client/build/")
+    into("$buildDir/resources/main/static")
+}
+
+val buildTaskUsingYarn = tasks.register<YarnTask>("yarnBuild") {
+    dependsOn(tasks.yarn)
+    yarnCommand.set(listOf("run", "build"))
+    workingDir.set(file("src/main/client"))
+    inputs.dir("src")
+    outputs.dir("$buildDir")
+}
+
+tasks.yarn {
+    nodeModulesOutputFilter {
+        exclude("notExistingFile")
+    }
+    workingDir.set(file("src/main/client"))
 }
