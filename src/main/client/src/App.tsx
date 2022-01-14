@@ -1,7 +1,6 @@
 import { ChakraProvider, Code, Grid, Link, Text, VStack } from '@chakra-ui/react'
 import * as React from 'react'
 
-import { ColorModeSwitcher } from './components/@commons/ColorModeSwitcher'
 import customTheme from './utils/customTheme'
 import { IndexLayout } from './components/@layout/IndexLayout'
 import { ExampleApiCallComponent } from './components/@commons/ExampleApiCallComponent'
@@ -11,7 +10,6 @@ export function App() {
     <ChakraProvider theme={customTheme}>
       <IndexLayout>
         <Grid minH="50vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
             <Text>
               Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.

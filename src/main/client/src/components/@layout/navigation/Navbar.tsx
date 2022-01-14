@@ -1,14 +1,14 @@
-import { CloseIcon, HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { Box, Collapse, Flex, IconButton, useColorMode, useColorModeValue, useDisclosure } from '@chakra-ui/react'
+import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { Box, Collapse, Flex, IconButton, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import * as React from 'react'
 import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
+import { ColorModeSwitcher } from '../../@commons/ColorModeSwitcher'
 
 type NavbarProps = {}
 
 export const Navbar: React.FC<NavbarProps> = ({}) => {
   const { isOpen, onToggle } = useDisclosure()
-  const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <Box align="center" fontFamily="heading">
@@ -51,12 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
           </Flex>
         </Flex>
         <Flex flex={{ base: 1, md: 0 }} mr={{ base: -2, md: 0 }} justify="flex-end">
-          <IconButton
-            aria-label="Sötét-világos mód váltás"
-            icon={colorMode === 'dark' ? <SunIcon w={5} h={5} /> : <MoonIcon w={5} h={5} />}
-            onClick={toggleColorMode}
-            variant="ghost"
-          />
+          <ColorModeSwitcher />
         </Flex>
       </Flex>
 
