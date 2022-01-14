@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebMvcConfig : WebMvcConfigurer {
 
-    @Value("\${g7web.external:/etc/g7web/external/}")
-    private val uploadPath = "/etc/g7web/external/"
+    @Value("\${cmsch.external:/etc/cmsch/external/}")
+    private val uploadPath = "/etc/cmsch/external/"
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/cdn/**")

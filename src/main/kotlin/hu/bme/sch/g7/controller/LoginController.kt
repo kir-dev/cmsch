@@ -6,7 +6,6 @@ import hu.bme.sch.g7.model.GuildType
 import hu.bme.sch.g7.model.MajorType
 import hu.bme.sch.g7.model.RoleType
 import hu.bme.sch.g7.model.UserEntity
-import hu.bme.sch.g7.service.NextJsSessionService
 import hu.bme.sch.g7.service.RealtimeConfigService
 import hu.bme.sch.g7.service.UserProfileGeneratorService
 import hu.bme.sch.g7.service.UserService
@@ -42,12 +41,11 @@ open class LoginController(
         private val groupToUserMapping: GroupToUserMappingRepository,
         private val guildToUserMapping: GuildToUserMappingRepository,
         private val groups: GroupRepository,
-        @Value("\${g7web.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") private val grantStaffGroupName: String,
-        @Value("\${g7web.sysadmins:}") private val systemAdmins: String,
-        @Value("\${g7web.default-staff-group-name:SENIOR}") private val staffGroupName: String,
-        @Value("\${g7web.default-group-name:DEFAULT}") private val defaultGroupName: String,
+        @Value("\${cmsch.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") private val grantStaffGroupName: String,
+        @Value("\${cmsch.sysadmins:}") private val systemAdmins: String,
+        @Value("\${cmsch.default-staff-group-name:SENIOR}") private val staffGroupName: String,
+        @Value("\${cmsch.default-group-name:DEFAULT}") private val defaultGroupName: String,
         private val config: RealtimeConfigService,
-        private val sessions: NextJsSessionService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -81,17 +79,16 @@ open class LoginController(
                         "",
                         profile.mail ?: "",
                         RoleType.BASIC,
-                        false, false, false, false,
-                        false, false,  false,
-                        false, false,
-                        false, false,
-                        "", null, GuildType.UNKNOWN, MajorType.UNKNOWN
+                        grantSellProduct = false, grantSellFood = false, grantSellMerch = false, grantMedia = false,
+                        grantRateAchievement = false, grantCreateAchievement = false, grantListUsers = false,
+                        grantGroupManager = false, grantGroupDebtsMananger = false,
+                        grantFinance = false, grantTracker = false,
+                        groupName = "", group = null, guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN
                 )
                 log.info("Logging in with new user ${user.fullName} pekId: ${user.pekId}")
             }
             updateFields(user, profile)
             auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
-            sessions.storeUser(user)
 
             request.getSession(true).setAttribute(USER_SESSION_ATTRIBUTE_NAME, user.pekId)
             request.getSession(true).setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, user)
@@ -123,7 +120,7 @@ open class LoginController(
             profile.eduPersonEntitlements
                     .filter { it.end == null }
                     .filter { it.name.equals(grantStaffGroupName) }
-                    .forEach {
+                    .forEach { _ ->
                         log.info("Granting STAFF for ${user.fullName}")
                         user.role = RoleType.STAFF
 
@@ -175,9 +172,6 @@ open class LoginController(
     fun logout(request: HttpServletRequest): String {
         try {
             request.getSession(false)
-            request.getUserOrNull()?.let {
-                sessions.invalidate(it.token)
-            }
 
             SecurityContextHolder.clearContext()
             val session = request.getSession(false)
