@@ -6,7 +6,6 @@ import hu.bme.sch.g7.dto.Edit
 import hu.bme.sch.g7.dto.FullDetails
 import hu.bme.sch.g7.dto.Preview
 import javax.persistence.*
-import kotlin.math.min
 
 @Entity
 @Table(name="achievementCategories")

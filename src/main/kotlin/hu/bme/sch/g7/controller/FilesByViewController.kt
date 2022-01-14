@@ -26,7 +26,7 @@ const val CONTROL_MODE_FILE = "file"
 @Controller
 @RequestMapping("/admin/control/files")
 class FilesByViewController(
-        @Value("\${g7web.external:/etc/g7web/external/}") private val root: String,
+        @Value("\${cmsch.external:/etc/cmsch/external/}") private val root: String,
         private val clock: ClockService
 ) {
 

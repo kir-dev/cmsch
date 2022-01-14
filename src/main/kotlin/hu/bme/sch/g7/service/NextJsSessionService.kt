@@ -7,7 +7,8 @@ import java.util.concurrent.ConcurrentHashMap
 
 const val CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
-@Service
+//@Service
+@Deprecated("This service was used for G7 2021, but unused since then")
 class NextJsSessionService {
 
     private val storage = ConcurrentHashMap<String, UserEntity>()
@@ -22,7 +23,7 @@ class NextJsSessionService {
 
     fun storeUser(entity: UserEntity): String {
         val id = generateNewId()
-        storage.entries.forEach { (token, storedEntity) -> if (storedEntity.equals(entity)) storage.remove(token) }
+        storage.entries.forEach { (token, storedEntity) -> if (storedEntity == entity) storage.remove(token) }
         storage[id] = entity
         entity.token = id
         return id

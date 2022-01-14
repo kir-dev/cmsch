@@ -20,7 +20,7 @@ class DI {
         instance = this
     }
 
-    @Value("\${g7web.external:/etc/g7web/external}")
+    @Value("\${cmsch.external:/etc/cmsch/external}")
     lateinit var uploadPath: String
 }
 

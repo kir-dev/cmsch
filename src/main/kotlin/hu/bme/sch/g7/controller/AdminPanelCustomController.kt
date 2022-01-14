@@ -34,7 +34,7 @@ class AdminPanelCustomController(
         private val config: RealtimeConfigService,
         private val submittedRepository: SubmittedAchievementRepository,
         private val locationService: LocationService,
-        @Value("\${g7web.profile.qr-prefix:G7_}") private val prefix: String
+        @Value("\${cmsch.profile.qr-prefix:G7_}") private val prefix: String
 ) {
 
     private val topListDescriptor = OverviewBuilder(TopListEntryDto::class)

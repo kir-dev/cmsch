@@ -1,1 +1,1 @@
-rootProject.name = "g7"
+rootProject.name = "cmsch"

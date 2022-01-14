@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 class LocationService(
         private val clock: ClockService,
         private val userRepository: UserRepository,
-        @Value("\${g7web.profile.qr-prefix:G7_}") val prefix: String
+        @Value("\${cmsch.profile.qr-prefix:G7_}") val prefix: String
 ) {
 
     private val tokenToLocationMapping = ConcurrentHashMap<String, LocationEntity>()
