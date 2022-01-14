@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.github.gradle.node.yarn.task.YarnTask
+import java.util.Properties
 
 plugins {
     id("org.springframework.boot") version "2.5.2"
@@ -10,6 +11,12 @@ plugins {
     kotlin("plugin.jpa") version "1.5.20"
 }
 
+val applicationProperties = Properties()
+file("${projectDir}/src/main/resources/config/application.properties")
+    .reader()
+    .also {
+        applicationProperties.load(it)
+    }
 group = "hu.bme.sch"
 version = "1.0.13"
 java.sourceCompatibility = JavaVersion.VERSION_11
@@ -70,11 +77,10 @@ tasks.withType<ProcessResources> {
 }
 
 tasks.register<Copy>("copyFrontendToBuild") {
+    dependsOn("yarnBuild")
     from("$projectDir/src/main/client/build/")
     into("$buildDir/resources/main/static")
 }
-
-val backendBaseUrl = "https://gkorte.sch.bme.hu/"
 
 tasks.register<YarnTask>("yarnBuild") {
     dependsOn(tasks.yarn, "setupBuildEnv")
@@ -86,8 +92,11 @@ tasks.register<YarnTask>("yarnBuild") {
 
 tasks.register("setupBuildEnv") {
     doLast {
-        File("$projectDir/src/main/client", ".env")
-            .writeText("REACT_APP_BACKEND_BASE_URL=$backendBaseUrl")
+        File("$projectDir/src/main/client", ".env").writeText(
+            "REACT_APP_BACKEND_BASE_URL=${applicationProperties.getProperty("g7web.backend.production-url")}" +
+            "\nREACT_APP_KIRDEV_URL=${applicationProperties.getProperty("g7web.frontend.kirdev-url")}" +
+            "\nREACT_APP_BUGREPORT_URL=${applicationProperties.getProperty("g7web.frontend.bugreport-url")}"
+        )
     }
 }
 
