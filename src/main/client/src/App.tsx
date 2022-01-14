@@ -1,13 +1,16 @@
-import { Box, ChakraProvider, Code, Grid, Link, Text, theme, VStack } from '@chakra-ui/react'
+import { ChakraProvider, Code, Grid, Link, Text, VStack } from '@chakra-ui/react'
 import * as React from 'react'
 
-import { ColorModeSwitcher } from './ColorModeSwitcher'
+import { ColorModeSwitcher } from './components/@commons/ColorModeSwitcher'
+import customTheme from './utils/customTheme'
+import { IndexLayout } from './components/@layout/IndexLayout'
+import { ExampleApiCallComponent } from './components/@commons/ExampleApiCallComponent'
 
 export function App() {
   return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
+    <ChakraProvider theme={customTheme}>
+      <IndexLayout>
+        <Grid minH="50vh" p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
             <Text>
@@ -16,9 +19,10 @@ export function App() {
             <Link color="teal.500" href="https://chakra-ui.com" fontSize="2xl" target="_blank" rel="noopener noreferrer">
               Learn Chakra
             </Link>
+            <ExampleApiCallComponent />
           </VStack>
         </Grid>
-      </Box>
+      </IndexLayout>
     </ChakraProvider>
   )
 }

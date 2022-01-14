@@ -1,7 +1,7 @@
 # CMSch client
 
 This project was bootstrapped with
-[Create React App](https://github.com/facebook/create-react-app).
+[Create React App](https://github.com/facebook/create-react-app) using template of ChakraUI.
 
 ## Development notes
 
@@ -11,38 +11,49 @@ Uses:
 - [React-icons](https://react-icons.github.io/react-icons/)
 - Typescript 4.5.4
 
-## Available Scripts
+### Basic recommended development workflow
 
-In the project directory, you can run:
+Open IDEA, start the Spring app, but you won't use [localhost:8080](http://localhost:8080) to see your client side
+modifications, you don't need to open this url in your browser.
 
-### `yarn start`
+Instead, you open a VSCode in the client project's root (`src/main/client`) and start with
 
-Runs the app in the development mode.<br /> Open
-[http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. `yarn install` to install dependencies locally in node_modules
+2. `yarn start` to start React client server
 
-The page will reload if you make edits.<br /> You will also see any lint errors
-in the console.
+Once the client server is running on preferably [localhost:3000](http://localhost:3000), you need to open this url, where
+you can see your frontend modifications in development mode with the React dev-server watching for your code alterations.
+Running both of the servers parallel will not trigger CORS related problems, as you are running both of the apps on
+your localhost and this is allowed.
 
-### `yarn test`
+As this is a reusable template CMS project, don't forget to set a custom theme of the app in the `utils/customTheme.ts`
+file.
 
-Launches the test runner in the interactive watch mode.<br /> See the section
-about
-[running tests](https://facebook.github.io/create-react-app/docs/running-tests)
-for more information.
+### In production mode
 
-### `yarn build`
+The gradle building task will build the react app's files into the static directory of our Spring app, from where the
+Spring backend app will serve the built js files, they will access easily the spring app backend through fetch API. This
+will not induce CORS related problems, both the backend and these static files will be served in web domain.
 
-Builds the app for production to the `build` folder.<br /> It correctly bundles
-React in production mode and optimizes the build for the best performance.
+If you're using the Spring backend's baseUrl (from `utils/configuration.ts`: `BACKEND_BASE_URL`) in the client app,
+you can change the `backendBaseUrl` constant variable in the `build.gradle.kts` file, as it is going to be built into
+the `.env` file by the building gradle task.
 
-The build is minified and the filenames include the hashes.<br /> Your app is
-ready to be deployed!
+## Other notes
 
-See the section about
-[deployment](https://facebook.github.io/create-react-app/docs/deployment) for
-more information.
+### Yarn run tasks
 
-### `yarn eject`
+#### `yarn lint`
+
+This will run the eslint and prettier linter and show you your codes faults and where you didn't follow the set clean
+code rules in `.eslintrc.json` and `.prettierrc.json`.
+
+#### `yarn fix`
+
+This will not just run the eslint and prettier linter, but will try to fix your faults where you didn't follow the set
+clean code rules in `.eslintrc.json` and `.prettierrc.json`. This will not guarantee the full cleanliness of your code.
+
+#### `yarn eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
@@ -61,7 +72,7 @@ small and middle deployments, and you shouldn’t feel obligated to use this
 feature. However we understand that this tool wouldn’t be useful if you couldn’t
 customize it when you are ready for it.
 
-## Learn More
+### Learn More
 
 You can learn more in the
 [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
