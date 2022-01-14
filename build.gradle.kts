@@ -74,12 +74,21 @@ tasks.register<Copy>("copyFrontendToBuild") {
     into("$buildDir/resources/main/static")
 }
 
-val buildTaskUsingYarn = tasks.register<YarnTask>("yarnBuild") {
-    dependsOn(tasks.yarn)
+val backendBaseUrl = "https://gkorte.sch.bme.hu/"
+
+tasks.register<YarnTask>("yarnBuild") {
+    dependsOn(tasks.yarn, "setupBuildEnv")
     yarnCommand.set(listOf("run", "build"))
     workingDir.set(file("src/main/client"))
     inputs.dir("src")
     outputs.dir("$buildDir")
+}
+
+tasks.register("setupBuildEnv") {
+    doLast {
+        File("$projectDir/src/main/client", ".env")
+            .writeText("REACT_APP_BACKEND_BASE_URL=$backendBaseUrl")
+    }
 }
 
 tasks.yarn {
