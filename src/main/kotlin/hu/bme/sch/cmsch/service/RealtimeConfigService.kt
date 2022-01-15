@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import javax.annotation.PostConstruct
 
 const val WARNING_MESSAGE = "WARNING_MESSAGE"
+const val WARNING_TYPE = "WARNING_TYPE"
 const val LEADER_BOARD_ENABLED = "LEADER_BOARD_ENABLED"
 const val LEADER_BOARD_UPDATES = "LEADER_BOARD_UPDATES"
 const val SITE_LOW_PROFILE = "SITE_LOW_PROFILE"
@@ -29,6 +30,9 @@ class RealtimeConfigService(
     fun init() {
         if (realtimeConfig.findByKey(WARNING_MESSAGE).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, WARNING_MESSAGE, ""))
+
+        if (realtimeConfig.findByKey(WARNING_TYPE).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_TYPE, "warning"))
 
         if (realtimeConfig.findByKey(LEADER_BOARD_ENABLED).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_ENABLED, "true"))
@@ -65,6 +69,14 @@ class RealtimeConfigService(
             realtimeConfig.findByKey(key)
                     .map { it.value }
                     .orElse("")
+        }
+    }
+
+    fun getWarningType(): String {
+        return cache.computeIfAbsent(WARNING_TYPE) { key ->
+            realtimeConfig.findByKey(key)
+                .map { it.value }
+                .orElse("warning")
         }
     }
 
@@ -126,7 +138,7 @@ class RealtimeConfigService(
 
     @Transactional
     fun setLeaderboardUpdates(value: Boolean) {
-        cache.put(LEADER_BOARD_UPDATES, value.toString())
+        cache[LEADER_BOARD_UPDATES] = value.toString()
         realtimeConfig.findByKey(LEADER_BOARD_UPDATES)
                 .map {
                     it.value = value.toString()
