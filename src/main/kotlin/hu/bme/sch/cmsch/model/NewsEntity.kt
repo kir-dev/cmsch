@@ -91,7 +91,7 @@ data class NewsEntity(
         @Column(nullable = false)
         @JsonView(value = [ Edit::class ])
         @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Minimum rang a megtekintéshez",
-                note = "GUEST = kijelentkezett, BASIC = gólya, STAFF = senior ",
+                note = "GUEST = kijelentkezett, BASIC = gólya, STAFF = rendező ",
                 source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
         @property:GenerateOverview(visible = false)
         @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_ENUM, enumSource = RoleType::class)

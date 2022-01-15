@@ -97,7 +97,7 @@ open class LoginController(
             auth?.isAuthenticated = false
             e.printStackTrace()
         }
-        return if (auth != null && auth.isAuthenticated) "redirect:/entrypoint" else "redirect:/logged-out?error"
+        return if (auth != null && auth.isAuthenticated) "redirect:/control/entrypoint" else "redirect:/control/logged-out?error"
     }
 
     private fun updateFields(user: UserEntity, profile: ProfileDataResponse) {

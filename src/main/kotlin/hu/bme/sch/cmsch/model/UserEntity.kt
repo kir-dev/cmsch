@@ -89,7 +89,7 @@ data class UserEntity(
         @Enumerated(EnumType.STRING)
         @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Jogkör",
                 source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
-                note = "BASIC = gólya, STAFF = senior, ADMIN = minden jog")
+                note = "BASIC = gólya, STAFF = rendező, ADMIN = minden jog")
         @property:GenerateOverview(visible = false)
         var role: RoleType = RoleType.GUEST,
 
@@ -160,15 +160,22 @@ data class UserEntity(
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 19, label = "JOG: Gazdaságis", minimumRole = RoleType.ADMIN)
         @property:GenerateOverview(visible = false)
-        @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
+        @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_BOOLEAN)
         var grantFinance: Boolean = false,
 
         @JsonView(value = [ Edit::class ])
         @Column(nullable = false)
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 20, label = "JOG: Térkép figyelő", minimumRole = RoleType.ADMIN)
         @property:GenerateOverview(visible = false)
-        @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
+        @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_BOOLEAN)
         var grantTracker: Boolean = false,
+
+        @JsonView(value = [ Edit::class ])
+        @Column(nullable = false)
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 21, label = "JOG: Riddleök kezelése", minimumRole = RoleType.ADMIN)
+        @property:GenerateOverview(visible = false)
+        @property:ImportFormat(ignore = false, columnId = 17, type = IMPORT_BOOLEAN)
+        var grantRiddle: Boolean = false,
 
         @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
         @Column(nullable = false)

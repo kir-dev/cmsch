@@ -209,3 +209,31 @@ class GroupToUserMappingController(
         permissionControl = { it?.isAdmin() ?: false || it?.grantGroupManager ?: false || it?.grantListUsers ?: false },
         importable = true
 )
+
+@Controller
+@RequestMapping("/admin/control/riddles")
+class RiddleController(
+    repo: RiddleRepository,
+    importService: ImportService
+) : AbstractAdminPanelController<RiddleEntity>(
+    repo,
+    "riddles", "Riddle", "Riddleök",
+    "Képrejtvények kezelése.",
+    RiddleEntity::class, ::RiddleEntity, importService,
+    permissionControl = { it?.isAdmin() ?: false || it?.grantRiddle ?: false },
+    importable = true
+)
+
+@Controller
+@RequestMapping("/admin/control/riddle-categories")
+class RiddleCategoryController(
+    repo: RiddleCategoryRepository,
+    importService: ImportService
+) : AbstractAdminPanelController<RiddleCategoryEntity>(
+    repo,
+    "riddle-categories", "Riddle Kategória", "Riddle Kategóriák",
+    "Képrejtvény kategóriák kezelése.",
+    RiddleCategoryEntity::class, ::RiddleCategoryEntity, importService,
+    permissionControl = { it?.isAdmin() ?: false || it?.grantRiddle ?: false },
+    importable = true
+)

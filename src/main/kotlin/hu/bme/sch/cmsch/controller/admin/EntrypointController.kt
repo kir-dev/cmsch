@@ -23,12 +23,6 @@ class EntrypointController(
         private val config: RealtimeConfigService
 ) {
 
-    // FIXME: remove when SPA is ready
-//    @GetMapping("/")
-//    fun index(): String {
-//        return if (config.isEventFinished()) "eventFinished" else "index"
-//    }
-
     @GetMapping("/control/entrypoint")
     fun entrypoint(model: Model, request: HttpServletRequest): String {
         val user = request.getUserOrNull() ?: return "redirect:/control/logged-out?error=invalid-permissions"

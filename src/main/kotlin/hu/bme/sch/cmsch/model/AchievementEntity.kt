@@ -98,8 +98,8 @@ data class AchievementEntity(
         @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
         var highlighted: Boolean = false,
 
-        @Column(nullable = false, name = "`order`")
         @JsonView(value = [ Edit::class ])
+        @Column(nullable = false, name = "`order`")
         @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 11, label = "Sorrend")
         @property:GenerateOverview(visible = false)
         @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LONG)
