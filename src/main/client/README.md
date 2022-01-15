@@ -85,6 +85,12 @@ small and middle deployments, and you shouldn’t feel obligated to use this
 feature. However we understand that this tool wouldn’t be useful if you couldn’t
 customize it when you are ready for it.
 
+### Coding conventions
+ - Icon pack used: Font Awesome (react-icons)
+ - Use as many Chakra components as possible minimizing attributes
+ - Use global theme settings and components to minimize bundle size and unify design
+ - Color scheme used: 'brand'
+
 ### Learn More
 
 You can learn more in the
