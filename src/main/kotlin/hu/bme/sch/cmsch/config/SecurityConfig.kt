@@ -19,7 +19,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
                 .antMatchers("/", "/control/loggedin", "/control/login", "/control/logged-out", "/api/events",
-                        "/api/events/**", "/api/extra-page/**", "/api/version", "/style.css",
+                        "/api/events/**", "/api/extra-page/**", "/api/version", "/style.css", "/control/test-user",
                         "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/events/**",
                         "/countdown", "/control/logout", "/control/test", "/api/achievement", "/control/open-site")
                     .permitAll()
