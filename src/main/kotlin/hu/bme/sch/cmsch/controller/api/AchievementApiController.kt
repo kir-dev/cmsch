@@ -114,7 +114,7 @@ class AchievementApiController(
             return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
 
         val user = request.getUserOrNull() ?:
-        return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
+            return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
         return AchievementSubmissionResponseDto(achievements.submitAchievement(answer, file, user))
     }
 
