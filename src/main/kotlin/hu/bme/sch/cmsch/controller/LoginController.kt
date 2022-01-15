@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.controller
 
+import hu.bme.sch.cmsch.controller.api.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
 import hu.bme.sch.cmsch.dao.GroupRepository
 import hu.bme.sch.cmsch.dao.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.dao.GuildToUserMappingRepository
@@ -116,6 +117,11 @@ open class LoginController(
             auth?.isAuthenticated = false
             e.printStackTrace()
         }
+
+        if (request.getSession(true).getAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE) != null) {
+            httpResponse.sendRedirect("/api/token-after-login")
+            return
+        }
         httpResponse.sendRedirect(if (auth != null && auth.isAuthenticated) "/control/entrypoint" else "/control/logged-out?error")
     }
 
@@ -192,18 +198,16 @@ open class LoginController(
         log.info("Logging out from user {}", request.getUserOrNull()?.fullName ?: "n/a")
 
         try {
-            val cookie = Cookie(LOGGED_IN_COOKIE, "false")
-            cookie.maxAge = 0
-            cookie.path = "/"
-            httpResponse.addCookie(cookie)
-
             request.getSession(false)
 
             SecurityContextHolder.clearContext()
             val session = request.getSession(false)
             session?.invalidate()
             for (cookie in request.cookies) {
+                cookie.value = ""
                 cookie.maxAge = 0
+                cookie.path = "/"
+                httpResponse.addCookie(cookie)
             }
 
             request.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)

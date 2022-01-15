@@ -5,9 +5,8 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.NewsEntity
 
 data class NewsView(
-        @JsonView(Preview::class)
-        val warningMessage: String = "",
 
-        @JsonView(Preview::class)
-        val news: List<NewsEntity> = listOf()
+    @JsonView(Preview::class)
+    val news: List<NewsEntity> = listOf()
+
 )

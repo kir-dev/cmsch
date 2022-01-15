@@ -25,11 +25,11 @@
     <div class="content">
         <div class="split">
             <div class="header" th:fragment="mobile">
-                <span>G7 ADMIN</span>
+                <span>CMSch ADMIN</span>
                 <span class="material-icons fix-icons menu-icon" onclick="document.getElementById('menu').style.display = 'block'">menu</span>
             </div>
             <div class="menu" th:fragment="menu(userEntity)" id="menu">
-                <h1>G7 ADMIN</h1>
+                <h1>CMSch ADMIN</h1>
                 <div class="exit" onclick="document.getElementById('menu').style.display = 'none'">X</div>
                 <div class="separate"></div>
                 <a href="#" th:href="@{/admin/control/basics}">Alap adatok</a>
@@ -38,6 +38,9 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/news}">Hírek</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/events}">Események</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/extra-pages}">Extra oldalak</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/tokens}">Tokenek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-user}">Beolvasott fehasználói tokenek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-group}">Beolvasott csoportos tokenek</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Gárdatanköris és Infopult</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager()}" th:href="@{/admin/control/groups}">Tankörök</a>

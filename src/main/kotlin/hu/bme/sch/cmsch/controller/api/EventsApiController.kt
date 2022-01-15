@@ -39,7 +39,6 @@ class EventsApiController(
         val event = eventsRepository.findByUrl(path).orElse(null)
 
         return SingleEventView(
-            warningMessage = config.getWarningMessage(),
             event = event
         )
     }

@@ -82,10 +82,9 @@ class AchievementApiController(
     fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
         val achievement = achievements.getById(achievementId)
         if (achievement.orElse(null)?.visible?.not() == true || config.isSiteLowProfile())
-            return SingleAchievementView(warningMessage = config.getWarningMessage(), achievement = null, submission = null)
+            return SingleAchievementView(achievement = null, submission = null)
 
         val group = request.getUserOrNull()?.group ?: return SingleAchievementView(
-            warningMessage = config.getWarningMessage(),
             achievement = achievement.orElse(null),
             submission = null,
             status = AchievementStatus.NOT_SUBMITTED
@@ -93,7 +92,6 @@ class AchievementApiController(
 
         val submission = achievements.getSubmissionOrNull(group, achievement)
         return SingleAchievementView(
-            warningMessage = config.getWarningMessage(),
             achievement = achievement.orElse(null),
             submission = submission,
             status = if (submission?.approved == true) AchievementStatus.ACCEPTED

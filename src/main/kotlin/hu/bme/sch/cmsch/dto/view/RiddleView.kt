@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.dto.view
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 
-class RiddleView(
+data  class RiddleView(
 
     @JsonView(FullDetails::class)
     var imageUrl: String = "",

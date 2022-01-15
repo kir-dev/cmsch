@@ -19,9 +19,9 @@ import kotlin.reflect.KMutableProperty1
 @Controller
 @RequestMapping("/admin/control/debts-by-users")
 class DebtsByUsersController(
-        private val soldProductController: SoldProductRepository,
-        private val groupRepository: GroupRepository,
-        private val clock: ClockService
+    private val soldProductRepository: SoldProductRepository,
+    private val groupRepository: GroupRepository,
+    private val clock: ClockService
 ) {
 
     private val view = "debts-by-users"
@@ -56,10 +56,10 @@ class DebtsByUsersController(
     }
 
     private fun fetchOverview(): List<DebtsByUser> {
-        return soldProductController.findAll().groupBy { it.ownerId }
+        return soldProductRepository.findAll().groupBy { it.ownerId }
                 .map { it.value }
-                .filter { !it.isEmpty() }
-                .map {
+                .filter { it.isNotEmpty() }
+                .map { it ->
                     val groupName = groupRepository.findById(it[0].responsibleGroupId).map { it.name }.orElse("n/a")
                     DebtsByUser(
                             it[0].ownerId,
@@ -74,7 +74,7 @@ class DebtsByUsersController(
 
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() != false) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -85,7 +85,7 @@ class DebtsByUsersController(
         model.addAttribute("view", view)
         model.addAttribute("columns", submittedDescriptor.getColumns())
         model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", soldProductController.findAllByOwnerId(id))
+        model.addAttribute("rows", soldProductRepository.findAllByOwnerId(id))
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_EDIT)
 
@@ -94,7 +94,7 @@ class DebtsByUsersController(
 
     @GetMapping("/edit/{id}")
     fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() != false) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -108,7 +108,7 @@ class DebtsByUsersController(
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_EDIT)
 
-        val entity = soldProductController.findById(id)
+        val entity = soldProductRepository.findById(id)
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -123,12 +123,12 @@ class DebtsByUsersController(
              model: Model,
              request: HttpServletRequest
     ): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() != false) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
 
-        val entity = soldProductController.findById(id)
+        val entity = soldProductRepository.findById(id)
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"
         }
@@ -139,7 +139,7 @@ class DebtsByUsersController(
         updateEntity(submittedDescriptor, transaction, dto)
         transaction.log = "${transaction.log} '${user.fullName}'(${user.id}) changed [shipped: ${transaction.shipped}, payed: ${transaction.payed}, finsihed: ${transaction.finsihed}] at $date;"
         transaction.id = id
-        soldProductController.save(transaction)
+        soldProductRepository.save(transaction)
         return "redirect:/admin/control/$view"
     }
 

@@ -237,3 +237,18 @@ class RiddleCategoryController(
     permissionControl = { it?.isAdmin() ?: false || it?.grantRiddle ?: false },
     importable = true
 )
+
+@Controller
+@RequestMapping("/admin/control/tokens")
+class TokenController(
+    repo: TokenRepository,
+    importService: ImportService
+) : AbstractAdminPanelController<TokenEntity>(
+    repo,
+    "tokens", "Token", "Tokenek",
+    "Képrejtvény kategóriák kezelése.",
+    TokenEntity::class, ::TokenEntity, importService,
+    permissionControl = { it?.isAdmin() ?: false || it?.grantMedia ?: false },
+    importable = true
+)
+
