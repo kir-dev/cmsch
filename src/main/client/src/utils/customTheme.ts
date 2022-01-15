@@ -14,6 +14,18 @@ const customTheme = extendTheme({
       800: '#0f4e35',
       900: '#08271b'
     }
+  },
+  components: {
+    Heading: {
+      baseStyle: {
+        marginY: 7
+      }
+    },
+    Text: {
+      baseStyle: {
+        fontSize: 'lg'
+      }
+    }
   }
 })
 
