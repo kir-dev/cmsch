@@ -38,9 +38,6 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/news}">Hírek</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/events}">Események</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/extra-pages}">Extra oldalak</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/tokens}">Tokenek</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-user}">Beolvasott fehasználói tokenek</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-group}">Beolvasott csoportos tokenek</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Gárdatanköris és Infopult</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager()}" th:href="@{/admin/control/groups}">Tankörök</a>
@@ -59,6 +56,11 @@
                 <h2 th:if="${userEntity.isAdmin()}">Riddle</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles}">Riddleök</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddle-categories}">Riddle kategóriák</a>
+
+                <h2 th:if="${userEntity.isAdmin()}">Tokenek</h2>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/tokens}">Tokenek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-user}">Beolvasott fehasználói tokenek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-group}">Beolvasott csoportos tokenek</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Árusítás</h2>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/products}">Termékek</a>
