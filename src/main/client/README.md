@@ -46,7 +46,7 @@ The gradle building task will build the react app's files into the static direct
 Spring backend app will serve the built js files, they will access easily the spring app backend through fetch API. This
 will not induce CORS related problems, both the backend and these static files will be served in web domain.
 
-If you need to declare a new environment variable, create it in the `src/main/resources/configurations/application.properties` 
+If you need to declare a new environment variable, create it in the `src/main/resources/configurations/application.properties`
 file and modify the `build.gradle.kts` script (approx. line 97) to include the new property in the built .env file.
 
 When in development mode, you can freely change the .env file. **WARNING**: Gradle build will override the existing .env
