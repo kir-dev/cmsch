@@ -18,7 +18,7 @@ class AddonPaymentController(
 ) {
 
     @JsonView(FullDetails::class)
-    @GetMapping("/pay")
+//    @GetMapping("/pay")
     fun profile(request: HttpServletRequest, model: Model): String {
         val user = request.getUser()
         if (config.isSiteLowProfile())

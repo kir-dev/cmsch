@@ -100,3 +100,18 @@ interface LocationRepository : CrudRepository<LocationEntity, Int> {
     fun findByUserId(userId: Int): Optional<LocationEntity>
     override fun findAll(): List<LocationEntity>
 }
+
+@Repository
+interface RiddleRepository : CrudRepository<RiddleEntity, Int> {
+
+}
+
+@Repository
+interface RiddleCategoryRepository : CrudRepository<RiddleCategoryEntity, Int> {
+
+}
+
+@Repository
+interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
+
+}

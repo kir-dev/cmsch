@@ -53,6 +53,10 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/toplist}">Toplista</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/check-ratings}">Pontok ellenőrzése</a>
 
+                <h2 th:if="${userEntity.isAdmin()}">Riddle</h2>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles}">Riddleök</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddle-categories}">Riddle kategóriák</a>
+
                 <h2 th:if="${userEntity.isAdmin()}">Árusítás</h2>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/products}">Termékek</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellProduct()}" th:href="@{/admin/control/sell-products}">Termék árusítás</a>
@@ -143,10 +147,9 @@
     </div>
 
     <div class="footer">
-        A G7 web projekt backendjét a kir-dev, a látogatói lapot pedig az schdesign készítette<br />
-        <a href="https://kir-dev.sch.bme.hu/">kir-dev</a> :: <a href="https://pek.sch.bme.hu/profiles/Gerviba">Schámi</a>,
-        <a href="https://schdesign.hu/">schdesign</a> :: <a href="https://pek.sch.bme.hu/profiles/andrisborbas">Andris</a><br />
-        2021
+        A CMSch projektet a kir-dev készítette<br />
+        <a href="https://kir-dev.sch.bme.hu/">kir-dev</a> :: <a href="https://pek.sch.bme.hu/profiles/Gerviba">Schámi</a>, TODO többiek
+        2022
     </div>
 </body>
 </html>

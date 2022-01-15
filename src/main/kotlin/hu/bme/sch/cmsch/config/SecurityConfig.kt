@@ -18,13 +18,13 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/", "/loggedin", "/login", "/logged-out", "/api/news", "/api/events",
-                        "/api/events/**", "/api/products", "/api/extra-page/**", "/api/version", "/style.css",
-                        "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/profiles/**", "/cdn/events/**", "/cdn/news/**",
-                        "/countdown", "/logout", "/test", "/api/profile/profile/**", "/api/achievement/**", "/open-site")
+                .antMatchers("/", "/control/loggedin", "/control/login", "/control/logged-out", "/api/events",
+                        "/api/events/**", "/api/extra-page/**", "/api/version", "/style.css",
+                        "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/events/**",
+                        "/countdown", "/control/logout", "/control/test", "/api/achievement", "/control/open-site")
                     .permitAll()
 
-                .antMatchers("/api/debts", "/entrypoint", "/pay", "/export-bucketlist", "/cdn/achievement/**")
+                .antMatchers("/api/profile", "/api/riddle/**", "/control/entrypoint", "/cdn/achievement/**")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")
