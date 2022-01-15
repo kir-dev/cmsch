@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.dto.scan.G7idBuyRequest
 import hu.bme.sch.cmsch.dto.scan.NeptunBuyRequest

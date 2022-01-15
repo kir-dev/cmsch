@@ -93,9 +93,9 @@ tasks.register<YarnTask>("yarnBuild") {
 tasks.register("setupBuildEnv") {
     doLast {
         File("$projectDir/src/main/client", ".env").writeText(
-            "REACT_APP_BACKEND_BASE_URL=${applicationProperties.getProperty("g7web.backend.production-url")}" +
-            "\nREACT_APP_KIRDEV_URL=${applicationProperties.getProperty("g7web.frontend.kirdev-url")}" +
-            "\nREACT_APP_BUGREPORT_URL=${applicationProperties.getProperty("g7web.frontend.bugreport-url")}"
+            "REACT_APP_BACKEND_BASE_URL=${applicationProperties.getProperty("cmsch.backend.production-url")}" +
+            "\nREACT_APP_KIRDEV_URL=${applicationProperties.getProperty("cmsch.frontend.kirdev-url")}" +
+            "\nREACT_APP_BUGREPORT_URL=${applicationProperties.getProperty("cmsch.frontend.bugreport-url")}"
         )
     }
 }

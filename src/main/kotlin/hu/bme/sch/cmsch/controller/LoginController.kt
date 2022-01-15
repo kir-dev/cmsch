@@ -51,13 +51,13 @@ open class LoginController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @ResponseBody
-    @GetMapping("/logged-out")
+    @GetMapping("/control/logged-out")
     fun loggedOut(): String {
         return "Sikeres kijelentkezés!"
     }
 
     @ApiOperation("Login re-entry point")
-    @GetMapping("/auth/authsch/callback")
+    @GetMapping("/control/auth/authsch/callback")
     fun loggedIn(@RequestParam code: String, @RequestParam state: String, request: HttpServletRequest): String {
         if (buildUniqueState(request) != state)
             return "index?invalid-state"
@@ -152,7 +152,7 @@ open class LoginController(
     }
 
     @ApiOperation("Redirection to the auth provider")
-    @GetMapping("/login")
+    @GetMapping("/control/login")
     fun items(request: HttpServletRequest): String {
         if (config.isRequestForNeptun()) {
             return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
@@ -168,7 +168,7 @@ open class LoginController(
     }
 
     @ApiOperation("Logout user")
-    @GetMapping("/logout")
+    @GetMapping("/control/logout")
     fun logout(request: HttpServletRequest): String {
         try {
             request.getSession(false)
@@ -193,17 +193,15 @@ open class LoginController(
         return "redirect:${config.getWebsiteUrl()}"
     }
 
-    @GetMapping("/test")
-    fun test() = "eventFinished"
+    @ResponseBody
+    @GetMapping("/control/test")
+    fun test() = "Pong!"
 
-    @GetMapping("/open-site")
+    @GetMapping("/control/open-site")
     fun openSite(request: HttpServletRequest): String {
-        if (config.getWebsiteUrl().endsWith("#"))
-            "redirect:" + config.getWebsiteUrl()
-        val token = (request.getUserOrNull() ?: return "redirect:/login").token
         if (config.isEventFinished())
             return "redirect:/"
-        return "redirect:" + config.getWebsiteUrl() + "api/auth/callback?accessToken=$token"
+        return "redirect:" + config.getWebsiteUrl()
     }
 
 

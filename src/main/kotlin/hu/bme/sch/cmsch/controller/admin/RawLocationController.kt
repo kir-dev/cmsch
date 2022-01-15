@@ -1,8 +1,9 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.SoldProductRepository
-import hu.bme.sch.cmsch.dto.virtual.ProductGroupVirtualEntity
+import hu.bme.sch.cmsch.model.LocationEntity
+import hu.bme.sch.cmsch.model.SoldProductEntity
+import hu.bme.sch.cmsch.service.LocationService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller
@@ -12,17 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-@RequestMapping("/admin/control/track-sold")
-class TrackSoldProductsController(
-        private val productRepository: SoldProductRepository
+@RequestMapping("/admin/control/locations")
+class RawLocationController(
+        private val locationService: LocationService
 ) {
 
-    private val view = "track-sold"
-    private val titleSingular = "Eladott termékek"
-    private val titlePlural = "Eladott termékek"
-    private val description = "Az eladott termékek mennyiségei típusra rendezve"
+    private val view = "locations"
+    private val titleSingular = "Pozíció"
+    private val titlePlural = "Pozíciók"
+    private val description = "A helymeghatározás adatai nyersen"
 
-    private val overviewDescriptor = OverviewBuilder(ProductGroupVirtualEntity::class)
+    private val entitySourceMapping: Map<String, (SoldProductEntity) -> List<String>> =
+            mapOf(Nothing::class.simpleName!! to { listOf() })
+
+    private val overviewDescriptor = OverviewBuilder(LocationEntity::class)
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
@@ -37,17 +41,11 @@ class TrackSoldProductsController(
         model.addAttribute("view", view)
         model.addAttribute("columns", overviewDescriptor.getColumns())
         model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", fetchData())
+        model.addAttribute("rows", locationService.findAllLocation())
         model.addAttribute("user", request.getUser())
-        model.addAttribute("controlMode", CONTROL_MODE_NONE)
+        model.addAttribute("controlMode", CONTROL_MODE_LOCATION)
 
         return "overview"
-    }
-
-    private fun fetchData(): List<ProductGroupVirtualEntity> {
-        return productRepository.findAll()
-                .groupBy { it.product }
-                .map { ProductGroupVirtualEntity(0, it.key, it.value.size) }
     }
 
 }
