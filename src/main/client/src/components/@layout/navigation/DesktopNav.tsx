@@ -4,29 +4,32 @@ import { useColorModeValue } from '@chakra-ui/system'
 import React from 'react'
 import { NavItem } from '../../../types/NavItem'
 import { NAV_ITEMS } from '../../../utils/navItems'
+import { Link } from 'react-router-dom'
 
 const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
   return (
-    <Box as={'a'} href={href} role="group" display="block" p={2} rounded="md" _hover={{ bg: useColorModeValue('orange.50', 'gray.900') }}>
-      <Stack direction="row" align="center">
-        <Box>
-          <Text transition="all .3s ease" _groupHover={{ color: 'orange.500' }} fontWeight={500}>
-            {label}
-          </Text>
-        </Box>
-        <Flex
-          transition="all .3s ease"
-          transform="translateX(-10px)"
-          opacity={0}
-          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-          justify="flex-end"
-          align="center"
-          flex={1}
-        >
-          <Icon color="orange.500" w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
-      </Stack>
-    </Box>
+    <Link to={href} replace>
+      <Box role="group" display="block" p={2} rounded="md" _hover={{ bg: useColorModeValue('brand.50', 'gray.900') }}>
+        <Stack direction="row" align="center">
+          <Box>
+            <Text transition="all .3s ease" _groupHover={{ color: 'brand.500' }} fontWeight={500}>
+              {label}
+            </Text>
+          </Box>
+          <Flex
+            transition="all .3s ease"
+            transform="translateX(-10px)"
+            opacity={0}
+            _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
+            justify="flex-end"
+            align="center"
+            flex={1}
+          >
+            <Icon color="brand.500" w={5} h={5} as={ChevronRightIcon} />
+          </Flex>
+        </Stack>
+      </Box>
+    </Link>
   )
 }
 
@@ -37,19 +40,19 @@ const DesktopNav: React.FC = () => {
         <Box key={navItem.label}>
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
-              <Text
-                p={2}
-                as={'a'}
-                href={navItem.href ?? '#'}
-                fontSize="md"
-                fontWeight={500}
-                _hover={{
-                  textDecoration: 'none',
-                  color: 'orange.500'
-                }}
-              >
-                {navItem.label}
-              </Text>
+              <Link to={navItem.href ?? '#'} replace>
+                <Text
+                  p={2}
+                  fontSize="md"
+                  fontWeight={500}
+                  _hover={{
+                    textDecoration: 'none',
+                    color: 'brand.500'
+                  }}
+                >
+                  {navItem.label}
+                </Text>
+              </Link>
             </PopoverTrigger>
 
             {navItem.children && (

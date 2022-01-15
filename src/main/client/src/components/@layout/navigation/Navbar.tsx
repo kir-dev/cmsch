@@ -4,6 +4,7 @@ import * as React from 'react'
 import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
 import { ColorModeSwitcher } from '../../@commons/ColorModeSwitcher'
+import { Link } from 'react-router-dom'
 
 type NavbarProps = {}
 
@@ -27,23 +28,24 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
             icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
             variant="ghost"
             aria-label="Navigáció megnyitása"
+            colorScheme="brand"
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Box
-            as={'a'}
-            href="/"
-            display="block"
-            rounded="md"
-            _hover={{
-              textDecoration: 'none',
-              color: 'orange.500'
-            }}
-          >
-            <Box textAlign={{ base: 'center', md: 'left' }} mx="2">
-              Logo here
+          <Link to="/" replace>
+            <Box
+              display="block"
+              rounded="md"
+              _hover={{
+                textDecoration: 'none',
+                color: 'brand.500'
+              }}
+            >
+              <Box textAlign={{ base: 'center', md: 'left' }} mx="2">
+                🍐
+              </Box>
             </Box>
-          </Box>
+          </Link>
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>
           <Flex display={{ base: 'none', md: 'flex' }} mx={4}>
@@ -54,8 +56,14 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
           <ColorModeSwitcher />
         </Flex>
       </Flex>
-
-      <Collapse in={isOpen} animateOpacity>
+      {/*The method in onClick hides the menu items when a menu item is clicked. Works for collapsible items too!*/}
+      <Collapse
+        in={isOpen}
+        animateOpacity
+        onClick={(evt) => {
+          if ((evt.target as Element).closest('.navitem')) onToggle()
+        }}
+      >
         <MobileNav />
       </Collapse>
     </Box>
