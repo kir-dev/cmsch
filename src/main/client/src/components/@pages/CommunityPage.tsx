@@ -1,11 +1,13 @@
-import { Container } from '../@layout/Container'
-import { Outlet } from 'react-router-dom'
+import { Page } from '../@layout/Page'
+import { Heading } from '@chakra-ui/react'
+import React from 'react'
 
-export function CommunityPage() {
+type CommunityPageProps = {}
+
+export const CommunityPage: React.FC<CommunityPageProps> = (props) => {
   return (
-    <Container>
-      <Outlet />
-      <h1>Kör</h1>
-    </Container>
+    <Page {...props}>
+      <Heading>Kör neve</Heading>
+    </Page>
   )
 }
