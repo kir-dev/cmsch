@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.RealtimeConfigService
@@ -23,18 +23,19 @@ class EntrypointController(
         private val config: RealtimeConfigService
 ) {
 
-    @GetMapping("/")
-    fun index(): String {
-        return if (config.isEventFinished()) "eventFinished" else "index"
-    }
+    // FIXME: remove when SPA is ready
+//    @GetMapping("/")
+//    fun index(): String {
+//        return if (config.isEventFinished()) "eventFinished" else "index"
+//    }
 
-    @GetMapping("/entrypoint")
+    @GetMapping("/control/entrypoint")
     fun entrypoint(model: Model, request: HttpServletRequest): String {
-        val user = request.getUserOrNull() ?: return "redirect:/logged-out?error=invalid-permissions"
+        val user = request.getUserOrNull() ?: return "redirect:/control/logged-out?error=invalid-permissions"
         if (user.role.value < RoleType.STAFF.value)
-            return "redirect:${config.getWebsiteUrl()}api/auth/callback?accessToken=${user.token}"
+            return "redirect:${config.getWebsiteUrl()}"
 
-        model.addAttribute("greetings", GREETINGS.get(Random.nextInt(GREETINGS.size)))
+        model.addAttribute("greetings", GREETINGS[Random.nextInt(GREETINGS.size)])
         model.addAttribute("motd", config.getMotd())
         model.addAttribute("website", config.getWebsiteUrl())
 

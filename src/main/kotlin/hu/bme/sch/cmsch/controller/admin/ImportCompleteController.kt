@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewBuilder

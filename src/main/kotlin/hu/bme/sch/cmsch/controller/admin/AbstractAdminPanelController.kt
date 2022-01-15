@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT

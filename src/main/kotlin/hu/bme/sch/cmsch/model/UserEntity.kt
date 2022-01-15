@@ -194,10 +194,6 @@ data class UserEntity(
         @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
         var major: MajorType = MajorType.UNKNOWN,
 
-        @Transient
-        @JsonIgnore
-        var token: String = ""
-
 ): ManagedEntity {
     override fun toString(): String {
         return "[$id]: $fullName neptun:$neptun pek:$pekId"

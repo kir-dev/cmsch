@@ -46,6 +46,10 @@ or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 - Admin UI: BASE_URL/admin/control/basics
 - API: BASE_URL/api/... (see swagger for more)
 
+## Required apps
+
+You must install yarn.
+
 ## Application local properties
 
 Create an application-local.properties file in the `src/main/resources/config` folder, 

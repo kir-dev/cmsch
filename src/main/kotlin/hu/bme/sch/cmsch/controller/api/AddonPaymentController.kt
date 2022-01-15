@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.controller.api
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dao.SoldProductRepository
