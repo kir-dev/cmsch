@@ -2,18 +2,14 @@ package hu.bme.sch.cmsch.dto.view
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.dto.TokenCollectorStatus
 
-enum class RiddleSubmissionStatus {
-    CORRECT,
-    WRONG
-}
-
-data class RiddleSubmissionView(
+data class TokenSubmittedView(
 
     @JsonView(FullDetails::class)
-    var status: RiddleSubmissionStatus = RiddleSubmissionStatus.WRONG,
+    var status: TokenCollectorStatus,
 
     @JsonView(FullDetails::class)
-    var nextId: Int? = null
+    var title: String?
 
 )

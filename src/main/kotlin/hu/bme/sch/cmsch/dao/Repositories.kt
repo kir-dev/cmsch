@@ -115,3 +115,15 @@ interface RiddleCategoryRepository : CrudRepository<RiddleCategoryEntity, Int> {
 interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
 
 }
+
+@Repository
+interface TokenRepository : CrudRepository<TokenEntity, Int> {
+
+}
+
+@Repository
+interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int> {
+    override fun findAll(): List<TokenPropertyEntity>
+    fun findAllByOwnerUser_Id(owner: Int): List<TokenPropertyEntity>
+    fun findAllByOwnerGroup_Id(owner: Int): List<TokenPropertyEntity>
+}

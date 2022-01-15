@@ -21,10 +21,17 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/", "/control/loggedin", "/control/login", "/control/logged-out", "/api/events",
                         "/api/events/**", "/api/extra-page/**", "/api/version", "/style.css", "/control/test-user",
                         "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/events/**",
-                        "/api/warning", "/countdown", "/control/logout", "/control/test", "/api/achievement", "/control/open-site")
+                        "/api/warning", "/countdown", "/control/logout", "/control/test", "/api/achievement", "/control/open-site",
+                        "/api/qr/**")
                     .permitAll()
 
-                .antMatchers("/api/profile", "/api/riddle/**", "/control/entrypoint", "/cdn/achievement/**")
+                .antMatchers(
+                        "/api/profile",
+                        "/api/riddle/**",
+                        "/control/entrypoint",
+                        "/cdn/achievement/**",
+                        "/api/token-after-login",
+                        "/api/token/**")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")

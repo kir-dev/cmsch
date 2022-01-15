@@ -47,7 +47,6 @@ class MainController(
     fun news(request: HttpServletRequest): NewsView {
         val user = request.getUserOrNull()
         return NewsView(
-                warningMessage = config.getWarningMessage(),
                 news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
                         .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
         )
@@ -67,7 +66,6 @@ class MainController(
             upcomingEvents = events.filter { it.timestampStart >= dayStart }.take(6)
 
         return HomeView(
-                warningMessage = config.getWarningMessage(),
                 news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
                         .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
                         .take(4),
@@ -114,10 +112,9 @@ class MainController(
 //    @GetMapping("/extra-page/{path}")
     fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
         if (config.isSiteLowProfile())
-            return ExtraPageView(warningMessage = config.getWarningMessage(), page = null)
+            return ExtraPageView(page = null)
 
         return ExtraPageView(
-                warningMessage = config.getWarningMessage(),
                 page = extraPagesRepository.findByUrlAndVisibleTrue(path).orElse(null)
         )
     }

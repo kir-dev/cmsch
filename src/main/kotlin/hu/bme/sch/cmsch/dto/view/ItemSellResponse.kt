@@ -10,5 +10,5 @@ enum class SellStatus {
 }
 
 data class ItemSellResponse(
-        val status: SellStatus
+    val status: SellStatus
 )
