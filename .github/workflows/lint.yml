@@ -1,0 +1,38 @@
+name: Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          
+      - name: Install Node.js dependencies
+        run: yarn
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          eslint: true
+          eslint_args: "--ignore-path .gitignore ."
+          eslint_dir: src/main/client/
+          eslint_extensions: ts,tsx,js,jsx
+          
+          prettier: true
+          prettier_args: "--check --ignore-path .gitignore ."
+          prettier_dir: src/main/client/
+          
+          auto_fix: true
+          commit_message: "[lint] Fix code ${linter}"
