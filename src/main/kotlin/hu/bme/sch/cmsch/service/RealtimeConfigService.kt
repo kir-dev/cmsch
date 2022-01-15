@@ -49,7 +49,7 @@ class RealtimeConfigService(
             realtimeConfig.save(RealtimeConfigEntity(0, STAFF_MESSAGE, "Szorgos népünk győzni fog!"))
 
         if (realtimeConfig.findByKey(WEBSITE_URL).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, "https://g7.sch.bme.hu/"))
+            realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, "http://127.0.0.1:8080/"))
 
         if (realtimeConfig.findByKey(REQUEST_FOR_NEPTUN).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, "false"))
