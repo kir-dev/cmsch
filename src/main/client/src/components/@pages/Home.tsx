@@ -1,11 +1,27 @@
-import { Container } from '../@layout/Container'
-import { Outlet } from 'react-router-dom'
+import { Alert, AlertIcon, Button, ButtonGroup, Heading } from '@chakra-ui/react'
+import { PlusSquareIcon } from '@chakra-ui/icons'
+import { Paragraph } from '../@commons/Basics'
+import { Page } from '../@layout/Page'
+import React from 'react'
 
-export function Home() {
+export const Home: React.FC = (props) => {
   return (
-    <Container>
-      <Outlet />
-      <h1>Főoldal</h1>
-    </Container>
+    <Page {...props}>
+      <Heading>Üdvözlünk a GólyaKörTe portálon</Heading>
+      <Alert status="warning" variant="left-accent">
+        <AlertIcon />
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam velit nisi, facilisis id iaculis eu, pretium sed diam. Sed sit amet
+        nibh non felis venenatis gravida. Aenean semper accumsan ante varius gravida.
+      </Alert>
+      <Paragraph>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam velit nisi, facilisis id iaculis eu, pretium sed diam. Sed sit amet
+        nibh non felis venenatis gravida. Aenean semper accumsan ante varius gravida.
+      </Paragraph>
+      <ButtonGroup>
+        <Button colorScheme="brand" leftIcon={<PlusSquareIcon />}>
+          Click me
+        </Button>
+      </ButtonGroup>
+    </Page>
   )
 }

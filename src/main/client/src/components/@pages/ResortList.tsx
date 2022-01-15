@@ -1,11 +1,13 @@
-import { Container } from '../@layout/Container'
-import { Outlet } from 'react-router-dom'
+import { Page } from '../@layout/Page'
+import { Heading } from '@chakra-ui/react'
+import React from 'react'
 
-export function ResortList() {
+type ResortListProps = {}
+
+export const ResortList: React.FC<ResortListProps> = (props) => {
   return (
-    <Container>
-      <Outlet />
-      <h1>Reszortok</h1>
-    </Container>
+    <Page {...props}>
+      <Heading>Reszortok</Heading>
+    </Page>
   )
 }
