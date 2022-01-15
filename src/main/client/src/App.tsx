@@ -1,26 +1,43 @@
-import { ChakraProvider, Code, Grid, Link, Text, VStack } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import * as React from 'react'
 
 import customTheme from './utils/customTheme'
 import { IndexLayout } from './components/@layout/IndexLayout'
-import { ExampleApiCallComponent } from './components/@commons/ExampleApiCallComponent'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Home } from './components/@pages/Home'
+import { ResortList } from './components/@pages/ResortList'
+import { CommunityPage } from './components/@pages/CommunityPage'
+import { ResortPage } from './components/@pages/ResortPage'
+import { CommunityList } from './components/@pages/CommunityList'
 
 export function App() {
   return (
     <ChakraProvider theme={customTheme}>
-      <IndexLayout>
-        <Grid minH="50vh" p={3}>
-          <VStack spacing={8}>
-            <Text>
-              Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-            </Text>
-            <Link color="teal.500" href="https://chakra-ui.com" fontSize="2xl" target="_blank" rel="noopener noreferrer">
-              Learn Chakra
-            </Link>
-            <ExampleApiCallComponent />
-          </VStack>
-        </Grid>
-      </IndexLayout>
+      <BrowserRouter>
+        <IndexLayout>
+          <Routes>
+            <Route path="/">
+              {/*Főoldal*/}
+              <Route index element={<Home />} />
+              {/*Reszortok*/}
+              <Route path="reszortok">
+                <Route path=":name">
+                  <Route index element={<ResortPage />} />
+                </Route>
+                <Route index element={<ResortList />} />
+              </Route>
+              {/*Körök*/}
+              <Route path="korok">
+                <Route path=":name" element={<CommunityPage />} />
+                <Route index element={<CommunityList />} />
+              </Route>
+              {/*Riddle*/}
+              {/*BucketList*/}
+              {/*QR*/}
+            </Route>
+          </Routes>
+        </IndexLayout>
+      </BrowserRouter>
     </ChakraProvider>
   )
 }
