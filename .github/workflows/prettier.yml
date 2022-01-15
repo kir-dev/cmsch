@@ -1,35 +1,36 @@
-name: Lint
+name: Prettier - Lint
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   run-linters:
     name: Run linters
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/main/client
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
-        
+
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14
-          
+          node-version: 16
+
       - name: Install Node.js dependencies
-        run: yarn
+        run: yarn install
 
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
-          eslint: true
-          eslint_args: "--ignore-path .gitignore ."
-          eslint_dir: src/main/client/
-          eslint_extensions: ts,tsx,js,jsx
-          
           prettier: true
           prettier_args: "--check --ignore-path .gitignore ."
           prettier_dir: src/main/client/
