@@ -12,16 +12,19 @@ export const mockData = {
     {
       achievement: {
         id: 1,
-        title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        title: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
         description: 'blalblal',
-        type: 'BOTH',
+        type: 'BOTH'
       },
       status: 'ACCEPTED',
       comment: 'Nice work!',
       submission: {
         approved: true,
         imageUrlAnswer: 'https://via.placeholder.com/200',
-        textAnswer: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
         score: 10
       }
     },
@@ -30,13 +33,15 @@ export const mockData = {
         id: 2,
         title: 'Lorem ipsum2',
         description: 'fdsfdsgsd',
-        type: 'TEXT',
+        type: 'TEXT'
       },
       status: 'REJECTED',
       comment: 'nice try tho',
       submission: {
         approved: false,
-        textAnswer: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
         score: 0
       }
     },
@@ -45,7 +50,7 @@ export const mockData = {
         id: 3,
         title: 'Lorem ipsum3',
         description: 'fdsfdsgsd',
-        type: 'IMAGE',
+        type: 'IMAGE'
       },
       status: 'SUBMITTED',
       submission: {
@@ -59,10 +64,10 @@ export const mockData = {
         id: 4,
         title: 'Lorem ipsum4',
         description: 'fdsfdsgsd',
-        type: 'BOTH',
+        type: 'BOTH'
       },
-      status: 'NOT_SUBMITTED',
-    },
+      status: 'NOT_SUBMITTED'
+    }
   ]
 }
 
@@ -70,14 +75,14 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
   return (
     <Page {...props}>
       <Heading>Bucketlist</Heading>
-      <VStack divider={<StackDivider borderColor='gray.200' />} spacing={4} align='stretch'>
+      <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
         {mockData.achievements.map((item) => (
           <Box key={item.achievement.id}>
             <Link to={`/bucketlist/${item.achievement.id}`}>
-            <Flex align='center'>
-              <Text fontSize='lg'>{item.achievement.title}</Text>
+            <Flex align="center">
+              <Text fontSize="lg">{item.achievement.title}</Text>
               <Spacer />
-              <AchievementStatusBadge status={item.status} fontSize='sm' />
+              <AchievementStatusBadge status={item.status} fontSize="sm" />
             </Flex>
             </Link>
           </Box>
