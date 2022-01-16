@@ -18,6 +18,7 @@ import { CommunityList } from './components/@pages/CommunityList'
 import { ProfilePage } from 'components/@pages/ProfilePage'
 import { AchievementList } from './components/@pages/AchievementList'
 import { AchievementPage } from './components/@pages/AchievementPage'
+import { QRList } from 'components/@pages/QRList'
 
 export function App() {
   return (
@@ -51,6 +52,10 @@ export function App() {
                 <Route index element={<AchievementList />} />
               </Route>
               {/*QR*/}
+              <Route path="qr">
+                <Route index element={<QRList />} />
+                <Route path="scan"></Route>
+              </Route>
             </Route>
           </Routes>
         </IndexLayout>
