@@ -12,32 +12,32 @@ export function ProfilePage() {
       <Text marginBottom={10} fontSize="3xl">
         Tankör: I06
       </Text>
-      <Wrap spacing="50px" justify="center">
+      <Wrap spacing="3rem" justify="center">
         <WrapItem>
-          <Center w="180px" h="210px">
+          <Center w="10rem" h="12rem">
             <Flex direction={'column'} align={'center'}>
               <Text fontSize="3xl">Bucketlist</Text>
-              <CircularProgress value={40} color="green.400" size="180px">
+              <CircularProgress value={40} color="green.400" size="10rem">
                 <CircularProgressLabel>40%</CircularProgressLabel>
               </CircularProgress>
             </Flex>
           </Center>
         </WrapItem>
         <WrapItem>
-          <Center w="180px" h="210px">
+          <Center w="10rem" h="12rem">
             <Flex direction={'column'} align={'center'}>
               <Text fontSize="3xl">Riddle</Text>
-              <CircularProgress value={73} color="green.400" size="180px">
+              <CircularProgress value={73} color="green.400" size="10rem">
                 <CircularProgressLabel>73%</CircularProgressLabel>
               </CircularProgress>
             </Flex>
           </Center>
         </WrapItem>
         <WrapItem>
-          <Center w="180px" h="210px">
+          <Center w="10rem" h="12rem">
             <Flex direction={'column'} align={'center'}>
               <Text fontSize="3xl">QR kód</Text>
-              <CircularProgress value={17} color="green.400" size="180px">
+              <CircularProgress value={17} color="green.400" size="10rem">
                 <CircularProgressLabel>17%</CircularProgressLabel>
               </CircularProgress>
             </Flex>
