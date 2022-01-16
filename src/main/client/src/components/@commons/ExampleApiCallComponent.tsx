@@ -8,7 +8,7 @@ export const ExampleApiCallComponent: React.FC = () => {
   const [newsList, setNewsList] = React.useState<NewsView>({ warningMessage: '', news: [] })
 
   React.useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/news`).then((res) => {
+    axios.get<NewsView>(`${API_BASE_URL}/api/news`).then((res) => {
       console.log(res)
       setNewsList(res.data)
     })
