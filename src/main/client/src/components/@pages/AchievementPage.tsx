@@ -12,12 +12,12 @@ type AchievementPageProps = {}
 
 export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   const [textAnswer, setTextAnswer] = React.useState('')
-  const { id }  = useParams()
+  const { id } = useParams()
   if (!id) {
     return null
   }
   // ez csúnya tudom de itt úgyis api hívás lesz
-  const data = mockData.achievements.filter(ach => ach.achievement.id === parseInt(id))[0]
+  const data = mockData.achievements.filter((ach) => ach.achievement.id === parseInt(id))[0]
 
   const handleFileChange = (fileList: Array<File>) => {
     console.log(fileList)
@@ -29,29 +29,35 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   const textInput = textAllowed ? (
     <Box>
       <FormLabel htmlFor="textAnswer">Szöveges válasz</FormLabel>
-      <Textarea id="textAnswer" name="textAnswer" value={textAnswer} onChange={(e) => setTextAnswer(e.target.value)} placeholder="Szöveges válasz" />
+      <Textarea 
+        id="textAnswer" 
+        name="textAnswer" 
+        value={textAnswer} 
+        onChange={(e) => setTextAnswer(e.target.value)} 
+        placeholder="Szöveges válasz" 
+      />
     </Box>
   ) : null
 
   const fileInput = imageAllowed ? (
     <Box>
       <FormLabel>Csatolt fájl</FormLabel>
-      <FilePicker onFileChange={handleFileChange} placeholder="Csatolt fájl" clearButtonLabel='Törlés' accept=".png,.jpeg,.jpg,.gif" />
+      <FilePicker onFileChange={handleFileChange} placeholder="Csatolt fájl" clearButtonLabel="Törlés" accept=".png,.jpeg,.jpg,.gif" />
     </Box>
   ) : null
 
   return (
     <Page {...props}>
       <Stack>
-        <Flex align='center'>
+        <Flex align="center">
           <Heading>{data.achievement.title}</Heading>
           <Spacer />
-          <AchievementStatusBadge status={data.status} fontSize='lg' />
+          <AchievementStatusBadge status={data.status} fontSize="lg" />
         </Flex>
         <Stack>
-          <Skeleton height='20px' />
-          <Skeleton height='20px' />
-          <Skeleton height='20px' />
+          <Skeleton height="20px" />
+          <Skeleton height="20px" />
+          <Skeleton height="20px" />
         </Stack>
         {data.status === 'NOT_SUBMITTED' ? (
           <form>
@@ -59,7 +65,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
               {textInput}
               {fileInput}
               <Box>
-                <Button mt={4} colorScheme='brand' type='submit'>
+                <Button mt={4} colorScheme="brand" type="submit">
                   Küldés
                 </Button>
               </Box>
@@ -73,7 +79,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
             <Heading size="lg">Értékelés</Heading>
             <Flex>
               <Text>Státusz:&nbsp;</Text>
-              <AchievementStatusBadge status={data.status} fontSize='lg' />
+              <AchievementStatusBadge status={data.status} fontSize="lg" />
             </Flex>
             
             {(data.status === 'ACCEPTED' || data.status === 'REJECTED') && data.submission ? (
