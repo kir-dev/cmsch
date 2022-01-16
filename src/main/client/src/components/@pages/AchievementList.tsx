@@ -8,33 +8,42 @@ type AchievementListProps = {}
 export const mockData = {
   achievements: [
     {
-      id: 1,
-      name: 'Lorem ipsumdsadfsd fmkdsfdls fdskl fdskofsd',
+      achievement: {
+        id: 1,
+        title: 'Lorem ipsumdsadfsd fmkdsfdls fdskl fdskofsd',
+        description: 'blalblal',
+        type: 'BOTH',
+      },
       status: 'ACCEPTED',
-      description: 'blalblal',
-      type: 'BOTH',
-    },
-    {
-      id: 2,
-      name: 'Lorem ipsum2',
-      status: 'REJECTED',
-      description: 'fdsfdsgsd',
       comment: 'Nice work!',
-      type: 'TEXT',
     },
     {
-      id: 3,
-      name: 'Lorem ipsum3',
+      achievement: {
+        id: 2,
+        title: 'Lorem ipsum2',
+        description: 'fdsfdsgsd',
+        type: 'TEXT',
+      },
+      status: 'REJECTED',
+      comment: 'nice try tho'
+    },
+    {
+      achievement: {
+        id: 3,
+        title: 'Lorem ipsum3',
+        description: 'fdsfdsgsd',
+        type: 'IMAGE',
+      },
       status: 'SUBMITTED',
-      description: 'fdsfdsgsd',
-      type: 'IMAGE',
     },
     {
-      id: 4,
-      name: 'Lorem ipsum4',
+      achievement: {
+        id: 4,
+        title: 'Lorem ipsum4',
+        description: 'fdsfdsgsd',
+        type: 'BOTH',
+      },
       status: 'NOT_SUBMITTED',
-      description: 'fdsfdsgsd',
-      type: 'BOTH',
     },
   ]
 }
@@ -61,10 +70,10 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
       <Heading>Bucketlist</Heading>
       <VStack divider={<StackDivider borderColor='gray.200' />} spacing={4} align='stretch'>
         {mockData.achievements.map((item) => (
-          <Box key={item.id}>
-            <Link to={`/bucketlist/${item.id}`}>
+          <Box key={item.achievement.id}>
+            <Link to={`/bucketlist/${item.achievement.id}`}>
             <Flex>
-              <Text fontSize='lg'>{item.name}</Text>
+              <Text fontSize='lg'>{item.achievement.title}</Text>
               <Spacer />
               <Box>
                 <Badge colorScheme={statusColorMap.get(item.status)}>{statusTextMap.get(item.status)}</Badge>
