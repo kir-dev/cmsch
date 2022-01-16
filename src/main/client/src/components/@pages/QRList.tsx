@@ -4,6 +4,7 @@ import { Heading, Button, Progress, Stack, Icon, Center, Flex, Box, Stat, StatHe
 import { FaQrcode, FaStamp } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Basics'
+import { useNavigate } from 'react-router-dom'
 
 export const QRList: React.FC = (props) => {
   //Mock data for tokens
@@ -13,6 +14,12 @@ export const QRList: React.FC = (props) => {
     { title: 'Úristen ez a title very big. Very Very Big', type: 'KÖR' }
   ]
 
+  const navigate = useNavigate()
+
+  const scanEventHandler = () => {
+    navigate('/qr/scan')
+  }
+
   return (
     <Page {...props}>
       <Heading>QR kód vadászat</Heading>
@@ -21,7 +28,7 @@ export const QRList: React.FC = (props) => {
         Fogalmazzunk meg ide szöveget, mert ma bevettem a fogalmazás gátlóm.
       </Paragraph>
 
-      <Button colorScheme={'brand'} leftIcon={<FaQrcode />}>
+      <Button colorScheme={'brand'} leftIcon={<FaQrcode />} onClick={scanEventHandler}>
         QR kód beolvasása
       </Button>
 
@@ -37,7 +44,7 @@ export const QRList: React.FC = (props) => {
       <Stack spacing="5" alignItems={'center'}>
         {token_response.map((token, i) => {
           return (
-            <Box key={i} maxW={'md'} minW={'md'} borderWidth="1px" borderRadius={'lg'} overflow={'hidden'} boxShadow="lg" bg="brand.100">
+            <Box key={i} maxW={'md'} minW={'md'} borderWidth="1px" borderRadius={'lg'} boxShadow="lg" bg="brand.100">
               <Flex>
                 <Center bg={'brand.300'} padding="2">
                   <Icon as={FaStamp} boxSize="2em" fontSize="3xl" />
