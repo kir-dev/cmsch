@@ -8,7 +8,7 @@ import hu.bme.sch.cmsch.dto.TopListEntryDto
 data class AchievementsView(
 
     @JsonView(Preview::class)
-    val groupScore: Int?,
+    val score: Int?,
 
     @JsonView(Preview::class)
     val categories: List<AchievementCategoryDto> = listOf(),

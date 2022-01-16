@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.dao.GroupRepository
 import hu.bme.sch.cmsch.dao.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.dto.TopListEntryDto
 import hu.bme.sch.cmsch.model.GroupEntity
+import hu.bme.sch.cmsch.model.UserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -44,6 +45,12 @@ open class LeaderBoardService(
         return null
     }
 
+    fun getScoreOfUser(user: UserEntity): Int? {
+        if (config.isLeaderBoardEnabled())
+            return cachedTopList.find { it.name == user.pekId }?.score ?: 0
+        return null
+    }
+
     @Transactional(readOnly = true)
     @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
     open fun recalculate() {
@@ -58,10 +65,9 @@ open class LeaderBoardService(
     open fun forceRecalculate() {
         log.info("Recalculating top list cache")
         cachedTopList = submissions.findAll()
-                .asSequence()
                 .groupBy { it.groupName }
-                .filter { groups.findByName(it.key).map { it.races }.orElse(false) }
-                .map { TopListEntryDto(it.key, it.value.sumOf { it.score }) }
+                .filter { groups.findByName(it.key).map { m -> m.races }.orElse(false) }
+                .map { TopListEntryDto(it.key, it.value.sumOf { s -> s.score }) }
                 .sortedByDescending { it.score }
     }
 
