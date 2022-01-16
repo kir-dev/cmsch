@@ -2,10 +2,8 @@ package hu.bme.sch.cmsch.controller.api
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dao.SoldProductRepository
-import hu.bme.sch.cmsch.dto.DebtDto
-import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.GroupEntityDto
-import hu.bme.sch.cmsch.dto.GroupMemberLocationDto
+import hu.bme.sch.cmsch.dto.*
+import hu.bme.sch.cmsch.dto.view.Profile2View
 import hu.bme.sch.cmsch.dto.view.ProfileView
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.LocationService
@@ -29,6 +27,26 @@ class ProfileApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/profile")
+    fun profile2(request: HttpServletRequest): Profile2View {
+        val user = request.getUserOrNull() ?: return Profile2View()
+        if (config.isSiteLowProfile())
+            return Profile2View()
+
+        return Profile2View(
+            fullName = user.fullName,
+            groupName = user.group?.name ?: "nincs",
+            role = user.role,
+            tokens = listOf(TokenDto("Mock Kör 1", "KÖR"), TokenDto("NFT-sch kör", "KÖR"), TokenDto("Crypto Reszort", "KÖR")),
+            totalTokenCount = 5,
+            totalAchievementCount = 40,
+            submittedAchievementCount = 12,
+            totalRiddleCount = 80,
+            completedRiddleCount = 7
+        )
+    }
+
+    @JsonView(FullDetails::class)
+//    @GetMapping("/profile")
     fun profile(request: HttpServletRequest): ProfileView {
         val user = request.getUserOrNull() ?: return ProfileView(false, UNKNOWN_USER, group = null)
         if (config.isSiteLowProfile())

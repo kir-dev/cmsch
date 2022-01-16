@@ -27,7 +27,7 @@ data class GroupEntityDto(
         entity.name,
         entity.major,
             sequenceOf(entity.staff1, entity.staff2, entity.staff3, entity.staff4)
-                    .filter { !it.isBlank() }
+                    .filter { it.isNotBlank() }
                     .map { it.split('|') }
                     .map {
                         GroupStaffDto(
