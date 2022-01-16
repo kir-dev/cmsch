@@ -29,12 +29,12 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   const textInput = textAllowed ? (
     <Box>
       <FormLabel htmlFor="textAnswer">Szöveges válasz</FormLabel>
-      <Textarea 
-        id="textAnswer" 
-        name="textAnswer" 
-        value={textAnswer} 
-        onChange={(e) => setTextAnswer(e.target.value)} 
-        placeholder="Szöveges válasz" 
+      <Textarea
+        id="textAnswer"
+        name="textAnswer"
+        value={textAnswer}
+        onChange={(e) => setTextAnswer(e.target.value)}
+        placeholder="Szöveges válasz"
       />
     </Box>
   ) : null
@@ -75,13 +75,17 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
           <>
             <Heading size="lg">Beküldött megoldás</Heading>
             {textAllowed && data.submission ? <Paragraph>{data.submission.textAnswer}</Paragraph> : null}
-            {imageAllowed && data.submission ? <Box><Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" /></Box> : null}
+            {imageAllowed && data.submission ? (
+              <Box>
+                <Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" />
+              </Box>
+            ) : null}
             <Heading size="lg">Értékelés</Heading>
             <Flex>
               <Text>Státusz:&nbsp;</Text>
               <AchievementStatusBadge status={data.status} fontSize="lg" />
             </Flex>
-            
+
             {(data.status === 'ACCEPTED' || data.status === 'REJECTED') && data.submission ? (
               <>
                 <Text>Javító üzenete: {data.comment}</Text>
