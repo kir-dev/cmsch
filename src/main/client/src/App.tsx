@@ -9,6 +9,7 @@ import { ResortList } from './components/@pages/ResortList'
 import { CommunityPage } from './components/@pages/CommunityPage'
 import { ResortPage } from './components/@pages/ResortPage'
 import { CommunityList } from './components/@pages/CommunityList'
+import { ProfilePage } from 'components/@pages/ProfilePage'
 
 export function App() {
   return (
@@ -19,6 +20,10 @@ export function App() {
             <Route path="/">
               {/*Főoldal*/}
               <Route index element={<Home />} />
+              {/*Profil*/}
+              <Route path="profil">
+                <Route index element={<ProfilePage />} />
+              </Route>
               {/*Reszortok*/}
               <Route path="reszortok">
                 <Route path=":name">
