@@ -14,6 +14,10 @@ export const NAV_ITEMS: Array<NavItem> = [
     href: '/korok'
   },
   {
+    label: 'QR',
+    href: '/qr'
+  },
+  {
     label: 'Profil',
     href: '/profil'
   }
