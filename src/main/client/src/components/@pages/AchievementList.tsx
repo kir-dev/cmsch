@@ -1,7 +1,9 @@
-import { Box, Heading, StackDivider, VStack, Text, Badge, Flex, Spacer } from '@chakra-ui/react'
+import { Box, Heading, StackDivider, VStack, Text, Flex, Spacer } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
 import React from 'react'
 import { Link } from 'react-router-dom'
+
+import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
 
 type AchievementListProps = {}
 
@@ -10,12 +12,18 @@ export const mockData = {
     {
       achievement: {
         id: 1,
-        title: 'Lorem ipsumdsadfsd fmkdsfdls fdskl fdskofsd',
+        title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         description: 'blalblal',
         type: 'BOTH',
       },
       status: 'ACCEPTED',
       comment: 'Nice work!',
+      submission: {
+        approved: true,
+        imageUrlAnswer: 'https://via.placeholder.com/200',
+        textAnswer: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        score: 10
+      }
     },
     {
       achievement: {
@@ -25,7 +33,12 @@ export const mockData = {
         type: 'TEXT',
       },
       status: 'REJECTED',
-      comment: 'nice try tho'
+      comment: 'nice try tho',
+      submission: {
+        approved: false,
+        textAnswer: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        score: 0
+      }
     },
     {
       achievement: {
@@ -35,6 +48,11 @@ export const mockData = {
         type: 'IMAGE',
       },
       status: 'SUBMITTED',
+      submission: {
+        approved: false,
+        imageUrlAnswer: 'https://via.placeholder.com/150',
+        score: 0
+      }
     },
     {
       achievement: {
@@ -48,22 +66,6 @@ export const mockData = {
   ]
 }
 
-export const statusTextMap = new Map<string, string>([
-  ['ACCEPTED', 'ELFOGADVA'],
-  ['NOT_SUBMITTED', 'BEADÁSRA VÁR'],
-  ['REJECTED', 'ELUTASÍTVA'],
-  ['SUBMITTED', 'ÉRTÉKELÉSRE VÁR'],
-  ['NOT_LOGGED_IN', 'NEM VAGY BEJELENTKEZVE'],
-])
-
-export const statusColorMap = new Map<string, string>([
-  ['ACCEPTED', 'green'],
-  ['NOT_SUBMITTED', 'gray'],
-  ['REJECTED', 'red'],
-  ['SUBMITTED', 'yellow'],
-  ['NOT_LOGGED_IN', 'gray'],
-])
-
 export const AchievementList: React.FC<AchievementListProps> = (props) => {
   return (
     <Page {...props}>
@@ -72,12 +74,10 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
         {mockData.achievements.map((item) => (
           <Box key={item.achievement.id}>
             <Link to={`/bucketlist/${item.achievement.id}`}>
-            <Flex>
+            <Flex align='center'>
               <Text fontSize='lg'>{item.achievement.title}</Text>
               <Spacer />
-              <Box>
-                <Badge colorScheme={statusColorMap.get(item.status)}>{statusTextMap.get(item.status)}</Badge>
-              </Box>
+              <AchievementStatusBadge status={item.status} fontSize='sm' />
             </Flex>
             </Link>
           </Box>

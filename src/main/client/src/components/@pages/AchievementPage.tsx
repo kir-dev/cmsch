@@ -1,10 +1,12 @@
-import { Badge, Box, Button, Flex, FormLabel, Heading, Skeleton, Spacer, Stack, Text, Textarea } from '@chakra-ui/react'
+import { Box, Button, Flex, FormLabel, Heading, Skeleton, Spacer, Stack, Text, Textarea, Image } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-import { mockData, statusColorMap, statusTextMap } from './AchievementList'
+import { mockData } from './AchievementList'
 import FilePicker from '../@commons/FilePicker'
+import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
+import { Paragraph } from 'components/@commons/Basics'
 
 type AchievementPageProps = {}
 
@@ -14,47 +16,29 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   if (!id) {
     return null
   }
+  // ez csúnya tudom de itt úgyis api hívás lesz
   const data = mockData.achievements.filter(ach => ach.achievement.id === parseInt(id))[0]
 
   const handleFileChange = (fileList: Array<File>) => {
-    fileList.forEach(file => console.log(file))
+    console.log(fileList)
   }
 
-  const textInput = data.achievement.type !== 'TEXT' && data.achievement.type !== 'BOTH' ? null : (
+  const textAllowed = data.achievement.type === 'TEXT' || data.achievement.type === 'BOTH'
+  const imageAllowed = data.achievement.type === 'IMAGE' || data.achievement.type === 'BOTH'
+
+  const textInput = textAllowed ? (
     <Box>
       <FormLabel htmlFor="textAnswer">Szöveges válasz</FormLabel>
       <Textarea id="textAnswer" name="textAnswer" value={textAnswer} onChange={(e) => setTextAnswer(e.target.value)} placeholder="Szöveges válasz" />
     </Box>
-  )
+  ) : null
 
-  const fileInput = data.achievement.type !== 'IMAGE' && data.achievement.type !== 'BOTH' ? null : (
+  const fileInput = imageAllowed ? (
     <Box>
       <FormLabel>Csatolt fájl</FormLabel>
       <FilePicker onFileChange={handleFileChange} placeholder="Csatolt fájl" clearButtonLabel='Törlés' accept=".png,.jpeg,.jpg,.gif" />
     </Box>
-  )
-
-  const form = data.status !== 'NOT_SUBMITTED' ? null : (
-    <form>
-      <Stack>
-        {textInput}
-        {fileInput}
-        <Box>
-          <Button
-            mt={4}
-            backgroundColor="brand.400"
-            _hover={{ bg: "brand.500" }}
-            _active={{ bg: "brand.500" }}
-            color="white"
-            type="submit"
-          >
-            Küldés
-          </Button>
-        </Box>
-      
-        </Stack>
-    </form>
-  )
+  ) : null
 
   return (
     <Page {...props}>
@@ -62,19 +46,45 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
         <Flex align='center'>
           <Heading>{data.achievement.title}</Heading>
           <Spacer />
-          <Box>
-            <Badge colorScheme={statusColorMap.get(data.status)}><Text fontSize='lg'>{statusTextMap.get(data.status)}</Text></Badge>
-          </Box>
+          <AchievementStatusBadge status={data.status} fontSize='lg' />
         </Flex>
         <Stack>
           <Skeleton height='20px' />
           <Skeleton height='20px' />
           <Skeleton height='20px' />
         </Stack>
-        
-        {form}
+        {data.status === 'NOT_SUBMITTED' ? (
+          <form>
+            <Stack>
+              {textInput}
+              {fileInput}
+              <Box>
+                <Button mt={4} colorScheme='brand' type='submit'>
+                  Küldés
+                </Button>
+              </Box>
+            </Stack>
+          </form>
+        ) : (
+          <>
+            <Heading size="lg">Beküldött megoldás</Heading>
+            {textAllowed && data.submission ? <Paragraph>{data.submission.textAnswer}</Paragraph> : null}
+            {imageAllowed && data.submission ? <Box><Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" /></Box> : null}
+            <Heading size="lg">Értékelés</Heading>
+            <Flex>
+              <Text>Státusz:&nbsp;</Text>
+              <AchievementStatusBadge status={data.status} fontSize='lg' />
+            </Flex>
+            
+            {(data.status === 'ACCEPTED' || data.status === 'REJECTED') && data.submission ? (
+              <>
+                <Text>Javító üzenete: {data.comment}</Text>
+                <Text>Pont: {data.submission.score} pont</Text>
+              </>
+            ) : null}
+          </>
+        )}
       </Stack>
-      
     </Page>
   )
 }
