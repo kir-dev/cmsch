@@ -39,7 +39,7 @@ export const QRList: React.FC = (props) => {
 
       <Progress hasStripe colorScheme="brand" value={(100 * token_response.length) / 5} />
       <Heading as="h4" size="md">
-        Amhol eddig jártál
+        Ahol eddig jártál
       </Heading>
       <Stack spacing="5" alignItems={'center'}>
         {token_response.map((token, i) => {
