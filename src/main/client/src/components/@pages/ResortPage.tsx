@@ -1,13 +1,23 @@
 import { Page } from '../@layout/Page'
-import { Heading } from '@chakra-ui/react'
 import React from 'react'
+import { Navigate, useParams } from 'react-router-dom'
+import { Resorts } from '../../content/resorts'
+import { Communities } from '../../content/communities'
+import { CardListItem } from '../@commons/CardListItem'
+import { DataSheet } from '../@commons/DataSheet'
 
 type ResortPageProps = {}
 
-export const ResortPage: React.FC<ResortPageProps> = (props) => {
+export const ResortPage: React.FC<ResortPageProps> = () => {
+  const params = useParams()
+  const resort = Resorts.find((r) => r.id === params.name)
+  if (!resort) return <Navigate to="/reszortok" />
   return (
-    <Page {...props}>
-      <Heading>Reszort neve</Heading>
+    <Page>
+      <DataSheet organization={resort} />
+      {Communities.filter((c) => c.resortId === resort.id).map((community) => {
+        return <CardListItem data={community} link={'/korok/' + community.id} />
+      })}
     </Page>
   )
 }
