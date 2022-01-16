@@ -22,6 +22,7 @@ class ProfileApiController(
     private val locationService: LocationService,
     private val tokenService: TokenCollectorService,
     private val riddleService: RiddleService,
+    private val achievementsService: AchievementsService,
     private val clock: ClockService
 ) {
 
@@ -39,8 +40,8 @@ class ProfileApiController(
             tokens = tokenService.getTokensForUser(user),
             collectedTokenCount = tokenService.getTokensForUserWithCategory(user,"default"),
             totalTokenCount = tokenService.getTotalTokenCountWithCategory("default"),
-            totalAchievementCount = 40,
-            submittedAchievementCount = 12,
+            totalAchievementCount = achievementsService.getTotalAchievementsForUser(user),
+            submittedAchievementCount = achievementsService.getSubmittedAchievementsForUser(user),
             totalRiddleCount = riddleService.getTotalRiddleCount(user),
             completedRiddleCount = riddleService.getCompletedRiddleCount(user),
             minTokenToComplete = config.getMinTokenToComplete()
