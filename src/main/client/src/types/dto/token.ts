@@ -4,9 +4,9 @@ export interface TokenDTO {
 }
 
 export enum ScanStatus {
-  SCANNED,
-  ALREADY_SCANNED,
-  WRONG
+  SCANNED = 'SCANNED',
+  ALREADY_SCANNED = 'ALREADY_SCANNED',
+  WRONG = 'WRONG'
 }
 
 export interface ScanResponseDTO {

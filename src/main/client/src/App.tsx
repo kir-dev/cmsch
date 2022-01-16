@@ -14,6 +14,7 @@ import { AchievementList } from './components/@pages/AchievementList'
 import { AchievementPage } from './components/@pages/AchievementPage'
 import { QRList } from 'components/@pages/QRList'
 import { QRScan } from 'components/@pages/QRScan'
+import { QRScanResult } from 'components/@pages/QRScanResult'
 
 export function App() {
   return (
@@ -47,6 +48,7 @@ export function App() {
                 <Route index element={<AchievementList />} />
               </Route>
               {/*QR*/}
+              <Route path="qr-scanned" element={<QRScanResult />}></Route>
               <Route path="qr">
                 <Route index element={<QRList />} />
                 <Route path="scan" element={<QRScan />}></Route>
