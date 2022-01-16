@@ -9,8 +9,8 @@ import { ResortList } from './components/@pages/ResortList'
 import { CommunityPage } from './components/@pages/CommunityPage'
 import { ResortPage } from './components/@pages/ResortPage'
 import { CommunityList } from './components/@pages/CommunityList'
-import { BucketList } from './components/@pages/BucketList'
-import { BucketPage } from './components/@pages/BucketPage'
+import { AchievementList } from './components/@pages/AchievementList'
+import { AchievementPage } from './components/@pages/AchievementPage'
 
 export function App() {
   return (
@@ -36,8 +36,8 @@ export function App() {
               {/*Riddle*/}
               {/*BucketList*/}
               <Route path="bucketlist">
-                <Route path=":id" element={<BucketPage />} />
-                <Route index element={<BucketList />} />
+                <Route path=":id" element={<AchievementPage />} />
+                <Route index element={<AchievementList />} />
               </Route>
               {/*QR*/}
             </Route>
