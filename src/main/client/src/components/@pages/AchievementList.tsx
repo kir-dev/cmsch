@@ -79,11 +79,11 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
         {mockData.achievements.map((item) => (
           <Box key={item.achievement.id}>
             <Link to={`/bucketlist/${item.achievement.id}`}>
-            <Flex align="center">
-              <Text fontSize="lg">{item.achievement.title}</Text>
-              <Spacer />
-              <AchievementStatusBadge status={item.status} fontSize="sm" />
-            </Flex>
+              <Flex align="center">
+                <Text fontSize="lg">{item.achievement.title}</Text>
+                <Spacer />
+                <AchievementStatusBadge status={item.status} fontSize="sm" />
+              </Flex>
             </Link>
           </Box>
         ))}
