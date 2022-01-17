@@ -61,15 +61,15 @@ export const mockData = {
   ]
 }
 
-export const RiddleList: React.FC<RiddleListProps> = (props) => {
+export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
   const bg = useColorModeValue('gray.200', 'gray.600')
 
   return (
     <Page {...props}>
       <Heading>Riddleök</Heading>
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={4} mt={5} align="stretch">
         {mockData.riddles.map((item) => (
-          <Box bg={bg} px={4} py={2} borderRadius="md" _hover={{ bgColor: 'brand.500' }}>
+          <Box bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: 'brand.500' }}>
             <Link to={`/riddleok/${item.riddle.id}`} style={{ textDecoration: 'none' }}>
               <Flex align="center">
                 <Text fontWeight="bold" fontSize="xl">
