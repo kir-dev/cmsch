@@ -1,93 +1,109 @@
-import { Box, Heading, StackDivider, VStack, Text, Flex, Spacer } from '@chakra-ui/react'
+import { Box, Heading, StackDivider, VStack, Stack, Text, Flex, Spacer } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
+import { AchievementCategory, AchievementWrapper, achievementStatus, achievementType } from '../../types/dto/achievements'
 
 type AchievementListProps = {}
 
-export const MOCK_DATA = {
-  achievements: [
-    {
-      achievement: {
-        id: 1,
-        title: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-        description: 'blalblal',
-        type: 'BOTH'
-      },
-      status: 'ACCEPTED',
-      comment: 'Nice work!',
-      submission: {
-        approved: true,
-        imageUrlAnswer: 'https://via.placeholder.com/200',
-        textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-        score: 10
-      }
+// GET /api/achievement -ben lesz egy ilyen tömb
+const CATEGORIES: AchievementCategory[] = [
+  {
+    categoryId: 1,
+    name: 'első kategória'
+  },
+  {
+    categoryId: 2,
+    name: 'második kategória'
+  },
+  {
+    categoryId: 3,
+    name: 'századik kategória'
+  },
+]
+
+// GET /api/achievement/category/1 -ben lesz egy ilyen tömb
+const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
+  {
+    achievement: {
+      id: 1,
+      categoryId: 1,
+      title: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
+      description: 'blalblal',
+      type: achievementType.BOTH
     },
-    {
-      achievement: {
-        id: 2,
-        title: 'Lorem ipsum2',
-        description: 'fdsfdsgsd',
-        type: 'TEXT'
-      },
-      status: 'REJECTED',
-      comment: 'nice try tho',
-      submission: {
-        approved: false,
-        textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-        score: 0
-      }
+    status: achievementStatus.ACCEPTED,
+    comment: 'Nice work!'
+  },
+  {
+    achievement: {
+      id: 2,
+      categoryId: 1,
+      title: 'Lorem ipsum2',
+      description: 'fdsfdsgsd',
+      type: achievementType.TEXT
     },
-    {
-      achievement: {
-        id: 3,
-        title: 'Lorem ipsum3',
-        description: 'fdsfdsgsd',
-        type: 'IMAGE'
-      },
-      status: 'SUBMITTED',
-      submission: {
-        approved: false,
-        imageUrlAnswer: 'https://via.placeholder.com/150',
-        score: 0
-      }
+    status: achievementStatus.REJECTED,
+    comment: 'nice try tho'
+  },
+  {
+    achievement: {
+      id: 3,
+      categoryId: 1,
+      title: 'Lorem ipsum3',
+      description: 'fdsfdsgsd',
+      type: achievementType.IMAGE
     },
-    {
-      achievement: {
-        id: 4,
-        title: 'Lorem ipsum4',
-        description: 'fdsfdsgsd',
-        type: 'BOTH'
-      },
-      status: 'NOT_SUBMITTED'
-    }
-  ]
-}
+    status: achievementStatus.SUBMITTED
+  },
+  {
+    achievement: {
+      id: 4,
+      categoryId: 1,
+      title: 'Lorem ipsum4',
+      description: 'fdsfdsgsd',
+      type: achievementType.BOTH
+    },
+    status: achievementStatus.NOT_SUBMITTED
+  }
+]
 
 export const AchievementList: React.FC<AchievementListProps> = (props) => {
+  // ez nyilván nem így lesz
+  CATEGORIES.forEach((category, idx) => {
+    if (idx === 0) {
+      category.achievements = ACHIEVEMENTS_IN_CATEGORY
+    } else {
+      category.achievements = []
+    }
+  })
+
   return (
     <Page {...props}>
       <Heading>Bucketlist</Heading>
-      <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-        {MOCK_DATA.achievements.map((item) => (
-          <Box key={item.achievement.id}>
-            <Link to={`/bucketlist/${item.achievement.id}`}>
-              <Flex align="center">
-                <Text fontSize="lg">{item.achievement.title}</Text>
-                <Spacer />
-                <AchievementStatusBadge status={item.status} fontSize="sm" />
-              </Flex>
-            </Link>
-          </Box>
+      <Stack>
+        {CATEGORIES.map((category) => (
+          <>
+            <Heading size="lg">{category.name}</Heading>
+            <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+              {category.achievements?.map((ach) => (
+                <Box key={ach.achievement.id}>
+                  <Link to={`/bucketlist/${ach.achievement.id}`}>
+                    <Flex align="center">
+                      <Text fontSize="lg">{ach.achievement.title}</Text>
+                      <Spacer />
+                      <AchievementStatusBadge status={ach.status} fontSize="sm" />
+                    </Flex>
+                  </Link>
+                </Box>
+              ))}
+            </VStack>
+          </>
         ))}
-      </VStack>
+      </Stack>
     </Page>
   )
 }
