@@ -28,6 +28,7 @@ class TokenApiController(
         @Value("\${cmsch.token.ownership:USER}") private val tokenOwnershipMode: OwnershipType
 ) {
 
+    @ResponseBody
     @JsonView(FullDetails::class)
     @PostMapping("/token/{token}")
     fun submitToken(@PathVariable token: String, request: HttpServletRequest): TokenSubmittedView {
