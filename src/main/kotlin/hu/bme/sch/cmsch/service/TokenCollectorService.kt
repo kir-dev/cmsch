@@ -19,9 +19,9 @@ open class TokenCollectorService(
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun collectToken(userEntity: UserEntity, token: String): Pair<String?, TokenCollectorStatus> {
-        val tokenEntity = tokenRepository.findAllByToken(token).firstOrNull()
+        val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
-            if (tokenPropertyRepository.findByToken_TokenAndOwnerUserAndToken_VisibleTrue(token, userEntity).isPresent)
+            if (tokenPropertyRepository.findByToken_TokenAndOwnerUser(token, userEntity).isPresent)
                 return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
 
             tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity))
@@ -36,9 +36,9 @@ open class TokenCollectorService(
         if (groupEntity.isEmpty)
             return Pair(null, TokenCollectorStatus.CANNOT_COLLECT)
 
-        val tokenEntity = tokenRepository.findAllByToken(token).firstOrNull()
+        val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
-            if (tokenPropertyRepository.findByToken_TokenAndOwnerGroupAndToken_VisibleTrue(token, groupEntity.get()).isPresent)
+            if (tokenPropertyRepository.findByToken_TokenAndOwnerGroup(token, groupEntity.get()).isPresent)
                 return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
 
             tokenPropertyRepository.save(TokenPropertyEntity(0, null, groupEntity.get(), tokenEntity))

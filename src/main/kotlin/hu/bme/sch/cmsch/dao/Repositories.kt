@@ -118,7 +118,7 @@ interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
 
 @Repository
 interface TokenRepository : CrudRepository<TokenEntity, Int> {
-    fun findAllByToken(token: String): List<TokenEntity>
+    fun findAllByTokenAndVisibleTrue(token: String): List<TokenEntity>
 }
 
 @Repository
@@ -133,9 +133,9 @@ interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int> {
     fun findAllByOwnerGroup_Id(owner: Int): List<TokenPropertyEntity>
 
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
-    fun findByToken_TokenAndOwnerUserAndToken_VisibleTrue(token: String, owner: UserEntity): Optional<TokenPropertyEntity>
+    fun findByToken_TokenAndOwnerUser(token: String, owner: UserEntity): Optional<TokenPropertyEntity>
 
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
-    fun findByToken_TokenAndOwnerGroupAndToken_VisibleTrue(token: String, owner: GroupEntity): Optional<TokenPropertyEntity>
+    fun findByToken_TokenAndOwnerGroup(token: String, owner: GroupEntity): Optional<TokenPropertyEntity>
 
 }
