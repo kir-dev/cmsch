@@ -1,6 +1,6 @@
 import { Page } from '../@layout/Page'
 import React from 'react'
-import { Heading, Button, Progress, Stack } from '@chakra-ui/react'
+import { Heading, Button, Progress, Stack, ButtonGroup } from '@chakra-ui/react'
 import { FaQrcode } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Basics'
@@ -29,9 +29,11 @@ export const QRList: React.FC = (props) => {
         Fogalmazzunk meg ide szöveget, mert ma bevettem a fogalmazás gátlóm.
       </Paragraph>
 
-      <Button colorScheme={'brand'} leftIcon={<FaQrcode />} onClick={scanEventHandler}>
-        QR kód beolvasása
-      </Button>
+      <ButtonGroup>
+        <Button colorScheme={'brand'} leftIcon={<FaQrcode />} onClick={scanEventHandler}>
+          QR kód beolvasása
+        </Button>
+      </ButtonGroup>
 
       <Heading>Haladás</Heading>
       <Heading as="h4" size="md">
@@ -42,7 +44,7 @@ export const QRList: React.FC = (props) => {
       <Heading as="h4" size="md">
         Ahol eddig jártál
       </Heading>
-      <Stack spacing="5" alignItems={'center'}>
+      <Stack spacing="5" alignItems={{ base: 'center', md: 'start' }}>
         {token_response.map((token, i) => {
           return <StampComponent key={i} title={token.title} type={token.type}></StampComponent>
         })}
