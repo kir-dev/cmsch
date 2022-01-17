@@ -11,6 +11,7 @@ import { AchievementFullDetailsView, achievementType, achievementStatus } from '
 type AchievementPageProps = {}
 
 const MOCK_DATA: AchievementFullDetailsView[] = [
+  // GET /api/achievement/submit/1
   {
     achievement: {
       id: 1,
@@ -33,6 +34,7 @@ const MOCK_DATA: AchievementFullDetailsView[] = [
       score: 10
     }
   },
+  // GET /api/achievement/submit/2
   {
     achievement: {
       id: 2,
