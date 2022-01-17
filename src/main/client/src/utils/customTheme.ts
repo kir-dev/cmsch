@@ -5,12 +5,12 @@ import { mode } from '@chakra-ui/theme-tools'
 const customTheme = extendTheme({
   fonts: {
     heading: 'Commissioner',
-    body: 'Roboto'
+    body: 'Raleway'
   },
   styles: {
     global: (props: any) => ({
       body: {
-        color: mode('gray.800', 'whiteAlpha.900')(props),
+        color: mode('gray.900', 'whiteAlpha.900')(props),
         bg: mode('white', 'gray.900')(props)
       }
     })
