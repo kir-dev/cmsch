@@ -1,4 +1,3 @@
-import { CheckCircleIcon } from '@chakra-ui/icons'
 import {
   Alert,
   AlertDescription,
@@ -12,23 +11,41 @@ import {
   Fade,
   Heading
 } from '@chakra-ui/react'
+import axios from 'axios'
+import { QrScanResultComponent } from 'components/@commons/QrScanResultComponent'
 import { Page } from 'components/@layout/Page'
 import React from 'react'
+import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import QRreader from 'react-qr-reader'
 import { useNavigate } from 'react-router-dom'
-import { ScanView, ScanViewState } from 'types/dto/token'
+import { ScanStatus, ScanView, ScanViewState } from 'types/dto/token'
+import { API_BASE_URL } from 'utils/configurations'
 
 export const QRScan: React.FC = (props) => {
   const [state, setState] = React.useState<ScanView>({ state: ScanViewState.Scanning })
   const navigate = useNavigate()
 
-  const handleScan = (data: any) => {
-    if (data) {
-      console.log(data)
+  const handleScan = (qrData: any) => {
+    if (qrData) {
+      // set state to loading
       setState({ state: ScanViewState.Loading })
-      setTimeout(() => {
-        setState({ state: ScanViewState.Success })
-      }, 1500)
+
+      //get token id from scanned url
+      const token = (qrData as string)
+        .split('/')
+        .filter((part) => part !== '')
+        .pop()
+
+      //send token to backaend with post
+      axios
+        .post(`${API_BASE_URL}/api/token/${token}`)
+        .then((res) => {
+          setState({ state: ScanViewState.Success, response: res.data })
+        })
+        .catch((err) => {
+          console.log(err)
+          setState({ state: ScanViewState.Error, errorMessage: 'A szerver nem válaszol!' })
+        })
     }
   }
   const handleError = (err: any) => {
@@ -37,6 +54,9 @@ export const QRScan: React.FC = (props) => {
 
   const backButtonHandler = () => {
     navigate('/qr')
+  }
+  const resetButtonHandler = () => {
+    setState({ state: ScanViewState.Scanning, response: undefined, errorMessage: '' })
   }
 
   return (
@@ -56,20 +76,23 @@ export const QRScan: React.FC = (props) => {
           <CircularProgress isIndeterminate color="brand.300" size="120px" />
         </Center>
       )}
-      <ButtonGroup>
-        <Button marginTop="3" colorScheme="brand" onClick={backButtonHandler} size="lg">
-          Vissza
-        </Button>
-      </ButtonGroup>
-
-      <Fade in={state.state == ScanViewState.Success}>
-        <Center p="40px" mt="4">
-          <CheckCircleIcon color="brand.500" boxSize="120px" />
-        </Center>
-        <Center>
-          <Heading>Állomás lepecsételve</Heading>
-        </Center>
-      </Fade>
+      {state.state == ScanViewState.Success && (
+        <Fade in={state.state == ScanViewState.Success}>
+          <QrScanResultComponent response={state.response || { status: ScanStatus.WRONG }}></QrScanResultComponent>
+        </Fade>
+      )}
+      {state.state !== ScanViewState.Loading && (
+        <ButtonGroup>
+          <Button marginTop="3" leftIcon={<FaArrowLeft />} onClick={backButtonHandler} size="lg">
+            Vissza
+          </Button>
+          {state.state !== ScanViewState.Scanning && (
+            <Button marginTop="3" colorScheme="brand" leftIcon={<FaQrcode />} onClick={resetButtonHandler} size="lg">
+              Új QR scannelése
+            </Button>
+          )}
+        </ButtonGroup>
+      )}
     </Page>
   )
 }
