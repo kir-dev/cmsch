@@ -39,7 +39,7 @@ export interface AchievementEntity {
 
 export interface AchievementWrapper {
   achievement: AchievementEntity
-  comment?: string
+  response?: string
   status: achievementStatus
 }
 

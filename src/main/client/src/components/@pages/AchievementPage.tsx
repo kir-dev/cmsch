@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormLabel, Heading, Skeleton, Stack, Text, Textarea, Image } from '@chakra-ui/react'
+import { Box, Button, FormLabel, Heading, Skeleton, Stack, Text, Textarea, Image } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
 import React from 'react'
 import { useParams } from 'react-router-dom'
@@ -22,7 +22,6 @@ const MOCK_DATA: AchievementFullDetailsView[] = [
       type: achievementType.BOTH
     },
     status: achievementStatus.ACCEPTED,
-    //comment: 'Nice work!',
     submission: {
       id: 1,
       rejected: false,
@@ -31,6 +30,7 @@ const MOCK_DATA: AchievementFullDetailsView[] = [
       textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
         Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
         Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
+      response: 'Nice work!',
       score: 10
     }
   },
@@ -44,7 +44,6 @@ const MOCK_DATA: AchievementFullDetailsView[] = [
       type: achievementType.TEXT
     },
     status: achievementStatus.REJECTED,
-    //comment: 'nice try tho',
     submission: {
       id: 2,
       rejected: true,
@@ -52,6 +51,7 @@ const MOCK_DATA: AchievementFullDetailsView[] = [
       textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
         Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
         Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
+      response: 'nice try tho',
       score: 0
     }
   },
@@ -130,19 +130,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
           <Skeleton height="20px" />
           <Skeleton height="20px" />
         </Stack>
-        {data.status === achievementStatus.NOT_SUBMITTED ? (
-          <form>
-            <Stack>
-              {textInput}
-              {fileInput}
-              <Box>
-                <Button mt={4} colorScheme="brand" type="submit">
-                  Küldés
-                </Button>
-              </Box>
-            </Stack>
-          </form>
-        ) : (
+        {data.status !== achievementStatus.NOT_SUBMITTED && (
           <>
             <Heading size="lg">Beküldött megoldás</Heading>
             {textAllowed && data.submission && <Paragraph>{data.submission.textAnswer}</Paragraph>}
@@ -151,18 +139,30 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
                 <Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" />
               </Box>
             )}
+          </>
+        )}
+        {(data.status === achievementStatus.ACCEPTED || data.status === achievementStatus.REJECTED) && data.submission && (
+          <>
             <Heading size="lg">Értékelés</Heading>
-            <Flex flexDirection="row">
-              <Text>Státusz:&nbsp;</Text>
-              <AchievementStatusBadge status={data.status} fontSize="lg" />
-            </Flex>
+            <Text>Javító üzenete: {data.submission.response}</Text>
+            <Text>Pont: {data.submission.score} pont</Text>
+          </>
+        )}
 
-            {(data.status === achievementStatus.ACCEPTED || data.status === achievementStatus.REJECTED) && data.submission ? (
-              <>
-                <Text>Javító üzenete: data.comment</Text>
-                <Text>Pont: {data.submission.score} pont</Text>
-              </>
-            ) : null}
+        {(data.status === achievementStatus.NOT_SUBMITTED || data.status === achievementStatus.REJECTED) && (
+          <>
+            <Heading size="lg">{data.status === achievementStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}</Heading>
+            <form>
+              <Stack>
+                {textInput}
+                {fileInput}
+                <Box>
+                  <Button mt={4} colorScheme="brand" type="submit">
+                    Küldés
+                  </Button>
+                </Box>
+              </Stack>
+            </form>
           </>
         )}
       </Stack>

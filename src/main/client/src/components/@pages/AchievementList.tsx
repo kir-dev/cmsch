@@ -35,8 +35,7 @@ const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
       description: 'blalblal',
       type: achievementType.BOTH
     },
-    status: achievementStatus.ACCEPTED,
-    comment: 'Nice work!'
+    status: achievementStatus.ACCEPTED
   },
   {
     achievement: {
@@ -46,8 +45,7 @@ const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
       description: 'fdsfdsgsd',
       type: achievementType.TEXT
     },
-    status: achievementStatus.REJECTED,
-    comment: 'nice try tho'
+    status: achievementStatus.REJECTED
   },
   {
     achievement: {
@@ -86,14 +84,16 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
       <Heading>Bucketlist</Heading>
       <Stack>
         {CATEGORIES.map((category) => (
-          <>
+          <Box key={category.categoryId}>
             <Heading size="lg">{category.name}</Heading>
             <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
               {category.achievements?.map((ach) => (
                 <Box key={ach.achievement.id}>
                   <Link to={`/bucketlist/${ach.achievement.id}`}>
                     <Flex align="center">
-                      <Text fontSize="lg">{ach.achievement.title}</Text>
+                      <Text marginRight="10px" fontSize="lg">
+                        {ach.achievement.title}
+                      </Text>
                       <Spacer />
                       <AchievementStatusBadge status={ach.status} fontSize="sm" />
                     </Flex>
@@ -101,7 +101,7 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
                 </Box>
               ))}
             </VStack>
-          </>
+          </Box>
         ))}
       </Stack>
     </Page>
