@@ -1,7 +1,7 @@
 import { Page } from '../@layout/Page'
 import React from 'react'
 import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
-import { QrScanResultComponent } from 'components/@commons/QrScanResultComponent'
+import { QRScanResultComponent } from 'components/@commons/QRScanResultComponent'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ButtonGroup, Button } from '@chakra-ui/react'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
@@ -23,7 +23,7 @@ export const QRScanResult: React.FC = (props) => {
 
   return (
     <Page {...props}>
-      <QrScanResultComponent response={server_response} />
+      <QRScanResultComponent response={server_response} />
       <ButtonGroup spacing="6">
         <Button leftIcon={<FaArrowLeft />} onClick={backButtonHandler}>
           Vissza{' '}
