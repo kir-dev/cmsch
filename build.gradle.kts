@@ -83,15 +83,21 @@ tasks.register<Copy>("copyFrontendToBuild") {
 }
 
 tasks.register<YarnTask>("yarnBuild") {
-    dependsOn(tasks.yarn, "yarnFormat", "setupBuildEnv")
+    dependsOn(tasks.yarn, "yarnFormatEslint", "yarnFormatPrettier", "setupBuildEnv")
     yarnCommand.set(listOf("run", "build"))
     workingDir.set(file("src/main/client"))
     inputs.dir("src")
     outputs.dir("$buildDir")
 }
 
-tasks.register<YarnTask>("yarnFormat") {
-    yarnCommand.set(listOf("run", "fix"))
+tasks.register<YarnTask>("yarnFormatEslint") {
+    yarnCommand.set(listOf("run", "fix:eslint"))
+    workingDir.set(file("src/main/client"))
+    inputs.dir("src")
+}
+
+tasks.register<YarnTask>("yarnFormatPrettier") {
+    yarnCommand.set(listOf("run", "fix:prettier"))
     workingDir.set(file("src/main/client"))
     inputs.dir("src")
 }

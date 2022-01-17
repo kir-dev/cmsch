@@ -1,0 +1,39 @@
+name: Prettier - Lint
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/main/client
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install Node.js dependencies
+        run: yarn install
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          prettier: true
+          prettier_args: "--check --ignore-path .gitignore ."
+          prettier_dir: src/main/client/
+          
+          auto_fix: true
+          commit_message: "[lint] Fix code ${linter}"
