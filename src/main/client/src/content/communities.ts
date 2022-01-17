@@ -16,7 +16,7 @@ export const COMMUNITIES: Community[] = [
     email: 'kir-dev@sch.bme.hu',
     members: 17,
     resortId: 'simonyi',
-    logo: 'https://logotar.schdesign.hu/preview/Kir-Dev_preview.png',
+    logo: '/img/communities/kirdev.svg',
     color: 'orange',
     images: ['https://kir-dev.sch.bme.hu/static/694736fc08b01fcbab76646a0b403c64/678ad/pek-next.webp']
   },
@@ -33,7 +33,7 @@ export const COMMUNITIES: Community[] = [
     email: 'hello@schdesign.hu',
     members: 54,
     resortId: 'simonyi',
-    logo: 'https://logotar.schdesign.hu/preview/schdesign-szürke-rózsasz%C3%ADn_preview.png',
+    logo: '/img/communities/schdesign.svg',
     color: 'red'
   }
 ]
