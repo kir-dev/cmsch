@@ -1,10 +1,11 @@
 import { Page } from '../@layout/Page'
 import React from 'react'
-import { Heading, Button, Progress, Stack, Icon, Center, Flex, Box, Stat, StatHelpText, StatLabel } from '@chakra-ui/react'
-import { FaQrcode, FaStamp } from 'react-icons/fa'
+import { Heading, Button, Progress, Stack } from '@chakra-ui/react'
+import { FaQrcode } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Basics'
 import { useNavigate } from 'react-router-dom'
+import { StampComponent } from 'components/@commons/StampComponent'
 
 export const QRList: React.FC = (props) => {
   //Mock data for tokens
@@ -43,21 +44,7 @@ export const QRList: React.FC = (props) => {
       </Heading>
       <Stack spacing="5" alignItems={'center'}>
         {token_response.map((token, i) => {
-          return (
-            <Box key={i} maxW={'md'} minW={'md'} borderWidth="1px" borderRadius={'lg'} boxShadow="lg" bg="brand.100">
-              <Flex>
-                <Center bg={'brand.300'} padding="2">
-                  <Icon as={FaStamp} boxSize="2em" fontSize="3xl" />
-                </Center>
-                <Center width="100%" paddingStart={'3'} textAlign="center">
-                  <Stat>
-                    <StatLabel fontSize="xl">{token.title}</StatLabel>
-                    <StatHelpText>{token.type}</StatHelpText>
-                  </Stat>
-                </Center>
-              </Flex>
-            </Box>
-          )
+          return <StampComponent key={i} title={token.title} type={token.type}></StampComponent>
         })}
       </Stack>
     </Page>
