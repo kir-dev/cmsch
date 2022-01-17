@@ -34,6 +34,8 @@
     "@chakra-ui/system": "1.8.3",
     "@emotion/react": "11",
     "@emotion/styled": "11",
+    "@fontsource/commissioner": "4.5.0",
+    "@fontsource/roboto": "4.5.1",
     "axios": "0.24.0",
     "framer-motion": "5",
     "react": "17.0.2",

@@ -1,5 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import * as React from 'react'
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/700.css'
+import '@fontsource/commissioner/300.css'
+import '@fontsource/commissioner/400.css'
+import '@fontsource/commissioner/700.css'
 
 import customTheme from './utils/customTheme'
 import { IndexLayout } from './components/@layout/IndexLayout'

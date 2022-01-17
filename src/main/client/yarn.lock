@@ -1762,6 +1762,16 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/commissioner@4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/commissioner/-/commissioner-4.5.0.tgz#9ce06d1b6db80a4b3f68c6dd8b2f59e66597e69a"
+  integrity sha512-wPWpcFYTx6VRZHfq4m8PTH15/YXxqFdQrNcl4TRq2i25tPMahcuNBlFGW1bxm1JBvcY+HsWvyjNKRqqWbdENKg==
+
+"@fontsource/roboto@4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/roboto/-/roboto-4.5.1.tgz#63f7b783f755d8f6727eb60198627e7e1be3ac20"
+  integrity sha512-3mhfL+eNPG/woMNqwD/OHaW5qMpeGEBsDwzmhFmjB1yUV+M+M9P0NhP/AyHvnGz3DrqkvZ7CPzNMa+UkVLeELg==
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.2.tgz#68be55c737023009dfc5fe245d51181bb6476914"
