@@ -1,7 +1,12 @@
 import { extendTheme } from '@chakra-ui/react'
+import { mode } from '@chakra-ui/theme-tools'
 
 // See more: https://chakra-ui.com/docs/theming/customize-theme
 const customTheme = extendTheme({
+  fonts: {
+    heading: 'Commissioner',
+    body: 'Roboto'
+  },
   colors: {
     brand: {
       100: '#d4f3e7',

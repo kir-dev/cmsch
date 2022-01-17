@@ -3,7 +3,13 @@ import { NavItem } from '../types/NavItem'
 export const NAV_ITEMS: Array<NavItem> = [
   {
     label: 'Főoldal',
-    href: '/'
+    href: '/',
+    children: [
+      {
+        label: 'Asd',
+        href: '/'
+      }
+    ]
   },
   {
     label: 'Reszortok',
