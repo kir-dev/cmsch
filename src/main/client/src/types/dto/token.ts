@@ -6,7 +6,8 @@ export interface TokenDTO {
 export enum ScanStatus {
   SCANNED = 'SCANNED',
   ALREADY_SCANNED = 'ALREADY_SCANNED',
-  WRONG = 'WRONG'
+  WRONG = 'WRONG',
+  CANNOT_COLLECT = 'CANNOT_COLLECT'
 }
 
 export interface ScanResponseDTO {
