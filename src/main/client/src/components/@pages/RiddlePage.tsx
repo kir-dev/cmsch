@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { mockData } from './RiddleList'
+import { mockData } from './RiddleCategoryList'
 import { Page } from 'components/@layout/Page'
 import { Alert, AlertIcon, Box, Button, Flex, FormControl, FormLabel, Heading, Image, Input, useColorModeValue } from '@chakra-ui/react'
 
@@ -23,32 +23,25 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
         <Heading> {riddle.title} </Heading>
       </Flex>
 
-      {riddle.solved && (
-        <Alert status="success" mb={2} borderRadius="md" bgColor={bg}>
-          <AlertIcon />
-          Ezt a riddlet már sikeresen megoldottad!
-        </Alert>
-      )}
-
       <Box>
         <Image width="100%" src={riddle.imageUrl} alt="Riddle Kép" borderRadius="md" />
-        <Alert status="info" mt={2} borderRadius="md">
-          <AlertIcon />
-          {riddle.hint}
-        </Alert>
+        {riddle.hint && (
+          <Alert status="info" mt={2} borderRadius="md">
+            <AlertIcon />
+            {riddle.hint}
+          </Alert>
+        )}
       </Box>
 
-      <Box as="form" action={submitUrl} borderWidth={2} borderColor="brand.200" borderRadius="md" mt={2} p={2}>
+      <Box as="form" action={submitUrl} borderWidth={2} borderColor="brand.200" borderRadius="md" mt={2} p={5}>
         <FormControl>
-          <FormLabel htmlFor="solution">Megoldás</FormLabel>
+          <FormLabel htmlFor="solution">Megoldásom:</FormLabel>
           <Input id="solution" name="solution" autoComplete="off" readOnly={riddle.solved} defaultValue={riddle.solution} />
         </FormControl>
 
-        {!riddle.solved && (
-          <Button type="submit" width="100%" bg={bg} mt={2} _hover={{ background: hover }} _active={{ bg: active }}>
-            Beadom
-          </Button>
-        )}
+        <Button type="submit" width="100%" bg={bg} mt={10} _hover={{ background: hover }} _active={{ bg: active }}>
+          Beadom
+        </Button>
       </Box>
     </Page>
   )
