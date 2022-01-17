@@ -1,15 +1,16 @@
 import React, { ReactNode } from 'react'
 import { Box, ButtonGroup, Grid, GridItem, Heading, Image, ListItem, UnorderedList, Wrap } from '@chakra-ui/react'
-import { LinkButton, Paragraph } from './Basics'
+import { Paragraph } from './Basics'
 import { Organization } from '../../types/Organization'
 import { LinkIcon } from '@chakra-ui/icons'
+import { LinkButton } from './LinkButton'
 
 type DataSheetProps = {
   organization: Organization
 }
 
 /**
- * Data Sheet for Resorts and Communities. Made to unify design on those pages.
+ * Data Sheet for RESORTS and COMMUNITIES. Made to unify design on those pages.
  * @param dataObject Organization type object - resort or community
  * @constructor
  */
@@ -53,7 +54,7 @@ export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
   )
 }
 
-export const DataGrid: React.FC = ({ children }) => {
+const DataGrid: React.FC = ({ children }) => {
   return (
     <Grid templateColumns="repeat(2,auto)" gap={5} width="fit-content" marginTop={5}>
       {children}
@@ -66,7 +67,7 @@ type DataFieldProps = {
   value: string | number | ReactNode
 }
 
-export const DataField: React.FC<DataFieldProps> = ({ label, value }) => {
+const DataField: React.FC<DataFieldProps> = ({ label, value }) => {
   if (!value) return null
   return (
     <>
