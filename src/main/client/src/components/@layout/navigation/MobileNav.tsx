@@ -45,7 +45,7 @@ const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
 
 const MobileNav: React.FC = () => {
   return (
-    <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
+    <Stack p={4} display={{ md: 'none' }}>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} label={navItem.label} children={navItem.children} href={navItem.href} />
       ))}
