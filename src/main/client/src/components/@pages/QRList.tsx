@@ -46,7 +46,7 @@ export const QRList: React.FC = (props) => {
       </Paragraph>
 
       <ButtonGroup>
-        <Button colorScheme={'brand'} leftIcon={<FaQrcode />} onClick={scanEventHandler}>
+        <Button colorScheme="brand" leftIcon={<FaQrcode />} onClick={scanEventHandler}>
           QR kód beolvasása
         </Button>
       </ButtonGroup>
