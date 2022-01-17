@@ -10,7 +10,7 @@ export const RESORTS: Organization[] = [
     szerint a Villamosmérnöki és Informatikai Kar minden
     hallgatója számára lehetőséget biztosítson az egyetemi képzést kiegészítő ismeretek elsajátítására.`,
     website: 'https://simonyi.bme.hu',
-    logo: 'https://logotar.schdesign.hu/preview/Simonyi_preview.png',
+    logo: '/img/resorts/simonyi.svg',
     color: 'green',
     established: '2003.',
     email: 'info@simonyi.bme.hu',
