@@ -1,7 +1,7 @@
 // from https://github.com/PedroDBFlores/chakra-ui-file-picker
 
 import { Input, InputGroup, InputGroupProps } from '@chakra-ui/input'
-import { Button, InputRightAddon } from '@chakra-ui/react'
+import { Button, InputRightElement } from '@chakra-ui/react'
 import React from 'react'
 import PropTypes from 'prop-types'
 
@@ -21,7 +21,7 @@ interface FilePickerState {
   fileName: string
 }
 
-class FilePicker extends React.Component<FilePickerProps, FilePickerState> {
+export class FilePicker extends React.Component<FilePickerProps, FilePickerState> {
   static defaultProps = {
     clearButtonLabel: 'Clear',
     multipleFiles: false,
@@ -114,14 +114,12 @@ type ClearButtonProps = Pick<FilePickerProps, 'clearButtonLabel'> & {
 }
 
 const ClearButton: React.VFC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) => (
-  <InputRightAddon>
+  <InputRightElement width="4.5rem">
     <Button onClick={onButtonClick}>{clearButtonLabel ?? 'Clear'}</Button>
-  </InputRightAddon>
+  </InputRightElement>
 )
 
 ClearButton.propTypes = {
   clearButtonLabel: PropTypes.string,
   onButtonClick: PropTypes.func.isRequired
 }
-
-export default FilePicker
