@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
   return (
     <Link to={href} replace>
-      <Box role="group" display="block" p={2} rounded="md" _hover={{ bg: useColorModeValue('brand.50', 'gray.900') }}>
+      <Box role="group" display="block" p={2} rounded="md" _hover={{ bg: useColorModeValue('brand.50', 'gray.800') }}>
         <Stack direction="row" align="center">
           <Box>
             <Text transition="all .3s ease" _groupHover={{ color: 'brand.500' }} fontWeight={500}>
@@ -56,7 +56,7 @@ const DesktopNav: React.FC = () => {
             </PopoverTrigger>
 
             {navItem.children && (
-              <PopoverContent border={0} boxShadow="xl" bg={useColorModeValue('white', 'gray.800')} p={4} rounded="xl" maxW="2xs">
+              <PopoverContent border={0} boxShadow="xl" bg={useColorModeValue('gray.50', 'gray.800')} p={4} rounded="xl" maxW="2xs">
                 <Stack>
                   {navItem.children.map((child) => (
                     <DesktopSubNav key={child.label} label={child.label} href={child.href} />

@@ -7,6 +7,14 @@ const customTheme = extendTheme({
     heading: 'Commissioner',
     body: 'Roboto'
   },
+  styles: {
+    global: (props: any) => ({
+      body: {
+        color: mode('gray.800', 'whiteAlpha.900')(props),
+        bg: mode('white', 'gray.900')(props)
+      }
+    })
+  },
   colors: {
     brand: {
       100: '#d4f3e7',
