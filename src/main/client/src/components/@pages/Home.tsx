@@ -4,9 +4,9 @@ import { Paragraph } from '../@commons/Basics'
 import { Page } from '../@layout/Page'
 import React from 'react'
 
-export const Home: React.FC = (props) => {
+export const Home: React.FC = () => {
   return (
-    <Page {...props}>
+    <Page>
       <Heading>Üdvözlünk a GólyaKörTe portálon</Heading>
       <Alert status="warning" variant="left-accent">
         <AlertIcon />

@@ -3,7 +3,7 @@ import { Text } from '@chakra-ui/react'
 
 export const Paragraph: React.FC = ({ children, ...props }) => {
   return (
-    <Text my={5} {...props}>
+    <Text marginTop={5} {...props} textAlign="justify">
       {children}
     </Text>
   )

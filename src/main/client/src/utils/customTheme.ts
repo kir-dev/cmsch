@@ -18,7 +18,7 @@ const customTheme = extendTheme({
   components: {
     Heading: {
       baseStyle: {
-        marginY: 7
+        marginTop: 5
       }
     },
     Text: {
