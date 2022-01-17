@@ -4,8 +4,8 @@ import { mode } from '@chakra-ui/theme-tools'
 // See more: https://chakra-ui.com/docs/theming/customize-theme
 const customTheme = extendTheme({
   fonts: {
-    heading: 'Commissioner',
-    body: 'Raleway'
+    heading: 'Raleway',
+    body: 'Commissioner'
   },
   styles: {
     global: (props: any) => ({
