@@ -3,7 +3,6 @@ import React from 'react'
 
 import { achievementStatus } from '../../types/dto/achievements'
 
-
 const STATUS_TEXT_MAP = new Map<achievementStatus, string>([
   [achievementStatus.ACCEPTED, 'ELFOGADVA'],
   [achievementStatus.NOT_SUBMITTED, 'BEADÁSRA VÁR'],

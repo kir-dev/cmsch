@@ -21,7 +21,7 @@ const CATEGORIES: AchievementCategory[] = [
   {
     categoryId: 3,
     name: 'századik kategória'
-  },
+  }
 ]
 
 // GET /api/achievement/category/1 -ben lesz egy ilyen tömb
