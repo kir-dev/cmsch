@@ -19,5 +19,5 @@ data class AchievementEntityWrapper(
         val status: AchievementStatus,
 
         @JsonView(value = [ Preview::class, FullDetails::class ])
-        val comment: String
+        val response: String
 )
