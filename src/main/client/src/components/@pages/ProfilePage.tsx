@@ -1,49 +1,45 @@
-import { Container } from '../@layout/Container'
-import { Outlet } from 'react-router-dom'
-
+import { Page } from '../@layout/Page'
 import { Text, Flex, Heading, CircularProgress, CircularProgressLabel, Wrap, WrapItem, Center } from '@chakra-ui/react'
 
-export function ProfilePage() {
+const challenges = [
+  {
+    name: 'Bucketlist',
+    value: 40
+  },
+  {
+    name: 'Riddle',
+    value: 73
+  },
+  {
+    name: 'QR kód',
+    value: 17
+  }
+]
+
+type ProfilePageProps = {}
+
+export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   return (
-    <Container>
-      <Outlet />
+    <Page {...props}>
       <Heading>Profil</Heading>
       <Text fontSize="3xl">Kovács Péter</Text>
-      <Text marginBottom={10} fontSize="3xl">
+      <Text marginBottom="10" fontSize="3xl">
         Tankör: I06
       </Text>
-      <Wrap spacing="50px" justify="center">
-        <WrapItem>
-          <Center w="180px" h="210px">
-            <Flex direction={'column'} align={'center'}>
-              <Text fontSize="3xl">Bucketlist</Text>
-              <CircularProgress value={40} color="green.400" size="180px">
-                <CircularProgressLabel>40%</CircularProgressLabel>
-              </CircularProgress>
-            </Flex>
-          </Center>
-        </WrapItem>
-        <WrapItem>
-          <Center w="180px" h="210px">
-            <Flex direction={'column'} align={'center'}>
-              <Text fontSize="3xl">Riddle</Text>
-              <CircularProgress value={73} color="green.400" size="180px">
-                <CircularProgressLabel>73%</CircularProgressLabel>
-              </CircularProgress>
-            </Flex>
-          </Center>
-        </WrapItem>
-        <WrapItem>
-          <Center w="180px" h="210px">
-            <Flex direction={'column'} align={'center'}>
-              <Text fontSize="3xl">QR kód</Text>
-              <CircularProgress value={17} color="green.400" size="180px">
-                <CircularProgressLabel>17%</CircularProgressLabel>
-              </CircularProgress>
-            </Flex>
-          </Center>
-        </WrapItem>
+      <Wrap spacing="3rem" justify="center">
+        {challenges.map((challenge) => (
+          <WrapItem key={challenge.name}>
+            <Center w="10rem" h="12rem">
+              <Flex direction="column" align="center">
+                <Text fontSize="3xl">{challenge.name}</Text>
+                <CircularProgress value={challenge.value} color="brand.400" size="10rem">
+                  <CircularProgressLabel>{challenge.value}%</CircularProgressLabel>
+                </CircularProgress>
+              </Flex>
+            </Center>
+          </WrapItem>
+        ))}
       </Wrap>
-    </Container>
+    </Page>
   )
 }
