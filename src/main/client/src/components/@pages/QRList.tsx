@@ -1,24 +1,44 @@
 import { Page } from '../@layout/Page'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Heading, Button, Progress, Stack, ButtonGroup } from '@chakra-ui/react'
 import { FaQrcode } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Basics'
 import { useNavigate } from 'react-router-dom'
 import { StampComponent } from 'components/@commons/StampComponent'
+import axios from 'axios'
+import { API_BASE_URL } from 'utils/configurations'
+import { ProfileDTO } from 'types/dto/profile'
 
 export const QRList: React.FC = (props) => {
-  //Mock data for tokens
-  const token_response: TokenDTO[] = [
+  const [tokens, setTokens] = useState<TokenDTO[]>([
     { title: 'Mock Token 1', type: 'KÖR' },
     { title: 'Kir-Dev token of awesomeness', type: 'KÖR' },
     { title: 'Úristen ez a title very big. Very Very Big', type: 'KÖR' }
-  ]
-
+  ])
+  const [totalTokenCount, setTotalTokenCount] = useState<number>(0)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    axios
+      .get(`${API_BASE_URL}/api/profile`)
+      .then((res) => {
+        const profile = res.data as ProfileDTO
+        setTokens(profile.tokens || [])
+        setTotalTokenCount(profile.totalTokenCount || 0)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   const scanEventHandler = () => {
     navigate('/qr/scan')
+  }
+
+  const calculate_progress = () => {
+    if (totalTokenCount == 0) return 100
+    else return (100 * tokens.length) / totalTokenCount
   }
 
   return (
@@ -37,15 +57,15 @@ export const QRList: React.FC = (props) => {
 
       <Heading>Haladás</Heading>
       <Heading as="h4" size="md">
-        Eddig beolvasott tokenek: {token_response.length} / 5
+        Eddig beolvasott tokenek: {tokens.length} / {totalTokenCount}
       </Heading>
 
-      <Progress hasStripe colorScheme="brand" value={(100 * token_response.length) / 5} />
+      <Progress hasStripe colorScheme="brand" value={calculate_progress()} />
       <Heading as="h4" size="md">
         Ahol eddig jártál
       </Heading>
       <Stack spacing="5" alignItems={{ base: 'center', md: 'start' }}>
-        {token_response.map((token, i) => {
+        {tokens.map((token, i) => {
           return <StampComponent key={i} title={token.title} type={token.type}></StampComponent>
         })}
       </Stack>
