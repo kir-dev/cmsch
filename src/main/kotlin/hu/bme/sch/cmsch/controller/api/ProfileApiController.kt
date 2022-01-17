@@ -41,7 +41,8 @@ class ProfileApiController(
             totalAchievementCount = 40,
             submittedAchievementCount = 12,
             totalRiddleCount = 80,
-            completedRiddleCount = 7
+            completedRiddleCount = 7,
+            minTokenToComplete = 5
         )
     }
 
