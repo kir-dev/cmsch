@@ -7,7 +7,7 @@ import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
 
 type AchievementListProps = {}
 
-export const mockData = {
+export const MOCK_DATA = {
   achievements: [
     {
       achievement: {
@@ -76,7 +76,7 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
     <Page {...props}>
       <Heading>Bucketlist</Heading>
       <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-        {mockData.achievements.map((item) => (
+        {MOCK_DATA.achievements.map((item) => (
           <Box key={item.achievement.id}>
             <Link to={`/bucketlist/${item.achievement.id}`}>
               <Flex align="center">
