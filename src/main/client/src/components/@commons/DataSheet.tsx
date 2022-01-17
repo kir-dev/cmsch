@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Box, ButtonGroup, Grid, GridItem, Heading, Image, ListItem, UnorderedList, Wrap } from '@chakra-ui/react'
+import { ButtonGroup, Flex, Grid, GridItem, Heading, Image, ListItem, UnorderedList, Wrap } from '@chakra-ui/react'
 import { Paragraph } from './Basics'
 import { Organization } from '../../types/Organization'
 import { LinkIcon } from '@chakra-ui/icons'
@@ -18,9 +18,9 @@ export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
   return (
     <>
       {organization.logo && (
-        <Box>
+        <Flex>
           <Image marginTop={5} src={organization.logo} alt={organization.name} maxH={20} objectFit="contain" />
-        </Box>
+        </Flex>
       )}
       <Heading>{organization.name}</Heading>
       <Wrap justify="space-between" marginTop={5} maxW="100%">
