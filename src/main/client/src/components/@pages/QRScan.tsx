@@ -1,12 +1,26 @@
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Center, CircularProgress, CloseButton, Fade, Heading } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  ButtonGroup,
+  Center,
+  CircularProgress,
+  CloseButton,
+  Fade,
+  Heading
+} from '@chakra-ui/react'
 import { Page } from 'components/@layout/Page'
 import React from 'react'
 import QRreader from 'react-qr-reader'
+import { useNavigate } from 'react-router-dom'
 import { ScanView, ScanViewState } from 'types/dto/token'
 
 export const QRScan: React.FC = (props) => {
   const [state, setState] = React.useState<ScanView>({ state: ScanViewState.Scanning })
+  const navigate = useNavigate()
 
   const handleScan = (data: any) => {
     if (data) {
@@ -19,6 +33,10 @@ export const QRScan: React.FC = (props) => {
   }
   const handleError = (err: any) => {
     console.log(err)
+  }
+
+  const backButtonHandler = () => {
+    navigate('/qr')
   }
 
   return (
@@ -38,6 +56,11 @@ export const QRScan: React.FC = (props) => {
           <CircularProgress isIndeterminate color="brand.300" size="120px" />
         </Center>
       )}
+      <ButtonGroup>
+        <Button marginTop="3" colorScheme="brand" onClick={backButtonHandler} size="lg">
+          Vissza
+        </Button>
+      </ButtonGroup>
 
       <Fade in={state.state == ScanViewState.Success}>
         <Center p="40px" mt="4">
