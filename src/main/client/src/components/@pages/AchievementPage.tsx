@@ -36,19 +36,21 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
         onChange={(e) => setTextAnswer(e.target.value)}
         placeholder="Szöveges válasz"
       />
-    </Box>)
+    </Box>
+  )
 
   const fileInput = imageAllowed && (
     <Box>
       <FormLabel>Csatolt fájl</FormLabel>
       <FilePicker onFileChange={handleFileChange} placeholder="Csatolt fájl" clearButtonLabel="Törlés" accept=".png,.jpeg,.jpg,.gif" />
-    </Box>)
+    </Box>
+  )
 
   return (
     <Page {...props}>
       <Stack>
-          <Heading marginBottom={0}>{data.achievement.title}</Heading>
-          <AchievementStatusBadge status={data.status} fontSize="lg" />
+        <Heading marginBottom="0px">{data.achievement.title}</Heading>
+        <AchievementStatusBadge status={data.status} fontSize="lg" />
         <Stack>
           <Skeleton height="20px" />
           <Skeleton height="20px" />
