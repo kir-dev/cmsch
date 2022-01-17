@@ -11,11 +11,7 @@ import { API_BASE_URL } from 'utils/configurations'
 import { ProfileDTO } from 'types/dto/profile'
 
 export const QRList: React.FC = (props) => {
-  const [tokens, setTokens] = useState<TokenDTO[]>([
-    { title: 'Mock Token 1', type: 'KÖR' },
-    { title: 'Kir-Dev token of awesomeness', type: 'KÖR' },
-    { title: 'Úristen ez a title very big. Very Very Big', type: 'KÖR' }
-  ])
+  const [tokens, setTokens] = useState<TokenDTO[]>([])
   const [totalTokenCount, setTotalTokenCount] = useState<number>(0)
   const navigate = useNavigate()
 
