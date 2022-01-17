@@ -1,7 +1,7 @@
 import { Page } from '../@layout/Page'
 import { Alert, AlertIcon, Heading } from '@chakra-ui/react'
 import React from 'react'
-import { Resorts } from '../../content/resorts'
+import { RESORTS } from '../../content/resorts'
 import { CardListItem } from '../@commons/CardListItem'
 
 type ResortListProps = {}
@@ -13,7 +13,7 @@ export const ResortList: React.FC<ResortListProps> = () => {
       <Alert variant="left-accent" status="info" marginTop={5}>
         <AlertIcon />A legtöbb kör egy-egy reszort alá tartozik.
       </Alert>
-      {Resorts.map((resort) => (
+      {RESORTS.map((resort) => (
         <CardListItem data={resort} link={'/reszortok/' + resort.id} />
       ))}
     </Page>
