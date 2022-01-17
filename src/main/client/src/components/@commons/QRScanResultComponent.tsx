@@ -7,7 +7,7 @@ interface QrScanResultProps {
   response: ScanResponseDTO
 }
 
-export const QrScanResultComponent: React.FC<QrScanResultProps> = ({ response }: QrScanResultProps) => {
+export const QRScanResultComponent: React.FC<QrScanResultProps> = ({ response }: QrScanResultProps) => {
   const renderIcon = () => {
     switch (response.status) {
       case ScanStatus.SCANNED:

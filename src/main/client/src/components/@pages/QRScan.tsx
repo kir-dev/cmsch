@@ -12,14 +12,27 @@ import {
   Heading
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { QrScanResultComponent } from 'components/@commons/QrScanResultComponent'
+import { QRScanResultComponent } from 'components/@commons/QRScanResultComponent'
 import { Page } from 'components/@layout/Page'
 import React from 'react'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import QRreader from 'react-qr-reader'
 import { useNavigate } from 'react-router-dom'
-import { ScanStatus, ScanView, ScanViewState } from 'types/dto/token'
+import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
 import { API_BASE_URL } from 'utils/configurations'
+
+enum ScanViewState {
+  Scanning,
+  Loading,
+  Error,
+  Success
+}
+
+interface ScanView {
+  state: ScanViewState
+  response?: ScanResponseDTO
+  errorMessage?: string
+}
 
 export const QRScan: React.FC = (props) => {
   const [state, setState] = React.useState<ScanView>({ state: ScanViewState.Scanning })
@@ -42,12 +55,14 @@ export const QRScan: React.FC = (props) => {
         .then((res) => {
           setState({ state: ScanViewState.Success, response: res.data })
         })
+        //catch any network error
         .catch((err) => {
           console.log(err)
           setState({ state: ScanViewState.Error, errorMessage: 'A szerver nem válaszol!' })
         })
     }
   }
+  //handle any scanner error
   const handleError = (err: any) => {
     console.log(err)
   }
@@ -78,7 +93,7 @@ export const QRScan: React.FC = (props) => {
       )}
       {state.state == ScanViewState.Success && (
         <Fade in={state.state == ScanViewState.Success}>
-          <QrScanResultComponent response={state.response || { status: ScanStatus.WRONG }}></QrScanResultComponent>
+          <QRScanResultComponent response={state.response || { status: ScanStatus.WRONG }}></QRScanResultComponent>
         </Fade>
       )}
       {state.state !== ScanViewState.Loading && (
