@@ -1,6 +1,6 @@
 import { Organization } from '../types/Organization'
 
-export const Resorts: Organization[] = [
+export const RESORTS: Organization[] = [
   {
     id: 'simonyi',
     name: 'Simonyi Károly Szakkollégium',

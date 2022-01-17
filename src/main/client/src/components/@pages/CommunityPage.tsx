@@ -1,7 +1,7 @@
 import { Page } from '../@layout/Page'
 import { Image } from '@chakra-ui/react'
 import React from 'react'
-import { Communities } from '../../content/communities'
+import { COMMUNITIES } from '../../content/communities'
 import { Navigate, useParams } from 'react-router-dom'
 import { DataSheet } from '../@commons/DataSheet'
 
@@ -9,7 +9,7 @@ type CommunityPageProps = {}
 
 export const CommunityPage: React.FC<CommunityPageProps> = () => {
   const params = useParams()
-  const community = Communities.find((c) => c.id === params.name)
+  const community = COMMUNITIES.find((c) => c.id === params.name)
   if (!community) return <Navigate to="/korok" />
   return (
     <Page>

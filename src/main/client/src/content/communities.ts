@@ -1,6 +1,6 @@
 import { Community } from '../types/Organization'
 
-export const Communities: Community[] = [
+export const COMMUNITIES: Community[] = [
   {
     id: 'kirdev',
     name: 'Kir-Dev',
