@@ -75,9 +75,9 @@ export const QRScan: React.FC = (props) => {
   }
 
   return (
-    <Page {...props}>
+    <Page {...props} loginRequired>
       <Heading>Scanneld be a QR kódot</Heading>
-      {state.state == ScanViewState.Scanning && <QRreader delay={300} onError={handleError} onScan={handleScan}></QRreader>}
+      {state.state == ScanViewState.Scanning && <QRreader delay={300} onError={handleError} onScan={handleScan} />}
       {state.state == ScanViewState.Error && (
         <Alert status="error">
           <AlertIcon />
@@ -93,7 +93,7 @@ export const QRScan: React.FC = (props) => {
       )}
       {state.state == ScanViewState.Success && (
         <Fade in={state.state == ScanViewState.Success}>
-          <QRScanResultComponent response={state.response || { status: ScanStatus.WRONG }}></QRScanResultComponent>
+          <QRScanResultComponent response={state.response || { status: ScanStatus.WRONG }} />
         </Fade>
       )}
       {state.state !== ScanViewState.Loading && (
