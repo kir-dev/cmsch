@@ -121,7 +121,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   )
 
   return (
-    <Page {...props}>
+    <Page {...props} loginRequired>
       <Stack>
         <Heading marginBottom="0px">{data.achievement.title}</Heading>
         <AchievementStatusBadge status={data.status} fontSize="lg" />

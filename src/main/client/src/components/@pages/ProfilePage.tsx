@@ -84,7 +84,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   if (delay || profile?.fullName === undefined) return <ProfilePageSkeleton {...props} />
 
   return (
-    <Page {...props}>
+    <Page {...props} loginRequired>
       <Heading>Profil</Heading>
       <Text fontSize="3xl">{profile?.fullName}</Text>
       <HStack justify="space-between">
