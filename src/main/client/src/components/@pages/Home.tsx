@@ -10,7 +10,7 @@ import { EVENTS } from '../../content/events'
 export const Home: React.FC = () => {
   return (
     <Page>
-      <Heading size="3xl" textAlign="center">
+      <Heading size="3xl" textAlign="center" marginTop={10}>
         Üdvözlünk a{' '}
         <Heading as="span" color="brand.500" size="3xl">
           GólyaKörTe
