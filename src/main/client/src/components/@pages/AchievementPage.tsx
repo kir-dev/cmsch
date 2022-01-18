@@ -1,8 +1,8 @@
-import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, Spinner, useToast } from '@chakra-ui/react'
+import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, useToast, Skeleton } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams /*, useNavigate*/ } from 'react-router-dom'
 import axios from 'axios'
 
 import { FilePicker } from '../@commons/FilePicker'
@@ -96,7 +96,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
 
   const toast = useToast()
   const { id } = useParams()
-  const navigate = useNavigate()
+  //const navigate = useNavigate()
   if (!id) {
     return null
   }
@@ -115,7 +115,14 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   }, [])
 
   if (!achDetails) {
-    return <Spinner size="xl" color="brand.600" thickness="3px" />
+    return (
+      <Page {...props}>
+        <Skeleton height="40px"/>
+        <Skeleton marginTop="20px" height="20px"/>
+        <Skeleton marginTop="8px" height="20px"/>
+        <Skeleton marginTop="8px" height="20px"/>
+      </Page>
+    )
   }
 
   // ez csúnya tudom de itt úgyis api hívás lesz
@@ -146,14 +153,14 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
               title: 'Megoldás elküldve',
               status: 'success',
               duration: 5000,
-              isClosable: true,
+              isClosable: true
             })
           } else {
             toast({
               title: res.data.status,
               status: 'error',
               duration: 5000,
-              isClosable: true,
+              isClosable: true
             })
           }
           setTextAnswer('')
@@ -165,10 +172,10 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
     } else {
       toast({
         title: 'Üres megoldás',
-        description: "Üres megoldást nem küldhetsz be.",
+        description: 'Üres megoldást nem küldhetsz be.',
         status: 'error',
         duration: 5000,
-        isClosable: true,
+        isClosable: true
       })
     }
   }
