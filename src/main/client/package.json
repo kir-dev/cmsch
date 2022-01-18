@@ -36,7 +36,6 @@
     "@emotion/styled": "11",
     "@fontsource/commissioner": "4.5.0",
     "@fontsource/raleway": "4.5.0",
-    "@types/js-cookie": "^3.0.1",
     "axios": "0.24.0",
     "framer-motion": "5",
     "js-cookie": "^3.0.1",
@@ -52,6 +51,7 @@
     "mini-css-extract-plugin": "2.4.5"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.1",
     "@types/node": "17.0.8",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
