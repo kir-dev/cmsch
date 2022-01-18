@@ -31,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Link to="/" replace>
+          <Link to="/">
             <Box
               display="block"
               rounded="md"

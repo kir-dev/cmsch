@@ -14,8 +14,6 @@ export const LinkButton: React.FC<LinkProps & ButtonProps> = ({ external, href, 
       {ButtonComponent}
     </a>
   ) : (
-    <RouterLink to={href} replace>
-      {ButtonComponent}
-    </RouterLink>
+    <RouterLink to={href}>{ButtonComponent}</RouterLink>
   )
 }

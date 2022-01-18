@@ -11,7 +11,7 @@ const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
-      <Link to={children ? '#' : href} replace className={children ? undefined : 'navitem'}>
+      <Link to={children ? '#' : href} className={children ? undefined : 'navitem'}>
         <Flex
           py={2}
           justify="space-between"
@@ -31,7 +31,7 @@ const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
         <Stack pl={4} borderLeft={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.800')} align="start">
           {children &&
             children.map((child) => (
-              <Link to={child.href} replace className="navitem">
+              <Link to={child.href} className="navitem">
                 <Text key={child.label} py={2}>
                   {child.label}
                 </Text>
