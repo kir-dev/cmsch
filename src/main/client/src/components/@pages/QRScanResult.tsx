@@ -24,7 +24,7 @@ export const QRScanResult: React.FC = (props) => {
   return (
     <Page {...props}>
       <QRScanResultComponent response={server_response} />
-      <ButtonGroup spacing="6">
+      <ButtonGroup spacing="6" alignSelf="center">
         <Button leftIcon={<FaArrowLeft />} onClick={backButtonHandler}>
           Vissza{' '}
         </Button>

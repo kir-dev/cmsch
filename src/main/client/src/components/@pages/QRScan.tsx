@@ -97,7 +97,7 @@ export const QRScan: React.FC = (props) => {
         </Fade>
       )}
       {state.state !== ScanViewState.Loading && (
-        <ButtonGroup>
+        <ButtonGroup alignSelf="center">
           <Button marginTop="3" leftIcon={<FaArrowLeft />} onClick={backButtonHandler} size="lg">
             Vissza
           </Button>
