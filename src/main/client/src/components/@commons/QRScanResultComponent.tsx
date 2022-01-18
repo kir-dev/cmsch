@@ -38,14 +38,14 @@ export const QRScanResultComponent: React.FC<QrScanResultProps> = ({ response }:
     <Box>
       {response.title && (
         <Center>
-          <Heading>{response.title}</Heading>
+          <Heading size="md">{response.title}</Heading>
         </Center>
       )}
       <Center p="40px" mt="4">
         {renderIcon()}
       </Center>
       <Center>
-        <Heading>{getInfoText()}</Heading>
+        <Heading size="md">{getInfoText()}</Heading>
       </Center>
     </Box>
   )
