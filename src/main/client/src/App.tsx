@@ -56,10 +56,10 @@ export function App() {
                   <Route index element={<AchievementList />} />
                 </Route>
                 {/*QR*/}
-                <Route path="qr-scanned" element={<QRScanResult />}></Route>
+                <Route path="qr-scanned" element={<QRScanResult />} />
                 <Route path="qr">
                   <Route index element={<QRList />} />
-                  <Route path="scan" element={<QRScan />}></Route>
+                  <Route path="scan" element={<QRScan />} />
                 </Route>
               </Route>
             </Routes>
