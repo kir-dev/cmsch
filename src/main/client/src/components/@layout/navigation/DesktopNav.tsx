@@ -5,6 +5,8 @@ import React from 'react'
 import { NavItem } from '../../../types/NavItem'
 import { NAV_ITEMS } from '../../../utils/navItems'
 import { Link } from 'react-router-dom'
+import { AuthButton } from '../../@commons/AuthButton'
+import { useAuthContext } from '../../../utils/useAuthContext'
 
 const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
   return (
@@ -34,9 +36,10 @@ const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
 }
 
 const DesktopNav: React.FC = () => {
+  const { isLoggedIn } = useAuthContext()
   return (
     <Stack direction="row" spacing={4}>
-      {NAV_ITEMS.map((navItem) => (
+      {NAV_ITEMS.filter((navItem) => (navItem.loginRequired && isLoggedIn) || !navItem.loginRequired).map((navItem) => (
         <Box key={navItem.label}>
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
@@ -67,6 +70,7 @@ const DesktopNav: React.FC = () => {
           </Popover>
         </Box>
       ))}
+      <AuthButton />
     </Stack>
   )
 }
