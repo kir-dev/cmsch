@@ -1,8 +1,10 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
+import axios from 'axios'
+import { API_BASE_URL } from './configurations'
 
 const CookieKeys = {
-  IS_LOGGED_IN: 'isLoggedIn'
+  LOGGED_IN: 'loggedIn'
 }
 
 export type AuthContextType = {
@@ -12,20 +14,31 @@ export type AuthContextType = {
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  isLoggedIn: Cookies.get(CookieKeys.IS_LOGGED_IN) === 'true',
+  isLoggedIn: Cookies.get(CookieKeys.LOGGED_IN) === 'true',
   login: () => {},
   logout: () => {}
 })
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [isLoggedIn] = useState<boolean>(localStorage.getItem(CookieKeys.IS_LOGGED_IN) === 'true')
+  const [isLoggedIn] = useState<boolean>(Cookies.get(CookieKeys.LOGGED_IN) === 'true')
   const login = () => {
-    localStorage.setItem(CookieKeys.IS_LOGGED_IN, 'true')
-    location.href = '/'
+    location.href = '/control/login'
   }
   const logout = () => {
-    localStorage.removeItem(CookieKeys.IS_LOGGED_IN)
-    location.href = '/'
+    location.href = '/control/logout'
   }
+  useEffect(() => {
+    if (isLoggedIn)
+      axios
+        .get(`${API_BASE_URL}/api/profile`)
+        .then((res) => {
+          if (typeof res.data === 'object') console.log(res.data)
+          else throw 'res.data is not JSON'
+        })
+        .catch((e) => {
+          console.log(e)
+          logout()
+        })
+  }, [isLoggedIn])
   return <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}>{children}</AuthContext.Provider>
 }
