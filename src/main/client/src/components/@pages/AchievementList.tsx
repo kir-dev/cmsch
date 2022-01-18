@@ -126,8 +126,8 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
                   ))
                 ) : (
                   <Stack marginTop="20px">
-                    <Skeleton height="20px" />
-                    <Skeleton height="20px" />
+                    <Skeleton height="20px"/>
+                    <Skeleton height="20px"/>
                   </Stack>
                 )}
               </VStack>
@@ -135,11 +135,11 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
           ))
         ) : (
           <Stack marginTop="20px">
-            <Skeleton height="40px" />
-            <Skeleton height="40px" />
-            <Skeleton height="40px" />
-            <Skeleton height="40px" />
-            <Skeleton height="40px" />
+            <Skeleton height="40px"/>
+            <Skeleton height="40px"/>
+            <Skeleton height="40px"/>
+            <Skeleton height="40px"/>
+            <Skeleton height="40px"/>
           </Stack>
         )}
       </Stack>
