@@ -17,8 +17,6 @@ export const SimpleLink: React.FC<LinkProps & ChakraLinkProps> = ({ external, hr
       {ButtonComponent}
     </a>
   ) : (
-    <RouterLink to={href} replace>
-      {ButtonComponent}
-    </RouterLink>
+    <RouterLink to={href}>{ButtonComponent}</RouterLink>
   )
 }

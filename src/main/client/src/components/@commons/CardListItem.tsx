@@ -11,7 +11,7 @@ type CardListItemProps = {
 
 export const CardListItem: React.FC<CardListItemProps> = ({ data, link }) => {
   return (
-    <Link to={link} replace>
+    <Link to={link}>
       <Box
         borderRadius="lg"
         padding={4}

@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
   return (
-    <Link to={href} replace>
+    <Link to={href}>
       <Box role="group" display="block" p={2} rounded="md" _hover={{ bg: useColorModeValue('brand.50', 'gray.800') }}>
         <Stack direction="row" align="center">
           <Box>
@@ -40,7 +40,7 @@ const DesktopNav: React.FC = () => {
         <Box key={navItem.label}>
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
-              <Link to={navItem.href ?? '#'} replace>
+              <Link to={navItem.href ?? '#'}>
                 <Text
                   p={2}
                   fontSize="md"
