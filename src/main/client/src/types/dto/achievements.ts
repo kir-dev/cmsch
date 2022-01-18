@@ -26,15 +26,32 @@ export interface AchievementCategory {
   achievements?: AchievementWrapper[]
 }
 
+export interface AchievementsInCategory {
+  achievements: AchievementWrapper[]
+  categoryName: string
+}
+
+export interface AllAchievementCategories {
+  categories: AchievementCategory[]
+  leaderboard?: [
+    {
+      name: string
+      score: number
+    }
+  ]
+  leaderBoardVisible?: boolean
+  leaderBoardFrozen?: boolean
+}
+
 export interface AchievementEntity {
   id: number
   categoryId: number
   title: string
   description: string
   type: achievementType
+  expectedResultDescription?: string
   availableFrom?: number
   availableTo?: number
-  expectedResultDescription?: string
 }
 
 export interface AchievementWrapper {
@@ -43,19 +60,17 @@ export interface AchievementWrapper {
   status: achievementStatus
 }
 
-export interface AchievementSubmission {
-  id: number
-  approved: boolean
-  imageUrlAnswer?: string
-  textAnswer?: string
-  score: number
-  groupName?: string
-  rejected: boolean
-  response?: string
-}
-
 export interface AchievementFullDetailsView {
-  achievement: AchievementEntity
+  achievement?: AchievementEntity
   status: achievementStatus
-  submission?: AchievementSubmission
+  submission?: {
+    id: number
+    approved: boolean
+    imageUrlAnswer?: string
+    textAnswer?: string
+    score: number
+    groupName?: string
+    rejected: boolean
+    response?: string
+  }
 }
