@@ -1,10 +1,19 @@
-import { Box, Heading, StackDivider, VStack, Stack, Text, Flex, Spacer } from '@chakra-ui/react'
+import { Box, Heading, StackDivider, VStack, Stack, Text, Flex, Spacer, Skeleton } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
+import { API_BASE_URL } from '../../utils/configurations'
 import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
-import { AchievementCategory, AchievementWrapper, achievementStatus, achievementType } from '../../types/dto/achievements'
+import {
+  AchievementCategory,
+  AchievementsInCategory,
+  AllAchievementCategories,
+  AchievementWrapper,
+  achievementStatus,
+  achievementType
+} from '../../types/dto/achievements'
 
 type AchievementListProps = {}
 
@@ -70,6 +79,19 @@ const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
 ]
 
 export const AchievementList: React.FC<AchievementListProps> = (props) => {
+  const [categories, setCategories] = useState<AchievementCategory[]>([])
+
+  useEffect(() => {
+    axios.get<AllAchievementCategories>(`${API_BASE_URL}/api/achievement`).then((res) => {
+      setCategories(res.data.categories)
+      categories.forEach((category) => {
+        axios.get<AchievementsInCategory>(`${API_BASE_URL}/api/achievement/category/${category.categoryId}`).then((otherRes) => {
+          category.achievements = otherRes.data.achievements
+        })
+      })
+    })
+  }, [])
+
   // ez nyilván nem így lesz
   CATEGORIES.forEach((category, idx) => {
     if (idx === 0) {
@@ -83,26 +105,43 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
     <Page {...props} loginRequired>
       <Heading>Bucketlist</Heading>
       <Stack>
-        {CATEGORIES.map((category) => (
-          <Box key={category.categoryId}>
-            <Heading size="lg">{category.name}</Heading>
-            <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-              {category.achievements?.map((ach) => (
-                <Box key={ach.achievement.id}>
-                  <Link to={`/bucketlist/${ach.achievement.id}`}>
-                    <Flex align="center">
-                      <Text marginRight="10px" fontSize="lg">
-                        {ach.achievement.title}
-                      </Text>
-                      <Spacer />
-                      <AchievementStatusBadge status={ach.status} fontSize="sm" />
-                    </Flex>
-                  </Link>
-                </Box>
-              ))}
-            </VStack>
-          </Box>
-        ))}
+        {CATEGORIES.length > 0 ? (
+          CATEGORIES.map((category) => (
+            <Box key={category.categoryId}>
+              <Heading size="lg">{category.name}</Heading>
+              <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+                {category.achievements && category.achievements.length > 0 ? (
+                  category.achievements?.map((ach) => (
+                    <Box key={ach.achievement.id}>
+                      <Link to={`/bucketlist/${ach.achievement.id}`}>
+                        <Flex align="center">
+                          <Text marginRight="10px" fontSize="lg">
+                            {ach.achievement.title}
+                          </Text>
+                          <Spacer />
+                          <AchievementStatusBadge status={ach.status} fontSize="sm" />
+                        </Flex>
+                      </Link>
+                    </Box>
+                  ))
+                ) : (
+                  <Stack marginTop="20px">
+                    <Skeleton height="20px" />
+                    <Skeleton height="20px" />
+                  </Stack>
+                )}
+              </VStack>
+            </Box>
+          ))
+        ) : (
+          <Stack marginTop="20px">
+            <Skeleton height="40px" />
+            <Skeleton height="40px" />
+            <Skeleton height="40px" />
+            <Skeleton height="40px" />
+            <Skeleton height="40px" />
+          </Stack>
+        )}
       </Stack>
     </Page>
   )

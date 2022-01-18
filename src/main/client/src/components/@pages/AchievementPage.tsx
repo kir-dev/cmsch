@@ -1,12 +1,15 @@
-import { Box, Button, FormLabel, Heading, Skeleton, Stack, Text, Textarea, Image } from '@chakra-ui/react'
+import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, Spinner, useToast } from '@chakra-ui/react'
+import { chakra } from '@chakra-ui/system'
 import { Page } from '../@layout/Page'
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 import { FilePicker } from '../@commons/FilePicker'
 import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
 import { Paragraph } from 'components/@commons/Basics'
 import { AchievementFullDetailsView, achievementType, achievementStatus } from '../../types/dto/achievements'
+import { API_BASE_URL } from 'utils/configurations'
 
 type AchievementPageProps = {}
 
@@ -78,27 +81,97 @@ const MOCK_DATA: AchievementFullDetailsView[] = [
       categoryId: 1,
       title: 'Lorem ipsum4',
       description: 'fdsfdsgsd',
-      type: achievementType.BOTH
+      type: achievementType.BOTH,
+      expectedResultDescription: 'Egy kép meg egy izé bigyó'
     },
     status: achievementStatus.NOT_SUBMITTED
   }
 ]
 
 export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
-  const [textAnswer, setTextAnswer] = React.useState('')
+  let [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
+  const [textAnswer, setTextAnswer] = useState<string>('')
+  const [imageAnswer, setImageAnswer] = useState<File | undefined>(undefined)
+  const filePickerRef = useRef<FilePicker>(null)
+
+  const toast = useToast()
   const { id } = useParams()
+  const navigate = useNavigate()
   if (!id) {
     return null
   }
-  // ez csúnya tudom de itt úgyis api hívás lesz
-  const data = MOCK_DATA.filter((ach) => ach.achievement.id === parseInt(id))[0]
 
-  const handleFileChange = (fileList: Array<File>) => {
-    console.log(fileList)
+  const getAchievementDetails = () => {
+    axios.get<AchievementFullDetailsView>(`${API_BASE_URL}/api/achievement/submit/${id}`).then((res) => {
+      setAchDetails(res.data)
+      if (!achDetails?.achievement) {
+        //navigate('/bucketlist')
+      }
+    })
   }
 
-  const textAllowed = data.achievement.type === achievementType.TEXT || data.achievement.type === achievementType.BOTH
-  const imageAllowed = data.achievement.type === achievementType.IMAGE || data.achievement.type === achievementType.BOTH
+  useEffect(() => {
+    getAchievementDetails()
+  }, [])
+
+  if (!achDetails) {
+    return <Spinner size="xl" color="brand.600" thickness="3px" />
+  }
+
+  // ez csúnya tudom de itt úgyis api hívás lesz
+  achDetails = MOCK_DATA.filter((ach) => ach.achievement?.id === parseInt(id))[0]
+
+  const textAllowed = achDetails.achievement?.type === achievementType.TEXT || achDetails.achievement?.type === achievementType.BOTH
+  const imageAllowed = achDetails.achievement?.type === achievementType.IMAGE || achDetails.achievement?.type === achievementType.BOTH
+  const submissionAllowed = achDetails?.status === achievementStatus.NOT_SUBMITTED || achDetails?.status === achievementStatus.REJECTED
+  const reviewed = achDetails.status === achievementStatus.ACCEPTED || achDetails.status === achievementStatus.REJECTED
+
+  const handleSubmit = () => {
+    if (((textAllowed && textAnswer) || (imageAllowed && imageAnswer)) && submissionAllowed) {
+      const formData = new FormData()
+      if (imageAnswer) {
+        formData.append('file', imageAnswer)
+      }
+      formData.append('achievementId', id)
+      formData.append('textAnswer', textAnswer)
+      axios
+        .post(`${API_BASE_URL}/api/achievement/submit`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then((res) => {
+          if (res.data.status === 'OK') {
+            toast({
+              title: 'Megoldás elküldve',
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+            })
+          } else {
+            toast({
+              title: res.data.status,
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+          }
+          setTextAnswer('')
+          if (filePickerRef.current) {
+            filePickerRef.current.reset()
+          }
+          getAchievementDetails()
+        })
+    } else {
+      toast({
+        title: 'Üres megoldás',
+        description: "Üres megoldást nem küldhetsz be.",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+  }
 
   const textInput = textAllowed && (
     <Box>
@@ -116,53 +189,59 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   const fileInput = imageAllowed && (
     <Box>
       <FormLabel>Csatolt fájl</FormLabel>
-      <FilePicker onFileChange={handleFileChange} placeholder="Csatolt fájl" clearButtonLabel="Törlés" accept=".png,.jpeg,.jpg,.gif" />
+      <FilePicker
+        onFileChange={(fileArray) => setImageAnswer(fileArray[0])}
+        placeholder="Csatolt fájl"
+        clearButtonLabel="Törlés"
+        accept=".png,.jpeg,.jpg,.gif"
+        ref={filePickerRef}
+      />
     </Box>
   )
 
   return (
     <Page {...props} loginRequired>
       <Stack>
-        <Heading marginBottom="0px">{data.achievement.title}</Heading>
-        <AchievementStatusBadge status={data.status} fontSize="lg" />
-        <Stack>
-          <Skeleton height="20px" />
-          <Skeleton height="20px" />
-          <Skeleton height="20px" />
-        </Stack>
-        {data.status !== achievementStatus.NOT_SUBMITTED && (
+        <Heading marginBottom="0px">{achDetails.achievement?.title}</Heading>
+        <AchievementStatusBadge status={achDetails.status} fontSize="lg" />
+        <Paragraph>{achDetails.achievement?.description}</Paragraph>
+        {achDetails.achievement?.expectedResultDescription && (
+          <Text size="sm">
+            <chakra.span fontWeight="bold">Beadandó formátum:</chakra.span>
+            &nbsp;{achDetails.achievement?.expectedResultDescription}
+          </Text>
+        )}
+        {achDetails.status !== achievementStatus.NOT_SUBMITTED && (
           <>
-            <Heading size="lg">Beküldött megoldás</Heading>
-            {textAllowed && data.submission && <Paragraph>{data.submission.textAnswer}</Paragraph>}
-            {imageAllowed && data.submission && (
+            <Heading size="md">Beküldött megoldás</Heading>
+            {textAllowed && achDetails.submission && <Paragraph>{achDetails.submission.textAnswer}</Paragraph>}
+            {imageAllowed && achDetails.submission && (
               <Box>
-                <Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" />
+                <Image src={achDetails.submission.imageUrlAnswer} alt="Beküldött megoldás" />
               </Box>
             )}
           </>
         )}
-        {(data.status === achievementStatus.ACCEPTED || data.status === achievementStatus.REJECTED) && data.submission && (
+        {reviewed && achDetails.submission && (
           <>
-            <Heading size="lg">Értékelés</Heading>
-            <Text>Javító üzenete: {data.submission.response}</Text>
-            <Text>Pont: {data.submission.score} pont</Text>
+            <Heading size="md">Értékelés</Heading>
+            <Text>Javító üzenete: {achDetails.submission.response}</Text>
+            <Text>Pont: {achDetails.submission.score} pont</Text>
           </>
         )}
 
-        {(data.status === achievementStatus.NOT_SUBMITTED || data.status === achievementStatus.REJECTED) && (
+        {submissionAllowed && (
           <>
-            <Heading size="lg">{data.status === achievementStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}</Heading>
-            <form>
-              <Stack>
-                {textInput}
-                {fileInput}
-                <Box>
-                  <Button mt={4} colorScheme="brand" type="submit">
-                    Küldés
-                  </Button>
-                </Box>
-              </Stack>
-            </form>
+            <Heading size="md">{achDetails.status === achievementStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}</Heading>
+            <Stack>
+              {textInput}
+              {fileInput}
+              <Box>
+                <Button mt={4} colorScheme="brand" type="button" onClick={handleSubmit}>
+                  Küldés
+                </Button>
+              </Box>
+            </Stack>
           </>
         )}
       </Stack>
