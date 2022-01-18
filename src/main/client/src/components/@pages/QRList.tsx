@@ -38,7 +38,7 @@ export const QRList: React.FC = (props) => {
   }
 
   return (
-    <Page {...props}>
+    <Page {...props} loginRequired>
       <Heading>QR kód vadászat</Heading>
       <Paragraph>
         A standoknál végzett aktív tevékenyégért QR kódokat lehet gyűjteni, amiket tanköri hiányzások igazolására lehet beváltani. TODO:
@@ -62,7 +62,7 @@ export const QRList: React.FC = (props) => {
       </Heading>
       <Stack spacing="5" alignItems={{ base: 'center', md: 'start' }}>
         {tokens.map((token, i) => {
-          return <StampComponent key={i} title={token.title} type={token.type}></StampComponent>
+          return <StampComponent key={i} title={token.title} type={token.type} />
         })}
       </Stack>
     </Page>
