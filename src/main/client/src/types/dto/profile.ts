@@ -1,21 +1,23 @@
 import { TokenDTO } from './token'
 
-export enum RoleType {
-  GUEST = 'GUEST', // anyone without login
-  BASIC = 'BASIC', // has auth.sch but not member of SSSL
-  STAFF = 'STAFF', // member of the SSSL
-  ADMIN = 'ADMIN', // the organizers of the event
-  SUPERUSER = 'SUPERUSER' // advanced user management (able to grant admin access)
-}
-
 export interface ProfileDTO {
-  completedRiddleCount: number
   fullName: string
   groupName: string
-  role: RoleType
-  submittedAchievementCount: number
+  role: keyof typeof RoleType
   tokens: TokenDTO[]
-  totalAchievementCount: number
-  totalRiddleCount: number
   totalTokenCount: number
+  totalRiddleCount: number
+  completedRiddleCount: number
+  totalAchievementCount: number
+  submittedAchievementCount: number
+  minTokenToComplete: number
+}
+
+//cannot compare roles if the enums values are strings use the RoleType[role] syntax
+export enum RoleType {
+  GUEST = 0, // anyone without login
+  BASIC = 1, // has auth.sch but not member of SSSL
+  STAFF = 100, // member of the SSSL
+  ADMIN = 200, // the organizers of the event
+  SUPERUSER = 500 // advanced user management (able to grant admin access)
 }
