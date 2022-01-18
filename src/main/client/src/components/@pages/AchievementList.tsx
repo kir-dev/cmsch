@@ -82,7 +82,7 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
   })
 
   return (
-    <Page {...props}>
+    <Page {...props} loginRequired>
       <Heading>Bucketlist</Heading>
       <Stack>
         {CATEGORIES.map((category) => (
