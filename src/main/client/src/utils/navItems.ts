@@ -19,6 +19,14 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: 'Profil',
-    href: '/profil'
+    href: '/profil',
+    loginRequired: true,
+    children: [
+      {
+        label: 'Bucketlist',
+        href: '/bucketlist',
+        loginRequired: true
+      }
+    ]
   }
 ]

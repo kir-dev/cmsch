@@ -5,6 +5,8 @@ import React from 'react'
 import { NavItem } from '../../../types/NavItem'
 import { NAV_ITEMS } from '../../../utils/navItems'
 import { Link } from 'react-router-dom'
+import { AuthButton } from '../../@commons/AuthButton'
+import { useAuthContext } from '../../../utils/useAuthContext'
 
 const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
   const { isOpen, onToggle } = useDisclosure()
@@ -44,11 +46,13 @@ const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
 }
 
 const MobileNav: React.FC = () => {
+  const { isLoggedIn } = useAuthContext()
   return (
     <Stack p={4} display={{ md: 'none' }}>
-      {NAV_ITEMS.map((navItem) => (
+      {NAV_ITEMS.filter((navItem) => (navItem.loginRequired && isLoggedIn) || !navItem.loginRequired).map((navItem) => (
         <MobileNavItem key={navItem.label} label={navItem.label} children={navItem.children} href={navItem.href} />
       ))}
+      <AuthButton />
     </Stack>
   )
 }
