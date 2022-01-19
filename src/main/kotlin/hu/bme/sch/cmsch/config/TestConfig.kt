@@ -90,7 +90,7 @@ class TestConfig(
             0,
             "Admin riddleök",
             6,
-            false,
+            true,
             RoleType.ADMIN
         ))
 

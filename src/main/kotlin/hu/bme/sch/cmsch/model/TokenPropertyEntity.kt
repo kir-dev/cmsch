@@ -33,6 +33,9 @@ data class TokenPropertyEntity(
     @ManyToOne(fetch = FetchType.EAGER)
     var token: TokenEntity? = null,
 
+    @Column(nullable = false)
+    var recieved: Long = 0
+
 ): ManagedEntity {
     override fun toString(): String {
         return "[$id] ${ownerUser?.fullName ?: "*"} ${ownerGroup?.name ?: "*"} -> ${token?.title ?: "-"}"

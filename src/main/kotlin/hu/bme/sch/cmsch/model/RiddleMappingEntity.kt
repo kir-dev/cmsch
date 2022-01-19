@@ -33,4 +33,8 @@ data class RiddleMappingEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     var completed: Boolean = false,
 
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    var completedAt: Long = 0
+
 )
