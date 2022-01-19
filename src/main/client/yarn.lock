@@ -1762,16 +1762,6 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fontsource/commissioner@4.5.0":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/commissioner/-/commissioner-4.5.0.tgz#9ce06d1b6db80a4b3f68c6dd8b2f59e66597e69a"
-  integrity sha512-wPWpcFYTx6VRZHfq4m8PTH15/YXxqFdQrNcl4TRq2i25tPMahcuNBlFGW1bxm1JBvcY+HsWvyjNKRqqWbdENKg==
-
-"@fontsource/raleway@4.5.0":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/raleway/-/raleway-4.5.0.tgz#d5c464abe655d2e2cb134c503db455b7af6c03a6"
-  integrity sha512-Rzj90wbZQnNzazqzoiu5HzMEMdqMJLUVFOo699sinTXrZRm1aB5iX2HTiK2VlPnH4M6u8yYnJ7CebOyamfWlqw==
-
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.2.tgz#68be55c737023009dfc5fe245d51181bb6476914"
