@@ -27,6 +27,10 @@ data class RiddleMappingEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    var hintUsed: Boolean = false
+    var hintUsed: Boolean = false,
+
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    var completed: Boolean = false,
 
 )

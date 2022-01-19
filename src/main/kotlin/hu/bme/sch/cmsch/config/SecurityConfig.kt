@@ -31,7 +31,8 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/control/entrypoint",
                         "/cdn/achievement/**",
                         "/api/token-after-login",
-                        "/api/token/**")
+                        "/api/token/**",
+                        "/api/riddle/**")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")
@@ -39,7 +40,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
 
                 .and()
                 .formLogin()
-                .loginPage("/login")
+                .loginPage("/control/login")
         http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**")
     }
 

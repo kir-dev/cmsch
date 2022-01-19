@@ -188,8 +188,7 @@ open class LoginController(
     }
 
     fun buildUniqueState(request: HttpServletRequest): String {
-        return (request.session.id
-                + request.localAddr).sha256()
+        return (request.session.id + request.localAddr).sha256()
     }
 
     @ApiOperation("Logout user")
@@ -220,7 +219,7 @@ open class LoginController(
         } catch (e: Exception) {
             // Ignore it for now
         }
-        return "redirect:${config.getWebsiteUrl()}"
+        return "redirect:${config.getWebsiteUrl()}?logged-out=true"
     }
 
     @GetMapping("/control/open-site")
