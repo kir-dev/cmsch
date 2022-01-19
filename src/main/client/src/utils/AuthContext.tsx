@@ -29,16 +29,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
   useEffect(() => {
     if (isLoggedIn)
-      axios
-        .get(`${API_BASE_URL}/api/profile`)
-        .then((res) => {
-          if (typeof res.data === 'object') console.log(res.data)
-          else throw 'res.data is not JSON'
-        })
-        .catch((e) => {
-          console.log(e)
-          logout()
-        })
+      axios.get(`${API_BASE_URL}/api/profile`).then((res) => {
+        if (typeof res.data !== 'object') logout()
+      })
   }, [isLoggedIn])
   return <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}>{children}</AuthContext.Provider>
 }
