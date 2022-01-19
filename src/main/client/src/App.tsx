@@ -16,6 +16,7 @@ import { QRList } from 'components/@pages/QRList'
 import { QRScan } from 'components/@pages/QRScan'
 import { QRScanResult } from 'components/@pages/QRScanResult'
 import { AuthProvider } from './utils/AuthContext'
+import { EventPage } from 'components/@pages/EventPage'
 
 export function App() {
   return (
@@ -30,6 +31,10 @@ export function App() {
                 {/*Profil*/}
                 <Route path="profil">
                   <Route index element={<ProfilePage />} />
+                </Route>
+                {/*Események*/}
+                <Route path="esemenyek">
+                  <Route index element={<EventPage />} />
                 </Route>
                 {/*Reszortok*/}
                 <Route path="reszortok">
