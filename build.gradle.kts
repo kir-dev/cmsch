@@ -76,6 +76,19 @@ tasks.withType<ProcessResources> {
     dependsOn("copyFrontendToBuild")
 }
 
+tasks.register<Copy>("copyFrontendToBuildFast") {
+    dependsOn("yarnBuildNoInstall")
+    from("$projectDir/src/main/client/build/")
+    into("$buildDir/resources/main/static")
+}
+
+tasks.register<YarnTask>("yarnBuildNoInstall") {
+    yarnCommand.set(listOf("run", "build"))
+    workingDir.set(file("src/main/client"))
+    inputs.dir("src")
+    outputs.dir("$buildDir")
+}
+
 tasks.register<Copy>("copyFrontendToBuild") {
     dependsOn("yarnBuild")
     from("$projectDir/src/main/client/build/")
