@@ -1,15 +1,21 @@
 export interface Riddle {
-  id: Number
-  title: String
-  imageUrl: String
-  solved: Boolean
-  hint?: String
+  id: number
+  title: string
+  imageUrl: string
+  solved: boolean
+  hint?: string
 }
 
 export interface RiddleCategory {
-  id: Number
-  name: String
-  completed: Boolean
-  scoore: Number
-  nextRiddle?: Number
+  // id: number
+  // name: string
+  // completed: boolean
+  // scoore: number
+  // nextRiddle?: number
+  id:number
+  name:string
+  score:number
+  completed:number
+  total: number
+  nextRiddleId:number
 }
