@@ -12,10 +12,10 @@ export interface RiddleCategory {
   // completed: boolean
   // scoore: number
   // nextRiddle?: number
-  id:number
-  name:string
-  score:number
-  completed:number
+  id: number
+  name: string
+  score: number
+  completed: number
   total: number
-  nextRiddleId:number
+  nextRiddleId: number
 }
