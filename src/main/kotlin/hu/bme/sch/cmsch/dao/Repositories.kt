@@ -105,6 +105,7 @@ interface LocationRepository : CrudRepository<LocationEntity, Int> {
 interface RiddleRepository : CrudRepository<RiddleEntity, Int> {
     override fun findAll(): List<RiddleEntity>
     fun findAllByCategoryId(categoryId: Int): List<RiddleEntity>
+    fun findAllByCategoryIdIn(categories: List<Int>): List<RiddleEntity>
 }
 
 @Repository
@@ -116,13 +117,22 @@ interface RiddleCategoryRepository : CrudRepository<RiddleCategoryEntity, Int> {
 @Repository
 interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
     fun findAllByOwnerUserAndCompletedTrue(user: UserEntity): List<RiddleMappingEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByOwnerUserAndRiddle_CategoryId(user: UserEntity, categoryId: Int): List<RiddleMappingEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByOwnerUserAndRiddle_Id(user: UserEntity, riddleId: Int): Optional<RiddleMappingEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
+    fun findAllByCompletedTrueAndRiddle_CategoryIdIn(categories: List<Int>): List<RiddleMappingEntity>
+
 }
 
 @Repository
 interface TokenRepository : CrudRepository<TokenEntity, Int> {
     fun findAllByTokenAndVisibleTrue(token: String): List<TokenEntity>
+    fun findAllByTypeAndVisibleTrue(type: String): List<TokenEntity>
 }
 
 @Repository
@@ -132,6 +142,9 @@ interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int> {
 
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByOwnerUser_Id(owner: Int): List<TokenPropertyEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
+    fun findAllByOwnerUser_IdAndToken_Type(owner: Int, type: String): List<TokenPropertyEntity>
 
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByOwnerGroup_Id(owner: Int): List<TokenPropertyEntity>

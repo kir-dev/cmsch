@@ -19,6 +19,7 @@ const val WEBSITE_URL = "WEBSITE_URL"
 const val STAFF_MESSAGE = "STAFF_MESSAGE"
 const val EVENT_FINISHED = "EVENT_FINISHED"
 const val REQUEST_FOR_NEPTUN = "REQUEST_FOR_NEPTUN"
+const val MIN_TOKEN_TO_COMPLETE = "MIN_TOKEN_TO_COMPLETE"
 
 @Service
 class RealtimeConfigService(
@@ -60,6 +61,9 @@ class RealtimeConfigService(
 
         if (realtimeConfig.findByKey(REQUEST_FOR_NEPTUN).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, "false"))
+
+        if (realtimeConfig.findByKey(MIN_TOKEN_TO_COMPLETE).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, MIN_TOKEN_TO_COMPLETE, "100"))
     }
 
     fun resetCache() {
@@ -156,6 +160,14 @@ class RealtimeConfigService(
                     .map { it.value }
                     .orElse("false")
         }.equals("true", ignoreCase = true)
+    }
+
+    fun getMinTokenToComplete(): Int {
+        return cache.computeIfAbsent(MIN_TOKEN_TO_COMPLETE) { key ->
+            realtimeConfig.findByKey(key)
+                .map { it.value }
+                .orElse("0")
+        }.toIntOrNull() ?: 0
     }
 
 }

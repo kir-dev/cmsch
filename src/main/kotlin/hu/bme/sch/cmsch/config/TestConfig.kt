@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.dao.*
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.service.ProductService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
+import hu.bme.sch.cmsch.util.sha256
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import java.util.*
@@ -38,7 +39,8 @@ class TestConfig(
         private val submittedAchievements: SubmittedAchievementRepository,
         private val productsService: ProductService,
         private val riddleRepository: RiddleRepository,
-        private val riddleCategoryRepository: RiddleCategoryRepository
+        private val riddleCategoryRepository: RiddleCategoryRepository,
+        private val tokenRepository: TokenRepository
 ) {
 
     private var now = System.currentTimeMillis() / 1000
@@ -55,6 +57,52 @@ class TestConfig(
         addGroupMapping()
         addGuildMappings()
         addRiddles()
+        addTokens()
+    }
+
+    private fun addTokens() {
+        tokenRepository.save(TokenEntity(
+            0,
+            "Kir-Dev",
+            "A5BCD8242".sha256(),
+            true,
+            "default"
+        ))
+        tokenRepository.save(TokenEntity(
+            0,
+            "Invisible token",
+            "XDDD".sha256(),
+            false,
+            "default"
+        ))
+        tokenRepository.save(TokenEntity(
+            0,
+            "NFT-sch kör",
+            "NFT".sha256(),
+            true,
+            "default"
+        ))
+        tokenRepository.save(TokenEntity(
+            0,
+            "Crypto Reszort",
+            "crypto".sha256(),
+            true,
+            "default"
+        ))
+        tokenRepository.save(TokenEntity(
+            0,
+            "Kollégiumi Szak-Kollégium (KSZK)",
+            "kszk".sha256(),
+            true,
+            "default"
+        ))
+        tokenRepository.save(TokenEntity(
+            0,
+            "Extra Token",
+            "x".sha256(),
+            true,
+            "extra"
+        ))
     }
 
     private fun addRiddles() {

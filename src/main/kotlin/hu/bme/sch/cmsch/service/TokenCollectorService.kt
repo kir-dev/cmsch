@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.dao.GroupRepository
 import hu.bme.sch.cmsch.dao.TokenPropertyRepository
 import hu.bme.sch.cmsch.dao.TokenRepository
 import hu.bme.sch.cmsch.dto.TokenCollectorStatus
+import hu.bme.sch.cmsch.dto.TokenDto
 import hu.bme.sch.cmsch.model.TokenPropertyEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import org.springframework.stereotype.Service
@@ -46,6 +47,22 @@ open class TokenCollectorService(
             return Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
         }
         return Pair(null, TokenCollectorStatus.WRONG)
+    }
+
+    @Transactional(readOnly = true)
+    fun getTokensForUser(user: UserEntity): List<TokenDto> {
+        return tokenPropertyRepository.findAllByOwnerUser_Id(user.id)
+            .map { TokenDto(it.token?.title ?: "n/a", it.token?.type ?: "n/a") }
+    }
+
+    @Transactional(readOnly = true)
+    fun getTokensForUserWithCategory(user: UserEntity, category: String): Int {
+        return tokenPropertyRepository.findAllByOwnerUser_IdAndToken_Type(user.id, category).size
+    }
+
+    @Transactional(readOnly = true)
+    fun getTotalTokenCountWithCategory(category: String): Int {
+        return tokenRepository.findAllByTypeAndVisibleTrue(category).size
     }
 
 }
