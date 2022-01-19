@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.service
 import hu.bme.sch.cmsch.dao.RealtimeConfigRepository
 import hu.bme.sch.cmsch.model.RealtimeConfigEntity
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.PostConstruct
@@ -20,7 +21,8 @@ const val REQUEST_FOR_NEPTUN = "REQUEST_FOR_NEPTUN"
 
 @Service
 class RealtimeConfigService(
-        private val realtimeConfig: RealtimeConfigRepository
+        private val realtimeConfig: RealtimeConfigRepository,
+        @Value("\${cmsch.website-default-url:http://127.0.0.1:8080/}") private val defaultWebsiteUrl: String
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -53,7 +55,7 @@ class RealtimeConfigService(
             realtimeConfig.save(RealtimeConfigEntity(0, STAFF_MESSAGE, "Szorgos népünk győzni fog!"))
 
         if (realtimeConfig.findByKey(WEBSITE_URL).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, "http://127.0.0.1:8080/"))
+            realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, defaultWebsiteUrl))
 
         if (realtimeConfig.findByKey(REQUEST_FOR_NEPTUN).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, "false"))
