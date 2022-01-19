@@ -2,7 +2,7 @@ import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, useToast
 import { chakra } from '@chakra-ui/system'
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams , useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import { FilePicker } from '../@commons/FilePicker'
@@ -117,10 +117,10 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   if (!achDetails) {
     return (
       <Page {...props}>
-        <Skeleton height="40px"/>
-        <Skeleton marginTop="20px" height="20px"/>
-        <Skeleton marginTop="8px" height="20px"/>
-        <Skeleton marginTop="8px" height="20px"/>
+        <Skeleton height="40px" />
+        <Skeleton marginTop="20px" height="20px" />
+        <Skeleton marginTop="8px" height="20px" />
+        <Skeleton marginTop="8px" height="20px" />
       </Page>
     )
   }
