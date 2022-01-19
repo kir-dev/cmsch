@@ -1,0 +1,11 @@
+
+  ______ .___  ___.      _______.  ______  __    __
+ /      ||   \/   |     /       | /      ||  |  |  |
+|  ,----'|  \  /  |    |   (----`|  ,----'|  |__|  |
+|  |     |  |\/|  |     \   \    |  |     |   __   |
+|  `----.|  |  |  | .----)   |   |  `----.|  |  |  |
+ \______||__|  |__| |_______/     \______||__|  |__|
+
+${application.title} ${application.version}
+Powered by Spring Boot ${spring-boot.version}
+Developed by Kir-Dev https://kir-dev.sch.bme.hu/
