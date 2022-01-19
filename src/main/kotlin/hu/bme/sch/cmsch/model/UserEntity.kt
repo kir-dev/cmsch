@@ -14,6 +14,13 @@ enum class RoleType(val value: Int) {
     STAFF(100),    // member of the SSSL
     ADMIN(200),    // the organizers of the event
     SUPERUSER(500) // advanced user management (able to grant admin access)
+    ;
+
+    companion object {
+        fun atLeast(type: RoleType): List<RoleType> {
+            return values().filter { it.value >= type.value }
+        }
+    }
 }
 
 enum class GuildType(val displayName: String) {

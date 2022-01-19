@@ -103,17 +103,21 @@ interface LocationRepository : CrudRepository<LocationEntity, Int> {
 
 @Repository
 interface RiddleRepository : CrudRepository<RiddleEntity, Int> {
-
+    override fun findAll(): List<RiddleEntity>
+    fun findAllByCategoryId(categoryId: Int): List<RiddleEntity>
 }
 
 @Repository
 interface RiddleCategoryRepository : CrudRepository<RiddleCategoryEntity, Int> {
-
+    fun findAllByVisibleTrueAndMinRoleIn(roles: List<RoleType>): List<RiddleCategoryEntity>
+    fun findByCategoryIdAndVisibleTrueAndMinRoleIn(categoryId: Int, roles: List<RoleType>): Optional<RiddleCategoryEntity>
 }
 
 @Repository
 interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
-
+    fun findAllByOwnerUserAndCompletedTrue(user: UserEntity): List<RiddleMappingEntity>
+    fun findAllByOwnerUserAndRiddle_CategoryId(user: UserEntity, categoryId: Int): List<RiddleMappingEntity>
+    fun findByOwnerUserAndRiddle_Id(user: UserEntity, riddleId: Int): Optional<RiddleMappingEntity>
 }
 
 @Repository
