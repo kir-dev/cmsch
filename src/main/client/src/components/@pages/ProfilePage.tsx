@@ -44,9 +44,9 @@ export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
   return (
     <Page {...props}>
       <VStack align="flex-start" mb="14" mt={6}>
-        <Skeleton h={12} w={['40%', null, null, '15%']}></Skeleton>
-        <Skeleton h={10} w={['50%', null, null, '20%']}></Skeleton>
-        <Skeleton h={10} w={['60%', null, null, '25%']}></Skeleton>
+        <Skeleton h={12} w={['40%', null, null, '15%']} />
+        <Skeleton h={10} w={['50%', null, null, '20%']} />
+        <Skeleton h={10} w={['60%', null, null, '25%']} />
       </VStack>
       <Wrap spacing="3rem" justify="center" mt={3}>
         {[0, 1, 2].map((challenge) => (
