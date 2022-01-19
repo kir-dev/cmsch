@@ -1,19 +1,19 @@
 export enum achievementType {
-  TEXT,
-  IMAGE,
-  BOTH
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  BOTH = 'BOTH'
 }
 
 export enum achievementStatus {
-  ACCEPTED,
-  NOT_LOGGED_IN,
-  NOT_SUBMITTED,
-  REJECTED,
-  SUBMITTED
+  ACCEPTED = 'ACCEPTED',
+  NOT_LOGGED_IN = 'NOT_LOGGED_IN',
+  NOT_SUBMITTED = 'NOT_SUBMITTED',
+  REJECTED = 'REJECTED',
+  SUBMITTED = 'SUBMITTED'
 }
 
 export interface AchievementCategory {
-  categoryId: number
+  categoryId?: number
   name: string
   approved?: number
   availableFrom?: number
@@ -21,14 +21,7 @@ export interface AchievementCategory {
   notGraded?: number
   rejected?: number
   sum?: number
-  // this won't come from the api, but it can be manually put here,
-  // so it's easier to map through the categories
   achievements?: AchievementWrapper[]
-}
-
-export interface AchievementsInCategory {
-  achievements: AchievementWrapper[]
-  categoryName: string
 }
 
 export interface AllAchievementCategories {
