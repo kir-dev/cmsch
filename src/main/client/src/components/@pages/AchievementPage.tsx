@@ -2,7 +2,7 @@ import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, useToast
 import { chakra } from '@chakra-ui/system'
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams /*, useNavigate*/ } from 'react-router-dom'
+import { useParams , useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import { FilePicker } from '../@commons/FilePicker'
@@ -13,7 +13,7 @@ import { API_BASE_URL } from 'utils/configurations'
 
 type AchievementPageProps = {}
 
-const MOCK_DATA: AchievementFullDetailsView[] = [
+/*const MOCK_DATA: AchievementFullDetailsView[] = [
   // GET /api/achievement/submit/1
   {
     achievement: {
@@ -86,7 +86,7 @@ const MOCK_DATA: AchievementFullDetailsView[] = [
     },
     status: achievementStatus.NOT_SUBMITTED
   }
-]
+]*/
 
 export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   let [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
@@ -96,7 +96,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
 
   const toast = useToast()
   const { id } = useParams()
-  //const navigate = useNavigate()
+  const navigate = useNavigate()
   if (!id) {
     return null
   }
@@ -105,7 +105,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
     axios.get<AchievementFullDetailsView>(`${API_BASE_URL}/api/achievement/submit/${id}`).then((res) => {
       setAchDetails(res.data)
       if (!achDetails?.achievement) {
-        //navigate('/bucketlist')
+        navigate('/bucketlist')
       }
     })
   }
@@ -126,7 +126,7 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
   }
 
   // ez csúnya tudom de itt úgyis api hívás lesz
-  achDetails = MOCK_DATA.filter((ach) => ach.achievement?.id === parseInt(id))[0]
+  //achDetails = MOCK_DATA.filter((ach) => ach.achievement?.id === parseInt(id))[0]
 
   const textAllowed = achDetails.achievement?.type === achievementType.TEXT || achDetails.achievement?.type === achievementType.BOTH
   const imageAllowed = achDetails.achievement?.type === achievementType.IMAGE || achDetails.achievement?.type === achievementType.BOTH
@@ -155,6 +155,11 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
               duration: 5000,
               isClosable: true
             })
+            setTextAnswer('')
+            if (filePickerRef.current) {
+              filePickerRef.current.reset()
+            }
+            getAchievementDetails()
           } else {
             toast({
               title: res.data.status,
@@ -163,11 +168,6 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
               isClosable: true
             })
           }
-          setTextAnswer('')
-          if (filePickerRef.current) {
-            filePickerRef.current.reset()
-          }
-          getAchievementDetails()
         })
     } else {
       toast({
