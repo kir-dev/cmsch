@@ -9,16 +9,16 @@ import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
 import {
   AchievementCategory,
   AchievementsInCategory,
-  AllAchievementCategories,
+  AllAchievementCategories/*,
   AchievementWrapper,
   achievementStatus,
-  achievementType
+  achievementType*/
 } from '../../types/dto/achievements'
 
 type AchievementListProps = {}
 
 // GET /api/achievement -ben lesz egy ilyen tömb
-const CATEGORIES: AchievementCategory[] = [
+/*const CATEGORIES: AchievementCategory[] = [
   {
     categoryId: 1,
     name: 'első kategória'
@@ -31,10 +31,10 @@ const CATEGORIES: AchievementCategory[] = [
     categoryId: 3,
     name: 'századik kategória'
   }
-]
+]*/
 
 // GET /api/achievement/category/1 -ben lesz egy ilyen tömb
-const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
+/*const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
   {
     achievement: {
       id: 1,
@@ -76,7 +76,7 @@ const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
     },
     status: achievementStatus.NOT_SUBMITTED
   }
-]
+]*/
 
 export const AchievementList: React.FC<AchievementListProps> = (props) => {
   const [categories, setCategories] = useState<AchievementCategory[]>([])
@@ -93,20 +93,20 @@ export const AchievementList: React.FC<AchievementListProps> = (props) => {
   }, [])
 
   // ez nyilván nem így lesz
-  CATEGORIES.forEach((category, idx) => {
+  /*CATEGORIES.forEach((category, idx) => {
     if (idx === 0) {
       category.achievements = ACHIEVEMENTS_IN_CATEGORY
     } else {
       category.achievements = []
     }
-  })
+  })*/
 
   return (
     <Page {...props} loginRequired>
       <Heading>Bucketlist</Heading>
       <Stack>
-        {CATEGORIES.length > 0 ? (
-          CATEGORIES.map((category) => (
+        {categories.length > 0 ? (
+          categories.map((category) => (
             <Box key={category.categoryId}>
               <Heading size="lg">{category.name}</Heading>
               <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
