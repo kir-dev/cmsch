@@ -19,21 +19,24 @@ import org.springframework.transaction.annotation.Transactional
 open class RiddleService(
     private val riddleRepository: RiddleRepository,
     private val riddleCategoryRepository: RiddleCategoryRepository,
-    private val riddleMappingRepository: RiddleMappingRepository
+    private val riddleMappingRepository: RiddleMappingRepository,
+    private val clock: ClockService
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
     open fun listRiddlesForUser(user: UserEntity): List<RiddleCategoryDto> {
-        val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atLeast(user.role))
+        val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
         val submissions = riddleMappingRepository.findAllByOwnerUserAndCompletedTrue(user)
             .groupBy { it.riddle?.categoryId ?: 0 }
             .toMap()
+
+        println(submissions)
 
         return categories.map { category ->
             val riddles = riddleRepository.findAllByCategoryId(category.categoryId)
             val total = riddles.size
             val nextId = riddles
-                .filter { filter -> submissions[category.id]?.none { it.id == filter.id } ?: false }
+                .filter { filter -> submissions[category.id]?.none { it.id == filter.id } ?: true }
                 .minByOrNull { it.order }
                 ?.id
 
@@ -44,7 +47,7 @@ open class RiddleService(
     @Transactional(readOnly = true)
     open fun getRiddleForUser(user: UserEntity, riddleId: Int): RiddleView? {
         val riddle = riddleRepository.findById(riddleId).orElse(null) ?: return null
-        if (riddleCategoryRepository.findByCategoryIdAndVisibleTrueAndMinRoleIn(riddle.categoryId, RoleType.atLeast(user.role)).isEmpty)
+        if (riddleCategoryRepository.findByCategoryIdAndVisibleTrueAndMinRoleIn(riddle.categoryId, RoleType.atMost(user.role)).isEmpty)
             return null
 
         val submissions = riddleMappingRepository.findAllByOwnerUserAndRiddle_CategoryId(user, riddle.categoryId)
@@ -66,7 +69,7 @@ open class RiddleService(
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun unlockHintForUser(user: UserEntity, riddleId: Int): String? {
         val riddle = riddleRepository.findById(riddleId).orElse(null) ?: return null
-        if (riddleCategoryRepository.findByCategoryIdAndVisibleTrueAndMinRoleIn(riddle.categoryId, RoleType.atLeast(user.role)).isEmpty)
+        if (riddleCategoryRepository.findByCategoryIdAndVisibleTrueAndMinRoleIn(riddle.categoryId, RoleType.atMost(user.role)).isEmpty)
             return null
 
         val submission = riddleMappingRepository.findByOwnerUserAndRiddle_Id(user, riddleId)
@@ -87,15 +90,18 @@ open class RiddleService(
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun submitRiddleForUser(user: UserEntity, riddleId: Int, solution: String): RiddleSubmissionView? {
         val riddle = riddleRepository.findById(riddleId).orElse(null) ?: return null
-        if (riddleCategoryRepository.findByCategoryIdAndVisibleTrueAndMinRoleIn(riddle.categoryId, RoleType.atLeast(user.role)).isEmpty)
+        if (riddleCategoryRepository.findByCategoryIdAndVisibleTrueAndMinRoleIn(riddle.categoryId, RoleType.atMost(user.role)).isEmpty)
             return null
 
         val submission = riddleMappingRepository.findByOwnerUserAndRiddle_Id(user, riddleId)
         if (submission.isPresent) {
             if (checkSolution(solution, riddle))
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
-            submission.get().completed = true
-            riddleMappingRepository.save(submission.get())
+
+            val submissionEntity = submission.get()
+            submissionEntity.completed = true
+            submissionEntity.completedAt = clock.getTimeInSeconds()
+            riddleMappingRepository.save(submissionEntity)
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextId(user, riddle))
         } else {
             val nextId = getNextId(user, riddle)
@@ -105,7 +111,7 @@ open class RiddleService(
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
 
             riddleMappingRepository.save(RiddleMappingEntity(0, riddle, user, null,
-                hintUsed = false, completed = true))
+                hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds()))
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextId(user, riddle))
         }
     }

@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional
 open class TokenCollectorService(
     private val tokenRepository: TokenRepository,
     private val tokenPropertyRepository: TokenPropertyRepository,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val clock: ClockService
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
@@ -24,7 +25,7 @@ open class TokenCollectorService(
             if (tokenPropertyRepository.findByToken_TokenAndOwnerUser(token, userEntity).isPresent)
                 return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
 
-            tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity))
+            tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity, clock.getTimeInSeconds()))
             return Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
         }
         return Pair(null, TokenCollectorStatus.WRONG)
@@ -41,7 +42,7 @@ open class TokenCollectorService(
             if (tokenPropertyRepository.findByToken_TokenAndOwnerGroup(token, groupEntity.get()).isPresent)
                 return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
 
-            tokenPropertyRepository.save(TokenPropertyEntity(0, null, groupEntity.get(), tokenEntity))
+            tokenPropertyRepository.save(TokenPropertyEntity(0, null, groupEntity.get(), tokenEntity, clock.getTimeInSeconds()))
             return Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
         }
         return Pair(null, TokenCollectorStatus.WRONG)

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.concurrent.ConcurrentHashMap
 import javax.annotation.PostConstruct
 
 const val WARNING_MESSAGE = "WARNING_MESSAGE"
@@ -26,7 +27,7 @@ class RealtimeConfigService(
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-    private val cache: MutableMap<String, String> = mutableMapOf()
+    private val cache: ConcurrentHashMap<String, String> = ConcurrentHashMap()
 
     @PostConstruct
     fun init() {
