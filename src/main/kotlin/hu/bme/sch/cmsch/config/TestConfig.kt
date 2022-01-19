@@ -36,7 +36,9 @@ class TestConfig(
         private val groupToUserMapping: GroupToUserMappingRepository,
         private val guildToUserMapping: GuildToUserMappingRepository,
         private val submittedAchievements: SubmittedAchievementRepository,
-        private val productsService: ProductService
+        private val productsService: ProductService,
+        private val riddleRepository: RiddleRepository,
+        private val riddleCategoryRepository: RiddleCategoryRepository
 ) {
 
     private var now = System.currentTimeMillis() / 1000
@@ -52,6 +54,98 @@ class TestConfig(
         addExtraPages()
         addGroupMapping()
         addGuildMappings()
+        addRiddles()
+    }
+
+    private fun addRiddles() {
+        riddleCategoryRepository.save(RiddleCategoryEntity(
+            0,
+            "Álalános",
+            1,
+            true,
+            RoleType.BASIC
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
+            0,
+            "Kir-Dev speciál",
+            2,
+            true,
+            RoleType.BASIC
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
+            0,
+            "Üres riddleök",
+            5,
+            true,
+            RoleType.BASIC
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
+            0,
+            "Nem látható",
+            3,
+            false,
+            RoleType.BASIC
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
+            0,
+            "Admin riddleök",
+            6,
+            false,
+            RoleType.ADMIN
+        ))
+
+        riddleRepository.save(RiddleEntity(
+            0,
+            "Első riddle",
+            "/image1.png",
+            "elso",
+            "Az első szám a számegyenesen",
+            10,
+            1,
+            1
+        ))
+        riddleRepository.save(RiddleEntity(
+            0,
+            "Második riddle",
+            "/image2.png",
+            "masodik",
+            "A második szám a számegyenesen",
+            10,
+            2,
+            1
+        ))
+        riddleRepository.save(RiddleEntity(
+            0,
+            "Harmadik riddle",
+            "/image3.png",
+            "HarMadik",
+            "Szedd össze magad!",
+            20,
+            3,
+            1
+        ))
+
+
+        riddleRepository.save(RiddleEntity(
+            0,
+            "Kir-Dev riddle",
+            "/image4.png",
+            "Kir-Dev",
+            "Beszoptad tesóm",
+            100,
+            1,
+            1
+        ))
+        riddleRepository.save(RiddleEntity(
+            0,
+            "Admin riddle",
+            "/image5.png",
+            "Admin",
+            "Admin Riddle",
+            200,
+            1,
+            6
+        ))
     }
 
     private fun addGroups() {
@@ -170,6 +264,7 @@ class TestConfig(
                 category = "Szórakozás",
                 place = "Feneketlen tó",
                 timestampStart = now,
+                timestampEnd = now + A_DAY,
                 previewDescription = LOREM_IPSUM_SHORT_3,
                 description = LOREM_IPSUM_LONG_3,
                 visible = true,
@@ -183,6 +278,7 @@ class TestConfig(
                 category = "Bulika",
                 place = "Schönherz",
                 timestampStart = now + (4 * 3600),
+                timestampEnd = now + (4 * 3600) + A_DAY,
                 previewDescription = LOREM_IPSUM_SHORT_3,
                 description = LOREM_IPSUM_LONG_3,
                 visible = true,
@@ -196,6 +292,7 @@ class TestConfig(
                 category = "Egyetemi",
                 place = "Drop-szerda klub",
                 timestampStart = now + A_DAY,
+                timestampEnd = now + A_DAY + 30,
                 previewDescription = LOREM_IPSUM_SHORT_1,
                 description = LOREM_IPSUM_LONG_1,
                 visible = true,
@@ -209,6 +306,7 @@ class TestConfig(
                 category = "Szórakozás",
                 place = "Bikás park",
                 timestampStart = now - A_DAY + (3600),
+                timestampEnd = now - A_DAY + (2 * 3600),
                 previewDescription = LOREM_IPSUM_SHORT_2,
                 description = LOREM_IPSUM_LONG_2,
                 visible = true,
