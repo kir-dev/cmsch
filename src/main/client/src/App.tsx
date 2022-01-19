@@ -22,6 +22,7 @@ import { ServiceProvider } from './utils/ServiceContext'
 import { IndexLayout } from 'components/@layout/IndexLayout'
 import { ImpressumPage } from 'components/@pages/ImpressumPage'
 import './global.css'
+import { EventPage } from 'components/@pages/EventPage'
 
 export function App() {
   return (
@@ -38,6 +39,10 @@ export function App() {
                   <Route path="profil">
                     <Route index element={<ProfilePage />} />
                   </Route>
+                  {/*Események*/}
+              <Route path="esemenyek">
+                <Route index element={<EventPage />} />
+              </Route>
                   {/*Reszortok*/}
                   <Route path="reszortok">
                     <Route path=":name">

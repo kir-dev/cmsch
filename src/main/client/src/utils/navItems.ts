@@ -2,6 +2,10 @@ import { NavItem } from '../types/NavItem'
 
 export const NAV_ITEMS: Array<NavItem> = [
   {
+    label: 'Események',
+    href: '/esemenyek'
+  },
+  {
     label: 'Reszortok',
     href: '/reszortok'
   },
