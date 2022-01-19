@@ -414,7 +414,7 @@ class TestConfig(
                 order = 3,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
-                type = AchievementType.IMAGE,
+                type = AchievementType.BOTH,
                 maxScore = 30,
                 description = LOREM_IPSUM_LONG_3
         ))
@@ -544,7 +544,9 @@ class TestConfig(
                 0
         ))
 
-        categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
+        categories.save(AchievementCategoryEntity(1, "Mine Category", 1, 0, 3000000000))
+        categories.save(AchievementCategoryEntity(2, "Mine Category2", 2, 0, 3000000000))
+        categories.save(AchievementCategoryEntity(3, "Mine Category3", 3, 0, 3000000000))
     }
 
     private fun addUsers() {

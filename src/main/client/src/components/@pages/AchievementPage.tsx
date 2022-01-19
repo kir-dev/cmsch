@@ -11,85 +11,8 @@ import { Paragraph } from 'components/@commons/Basics'
 import { AchievementFullDetailsView, achievementType, achievementStatus } from '../../types/dto/achievements'
 import { API_BASE_URL } from 'utils/configurations'
 
-type AchievementPageProps = {}
-
-/*const MOCK_DATA: AchievementFullDetailsView[] = [
-  // GET /api/achievement/submit/1
-  {
-    achievement: {
-      id: 1,
-      categoryId: 1,
-      title: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-      description: 'blalblal',
-      type: achievementType.BOTH
-    },
-    status: achievementStatus.ACCEPTED,
-    submission: {
-      id: 1,
-      rejected: false,
-      approved: true,
-      imageUrlAnswer: 'https://via.placeholder.com/200',
-      textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-      response: 'Nice work!',
-      score: 10
-    }
-  },
-  // GET /api/achievement/submit/2
-  {
-    achievement: {
-      id: 2,
-      categoryId: 1,
-      title: 'Lorem ipsum2',
-      description: 'fdsfdsgsd',
-      type: achievementType.TEXT
-    },
-    status: achievementStatus.REJECTED,
-    submission: {
-      id: 2,
-      rejected: true,
-      approved: false,
-      textAnswer: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-      response: 'nice try tho',
-      score: 0
-    }
-  },
-  {
-    achievement: {
-      id: 3,
-      categoryId: 1,
-      title: 'Lorem ipsum3',
-      description: 'fdsfdsgsd',
-      type: achievementType.IMAGE
-    },
-    status: achievementStatus.SUBMITTED,
-    submission: {
-      id: 3,
-      approved: false,
-      rejected: false,
-      imageUrlAnswer: 'https://via.placeholder.com/150',
-      score: 0
-    }
-  },
-  {
-    achievement: {
-      id: 4,
-      categoryId: 1,
-      title: 'Lorem ipsum4',
-      description: 'fdsfdsgsd',
-      type: achievementType.BOTH,
-      expectedResultDescription: 'Egy kép meg egy izé bigyó'
-    },
-    status: achievementStatus.NOT_SUBMITTED
-  }
-]*/
-
-export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
-  let [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
+export const AchievementPage: React.FC = (props) => {
+  const [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
   const [textAnswer, setTextAnswer] = useState<string>('')
   const [imageAnswer, setImageAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
@@ -103,10 +26,10 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
 
   const getAchievementDetails = () => {
     axios.get<AchievementFullDetailsView>(`${API_BASE_URL}/api/achievement/submit/${id}`).then((res) => {
-      setAchDetails(res.data)
-      if (!achDetails?.achievement) {
+      if (!res.data.achievement) {
         navigate('/bucketlist')
       }
+      setAchDetails(res.data)
     })
   }
 
@@ -124,9 +47,6 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
       </Page>
     )
   }
-
-  // ez csúnya tudom de itt úgyis api hívás lesz
-  //achDetails = MOCK_DATA.filter((ach) => ach.achievement?.id === parseInt(id))[0]
 
   const textAllowed = achDetails.achievement?.type === achievementType.TEXT || achDetails.achievement?.type === achievementType.BOTH
   const imageAllowed = achDetails.achievement?.type === achievementType.IMAGE || achDetails.achievement?.type === achievementType.BOTH
@@ -224,7 +144,9 @@ export const AchievementPage: React.FC<AchievementPageProps> = (props) => {
             {textAllowed && achDetails.submission && <Paragraph>{achDetails.submission.textAnswer}</Paragraph>}
             {imageAllowed && achDetails.submission && (
               <Box>
-                <Image src={achDetails.submission.imageUrlAnswer} alt="Beküldött megoldás" />
+                {achDetails.submission.imageUrlAnswer && achDetails.submission.imageUrlAnswer.length > 'achievement/'.length && (
+                  <Image src={`/cdn/${achDetails.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
+                )}
               </Box>
             )}
           </>
