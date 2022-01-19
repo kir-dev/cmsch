@@ -19,6 +19,9 @@ data class Profile2View(
         val tokens: List<TokenDto> = listOf(),
 
         @JsonView(FullDetails::class)
+        val collectedTokenCount: Int = 0,
+
+        @JsonView(FullDetails::class)
         val totalTokenCount: Int = 0,
 
         @JsonView(FullDetails::class)

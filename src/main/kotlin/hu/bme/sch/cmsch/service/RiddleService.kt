@@ -128,4 +128,18 @@ open class RiddleService(
             ?.id
     }
 
+    @Transactional(readOnly = true)
+    open fun getCompletedRiddleCount(user: UserEntity): Int {
+        val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
+                .map { it.categoryId }
+        return riddleMappingRepository.findAllByCompletedTrueAndRiddle_CategoryIdIn(categories).size
+    }
+
+    @Transactional(readOnly = true)
+    open fun getTotalRiddleCount(user: UserEntity): Int {
+        val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
+            .map { it.categoryId }
+        return riddleRepository.findAllByCategoryIdIn(categories).size
+    }
+
 }

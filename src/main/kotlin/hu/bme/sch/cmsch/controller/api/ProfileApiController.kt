@@ -5,9 +5,7 @@ import hu.bme.sch.cmsch.dao.SoldProductRepository
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.dto.view.Profile2View
 import hu.bme.sch.cmsch.dto.view.ProfileView
-import hu.bme.sch.cmsch.service.ClockService
-import hu.bme.sch.cmsch.service.LocationService
-import hu.bme.sch.cmsch.service.RealtimeConfigService
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,6 +20,8 @@ class ProfileApiController(
     private val config: RealtimeConfigService,
     private val debtsRepository: SoldProductRepository,
     private val locationService: LocationService,
+    private val tokenService: TokenCollectorService,
+    private val riddleService: RiddleService,
     private val clock: ClockService
 ) {
 
@@ -36,13 +36,14 @@ class ProfileApiController(
             fullName = user.fullName,
             groupName = user.group?.name ?: "nincs",
             role = user.role,
-            tokens = listOf(TokenDto("Mock Kör 1", "KÖR"), TokenDto("NFT-sch kör", "KÖR"), TokenDto("Crypto Reszort", "KÖR")),
-            totalTokenCount = 5,
+            tokens = tokenService.getTokensForUser(user),
+            collectedTokenCount = tokenService.getTokensForUserWithCategory(user,"default"),
+            totalTokenCount = tokenService.getTotalTokenCountWithCategory("default"),
             totalAchievementCount = 40,
             submittedAchievementCount = 12,
-            totalRiddleCount = 80,
-            completedRiddleCount = 7,
-            minTokenToComplete = 5
+            totalRiddleCount = riddleService.getTotalRiddleCount(user),
+            completedRiddleCount = riddleService.getCompletedRiddleCount(user),
+            minTokenToComplete = config.getMinTokenToComplete()
         )
     }
 
