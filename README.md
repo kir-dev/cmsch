@@ -48,7 +48,11 @@ or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 
 ## Required apps
 
-You must install yarn.
+You must install:
+
+- Node v16
+- Yarn v1.22.17
+- IDEA or at least Gradle
 
 ## Application local properties
 
@@ -58,41 +62,33 @@ and fill the file with these configurations (using your credentials):
 ```properties
 authsch.client-identifier=<insert the shorter key>
 authsch.client-key=<insert the long key>
-
-cmsch.default-group-name=I16
-cmsch.frontend.production-url=http://localhost:3000
+cmsch.sysadmins=<your pekId>
+cmsch.website-default-url=http://<your ip>:8080/
+logging.level.web=DEBUG
 ```
 
-Once created, edit the run config's Spring Boot Active Profiles to use 
+Your pekId can be found in the console log of the Spring app when signing in with AuthSCH. The `cmsch.website-default-url`
+property's IP address needs to be either `localhost` or the IP of your current device running your Spring app on your network.
 
-![runconfig](.readme-files/runconfig.png)
+Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active Profiles to use (see image down below)
 
 - `local,test` if you want test data in the database also
 - `local` if you don't
 
+![runconfig](.readme-files/runconfig.png)
+
 ## Client side solutions
 
-### Client in the Backend
+### Hybrid solution: SPA client built statically for the Spring app
 
-Running both the React dev-server and Spring server will NOT trigger CORS related problems, as it's been configured to allow
-the dev-server to make requests to the Spring server with this annotation:
-
-```kotlin
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
-@RestController
-@RequestMapping("/api")
-class MainController() {  ...  }
-```
-
-Don't forget to include the `g7web.frontend.production-url` property in the `application-local.properties` file with the
-value of `http://localhost:3000` (this is the React dev server's address).
+The React client is built into the Spring app upon triggering a Gradle build. 
 
 ### In production mode
 
-The gradle building task will build the react app's files into the static directory of our Spring app, from where the
-Spring backend app will serve the built js files, they will access easily the Spring app backend through axios API. This
-will not induce CORS related problems, both the backend and these static files will be served by Tomcat in Spring app's 
-domain.
+The gradle building task will build the React app's built JS files into the static directory of our Spring app, from 
+where the Spring backend app will serve the built js files, they will access easily the Spring app backend through axios
+API. This will not induce CORS related problems, both the backend and these static files will be served by Tomcat in 
+Spring app's domain.
 
 If you need to declare a new client environment variable, create it in the `src/main/resources/configurations/application.properties`
 file and modify the `build.gradle.kts` script (approx. line 97) to include the new property in the built .env file.
@@ -100,14 +96,34 @@ file and modify the `build.gradle.kts` script (approx. line 97) to include the n
 When in development mode, you can freely change the .env file. **WARNING**: Gradle build will override the existing .env
 file so always have an .env.development file in the client repo as a backup.
 
-Read more in the `src/main/client/README.md` file.
-
 ### Recommended development workflows
 
-- Open IDEA or Webstorm to run Gradle run to serve the Spring app, edit the client code in VSCode or any text editor of 
-your choice, save, then restart the Spring app to rebuild the frontend also. You might find the client side result on 
-`localhost:8080/index.html` (as of now).
-- **More recommended:** Open IDEA or Webstorm to run Gradle run to serve the Spring app, start up the React dev-server in 
-the `src/main/client` folder (with `yarn start`) and edit the code in VSCode or any text editor of choice, save, the client served on `localhost:3000`
-will watch for alterations, will rebuild, so you can easily develop frontend without the need of rebuilding the Spring app
-every time.
+### Basic recommended development workflow
+
+#### FOR BACKEND DEVELOPMENT 
+
+Open up IDEA, start the Spring app, you're good to go.
+
+#### FOR FRONTEND DEVELOPMENT
+
+1. Open up `src/main/client` in VSCode or Webstorm, open a terminal there.
+2. `yarn install` to install dependencies locally in node_modules
+3. `yarn start` to start React client server **DEPRECATED**: while using React dev-server, you won't be able to make
+proper API calls or use session handling so you won't be able to log into the Spring app.
+4. `yarn spring:start-app` to start the Spring app easily.
+
+Once the Spring server is running on [localhost:8080](http://localhost:8080), you need to open this url, where you can 
+see your React frontend in *production* mode. 
+
+**IMPORTANT AND USEFUL TIP:** Anytime you need to see your modifications without the need of restarting the Spring app, 
+**do not** close the terminal running the Spring app, but open a new terminal and use the `yarn spring:build-ui` command
+in the client-side project root.
+
+Be wise with using the `yarn spring:build-ui` script, as it takes approx. 1 minute to rebuild the React frontend and move
+it into the Spring app's static resources files.
+
+The last two yarn commands work from Windows, use `yarn spring:start-app-alt` and `yarn spring:build-ui-alt` if you're
+using MaxOS or Linux base systems.
+
+If you need to declare a new environment variable, create it in the `src/main/resources/configurations/application.properties`
+file and modify the `build.gradle.kts` script (approx. line 97) to include the new property in the built .env file.

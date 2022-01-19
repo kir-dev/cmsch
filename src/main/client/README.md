@@ -11,46 +11,7 @@ Uses:
 - [React-icons](https://react-icons.github.io/react-icons/)
 - Typescript 4.5.4
 
-### Basic recommended development workflow
-
-Open IDEA, start the Spring app, but you won't use [localhost:8080](http://localhost:8080) to see your client side
-modifications, you don't need to open this url in your browser.
-
-Instead, you open a VSCode in the client project's root (`src/main/client`) and start with
-
-1. `yarn install` to install dependencies locally in node_modules
-2. `yarn start` to start React client server
-
-Once the client server is running on preferably [localhost:3000](http://localhost:3000), you need to open this url, where
-you can see your frontend modifications in development mode with the React dev-server watching for your code alterations.
-Running both of the servers parallel will not trigger CORS related problems, as you are running both of the apps on
-your localhost and this is programmed in the backend to be allowed, with the help of this annotation before every controller
-used by the frontend:
-
-```kotlin
-@CrossOrigin(origins = ["\${g7web.frontend.production-url}"], allowedHeaders = ["*"])
-@RestController
-@RequestMapping("/api")
-class MainController() {  ...  }
-```
-
-Never forget the request param out of the paramlist in endpoint methods! Don't forget to include the `g7web.frontend.production-url`
-property in the `application-local.properties` file with the value of `http://localhost:3000` (see main README in project root).
-
-As this is a reusable template CMS project, don't forget to set a custom theme of the app in the `utils/customTheme.ts`
-file.
-
-### In production mode
-
-The gradle building task will build the react app's files into the static directory of our Spring app, from where the
-Spring backend app will serve the built js files, they will access easily the spring app backend through fetch API. This
-will not induce CORS related problems, both the backend and these static files will be served in web domain.
-
-If you need to declare a new environment variable, create it in the `src/main/resources/configurations/application.properties`
-file and modify the `build.gradle.kts` script (approx. line 97) to include the new property in the built .env file.
-
-When in development mode, you can freely change the .env file. **WARNING**: Gradle build will override the existing .env
-file so always have an .env.development file in the client repo as a backup.
+See other development notes in the root README.md file.
 
 ## Other notes
 
