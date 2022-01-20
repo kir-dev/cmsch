@@ -465,76 +465,68 @@ class TestConfig(
         val groupV10 = groups.findByName("V10").orElseThrow()
 
         submittedAchievements.save(SubmittedAchievementEntity(
-                0,
-                achi1,
-                groupI16.id,
-                "I16",
-                2,
-                "Ezt adtuk be xd",
-                "",
-                "Hát kár volt bazdmeg",
-                false,
-                true,
-                0
+                achievement = achi1,
+                groupId = groupI16.id,
+                groupName = "I16",
+                userId = 2,
+                textAnswer = "Ezt adtuk be xd",
+                response = "Hát kár volt bazdmeg",
+                approved = false,
+                rejected = true,
+                score = 0
         ))
 
         submittedAchievements.save(SubmittedAchievementEntity(
-                0,
-                achi1,
-                groupI09.id,
-                "I09",
-                1,
-                "Szia Lajos!",
-                "",
-                "Szia Bazdmeg!",
-                true,
-                false,
-                20
+                achievement = achi1,
+                groupId = groupI09.id,
+                groupName = "I09",
+                userId = 1,
+                textAnswer = "Szia Lajos!",
+                response = "Szia Bazdmeg!",
+                approved = true,
+                rejected = false,
+                score = 20
         ))
 
         submittedAchievements.save(SubmittedAchievementEntity(
-                0,
-                achi1,
-                groupV10.id,
-                "V10",
-                1,
-                "Jobbra",
-                "",
-                "",
-                false,
-                false,
-                0
+                achievement = achi1,
+                groupId = groupV10.id,
+                groupName = "V10",
+                userId = 1,
+                textAnswer = "Jobbra",
+                approved = false,
+                rejected = false,
+                score = 0
         ))
 
         submittedAchievements.save(SubmittedAchievementEntity(
-                0,
-                achi2,
-                groupI16.id,
-                "I16",
-                2,
-                "Ellipszilonos",
-                "",
-                "",
-                false,
-                false,
-                0
+                achievement = achi2,
+                groupId = groupI16.id,
+                groupName = "I16",
+                userId = 2,
+                textAnswer = "Ellipszilonos",
+                approved = false,
+                rejected = false,
+                score = 0
         ))
 
         submittedAchievements.save(SubmittedAchievementEntity(
-                0,
-                achi2,
-                groupI09.id,
-                "I09",
-                1,
-                "",
-                "achievements/test.png",
-                "",
-                false,
-                false,
-                0
+                achievement = achi2,
+                groupId = groupI09.id,
+                groupName = "I09",
+                userId = 1,
+                imageUrlAnswer = "achievements/test.png",
+                approved = false,
+                rejected = false,
+                score = 0
         ))
 
-        categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
+        categories.save(AchievementCategoryEntity(
+                name = "Mine Category",
+                categoryId = 1,
+                availableFrom = 0,
+                availableTo = 3000000000
+        ))
     }
 
     private fun addUsers() {
