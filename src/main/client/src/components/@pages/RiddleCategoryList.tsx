@@ -40,12 +40,12 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
       <VStack spacing={4} mt={5} align="stretch">
         {riddleCategoryList.map((riddleCategory) => (
           <Box bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: 'brand.500' }}>
-            <Link to={`/riddleok/${riddleCategory.nextRiddleId}`} style={{ textDecoration: 'none' }}>
+            <Link to={`/riddleok/${riddleCategory.nextRiddle}`} style={{ textDecoration: 'none' }}>
               <Flex align="center" justifyContent="space-between">
                 <Text fontWeight="bold" fontSize="xl">
                   {riddleCategory.name}
                 </Text>
-                <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.200')} px={1} py={1} borderRadius="6px">
+                <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
                   <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
                     {riddleCategory.completed} / {riddleCategory.total}
                   </Text>

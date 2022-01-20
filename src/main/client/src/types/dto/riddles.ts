@@ -17,5 +17,14 @@ export interface RiddleCategory {
   score: number
   completed: number
   total: number
-  nextRiddleId: number
+  nextRiddle: number
+}
+
+export enum RiddleSubmissonStatus {
+  CORRECT = 'CORRECT',
+  WRONG = 'WRONG'
+}
+export interface RiddleSubmissonResult {
+  status: RiddleSubmissonStatus
+  nextId?: number
 }
