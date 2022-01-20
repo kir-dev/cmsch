@@ -70,7 +70,7 @@ class MainController(
                         .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
                         .take(4),
                 upcomingEvents = upcomingEvents,
-                achievements = request.getUserOrNull()?.group?.let { achievements.getAllAchievements(it) }
+                achievements = request.getUserOrNull()?.group?.let { achievements.getAllAchievementsForGroup(it) }
                         ?: achievements.getAllAchievementsForGuests(),
                 leaderBoard = leaderBoardService.getBoard(),
                 leaderBoardVisible = config.isLeaderBoardEnabled(),

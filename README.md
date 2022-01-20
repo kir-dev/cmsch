@@ -4,15 +4,30 @@ CMSch web backend with in-built frontend
 ## Build docker
 
 ```bash
+  ./gradlew clean build
   docker build -t cmsch .
+```
+
+## Run
+
+```bash
+  ./gradlew bootRun --args='--spring.profiles.include=test,internal'
 ```
 
 ## Publish
 
+Use your authsch details for docker login. Tag `rc` for staging (release candidate) and tag release for release.
+
 ```bash
-  docker login registry.k8s.sch.bme.hu
-  docker image tag cmsch:latest registry.k8s.sch.bme.hu/kir-dev/cmsch:latest
-  docker image push registry.k8s.sch.bme.hu/kir-dev/cmsch
+  docker login harbor.sch.bme.hu
+  
+  # Release candidate
+  docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:rc
+  docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:rc
+  
+  # Release (you can use versions like ':major.minor.build' as well)
+  docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:release
+  docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:release
 ```
 
 ## Run (you can start here)
@@ -31,13 +46,13 @@ For develpment:
 or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 
 ```bash
-  docker pull registry.k8s.sch.bme.hu/kir-dev/cmsch
+  docker pull harbor.sch.bme.hu/org-golyakorte/cmsch
   docker run --rm -p 8080:80 \
         -e AUTHSCH_CLIENT_ID=20_CHARS \
         -e AUTHSCH_CLIENT_KEY=80_CHARS \
         -e PROFILE_SALT=RANDOM_STRING \
         -e SYSADMINS=YOUR_AUTH_SCH_UUID \
-        registry.k8s.sch.bme.hu/kir-dev/cmsch
+        harbor.sch.bme.hu/org-golyakorte/cmsch
 ```
 
 ## Where to start?
