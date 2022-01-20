@@ -544,9 +544,19 @@ class TestConfig(
                 0
         ))
 
-        categories.save(AchievementCategoryEntity(1, "Mine Category", 1, 0, 3000000000))
-        categories.save(AchievementCategoryEntity(2, "Mine Category2", 2, 0, 3000000000))
-        categories.save(AchievementCategoryEntity(3, "Mine Category3", 3, 0, 3000000000))
+        categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
+        categories.save(AchievementCategoryEntity(
+                name = "Mine Category2",
+                categoryId = 2,
+                availableFrom = 0,
+                availableTo = 3000000000
+        ))
+        categories.save(AchievementCategoryEntity(
+            name = "Mine Category3",
+            categoryId = 3,
+            availableFrom = 0,
+            availableTo = 3000000000
+        ))
     }
 
     private fun addUsers() {
