@@ -5,6 +5,7 @@ import { RESORTS } from '../../content/resorts'
 import { COMMUNITIES } from '../../content/communities'
 import { CardListItem } from '../@commons/CardListItem'
 import { DataSheet } from '../@commons/DataSheet'
+import { Helmet } from 'react-helmet'
 import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
 
 type ResortPageProps = {}
@@ -25,6 +26,7 @@ export const ResortPage: React.FC<ResortPageProps> = () => {
   ]
   return (
     <Page>
+      <Helmet title={resort.name} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <DataSheet organization={resort} />
       {COMMUNITIES.filter((c) => c.resortId === resort.id).map((community) => {

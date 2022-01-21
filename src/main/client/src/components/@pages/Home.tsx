@@ -11,7 +11,7 @@ import customTheme from '../../utils/customTheme'
 
 export const Home: React.FC = () => {
   return (
-    <Page title="GólyaKörTe">
+    <Page>
       <Heading size="3xl" textAlign="center" marginTop={10}>
         Üdvözlünk a{' '}
         <Heading as="span" color="brand.500" size="3xl">

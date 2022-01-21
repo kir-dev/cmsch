@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom'
 import { ButtonGroup } from '@chakra-ui/react'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { LinkButton } from '../@commons/LinkButton'
+import { Helmet } from 'react-helmet'
 
 export const QRScanResult: React.FC = (props) => {
   const [searchParams] = useSearchParams()
@@ -14,7 +15,8 @@ export const QRScanResult: React.FC = (props) => {
     status: (searchParams.get('status') || ScanStatus.WRONG) as ScanStatus
   }
   return (
-    <Page {...props} title="QR">
+    <Page {...props}>
+      <Helmet title="QR eredmény" />
       <QRScanResultComponent response={server_response} />
       <ButtonGroup spacing="6" alignSelf="center">
         <LinkButton leftIcon={<FaArrowLeft />} href="/qr">

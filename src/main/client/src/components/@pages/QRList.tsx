@@ -11,6 +11,7 @@ import { ProfileDTO } from 'types/dto/profile'
 import { LinkButton } from '../@commons/LinkButton'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
+import { Helmet } from 'react-helmet'
 
 interface TokenProgress {
   totalTokenCount: number
@@ -75,6 +76,7 @@ export const QRList: React.FC = (props) => {
 
   return (
     <Page {...props} loginRequired>
+      <Helmet title="QR page" />
       <Heading as="h1">QR kód vadászat</Heading>
       {alertBar(progress.acquiredTokenCount, progress.minTokenToComplete)}
       <Paragraph>
