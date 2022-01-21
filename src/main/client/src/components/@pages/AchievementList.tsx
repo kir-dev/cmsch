@@ -1,4 +1,4 @@
-import { Heading, Stack, Skeleton } from '@chakra-ui/react'
+import { Heading, Stack, Skeleton, Text } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -9,10 +9,12 @@ import { AchievementCategoryItem } from '../@commons/AchievementCategoryItem'
 
 export const AchievementList: React.FC = (props) => {
   const [categories, setCategories] = useState<AchievementCategory[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     axios.get<AllAchievementCategories>(`${API_BASE_URL}/api/achievement`).then((res) => {
       setCategories(res.data.categories)
+      setLoading(false)
     })
   }, [])
 
@@ -20,17 +22,21 @@ export const AchievementList: React.FC = (props) => {
     <Page {...props} loginRequired>
       <Heading>Bucketlist</Heading>
       <Stack>
-        {categories.length > 0
-          ? categories.map((category) => (
-              <AchievementCategoryItem key={category.categoryId} categoryId={category.categoryId} name={category.name} />
-            ))
-          : [0, 1, 2].map((idx) => (
-              <Stack key={idx} marginTop="20px">
-                <Skeleton height="40px" />
-                <Skeleton height="20px" />
-                <Skeleton height="20px" />
-              </Stack>
-            ))}
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <AchievementCategoryItem key={category.categoryId} categoryId={category.categoryId} name={category.name} />
+          ))
+        ) : loading ? (
+          [0, 1, 2].map((idx) => (
+            <Stack key={idx} mt="20px">
+              <Skeleton height="40px" />
+              <Skeleton height="20px" />
+              <Skeleton height="20px" />
+            </Stack>
+          ))
+        ) : (
+          <Text>Nincs egyetlen bucketlist challenge se.</Text>
+        )}
       </Stack>
     </Page>
   )
