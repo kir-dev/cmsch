@@ -30,17 +30,15 @@ open class RiddleService(
             .groupBy { it.riddle?.categoryId ?: 0 }
             .toMap()
 
-        println(submissions)
-
         return categories.map { category ->
             val riddles = riddleRepository.findAllByCategoryId(category.categoryId)
             val total = riddles.size
             val nextId = riddles
-                .filter { filter -> submissions[category.id]?.none { it.id == filter.id } ?: true }
+                .filter { filter -> submissions[category.categoryId]?.map { it.riddle?.id }?.contains(filter.id)?.not() ?: true }
                 .minByOrNull { it.order }
                 ?.id
 
-            RiddleCategoryDto(category.categoryId, category.title, nextId, submissions.size, total)
+            RiddleCategoryDto(category.categoryId, category.title, nextId, submissions[category.categoryId]?.size ?: 0, total)
         }
     }
 
@@ -51,13 +49,13 @@ open class RiddleService(
             return null
 
         val submissions = riddleMappingRepository.findAllByOwnerUserAndRiddle_CategoryId(user, riddle.categoryId)
-        val submission = submissions.find { it.id == riddleId }
+        val submission = submissions.find { it.riddle?.id == riddleId }
         if (submission != null)
             return RiddleView(riddle.imageUrl, riddle.title, if (submission.hintUsed) riddle.hint else null, submission.completed)
 
         val riddles = riddleRepository.findAllByCategoryId(riddle.categoryId)
         val nextId = riddles
-            .filter { filter -> submissions.none { it.completed && it.id == filter.id } }
+            .filter { filter -> submissions.filter { it.completed }.map { it.riddle?.id }.contains(filter.id).not() }
             .minByOrNull { it.order }
             ?.id
 
@@ -74,8 +72,9 @@ open class RiddleService(
 
         val submission = riddleMappingRepository.findByOwnerUserAndRiddle_Id(user, riddleId)
         if (submission.isPresent) {
-            submission.get().hintUsed = true
-            riddleMappingRepository.save(submission.get())
+            val submissionEntity = submission.get()
+            submissionEntity.hintUsed = true
+            riddleMappingRepository.save(submissionEntity)
         } else {
             val nextId = getNextId(user, riddle)
             if (nextId != riddle.id)
@@ -123,7 +122,7 @@ open class RiddleService(
         val submissions = riddleMappingRepository.findAllByOwnerUserAndRiddle_CategoryId(user, riddle.categoryId)
         val riddles = riddleRepository.findAllByCategoryId(riddle.categoryId)
         return riddles
-            .filter { filter -> submissions.none { it.completed && it.id == filter.id } }
+            .filter { filter -> submissions.filter { it.completed }.map { it.riddle?.id }.contains(filter.id).not() }
             .minByOrNull { it.order }
             ?.id
     }
