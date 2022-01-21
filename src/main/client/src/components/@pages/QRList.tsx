@@ -1,21 +1,23 @@
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState } from 'react'
-import { Heading, Button, Progress, Stack, ButtonGroup } from '@chakra-ui/react'
+import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
 import { FaQrcode } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Basics'
-import { useNavigate } from 'react-router-dom'
 import { StampComponent } from 'components/@commons/StampComponent'
 import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
 import { ProfileDTO } from 'types/dto/profile'
+import { LinkButton } from '../@commons/LinkButton'
+import { Loading } from '../../utils/Loading'
 
 export const QRList: React.FC = (props) => {
   const [tokens, setTokens] = useState<TokenDTO[]>([])
   const [totalTokenCount, setTotalTokenCount] = useState<number>(0)
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
+    setLoading(true)
     axios
       .get(`${API_BASE_URL}/api/profile`)
       .then((res) => {
@@ -26,16 +28,17 @@ export const QRList: React.FC = (props) => {
       .catch((err) => {
         console.log(err)
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
-
-  const scanEventHandler = () => {
-    navigate('/qr/scan')
-  }
 
   const calculate_progress = () => {
     if (totalTokenCount == 0) return 100
     else return (100 * tokens.length) / totalTokenCount
   }
+
+  if (loading) return <Loading />
 
   return (
     <Page {...props} loginRequired>
@@ -46,9 +49,9 @@ export const QRList: React.FC = (props) => {
       </Paragraph>
 
       <ButtonGroup>
-        <Button colorScheme="brand" leftIcon={<FaQrcode />} onClick={scanEventHandler}>
+        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href="/qr/scan">
           QR kód beolvasása
-        </Button>
+        </LinkButton>
       </ButtonGroup>
 
       <Heading>Haladás</Heading>
