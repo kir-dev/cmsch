@@ -22,7 +22,7 @@ export function App() {
   return (
     <ChakraProvider theme={customTheme}>
       <BrowserRouter>
-        <IndexLayout>
+        <AuthProvider>
           <Routes>
             <Route path="/">
               {/*Főoldal*/}
@@ -61,7 +61,7 @@ export function App() {
               </Route>
             </Route>
           </Routes>
-        </IndexLayout>
+        </AuthProvider>
       </BrowserRouter>
     </ChakraProvider>
   )
