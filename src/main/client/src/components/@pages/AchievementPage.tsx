@@ -125,7 +125,7 @@ export const AchievementPage: React.FC = (props) => {
 
   const fileInput = imageAllowed && (
     <Box>
-      <FormLabel>Csatolt fájl (max. méret: 1 MB TODO: ezt felemelni)</FormLabel>
+      <FormLabel>Csatolt fájl</FormLabel>
       <FilePicker
         onFileChange={(fileArray) => setImageAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
