@@ -10,6 +10,7 @@ import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
 import { Paragraph } from 'components/@commons/Basics'
 import { AchievementFullDetailsView, achievementType, achievementStatus } from '../../types/dto/achievements'
 import { API_BASE_URL } from 'utils/configurations'
+import { Loading } from '../../utils/Loading'
 
 export const AchievementPage: React.FC = (props) => {
   const [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
@@ -45,12 +46,14 @@ export const AchievementPage: React.FC = (props) => {
 
   if (!achDetails) {
     return (
-      <Page {...props}>
-        <Skeleton height="40px" />
-        <Skeleton marginTop="20px" height="20px" />
-        <Skeleton marginTop="8px" height="20px" />
-        <Skeleton marginTop="8px" height="20px" />
-      </Page>
+      <Loading>
+        <Page {...props}>
+          <Skeleton height="40px" />
+          <Skeleton marginTop="20px" height="20px" />
+          <Skeleton marginTop="8px" height="20px" />
+          <Skeleton marginTop="8px" height="20px" />
+        </Page>
+      </Loading>
     )
   }
 

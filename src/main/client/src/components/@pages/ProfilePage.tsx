@@ -11,13 +11,14 @@ import {
   Skeleton,
   VStack,
   SkeletonCircle,
-  Button,
   HStack
 } from '@chakra-ui/react'
 import * as React from 'react'
 import { ProfileDTO, RoleType } from 'types/dto/profile'
 import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
+import { Loading } from '../../utils/Loading'
+import { LinkButton } from '../@commons/LinkButton'
 
 const challenges = (profile: ProfileDTO) => [
   {
@@ -66,22 +67,21 @@ export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
 
 export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const [profile, setProfile] = React.useState<ProfileDTO | undefined>(undefined)
-  const [delay, setDelay] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-    //delay is needed to remove flickering of the skeleton
-    setDelay(true)
-    setTimeout(() => setDelay(false), 1000)
     axios.get<ProfileDTO>(`${API_BASE_URL}/api/profile`).then((res) => {
-      if (res.status !== 200) {
-        console.log(res)
-        return
+      if (res.status === 200) {
+        setProfile(res.data)
       }
-      setProfile(res.data)
     })
   }, [setProfile])
 
-  if (delay || profile?.fullName === undefined) return <ProfilePageSkeleton {...props} />
+  if (profile === undefined)
+    return (
+      <Loading>
+        <ProfilePageSkeleton {...props} />
+      </Loading>
+    )
 
   return (
     <Page {...props} loginRequired>
@@ -90,11 +90,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
       <HStack justify="space-between">
         <Text fontSize="3xl">Tankör: {profile?.groupName || 'nincs'}</Text>
         {profile?.role && RoleType[profile.role] >= RoleType.STAFF && (
-          <a href="/admin/control/">
-            <Button as="span" colorScheme="red">
-              Admin panel
-            </Button>
-          </a>
+          <LinkButton as="span" colorScheme="red" href="/admin/control" external>
+            Admin panel
+          </LinkButton>
         )}
       </HStack>
       <Wrap spacing="3rem" justify="center" mt="10">
