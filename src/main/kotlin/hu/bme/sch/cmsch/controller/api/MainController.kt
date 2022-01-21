@@ -40,7 +40,7 @@ class MainController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "v1.1.27"
+    fun version(): String = "v2.1.1"
 
     @JsonView(Preview::class)
 //    @GetMapping("/news")
