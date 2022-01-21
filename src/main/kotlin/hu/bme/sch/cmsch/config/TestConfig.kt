@@ -182,7 +182,7 @@ class TestConfig(
             "Beszoptad tesóm",
             100,
             1,
-            1
+            2
         ))
         riddleRepository.save(RiddleEntity(
             0,
