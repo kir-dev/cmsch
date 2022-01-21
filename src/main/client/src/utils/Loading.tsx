@@ -4,6 +4,7 @@ import { Center, Spinner } from '@chakra-ui/react'
 type LoadingProps = {
   timeout?: number
 }
+
 /**
  * Displays the given loading component or a Spinner after the given timeout or one second.
  * @param timeout Number, Optional - The timeout in seconds before the component appears. Default value is 1 sec.
