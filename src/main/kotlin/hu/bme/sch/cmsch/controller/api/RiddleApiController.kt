@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.controller.api
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.dto.RiddleCategoryDto
 import hu.bme.sch.cmsch.dto.RiddleSubmissionDto
 import hu.bme.sch.cmsch.dto.view.*
 import hu.bme.sch.cmsch.model.RiddleCategoryEntity
@@ -20,10 +21,9 @@ class RiddleApiController(
     private val riddleService: RiddleService
 ) {
 
-    @JsonView(Preview::class)
     @GetMapping("/riddle")
-    fun riddleCategories(request: HttpServletRequest): RiddleCategoryView {
-        return RiddleCategoryView(riddleService.listRiddlesForUser(request.getUser()))
+    fun riddleCategories(request: HttpServletRequest): List<RiddleCategoryDto> {
+        return riddleService.listRiddlesForUser(request.getUser())
     }
 
     @JsonView(FullDetails::class)

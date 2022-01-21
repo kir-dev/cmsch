@@ -9,7 +9,7 @@ data  class RiddleView(
     var imageUrl: String = "",
 
     @JsonView(FullDetails::class)
-    var titleString: String = "",
+    var title: String = "",
 
     @JsonView(FullDetails::class)
     var hint: String? = null,
