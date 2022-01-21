@@ -6,7 +6,7 @@ import { LinkButton } from '../@commons/LinkButton'
 
 export const UnauthorizedPage: React.FC = () => {
   return (
-    <Page>
+    <Page title="Hiba">
       <Heading textAlign="center">Bejelentkezés szükséges</Heading>
       <Text textAlign="center" color="gray.500" marginTop={10}>
         Az oldal eléréséhez be kell jelentkezned!
