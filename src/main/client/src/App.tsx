@@ -44,7 +44,7 @@ export function App() {
                 <Route index element={<CommunityList />} />
               </Route>
               {/*Riddle*/}
-              <Route path="riddles">
+              <Route path="riddleok">
                 <Route path=":id" element={<RiddlePage />} />
                 <Route index element={<RiddleCategoryList />} />
               </Route>
