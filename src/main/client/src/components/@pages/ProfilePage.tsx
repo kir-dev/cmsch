@@ -21,6 +21,7 @@ import { Loading } from '../../utils/Loading'
 import { LinkButton } from '../@commons/LinkButton'
 import { useServiceContext } from '../../utils/useServiceContext'
 import { useAuthContext } from 'utils/useAuthContext'
+import { Helmet } from 'react-helmet'
 
 const challenges = (profile: ProfileDTO) => [
   {
@@ -45,7 +46,7 @@ type ProfilePageProps = {}
 //Had to create a seperate skeleton layout so it wouldn't look strange
 export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
   return (
-    <Page {...props} loginRequired title="Profil">
+    <Page {...props} loginRequired>
       <VStack align="flex-start" mb="14" mt={6}>
         <Skeleton h={12} w={['40%', null, null, '15%']} />
         <Skeleton h={10} w={['50%', null, null, '20%']} />
@@ -94,6 +95,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 
   return (
     <Page {...props} loginRequired>
+     <Helmet title="Profil" />
       <Flex justifyContent="space-between" flexDirection={{ base: 'column', sm: 'row' }}>
         <Box>
           <Heading>{profile?.fullName}</Heading>

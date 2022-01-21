@@ -5,6 +5,7 @@ import { Paragraph } from '../@commons/Basics'
 import { COMMUNITIES } from '../../content/communities'
 import { CardListItem } from '../@commons/CardListItem'
 import { Community } from '../../types/Organization'
+import { Helmet } from 'react-helmet'
 
 type CommunityListProps = {}
 
@@ -31,6 +32,7 @@ export const CommunityList: React.FC<CommunityListProps> = () => {
   }
   return (
     <Page>
+      <Helmet title="Körök" />
       <Heading>Körök</Heading>
       <Input ref={inputRef} placeholder="Keresés..." size="lg" boxShadow="md" marginTop={5} onChange={handleInput} />
       <Paragraph>

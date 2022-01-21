@@ -7,6 +7,7 @@ import { Navigate, useParams } from 'react-router-dom'
 import { DataSheet } from '../@commons/DataSheet'
 import { YouTubeFrame } from '../@commons/YouTubeFrame'
 import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
+import { Helmet } from 'react-helmet'
 
 type CommunityPageProps = {}
 
@@ -32,6 +33,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
   ]
   return (
     <Page>
+      <Helmet title={community.name} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <DataSheet organization={community} />
 
