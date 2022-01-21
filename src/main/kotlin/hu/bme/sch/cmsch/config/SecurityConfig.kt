@@ -39,8 +39,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                     .hasAnyRole(RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .and()
-                .formLogin()
-                .loginPage("/control/login")
+                .formLogin().disable()
         http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**")
     }
 
