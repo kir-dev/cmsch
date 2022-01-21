@@ -7,6 +7,7 @@ import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
 
 type RiddleListProps = {}
+
 function progress(riddleCategory: RiddleCategory) {
   return riddleCategory.completed / riddleCategory.total
 }

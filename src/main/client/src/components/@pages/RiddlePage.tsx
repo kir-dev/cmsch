@@ -7,6 +7,7 @@ import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'type
 import { API_BASE_URL } from 'utils/configurations'
 
 type RiddleProps = {}
+
 export const RiddlePage: React.FC<RiddleProps> = (props) => {
   const { id } = useParams()
   if (!id) {

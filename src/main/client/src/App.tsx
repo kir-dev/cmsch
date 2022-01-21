@@ -1,14 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import * as React from 'react'
-import '@fontsource/raleway/300.css'
-import '@fontsource/raleway/400.css'
-import '@fontsource/raleway/700.css'
-import '@fontsource/commissioner/300.css'
-import '@fontsource/commissioner/400.css'
-import '@fontsource/commissioner/700.css'
 
 import customTheme from './utils/customTheme'
-import { IndexLayout } from './components/@layout/IndexLayout'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './components/@pages/Home'
 import { ResortList } from './components/@pages/ResortList'
@@ -51,9 +44,9 @@ export function App() {
                 <Route index element={<CommunityList />} />
               </Route>
               {/*Riddle*/}
-              <Route path="riddleok">
+              <Route path="riddles">
                 <Route path=":id" element={<RiddlePage />} />
-                <Route index element={<RiddleList />} />
+                <Route index element={<RiddleCategoryList />} />
               </Route>
               {/*BucketList*/}
               <Route path="bucketlist">
