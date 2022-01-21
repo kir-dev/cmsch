@@ -43,7 +43,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
             <Link to={`/riddleok/${riddleCategory.nextRiddle}`} style={{ textDecoration: 'none' }}>
               <Flex align="center" justifyContent="space-between">
                 <Text fontWeight="bold" fontSize="xl">
-                  {riddleCategory.name}
+                  {riddleCategory.title}
                 </Text>
                 <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
                   <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
