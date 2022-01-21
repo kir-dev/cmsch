@@ -5,6 +5,26 @@ import React from 'react'
 import { EventsPreviewDTO, EventsView } from 'types/dto/events'
 import { API_BASE_URL } from 'utils/configurations'
 import { Paragraph } from 'components/@commons/Basics'
+import { stringifyTimeStamp } from 'utils/utilFunctions'
+
+interface IEventTags {
+  tags: Array<string>
+  my?: SpaceProps['my']
+}
+
+const EventTags: React.FC<IEventTags> = (props) => {
+  return (
+    <HStack spacing={2} my={props.my}>
+      {props.tags.map((tag) => {
+        return (
+          <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
+            {tag}
+          </Tag>
+        )
+      })}
+    </HStack>
+  )
+}
 
 type EventPageProps = {}
 
@@ -24,29 +44,6 @@ export const EventPage: React.FC<EventPageProps> = (props) => {
     })
   }, [setEventsList])
 
-  const getDate = (d: number) => {
-    return new Date(d * 1000).toLocaleString('hu', { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' })
-  }
-
-  interface IEventTags {
-    tags: Array<string>
-    marginTop?: SpaceProps['marginTop']
-  }
-
-  const EventTags: React.FC<IEventTags> = (props) => {
-    return (
-      <HStack spacing={2} marginTop={props.marginTop}>
-        {props.tags.map((tag) => {
-          return (
-            <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
-              {tag}
-            </Tag>
-          )
-        })}
-      </HStack>
-    )
-  }
-
   return (
     <Page {...props}>
       <Heading>Események</Heading>
@@ -55,9 +52,9 @@ export const EventPage: React.FC<EventPageProps> = (props) => {
           <Divider />
           <Box marginY="6" display="flex" flex="1" flexDirection="column" justifyContent="center">
             <Heading>{item.title}</Heading>
-            <EventTags marginTop={0} tags={[item.category, item.place]} />
+            <EventTags my={1} tags={[item.category, item.place]} />
             <Text>
-              {getDate(item.timestampStart)} — {getDate(item.timestampEnd)}
+              {stringifyTimeStamp(item.timestampStart)} — {stringifyTimeStamp(item.timestampEnd)}
             </Text>
             <Paragraph>{item.previewDescription}</Paragraph>
           </Box>
