@@ -14,7 +14,7 @@ export const QRScanResult: React.FC = (props) => {
     status: (searchParams.get('status') || ScanStatus.WRONG) as ScanStatus
   }
   return (
-    <Page {...props}>
+    <Page {...props} title="QR">
       <QRScanResultComponent response={server_response} />
       <ButtonGroup spacing="6" alignSelf="center">
         <LinkButton leftIcon={<FaArrowLeft />} href="/qr">

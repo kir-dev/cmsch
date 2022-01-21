@@ -64,7 +64,7 @@ export const QRScan: React.FC = (props) => {
   if (state.state == ScanViewState.Loading) return <Loading timeout={0} />
 
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired title="QR">
       <Heading>Scanneld be a QR kódot</Heading>
       {state.state == ScanViewState.Scanning && <QRreader delay={300} onError={handleError} onScan={handleScan} />}
 

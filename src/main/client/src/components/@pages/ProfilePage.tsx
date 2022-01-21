@@ -45,7 +45,7 @@ type ProfilePageProps = {}
 //Had to create a seperate skeleton layout so it wouldn't look strange
 export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired title="Profil">
       <VStack align="flex-start" mb="14" mt={6}>
         <Skeleton h={12} w={['40%', null, null, '15%']} />
         <Skeleton h={10} w={['50%', null, null, '20%']} />
