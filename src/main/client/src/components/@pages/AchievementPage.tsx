@@ -28,6 +28,12 @@ export const AchievementPage: React.FC = (props) => {
     axios.get<AchievementFullDetailsView>(`${API_BASE_URL}/api/achievement/submit/${id}`).then((res) => {
       if (!res.data.achievement) {
         navigate('/bucketlist')
+        toast({
+          title: 'Challange nem található',
+          description: 'Ilyen challange nem létezik vagy nincs jogosultságod hozzá.',
+          status: 'error',
+          isClosable: true
+        })
       }
       setAchDetails(res.data)
     })
@@ -72,7 +78,6 @@ export const AchievementPage: React.FC = (props) => {
             toast({
               title: 'Megoldás elküldve',
               status: 'success',
-              duration: 5000,
               isClosable: true
             })
             setTextAnswer('')
@@ -84,17 +89,22 @@ export const AchievementPage: React.FC = (props) => {
             toast({
               title: res.data.status,
               status: 'error',
-              duration: 5000,
               isClosable: true
             })
           }
+        })
+        .catch(() => {
+          toast({
+            title: 'Valamilyen hiba történt',
+            status: 'error',
+            isClosable: true
+          })
         })
     } else {
       toast({
         title: 'Üres megoldás',
         description: 'Üres megoldást nem küldhetsz be.',
         status: 'error',
-        duration: 5000,
         isClosable: true
       })
     }
@@ -115,7 +125,7 @@ export const AchievementPage: React.FC = (props) => {
 
   const fileInput = imageAllowed && (
     <Box>
-      <FormLabel>Csatolt fájl</FormLabel>
+      <FormLabel>Csatolt fájl (max. méret: 1 MB TODO: ezt felemelni)</FormLabel>
       <FilePicker
         onFileChange={(fileArray) => setImageAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
@@ -128,52 +138,56 @@ export const AchievementPage: React.FC = (props) => {
 
   return (
     <Page {...props} loginRequired>
-      <Stack>
-        <Heading marginBottom="0px">{achDetails.achievement?.title}</Heading>
-        <AchievementStatusBadge status={achDetails.status} fontSize="lg" />
-        <Paragraph>{achDetails.achievement?.description}</Paragraph>
-        {achDetails.achievement?.expectedResultDescription && (
-          <Text size="sm">
-            <chakra.span fontWeight="bold">Beadandó formátum:</chakra.span>
-            &nbsp;{achDetails.achievement?.expectedResultDescription}
-          </Text>
-        )}
-        {achDetails.status !== achievementStatus.NOT_SUBMITTED && (
-          <>
-            <Heading size="md">Beküldött megoldás</Heading>
-            {textAllowed && achDetails.submission && <Paragraph>{achDetails.submission.textAnswer}</Paragraph>}
-            {imageAllowed && achDetails.submission && (
-              <Box>
-                {achDetails.submission.imageUrlAnswer && achDetails.submission.imageUrlAnswer.length > 'achievement/'.length && (
-                  <Image src={`/cdn/${achDetails.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
-                )}
-              </Box>
-            )}
-          </>
-        )}
-        {reviewed && achDetails.submission && (
-          <>
-            <Heading size="md">Értékelés</Heading>
-            <Text>Javító üzenete: {achDetails.submission.response}</Text>
-            <Text>Pont: {achDetails.submission.score} pont</Text>
-          </>
-        )}
+      <Heading mb={0}>{achDetails.achievement?.title}</Heading>
+      <AchievementStatusBadge status={achDetails.status} fontSize="lg" />
+      <Paragraph mt={2}>{achDetails.achievement?.description}</Paragraph>
+      {achDetails.achievement?.expectedResultDescription && (
+        <Text size="sm">
+          <chakra.span fontWeight="bold">Beadandó formátum:</chakra.span>
+          &nbsp;{achDetails.achievement?.expectedResultDescription}
+        </Text>
+      )}
+      {achDetails.status !== achievementStatus.NOT_SUBMITTED && (
+        <>
+          <Heading size="md" mt={5}>
+            Beküldött megoldás
+          </Heading>
+          {textAllowed && achDetails.submission && <Paragraph mt={2}>{achDetails.submission.textAnswer}</Paragraph>}
+          {imageAllowed && achDetails.submission && (
+            <Box>
+              {achDetails.submission.imageUrlAnswer && achDetails.submission.imageUrlAnswer.length > 'achievement/'.length && (
+                <Image src={`/cdn/${achDetails.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
+              )}
+            </Box>
+          )}
+        </>
+      )}
+      {reviewed && achDetails.submission && (
+        <>
+          <Heading size="md" mt={5}>
+            Értékelés
+          </Heading>
+          <Text mt={2}>Javító üzenete: {achDetails.submission.response}</Text>
+          <Text>Pont: {achDetails.submission.score} pont</Text>
+        </>
+      )}
 
-        {submissionAllowed && (
-          <>
-            <Heading size="md">{achDetails.status === achievementStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}</Heading>
-            <Stack>
-              {textInput}
-              {fileInput}
-              <Box>
-                <Button mt={4} colorScheme="brand" type="button" onClick={handleSubmit}>
-                  Küldés
-                </Button>
-              </Box>
-            </Stack>
-          </>
-        )}
-      </Stack>
+      {submissionAllowed && (
+        <>
+          <Heading size="md" mt={5}>
+            {achDetails.status === achievementStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
+          </Heading>
+          <Stack mt={2}>
+            {textInput}
+            {fileInput}
+            <Box>
+              <Button mt={4} colorScheme="brand" type="button" onClick={handleSubmit}>
+                Küldés
+              </Button>
+            </Box>
+          </Stack>
+        </>
+      )}
     </Page>
   )
 }
