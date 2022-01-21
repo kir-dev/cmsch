@@ -7,24 +7,24 @@ export interface Riddle {
 }
 
 export interface RiddleCategory {
-  // id: number
-  // name: string
-  // completed: boolean
-  // scoore: number
-  // nextRiddle?: number
-  id: number
-  name: string
+  categoryId: number
+  title: string
   score: number
   completed: number
   total: number
-  nextRiddle: number
+  nextRiddle?: number
 }
 
 export enum RiddleSubmissonStatus {
   CORRECT = 'CORRECT',
   WRONG = 'WRONG'
 }
+
 export interface RiddleSubmissonResult {
   status: RiddleSubmissonStatus
   nextId?: number
+}
+
+export interface Hint {
+  hint: string
 }

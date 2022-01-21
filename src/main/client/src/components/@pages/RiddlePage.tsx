@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Page } from 'components/@layout/Page'
 import { Alert, AlertIcon, Box, Button, Flex, FormControl, FormLabel, Heading, Image, Input, useColorModeValue } from '@chakra-ui/react'
 import axios from 'axios'
-import { Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'types/dto/riddles'
+import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'types/dto/riddles'
 import { API_BASE_URL } from 'utils/configurations'
 
 type RiddleProps = {}
@@ -26,7 +26,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
     })
   }, [setRiddle])
 
-  function handleFormSubmit(event: FormEvent) {
+  function submitSolution(event: FormEvent) {
     event.preventDefault()
     console.log(event)
     const solution = solutionInput?.current?.value
@@ -43,6 +43,14 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       }
     })
   }
+
+  function getHint() {
+    return axios.get<Hint>(`${API_BASE_URL}/api/riddle/${id}/hint`).then((res) => {
+      const newRiddle = { ...riddle, hint: res.data.hint }
+      setRiddle(newRiddle)
+    })
+  }
+
   return (
     <Page {...props}>
       <Flex align="center">
@@ -52,14 +60,19 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       <Box>
         <Image width="100%" src={riddle.imageUrl} alt="Riddle Kép" borderRadius="md" />
         {riddle.hint && (
-          <Alert status="info" mt={2} borderRadius="md">
+          <Alert status="info" my={5} borderRadius="md">
             <AlertIcon />
             {riddle.hint}
           </Alert>
         )}
+        {!riddle.hint && (
+          <Button onClick={getHint} width="100%" bg="blue.500" my={5}>
+            Hintet kérek!
+          </Button>
+        )}
       </Box>
 
-      <Box as="form" onSubmit={handleFormSubmit} borderWidth={2} borderColor={bg} borderRadius="md" mt={2} p={5}>
+      <Box as="form" onSubmit={submitSolution} borderWidth={2} borderColor={bg} borderRadius="md" p={5}>
         <FormControl>
           <FormLabel htmlFor="solution">Megoldásom:</FormLabel>
           <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={riddle.solved} />
