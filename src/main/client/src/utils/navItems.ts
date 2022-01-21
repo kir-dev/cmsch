@@ -6,10 +6,6 @@ export const NAV_ITEMS: Array<NavItem> = [
     href: '/'
   },
   {
-    label: 'Események',
-    href: '/esemenyek'
-  },
-  {
     label: 'Reszortok',
     href: '/reszortok'
   },
