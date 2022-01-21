@@ -40,7 +40,7 @@ export const Home: React.FC = () => {
         <LinkButton href="/bucketlist" variant="outline" colorScheme="brand">
           Bucketlist
         </LinkButton>
-        <LinkButton href="#" variant="outline" colorScheme="brand">
+        <LinkButton href="/qr" variant="outline" colorScheme="brand">
           QR-kódok
         </LinkButton>
       </ButtonGroup>
