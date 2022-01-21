@@ -15,7 +15,7 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: 'Riddles',
-    href: '/riddles'
+    href: '/riddleok'
   },
   {
     label: 'Profil',
