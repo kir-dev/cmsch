@@ -120,7 +120,8 @@ tasks.register("setupBuildEnv") {
         File("$projectDir/src/main/client", ".env").writeText(
             "REACT_APP_BACKEND_BASE_URL=${applicationProperties.getProperty("cmsch.backend.production-url")}" +
             "\nREACT_APP_KIRDEV_URL=${applicationProperties.getProperty("cmsch.frontend.kirdev-url")}" +
-            "\nREACT_APP_BUGREPORT_URL=${applicationProperties.getProperty("cmsch.frontend.bugreport-url")}"
+            "\nREACT_APP_BUGREPORT_URL=${applicationProperties.getProperty("cmsch.frontend.bugreport-url")}" +
+            "\nREACT_APP_NAME=${applicationProperties.getProperty("cmsch.frontend.appname")}"
         )
     }
 }
