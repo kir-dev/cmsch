@@ -16,49 +16,57 @@ import { QRList } from 'components/@pages/QRList'
 import { QRScan } from 'components/@pages/QRScan'
 import { QRScanResult } from 'components/@pages/QRScanResult'
 import { AuthProvider } from './utils/AuthContext'
+import { ErrorPage } from './components/@pages/ErrorPage'
+import { ServiceProvider } from './utils/ServiceContext'
 
 export function App() {
   return (
     <ChakraProvider theme={customTheme}>
       <BrowserRouter>
-        <AuthProvider>
-          <IndexLayout>
-            <Routes>
-              <Route path="/">
-                {/*Főoldal*/}
-                <Route index element={<Home />} />
-                {/*Profil*/}
-                <Route path="profil">
-                  <Route index element={<ProfilePage />} />
-                </Route>
-                {/*Reszortok*/}
-                <Route path="reszortok">
-                  <Route path=":name">
-                    <Route index element={<ResortPage />} />
+        <ServiceProvider>
+          <AuthProvider>
+            <IndexLayout>
+              <Routes>
+                <Route path="/">
+                  {/*Főoldal*/}
+                  <Route index element={<Home />} />
+                  {/*Profil*/}
+                  <Route path="profil">
+                    <Route index element={<ProfilePage />} />
                   </Route>
-                  <Route index element={<ResortList />} />
+                  {/*Reszortok*/}
+                  <Route path="reszortok">
+                    <Route path=":name">
+                      <Route index element={<ResortPage />} />
+                    </Route>
+                    <Route index element={<ResortList />} />
+                  </Route>
+                  {/*Körök*/}
+                  <Route path="korok">
+                    <Route path=":name" element={<CommunityPage />} />
+                    <Route index element={<CommunityList />} />
+                  </Route>
+                  {/*Riddle*/}
+                  {/*BucketList*/}
+                  <Route path="bucketlist">
+                    <Route path=":id" element={<AchievementPage />} />
+                    <Route index element={<AchievementList />} />
+                  </Route>
+                  {/*QR*/}
+                  <Route path="qr-scanned" element={<QRScanResult />} />
+                  <Route path="qr">
+                    <Route index element={<QRList />} />
+                    <Route path="scan" element={<QRScan />} />
+                  </Route>
+                  {/*Error*/}
+                  <Route path="error">
+                    <Route index element={<ErrorPage />} />
+                  </Route>
                 </Route>
-                {/*Körök*/}
-                <Route path="korok">
-                  <Route path=":name" element={<CommunityPage />} />
-                  <Route index element={<CommunityList />} />
-                </Route>
-                {/*Riddle*/}
-                {/*BucketList*/}
-                <Route path="bucketlist">
-                  <Route path=":id" element={<AchievementPage />} />
-                  <Route index element={<AchievementList />} />
-                </Route>
-                {/*QR*/}
-                <Route path="qr-scanned" element={<QRScanResult />} />
-                <Route path="qr">
-                  <Route index element={<QRList />} />
-                  <Route path="scan" element={<QRScan />} />
-                </Route>
-              </Route>
-            </Routes>
-          </IndexLayout>
-        </AuthProvider>
+              </Routes>
+            </IndexLayout>
+          </AuthProvider>
+        </ServiceProvider>
       </BrowserRouter>
     </ChakraProvider>
   )

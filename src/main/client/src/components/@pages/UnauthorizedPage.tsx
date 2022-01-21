@@ -2,6 +2,7 @@ import React from 'react'
 import { Page } from '../@layout/Page'
 import { ButtonGroup, Heading, Text } from '@chakra-ui/react'
 import { AuthButton } from '../@commons/AuthButton'
+import { LinkButton } from '../@commons/LinkButton'
 
 export const UnauthorizedPage: React.FC = () => {
   return (
@@ -12,6 +13,9 @@ export const UnauthorizedPage: React.FC = () => {
       </Text>
       <ButtonGroup justifyContent="center" marginTop={10}>
         <AuthButton />
+        <LinkButton href="/" variant="ghost">
+          Főoldal
+        </LinkButton>
       </ButtonGroup>
     </Page>
   )
