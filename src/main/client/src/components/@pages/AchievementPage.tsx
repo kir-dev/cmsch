@@ -12,6 +12,7 @@ import { AchievementFullDetailsView, achievementType, achievementStatus, Achieve
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
+import { Helmet } from 'react-helmet'
 import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
 
 export const AchievementPage: React.FC = (props) => {
@@ -180,6 +181,7 @@ export const AchievementPage: React.FC = (props) => {
 
   return (
     <Page {...props} loginRequired>
+      <Helmet title={achDetails.achievement?.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading mb={5}>{achDetails.achievement?.title}</Heading>
       <AchievementStatusBadge status={achDetails.status} fontSize="lg" />

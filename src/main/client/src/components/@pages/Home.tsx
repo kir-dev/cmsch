@@ -6,12 +6,14 @@ import { LinkButton } from '../@commons/LinkButton'
 import { ImageCarousel } from '../@commons/ImageCarousel'
 import { Schedule } from '../@commons/Schedule'
 import { EVENTS } from '../../content/events'
+import { Helmet } from 'react-helmet'
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa'
 import customTheme from '../../utils/customTheme'
 
 export const Home: React.FC = () => {
   return (
     <Page>
+      <Helmet />
       <Heading size="3xl" textAlign="center" marginTop={10}>
         Üdvözlünk a{' '}
         <Heading as="span" color="brand.500" size="3xl">
