@@ -178,13 +178,15 @@ spec:
             - containerPort: 80
               protocol: TCP
           env:
+            - name: SPRING_PROFILES
+              value: 'staging,golyakorte2022,test'
             - name: PORT
               value: '80'
             - name: WEBSITE_URL
               value: https://staging.golyakorte.sch.bme.hu/
             - name: SYSADMINS
               value: >-
-                TODO-internal-ids
+                6af3c8b0-592c-6864-8dd9-5f354edfc0be,814e5203-9fd0-8a91-c952-7d05979b4184,0e81d7b8-7758-724c-8c50-744e4a2aefb9,ceceec21-3b1d-7917-f2c4-d1bf1e1f44ad
             - name: PROFILE_SALT
               value: example_salt
             - name: AUTHSCH_CLIENT_ID
@@ -197,6 +199,18 @@ spec:
                 secretKeyRef:
                   name: golyakorte-staging-secrets
                   key: AuthSCH_KEY
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: golyakorte-staging-secrets
+                  key: MySQL_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: golyakorte-staging-secrets
+                  key: MySQL_PASSWORD
+            - name: DATABASE_URL
+              value: 'jdbc:mysql://10.0.208.72:3306/golyakorte-staging?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=yes&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
           resources:
             limits:
               memory: 512Mi
