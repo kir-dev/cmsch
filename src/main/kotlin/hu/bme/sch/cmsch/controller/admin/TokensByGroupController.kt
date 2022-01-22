@@ -31,7 +31,7 @@ class TokensByGroupController(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() != false) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() != false) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -65,7 +65,7 @@ class TokensByGroupController(
 
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() != false) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() != false) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }

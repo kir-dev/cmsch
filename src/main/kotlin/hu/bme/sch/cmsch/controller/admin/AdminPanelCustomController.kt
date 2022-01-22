@@ -23,6 +23,7 @@ const val CONTROL_MODE_TOPLIST = "toplist"
 const val CONTROL_MODE_PAYED = "payed"
 const val CONTROL_MODE_NONE = "none"
 const val CONTROL_MODE_TRACK = "track"
+const val CONTROL_MODE_PDF = "pdf"
 
 @Controller
 @RequestMapping("/admin/control")
