@@ -1,7 +1,7 @@
 import React from 'react'
-import { Box, Flex, Heading, VStack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Heading, VStack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
 import { Page } from 'components/@layout/Page'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { RiddleCategory } from 'types/dto/riddles'
 import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
@@ -14,6 +14,8 @@ function progress(riddleCategory: RiddleCategory) {
 
 export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
   const bg = useColorModeValue('gray.200', 'gray.600')
+  const navigate = useNavigate()
+  const toast = useToast()
 
   const [riddleCategoryList, setRiddleCategoryList] = React.useState<RiddleCategory[]>([])
 
@@ -23,6 +25,20 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
       setRiddleCategoryList(res.data)
     })
   }, [setRiddleCategoryList])
+
+  function onRiddleCategoryClick(nextRiddle?: number) {
+    if (nextRiddle) {
+      navigate(`/riddleok/${nextRiddle}`)
+    } else {
+      toast({
+        title: 'Mindet megcsináltad!',
+        description: 'Ebben a kategóriában nincs több riddle!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true
+      })
+    }
+  }
 
   function progressGradient(progress: number, color: string) {
     const endDeg = 360 * progress
@@ -41,7 +57,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
       <VStack spacing={4} mt={5} align="stretch">
         {riddleCategoryList.map((riddleCategory) => (
           <Box bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: 'brand.500' }}>
-            <Link to={`/riddleok/${riddleCategory.nextRiddle}`} style={{ textDecoration: 'none' }}>
+            <Box onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)} style={{ textDecoration: 'none' }}>
               <Flex align="center" justifyContent="space-between">
                 <Text fontWeight="bold" fontSize="xl">
                   {riddleCategory.title}
@@ -52,7 +68,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
                   </Text>
                 </Box>
               </Flex>
-            </Link>
+            </Box>
           </Box>
         ))}
       </VStack>
