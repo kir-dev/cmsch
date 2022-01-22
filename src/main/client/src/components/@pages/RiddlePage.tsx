@@ -1,7 +1,20 @@
-import React, { FormEvent, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { FormEvent, useEffect, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Page } from 'components/@layout/Page'
-import { Alert, AlertIcon, Box, Button, Flex, FormControl, FormLabel, Heading, Image, Input, useColorModeValue } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Image,
+  Input,
+  useColorModeValue,
+  useToast
+} from '@chakra-ui/react'
 import axios from 'axios'
 import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'types/dto/riddles'
 import { API_BASE_URL } from 'utils/configurations'
@@ -10,6 +23,9 @@ type RiddleProps = {}
 
 export const RiddlePage: React.FC<RiddleProps> = (props) => {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const toast = useToast()
+
   if (!id) {
     return null
   }
@@ -21,7 +37,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
 
   const solutionInput = useRef<HTMLInputElement>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     axios.get<Riddle>(`${API_BASE_URL}/api/riddle/${id}`).then((res) => {
       setRiddle(res.data)
     })
@@ -29,24 +45,48 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
 
   function submitSolution(event: FormEvent) {
     event.preventDefault()
-    console.log(event)
     const solution = solutionInput?.current?.value
     axios.post<RiddleSubmissonResult>(`${API_BASE_URL}/api/riddle/${id}`, { solution: solution }).then((res) => {
       console.log(res)
       if (res.data.status == RiddleSubmissonStatus.WRONG) {
-        console.log('wrong')
+        toast({
+          title: 'Helytelen válasz!',
+          description: 'Próbáld meg újra, sikerülni fog!',
+          status: 'error',
+          duration: 9000,
+          isClosable: true
+        })
       }
       if (res.data.status == RiddleSubmissonStatus.CORRECT && res.data.nextId) {
-        console.log('open next riddle')
+        navigate(`/riddleok/${res.data.nextId}`)
+        const input = document.getElementById('solution') as HTMLInputElement
+        input.value = ''
+        axios.get<Riddle>(`${API_BASE_URL}/api/riddle/${res.data.nextId}`).then((resp) => {
+          setRiddle(resp.data)
+        })
+        toast({
+          title: 'Helyes megoldás!',
+          description: 'Csak így tovább!',
+          status: 'success',
+          duration: 9000,
+          isClosable: true
+        })
       }
       if (res.data.status == RiddleSubmissonStatus.CORRECT && !res.data.nextId) {
-        console.log('mind kesz')
+        navigate(`/riddleok/`)
+        toast({
+          title: 'Minden megvan!',
+          description: 'Igazán ügyi voltál!',
+          status: 'success',
+          duration: 9000,
+          isClosable: true
+        })
       }
     })
   }
 
   function getHint() {
-    return axios.get<Hint>(`${API_BASE_URL}/api/riddle/${id}/hint`).then((res) => {
+    return axios.put<Hint>(`${API_BASE_URL}/api/riddle/${id}/hint`).then((res) => {
       const newRiddle = { ...riddle, hint: res.data.hint }
       setRiddle(newRiddle)
     })
@@ -59,7 +99,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       </Flex>
 
       <Box>
-        <Image width="100%" src={riddle.imageUrl} alt="Riddle Kép" borderRadius="md" />
+        <Image width="100%" src={`/cdn/${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />
         {riddle.hint && (
           <Alert status="info" my={5} borderRadius="md">
             <AlertIcon />
