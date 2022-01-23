@@ -101,7 +101,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
         </Box>
         <VStack py={2} alignItems="flex-end">
           {profile?.role && RoleType[profile.role] >= RoleType.STAFF && (
-            <LinkButton colorScheme="brand" href="/admin/control">
+            <LinkButton colorScheme="brand" href="/admin/control" external>
               Admin panel
             </LinkButton>
           )}
