@@ -95,7 +95,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 
   return (
     <Page {...props} loginRequired>
-     <Helmet title="Profil" />
+      <Helmet title="Profil" />
       <Flex justifyContent="space-between" flexDirection={{ base: 'column', sm: 'row' }}>
         <Box>
           <Heading>{profile?.fullName}</Heading>
