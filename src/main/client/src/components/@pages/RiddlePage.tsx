@@ -18,6 +18,7 @@ import {
 import axios from 'axios'
 import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'types/dto/riddles'
 import { API_BASE_URL } from 'utils/configurations'
+import { Loading } from '../../utils/Loading'
 
 type RiddleProps = {}
 
@@ -34,20 +35,25 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
   const active = useColorModeValue('brand.500', 'brand.500')
 
   const [riddle, setRiddle] = React.useState<Riddle>({ id: 1, title: '', imageUrl: '', solved: false, hint: undefined })
+  const [loading, setLoading] = React.useState<boolean>(false)
 
   const solutionInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    axios.get<Riddle>(`${API_BASE_URL}/api/riddle/${id}`).then((res) => {
-      setRiddle(res.data)
-    })
+    setLoading(true)
+    axios
+      .get<Riddle>(`${API_BASE_URL}/api/riddle/${id}`)
+      .then((res) => {
+        setRiddle(res.data)
+        setLoading(false)
+      })
+      .catch(() => {})
   }, [setRiddle])
 
   function submitSolution(event: FormEvent) {
     event.preventDefault()
     const solution = solutionInput?.current?.value
     axios.post<RiddleSubmissonResult>(`${API_BASE_URL}/api/riddle/${id}`, { solution: solution }).then((res) => {
-      console.log(res)
       if (res.data.status === RiddleSubmissonStatus.WRONG) {
         toast({
           title: 'Helytelen válasz!',
@@ -91,6 +97,8 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       setRiddle(newRiddle)
     })
   }
+
+  if (loading) return <Loading />
 
   return (
     <Page {...props}>
