@@ -38,8 +38,8 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/admin/**", "/cdn/**")
                     .hasAnyRole(RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
-                .and()
-                .formLogin().disable()
+                .and().formLogin().disable()
+                .exceptionHandling().accessDeniedPage("/403")
         http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**")
     }
 

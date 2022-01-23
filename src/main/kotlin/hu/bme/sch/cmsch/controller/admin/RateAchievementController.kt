@@ -26,7 +26,7 @@ class RateAchievementController(
     private val view = "rate-achievements"
     private val titleSingular = "Értékelés"
     private val titlePlural = "Értékelések"
-    private val description = "A tankörök által beadott értékelések"
+    private val description = "A beadott bucketlistek értékelése"
 
     private val entitySourceMapping: Map<String, (SubmittedAchievementEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
