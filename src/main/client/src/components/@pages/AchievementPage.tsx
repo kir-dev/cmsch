@@ -11,6 +11,7 @@ import { Paragraph } from 'components/@commons/Basics'
 import { AchievementFullDetailsView, achievementType, achievementStatus } from '../../types/dto/achievements'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
+import { useServiceContext } from '../../utils/useServiceContext'
 
 export const AchievementPage: React.FC = (props) => {
   const [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
@@ -21,23 +22,31 @@ export const AchievementPage: React.FC = (props) => {
   const toast = useToast()
   const { id } = useParams()
   const navigate = useNavigate()
+  const { throwError } = useServiceContext()
+
   if (!id) {
+    navigate('/')
     return null
   }
 
   const getAchievementDetails = () => {
-    axios.get<AchievementFullDetailsView>(`${API_BASE_URL}/api/achievement/submit/${id}`).then((res) => {
-      if (!res.data.achievement) {
-        navigate('/bucketlist')
-        toast({
-          title: 'Challange nem található',
-          description: 'Ilyen challange nem létezik vagy nincs jogosultságod hozzá.',
-          status: 'error',
-          isClosable: true
-        })
-      }
-      setAchDetails(res.data)
-    })
+    axios
+      .get<AchievementFullDetailsView>(`${API_BASE_URL}/api/achievement/submit/${id}`)
+      .then((res) => {
+        if (!res.data.achievement) {
+          navigate('/bucketlist')
+          toast({
+            title: 'Challange nem található',
+            description: 'Ilyen challange nem létezik vagy nincs jogosultságod hozzá.',
+            status: 'error',
+            isClosable: true
+          })
+        }
+        setAchDetails(res.data)
+      })
+      .catch(() => {
+        throwError('Nem sikerült lekérdezni a Bucketlist feladatot.')
+      })
   }
 
   useEffect(() => {
@@ -97,11 +106,7 @@ export const AchievementPage: React.FC = (props) => {
           }
         })
         .catch(() => {
-          toast({
-            title: 'Valamilyen hiba történt',
-            status: 'error',
-            isClosable: true
-          })
+          throwError('Hiba történt a beküldés közben.', { toast: true })
         })
     } else {
       toast({

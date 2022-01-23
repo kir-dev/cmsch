@@ -6,6 +6,7 @@ import { RiddleCategory } from 'types/dto/riddles'
 import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
+import { useServiceContext } from '../../utils/useServiceContext'
 
 type RiddleListProps = {}
 
@@ -17,6 +18,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
   const bg = useColorModeValue('gray.200', 'gray.600')
   const navigate = useNavigate()
   const toast = useToast()
+  const { throwError } = useServiceContext()
 
   const [riddleCategoryList, setRiddleCategoryList] = React.useState<RiddleCategory[]>([])
   const [loading, setLoading] = React.useState<boolean>(false)
@@ -29,7 +31,9 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
         setRiddleCategoryList(res.data)
         setLoading(false)
       })
-      .catch(() => {})
+      .catch(() => {
+        throwError('Nem sikerült lekérni a Riddle-öket.')
+      })
   }, [setRiddleCategoryList])
 
   function onRiddleCategoryClick(nextRiddle?: number) {

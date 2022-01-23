@@ -7,16 +7,23 @@ import { API_BASE_URL } from '../../utils/configurations'
 import { AchievementCategory, AllAchievementCategories } from '../../types/dto/achievements'
 import { AchievementCategoryItem } from '../@commons/AchievementCategoryItem'
 import { Loading } from '../../utils/Loading'
+import { useServiceContext } from '../../utils/useServiceContext'
 
 export const AchievementList: React.FC = (props) => {
   const [categories, setCategories] = useState<AchievementCategory[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const { throwError } = useServiceContext()
 
   useEffect(() => {
-    axios.get<AllAchievementCategories>(`${API_BASE_URL}/api/achievement`).then((res) => {
-      setCategories(res.data.categories)
-      setLoading(false)
-    })
+    axios
+      .get<AllAchievementCategories>(`${API_BASE_URL}/api/achievement`)
+      .then((res) => {
+        setCategories(res.data.categories)
+        setLoading(false)
+      })
+      .catch(() => {
+        throwError('Nem sikerült lekérdezni a Bucketlist feladatokat.')
+      })
   }, [])
 
   if (loading)

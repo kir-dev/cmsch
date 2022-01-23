@@ -9,13 +9,17 @@ import { getToastTitle } from '../../utils/toastTitle'
 export const Warning: React.FC = () => {
   const [warning, setWarning] = React.useState<WarningView | undefined>(undefined)
   const [closed, setClosed] = React.useState<boolean>(false)
-
   const closeWarning = () => setClosed(true)
 
   React.useEffect(() => {
-    axios.get<WarningView>(`${API_BASE_URL}/api/warning`).then((res) => {
-      if (res.data.message !== '') setWarning(res.data)
-    })
+    axios
+      .get<WarningView>(`${API_BASE_URL}/api/warning`)
+      .then((res) => {
+        if (res.data.message !== '') setWarning(res.data)
+      })
+      .catch(() => {
+        console.error('Nem sikerült lekérni a figyelmeztetéseket.')
+      })
   }, [setWarning])
 
   if (warning === undefined || closed) return null
