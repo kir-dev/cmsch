@@ -248,7 +248,15 @@
                         <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
                     </object>
                     <object th:if="${controlMode == 'grade'}" th:remove="tag">
-
+                        <br />
+                        <label>Gyors értékelés</label>
+                        <input type="submit" value="max" th:value="|Max pont (${maxScore})|"
+                               th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore}'; |" />
+                        <input type="submit" value="half" th:value="|Fele pont (${maxScore / 2})|"
+                               th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore / 2}'; |" />
+                        <input type="submit" value="Elutasít"
+                               th:onclick="|document.getElementsByName('approved')[0].checked = false; document.getElementsByName('rejected')[0].checked = true; document.getElementsByName('score')[0].value = '0'; |"/>
+                        <span class="note">Ezek a gombok a pontot és az elfogadva státuszt állítják, a kattintás után lezár, ezért a szöves értékelést írd meg előtte!</span>
                     </object>
                 </form>
             </div>
