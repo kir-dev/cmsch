@@ -1,6 +1,6 @@
 export interface NavItem {
   label: string
   children?: Array<NavItem>
-  href: string
+  href: string | undefined
   loginRequired?: boolean
 }
