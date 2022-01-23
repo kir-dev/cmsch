@@ -13,7 +13,6 @@ import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.servlet.http.HttpServletRequest
@@ -72,7 +71,7 @@ class MainController(
                 upcomingEvents = upcomingEvents,
                 achievements = request.getUserOrNull()?.group?.let { achievements.getAllAchievementsForGroup(it) }
                         ?: achievements.getAllAchievementsForGuests(),
-                leaderBoard = leaderBoardService.getBoard(),
+                leaderBoard = leaderBoardService.getBoardForGroups(),
                 leaderBoardVisible = config.isLeaderBoardEnabled(),
                 leaderBoardFrozen = !config.isLeaderBoardUpdates()
         )

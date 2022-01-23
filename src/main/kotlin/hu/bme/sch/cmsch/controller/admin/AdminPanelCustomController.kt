@@ -2,7 +2,8 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.dao.SubmittedAchievementRepository
-import hu.bme.sch.cmsch.dto.TopListEntryDto
+import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
+import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.TrackGroupVirtualEntity
@@ -37,7 +38,8 @@ class AdminPanelCustomController(
         @Value("\${cmsch.profile.qr-prefix:G7_}") private val prefix: String
 ) {
 
-    private val topListDescriptor = OverviewBuilder(TopListEntryDto::class)
+    private val groupTopListDescriptor = OverviewBuilder(TopListAsGroupEntryDto::class)
+    private val userTopListDescriptor = OverviewBuilder(TopListAsUserEntryDto::class)
     private val debtsDescriptor = OverviewBuilder(SoldProductEntity::class)
     private val membersDescriptor = OverviewBuilder(GroupMemberVirtualEntity::class)
     private val submittedDescriptor = OverviewBuilder(CheckRatingVirtualEntity::class)
@@ -58,21 +60,21 @@ class AdminPanelCustomController(
         return "admin"
     }
 
-    @GetMapping("/toplist")
-    fun toplist(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+    @GetMapping("/group-toplist")
+    fun groupToplist(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
 
-        model.addAttribute("title", "Toplista")
+        model.addAttribute("title", "Tankör Toplista")
         model.addAttribute("description", "Tankörök helyezése a pontversenyben. " +
                 "A pontok 10 percenként számítódnak újra. " +
                 "Manuális újrageneráláshoz van egy gomb a lap alján.")
-        model.addAttribute("view", "toplist")
-        model.addAttribute("columns", topListDescriptor.getColumns())
-        model.addAttribute("fields", topListDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", leaderBoardService.getBoardAnyways())
+        model.addAttribute("view", "group-toplist")
+        model.addAttribute("columns", groupTopListDescriptor.getColumns())
+        model.addAttribute("fields", groupTopListDescriptor.getColumnDefinitions())
+        model.addAttribute("rows", leaderBoardService.getBoardAnywaysForGroups())
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_TOPLIST)
         model.addAttribute("leaderboardEnabled", config.isLeaderBoardEnabled())
@@ -81,37 +83,93 @@ class AdminPanelCustomController(
         return "overview"
     }
 
-    @GetMapping("/toplist/refresh")
-    fun refreshTopList(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+    @GetMapping("/group-toplist/refresh")
+    fun refreshGroupTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
 
-        leaderBoardService.forceRecalculate()
-        return "redirect:/admin/control/toplist"
+        leaderBoardService.forceRecalculateForGroups()
+        return "redirect:/admin/control/group-toplist"
     }
 
-    @GetMapping("/toplist/refresh-enable")
-    fun enableRefreshTopList(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+    @GetMapping("/group-toplist/refresh-enable")
+    fun enableRefreshGroupTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
 
         config.setLeaderboardUpdates(true)
-        return "redirect:/admin/control/toplist"
+        return "redirect:/admin/control/group-toplist"
     }
 
-    @GetMapping("/toplist/refresh-disable")
-    fun disableRefreshTopList(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+    @GetMapping("/group-toplist/refresh-disable")
+    fun disableRefreshGroupTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
 
         config.setLeaderboardUpdates(false)
-        return "redirect:/admin/control/toplist"
+        return "redirect:/admin/control/group-toplist"
+    }
+
+    @GetMapping("/user-toplist")
+    fun userToplist(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        model.addAttribute("title", "Felhasználó Toplista")
+        model.addAttribute("description", "Felhasználó helyezése a pontversenyben. " +
+                "A pontok 10 percenként számítódnak újra. " +
+                "Manuális újrageneráláshoz van egy gomb a lap alján.")
+        model.addAttribute("view", "user-toplist")
+        model.addAttribute("columns", userTopListDescriptor.getColumns())
+        model.addAttribute("fields", userTopListDescriptor.getColumnDefinitions())
+        model.addAttribute("rows", leaderBoardService.getBoardAnywaysForUsers())
+        model.addAttribute("user", request.getUser())
+        model.addAttribute("controlMode", CONTROL_MODE_TOPLIST)
+        model.addAttribute("leaderboardEnabled", config.isLeaderBoardEnabled())
+        model.addAttribute("leaderboardUpdates", config.isLeaderBoardUpdates())
+
+        return "overview"
+    }
+
+    @GetMapping("/user-toplist/refresh")
+    fun refreshUserTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        leaderBoardService.forceRecalculateForUsers()
+        return "redirect:/admin/control/user-toplist"
+    }
+
+    @GetMapping("/user-toplist/refresh-enable")
+    fun enableRefreshUserTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        config.setLeaderboardUpdates(true)
+        return "redirect:/admin/control/user-toplist"
+    }
+
+    @GetMapping("/user-toplist/refresh-disable")
+    fun disableRefreshUserTopList(model: Model, request: HttpServletRequest): String {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantMedia }?.not() ?: true) {
+            model.addAttribute("user", request.getUser())
+            return "admin403"
+        }
+
+        config.setLeaderboardUpdates(false)
+        return "redirect:/admin/control/user-toplist"
     }
 
     @GetMapping("/check-ratings")

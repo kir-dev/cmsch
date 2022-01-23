@@ -50,7 +50,10 @@
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/achievements}">Bucketlist feladatok</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/categories}">Bucketlist kategóriák</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/rate-achievements}">Bucketlist értékelés</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/toplist}">Toplista</a>
+
+                <h2 th:if="${userEntity.isAdmin()}">Toplista</h2>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantMedia()}" th:href="@{/admin/control/user-toplist}">Felhasználói toplista</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantMedia()}" th:href="@{/admin/control/group-toplist}">Tankör toplista</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/check-ratings}">Pontok ellenőrzése</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Riddle</h2>
