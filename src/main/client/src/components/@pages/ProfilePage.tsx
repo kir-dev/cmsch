@@ -11,9 +11,7 @@ import {
   Skeleton,
   VStack,
   SkeletonCircle,
-  HStack,
-  Box,
-  Button
+  Box
 } from '@chakra-ui/react'
 import * as React from 'react'
 import { ProfileDTO, RoleType } from 'types/dto/profile'
@@ -96,24 +94,22 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 
   return (
     <Page {...props} loginRequired>
-      <HStack>
+      <Flex justifyContent="space-between" flexDirection={{ base: 'column', sm: 'row' }}>
         <Box>
-          <Heading>Profil</Heading>
-          <Text fontSize="3xl">{profile?.fullName}</Text>
+          <Heading>{profile?.fullName}</Heading>
+          <Text fontSize="3xl">Tankör: {profile?.groupName || 'nincs'}</Text>
         </Box>
-        <Button colorScheme="brand" onClick={logout}>
-          Kijelentkezés
-        </Button>
-      </HStack>
-
-      <HStack justify="space-between">
-        <Text fontSize="3xl">Tankör: {profile?.groupName || 'nincs'}</Text>
-        {profile?.role && RoleType[profile.role] >= RoleType.STAFF && (
-          <LinkButton as="span" colorScheme="red" href="/admin/control" external>
-            Admin panel
+        <VStack py={2} alignItems="flex-end">
+          {profile?.role && RoleType[profile.role] >= RoleType.STAFF && (
+            <LinkButton colorScheme="brand" href="/admin/control">
+              Admin panel
+            </LinkButton>
+          )}
+          <LinkButton href="#" colorScheme="brand" variant="outline" onClick={logout}>
+            Kijelentkezés
           </LinkButton>
-        )}
-      </HStack>
+        </VStack>
+      </Flex>
 
       <Wrap spacing="3rem" justify="center" mt="10">
         {challenges(profile!).map((challenge) => (
