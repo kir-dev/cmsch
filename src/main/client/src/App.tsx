@@ -24,9 +24,9 @@ export function App() {
   return (
     <ChakraProvider theme={customTheme}>
       <BrowserRouter>
-        <IndexLayout>
-          <ServiceProvider>
-            <AuthProvider>
+        <ServiceProvider>
+          <AuthProvider>
+            <IndexLayout>
               <Routes>
                 <Route path="/">
                   {/*Főoldal*/}
@@ -69,9 +69,9 @@ export function App() {
                   </Route>
                 </Route>
               </Routes>
-            </AuthProvider>
-          </ServiceProvider>
-        </IndexLayout>
+            </IndexLayout>
+          </AuthProvider>
+        </ServiceProvider>
       </BrowserRouter>
     </ChakraProvider>
   )

@@ -24,12 +24,15 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider: React.FC = ({ children }) => {
   const { throwError } = useServiceContext()
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(Cookies.get(CookieKeys.LOGGED_IN) === 'true')
+
   const login = () => {
     location.href = '/control/login'
   }
+
   const logout = () => {
     location.href = '/control/logout'
   }
+
   useEffect(() => {
     if (isLoggedIn)
       axios
@@ -42,5 +45,6 @@ export const AuthProvider: React.FC = ({ children }) => {
           setIsLoggedIn(false)
         })
   }, [isLoggedIn])
-  return <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}>{children}</AuthContext.Provider>
+
+  return <AuthContext.Provider value={{ isLoggedIn, login, logout }}>{children}</AuthContext.Provider>
 }
