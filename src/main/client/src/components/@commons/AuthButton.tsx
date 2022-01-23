@@ -3,12 +3,9 @@ import { Button } from '@chakra-ui/react'
 import { useAuthContext } from '../../utils/useAuthContext'
 
 export const AuthButton: React.FC = () => {
-  const { isLoggedIn, login, logout } = useAuthContext()
-  return isLoggedIn ? (
-    <Button colorScheme="brand" variant="outline" onClick={logout}>
-      Kijelentkezés
-    </Button>
-  ) : (
+  const { isLoggedIn, login } = useAuthContext()
+  if (isLoggedIn) return null
+  return (
     <Button colorScheme="brand" onClick={login}>
       Bejelentkezés
     </Button>
