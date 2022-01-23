@@ -20,6 +20,7 @@ import QRreader from 'react-qr-reader'
 import { useNavigate } from 'react-router-dom'
 import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
 import { API_BASE_URL } from 'utils/configurations'
+import { useServiceContext } from '../../utils/useServiceContext'
 
 enum ScanViewState {
   Scanning,
@@ -37,7 +38,7 @@ interface ScanView {
 export const QRScan: React.FC = (props) => {
   const [state, setState] = React.useState<ScanView>({ state: ScanViewState.Scanning })
   const navigate = useNavigate()
-
+  const { throwError } = useServiceContext()
   const handleScan = (qrData: any) => {
     if (qrData) {
       // set state to loading
@@ -55,16 +56,15 @@ export const QRScan: React.FC = (props) => {
         .then((res) => {
           setState({ state: ScanViewState.Success, response: res.data })
         })
-        //catch any network error
-        .catch((err) => {
-          console.log(err)
-          setState({ state: ScanViewState.Error, errorMessage: 'A szerver nem válaszol!' })
+        .catch(() => {
+          throwError('Nem sikerült érvényesíteni a beolvasást.')
         })
     }
   }
   //handle any scanner error
   const handleError = (err: any) => {
     console.log(err)
+    throwError('Beolvasási hiba.', { toast: true })
   }
 
   const backButtonHandler = () => {

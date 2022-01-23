@@ -34,7 +34,7 @@ export const Home: React.FC = () => {
       </Heading>
       <Paragraph textAlign="center">Három típusú feladatot tudtok teljesíteni. Ezekhez AuthSch fiók használata szükséges!</Paragraph>
       <ButtonGroup marginTop={10} justifyContent="center">
-        <LinkButton href="#" variant="outline" colorScheme="brand">
+        <LinkButton href="/riddleok" variant="outline" colorScheme="brand">
           Riddle
         </LinkButton>
         <LinkButton href="/bucketlist" variant="outline" colorScheme="brand">

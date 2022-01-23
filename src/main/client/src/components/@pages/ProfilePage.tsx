@@ -19,6 +19,7 @@ import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { LinkButton } from '../@commons/LinkButton'
+import { useServiceContext } from '../../utils/useServiceContext'
 
 const challenges = (profile: ProfileDTO) => [
   {
@@ -67,13 +68,18 @@ export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
 
 export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const [profile, setProfile] = React.useState<ProfileDTO | undefined>(undefined)
-
+  const { throwError } = useServiceContext()
   React.useEffect(() => {
-    axios.get<ProfileDTO>(`${API_BASE_URL}/api/profile`).then((res) => {
-      if (res.status === 200) {
-        setProfile(res.data)
-      }
-    })
+    axios
+      .get<ProfileDTO>(`${API_BASE_URL}/api/profile`)
+      .then((res) => {
+        if (res.status === 200) {
+          setProfile(res.data)
+        }
+      })
+      .catch(() => {
+        throwError('Nem sikerült lekérdezni a profilt.')
+      })
   }, [setProfile])
 
   if (profile === undefined)

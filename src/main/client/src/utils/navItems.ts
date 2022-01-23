@@ -14,11 +14,7 @@ export const NAV_ITEMS: Array<NavItem> = [
     href: '/korok'
   },
   {
-    label: 'Riddles',
-    href: '/riddleok'
-  },
-  {
-    label: 'Profil',
+    label: 'Feladatok',
     href: '/profil',
     loginRequired: true,
     children: [
@@ -28,10 +24,21 @@ export const NAV_ITEMS: Array<NavItem> = [
         loginRequired: true
       },
       {
+        label: 'Riddle',
+        href: '/riddleok',
+        loginRequired: true
+      },
+      {
         label: 'QR',
         href: '/qr',
         loginRequired: true
       }
     ]
+  },
+  {
+    label: 'Profil',
+    href: '/profil',
+    loginRequired: true,
+    children: [{ label: 'Profilom', href: '/profil', loginRequired: true }]
   }
 ]

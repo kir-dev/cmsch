@@ -10,8 +10,11 @@ import { API_BASE_URL } from 'utils/configurations'
 import { ProfileDTO } from 'types/dto/profile'
 import { LinkButton } from '../@commons/LinkButton'
 import { Loading } from '../../utils/Loading'
+import { useServiceContext } from '../../utils/useServiceContext'
 
 export const QRList: React.FC = (props) => {
+  const { throwError } = useServiceContext()
+
   const [tokens, setTokens] = useState<TokenDTO[]>([])
   const [totalTokenCount, setTotalTokenCount] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
@@ -24,12 +27,10 @@ export const QRList: React.FC = (props) => {
         const profile = res.data as ProfileDTO
         setTokens(profile.tokens || [])
         setTotalTokenCount(profile.totalTokenCount || 0)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
         setLoading(false)
+      })
+      .catch(() => {
+        throwError('Nem sikerült lekérni a QR kódokat.')
       })
   }, [])
 
