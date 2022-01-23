@@ -2,10 +2,6 @@ import { NavItem } from '../types/NavItem'
 
 export const NAV_ITEMS: Array<NavItem> = [
   {
-    label: 'Főoldal',
-    href: '/'
-  },
-  {
     label: 'Reszortok',
     href: '/reszortok'
   },
@@ -38,7 +34,6 @@ export const NAV_ITEMS: Array<NavItem> = [
   {
     label: 'Profil',
     href: '/profil',
-    loginRequired: true,
-    children: [{ label: 'Profilom', href: '/profil', loginRequired: true }]
+    loginRequired: true
   }
 ]

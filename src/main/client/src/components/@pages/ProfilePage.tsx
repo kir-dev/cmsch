@@ -11,7 +11,9 @@ import {
   Skeleton,
   VStack,
   SkeletonCircle,
-  HStack
+  HStack,
+  Box,
+  Button
 } from '@chakra-ui/react'
 import * as React from 'react'
 import { ProfileDTO, RoleType } from 'types/dto/profile'
@@ -20,6 +22,7 @@ import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { LinkButton } from '../@commons/LinkButton'
 import { useServiceContext } from '../../utils/useServiceContext'
+import { useAuthContext } from 'utils/useAuthContext'
 
 const challenges = (profile: ProfileDTO) => [
   {
@@ -69,6 +72,8 @@ export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
 export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const [profile, setProfile] = React.useState<ProfileDTO | undefined>(undefined)
   const { throwError } = useServiceContext()
+  const { logout } = useAuthContext()
+
   React.useEffect(() => {
     axios
       .get<ProfileDTO>(`${API_BASE_URL}/api/profile`)
@@ -91,8 +96,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 
   return (
     <Page {...props} loginRequired>
-      <Heading>Profil</Heading>
-      <Text fontSize="3xl">{profile?.fullName}</Text>
+      <HStack>
+        <Box>
+          <Heading>Profil</Heading>
+          <Text fontSize="3xl">{profile?.fullName}</Text>
+        </Box>
+        <Button colorScheme="brand" onClick={logout}>
+          Kijelentkezés
+        </Button>
+      </HStack>
+
       <HStack justify="space-between">
         <Text fontSize="3xl">Tankör: {profile?.groupName || 'nincs'}</Text>
         {profile?.role && RoleType[profile.role] >= RoleType.STAFF && (
@@ -101,6 +114,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
           </LinkButton>
         )}
       </HStack>
+
       <Wrap spacing="3rem" justify="center" mt="10">
         {challenges(profile!).map((challenge) => (
           <WrapItem key={challenge.name}>
