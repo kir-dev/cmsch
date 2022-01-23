@@ -18,57 +18,60 @@ import { QRScanResult } from 'components/@pages/QRScanResult'
 import { AuthProvider } from './utils/AuthContext'
 import { ErrorPage } from './components/@pages/ErrorPage'
 import { ServiceProvider } from './utils/ServiceContext'
+import { IndexLayout } from 'components/@layout/IndexLayout'
 
 export function App() {
   return (
     <ChakraProvider theme={customTheme}>
       <BrowserRouter>
-        <ServiceProvider>
-          <AuthProvider>
-            <Routes>
-              <Route path="/">
-                {/*Főoldal*/}
-                <Route index element={<Home />} />
-                {/*Profil*/}
-                <Route path="profil">
-                  <Route index element={<ProfilePage />} />
-                </Route>
-                {/*Reszortok*/}
-                <Route path="reszortok">
-                  <Route path=":name">
-                    <Route index element={<ResortPage />} />
+        <IndexLayout>
+          <ServiceProvider>
+            <AuthProvider>
+              <Routes>
+                <Route path="/">
+                  {/*Főoldal*/}
+                  <Route index element={<Home />} />
+                  {/*Profil*/}
+                  <Route path="profil">
+                    <Route index element={<ProfilePage />} />
                   </Route>
-                  <Route index element={<ResortList />} />
+                  {/*Reszortok*/}
+                  <Route path="reszortok">
+                    <Route path=":name">
+                      <Route index element={<ResortPage />} />
+                    </Route>
+                    <Route index element={<ResortList />} />
+                  </Route>
+                  {/*Körök*/}
+                  <Route path="korok">
+                    <Route path=":name" element={<CommunityPage />} />
+                    <Route index element={<CommunityList />} />
+                  </Route>
+                  {/*Riddle*/}
+                  <Route path="riddleok">
+                    <Route path=":id" element={<RiddlePage />} />
+                    <Route index element={<RiddleCategoryList />} />
+                  </Route>
+                  {/*BucketList*/}
+                  <Route path="bucketlist">
+                    <Route path=":id" element={<AchievementPage />} />
+                    <Route index element={<AchievementList />} />
+                  </Route>
+                  {/*QR*/}
+                  <Route path="qr-scanned" element={<QRScanResult />} />
+                  <Route path="qr">
+                    <Route index element={<QRList />} />
+                    <Route path="scan" element={<QRScan />} />
+                  </Route>
+                  {/*Error*/}
+                  <Route path="error">
+                    <Route index element={<ErrorPage />} />
+                  </Route>
                 </Route>
-                {/*Körök*/}
-                <Route path="korok">
-                  <Route path=":name" element={<CommunityPage />} />
-                  <Route index element={<CommunityList />} />
-                </Route>
-                {/*Riddle*/}
-                <Route path="riddleok">
-                  <Route path=":id" element={<RiddlePage />} />
-                  <Route index element={<RiddleCategoryList />} />
-                </Route>
-                {/*BucketList*/}
-                <Route path="bucketlist">
-                  <Route path=":id" element={<AchievementPage />} />
-                  <Route index element={<AchievementList />} />
-                </Route>
-                {/*QR*/}
-                <Route path="qr-scanned" element={<QRScanResult />} />
-                <Route path="qr">
-                  <Route index element={<QRList />} />
-                  <Route path="scan" element={<QRScan />} />
-                </Route>
-                {/*Error*/}
-                <Route path="error">
-                  <Route index element={<ErrorPage />} />
-                </Route>
-              </Route>
-            </Routes>
-          </AuthProvider>
-        </ServiceProvider>
+              </Routes>
+            </AuthProvider>
+          </ServiceProvider>
+        </IndexLayout>
       </BrowserRouter>
     </ChakraProvider>
   )
