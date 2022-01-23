@@ -36,8 +36,8 @@ export const AchievementPage: React.FC = (props) => {
         if (!res.data.achievement) {
           navigate('/bucketlist')
           toast({
-            title: 'Challange nem található',
-            description: 'Ilyen challange nem létezik vagy nincs jogosultságod hozzá.',
+            title: 'Challenge nem található',
+            description: 'Ilyen challenge nem létezik vagy nincs jogosultságod hozzá.',
             status: 'error',
             isClosable: true
           })

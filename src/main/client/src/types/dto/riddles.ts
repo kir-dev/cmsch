@@ -15,13 +15,13 @@ export interface RiddleCategory {
   nextRiddle?: number
 }
 
-export enum RiddleSubmissonStatus {
+export enum RiddleSubmissionStatus {
   CORRECT = 'CORRECT',
   WRONG = 'WRONG'
 }
 
-export interface RiddleSubmissonResult {
-  status: RiddleSubmissonStatus
+export interface RiddleSubmissionResult {
+  status: RiddleSubmissionStatus
   nextId?: number
 }
 

@@ -16,7 +16,7 @@ import {
   useToast
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'types/dto/riddles'
+import { Hint, Riddle, RiddleSubmissionResult, RiddleSubmissionStatus } from 'types/dto/riddles'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
@@ -58,9 +58,9 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
     event.preventDefault()
     const solution = solutionInput?.current?.value
     axios
-      .post<RiddleSubmissonResult>(`${API_BASE_URL}/api/riddle/${id}`, { solution: solution })
+      .post<RiddleSubmissionResult>(`${API_BASE_URL}/api/riddle/${id}`, { solution: solution })
       .then((res) => {
-        if (res.data.status === RiddleSubmissonStatus.WRONG) {
+        if (res.data.status === RiddleSubmissionStatus.WRONG) {
           toast({
             title: 'Helytelen válasz!',
             description: 'Próbáld meg újra, sikerülni fog!',
@@ -69,7 +69,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
             isClosable: true
           })
         }
-        if (res.data.status === RiddleSubmissonStatus.CORRECT && res.data.nextId) {
+        if (res.data.status === RiddleSubmissionStatus.CORRECT && res.data.nextId) {
           navigate(`/riddleok/${res.data.nextId}`)
           const input = document.getElementById('solution') as HTMLInputElement
           input.value = ''
@@ -84,7 +84,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
             isClosable: true
           })
         }
-        if (res.data.status === RiddleSubmissonStatus.CORRECT && !res.data.nextId) {
+        if (res.data.status === RiddleSubmissionStatus.CORRECT && !res.data.nextId) {
           navigate(`/riddleok/`)
           toast({
             title: 'Minden megvan!',
