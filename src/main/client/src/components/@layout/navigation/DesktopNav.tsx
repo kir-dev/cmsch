@@ -43,7 +43,7 @@ const DesktopNav: React.FC = () => {
         <Box key={navItem.label}>
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
-              <Link to={navItem.href || '#'}>
+              <Link to={navItem.href || '#'} style={navItem.href ? {} : { cursor: 'default' }}>
                 <Text
                   p={2}
                   fontSize="md"
