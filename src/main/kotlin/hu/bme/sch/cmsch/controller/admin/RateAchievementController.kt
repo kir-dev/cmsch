@@ -133,7 +133,9 @@ class RateAchievementController(
             model.addAttribute("data", entity.orElseThrow())
             model.addAttribute("taskTitle", entity.orElseThrow().achievement?.title)
             model.addAttribute("taskDescription", entity.orElseThrow().achievement?.description)
-            model.addAttribute("comment", "Feladványhoz tartozó max pont: " + (entity.orElseThrow().achievement?.maxScore ?: "n/a"))
+            val maxScore = entity.orElseThrow().achievement?.maxScore ?: 0
+            model.addAttribute("comment", "Feladványhoz tartozó max pont: " + maxScore)
+            model.addAttribute("maxScore", maxScore)
         }
         return "details"
     }

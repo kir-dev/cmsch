@@ -59,19 +59,19 @@ open class AchievementsService(
 
     @Transactional(readOnly = true)
     open fun getAllAchievementsForGroup(group: GroupEntity): List<AchievementEntityWrapper> {
-        return achievements.findAll()
+        return achievements.findAllByVisibleTrue()
                 .map { findSubmissionStatusForGroup(it, group) }
     }
 
     @Transactional(readOnly = true)
     open fun getAllAchievementsForUser(user: UserEntity): List<AchievementEntityWrapper> {
-        return achievements.findAll()
+        return achievements.findAllByVisibleTrue()
             .map { findSubmissionStatusForUser(it, user) }
     }
 
     @Transactional(readOnly = true)
     open fun getAllAchievementsForGuests(): List<AchievementEntityWrapper> {
-        return achievements.findAll()
+        return achievements.findAllByVisibleTrue()
                 .map { AchievementEntityWrapper(it, AchievementStatus.NOT_LOGGED_IN, "") }
     }
 
@@ -154,7 +154,7 @@ open class AchievementsService(
     ): AchievementSubmissionStatus {
 
         val groupName = if (groupId != null) user.group?.name else null
-        val userName = if (groupId != null) user.fullName else null
+        val userName = if (userId != null) user.fullName else null
 
         if (achievement.type == AchievementType.TEXT) {
             if (answer.textAnswer.isBlank())
