@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { RiddleCategory } from 'types/dto/riddles'
 import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
+import { Loading } from '../../utils/Loading'
 
 type RiddleListProps = {}
 
@@ -18,12 +19,17 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
   const toast = useToast()
 
   const [riddleCategoryList, setRiddleCategoryList] = React.useState<RiddleCategory[]>([])
+  const [loading, setLoading] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-    axios.get<RiddleCategory[]>(`${API_BASE_URL}/api/riddle`).then((res) => {
-      console.log(res)
-      setRiddleCategoryList(res.data)
-    })
+    setLoading(true)
+    axios
+      .get<RiddleCategory[]>(`${API_BASE_URL}/api/riddle`)
+      .then((res) => {
+        setRiddleCategoryList(res.data)
+        setLoading(false)
+      })
+      .catch(() => {})
   }, [setRiddleCategoryList])
 
   function onRiddleCategoryClick(nextRiddle?: number) {
@@ -50,6 +56,8 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
     }
     return `conic-gradient(grey 0deg,${color} 10deg, ${color} ${endDeg}deg, grey ${endDeg + 10}deg)`
   }
+
+  if (loading) return <Loading />
 
   return (
     <Page {...props}>
