@@ -20,6 +20,7 @@ const val STAFF_MESSAGE = "STAFF_MESSAGE"
 const val EVENT_FINISHED = "EVENT_FINISHED"
 const val REQUEST_FOR_NEPTUN = "REQUEST_FOR_NEPTUN"
 const val MIN_TOKEN_TO_COMPLETE = "MIN_TOKEN_TO_COMPLETE"
+const val HINT_SCORE_PERCENTAGE = "HINT_SCORE_PERCENTAGE"
 
 @Service
 class RealtimeConfigService(
@@ -33,37 +34,40 @@ class RealtimeConfigService(
     @PostConstruct
     fun init() {
         if (realtimeConfig.findByKey(WARNING_MESSAGE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_MESSAGE, ""))
+            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_MESSAGE, "", "Ez a szöveg jelenik meg az oldal tetején minden felhasználónak"))
 
         if (realtimeConfig.findByKey(WARNING_TYPE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_TYPE, "warning"))
+            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_TYPE, "warning", "success, info, warning, error"))
 
         if (realtimeConfig.findByKey(LEADER_BOARD_ENABLED).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_ENABLED, "true"))
+            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_ENABLED, "true", "true, false"))
 
         if (realtimeConfig.findByKey(LEADER_BOARD_UPDATES).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_UPDATES, "true"))
+            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_UPDATES, "true", "true, false"))
 
         if (realtimeConfig.findByKey(EVENT_FINISHED).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, EVENT_FINISHED, "false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, EVENT_FINISHED, "false", "true, false"))
 
         if (realtimeConfig.findByKey(SITE_LOW_PROFILE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, SITE_LOW_PROFILE, "false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, SITE_LOW_PROFILE, "false", "true, false"))
 
         if (realtimeConfig.findByKey(MESSAGE_OF_THE_DAY).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, MESSAGE_OF_THE_DAY, "Jobb ma egy túzok, mint holnap egy veréb!"))
+            realtimeConfig.save(RealtimeConfigEntity(0, MESSAGE_OF_THE_DAY, "Jobb ma egy túzok, mint holnap egy veréb!", "Ez a szöveg jelenik meg a bejelentkezés után"))
 
         if (realtimeConfig.findByKey(STAFF_MESSAGE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, STAFF_MESSAGE, "Szorgos népünk győzni fog!"))
+            realtimeConfig.save(RealtimeConfigEntity(0, STAFF_MESSAGE, "Szorgos népünk győzni fog!", "Ez a szöveg jelenik meg az admin oldal tetején"))
 
         if (realtimeConfig.findByKey(WEBSITE_URL).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, defaultWebsiteUrl))
+            realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, defaultWebsiteUrl, "Átirányításoknál használt cím, mindig mutasson a frontendhez (teljes url)"))
 
         if (realtimeConfig.findByKey(REQUEST_FOR_NEPTUN).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, "false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, "false", "true, false"))
 
         if (realtimeConfig.findByKey(MIN_TOKEN_TO_COMPLETE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, MIN_TOKEN_TO_COMPLETE, "100"))
+            realtimeConfig.save(RealtimeConfigEntity(0, MIN_TOKEN_TO_COMPLETE, "20", "int"))
+
+        if (realtimeConfig.findByKey(HINT_SCORE_PERCENTAGE).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, HINT_SCORE_PERCENTAGE, "100", "int 0-100"))
     }
 
     fun resetCache() {
@@ -168,6 +172,14 @@ class RealtimeConfigService(
                 .map { it.value }
                 .orElse("0")
         }.toIntOrNull() ?: 0
+    }
+
+    fun getHintScorePercentage(): Int {
+        return cache.computeIfAbsent(HINT_SCORE_PERCENTAGE) { key ->
+            realtimeConfig.findByKey(key)
+                .map { it.value }
+                .orElse("0")
+        }.toIntOrNull() ?: 100
     }
 
 }

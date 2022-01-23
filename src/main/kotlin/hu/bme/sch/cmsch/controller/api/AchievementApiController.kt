@@ -46,31 +46,40 @@ class AchievementApiController(
             OwnershipType.USER -> {
                 val user = request.getUserOrNull() ?: return AchievementsView(
                     score = null,
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoard() else listOf(),
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForUsers() else listOf(),
                     leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
                     leaderBoardFrozen = !config.isLeaderBoardUpdates())
                 categories = achievements.getCategoriesForUser(user.id)
                 score = if (leaderBoardAvailable) leaderBoardService.getScoreOfUser(user) else null
+
+                return AchievementsView(
+                    score = score,
+                    categories = categories
+                        .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForUsers() else listOf(),
+                    leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
+                    leaderBoardFrozen = !config.isLeaderBoardUpdates()
+                )
             }
             OwnershipType.GROUP -> {
                 val group = request.getUserOrNull()?.group ?: return AchievementsView(
                     score = null,
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoard() else listOf(),
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForGroups() else listOf(),
                     leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
                     leaderBoardFrozen = !config.isLeaderBoardUpdates())
                 categories = achievements.getCategoriesForGroup(group.id)
                 score = if (leaderBoardAvailable) leaderBoardService.getScoreOfGroup(group) else null
+
+                return AchievementsView(
+                    score = score,
+                    categories = categories
+                        .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForGroups() else listOf(),
+                    leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
+                    leaderBoardFrozen = !config.isLeaderBoardUpdates()
+                )
             }
         }
-
-        return AchievementsView(
-            score = score,
-            categories = categories
-                .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
-            leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoard() else listOf(),
-            leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
-            leaderBoardFrozen = !config.isLeaderBoardUpdates()
-        )
     }
 
     @JsonView(FullDetails::class)

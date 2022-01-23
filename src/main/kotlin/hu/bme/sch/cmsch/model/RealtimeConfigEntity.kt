@@ -29,7 +29,13 @@ data class RealtimeConfigEntity(
         @Column(nullable = false)
         @property:GenerateInput(order = 2, label = "Érték")
         @property:GenerateOverview(columnName = "Érték", order = 2)
-        var value: String = ""
+        var value: String = "",
+
+        @JsonView(value = [ Edit::class ])
+        @Column(nullable = false)
+        @property:GenerateInput(order = 2, label = "Megjegyzés")
+        @property:GenerateOverview(columnName = "Megjegyzés", order = 3)
+        var comment: String = ""
 
 ): ManagedEntity {
     override fun toString(): String {
