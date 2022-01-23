@@ -85,12 +85,12 @@ class ImportCompleteController(
         return dto.transactionIds.split(Regex("[\\n\\r]"))
                 .asSequence()
                 .filter { it.isNotBlank() }
-                .map {
-                    println("Setting #$it")
-                    return@map transactions.findById(it.toInt()).map {
+                .map { transaction ->
+                    println("Setting #$transaction")
+                    return@map transactions.findById(transaction.toInt()).map {
                         if (it.payed && it.finsihed) {
                             println("Already set #${it.id}")
-                            return@map "${it.id}: already;"
+                            "${it.id}: already;"
                         } else {
                             it.payed = true
                             it.payedAt = clock.getTimeInSeconds()
@@ -98,9 +98,9 @@ class ImportCompleteController(
                             it.log += " autoclose by importer: ${request.getUser().fullName} at ${clock.getTimeInSeconds()};"
                             transactions.save(it)
                             println("Closed #${it.id}")
-                            return@map "${it.id}: closed;"
+                            "${it.id}: closed;"
                         }
-                    }.orElse("$it: not found;")
+                    }.orElse("$transaction: not found;")
                 }
                 .joinToString("\n")
 

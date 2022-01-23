@@ -41,7 +41,6 @@ class TokenApiController(
                 val (title, status) = tokens.collectTokenForGroup(request.getUser(), token)
                 TokenSubmittedView(status, title)
             }
-            else -> TokenSubmittedView(TokenCollectorStatus.WRONG, null)
         }
     }
 
@@ -79,7 +78,6 @@ class TokenApiController(
                 "redirect:/qr-scanned?status=${status.name}" +
                         "&title=${URLEncoder.encode(title ?: "", StandardCharsets.UTF_8.toString())}"
             }
-            else -> "redirect:/qr-scanned?status=${TokenCollectorStatus.WRONG.name}&title="
         }
 
 }

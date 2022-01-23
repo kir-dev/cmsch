@@ -7,6 +7,8 @@ data:
   AuthSCH_ID: TODO-base64-20chars
   AuthSCH_KEY: >-
     TODO-base64-80chars
+  MySQL_USER: TODO-base64-user
+  MySQL_PASSWORD: TODO-base64-password
 type: Opaque
 ---
 kind: Deployment

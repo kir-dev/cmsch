@@ -1,108 +1,42 @@
-import { Box, Heading, StackDivider, VStack, Stack, Text, Flex, Spacer } from '@chakra-ui/react'
+import { Heading, Stack, Skeleton, Text } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
-import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
-import { AchievementCategory, AchievementWrapper, achievementStatus, achievementType } from '../../types/dto/achievements'
+import { API_BASE_URL } from '../../utils/configurations'
+import { AchievementCategory, AllAchievementCategories } from '../../types/dto/achievements'
+import { AchievementCategoryItem } from '../@commons/AchievementCategoryItem'
 
-type AchievementListProps = {}
+export const AchievementList: React.FC = (props) => {
+  const [categories, setCategories] = useState<AchievementCategory[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
-// GET /api/achievement -ben lesz egy ilyen tömb
-const CATEGORIES: AchievementCategory[] = [
-  {
-    categoryId: 1,
-    name: 'első kategória'
-  },
-  {
-    categoryId: 2,
-    name: 'második kategória'
-  },
-  {
-    categoryId: 3,
-    name: 'századik kategória'
-  }
-]
-
-// GET /api/achievement/category/1 -ben lesz egy ilyen tömb
-const ACHIEVEMENTS_IN_CATEGORY: AchievementWrapper[] = [
-  {
-    achievement: {
-      id: 1,
-      categoryId: 1,
-      title: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-      description: 'blalblal',
-      type: achievementType.BOTH
-    },
-    status: achievementStatus.ACCEPTED,
-    comment: 'Nice work!'
-  },
-  {
-    achievement: {
-      id: 2,
-      categoryId: 1,
-      title: 'Lorem ipsum2',
-      description: 'fdsfdsgsd',
-      type: achievementType.TEXT
-    },
-    status: achievementStatus.REJECTED,
-    comment: 'nice try tho'
-  },
-  {
-    achievement: {
-      id: 3,
-      categoryId: 1,
-      title: 'Lorem ipsum3',
-      description: 'fdsfdsgsd',
-      type: achievementType.IMAGE
-    },
-    status: achievementStatus.SUBMITTED
-  },
-  {
-    achievement: {
-      id: 4,
-      categoryId: 1,
-      title: 'Lorem ipsum4',
-      description: 'fdsfdsgsd',
-      type: achievementType.BOTH
-    },
-    status: achievementStatus.NOT_SUBMITTED
-  }
-]
-
-export const AchievementList: React.FC<AchievementListProps> = (props) => {
-  // ez nyilván nem így lesz
-  CATEGORIES.forEach((category, idx) => {
-    if (idx === 0) {
-      category.achievements = ACHIEVEMENTS_IN_CATEGORY
-    } else {
-      category.achievements = []
-    }
-  })
+  useEffect(() => {
+    axios.get<AllAchievementCategories>(`${API_BASE_URL}/api/achievement`).then((res) => {
+      setCategories(res.data.categories)
+      setLoading(false)
+    })
+  }, [])
 
   return (
     <Page {...props} loginRequired>
       <Heading>Bucketlist</Heading>
       <Stack>
-        {CATEGORIES.map((category) => (
-          <>
-            <Heading size="lg">{category.name}</Heading>
-            <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-              {category.achievements?.map((ach) => (
-                <Box key={ach.achievement.id}>
-                  <Link to={`/bucketlist/${ach.achievement.id}`}>
-                    <Flex align="center">
-                      <Text fontSize="lg">{ach.achievement.title}</Text>
-                      <Spacer />
-                      <AchievementStatusBadge status={ach.status} fontSize="sm" />
-                    </Flex>
-                  </Link>
-                </Box>
-              ))}
-            </VStack>
-          </>
-        ))}
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <AchievementCategoryItem key={category.categoryId} categoryId={category.categoryId} name={category.name} />
+          ))
+        ) : loading ? (
+          [0, 1, 2].map((idx) => (
+            <Stack key={idx} mt="20px">
+              <Skeleton height="40px" />
+              <Skeleton height="20px" />
+              <Skeleton height="20px" />
+            </Stack>
+          ))
+        ) : (
+          <Text>Nincs egyetlen bucketlist challenge se.</Text>
+        )}
       </Stack>
     </Page>
   )

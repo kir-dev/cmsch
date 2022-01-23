@@ -34,7 +34,7 @@ class TokensByUsersController(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() ?: true) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -69,7 +69,7 @@ class TokensByUsersController(
 
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantCreateAchievement || it.grantCreateAchievement }?.not() != false) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() != false) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }

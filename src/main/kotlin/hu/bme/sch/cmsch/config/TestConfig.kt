@@ -182,7 +182,7 @@ class TestConfig(
             "Beszoptad tesóm",
             100,
             1,
-            1
+            2
         ))
         riddleRepository.save(RiddleEntity(
             0,
@@ -414,7 +414,7 @@ class TestConfig(
                 order = 3,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
-                type = AchievementType.IMAGE,
+                type = AchievementType.BOTH,
                 maxScore = 30,
                 description = LOREM_IPSUM_LONG_3
         ))
@@ -545,6 +545,18 @@ class TestConfig(
         ))
 
         categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
+        categories.save(AchievementCategoryEntity(
+                name = "Mine Category2",
+                categoryId = 2,
+                availableFrom = 0,
+                availableTo = 3000000000
+        ))
+        categories.save(AchievementCategoryEntity(
+            name = "Mine Category3",
+            categoryId = 3,
+            availableFrom = 0,
+            availableTo = 3000000000
+        ))
     }
 
     private fun addUsers() {

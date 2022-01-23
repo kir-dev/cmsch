@@ -61,10 +61,6 @@ class AchievementApiController(
                 categories = achievements.getCategoriesForGroup(group.id)
                 score = if (leaderBoardAvailable) leaderBoardService.getScoreOfGroup(group) else null
             }
-            else -> {
-                categories = listOf()
-                score = null
-            }
         }
 
         return AchievementsView(
@@ -107,7 +103,6 @@ class AchievementApiController(
                 )
                 achievements.getAllAchievementsForGroup(group)
             }
-            else -> listOf()
         }
 
         return AchievementCategoryView(
@@ -140,7 +135,6 @@ class AchievementApiController(
                 )
                 achievements.getSubmissionForGroupOrNull(group, achievement)
             }
-            else -> null
         }
 
         return SingleAchievementView(
@@ -169,7 +163,6 @@ class AchievementApiController(
         return when (achievementOwnershipMode) {
             OwnershipType.USER -> AchievementSubmissionResponseDto(achievements.submitAchievementForUser(answer, file, user))
             OwnershipType.GROUP -> AchievementSubmissionResponseDto(achievements.submitAchievementForGroup(answer, file, user))
-            else -> AchievementSubmissionResponseDto(AchievementSubmissionStatus.INVALID_BACKEND_CONFIG)
         }
     }
 

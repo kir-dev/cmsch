@@ -247,7 +247,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @ResponseBody
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
-    fun export(model: Model, request: HttpServletRequest, response: HttpServletResponse): ByteArray {
+    fun export(request: HttpServletRequest, response: HttpServletResponse): ByteArray {
         if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
             throw IllegalStateException("Insufficient permissions")
         }

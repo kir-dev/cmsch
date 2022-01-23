@@ -1,19 +1,19 @@
 export enum achievementType {
-  TEXT,
-  IMAGE,
-  BOTH
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  BOTH = 'BOTH'
 }
 
 export enum achievementStatus {
-  ACCEPTED,
-  NOT_LOGGED_IN,
-  NOT_SUBMITTED,
-  REJECTED,
-  SUBMITTED
+  ACCEPTED = 'ACCEPTED',
+  NOT_LOGGED_IN = 'NOT_LOGGED_IN',
+  NOT_SUBMITTED = 'NOT_SUBMITTED',
+  REJECTED = 'REJECTED',
+  SUBMITTED = 'SUBMITTED'
 }
 
 export interface AchievementCategory {
-  categoryId: number
+  categoryId?: number
   name: string
   approved?: number
   availableFrom?: number
@@ -21,9 +21,19 @@ export interface AchievementCategory {
   notGraded?: number
   rejected?: number
   sum?: number
-  // this won't come from the api, but it can be manually put here,
-  // so it's easier to map through the categories
   achievements?: AchievementWrapper[]
+}
+
+export interface AllAchievementCategories {
+  categories: AchievementCategory[]
+  leaderboard?: [
+    {
+      name: string
+      score: number
+    }
+  ]
+  leaderBoardVisible?: boolean
+  leaderBoardFrozen?: boolean
 }
 
 export interface AchievementEntity {
@@ -32,30 +42,28 @@ export interface AchievementEntity {
   title: string
   description: string
   type: achievementType
+  expectedResultDescription?: string
   availableFrom?: number
   availableTo?: number
-  expectedResultDescription?: string
 }
 
 export interface AchievementWrapper {
   achievement: AchievementEntity
-  comment?: string
-  status: achievementStatus
-}
-
-export interface AchievementSubmission {
-  id: number
-  approved: boolean
-  imageUrlAnswer?: string
-  textAnswer?: string
-  score: number
-  groupName?: string
-  rejected: boolean
   response?: string
+  status: achievementStatus
 }
 
 export interface AchievementFullDetailsView {
-  achievement: AchievementEntity
+  achievement?: AchievementEntity
   status: achievementStatus
-  submission?: AchievementSubmission
+  submission?: {
+    id: number
+    approved: boolean
+    imageUrlAnswer?: string
+    textAnswer?: string
+    score: number
+    groupName?: string
+    rejected: boolean
+    response?: string
+  }
 }
