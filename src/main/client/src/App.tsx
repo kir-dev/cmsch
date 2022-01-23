@@ -40,9 +40,9 @@ export function App() {
                     <Route index element={<ProfilePage />} />
                   </Route>
                   {/*Események*/}
-              <Route path="esemenyek">
-                <Route index element={<EventPage />} />
-              </Route>
+                  <Route path="esemenyek">
+                    <Route index element={<EventPage />} />
+                  </Route>
                   {/*Reszortok*/}
                   <Route path="reszortok">
                     <Route path=":name">
