@@ -11,7 +11,7 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: 'Feladatok',
-    href: '/profil',
+    href: undefined,
     loginRequired: true,
     children: [
       {
