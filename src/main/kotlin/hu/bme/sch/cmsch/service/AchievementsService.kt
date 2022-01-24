@@ -264,9 +264,9 @@ open class AchievementsService(
                             availableTo = category.availableTo,
 
                             sum = achievementByCategory.count { it.categoryId == category.categoryId },
-                            approved = submissionByCategory[category.id]?.count { it.approved } ?: 0,
-                            rejected = submissionByCategory[category.id]?.count { it.rejected } ?: 0,
-                            notGraded = submissionByCategory[category.id]?.count { !it.approved && !it.rejected } ?: 0
+                            approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,
+                            rejected = submissionByCategory[category.categoryId]?.count { it.rejected } ?: 0,
+                            notGraded = submissionByCategory[category.categoryId]?.count { !it.approved && !it.rejected } ?: 0
                     )
                 }
     }
@@ -287,9 +287,9 @@ open class AchievementsService(
                     availableTo = category.availableTo,
 
                     sum = achievementByCategory.count { it.categoryId == category.categoryId },
-                    approved = submissionByCategory[category.id]?.count { it.approved } ?: 0,
-                    rejected = submissionByCategory[category.id]?.count { it.rejected } ?: 0,
-                    notGraded = submissionByCategory[category.id]?.count { !it.approved && !it.rejected } ?: 0
+                    approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,
+                    rejected = submissionByCategory[category.categoryId]?.count { it.rejected } ?: 0,
+                    notGraded = submissionByCategory[category.categoryId]?.count { !it.approved && !it.rejected } ?: 0
                 )
             }
     }
