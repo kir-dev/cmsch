@@ -10,6 +10,9 @@ export interface Organization {
   members?: number
   color?: string
   interests?: string[]
+  facebook?: string
+  instagram?: string
+  application?: string
 }
 
 export interface Community extends Organization {

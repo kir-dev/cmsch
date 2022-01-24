@@ -15,7 +15,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
     <Page>
       <DataSheet organization={community} />
       {community.images?.map((url) => (
-        <Image marginTop={5} src={url} alt="Körkép" borderRadius="lg" boxShadow="lg" />
+        <Image marginTop={10} src={url} alt="Körkép" borderRadius="lg" />
       ))}
     </Page>
   )

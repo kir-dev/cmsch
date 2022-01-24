@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, ButtonProps } from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export type LinkProps = {
   external?: boolean
@@ -8,12 +8,16 @@ export type LinkProps = {
 }
 
 export const LinkButton: React.FC<LinkProps & ButtonProps> = ({ external, href, children, ...props }) => {
-  const ButtonComponent = <Button {...props}>{children}</Button>
-  return external ? (
-    <a href={href} target="_blank" rel="noreferrer">
-      {ButtonComponent}
-    </a>
-  ) : (
-    <RouterLink to={href}>{ButtonComponent}</RouterLink>
+  const navigate = useNavigate()
+  return (
+    <Button
+      {...props}
+      onClick={() => {
+        if (external) window.open(href)
+        else navigate(href)
+      }}
+    >
+      {children}
+    </Button>
   )
 }

@@ -11,7 +11,8 @@ export const ResortList: React.FC<ResortListProps> = () => {
     <Page>
       <Heading>Reszortok</Heading>
       <Alert variant="left-accent" status="info" marginTop={5}>
-        <AlertIcon />A legtöbb kör egy-egy reszort alá tartozik.
+        <AlertIcon />
+        Minden kör egy-egy reszort alá tartozik.
       </Alert>
       {RESORTS.map((resort) => (
         <CardListItem data={resort} link={'/reszortok/' + resort.id} />
