@@ -8,15 +8,17 @@ import axios from 'axios'
 import { FilePicker } from '../@commons/FilePicker'
 import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
 import { Paragraph } from 'components/@commons/Basics'
-import { AchievementFullDetailsView, achievementType, achievementStatus } from '../../types/dto/achievements'
+import { AchievementFullDetailsView, achievementType, achievementStatus, AchievementCategory } from '../../types/dto/achievements'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
+import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
 
 export const AchievementPage: React.FC = (props) => {
   const [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
   const [textAnswer, setTextAnswer] = useState<string>('')
   const [imageAnswer, setImageAnswer] = useState<File | undefined>(undefined)
+  const [categoryName, setCategoryName] = useState<string>('')
   const filePickerRef = useRef<FilePicker>(null)
 
   const toast = useToast()
@@ -41,8 +43,17 @@ export const AchievementPage: React.FC = (props) => {
             status: 'error',
             isClosable: true
           })
+        } else {
+          setAchDetails(res.data)
+          axios
+            .get<AchievementCategory>(`${API_BASE_URL}/api/achievement/category/${res.data.achievement.categoryId}`)
+            .then((res) => {
+              setCategoryName(res.data.categoryName || '')
+            })
+            .catch(() => {
+              throwError('Nem sikerült lekérdezni a feladat kategóriáját.', { toast: true })
+            })
         }
-        setAchDetails(res.data)
       })
       .catch(() => {
         throwError('Nem sikerült lekérdezni a Bucketlist feladatot.')
@@ -144,8 +155,23 @@ export const AchievementPage: React.FC = (props) => {
     </Box>
   )
 
+  const breadcrumbItems = [
+    {
+      title: 'Bucketlist',
+      to: '/bucketlist'
+    },
+    {
+      title: categoryName,
+      to: `/bucketlist/kategoria/${achDetails.achievement?.categoryId}`
+    },
+    {
+      title: achDetails.achievement?.title
+    }
+  ]
+
   return (
     <Page {...props} loginRequired>
+      <CustomBreadcrumb items={breadcrumbItems} />
       <Heading mb={0}>{achDetails.achievement?.title}</Heading>
       <AchievementStatusBadge status={achDetails.status} fontSize="lg" />
       <Paragraph mt={2}>{achDetails.achievement?.description}</Paragraph>

@@ -15,13 +15,14 @@ export enum achievementStatus {
 export interface AchievementCategory {
   categoryId?: number
   name: string
-  approved?: number
+  approved: number
   availableFrom?: number
   availableTo?: number
-  notGraded?: number
-  rejected?: number
-  sum?: number
+  notGraded: number
+  rejected: number
+  sum: number
   achievements?: AchievementWrapper[]
+  categoryName?: string
 }
 
 export interface AllAchievementCategories {

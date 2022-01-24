@@ -27,7 +27,7 @@ type AchievementStatusBadgeProps = {
 export const AchievementStatusBadge: React.FC<AchievementStatusBadgeProps> = ({ status, fontSize }) => {
   return (
     <Box>
-      <Badge colorScheme={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
+      <Badge variant="solid" colorScheme={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
         {STATUS_TEXT_MAP.get(status)}
       </Badge>
     </Box>

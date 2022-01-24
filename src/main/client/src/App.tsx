@@ -8,7 +8,8 @@ import { CommunityPage } from './components/@pages/CommunityPage'
 import { ResortPage } from './components/@pages/ResortPage'
 import { CommunityList } from './components/@pages/CommunityList'
 import { ProfilePage } from 'components/@pages/ProfilePage'
-import { AchievementList } from './components/@pages/AchievementList'
+import { AchievementCategoryList } from './components/@pages/AchievementCategoryList'
+import { AchievementCategoryPage } from './components/@pages/AchievementCategoryPage'
 import { AchievementPage } from './components/@pages/AchievementPage'
 import { RiddleCategoryList } from 'components/@pages/RiddleCategoryList'
 import { RiddlePage } from 'components/@pages/RiddlePage'
@@ -54,8 +55,9 @@ export function App() {
                   </Route>
                   {/*BucketList*/}
                   <Route path="bucketlist">
+                    <Route path="kategoria/:id" element={<AchievementCategoryPage />} />
                     <Route path=":id" element={<AchievementPage />} />
-                    <Route index element={<AchievementList />} />
+                    <Route index element={<AchievementCategoryList />} />
                   </Route>
                   {/*QR*/}
                   <Route path="qr-scanned" element={<QRScanResult />} />
