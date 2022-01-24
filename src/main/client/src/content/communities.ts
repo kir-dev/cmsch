@@ -25,7 +25,7 @@ export const COMMUNITIES: Community[] = [
   },
   {
     id: 'schdesign',
-    name: 'SchDesign',
+    name: 'schdesign',
     shortDescription: 'Az schdesign a Simonyi Károly Szakkollégium kreatív alkotóműhelye.',
     description: `Körünk UI, UX, illetve digitális designnal foglalkozik.
     Célunk lehetőséget biztosítani, hogy a kódolás, forrasztás
