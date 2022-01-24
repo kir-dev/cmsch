@@ -1,9 +1,11 @@
-import React, { ReactNode } from 'react'
-import { ButtonGroup, Flex, Grid, GridItem, Heading, Image, ListItem, UnorderedList, Wrap } from '@chakra-ui/react'
+import React from 'react'
+import { Flex, Grid, GridItem, Heading, Image, Tag, Wrap } from '@chakra-ui/react'
 import { Paragraph } from './Basics'
 import { Organization } from '../../types/Organization'
-import { LinkIcon } from '@chakra-ui/icons'
+import { EditIcon, LinkIcon } from '@chakra-ui/icons'
 import { LinkButton } from './LinkButton'
+import { SimpleLink } from './SimpleLink'
+import { FaFacebook, FaInstagram } from 'react-icons/fa'
 
 type DataSheetProps = {
   organization: Organization
@@ -17,46 +19,72 @@ type DataSheetProps = {
 export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
   return (
     <>
-      {organization.logo && (
-        <Flex>
-          <Image marginTop={5} src={organization.logo} alt={organization.name} maxH={20} objectFit="contain" />
-        </Flex>
-      )}
       <Heading>{organization.name}</Heading>
-      <Wrap justify="space-between" marginTop={5} maxW="100%">
+      <Flex justify="space-between" align="center" flexWrap="wrap-reverse">
         <DataGrid>
-          <DataField label="Alapítva" value={organization.established} />
-          <DataField label="E-mail" value={organization.email} />
-          <DataField label="Létszám" value={organization.members} />
+          {organization.established && <DataField label="Alapítva">{organization.established}</DataField>}
+          {organization.email && (
+            <DataField label="E-mail">
+              <SimpleLink external href={'mailto:' + organization.email}>
+                {organization.email}
+              </SimpleLink>
+            </DataField>
+          )}
+          {organization.members && <DataField label="Létszám">{organization.members}</DataField>}
+          {organization.website && (
+            <DataField label="Weboldal">
+              <SimpleLink external href={organization.website} color={organization.color}>
+                {organization.website}
+              </SimpleLink>
+            </DataField>
+          )}
         </DataGrid>
-      </Wrap>
+        {organization.logo && <Image mt={5} src={organization.logo} alt={organization.name} maxH={28} maxW={40} objectFit="contain" />}
+      </Flex>
       {organization.description && <Paragraph>{organization.description}</Paragraph>}
       {organization.interests && (
         <>
           <Heading size="md" marginBottom={0}>
             A kör tevékenységei közé tartozik:
           </Heading>
-          <UnorderedList marginTop={2}>
+          <Wrap marginTop={2}>
             {organization.interests.map((interest) => (
-              <ListItem>{interest}</ListItem>
+              <Tag colorScheme={organization.color} variant="solid">
+                {interest}
+              </Tag>
             ))}
-          </UnorderedList>
+          </Wrap>
         </>
       )}
-      <ButtonGroup marginTop={5}>
+      <Wrap marginTop={10} justify={['center', 'center', 'flex-start']}>
         {organization.website && (
           <LinkButton href={organization.website} external leftIcon={<LinkIcon />} colorScheme={organization.color}>
             Weboldal
           </LinkButton>
         )}
-      </ButtonGroup>
+        {organization.application && (
+          <LinkButton href={organization.application} external leftIcon={<EditIcon />} colorScheme="brand">
+            Jelentkezés
+          </LinkButton>
+        )}
+        {organization.facebook && (
+          <LinkButton href={organization.facebook} external leftIcon={<FaFacebook />} colorScheme="facebook">
+            Facebook
+          </LinkButton>
+        )}
+        {organization.instagram && (
+          <LinkButton href={organization.instagram} external leftIcon={<FaInstagram />} colorScheme="purple">
+            Instagram
+          </LinkButton>
+        )}
+      </Wrap>
     </>
   )
 }
 
 const DataGrid: React.FC = ({ children }) => {
   return (
-    <Grid templateColumns="repeat(2,auto)" gap={5} width="fit-content" marginTop={5}>
+    <Grid templateColumns="repeat(2,auto)" mt={5} gap={5} width="fit-content" mr={5}>
       {children}
     </Grid>
   )
@@ -64,18 +92,16 @@ const DataGrid: React.FC = ({ children }) => {
 
 type DataFieldProps = {
   label: string
-  value: string | number | ReactNode
 }
 
-const DataField: React.FC<DataFieldProps> = ({ label, value }) => {
-  if (!value) return null
+const DataField: React.FC<DataFieldProps> = ({ label, children }) => {
   return (
     <>
       <GridItem color="gray.500" colStart={1} colEnd={1}>
         {label}:
       </GridItem>
       <GridItem color="gray.500" colStart={2} colEnd={2}>
-        {value}
+        {children}
       </GridItem>
     </>
   )

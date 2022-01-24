@@ -3,6 +3,7 @@ import { Box, Heading, HStack, VStack, Image, Text, Spacer } from '@chakra-ui/re
 import { Organization } from '../../types/Organization'
 import { Link } from 'react-router-dom'
 import { ChevronRightIcon } from '@chakra-ui/icons'
+import { useColorModeValue } from '@chakra-ui/system'
 
 type CardListItemProps = {
   data: Organization
@@ -15,17 +16,15 @@ export const CardListItem: React.FC<CardListItemProps> = ({ data, link }) => {
       <Box
         borderRadius="lg"
         padding={4}
-        boxShadow="md"
-        backgroundColor="gray.100"
+        backgroundColor={useColorModeValue('gray.100', 'gray.700')}
         marginTop={5}
         transition="transform .2s ease-in-out"
         _hover={{ transform: 'translateX(0.5em)' }}
-        color="black"
       >
         <HStack spacing={4}>
           {data.logo && <Image src={data.logo} alt={data.name} boxSize={16} objectFit="contain" />}
           <VStack align="flex-start" overflow="hidden">
-            <Heading as="h3" size="md" marginY={0} isTruncated maxWidth="100%">
+            <Heading as="h3" size="md" marginY={0} maxWidth="100%">
               {data.name}
             </Heading>
             {data.shortDescription && (
