@@ -9,6 +9,7 @@ export interface ProfileDTO {
   totalRiddleCount: number
   completedRiddleCount: number
   totalAchievementCount: number
+  completedAchievementCount: number
   submittedAchievementCount: number
   minTokenToComplete: number
 }

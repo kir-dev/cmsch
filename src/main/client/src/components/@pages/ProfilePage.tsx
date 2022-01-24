@@ -26,23 +26,26 @@ import { Helmet } from 'react-helmet'
 
 const challenges = (profile: ProfileDTO) => [
   {
-    name: 'Bucketlist',
-    value: profile?.submittedAchievementCount,
-    total: profile?.totalAchievementCount
-  },
-  {
     name: 'Riddle',
-    value: profile?.completedRiddleCount,
+    completed: profile?.completedRiddleCount,
     total: profile?.totalRiddleCount
   },
   {
     name: 'QR kód',
-    value: profile?.tokens?.length,
+    completed: profile?.tokens?.length,
     total: profile?.minTokenToComplete
   }
 ]
 
 type ProfilePageProps = {}
+
+function submittedPercent(profile: ProfileDTO) {
+  return (profile.submittedAchievementCount / profile.totalAchievementCount) * 100
+}
+
+function completedPercent(profile: ProfileDTO) {
+  return (profile.completedAchievementCount / profile.totalAchievementCount) * 100
+}
 
 //Had to create a seperate skeleton layout so it wouldn't look strange
 export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
@@ -115,13 +118,40 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
       </Flex>
 
       <Wrap spacing="3rem" justify="center" mt="10">
+        <WrapItem key="achivement">
+          <Center w="10rem" h="12rem">
+            <Flex direction="column" align="center">
+              <Text fontSize="3xl">Achivemnet</Text>
+              <Box>
+                <CircularProgress
+                  color="yellow.400"
+                  size="10rem"
+                  position="absolute"
+                  value={submittedPercent(profile) + completedPercent(profile)}
+                />
+                <CircularProgress color="brand.400" size="10rem" value={completedPercent(profile)} trackColor="transparent">
+                  <CircularProgressLabel color="brand.400" pb="2.5rem">
+                    {Math.round(completedPercent(profile))}%
+                  </CircularProgressLabel>
+                  <CircularProgressLabel>
+                    <Box height="2px" backgroundColor="gray.200" width="70%" mx="auto" borderRadius="20%"></Box>
+                  </CircularProgressLabel>
+                  <CircularProgressLabel color="yellow.400" pt="2.5rem">
+                    {Math.round(submittedPercent(profile))}%
+                  </CircularProgressLabel>
+                </CircularProgress>
+              </Box>
+            </Flex>
+          </Center>
+        </WrapItem>
+
         {challenges(profile!).map((challenge) => (
           <WrapItem key={challenge.name}>
             <Center w="10rem" h="12rem">
               <Flex direction="column" align="center">
                 <Text fontSize="3xl">{challenge.name}</Text>
-                <CircularProgress value={challenge.value} color="brand.400" size="10rem">
-                  <CircularProgressLabel>{challenge.value}%</CircularProgressLabel>
+                <CircularProgress color="brand.400" size="10rem" value={(challenge.completed / challenge.total) * 100}>
+                  <CircularProgressLabel>{Math.round((challenge.completed / challenge.total) * 100)}%</CircularProgressLabel>
                 </CircularProgress>
               </Flex>
             </Center>
