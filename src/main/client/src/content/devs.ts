@@ -4,7 +4,7 @@ export const DEVS: Dev[] = [
   {
     name: 'Schámi',
     img: 'https://warp.kir-dev.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBaQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--737f724721ff27591d88bf4edae5650473b2fcd9/ertqertqfunny5.jpg',
-    tags: ['Project Leader', 'Backend Leader', 'Backend']
+    tags: ['Project Leader', 'Backend']
   },
   {
     name: 'Bálint',

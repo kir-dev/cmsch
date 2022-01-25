@@ -13,7 +13,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
       <Paragraph>
         A Gólyakörte 2022 weblapját az SSSL megbízásából a{' '}
         <Link isExternal color={KIRDEV_ORANGE} href={KIRDEV_URL}>
-          Kir-Dev
+          kir-dev
         </Link>{' '}
         <Text as="i">speed-run munkacsoport</Text> készítette.
       </Paragraph>
@@ -26,6 +26,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
             <Center w="20rem" h="20rem">
               <Flex direction="column" align="center">
                 <Text fontSize="2xl">{dev.name}</Text>
+                <Image src={dev.img} h="15rem" fallbackSrc="/img/communities/kirdev.svg" />
                 <HStack spacing={2} my={2}>
                   {dev.tags.map((tag) => (
                     <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
@@ -33,7 +34,6 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
                     </Tag>
                   ))}
                 </HStack>
-                <Image src={dev.img} h="15rem" fallbackSrc="/img/communities/kirdev.svg" />
               </Flex>
             </Center>
           </WrapItem>
@@ -48,7 +48,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
         <Link isExternal color={KIRDEV_ORANGE} href={KIRDEV_URL}>
           oldalunkra
         </Link>{' '}
-        vagy keress fel minket a Kir-Dev standnál!
+        vagy keress fel minket a kir-dev standnál!
       </Paragraph>
       <Paragraph>Az alaklamazás a KSZK Kubernetes clusterjében fut, köszönjük az erőforrást és a segítséget nekik ezúton is!</Paragraph>
     </Page>
