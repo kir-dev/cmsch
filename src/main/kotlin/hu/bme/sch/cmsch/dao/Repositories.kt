@@ -134,6 +134,8 @@ interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByCompletedTrueAndRiddle_CategoryIdIn(categories: List<Int>): List<RiddleMappingEntity>
 
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
+    fun findAllByCompletedTrueAndOwnerUserAndRiddle_CategoryIdIn(user: UserEntity, categories: List<Int>): List<RiddleMappingEntity>
 }
 
 @Repository
