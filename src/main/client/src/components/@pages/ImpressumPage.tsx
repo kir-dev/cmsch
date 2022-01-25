@@ -1,4 +1,4 @@
-import { Heading, HStack, Link, Tag, Text, Image, Wrap, WrapItem, Center, Flex } from '@chakra-ui/react'
+import { Heading, HStack, Link, Tag, Text, Image, Wrap, WrapItem, Center, Flex, useColorModeValue } from '@chakra-ui/react'
 import { Paragraph } from 'components/@commons/Basics'
 import { Page } from 'components/@layout/Page'
 import { DEVS } from 'content/devs'
@@ -15,14 +15,14 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
         <Link isExternal color={KIRDEV_ORANGE} href={KIRDEV_URL}>
           Kir-Dev
         </Link>{' '}
-        <Text as="i">speed-run munkasoport</Text> készítette.
+        <Text as="i">speed-run munkacsoport</Text> készítette.
       </Paragraph>
-      <Text my="2" fontSize="3xl" align="center">
+      <Heading as="h2" size="lg" my="5" textAlign="center">
         Fejlesztők
-      </Text>
+      </Heading>
       <Wrap justify="center">
         {DEVS.map((dev) => (
-          <WrapItem border="2px" borderColor="brand.100" key={dev.name}>
+          <WrapItem border="2px" borderColor={useColorModeValue('brand.100', 'brand.700')} key={dev.name}>
             <Center w="20rem" h="20rem">
               <Flex direction="column" align="center">
                 <Text fontSize="2xl">{dev.name}</Text>
@@ -40,7 +40,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
         ))}
       </Wrap>
       <Paragraph>
-        Felhasznált technológiák: Kotlin, Spring-boot, Typescript és React. Mint ahogy az összes többi projektünk ez is{' '}
+        Felhasznált technológiák: Kotlin, Spring-boot, Typescript és React. Mint ahogy az összes többi projektünk, ez is{' '}
         <Link isExternal color={KIRDEV_ORANGE} href={GITHUB_ORG_URL}>
           nyílt forráskódú
         </Link>
