@@ -1,16 +1,4 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Button,
-  ButtonGroup,
-  Center,
-  CircularProgress,
-  CloseButton,
-  Fade,
-  Heading
-} from '@chakra-ui/react'
+import { Button, ButtonGroup, Fade, Heading } from '@chakra-ui/react'
 import axios from 'axios'
 import { LinkButton } from 'components/@commons/LinkButton'
 import { QRScanResultComponent } from 'components/@commons/QRScanResultComponent'
@@ -18,7 +6,6 @@ import { Page } from 'components/@layout/Page'
 import React from 'react'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import QRreader from 'react-qr-reader'
-import { useNavigate } from 'react-router-dom'
 import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from 'utils/Loading'
