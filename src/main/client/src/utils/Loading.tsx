@@ -16,7 +16,7 @@ export const Loading: React.FC<LoadingProps> = ({ timeout, children }) => {
   useEffect(() => {
     setTimeout(() => {
       setShow(true)
-    }, (timeout || 1) * 1000)
+    }, (timeout ?? 1) * 1000) // use ?? instead of || because the latter will give false value if timeout is set to 0
   }, [setTimeout, timeout])
   if (!show) return null
   return children ? (
