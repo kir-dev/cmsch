@@ -20,6 +20,7 @@ import { AuthProvider } from './utils/AuthContext'
 import { ErrorPage } from './components/@pages/ErrorPage'
 import { ServiceProvider } from './utils/ServiceContext'
 import { IndexLayout } from 'components/@layout/IndexLayout'
+import { ImpressumPage } from 'components/@pages/ImpressumPage'
 
 export function App() {
   return (
@@ -64,6 +65,10 @@ export function App() {
                   <Route path="qr">
                     <Route index element={<QRList />} />
                     <Route path="scan" element={<QRScan />} />
+                  </Route>
+                  {/*Impressum*/}
+                  <Route path="impresszum">
+                    <Route index element={<ImpressumPage />} />
                   </Route>
                   {/*Error*/}
                   <Route path="error">
