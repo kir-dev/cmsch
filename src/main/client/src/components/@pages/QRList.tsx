@@ -79,14 +79,14 @@ export const QRList: React.FC = (props) => {
         Haladás
       </Heading>
       <Heading as="h4" size="md" mt={5}>
-        Eddig beolvasott tokenek: {tokens.length} / {totalTokenCount}
+        Eddig beolvasott kódok: {tokens.length} / {totalTokenCount}
       </Heading>
       <Progress hasStripe colorScheme="brand" mt="1" value={calculate_progress()} />
 
       <Heading as="h4" size="md" mt="5">
         Ahol eddig jártál
       </Heading>
-      <Stack spacing="5" mt="5">
+      <Stack spacing="5" mt="1">
         {tokens.map((token, i) => {
           return <StampComponent key={i} title={token.title} type={token.type} />
         })}
