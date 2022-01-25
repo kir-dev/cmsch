@@ -26,14 +26,12 @@ import { useServiceContext } from '../../utils/useServiceContext'
 enum ScanViewState {
   Scanning,
   Loading,
-  Error,
   Success
 }
 
 interface ScanView {
   state: ScanViewState
   response?: ScanResponseDTO
-  errorMessage?: string
 }
 
 export const QRScan: React.FC = (props) => {
@@ -57,7 +55,11 @@ export const QRScan: React.FC = (props) => {
           setState({ state: ScanViewState.Success, response: res.data })
         })
         .catch(() => {
-          throwError('Nem sikerült érvényesíteni a beolvasást.')
+          throwError('Hálózati hiba a token érvényesítésénél', { toast: true })
+          // wait a few moments, so users wont spam error messages.
+          setTimeout(() => {
+            setState({ state: ScanViewState.Scanning })
+          }, 750)
         })
     }
   }
@@ -68,21 +70,13 @@ export const QRScan: React.FC = (props) => {
   }
 
   const resetButtonHandler = () => {
-    setState({ state: ScanViewState.Scanning, response: undefined, errorMessage: '' })
+    setState({ state: ScanViewState.Scanning, response: undefined })
   }
 
   return (
     <Page {...props} loginRequired>
       <Heading>Scanneld be a QR kódot</Heading>
       {state.state == ScanViewState.Scanning && <QRreader delay={300} onError={handleError} onScan={handleScan} />}
-      {state.state == ScanViewState.Error && (
-        <Alert status="error">
-          <AlertIcon />
-          <AlertTitle mr={2}>Valami hibát dobott</AlertTitle>
-          <AlertDescription>{state.errorMessage ? state.errorMessage : 'Próbáld újra'}</AlertDescription>
-          <CloseButton position="absolute" right="8px" top="8px" />
-        </Alert>
-      )}
       {state.state == ScanViewState.Loading && (
         <Center>
           <CircularProgress isIndeterminate color="brand.300" size="120px" />
