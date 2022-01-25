@@ -45,8 +45,7 @@ export const QRList: React.FC = (props) => {
     <Page {...props} loginRequired>
       <Heading>QR kód vadászat</Heading>
       <Paragraph>
-        A standoknál végzett aktív tevékenyégért QR kódokat lehet gyűjteni, amiket tanköri hiányzások igazolására lehet beváltani. TODO:
-        Fogalmazzunk meg ide szöveget, mert ma bevettem a fogalmazás gátlóm.
+        A standoknál végzett aktív tevékenyégért QR kódokat lehet gyűjteni. Ha eleget összegíűjtesz, beválthatod egy tanköri óra aláírására.
       </Paragraph>
 
       <ButtonGroup>
