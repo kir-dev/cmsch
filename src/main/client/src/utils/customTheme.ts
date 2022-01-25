@@ -1,8 +1,14 @@
 import { extendTheme } from '@chakra-ui/react'
-import { mode } from '@chakra-ui/theme-tools'
+import { mode, createBreakpoints } from '@chakra-ui/theme-tools'
 
 // See more: https://chakra-ui.com/docs/theming/customize-theme
 const customTheme = extendTheme({
+  breakpoints: createBreakpoints({
+    sm: '30em',
+    md: '48em',
+    lg: '68em',
+    xl: '80em'
+  }),
   styles: {
     global: (props: any) => ({
       body: {
