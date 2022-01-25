@@ -3,12 +3,11 @@ import com.github.gradle.node.yarn.task.YarnTask
 import java.util.Properties
 
 plugins {
-    id("org.springframework.boot") version "2.5.2"
+    id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.github.node-gradle.node") version "3.1.1"
-    kotlin("jvm") version "1.5.20"
-    kotlin("plugin.spring") version "1.5.20"
-    kotlin("plugin.jpa") version "1.5.20"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
 }
 
 val applicationProperties = Properties()
@@ -18,8 +17,8 @@ file("${projectDir}/src/main/resources/config/application.properties")
         applicationProperties.load(it)
     }
 group = "hu.bme.sch"
-version = "2.2.0"
-java.sourceCompatibility = JavaVersion.VERSION_11
+version = "2.2.1"
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 tasks {
     bootJar {
@@ -55,7 +54,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
