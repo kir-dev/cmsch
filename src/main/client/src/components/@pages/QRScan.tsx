@@ -12,6 +12,7 @@ import {
   Heading
 } from '@chakra-ui/react'
 import axios from 'axios'
+import { LinkButton } from 'components/@commons/LinkButton'
 import { QRScanResultComponent } from 'components/@commons/QRScanResultComponent'
 import { Page } from 'components/@layout/Page'
 import React from 'react'
@@ -37,7 +38,6 @@ interface ScanView {
 
 export const QRScan: React.FC = (props) => {
   const [state, setState] = React.useState<ScanView>({ state: ScanViewState.Scanning })
-  const navigate = useNavigate()
   const { throwError } = useServiceContext()
   const handleScan = (qrData: any) => {
     if (qrData) {
@@ -67,9 +67,6 @@ export const QRScan: React.FC = (props) => {
     throwError('Beolvasási hiba.', { toast: true })
   }
 
-  const backButtonHandler = () => {
-    navigate('/qr')
-  }
   const resetButtonHandler = () => {
     setState({ state: ScanViewState.Scanning, response: undefined, errorMessage: '' })
   }
@@ -98,9 +95,9 @@ export const QRScan: React.FC = (props) => {
       )}
       {state.state !== ScanViewState.Loading && (
         <ButtonGroup alignSelf="center">
-          <Button marginTop="3" leftIcon={<FaArrowLeft />} onClick={backButtonHandler} size="lg">
+          <LinkButton marginTop="3" leftIcon={<FaArrowLeft />} size="lg" href="/qr">
             Vissza
-          </Button>
+          </LinkButton>
           {state.state !== ScanViewState.Scanning && (
             <Button marginTop="3" colorScheme="brand" leftIcon={<FaQrcode />} onClick={resetButtonHandler} size="lg">
               Új QR scannelése
