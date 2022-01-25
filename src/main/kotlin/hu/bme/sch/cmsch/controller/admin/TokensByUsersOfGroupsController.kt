@@ -89,7 +89,7 @@ class TokensByUsersOfGroupsController(
 
     @ResponseBody
     @GetMapping(value = ["/pdf/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun viewAll(@PathVariable id: Int, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
+    fun generatePdf(@PathVariable id: Int, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() != false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
@@ -106,11 +106,11 @@ class TokensByUsersOfGroupsController(
         document.setMargins(20f, 40f, 20f, 40f)
 
         val kirdevLogo: Image = Image(ImageDataFactory.create(
-            ClassLoader.getSystemResource("static/images/kirdev-logo.png").toURI().toURL()
+            ClassLoader.getSystemResource("/static/images/kirdev-logo.png").toURI().toURL()
         )).scaleToFit(70f, 70f)
 
         val ssslLogo: Image = Image(ImageDataFactory.create(
-            ClassLoader.getSystemResource("static/images/sssl-logo.png").toURI().toURL()
+            ClassLoader.getSystemResource("/static/images/sssl-logo.png").toURI().toURL()
         )).scaleToFit(70f, 70f)
 
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
