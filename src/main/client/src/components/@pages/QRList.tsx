@@ -1,6 +1,6 @@
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState } from 'react'
-import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
+import { Alert, AlertIcon, ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
 import { FaQrcode } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Basics'
@@ -17,6 +17,7 @@ export const QRList: React.FC = (props) => {
 
   const [tokens, setTokens] = useState<TokenDTO[]>([])
   const [totalTokenCount, setTotalTokenCount] = useState<number>(0)
+  const [minTokenToComplete, setMinTokenToComplete] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export const QRList: React.FC = (props) => {
         const profile = res.data as ProfileDTO
         setTokens(profile.tokens || [])
         setTotalTokenCount(profile.totalTokenCount || 0)
+        setMinTokenToComplete(profile.minTokenToComplete || 0)
         setLoading(false)
       })
       .catch(() => {
@@ -39,31 +41,52 @@ export const QRList: React.FC = (props) => {
     else return (100 * tokens.length) / totalTokenCount
   }
 
+  const alertBar = (acquired: number, needed: number) => {
+    if (acquired == null || needed == null) return <></>
+    else if (acquired < needed)
+      return (
+        <Alert variant="left-accent" status="info" mt="5">
+          <AlertIcon />
+          Még {needed - acquired} darab QR kód kell a tanköri jelenlét megszerzéséig.
+        </Alert>
+      )
+    else
+      return (
+        <Alert variant="left-accent" status="success" mt="5">
+          <AlertIcon />
+          Megvan a tanköri jelenlét!
+        </Alert>
+      )
+  }
+
   if (loading) return <Loading />
 
   return (
     <Page {...props} loginRequired>
-      <Heading>QR kód vadászat</Heading>
+      <Heading as="h1">QR kód vadászat</Heading>
+      {alertBar(tokens.length, minTokenToComplete)}
       <Paragraph>
-        A standoknál végzett aktív tevékenyégért QR kódokat lehet gyűjteni. Ha eleget összegíűjtesz, beválthatod egy tanköri óra aláírására.
+        A standoknál végzett aktív tevékenyégért QR kódokat lehet gyűjteni. Ha eleget összegíűjtesz, beválthatod egy tanköri jelenlétre.
       </Paragraph>
 
-      <ButtonGroup>
+      <ButtonGroup mt="5">
         <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href="/qr/scan">
           QR kód beolvasása
         </LinkButton>
       </ButtonGroup>
 
-      <Heading>Haladás</Heading>
-      <Heading as="h4" size="md">
+      <Heading as="h3" mt="10">
+        Haladás
+      </Heading>
+      <Heading as="h4" size="md" mt={5}>
         Eddig beolvasott tokenek: {tokens.length} / {totalTokenCount}
       </Heading>
+      <Progress hasStripe colorScheme="brand" mt="1" value={calculate_progress()} />
 
-      <Progress hasStripe colorScheme="brand" value={calculate_progress()} />
-      <Heading as="h4" size="md">
+      <Heading as="h4" size="md" mt="5">
         Ahol eddig jártál
       </Heading>
-      <Stack spacing="5" alignItems={{ base: 'center', md: 'start' }}>
+      <Stack spacing="5" mt="5">
         {tokens.map((token, i) => {
           return <StampComponent key={i} title={token.title} type={token.type} />
         })}
