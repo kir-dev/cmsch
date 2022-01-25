@@ -86,6 +86,15 @@ export const AchievementPage: React.FC = (props) => {
     if (((textAllowed && textAnswer) || (imageAllowed && imageAnswer)) && submissionAllowed) {
       const formData = new FormData()
       if (imageAnswer) {
+        if (imageAnswer.size > 31457280) {
+          toast({
+            title: 'Túl nagy kép',
+            description: 'A feltöltött kép túllépte a 30 MB-os feltöltési korlátot!',
+            status: 'error',
+            isClosable: true
+          })
+          return
+        }
         formData.append('file', imageAnswer)
       }
       formData.append('achievementId', id)
@@ -144,7 +153,7 @@ export const AchievementPage: React.FC = (props) => {
 
   const fileInput = imageAllowed && (
     <Box>
-      <FormLabel>Csatolt fájl</FormLabel>
+      <FormLabel>Csatolt fájl (max. méret: 30 MB)</FormLabel>
       <FilePicker
         onFileChange={(fileArray) => setImageAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
@@ -172,18 +181,18 @@ export const AchievementPage: React.FC = (props) => {
   return (
     <Page {...props} loginRequired>
       <CustomBreadcrumb items={breadcrumbItems} />
-      <Heading mb={0}>{achDetails.achievement?.title}</Heading>
+      <Heading mb={5}>{achDetails.achievement?.title}</Heading>
       <AchievementStatusBadge status={achDetails.status} fontSize="lg" />
-      <Paragraph mt={2}>{achDetails.achievement?.description}</Paragraph>
+      <Paragraph mt={5}>{achDetails.achievement?.description}</Paragraph>
       {achDetails.achievement?.expectedResultDescription && (
-        <Text size="sm">
+        <Text size="sm" mt={5}>
           <chakra.span fontWeight="bold">Beadandó formátum:</chakra.span>
           &nbsp;{achDetails.achievement?.expectedResultDescription}
         </Text>
       )}
       {achDetails.status !== achievementStatus.NOT_SUBMITTED && (
         <>
-          <Heading size="md" mt={5}>
+          <Heading size="md" mt={8}>
             Beküldött megoldás
           </Heading>
           {textAllowed && achDetails.submission && <Paragraph mt={2}>{achDetails.submission.textAnswer}</Paragraph>}
@@ -198,7 +207,7 @@ export const AchievementPage: React.FC = (props) => {
       )}
       {reviewed && achDetails.submission && (
         <>
-          <Heading size="md" mt={5}>
+          <Heading size="md" mt={8}>
             Értékelés
           </Heading>
           <Text mt={2}>Javító üzenete: {achDetails.submission.response}</Text>
@@ -208,14 +217,14 @@ export const AchievementPage: React.FC = (props) => {
 
       {submissionAllowed && (
         <>
-          <Heading size="md" mt={5}>
+          <Heading size="md" mt={8}>
             {achDetails.status === achievementStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
           </Heading>
           <Stack mt={2}>
             {textInput}
             {fileInput}
             <Box>
-              <Button mt={4} colorScheme="brand" type="button" onClick={handleSubmit}>
+              <Button mt={3} colorScheme="brand" type="button" onClick={handleSubmit}>
                 Küldés
               </Button>
             </Box>
