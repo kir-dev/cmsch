@@ -37,5 +37,8 @@ data class Profile2View(
         val submittedAchievementCount: Int = 0,
 
         @JsonView(FullDetails::class)
+        val completedAchievementCount: Int = 0,
+
+        @JsonView(FullDetails::class)
         val minTokenToComplete: Int = 0,
 )

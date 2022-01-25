@@ -42,6 +42,7 @@ class ProfileApiController(
             totalTokenCount = tokenService.getTotalTokenCountWithCategory("default"),
             totalAchievementCount = achievementsService.getTotalAchievementsForUser(user),
             submittedAchievementCount = achievementsService.getSubmittedAchievementsForUser(user),
+            completedAchievementCount = achievementsService.getCompletedAchievementsForUser(user),
             totalRiddleCount = riddleService.getTotalRiddleCount(user),
             completedRiddleCount = riddleService.getCompletedRiddleCount(user),
             minTokenToComplete = config.getMinTokenToComplete()

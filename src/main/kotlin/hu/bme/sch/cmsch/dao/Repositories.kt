@@ -83,7 +83,9 @@ interface SubmittedAchievementRepository : CrudRepository<SubmittedAchievementEn
 
     fun findAllByUserId(userId: Int): List<SubmittedAchievementEntity>
 
-    fun findAllByUserIdAndRejectedFalse(userId: Int): List<SubmittedAchievementEntity>
+    fun findAllByUserIdAndRejectedFalseAndApprovedFalse(userId: Int): List<SubmittedAchievementEntity>
+
+    fun findAllByUserIdAndRejectedFalseAndApprovedTrue(userId: Int): List<SubmittedAchievementEntity>
 }
 
 @Repository
