@@ -326,7 +326,12 @@ open class AchievementsService(
 
     @Transactional(readOnly = true)
     fun getSubmittedAchievementsForUser(user: UserEntity): Int {
-        return submitted.findAllByUserIdAndRejectedFalse(user.id).size
+        return submitted.findAllByUserIdAndRejectedFalseAndApprovedFalse(user.id).size
+    }
+
+    @Transactional(readOnly = true)
+    fun getCompletedAchievementsForUser(user: UserEntity): Int {
+        return submitted.findAllByUserIdAndRejectedFalseAndApprovedTrue(user.id).size
     }
 
 }
