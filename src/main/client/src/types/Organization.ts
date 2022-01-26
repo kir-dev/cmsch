@@ -17,5 +17,7 @@ export interface Organization {
 
 export interface Community extends Organization {
   images?: string[]
+  videoIds?: string[]
   resortId?: string
+  searchKeywords?: string[]
 }

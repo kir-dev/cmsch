@@ -14,7 +14,20 @@ export const CommunityList: React.FC<CommunityListProps> = () => {
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
     if (!search) setFilteredCommunities(COMMUNITIES)
-    else setFilteredCommunities(COMMUNITIES.filter((c) => c.name.toLocaleLowerCase().includes(search)))
+    else
+      setFilteredCommunities(
+        COMMUNITIES.filter((c) => {
+          if (c.name.toLocaleLowerCase().includes(search)) return true
+          if (c.id.toLocaleLowerCase().includes(search)) return true
+          for (const keyword of c.searchKeywords || []) {
+            if (keyword.toLocaleLowerCase().includes(search)) return true
+          }
+          for (const interest of c.interests || []) {
+            if (interest.toLocaleLowerCase().includes(search)) return true
+          }
+          return false
+        })
+      )
   }
   return (
     <Page>
