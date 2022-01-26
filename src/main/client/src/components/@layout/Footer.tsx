@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { Box, Flex, HStack, Icon, Image, Link, StackProps, Text, useColorModeValue, VStack, Wrap } from '@chakra-ui/react'
-import { BUGREPORT_URL, KIRDEV_ORANGE, KIRDEV_URL } from 'utils/configurations'
+import { BUGREPORT_URL, KIRDEV_URL } from 'utils/configurations'
 import { socialPages } from 'content/socialPages'
 import { FaHeart } from 'react-icons/fa'
 import { Container } from './Container'
+import customTheme from '../../utils/customTheme'
 
 type impresszumWrapItemProps = {
   display: {
@@ -15,12 +16,19 @@ type impresszumWrapItemProps = {
 const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) => {
   return (
     <FooterWrapItem key={key} display={display}>
+      <HStack spacing={1} justify="center">
+        {socialPages.map((socialPage) => (
+          <HStack as={Link} _hover={{ color: customTheme.colors.kirDev }} href={socialPage.href} isExternal key={socialPage.label}>
+            <Icon as={socialPage.icon} boxSize="2rem" />
+          </HStack>
+        ))}
+      </HStack>
       <Text marginBottom={3} align="center" fontSize="xl">
-        <Link textColor={KIRDEV_ORANGE} href="/impresszum">
+        <Link textColor={customTheme.colors.kirDev} href="/impresszum">
           Impresszum
         </Link>
         {' | '}
-        <Link textColor={KIRDEV_ORANGE} isExternal href="https://www.youtube.com/watch?v=YLR6tqJDHEc">
+        <Link textColor={customTheme.colors.kirDev} isExternal href="https://www.youtube.com/watch?v=YLR6tqJDHEc">
           Adatkezelés
         </Link>
       </Text>
@@ -38,12 +46,24 @@ export const Footer: React.FC = () => (
       <Wrap justify="space-between" spacing={2} align="center">
         <FooterWrapItem>
           <FooterBigImage src="/img/communities/sssl.svg" filter={useColorModeValue('', 'invert(100%)')} />
-          <HStack spacing={1}>
-            {socialPages.map((sociaPage) => (
-              <HStack as={Link} _hover={{ color: KIRDEV_ORANGE }} href={sociaPage.href} isExternal key={sociaPage.label}>
-                <Icon as={sociaPage.icon} boxSize="2rem" />
-              </HStack>
-            ))}
+          <HStack align="center">
+            <Link
+              isExternal
+              fontSize="xl"
+              _hover={{ color: customTheme.colors.kirDev, textDecorationLine: 'underline' }}
+              href="https://sssl.sch.bme.hu"
+            >
+              Weboldal
+            </Link>
+            <Text>|</Text>
+            <Link
+              isExternal
+              fontSize="xl"
+              _hover={{ color: customTheme.colors.kirDev, textDecorationLine: 'underline' }}
+              href="https://sssl.sch.bme.hu/contact"
+            >
+              Kapcsolat
+            </Link>
           </HStack>
         </FooterWrapItem>
         <ImpressumWrapItem key="bigDisplay" display={{ base: 'none', md: 'block' }} />
@@ -54,15 +74,20 @@ export const Footer: React.FC = () => (
             <Text ml={2}>by</Text>
           </Flex>
           <FooterBigImage src="/img/communities/kirdev.svg" />
-          <Box>
-            <Link isExternal fontSize="xl" _hover={{ color: KIRDEV_ORANGE, textDecorationLine: 'underline' }} href={KIRDEV_URL}>
-              Kir-Dev
+          <HStack align="center">
+            <Link isExternal fontSize="xl" _hover={{ color: customTheme.colors.kirDev, textDecorationLine: 'underline' }} href={KIRDEV_URL}>
+              Weboldal
             </Link>
-            {' | '}
-            <Link isExternal fontSize="xl" _hover={{ color: KIRDEV_ORANGE, textDecorationLine: 'underline' }} href={BUGREPORT_URL}>
-              Contact
+            <Text>|</Text>
+            <Link
+              isExternal
+              fontSize="xl"
+              _hover={{ color: customTheme.colors.kirDev, textDecorationLine: 'underline' }}
+              href={BUGREPORT_URL}
+            >
+              Kapcsolat
             </Link>
-          </Box>
+          </HStack>
         </FooterWrapItem>
         <ImpressumWrapItem key="smallDisplay" display={{ md: 'none' }} />
       </Wrap>
