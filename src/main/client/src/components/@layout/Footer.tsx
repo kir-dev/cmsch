@@ -37,7 +37,7 @@ export const Footer: React.FC = () => (
     <Container>
       <Wrap justify="space-between" spacing={2} align="center">
         <FooterWrapItem>
-          <FooterBigImage src="/img/communities/sssl.svg" />
+          <FooterBigImage src="/img/communities/sssl.svg" filter={useColorModeValue('', 'invert(100%)')} />
           <HStack spacing={1}>
             {socialPages.map((sociaPage) => (
               <HStack as={Link} _hover={{ color: KIRDEV_ORANGE }} href={sociaPage.href} isExternal key={sociaPage.label}>
@@ -78,6 +78,6 @@ const FooterWrapItem: React.FC<StackProps> = ({ children, ...props }) => {
   )
 }
 
-const FooterBigImage: React.FC<{ src: string }> = ({ src }) => {
-  return <Image src={src} w="10rem" h="10rem" my={3} />
+const FooterBigImage: React.FC<{ src: string; filter?: string }> = ({ src, filter = '' }) => {
+  return <Image src={src} w="10rem" h="10rem" my={3} filter={filter} />
 }
