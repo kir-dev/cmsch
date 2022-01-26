@@ -21,6 +21,7 @@ import { ErrorPage } from './components/@pages/ErrorPage'
 import { ServiceProvider } from './utils/ServiceContext'
 import { IndexLayout } from 'components/@layout/IndexLayout'
 import { ImpressumPage } from 'components/@pages/ImpressumPage'
+import './global.css'
 
 export function App() {
   return (
