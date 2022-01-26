@@ -12,12 +12,21 @@ import { LinkButton } from '../@commons/LinkButton'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
 
+interface TokenProgress {
+  totalTokenCount: number
+  minTokenToComplete: number
+  acquiredTokenCount: number
+  tokens: TokenDTO[]
+}
+
 export const QRList: React.FC = (props) => {
   const { throwError } = useServiceContext()
-
-  const [tokens, setTokens] = useState<TokenDTO[]>([])
-  const [totalTokenCount, setTotalTokenCount] = useState<number>(0)
-  const [minTokenToComplete, setMinTokenToComplete] = useState<number>(0)
+  const [progress, setProgress] = useState<TokenProgress>({
+    totalTokenCount: 0,
+    minTokenToComplete: 0,
+    acquiredTokenCount: 0,
+    tokens: []
+  })
   const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
@@ -26,9 +35,12 @@ export const QRList: React.FC = (props) => {
       .get(`${API_BASE_URL}/api/profile`)
       .then((res) => {
         const profile = res.data as ProfileDTO
-        setTokens(profile.tokens || [])
-        setTotalTokenCount(profile.totalTokenCount || 0)
-        setMinTokenToComplete(profile.minTokenToComplete || 0)
+        setProgress({
+          tokens: profile.tokens,
+          minTokenToComplete: profile.minTokenToComplete,
+          totalTokenCount: profile.totalTokenCount,
+          acquiredTokenCount: profile.tokens.filter((token) => token.type === 'default').length
+        })
         setLoading(false)
       })
       .catch(() => {
@@ -36,9 +48,9 @@ export const QRList: React.FC = (props) => {
       })
   }, [])
 
-  const calculate_progress = () => {
-    if (totalTokenCount == 0) return 100
-    else return (100 * tokens.length) / totalTokenCount
+  const calculate_progress = (acquired: number, total: number) => {
+    if (total == 0) return 100
+    else return (100 * acquired) / total
   }
 
   const alertBar = (acquired: number, needed: number) => {
@@ -64,7 +76,7 @@ export const QRList: React.FC = (props) => {
   return (
     <Page {...props} loginRequired>
       <Heading as="h1">QR kód vadászat</Heading>
-      {alertBar(tokens.length, minTokenToComplete)}
+      {alertBar(progress.acquiredTokenCount, progress.minTokenToComplete)}
       <Paragraph>
         A standoknál végzett aktív tevékenyégért QR kódokat lehet gyűjteni. Ha eleget összegíűjtesz, beválthatod egy tanköri jelenlétre.
       </Paragraph>
@@ -79,15 +91,15 @@ export const QRList: React.FC = (props) => {
         Haladás
       </Heading>
       <Heading as="h4" size="md" mt={5}>
-        Eddig beolvasott kódok: {tokens.length} / {totalTokenCount}
+        Eddig beolvasott kódok: {progress.acquiredTokenCount} / {progress.totalTokenCount}
       </Heading>
-      <Progress hasStripe colorScheme="brand" mt="1" value={calculate_progress()} />
+      <Progress hasStripe colorScheme="brand" mt="1" value={calculate_progress(progress.acquiredTokenCount, progress.totalTokenCount)} />
 
       <Heading as="h4" size="md" mt="5">
         Ahol eddig jártál
       </Heading>
       <Stack spacing="5" mt="1">
-        {tokens.map((token, i) => {
+        {progress.tokens.map((token, i) => {
           return <StampComponent key={i} title={token.title} type={token.type} />
         })}
       </Stack>
