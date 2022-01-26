@@ -130,15 +130,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                   value={submittedPercent(profile) + completedPercent(profile)}
                 />
                 <CircularProgress color="brand.400" size="10rem" value={completedPercent(profile)} trackColor="transparent">
-                  <CircularProgressLabel color="brand.400" pb="2.5rem">
+                  <CircularProgressLabel color="brand.400" pb={submittedPercent(profile) !== 0 ? '2.5rem' : '0'}>
                     {Math.round(completedPercent(profile))}%
                   </CircularProgressLabel>
-                  <CircularProgressLabel>
-                    <Box height="2px" backgroundColor="gray.200" width="70%" mx="auto" borderRadius="20%"></Box>
-                  </CircularProgressLabel>
-                  <CircularProgressLabel color="yellow.400" pt="2.5rem">
-                    {Math.round(submittedPercent(profile))}%
-                  </CircularProgressLabel>
+                  {submittedPercent(profile) !== 0 && (
+                    <>
+                      <CircularProgressLabel>
+                        <Box height="2px" backgroundColor="gray.200" width="70%" mx="auto" borderRadius="20%"></Box>
+                      </CircularProgressLabel>
+                      <CircularProgressLabel color="yellow.400" pt="2.5rem">
+                        {Math.round(submittedPercent(profile))}%
+                      </CircularProgressLabel>
+                    </>
+                  )}
                 </CircularProgress>
               </Box>
             </Flex>
