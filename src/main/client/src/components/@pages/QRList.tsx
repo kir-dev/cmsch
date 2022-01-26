@@ -78,7 +78,7 @@ export const QRList: React.FC = (props) => {
       <Heading as="h1">QR kód vadászat</Heading>
       {alertBar(progress.acquiredTokenCount, progress.minTokenToComplete)}
       <Paragraph>
-        A standoknál végzett aktív tevékenyégért QR kódokat lehet gyűjteni. Ha eleget összegíűjtesz, beválthatod egy tanköri jelenlétre.
+        A standoknál végzett aktív tevékenyégért QR kódokat lehet beolvasni. Ha eleget összegyűjtesz, beválthatod egy tanköri jelenlétre.
       </Paragraph>
 
       <ButtonGroup mt="5">
@@ -87,7 +87,7 @@ export const QRList: React.FC = (props) => {
         </LinkButton>
       </ButtonGroup>
 
-      <Heading as="h3" mt="10">
+      <Heading as="h3" mt="10" size="lg">
         Haladás
       </Heading>
       <Heading as="h4" size="md" mt={5}>
