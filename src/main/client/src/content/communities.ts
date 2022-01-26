@@ -21,7 +21,9 @@ export const COMMUNITIES: Community[] = [
     resortId: 'simonyi',
     logo: '/img/communities/kirdev.svg',
     color: 'orange',
-    images: ['https://kir-dev.sch.bme.hu/static/694736fc08b01fcbab76646a0b403c64/678ad/pek-next.webp']
+    images: ['https://kir-dev.sch.bme.hu/static/694736fc08b01fcbab76646a0b403c64/678ad/pek-next.webp'],
+    videoIds: ['sY-s7O0FiYE', 'HA55hFBE32M'],
+    searchKeywords: ['legjobb', 'web', 'programozás']
   },
   {
     id: 'schdesign',
