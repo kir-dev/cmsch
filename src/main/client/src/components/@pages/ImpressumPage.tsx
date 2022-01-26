@@ -22,14 +22,14 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
       </Heading>
       <Wrap justify="center">
         {DEVS.map((dev) => (
-          <WrapItem border="2px" borderColor={useColorModeValue('brand.100', 'brand.700')} key={dev.name}>
+          <WrapItem border="2px" borderColor={useColorModeValue(KIRDEV_ORANGE, KIRDEV_ORANGE)} key={dev.name}>
             <Center w="20rem" h="20rem">
               <Flex direction="column" align="center">
                 <Text fontSize="2xl">{dev.name}</Text>
                 <Image src={dev.img} h="15rem" fallbackSrc="/img/communities/kirdev.svg" />
                 <HStack spacing={2} my={2}>
                   {dev.tags.map((tag) => (
-                    <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
+                    <Tag size={'md'} variant="solid" fontWeight="bold" color="white" bgColor={KIRDEV_ORANGE} key={tag}>
                       {tag}
                     </Tag>
                   ))}
