@@ -74,12 +74,12 @@ export const QRScan: React.FC = (props) => {
         </Fade>
       )}
 
-      <ButtonGroup alignSelf="center">
-        <LinkButton marginTop="3" leftIcon={<FaArrowLeft />} size="lg" href="/qr">
+      <ButtonGroup alignSelf="center" mt="5">
+        <LinkButton leftIcon={<FaArrowLeft />} size="lg" href="/qr">
           Vissza
         </LinkButton>
         {state.state !== ScanViewState.Scanning && (
-          <Button marginTop="3" colorScheme="brand" leftIcon={<FaQrcode />} onClick={resetButtonHandler} size="lg">
+          <Button colorScheme="brand" leftIcon={<FaQrcode />} onClick={resetButtonHandler} size="lg">
             Új QR scannelése
           </Button>
         )}
