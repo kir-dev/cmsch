@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, ButtonGroup, Heading, Stack } from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, ButtonGroup, Heading, Stack, VStack } from '@chakra-ui/react'
 import { Paragraph } from '../@commons/Basics'
 import { Page } from '../@layout/Page'
 import React from 'react'
@@ -6,6 +6,8 @@ import { LinkButton } from '../@commons/LinkButton'
 import { ImageCarousel } from '../@commons/ImageCarousel'
 import { Schedule } from '../@commons/Schedule'
 import { EVENTS } from '../../content/events'
+import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa'
+import customTheme from '../../utils/customTheme'
 
 export const Home: React.FC = () => {
   return (
@@ -17,10 +19,21 @@ export const Home: React.FC = () => {
         </Heading>{' '}
         portálon
       </Heading>
-      <Paragraph marginTop={20} color="gray.500" textAlign="center" maxW={800} marginX="auto">
-        Elérkezett a GólyaKörTe! Ezen az oldalon tájékozódhatsz az eseményről. A rendezvény alatt feladatokat tudsz megoldani nyereményekért
-        és tanköri aláírásért!
-      </Paragraph>
+      <BlockQuote quoteMarkSize={4}>
+        <Paragraph>Kedves Gólyák!</Paragraph>
+        <Paragraph>Köszöntünk titeket a 2022-es Gólyakörte honlapján!</Paragraph>
+        <Paragraph>
+          A Gólyakörte egy olyan rendezvény, ahol a VIK-es körök bemutatkoznak nektek, hogy megismerjétek, hogy mivel foglalkoznak. Ez a
+          rendezvény segíti a közéletben való elhelyezkedéseteket, megnyitja a lehetőségeiteket, hogy új dolgokat próbáljatok ki vagy, hogy
+          a meglévő érdeklődéseiteket elmélyítsétek.
+        </Paragraph>
+        <Paragraph>Biztatunk titeket, hogy vegyetek részt a rendezvényen és találjátok meg az új hobbitokat!</Paragraph>
+        <Paragraph fontStyle="italic">
+          Üdv,
+          <br />
+          Főrendezők
+        </Paragraph>
+      </BlockQuote>
       <Stack justifyContent="center" marginTop={20} direction="column" alignItems="center">
         <LinkButton href="/korok" colorScheme="brand" size="lg">
           Körök listája
@@ -56,5 +69,52 @@ export const Home: React.FC = () => {
       </Heading>
       <ImageCarousel images={['/img/maps/bmei.png', '/img/maps/sch.png', '/img/maps/fnt.png']} />
     </Page>
+  )
+}
+
+type BlockQuoteProps = {
+  quoteMarkSize: number
+}
+
+const BlockQuote: React.FC<BlockQuoteProps> = ({ children, quoteMarkSize }) => {
+  return (
+    <VStack
+      px={quoteMarkSize / 2 + 'rem'}
+      py={quoteMarkSize + 'rem'}
+      marginTop={20}
+      color="gray.500"
+      maxW={800}
+      marginX="auto"
+      align="flex-start"
+      spacing={5}
+      position="relative"
+    >
+      <QuoteMark side="left" size={quoteMarkSize} />
+      {children}
+      <QuoteMark side="right" size={quoteMarkSize} />
+    </VStack>
+  )
+}
+
+type QuoteMarkProps = {
+  side: 'left' | 'right'
+  size: number
+}
+
+const QuoteMark: React.FC<QuoteMarkProps> = ({ side, size }) => {
+  return (
+    <Box
+      position="absolute"
+      top={side === 'left' ? 0 : undefined}
+      bottom={side === 'right' ? 0 : undefined}
+      left={side === 'left' ? 0 : undefined}
+      right={side === 'right' ? 0 : undefined}
+    >
+      {side === 'left' ? (
+        <FaQuoteLeft size={size + 'rem'} color={customTheme.colors.brand['300']} />
+      ) : (
+        <FaQuoteRight size={size + 'rem'} color={customTheme.colors.brand['300']} />
+      )}
+    </Box>
   )
 }
