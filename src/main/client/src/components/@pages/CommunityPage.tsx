@@ -4,6 +4,7 @@ import React from 'react'
 import { COMMUNITIES } from '../../content/communities'
 import { Navigate, useParams } from 'react-router-dom'
 import { DataSheet } from '../@commons/DataSheet'
+import { YouTubeFrame } from '../@commons/YouTubeFrame'
 
 type CommunityPageProps = {}
 
@@ -14,6 +15,10 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
   return (
     <Page>
       <DataSheet organization={community} />
+
+      {community.videoIds?.map((id) => (
+        <YouTubeFrame videoId={id} />
+      ))}
       {community.images?.map((url) => (
         <Image marginTop={10} src={url} alt="Körkép" borderRadius="lg" />
       ))}
