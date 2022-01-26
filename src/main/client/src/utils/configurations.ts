@@ -6,5 +6,3 @@ export const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'localhost:
 export const KIRDEV_URL = process.env.REACT_APP_KIRDEV_URL || 'https://kir-dev.sch.bme.hu'
 export const BUGREPORT_URL = process.env.REACT_APP_BUGREPORT_URL || 'https://kir-dev.sch.bme.hu/about#contact'
 export const GITHUB_ORG_URL = process.env.REACT_APP_GITHUB_ORG_URL || 'https://github.com/kir-dev/cmsch'
-
-export const KIRDEV_ORANGE = '#F15A29'
