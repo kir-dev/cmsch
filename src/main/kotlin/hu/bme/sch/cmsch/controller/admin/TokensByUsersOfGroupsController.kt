@@ -21,6 +21,7 @@ import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.service.RiddleService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
+import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -106,11 +107,11 @@ class TokensByUsersOfGroupsController(
         document.setMargins(20f, 40f, 20f, 40f)
 
         val kirdevLogo: Image = Image(ImageDataFactory.create(
-            ClassLoader.getSystemResource("/static/images/kirdev-logo.png").toURI().toURL()
+            ClassPathResource("/static/images/kirdev-logo.png").inputStream.readAllBytes()
         )).scaleToFit(70f, 70f)
 
         val ssslLogo: Image = Image(ImageDataFactory.create(
-            ClassLoader.getSystemResource("/static/images/sssl-logo.png").toURI().toURL()
+            ClassPathResource("/static/images/sssl-logo.png").inputStream.readAllBytes()
         )).scaleToFit(70f, 70f)
 
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
@@ -139,8 +140,8 @@ class TokensByUsersOfGroupsController(
             .filter { it.value.count { t -> t.token?.type == PREFERRED_TOKEN_TYPE } >= minTokenToComplete }
             .count()
         document.add(Paragraph("A hallgatók a rendezvény alatt ellátogathattak a Schönherz öntevékeny köreinek " +
-                "standjaihoz, ahol miután megismerkedtek az adott körrel beolvashattak egy QR kódot, ezáltal egy digitális " +
-                "pecsétet szereztek. A tanköri aláíráshoz szükséges pecsétek száma: ")
+                "standjaihoz, ahol miután megismerkedtek az adott körrel, beolvashattak egy-egy QR kódot. Ezáltal digitális " +
+                "pecséteket szerezhettek. A tanköri aláíráshoz szükséges pecsétek száma: ")
             .add(Text("$minTokenToComplete db").setBold())
             .add(". A tankörből ")
             .add(Text("${tokensByUsers.count{ it.value.size >= 0 }} fő").setBold())
@@ -238,10 +239,6 @@ class TokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(12f)
             .setMarginTop(20f))
-        document.add(Paragraph().add(ssslLogo).add(Paragraph().setMargin(10f)).add(kirdevLogo)
-            .setTextAlignment(TextAlignment.CENTER)
-            .setMarginTop(20f)
-            .setMarginBottom(40f))
 
         document.close()
         response.addHeader("Content-Disposition", "attachment; filename=jelenleti-export-2022-${group.name}.pdf")

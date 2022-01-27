@@ -33,7 +33,7 @@ data class RealtimeConfigEntity(
 
         @JsonView(value = [ Edit::class ])
         @Column(nullable = false)
-        @property:GenerateInput(order = 2, label = "Megjegyzés")
+        @property:GenerateInput(order = 3, label = "Megjegyzés")
         @property:GenerateOverview(columnName = "Megjegyzés", order = 3)
         var comment: String = ""
 

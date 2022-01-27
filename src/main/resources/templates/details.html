@@ -247,6 +247,9 @@
                     <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">
                         <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
                     </object>
+                    <object th:if="${controlMode == 'delete'}" th:remove="tag">
+                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
+                    </object>
                     <object th:if="${controlMode == 'grade'}" th:remove="tag">
                         <br />
                         <label>Gyors értékelés</label>
