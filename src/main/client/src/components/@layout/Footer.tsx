@@ -73,7 +73,7 @@ export const Footer: React.FC = () => (
             <FaHeart color="red" size="1.5rem" />
             <Text ml={2}>by</Text>
           </Flex>
-          <FooterBigImage src="/img/communities/kirdev.svg" />
+          <FooterBigImage src={useColorModeValue('/img/communities/kirdev.svg', '/img/communities/kirdev-white.svg')} />
           <HStack align="center">
             <Link isExternal fontSize="xl" _hover={{ color: customTheme.colors.kirDev, textDecorationLine: 'underline' }} href={KIRDEV_URL}>
               Weboldal
