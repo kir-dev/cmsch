@@ -59,6 +59,7 @@
                 <h2 th:if="${userEntity.isAdmin()}">Riddle</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles}">Riddleök</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddle-categories}">Riddle kategóriák</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles-by-users}">Riddle beadások</a>
 
                 <h2 th:if="${userEntity.isAdmin()}">Tokenek</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/tokens}">Tokenek</a>
