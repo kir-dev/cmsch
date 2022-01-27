@@ -6,6 +6,7 @@ type BreadcrumbProps = {
   items: {
     title?: string
     to?: string
+    color?: string
   }[]
 }
 
@@ -21,7 +22,7 @@ export const CustomBreadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
             fontWeight={500}
             _hover={{
               textDecoration: 'none',
-              color: 'brand.500'
+              color: item.color || 'brand.500'
             }}
           >
             {item.title}
