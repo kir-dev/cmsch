@@ -21,6 +21,7 @@ import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
 import { Helmet } from 'react-helmet'
+import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
 
 type RiddleProps = {}
 
@@ -113,17 +114,29 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       })
   }
 
+  const breadcrumbItems = [
+    {
+      title: 'Riddle',
+      to: '/riddleok'
+    },
+    {
+      title: riddle.title
+    }
+  ]
+
   if (loading) return <Loading />
 
   return (
     <Page {...props}>
       <Helmet title={riddle.title} />
+      <CustomBreadcrumb items={breadcrumbItems} />
+
       <Flex align="center">
         <Heading> {riddle.title} </Heading>
       </Flex>
 
       <Box>
-        <Image width="100%" src={`/cdn/${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />
+        {riddle.imageUrl && <Image width="100%" src={`/cdn/${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
         {riddle.hint && (
           <Alert status="info" my={5} borderRadius="md">
             <AlertIcon />
