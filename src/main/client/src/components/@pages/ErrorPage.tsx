@@ -6,6 +6,7 @@ import { LinkButton } from '../@commons/LinkButton'
 import { ErrorTypes } from '../../utils/ServiceContext'
 import { UnauthorizedPage } from './UnauthorizedPage'
 import { Navigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
 export const ErrorPage: React.FC = () => {
   const { clearError, error, errorType } = useServiceContext()
@@ -25,6 +26,7 @@ export const ErrorPage: React.FC = () => {
   if (clonedErrorType === ErrorTypes.AUTHENTICATION) return <UnauthorizedPage />
   return (
     <Page>
+      <Helmet title="Hiba" />
       <Heading textAlign="center">Hiba történt</Heading>
       <Text textAlign="center" color="gray.500" marginTop={10}>
         {clonedError}

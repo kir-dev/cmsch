@@ -5,12 +5,15 @@ import { DEVS } from 'content/devs'
 import { GITHUB_ORG_URL, KIRDEV_URL } from 'utils/configurations'
 import { useColorModeValue } from '@chakra-ui/system'
 import customTheme from '../../utils/customTheme'
+import { Helmet } from 'react-helmet'
+import React from 'react'
 
 type ImpressumPageProps = {}
 
 export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
   return (
     <Page>
+      <Helmet title="Impresszum" />
       <Heading>Impresszum</Heading>
       <Paragraph>
         A Gólyakörte 2022 weblapját az SSSL megbízásából a{' '}

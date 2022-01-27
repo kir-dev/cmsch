@@ -10,6 +10,7 @@ import { API_BASE_URL } from 'utils/configurations'
 import { Page } from 'components/@layout/Page'
 import { Loading } from 'utils/Loading'
 import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
+import { Helmet } from 'react-helmet'
 
 export const AchievementCategoryPage: React.FC = (props) => {
   const { throwError } = useServiceContext()
@@ -50,6 +51,7 @@ export const AchievementCategoryPage: React.FC = (props) => {
 
   return (
     <Page {...props} loginRequired>
+      <Helmet title={category.categoryName} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>Bucketlist kategória: {category.categoryName}</Heading>
       {category.achievements && category.achievements.length > 0 ? (

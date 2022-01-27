@@ -8,6 +8,7 @@ import { AchievementCategory, AllAchievementCategories } from '../../types/dto/a
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
 const progress = (category: AchievementCategory) => {
   return (category.approved + category.notGraded) / category.sum
@@ -56,6 +57,7 @@ export const AchievementCategoryList: React.FC = (props) => {
     )
   return (
     <Page {...props} loginRequired>
+      <Helmet title="Bucketlist kategóriák" />
       <Heading>Bucketlist</Heading>
       {categories.length > 0 ? (
         <VStack spacing={4} mt={5} align="stretch">

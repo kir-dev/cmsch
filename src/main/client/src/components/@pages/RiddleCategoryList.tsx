@@ -7,6 +7,7 @@ import axios from 'axios'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
+import { Helmet } from 'react-helmet'
 
 type RiddleListProps = {}
 
@@ -65,6 +66,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
 
   return (
     <Page {...props}>
+      <Helmet title="Riddleök" />
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">
         {riddleCategoryList.map((riddleCategory) => (
