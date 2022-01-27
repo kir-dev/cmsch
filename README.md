@@ -14,6 +14,12 @@ CMSch web backend with in-built frontend
   ./gradlew bootRun --args='--spring.profiles.include=test,internal'
 ```
 
+## Enable profileing
+
+```bash
+  ./gradlew -Dorg.gradle.jvmargs="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -XX:+UseSerialGC" clean bootRun --args='--spring.profiles.include=test,internal'
+```
+
 ## Publish
 
 Use your authsch details for docker login. Tag `rc` for staging (release candidate) and tag release for release.
