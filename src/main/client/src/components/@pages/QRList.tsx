@@ -76,7 +76,7 @@ export const QRList: React.FC = (props) => {
 
   return (
     <Page {...props} loginRequired>
-      <Helmet title="QR page" />
+      <Helmet title="QR-kódok" />
       <Heading as="h1">QR kód vadászat</Heading>
       {alertBar(progress.acquiredTokenCount, progress.minTokenToComplete)}
       <Paragraph>

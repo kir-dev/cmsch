@@ -20,6 +20,7 @@ import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'type
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
+import { Helmet } from 'react-helmet'
 
 type RiddleProps = {}
 
@@ -116,6 +117,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
 
   return (
     <Page {...props}>
+      <Helmet title={riddle.title} />
       <Flex align="center">
         <Heading> {riddle.title} </Heading>
       </Flex>
