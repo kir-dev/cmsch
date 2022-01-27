@@ -12,6 +12,9 @@ import { Helmet } from 'react-helmet'
 type RiddleListProps = {}
 
 function progress(riddleCategory: RiddleCategory) {
+  if (riddleCategory.completed === 0) {
+    return 0
+  }
   return riddleCategory.completed / riddleCategory.total
 }
 
@@ -70,19 +73,24 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">
         {riddleCategoryList.map((riddleCategory) => (
-          <Box bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: 'brand.500' }}>
-            <Box onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)} style={{ textDecoration: 'none' }}>
-              <Flex align="center" justifyContent="space-between">
-                <Text fontWeight="bold" fontSize="xl">
-                  {riddleCategory.title}
+          <Box
+            bg={bg}
+            px={6}
+            py={2}
+            borderRadius="md"
+            _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700'), transform: 'translateX(0.5em)', cursor: 'pointer' }}
+            onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
+          >
+            <Flex align="center" justifyContent="space-between">
+              <Text fontWeight="bold" fontSize="xl">
+                {riddleCategory.title}
+              </Text>
+              <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
+                <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
+                  {riddleCategory.completed} / {riddleCategory.total}
                 </Text>
-                <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
-                  <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
-                    {riddleCategory.completed} / {riddleCategory.total}
-                  </Text>
-                </Box>
-              </Flex>
-            </Box>
+              </Box>
+            </Flex>
           </Box>
         ))}
       </VStack>
