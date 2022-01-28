@@ -12,6 +12,7 @@ import {
   Heading,
   Image,
   Input,
+  ToastId,
   useColorModeValue,
   useToast
 } from '@chakra-ui/react'
@@ -29,6 +30,8 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const toast = useToast()
+  const toastIdRef = React.useRef<ToastId | null>(null)
+
   const { throwError } = useServiceContext()
 
   if (!id) {
@@ -63,13 +66,17 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       .post<RiddleSubmissonResult>(`${API_BASE_URL}/api/riddle/${id}`, { solution: solution })
       .then((res) => {
         if (res.data.status === RiddleSubmissonStatus.WRONG) {
-          toast({
-            title: 'Helytelen válasz!',
-            description: 'Próbáld meg újra, sikerülni fog!',
-            status: 'error',
-            duration: 9000,
-            isClosable: true
-          })
+          if (toastIdRef.current) {
+            toast.close(toastIdRef.current)
+          }
+          toastIdRef.current =
+            toast({
+              title: 'Helytelen válasz!',
+              description: 'Próbáld meg újra, sikerülni fog!',
+              status: 'error',
+              duration: 9000,
+              isClosable: true
+            }) || null
         }
         if (res.data.status === RiddleSubmissonStatus.CORRECT && res.data.nextId) {
           navigate(`/riddleok/${res.data.nextId}`)
