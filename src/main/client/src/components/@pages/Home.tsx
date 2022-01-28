@@ -59,14 +59,14 @@ export const Home: React.FC = () => {
           QR-kódok
         </LinkButton>
       </ButtonGroup>
-      <Heading as="h2" size="lg" textAlign="center" marginTop={20}>
+      <Heading as="h2" size="lg" textAlign="center" marginTop={20} id="esemenyek">
         Események
       </Heading>
       <Alert marginTop={10} variant="left-accent" width="fit-content" marginX="auto">
         <AlertIcon />A változás jogát fenntartjuk! Kísérd figyelemmel az oldal tetején megjelenő értesítéseket!
       </Alert>
       <Schedule events={EVENTS} />
-      <Heading as="h2" size="lg" textAlign="center" marginTop={20}>
+      <Heading as="h2" size="lg" textAlign="center" marginTop={20} id="terkepek">
         Térképek
       </Heading>
       <ImageCarousel images={['/img/maps/bmei.png', '/img/maps/sch.png', '/img/maps/fnt.png']} />
