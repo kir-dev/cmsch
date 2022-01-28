@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Page } from 'components/@layout/Page'
 import {
   Alert,
@@ -14,7 +14,8 @@ import {
   Input,
   ToastId,
   useColorModeValue,
-  useToast
+  useToast,
+  VStack
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'types/dto/riddles'
@@ -37,9 +38,6 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
   if (!id) {
     navigate('/')
   }
-  const bg = useColorModeValue('brand.200', 'brand.600')
-  const hover = useColorModeValue('brand.300', 'brand.700')
-  const active = useColorModeValue('brand.500', 'brand.500')
 
   const [riddle, setRiddle] = React.useState<Riddle>({ id: 1, title: '', imageUrl: '', solved: false, hint: undefined })
   const [loading, setLoading] = React.useState<boolean>(false)
@@ -134,38 +132,45 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
   if (loading) return <Loading />
 
   return (
-    <Page {...props}>
+    <Page {...props} loginRequired>
       <Helmet title={riddle.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
 
       <Flex align="center">
         <Heading> {riddle.title} </Heading>
       </Flex>
+      <Box maxW="100%" w="30rem" mx="auto">
+        {riddle.imageUrl && <Image width="100%" src={`${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
+        <Box
+          as="form"
+          onSubmit={submitSolution}
+          borderWidth={2}
+          borderColor={useColorModeValue('gray.200', 'gray.600')}
+          borderRadius="md"
+          p={5}
+          mt={5}
+        >
+          <FormControl>
+            <FormLabel htmlFor="solution">Megoldásom:</FormLabel>
+            <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={riddle.solved} />
+          </FormControl>
 
-      <Box>
-        {riddle.imageUrl && <Image width="100%" src={`/cdn/${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
-        {riddle.hint && (
-          <Alert status="info" my={5} borderRadius="md">
-            <AlertIcon />
-            {riddle.hint}
-          </Alert>
-        )}
-        {!riddle.hint && (
-          <Button onClick={getHint} width="100%" bg="blue.500" my={5}>
-            Hintet kérek!
-          </Button>
-        )}
-      </Box>
-
-      <Box as="form" onSubmit={submitSolution} borderWidth={2} borderColor={bg} borderRadius="md" p={5}>
-        <FormControl>
-          <FormLabel htmlFor="solution">Megoldásom:</FormLabel>
-          <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={riddle.solved} />
-        </FormControl>
-
-        <Button type="submit" width="100%" bg={bg} mt={10} _hover={{ background: hover }} _active={{ bg: active }}>
-          Beadom
-        </Button>
+          <VStack spacing={5} mt={10}>
+            <Button type="submit" colorScheme="brand" width="100%">
+              Beadom
+            </Button>
+            {riddle.hint ? (
+              <Alert status="info" borderRadius="md">
+                <AlertIcon />
+                {riddle.hint}
+              </Alert>
+            ) : (
+              <Button onClick={getHint} width="100%" colorScheme="blue" variant="outline">
+                Hintet kérek!
+              </Button>
+            )}
+          </VStack>
+        </Box>
       </Box>
     </Page>
   )
