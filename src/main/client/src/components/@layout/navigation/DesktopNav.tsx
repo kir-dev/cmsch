@@ -1,5 +1,5 @@
-import { ChevronRightIcon, Icon } from '@chakra-ui/icons'
-import { Box, Flex, Popover, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
+import { ChevronDownIcon, ChevronRightIcon, Icon } from '@chakra-ui/icons'
+import { Box, Flex, HStack, Popover, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import React from 'react'
 import { NavItem } from '../../../types/NavItem'
@@ -40,21 +40,21 @@ const DesktopNav: React.FC = () => {
   return (
     <Stack direction="row" spacing={4}>
       {NAV_ITEMS.filter((navItem) => (navItem.loginRequired && isLoggedIn) || !navItem.loginRequired).map((navItem) => (
-        <Box key={navItem.label}>
+        <Box key={navItem.label} p={2}>
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
               <Link to={navItem.href || '#'} style={navItem.href ? {} : { cursor: 'default' }}>
-                <Text
-                  p={2}
-                  fontSize="md"
-                  fontWeight={500}
+                <HStack
                   _hover={{
                     textDecoration: 'none',
                     color: 'brand.500'
                   }}
                 >
-                  {navItem.label}
-                </Text>
+                  <Text fontSize="md" fontWeight={500}>
+                    {navItem.label}
+                  </Text>
+                  {navItem.children && <Icon as={ChevronDownIcon} w={6} h={6} m={0} />}
+                </HStack>
               </Link>
             </PopoverTrigger>
 
