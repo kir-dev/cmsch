@@ -5,6 +5,7 @@ export interface Organization {
   description?: string
   website?: string
   logo?: string
+  darkLogo?: string
   established?: string
   email?: string
   members?: number
