@@ -159,7 +159,7 @@ export const AchievementPage: React.FC = (props) => {
         onFileChange={(fileArray) => setImageAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
         clearButtonLabel="Törlés"
-        accept=".png,.jpeg,.jpg,.gif"
+        accept="image/jpeg,image/png,image/jpg,image/gif"
         ref={filePickerRef}
       />
     </Box>
