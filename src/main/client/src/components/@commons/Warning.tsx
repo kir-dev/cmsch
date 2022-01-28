@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { Alert, AlertDescription, AlertIcon, AlertTitle, CloseButton, HStack, VStack } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, CloseButton, HStack, VStack } from '@chakra-ui/react'
 import axios from 'axios'
 import { API_BASE_URL } from '../../utils/configurations'
 import { WarningView } from 'types/dto/warning'
 import { Container } from 'components/@layout/Container'
-import { getToastTitle } from '../../utils/toastTitle'
 
 export const Warning: React.FC = () => {
   const [warning, setWarning] = React.useState<WarningView | undefined>(undefined)
@@ -26,11 +25,10 @@ export const Warning: React.FC = () => {
 
   return (
     <Container>
-      <Alert status="warning" variant="left-accent">
+      <Alert status={warning?.type || 'warning'} variant="left-accent">
         <HStack justify="space-between" flex={1}>
           <AlertIcon />
           <VStack align="flex-start" flex={1}>
-            <AlertTitle mr={2}>{getToastTitle(warning.type)}</AlertTitle>
             <AlertDescription wordBreak="break-word">{warning.message}</AlertDescription>
           </VStack>
           <CloseButton onClick={closeWarning} />

@@ -1,4 +1,4 @@
 export interface WarningView {
   message: string
-  type: string
+  type: 'warning' | 'info' | 'success' | 'error'
 }
