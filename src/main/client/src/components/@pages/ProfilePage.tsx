@@ -11,7 +11,8 @@ import {
   Skeleton,
   VStack,
   SkeletonCircle,
-  Box
+  Box,
+  Button
 } from '@chakra-ui/react'
 import * as React from 'react'
 import { ProfileDTO, RoleType } from 'types/dto/profile'
@@ -107,9 +108,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
               Admin panel
             </LinkButton>
           )}
-          <LinkButton href="#" colorScheme="brand" variant="outline" onClick={logout}>
+          <Button colorScheme="brand" variant="outline" onClick={logout}>
             Kijelentkezés
-          </LinkButton>
+          </Button>
         </VStack>
       </Flex>
 
