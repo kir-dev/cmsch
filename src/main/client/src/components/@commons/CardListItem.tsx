@@ -11,6 +11,12 @@ type CardListItemProps = {
 }
 
 export const CardListItem: React.FC<CardListItemProps> = ({ data, link }) => {
+  let logoSource
+  if (data.logo) {
+    logoSource = data.darkLogo ? useColorModeValue(data.logo, data.darkLogo) : data.logo
+  } else {
+    logoSource = data.darkLogo
+  }
   return (
     <Link to={link}>
       <Box
@@ -22,7 +28,7 @@ export const CardListItem: React.FC<CardListItemProps> = ({ data, link }) => {
         _hover={{ transform: 'translateX(0.5em)' }}
       >
         <HStack spacing={4}>
-          {data.logo && <Image src={data.logo} alt={data.name} boxSize={16} objectFit="contain" />}
+          {logoSource && <Image src={logoSource} alt={data.name} boxSize={16} objectFit="contain" />}
           <VStack align="flex-start" overflow="hidden">
             <Heading as="h3" size="md" marginY={0} maxWidth="100%">
               {data.name}

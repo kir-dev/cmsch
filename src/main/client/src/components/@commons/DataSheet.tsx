@@ -6,6 +6,7 @@ import { EditIcon, LinkIcon } from '@chakra-ui/icons'
 import { LinkButton } from './LinkButton'
 import { SimpleLink } from './SimpleLink'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
+import { useColorModeValue } from '@chakra-ui/system'
 
 type DataSheetProps = {
   organization: Organization
@@ -17,6 +18,12 @@ type DataSheetProps = {
  * @constructor
  */
 export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
+  let logoSource
+  if (organization.logo) {
+    logoSource = organization.darkLogo ? useColorModeValue(organization.logo, organization.darkLogo) : organization.logo
+  } else {
+    logoSource = organization.darkLogo
+  }
   return (
     <>
       <Heading>{organization.name}</Heading>
@@ -31,15 +38,8 @@ export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
             </DataField>
           )}
           {organization.members && <DataField label="Létszám">{organization.members}</DataField>}
-          {organization.website && (
-            <DataField label="Weboldal">
-              <SimpleLink external href={organization.website} color={organization.color}>
-                {organization.website}
-              </SimpleLink>
-            </DataField>
-          )}
         </DataGrid>
-        {organization.logo && <Image mt={5} src={organization.logo} alt={organization.name} maxH={28} maxW={40} objectFit="contain" />}
+        {organization.logo && <Image mt={5} src={logoSource} alt={organization.name} maxH={28} maxW={40} objectFit="contain" />}
       </Flex>
       {organization.description && <Paragraph>{organization.description}</Paragraph>}
       {organization.interests && (
