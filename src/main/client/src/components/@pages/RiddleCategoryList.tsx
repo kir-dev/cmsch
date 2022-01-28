@@ -68,7 +68,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
   if (loading) return <Loading />
 
   return (
-    <Page {...props}>
+    <Page {...props} loginRequired>
       <Helmet title="Riddleök" />
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">
@@ -78,7 +78,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
             px={6}
             py={2}
             borderRadius="md"
-            _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700'), transform: 'translateX(0.5em)', cursor: 'pointer' }}
+            _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700'), cursor: 'pointer' }}
             onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
           >
             <Flex align="center" justifyContent="space-between">
