@@ -30,7 +30,11 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
           <WrapItem border="2px" borderColor={useColorModeValue('gray.200', 'gray.700')} borderRadius="md" key={dev.name}>
             <Flex direction="column" align="center" w="20rem" h="20rem">
               <Text fontSize="2xl">{dev.name}</Text>
-              <Image src={dev.img} h="15rem" fallbackSrc="/img/communities/kirdev.svg" />
+              <Image
+                src={dev.img}
+                h="15rem"
+                fallbackSrc={useColorModeValue('/img/communities/kirdev.svg', '/img/communities/kirdev-white.svg')}
+              />
               <HStack spacing={2} my={2}>
                 {dev.tags.map((tag) => (
                   <Tag size={'md'} variant="solid" fontWeight="bold" color="white" bgColor={customTheme.colors.kirDev} key={tag}>
