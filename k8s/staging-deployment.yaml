@@ -184,6 +184,10 @@ spec:
               value: 'staging,golyakorte2022,test'
             - name: PORT
               value: '80'
+            - name: REQUEST_FOR_NEPTUN_DEFAULT
+              value: 'true'
+            - name: REQUEST_FOR_EMAIL_DEFAULT
+              value: 'false'
             - name: WEBSITE_URL
               value: https://staging.golyakorte.sch.bme.hu/
             - name: SYSADMINS
