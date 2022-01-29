@@ -27,8 +27,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
       color: resort?.color
     },
     {
-      title: community.name,
-      color: community.color
+      title: community.name
     }
   ]
   return (

@@ -20,8 +20,7 @@ export const ResortPage: React.FC<ResortPageProps> = () => {
       to: '/reszortok'
     },
     {
-      title: resort.name,
-      color: resort.color
+      title: resort.name
     }
   ]
   return (
