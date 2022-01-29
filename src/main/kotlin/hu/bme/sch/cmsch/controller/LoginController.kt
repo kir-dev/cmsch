@@ -179,12 +179,19 @@ open class LoginController(
     @ApiOperation("Redirection to the auth provider")
     @GetMapping("/control/login")
     fun items(request: HttpServletRequest): String {
-        if (config.isRequestForNeptun()) {
-            return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
-                    Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
-        }
-        return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
+        val neptun = config.isRequestForNeptun()
+        val email = config.isRequestForEmail()
+        return "redirect:" + when {
+            neptun && email -> authSch.generateLoginUrl(buildUniqueState(request),
+                Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
+            neptun && !email -> authSch.generateLoginUrl(buildUniqueState(request),
+                Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
+            !neptun && email -> authSch.generateLoginUrl(buildUniqueState(request),
+                Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
+            !neptun && !email -> authSch.generateLoginUrl(buildUniqueState(request),
                 Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
+            else -> "/error-during-login"
+        }
     }
 
     fun buildUniqueState(request: HttpServletRequest): String {
