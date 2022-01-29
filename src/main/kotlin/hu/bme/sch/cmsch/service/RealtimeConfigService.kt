@@ -19,13 +19,26 @@ const val WEBSITE_URL = "WEBSITE_URL"
 const val STAFF_MESSAGE = "STAFF_MESSAGE"
 const val EVENT_FINISHED = "EVENT_FINISHED"
 const val REQUEST_FOR_NEPTUN = "REQUEST_FOR_NEPTUN"
+const val REQUEST_FOR_EMAIL = "REQUEST_FOR_EMAIL"
 const val MIN_TOKEN_TO_COMPLETE = "MIN_TOKEN_TO_COMPLETE"
 const val HINT_SCORE_PERCENTAGE = "HINT_SCORE_PERCENTAGE"
 
 @Service
 class RealtimeConfigService(
         private val realtimeConfig: RealtimeConfigRepository,
-        @Value("\${cmsch.website-default-url:http://127.0.0.1:8080/}") private val defaultWebsiteUrl: String
+        @Value("\${cmsch.website-default-url:http://127.0.0.1:8080/}") private val defaultWebsiteUrl: String,
+        @Value("\${cmsch.config.warning-message-default:}") private val warningMessageDefault: String,
+        @Value("\${cmsch.config.warning-type-default:warning}") private val warningTypeDefault: String,
+        @Value("\${cmsch.config.leader-board-enabled-default:true}") private val leaderBoardEnabledDefault: String,
+        @Value("\${cmsch.config.leader-board-updates-default:true}") private val leaderBoardUpdatesDefault: String,
+        @Value("\${cmsch.config.event-finished-default:false}") private val eventFinishedDefault: String,
+        @Value("\${cmsch.config.site-low-profile-default:false}") private val siteLowProfileDefault: String,
+        @Value("\${cmsch.config.moth-default:Message of the day}") private val motdDefault: String,
+        @Value("\${cmsch.config.staff-message-default:Szorgos népünk győzni fog!}") private val staffMessageDefault: String,
+        @Value("\${cmsch.config.request-for-neptun-default:false}") private val requestForNeptunDefault: String,
+        @Value("\${cmsch.config.request-for-email-default:false}") private val requestForEmailDefault: String,
+        @Value("\${cmsch.config.min-token-to-complete-default:20}") private val minTokenToCompleteDefault: String,
+        @Value("\${cmsch.config.hint-score-percentage-default:100}") private val hintScorePercentageDefault: String,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -34,40 +47,43 @@ class RealtimeConfigService(
     @PostConstruct
     fun init() {
         if (realtimeConfig.findByKey(WARNING_MESSAGE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_MESSAGE, "", "Ez a szöveg jelenik meg az oldal tetején minden felhasználónak"))
+            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_MESSAGE, warningMessageDefault, "Ez a szöveg jelenik meg az oldal tetején minden felhasználónak"))
 
         if (realtimeConfig.findByKey(WARNING_TYPE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_TYPE, "warning", "success, info, warning, error"))
+            realtimeConfig.save(RealtimeConfigEntity(0, WARNING_TYPE, warningTypeDefault, "success, info, warning, error"))
 
         if (realtimeConfig.findByKey(LEADER_BOARD_ENABLED).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_ENABLED, "true", "true, false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_ENABLED, leaderBoardEnabledDefault, "true, false"))
 
         if (realtimeConfig.findByKey(LEADER_BOARD_UPDATES).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_UPDATES, "true", "true, false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, LEADER_BOARD_UPDATES, leaderBoardUpdatesDefault, "true, false"))
 
         if (realtimeConfig.findByKey(EVENT_FINISHED).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, EVENT_FINISHED, "false", "true, false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, EVENT_FINISHED, eventFinishedDefault, "true, false"))
 
         if (realtimeConfig.findByKey(SITE_LOW_PROFILE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, SITE_LOW_PROFILE, "false", "true, false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, SITE_LOW_PROFILE, siteLowProfileDefault, "true, false"))
 
         if (realtimeConfig.findByKey(MESSAGE_OF_THE_DAY).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, MESSAGE_OF_THE_DAY, "Jobb ma egy túzok, mint holnap egy veréb!", "Ez a szöveg jelenik meg a bejelentkezés után"))
+            realtimeConfig.save(RealtimeConfigEntity(0, MESSAGE_OF_THE_DAY, motdDefault, "Ez a szöveg jelenik meg a bejelentkezés után"))
 
         if (realtimeConfig.findByKey(STAFF_MESSAGE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, STAFF_MESSAGE, "Szorgos népünk győzni fog!", "Ez a szöveg jelenik meg az admin oldal tetején"))
+            realtimeConfig.save(RealtimeConfigEntity(0, STAFF_MESSAGE, staffMessageDefault, "Ez a szöveg jelenik meg az admin oldal tetején"))
 
         if (realtimeConfig.findByKey(WEBSITE_URL).isEmpty)
             realtimeConfig.save(RealtimeConfigEntity(0, WEBSITE_URL, defaultWebsiteUrl, "Átirányításoknál használt cím, mindig mutasson a frontendhez (teljes url)"))
 
         if (realtimeConfig.findByKey(REQUEST_FOR_NEPTUN).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, "false", "true, false"))
+            realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_NEPTUN, requestForNeptunDefault, "true, false"))
+
+        if (realtimeConfig.findByKey(REQUEST_FOR_EMAIL).isEmpty)
+            realtimeConfig.save(RealtimeConfigEntity(0, REQUEST_FOR_EMAIL, requestForEmailDefault, "true, false"))
 
         if (realtimeConfig.findByKey(MIN_TOKEN_TO_COMPLETE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, MIN_TOKEN_TO_COMPLETE, "20", "int"))
+            realtimeConfig.save(RealtimeConfigEntity(0, MIN_TOKEN_TO_COMPLETE, minTokenToCompleteDefault, "int"))
 
         if (realtimeConfig.findByKey(HINT_SCORE_PERCENTAGE).isEmpty)
-            realtimeConfig.save(RealtimeConfigEntity(0, HINT_SCORE_PERCENTAGE, "100", "int 0-100"))
+            realtimeConfig.save(RealtimeConfigEntity(0, HINT_SCORE_PERCENTAGE, hintScorePercentageDefault, "int 0-100"))
     }
 
     fun resetCache() {
@@ -163,6 +179,14 @@ class RealtimeConfigService(
             realtimeConfig.findByKey(key)
                     .map { it.value }
                     .orElse("false")
+        }.equals("true", ignoreCase = true)
+    }
+
+    fun isRequestForEmail(): Boolean {
+        return cache.computeIfAbsent(REQUEST_FOR_EMAIL) { key ->
+            realtimeConfig.findByKey(key)
+                .map { it.value }
+                .orElse("false")
         }.equals("true", ignoreCase = true)
     }
 

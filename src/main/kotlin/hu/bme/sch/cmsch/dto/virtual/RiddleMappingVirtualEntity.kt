@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.dto.virtual
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_BOOLEAN
+import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_DATE
 
 data class RiddleMappingVirtualEntity(
 
@@ -18,6 +19,12 @@ data class RiddleMappingVirtualEntity(
     val hintUsed: Boolean,
 
     @property:GenerateOverview(columnName = "Megoldva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    val solved: Boolean
+    val solved: Boolean,
+
+    @property:GenerateOverview(columnName = "Próbálkozás", order = 5, centered = true)
+    val attempt: Int,
+
+    @property:GenerateOverview(columnName = "Beadva", order = 6, centered = true, renderer = OVERVIEW_TYPE_DATE)
+    val timestamp: Long
 
 )

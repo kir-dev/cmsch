@@ -81,7 +81,7 @@ open class RiddleService(
                 return null
 
             riddleMappingRepository.save(RiddleMappingEntity(0, riddle, user, null,
-                hintUsed = true, completed = false))
+                hintUsed = true, completed = false, attemptCount = 0))
         }
         return riddle.hint
     }
@@ -94,24 +94,34 @@ open class RiddleService(
 
         val submission = riddleMappingRepository.findByOwnerUserAndRiddle_Id(user, riddleId)
         if (submission.isPresent) {
-            if (checkSolution(solution, riddle))
-                return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
-
             val submissionEntity = submission.get()
+            if (checkSolution(solution, riddle)) {
+                submissionEntity.attemptCount += 1
+                submissionEntity.completedAt = clock.getTimeInSeconds()
+                riddleMappingRepository.save(submissionEntity)
+                return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
+            }
+
             submissionEntity.completed = true
+            submissionEntity.attemptCount += 1
             submissionEntity.completedAt = clock.getTimeInSeconds()
             riddleMappingRepository.save(submissionEntity)
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextId(user, riddle))
+
         } else {
             val nextId = getNextId(user, riddle)
             if (nextId != riddle.id)
                 return null
-            if (checkSolution(solution, riddle))
+            if (checkSolution(solution, riddle)) {
+                riddleMappingRepository.save(RiddleMappingEntity(0, riddle, user, null,
+                    hintUsed = false, completed = false, completedAt = clock.getTimeInSeconds(), attemptCount = 1))
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
+            }
 
             riddleMappingRepository.save(RiddleMappingEntity(0, riddle, user, null,
-                hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds()))
+                hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds(), attemptCount = 1))
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextId(user, riddle))
+
         }
     }
 
