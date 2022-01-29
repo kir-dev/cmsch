@@ -1,5 +1,5 @@
 import { extendTheme } from '@chakra-ui/react'
-import { mode } from '@chakra-ui/theme-tools'
+import { mode, SystemStyleObject } from '@chakra-ui/theme-tools'
 
 // See more: https://chakra-ui.com/docs/theming/customize-theme
 const customTheme = extendTheme({
@@ -34,6 +34,44 @@ const customTheme = extendTheme({
     Text: {
       baseStyle: {
         fontSize: 'lg'
+      }
+    },
+    Button: {
+      variants: {
+        solid: (props: SystemStyleObject) => {
+          const { colorScheme: c } = props
+          if (c === 'gray') {
+            const bg = mode(`gray.100`, `whiteAlpha.200`)(props)
+            return {
+              bg,
+              _hover: {
+                bg: mode(`gray.200`, `whiteAlpha.300`)(props),
+                _disabled: {
+                  bg
+                }
+              },
+              _active: { bg: mode(`gray.300`, `whiteAlpha.400`)(props) }
+            }
+          }
+          const yellowOrCyan = c === 'yellow' || c === 'cyan'
+          const bg = yellowOrCyan ? `${c}.400` : `${c}.500`
+          const color = yellowOrCyan ? 'black' : 'white'
+          const hoverBg = yellowOrCyan ? `${c}.500` : `${c}.600`
+          const activeBg = yellowOrCyan ? `${c}.600` : `${c}.700`
+
+          const background = mode(bg, `${c}.700`)(props)
+          return {
+            bg: background,
+            color: mode(color, `whiteAlpha.900`)(props),
+            _hover: {
+              bg: mode(hoverBg, `${c}.600`)(props),
+              _disabled: {
+                bg: background
+              }
+            },
+            _active: { bg: mode(activeBg, `${c}.600`)(props) }
+          }
+        }
       }
     }
   }
