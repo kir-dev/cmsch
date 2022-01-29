@@ -44,8 +44,8 @@ export interface AchievementEntity {
   description: string
   type: achievementType
   expectedResultDescription?: string
-  availableFrom?: number
-  availableTo?: number
+  availableFrom: number
+  availableTo: number
 }
 
 export interface AchievementWrapper {

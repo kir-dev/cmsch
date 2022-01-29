@@ -76,7 +76,7 @@ export const AchievementCategoryPage: React.FC = (props) => {
           ))}
         </VStack>
       ) : (
-        <Text>Nincs egyetlen bucketlist challenge se ebben a kategóriában.</Text>
+        <Text>Nincs egyetlen bucketlist feladat se ebben a kategóriában.</Text>
       )}
     </Page>
   )

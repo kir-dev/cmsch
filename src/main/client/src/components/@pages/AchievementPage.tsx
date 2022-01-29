@@ -1,4 +1,4 @@
-import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, useToast, Skeleton } from '@chakra-ui/react'
+import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, useToast, Skeleton, Alert, AlertIcon } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState, useRef } from 'react'
@@ -14,6 +14,7 @@ import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
 import { Helmet } from 'react-helmet'
 import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
+import { stringifyTimeStamp } from '../../utils/utilFunctions'
 
 export const AchievementPage: React.FC = (props) => {
   const [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
@@ -222,7 +223,10 @@ export const AchievementPage: React.FC = (props) => {
           <Heading size="md" mt={8}>
             {achDetails.status === achievementStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
           </Heading>
-          <Stack mt={2}>
+          <Stack mt={5}>
+            <Alert variant="left-accent" status="info">
+              <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(achDetails.achievement?.availableTo || 0)}
+            </Alert>
             {textInput}
             {fileInput}
             <Box>
