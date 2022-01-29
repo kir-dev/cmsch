@@ -35,6 +35,10 @@ data class RiddleMappingEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    var completedAt: Long = 0
+    var completedAt: Long = 0,
+
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    var attemptCount: Int = 0
 
 )

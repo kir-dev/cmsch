@@ -184,7 +184,7 @@ open class LoginController(
                     Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
         }
         return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
+                Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
     }
 
     fun buildUniqueState(request: HttpServletRequest): String {

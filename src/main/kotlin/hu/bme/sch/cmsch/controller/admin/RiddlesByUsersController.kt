@@ -99,7 +99,9 @@ class RiddlesByUsersController(
                     submission.riddle?.categoryId ?: 0,
                     submission.riddle?.title ?: "n/a",
                     submission.hintUsed,
-                    submission.completed
+                    submission.completed,
+                    submission.attemptCount,
+                    submission.completedAt
                 )
             }
     }
