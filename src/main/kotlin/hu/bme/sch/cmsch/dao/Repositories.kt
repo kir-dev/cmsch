@@ -158,6 +158,9 @@ interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int> {
     fun findAllByOwnerUser_Id(owner: Int): List<TokenPropertyEntity>
 
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
+    fun findAllByToken_Id(token: Int): List<TokenPropertyEntity>
+
+    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByOwnerUser_IdAndToken_Type(owner: Int, type: String): List<TokenPropertyEntity>
 
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data

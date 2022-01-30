@@ -1,11 +1,9 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.GroupRepository
 import hu.bme.sch.cmsch.dao.TokenPropertyRepository
-import hu.bme.sch.cmsch.dto.virtual.TokenListByGroupVirtualEntity
-import hu.bme.sch.cmsch.dto.virtual.TokenVirtualEntity
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.dto.virtual.TokenPropertyVirtualEntity
+import hu.bme.sch.cmsch.dto.virtual.TokenStatVirtualEntity
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller
@@ -17,23 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-@RequestMapping("/admin/control/token-properties-group")
-class TokensByGroupController(
-    private val tokenPropertyRepository: TokenPropertyRepository,
-    private val groupRepository: GroupRepository
+@RequestMapping("/admin/control/token-properties-type")
+class TokensByTypeController(
+    private val tokenPropertyRepository: TokenPropertyRepository
 ) {
 
-    private val view = "token-properties-group"
-    private val titleSingular = "Tokenek tankörönként"
-    private val titlePlural = "Tokenek tankörönként"
-    private val description = "Tokenek tankörönként csoportosítva"
+    private val view = "token-properties-type"
+    private val titleSingular = "Token statisztika"
+    private val titlePlural = "Token statisztika"
+    private val description = "Ki szerezte be melyik tokent"
 
-    private val overviewDescriptor = OverviewBuilder(TokenListByGroupVirtualEntity::class)
-    private val propertyDescriptor = OverviewBuilder(TokenVirtualEntity::class)
+    private val overviewDescriptor = OverviewBuilder(TokenStatVirtualEntity::class)
+    private val propertyDescriptor = OverviewBuilder(TokenPropertyVirtualEntity::class)
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() != false) {
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -51,15 +48,15 @@ class TokensByGroupController(
         return "overview"
     }
 
-    private fun fetchOverview(): List<TokenListByGroupVirtualEntity> {
-        return tokenPropertyRepository.findAll().groupBy { it.ownerGroup?.id ?: 0 }
+    private fun fetchOverview(): List<TokenStatVirtualEntity> {
+        return tokenPropertyRepository.findAll().groupBy { it.token?.id }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { it ->
-                    val groupName = groupRepository.findById(it[0].ownerGroup?.id ?: 0).map { it.name }.orElse("n/a")
-                    TokenListByGroupVirtualEntity(
-                            it[0].ownerGroup?.id ?: 0,
-                            groupName,
+                    TokenStatVirtualEntity(
+                            it[0].token?.id ?: 0,
+                            it[0].token?.title ?: "n/a",
+                            it[0].token?.type ?: "n/a",
                             it.count()
                     )
                 }
@@ -85,13 +82,12 @@ class TokensByGroupController(
         return "overview"
     }
 
-    private fun fetchProperties(group: Int): List<TokenVirtualEntity> {
-        return tokenPropertyRepository.findAllByOwnerGroup_Id(group)
+    private fun fetchProperties(token: Int): List<TokenPropertyVirtualEntity> {
+        return tokenPropertyRepository.findAllByToken_Id(token)
             .map {
-                TokenVirtualEntity(
+                TokenPropertyVirtualEntity(
                     it.id,
-                    it.token?.title ?: "n/a",
-                    it.token?.type ?: "n/a",
+                    it.ownerUser?.fullName ?: it.ownerGroup?.name ?: "n/a",
                     it.recieved
                 )
             }

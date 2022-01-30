@@ -28,7 +28,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import java.util.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -69,7 +68,7 @@ open class LoginController(
                  request: HttpServletRequest,
                  httpResponse: HttpServletResponse
 
-    ): Unit {
+    ) {
         if (buildUniqueState(request) != state) {
             httpResponse.sendRedirect("index?invalid-state")
             return
@@ -234,20 +233,6 @@ open class LoginController(
         if (config.isEventFinished())
             return "redirect:/"
         return "redirect:" + config.getWebsiteUrl()
-    }
-
-    @ResponseBody
-    @GetMapping("/control/test")
-    fun test(): String {
-        log.info("test endpoint was fired")
-        return "Pong!"
-    }
-
-    @ResponseBody
-    @GetMapping("/control/test-user")
-    fun testUser(request: HttpServletRequest): String {
-        log.info("test user endpoint was fired")
-        return request.getUserOrNull()?.fullName ?: "not logged in"
     }
 
 }

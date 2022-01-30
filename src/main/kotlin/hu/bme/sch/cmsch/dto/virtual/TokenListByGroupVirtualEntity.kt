@@ -10,7 +10,7 @@ data class TokenListByGroupVirtualEntity(
     @property:GenerateOverview(columnName = "Tankör", order = 1)
     val groupName: String,
 
-    @property:GenerateOverview(columnName = "Tokenjeik [db]", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Tokenek [db]", order = 2, centered = true)
     val tokens: Int,
 
 )

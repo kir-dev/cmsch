@@ -1,16 +1,11 @@
 package hu.bme.sch.cmsch.controller
 
-import org.springframework.web.bind.annotation.RequestMapping
-
 import org.springframework.boot.web.servlet.error.ErrorController
-import org.springframework.stereotype.Controller
-import javax.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
-
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.RequestDispatcher
-
-
-
+import javax.servlet.http.HttpServletRequest
 
 @Controller
 class ServerSideErrorController : ErrorController {
