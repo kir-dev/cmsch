@@ -10,10 +10,10 @@ data class TokenListByUserVirtualEntity(
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
     val username: String,
 
-    @property:GenerateOverview(columnName = "Tanköre", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Tankör", order = 2, centered = true)
     val groupName: String,
 
-    @property:GenerateOverview(columnName = "Tokenjei [db]", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "Tokenek [db]", order = 3, centered = true)
     val tokens: Int,
 
 )

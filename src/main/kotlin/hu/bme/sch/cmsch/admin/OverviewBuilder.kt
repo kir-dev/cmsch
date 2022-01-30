@@ -46,7 +46,7 @@ class OverviewBuilder(val type: KClass<*>) {
 
     fun <T> exportToCsv(entities: List<T>): String {
         val details = getImportModifiers()
-        val header = details.map { it.first.name }.joinToString(";")
+        val header = details.joinToString(";") { it.first.name }
         val result = entities
                 .asSequence()
                 .map {
