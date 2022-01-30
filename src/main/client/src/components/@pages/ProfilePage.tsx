@@ -128,7 +128,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
         Ha a tanköröd nem helyes, akkor az infópultnál állíttasd át a megfelelőre! A sikeres tanköri jelenlétről csak a jelzett tankör
         tankörvezét fogjuk értesíteni.
       </Alert>
-      <PresenceAlert acquired={profile.totalTokenCount} needed={profile.minTokenToComplete} mt={3} />
+      <PresenceAlert
+        acquired={profile.tokens.filter((token) => token.type === 'default').length}
+        needed={profile.minTokenToComplete}
+        mt={3}
+      />
 
       <Wrap spacing="3rem" justify="center" mt="10">
         <WrapItem key="achivement">
