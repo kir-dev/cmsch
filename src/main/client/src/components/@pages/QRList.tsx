@@ -1,6 +1,6 @@
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState } from 'react'
-import { Alert, AlertIcon, ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
+import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
 import { FaQrcode } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Basics'
@@ -12,6 +12,7 @@ import { LinkButton } from '../@commons/LinkButton'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
 import { Helmet } from 'react-helmet'
+import { PresenceAlert } from 'components/@commons/PresenceAlert'
 
 interface TokenProgress {
   totalTokenCount: number
@@ -54,31 +55,13 @@ export const QRList: React.FC = (props) => {
     else return (100 * acquired) / total
   }
 
-  const alertBar = (acquired: number, needed: number) => {
-    if (acquired == null || needed == null) return <></>
-    else if (acquired < needed)
-      return (
-        <Alert variant="left-accent" status="info" mt="5">
-          <AlertIcon />
-          Még {needed - acquired} darab QR kód kell a tanköri jelenlét megszerzéséig.
-        </Alert>
-      )
-    else
-      return (
-        <Alert variant="left-accent" status="success" mt="5">
-          <AlertIcon />
-          Megvan a tanköri jelenlét!
-        </Alert>
-      )
-  }
-
   if (loading) return <Loading />
 
   return (
     <Page {...props} loginRequired>
       <Helmet title="QR-kódok" />
       <Heading as="h1">QR kód vadászat</Heading>
-      {alertBar(progress.acquiredTokenCount, progress.minTokenToComplete)}
+      <PresenceAlert acquired={progress.acquiredTokenCount} needed={progress.minTokenToComplete} />
       <Paragraph>
         A standoknál végzett aktív tevékenyégért QR kódokat lehet beolvasni. Ha eleget összegyűjtesz, beválthatod egy tanköri jelenlétre.
       </Paragraph>
