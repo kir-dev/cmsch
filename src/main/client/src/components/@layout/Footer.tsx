@@ -17,7 +17,7 @@ const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) 
   return (
     <FooterWrapItem key={key} display={display}>
       <Box align="center">
-      <FooterBigImage src="/img/navbarnagy.png" />
+      <FooterBigImage src="/img/footer_logo.png" />
 
       </Box>
       <HStack spacing={1} justify="center">
