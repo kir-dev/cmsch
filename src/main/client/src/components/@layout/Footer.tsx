@@ -16,6 +16,10 @@ type impresszumWrapItemProps = {
 const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) => {
   return (
     <FooterWrapItem key={key} display={display}>
+      <Box align="center">
+      <FooterBigImage src="/img/navbarnagy.png" />
+
+      </Box>
       <HStack spacing={1} justify="center">
         {socialPages.map((socialPage) => (
           <HStack as={Link} _hover={{ color: customTheme.colors.kirDev }} href={socialPage.href} isExternal key={socialPage.label}>
@@ -26,10 +30,6 @@ const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) 
       <Text marginBottom={3} align="center" fontSize="xl">
         <Link textColor={customTheme.colors.kirDev} href="/impresszum">
           Impresszum
-        </Link>
-        {' | '}
-        <Link textColor={customTheme.colors.kirDev} isExternal href="https://www.youtube.com/watch?v=YLR6tqJDHEc">
-          Adatkezelés
         </Link>
       </Text>
       <Box align="center">

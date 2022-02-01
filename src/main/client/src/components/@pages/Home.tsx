@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, ButtonGroup, Heading, Stack, VStack } from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, ButtonGroup, Flex, Heading, Stack, VStack, Image } from '@chakra-ui/react'
 import { Paragraph } from '../@commons/Basics'
 import { Page } from '../@layout/Page'
 import React from 'react'
@@ -21,21 +21,25 @@ export const Home: React.FC = () => {
         </Heading>{' '}
         portálon
       </Heading>
-      <BlockQuote quoteMarkSize={4}>
-        <Paragraph>Kedves Gólyák!</Paragraph>
-        <Paragraph>Köszöntünk titeket a 2022-es Gólyakörte honlapján!</Paragraph>
-        <Paragraph>
-          A Gólyakörte egy olyan rendezvény, ahol a VIK-es körök bemutatkoznak nektek, hogy megismerjétek, hogy mivel foglalkoznak. Ez a
-          rendezvény segíti a közéletben való elhelyezkedéseteket, megnyitja a lehetőségeiteket, hogy új dolgokat próbáljatok ki vagy, hogy
-          a meglévő érdeklődéseiteket elmélyítsétek.
-        </Paragraph>
-        <Paragraph>Biztatunk titeket, hogy vegyetek részt a rendezvényen és találjátok meg az új hobbitokat!</Paragraph>
-        <Paragraph fontStyle="italic">
-          Üdv,
-          <br />
-          Főrendezők
-        </Paragraph>
-      </BlockQuote>
+      <Flex align="center">
+        <BlockQuote quoteMarkSize={4}>
+          <Paragraph>Kedves Gólyák!</Paragraph>
+          <Paragraph>Köszöntünk titeket a 2022-es Gólyakörte honlapján!</Paragraph>
+          <Paragraph>
+            A Gólyakörte egy olyan rendezvény, ahol a VIK-es körök bemutatkoznak nektek, hogy megismerjétek, hogy mivel foglalkoznak. Ez a
+            rendezvény segíti a közéletben való elhelyezkedéseteket, megnyitja a lehetőségeiteket, hogy új dolgokat próbáljatok ki vagy, hogy
+            a meglévő érdeklődéseiteket elmélyítsétek.
+          </Paragraph>
+          <Paragraph>Biztatunk titeket, hogy vegyetek részt a rendezvényen és találjátok meg az új hobbitokat!</Paragraph>
+          <Paragraph fontStyle="italic">
+            Üdv,
+            <br />
+            Főrendezők
+          </Paragraph>
+        </BlockQuote>
+        <Image src="/img/allo.png" h="30rem" display={{base: 'none', md: 'block'}}/>
+      </Flex>
+      
       <Stack justifyContent="center" marginTop={20} direction="column" alignItems="center">
         <LinkButton href="/korok" colorScheme="brand" size="lg">
           Körök listája
