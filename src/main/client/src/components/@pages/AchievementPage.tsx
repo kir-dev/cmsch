@@ -119,6 +119,7 @@ export const AchievementPage: React.FC = (props) => {
               filePickerRef.current.reset()
             }
             getAchievementDetails()
+            window.scrollTo(0, 0)
           } else {
             toast({
               title: res.data.status,
