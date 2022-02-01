@@ -1,5 +1,5 @@
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
-import { Box, Collapse, Flex, IconButton, useColorModeValue, useDisclosure } from '@chakra-ui/react'
+import { Box, Collapse, Flex, IconButton, useColorModeValue, useDisclosure, Image } from '@chakra-ui/react'
 import * as React from 'react'
 import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
@@ -32,18 +32,8 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
-            <Box
-              display="block"
-              rounded="md"
-              _hover={{
-                textDecoration: 'none',
-                color: 'brand.500'
-              }}
-            >
-              <Box textAlign={{ base: 'center', md: 'left' }} mx="2">
-                🍐
-              </Box>
-            </Box>
+            
+              <Image src={`/img/${useColorModeValue('navbarkicsi.png', 'navbarkicsi_white.png')}`} width="12.938rem"/>
           </Link>
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>
