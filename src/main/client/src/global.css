@@ -6,9 +6,9 @@ body::-webkit-scrollbar-track {
 }
 body::-webkit-scrollbar-thumb {
   /*bg: brand-500*/
-  background: rgba(38,196,133, 0.5);
+  background: rgba(38, 196, 133, 0.5);
   border-radius: 10px;
 }
 body::-webkit-scrollbar-thumb:hover {
-  background: rgba(38,196,133, 0.75);
+  background: rgba(38, 196, 133, 0.75);
 }
