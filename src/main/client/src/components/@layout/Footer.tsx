@@ -17,8 +17,7 @@ const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) 
   return (
     <FooterWrapItem key={key} display={display}>
       <Box align="center">
-      <FooterBigImage src="/img/footer_logo.png" />
-
+        <FooterBigImage src={`/img/${useColorModeValue('footer_logo.png', 'footer_logo_white.png')}`} />
       </Box>
       <HStack spacing={1} justify="center">
         {socialPages.map((socialPage) => (
@@ -41,7 +40,7 @@ const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) 
 }
 
 export const Footer: React.FC = () => (
-  <Box borderTopWidth={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')} py={5}>
+  <Box borderTopWidth={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')}>
     <Container>
       <Wrap justify="space-between" spacing={2} align="center">
         <FooterWrapItem>
@@ -97,7 +96,7 @@ export const Footer: React.FC = () => (
 
 const FooterWrapItem: React.FC<StackProps> = ({ children, ...props }) => {
   return (
-    <VStack py={5} spacing={1} align="center" width={{ base: '100%', md: 'fit-content' }} {...props}>
+    <VStack py={3} spacing={1} align="center" width={{ base: '100%', md: 'fit-content' }} {...props}>
       {children}
     </VStack>
   )
