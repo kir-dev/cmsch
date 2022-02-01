@@ -37,7 +37,7 @@ export const Home: React.FC = () => {
             Főrendezők
           </Paragraph>
         </BlockQuote>
-        <Image src="/img/allo.png" h="30rem" display={{base: 'none', md: 'block'}}/>
+        <Image src="/img/big_stork_logo.png" h="30rem" display={{base: 'none', md: 'block'}}/>
       </Flex>
       
       <Stack justifyContent="center" marginTop={20} direction="column" alignItems="center">
