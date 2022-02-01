@@ -27,8 +27,8 @@ export const Home: React.FC = () => {
           <Paragraph>Köszöntünk titeket a 2022-es Gólyakörte honlapján!</Paragraph>
           <Paragraph>
             A Gólyakörte egy olyan rendezvény, ahol a VIK-es körök bemutatkoznak nektek, hogy megismerjétek, hogy mivel foglalkoznak. Ez a
-            rendezvény segíti a közéletben való elhelyezkedéseteket, megnyitja a lehetőségeiteket, hogy új dolgokat próbáljatok ki vagy, hogy
-            a meglévő érdeklődéseiteket elmélyítsétek.
+            rendezvény segíti a közéletben való elhelyezkedéseteket, megnyitja a lehetőségeiteket, hogy új dolgokat próbáljatok ki vagy,
+            hogy a meglévő érdeklődéseiteket elmélyítsétek.
           </Paragraph>
           <Paragraph>Biztatunk titeket, hogy vegyetek részt a rendezvényen és találjátok meg az új hobbitokat!</Paragraph>
           <Paragraph fontStyle="italic">
@@ -37,9 +37,9 @@ export const Home: React.FC = () => {
             Főrendezők
           </Paragraph>
         </BlockQuote>
-        <Image src="/img/big_stork_logo.png" h="30rem" display={{base: 'none', md: 'block'}}/>
+        <Image src="/img/big_stork_logo.png" h="30rem" display={{ base: 'none', md: 'block' }} />
       </Flex>
-      
+
       <Stack justifyContent="center" marginTop={20} direction="column" alignItems="center">
         <LinkButton href="/korok" colorScheme="brand" size="lg">
           Körök listája
