@@ -59,8 +59,8 @@ export const QRList: React.FC = (props) => {
 
   return (
     <Page {...props} loginRequired>
-      <Helmet title="QR-kódok" />
-      <Heading as="h1">QR kód vadászat</Heading>
+      <Helmet title="QR pecsétek" />
+      <Heading as="h1">QR kód pecsétek</Heading>
       <PresenceAlert acquired={progress.acquiredTokenCount} needed={progress.minTokenToComplete} />
       <Paragraph>
         A standoknál végzett aktív tevékenyégért QR kódokat lehet beolvasni. Ha eleget összegyűjtesz, beválthatod egy tanköri jelenlétre.
