@@ -25,7 +25,7 @@ export const NAV_ITEMS: Array<NavItem> = [
         loginRequired: true
       },
       {
-        label: 'QR',
+        label: 'QR pecsétek',
         href: '/qr',
         loginRequired: true
       }

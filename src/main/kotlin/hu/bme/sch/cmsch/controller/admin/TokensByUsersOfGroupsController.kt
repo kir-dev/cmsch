@@ -141,13 +141,13 @@ class TokensByUsersOfGroupsController(
             .count()
         document.add(Paragraph("A hallgatók a rendezvény alatt ellátogathattak a Schönherz öntevékeny köreinek " +
                 "standjaihoz, ahol miután megismerkedtek az adott körrel, beolvashattak egy-egy QR kódot. Ezáltal digitális " +
-                "pecséteket szerezhettek. A tanköri aláíráshoz szükséges pecsétek száma: ")
-            .add(Text("$minTokenToComplete db").setBold())
+                "pecséteket szerezhettek. A tanköri jelenléthez szükséges pecsétek száma: ")
+            .add(Text("$minTokenToComplete db").setUnderline())
             .add(". A tankörből ")
-            .add(Text("${tokensByUsers.count{ it.value.size >= 0 }} fő").setBold())
+            .add(Text("${tokensByUsers.count{ it.value.isNotEmpty() }} fő").setUnderline())
             .add(" legalább egy pecséttel rendelkezik, és ")
-            .add(Text("$signed fő").setBold())
-            .add(" szerezte meg az aláírást. A rendezvényen a hallgatók megoldhattak logikai feladatokat (riddleöket) és beadhattak megoldást kreatív feladatokra (buckelist).")
+            .add(Text("$signed fő").setUnderline())
+            .add(" szerezte meg a jelenlétet. A rendezvényen a hallgatók megoldhattak logikai feladatokat (riddleöket) és beadhattak megoldást kreatív feladatokra (buckelist) is.")
             .setTextAlignment(TextAlignment.JUSTIFIED)
             .setMarginBottom(20f)
             .setFont(font)
@@ -163,7 +163,7 @@ class TokensByUsersOfGroupsController(
         table.addHeaderCell(Cell().add(Paragraph("PECSÉT")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font).setFontSize(12f)))
-        table.addHeaderCell(Cell().add(Paragraph("ALÁÍRÁS")
+        table.addHeaderCell(Cell().add(Paragraph("JELENLÉT")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font).setFontSize(12f)))
         table.addHeaderCell(Cell().add(Paragraph("RIDDLE")
@@ -197,7 +197,7 @@ class TokensByUsersOfGroupsController(
         }
         document.add(table)
 
-        document.add(Paragraph("Részletes adatok".uppercase())
+        document.add(Paragraph("Pecsétek hallgatónként".uppercase())
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font)
             .setFontSize(20f))
@@ -234,7 +234,7 @@ class TokensByUsersOfGroupsController(
             document.add(userTable)
         }
 
-        document.add(Paragraph("Az exportot az SSSL megbízásából a Kir-Dev generálta a résztvevők hozzájárulásával!\nkir-dev@sch.bme.hu | kir-dev.sch.bme.hu")
+        document.add(Paragraph("Az exportot az SSSL megbízásából a Kir-Dev generálta a résztvevők hozzájárulásával!\nkir-dev@sch.bme.hu | https://kir-dev.sch.bme.hu")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font)
             .setFontSize(12f)
