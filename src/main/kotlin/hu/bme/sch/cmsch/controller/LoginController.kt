@@ -28,9 +28,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.collections.ArrayList
 
 const val USER_SESSION_ATTRIBUTE_NAME = "user_id"
 const val USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME = "user"
@@ -40,20 +42,27 @@ const val SESSION_TIMEOUT = 7 * 24 * 60 * 60
 
 @Controller
 open class LoginController(
-        private val authSch: AuthSchAPI,
-        private val users: UserService,
-        private val profileService: UserProfileGeneratorService,
-        private val groupToUserMapping: GroupToUserMappingRepository,
-        private val guildToUserMapping: GuildToUserMappingRepository,
-        private val groups: GroupRepository,
-        @Value("\${cmsch.pek-group-grant-name:Szent Schönherz Senior Lovagrend}") private val grantStaffGroupName: String,
-        @Value("\${cmsch.sysadmins:}") private val systemAdmins: String,
-        @Value("\${cmsch.default-staff-group-name:STAFF}") private val staffGroupName: String,
-        @Value("\${cmsch.default-group-name:DEFAULT}") private val defaultGroupName: String,
-        private val config: RealtimeConfigService,
+    private val authSch: AuthSchAPI,
+    private val users: UserService,
+    private val profileService: UserProfileGeneratorService,
+    private val groupToUserMapping: GroupToUserMappingRepository,
+    private val guildToUserMapping: GuildToUserMappingRepository,
+    private val groups: GroupRepository,
+    @Value("\${cmsch.pek-group-grant-name:unset}") private val grantStaffGroupName: String,
+    @Value("\${cmsch.sysadmins:}") private val systemAdmins: String,
+    @Value("\${cmsch.default-staff-group-name:STAFF}") private val staffGroupName: String,
+    @Value("\${cmsch.default-group-name:DEFAULT}") private val defaultGroupName: String,
+    @Value("\${cmsch.profile-qr.enabled:true}") private val profileQrEnabled: Boolean,
+    @Value("\${cmsch.staff-group-strategy:ONE_COMMUNITY}") private val staffGroupStrategy: StaffGroupStrategy,
+    @Value("\${cmsch.group-select.organizer-group-ids:0}") private val rawOrganizerGroupIds: String,
+    @Value("\${cmsch.group-select.organizer-group:Kiállító}") private val organizerGroupName: String,
+    private val config: RealtimeConfigService,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+    private val organizerGroups: LongArray = rawOrganizerGroupIds.split(',').mapNotNull { it.toLongOrNull() }.toLongArray()
+
+    enum class StaffGroupStrategy { ONE_COMMUNITY, MULTIPLE_COMMUNITIES }
 
     @ResponseBody
     @GetMapping("/control/logged-out")
@@ -125,7 +134,7 @@ open class LoginController(
     }
 
     private fun updateFields(user: UserEntity, profile: ProfileDataResponse) {
-        if (user.g7id.isBlank()) {
+        if (profileQrEnabled && user.g7id.isBlank()) {
             profileService.generateProfileForUser(user)
         }
         if (user.neptun.isNotBlank() && user.groupName.isBlank()) {
@@ -141,20 +150,10 @@ open class LoginController(
             }
         }
         if (profile.eduPersonEntitlements != null && user.role == RoleType.BASIC) {
-            profile.eduPersonEntitlements
-                    .filter { it.end == null }
-                    .filter { it.name.equals(grantStaffGroupName) }
-                    .forEach { _ ->
-                        log.info("Granting STAFF for ${user.fullName}")
-                        user.role = RoleType.STAFF
-
-                        if (user.groupName.isBlank()) {
-                            groups.findByName(staffGroupName).ifPresent {
-                                user.groupName = it.name
-                                user.group = it
-                            }
-                        }
-                    }
+            when (staffGroupStrategy) {
+                StaffGroupStrategy.ONE_COMMUNITY -> staffGroupStrategyOneCommunity(profile, user)
+                StaffGroupStrategy.MULTIPLE_COMMUNITIES -> staffGroupStrategyMultipleCommunities(profile, user)
+            }
         }
         if (systemAdmins.split(",").contains(user.pekId)) {
             log.info("Granting SUPERUSER for ${user.fullName}")
@@ -167,6 +166,44 @@ open class LoginController(
             }
         }
         users.save(user)
+    }
+
+    private fun staffGroupStrategyOneCommunity(
+        profile: ProfileDataResponse,
+        user: UserEntity
+    ) {
+        profile.eduPersonEntitlements
+            .filter { it.end == null }
+            .filter { it.name.equals(grantStaffGroupName) }
+            .forEach { _ ->
+                log.info("Granting STAFF for ${user.fullName}")
+                user.role = RoleType.STAFF
+
+                if (user.groupName.isBlank()) {
+                    groups.findByName(staffGroupName).ifPresent {
+                        user.groupName = it.name
+                        user.group = it
+                    }
+                }
+            }
+    }
+
+    private fun staffGroupStrategyMultipleCommunities(
+        profile: ProfileDataResponse,
+        user: UserEntity
+    ) {
+        val memberOfAnyOrganizerGroups = profile.eduPersonEntitlements
+            .filter { it.end == null }
+            .any { organizerGroups.contains(it.id) }
+
+        if (memberOfAnyOrganizerGroups) {
+            groups.findByName(organizerGroupName).ifPresent {
+                log.info("Identified organizer: ${user.fullName}")
+                user.groupName = it.name
+                user.group = it
+            }
+        }
+
     }
 
     private fun getAuthorities(user: UserEntity): List<GrantedAuthority> {

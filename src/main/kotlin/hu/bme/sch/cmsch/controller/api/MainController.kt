@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.servlet.http.HttpServletRequest
@@ -37,9 +38,15 @@ class MainController(
 ) {
     private val timeZone = ZoneId.of(zoneId)
 
+    private val formatter = SimpleDateFormat("yyyy.MM.dd. HH:mm:ss")
+
     @ResponseBody
     @GetMapping("/version")
     fun version(): String = "2.5.0"
+
+    @ResponseBody
+    @GetMapping("/time")
+    fun time(): String = formatter.format(clock.getTimeInSeconds())
 
     @JsonView(Preview::class)
 //    @GetMapping("/news")
