@@ -53,7 +53,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
         </Link>{' '}
         vagy keress fel minket a kir-dev standnál!
       </Paragraph>
-      <Paragraph>Az alaklamazás a KSZK Kubernetes clusterjében fut, köszönjük az erőforrást és a segítséget nekik ezúton is!</Paragraph>
+      <Paragraph>Az alkalmazás a KSZK Kubernetes clusterjében fut, köszönjük az erőforrást és a segítséget nekik ezúton is!</Paragraph>
     </Page>
   )
 }
