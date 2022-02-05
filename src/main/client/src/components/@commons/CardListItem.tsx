@@ -28,7 +28,9 @@ export const CardListItem: React.FC<CardListItemProps> = ({ data, link }) => {
         _hover={{ transform: 'translateX(0.5em)' }}
       >
         <HStack spacing={4}>
-          {logoSource && <Image src={logoSource} alt={data.name} boxSize={16} objectFit="contain" />}
+          {logoSource && (
+            <Image src={logoSource} alt={data.name} minW={{ base: 12, sm: 16 }} boxSize={{ base: 12, sm: 16 }} objectFit="contain" />
+          )}
           <VStack align="flex-start" overflow="hidden">
             <Heading as="h3" size="md" marginY={0} maxWidth="100%">
               {data.name}
@@ -40,7 +42,7 @@ export const CardListItem: React.FC<CardListItemProps> = ({ data, link }) => {
             )}
           </VStack>
           <Spacer />
-          <ChevronRightIcon boxSize={16} color="gray.300" />
+          <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />
         </HStack>
       </Box>
     </Link>
