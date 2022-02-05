@@ -83,7 +83,21 @@ data class GroupEntity(
         @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Játszik a tankör versenyben?")
         @property:GenerateOverview(visible = false)
         @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
-        var races: Boolean = false
+        var races: Boolean = false,
+
+        @JsonView(value = [ Edit::class ])
+        @Column(nullable = false)
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "Kiválasztható", note = "Szabadon válaszható a csoport")
+        @property:GenerateOverview(visible = false)
+        @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
+        var selectable: Boolean = false,
+
+        @JsonView(value = [ Edit::class ])
+        @Column(nullable = false)
+        @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "Elhagyható", note = "A csoport tagjai megváltoztathatják a csoportjukat")
+        @property:GenerateOverview(visible = false)
+        @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_BOOLEAN)
+        var leaveable: Boolean = false
 
 ): ManagedEntity {
     override fun toString(): String {
