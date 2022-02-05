@@ -1,8 +1,10 @@
 export interface Organization {
   id: string
   name: string
+  /** Should hide name on their own page, logo is enough */
+  hideName?: boolean
   shortDescription?: string
-  description?: string
+  descriptionParagraphs?: string[] | string
   website?: string
   logo?: string
   darkLogo?: string
