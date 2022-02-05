@@ -52,7 +52,7 @@ export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => (
     </Flex>
     {organization.descriptionParagraphs && generateParagraphs(organization.descriptionParagraphs)}
 
-    <Wrap marginTop={10} justify={{ base: 'center', md: 'flex-end' }}>
+    <Wrap marginTop={10} justify={{ base: 'center', md: 'flex-start' }}>
       {organization.website && (
         <LinkButton href={organization.website} external leftIcon={<LinkIcon />} colorScheme={organization.color}>
           Weboldal
@@ -122,7 +122,7 @@ const generateLogo = (org: Organization): JSX.Element | null => {
         alignSelf={{ base: 'flex-end', sm: 'flex-start' }}
         src={logoSource}
         alt={org.name}
-        maxH={{ base: '10rem', sm: '10rem', md: '16rem' }}
+        maxH={{ base: '10rem', sm: '10rem', md: '12rem' }}
         maxW={{ base: '16rem', sm: '10rem', md: '16rem' }}
         objectFit="contain"
       />
