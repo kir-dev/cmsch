@@ -13,6 +13,15 @@ data class Profile2View(
         val groupName: String? = null,
 
         @JsonView(FullDetails::class)
+        val groupSelectionAllowed: Boolean = false,
+
+        @JsonView(FullDetails::class)
+        val availableGroups: Map<Int, String> = mapOf(),
+
+        @JsonView(FullDetails::class)
+        val fallbackGroup: Int? = null,
+
+        @JsonView(FullDetails::class)
         val role: RoleType = RoleType.GUEST,
 
         @JsonView(FullDetails::class)

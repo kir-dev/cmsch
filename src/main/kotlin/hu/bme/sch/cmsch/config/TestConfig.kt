@@ -204,7 +204,9 @@ class TestConfig(
                 staff2 = "Kelep Kelep| fb.com/dzsinks142| +36301002001",
                 staff3 = "Elek Elek| fb.com/elek| +36301002002",
                 staff4 = "Het Golya| fb.com/nem| +36301002003",
-                races = true
+                races = true,
+                selectable = true,
+                leaveable = false
         ))
 
         groups.save(GroupEntity(
@@ -214,7 +216,9 @@ class TestConfig(
                 staff2 = "Tony Montana| fb.com/dzsinks142| +36301003001",
                 staff3 = "Tony Hilfiger| fb.com/elek| +36301003002",
                 staff4 = "Bekő Tony| fb.com/nem| +36301003003",
-                races = true
+                races = true,
+                selectable = true,
+                leaveable = false
         ))
 
         groups.save(GroupEntity(
@@ -224,7 +228,33 @@ class TestConfig(
                 staff2 = "De Mindegy| fb.com/dzsinks142| +36301003001",
                 staff3 = "Tony Hilfiger| fb.com/elek| +36301003002",
                 staff4 = "Bekő Tony| fb.com/nem| +36301003003",
-                races = true
+                races = true,
+                selectable = true,
+                leaveable = false
+        ))
+
+        groups.save(GroupEntity(
+            name = "Vendég",
+            major = MajorType.UNKNOWN,
+            staff1 = "",
+            staff2 = "",
+            staff3 = "",
+            staff4 = "",
+            races = false,
+            selectable = true,
+            leaveable = false
+        ))
+
+        groups.save(GroupEntity(
+            name = "Kiállító",
+            major = MajorType.UNKNOWN,
+            staff1 = "",
+            staff2 = "",
+            staff3 = "",
+            staff4 = "",
+            races = false,
+            selectable = false,
+            leaveable = false
         ))
     }
 
