@@ -74,6 +74,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
       <VStack spacing={4} mt={5} align="stretch">
         {riddleCategoryList.map((riddleCategory) => (
           <Box
+            key={riddleCategory.categoryId}
             bg={bg}
             px={6}
             py={2}

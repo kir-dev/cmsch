@@ -62,7 +62,14 @@ export const AchievementCategoryList: React.FC = (props) => {
       {categories.length > 0 ? (
         <VStack spacing={4} mt={5} align="stretch">
           {categories.map((category) => (
-            <Box bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700') }}>
+            <Box
+              key={category.categoryId}
+              bg={bg}
+              px={6}
+              py={2}
+              borderRadius="md"
+              _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700') }}
+            >
               <Link to={`/bucketlist/kategoria/${category.categoryId}`}>
                 <Flex align="center" justifyContent="space-between">
                   <Text fontWeight="bold" fontSize="xl">

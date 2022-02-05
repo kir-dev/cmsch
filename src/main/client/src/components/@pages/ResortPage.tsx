@@ -28,9 +28,9 @@ export const ResortPage: React.FC<ResortPageProps> = () => {
       <Helmet title={resort.name} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <DataSheet organization={resort} />
-      {COMMUNITIES.filter((c) => c.resortId === resort.id).map((community) => {
-        return <CardListItem data={community} link={'/korok/' + community.id} />
-      })}
+      {COMMUNITIES.filter((c) => c.resortId === resort.id).map((community) => (
+        <CardListItem key={community.id} data={community} link={'/korok/' + community.id} />
+      ))}
     </Page>
   )
 }
