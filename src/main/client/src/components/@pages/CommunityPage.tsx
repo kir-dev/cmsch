@@ -33,7 +33,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
   return (
     <Page>
       <Helmet title={community.name} />
-      <CustomBreadcrumb items={breadcrumbItems} />
+      <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={community} />
 
       {community.videoIds?.map((id) => (
