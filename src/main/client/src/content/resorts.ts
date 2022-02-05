@@ -5,7 +5,7 @@ export const RESORTS: Organization[] = [
     id: 'simonyi',
     name: 'Simonyi Károly Szakkollégium',
     shortDescription: 'Szakmában erős.',
-    description: `A Simonyi Károly Szakkollégium célja,
+    descriptionParagraphs: `A Simonyi Károly Szakkollégium célja,
     hogy elsősorban a szakkollégium tagjai, lehetőség
     szerint a Villamosmérnöki és Informatikai Kar minden
     hallgatója számára lehetőséget biztosítson az egyetemi képzést kiegészítő ismeretek elsajátítására.`,
@@ -20,7 +20,7 @@ export const RESORTS: Organization[] = [
     id: 'kszk',
     name: 'Kollégiumi Számítástechnikai Kör',
     shortDescription: 'Szakma. Barátok. Történelem.',
-    description: `A Kollégiumi Számítástechnikai Kör a kar egyik első – jelenleg is aktív – öntevékeny csoportosulása,
+    descriptionParagraphs: `A Kollégiumi Számítástechnikai Kör a kar egyik első – jelenleg is aktív – öntevékeny csoportosulása,
     mely 1976-ban került megalapításra. Tagjaink az informatika különböző területei iránt kiemelten érdeklődő öntevékeny
     egyetemista hallgatók, akik tanulmányaikon túl, szabaidejükben fejlesztik magukat és rendszereinket, megkönnyítve ezzel
     a kollégisták, valamint a kar hallgatóinak hétköznapjait. Aktív tagjaink az iparban alkalmazott naprakész tudásra tesznek
@@ -36,7 +36,7 @@ export const RESORTS: Organization[] = [
     id: 'szor',
     name: 'Szolgáltató Reszort (SZOR)',
     shortDescription: 'Nem kulturális jellegű szolgáltatások.',
-    description: `A 2004-ben alapított Szolgáltató Reszort azokat a köröket,
+    descriptionParagraphs: `A 2004-ben alapított Szolgáltató Reszort azokat a köröket,
     csoportokat tömöríti magába, melyek valamilyen nem kulturális jellegű szolgáltatást
     nyújtanak a Schönherz Zoltán Kollégium lakóinak.
     Jelenleg 7 körünk szolgálja ki felváltva az éhesek kollégisták igényeit a hét szinte minden napján.
@@ -53,7 +53,7 @@ export const RESORTS: Organization[] = [
     id: 'bulis',
     name: 'Bulis Reszort',
     shortDescription: 'A legjobb villanykaros bulik!',
-    description: `Csapatunk a BME Villamosmérnöki és Informatikai Karán működik,
+    descriptionParagraphs: `Csapatunk a BME Villamosmérnöki és Informatikai Karán működik,
       a Schönherz Kollégiumban, rendezvények széles palettájával várjuk a bulizni vágyó egyetemistákat.`,
     website: 'https://bulis.sch.bme.hu',
     logo: '/img/resorts/bulis.svg'
@@ -62,7 +62,7 @@ export const RESORTS: Organization[] = [
     id: 'kultur',
     name: 'Kultúr Reszort',
     shortDescription: 'Kultúra és művészet.',
-    description: `A Kultúr Reszort a Schönherz kultúrával és művészettel foglalkozó köreit tömöríti egy nagy csoportba.
+    descriptionParagraphs: `A Kultúr Reszort a Schönherz kultúrával és művészettel foglalkozó köreit tömöríti egy nagy csoportba.
     A reszortban és a körökben lehetőség van a hobbidnak élni, olyanokat csinálni amik boldoggá tesznek. A reszortunk
     egy nagyon fontos célja, hogy a hallgatók, ne váljanak szakbarbárrá. A körök rendszeres rendezvénye a KultúrNight.`,
     logo: '/img/resorts/kultur.svg'
@@ -71,7 +71,7 @@ export const RESORTS: Organization[] = [
     id: 'sport',
     name: 'Sport Reszort',
     shortDescription: 'Sportolni kívánó hallgatók reszortja.',
-    description: `A Sport reszort foglalja magába a Házban a sportért tenni kívánó embereket.
+    descriptionParagraphs: `A Sport reszort foglalja magába a Házban a sportért tenni kívánó embereket.
     A lehetőségek köre széles, rengeteg különböző sportban kipróbálhatják magukat a kollégisták
     vagy akár valami újat is behozhatnak a jelenlegiek közé.`,
     website: 'https://dsk.sch.bme.hu/',
@@ -81,7 +81,7 @@ export const RESORTS: Organization[] = [
     id: 'kofer',
     name: 'Kollégiumi Felvételi és Érdekvédelmi Reszort',
     shortDescription: 'Érdekvédelem és felvételi.',
-    description: `A Kollégiumi Felvételi és Érdekvédelmi Reszort (KOFER) felel
+    descriptionParagraphs: `A Kollégiumi Felvételi és Érdekvédelmi Reszort (KOFER) felel
     a kollégiumi felvételi zökkenőmentes lebonyolításáért illetve a kollégiumban
     élő szintközösségek életszínvonalának növeléséért, a szintközösségek képviseletéért.`,
     logo: '/img/resorts/kofer.svg'
@@ -90,7 +90,7 @@ export const RESORTS: Organization[] = [
     id: 'sssl',
     name: 'Szent Schönherz Senior Lovagrend',
     shortDescription: 'Elsőéves hallgatók szolgálatában.',
-    description: `A Szent Schönherz Senior Lovagrend (SSSL) főleg a Karra
+    descriptionParagraphs: `A Szent Schönherz Senior Lovagrend (SSSL) főleg a Karra
     kerülő elsőéves hallgatók egyetemi és közösségi beilleszkedésével foglalkozik.
     Ezen felül segítséget nyújt a kollégium más szervezeteinek az utánpótlás keresésben,
     ezen szervezeteknek az elsősökkel kapcsolatos döntéseik előkészítésében, meghozatalában.
