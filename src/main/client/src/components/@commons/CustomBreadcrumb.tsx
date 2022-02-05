@@ -12,8 +12,8 @@ type BreadcrumbProps = {
 export const CustomBreadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
     <Breadcrumb spacing={2} separator={<ChevronRightIcon color={'brand.500'} />}>
-      {items.map((item) => (
-        <BreadcrumbItem>
+      {items.map((item, idx) => (
+        <BreadcrumbItem key={idx}>
           <BreadcrumbLink
             as={Link}
             to={item.to ? item.to : '#'}

@@ -17,7 +17,7 @@ export const ResortList: React.FC<ResortListProps> = () => {
         Minden kör egy-egy reszort alá tartozik.
       </Alert>
       {RESORTS.map((resort) => (
-        <CardListItem data={resort} link={'/reszortok/' + resort.id} />
+        <CardListItem key={resort.id} data={resort} link={'/reszortok/' + resort.id} />
       ))}
     </Page>
   )

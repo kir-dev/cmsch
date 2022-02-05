@@ -48,8 +48,8 @@ export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
             A kör tevékenységei közé tartozik:
           </Heading>
           <Wrap marginTop={2}>
-            {organization.interests.map((interest) => (
-              <Tag colorScheme={organization.color} variant="solid">
+            {organization.interests.map((interest, idx) => (
+              <Tag colorScheme={organization.color} variant="solid" key={idx}>
                 {interest}
               </Tag>
             ))}

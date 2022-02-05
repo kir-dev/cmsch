@@ -9,8 +9,8 @@ type ScheduleProps = {
 export const Schedule: React.FC<ScheduleProps> = ({ events }) => {
   return (
     <Grid templateColumns="repeat(2, auto)" gap={10} marginTop={10}>
-      {events.map((event) => (
-        <EventDisplay event={event} />
+      {events.map((event, idx) => (
+        <EventDisplay key={idx} event={event} />
       ))}
     </Grid>
   )

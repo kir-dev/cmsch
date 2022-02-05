@@ -37,10 +37,10 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
       <DataSheet organization={community} />
 
       {community.videoIds?.map((id) => (
-        <YouTubeFrame videoId={id} />
+        <YouTubeFrame key={id} videoId={id} />
       ))}
       {community.images?.map((url) => (
-        <Image marginTop={10} src={url} alt="Körkép" borderRadius="lg" />
+        <Image key={url} marginTop={10} src={url} alt="Körkép" borderRadius="lg" />
       ))}
     </Page>
   )

@@ -39,9 +39,9 @@ export const CommunityList: React.FC<CommunityListProps> = () => {
         A karon számtalan öntevékeny kör működik, mindenki megtalálhatja az érdeklődési körének megfelelő csoportot. A körök többsége a
         Schönherz Kollégiumban működik, de számtalan lehetőség található a Nagytétényi úti kollégiumban is.
       </Paragraph>
-      {filteredCommunities.map((community) => {
-        return <CardListItem data={community} link={'/korok/' + community.id} />
-      })}
+      {filteredCommunities.map((community) => (
+        <CardListItem key={community.id} data={community} link={'/korok/' + community.id} />
+      ))}
     </Page>
   )
 }

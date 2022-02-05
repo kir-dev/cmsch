@@ -20,13 +20,13 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
   return (
     <Box marginTop={10}>
       {images.map((image, index) => (
-        <Image src={image} w="100%" maxH="50rem" objectFit="contain" display={index === currentImageIndex ? 'block' : 'none'} />
+        <Image key={index} src={image} w="100%" maxH="50rem" objectFit="contain" display={index === currentImageIndex ? 'block' : 'none'} />
       ))}
       <Flex marginTop={5} justify="space-between">
         <DirectionButton direction={Directions.LEFT} onClick={previousImage} />
         <ButtonGroup>
           {images.map((_image, index) => (
-            <CurrentImageIndicatorDot index={index} currentIndex={currentImageIndex} onClick={setCurrentImageIndex} />
+            <CurrentImageIndicatorDot key={index} index={index} currentIndex={currentImageIndex} onClick={setCurrentImageIndex} />
           ))}
         </ButtonGroup>
         <DirectionButton direction={Directions.RIGHT} onClick={nextImage} />
