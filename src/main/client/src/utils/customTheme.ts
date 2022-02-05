@@ -33,7 +33,7 @@ const customTheme = extendTheme({
     },
     Text: {
       baseStyle: {
-        fontSize: 'lg'
+        // fontSize: 'lg'
       }
     },
     Button: {
