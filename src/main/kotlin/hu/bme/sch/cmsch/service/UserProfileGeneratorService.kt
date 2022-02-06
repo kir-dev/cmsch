@@ -52,8 +52,8 @@ class UserProfileGeneratorService(
                 Path.of(path))
     }
 
-    fun generateProfileForUser(user: UserEntity) {
-        user.g7id = (prefix + (user.pekId + salt).sha256().substring(prefix.length, 40))
+    fun generateFullProfileForUser(user: UserEntity) {
+        generateProfileIdForUser(user)
         val fullPath = rootPath + File.separator + user.g7id + ".png"
         if (Files.exists(Path.of(fullPath))) {
             log.info("QR code already exists for user ${user.fullName}")
@@ -61,6 +61,10 @@ class UserProfileGeneratorService(
         }
         createQR(user.g7id, fullPath)
         log.info("New QR code was generated to $fullPath for user ${user.fullName}")
+    }
+
+    fun generateProfileIdForUser(user: UserEntity) {
+        user.g7id = (prefix + (user.pekId + salt).sha256().substring(prefix.length, 40))
     }
 
 }

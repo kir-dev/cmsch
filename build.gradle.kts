@@ -65,7 +65,7 @@ tasks.withType<Test> {
 node {
     version.set("16.13.2")
     distBaseUrl.set("https://nodejs.org/dist")
-    download.set(false)
+    download.set(true)
     workDir.set(file("${project.projectDir}/.gradle/nodejs"))
     npmWorkDir.set(file("${project.projectDir}/.gradle/npm"))
     yarnWorkDir.set(file("${project.projectDir}/.gradle/yarn"))

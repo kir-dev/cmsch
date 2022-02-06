@@ -16,7 +16,7 @@
                 </p>
 
                 <div class="centered button-group">
-                    <a href="#" class="btn" th:if="${controlMode == 'edit,delete'}" th:text="|Új ${titleSingular}|" th:href="|@{/admin/control}/${view}/create|"></a>
+                    <a href="#" class="btn btn-secondary" th:if="${controlMode == 'edit,delete'}" th:text="|Új ${titleSingular}|" th:href="|@{/admin/control}/${view}/create|"></a>
                 </div>
 
                 <div class="table-container">
@@ -38,8 +38,8 @@
                                 </object>
                                 <object th:if="${field.second.renderer == 'boolean'}" th:remove="tag">
                                     <td th:class="${field.second.centered ? 'centered' : ''}">
-                                        <span th:unless="${field.first.get(row)}" class="material-icons fix-icons">close</span>
-                                        <span th:if="${field.first.get(row)}" class="material-icons fix-icons">done</span>
+                                        <span th:unless="${field.first.get(row)}" class="material-icons fix-icons danger">close</span>
+                                        <span th:if="${field.first.get(row)}" class="material-icons fix-icons success">done</span>
                                     </td>
                                 </object>
                                 <object th:if="${field.second.renderer == 'date'}" th:remove="tag">
@@ -91,9 +91,10 @@
                 </div>
 
                 <object th:if="${controlMode == 'toplist'}" th:remove="tag">
-                    <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn">Toplista újraszámítása</a>
-                    <a href="#" th:href="|@{/admin/control}/${view}/refresh-enable|" class="btn">Toplista frisítés bekapcsolása</a>
-                    <a href="#" th:href="|@{/admin/control}/${view}/refresh-disable|" class="btn">Toplista frisítés kikapcsolása</a>
+                    <br>
+                    <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn btn-secondary">Toplista újraszámítása</a>
+                    <a href="#" th:href="|@{/admin/control}/${view}/refresh-enable|" class="btn btn-secondary">Toplista frisítés bekapcsolása</a>
+                    <a href="#" th:href="|@{/admin/control}/${view}/refresh-disable|" class="btn btn-secondary">Toplista frisítés kikapcsolása</a>
                     <p>
                         Látható (bárki számára):
                             <b th:if="${leaderboardEnabled}">igen</b>
@@ -107,12 +108,12 @@
                 </object>
 
                 <object th:if="${importable != null && importable && user.isAdmin()}" th:remove="tag">
-                    <a href="#" th:href="|@{/admin/control}/${view}/resource|" class="btn">Import és export</a>
+                    <a href="#" th:href="|@{/admin/control}/${view}/resource|" class="btn btn-secondary">Import és export</a>
                 </object>
 
                 <object th:if="${controlMode == 'location'}" th:remove="tag">
-                    <a href="#" th:href="|@{/admin/control}/${view}/clean|" class="btn">Törlés</a>
                     <a href="#" th:href="|@{/admin/control}/${view}/refresh|" class="btn">Frissítés</a>
+                    <a href="#" th:href="|@{/admin/control}/${view}/clean|" class="btn btn-secondary">Törlés</a>
                 </object>
             </div>
         </div>

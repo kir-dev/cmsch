@@ -601,7 +601,7 @@ class TestConfig(
                 groupName = "V10",
                 group = groups.findByName("V10").orElse(null)
         )
-        profileService.generateProfileForUser(u1)
+        profileService.generateFullProfileForUser(u1)
         users.save(u1)
 
         val u2 = UserEntity(
@@ -615,7 +615,7 @@ class TestConfig(
                 groupName = "V10",
                 group = groups.findByName("V10").orElse(null)
         )
-        profileService.generateProfileForUser(u2)
+        profileService.generateFullProfileForUser(u2)
         users.save(u2)
 
         val u3 = UserEntity(
@@ -627,7 +627,7 @@ class TestConfig(
                 fullName = "Fitty Mátyás",
                 guild = GuildType.BLACK
         )
-        profileService.generateProfileForUser(u3)
+        profileService.generateFullProfileForUser(u3)
         users.save(u3)
     }
 
