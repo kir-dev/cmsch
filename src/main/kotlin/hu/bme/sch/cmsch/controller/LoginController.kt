@@ -134,8 +134,12 @@ open class LoginController(
     }
 
     private fun updateFields(user: UserEntity, profile: ProfileDataResponse) {
-        if (profileQrEnabled && user.g7id.isBlank()) {
-            profileService.generateProfileForUser(user)
+        if (user.g7id.isBlank()) {
+            if (profileQrEnabled) {
+                profileService.generateFullProfileForUser(user)
+            } else {
+                profileService.generateProfileIdForUser(user)
+            }
         }
         if (user.neptun.isNotBlank() && user.groupName.isBlank()) {
             groupToUserMapping.findByNeptun(user.neptun).ifPresent {

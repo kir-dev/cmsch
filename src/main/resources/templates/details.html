@@ -13,14 +13,16 @@
                 <h2 th:text="|${title} szerkesztése|" th:if="${editMode}">View edit</h2>
                 <h2 th:text="|${title} létrehozása|" th:unless="${editMode}">View create</h2>
 
-                <object th:if="${taskTitle != null}" th:remove="tag">
-                    <label>Feladat</label>
-                    <p th:text="${taskTitle}" class="highlight"></p>
-                </object>
+                <div class="card" th:if="${taskTitle != null || taskDescription != null}">
+                    <object th:if="${taskTitle != null}" th:remove="tag">
+                        <label class="card-label">Feladat</label>
+                        <p th:text="${taskTitle}" class="highlight"></p>
+                    </object>
 
-                <object th:if="${taskDescription != null}" th:remove="tag">
-                    <p th:text="${taskDescription}"></p>
-                </object>
+                    <object th:if="${taskDescription != null}" th:remove="tag">
+                        <p th:text="${taskDescription}"></p>
+                    </object>
+                </div>
 
                 <form th:action="|@{/admin/control}/${view}/${editMode ? ((controlMode == 'grade' ? 'grade/' : 'edit/') + id) : 'create'}|"
                       method="post"
@@ -253,11 +255,11 @@
                     <object th:if="${controlMode == 'grade'}" th:remove="tag">
                         <br />
                         <label>Gyors értékelés</label>
-                        <input type="submit" value="max" th:value="|Max pont (${maxScore})|"
+                        <input type="submit" value="max" th:value="|Max pont (${maxScore})|" class="btn btn-secondary"
                                th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore}'; |" />
-                        <input type="submit" value="half" th:value="|Fele pont (${maxScore / 2})|"
+                        <input type="submit" value="half" th:value="|Fele pont (${maxScore / 2})|" class="btn btn-secondary"
                                th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore / 2}'; |" />
-                        <input type="submit" value="Elutasít"
+                        <input type="submit" value="Elutasít" class="btn btn-secondary"
                                th:onclick="|document.getElementsByName('approved')[0].checked = false; document.getElementsByName('rejected')[0].checked = true; document.getElementsByName('score')[0].value = '0'; |"/>
                         <span class="note">Ezek a gombok a pontot és az elfogadva státuszt állítják, a kattintás után lezár, ezért a szöves értékelést írd meg előtte!</span>
                     </object>

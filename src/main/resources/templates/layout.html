@@ -25,79 +25,81 @@
     <div class="content">
         <div class="split">
             <div class="header" th:fragment="mobile">
-                <span>CMSch ADMIN</span>
+                <span>CM<b>SCH</b> ADMIN</span>
                 <span class="material-icons fix-icons menu-icon" onclick="document.getElementById('menu').style.display = 'block'">menu</span>
             </div>
             <div class="menu" th:fragment="menu(userEntity)" id="menu">
-                <h1>CMSch ADMIN</h1>
+                <h1>CM<b>SCH</b> ADMIN</h1>
                 <div class="exit" onclick="document.getElementById('menu').style.display = 'none'">X</div>
                 <div class="separate"></div>
-                <a href="#" th:href="@{/admin/control/basics}">Kezdő menü</a>
+                <h2>Általános</h2>
+                <a href="#" th:href="@{/admin/control/basics}"><span class="material-icons fix-icons">home</span> Kezdő menü</a>
+                <a href="#" th:href="@{/control/open-site}"><span class="material-icons fix-icons">launch</span> Oldal megyitása</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}">PR</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/news}">Hírek</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/events}">Események</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/extra-pages}">Extra oldalak</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/news}"><span class="material-icons fix-icons">newspaper</span> Hírek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/events}"><span class="material-icons fix-icons">event</span> Események</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/extra-pages}"><span class="material-icons fix-icons">article</span> Extra oldalak</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers() || userEntity.getGrantTracker()}">Gárdatanköris és Infopult</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager()}" th:href="@{/admin/control/groups}">Tankörök</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/users}">Felhasználók</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/group-to-user}">Tankör tagságok</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/guild-to-user}">Gárda tagságok</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers() || userEntity.getGrantTracker()}" th:href="@{/admin/control/track-group}">Tankör követése</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager()}" th:href="@{/admin/control/groups}"><span class="material-icons fix-icons">groups</span> Tankörök</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/users}"><span class="material-icons fix-icons">person</span> Felhasználók</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/group-to-user}"><span class="material-icons fix-icons">people</span> Tankör tagságok</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers()}" th:href="@{/admin/control/guild-to-user}"><span class="material-icons fix-icons">badge</span> Gárda tagságok</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers() || userEntity.getGrantTracker()}" th:href="@{/admin/control/track-group}"><span class="material-icons fix-icons">my_location</span> Tankör követése</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantRateAchievement() || userEntity.getGrantCreateAchievement()}">Bucketlist</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/achievements}">Bucketlist feladatok</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/categories}">Bucketlist kategóriák</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/rate-achievements}">Bucketlist értékelés</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/achievements}"><span class="material-icons fix-icons">emoji_events</span> Bucketlist feladatok</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/categories}"><span class="material-icons fix-icons">category</span> Bucketlist kategóriák</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRateAchievement()}" th:href="@{/admin/control/rate-achievements}"><span class="material-icons fix-icons">thumbs_up_down</span> Bucketlist értékelés</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantMedia()}">Toplista</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantMedia()}" th:href="@{/admin/control/user-toplist}">Felhasználói toplista</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantMedia()}" th:href="@{/admin/control/group-toplist}">Tankör toplista</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/check-ratings}">Pontok ellenőrzése</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantMedia()}" th:href="@{/admin/control/user-toplist}"><span class="material-icons fix-icons">leaderboard</span> Felhasználói toplista</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement() || userEntity.getGrantMedia()}" th:href="@{/admin/control/group-toplist}"><span class="material-icons fix-icons">leaderboard</span> Tankör toplista</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantCreateAchievement()}" th:href="@{/admin/control/check-ratings}"><span class="material-icons fix-icons">fact_check</span> Pontok ellenőrzése</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}">Riddle</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles}">Riddleök</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddle-categories}">Riddle kategóriák</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles-by-users}">Riddle beadások</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles}"><span class="material-icons fix-icons">task</span> Riddleök</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddle-categories}"><span class="material-icons fix-icons">category</span> Riddle kategóriák</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantRiddle()}" th:href="@{/admin/control/riddles-by-users}"><span class="material-icons fix-icons">checklist_rtl</span> Riddle beadások</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}">Tokenek</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/tokens}">Tokenek</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-user}">Beolvasott fehasználói tokenek</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-group}">Beolvasott csoportos tokenek</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-of-groups}">Jelenléti export</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-type}">Token statisztika</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/tokens}"><span class="material-icons fix-icons">token</span> Tokenek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-user}"><span class="material-icons fix-icons">local_activity</span> Fehasználói tokenek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-group}"><span class="material-icons fix-icons">local_activity</span> Csoportos tokenek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-of-groups}"><span class="material-icons fix-icons">file_download</span> Jelenléti export</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}" th:href="@{/admin/control/token-properties-type}"><span class="material-icons fix-icons">analytics</span> Token statisztika</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantSellProduct() || userEntity.getGrantSellFood() || userEntity.getGrantSellMerch() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers() || userEntity.getGrantMedia()}">Árusítás</h2>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/products}">Termékek</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellProduct()}" th:href="@{/admin/control/sell-products}">Termék árusítás</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellFood()}" th:href="@{/admin/control/sell-food}">Étel árusítás</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellMerch()}" th:href="@{/admin/control/sell-merch}">Merch árusítás</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers() || userEntity.getGrantMedia()}" th:href="@{/admin/control/track-sold}">Eladott termékek</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/products}"><span class="material-icons fix-icons">inventory_2</span> Termékek</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellProduct()}" th:href="@{/admin/control/sell-products}"><span class="material-icons fix-icons">point_of_sale</span> Termék árusítás</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellFood()}" th:href="@{/admin/control/sell-food}"><span class="material-icons fix-icons">restaurant</span> Étel árusítás</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantSellMerch()}" th:href="@{/admin/control/sell-merch}"><span class="material-icons fix-icons">sell</span> Merch árusítás</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupManager() || userEntity.getGrantListUsers() || userEntity.getGrantMedia()}" th:href="@{/admin/control/track-sold}"><span class="material-icons fix-icons">receipt_long</span> Eladott termékek</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}">Tankör</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}" th:href="@{/admin/control/debts-of-my-group}">Tanköröm tartozásai</a>
-                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/members-of-my-group}">Tanköröm tagjai</a>
-                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/share-location}">Helymeghatározás</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}" th:href="@{/admin/control/debts-of-my-group}"><span class="material-icons fix-icons">account_balance</span> Tanköröm tartozásai</a>
+                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/members-of-my-group}"><span class="material-icons fix-icons">group</span> Tanköröm tagjai</a>
+                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/share-location}"><span class="material-icons fix-icons">share_location</span> Helymeghatározás</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}">Gazdaságis</h2>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts}">Tartozások</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-group}">Tartozások tankörönként</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-users}">Tartozások felhasználónként</a>
-                <a href="#" th:href="@{/admin/control/my-debts}">Saját tartozásaim</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts}"><span class="material-icons fix-icons">account_balance</span> Tartozások</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-group}"><span class="material-icons fix-icons">account_balance</span> Tankörök tartozásai</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-users}"><span class="material-icons fix-icons">account_balance</span> Felhasználók tartozásai</a>
+                <a href="#" th:href="@{/admin/control/my-debts}"><span class="material-icons fix-icons">account_balance_wallet</span> Saját tartozásaim</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantTracker()}">Admin</h2>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/files}">Fájlok</a>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/locations}">Pozíciók</a>
-                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantTracker()}" th:href="@{/admin/control/tracking}">Követés (térkép)</a>
-                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}">Beállítások</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/files}"><span class="material-icons fix-icons">folder</span> Fájlok</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/locations}"><span class="material-icons fix-icons">place</span> Pozíciók</a>
+                <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantTracker()}" th:href="@{/admin/control/tracking}"><span class="material-icons fix-icons">map</span> Követés (térkép)</a>
+                <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/config}"><span class="material-icons fix-icons">settings</span> Beállítások</a>
 
                 <h2 th:if="${userEntity.isSuperuser()}">Experimental</h2>
-                <a href="#" th:if="${userEntity.isSuperuser()}" th:href="@{/admin/control/import-debts-complete}">Tranzakció import</a>
+                <a href="#" th:if="${userEntity.isSuperuser()}" th:href="@{/admin/control/import-debts-complete}"><span class="material-icons fix-icons">upload_file</span> Tranzakció import</a>
 
                 <div class="separate"></div>
 
-                <a href="#" th:href="@{/control/logout}">Kijelentkezés</a>
+                <a href="#" th:href="@{/control/logout}"><span class="material-icons fix-icons">logout</span> Kijelentkezés</a>
 
                 <div class="separate"></div>
             </div>

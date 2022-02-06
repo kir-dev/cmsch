@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.util.getUser
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
@@ -46,8 +47,8 @@ class AchievementController(
         importService: ImportService
 ) : AbstractAdminPanelController<AchievementEntity>(
         repo,
-        "achievements", "Feladat", "Feladatok",
-        "Bucketlist feladatok kezelése. A feladatok javítására használd a Javítások menüt!",
+        "achievements", "Bucketlist Feladat", "Bucketlist feladatokek",
+        "Bucketlist feladatok kezelése. A feladatok javítására használd a \"Bucketlist értékelése\" menüt!",
         AchievementEntity::class, ::AchievementEntity, importService,
         permissionControl = { it?.isAdmin() ?: false || it?.grantCreateAchievement ?: false },
         importable = true
@@ -126,7 +127,8 @@ class UserController(
         repo: UserRepository,
         private val profileService: UserProfileGeneratorService,
         private val groups: GroupRepository,
-        importService: ImportService
+        importService: ImportService,
+        @Value("\${cmsch.profile-qr.enabled:true}") private val profileQrEnabled: Boolean
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",
@@ -137,7 +139,12 @@ class UserController(
         importable = true
 ) {
     override fun onEntityPreSave(entity: UserEntity, request: HttpServletRequest) {
-        profileService.generateProfileForUser(entity)
+        if (profileQrEnabled) {
+            profileService.generateFullProfileForUser(entity)
+        } else {
+            profileService.generateProfileIdForUser(entity)
+        }
+
         if (entity.groupName.isNotBlank()) {
             groups.findByName(entity.groupName).ifPresentOrElse({
                 entity.group = it

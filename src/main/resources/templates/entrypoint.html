@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
 <head th:replace="layout :: head">
 </head>
-<body>
+<body class="entrypoint">
 <div class="content">
     <div class="greetings">
         <h2 th:text="${greetings ?: 'n/a'}">Hey!</h2>
-        <span>ne felejtsétek:</span>
+        <span>a nap üzenete:</span>
         <h3 th:text="${motd ?: 'n/a'}">Don't forget to open the banana before eating it!</h3>
 
         <a href="#" th:href="@{/control/open-site}" class="big-btn">Vissza az oldalra</a>
