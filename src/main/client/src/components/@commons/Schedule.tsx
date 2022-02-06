@@ -24,7 +24,7 @@ const EventDisplay: React.FC<EventDisplayProps> = ({ event }) => {
   return (
     <>
       <GridItem textAlign="right">
-        <Text fontSize="2xl" color={useColorModeValue('brand.700', 'brand.300')}>
+        <Text fontSize="2xl" color={useColorModeValue('brand.500', 'brand.600')}>
           {event.start}-{event.end}
         </Text>
       </GridItem>

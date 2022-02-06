@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, ButtonGroup, Flex, Heading, Stack, VStack, Image } from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, ButtonGroup, Flex, Heading, Stack, VStack, Image, useColorModeValue } from '@chakra-ui/react'
 import { Paragraph } from '../@commons/Basics'
 import { Page } from '../@layout/Page'
 import React from 'react'
@@ -16,7 +16,7 @@ export const Home: React.FC = () => {
       <Helmet />
       <Heading size="3xl" textAlign="center" marginTop={10}>
         Üdvözlünk a{' '}
-        <Heading as="span" color="brand.500" size="3xl">
+        <Heading as="span" color={useColorModeValue('brand.500', 'brand.600')} size="3xl">
           GólyaKörTe
         </Heading>{' '}
         portálon
@@ -117,9 +117,9 @@ const QuoteMark: React.FC<QuoteMarkProps> = ({ side, size }) => {
       right={side === 'right' ? 0 : undefined}
     >
       {side === 'left' ? (
-        <FaQuoteLeft size={size + 'rem'} color={customTheme.colors.brand['300']} />
+        <FaQuoteLeft size={size + 'rem'} color={useColorModeValue(customTheme.colors.brand['500'], customTheme.colors.brand['600'])} />
       ) : (
-        <FaQuoteRight size={size + 'rem'} color={customTheme.colors.brand['300']} />
+        <FaQuoteRight size={size + 'rem'} color={useColorModeValue(customTheme.colors.brand['500'], customTheme.colors.brand['600'])} />
       )}
     </Box>
   )
