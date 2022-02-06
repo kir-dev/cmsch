@@ -75,7 +75,12 @@ export const AchievementCategoryList: React.FC = (props) => {
                   <Text fontWeight="bold" fontSize="xl">
                     {category.name}
                   </Text>
-                  <Box bgGradient={progressGradient(progress(category), 'brand.600')} px={1} py={1} borderRadius="6px">
+                  <Box
+                    bgGradient={progressGradient(progress(category), useColorModeValue('brand.500', 'brand.600'))}
+                    px={1}
+                    py={1}
+                    borderRadius="6px"
+                  >
                     <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
                       {category.approved + category.notGraded} / {category.sum}
                     </Text>

@@ -144,7 +144,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                 fontWeight={500}
                 _hover={{
                   textDecoration: 'none',
-                  color: 'brand.500'
+                  color: useColorModeValue('brand.500', 'brand.600')
                 }}
               >
                 Bucketlist
@@ -203,7 +203,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                   fontWeight={500}
                   _hover={{
                     textDecoration: 'none',
-                    color: 'brand.500'
+                    color: useColorModeValue('brand.500', 'brand.600')
                   }}
                 >
                   {challenge.name}
