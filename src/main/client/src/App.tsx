@@ -22,6 +22,7 @@ import { ServiceProvider } from './utils/ServiceContext'
 import { IndexLayout } from 'components/@layout/IndexLayout'
 import { ImpressumPage } from 'components/@pages/ImpressumPage'
 import './global.css'
+import { GroupSelectionPage } from './components/@pages/GroupSelectionPage'
 
 export function App() {
   return (
@@ -36,6 +37,7 @@ export function App() {
                   <Route index element={<Home />} />
                   {/*Profil*/}
                   <Route path="profil">
+                    <Route path="tankor-modositas" element={<GroupSelectionPage />} />
                     <Route index element={<ProfilePage />} />
                   </Route>
                   {/*Reszortok*/}
