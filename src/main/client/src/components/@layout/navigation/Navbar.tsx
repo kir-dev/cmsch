@@ -27,7 +27,6 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
             icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
             variant="ghost"
             aria-label="Navigáció megnyitása"
-            colorScheme="brand"
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
