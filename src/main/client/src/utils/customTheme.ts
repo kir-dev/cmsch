@@ -1,9 +1,10 @@
 import { extendTheme } from '@chakra-ui/react'
-import { alertAnatomy as parts } from '@chakra-ui/anatomy'
-import { PartsStyleFunction, mode, SystemStyleFunction, transparentize } from '@chakra-ui/theme-tools'
+import { alertAnatomy as alertParts, progressAnatomy as progressParts } from '@chakra-ui/anatomy'
+import { PartsStyleFunction, mode, SystemStyleFunction, generateStripe, getColor, transparentize } from '@chakra-ui/theme-tools'
 
-// functions copied from https://github.com/chakra-ui/chakra-ui/blob/main/packages/theme/src/components/button.ts
-// (and alert.ts) then modified to our liking
+// functions copied from
+// https://github.com/chakra-ui/chakra-ui/blob/main/packages/theme/src/components/button.ts, alert.ts and progress.ts
+// then modified to our liking
 const buttonVariantGhost: SystemStyleFunction = (props) => {
   const { colorScheme: c, theme } = props
 
@@ -77,12 +78,34 @@ const buttonVariantOutline: SystemStyleFunction = (props) => {
   }
 }
 
-const alertVariantSolid: PartsStyleFunction<typeof parts> = (props) => {
+const alertVariantSolid: PartsStyleFunction<typeof alertParts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
       bg: mode(`${c}.500`, `${c}.600`)(props),
       color: 'white'
+    }
+  }
+}
+
+const progressBaseStyle: PartsStyleFunction<typeof progressParts> = (props) => {
+  const { colorScheme: c, theme: t, isIndeterminate, hasStripe } = props
+  const stripeStyle = mode(generateStripe(), generateStripe('1rem', 'rgba(0,0,0,0.1)'))(props)
+  const bgColor = mode(`${c}.500`, `${c}.600`)(props)
+  const gradient = `linear-gradient(
+    to right,
+    transparent 0%,
+    ${getColor(t, bgColor)} 50%,
+    transparent 100%
+  )`
+  const addStripe = !isIndeterminate && hasStripe
+
+  return {
+    filledTrack: {
+      transitionProperty: 'common',
+      transitionDuration: 'slow',
+      ...(addStripe && stripeStyle),
+      ...(isIndeterminate ? { bgImage: gradient } : { bgColor })
     }
   }
 }
@@ -134,6 +157,9 @@ const customTheme = extendTheme({
       variants: {
         solid: alertVariantSolid
       }
+    },
+    Progress: {
+      baseStyle: progressBaseStyle
     }
   }
 })

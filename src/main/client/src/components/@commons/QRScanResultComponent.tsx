@@ -45,7 +45,9 @@ export const QRScanResultComponent: React.FC<QrScanResultProps> = ({ response }:
         {renderIcon()}
       </Center>
       <Center>
-        <Heading size="md">{getInfoText()}</Heading>
+        <Heading mb={5} size="md">
+          {getInfoText()}
+        </Heading>
       </Center>
     </Box>
   )
