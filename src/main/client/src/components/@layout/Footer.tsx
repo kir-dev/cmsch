@@ -31,7 +31,7 @@ const ImpressumWrapItem: React.FC<ImpressumWrapItemProps> = ({ display }) => {
         </Link>
       </Text>
       <Box align="center">
-        <Text>@ kir-dev [kukac] sch.bme.hu</Text>
+        <Text>@ kir-dev [at] sch.bme.hu</Text>
         <Text>© 2022</Text>
       </Box>
     </FooterWrapItem>
