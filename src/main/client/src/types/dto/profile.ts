@@ -12,6 +12,9 @@ export interface ProfileDTO {
   completedAchievementCount: number
   submittedAchievementCount: number
   minTokenToComplete: number
+  groupSelectionAllowed: boolean
+  fallbackGroup: number
+  availableGroups: Record<number, string>
 }
 
 //cannot compare roles if the enums values are strings use the RoleType[role] syntax
