@@ -1,5 +1,5 @@
 import { Flex, Heading, HStack, Image, Link, Tag, Text, Wrap, WrapItem } from '@chakra-ui/react'
-import { Paragraph } from 'components/@commons/Basics'
+import { Paragraph } from 'components/@commons/Paragraph'
 import { Page } from 'components/@layout/Page'
 import { DEVS } from 'content/devs'
 import { GITHUB_ORG_URL, KIRDEV_URL } from 'utils/configurations'

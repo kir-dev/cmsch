@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex, Heading, HStack, Image, Tag, VStack, Wrap } from '@chakra-ui/react'
-import { Paragraph } from './Basics'
+import { Paragraph } from './Paragraph'
 import { Organization } from '../../types/Organization'
 import { EditIcon, LinkIcon } from '@chakra-ui/icons'
 import { LinkButton } from './LinkButton'

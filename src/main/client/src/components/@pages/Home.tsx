@@ -1,5 +1,5 @@
 import { Alert, AlertIcon, Box, ButtonGroup, Flex, Heading, Stack, VStack, Image, useColorModeValue } from '@chakra-ui/react'
-import { Paragraph } from '../@commons/Basics'
+import { Paragraph } from '../@commons/Paragraph'
 import { Page } from '../@layout/Page'
 import React from 'react'
 import { LinkButton } from '../@commons/LinkButton'
@@ -24,13 +24,13 @@ export const Home: React.FC = () => {
       <Flex align="center">
         <BlockQuote quoteMarkSize={4}>
           <Paragraph>Kedves Gólyák!</Paragraph>
-          <Paragraph>Köszöntünk titeket a 2022-es Gólyakörte honlapján!</Paragraph>
+          <Paragraph>Köszöntünk titeket a 2022-es GólyaKörTe honlapján!</Paragraph>
           <Paragraph>
-            A Gólyakörte egy olyan rendezvény, ahol a VIK-es körök bemutatkoznak nektek, hogy megismerjétek, hogy mivel foglalkoznak. Ez a
-            rendezvény segíti a közéletben való elhelyezkedéseteket, megnyitja a lehetőségeiteket, hogy új dolgokat próbáljatok ki vagy,
-            hogy a meglévő érdeklődéseiteket elmélyítsétek.
+            A GólyaKörTe egy olyan program sorozat, amelynek segítségével a VIK-es körök bemutatkozhatnak nektek, hogy megismerjétek a
+            munkájukat. A rendezvény segíti a közéletben való elhelyezkedést és lehetőséget ad, hogy kipróbáljatok új dolgokat vagy akár a
+            meglévő érdeklődéseiteket elmélyítsétek.
           </Paragraph>
-          <Paragraph>Biztatunk titeket, hogy vegyetek részt a rendezvényen és találjátok meg az új hobbitokat!</Paragraph>
+          <Paragraph>Biztatunk titeket, hogy vegyetek részt a Gólyakörtén és találjátok meg az új hobbitokat!</Paragraph>
           <Paragraph fontStyle="italic">
             Üdv,
             <br />
