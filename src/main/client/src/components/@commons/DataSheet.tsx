@@ -18,7 +18,7 @@ type DataSheetProps = {
  */
 export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => (
   <>
-    {!organization.hideName && <Heading>{organization.name}</Heading>}
+    {!organization.hideName && <Heading textAlign={{ base: 'center', sm: 'left' }}>{organization.name}</Heading>}
     <Flex flexDir={{ base: 'column-reverse', sm: 'row' }} justify="space-between" align="center" mt={{ base: 2, sm: 5 }}>
       <VStack alignItems="flex-start" alignSelf={{ base: 'flex-start', sm: 'center' }}>
         {organization.established && (
@@ -119,7 +119,7 @@ const generateLogo = (org: Organization): JSX.Element | null => {
     return (
       <Image
         my={2}
-        alignSelf={{ base: 'flex-end', sm: 'flex-start' }}
+        alignSelf={{ base: 'center', sm: 'flex-start' }}
         src={logoSource}
         alt={org.name}
         maxH={{ base: '10rem', sm: '10rem', md: '12rem' }}
