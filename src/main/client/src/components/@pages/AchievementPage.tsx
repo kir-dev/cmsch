@@ -7,7 +7,7 @@ import axios from 'axios'
 
 import { FilePicker } from '../@commons/FilePicker'
 import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
-import { Paragraph } from 'components/@commons/Basics'
+import { Paragraph } from 'components/@commons/Paragraph'
 import { AchievementFullDetailsView, achievementType, achievementStatus, AchievementCategory } from '../../types/dto/achievements'
 import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'

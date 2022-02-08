@@ -1,7 +1,7 @@
 import { Heading, Input } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
 import React, { createRef, useState } from 'react'
-import { Paragraph } from '../@commons/Basics'
+import { Paragraph } from '../@commons/Paragraph'
 import { COMMUNITIES } from '../../content/communities'
 import { CardListItem } from '../@commons/CardListItem'
 import { Community } from '../../types/Organization'
