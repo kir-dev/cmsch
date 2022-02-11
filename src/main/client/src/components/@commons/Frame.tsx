@@ -1,18 +1,17 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 
-type YouTubeFrameProps = {
-  videoId: string
+type FrameProps = {
+  id: string
 }
 
-export const YouTubeFrame: React.FC<YouTubeFrameProps> = ({ videoId }) => {
+export const Frame: React.FC<FrameProps> = ({ id }) => {
   return (
     <Box mt={5} w="100%" pt="56.25%" position="relative">
       <iframe
-        src={`https://www.youtube.com/embed/${videoId}`}
-        title="Körös videó"
-        frameBorder="0"
-        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+        src={`https://drive.google.com/file/d/${id}/preview`}
+        title="Körös tartalom"
+        allow=""
         allowFullScreen
         style={{
           position: 'absolute',
