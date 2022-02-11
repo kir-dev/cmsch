@@ -58,7 +58,7 @@ export const QRList: React.FC = (props) => {
   if (loading) return <Loading />
 
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired groupRequired>
       <Helmet title="QR pecsétek" />
       <Heading as="h1">QR kód pecsétek</Heading>
       <PresenceAlert acquired={progress.acquiredTokenCount} needed={progress.minTokenToComplete} />
