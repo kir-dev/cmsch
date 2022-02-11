@@ -6,7 +6,6 @@ import { APP_NAME } from 'utils/configurations'
 import { Footer } from './Footer'
 import { Navbar } from './navigation/Navbar'
 import ScrollToTop from '../../utils/ScrollToTop'
-import { GroupSelectionWarning } from '../@commons/GroupSelectionWarning'
 
 type IndexLayoutProps = {
   background?: string
@@ -20,7 +19,6 @@ export const IndexLayout: React.FC<IndexLayoutProps> = ({ background, children }
       <Navbar />
       <Box background={background} flex={1} pb={20}>
         <Warning />
-        <GroupSelectionWarning />
         {children}
       </Box>
       <Footer />

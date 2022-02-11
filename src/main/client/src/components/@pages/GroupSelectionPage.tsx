@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Page } from '../@layout/Page'
-import { Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VStack } from '@chakra-ui/react'
+import { Alert, AlertIcon, Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
 import { LinkButton } from '../@commons/LinkButton'
 import axios from 'axios'
@@ -17,10 +17,14 @@ export const GroupSelectionPage: React.FC = () => {
   const { throwError } = useServiceContext()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    setValue(profile?.fallbackGroup.toString())
+  }, [profile?.fallbackGroup])
+
   const onSubmit = () => {
     if (value)
       axios
-        .post<GroupChangeDTO>(`${API_BASE_URL}/api/groups/select/${value}`)
+        .post<GroupChangeDTO>(`${API_BASE_URL}/api/group/select/${value}`)
         .then((res) => {
           switch (res.data.status) {
             case GroupChangeStatus.OK:
@@ -38,7 +42,7 @@ export const GroupSelectionPage: React.FC = () => {
               setError('Nem engedélyezett!')
               break
             default:
-              setError('Valami nem stimmel, nem sikerült a módosítás.')
+              setError('Valami nem stimmel.')
               break
           }
         })
@@ -58,8 +62,11 @@ export const GroupSelectionPage: React.FC = () => {
         Állítsd be a tankörödet, hogy részt vehess a feladatokban!
       </Text>
       <Text color="gray.500" textAlign="center">
-        Csak helyesen beállított tankörrel fog érvényesülni a tanköri jelenlét!
+        Csak helyesen beállított tankörrel fog érvényesülni a tanköri jelenlét.
       </Text>
+      <Alert status="warning" mt={10} variant="left-accent">
+        <AlertIcon />A tanköröd módosítása után már nem tudod újra megváltoztatni.
+      </Alert>
       <form>
         <VStack spacing={5} mt={10} maxW={80} mx="auto">
           <FormControl>
@@ -86,7 +93,7 @@ export const GroupSelectionPage: React.FC = () => {
                 setValue(profile?.fallbackGroup.toString())
               }}
             >
-              Vendég vagyok
+              Vendég kiválasztása
             </Button>
           </ButtonGroup>
           <ButtonGroup>
