@@ -182,7 +182,7 @@ export const AchievementPage: React.FC = (props) => {
   ]
 
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired groupRequired>
       <Helmet title={achDetails.achievement?.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading mb={5}>{achDetails.achievement?.title}</Heading>

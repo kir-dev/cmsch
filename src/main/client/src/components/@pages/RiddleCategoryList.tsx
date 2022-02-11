@@ -68,7 +68,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
   if (loading) return <Loading />
 
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired groupRequired>
       <Helmet title="Riddleök" />
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">
