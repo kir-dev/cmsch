@@ -18,19 +18,33 @@ export const RESORTS: Organization[] = [
   },
   {
     id: 'kszk',
-    name: 'Kollégiumi Számítástechnikai Kör',
+    name: 'KSZK',
     shortDescription: 'Szakma. Barátok. Történelem.',
-    descriptionParagraphs: `A Kollégiumi Számítástechnikai Kör a kar egyik első – jelenleg is aktív – öntevékeny csoportosulása,
-    mely 1976-ban került megalapításra. Tagjaink az informatika különböző területei iránt kiemelten érdeklődő öntevékeny
-    egyetemista hallgatók, akik tanulmányaikon túl, szabaidejükben fejlesztik magukat és rendszereinket, megkönnyítve ezzel
-    a kollégisták, valamint a kar hallgatóinak hétköznapjait. Aktív tagjaink az iparban alkalmazott naprakész tudásra tesznek
-    szert itt, kísérleteznek saját ötleteikkel és jó kapcsolatokat építenek ki ebben a jó hangulatú, alkotó kedvű közösségben.
-    A KSZK tevékenysége két nagy területre bontható: az üzemeltetésre és a fejlesztésre. Előbbi esetén hálózattervezéssel,
-    felügyelettel, monitorozással és különböző típusú szerverszolgáltatások üzemeltetésével foglalkozunk. Utóbbi esetén
-    pedig a web-, mobil- és szoftverfejlesztés jön szóba, valamint tevékenységeink során az IT security-vel is behatóan
-    foglalkozunk.`,
-    website: 'https://kszk.sch.bme.hu',
-    logo: '/img/resorts/kszk.svg'
+    descriptionParagraphs: [
+      `A Kollégiumi Számítástechnikai Kör az egyetem legrégebben működő és legnagyobb aktív,
+      informatikával foglalkozó öntevékeny csoportosulása, mely idén ünnepli 45+1. születésnapját.
+      A KSZK egy vidám hangulatú, alkotó kedvű csapat, mely a Kar jó szakmai képességű, számítástechnika
+      iránt kiemelten érdeklődő tagjaiból verbuválódott, és bővül évente új tehetségekkel, lelkes informatikusokkal,
+      villamosmérnökökkel.`,
+      `A KSZK a lehetőségek tárháza. A hely, ahol te, leendő mérnök, minden területen kipróbálhatod,
+      továbbképezheted magad. Náluk kibontakoztathatod kreativitásod, tapasztalatot, mérnöki szemléletet
+      szerezhetsz, miközben az úgynevezett soft skilljeidet is fejlesztheted. Ha számodra a szakma hivatás,
+      ha szeretsz új dolgokat alkotni, vagy csak jó társaságra vágysz, a legjobb helyre kerültél. A reszort
+      körei a szakma egy-egy meghatározó területével foglalkoznak a fejlesztés és üzemeltetés terén. A szakmai
+      tevékenységen túl a KSZK-t pezsgő közösségi élet is jellemzi, melyet mi sem bizonyít jobban, mint az általuk
+      szervezett rengeteg összejövetel: vacsorák, táborok, közös mozizások, paintballozás, LAN-partik, szakmai
+      workshopok, sörözések és random pipázások. Újoncként te is részt vehetsz eseményeiken, ahol jó társaságban
+      szerezhetsz gyakorlatban is hasznosítható tudást és sok új barátot. További információk és jelentkezés az
+      ujonc.kszk.bme.hu oldalon.`
+    ],
+    // images: 'https://drive.google.com/drive/folders/1xoMzH5_pjYBGYwwIShrRkJeQp1Mu4meg?usp=sharing',
+    website: 'https://kszk.bme.hu',
+    application: 'https://ujonc.kszk.bme.hu',
+    established: '1976',
+    email: 'kszk@sch.bme.hu',
+    members: 70,
+    interests: ['Szolgáltatások', 'szerver üzemeltetés', 'SCHNet üzemeltetés', 'vik.wiki üzemeltetés/fejlesztés', 'számítógépes biztonság'],
+    logo: '/img/communities/kszk.svg'
   },
   {
     id: 'szor',
@@ -87,14 +101,10 @@ export const RESORTS: Organization[] = [
     logo: '/img/resorts/kofer.svg'
   },
   {
-    id: 'sssl',
-    name: 'Szent Schönherz Senior Lovagrend',
-    shortDescription: 'Elsőéves hallgatók szolgálatában.',
-    descriptionParagraphs: `A Szent Schönherz Senior Lovagrend (SSSL) főleg a Karra
-    kerülő elsőéves hallgatók egyetemi és közösségi beilleszkedésével foglalkozik.
-    Ezen felül segítséget nyújt a kollégium más szervezeteinek az utánpótlás keresésben,
-    ezen szervezeteknek az elsősökkel kapcsolatos döntéseik előkészítésében, meghozatalában.
-    Legtöbb rendezvényünk első évesekkel kapcsolatos, pl. a Gólyatábor, Gólyahét, Gólyabál.`,
-    website: 'https://sssl.sch.bme.hu'
+    id: 'schonherz',
+    name: 'Schönherz',
+    shortDescription: 'Kollégiumi közélet szolgálatában.',
+    website: 'https://sch.bme.hu',
+    logo: '/img/resorts/schonherz.svg'
   }
 ]
