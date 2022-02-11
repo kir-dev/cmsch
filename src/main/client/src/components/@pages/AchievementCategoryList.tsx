@@ -56,7 +56,7 @@ export const AchievementCategoryList: React.FC = (props) => {
       </Loading>
     )
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired groupRequired>
       <Helmet title="Bucketlist kategóriák" />
       <Heading>Bucketlist</Heading>
       {categories.length > 0 ? (

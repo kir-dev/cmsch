@@ -50,7 +50,7 @@ export const AchievementCategoryPage: React.FC = (props) => {
   ]
 
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired groupRequired>
       <Helmet title={category.categoryName} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>Bucketlist kategória: {category.categoryName}</Heading>
