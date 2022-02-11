@@ -1,11 +1,10 @@
 import { Page } from '../@layout/Page'
-import { Image } from '@chakra-ui/react'
 import React from 'react'
 import { COMMUNITIES } from '../../content/communities'
 import { RESORTS } from '../../content/resorts'
 import { Navigate, useParams } from 'react-router-dom'
 import { DataSheet } from '../@commons/DataSheet'
-import { YouTubeFrame } from '../@commons/YouTubeFrame'
+import { Frame } from '../@commons/Frame'
 import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
 import { Helmet } from 'react-helmet'
 
@@ -37,10 +36,11 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
       <DataSheet organization={community} />
 
       {community.videoIds?.map((id) => (
-        <YouTubeFrame key={id} videoId={id} />
+        <Frame key={id} id={id} />
       ))}
       {community.images?.map((url) => (
-        <Image key={url} marginTop={10} src={url} alt="Körkép" borderRadius="lg" />
+        <Frame key={url} id={url} />
+        // <Image key={url} marginTop={10} src={url} alt="Körkép" borderRadius="lg" />
       ))}
     </Page>
   )
