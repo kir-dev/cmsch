@@ -39,7 +39,6 @@ export const Home: React.FC = () => {
         </BlockQuote>
         <Image src="/img/big_stork_logo.png" h="30rem" display={{ base: 'none', md: 'block' }} />
       </Flex>
-
       <Stack justifyContent="center" marginTop={20} direction="column" alignItems="center">
         <LinkButton href="/korok" colorScheme="brand" size="lg">
           Körök listája
@@ -48,6 +47,17 @@ export const Home: React.FC = () => {
           Reszortok listája
         </LinkButton>
       </Stack>
+      <Heading as="h2" size="lg" marginTop={20} textAlign="center">
+        Információk
+      </Heading>
+      <ButtonGroup marginTop={10} justifyContent="center">
+        <LinkButton external newTab={false} href="#esemenyek" variant="outline" colorScheme="brand">
+          Események
+        </LinkButton>
+        <LinkButton external newTab={false} href="#terkepek" variant="outline" colorScheme="brand">
+          Térképek
+        </LinkButton>
+      </ButtonGroup>
       <Heading as="h2" size="lg" marginTop={20} textAlign="center">
         Feladatok
       </Heading>
