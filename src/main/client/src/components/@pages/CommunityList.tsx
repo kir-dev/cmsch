@@ -1,4 +1,4 @@
-import { Heading, Input } from '@chakra-ui/react'
+import { Heading, Input, InputLeftElement } from '@chakra-ui/react'
 import { Page } from '../@layout/Page'
 import React, { createRef, useState } from 'react'
 import { Paragraph } from '../@commons/Paragraph'
@@ -6,6 +6,8 @@ import { COMMUNITIES } from '../../content/communities'
 import { CardListItem } from '../@commons/CardListItem'
 import { Community } from '../../types/Organization'
 import { Helmet } from 'react-helmet'
+import { InputGroup } from '@chakra-ui/input'
+import { SearchIcon } from '@chakra-ui/icons'
 
 type CommunityListProps = {}
 
@@ -34,10 +36,15 @@ export const CommunityList: React.FC<CommunityListProps> = () => {
     <Page>
       <Helmet title="Körök" />
       <Heading>Körök</Heading>
-      <Input ref={inputRef} placeholder="Keresés..." size="lg" boxShadow="md" marginTop={5} onChange={handleInput} />
+      <InputGroup mt={5}>
+        <InputLeftElement h="100%">
+          <SearchIcon />
+        </InputLeftElement>
+        <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} />
+      </InputGroup>
       <Paragraph>
-        A karon számtalan öntevékeny kör működik, mindenki megtalálhatja az érdeklődési körének megfelelő csoportot. A körök többsége a
-        Schönherz Kollégiumban működik, de számtalan lehetőség található a Nagytétényi úti kollégiumban is.
+        A karon számtalan öntevékeny kör működik, mindenki megtalálhatja az érdeklődési körének megfelelő csoportot. A körök a Schönherz
+        Kollégiumban működnek.
       </Paragraph>
       {filteredCommunities.map((community) => (
         <CardListItem key={community.id} data={community} link={'/korok/' + community.id} />
