@@ -43,6 +43,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         .catch(() => {
           throwError('Újra be kell jelentkezned!', { toast: true, toastStatus: 'warning', toHomePage: true })
           setIsLoggedIn(false)
+          Cookies.remove(CookieKeys.LOGGED_IN)
         })
   }, [isLoggedIn])
 
