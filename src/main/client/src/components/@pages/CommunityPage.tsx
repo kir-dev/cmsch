@@ -4,7 +4,7 @@ import { COMMUNITIES } from '../../content/communities'
 import { RESORTS } from '../../content/resorts'
 import { Navigate, useParams } from 'react-router-dom'
 import { DataSheet } from '../@commons/DataSheet'
-import { Frame } from '../@commons/Frame'
+// import { Frame } from '../@commons/Frame'
 import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
 import { Helmet } from 'react-helmet'
 
@@ -35,13 +35,13 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={community} />
 
-      {community.videoIds?.map((id) => (
-        <Frame key={id} id={id} />
-      ))}
-      {community.images?.map((url) => (
-        <Frame key={url} id={url} />
-        // <Image key={url} marginTop={10} src={url} alt="Körkép" borderRadius="lg" />
-      ))}
+      {/*{community.videoIds?.map((id) => (*/}
+      {/*  <Frame key={id} id={id} />*/}
+      {/*))}*/}
+      {/*{community.imageIds?.map((url) => (*/}
+      {/*  <Frame key={url} id={url} />*/}
+      {/*  <Image key={url} marginTop={10} src={url} alt="Körkép" borderRadius="lg" />*/}
+      {/*))}*/}
     </Page>
   )
 }
