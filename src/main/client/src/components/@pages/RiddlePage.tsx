@@ -140,7 +140,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
         <Heading> {riddle.title} </Heading>
       </Flex>
       <Box maxW="100%" w="30rem" mx="auto">
-        {riddle.imageUrl && <Image width="100%" src={`${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
+        {riddle.imageUrl && <Image width="100%" src={`/cdn/${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
         <Box
           as="form"
           onSubmit={submitSolution}
