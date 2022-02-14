@@ -127,65 +127,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
         mt={3}
       />
 
-      <Wrap spacing="3rem" justify="center" mt="10">
-        <WrapItem key="achivement">
-          <Center w="10rem" h="12rem">
-            <Flex direction="column" align="center">
-              <Link
-                href="/bucketlist"
-                fontSize="3xl"
-                fontWeight={500}
-                _hover={{
-                  textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.600')
-                }}
-              >
-                Bucketlist
-              </Link>
-              <Box>
-                <CircularProgress
-                  color={useColorModeValue('yellow.400', 'yellow.500')}
-                  size="10rem"
-                  position="absolute"
-                  value={submittedPercent(profile) + completedPercent(profile)}
-                  trackColor={useColorModeValue('gray.200', 'gray.700')}
-                />
-                <CircularProgress
-                  color={useColorModeValue('brand.500', 'brand.600')}
-                  size="10rem"
-                  value={completedPercent(profile)}
-                  trackColor="transparent"
-                >
-                  <CircularProgressLabel
-                    color={
-                      submittedPercent(profile) + completedPercent(profile) === 0 ? 'gray.500' : useColorModeValue('brand.500', 'brand.600')
-                    }
-                    pb={submittedPercent(profile) !== 0 ? '2.9rem' : '0'}
-                  >
-                    {Math.round(completedPercent(profile))}%
-                  </CircularProgressLabel>
-                  {submittedPercent(profile) !== 0 && (
-                    <>
-                      <CircularProgressLabel>
-                        <Box
-                          height="2px"
-                          backgroundColor={useColorModeValue('gray.200', 'gray.700')}
-                          width="70%"
-                          mx="auto"
-                          borderRadius="20%"
-                        />
-                      </CircularProgressLabel>
-                      <CircularProgressLabel color={useColorModeValue('yellow.400', 'yellow.500')} pt="2.5rem">
-                        {Math.round(submittedPercent(profile))}%
-                      </CircularProgressLabel>
-                    </>
-                  )}
-                </CircularProgress>
-              </Box>
-            </Flex>
-          </Center>
-        </WrapItem>
-      <Flex justify="center" align="center" mt="10" flexWrap="wrap">
+      <Flex justify="center" alignItems="center" flexWrap="wrap" mt="10">
         <Center p={3}>
           <Flex direction="column" align="center">
             <Link
