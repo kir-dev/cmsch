@@ -29,6 +29,6 @@ export const EVENTS: Event[] = [
     start: '21:00',
     end: '4:00',
     name: 'Nyereményjáték hirdetés',
-    location: 'Schönherz'
+    location: 'Schönherz ENT'
   }
 ]

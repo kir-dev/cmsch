@@ -13,12 +13,12 @@ export const socialPages: SocialPage[] = [
     icon: FaYoutube
   },*/
   {
-    href: 'https://www.facebook.com/golyakorte/',
-    label: 'GólyaKörTe Facebook',
+    href: 'https://www.facebook.com/events/697152491692648',
+    label: 'GólyaKörTe Facebook esemény',
     icon: FaFacebook
   },
   {
-    href: '',
+    href: 'https://www.instagram.com/golyakortevik',
     label: 'GólyaKörTe Instagram',
     icon: FaInstagram
   }
