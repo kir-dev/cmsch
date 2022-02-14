@@ -11,7 +11,7 @@ CMSch web backend with in-built frontend
 ## Run
 
 ```bash
-  ./gradlew bootRun --args='--spring.profiles.include=test,internal,goylakorte2022'
+  ./gradlew bootRun --args='--spring.profiles.include=test,internal,golyakorte2022'
 ```
 
 ## Enable profileing
