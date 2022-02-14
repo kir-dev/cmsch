@@ -7,6 +7,7 @@ import { DataSheet } from '../@commons/DataSheet'
 // import { Frame } from '../@commons/Frame'
 import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
 import { Helmet } from 'react-helmet'
+import { Paragraph } from '../@commons/Paragraph'
 
 type CommunityPageProps = {}
 
@@ -34,6 +35,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
       <Helmet title={community.name} />
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={community} />
+      {!community.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
       {/*{community.videoIds?.map((id) => (*/}
       {/*  <Frame key={id} id={id} />*/}

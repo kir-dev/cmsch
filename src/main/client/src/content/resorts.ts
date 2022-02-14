@@ -5,10 +5,12 @@ export const RESORTS: Organization[] = [
     id: 'simonyi',
     name: 'Simonyi Károly Szakkollégium',
     shortDescription: 'Szakmában erős.',
-    descriptionParagraphs: `A Simonyi Károly Szakkollégium célja,
+    descriptionParagraphs: [
+      `A Simonyi Károly Szakkollégium célja,
     hogy elsősorban a szakkollégium tagjai, lehetőség
     szerint a Villamosmérnöki és Informatikai Kar minden
-    hallgatója számára lehetőséget biztosítson az egyetemi képzést kiegészítő ismeretek elsajátítására.`,
+    hallgatója számára lehetőséget biztosítson az egyetemi képzést kiegészítő ismeretek elsajátítására.`
+    ],
     website: 'https://simonyi.bme.hu',
     logo: '/img/resorts/simonyi.svg',
     color: 'green',
@@ -50,16 +52,18 @@ export const RESORTS: Organization[] = [
     id: 'szor',
     name: 'Szolgáltató Reszort (SZOR)',
     shortDescription: 'Nem kulturális jellegű szolgáltatások.',
-    descriptionParagraphs: `A 2004-ben alapított Szolgáltató Reszort azokat a köröket,
+    descriptionParagraphs: [
+      `A 2004-ben alapított Szolgáltató Reszort azokat a köröket,
     csoportokat tömöríti magába, melyek valamilyen nem kulturális jellegű szolgáltatást
     nyújtanak a Schönherz Zoltán Kollégium lakóinak.
     Jelenleg 7 körünk szolgálja ki felváltva az éhesek kollégisták igényeit a hét szinte minden napján.
-    Ők név szerint: Vödör Kör, Americano, PizzáSCH, Dzsájrosz, Palacsintázó, LángoSCH, Vörös Kakas Fogadó.
-    A kollégisták által rendelt ételeket a FoodEx "házhoz" is szállítja. Ha valaki baráti társaságával szívesen
+    Ők név szerint: Vödör Kör, Americano, PizzáSCH, Dzsájrosz, Palacsintázó, LángoSCH, Vörös Kakas Fogadó.`,
+      `A kollégisták által rendelt ételeket a FoodEx "házhoz" is szállítja. Ha valaki baráti társaságával szívesen
     vizipipázna egyet, akkor érdemes a WTF-t keresnie. A kollégiumban található egy szauna is, melynek működtetésével
     a Szauna Kör foglalkozik. Ha valaki sokadmagával szeretne egy nagyot főzni, akkor az Edénykölcsönzőnél mindent megtalál,
     ami egy nagy lakomához kell.
-    A már szimbólummá vált különböző foltokkal és villanykari pulóverekkel pedig a Pulcsi és Foltmékört érdemes keresni.`,
+    A már szimbólummá vált különböző foltokkal és villanykari pulóverekkel pedig a Pulcsi és Foltmékört érdemes keresni.`
+    ],
     website: 'https://szor.sch.bme.hu',
     logo: 'https://logotar.schdesign.hu/preview/SZORReszort_preview.png'
   },
@@ -67,8 +71,10 @@ export const RESORTS: Organization[] = [
     id: 'bulis',
     name: 'Bulis Reszort',
     shortDescription: 'A legjobb villanykaros bulik!',
-    descriptionParagraphs: `Csapatunk a BME Villamosmérnöki és Informatikai Karán működik,
-      a Schönherz Kollégiumban, rendezvények széles palettájával várjuk a bulizni vágyó egyetemistákat.`,
+    descriptionParagraphs: [
+      `Csapatunk a BME Villamosmérnöki és Informatikai Karán működik,
+      a Schönherz Kollégiumban, rendezvények széles palettájával várjuk a bulizni vágyó egyetemistákat.`
+    ],
     website: 'https://bulis.sch.bme.hu',
     logo: '/img/resorts/bulis.svg'
   },
@@ -76,18 +82,22 @@ export const RESORTS: Organization[] = [
     id: 'kultur',
     name: 'Kultúr Reszort',
     shortDescription: 'Kultúra és művészet.',
-    descriptionParagraphs: `A Kultúr Reszort a Schönherz kultúrával és művészettel foglalkozó köreit tömöríti egy nagy csoportba.
+    descriptionParagraphs: [
+      `A Kultúr Reszort a Schönherz kultúrával és művészettel foglalkozó köreit tömöríti egy nagy csoportba.
     A reszortban és a körökben lehetőség van a hobbidnak élni, olyanokat csinálni amik boldoggá tesznek. A reszortunk
-    egy nagyon fontos célja, hogy a hallgatók, ne váljanak szakbarbárrá. A körök rendszeres rendezvénye a KultúrNight.`,
+    egy nagyon fontos célja, hogy a hallgatók, ne váljanak szakbarbárrá. A körök rendszeres rendezvénye a KultúrNight.`
+    ],
     logo: '/img/resorts/kultur.svg'
   },
   {
     id: 'sport',
     name: 'Sport Reszort',
     shortDescription: 'Sportolni kívánó hallgatók reszortja.',
-    descriptionParagraphs: `A Sport reszort foglalja magába a Házban a sportért tenni kívánó embereket.
+    descriptionParagraphs: [
+      `A Sport reszort foglalja magába a Házban a sportért tenni kívánó embereket.
     A lehetőségek köre széles, rengeteg különböző sportban kipróbálhatják magukat a kollégisták
-    vagy akár valami újat is behozhatnak a jelenlegiek közé.`,
+    vagy akár valami újat is behozhatnak a jelenlegiek közé.`
+    ],
     website: 'https://dsk.sch.bme.hu/',
     logo: '/img/communities/dsk.png'
   },
@@ -95,9 +105,11 @@ export const RESORTS: Organization[] = [
     id: 'kofer',
     name: 'Kollégiumi Felvételi és Érdekvédelmi Reszort',
     shortDescription: 'Érdekvédelem és felvételi.',
-    descriptionParagraphs: `A Kollégiumi Felvételi és Érdekvédelmi Reszort (KOFER) felel
+    descriptionParagraphs: [
+      `A Kollégiumi Felvételi és Érdekvédelmi Reszort (KOFER) felel
     a kollégiumi felvételi zökkenőmentes lebonyolításáért illetve a kollégiumban
-    élő szintközösségek életszínvonalának növeléséért, a szintközösségek képviseletéért.`,
+    élő szintközösségek életszínvonalának növeléséért, a szintközösségek képviseletéért.`
+    ],
     logo: '/img/resorts/kofer.svg'
   },
   {

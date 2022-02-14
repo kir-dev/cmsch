@@ -4,7 +4,7 @@ export interface Organization {
   /** Should hide name on their own page, logo is enough */
   hideName?: boolean
   shortDescription?: string
-  descriptionParagraphs?: string[] | string
+  descriptionParagraphs?: string[]
   website?: string
   logo?: string
   darkLogo?: string
