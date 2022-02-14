@@ -16,11 +16,11 @@ export interface Organization {
   facebook?: string
   instagram?: string
   application?: string
+  imageIds?: string[]
+  videoIds?: string[]
 }
 
 export interface Community extends Organization {
-  images?: string[]
-  videoIds?: string[]
   resortId?: string
   searchKeywords?: string[]
 }
