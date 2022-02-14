@@ -50,7 +50,7 @@ export const AchievementCategoryPage: React.FC = (props) => {
   ]
 
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired groupRequired>
       <Helmet title={category.categoryName} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>Bucketlist kategória: {category.categoryName}</Heading>
@@ -58,6 +58,7 @@ export const AchievementCategoryPage: React.FC = (props) => {
         <VStack spacing={4} mt={5} align="stretch">
           {category.achievements.map((ach) => (
             <Box
+              key={ach.achievement.id}
               bg={useColorModeValue('gray.200', 'gray.600')}
               px={6}
               py={2}

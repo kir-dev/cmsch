@@ -18,7 +18,7 @@ export const ExampleApiCallComponent: React.FC = () => {
     <Box>
       Result:{' '}
       {newsList?.news.map((item: NewsPreviewDTO) => (
-        <Box>{item.title}</Box>
+        <Box key={item.timestamp}>{item.title}</Box>
       ))}
     </Box>
   )

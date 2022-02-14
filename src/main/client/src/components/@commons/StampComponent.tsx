@@ -19,7 +19,7 @@ export const StampComponent: React.FC<StampComponentProps> = ({ title, type }: S
     <Box maxW="md" minW={['100%', 'md']} borderRadius="lg" bg={backgroundBase}>
       <Flex>
         <Center bg={stampCorner} padding="2" borderStartRadius="lg">
-          <Icon as={icon} boxSize="2em" fontSize="3xl" color="brand.500" />
+          <Icon as={icon} boxSize="2em" fontSize="3xl" color={useColorModeValue('brand.500', 'brand.600')} />
         </Center>
         <Center width="100%" paddingStart="3" textAlign="center">
           <Text fontSize="xl" fontWeight="bold">

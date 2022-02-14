@@ -11,10 +11,10 @@ import { useAuthContext } from '../../../utils/useAuthContext'
 const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
   return (
     <Link to={href || '#'}>
-      <Box role="group" display="block" p={2} rounded="md" _hover={{ bg: useColorModeValue('brand.50', 'gray.800') }}>
+      <Box role="group" display="block" p={2} rounded="md">
         <Stack direction="row" align="center">
           <Box>
-            <Text transition="all .3s ease" _groupHover={{ color: 'brand.500' }} fontWeight={500}>
+            <Text transition="all .3s ease" _groupHover={{ color: useColorModeValue('brand.500', 'brand.600') }} fontWeight={500}>
               {label}
             </Text>
           </Box>
@@ -27,7 +27,7 @@ const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
             align="center"
             flex={1}
           >
-            <Icon color="brand.500" w={5} h={5} as={ChevronRightIcon} />
+            <Icon color={useColorModeValue('brand.500', 'brand.600')} w={5} h={5} as={ChevronRightIcon} />
           </Flex>
         </Stack>
       </Box>
@@ -47,7 +47,7 @@ const DesktopNav: React.FC = () => {
                 <HStack
                   _hover={{
                     textDecoration: 'none',
-                    color: 'brand.500'
+                    color: useColorModeValue('brand.500', 'brand.600')
                   }}
                 >
                   <Text fontSize="md" fontWeight={500}>

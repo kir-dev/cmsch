@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, SpaceProps, useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 
 type BreadcrumbProps = {
@@ -7,13 +7,13 @@ type BreadcrumbProps = {
     title?: string
     to?: string
   }[]
-}
+} & SpaceProps
 
-export const CustomBreadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
+export const CustomBreadcrumb: React.FC<BreadcrumbProps> = ({ items, ...spaceProps }) => {
   return (
-    <Breadcrumb spacing={2} separator={<ChevronRightIcon color={'brand.500'} />}>
-      {items.map((item) => (
-        <BreadcrumbItem>
+    <Breadcrumb {...spaceProps} spacing={2} separator={<ChevronRightIcon color={useColorModeValue('brand.500', 'brand.600')} />}>
+      {items.map((item, idx) => (
+        <BreadcrumbItem key={idx}>
           <BreadcrumbLink
             as={Link}
             to={item.to ? item.to : '#'}
@@ -21,7 +21,7 @@ export const CustomBreadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
             fontWeight={500}
             _hover={{
               textDecoration: 'none',
-              color: 'brand.500'
+              color: useColorModeValue('brand.500', 'brand.600')
             }}
           >
             {item.title}

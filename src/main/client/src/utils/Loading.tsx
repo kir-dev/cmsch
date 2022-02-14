@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Center, Spinner } from '@chakra-ui/react'
+import { Center, Spinner, useColorModeValue } from '@chakra-ui/react'
 
 type LoadingProps = {
   timeout?: number
@@ -23,7 +23,7 @@ export const Loading: React.FC<LoadingProps> = ({ timeout, children }) => {
     <>{children}</>
   ) : (
     <Center>
-      <Spinner color="brand.500" size="xl" thickness="0.3rem" />
+      <Spinner color={useColorModeValue('brand.500', 'brand.600')} size="xl" thickness="0.3rem" />
     </Center>
   )
 }

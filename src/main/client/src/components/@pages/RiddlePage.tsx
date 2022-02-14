@@ -132,7 +132,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
   if (loading) return <Loading />
 
   return (
-    <Page {...props} loginRequired>
+    <Page {...props} loginRequired groupRequired>
       <Helmet title={riddle.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
 

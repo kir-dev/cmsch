@@ -6,16 +6,15 @@ import { FaHeart } from 'react-icons/fa'
 import { Container } from './Container'
 import customTheme from '../../utils/customTheme'
 
-type impresszumWrapItemProps = {
+type ImpressumWrapItemProps = {
   display: {
     base?: string
     md: string
   }
-  key: string
 }
-const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) => {
+const ImpressumWrapItem: React.FC<ImpressumWrapItemProps> = ({ display }) => {
   return (
-    <FooterWrapItem key={key} display={display}>
+    <FooterWrapItem display={display}>
       <Box align="center">
         <FooterBigImage src={`/img/${useColorModeValue('footer_logo.png', 'footer_logo_white.png')}`} />
       </Box>
@@ -32,7 +31,7 @@ const ImpressumWrapItem: React.FC<impresszumWrapItemProps> = ({ display, key }) 
         </Link>
       </Text>
       <Box align="center">
-        <Text>@ kir-dev [kukac] sch.bme.hu</Text>
+        <Text>@ kir-dev [at] sch.bme.hu</Text>
         <Text>© 2022</Text>
       </Box>
     </FooterWrapItem>

@@ -1,5 +1,5 @@
 import { CheckCircleIcon, InfoIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons'
-import { Box, Center, Heading } from '@chakra-ui/react'
+import { Box, Center, Heading, useColorModeValue } from '@chakra-ui/react'
 import React from 'react'
 import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
 
@@ -11,7 +11,7 @@ export const QRScanResultComponent: React.FC<QrScanResultProps> = ({ response }:
   const renderIcon = () => {
     switch (response.status) {
       case ScanStatus.SCANNED:
-        return <CheckCircleIcon color="brand.500" boxSize="120px" />
+        return <CheckCircleIcon color={useColorModeValue('brand.500', 'brand.600')} boxSize="120px" />
       case ScanStatus.ALREADY_SCANNED:
         return <InfoIcon color="orange.500" boxSize="120px" />
       case ScanStatus.WRONG:
@@ -45,7 +45,9 @@ export const QRScanResultComponent: React.FC<QrScanResultProps> = ({ response }:
         {renderIcon()}
       </Center>
       <Center>
-        <Heading size="md">{getInfoText()}</Heading>
+        <Heading mb={5} size="md">
+          {getInfoText()}
+        </Heading>
       </Center>
     </Box>
   )

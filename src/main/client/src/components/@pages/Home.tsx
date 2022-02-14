@@ -1,5 +1,5 @@
-import { Alert, AlertIcon, Box, ButtonGroup, Flex, Heading, Stack, VStack, Image } from '@chakra-ui/react'
-import { Paragraph } from '../@commons/Basics'
+import { Alert, AlertIcon, Box, ButtonGroup, Flex, Heading, Stack, VStack, Image, useColorModeValue } from '@chakra-ui/react'
+import { Paragraph } from '../@commons/Paragraph'
 import { Page } from '../@layout/Page'
 import React from 'react'
 import { LinkButton } from '../@commons/LinkButton'
@@ -16,7 +16,7 @@ export const Home: React.FC = () => {
       <Helmet />
       <Heading size="3xl" textAlign="center" marginTop={10}>
         Üdvözlünk a{' '}
-        <Heading as="span" color="brand.500" size="3xl">
+        <Heading as="span" color={useColorModeValue('brand.500', 'brand.600')} size="3xl">
           GólyaKörTe
         </Heading>{' '}
         portálon
@@ -24,13 +24,13 @@ export const Home: React.FC = () => {
       <Flex align="center">
         <BlockQuote quoteMarkSize={4}>
           <Paragraph>Kedves Gólyák!</Paragraph>
-          <Paragraph>Köszöntünk titeket a 2022-es Gólyakörte honlapján!</Paragraph>
+          <Paragraph>Köszöntünk titeket a 2022-es GólyaKörTe honlapján!</Paragraph>
           <Paragraph>
-            A Gólyakörte egy olyan rendezvény, ahol a VIK-es körök bemutatkoznak nektek, hogy megismerjétek, hogy mivel foglalkoznak. Ez a
-            rendezvény segíti a közéletben való elhelyezkedéseteket, megnyitja a lehetőségeiteket, hogy új dolgokat próbáljatok ki vagy,
-            hogy a meglévő érdeklődéseiteket elmélyítsétek.
+            A GólyaKörTe egy olyan program sorozat, amelynek segítségével a VIK-es körök bemutatkozhatnak nektek, hogy megismerjétek a
+            munkájukat. A rendezvény segíti a közéletben való elhelyezkedést és lehetőséget ad, hogy kipróbáljatok új dolgokat vagy akár a
+            meglévő érdeklődéseiteket elmélyítsétek.
           </Paragraph>
-          <Paragraph>Biztatunk titeket, hogy vegyetek részt a rendezvényen és találjátok meg az új hobbitokat!</Paragraph>
+          <Paragraph>Biztatunk titeket, hogy vegyetek részt a Gólyakörtén és találjátok meg az új hobbitokat!</Paragraph>
           <Paragraph fontStyle="italic">
             Üdv,
             <br />
@@ -39,7 +39,6 @@ export const Home: React.FC = () => {
         </BlockQuote>
         <Image src="/img/big_stork_logo.png" h="30rem" display={{ base: 'none', md: 'block' }} />
       </Flex>
-
       <Stack justifyContent="center" marginTop={20} direction="column" alignItems="center">
         <LinkButton href="/korok" colorScheme="brand" size="lg">
           Körök listája
@@ -48,6 +47,17 @@ export const Home: React.FC = () => {
           Reszortok listája
         </LinkButton>
       </Stack>
+      <Heading as="h2" size="lg" marginTop={20} textAlign="center">
+        Információk
+      </Heading>
+      <ButtonGroup marginTop={10} justifyContent="center">
+        <LinkButton external newTab={false} href="#esemenyek" variant="outline" colorScheme="brand">
+          Események
+        </LinkButton>
+        <LinkButton external newTab={false} href="#terkepek" variant="outline" colorScheme="brand">
+          Térképek
+        </LinkButton>
+      </ButtonGroup>
       <Heading as="h2" size="lg" marginTop={20} textAlign="center">
         Feladatok
       </Heading>
@@ -117,9 +127,9 @@ const QuoteMark: React.FC<QuoteMarkProps> = ({ side, size }) => {
       right={side === 'right' ? 0 : undefined}
     >
       {side === 'left' ? (
-        <FaQuoteLeft size={size + 'rem'} color={customTheme.colors.brand['300']} />
+        <FaQuoteLeft size={size + 'rem'} color={useColorModeValue(customTheme.colors.brand['500'], customTheme.colors.brand['600'])} />
       ) : (
-        <FaQuoteRight size={size + 'rem'} color={customTheme.colors.brand['300']} />
+        <FaQuoteRight size={size + 'rem'} color={useColorModeValue(customTheme.colors.brand['500'], customTheme.colors.brand['600'])} />
       )}
     </Box>
   )

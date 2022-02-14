@@ -1,30 +1,27 @@
 import { Page } from '../@layout/Page'
 import {
-  Text,
-  Flex,
-  Heading,
-  CircularProgress,
-  CircularProgressLabel,
-  Wrap,
-  WrapItem,
-  Center,
-  Skeleton,
-  VStack,
-  SkeletonCircle,
-  Box,
-  Button,
-  useColorModeValue,
   Alert,
   AlertIcon,
-  Link
+  Box,
+  Button,
+  Center,
+  CircularProgress,
+  CircularProgressLabel,
+  Flex,
+  Heading,
+  Link,
+  Skeleton,
+  SkeletonCircle,
+  Text,
+  useColorModeValue,
+  VStack,
+  Wrap,
+  WrapItem
 } from '@chakra-ui/react'
 import * as React from 'react'
 import { ProfileDTO, RoleType } from 'types/dto/profile'
-import axios from 'axios'
-import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { LinkButton } from '../@commons/LinkButton'
-import { useServiceContext } from '../../utils/useServiceContext'
 import { useAuthContext } from 'utils/useAuthContext'
 import { Helmet } from 'react-helmet'
 import { PresenceAlert } from 'components/@commons/PresenceAlert'
@@ -80,22 +77,11 @@ export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
 }
 
 export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
-  const [profile, setProfile] = React.useState<ProfileDTO | undefined>(undefined)
-  const { throwError } = useServiceContext()
-  const { logout } = useAuthContext()
+  const { logout, profile, updateProfile } = useAuthContext()
 
   React.useEffect(() => {
-    axios
-      .get<ProfileDTO>(`${API_BASE_URL}/api/profile`)
-      .then((res) => {
-        if (res.status === 200) {
-          setProfile(res.data)
-        }
-      })
-      .catch(() => {
-        throwError('Nem sikerült lekérdezni a profilt.')
-      })
-  }, [setProfile])
+    updateProfile()
+  }, [])
 
   if (profile === undefined)
     return (
@@ -118,16 +104,23 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
               Admin panel
             </LinkButton>
           )}
+          {profile?.groupSelectionAllowed && (
+            <LinkButton colorScheme="brand" href="/profil/tankor-modositas">
+              Tankör módosítása
+            </LinkButton>
+          )}
           <Button colorScheme="brand" variant="outline" onClick={logout}>
             Kijelentkezés
           </Button>
         </VStack>
       </Flex>
-      <Alert status="info" variant="left-accent" mt={5}>
-        <AlertIcon />
-        Ha a tanköröd nem helyes, akkor az infópultnál állíttasd át a megfelelőre! A sikeres tanköri jelenlétről csak a jelzett tankör
-        tankörvezét fogjuk értesíteni.
-      </Alert>
+      {!profile?.groupSelectionAllowed && (
+        <Alert status="info" variant="left-accent" mt={5}>
+          <AlertIcon />
+          Ha a tanköröd nem helyes, akkor az infópultnál állíttasd át a megfelelőre! A sikeres tanköri jelenlétről csak a jelzett tankör
+          tankörvezét fogjuk értesíteni.
+        </Alert>
+      )}
       <PresenceAlert
         acquired={profile.tokens.filter((token) => token.type === 'default').length}
         needed={profile.minTokenToComplete}
@@ -144,7 +137,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                 fontWeight={500}
                 _hover={{
                   textDecoration: 'none',
-                  color: 'brand.500'
+                  color: useColorModeValue('brand.500', 'brand.600')
                 }}
               >
                 Bucketlist
@@ -180,7 +173,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                           width="70%"
                           mx="auto"
                           borderRadius="20%"
-                        ></Box>
+                        />
                       </CircularProgressLabel>
                       <CircularProgressLabel color={useColorModeValue('yellow.400', 'yellow.500')} pt="2.5rem">
                         {Math.round(submittedPercent(profile))}%
@@ -203,7 +196,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                   fontWeight={500}
                   _hover={{
                     textDecoration: 'none',
-                    color: 'brand.500'
+                    color: useColorModeValue('brand.500', 'brand.600')
                   }}
                 >
                   {challenge.name}

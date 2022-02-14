@@ -1,5 +1,5 @@
 import { Flex, Heading, HStack, Image, Link, Tag, Text, Wrap, WrapItem } from '@chakra-ui/react'
-import { Paragraph } from 'components/@commons/Basics'
+import { Paragraph } from 'components/@commons/Paragraph'
 import { Page } from 'components/@layout/Page'
 import { DEVS } from 'content/devs'
 import { GITHUB_ORG_URL, KIRDEV_URL } from 'utils/configurations'
@@ -53,7 +53,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = () => {
         </Link>{' '}
         vagy keress fel minket a kir-dev standnál!
       </Paragraph>
-      <Paragraph>Az alaklamazás a KSZK Kubernetes clusterjében fut, köszönjük az erőforrást és a segítséget nekik ezúton is!</Paragraph>
+      <Paragraph>Az alkalmazás a KSZK Kubernetes clusterjében fut, köszönjük az erőforrást és a segítséget nekik ezúton is!</Paragraph>
     </Page>
   )
 }
