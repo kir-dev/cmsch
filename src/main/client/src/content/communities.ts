@@ -508,7 +508,7 @@ export const COMMUNITIES: Community[] = [
     ],
     // imageIds:'https://drive.google.com/open?id=1ujcxORRvzwjcQkMsHSc3cr4BPHSu_oow, https://drive.google.com/open?id=1dUnWBGDzFDRmc0PKAPij6AADmUiqwjlM, https://drive.google.com/open?id=1w3ypu9qW6Iua6Hsw88NgVYzcS52ZTlKa, https://drive.google.com/open?id=1eJh6Uk-w67ej3jfUy22A1lYFsOo4RcNt, https://drive.google.com/open?id=10XncmycHFF428r2-Un1UIWEa_rYGF0QM',
     // videoIds: 'https://drive.google.com/file/d/19hPpM99N35cS5K_nDJGX0mO_Q_GAJ50V/view?usp=sharing',
-    website: 'fb.com/SchLevelUp',
+    website: 'https://fb.com/SchLevelUp',
     application: 'https://forms.gle/HdrTdvnwPy9e8RMS6',
     established: '2018',
     email: 'levelup@sch.bme.hu',
@@ -989,7 +989,7 @@ export const COMMUNITIES: Community[] = [
       is tartani, a félév elején Gatyábarázót, a szorgalmi időszak végén pedig Búfelejtő
       Szakesteket. Ezeknek a célja pusztán a szórakoztatás.`
     ],
-    website: 'szakest.sch.bme.hu',
+    website: 'https://szakest.sch.bme.hu',
     established: '2001',
     email: 'vik-szakest@sch.bme.hu',
     members: 50,
