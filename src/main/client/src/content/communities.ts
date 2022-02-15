@@ -177,6 +177,7 @@ export const COMMUNITIES: Community[] = [
       a képességeinek megfelelő elfoglaltságot.`
     ],
     resortId: 'kszk',
+    application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/devteam.svg'
   },
   {
@@ -354,6 +355,7 @@ export const COMMUNITIES: Community[] = [
     (rosszabb napjain) napi ötezer oldalmegtekintést produkáló rendszer karbantartásától, fejlesztésétől.`
     ],
     resortId: 'kszk',
+    application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/hat.svg'
   },
   {
@@ -610,6 +612,7 @@ export const COMMUNITIES: Community[] = [
       tényező tud lenni, amivel kevés frissen végzett hálózati szakember rendelkezik.`
     ],
     resortId: 'kszk',
+    application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/neteam.svg'
   },
   {
@@ -780,6 +783,7 @@ export const COMMUNITIES: Community[] = [
       minden ősszel rendezünk meg, a Wargame.`
     ],
     resortId: 'kszk',
+    application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/securiteam.svg'
   },
   {
@@ -857,6 +861,7 @@ export const COMMUNITIES: Community[] = [
       ne csüggedj: az előismeret nem követelmény, a lelkesedés igen.`
     ],
     resortId: 'kszk',
+    application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/sysadmin.svg'
   },
   {

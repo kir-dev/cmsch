@@ -31,13 +31,15 @@ const challenges = (profile: ProfileDTO) => [
     name: 'Riddle',
     completed: profile?.completedRiddleCount,
     total: profile?.totalRiddleCount,
-    link: '/riddleok'
+    link: '/riddleok',
+    percentage: profile?.totalRiddleCount === 0 ? 0 : (profile?.completedRiddleCount / profile?.totalRiddleCount) * 100
   },
   {
     name: 'QR kód',
     completed: profile?.tokens?.length,
     total: profile?.totalTokenCount,
-    link: '/qr'
+    link: '/qr',
+    percentage: profile?.totalTokenCount === 0 ? 0 : (profile?.tokens?.length / profile?.totalTokenCount) * 100
   }
 ]
 
@@ -203,11 +205,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
               <CircularProgress
                 color={useColorModeValue('brand.500', 'brand.600')}
                 size="10rem"
-                value={(challenge.completed / challenge.total) * 100}
+                value={challenge.percentage}
                 trackColor={useColorModeValue('gray.200', 'gray.700')}
               >
                 <CircularProgressLabel color={challenge.completed === 0 ? 'gray.500' : useColorModeValue('brand.500', 'brand.600')}>
-                  {Math.round((challenge.completed / challenge.total) * 100)}%
+                  {Math.round(challenge.percentage)}%
                 </CircularProgressLabel>
               </CircularProgress>
             </Flex>
