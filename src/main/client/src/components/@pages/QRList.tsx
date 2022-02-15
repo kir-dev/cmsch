@@ -79,15 +79,22 @@ export const QRList: React.FC = (props) => {
         Eddig beolvasott kódok: {progress.acquiredTokenCount} / {progress.totalTokenCount}
       </Heading>
       <Progress hasStripe colorScheme="brand" mt="1" value={calculate_progress(progress.acquiredTokenCount, progress.totalTokenCount)} />
-
-      <Heading as="h4" size="md" mt="5">
-        Ahol eddig jártál
-      </Heading>
-      <Stack spacing="5" mt="1">
-        {progress.tokens.map((token, i) => {
-          return <StampComponent key={i} title={token.title} type={token.type} />
-        })}
-      </Stack>
+      {progress.tokens.length > 0 ? (
+        <>
+          <Heading as="h4" size="md" mt="5">
+            Ahol eddig jártál
+          </Heading>
+          <Stack spacing="5" mt="1">
+            {progress.tokens.map((token, i) => {
+              return <StampComponent key={i} title={token.title} type={token.type} />
+            })}
+          </Stack>
+        </>
+      ) : (
+        <Heading as="h4" size="md" mt="5">
+          Még nem szereztél pecsétet
+        </Heading>
+      )}
     </Page>
   )
 }

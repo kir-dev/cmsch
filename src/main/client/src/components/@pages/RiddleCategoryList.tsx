@@ -72,28 +72,34 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
       <Helmet title="Riddleök" />
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">
-        {riddleCategoryList.map((riddleCategory) => (
-          <Box
-            key={riddleCategory.categoryId}
-            bg={bg}
-            px={6}
-            py={2}
-            borderRadius="md"
-            _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700'), cursor: 'pointer' }}
-            onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
-          >
-            <Flex align="center" justifyContent="space-between">
-              <Text fontWeight="bold" fontSize="xl">
-                {riddleCategory.title}
-              </Text>
-              <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
-                <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
-                  {riddleCategory.completed} / {riddleCategory.total}
-                </Text>
+        {riddleCategoryList.length > 0 ? (
+          <>
+            {riddleCategoryList.map((riddleCategory) => (
+              <Box
+                key={riddleCategory.categoryId}
+                bg={bg}
+                px={6}
+                py={2}
+                borderRadius="md"
+                _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700'), cursor: 'pointer' }}
+                onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
+              >
+                <Flex align="center" justifyContent="space-between">
+                  <Text fontWeight="bold" fontSize="xl">
+                    {riddleCategory.title}
+                  </Text>
+                  <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
+                    <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
+                      {riddleCategory.completed} / {riddleCategory.total}
+                    </Text>
+                  </Box>
+                </Flex>
               </Box>
-            </Flex>
-          </Box>
-        ))}
+            ))}
+          </>
+        ) : (
+          <Text>Nincs egyetlen riddle feladat se.</Text>
+        )}
       </VStack>
     </Page>
   )
