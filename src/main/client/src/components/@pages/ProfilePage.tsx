@@ -44,11 +44,13 @@ const challenges = (profile: ProfileDTO) => [
 type ProfilePageProps = {}
 
 function submittedPercent(profile: ProfileDTO) {
-  return (profile.submittedAchievementCount / profile.totalAchievementCount) * 100
+  let res = (profile.submittedAchievementCount / profile.totalAchievementCount) * 100
+  return isNaN(res) ? 0 : res
 }
 
 function completedPercent(profile: ProfileDTO) {
-  return (profile.completedAchievementCount / profile.totalAchievementCount) * 100
+  let res = (profile.completedAchievementCount / profile.totalAchievementCount) * 100
+  return isNaN(res) ? 0 : res
 }
 
 //Had to create a separate skeleton layout so it wouldn't look strange
