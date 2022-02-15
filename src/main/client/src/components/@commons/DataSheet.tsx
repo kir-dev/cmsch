@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Flex, Heading, HStack, Image, Tag, VStack, Wrap } from '@chakra-ui/react'
+import { Box, Flex, Heading, HStack, Image, Link, Tag, VStack, Wrap } from '@chakra-ui/react'
 import { Paragraph } from './Paragraph'
 import { Organization } from '../../types/Organization'
 import { EditIcon, LinkIcon } from '@chakra-ui/icons'
@@ -31,7 +31,7 @@ export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
             )}
             {organization.email && (
               <DataField icon={<FaAt />} label="E-mail">
-                <Box>{organization.email.replace('@', '[at]')}</Box>
+                <Link href={`mailto:${organization.email}`}>{organization.email}</Link>
               </DataField>
             )}
             {organization.members && (
