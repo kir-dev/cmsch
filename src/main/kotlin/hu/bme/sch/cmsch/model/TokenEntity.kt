@@ -30,21 +30,21 @@ data class TokenEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Token")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat(ignore = false, columnId = 1)
     var token: String = "",
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Beolvasható-e a token")
     @property:GenerateOverview(columnName = "Olvasható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_BOOLEAN)
+    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
     var visible: Boolean = false,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 4, label = "Típus")
     @property:GenerateOverview(columnName = "Típus", order = 3)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat(ignore = false, columnId = 3)
     var type: String = "",
 
 ): ManagedEntity {
