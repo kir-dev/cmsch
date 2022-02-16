@@ -42,7 +42,7 @@ class MainController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "2.6.1"
+    fun version(): String = "2.6.2"
 
     @ResponseBody
     @GetMapping("/time")
