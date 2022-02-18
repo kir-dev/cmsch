@@ -39,13 +39,26 @@ export const RESORTS: Organization[] = [
       szerezhetsz gyakorlatban is hasznosítható tudást és sok új barátot. További információk és jelentkezés az
       ujonc.kszk.bme.hu oldalon.`
     ],
-    // images: 'https://drive.google.com/drive/folders/1xoMzH5_pjYBGYwwIShrRkJeQp1Mu4meg?usp=sharing',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ddf2a6728e2b0df80069f274309d7f263015cfd7/20210806_164604_sfphoton.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f5727fcffd73caca1037c8e14ac6bb1d5a506683/IMG_1497.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9283898f820245207dc9363f8786048db315a34d/IMG_20200216_191018.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZU09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--4866402588c16d1cbe1f32d58fca051ae5871e61/IMG_20200308_220037.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZVU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--4b17c9455823e5b8583a9c76177f9c6838c42036/IMG_20210625_144241.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZVk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--48bfe11a370b64430d213ec6c5821555b77b7e6c/IMG_20210705_200340.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZVE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--427f98ff0ab680cefd4b961b484fca3b52efe11c/IMG_20210625_120605.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZWM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b403113366e283767fb38996a8ad209a62a75d06/IMG_20210827_163243.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZW89IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fe0c55ba7f99607a31f36232281648cbb27e68a1/tabor-64.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZWs9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--81c72115c38097f1f1893fa242027fc1dd2e8e21/IMG_20210829_174125.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d6fd36cfdecf41d603bb37acf510ab375f76a121/20210715_230831.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZWc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3ef5e1abd8642c4eaa5b68770f12bcedcb39e4ef/IMG_20210827_200520.jpg'
+    ],
     website: 'https://kszk.bme.hu',
     application: 'https://ujonc.kszk.bme.hu',
     established: '1976',
     email: 'kszk@sch.bme.hu',
     members: 70,
-    interests: ['Szolgáltatások', 'szerver üzemeltetés', 'SCHNet üzemeltetés', 'vik.wiki üzemeltetés/fejlesztés', 'számítógépes biztonság'],
+    interests: ['szolgáltatások', 'szerver üzemeltetés', 'SCHNet üzemeltetés', 'vik.wiki üzemeltetés/fejlesztés', 'számítógépes biztonság'],
     logo: '/img/communities/kszk.svg'
   },
   {
