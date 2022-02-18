@@ -35,7 +35,12 @@ export const COMMUNITIES: Community[] = [
     logo: '/img/communities/kirdev.svg',
     darkLogo: '/img/communities/kirdev-white.svg',
     color: 'orange',
-    // imageIds: ['https://kir-dev.sch.bme.hu/static/694736fc08b01fcbab76646a0b403c64/678ad/pek-next.webp'],
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBRZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--8c0201879b26e0649ca7ca7c6728c8a9cea28529/kir-dev-simonyi-szulinap.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBSQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--8cec0c76ed80e7d138a6236a13ef1eccd7ba724a/kir-dev-at-simonyi-szulinap-table.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--219692dc85b16c4d08e17aef4d357312b8c14aa8/20210718_095824_talli.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--278668d7c14e082c2921e599742295eb0292f74f/20210814_145833_vince.jpg'
+    ],
     // videoIds: ['sY-s7O0FiYE', 'HA55hFBE32M'],
     searchKeywords: ['legjobb', 'web', 'programozás']
   },
@@ -51,17 +56,17 @@ export const COMMUNITIES: Community[] = [
     melyet ki is szoktunk használni DJ-s bulikon és koncerteken. Ha a fentiek közül
     bármelyik is érdekel, akkor nálunk a helyed!`
     ],
-    // imageIds: [
-    //   '1hXrMKKFOOnm2AqRJSPmNRKzWLJLTGBoq',
-    //   '1sdcfII-YOSwqGVXm087QTypnAAHQuEc8',
-    //   '1A1vB3Z0YbdKVbpEpeWP8NO7mHpZ_RQcH',
-    //   '16PSRo7QI9Q9EIKcEi49dS06KQFd0t-aV',
-    //   '1r9IK70s5dqIkS0uicZ-wgt9XsmBKi5du',
-    //   '1Sk2nMZg2rxuTj8OpFmkff_lX4hKuuzIq',
-    //   '1Z49XOAg7wB3joEEs4sfQpwwjRsueQD-c',
-    //   '1GlPbVhcOB4xQI77gJ9UxBsUTJ8VfDnRj'
-    // ],
-    // videoIds: ['1CT5t9oOoUBcHeGtD09oA-v1WB7_yB7oi'],
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZGM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6bccc6704427dbd360adfd746f105fd611eb8f95/AC_1%20-%20%C3%81kos%20Imre%20Kis.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZGc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--09fc62e11a3893a287b49c1d004f022e37fb0f3d/AC_2%20-%20%C3%81kos%20Imre%20Kis.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--8fde3e3dfa6651ec3fd7afe7b6ecd01b3aaef65a/AC_7%20-%20%C3%81kos%20Imre%20Kis.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZGs9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--49cb1d60207fcb4851318b340aeffd143cca6df9/AC_3%20-%20%C3%81kos%20Imre%20Kis.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--407488dbd6c341cd785ac7e0839507241866465d/AC_8%20-%20%C3%81kos%20Imre%20Kis.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZG89IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9b332ee1dcb11ba6568b52ef11db67195b2d47fd/AC_4%20-%20%C3%81kos%20Imre%20Kis.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZHM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--038dfd43da7a84f46c0617f1a7cd113ab2ed922b/AC_5%20-%20%C3%81kos%20Imre%20Kis.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZHc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--8750a90b3e5dc041b2c9040335d9ee21984baa44/AC_6%20-%20%C3%81kos%20Imre%20Kis.jpg'
+    ],
+    videoIds: ['1CT5t9oOoUBcHeGtD09oA-v1WB7_yB7oi'],
     website: 'https://acstudio.sch.bme.hu/',
     established: '1993',
     email: 'ac-info@simonyi.bme.hu',
@@ -133,7 +138,9 @@ export const COMMUNITIES: Community[] = [
       az operatőri folyamatokon át, a krimpelőfogó helyes használatáig számtalan területen tevékenykedünk.`,
       `Ha fognál valami igazán nagyot a kezedben, és minden álmod, hogy az egy tévés kamera legyen, akkor várunk Téged is!`
     ],
-    // imageIds: 'https://drive.google.com/open?id=1OeWFasde1C46GprP_RUyW91hs8mWwLV5',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWXc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f11eb24b3be09e71248ede0ee8c4ca805d00a2ed/1.jpg'
+    ],
     // videoIds: 'https://drive.google.com/file/d/1NisXkGOasXq9mwtJjIRuNq3cmZFOcKbm/view?usp=sharing',
     website: 'https://bsstudio.hu/',
     application: 'https://bsstudio.hu/tanfolyamok',
@@ -289,7 +296,12 @@ export const COMMUNITIES: Community[] = [
       `Ízelítő az aktuális projektekből: kereszt-Yagi antenna és antennaforgató műholdazáshoz,
       FPGA vevő rövidhullámra, SSTV-SSDV átjátszóállomás, HamNet vezeték nélküli internet hálózat és még sok más.`
     ],
-    // imageIds: 'https://drive.google.com/drive/folders/1PNF6eOaIRk86nrcp3VAT5I5rZAX4Nrsq?usp=sharing',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWTA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e6cd21e3e64f259f5ed8ff6dbbeb4fc9950051a0/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWTQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9853d2b0a41ec6d64722c613ec39a74972ac46c6/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWTg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--99248526c0899eae9678f6801f9190b7b5b37985/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWkE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4e525f7aabd9219044195fb6757741d6d1a1797/4.jpg'
+    ],
     // videoIds: 'https://drive.google.com/file/d/1V_7RYcnd_BfhkihuvLI_UtS8ComPKmC0/view?usp=sharing',
     website: 'https://ha5kfu.hu/',
     application: 'https://forms.gle/AjPcphBbdoWHejcP7',
@@ -316,7 +328,12 @@ export const COMMUNITIES: Community[] = [
       a szabályzat-rengetegben. Ennek köszönhetően egy idő után könnyen kiismerjük magunkat a
       szabályzatokban, így az egyedi kérdésekre is tudunk válaszolni.`
     ],
-    // imageIds:'https://drive.google.com/open?id=1C-ZYsCrTGpCaKXXyzblSX6LNE9gBMEA8, https://drive.google.com/open?id=1TQCDHdd2FIlGC5eiqLkhINr1F0EtiUFp, https://drive.google.com/open?id=1E_yXtsA9SAYXG8uLMsUr_Q_llS5IynQe, https://drive.google.com/open?id=1kMTml7QWe4TN2apmfe_6S2hRgGPZMO1s, https://drive.google.com/open?id=1FO4TwK1mkEYy3Tpko8ibZySgp8KuyXg9',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWkU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--8011cb66d3a66e1c4e671dc4263341d44187ce54/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWkk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aa29dd2a3f4fe29300c403e491daf4fa2c8272f7/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWk09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--068339f9cdb904c40f52175569fdec5d22fe8942/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWlE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d51536481dbe16654ffb8544b59cd401e6208647/4.jpg'
+    ],
     website: 'https://vik.hk/',
     application: 'https://vik.hk/ujonckepzes-jelentkezes/',
     established: '1993',
@@ -372,7 +389,9 @@ export const COMMUNITIES: Community[] = [
     erre láthattátok már példának a Qpa utáni számokat és a téli kiadást is. Mindezt 1971 óta, az
     ország egyik legrégebbi és több díjat is nyert diákújságjaként tesszük.`
     ],
-    // imageIds: 'https://drive.google.com/file/d/1i5B37vSAZTcuGVkR393szEb2-9di7YrU/view?usp=sharing',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWlU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cd63773679a8f49fffc81bf0360213c853ff8c45/1.jpg'
+    ],
     website: 'http://www.impulzus.com/',
     application: 'https://forms.gle/MkPjaE3roXBh6K739',
     established: '1971',
@@ -391,7 +410,36 @@ export const COMMUNITIES: Community[] = [
       Ha érdekelnek a társasjátékok és keresel jófej, vicces és befogadó közösséget
       (akikkel szinte bármikor társasozhatsz) akkor jelentkezz hozzánk 😃`
     ],
-    // imageIds: 'https://drive.google.com/open?id=1EAzLJk4L4nINmfPs9s6qzeNTHq9MWG06',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWlk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--62a2c120f2c269930b28c61eeb71f351505ec762/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWmM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--41b7537ef428df258078331d746a56eaab2a16e7/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWmc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2fbf3be17c816f9444c4824ec46268446dcc2c9a/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWms9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--eb25a54b1c06aa43f60f680ee78008f0aa80d788/4.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWm89IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--4f2a7cb7e761d3ebb0e3c5378836f12bbb7d9087/5.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWjA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--1ef4fe7af3c5c193909ef623112402d1c768ea30/8.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWjQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d0d1f6bc97255fe9c4505e06351e0edbf3c8873f/9.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWnc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--346ef1a54781e7fd3f42d382e24264899da35e5f/7.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWjg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--59c78f6fffaf4dbf4c5b9c227ba1715966ea4692/10.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWnM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ffd866c56aee4e361e01a6d499b915b7bb3fcd68/6.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYUE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e9d0c5ab560d73da80c750e76f0a908400c216fb/11.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYUk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3f466b7336601b38edd15f42615ea42fede00d27/13.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYUU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2c0299c0c0e3c45648c9a4fd914b8a1a295fd842/12.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYU09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--8d6f5c735ebed42bf842794fe98a1a8d6c38e7cd/14.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYVE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6cfa3233402e02954e85822240c446e09e08da60/15.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYVU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--dde01dd73b48d29a9507099d5ca788b7e842b395/16.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYWM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--83062fda948a2539ca3ac689358d2ab474b02a46/18.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYVk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ff0dfaed4d25c499f8ff1f2fa819bc6a074c46b1/17.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYW89IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fc51f0fd71d053b3cafaad1d30e08207734ee638/21.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYWs9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--40e8f2fc445fcb1447570c45664a77bc3a5d58b0/20.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYWc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b88ccab034389ab2fed660d0bc8960a59d0e0836/19.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYXc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3b9b7997c4480f0ccbd2d97586faddc9f0145e34/23.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYTQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--557c9e0b327b2cfc70464d0233385bdaf58f1a71/25.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYTA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d533babea102a82a928dc5dbd8b983e87e096952/24.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYTg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f15e338828dbe470ccdc72bc964bc66191af6c8a/26.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYXM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cd9de690b3668363bd540094ef08fb0c76a94f3d/22.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYkU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--1006fdf1437308d9ad519db2d5a047ddc2b1fe7e/28.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYkE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57851c03ef662c46ac4509a4ab03e037a128d85c/27.jpg'
+    ],
     // videoIds: 'https://drive.google.com/file/d/1IMp61Q7CwWN9x8JV1YE-BEX8Z14-LG0z/view?usp=drivesdk',
     website: 'https://jatszohaz.sch.bme.hu/news/',
     application: 'https://forms.gle/DJwK9nYicrFeKLtm7',
@@ -444,7 +492,14 @@ export const COMMUNITIES: Community[] = [
       `Twitch: https://twitch.tv/lanosch`
     ],
     established: '2012',
-    // imageIds:'https://drive.google.com/open?id=1qOsfLkx5xWsk6__G1CQzdzIEyL5q_4yx, https://drive.google.com/open?id=1Hchdl-TZmguPVn7z4-Gj-o2NQ-MvaHg5, https://drive.google.com/open?id=1cQZBHWqdR1s5_z08fu8P29RsDQOIALG2, https://drive.google.com/open?id=1kaXhzKWDGZ2jMtEy1JXZ35scTrDPzZnJ, https://drive.google.com/open?id=1ADV0IVl-WRmpuXMuO2lziOTEAujdmc0-, https://drive.google.com/open?id=19oGFbdLB_pVJ1HLIy71xfJU1VHhCHPwt',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYkk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--306a7af5c6fd86b0dd5ae166a023f6afbc17b0fa/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYmM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ffe1ed451a6c1c7b40cb26f33800516f62b59587/6.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYk09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--94e03b262f2891fbc8bc7161ff4cc2c744dd1b8a/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYlE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6b2d34c856359e2e2915461d5b02f9a310d30de2/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYlU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3cdb3547d2df2d06681c585704193c4a0de1f9e4/4.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYlk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a12c992b2a0379cbccbbbef9ee4e73a209b0ac88/5.jpg'
+    ],
     resortId: 'bulis',
     facebook: 'fb.com/lanoschbme',
     instagram: 'instagram.com/lanosch.gaming',
@@ -482,7 +537,15 @@ export const COMMUNITIES: Community[] = [
       relevánsabb fejlesztéseket tudunk végezni. Az egyetemi elméleti oktatást kiegészítve lehetőségetek van a
       gyakorlatban is kipróbálni az előadásokon tanultakat, legyetek akár villanyos, akár infós érdeklődésűek.`
     ],
-    // imageIds: 'https://drive.google.com/drive/folders/1wehgp5EM5ahmIdtg4E_IEEwmrd4NAfRA?usp=sharing',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYmc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--59b8715ccf639ebac93d02b251e71f89f806820e/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYjQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c79e58333c17e3151f917105bfb9f87f889fd348/7.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYms9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--81776258bc5228fc52c12c9f8cf18615fce65faf/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYm89IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--97624d84ab5ebfad247d6d5541fbcd321203fddd/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYjA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--772be94bd2189d6c78d47c65385192533d7b29f0/6.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYnM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c783d969552f49eb58cb2bc22bb3986f6df15ea7/4.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYnc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d8671e422fc39ca6ce8947e50cafdf7515c5659d/5.jpg'
+    ],
     // videoIds: 'https://drive.google.com/file/d/19WuAkBVK6IsILqrOGUynM0GvBTxJhpIL/view?usp=sharing',
     website: 'https://legokor.hu/',
     application: 'https://legokor.hu/tanfolyam/',
@@ -504,7 +567,13 @@ export const COMMUNITIES: Community[] = [
     csapat tagja lehetsz, és nem utolsó sorban életreszóló élményekben lehet részed. Ha felkeltettük az
     érdeklődésed, akkor jelentkezz a LevelUp csapatába!`
     ],
-    // imageIds:'https://drive.google.com/open?id=1ujcxORRvzwjcQkMsHSc3cr4BPHSu_oow, https://drive.google.com/open?id=1dUnWBGDzFDRmc0PKAPij6AADmUiqwjlM, https://drive.google.com/open?id=1w3ypu9qW6Iua6Hsw88NgVYzcS52ZTlKa, https://drive.google.com/open?id=1eJh6Uk-w67ej3jfUy22A1lYFsOo4RcNt, https://drive.google.com/open?id=10XncmycHFF428r2-Un1UIWEa_rYGF0QM',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYjg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d89fbfc256e48398675bc93ac2b82506151c85bd/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY0E9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b3bb9c923a1b27ce17997f2478c7ad44aa8f29a4/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY0U9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2470ffcb3c7f690f31973b0b7788afc77ca6146b/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY0k9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cf8e04e9440db02d107064aed83fb42a89cda699/4.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY009IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2521264c262c6b00a97239d9bbce4ad8a22fdfb4/5.jpg'
+    ],
     // videoIds: 'https://drive.google.com/file/d/19hPpM99N35cS5K_nDJGX0mO_Q_GAJ50V/view?usp=sharing',
     website: 'fb.com/SchLevelUp',
     application: 'https://forms.gle/HdrTdvnwPy9e8RMS6',
@@ -640,9 +709,20 @@ export const COMMUNITIES: Community[] = [
       `Alapítás éve: 2004`,
       `Körvezető: Melik Gábor (Apuci)`
     ],
-    // imageIds:'https://drive.google.com/open?id=1DptHvN48aZ3CKB7xhWgYYWD8dTZdb272, https://drive.google.com/open?id=1K5BosVlqUYYJFqD2ES_56inhqG3cRqT_, https://drive.google.com/open?id=1wzDXFn8134cOIZ_G9hxc0K4MK976_LKa, https://drive.google.com/open?id=1gNWxuizsX5y5XReS2gFF0H5X66lOwSUE, https://drive.google.com/open?id=1catZMbo5rh_YI3nESqYs6HU3a0v5kOT2, https://drive.google.com/open?id=19ttK9ed1EtjVmSyqlgLR0FKu27zkj0Y2, https://drive.google.com/open?id=1zF9rrhYZvWGQDjD_YXyUPrTsz-E_OcWj, https://drive.google.com/open?id=1KBHKImAoDPu4vdlOGtCAF-Rwz7JXApGP, https://drive.google.com/open?id=12LdnE-WpFDIJzLq1Tt3JbyfO9TfCMqx5, https://drive.google.com/open?id=1a2XJGqyvp0UhfCWaodvfYjwRjAuEUkVW',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY1E9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f0f492525aeeb44f78c508430d5d174fb4cbd699/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY289IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f6a540d49431aea6de26762f09029a6eb977a125/7.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY1U9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f41f14885a8d544153a34557cb099b3eeb218329/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2s9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ff1c387644532e2c6c5a3f9aaaafb3a166358c1f/6.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY1k9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cd674273c68e6e4e5867b46e60c8e8f0db2d05f3/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY3M9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--81bf0c7ec82ee0490f5a1d827f6cd6b5e74bab9b/8.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2M9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e6a9a6c9634edaeee1f45d99dcf45cba2b49635f/4.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYzA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--07f495d981a9db9ac5c7e35add9b1134de7ad6ae/10.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2c9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3a8ea104e62facbb4986d97b9d5f48873fa2399b/5.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY3c9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--559a166f5648ea7cf5dd934f53d28dd893fcee4f/9.jpg'
+    ],
     // videoIds: 'https://drive.google.com/file/d/1k2cNoONyho8Zg_AErnhLiwLVrdMoIeeW/view?usp=sharing',
-    website: 'http://pizzasch.sch.bme.hu/',
+    website: 'https://pizzasch.sch.bme.hu/',
     established: '2004',
     interests: ['pizzát sütünk'],
     resortId: 'szor',
@@ -650,7 +730,7 @@ export const COMMUNITIES: Community[] = [
   },
   {
     id: 'reggelisch',
-    name: 'reggelisch',
+    name: 'Reggelisch',
     descriptionParagraphs: [
       `Lelkes tagjaink már 2018 ősze óta várják minden héten a reggelizni vágyó
       éhes egyetemistákat. Kínálatunkban megtalálható a rántotta, a bacon, a
@@ -733,7 +813,17 @@ export const COMMUNITIES: Community[] = [
       céges tárgyalások keretein belül. Megismerhetitek milyen szakmai eseményeket
       szervezni, illetve lehetőségetek van levezényelni egy MeetUpot.`
     ],
-    // imageIds: 'https://drive.google.com/drive/folders/1Y6ZgtqqXEgCLkwL2Ip1YB_N9iIGEUjCn?usp=sharing',
+    imageIds: [
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYzQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b6bdee80739522945e1be9e58b23109c8adac632/1.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZE09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a1e2f92fcf9859fb9e78565cb2e7059f1060c328/6.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYzg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9df09f720c8d773d4886593c6bc0aa8955811a0f/2.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZFk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3a2272d396a161a4245aedc9fb2b745bfdbd63cf/9.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZEE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--0eddeaf565e11b638c288b5b08018a4517fde26c/3.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZEU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--923633acd0838e7b50115dff21979cafb511b8d2/4.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZFU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--94e1fe95a103217b942dab3a5077285809d90d04/8.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZEk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f0622a1ad8d5ad98f903e24b36bf7f73986daa76/5.jpg',
+      'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZFE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2976f821bdb30163e27b7f18327284c2db2a651c/7.jpg'
+    ],
     // videoIds: 'https://drive.google.com/file/d/135UMGzoKn9Ke1cb6kfjpuSVPVkukYOkh/view?usp=sharing',
     application: 'https://docs.google.com/forms/d/1Pj7NvO2JJWieO80w8_vLQgVIz24cOiWZWaIeyqLics0/edit',
     established: '2003',
