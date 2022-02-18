@@ -6,6 +6,7 @@ export interface ProfileDTO {
   role: keyof typeof RoleType
   tokens: TokenDTO[]
   totalTokenCount: number
+  collectedTokenCount: number
   totalRiddleCount: number
   completedRiddleCount: number
   totalAchievementCount: number

@@ -36,10 +36,10 @@ const challenges = (profile: ProfileDTO) => [
   },
   {
     name: 'QR kód',
-    completed: profile?.tokens?.length,
+    completed: profile?.collectedTokenCount,
     total: profile?.totalTokenCount,
     link: '/qr',
-    percentage: profile?.totalTokenCount === 0 ? 0 : (profile?.tokens?.length / profile?.totalTokenCount) * 100
+    percentage: profile?.totalTokenCount === 0 ? 0 : (profile?.collectedTokenCount / profile?.totalTokenCount) * 100
   }
 ]
 

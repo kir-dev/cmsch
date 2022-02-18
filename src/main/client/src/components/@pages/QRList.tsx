@@ -41,7 +41,7 @@ export const QRList: React.FC = (props) => {
           tokens: profile.tokens,
           minTokenToComplete: profile.minTokenToComplete,
           totalTokenCount: profile.totalTokenCount,
-          acquiredTokenCount: profile.tokens.filter((token) => token.type === 'default').length
+          acquiredTokenCount: profile.collectedTokenCount
         })
         setLoading(false)
       })
