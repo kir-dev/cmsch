@@ -1109,5 +1109,24 @@ export const COMMUNITIES: Community[] = [
     interests: ['nyomtatás'],
     resortId: 'schonherz',
     logo: '/img/communities/kbpr.svg'
+  },
+  {
+    id: 'langosch',
+    name: 'Lángosch',
+    hideName: true,
+    descriptionParagraphs: [
+      `A LángoSCH 2017-ben kezdte pályafutását a 18. emeleti konyhában. Azóta próbáljuk megidézni a
+      strandok kellemes feelingjét kéthetente vasárnap a kollégiumban, eredeti házi recept alapján
+      készült lángosainkkal. Habár az állandó kínálat már kialakult, a kísérletezéstől sem riadunk
+      vissza. Mindenkit szívesen látunk!`
+    ],
+    website: 'https://schpincer.sch.bme.hu/langosch',
+    established: '2017',
+    email: 'langosch@googlegroups.com',
+    members: 17,
+    interests: ['lángoskészítés'],
+    color: 'yellow',
+    resortId: 'szor',
+    logo: '/img/communities/langosch.svg'
   }
 ]
