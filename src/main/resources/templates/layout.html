@@ -33,7 +33,7 @@
                 <div class="exit" onclick="document.getElementById('menu').style.display = 'none'">X</div>
                 <div class="separate"></div>
                 <h2>Általános</h2>
-                <a href="#" th:href="@{/admin/control/basics}"><span class="material-icons fix-icons">home</span> Kezdő menü</a>
+                <a href="#" th:if="${userEntity.isStaff() || userEntity.isAdmin()}" th:href="@{/admin/control/basics}"><span class="material-icons fix-icons">home</span> Kezdő menü</a>
                 <a href="#" th:href="@{/control/open-site}"><span class="material-icons fix-icons">launch</span> Oldal megyitása</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantMedia()}">PR</h2>
@@ -79,14 +79,14 @@
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}">Tankör</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantGroupDebtsMananger()}" th:href="@{/admin/control/debts-of-my-group}"><span class="material-icons fix-icons">account_balance</span> Tanköröm tartozásai</a>
-                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/members-of-my-group}"><span class="material-icons fix-icons">group</span> Tanköröm tagjai</a>
-                <a href="#" th:if="${userEntity.groupName != ''}" th:href="@{/admin/control/share-location}"><span class="material-icons fix-icons">share_location</span> Helymeghatározás</a>
+                <a href="#" th:if="${(userEntity.isStaff() || userEntity.isAdmin()) && userEntity.groupName != ''}" th:href="@{/admin/control/members-of-my-group}"><span class="material-icons fix-icons">group</span> Tanköröm tagjai</a>
+                <a href="#" th:if="${(userEntity.isStaff() || userEntity.isAdmin()) && userEntity.groupName != ''}" th:href="@{/admin/control/share-location}"><span class="material-icons fix-icons">share_location</span> Helymeghatározás</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}">Gazdaságis</h2>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts}"><span class="material-icons fix-icons">account_balance</span> Tartozások</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-group}"><span class="material-icons fix-icons">account_balance</span> Tankörök tartozásai</a>
                 <a href="#" th:if="${userEntity.isAdmin() || userEntity.getGrantFinance()}" th:href="@{/admin/control/debts-by-users}"><span class="material-icons fix-icons">account_balance</span> Felhasználók tartozásai</a>
-                <a href="#" th:href="@{/admin/control/my-debts}"><span class="material-icons fix-icons">account_balance_wallet</span> Saját tartozásaim</a>
+                <a href="#" th:if="${userEntity.isStaff() || userEntity.isAdmin()}" th:href="@{/admin/control/my-debts}"><span class="material-icons fix-icons">account_balance_wallet</span> Saját tartozásaim</a>
 
                 <h2 th:if="${userEntity.isAdmin() || userEntity.getGrantTracker()}">Admin</h2>
                 <a href="#" th:if="${userEntity.isAdmin()}" th:href="@{/admin/control/files}"><span class="material-icons fix-icons">folder</span> Fájlok</a>

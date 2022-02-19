@@ -32,7 +32,8 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/cdn/achievement/**",
                         "/api/token-after-login",
                         "/api/token/**",
-                        "/api/riddle/**")
+                        "/api/riddle/**",
+                        "/control/stamps")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")

@@ -67,6 +67,9 @@ export const GroupSelectionPage: React.FC = () => {
       <Alert status="warning" mt={10} variant="left-accent">
         <AlertIcon />A tanköröd módosítása után már nem tudod újra megváltoztatni.
       </Alert>
+      <Alert status="info" mt={5} variant="left-accent">
+        <AlertIcon />A VENDÉG jelentése: egyik tankörbe sem tartozol, ezért a tanköri jelenlétet sem fogják majd jóváírni!
+      </Alert>
       <form>
         <VStack spacing={5} mt={10} maxW={80} mx="auto">
           <FormControl>
