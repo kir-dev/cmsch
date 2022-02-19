@@ -40,7 +40,7 @@ export const CommunityList: React.FC<CommunityListProps> = () => {
         <InputLeftElement h="100%">
           <SearchIcon />
         </InputLeftElement>
-        <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} />
+        <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
       </InputGroup>
       <Paragraph>
         A karon számtalan öntevékeny kör működik, mindenki megtalálhatja az érdeklődési körének megfelelő csoportot. A körök a Schönherz

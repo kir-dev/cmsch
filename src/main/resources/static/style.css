@@ -80,6 +80,8 @@ h1 {
     width: 280px;
     font-weight: 400;
     padding: 0 20px 40px 0;
+    min-height: 100vh;
+    height: calc(100vh - 40px);
     box-shadow: 0 2px 4px rgb(15 34 58 / 12%);
 }
 

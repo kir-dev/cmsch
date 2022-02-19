@@ -1,7 +1,7 @@
 import { Page } from '../@layout/Page'
 import React, { useEffect, useState } from 'react'
 import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
-import { FaQrcode } from 'react-icons/fa'
+import { FaQrcode, FaStamp } from 'react-icons/fa'
 import { TokenDTO } from 'types/dto/token'
 import { Paragraph } from 'components/@commons/Paragraph'
 import { StampComponent } from 'components/@commons/StampComponent'
@@ -19,6 +19,7 @@ interface TokenProgress {
   minTokenToComplete: number
   acquiredTokenCount: number
   tokens: TokenDTO[]
+  groupName: string
 }
 
 export const QRList: React.FC = (props) => {
@@ -27,7 +28,8 @@ export const QRList: React.FC = (props) => {
     totalTokenCount: 0,
     minTokenToComplete: 0,
     acquiredTokenCount: 0,
-    tokens: []
+    tokens: [],
+    groupName: ''
   })
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -41,7 +43,8 @@ export const QRList: React.FC = (props) => {
           tokens: profile.tokens,
           minTokenToComplete: profile.minTokenToComplete,
           totalTokenCount: profile.totalTokenCount,
-          acquiredTokenCount: profile.collectedTokenCount
+          acquiredTokenCount: profile.collectedTokenCount,
+          groupName: profile.groupName
         })
         setLoading(false)
       })
@@ -70,6 +73,11 @@ export const QRList: React.FC = (props) => {
         <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href="/qr/scan">
           QR kód beolvasása
         </LinkButton>
+        {progress?.groupName === 'Kiállító' && (
+          <LinkButton colorScheme="brand" leftIcon={<FaStamp />} href="/control/stamps" external newTab={false}>
+            Pecsét statisztika
+          </LinkButton>
+        )}
       </ButtonGroup>
 
       <Heading as="h3" mt="10" size="lg">
