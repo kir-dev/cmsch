@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Box, Button, ButtonGroup, Flex, Image } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Flex, Image, useColorModeValue } from '@chakra-ui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { MapImage } from 'types/MapImage'
 
 type ImageCarouselProps = {
-  images: string[]
+  images: MapImage[]
 }
 
 export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
@@ -20,7 +21,14 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
   return (
     <Box marginTop={10}>
       {images.map((image, index) => (
-        <Image key={index} src={image} w="100%" maxH="50rem" objectFit="contain" display={index === currentImageIndex ? 'block' : 'none'} />
+        <Image
+          key={index}
+          src={useColorModeValue(image.light, image.dark)}
+          w="100%"
+          maxH="50rem"
+          objectFit="contain"
+          display={index === currentImageIndex ? 'block' : 'none'}
+        />
       ))}
       <Flex marginTop={5} justify="space-between">
         <DirectionButton direction={Directions.LEFT} onClick={previousImage} />
