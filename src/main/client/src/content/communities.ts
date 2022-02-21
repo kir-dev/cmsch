@@ -990,7 +990,7 @@ export const COMMUNITIES: Community[] = [
     ],
     // videoIds: 'https://drive.google.com/file/d/1QBJQFFHEK3FUA_5LV3dLL0caoH-pa1zb/view?usp=sharing',
     website: 'https://sssl.sch.bme.hu/',
-    application: 'kepzes.sch.bme.hu',
+    application: 'https://kepzes.sch.bme.hu',
     established: '1992',
     email: 'sssl@sch.bme.hu',
     members: 500,
