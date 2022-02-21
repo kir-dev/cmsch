@@ -9,6 +9,13 @@ import { EVENTS } from '../../content/events'
 import { Helmet } from 'react-helmet'
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa'
 import customTheme from '../../utils/customTheme'
+import { MapImage } from 'types/MapImage'
+
+const MAP_IMAGES: MapImage[] = [
+  { light: '/img/maps/I_light.png', dark: '/img/maps/I_dark.png' },
+  { light: '/img/maps/1_light.png', dark: '/img/maps/1_dark.png' },
+  { light: '/img/maps/SCH_light.png', dark: '/img/maps/SCH_dark.png' }
+]
 
 export const Home: React.FC = () => {
   return (
@@ -83,7 +90,7 @@ export const Home: React.FC = () => {
       <Heading as="h2" size="lg" textAlign="center" marginTop={20} id="terkepek">
         Térképek
       </Heading>
-      <ImageCarousel images={['/img/maps/bmei.png', '/img/maps/sch.png', '/img/maps/fnt.png']} />
+      <ImageCarousel images={MAP_IMAGES} />
     </Page>
   )
 }
