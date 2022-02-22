@@ -13,14 +13,18 @@ data class TopListAsUserEntryDto(
         override var name: String,
 
         @JsonView(value = [ Preview::class, FullDetails::class ])
-        @property:GenerateOverview(columnName = "BucketList", order = 2, centered = true)
+        @property:GenerateOverview(columnName = "Tankör", order = 2, centered = true)
+        var groupName: String,
+
+        @JsonView(value = [ Preview::class, FullDetails::class ])
+        @property:GenerateOverview(columnName = "BucketList", order = 3, centered = true)
         override var achievementScore: Int,
 
         @JsonView(value = [ Preview::class, FullDetails::class ])
-        @property:GenerateOverview(columnName = "Riddle", order = 3, centered = true)
+        @property:GenerateOverview(columnName = "Riddle", order = 4, centered = true)
         override var riddleScore: Int,
 
         @JsonView(value = [ Preview::class, FullDetails::class ])
-        @property:GenerateOverview(columnName = "Totál", order = 4, centered = true)
+        @property:GenerateOverview(columnName = "Totál", order = 5, centered = true)
         override var totalScore: Int,
 ) : TopListAbstractEntryDto
