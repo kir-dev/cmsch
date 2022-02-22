@@ -17,7 +17,7 @@ file("${projectDir}/src/main/resources/config/application.properties")
         applicationProperties.load(it)
     }
 group = "hu.bme.sch"
-version = "2.6.4"
+version = "2.6.5"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 tasks {
