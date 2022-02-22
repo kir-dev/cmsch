@@ -133,9 +133,11 @@ open class LeaderBoardService(
                 achievementSubmissions.findAll()
                     .groupBy { it.userId }
                     .map {
+                        val user = users.findById(it.key ?: 0)
                         TopListAsUserEntryDto(
                             it.key ?: 0,
-                            users.findById(it.key ?: 0).map { it.fullName }.orElse("n/a"),
+                            user.map { it.fullName }.orElse("n/a"),
+                            user.map { it.groupName }.orElse("-"),
                             it.value.sumOf { s -> s.score }, 0, 0
                         )
                     }
@@ -149,7 +151,9 @@ open class LeaderBoardService(
                     .groupBy { it.ownerUser }
                     .map {
                         TopListAsUserEntryDto(it.key?.id ?: 0,
-                            it.key?.fullName ?: "n/a", 0,
+                            it.key?.fullName ?: "n/a",
+                            it.key?.groupName ?: "-",
+                            0,
                             it.value.sumOf { s ->
                                 ((s.riddle?.score?.toFloat() ?: 0f) * (if (s.hintUsed) hintPercentage else 1f)).toInt()
                             }, 0
@@ -165,6 +169,7 @@ open class LeaderBoardService(
                 val achievementScore = entries.value.maxOf { it.achievementScore }
                 val riddleScore = entries.value.maxOf { it.riddleScore }
                 TopListAsUserEntryDto(entries.key, entries.value.firstOrNull()?.name ?: "n/a",
+                    entries.value.firstOrNull()?.groupName ?: "n/a",
                     achievementScore,
                     riddleScore,
                     achievementScore + riddleScore)
