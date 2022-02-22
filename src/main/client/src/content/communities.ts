@@ -752,17 +752,19 @@ export const COMMUNITIES: Community[] = [
   {
     id: 'schdesign',
     name: 'schdesign',
+    hideName: true,
     color: 'red',
     descriptionParagraphs: [
       `Az schdesign a Simonyi Károly Szakkollégium kreatív alkotóműhelye.
     Tagjainknak lehetőségük van kipróbálni magukat a különböző digitális esztétikai műfajokban,
     mint például arculattervezés, logókészítés, webdesign, UX design, 3D modellezés vagy egyéb
     nyomtatott grafikák készítése. Mindezt valós és izgalmas projekteken keresztül: egyik legnagyobb
-    felkérésünk az évről-évre megrendezésre kerülő Simonyi Konferencia arculatának megtervezése.
-    Leggyakrabban használt programjaink az Illustrator, a Photoshop, a Figma és a Blender. Ezeken
-    felül még számtalan más eszközt is igénybe szoktunk venni, a lehetőségek nincsenek korlátozva.
-    Digitális rajztábláink szabadon hozzáférhetőek tagjainknak klubszobánkban és az iPadünket is
-    bármikor elkérhetik a tagok. Az érdeklődőknek minden tavaszi félévben tartunk workshopokat,
+    felkérésünk az évről-évre megrendezésre kerülő Simonyi Konferencia arculatának megtervezése.`,
+      `Leggyakrabban használt programjaink az Illustrator, a Photoshop, a Figma és a Blender. Ezeken
+    felül még számtalan más eszközt is igénybe szoktunk venni, a lehetőségek nincsenek korlátozva.`,
+      `Digitális rajztábláink szabadon hozzáférhetőek tagjainknak klubszobánkban és az iPadünket is
+    bármikor elkérhetik a tagok.`,
+      `Az érdeklődőknek minden tavaszi félévben tartunk workshopokat,
     ahol az alapoktól mutatjuk meg Nektek a webfejlesztés, a vektor- és rasztergrafika, illetve
     a 3D modellezés eszközeit.`
     ],
