@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.GroupRepository
-import hu.bme.sch.cmsch.dao.TokenPropertyRepository
-import hu.bme.sch.cmsch.dao.TokenRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.TokenPropertyRepository
+import hu.bme.sch.cmsch.repository.TokenRepository
 import hu.bme.sch.cmsch.dto.TokenCollectorStatus
 import hu.bme.sch.cmsch.dto.TokenDto
 import hu.bme.sch.cmsch.model.TokenPropertyEntity

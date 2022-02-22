@@ -1,10 +1,11 @@
 package hu.bme.sch.cmsch.controller.api
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.dao.*
+import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.dto.view.*
 import hu.bme.sch.cmsch.g7mobile.LocationResponse
+import hu.bme.sch.cmsch.service.LocationService
 import hu.bme.sch.cmsch.model.ProductType
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
@@ -24,17 +25,17 @@ val UNKNOWN_USER = UserEntity(0, fullName = "Feature Not Available")
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 class MainController(
-        private val config: RealtimeConfigService,
-        private val newsRepository: NewsRepository,
-        private val eventsRepository: EventRepository,
-        @Value("\${cmsch.zone-id:CET}") zoneId: String,
-        private val leaderBoardService: LeaderBoardService,
-        private val achievements: AchievementsService,
-        private val extraPagesRepository: ExtraPageRepository,
-        private val debtsRepository: SoldProductRepository,
-        private val productsRepository: ProductRepository,
-        private val locationService: LocationService,
-        private val clock: ClockService
+    private val config: RealtimeConfigService,
+    private val newsRepository: NewsRepository,
+    private val eventsRepository: EventRepository,
+    @Value("\${cmsch.zone-id:CET}") zoneId: String,
+    private val leaderBoardService: LeaderBoardService,
+    private val achievements: AchievementsService,
+    private val extraPagesRepository: ExtraPageRepository,
+    private val debtsRepository: SoldProductRepository,
+    private val productsRepository: ProductRepository,
+    private val locationService: LocationService,
+    private val clock: ClockService
 ) {
     private val timeZone = ZoneId.of(zoneId)
 

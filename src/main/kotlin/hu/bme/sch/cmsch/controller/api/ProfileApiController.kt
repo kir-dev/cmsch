@@ -1,12 +1,14 @@
 package hu.bme.sch.cmsch.controller.api
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.dao.GroupRepository
-import hu.bme.sch.cmsch.dao.SoldProductRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.SoldProductRepository
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.dto.view.Profile2View
 import hu.bme.sch.cmsch.dto.view.ProfileView
+import hu.bme.sch.cmsch.service.LocationService
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.RiddleService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.CrossOrigin

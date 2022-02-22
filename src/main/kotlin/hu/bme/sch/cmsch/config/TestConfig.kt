@@ -1,9 +1,14 @@
 package hu.bme.sch.cmsch.config
 
-import hu.bme.sch.cmsch.dao.*
 import hu.bme.sch.cmsch.model.*
+import hu.bme.sch.cmsch.repository.*
+import hu.bme.sch.cmsch.model.RiddleCategoryEntity
+import hu.bme.sch.cmsch.model.RiddleEntity
+import hu.bme.sch.cmsch.repository.RiddleCategoryRepository
+import hu.bme.sch.cmsch.repository.RiddleRepository
 import hu.bme.sch.cmsch.service.ProductService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.sha256
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -25,22 +30,22 @@ const val A_DAY = 60 * 60 * 24
 @Profile("test")
 @Configuration
 class TestConfig(
-        private val news: NewsRepository,
-        private val events: EventRepository,
-        private val achievements: AchievementRepository,
-        private val categories: AchievementCategoryRepository,
-        private val users: UserRepository,
-        private val extraPages: ExtraPageRepository,
-        private val groups: GroupRepository,
-        private val products: ProductRepository,
-        private val profileService: UserProfileGeneratorService,
-        private val groupToUserMapping: GroupToUserMappingRepository,
-        private val guildToUserMapping: GuildToUserMappingRepository,
-        private val submittedAchievements: SubmittedAchievementRepository,
-        private val productsService: ProductService,
-        private val riddleRepository: RiddleRepository,
-        private val riddleCategoryRepository: RiddleCategoryRepository,
-        private val tokenRepository: TokenRepository
+    private val news: NewsRepository,
+    private val events: EventRepository,
+    private val achievements: AchievementRepository,
+    private val categories: AchievementCategoryRepository,
+    private val users: UserRepository,
+    private val extraPages: ExtraPageRepository,
+    private val groups: GroupRepository,
+    private val products: ProductRepository,
+    private val profileService: UserProfileGeneratorService,
+    private val groupToUserMapping: GroupToUserMappingRepository,
+    private val guildToUserMapping: GuildToUserMappingRepository,
+    private val submittedAchievements: SubmittedAchievementRepository,
+    private val productsService: ProductService,
+    private val riddleRepository: RiddleRepository,
+    private val riddleCategoryRepository: RiddleCategoryRepository,
+    private val tokenRepository: TokenRepository
 ) {
 
     private var now = System.currentTimeMillis() / 1000
@@ -106,43 +111,54 @@ class TestConfig(
     }
 
     private fun addRiddles() {
-        riddleCategoryRepository.save(RiddleCategoryEntity(
+        riddleCategoryRepository.save(
+            RiddleCategoryEntity(
             0,
             "Álalános",
             1,
             true,
             RoleType.BASIC
-        ))
-        riddleCategoryRepository.save(RiddleCategoryEntity(
+        )
+        )
+        riddleCategoryRepository.save(
+            RiddleCategoryEntity(
             0,
             "Kir-Dev speciál",
             2,
             true,
             RoleType.BASIC
-        ))
-        riddleCategoryRepository.save(RiddleCategoryEntity(
+        )
+        )
+        riddleCategoryRepository.save(
+            RiddleCategoryEntity(
             0,
             "Üres riddleök",
             5,
             true,
             RoleType.BASIC
-        ))
-        riddleCategoryRepository.save(RiddleCategoryEntity(
+        )
+        )
+        riddleCategoryRepository.save(
+            RiddleCategoryEntity(
             0,
             "Nem látható",
             3,
             false,
             RoleType.BASIC
-        ))
-        riddleCategoryRepository.save(RiddleCategoryEntity(
+        )
+        )
+        riddleCategoryRepository.save(
+            RiddleCategoryEntity(
             0,
             "Admin riddleök",
             6,
             true,
             RoleType.ADMIN
-        ))
+        )
+        )
 
-        riddleRepository.save(RiddleEntity(
+        riddleRepository.save(
+            RiddleEntity(
             0,
             "Első riddle",
             "/image1.png",
@@ -151,8 +167,10 @@ class TestConfig(
             10,
             1,
             1
-        ))
-        riddleRepository.save(RiddleEntity(
+        )
+        )
+        riddleRepository.save(
+            RiddleEntity(
             0,
             "Második riddle",
             "/image2.png",
@@ -161,8 +179,10 @@ class TestConfig(
             10,
             2,
             1
-        ))
-        riddleRepository.save(RiddleEntity(
+        )
+        )
+        riddleRepository.save(
+            RiddleEntity(
             0,
             "Harmadik riddle",
             "/image3.png",
@@ -171,10 +191,12 @@ class TestConfig(
             20,
             3,
             1
-        ))
+        )
+        )
 
 
-        riddleRepository.save(RiddleEntity(
+        riddleRepository.save(
+            RiddleEntity(
             0,
             "Kir-Dev riddle",
             "/image4.png",
@@ -183,8 +205,10 @@ class TestConfig(
             100,
             1,
             2
-        ))
-        riddleRepository.save(RiddleEntity(
+        )
+        )
+        riddleRepository.save(
+            RiddleEntity(
             0,
             "Admin riddle",
             "/image5.png",
@@ -193,7 +217,8 @@ class TestConfig(
             200,
             1,
             6
-        ))
+        )
+        )
     }
 
     private fun addGroups() {

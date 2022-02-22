@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.GroupRepository
-import hu.bme.sch.cmsch.dao.TokenPropertyRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.TokenPropertyRepository
 import hu.bme.sch.cmsch.dto.virtual.TokenListByGroupVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.TokenVirtualEntity
 import hu.bme.sch.cmsch.service.ClockService

@@ -11,9 +11,9 @@ import com.itextpdf.layout.properties.TextAlignment
 import com.itextpdf.layout.properties.UnitValue
 import com.itextpdf.layout.properties.VerticalAlignment
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.GroupRepository
-import hu.bme.sch.cmsch.dao.TokenPropertyRepository
-import hu.bme.sch.cmsch.dao.UserRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.TokenPropertyRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.virtual.TokenCollectorGroupVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.TokenVirtualEntity
 import hu.bme.sch.cmsch.service.AchievementsService
@@ -41,12 +41,12 @@ const val PREFERRED_TOKEN_TYPE = "default"
 @Controller
 @RequestMapping("/admin/control/token-properties-of-groups")
 class TokensByUsersOfGroupsController(
-        private val tokenPropertyRepository: TokenPropertyRepository,
-        private val groupRepository: GroupRepository,
-        private val userRepository: UserRepository,
-        private val config: RealtimeConfigService,
-        private val riddleService: RiddleService,
-        private val achievementsService: AchievementsService
+    private val tokenPropertyRepository: TokenPropertyRepository,
+    private val groupRepository: GroupRepository,
+    private val userRepository: UserRepository,
+    private val config: RealtimeConfigService,
+    private val riddleService: RiddleService,
+    private val achievementsService: AchievementsService
 ) {
 
     private val view = "token-properties-of-groups"

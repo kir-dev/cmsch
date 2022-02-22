@@ -1,13 +1,15 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.repository.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.TrackGroupVirtualEntity
+import hu.bme.sch.cmsch.service.LocationService
 import hu.bme.sch.cmsch.model.SoldProductEntity
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -29,13 +31,13 @@ const val CONTROL_MODE_PDF = "pdf"
 @Controller
 @RequestMapping("/admin/control")
 class AdminPanelCustomController(
-        private val leaderBoardService: LeaderBoardService,
-        private val productService: ProductService,
-        private val userService: UserService,
-        private val config: RealtimeConfigService,
-        private val submittedRepository: SubmittedAchievementRepository,
-        private val locationService: LocationService,
-        @Value("\${cmsch.profile.qr-prefix:G7_}") private val prefix: String
+    private val leaderBoardService: LeaderBoardService,
+    private val productService: ProductService,
+    private val userService: UserService,
+    private val config: RealtimeConfigService,
+    private val submittedRepository: SubmittedAchievementRepository,
+    private val locationService: LocationService,
+    @Value("\${cmsch.profile.qr-prefix:G7_}") private val prefix: String
 ) {
 
     private val groupTopListDescriptor = OverviewBuilder(TopListAsGroupEntryDto::class)

@@ -5,6 +5,8 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.model.RoleType
 import javax.persistence.*
 
 @Entity

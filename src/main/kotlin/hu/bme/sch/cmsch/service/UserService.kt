@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.GroupToUserMappingRepository
-import hu.bme.sch.cmsch.dao.GuildToUserMappingRepository
-import hu.bme.sch.cmsch.dao.UserRepository
+import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
+import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
@@ -13,9 +13,9 @@ import java.util.*
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class UserService(
-        val users: UserRepository,
-        val groupMapping: GroupToUserMappingRepository,
-        val guildMapping: GuildToUserMappingRepository
+    val users: UserRepository,
+    val groupMapping: GroupToUserMappingRepository,
+    val guildMapping: GuildToUserMappingRepository
 ) {
 
     @Transactional

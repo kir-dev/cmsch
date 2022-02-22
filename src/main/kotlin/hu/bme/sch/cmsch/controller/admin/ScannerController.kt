@@ -18,9 +18,9 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/admin/sell")
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 class ScannerController(
-        val userService: UserService,
-        val productService: ProductService,
-        val profileService: UserProfileGeneratorService
+    val userService: UserService,
+    val productService: ProductService,
+    val profileService: UserProfileGeneratorService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

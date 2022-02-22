@@ -1,11 +1,11 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.RiddleCategoryRepository
-import hu.bme.sch.cmsch.dao.RiddleMappingRepository
-import hu.bme.sch.cmsch.dao.RiddleRepository
+import hu.bme.sch.cmsch.repository.RiddleCategoryRepository
+import hu.bme.sch.cmsch.repository.RiddleMappingRepository
+import hu.bme.sch.cmsch.repository.RiddleRepository
 import hu.bme.sch.cmsch.dto.RiddleCategoryDto
-import hu.bme.sch.cmsch.dto.view.RiddleSubmissionStatus
-import hu.bme.sch.cmsch.dto.view.RiddleSubmissionView
+import hu.bme.sch.cmsch.riddle.view.RiddleSubmissionStatus
+import hu.bme.sch.cmsch.riddle.view.RiddleSubmissionView
 import hu.bme.sch.cmsch.dto.view.RiddleView
 import hu.bme.sch.cmsch.model.RiddleEntity
 import hu.bme.sch.cmsch.model.RiddleMappingEntity
@@ -80,8 +80,10 @@ open class RiddleService(
             if (nextId != riddle.id)
                 return null
 
-            riddleMappingRepository.save(RiddleMappingEntity(0, riddle, user, null,
-                hintUsed = true, completed = false, attemptCount = 0))
+            riddleMappingRepository.save(
+                RiddleMappingEntity(0, riddle, user, null,
+                hintUsed = true, completed = false, attemptCount = 0)
+            )
         }
         return riddle.hint
     }
@@ -113,13 +115,17 @@ open class RiddleService(
             if (nextId != riddle.id)
                 return null
             if (checkSolution(solution, riddle)) {
-                riddleMappingRepository.save(RiddleMappingEntity(0, riddle, user, null,
-                    hintUsed = false, completed = false, completedAt = clock.getTimeInSeconds(), attemptCount = 1))
+                riddleMappingRepository.save(
+                    RiddleMappingEntity(0, riddle, user, null,
+                    hintUsed = false, completed = false, completedAt = clock.getTimeInSeconds(), attemptCount = 1)
+                )
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
-            riddleMappingRepository.save(RiddleMappingEntity(0, riddle, user, null,
-                hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds(), attemptCount = 1))
+            riddleMappingRepository.save(
+                RiddleMappingEntity(0, riddle, user, null,
+                hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds(), attemptCount = 1)
+            )
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextId(user, riddle))
 
         }

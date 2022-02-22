@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.AchievementCategoryRepository
-import hu.bme.sch.cmsch.dao.AchievementRepository
-import hu.bme.sch.cmsch.dao.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.repository.AchievementCategoryRepository
+import hu.bme.sch.cmsch.repository.AchievementRepository
+import hu.bme.sch.cmsch.repository.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.util.uploadFile
@@ -15,7 +15,6 @@ import java.util.*
 
 const val HOUR = 60 * 60
 
-@Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class AchievementsService(
         val achievements: AchievementRepository,

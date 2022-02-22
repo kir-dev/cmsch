@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.controller
 
 import hu.bme.sch.cmsch.controller.api.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
-import hu.bme.sch.cmsch.dao.GroupRepository
-import hu.bme.sch.cmsch.dao.GroupToUserMappingRepository
-import hu.bme.sch.cmsch.dao.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
+import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.model.GuildType
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import java.util.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse

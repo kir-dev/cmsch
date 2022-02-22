@@ -1,11 +1,13 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.*
+import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
 import hu.bme.sch.cmsch.dto.config.OwnershipType
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.RiddleMappingRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
