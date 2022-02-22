@@ -35,6 +35,7 @@ open class GroupSelectionService(
             val newGroup = groupRepository.findById(groupId).orElse(null)
                     ?: return GroupSelectionResponse(GroupSelectionResponseType.INVALID_GROUP)
             user.group = newGroup
+            user.groupName = newGroup.name
             userRepository.save(user)
 
             request.getSession(true).setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, user)
