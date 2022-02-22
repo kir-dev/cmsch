@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.controller.api
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.dao.EventRepository
+import hu.bme.sch.cmsch.repository.EventRepository
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.dto.view.EventsView

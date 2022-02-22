@@ -3,8 +3,8 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.GroupRepository
-import hu.bme.sch.cmsch.dao.SoldProductRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.SoldProductRepository
 import hu.bme.sch.cmsch.dto.virtual.DebtsByUser
 import hu.bme.sch.cmsch.model.SoldProductEntity
 import hu.bme.sch.cmsch.service.ClockService

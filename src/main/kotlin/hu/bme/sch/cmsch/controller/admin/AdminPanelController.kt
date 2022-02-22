@@ -1,11 +1,16 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import hu.bme.sch.cmsch.dao.*
+import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.model.*
+import hu.bme.sch.cmsch.model.RiddleCategoryEntity
+import hu.bme.sch.cmsch.model.RiddleEntity
+import hu.bme.sch.cmsch.repository.RiddleCategoryRepository
+import hu.bme.sch.cmsch.repository.RiddleRepository
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -124,11 +129,11 @@ class GroupController(
 @Controller
 @RequestMapping("/admin/control/users")
 class UserController(
-        repo: UserRepository,
-        private val profileService: UserProfileGeneratorService,
-        private val groups: GroupRepository,
-        importService: ImportService,
-        @Value("\${cmsch.profile-qr.enabled:true}") private val profileQrEnabled: Boolean
+    repo: UserRepository,
+    private val profileService: UserProfileGeneratorService,
+    private val groups: GroupRepository,
+    importService: ImportService,
+    @Value("\${cmsch.profile-qr.enabled:true}") private val profileQrEnabled: Boolean
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",

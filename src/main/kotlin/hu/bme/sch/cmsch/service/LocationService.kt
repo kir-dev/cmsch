@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.UserRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.LocationDto
 import hu.bme.sch.cmsch.g7mobile.LocationResponse
 import hu.bme.sch.cmsch.model.LocationEntity
@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class LocationService(
-        private val clock: ClockService,
-        private val userRepository: UserRepository,
-        @Value("\${cmsch.profile.qr-prefix:KIRDEV_}") val prefix: String
+    private val clock: ClockService,
+    private val userRepository: UserRepository,
+    @Value("\${cmsch.profile.qr-prefix:KIRDEV_}") val prefix: String
 ) {
 
     private val tokenToLocationMapping = ConcurrentHashMap<String, LocationEntity>()

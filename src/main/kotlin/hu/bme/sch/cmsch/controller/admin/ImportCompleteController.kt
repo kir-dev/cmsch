@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.SoldProductRepository
+import hu.bme.sch.cmsch.repository.SoldProductRepository
 import hu.bme.sch.cmsch.dto.virtual.ImportDebtsCompleteVirtualEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.SoldProductEntity

@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.service
 
 import hu.bme.sch.cmsch.controller.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
-import hu.bme.sch.cmsch.dao.GroupRepository
-import hu.bme.sch.cmsch.dao.UserRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.GroupSelectionResponse
 import hu.bme.sch.cmsch.dto.GroupSelectionResponseType
 import hu.bme.sch.cmsch.model.UserEntity

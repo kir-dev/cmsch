@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dao.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.repository.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.dto.virtual.GradedAchievementGroup
 import hu.bme.sch.cmsch.model.SubmittedAchievementEntity
 import hu.bme.sch.cmsch.util.getUser

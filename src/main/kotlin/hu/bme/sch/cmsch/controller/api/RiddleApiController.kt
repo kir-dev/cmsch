@@ -2,13 +2,12 @@ package hu.bme.sch.cmsch.controller.api
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.dto.RiddleCategoryDto
 import hu.bme.sch.cmsch.dto.RiddleSubmissionDto
-import hu.bme.sch.cmsch.dto.view.*
-import hu.bme.sch.cmsch.model.RiddleCategoryEntity
-import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.dto.view.RiddleHintView
+import hu.bme.sch.cmsch.dto.view.RiddleView
 import hu.bme.sch.cmsch.service.RiddleService
+import hu.bme.sch.cmsch.riddle.view.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

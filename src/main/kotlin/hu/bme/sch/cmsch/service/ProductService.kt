@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.ProductRepository
-import hu.bme.sch.cmsch.dao.SoldProductRepository
-import hu.bme.sch.cmsch.dao.UserRepository
+import hu.bme.sch.cmsch.repository.ProductRepository
+import hu.bme.sch.cmsch.repository.SoldProductRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.view.SellStatus
 import hu.bme.sch.cmsch.model.ProductType
 import hu.bme.sch.cmsch.model.SoldProductEntity
@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class ProductService(
-        private val productRepository: ProductRepository,
-        private val soldProductRepository: SoldProductRepository,
-        private val userRepository: UserRepository,
-        private val clock: ClockService
+    private val productRepository: ProductRepository,
+    private val soldProductRepository: SoldProductRepository,
+    private val userRepository: UserRepository,
+    private val clock: ClockService
 ) {
 
     @Transactional(readOnly = true)

@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.dao.RealtimeConfigRepository
+import hu.bme.sch.cmsch.repository.RealtimeConfigRepository
 import hu.bme.sch.cmsch.model.RealtimeConfigEntity
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
