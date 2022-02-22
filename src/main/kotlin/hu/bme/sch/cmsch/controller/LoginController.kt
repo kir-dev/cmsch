@@ -169,6 +169,8 @@ open class LoginController(
                 user.group = it
             }
         }
+        if (user.groupName != user.group?.name)
+            user.groupName = user.group?.name ?: ""
         users.save(user)
     }
 
