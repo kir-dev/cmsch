@@ -8,6 +8,7 @@ import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
 import { Helmet } from 'react-helmet'
 import { Paragraph } from '../@commons/Paragraph'
 import { Image } from '@chakra-ui/react'
+import { Frame } from '../@commons/Frame'
 
 type CommunityPageProps = {}
 
@@ -37,9 +38,9 @@ export const CommunityPage: React.FC<CommunityPageProps> = () => {
       <DataSheet organization={community} />
       {!community.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
-      {/*{community.videoIds?.map((id) => (*/}
-      {/*  <Frame key={id} id={id} />*/}
-      {/*))}*/}
+      {community.videoIds?.map((id) => (
+        <Frame key={id} id={id} />
+      ))}
       {community.imageIds?.map((url) => (
         <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
       ))}

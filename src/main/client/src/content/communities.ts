@@ -41,7 +41,6 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--219692dc85b16c4d08e17aef4d357312b8c14aa8/20210718_095824_talli.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--278668d7c14e082c2921e599742295eb0292f74f/20210814_145833_vince.jpg'
     ],
-    // videoIds: ['sY-s7O0FiYE', 'HA55hFBE32M'],
     searchKeywords: ['legjobb', 'web', 'programozás']
   },
   {
@@ -66,7 +65,7 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZHM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--038dfd43da7a84f46c0617f1a7cd113ab2ed922b/AC_5%20-%20%C3%81kos%20Imre%20Kis.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZHc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--8750a90b3e5dc041b2c9040335d9ee21984baa44/AC_6%20-%20%C3%81kos%20Imre%20Kis.jpg'
     ],
-    videoIds: ['1CT5t9oOoUBcHeGtD09oA-v1WB7_yB7oi'],
+    videoIds: ['jgTuNoeA4E8'],
     website: 'https://acstudio.sch.bme.hu/',
     established: '1993',
     email: 'ac-info@simonyi.bme.hu',
@@ -85,7 +84,7 @@ export const COMMUNITIES: Community[] = [
     Ha szereted a minőségi hamburgereket és szeretnéd, hogy az álom hambidat tömegek
     ismerjék, akkor jelentkezz az Americanoba!`
     ],
-    // videoIds: ['1QC34LIpbK_xjRRnaHE5ODTa1WIQaTqdX'],
+    videoIds: ['thUsOIUnW5w'],
     website: 'https://schpincer.sch.bme.hu/americano',
     established: '2011',
     email: 'americanokor@gmail.com',
@@ -141,7 +140,7 @@ export const COMMUNITIES: Community[] = [
     imageIds: [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWXc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f11eb24b3be09e71248ede0ee8c4ca805d00a2ed/1.jpg'
     ],
-    // videoIds: 'https://drive.google.com/file/d/1NisXkGOasXq9mwtJjIRuNq3cmZFOcKbm/view?usp=sharing',
+    videoIds: ['Q8MDuXHvnLE'],
     website: 'https://bsstudio.hu/',
     application: 'https://bsstudio.hu/tanfolyamok',
     established: '1962',
@@ -161,8 +160,7 @@ export const COMMUNITIES: Community[] = [
     ahol rendszeresen fellépünk. Van oktatóanyagunk amiket edukációs célra tudunk használni így
     garantált a fejlődés! Valamint van néhány közös kellék amiket rendezvényeken lehet használni.`
     ],
-    // imageIds: 'https://drive.google.com/open?id=1965jlIvQzvlWgP_FbAjeYkatEE-jkAGW',
-    // videoIds: 'https://drive.google.com/file/d/1oATL9BApD9fR507GMa4YNConWlOm8qtw/view?usp=sharing',
+    videoIds: ['sq1ehzkqRcc'],
     application: 'https://forms.gle/7kNGvcgWXuM5TaX6A',
     email: 'buvesz@sch.bme.hu',
     interests: ['mágia'],
@@ -183,6 +181,7 @@ export const COMMUNITIES: Community[] = [
       aki csak most ismerkedik a fejlesztés szépségeivel – nálunk mindenki talál
       a képességeinek megfelelő elfoglaltságot.`
     ],
+    videoIds: ['D4nIfNGtpNw'],
     resortId: 'kszk',
     application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/devteam.svg'
@@ -221,7 +220,7 @@ export const COMMUNITIES: Community[] = [
     Ha szereted a sportokat, vagy csak szeretnéd kipróbálni magad a korábban említett rendezvények
     megszervezésében, akkor csatlakozz bátran társaságunkba.`
     ],
-    // videoIds: 'https://drive.google.com/file/d/141xwetfs58ON3PEXuKLPSy3zrKabSSG7/view?usp=sharing',
+    videoIds: ['1UIPVLKOFlU'],
     website: 'https://dsk.sch.bme.hu/',
     application: 'https://docs.google.com/forms/d/1KqZhnrbr9SPg6B-XKVVJWFv7g7N-swSNbKWPtXFa1gE',
     established: '2002',
@@ -246,8 +245,7 @@ export const COMMUNITIES: Community[] = [
     konyhába, hogy kiszakadva a hétköznapokból, jó hangulatban, fincsi
     gyrosokkal elégítse ki a kolisok kulináris vágyait.`
     ],
-    // imageIds: 'https://drive.google.com/open?id=1uTixkj61Vnl4c8RGNSoG80KbOE3ZuUbF',
-    // videoIds: 'https://drive.google.com/file/d/1CGNRKr1RCEYwF1Yxw4BXcAJwhsdPpE-c/view?usp=sharing',
+    videoIds: ['_KuXL4tnTTY'],
     website: 'https://dzsajrosz.sch.bme.hu/',
     application: 'https://docs.google.com/forms/d/e/1FAIpQLSfQ6Xj5VgEc0mlwHPfLH6hRt5GseUD45OC81iZjS0tZ7QUoQg/viewform?usp=sf_link',
     established: '2015',
@@ -303,7 +301,7 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWTg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--99248526c0899eae9678f6801f9190b7b5b37985/3.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWkE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4e525f7aabd9219044195fb6757741d6d1a1797/4.jpg'
     ],
-    // videoIds: 'https://drive.google.com/file/d/1V_7RYcnd_BfhkihuvLI_UtS8ComPKmC0/view?usp=sharing',
+    videoIds: ['vC9aIrdhZtA'],
     website: 'https://ha5kfu.hu/',
     application: 'https://forms.gle/AjPcphBbdoWHejcP7',
     established: '1954',
@@ -371,6 +369,7 @@ export const COMMUNITIES: Community[] = [
     milyen újításra van kereslet. Azoknak a jelentkezését várjuk, akik nem riadnak vissza egy
     (rosszabb napjain) napi ötezer oldalmegtekintést produkáló rendszer karbantartásától, fejlesztésétől.`
     ],
+    videoIds: ['U-tgnjK-ztM'],
     resortId: 'kszk',
     application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/hat.svg'
@@ -442,7 +441,7 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYkU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--1006fdf1437308d9ad519db2d5a047ddc2b1fe7e/28.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYkE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57851c03ef662c46ac4509a4ab03e037a128d85c/27.jpg'
     ],
-    // videoIds: 'https://drive.google.com/file/d/1IMp61Q7CwWN9x8JV1YE-BEX8Z14-LG0z/view?usp=drivesdk',
+    videoIds: ['mPB_SE6ODmk'],
     website: 'https://jatszohaz.sch.bme.hu/news/',
     application: 'https://forms.gle/DJwK9nYicrFeKLtm7',
     established: '2012',
@@ -474,7 +473,7 @@ export const COMMUNITIES: Community[] = [
       `Célunk, hogy a kollégiumba jelentkezők minél elégedettebbek legyenek, valamint az, hogy
       a KFB egy jó és hatékony csapatot alkosson.`
     ],
-    // videoIds: 'https://drive.google.com/file/d/16miYmYG0xrLDLluH29pZFrrj4AKsqWhz/view?usp=sharing',
+    videoIds: ['v1CbEw_YL18'],
     resortId: 'schonherz',
     logo: '/img/communities/kfb.svg'
   },
@@ -548,7 +547,7 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYnM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c783d969552f49eb58cb2bc22bb3986f6df15ea7/4.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYnc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d8671e422fc39ca6ce8947e50cafdf7515c5659d/5.jpg'
     ],
-    // videoIds: 'https://drive.google.com/file/d/19WuAkBVK6IsILqrOGUynM0GvBTxJhpIL/view?usp=sharing',
+    videoIds: ['LOu3b0CFW-c'],
     website: 'https://legokor.hu/',
     application: 'https://legokor.hu/tanfolyam/',
     established: '2008',
@@ -576,7 +575,7 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY0k9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cf8e04e9440db02d107064aed83fb42a89cda699/4.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY009IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2521264c262c6b00a97239d9bbce4ad8a22fdfb4/5.jpg'
     ],
-    // videoIds: 'https://drive.google.com/file/d/19hPpM99N35cS5K_nDJGX0mO_Q_GAJ50V/view?usp=sharing',
+    videoIds: ['wHEKmLN1uiE'],
     website: 'https://fb.com/SchLevelUp',
     application: 'https://forms.gle/HdrTdvnwPy9e8RMS6',
     established: '2018',
@@ -641,8 +640,7 @@ export const COMMUNITIES: Community[] = [
       `YouTube: https://www.youtube.com/user/mmmkcsatorna`,
       `Iratkozz fel levlistánkra: https://lists.sch.bme.hu/wws/info/mmmk`
     ],
-    // imageIds: 'https://drive.google.com/file/d/1kqkObW4mRES3zJhS2wMd6U1infj4J82K/view?usp=sharing',
-    // videoIds: 'https://drive.google.com/file/d/1gTRFUFYqmynZ032db2A14CxqC-RrUY6B/view?usp=sharing',
+    videoIds: ['mXC2vSzRmRo'],
     website: 'https://mmmk.sch.bme.hu/fooldal/',
     application: 'https://forms.gle/Xy5sNWNWuaagPtZp9',
     facebook: 'https://www.facebook.com/muzsikamivelomernokokklubja',
@@ -680,6 +678,7 @@ export const COMMUNITIES: Community[] = [
       ezzel járó nem kizárólag szakmai tapasztalat és technikai tudás pedig egy későbbi önéletrajzban is olyan
       tényező tud lenni, amivel kevés frissen végzett hálózati szakember rendelkezik.`
     ],
+    videoIds: ['91w_jB_7Www'],
     resortId: 'kszk',
     application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/neteam.svg'
@@ -724,7 +723,7 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2c9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3a8ea104e62facbb4986d97b9d5f48873fa2399b/5.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY3c9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--559a166f5648ea7cf5dd934f53d28dd893fcee4f/9.jpg'
     ],
-    // videoIds: 'https://drive.google.com/file/d/1k2cNoONyho8Zg_AErnhLiwLVrdMoIeeW/view?usp=sharing',
+    videoIds: ['KVfR-9B6diQ'],
     website: 'https://pizzasch.sch.bme.hu/',
     established: '2004',
     interests: ['pizzát sütünk'],
@@ -742,7 +741,7 @@ export const COMMUNITIES: Community[] = [
       zene barátságos légkört teremt a helyszínen fogyasztóknak, de reggelidet
       akár a szobádba is kérheted előrendeléssel.`
     ],
-    //    videoIds: 'https://drive.google.com/file/d/1OcCSximEoWNogZ56n8Gk23V1QApT-drR/view?usp=sharing',
+    videoIds: ['X_XNe0XoqgA'],
     established: '2019',
     email: 'reggelisch@gmail.com',
     interests: ['reggeli készítés'],
@@ -829,7 +828,7 @@ export const COMMUNITIES: Community[] = [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZEk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f0622a1ad8d5ad98f903e24b36bf7f73986daa76/5.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZFE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2976f821bdb30163e27b7f18327284c2db2a651c/7.jpg'
     ],
-    // videoIds: 'https://drive.google.com/file/d/135UMGzoKn9Ke1cb6kfjpuSVPVkukYOkh/view?usp=sharing',
+    videoIds: ['j6MD_M-MSXA'],
     application: 'https://docs.google.com/forms/d/1Pj7NvO2JJWieO80w8_vLQgVIz24cOiWZWaIeyqLics0/edit',
     established: '2003',
     email: 'svk@sch.bme.hu',
@@ -852,6 +851,7 @@ export const COMMUNITIES: Community[] = [
       összesítjük és így kerül ki a Schörpong bajnok. Mindezen túl, a félév
       alatt rendelkezésre állunk, ha valakinek szettre lenne szüksége!`
     ],
+    videoIds: ['L-z2e79EoIg'],
     resortId: 'bulis',
     logo: '/img/communities/schorpong.svg'
   },
@@ -874,6 +874,7 @@ export const COMMUNITIES: Community[] = [
       de akár IT biztonsági versenyeken (CTF) is indulhatsz. Ezen felül van saját fejlesztésű CTF-ünk is, amit
       minden ősszel rendezünk meg, a Wargame.`
     ],
+    videoIds: ['QPZrlOi50pE'],
     resortId: 'kszk',
     application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/securiteam.svg'
@@ -906,8 +907,7 @@ export const COMMUNITIES: Community[] = [
       fejlődésüket. A fotózás mellett a weblapunkat és az azt kiszolgáló szervereket is mi
       fejlesztjük és üzemeltetjük.`
     ],
-    // imageIds: 'https://drive.google.com/file/d/1kOXp_1be55THLKGYS_niLvB2rORqyFI2/view?usp=sharing',
-    // videoIds: 'https://drive.google.com/file/d/1uqLa7mptazsi0jFennpKOOSp8K-Ag_8n/view?usp=sharing',
+    videoIds: ['2JHhxv-IHJo'],
     website: 'https://spot.sch.bme.hu',
     application: 'https://spot.sch.bme.hu/tanfolyam',
     established: '1961',
@@ -952,6 +952,7 @@ export const COMMUNITIES: Community[] = [
       köztünk a helyed. Ha úgy érzed, hogy el vagy veszve a témákban, de érdekel a szerverüzemeltetés világa,
       ne csüggedj: az előismeret nem követelmény, a lelkesedés igen.`
     ],
+    videoIds: ['7ZTzP3890-0'],
     resortId: 'kszk',
     application: 'https://ujonc.kszk.bme.hu',
     logo: '/img/communities/sysadmin.svg'
@@ -990,7 +991,7 @@ export const COMMUNITIES: Community[] = [
       `A képzés nagyjából két hónapot ölel fel, hetente egy estédet veszi igénybe. Ez alatt az idő alatt,
       megismerheted és megtanulhatod, mivel és hogyan foglalkozik egy senior.`
     ],
-    // videoIds: 'https://drive.google.com/file/d/1QBJQFFHEK3FUA_5LV3dLL0caoH-pa1zb/view?usp=sharing',
+    videoIds: ['lJ8fLWguT_Y'],
     website: 'https://sssl.sch.bme.hu/',
     application: 'https://kepzes.sch.bme.hu',
     established: '1992',
@@ -1014,7 +1015,7 @@ export const COMMUNITIES: Community[] = [
       `P: Kiknek?`,
       `E: Éheseknek`
     ],
-    // videoIds: 'https://drive.google.com/file/d/14UUn6XQy6PJpDVr6Qgzn015zdO8lJl5e/view?usp=sharing',
+    videoIds: ['HLPvjliEYlM'],
     website: 'https://vodor.sch.bme.hu/',
     established: '2002',
     email: 'vodor@sch.bme.hu',
@@ -1031,7 +1032,7 @@ export const COMMUNITIES: Community[] = [
       `Ha bármi kérdésetek és kérésetek van vizpipázással vagy eszközkölcssönzéssel kapcsolatban, a
       választ nálunk garantáltan megtaláljátok!`
     ],
-    // videoIds: 'https://drive.google.com/file/d/1a1lLve63YgGUJJDzaau3MFghdUGfDOlJ/view?usp=sharing',
+    videoIds: ['ynqyRDwXsWs'],
     established: '2006',
     email: 'wtf@sch.bme.hu',
     members: 12,
@@ -1051,8 +1052,7 @@ export const COMMUNITIES: Community[] = [
       esti lövöldözés, mindezt egy nagyszerű közösségben! A nálunk szerzett élmény megfizethetetlen,
       minden másra pedig ott a MasterCard!`
     ],
-    //imageIds: 'https://drive.google.com/open?id=1UkEXOLq9jy_DQUTuZpDhRXS0Sv5Q9G3X',
-    //videoIds: 'https://drive.google.com/file/d/1os-Bx0aP9nmFZwuU-gopzHX4r1bdnAXR/view?usp=sharing',
+    videoIds: ['ZvV6wSuR8cM'],
     website: 'https://airsoft.sch.bme.hu/',
     application: 'https://forms.gle/xFnEEra9CsVgzJBs6',
     established: '2020',
@@ -1130,5 +1130,26 @@ export const COMMUNITIES: Community[] = [
     color: 'yellow',
     resortId: 'szor',
     logo: '/img/communities/langosch.svg'
+  },
+  {
+    id: 'okosch',
+    name: 'Ökosch',
+    descriptionParagraphs: [
+      `Az Ökosch a BME Villamosmérnöki és Informatikai Karának zöld köre.
+      2021-ben alapult, hogy a VIK (és ezen belül a Schönherz) hallgatói is
+      szerves részévé válhassanak az egyetemen zajló zöld életnek. Fő céljaink
+      a hallgatók szemléletformálása és a környezetvédelem iránt érdeklődő emberek
+      kapcsolatteremtésének megkönnyítése. Az Egyetemi Zöld Körrel (EZK) együttműködve
+      programokat és projekteket kínálunk mindenkinek!`
+    ],
+    videoIds: ['EGqVmhNwQoc'],
+    website: 'https://oko.sch.bme.hu',
+    application: 'https://discord.gg/GGkhWb8E',
+    email: 'okosch@sch.bme.hu',
+    established: '2021',
+    interests: ['környezetvédelem'],
+    color: 'green',
+    resortId: 'schonherz',
+    logo: '/img/communities/okosch.png'
   }
 ]

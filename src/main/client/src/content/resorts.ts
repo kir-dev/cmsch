@@ -39,6 +39,7 @@ export const RESORTS: Organization[] = [
       szerezhetsz gyakorlatban is hasznosítható tudást és sok új barátot. További információk és jelentkezés az
       ujonc.kszk.bme.hu oldalon.`
     ],
+    videoIds: ['mtow81cxTCc'],
     imageIds: [
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ddf2a6728e2b0df80069f274309d7f263015cfd7/20210806_164604_sfphoton.jpg',
       'https://warp.sch.bme.hu/img/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f5727fcffd73caca1037c8e14ac6bb1d5a506683/IMG_1497.jpg',

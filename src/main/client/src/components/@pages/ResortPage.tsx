@@ -8,6 +8,7 @@ import { DataSheet } from '../@commons/DataSheet'
 import { Helmet } from 'react-helmet'
 import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
 import { Image } from '@chakra-ui/react'
+import { Frame } from '../@commons/Frame'
 
 type ResortPageProps = {}
 
@@ -31,6 +32,9 @@ export const ResortPage: React.FC<ResortPageProps> = () => {
       <DataSheet organization={resort} />
       {COMMUNITIES.filter((c) => c.resortId === resort.id).map((community) => (
         <CardListItem key={community.id} data={community} link={'/korok/' + community.id} />
+      ))}
+      {resort.videoIds?.map((id) => (
+        <Frame key={id} id={id} />
       ))}
       {resort.imageIds?.map((url) => (
         <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />

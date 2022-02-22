@@ -9,7 +9,7 @@ export const Frame: React.FC<FrameProps> = ({ id }) => {
   return (
     <Box mt={5} w="100%" pt="56.25%" position="relative">
       <iframe
-        src={`https://drive.google.com/file/d/${id}/preview`}
+        src={`https://www.youtube.com/embed/${id}`}
         title="Körös tartalom"
         allow=""
         allowFullScreen
