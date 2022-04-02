@@ -1,6 +1,6 @@
-import { extendTheme } from '@chakra-ui/react'
 import { alertAnatomy as alertParts, progressAnatomy as progressParts } from '@chakra-ui/anatomy'
-import { PartsStyleFunction, mode, SystemStyleFunction, generateStripe, getColor, transparentize } from '@chakra-ui/theme-tools'
+import { extendTheme } from '@chakra-ui/react'
+import { generateStripe, getColor, mode, PartsStyleFunction, SystemStyleFunction, transparentize } from '@chakra-ui/theme-tools'
 
 // functions copied from
 // https://github.com/chakra-ui/chakra-ui/blob/main/packages/theme/src/components/button.ts, alert.ts and progress.ts

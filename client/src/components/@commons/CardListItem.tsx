@@ -1,16 +1,16 @@
-import React from 'react'
-import { Box, Heading, HStack, VStack, Image, Text, Spacer } from '@chakra-ui/react'
-import { Organization } from '../../types/Organization'
-import { Link } from 'react-router-dom'
 import { ChevronRightIcon } from '@chakra-ui/icons'
+import { Box, Heading, HStack, Image, Spacer, Text, VStack } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { Organization } from '../../types/Organization'
 
 type CardListItemProps = {
   data: Organization
   link: string
 }
 
-export const CardListItem: React.FC<CardListItemProps> = ({ data, link }) => {
+export const CardListItem: FC<CardListItemProps> = ({ data, link }) => {
   let logoSource
   if (data.logo) {
     logoSource = data.darkLogo ? useColorModeValue(data.logo, data.darkLogo) : data.logo

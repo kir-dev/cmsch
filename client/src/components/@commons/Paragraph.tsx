@@ -1,10 +1,8 @@
-import React from 'react'
 import { Text, TextProps } from '@chakra-ui/react'
+import { FC } from 'react'
 
-export const Paragraph: React.FC<TextProps> = ({ children, textAlign, ...props }) => {
-  return (
-    <Text marginTop={5} {...props} textAlign={textAlign}>
-      {children}
-    </Text>
-  )
-}
+export const Paragraph: FC<TextProps> = ({ children, textAlign, ...props }) => (
+  <Text marginTop={5} {...props} textAlign={textAlign}>
+    {children}
+  </Text>
+)

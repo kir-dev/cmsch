@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Icon, Text } from '@chakra-ui/react'
-import React from 'react'
 import { useColorModeValue } from '@chakra-ui/system'
+import { FC } from 'react'
 import { FaRocket, FaStamp } from 'react-icons/fa'
 import { IconType } from 'react-icons/lib'
 
@@ -9,7 +9,7 @@ interface StampComponentProps {
   type: string
 }
 
-export const StampComponent: React.FC<StampComponentProps> = ({ title, type }: StampComponentProps) => {
+export const StampComponent: FC<StampComponentProps> = ({ title, type }: StampComponentProps) => {
   const backgroundBase = useColorModeValue('gray.100', 'gray.700')
   const stampCorner = useColorModeValue('gray.200', 'gray.600')
 

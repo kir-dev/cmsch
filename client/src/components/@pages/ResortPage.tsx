@@ -1,21 +1,21 @@
-import { Page } from '../@layout/Page'
-import React from 'react'
-import { Navigate, useParams } from 'react-router-dom'
-import { RESORTS } from '../../content/resorts'
-import { COMMUNITIES } from '../../content/communities'
-import { CardListItem } from '../@commons/CardListItem'
-import { DataSheet } from '../@commons/DataSheet'
-import { Helmet } from 'react-helmet'
-import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
 import { Image } from '@chakra-ui/react'
+import { FC } from 'react'
+import { Helmet } from 'react-helmet'
+import { Navigate, useParams } from 'react-router-dom'
+import { COMMUNITIES } from '../../content/communities'
+import { RESORTS } from '../../content/resorts'
+import { CardListItem } from '../@commons/CardListItem'
+import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
+import { DataSheet } from '../@commons/DataSheet'
 import { Frame } from '../@commons/Frame'
+import { Page } from '../@layout/Page'
 
 type ResortPageProps = {}
 
-export const ResortPage: React.FC<ResortPageProps> = () => {
+export const ResortPage: FC<ResortPageProps> = () => {
   const params = useParams()
   const resort = RESORTS.find((r) => r.id === params.name)
-  if (!resort) return <Navigate to="/reszortok" />
+  if (!resort) return <Navigate to="/reszortok" replace />
   const breadcrumbItems = [
     {
       title: 'Reszortok',

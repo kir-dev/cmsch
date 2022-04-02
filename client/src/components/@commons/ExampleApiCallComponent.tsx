@@ -1,14 +1,13 @@
-import * as React from 'react'
 import { Box } from '@chakra-ui/react'
 import axios from 'axios'
-import { API_BASE_URL } from '../../utils/configurations'
+import { FC, useEffect, useState } from 'react'
 import { NewsPreviewDTO, NewsView } from '../../types/dto/news'
 
-export const ExampleApiCallComponent: React.FC = () => {
-  const [newsList, setNewsList] = React.useState<NewsView>({ warningMessage: '', news: [] })
+export const ExampleApiCallComponent: FC = () => {
+  const [newsList, setNewsList] = useState<NewsView>({ warningMessage: '', news: [] })
 
-  React.useEffect(() => {
-    axios.get<NewsView>(`${API_BASE_URL}/api/news`).then((res) => {
+  useEffect(() => {
+    axios.get<NewsView>(`/api/news`).then((res) => {
       console.log(res)
       setNewsList(res.data)
     })

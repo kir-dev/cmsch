@@ -1,11 +1,11 @@
-import React from 'react'
-import { Box, Flex, Heading, HStack, Image, Link, Tag, VStack, Wrap } from '@chakra-ui/react'
-import { Paragraph } from './Paragraph'
-import { Organization } from '../../types/Organization'
 import { EditIcon, LinkIcon } from '@chakra-ui/icons'
-import { LinkButton } from './LinkButton'
-import { FaAt, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
+import { Box, Flex, Heading, HStack, Image, Link, Tag, VStack, Wrap } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
+import { FC } from 'react'
+import { FaAt, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
+import { Organization } from '../../types/Organization'
+import { LinkButton } from './LinkButton'
+import { Paragraph } from './Paragraph'
 
 type DataSheetProps = {
   organization: Organization
@@ -16,7 +16,7 @@ type DataSheetProps = {
  * @param dataObject Organization type object - resort or community
  * @constructor
  */
-export const DataSheet: React.FC<DataSheetProps> = ({ organization }) => {
+export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
   const isDataAvailable = organization.established || organization.email || organization.members || organization.interests
   return (
     <>
@@ -87,15 +87,13 @@ type DataFieldProps = {
   label: string
 }
 
-const DataField: React.FC<DataFieldProps> = ({ icon, label, children }) => {
-  return (
-    <HStack color={useColorModeValue('gray.700', 'gray.200')}>
-      <Box>{icon}</Box>
-      <Box fontWeight={700}>{label}</Box>
-      {children}
-    </HStack>
-  )
-}
+const DataField: FC<DataFieldProps> = ({ icon, label, children }) => (
+  <HStack color={useColorModeValue('gray.700', 'gray.200')}>
+    <Box>{icon}</Box>
+    <Box fontWeight={700}>{label}</Box>
+    {children}
+  </HStack>
+)
 
 const generateParagraphs = (paragraphs: string | string[]): JSX.Element => {
   if (Array.isArray(paragraphs)) {

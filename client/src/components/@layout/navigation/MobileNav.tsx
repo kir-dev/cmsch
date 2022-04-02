@@ -1,14 +1,14 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Collapse, Flex, Icon, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
-import React from 'react'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
 import { NavItem } from '../../../types/NavItem'
 import { NAV_ITEMS } from '../../../utils/navItems'
-import { Link } from 'react-router-dom'
-import { AuthButton } from '../../@commons/AuthButton'
 import { useAuthContext } from '../../../utils/useAuthContext'
+import { AuthButton } from '../../@commons/AuthButton'
 
-const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
+const MobileNavItem: FC<NavItem> = ({ label, children, href }) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
@@ -45,7 +45,7 @@ const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
   )
 }
 
-const MobileNav: React.FC = () => {
+const MobileNav: FC = () => {
   const { isLoggedIn } = useAuthContext()
   return (
     <Stack p={4} display={{ md: 'none' }}>

@@ -1,7 +1,7 @@
-import React, { createContext, useEffect, useState } from 'react'
 import { useToast } from '@chakra-ui/react'
-import { getToastTitle } from './toastTitle'
+import { createContext, FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getToastTitle } from './toastTitle'
 
 export enum ErrorTypes {
   GENERAL = 'general',
@@ -28,7 +28,7 @@ export const ServiceContext = createContext<ServiceContextType>({
   errorType: ErrorTypes.GENERAL
 })
 
-export const ServiceProvider: React.FC = ({ children }) => {
+export const ServiceProvider: FC = ({ children }) => {
   const [error, setError] = useState<string | undefined>(undefined)
   const [errorType, setErrorType] = useState<ErrorTypes>(ErrorTypes.GENERAL)
   const toast = useToast()

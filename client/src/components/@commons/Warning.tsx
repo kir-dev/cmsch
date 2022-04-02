@@ -1,18 +1,17 @@
-import * as React from 'react'
 import { Alert, AlertDescription, AlertIcon, CloseButton, HStack, VStack } from '@chakra-ui/react'
 import axios from 'axios'
-import { API_BASE_URL } from '../../utils/configurations'
-import { WarningView } from 'types/dto/warning'
 import { Container } from 'components/@layout/Container'
+import { FC, useEffect, useState } from 'react'
+import { WarningView } from 'types/dto/warning'
 
-export const Warning: React.FC = () => {
-  const [warning, setWarning] = React.useState<WarningView | undefined>(undefined)
-  const [closed, setClosed] = React.useState<boolean>(false)
+export const Warning: FC = () => {
+  const [warning, setWarning] = useState<WarningView | undefined>(undefined)
+  const [closed, setClosed] = useState<boolean>(false)
   const closeWarning = () => setClosed(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     axios
-      .get<WarningView>(`${API_BASE_URL}/api/warning`)
+      .get<WarningView>(`/api/warning`)
       .then((res) => {
         if (res.data.message !== '') setWarning(res.data)
       })

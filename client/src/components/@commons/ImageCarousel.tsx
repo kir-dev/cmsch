@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Box, Button, ButtonGroup, Flex, Image, useColorModeValue } from '@chakra-ui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { Box, Button, ButtonGroup, Flex, Image, useColorModeValue } from '@chakra-ui/react'
+import { FC, useState } from 'react'
 import { MapImage } from 'types/MapImage'
 
 type ImageCarouselProps = {
   images: MapImage[]
 }
 
-export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
+export const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
   const previousImage = () => {
     const previousIndex = currentImageIndex - 1
@@ -49,26 +49,24 @@ type CurrentImageIndicatorDotProps = {
   onClick: (index: number) => void
 }
 
-const CurrentImageIndicatorDot: React.FC<CurrentImageIndicatorDotProps> = ({ index, currentIndex, onClick }) => {
-  return (
-    <Button
-      height={10}
-      width={10}
-      padding={0}
-      borderWidth={2}
-      borderStyle="solid"
-      borderColor="gray.500"
-      borderRadius="full"
-      cursor="pointer"
-      transition="border-width .1s"
-      _hover={{ borderWidth: 10 }}
-      backgroundColor={index === currentIndex ? 'gray.500' : 'transparent'}
-      onClick={() => {
-        onClick(index)
-      }}
-    />
-  )
-}
+const CurrentImageIndicatorDot: FC<CurrentImageIndicatorDotProps> = ({ index, currentIndex, onClick }) => (
+  <Button
+    height={10}
+    width={10}
+    padding={0}
+    borderWidth={2}
+    borderStyle="solid"
+    borderColor="gray.500"
+    borderRadius="full"
+    cursor="pointer"
+    transition="border-width .1s"
+    _hover={{ borderWidth: 10 }}
+    backgroundColor={index === currentIndex ? 'gray.500' : 'transparent'}
+    onClick={() => {
+      onClick(index)
+    }}
+  />
+)
 type DirectionButtonProps = {
   direction: Directions
   onClick: () => void
@@ -77,10 +75,8 @@ enum Directions {
   LEFT = 'left',
   RIGHT = 'right'
 }
-const DirectionButton: React.FC<DirectionButtonProps> = ({ direction, onClick }) => {
-  return (
-    <Button onClick={onClick} fontSize="6xl" padding={0} variant="ghost" color="gray.500">
-      {direction === Directions.LEFT ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-    </Button>
-  )
-}
+const DirectionButton: FC<DirectionButtonProps> = ({ direction, onClick }) => (
+  <Button onClick={onClick} fontSize="6xl" padding={0} variant="ghost" color="gray.500">
+    {direction === Directions.LEFT ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+  </Button>
+)

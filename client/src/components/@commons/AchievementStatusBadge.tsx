@@ -1,6 +1,5 @@
-import { Box, Badge } from '@chakra-ui/react'
-import React from 'react'
-
+import { Badge, Box } from '@chakra-ui/react'
+import { FC } from 'react'
 import { achievementStatus } from '../../types/dto/achievements'
 
 const STATUS_TEXT_MAP = new Map<achievementStatus, string>([
@@ -24,12 +23,10 @@ type AchievementStatusBadgeProps = {
   fontSize: string
 }
 
-export const AchievementStatusBadge: React.FC<AchievementStatusBadgeProps> = ({ status, fontSize }) => {
-  return (
-    <Box>
-      <Badge variant="solid" colorScheme={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
-        {STATUS_TEXT_MAP.get(status)}
-      </Badge>
-    </Box>
-  )
-}
+export const AchievementStatusBadge: FC<AchievementStatusBadgeProps> = ({ status, fontSize }) => (
+  <Box>
+    <Badge variant="solid" colorScheme={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
+      {STATUS_TEXT_MAP.get(status)}
+    </Badge>
+  </Box>
+)

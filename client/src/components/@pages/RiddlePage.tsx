@@ -1,6 +1,3 @@
-import React, { FormEvent, useEffect, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Page } from 'components/@layout/Page'
 import {
   Alert,
   AlertIcon,
@@ -18,36 +15,34 @@ import {
   VStack
 } from '@chakra-ui/react'
 import axios from 'axios'
+import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
+import { Page } from 'components/@layout/Page'
+import { FC, FormEvent, useEffect, useRef, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from 'types/dto/riddles'
-import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
-import { Helmet } from 'react-helmet'
-import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
 
 type RiddleProps = {}
 
-export const RiddlePage: React.FC<RiddleProps> = (props) => {
+export const RiddlePage: FC<RiddleProps> = (props) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const toast = useToast()
-  const toastIdRef = React.useRef<ToastId | null>(null)
-
+  const toastIdRef = useRef<ToastId | null>(null)
   const { throwError } = useServiceContext()
 
-  if (!id) {
-    navigate('/')
-  }
+  if (!id) return <Navigate to="/" replace />
 
-  const [riddle, setRiddle] = React.useState<Riddle>({ id: 1, title: '', imageUrl: '', solved: false, hint: undefined })
-  const [loading, setLoading] = React.useState<boolean>(false)
-
+  const [riddle, setRiddle] = useState<Riddle>({ id: 1, title: '', imageUrl: '', solved: false, hint: undefined })
+  const [loading, setLoading] = useState<boolean>(false)
   const solutionInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setLoading(true)
     axios
-      .get<Riddle>(`${API_BASE_URL}/api/riddle/${id}`)
+      .get<Riddle>(`/api/riddle/${id}`)
       .then((res) => {
         setRiddle(res.data)
         setLoading(false)
@@ -57,11 +52,11 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       })
   }, [setRiddle])
 
-  function submitSolution(event: FormEvent) {
+  const submitSolution = (event: FormEvent) => {
     event.preventDefault()
     const solution = solutionInput?.current?.value
     axios
-      .post<RiddleSubmissonResult>(`${API_BASE_URL}/api/riddle/${id}`, { solution: solution })
+      .post<RiddleSubmissonResult>(`/api/riddle/${id}`, { solution: solution })
       .then((res) => {
         if (res.data.status === RiddleSubmissonStatus.WRONG) {
           if (toastIdRef.current) {
@@ -80,7 +75,7 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
           navigate(`/riddleok/${res.data.nextId}`)
           const input = document.getElementById('solution') as HTMLInputElement
           input.value = ''
-          axios.get<Riddle>(`${API_BASE_URL}/api/riddle/${res.data.nextId}`).then((resp) => {
+          axios.get<Riddle>(`/api/riddle/${res.data.nextId}`).then((resp) => {
             setRiddle(resp.data)
           })
           toast({
@@ -107,9 +102,9 @@ export const RiddlePage: React.FC<RiddleProps> = (props) => {
       })
   }
 
-  function getHint() {
+  const getHint = () => {
     return axios
-      .put<Hint>(`${API_BASE_URL}/api/riddle/${id}/hint`)
+      .put<Hint>(`/api/riddle/${id}/hint`)
       .then((res) => {
         const newRiddle = { ...riddle, hint: res.data.hint }
         setRiddle(newRiddle)

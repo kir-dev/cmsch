@@ -1,22 +1,20 @@
-import { Box, Button, FormLabel, Heading, Stack, Text, Textarea, Image, useToast, Skeleton, Alert, AlertIcon } from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, Button, FormLabel, Heading, Image, Skeleton, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
-import { Page } from '../@layout/Page'
-import React, { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
-import { FilePicker } from '../@commons/FilePicker'
-import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
+import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
 import { Paragraph } from 'components/@commons/Paragraph'
-import { AchievementFullDetailsView, achievementType, achievementStatus, AchievementCategory } from '../../types/dto/achievements'
-import { API_BASE_URL } from 'utils/configurations'
+import { FC, useEffect, useRef, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { AchievementCategory, AchievementFullDetailsView, achievementStatus, achievementType } from '../../types/dto/achievements'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
-import { Helmet } from 'react-helmet'
-import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
 import { stringifyTimeStamp } from '../../utils/utilFunctions'
+import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
+import { FilePicker } from '../@commons/FilePicker'
+import { Page } from '../@layout/Page'
 
-export const AchievementPage: React.FC = (props) => {
+export const AchievementPage: FC = (props) => {
   const [achDetails, setAchDetails] = useState<AchievementFullDetailsView | undefined>(undefined)
   const [textAnswer, setTextAnswer] = useState<string>('')
   const [imageAnswer, setImageAnswer] = useState<File | undefined>(undefined)
@@ -28,14 +26,11 @@ export const AchievementPage: React.FC = (props) => {
   const navigate = useNavigate()
   const { throwError } = useServiceContext()
 
-  if (!id) {
-    navigate('/')
-    return null
-  }
+  if (!id) return <Navigate to="/" replace />
 
   const getAchievementDetails = () => {
     axios
-      .get<AchievementFullDetailsView>(`${API_BASE_URL}/api/achievement/submit/${id}`)
+      .get<AchievementFullDetailsView>(`/api/achievement/submit/${id}`)
       .then((res) => {
         if (!res.data.achievement) {
           navigate('/bucketlist')
@@ -48,7 +43,7 @@ export const AchievementPage: React.FC = (props) => {
         } else {
           setAchDetails(res.data)
           axios
-            .get<AchievementCategory>(`${API_BASE_URL}/api/achievement/category/${res.data.achievement.categoryId}`)
+            .get<AchievementCategory>(`/api/achievement/category/${res.data.achievement.categoryId}`)
             .then((res) => {
               setCategoryName(res.data.categoryName || '')
             })
@@ -102,7 +97,7 @@ export const AchievementPage: React.FC = (props) => {
       formData.append('achievementId', id)
       formData.append('textAnswer', textAnswer)
       axios
-        .post(`${API_BASE_URL}/api/achievement/submit`, formData, {
+        .post(`/api/achievement/submit`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

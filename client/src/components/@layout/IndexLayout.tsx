@@ -1,17 +1,17 @@
 import { Box, Flex } from '@chakra-ui/react'
 import { Warning } from 'components/@commons/Warning'
-import * as React from 'react'
+import { FC } from 'react'
 import { Helmet } from 'react-helmet'
 import { APP_NAME } from 'utils/configurations'
+import ScrollToTop from '../../utils/ScrollToTop'
 import { Footer } from './Footer'
 import { Navbar } from './navigation/Navbar'
-import ScrollToTop from '../../utils/ScrollToTop'
 
 type IndexLayoutProps = {
   background?: string
 }
 
-export const IndexLayout: React.FC<IndexLayoutProps> = ({ background, children }) => (
+export const IndexLayout: FC<IndexLayoutProps> = ({ background, children }) => (
   <>
     <Helmet titleTemplate={`%s | ${APP_NAME}`} defaultTitle={APP_NAME} />
     <Flex direction="column" minHeight="100vh">

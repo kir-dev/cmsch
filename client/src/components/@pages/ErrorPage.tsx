@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Page } from '../@layout/Page'
 import { ButtonGroup, Heading, Text } from '@chakra-ui/react'
+import { FC, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { Navigate } from 'react-router-dom'
+import { ErrorTypes } from '../../utils/ServiceContext'
 import { useServiceContext } from '../../utils/useServiceContext'
 import { LinkButton } from '../@commons/LinkButton'
-import { ErrorTypes } from '../../utils/ServiceContext'
+import { Page } from '../@layout/Page'
 import { UnauthorizedPage } from './UnauthorizedPage'
-import { Navigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 
-export const ErrorPage: React.FC = () => {
+export const ErrorPage: FC = () => {
   const { clearError, error, errorType } = useServiceContext()
   const [clonedError, setClonedError] = useState<string | undefined>('')
   const [clonedErrorType, setClonedErrorType] = useState<ErrorTypes>(ErrorTypes.GENERAL)

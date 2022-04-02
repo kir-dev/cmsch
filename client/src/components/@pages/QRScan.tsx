@@ -3,12 +3,11 @@ import axios from 'axios'
 import { LinkButton } from 'components/@commons/LinkButton'
 import { QRScanResultComponent } from 'components/@commons/QRScanResultComponent'
 import { Page } from 'components/@layout/Page'
-import React from 'react'
+import { FC, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import QRreader from 'react-qr-reader'
 import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
-import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from 'utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
 
@@ -23,8 +22,8 @@ interface ScanView {
   response?: ScanResponseDTO
 }
 
-export const QRScan: React.FC = (props) => {
-  const [state, setState] = React.useState<ScanView>({ state: ScanViewState.Scanning })
+export const QRScan: FC = (props) => {
+  const [state, setState] = useState<ScanView>({ state: ScanViewState.Scanning })
   const { throwError } = useServiceContext()
   const handleScan = (qrData: any) => {
     if (qrData) {
@@ -39,7 +38,7 @@ export const QRScan: React.FC = (props) => {
 
       //send token to backaend with post
       axios
-        .post(`${API_BASE_URL}/api/token/${token}`)
+        .post(`/api/token/${token}`)
         .then((res) => {
           setState({ state: ScanViewState.Success, response: res.data })
         })

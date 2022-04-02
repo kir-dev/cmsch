@@ -1,14 +1,14 @@
-import { Page } from '../@layout/Page'
-import React from 'react'
-import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
-import { QRScanResultComponent } from 'components/@commons/QRScanResultComponent'
-import { useSearchParams } from 'react-router-dom'
 import { ButtonGroup } from '@chakra-ui/react'
-import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
-import { LinkButton } from '../@commons/LinkButton'
+import { QRScanResultComponent } from 'components/@commons/QRScanResultComponent'
+import { FC } from 'react'
 import { Helmet } from 'react-helmet'
+import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
+import { useSearchParams } from 'react-router-dom'
+import { ScanResponseDTO, ScanStatus } from 'types/dto/token'
+import { LinkButton } from '../@commons/LinkButton'
+import { Page } from '../@layout/Page'
 
-export const QRScanResult: React.FC = (props) => {
+export const QRScanResult: FC = (props) => {
   const [searchParams] = useSearchParams()
   const server_response: ScanResponseDTO = {
     title: searchParams.get('title') || undefined,

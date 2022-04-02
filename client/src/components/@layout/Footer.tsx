@@ -1,10 +1,10 @@
-import * as React from 'react'
 import { Box, Flex, HStack, Icon, Image, Link, StackProps, Text, useColorModeValue, VStack, Wrap } from '@chakra-ui/react'
-import { BUGREPORT_URL, KIRDEV_URL } from 'utils/configurations'
 import { socialPages } from 'content/socialPages'
+import { FC } from 'react'
 import { FaHeart } from 'react-icons/fa'
-import { Container } from './Container'
+import { BUGREPORT_URL, KIRDEV_URL } from 'utils/configurations'
 import customTheme from '../../utils/customTheme'
+import { Container } from './Container'
 
 type ImpressumWrapItemProps = {
   display: {
@@ -12,33 +12,31 @@ type ImpressumWrapItemProps = {
     md: string
   }
 }
-const ImpressumWrapItem: React.FC<ImpressumWrapItemProps> = ({ display }) => {
-  return (
-    <FooterWrapItem display={display}>
-      <Flex justifyContent="center">
-        <FooterBigImage src={`/img/${useColorModeValue('footer_logo.png', 'footer_logo_white.png')}`} />
-      </Flex>
-      <HStack spacing={1} justify="center">
-        {socialPages.map((socialPage) => (
-          <HStack as={Link} _hover={{ color: customTheme.colors.kirDev }} href={socialPage.href} isExternal key={socialPage.label}>
-            <Icon as={socialPage.icon} boxSize="2rem" />
-          </HStack>
-        ))}
-      </HStack>
-      <Text marginBottom={3} align="center" fontSize="xl">
-        <Link textColor={customTheme.colors.kirDev} href="/impresszum">
-          Impresszum
-        </Link>
-      </Text>
-      <Flex align="center">
-        <Text>@ kir-dev [at] sch.bme.hu</Text>
-        <Text>© 2022</Text>
-      </Flex>
-    </FooterWrapItem>
-  )
-}
+const ImpressumWrapItem: FC<ImpressumWrapItemProps> = ({ display }) => (
+  <FooterWrapItem display={display}>
+    <Flex justifyContent="center">
+      <FooterBigImage src={`/img/${useColorModeValue('footer_logo.png', 'footer_logo_white.png')}`} />
+    </Flex>
+    <HStack spacing={1} justify="center">
+      {socialPages.map((socialPage) => (
+        <HStack as={Link} _hover={{ color: customTheme.colors.kirDev }} href={socialPage.href} isExternal key={socialPage.label}>
+          <Icon as={socialPage.icon} boxSize="2rem" />
+        </HStack>
+      ))}
+    </HStack>
+    <Text marginBottom={3} align="center" fontSize="xl">
+      <Link textColor={customTheme.colors.kirDev} href="/impresszum">
+        Impresszum
+      </Link>
+    </Text>
+    <Flex align="center">
+      <Text>@ kir-dev [at] sch.bme.hu</Text>
+      <Text>© 2022</Text>
+    </Flex>
+  </FooterWrapItem>
+)
 
-export const Footer: React.FC = () => (
+export const Footer: FC = () => (
   <Box borderTopWidth={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')}>
     <Container>
       <Wrap justify="space-between" spacing={2} align="center">
@@ -93,14 +91,12 @@ export const Footer: React.FC = () => (
   </Box>
 )
 
-const FooterWrapItem: React.FC<StackProps> = ({ children, ...props }) => {
-  return (
-    <VStack py={3} spacing={1} align="center" width={{ base: '100%', md: 'fit-content' }} {...props}>
-      {children}
-    </VStack>
-  )
-}
+const FooterWrapItem: FC<StackProps> = ({ children, ...props }) => (
+  <VStack py={3} spacing={1} align="center" width={{ base: '100%', md: 'fit-content' }} {...props}>
+    {children}
+  </VStack>
+)
 
-const FooterBigImage: React.FC<{ src: string; filter?: string }> = ({ src, filter = '' }) => {
-  return <Image src={src} w="10rem" h="10rem" my={3} filter={filter} />
-}
+const FooterBigImage: FC<{ src: string; filter?: string }> = ({ src, filter = '' }) => (
+  <Image src={src} w="10rem" h="10rem" my={3} filter={filter} />
+)

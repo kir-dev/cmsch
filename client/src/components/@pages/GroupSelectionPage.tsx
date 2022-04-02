@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Page } from '../@layout/Page'
 import { Alert, AlertIcon, Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet'
-import { LinkButton } from '../@commons/LinkButton'
 import axios from 'axios'
-import { API_BASE_URL } from '../../utils/configurations'
-import { GroupChangeDTO, GroupChangeStatus } from '../../types/dto/groupChange'
-import { useServiceContext } from '../../utils/useServiceContext'
+import { FC, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { Navigate, useNavigate } from 'react-router-dom'
+import { GroupChangeDTO, GroupChangeStatus } from '../../types/dto/groupChange'
 import { useAuthContext } from '../../utils/useAuthContext'
+import { useServiceContext } from '../../utils/useServiceContext'
+import { LinkButton } from '../@commons/LinkButton'
+import { Page } from '../@layout/Page'
 
-export const GroupSelectionPage: React.FC = () => {
+export const GroupSelectionPage: FC = () => {
   const { profile, updateProfile } = useAuthContext()
   const [value, setValue] = useState<string>()
   const [error, setError] = useState<string>()
@@ -24,7 +23,7 @@ export const GroupSelectionPage: React.FC = () => {
   const onSubmit = () => {
     if (value)
       axios
-        .post<GroupChangeDTO>(`${API_BASE_URL}/api/group/select/${value}`)
+        .post<GroupChangeDTO>(`/api/group/select/${value}`)
         .then((res) => {
           switch (res.data.status) {
             case GroupChangeStatus.OK:

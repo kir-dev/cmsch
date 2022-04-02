@@ -1,14 +1,14 @@
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
-import { Box, Collapse, Flex, IconButton, useColorModeValue, useDisclosure, Image } from '@chakra-ui/react'
-import * as React from 'react'
+import { Box, Collapse, Flex, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { ColorModeSwitcher } from '../../@commons/ColorModeSwitcher'
 import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
-import { ColorModeSwitcher } from '../../@commons/ColorModeSwitcher'
-import { Link } from 'react-router-dom'
 
 type NavbarProps = {}
 
-export const Navbar: React.FC<NavbarProps> = ({}) => {
+export const Navbar: FC<NavbarProps> = ({}) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (

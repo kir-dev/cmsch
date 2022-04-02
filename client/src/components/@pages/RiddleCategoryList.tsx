@@ -1,13 +1,12 @@
-import React from 'react'
-import { Box, Flex, Heading, VStack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import axios from 'axios'
 import { Page } from 'components/@layout/Page'
+import { FC, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 import { RiddleCategory } from 'types/dto/riddles'
-import axios from 'axios'
-import { API_BASE_URL } from 'utils/configurations'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
-import { Helmet } from 'react-helmet'
 
 type RiddleListProps = {}
 
@@ -18,19 +17,19 @@ function progress(riddleCategory: RiddleCategory) {
   return riddleCategory.completed / riddleCategory.total
 }
 
-export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
+export const RiddleCategoryList: FC<RiddleListProps> = (props) => {
   const bg = useColorModeValue('gray.200', 'gray.600')
   const navigate = useNavigate()
   const toast = useToast()
   const { throwError } = useServiceContext()
 
-  const [riddleCategoryList, setRiddleCategoryList] = React.useState<RiddleCategory[]>([])
-  const [loading, setLoading] = React.useState<boolean>(false)
+  const [riddleCategoryList, setRiddleCategoryList] = useState<RiddleCategory[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setLoading(true)
     axios
-      .get<RiddleCategory[]>(`${API_BASE_URL}/api/riddle`)
+      .get<RiddleCategory[]>(`/api/riddle`)
       .then((res) => {
         setRiddleCategoryList(res.data)
         setLoading(false)
@@ -40,7 +39,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
       })
   }, [setRiddleCategoryList])
 
-  function onRiddleCategoryClick(nextRiddle?: number) {
+  const onRiddleCategoryClick = (nextRiddle?: number) => {
     if (nextRiddle) {
       navigate(`/riddleok/${nextRiddle}`)
     } else {
@@ -54,7 +53,7 @@ export const RiddleCategoryList: React.FC<RiddleListProps> = (props) => {
     }
   }
 
-  function progressGradient(progress: number, color: string) {
+  const progressGradient = (progress: number, color: string) => {
     const endDeg = 360 * progress
     if (progress === 1) {
       return `conic-gradient(${color} 0deg, ${color} 360deg)`

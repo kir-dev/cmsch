@@ -1,11 +1,11 @@
-import React from 'react'
+import { LinkIcon } from '@chakra-ui/icons'
 import { LinkProps as ChakraLinkProps } from '@chakra-ui/layout'
 import { Link } from '@chakra-ui/react'
-import { LinkIcon } from '@chakra-ui/icons'
+import { FC } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { LinkProps } from './LinkButton'
 
-export const SimpleLink: React.FC<LinkProps & ChakraLinkProps> = ({ external, href, children, ...props }) => {
+export const SimpleLink: FC<LinkProps & ChakraLinkProps> = ({ external, href, children, ...props }) => {
   const ButtonComponent = (
     <Link {...props}>
       {children}

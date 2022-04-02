@@ -1,17 +1,17 @@
-import { Heading, Input, InputLeftElement } from '@chakra-ui/react'
-import { Page } from '../@layout/Page'
-import React, { createRef, useState } from 'react'
-import { Paragraph } from '../@commons/Paragraph'
-import { COMMUNITIES } from '../../content/communities'
-import { CardListItem } from '../@commons/CardListItem'
-import { Community } from '../../types/Organization'
-import { Helmet } from 'react-helmet'
-import { InputGroup } from '@chakra-ui/input'
 import { SearchIcon } from '@chakra-ui/icons'
+import { InputGroup } from '@chakra-ui/input'
+import { Heading, Input, InputLeftElement } from '@chakra-ui/react'
+import { createRef, FC, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { COMMUNITIES } from '../../content/communities'
+import { Community } from '../../types/Organization'
+import { CardListItem } from '../@commons/CardListItem'
+import { Paragraph } from '../@commons/Paragraph'
+import { Page } from '../@layout/Page'
 
 type CommunityListProps = {}
 
-export const CommunityList: React.FC<CommunityListProps> = () => {
+export const CommunityList: FC<CommunityListProps> = () => {
   const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(COMMUNITIES)
   const inputRef = createRef<HTMLInputElement>()
   const handleInput = () => {
