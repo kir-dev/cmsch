@@ -15,9 +15,9 @@ type ImpressumWrapItemProps = {
 const ImpressumWrapItem: React.FC<ImpressumWrapItemProps> = ({ display }) => {
   return (
     <FooterWrapItem display={display}>
-      <Box align="center">
+      <Flex justifyContent="center">
         <FooterBigImage src={`/img/${useColorModeValue('footer_logo.png', 'footer_logo_white.png')}`} />
-      </Box>
+      </Flex>
       <HStack spacing={1} justify="center">
         {socialPages.map((socialPage) => (
           <HStack as={Link} _hover={{ color: customTheme.colors.kirDev }} href={socialPage.href} isExternal key={socialPage.label}>
@@ -30,10 +30,10 @@ const ImpressumWrapItem: React.FC<ImpressumWrapItemProps> = ({ display }) => {
           Impresszum
         </Link>
       </Text>
-      <Box align="center">
+      <Flex align="center">
         <Text>@ kir-dev [at] sch.bme.hu</Text>
         <Text>© 2022</Text>
-      </Box>
+      </Flex>
     </FooterWrapItem>
   )
 }
