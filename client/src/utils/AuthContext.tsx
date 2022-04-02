@@ -4,39 +4,58 @@ import axios from 'axios'
 import { API_BASE_URL } from './configurations'
 import { ProfileDTO } from '../types/dto/profile'
 import { useServiceContext } from './useServiceContext'
+import { useNavigate } from 'react-router-dom'
 
 const CookieKeys = {
-  LOGGED_IN: 'CMSCH_LOGGED_IN',
   JWT_TOKEN: 'CMSCH_JWT_TOKEN'
 }
 
 export type AuthContextType = {
   isLoggedIn: boolean
   profile: ProfileDTO | undefined
-  login: () => void
-  logout: () => void
+  onLoginSuccess: (response: any) => void
+  onLoginFailure: (response: any) => void
+  onLogout: (response: any) => void
   updateProfile: () => void
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  isLoggedIn: Cookies.get(CookieKeys.LOGGED_IN) === 'true',
+  isLoggedIn: false,
   profile: undefined,
-  login: () => {},
-  logout: () => {},
+  onLoginSuccess: () => {},
+  onLoginFailure: () => {},
+  onLogout: () => {},
   updateProfile: () => {}
 })
 
 export const AuthProvider: React.FC = ({ children }) => {
   const { throwError } = useServiceContext()
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(Cookies.get(CookieKeys.LOGGED_IN) === 'true')
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(typeof Cookies.get(CookieKeys.JWT_TOKEN) !== 'undefined')
   const [profile, setProfile] = useState<ProfileDTO>()
+  const navigate = useNavigate()
 
-  const login = () => {
-    location.href = '/control/login'
+  const onLoginSuccess = async (response: any) => {
+    console.log('[DEBUG] onLoginSuccess, response:', response)
+    return // todo: remove this return
+    const { accessToken } = response
+
+    const res = await axios.post<{ profile: ProfileDTO; jwtToken: string }>(`${API_BASE_URL}/api/login`, { accessToken })
+    const { jwtToken } = res.data
+
+    Cookies.set(CookieKeys.JWT_TOKEN, jwtToken, { expires: 2 })
+    setIsLoggedIn(true)
+    navigate('/profil')
   }
 
-  const logout = () => {
-    location.href = '/control/logout'
+  const onLoginFailure = (response: any) => {
+    console.error('[ERROR] onLoginFailure, response:', response)
+    throwError('Hiba az AuthSCH-val való bejelentkeztetés során!', { toast: true, toastStatus: 'warning', toHomePage: true })
+  }
+
+  const onLogout = () => {
+    Cookies.remove(CookieKeys.JWT_TOKEN)
+    setIsLoggedIn(false)
+    navigate('/')
   }
 
   const updateProfile = () => {
@@ -44,14 +63,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       axios
         .get<ProfileDTO>(`${API_BASE_URL}/api/profile`)
         .then((res) => {
-          if (typeof res.data !== 'object') logout()
+          if (typeof res.data !== 'object') onLogout()
           setProfile(res.data)
         })
         .catch(() => {
           throwError('Újra be kell jelentkezned!', { toast: true, toastStatus: 'warning', toHomePage: true })
-          setIsLoggedIn(false)
-          setProfile(undefined)
-          Cookies.remove(CookieKeys.LOGGED_IN)
+          onLogout()
         })
   }
 
@@ -59,5 +76,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     updateProfile()
   }, [isLoggedIn])
 
-  return <AuthContext.Provider value={{ isLoggedIn, profile, login, logout, updateProfile }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, profile, onLoginSuccess, onLoginFailure, onLogout, updateProfile }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }

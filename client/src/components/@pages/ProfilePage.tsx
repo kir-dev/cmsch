@@ -81,7 +81,7 @@ export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
 }
 
 export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
-  const { logout, profile, updateProfile } = useAuthContext()
+  const { onLogout, profile, updateProfile } = useAuthContext()
 
   React.useEffect(() => {
     updateProfile()
@@ -113,7 +113,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
               Tankör módosítása
             </LinkButton>
           )}
-          <Button colorScheme="brand" variant="outline" onClick={logout}>
+          <Button colorScheme="brand" variant="outline" onClick={onLogout}>
             Kijelentkezés
           </Button>
         </VStack>

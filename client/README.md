@@ -11,6 +11,8 @@ Uses:
 - [React-icons](https://react-icons.github.io/react-icons/)
 - Typescript 4.5.4
 
+Your AuthSCH client should use `http://localhost:3000/auth/success` as the redirect URL.
+
 See other development notes in the root README.md file.
 
 ## Other notes

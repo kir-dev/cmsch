@@ -23,6 +23,7 @@ import { IndexLayout } from 'components/@layout/IndexLayout'
 import { ImpressumPage } from 'components/@pages/ImpressumPage'
 import './global.css'
 import { GroupSelectionPage } from './components/@pages/GroupSelectionPage'
+import { AUTHSCH_REDIRECT_PATH } from 'utils/configurations'
 
 export function App() {
   return (
@@ -75,6 +76,10 @@ export function App() {
                   </Route>
                   {/*Error*/}
                   <Route path="error">
+                    <Route index element={<ErrorPage />} />
+                  </Route>
+                  {/*Authsch visszateres*/}
+                  <Route path={AUTHSCH_REDIRECT_PATH}>
                     <Route index element={<ErrorPage />} />
                   </Route>
                 </Route>
