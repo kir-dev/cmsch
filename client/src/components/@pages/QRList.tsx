@@ -1,18 +1,17 @@
-import { Page } from '../@layout/Page'
-import React, { useEffect, useState } from 'react'
 import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
-import { FaQrcode, FaStamp } from 'react-icons/fa'
-import { TokenDTO } from 'types/dto/token'
-import { Paragraph } from 'components/@commons/Paragraph'
-import { StampComponent } from 'components/@commons/StampComponent'
 import axios from 'axios'
-import { API_BASE_URL } from 'utils/configurations'
+import { Paragraph } from 'components/@commons/Paragraph'
+import { PresenceAlert } from 'components/@commons/PresenceAlert'
+import { StampComponent } from 'components/@commons/StampComponent'
+import { FC, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { FaQrcode, FaStamp } from 'react-icons/fa'
 import { ProfileDTO } from 'types/dto/profile'
-import { LinkButton } from '../@commons/LinkButton'
+import { TokenDTO } from 'types/dto/token'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
-import { Helmet } from 'react-helmet'
-import { PresenceAlert } from 'components/@commons/PresenceAlert'
+import { LinkButton } from '../@commons/LinkButton'
+import { Page } from '../@layout/Page'
 
 interface TokenProgress {
   totalTokenCount: number
@@ -22,7 +21,7 @@ interface TokenProgress {
   groupName: string
 }
 
-export const QRList: React.FC = (props) => {
+export const QRList: FC = (props) => {
   const { throwError } = useServiceContext()
   const [progress, setProgress] = useState<TokenProgress>({
     totalTokenCount: 0,
@@ -36,7 +35,7 @@ export const QRList: React.FC = (props) => {
   useEffect(() => {
     setLoading(true)
     axios
-      .get(`${API_BASE_URL}/api/profile`)
+      .get(`/api/profile`)
       .then((res) => {
         const profile = res.data as ProfileDTO
         setProgress({
@@ -53,10 +52,7 @@ export const QRList: React.FC = (props) => {
       })
   }, [])
 
-  const calculate_progress = (acquired: number, total: number) => {
-    if (total == 0) return 100
-    else return (100 * acquired) / total
-  }
+  const calculate_progress = (acquired: number, total: number) => (total == 0 ? 100 : (100 * acquired) / total)
 
   if (loading) return <Loading />
 

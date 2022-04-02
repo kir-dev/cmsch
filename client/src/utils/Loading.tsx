@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
 import { Center, Spinner, useColorModeValue } from '@chakra-ui/react'
+import { FC, useEffect, useState } from 'react'
 
 type LoadingProps = {
   timeout?: number
@@ -11,7 +11,7 @@ type LoadingProps = {
  * @param children ReactNode, Optional - The component to be displayed instead of a brand colored spinner.
  * @constructor
  */
-export const Loading: React.FC<LoadingProps> = ({ timeout, children }) => {
+export const Loading: FC<LoadingProps> = ({ timeout, children }) => {
   const [show, setShow] = useState<boolean>(false)
   useEffect(() => {
     setTimeout(() => {

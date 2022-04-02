@@ -1,4 +1,3 @@
-import { Page } from '../@layout/Page'
 import {
   Alert,
   AlertIcon,
@@ -18,13 +17,14 @@ import {
   Wrap,
   WrapItem
 } from '@chakra-ui/react'
-import * as React from 'react'
+import { PresenceAlert } from 'components/@commons/PresenceAlert'
+import { FC, useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { ProfileDTO, RoleType } from 'types/dto/profile'
+import { useAuthContext } from 'utils/useAuthContext'
 import { Loading } from '../../utils/Loading'
 import { LinkButton } from '../@commons/LinkButton'
-import { useAuthContext } from 'utils/useAuthContext'
-import { Helmet } from 'react-helmet'
-import { PresenceAlert } from 'components/@commons/PresenceAlert'
+import { Page } from '../@layout/Page'
 
 const challenges = (profile: ProfileDTO) => [
   {
@@ -56,34 +56,32 @@ function completedPercent(profile: ProfileDTO) {
 }
 
 //Had to create a separate skeleton layout so it wouldn't look strange
-export const ProfilePageSkeleton: React.FC<ProfilePageProps> = (props) => {
-  return (
-    <Page {...props} loginRequired>
-      <VStack align="flex-start" mb="14" mt={6}>
-        <Skeleton h={12} w={['40%', null, null, '15%']} />
-        <Skeleton h={10} w={['50%', null, null, '20%']} />
-        <Skeleton h={10} w={['60%', null, null, '25%']} />
-      </VStack>
-      <Wrap spacing="3rem" justify="center" mt={3}>
-        {[0, 1, 2].map((challenge) => (
-          <WrapItem key={challenge}>
-            <Center w="10rem" h="12rem">
-              <Flex direction="column" align="center">
-                <Skeleton mb={3} w="90%" h={10} />
-                <SkeletonCircle size="10rem" />
-              </Flex>
-            </Center>
-          </WrapItem>
-        ))}
-      </Wrap>
-    </Page>
-  )
-}
+export const ProfilePageSkeleton: FC<ProfilePageProps> = (props) => (
+  <Page {...props} loginRequired>
+    <VStack align="flex-start" mb="14" mt={6}>
+      <Skeleton h={12} w={['40%', null, null, '15%']} />
+      <Skeleton h={10} w={['50%', null, null, '20%']} />
+      <Skeleton h={10} w={['60%', null, null, '25%']} />
+    </VStack>
+    <Wrap spacing="3rem" justify="center" mt={3}>
+      {[0, 1, 2].map((challenge) => (
+        <WrapItem key={challenge}>
+          <Center w="10rem" h="12rem">
+            <Flex direction="column" align="center">
+              <Skeleton mb={3} w="90%" h={10} />
+              <SkeletonCircle size="10rem" />
+            </Flex>
+          </Center>
+        </WrapItem>
+      ))}
+    </Wrap>
+  </Page>
+)
 
-export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
+export const ProfilePage: FC<ProfilePageProps> = (props) => {
   const { onLogout, profile, updateProfile } = useAuthContext()
 
-  React.useEffect(() => {
+  useEffect(() => {
     updateProfile()
   }, [])
 

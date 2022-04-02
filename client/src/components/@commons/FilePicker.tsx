@@ -2,8 +2,8 @@
 
 import { Input, InputGroup, InputGroupProps } from '@chakra-ui/input'
 import { Button, InputRightElement } from '@chakra-ui/react'
-import React from 'react'
 import PropTypes from 'prop-types'
+import { ChangeEvent, Component, createRef, VFC } from 'react'
 
 interface FilePickerProps {
   onFileChange: (fileList: Array<File>) => void
@@ -21,7 +21,7 @@ interface FilePickerState {
   fileName: string
 }
 
-export class FilePicker extends React.Component<FilePickerProps, FilePickerState> {
+export class FilePicker extends Component<FilePickerProps, FilePickerState> {
   static defaultProps = {
     clearButtonLabel: 'Clear',
     multipleFiles: false,
@@ -31,7 +31,7 @@ export class FilePicker extends React.Component<FilePickerProps, FilePickerState
     inputGroupProps: undefined
   }
 
-  private inputRef = React.createRef<HTMLInputElement>()
+  private inputRef = createRef<HTMLInputElement>()
 
   constructor(props: FilePickerProps) {
     super(props)
@@ -56,7 +56,7 @@ export class FilePicker extends React.Component<FilePickerProps, FilePickerState
 
   public reset = (): void => this.handleOnClearClick()
 
-  private handleOnFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  private handleOnFileChange = (ev: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, files: ev.target.files })
     this.clearInnerInput()
   }
@@ -113,7 +113,7 @@ type ClearButtonProps = Pick<FilePickerProps, 'clearButtonLabel'> & {
   onButtonClick: () => void
 }
 
-const ClearButton: React.VFC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) => (
+const ClearButton: VFC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) => (
   <InputRightElement width="4.5rem">
     <Button onClick={onButtonClick}>{clearButtonLabel ?? 'Clear'}</Button>
   </InputRightElement>

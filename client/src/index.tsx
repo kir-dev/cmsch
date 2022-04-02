@@ -1,15 +1,31 @@
-import { ColorModeScript } from '@chakra-ui/react'
-import * as React from 'react'
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import { IndexLayout } from 'components/@layout/IndexLayout'
+import React from 'react'
 import ReactDOM from 'react-dom'
-
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from 'utils/AuthContext'
+import { initAxios } from 'utils/axiosClientSetup'
+import customTheme from 'utils/customTheme'
+import { ServiceProvider } from 'utils/ServiceContext'
 import { App } from './App'
 import reportWebVitals from './reportWebVitals'
 import * as serviceWorker from './serviceWorker'
 
+initAxios()
 ReactDOM.render(
   <React.StrictMode>
     <ColorModeScript />
-    <App />
+    <ChakraProvider theme={customTheme}>
+      <BrowserRouter>
+        <ServiceProvider>
+          <AuthProvider>
+            <IndexLayout>
+              <App />
+            </IndexLayout>
+          </AuthProvider>
+        </ServiceProvider>
+      </BrowserRouter>
+    </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )

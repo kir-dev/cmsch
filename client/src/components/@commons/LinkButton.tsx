@@ -1,5 +1,5 @@
-import React from 'react'
 import { Button, ButtonProps } from '@chakra-ui/react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export type LinkProps = {
@@ -8,7 +8,7 @@ export type LinkProps = {
   newTab?: boolean
 }
 
-export const LinkButton: React.FC<LinkProps & ButtonProps> = ({ external, href, children, newTab = true, ...props }) => {
+export const LinkButton: FC<LinkProps & ButtonProps> = ({ external, href, children, newTab = true, ...props }) => {
   const navigate = useNavigate()
   return (
     <Button

@@ -1,25 +1,23 @@
-import { Box, Heading, VStack, Flex, Stack, Skeleton, Text, useColorModeValue } from '@chakra-ui/react'
-import { Link, useParams } from 'react-router-dom'
-import React, { useState, useEffect } from 'react'
+import { Box, Flex, Heading, Skeleton, Stack, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import axios from 'axios'
-
+import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
+import { Page } from 'components/@layout/Page'
+import { FC, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { Link, useParams } from 'react-router-dom'
+import { Loading } from 'utils/Loading'
+import { AchievementCategory } from '../../types/dto/achievements'
 import { useServiceContext } from '../../utils/useServiceContext'
 import { AchievementStatusBadge } from '../@commons/AchievementStatusBadge'
-import { AchievementCategory } from '../../types/dto/achievements'
-import { API_BASE_URL } from 'utils/configurations'
-import { Page } from 'components/@layout/Page'
-import { Loading } from 'utils/Loading'
-import { CustomBreadcrumb } from 'components/@commons/CustomBreadcrumb'
-import { Helmet } from 'react-helmet'
 
-export const AchievementCategoryPage: React.FC = (props) => {
+export const AchievementCategoryPage: FC = (props) => {
   const { throwError } = useServiceContext()
   const [category, setCategory] = useState<AchievementCategory | undefined>(undefined)
   const { id } = useParams()
 
   useEffect(() => {
     axios
-      .get<AchievementCategory>(`${API_BASE_URL}/api/achievement/category/${id}`)
+      .get<AchievementCategory>(`/api/achievement/category/${id}`)
       .then((res) => {
         setCategory(res.data)
       })

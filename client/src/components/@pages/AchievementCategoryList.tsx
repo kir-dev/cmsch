@@ -1,18 +1,14 @@
-import { Flex, Heading, Stack, VStack, Box, Skeleton, Text, useColorModeValue } from '@chakra-ui/react'
-import { Page } from '../@layout/Page'
-import React, { useEffect, useState } from 'react'
+import { Box, Flex, Heading, Skeleton, Stack, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import axios from 'axios'
-
-import { API_BASE_URL } from '../../utils/configurations'
+import { FC, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 import { AchievementCategory, AllAchievementCategories } from '../../types/dto/achievements'
 import { Loading } from '../../utils/Loading'
 import { useServiceContext } from '../../utils/useServiceContext'
-import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
+import { Page } from '../@layout/Page'
 
-const progress = (category: AchievementCategory) => {
-  return (category.approved + category.notGraded) / category.sum
-}
+const progress = (category: AchievementCategory) => (category.approved + category.notGraded) / category.sum
 
 const progressGradient = (progress: number, color: string) => {
   const endDeg = 360 * progress
@@ -25,7 +21,7 @@ const progressGradient = (progress: number, color: string) => {
   return `conic-gradient(grey 0deg,${color} 10deg, ${color} ${endDeg}deg, grey ${endDeg + 10}deg)`
 }
 
-export const AchievementCategoryList: React.FC = (props) => {
+export const AchievementCategoryList: FC = (props) => {
   const bg = useColorModeValue('gray.200', 'gray.600')
   const [categories, setCategories] = useState<AchievementCategory[]>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -33,7 +29,7 @@ export const AchievementCategoryList: React.FC = (props) => {
 
   useEffect(() => {
     axios
-      .get<AllAchievementCategories>(`${API_BASE_URL}/api/achievement`)
+      .get<AllAchievementCategories>(`/api/achievement`)
       .then((res) => {
         setCategories(res.data.categories)
         setLoading(false)

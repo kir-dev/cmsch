@@ -1,18 +1,18 @@
-import { Page } from '../@layout/Page'
-import React from 'react'
+import { Image } from '@chakra-ui/react'
+import { FC } from 'react'
+import { Helmet } from 'react-helmet'
+import { Navigate, useParams } from 'react-router-dom'
 import { COMMUNITIES } from '../../content/communities'
 import { RESORTS } from '../../content/resorts'
-import { Navigate, useParams } from 'react-router-dom'
-import { DataSheet } from '../@commons/DataSheet'
 import { CustomBreadcrumb } from '../@commons/CustomBreadcrumb'
-import { Helmet } from 'react-helmet'
-import { Paragraph } from '../@commons/Paragraph'
-import { Image } from '@chakra-ui/react'
+import { DataSheet } from '../@commons/DataSheet'
 import { Frame } from '../@commons/Frame'
+import { Paragraph } from '../@commons/Paragraph'
+import { Page } from '../@layout/Page'
 
 type CommunityPageProps = {}
 
-export const CommunityPage: React.FC<CommunityPageProps> = () => {
+export const CommunityPage: FC<CommunityPageProps> = () => {
   const params = useParams()
   const community = COMMUNITIES.find((c) => c.id === params.name)
   if (!community) return <Navigate to="/korok" />

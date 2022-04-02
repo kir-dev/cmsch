@@ -1,15 +1,15 @@
-import React from 'react'
-import { Container } from './Container'
+import { FC } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
-import { UnauthorizedPage } from '../@pages/UnauthorizedPage'
 import { useAuthContext } from '../../utils/useAuthContext'
+import { UnauthorizedPage } from '../@pages/UnauthorizedPage'
+import { Container } from './Container'
 
 type PageProps = {
   loginRequired?: boolean
   groupRequired?: boolean
 }
 
-export const Page: React.FC<PageProps> = ({ loginRequired, groupRequired, children, ...props }) => {
+export const Page: FC<PageProps> = ({ loginRequired, groupRequired, children, ...props }) => {
   const { isLoggedIn, profile } = useAuthContext()
   if (loginRequired && !isLoggedIn) return <UnauthorizedPage />
   if (groupRequired && profile?.groupSelectionAllowed) return <Navigate to="/profil/tankor-modositas" />

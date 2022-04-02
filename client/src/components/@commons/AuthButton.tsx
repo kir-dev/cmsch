@@ -1,9 +1,9 @@
-import React from 'react'
 import { Button } from '@chakra-ui/react'
-import { useAuthContext } from '../../utils/useAuthContext'
+import { FC } from 'react'
 import { API_BASE_URL } from 'utils/configurations'
+import { useAuthContext } from '../../utils/useAuthContext'
 
-export const AuthButton: React.FC = () => {
+export const AuthButton: FC = () => {
   const { isLoggedIn } = useAuthContext()
   const onLoginClicked = () => {
     window.location.replace(`${API_BASE_URL}/control/login`)

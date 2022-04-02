@@ -1,41 +1,39 @@
 import { ChevronDownIcon, ChevronRightIcon, Icon } from '@chakra-ui/icons'
 import { Box, Flex, HStack, Popover, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
-import React from 'react'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
 import { NavItem } from '../../../types/NavItem'
 import { NAV_ITEMS } from '../../../utils/navItems'
-import { Link } from 'react-router-dom'
-import { AuthButton } from '../../@commons/AuthButton'
 import { useAuthContext } from '../../../utils/useAuthContext'
+import { AuthButton } from '../../@commons/AuthButton'
 
-const DesktopSubNav: React.FC<NavItem> = ({ label, href }) => {
-  return (
-    <Link to={href || '#'}>
-      <Box role="group" display="block" p={2} rounded="md">
-        <Stack direction="row" align="center">
-          <Box>
-            <Text transition="all .3s ease" _groupHover={{ color: useColorModeValue('brand.500', 'brand.600') }} fontWeight={500}>
-              {label}
-            </Text>
-          </Box>
-          <Flex
-            transition="all .3s ease"
-            transform="translateX(-10px)"
-            opacity={0}
-            _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-            justify="flex-end"
-            align="center"
-            flex={1}
-          >
-            <Icon color={useColorModeValue('brand.500', 'brand.600')} w={5} h={5} as={ChevronRightIcon} />
-          </Flex>
-        </Stack>
-      </Box>
-    </Link>
-  )
-}
+const DesktopSubNav: FC<NavItem> = ({ label, href }) => (
+  <Link to={href || '#'}>
+    <Box role="group" display="block" p={2} rounded="md">
+      <Stack direction="row" align="center">
+        <Box>
+          <Text transition="all .3s ease" _groupHover={{ color: useColorModeValue('brand.500', 'brand.600') }} fontWeight={500}>
+            {label}
+          </Text>
+        </Box>
+        <Flex
+          transition="all .3s ease"
+          transform="translateX(-10px)"
+          opacity={0}
+          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
+          justify="flex-end"
+          align="center"
+          flex={1}
+        >
+          <Icon color={useColorModeValue('brand.500', 'brand.600')} w={5} h={5} as={ChevronRightIcon} />
+        </Flex>
+      </Stack>
+    </Box>
+  </Link>
+)
 
-const DesktopNav: React.FC = () => {
+const DesktopNav: FC = () => {
   const { isLoggedIn } = useAuthContext()
   return (
     <Stack direction="row" spacing={4}>

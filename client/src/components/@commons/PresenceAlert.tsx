@@ -1,4 +1,5 @@
 import { Alert, AlertIcon } from '@chakra-ui/react'
+import { FC } from 'react'
 
 type PresenceAlertProps = {
   acquired: number
@@ -6,7 +7,7 @@ type PresenceAlertProps = {
   mt?: number
 }
 
-export const PresenceAlert: React.FC<PresenceAlertProps> = ({ acquired, needed, mt = 5 }) => {
+export const PresenceAlert: FC<PresenceAlertProps> = ({ acquired, needed, mt = 5 }) => {
   if (acquired == null || needed == null) return null
   else if (acquired < needed)
     return (
