@@ -1,12 +1,11 @@
-import React, { createContext, useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
 import axios from 'axios'
-import { API_BASE_URL } from './configurations'
+import Cookies from 'js-cookie'
+import { createContext, FC, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ProfileDTO } from '../types/dto/profile'
 import { useServiceContext } from './useServiceContext'
-import { useNavigate } from 'react-router-dom'
 
-const CookieKeys = {
+export const CookieKeys = {
   JWT_TOKEN: 'CMSCH_JWT_TOKEN'
 }
 
@@ -28,7 +27,7 @@ export const AuthContext = createContext<AuthContextType>({
   updateProfile: () => {}
 })
 
-export const AuthProvider: React.FC = ({ children }) => {
+export const AuthProvider: FC = ({ children }) => {
   const { throwError } = useServiceContext()
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(typeof Cookies.get(CookieKeys.JWT_TOKEN) !== 'undefined')
   const [profile, setProfile] = useState<ProfileDTO>()
@@ -37,12 +36,8 @@ export const AuthProvider: React.FC = ({ children }) => {
   const onLoginSuccess = async (response: any) => {
     console.log('[DEBUG] onLoginSuccess, response:', response)
     return // todo: remove this return
-    const { accessToken } = response
-
-    const res = await axios.post<{ profile: ProfileDTO; jwtToken: string }>(`${API_BASE_URL}/api/login`, { accessToken })
-    const { jwtToken } = res.data
-
-    Cookies.set(CookieKeys.JWT_TOKEN, jwtToken, { expires: 2 })
+    const { jwt } = response
+    Cookies.set(CookieKeys.JWT_TOKEN, jwt, { expires: 2 })
     setIsLoggedIn(true)
     navigate('/profil')
   }
@@ -61,7 +56,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const updateProfile = () => {
     if (isLoggedIn)
       axios
-        .get<ProfileDTO>(`${API_BASE_URL}/api/profile`)
+        .get<ProfileDTO>(`/api/profile`)
         .then((res) => {
           if (typeof res.data !== 'object') onLogout()
           setProfile(res.data)
