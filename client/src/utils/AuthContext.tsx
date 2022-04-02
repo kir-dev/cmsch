@@ -6,7 +6,8 @@ import { ProfileDTO } from '../types/dto/profile'
 import { useServiceContext } from './useServiceContext'
 
 const CookieKeys = {
-  LOGGED_IN: 'loggedIn'
+  LOGGED_IN: 'CMSCH_LOGGED_IN',
+  JWT_TOKEN: 'CMSCH_JWT_TOKEN'
 }
 
 export type AuthContextType = {
