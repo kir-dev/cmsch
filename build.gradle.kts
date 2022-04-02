@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.github.gradle.node.yarn.task.YarnTask
 import java.util.Properties
 
 plugins {
@@ -60,75 +59,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-node {
-    version.set("16.13.2")
-    distBaseUrl.set("https://nodejs.org/dist")
-    download.set(true)
-    workDir.set(file("${project.projectDir}/.gradle/nodejs"))
-    npmWorkDir.set(file("${project.projectDir}/.gradle/npm"))
-    yarnWorkDir.set(file("${project.projectDir}/.gradle/yarn"))
-    nodeProjectDir.set(file("${project.projectDir}/src/main/client"))
-}
-
-tasks.withType<ProcessResources> {
-    dependsOn("copyFrontendToBuild")
-}
-
-tasks.register<Copy>("copyFrontendToBuildFast") {
-    dependsOn("yarnBuildNoInstall")
-    from("$projectDir/src/main/client/build/")
-    into("$buildDir/resources/main/static")
-}
-
-tasks.register<YarnTask>("yarnBuildNoInstall") {
-    yarnCommand.set(listOf("run", "build"))
-    workingDir.set(file("src/main/client"))
-    inputs.dir("src")
-    outputs.dir("$buildDir")
-}
-
-tasks.register<Copy>("copyFrontendToBuild") {
-    dependsOn("yarnBuild")
-    from("$projectDir/src/main/client/build/")
-    into("$buildDir/resources/main/static")
-}
-
-tasks.register<YarnTask>("yarnBuild") {
-    dependsOn(tasks.yarn, "yarnFormatEslint", "yarnFormatPrettier", "setupBuildEnv")
-    yarnCommand.set(listOf("run", "build"))
-    workingDir.set(file("src/main/client"))
-    inputs.dir("src")
-    outputs.dir("$buildDir")
-}
-
-tasks.register<YarnTask>("yarnFormatEslint") {
-    yarnCommand.set(listOf("run", "fix:eslint"))
-    workingDir.set(file("src/main/client"))
-    inputs.dir("src")
-}
-
-tasks.register<YarnTask>("yarnFormatPrettier") {
-    yarnCommand.set(listOf("run", "fix:prettier"))
-    workingDir.set(file("src/main/client"))
-    inputs.dir("src")
-}
-
-tasks.register("setupBuildEnv") {
-    doLast {
-        File("$projectDir/src/main/client", ".env").writeText(
-            "REACT_APP_BACKEND_BASE_URL=${applicationProperties.getProperty("cmsch.backend.production-url")}" +
-            "\nREACT_APP_KIRDEV_URL=${applicationProperties.getProperty("cmsch.frontend.kirdev-url")}" +
-            "\nREACT_APP_BUGREPORT_URL=${applicationProperties.getProperty("cmsch.frontend.bugreport-url")}" +
-            "\nREACT_APP_NAME=${applicationProperties.getProperty("cmsch.frontend.appname")}"
-        )
-    }
-}
-
-tasks.yarn {
-    nodeModulesOutputFilter {
-        exclude("notExistingFile")
-    }
-    workingDir.set(file("src/main/client"))
 }
