@@ -12,7 +12,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Box align="center" fontFamily="heading">
+    <Box mx="auto" maxW="6xl" w="full" fontFamily="heading">
       <Flex
         color={useColorModeValue('gray.800', 'white')}
         minH={{ base: '3rem', md: '4.5rem' }}

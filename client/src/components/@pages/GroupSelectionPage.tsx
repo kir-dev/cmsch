@@ -57,7 +57,7 @@ export const GroupSelectionPage: React.FC = () => {
   return (
     <Page>
       <Helmet title="Tankör beállítása" />
-      <Heading align="center">Tankör beállítása</Heading>
+      <Heading textAlign="center">Tankör beállítása</Heading>
       <Text mt={10} textAlign="center">
         Állítsd be a tankörödet, hogy részt vehess a feladatokban!
       </Text>
