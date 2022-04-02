@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./src/main/client
+        working-directory: ./client
 
     steps:
       - name: Check out Git repository
@@ -34,7 +34,7 @@ jobs:
           eslint: true
           eslint_args: "--ignore-path .gitignore ."
           eslint_extensions: ts,tsx,js,jsx
-          eslint_dir: src/main/client/
+          eslint_dir: client/
           
           auto_fix: true
           commit_message: "[lint] Fix code ${linter}"

@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./src/main/client
+        working-directory: ./client
 
     steps:
       - name: Check out Git repository
@@ -33,7 +33,7 @@ jobs:
         with:
           prettier: true
           prettier_args: "--check --ignore-path .gitignore ."
-          prettier_dir: src/main/client/
+          prettier_dir: client/
           
           auto_fix: true
           commit_message: "[lint] Fix code ${linter}"
