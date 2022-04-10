@@ -1,26 +1,25 @@
-package hu.bme.sch.cmsch.service
+package hu.bme.sch.cmsch.component.achievement
 
-import hu.bme.sch.cmsch.repository.AchievementCategoryRepository
-import hu.bme.sch.cmsch.repository.AchievementRepository
-import hu.bme.sch.cmsch.repository.SubmittedAchievementRepository
-import hu.bme.sch.cmsch.dto.*
-import hu.bme.sch.cmsch.model.*
+import hu.bme.sch.cmsch.model.GroupEntity
+import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.util.uploadFile
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
-import java.lang.IllegalStateException
 import java.util.*
 
 const val HOUR = 60 * 60
 
 @Service
+@ConditionalOnBean(AchievementComponent::class)
 open class AchievementsService(
-        val achievements: AchievementRepository,
-        val submitted: SubmittedAchievementRepository,
-        val categories: AchievementCategoryRepository,
-        val clock: ClockService
+    val achievements: AchievementEntityRepository,
+    val submitted: SubmittedAchievementRepository,
+    val categories: AchievementCategoryRepository,
+    val clock: ClockService
 ) {
 
     companion object {
@@ -51,45 +50,45 @@ open class AchievementsService(
     }
 
     @Transactional(readOnly = true)
-    open fun getHighlightedOnes(group: GroupEntity): List<AchievementEntityWrapper> {
+    open fun getHighlightedOnes(group: GroupEntity): List<AchievementEntityWrapperDto> {
         return achievements.findAllByHighlightedTrueAndVisibleTrue()
                 .map { findSubmissionStatusForGroup(it, group) }
     }
 
     @Transactional(readOnly = true)
-    open fun getAllAchievementsForGroup(group: GroupEntity): List<AchievementEntityWrapper> {
+    open fun getAllAchievementsForGroup(group: GroupEntity): List<AchievementEntityWrapperDto> {
         return achievements.findAllByVisibleTrue()
                 .map { findSubmissionStatusForGroup(it, group) }
     }
 
     @Transactional(readOnly = true)
-    open fun getAllAchievementsForUser(user: UserEntity): List<AchievementEntityWrapper> {
+    open fun getAllAchievementsForUser(user: UserEntity): List<AchievementEntityWrapperDto> {
         return achievements.findAllByVisibleTrue()
             .map { findSubmissionStatusForUser(it, user) }
     }
 
     @Transactional(readOnly = true)
-    open fun getAllAchievementsForGuests(): List<AchievementEntityWrapper> {
+    open fun getAllAchievementsForGuests(): List<AchievementEntityWrapperDto> {
         return achievements.findAllByVisibleTrue()
-                .map { AchievementEntityWrapper(it, AchievementStatus.NOT_LOGGED_IN, "") }
+                .map { AchievementEntityWrapperDto(it, AchievementStatus.NOT_LOGGED_IN, "") }
     }
 
-    private fun findSubmissionStatusForGroup(achievementEntity: AchievementEntity, group: GroupEntity): AchievementEntityWrapper {
+    private fun findSubmissionStatusForGroup(achievementEntity: AchievementEntity, group: GroupEntity): AchievementEntityWrapperDto {
         val submission = submitted.findByAchievement_IdAndGroupId(achievementEntity.id, group.id)
         return findSubmission(submission, achievementEntity)
     }
 
-    private fun findSubmissionStatusForUser(achievementEntity: AchievementEntity, user: UserEntity): AchievementEntityWrapper {
+    private fun findSubmissionStatusForUser(achievementEntity: AchievementEntity, user: UserEntity): AchievementEntityWrapperDto {
         val submission = submitted.findByAchievement_IdAndUserId(achievementEntity.id, user.id)
         return findSubmission(submission, achievementEntity)
     }
 
-    private fun findSubmission(submission: Optional<SubmittedAchievementEntity>, achievementEntity: AchievementEntity): AchievementEntityWrapper {
+    private fun findSubmission(submission: Optional<SubmittedAchievementEntity>, achievementEntity: AchievementEntity): AchievementEntityWrapperDto {
         return when {
-            submission.isEmpty -> AchievementEntityWrapper(achievementEntity, AchievementStatus.NOT_SUBMITTED, "")
-            submission.get().rejected -> AchievementEntityWrapper(achievementEntity, AchievementStatus.REJECTED, submission.get().response)
-            submission.get().approved -> AchievementEntityWrapper(achievementEntity, AchievementStatus.ACCEPTED, submission.get().response)
-            else -> AchievementEntityWrapper(achievementEntity, AchievementStatus.SUBMITTED, submission.get().response)
+            submission.isEmpty -> AchievementEntityWrapperDto(achievementEntity, AchievementStatus.NOT_SUBMITTED, "")
+            submission.get().rejected -> AchievementEntityWrapperDto(achievementEntity, AchievementStatus.REJECTED, submission.get().response)
+            submission.get().approved -> AchievementEntityWrapperDto(achievementEntity, AchievementStatus.ACCEPTED, submission.get().response)
+            else -> AchievementEntityWrapperDto(achievementEntity, AchievementStatus.SUBMITTED, submission.get().response)
         }
     }
 
@@ -144,12 +143,12 @@ open class AchievementsService(
     }
 
     private fun newSubmission(
-            achievement: AchievementEntity,
-            answer: AchievementSubmissionDto,
-            groupId: Int?,
-            userId: Int?,
-            user: UserEntity,
-            file: MultipartFile?
+        achievement: AchievementEntity,
+        answer: AchievementSubmissionDto,
+        groupId: Int?,
+        userId: Int?,
+        user: UserEntity,
+        file: MultipartFile?
     ): AchievementSubmissionStatus {
 
         val groupName = if (groupId != null) user.group?.name else null
@@ -159,12 +158,14 @@ open class AchievementsService(
             if (answer.textAnswer.isBlank())
                 return AchievementSubmissionStatus.EMPTY_ANSWER
 
-            submitted.save(SubmittedAchievementEntity(
+            submitted.save(
+                SubmittedAchievementEntity(
                     0, achievement, groupId, groupName ?: "",
                     userId, userName ?: "",
                     achievement.categoryId, answer.textAnswer, "",
                     "", approved = false, rejected = false, score = 0
-            ))
+            )
+            )
             return AchievementSubmissionStatus.OK
 
         } else if (achievement.type == AchievementType.IMAGE) {
@@ -173,23 +174,27 @@ open class AchievementsService(
 
             val fileName = file.uploadFile(target)
 
-            submitted.save(SubmittedAchievementEntity(
+            submitted.save(
+                SubmittedAchievementEntity(
                     0, achievement, groupId, groupName ?: "",
                      userId, userName ?: "",
                     achievement.categoryId, "", "$target/$fileName",
                     "", approved = false, rejected = false, score = 0
-            ))
+            )
+            )
             return AchievementSubmissionStatus.OK
 
         } else if (achievement.type == AchievementType.BOTH) {
             val fileName = file?.uploadFile(target) ?: ""
 
-            submitted.save(SubmittedAchievementEntity(
+            submitted.save(
+                SubmittedAchievementEntity(
                     0, achievement, groupId, groupName ?: "",
                     userId, userName ?: "",
                     achievement.categoryId, answer.textAnswer, "$target/$fileName",
                     "", approved = false, rejected = false, score = 0
-            ))
+            )
+            )
             return AchievementSubmissionStatus.OK
 
         } else {
@@ -198,10 +203,10 @@ open class AchievementsService(
     }
 
     private fun updateSubmission(
-            achievement: AchievementEntity,
-            answer: AchievementSubmissionDto,
-            file: MultipartFile?,
-            submission: SubmittedAchievementEntity
+        achievement: AchievementEntity,
+        answer: AchievementSubmissionDto,
+        file: MultipartFile?,
+        submission: SubmittedAchievementEntity
     ): AchievementSubmissionStatus {
 
         if (achievement.type == AchievementType.TEXT) {

@@ -18,7 +18,7 @@ import hu.bme.sch.cmsch.dto.virtual.TokenCollectorGroupVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.TokenVirtualEntity
 import hu.bme.sch.cmsch.service.AchievementsService
 import hu.bme.sch.cmsch.service.RealtimeConfigService
-import hu.bme.sch.cmsch.service.RiddleService
+import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.core.io.ClassPathResource

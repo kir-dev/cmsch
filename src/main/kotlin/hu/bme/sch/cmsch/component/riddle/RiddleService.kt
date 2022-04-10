@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.service
+package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.repository.RiddleCategoryRepository
 import hu.bme.sch.cmsch.repository.RiddleMappingRepository
@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.model.RiddleEntity
 import hu.bme.sch.cmsch.model.RiddleMappingEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.ClockService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional

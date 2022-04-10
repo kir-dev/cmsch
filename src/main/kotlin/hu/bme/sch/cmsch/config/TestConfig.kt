@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.config
 
+import hu.bme.sch.cmsch.component.achievement.*
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.model.RiddleCategoryEntity
@@ -32,7 +33,7 @@ const val A_DAY = 60 * 60 * 24
 class TestConfig(
     private val news: NewsRepository,
     private val events: EventRepository,
-    private val achievements: AchievementRepository,
+    private val achievements: AchievementEntityRepository,
     private val categories: AchievementCategoryRepository,
     private val users: UserRepository,
     private val extraPages: ExtraPageRepository,
@@ -461,7 +462,8 @@ class TestConfig(
         )
         achievements.save(achi3)
 
-        achievements.save(AchievementEntity(
+        achievements.save(
+            AchievementEntity(
                 title = "Milyen lóról nevezték el a lóvagtermet?",
                 expectedResultDescription = "A ló neve kisbetűvel",
                 categoryId = 2,
@@ -472,9 +474,11 @@ class TestConfig(
                 type = AchievementType.BOTH,
                 maxScore = 30,
                 description = LOREM_IPSUM_LONG_3
-        ))
+        )
+        )
 
-        achievements.save(AchievementEntity(
+        achievements.save(
+            AchievementEntity(
                 title = "Mingyá' lejár",
                 expectedResultDescription = "Kép a centrifugáról (am ez lejárt)",
                 categoryId = 3,
@@ -485,7 +489,8 @@ class TestConfig(
                 type = AchievementType.IMAGE,
                 maxScore = 420,
                 description = "Ez lejárt"
-        ))
+        )
+        )
 
         val achi4 = AchievementEntity(
                 title = "Mit mér a mérnök?",
@@ -502,7 +507,8 @@ class TestConfig(
         achievements.save(achi4)
 
 
-        achievements.save(AchievementEntity(
+        achievements.save(
+            AchievementEntity(
                 title = "Milye van a fának?",
                 expectedResultDescription = "gráfelméleti tézis",
                 categoryId = 2,
@@ -513,13 +519,15 @@ class TestConfig(
                 type = AchievementType.TEXT,
                 maxScore = 150,
                 description = "Levele van, vagy egyel több csúcsa mint éle?"
-        ))
+        )
+        )
 
         val groupI16 = groups.findByName("I16").orElseThrow()
         val groupI09 = groups.findByName("I09").orElseThrow()
         val groupV10 = groups.findByName("V10").orElseThrow()
 
-        submittedAchievements.save(SubmittedAchievementEntity(
+        submittedAchievements.save(
+            SubmittedAchievementEntity(
                 0,
                 achi1,
                 groupI16.id,
@@ -533,9 +541,11 @@ class TestConfig(
                 false,
                 true,
                 0
-        ))
+        )
+        )
 
-        submittedAchievements.save(SubmittedAchievementEntity(
+        submittedAchievements.save(
+            SubmittedAchievementEntity(
                 0,
                 achi1,
                 groupI09.id,
@@ -549,9 +559,11 @@ class TestConfig(
                 true,
                 false,
                 20
-        ))
+        )
+        )
 
-        submittedAchievements.save(SubmittedAchievementEntity(
+        submittedAchievements.save(
+            SubmittedAchievementEntity(
                 0,
                 achi1,
                 groupV10.id,
@@ -565,9 +577,11 @@ class TestConfig(
                 false,
                 false,
                 0
-        ))
+        )
+        )
 
-        submittedAchievements.save(SubmittedAchievementEntity(
+        submittedAchievements.save(
+            SubmittedAchievementEntity(
                 0,
                 achi2,
                 groupI16.id,
@@ -581,9 +595,11 @@ class TestConfig(
                 false,
                 false,
                 0
-        ))
+        )
+        )
 
-        submittedAchievements.save(SubmittedAchievementEntity(
+        submittedAchievements.save(
+            SubmittedAchievementEntity(
                 0,
                 achi2,
                 groupI09.id,
@@ -597,21 +613,26 @@ class TestConfig(
                 false,
                 false,
                 0
-        ))
+        )
+        )
 
         categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
-        categories.save(AchievementCategoryEntity(
+        categories.save(
+            AchievementCategoryEntity(
                 name = "Mine Category2",
                 categoryId = 2,
                 availableFrom = 0,
                 availableTo = 3000000000
-        ))
-        categories.save(AchievementCategoryEntity(
+        )
+        )
+        categories.save(
+            AchievementCategoryEntity(
             name = "Mine Category3",
             categoryId = 3,
             availableFrom = 0,
             availableTo = 3000000000
-        ))
+        )
+        )
     }
 
     private fun addUsers() {
@@ -726,11 +747,11 @@ class TestConfig(
         val user2 = users.findByNeptun("HITMAN").orElseThrow()
         val merchant = users.findByNeptun("FITYMA").orElseThrow()
 
-        productsService.sellProductByG7Id(product1.id, merchant, user1.g7id)
+        productsService.sellProductByG7Id(product1.id, merchant, user1.cmschId)
         productsService.sellProductByNeptun(product2.id, merchant, user1.neptun)
-        productsService.sellProductByG7Id(product1.id, merchant, user2.g7id)
+        productsService.sellProductByG7Id(product1.id, merchant, user2.cmschId)
         productsService.sellProductByNeptun(product1.id, merchant, user2.neptun)
-        productsService.sellProductByG7Id(product1.id, merchant, user2.g7id)
+        productsService.sellProductByG7Id(product1.id, merchant, user2.cmschId)
     }
 
     private fun addExtraPages() {

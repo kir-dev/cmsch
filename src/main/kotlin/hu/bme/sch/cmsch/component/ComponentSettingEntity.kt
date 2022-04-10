@@ -1,0 +1,30 @@
+package hu.bme.sch.cmsch.component
+
+import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.dto.Edit
+import java.io.Serializable
+import javax.persistence.*
+
+@Entity
+@Table(name = "componentSettings", indexes = [
+    Index(name = "idx_componentsettingentity", columnList = "component, property", unique = true)
+])
+class ComponentSettingEntity(
+
+    @Id
+    @GeneratedValue
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    var id: Int = 0,
+
+    @Column(nullable = false)
+    var component: String = "",
+
+    @Column(nullable = false)
+    var property: String = "",
+
+    @Lob
+    @Column(nullable = false)
+    var value: String = "",
+
+) : Serializable

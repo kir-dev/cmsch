@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto.view
+package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.*

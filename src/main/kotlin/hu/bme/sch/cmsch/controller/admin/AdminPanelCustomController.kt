@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.repository.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
@@ -307,7 +307,7 @@ class AdminPanelCustomController(
     fun shareLocation(model: Model, request: HttpServletRequest): String {
 
         model.addAttribute("user", request.getUser())
-        model.addAttribute("accessToken", request.getUser().g7id.substring(prefix.length))
+        model.addAttribute("accessToken", request.getUser().cmschId.substring(prefix.length))
 
         return "shareLocation"
     }

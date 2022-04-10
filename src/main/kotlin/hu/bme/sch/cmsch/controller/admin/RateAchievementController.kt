@@ -3,9 +3,9 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.repository.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.dto.virtual.GradedAchievementGroup
-import hu.bme.sch.cmsch.model.SubmittedAchievementEntity
+import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementEntity
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller
@@ -165,9 +165,9 @@ class RateAchievementController(
     }
 
     private fun updateEntity(
-            descriptor: OverviewBuilder,
-            entity: SubmittedAchievementEntity,
-            dto: SubmittedAchievementEntity
+        descriptor: OverviewBuilder,
+        entity: SubmittedAchievementEntity,
+        dto: SubmittedAchievementEntity
     ) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore) {

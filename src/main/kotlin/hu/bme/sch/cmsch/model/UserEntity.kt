@@ -10,8 +10,9 @@ import javax.persistence.*
 
 enum class RoleType(val value: Int) {
     GUEST(0),      // anyone without login
-    BASIC(1),      // has auth.sch but not member of SSSL
-    STAFF(100),    // member of the SSSL
+    BASIC(1),      // has auth.sch but not organizer
+    ATTENDEE(2),
+    STAFF(100),    // member of the organizer group
     ADMIN(200),    // the organizers of the event
     SUPERUSER(500) // advanced user management (able to grant admin access)
     ;
@@ -71,11 +72,11 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 3, label = "Gólyahét id", enabled = false,
+    @property:GenerateInput(order = 3, label = "Cmsch id", enabled = false,
         note = "Automatikusan generálódik a PéK ID-ből")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2)
-    var g7id: String = "",
+    var cmschId: String = "",
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
@@ -98,7 +99,7 @@ data class UserEntity(
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Jogkör",
-        source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
+        source = [ "GUEST", "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
         note = "BASIC = gólya, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
     var role: RoleType = RoleType.GUEST,

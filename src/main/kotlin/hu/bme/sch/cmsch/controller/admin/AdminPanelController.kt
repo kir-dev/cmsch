@@ -1,5 +1,9 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import hu.bme.sch.cmsch.component.achievement.AchievementCategoryEntity
+import hu.bme.sch.cmsch.component.achievement.AchievementCategoryRepository
+import hu.bme.sch.cmsch.component.achievement.AchievementEntity
+import hu.bme.sch.cmsch.component.achievement.AchievementEntityRepository
 import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.model.RiddleCategoryEntity
@@ -48,8 +52,8 @@ class EventsController(
 @Controller
 @RequestMapping("/admin/control/achievements")
 class AchievementController(
-        repo: AchievementRepository,
-        importService: ImportService
+    repo: AchievementEntityRepository,
+    importService: ImportService
 ) : AbstractAdminPanelController<AchievementEntity>(
         repo,
         "achievements", "Bucketlist Feladat", "Bucketlist feladatokek",
@@ -62,8 +66,8 @@ class AchievementController(
 @Controller
 @RequestMapping("/admin/control/categories")
 class AchievementCategoryController(
-        repo: AchievementCategoryRepository,
-        importService: ImportService
+    repo: AchievementCategoryRepository,
+    importService: ImportService
 ) : AbstractAdminPanelController<AchievementCategoryEntity>(
         repo,
         "categories", "Feladat kategória", "Feladat kategóriák",

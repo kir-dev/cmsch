@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.service
 
+import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto

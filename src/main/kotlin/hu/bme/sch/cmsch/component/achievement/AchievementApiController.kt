@@ -1,17 +1,15 @@
-package hu.bme.sch.cmsch.controller.api
+package hu.bme.sch.cmsch.component.achievement
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.dto.config.OwnershipType
-import hu.bme.sch.cmsch.dto.view.AchievementCategoryView
-import hu.bme.sch.cmsch.dto.view.AchievementsView
-import hu.bme.sch.cmsch.dto.view.SingleAchievementView
 import hu.bme.sch.cmsch.service.AchievementsService
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.LeaderBoardService
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
@@ -19,6 +17,7 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
+@ConditionalOnBean(AchievementComponent::class)
 class AchievementApiController(
     private val config: RealtimeConfigService,
     private val leaderBoardService: LeaderBoardService,

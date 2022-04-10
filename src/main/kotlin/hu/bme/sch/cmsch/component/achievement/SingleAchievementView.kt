@@ -1,10 +1,7 @@
-package hu.bme.sch.cmsch.dto.view
+package hu.bme.sch.cmsch.component.achievement
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.dto.AchievementStatus
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.model.AchievementEntity
-import hu.bme.sch.cmsch.model.SubmittedAchievementEntity
 
 data class SingleAchievementView(
 
