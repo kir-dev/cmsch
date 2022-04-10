@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.dto.RiddleCategoryDto
 import hu.bme.sch.cmsch.dto.RiddleSubmissionDto
 import hu.bme.sch.cmsch.dto.view.RiddleHintView
 import hu.bme.sch.cmsch.dto.view.RiddleView
-import hu.bme.sch.cmsch.service.RiddleService
+import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.riddle.view.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.http.ResponseEntity

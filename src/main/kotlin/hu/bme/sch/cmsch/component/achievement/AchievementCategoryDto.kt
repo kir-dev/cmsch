@@ -1,6 +1,8 @@
-package hu.bme.sch.cmsch.dto
+package hu.bme.sch.cmsch.component.achievement
 
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.dto.Preview
 
 data class AchievementCategoryDto(
         @JsonView(value = [ Preview::class, FullDetails::class ])

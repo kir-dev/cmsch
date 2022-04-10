@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto
+package hu.bme.sch.cmsch.component.achievement
 
 enum class AchievementSubmissionStatus {
     OK,

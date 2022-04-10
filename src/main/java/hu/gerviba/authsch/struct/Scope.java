@@ -9,6 +9,7 @@ package hu.gerviba.authsch.struct;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import hu.gerviba.authsch.response.ProfileDataResponse.ProfileDataResponseBuilder;
+import org.springframework.lang.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -192,7 +193,7 @@ public enum Scope {
 
     private final String scope;
 
-    private Scope(String scope) {
+    Scope(String scope) {
         this.scope = scope;
     }
 
@@ -203,24 +204,32 @@ public enum Scope {
         return BASIC;
     }
 
+    @Nullable
+    public static Scope byScopeOrNull(String scope) {
+        for (Scope s : values())
+            if (s.getScope().equals(scope))
+                return s;
+        return null;
+    }
+
     public String getScope() {
         return scope;
     }
 
     public static String buildForUrl(List<Scope> scopes) {
-        return String.join("+", scopes.stream()
-                .map(x -> x.scope).collect(Collectors.toList()));
+        return scopes.stream()
+                .map(x -> x.scope).collect(Collectors.joining("+"));
     }
 
     public static String buildForUrl(Scope... scopes) {
-        return String.join("+", Arrays.asList(scopes).stream()
-                .map(x -> x.scope).collect(Collectors.toList()));
+        return Arrays.stream(scopes)
+                .map(x -> x.scope).collect(Collectors.joining("+"));
     }
 
     public static List<Scope> listFromString(String delimiter, String scopes) {
-        return Arrays.asList(scopes.split(delimiter)).stream()
+        return Arrays.stream(scopes.split(delimiter))
                 .map(Scope::byScope)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public boolean canApply(JsonNode obj) {

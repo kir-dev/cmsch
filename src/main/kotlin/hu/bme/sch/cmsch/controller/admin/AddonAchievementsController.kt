@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import hu.bme.sch.cmsch.model.SubmittedAchievementEntity
+import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementEntity
 import hu.bme.sch.cmsch.service.AchievementsService
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.stereotype.Controller

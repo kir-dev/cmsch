@@ -1,13 +1,13 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.controller.api.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
-import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
-import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.model.GuildType
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
+import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
@@ -15,10 +15,10 @@ import hu.bme.sch.cmsch.util.getUserOrNull
 import hu.bme.sch.cmsch.util.sha256
 import hu.gerviba.authsch.AuthSchAPI
 import hu.gerviba.authsch.response.ProfileDataResponse
-import hu.gerviba.authsch.struct.Scope
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.collections.ArrayList
 
 const val USER_SESSION_ATTRIBUTE_NAME = "user_id"
 const val USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME = "user"
@@ -40,28 +39,21 @@ const val LOGGED_IN_COOKIE = "loggedIn"
 const val SESSION_TIMEOUT = 7 * 24 * 60 * 60
 
 @Controller
-open class LoginController(
+@ConditionalOnBean(LoginComponent::class)
+class LoginController(
     private val authSch: AuthSchAPI,
     private val users: UserService,
     private val profileService: UserProfileGeneratorService,
     private val groupToUserMapping: GroupToUserMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
     private val groups: GroupRepository,
-    @Value("\${cmsch.pek-group-grant-name:unset}") private val grantStaffGroupName: String,
     @Value("\${cmsch.sysadmins:}") private val systemAdmins: String,
-    @Value("\${cmsch.default-staff-group-name:STAFF}") private val staffGroupName: String,
-    @Value("\${cmsch.default-group-name:DEFAULT}") private val defaultGroupName: String,
     @Value("\${cmsch.profile-qr.enabled:true}") private val profileQrEnabled: Boolean,
-    @Value("\${cmsch.staff-group-strategy:ONE_COMMUNITY}") private val staffGroupStrategy: StaffGroupStrategy,
-    @Value("\${cmsch.group-select.organizer-group-ids:0}") private val rawOrganizerGroupIds: String,
-    @Value("\${cmsch.group-select.organizer-group:Kiállító}") private val organizerGroupName: String,
     private val config: RealtimeConfigService,
+    private val loginComponent: LoginComponent
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-    private val organizerGroups: LongArray = rawOrganizerGroupIds.split(',').mapNotNull { it.toLongOrNull() }.toLongArray()
-
-    enum class StaffGroupStrategy { ONE_COMMUNITY, MULTIPLE_COMMUNITIES }
 
     @ResponseBody
     @GetMapping("/control/logged-out")
@@ -133,13 +125,16 @@ open class LoginController(
     }
 
     private fun updateFields(user: UserEntity, profile: ProfileDataResponse) {
-        if (user.g7id.isBlank()) {
+        // Generate CMSch i if not present
+        if (user.cmschId.isBlank()) {
             if (profileQrEnabled) {
                 profileService.generateFullProfileForUser(user)
             } else {
                 profileService.generateProfileIdForUser(user)
             }
         }
+
+        // Check neptun; grant group and guild if mapping present
         if (user.neptun.isNotBlank() && user.groupName.isBlank()) {
             groupToUserMapping.findByNeptun(user.neptun).ifPresent {
                 user.major = it.major
@@ -152,63 +147,105 @@ open class LoginController(
                 user.guild = it.guild
             }
         }
+
+        // Assign groups and roles
         if (profile.eduPersonEntitlements != null && user.role == RoleType.BASIC) {
-            when (staffGroupStrategy) {
-                StaffGroupStrategy.ONE_COMMUNITY -> staffGroupStrategyOneCommunity(profile, user)
-                StaffGroupStrategy.MULTIPLE_COMMUNITIES -> staffGroupStrategyMultipleCommunities(profile, user)
-            }
+            assignStaffRole(profile, user)
+            assignAdminRole(profile, user)
+            assignOrganizerGroup(profile, user)
         }
+
+        // Override superuser roles
         if (systemAdmins.split(",").contains(user.pekId)) {
             log.info("Granting SUPERUSER for ${user.fullName}")
             user.role = RoleType.SUPERUSER
         }
+
+        // Assign fallback group if user still don't have one
         if (user.groupName.isBlank()) {
-            groups.findByName(defaultGroupName).ifPresent {
+            groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
                 user.groupName = it.name
                 user.group = it
             }
         }
+
+        // If fallback is still not found, set the group name to empty string
         if (user.groupName != user.group?.name)
             user.groupName = user.group?.name ?: ""
         users.save(user)
     }
 
-    private fun staffGroupStrategyOneCommunity(
+    private fun assignStaffRole(
         profile: ProfileDataResponse,
         user: UserEntity
     ) {
-        profile.eduPersonEntitlements
-            .filter { it.end == null }
-            .filter { it.name.equals(grantStaffGroupName) }
-            .forEach { _ ->
-                log.info("Granting STAFF for ${user.fullName}")
-                user.role = RoleType.STAFF
+        val staffGroups = loginComponent.staffGroups.getValue()
+            .split(',')
+            .mapNotNull { it.toLongOrNull() }
+            .toLongArray()
+        if (staffGroups.isEmpty())
+            return
 
-                if (user.groupName.isBlank()) {
-                    groups.findByName(staffGroupName).ifPresent {
-                        user.groupName = it.name
-                        user.group = it
-                    }
+        val grantStaffRole = profile.eduPersonEntitlements
+            .filter { it.end == null }
+            .any { staffGroups.contains(it.id) }
+
+        if (grantStaffRole) {
+            log.info("Granting STAFF for ${user.fullName}")
+            user.role = RoleType.STAFF
+
+            if (user.groupName.isBlank()) {
+                groups.findByName(loginComponent.staffGroupName.getValue()).ifPresent {
+                    user.groupName = it.name
+                    user.group = it
                 }
             }
+        }
     }
 
-    private fun staffGroupStrategyMultipleCommunities(
+    private fun assignAdminRole(
         profile: ProfileDataResponse,
         user: UserEntity
     ) {
+        val adminGroups = loginComponent.adminGroups.getValue()
+            .split(',')
+            .mapNotNull { it.toLongOrNull() }
+            .toLongArray()
+        if (adminGroups.isEmpty())
+            return
+
+        val grantAdminRole = profile.eduPersonEntitlements
+            .filter { it.end == null }
+            .any { adminGroups.contains(it.id) }
+
+        if (grantAdminRole) {
+            log.info("Granting ADMIN for ${user.fullName}")
+            user.role = RoleType.ADMIN
+        }
+    }
+
+    private fun assignOrganizerGroup(
+        profile: ProfileDataResponse,
+        user: UserEntity
+    ) {
+        val organizerGroups = loginComponent.organizerGroups.getValue()
+            .split(',')
+            .mapNotNull { it.toLongOrNull() }
+            .toLongArray()
+        if (organizerGroups.isEmpty())
+            return
+
         val memberOfAnyOrganizerGroups = profile.eduPersonEntitlements
             .filter { it.end == null }
             .any { organizerGroups.contains(it.id) }
 
-        if (memberOfAnyOrganizerGroups) {
-            groups.findByName(organizerGroupName).ifPresent {
+        if (memberOfAnyOrganizerGroups && user.role.value < RoleType.STAFF.value) {
+            groups.findByName(loginComponent.organizerGroupName.getValue()).ifPresent {
                 log.info("Identified organizer: ${user.fullName}")
                 user.groupName = it.name
                 user.group = it
             }
         }
-
     }
 
     private fun getAuthorities(user: UserEntity): List<GrantedAuthority> {
@@ -220,20 +257,17 @@ open class LoginController(
     @ApiOperation("Redirection to the auth provider")
     @GetMapping("/control/login")
     fun items(request: HttpServletRequest): String {
-        val neptun = config.isRequestForNeptun()
-        val email = config.isRequestForEmail()
-        return "redirect:" + when {
-            neptun && email -> authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
-            neptun && !email -> authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.NEPTUN_CODE, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
-            !neptun && email -> authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.MAIL, Scope.EDU_PERSON_ENTILEMENT)
-            !neptun && !email -> authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT)
-            else -> "/error-during-login"
-        }
+        return "redirect:${generateLoginUrl(buildUniqueState(request))}"
     }
+
+    fun generateLoginUrl(uniqueId: String): String {
+        return "${loginComponent.loginBaseUrl}?" +
+                "response_type=code" +
+                "&client_id=${authSch.clientIdentifier}" +
+                "&state=${uniqueId}" +
+                "&scope=${loginComponent.authschScopes.joinToString("+") { it.scope }}"
+    }
+
 
     fun buildUniqueState(request: HttpServletRequest): String {
         return (request.session.id + request.localAddr).sha256()

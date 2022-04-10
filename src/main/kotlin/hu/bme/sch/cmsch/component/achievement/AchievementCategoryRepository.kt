@@ -1,6 +1,6 @@
-package hu.bme.sch.cmsch.repository
+package hu.bme.sch.cmsch.component.achievement
 
-import hu.bme.sch.cmsch.model.AchievementCategoryEntity
+import hu.bme.sch.cmsch.component.achievement.AchievementCategoryEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
