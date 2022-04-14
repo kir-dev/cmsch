@@ -1,15 +1,17 @@
-package hu.bme.sch.cmsch.service
+package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.LocationDto
 import hu.bme.sch.cmsch.g7mobile.LocationResponse
-import hu.bme.sch.cmsch.model.LocationEntity
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ClockService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
+@ConditionalOnBean(LocationComponent::class)
 class LocationService(
     private val clock: ClockService,
     private val userRepository: UserRepository,
@@ -23,7 +25,8 @@ class LocationService(
             val user = userRepository.findByG7id(prefix + locationDto.token)
             if (user.isPresent) {
                 if (user.get().role.value >= RoleType.STAFF.value) {
-                    tokenToLocationMapping.put(locationDto.token, LocationEntity(0, user.get().id, user.get().fullName,  user.get().alias, user.get().groupName))
+                    tokenToLocationMapping[locationDto.token] =
+                        LocationEntity(0, user.get().id, user.get().fullName, user.get().alias, user.get().groupName)
                 } else {
                     return LocationResponse("jogosulatlan", "n/a")
                 }
@@ -75,8 +78,8 @@ class LocationService(
         return tokenToLocationMapping.values.filter { it.groupName == groupName }
     }
 
-    fun getRecents(): List<LocationEntity> {
-        val range = clock.getTimeInSeconds() + 600;
+    fun getRecentLocations(): List<LocationEntity> {
+        val range = clock.getTimeInSeconds() + 600
         return tokenToLocationMapping.values.filter { it.timestamp < range }
     }
 

@@ -4,25 +4,28 @@ import hu.bme.sch.cmsch.component.achievement.AchievementCategoryEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementCategoryRepository
 import hu.bme.sch.cmsch.component.achievement.AchievementEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementEntityRepository
+import hu.bme.sch.cmsch.component.debt.ProductEntity
+import hu.bme.sch.cmsch.component.debt.ProductRepository
+import hu.bme.sch.cmsch.component.debt.SoldProductEntity
+import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.extrapage.ExtraPageEntity
 import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
-import hu.bme.sch.cmsch.repository.*
-import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
-import hu.bme.sch.cmsch.component.riddle.RiddleEntity
 import hu.bme.sch.cmsch.component.riddle.RiddleCategoryRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleEntity
 import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
 import hu.bme.sch.cmsch.component.token.TokenEntity
 import hu.bme.sch.cmsch.component.token.TokenRepository
+import hu.bme.sch.cmsch.model.*
+import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
-import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -88,8 +91,8 @@ class AchievementCategoryController(
 @Controller
 @RequestMapping("/admin/control/products")
 class ProductController(
-        repo: ProductRepository,
-        importService: ImportService
+    repo: ProductRepository,
+    importService: ImportService
 ) : AbstractAdminPanelController<ProductEntity>(
         repo,
         "products", "Termék", "Termékek",
@@ -102,9 +105,9 @@ class ProductController(
 @Controller
 @RequestMapping("/admin/control/debts")
 class SoldProductController(
-        repo: SoldProductRepository,
-        private val clock: ClockService,
-        importService: ImportService
+    repo: SoldProductRepository,
+    private val clock: ClockService,
+    importService: ImportService
 ) : AbstractAdminPanelController<SoldProductEntity>(
         repo,
         "debts", "Tranzakció", "Tranzakciók",
@@ -145,7 +148,7 @@ class UserController(
     private val profileService: UserProfileGeneratorService,
     private val groups: GroupRepository,
     importService: ImportService,
-    @Value("\${cmsch.profile-qr.enabled:true}") private val profileQrEnabled: Boolean
+    @Value("\${cmsch.profile.qr-enabled:true}") private val profileQrEnabled: Boolean
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",

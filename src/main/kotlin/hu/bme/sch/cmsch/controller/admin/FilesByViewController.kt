@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.dto.virtual.FileVirtualEntity
-import hu.bme.sch.cmsch.dto.virtual.FilesByView
+import hu.bme.sch.cmsch.dto.virtual.FilesByViewVirtualEntity
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -31,7 +31,7 @@ class FilesByViewController(
     private val titlePlural = "Fájlok"
     private val description = "Fájlok kategóriánként csoportosítva"
 
-    private val overviewDescriptor = OverviewBuilder(FilesByView::class)
+    private val overviewDescriptor = OverviewBuilder(FilesByViewVirtualEntity::class)
     private val submittedDescriptor = OverviewBuilder(FileVirtualEntity::class)
 
     @GetMapping("")
@@ -54,10 +54,10 @@ class FilesByViewController(
         return "overview"
     }
 
-    private fun fetchOverview(): List<FilesByView> {
+    private fun fetchOverview(): List<FilesByViewVirtualEntity> {
         return sequenceOf("profiles", "news", "events", "products", "groups", "achievement")
                 .filter { Files.exists(Path.of(root, it)) }
-                .map { FilesByView(it, Files.walk(Path.of(root, it)).count() - 1, "~${Path.of(root, it).fileSize() / 1024} KB") }
+                .map { FilesByViewVirtualEntity(it, Files.walk(Path.of(root, it)).count() - 1, "~${Path.of(root, it).fileSize() / 1024} KB") }
                 .toList()
 
     }

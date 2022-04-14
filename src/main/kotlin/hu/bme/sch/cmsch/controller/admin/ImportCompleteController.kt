@@ -2,10 +2,10 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.repository.SoldProductRepository
+import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.dto.virtual.ImportDebtsCompleteVirtualEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
-import hu.bme.sch.cmsch.model.SoldProductEntity
+import hu.bme.sch.cmsch.component.debt.SoldProductEntity
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -18,8 +18,8 @@ import kotlin.reflect.KProperty1
 @Controller
 @RequestMapping("/admin/control/import-debts-complete")
 class ImportCompleteController(
-        private val transactions: SoldProductRepository,
-        private val clock: ClockService
+    private val transactions: SoldProductRepository,
+    private val clock: ClockService
 ) {
 
     private val view = "import-debts-complete"

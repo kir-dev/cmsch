@@ -2,13 +2,15 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.component.debt.ProductService
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
-import hu.bme.sch.cmsch.dto.virtual.TrackGroupVirtualEntity
-import hu.bme.sch.cmsch.service.LocationService
-import hu.bme.sch.cmsch.model.SoldProductEntity
+import hu.bme.sch.cmsch.component.location.TrackGroupVirtualEntity
+import hu.bme.sch.cmsch.component.location.LocationService
+import hu.bme.sch.cmsch.component.debt.SoldProductEntity
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
@@ -37,7 +39,7 @@ class AdminPanelCustomController(
     private val config: RealtimeConfigService,
     private val submittedRepository: SubmittedAchievementRepository,
     private val locationService: LocationService,
-    @Value("\${cmsch.profile.qr-prefix:G7_}") private val prefix: String
+    @Value("\${cmsch.profile.qr-prefix:KIRDEV_}") private val prefix: String
 ) {
 
     private val groupTopListDescriptor = OverviewBuilder(TopListAsGroupEntryDto::class)
@@ -296,7 +298,7 @@ class AdminPanelCustomController(
         model.addAttribute("view", "track-group")
         model.addAttribute("columns", trackDescriptor.getColumns())
         model.addAttribute("fields", trackDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", locationService.getRecents().map { TrackGroupVirtualEntity(it.groupName) }.distinct())
+        model.addAttribute("rows", locationService.getRecentLocations().map { TrackGroupVirtualEntity(it.groupName) }.distinct())
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_TRACK)
 

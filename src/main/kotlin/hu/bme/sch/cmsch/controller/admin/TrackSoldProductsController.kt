@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.repository.SoldProductRepository
-import hu.bme.sch.cmsch.dto.virtual.ProductGroupVirtualEntity
+import hu.bme.sch.cmsch.component.debt.SoldProductRepository
+import hu.bme.sch.cmsch.component.debt.ProductGroupVirtualEntity
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.service
+package hu.bme.sch.cmsch.component.leaderboard
 
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.repository.*
@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.service.RealtimeConfigService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled

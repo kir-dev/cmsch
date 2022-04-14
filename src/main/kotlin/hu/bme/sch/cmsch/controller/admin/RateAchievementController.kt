@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
-import hu.bme.sch.cmsch.dto.virtual.GradedAchievementGroup
+import hu.bme.sch.cmsch.component.achievement.GradedAchievementGroup
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementEntity
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull

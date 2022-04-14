@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.model.ProductEntity
-import hu.bme.sch.cmsch.service.ProductService
+import hu.bme.sch.cmsch.component.debt.ProductService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller

@@ -1,8 +1,8 @@
-package hu.bme.sch.cmsch.dto.virtual
+package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 
-data class DebtsByGroup(
+data class DebtsByGroupVirtualEntity(
 
         @property:GenerateOverview(visible = false)
         val id: Int,

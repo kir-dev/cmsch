@@ -1,10 +1,3 @@
-/**
- * "THE BEER-WARE LICENSE" (Revision 42):
- * <p>
- * <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
- * can do whatever you want with this stuff. If we meet some day, and you think
- * this stuff is worth it, you can buy me a beer in return.       Szabó Gergely
- */
 package hu.gerviba.authsch;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,12 +20,10 @@ import java.util.List;
  * Store it in application scope.
  *
  * @author Gerviba
- * @see {@link #validateAuthentication(String)}
- * @see {@link #refreshToken(String)}
- * @see {@link #getProfile(String)}
  */
 public class AuthSchAPI implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3441712708900902459L;
     private static final String FAILED_TO_PARSE_AUTH_RESPONSE = "Failed to parse auth hu.gerviba.authsch.response";
 

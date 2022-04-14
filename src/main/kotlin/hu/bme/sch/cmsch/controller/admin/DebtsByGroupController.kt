@@ -4,9 +4,9 @@ import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.SoldProductRepository
-import hu.bme.sch.cmsch.dto.virtual.DebtsByGroup
-import hu.bme.sch.cmsch.model.SoldProductEntity
+import hu.bme.sch.cmsch.component.debt.SoldProductRepository
+import hu.bme.sch.cmsch.component.debt.DebtsByGroupVirtualEntity
+import hu.bme.sch.cmsch.component.debt.SoldProductEntity
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -32,7 +32,7 @@ class DebtsByGroupController(
     private val entitySourceMapping: Map<String, (SoldProductEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
 
-    private val overviewDescriptor = OverviewBuilder(DebtsByGroup::class)
+    private val overviewDescriptor = OverviewBuilder(DebtsByGroupVirtualEntity::class)
     private val submittedDescriptor = OverviewBuilder(SoldProductEntity::class)
 
     @GetMapping("")
@@ -55,13 +55,13 @@ class DebtsByGroupController(
         return "overview"
     }
 
-    private fun fetchOverview(): List<DebtsByGroup> {
+    private fun fetchOverview(): List<DebtsByGroupVirtualEntity> {
         return soldProductRepository.findAll().groupBy { it.responsibleGroupId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { it ->
                     val groupName = groupRepository.findById(it[0].responsibleGroupId).map { it.name }.orElse("n/a")
-                    DebtsByGroup(
+                    DebtsByGroupVirtualEntity(
                             it[0].responsibleGroupId,
                             groupName,
                             it.sumOf { it.price },
@@ -143,9 +143,9 @@ class DebtsByGroupController(
     }
 
     private fun updateEntity(
-            descriptor: OverviewBuilder,
-            entity: SoldProductEntity,
-            dto: SoldProductEntity
+        descriptor: OverviewBuilder,
+        entity: SoldProductEntity,
+        dto: SoldProductEntity
     ) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore) {
