@@ -12,6 +12,7 @@ Project Structure
   - `token`
   - `profile`: aggregates `riddle`, `achievements`, `tokens`, profile data, `debts`, `location`
   - `extraPage`
+  - `impressum`
 - system components:
   - `login`: JWT and authsch
   - `menu`: required for `app` component

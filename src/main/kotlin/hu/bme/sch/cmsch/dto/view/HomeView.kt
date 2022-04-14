@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.component.achievement.AchievementEntityWrapperDto
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.model.EventEntity
-import hu.bme.sch.cmsch.model.NewsEntity
+import hu.bme.sch.cmsch.component.news.NewsEntity
 
 data class HomeView(
 
