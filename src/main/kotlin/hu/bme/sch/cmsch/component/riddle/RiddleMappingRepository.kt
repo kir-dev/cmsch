@@ -1,12 +1,13 @@
-package hu.bme.sch.cmsch.repository
+package hu.bme.sch.cmsch.component.riddle
 
-import hu.bme.sch.cmsch.model.RiddleMappingEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
+@ConditionalOnBean(RiddleService::class)
 interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
     fun findAllByOwnerUserAndCompletedTrue(user: UserEntity): List<RiddleMappingEntity>
 

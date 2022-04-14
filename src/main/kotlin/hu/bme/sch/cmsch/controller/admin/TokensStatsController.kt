@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.dto.virtual.TokenStatVirtualEntity
-import hu.bme.sch.cmsch.repository.TokenPropertyRepository
+import hu.bme.sch.cmsch.component.token.TokenStatVirtualEntity
+import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value

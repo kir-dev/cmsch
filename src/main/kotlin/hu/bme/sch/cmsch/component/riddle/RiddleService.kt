@@ -1,24 +1,17 @@
 package hu.bme.sch.cmsch.component.riddle
 
-import hu.bme.sch.cmsch.repository.RiddleCategoryRepository
-import hu.bme.sch.cmsch.repository.RiddleMappingRepository
-import hu.bme.sch.cmsch.repository.RiddleRepository
-import hu.bme.sch.cmsch.dto.RiddleCategoryDto
-import hu.bme.sch.cmsch.riddle.view.RiddleSubmissionStatus
-import hu.bme.sch.cmsch.riddle.view.RiddleSubmissionView
-import hu.bme.sch.cmsch.dto.view.RiddleView
-import hu.bme.sch.cmsch.model.RiddleEntity
-import hu.bme.sch.cmsch.model.RiddleMappingEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.ClockService
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@ConditionalOnBean(RiddleService::class)
 open class RiddleService(
-    private val riddleRepository: RiddleRepository,
+    private val riddleRepository: RiddleEntityRepository,
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
     private val clock: ClockService

@@ -5,10 +5,12 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.achievement.AchievementEntity
 import hu.bme.sch.cmsch.dto.*
 import org.hibernate.Hibernate
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
 
 @Entity
 @Table(name="submittedAchievements")
+@ConditionalOnBean(AchievementComponent::class)
 data class SubmittedAchievementEntity(
     @Id
     @GeneratedValue
@@ -83,7 +85,7 @@ data class SubmittedAchievementEntity(
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as SubmittedAchievementEntity
 
-        return id != null && id == other.id
+        return id != 0 && id == other.id
     }
 
     override fun hashCode(): Int = javaClass.hashCode()

@@ -158,14 +158,12 @@ open class AchievementsService(
             if (answer.textAnswer.isBlank())
                 return AchievementSubmissionStatus.EMPTY_ANSWER
 
-            submitted.save(
-                SubmittedAchievementEntity(
-                    0, achievement, groupId, groupName ?: "",
-                    userId, userName ?: "",
-                    achievement.categoryId, answer.textAnswer, "",
-                    "", approved = false, rejected = false, score = 0
-            )
-            )
+            submitted.save(SubmittedAchievementEntity(
+                0, achievement, groupId, groupName ?: "",
+                userId, userName ?: "",
+                achievement.categoryId, answer.textAnswer, "",
+                "", approved = false, rejected = false, score = 0
+            ))
             return AchievementSubmissionStatus.OK
 
         } else if (achievement.type == AchievementType.IMAGE) {
@@ -174,27 +172,23 @@ open class AchievementsService(
 
             val fileName = file.uploadFile(target)
 
-            submitted.save(
-                SubmittedAchievementEntity(
-                    0, achievement, groupId, groupName ?: "",
-                     userId, userName ?: "",
-                    achievement.categoryId, "", "$target/$fileName",
-                    "", approved = false, rejected = false, score = 0
-            )
-            )
+            submitted.save(SubmittedAchievementEntity(
+                0, achievement, groupId, groupName ?: "",
+                 userId, userName ?: "",
+                achievement.categoryId, "", "$target/$fileName",
+                "", approved = false, rejected = false, score = 0
+            ))
             return AchievementSubmissionStatus.OK
 
         } else if (achievement.type == AchievementType.BOTH) {
             val fileName = file?.uploadFile(target) ?: ""
 
-            submitted.save(
-                SubmittedAchievementEntity(
-                    0, achievement, groupId, groupName ?: "",
-                    userId, userName ?: "",
-                    achievement.categoryId, answer.textAnswer, "$target/$fileName",
-                    "", approved = false, rejected = false, score = 0
-            )
-            )
+            submitted.save(SubmittedAchievementEntity(
+                0, achievement, groupId, groupName ?: "",
+                userId, userName ?: "",
+                achievement.categoryId, answer.textAnswer, "$target/$fileName",
+                "", approved = false, rejected = false, score = 0
+            ))
             return AchievementSubmissionStatus.OK
 
         } else {

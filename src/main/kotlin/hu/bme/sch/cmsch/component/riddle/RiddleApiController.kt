@@ -1,14 +1,9 @@
-package hu.bme.sch.cmsch.controller.api
+package hu.bme.sch.cmsch.component.riddle
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.RiddleCategoryDto
-import hu.bme.sch.cmsch.dto.RiddleSubmissionDto
-import hu.bme.sch.cmsch.dto.view.RiddleHintView
-import hu.bme.sch.cmsch.dto.view.RiddleView
-import hu.bme.sch.cmsch.component.riddle.RiddleService
-import hu.bme.sch.cmsch.riddle.view.*
 import hu.bme.sch.cmsch.util.getUser
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
@@ -16,6 +11,7 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
+@ConditionalOnBean(RiddleService::class)
 class RiddleApiController(
     private val riddleService: RiddleService
 ) {

@@ -1,9 +1,9 @@
-package hu.bme.sch.cmsch.dto.virtual
+package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_DATE
 
-data class TokenVirtualEntity(
+data class TokenStatVirtualEntity(
 
     @property:GenerateOverview(visible = false)
     val id: Int,
@@ -14,7 +14,7 @@ data class TokenVirtualEntity(
     @property:GenerateOverview(columnName = "Típus", order = 2)
     val type: String,
 
-    @property:GenerateOverview(columnName = "Beolvasva", order = 3, centered = true, renderer = OVERVIEW_TYPE_DATE)
-    val timestamp: Long
+    @property:GenerateOverview(columnName = "Beolvasás", order = 3, centered = true)
+    val count: Int
 
 )

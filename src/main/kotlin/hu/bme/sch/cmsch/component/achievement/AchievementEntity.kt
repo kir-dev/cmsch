@@ -119,7 +119,7 @@ data class AchievementEntity(
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as AchievementEntity
 
-        return id == other.id
+        return id != 0 && id == other.id
     }
 
     override fun hashCode(): Int = javaClass.hashCode()

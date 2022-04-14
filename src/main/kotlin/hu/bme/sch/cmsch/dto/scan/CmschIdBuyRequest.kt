@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.dto.scan
 
-data class NeptunBuyRequest(
+data class CmschIdBuyRequest(
     var productId: Int,
-    var neptun: String
+    var g7id: String
 )

@@ -1,10 +1,10 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.repository.RiddleMappingRepository
-import hu.bme.sch.cmsch.repository.RiddleRepository
-import hu.bme.sch.cmsch.dto.virtual.RiddleMappingVirtualEntity
-import hu.bme.sch.cmsch.dto.virtual.RiddleStatsVirtualEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleMappingVirtualEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleStatsVirtualEntity
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/admin/control/riddles-by-users")
 class RiddlesByUsersController(
     private val riddleMappingRepository: RiddleMappingRepository,
-    private val riddleRepository: RiddleRepository,
+    private val riddleRepository: RiddleEntityRepository,
 ) {
 
     private val view = "riddles-by-users"

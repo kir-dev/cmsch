@@ -6,10 +6,12 @@ import hu.bme.sch.cmsch.component.achievement.AchievementEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementEntityRepository
 import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.model.*
-import hu.bme.sch.cmsch.model.RiddleCategoryEntity
-import hu.bme.sch.cmsch.model.RiddleEntity
-import hu.bme.sch.cmsch.repository.RiddleCategoryRepository
-import hu.bme.sch.cmsch.repository.RiddleRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
+import hu.bme.sch.cmsch.component.token.TokenEntity
+import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.RealtimeConfigService
@@ -229,7 +231,7 @@ class GroupToUserMappingController(
 @Controller
 @RequestMapping("/admin/control/riddles")
 class RiddleController(
-    repo: RiddleRepository,
+    repo: RiddleEntityRepository,
     importService: ImportService
 ) : AbstractAdminPanelController<RiddleEntity>(
     repo,

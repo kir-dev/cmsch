@@ -1,17 +1,17 @@
-package hu.bme.sch.cmsch.service
+package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.TokenPropertyRepository
-import hu.bme.sch.cmsch.repository.TokenRepository
 import hu.bme.sch.cmsch.dto.TokenCollectorStatus
 import hu.bme.sch.cmsch.dto.TokenDto
-import hu.bme.sch.cmsch.model.TokenPropertyEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.ClockService
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@ConditionalOnBean(TokenComponent::class)
 open class TokenCollectorService(
     private val tokenRepository: TokenRepository,
     private val tokenPropertyRepository: TokenPropertyRepository,
