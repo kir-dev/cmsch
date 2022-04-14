@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.dto.virtual
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 
-data class FilesByView(
+data class FilesByViewVirtualEntity(
 
         @property:GenerateOverview(columnName = "Típus", order = 1)
         val id: String,

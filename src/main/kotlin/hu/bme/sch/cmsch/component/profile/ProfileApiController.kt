@@ -7,7 +7,8 @@ import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.controller.api.UNKNOWN_USER
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.SoldProductRepository
+import hu.bme.sch.cmsch.component.debt.SoldProductRepository
+import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value

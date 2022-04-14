@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.servlet.http.HttpServletRequest
 
-@ConditionalOnProperty(prefix = "cmsch.component", name = ["test"], havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(
+    prefix = "hu.bme.sch.cmsch.component.load",
+    name = ["test"],
+    havingValue = "true",
+    matchIfMissing = false
+)
 @Controller
 class TestController {
 

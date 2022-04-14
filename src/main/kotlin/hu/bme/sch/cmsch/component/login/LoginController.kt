@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.login
 
-import hu.bme.sch.cmsch.controller.api.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
+import hu.bme.sch.cmsch.component.token.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
 import hu.bme.sch.cmsch.model.GuildType
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType
@@ -48,7 +48,7 @@ class LoginController(
     private val guildToUserMapping: GuildToUserMappingRepository,
     private val groups: GroupRepository,
     @Value("\${cmsch.sysadmins:}") private val systemAdmins: String,
-    @Value("\${cmsch.profile-qr.enabled:true}") private val profileQrEnabled: Boolean,
+    @Value("\${cmsch.profile.qr-enabled:true}") private val profileQrEnabled: Boolean,
     private val config: RealtimeConfigService,
     private val loginComponent: LoginComponent
 ) {

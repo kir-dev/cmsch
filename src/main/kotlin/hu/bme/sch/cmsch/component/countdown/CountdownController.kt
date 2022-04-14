@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller
+package hu.bme.sch.cmsch.component.countdown
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Controller

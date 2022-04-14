@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto.view
+package hu.bme.sch.cmsch.component.debt
 
 enum class SellStatus {
     SOLD,

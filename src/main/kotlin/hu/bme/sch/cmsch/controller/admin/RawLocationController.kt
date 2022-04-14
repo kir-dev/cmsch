@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.model.LocationEntity
-import hu.bme.sch.cmsch.model.SoldProductEntity
-import hu.bme.sch.cmsch.service.LocationService
+import hu.bme.sch.cmsch.component.location.LocationEntity
+import hu.bme.sch.cmsch.component.debt.SoldProductEntity
+import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller

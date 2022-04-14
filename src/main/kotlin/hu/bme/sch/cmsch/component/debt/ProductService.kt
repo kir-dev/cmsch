@@ -1,12 +1,8 @@
-package hu.bme.sch.cmsch.service
+package hu.bme.sch.cmsch.component.debt
 
-import hu.bme.sch.cmsch.repository.ProductRepository
-import hu.bme.sch.cmsch.repository.SoldProductRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.dto.view.SellStatus
-import hu.bme.sch.cmsch.model.ProductType
-import hu.bme.sch.cmsch.model.SoldProductEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.ClockService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -47,7 +43,8 @@ open class ProductService(
         val groupId = buyer.group?.id ?: return SellStatus.NOT_IN_GROUP
         val date = clock.getTimeInSeconds()
 
-        soldProductRepository.save(SoldProductEntity(
+        soldProductRepository.save(
+            SoldProductEntity(
                 0,
                 product.name, product.price,
                 seller.id, seller.fullName,
@@ -58,7 +55,8 @@ open class ProductService(
                 false,
                 " '${seller.fullName}'(${seller.id}) sold '${product.name}'(${product.price} JMF) to '${buyer.fullName}'(${buyer.id}) at $date;",
                 product.materialIcon
-        ))
+        )
+        )
         return SellStatus.SOLD
     }
 
