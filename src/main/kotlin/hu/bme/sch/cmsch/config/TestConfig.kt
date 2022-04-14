@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.component.achievement.*
+import hu.bme.sch.cmsch.component.event.EventEntity
+import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.model.*
@@ -334,7 +336,8 @@ class TestConfig(
     }
 
     private fun addEvents() {
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "hetfoi-elso-program",
                 title = "Hétfői Első Program",
                 category = "Egyetemi",
@@ -346,9 +349,11 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        ))
+        )
+        )
 
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "hetfoi-masodik-program",
                 title = "Hétfői Második Program",
                 category = "Szórakozás",
@@ -360,9 +365,11 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "BUTTON TEXT",
                 extraButtonUrl = "http://example.com/target"
-        ))
+        )
+        )
 
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "hetfoi-tiltott-program",
                 title = "Hétfői Tiltott Program",
                 category = "Öhömm",
@@ -374,9 +381,11 @@ class TestConfig(
                 visible = false,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        ))
+        )
+        )
 
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "kedd-elso-program",
                 title = "Kedden Volt",
                 category = "Szórakozás",
@@ -388,9 +397,11 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        ))
+        )
+        )
 
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "fene-kedd",
                 title = "Fene Kedd",
                 category = "Szórakozás",
@@ -402,9 +413,11 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        ))
+        )
+        )
 
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "kopa-szi-get",
                 title = "Kopa-Sziget",
                 category = "Bulika",
@@ -416,9 +429,11 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        ))
+        )
+        )
 
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "watt-fesztivál",
                 title = "Watt",
                 category = "Egyetemi",
@@ -430,9 +445,11 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        ))
+        )
+        )
 
-        events.save(EventEntity(
+        events.save(
+            EventEntity(
                 url = "bika-sound",
                 title = "Bika Sound",
                 category = "Szórakozás",
@@ -444,7 +461,8 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "BUTTON TEXT 2",
                 extraButtonUrl = "http://example.com/target2"
-        ))
+        )
+        )
     }
 
     private fun addAchievements() {

@@ -1,23 +1,23 @@
-package hu.bme.sch.cmsch.controller.api
+package hu.bme.sch.cmsch.component.event
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.repository.EventRepository
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.dto.view.EventsView
-import hu.bme.sch.cmsch.dto.view.SingleEventView
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.util.getUserOrNull
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
-class EventsApiController(
+@ConditionalOnBean(EventComponent::class)
+class EventApiController(
     private val config: RealtimeConfigService,
     private val eventsRepository: EventRepository,
+    private val eventComponent: EventComponent
 ) {
 
     @JsonView(Preview::class)
@@ -34,13 +34,13 @@ class EventsApiController(
     }
 
     @JsonView(FullDetails::class)
-//    @GetMapping("/events/{path}")
+    @GetMapping("/events/{path}")
     fun event(@PathVariable path: String, request: HttpServletRequest): SingleEventView {
-        val event = eventsRepository.findByUrl(path).orElse(null)
+        if (!eventComponent.enableDetailedView.isValueTrue())
+            return SingleEventView(event = EventEntity(id = 0, title = "detailed view disabled"))
 
-        return SingleEventView(
-            event = event
-        )
+        val event = eventsRepository.findByUrl(path).orElse(null)
+        return SingleEventView(event = event)
     }
 
 }
