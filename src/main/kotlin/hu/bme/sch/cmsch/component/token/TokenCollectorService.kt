@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.dto.TokenCollectorStatus
-import hu.bme.sch.cmsch.dto.TokenDto
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.ClockService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean

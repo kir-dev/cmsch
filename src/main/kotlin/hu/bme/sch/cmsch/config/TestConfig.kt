@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.component.achievement.*
+import hu.bme.sch.cmsch.component.news.NewsEntity
+import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
@@ -299,24 +301,36 @@ class TestConfig(
     }
 
     private fun addNews() {
-        news.save(NewsEntity(title = "Az eslő hír",
+        news.save(
+            NewsEntity(title = "Az eslő hír",
                 brief = LOREM_IPSUM_SHORT_1, content = LOREM_IPSUM_LONG_1,
-                visible = true, highlighted = false))
-        news.save(NewsEntity(title = "A második highlightolt hír",
+                visible = true, highlighted = false)
+        )
+        news.save(
+            NewsEntity(title = "A második highlightolt hír",
                 brief = LOREM_IPSUM_SHORT_2, content = LOREM_IPSUM_LONG_2,
-                visible = true, highlighted = true))
-        news.save(NewsEntity(title = "Ez nem is hír, nem látszik",
+                visible = true, highlighted = true)
+        )
+        news.save(
+            NewsEntity(title = "Ez nem is hír, nem látszik",
                 brief = LOREM_IPSUM_SHORT_3, content = LOREM_IPSUM_LONG_3,
-                visible = false, highlighted = false))
-        news.save(NewsEntity(title = "Teszt hír 4",
+                visible = false, highlighted = false)
+        )
+        news.save(
+            NewsEntity(title = "Teszt hír 4",
                 brief = LOREM_IPSUM_SHORT_4, content = LOREM_IPSUM_LONG_4,
-                visible = true, highlighted = false))
-        news.save(NewsEntity(title = "Teszt hír 5",
+                visible = true, highlighted = false)
+        )
+        news.save(
+            NewsEntity(title = "Teszt hír 5",
                 brief = LOREM_IPSUM_SHORT_3, content = LOREM_IPSUM_LONG_3,
-                visible = true, highlighted = false))
-        news.save(NewsEntity(title = "Teszt hír 6",
+                visible = true, highlighted = false)
+        )
+        news.save(
+            NewsEntity(title = "Teszt hír 6",
                 brief = LOREM_IPSUM_SHORT_3, content = LOREM_IPSUM_LONG_3,
-                visible = true, highlighted = false))
+                visible = true, highlighted = false)
+        )
     }
 
     private fun addEvents() {

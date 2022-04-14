@@ -4,6 +4,8 @@ import hu.bme.sch.cmsch.component.achievement.AchievementCategoryEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementCategoryRepository
 import hu.bme.sch.cmsch.component.achievement.AchievementEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementEntityRepository
+import hu.bme.sch.cmsch.component.news.NewsEntity
+import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
@@ -26,8 +28,8 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 @RequestMapping("/admin/control/news")
 class NewsController(
-        repo: NewsRepository,
-        importService: ImportService
+    repo: NewsRepository,
+    importService: ImportService
 ) : AbstractAdminPanelController<NewsEntity>(
         repo,
         "news", "Hír", "Hírek",
