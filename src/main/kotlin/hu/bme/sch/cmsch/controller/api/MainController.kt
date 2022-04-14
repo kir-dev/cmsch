@@ -8,7 +8,6 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.LocationDto
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.dto.view.DebtsView
-import hu.bme.sch.cmsch.dto.view.ExtraPageView
 import hu.bme.sch.cmsch.dto.view.HomeView
 import hu.bme.sch.cmsch.dto.view.ProductsView
 import hu.bme.sch.cmsch.g7mobile.LocationResponse
@@ -16,7 +15,6 @@ import hu.bme.sch.cmsch.model.ProductType
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.component.event.EventRepository
-import hu.bme.sch.cmsch.repository.ExtraPageRepository
 import hu.bme.sch.cmsch.repository.ProductRepository
 import hu.bme.sch.cmsch.repository.SoldProductRepository
 import hu.bme.sch.cmsch.service.ClockService
@@ -44,7 +42,6 @@ class MainController(
     @Value("\${cmsch.zone-id:CET}") zoneId: String,
     private val leaderBoardService: LeaderBoardService,
     private val achievements: AchievementsService,
-    private val extraPagesRepository: ExtraPageRepository,
     private val debtsRepository: SoldProductRepository,
     private val productsRepository: ProductRepository,
     private val locationService: LocationService,
@@ -115,17 +112,6 @@ class MainController(
                                 it.log,
                                 it.materialIcon
                         ) }
-        )
-    }
-
-    @JsonView(FullDetails::class)
-//    @GetMapping("/extra-page/{path}")
-    fun extraPage(@PathVariable path: String, request: HttpServletRequest): ExtraPageView {
-        if (config.isSiteLowProfile())
-            return ExtraPageView(page = null)
-
-        return ExtraPageView(
-                page = extraPagesRepository.findByUrlAndVisibleTrue(path).orElse(null)
         )
     }
 
