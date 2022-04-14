@@ -6,6 +6,8 @@ import hu.bme.sch.cmsch.component.achievement.AchievementEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementEntityRepository
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.event.EventRepository
+import hu.bme.sch.cmsch.component.extrapage.ExtraPageEntity
+import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.repository.*
@@ -174,8 +176,8 @@ class UserController(
 @Controller
 @RequestMapping("/admin/control/extra-pages")
 class ExtraPageController(
-        repo: ExtraPageRepository,
-        importService: ImportService
+    repo: ExtraPageRepository,
+    importService: ImportService
 ) : AbstractAdminPanelController<ExtraPageEntity>(
         repo,
         "extra-pages", "Extra Oldal", "Extra Oldalak",

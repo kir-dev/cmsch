@@ -3,6 +3,8 @@ package hu.bme.sch.cmsch.config
 import hu.bme.sch.cmsch.component.achievement.*
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.event.EventRepository
+import hu.bme.sch.cmsch.component.extrapage.ExtraPageEntity
+import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.model.*
@@ -801,7 +803,8 @@ class TestConfig(
     }
 
     private fun addExtraPages() {
-        extraPages.save(ExtraPageEntity(
+        extraPages.save(
+            ExtraPageEntity(
                 title = "Gyakran Ismételt Kérdések",
                 url = "gyik",
                 visible = true,
@@ -820,9 +823,11 @@ class TestConfig(
                         "## Mi az amit te keresel?\n" +
                         "\n" +
                         "Na ezt most ne, pls!\n"
-        ))
+        )
+        )
 
-        extraPages.save(ExtraPageEntity(
+        extraPages.save(
+            ExtraPageEntity(
                 title = "Egy másik nemzedék\n",
                 url = "egy-masik-nemzedek",
                 visible = false,
@@ -836,9 +841,11 @@ class TestConfig(
                         "> Ez egy másik nemzedék\n> Mert mi vagyunk a hurrikán,\n> Ezeréves út után mindent felkavar\n> Készülj fel, most mi jövünk!\n> Minden fejre áll holnap,\n> Ránk már senki sem szólhat\n> Nem kell többé a szentbeszéd\n> Ez egy másik nemzedék\n> Mondtuk szépen és durván\n> Lelkünk ébredő vulkán kitörni kész s ami régi mind elég,\n> S jön az újabb nemzedék\n> Minden fejre áll holnap\n> Ránk már senki sem szólhat\n> Nem kell többé a szent beszéd\n" +
                         "> Ez egy másik nemzedék\n> Mondtuk szépen és durván lelkünk ébredő vulkán\n> Kitörni kész s ami régi mind elég\n> S jön az újabb nemzedék\n> Minden fejre áll holnap\n> Ránk már senki sem szólhat\n> Nem kell többé a szent beszéd,\n> Ez egy másik nemzedék\n> Mondtuk szépen és durván\n> Lelkünk ébredő vulkán\n> Kitörni kész s ami régi mind elég\n> S jön az újabb nemzedék\n> Minden fejre áll holnap,\n> Ránk már senki sem szólhat\n" +
                         "> Nem kell többé a szent beszéd\n> Ez egy másik nemzedék\n"
-        ))
+        )
+        )
 
-        extraPages.save(ExtraPageEntity(
+        extraPages.save(
+            ExtraPageEntity(
                 title = "Az idei G7 költségvetése",
                 url = "koltsegvetes",
                 visible = false,
@@ -847,7 +854,8 @@ class TestConfig(
                         "===\n" +
                         "\n" +
                         "Ja persze, majd ideírjuk...\n"
-        ))
+        )
+        )
     }
 
     private fun addGroupMapping() {

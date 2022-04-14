@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import org.hibernate.Hibernate
 import javax.persistence.*
 
 enum class RoleType(val value: Int) {
@@ -212,10 +213,7 @@ data class UserEntity(
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
     var major: MajorType = MajorType.UNKNOWN,
 
-    ): ManagedEntity {
-    override fun toString(): String {
-        return "[$id]: $fullName neptun:$neptun pek:$pekId"
-    }
+): ManagedEntity {
 
     fun isStaff(): Boolean {
         return role == RoleType.STAFF
@@ -227,5 +225,20 @@ data class UserEntity(
 
     fun isSuperuser(): Boolean {
         return role == RoleType.SUPERUSER
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as UserEntity
+
+        return id != 0 && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id )"
     }
 }
