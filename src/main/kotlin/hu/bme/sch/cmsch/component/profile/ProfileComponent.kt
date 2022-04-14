@@ -200,22 +200,22 @@ class ProfileComponent(
     val tokenGoalGroup = SettingProxy(componentSettingService, component,
         "tokenGoalGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Token célok kiírja üzenetként", description = "Tipikusan tanköri jelenétre használt funkció; " +
-                "a szám meghatározása a token komponens része"
+                "a szám meghatározása a token komponens része (A token komponensnek is be kel kapcsolva legyen, hogy ez működjön)"
     )
 
     val showMinimumTokenMessage = SettingProxy(componentSettingService, component,
         "showMinimumToken", "false", type = SettingType.BOOLEAN,
-        fieldName = "Minimum token üzenet akítv", description = "A szükséges összegűjthető tokenekról legeyn-e üzenet?"
+        fieldName = "Minimum token üzenet akítv", description = "A szükséges összegűjthető tokenekról legyen-e üzenet?"
     )
 
     val minTokenNotEnoughMessage = SettingProxy(componentSettingService, component,
         "minTokenMsg", "Még {} darab kell a tanköri jelenléthez", type = SettingType.LONG_TEXT,
-        fieldName = "Nincs elég üzenet", description = "Az üzenet ha még nincs elérve a cél, {} = a szám amennyi kell még"
+        fieldName = "'Nincs elég' üzenet", description = "Az üzenet ha még nincs elérve a cél, {} = a szám amennyi kell még"
     )
 
     val minTokenDoneMessage = SettingProxy(componentSettingService, component,
         "minTokenAchievedMsg", "Megvan a tanköri jelenlét", type = SettingType.LONG_TEXT,
-        fieldName = "Már van elég üzenet", description = "ha üres, nem látszik"
+        fieldName = "'Már van elég' üzenet", description = "ha üres, nem látszik"
     )
 
 }

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.model
+package hu.bme.sch.cmsch.component.riddle
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
@@ -7,10 +7,13 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
+import org.hibernate.Hibernate
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
 
 @Entity
 @Table(name="riddleCategories")
+@ConditionalOnBean(RiddleService::class)
 data class RiddleCategoryEntity(
 
     @Id
@@ -52,7 +55,19 @@ data class RiddleCategoryEntity(
     var minRole: RoleType = RoleType.GUEST
 
 ) : ManagedEntity {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as RiddleCategoryEntity
+
+        return id != 0 && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
     override fun toString(): String {
-        return "[$id] $title"
+        return this::class.simpleName + "(id = $id )"
     }
 }

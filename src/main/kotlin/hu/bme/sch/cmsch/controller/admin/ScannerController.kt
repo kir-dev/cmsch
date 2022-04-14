@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import hu.bme.sch.cmsch.dto.scan.G7idBuyRequest
+import hu.bme.sch.cmsch.dto.scan.CmschIdBuyRequest
 import hu.bme.sch.cmsch.dto.scan.NeptunBuyRequest
 import hu.bme.sch.cmsch.dto.scan.ResolveRequest
 import hu.bme.sch.cmsch.dto.view.SellStatus
@@ -58,8 +58,8 @@ class ScannerController(
     @ResponseBody
     @PostMapping("/buy-g7id")
     fun buyNeptun(
-            @RequestBody buyRequest: G7idBuyRequest,
-            request: HttpServletRequest
+        @RequestBody buyRequest: CmschIdBuyRequest,
+        request: HttpServletRequest
     ): SellStatus {
         val user = request.getUserOrNull() ?: return SellStatus.INVALID_PERMISSIONS
         log.info("Selling ${buyRequest.productId} to ${buyRequest.g7id} by ${user.fullName}")

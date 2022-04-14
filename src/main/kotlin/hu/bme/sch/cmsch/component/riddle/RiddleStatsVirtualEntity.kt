@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto.virtual
+package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_BOOLEAN

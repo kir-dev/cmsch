@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 @ConditionalOnProperty(
     prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["achievement"],
+    name = ["login"],
     havingValue = "true",
     matchIfMissing = false
 )
@@ -47,7 +47,7 @@ class LoginComponent(
     /// -------------------------------------------------------------------------------------------------------------------
 
     val authschGroup = SettingProxy(componentSettingService, component,
-        "countersGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
+        "authschGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
         fieldName = "AuthSCH",
         description = "Csak akkor írd át ha tudod mit csinálsz! Ha elrontod nem fog beengedni, szóval óvatosan!"
     )

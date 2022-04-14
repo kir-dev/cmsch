@@ -1,17 +1,14 @@
-package hu.bme.sch.cmsch.controller.api
+package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.dto.TokenCollectorStatus
 import hu.bme.sch.cmsch.dto.config.OwnershipType
-import hu.bme.sch.cmsch.dto.view.TokenSubmittedView
-import hu.bme.sch.cmsch.dto.view.WarningView
-import hu.bme.sch.cmsch.service.RealtimeConfigService
-import hu.bme.sch.cmsch.service.TokenCollectorService
+import hu.bme.sch.cmsch.component.token.TokenSubmittedView
+import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import java.net.URLEncoder
@@ -23,9 +20,10 @@ const val SESSION_TOKEN_COLLECTOR_ATTRIBUTE = "TOKEN_COLLECTOR_ATTRIBUTE"
 @Controller
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
+@ConditionalOnBean(TokenComponent::class)
 class TokenApiController(
-        private val tokens: TokenCollectorService,
-        @Value("\${cmsch.token.ownership:USER}") private val tokenOwnershipMode: OwnershipType
+    private val tokens: TokenCollectorService,
+    @Value("\${cmsch.token.ownership:USER}") private val tokenOwnershipMode: OwnershipType
 ) {
 
     @ResponseBody

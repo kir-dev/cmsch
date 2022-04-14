@@ -2,10 +2,9 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.TokenPropertyRepository
-import hu.bme.sch.cmsch.dto.virtual.TokenListByUserVirtualEntity
-import hu.bme.sch.cmsch.dto.virtual.TokenVirtualEntity
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
+import hu.bme.sch.cmsch.component.token.TokenListByUserVirtualEntity
+import hu.bme.sch.cmsch.component.token.TokenVirtualEntity
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller
@@ -19,8 +18,8 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 @RequestMapping("/admin/control/token-properties-user")
 class TokensByUsersController(
-        private val tokenPropertyRepository: TokenPropertyRepository,
-        private val groupRepository: GroupRepository
+    private val tokenPropertyRepository: TokenPropertyRepository,
+    private val groupRepository: GroupRepository
 ) {
 
     private val view = "token-properties-user"

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto.virtual
+package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 

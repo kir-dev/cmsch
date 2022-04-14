@@ -12,10 +12,10 @@ import com.itextpdf.layout.properties.UnitValue
 import com.itextpdf.layout.properties.VerticalAlignment
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.TokenPropertyRepository
+import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.dto.virtual.TokenCollectorGroupVirtualEntity
-import hu.bme.sch.cmsch.dto.virtual.TokenVirtualEntity
+import hu.bme.sch.cmsch.component.token.TokenCollectorGroupVirtualEntity
+import hu.bme.sch.cmsch.component.token.TokenVirtualEntity
 import hu.bme.sch.cmsch.service.AchievementsService
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.component.riddle.RiddleService

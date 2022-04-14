@@ -1,13 +1,14 @@
 package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.component.achievement.AchievementsService
+import hu.bme.sch.cmsch.component.riddle.RiddleService
+import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.controller.api.UNKNOWN_USER
+import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.SoldProductRepository
-import hu.bme.sch.cmsch.dto.*
-import hu.bme.sch.cmsch.service.LocationService
 import hu.bme.sch.cmsch.service.*
-import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean

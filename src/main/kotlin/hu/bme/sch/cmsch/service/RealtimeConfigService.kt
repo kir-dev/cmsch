@@ -11,16 +11,24 @@ import javax.annotation.PostConstruct
 
 const val WARNING_MESSAGE = "WARNING_MESSAGE"
 const val WARNING_TYPE = "WARNING_TYPE"
+@Deprecated("moved to another place")
 const val LEADER_BOARD_ENABLED = "LEADER_BOARD_ENABLED"
+@Deprecated("moved to another place")
 const val LEADER_BOARD_UPDATES = "LEADER_BOARD_UPDATES"
+@Deprecated("feature is not supported")
 const val SITE_LOW_PROFILE = "SITE_LOW_PROFILE"
 const val MESSAGE_OF_THE_DAY = "MESSAGE_OF_THE_DAY"
 const val WEBSITE_URL = "WEBSITE_URL"
 const val STAFF_MESSAGE = "STAFF_MESSAGE"
+@Deprecated("feature is not supported")
 const val EVENT_FINISHED = "EVENT_FINISHED"
+@Deprecated("moved to another place")
 const val REQUEST_FOR_NEPTUN = "REQUEST_FOR_NEPTUN"
+@Deprecated("moved to another place")
 const val REQUEST_FOR_EMAIL = "REQUEST_FOR_EMAIL"
+@Deprecated("moved to another place")
 const val MIN_TOKEN_TO_COMPLETE = "MIN_TOKEN_TO_COMPLETE"
+@Deprecated("moved to another place")
 const val HINT_SCORE_PERCENTAGE = "HINT_SCORE_PERCENTAGE"
 
 @Service

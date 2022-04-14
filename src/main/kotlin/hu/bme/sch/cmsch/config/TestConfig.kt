@@ -3,10 +3,12 @@ package hu.bme.sch.cmsch.config
 import hu.bme.sch.cmsch.component.achievement.*
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.*
-import hu.bme.sch.cmsch.model.RiddleCategoryEntity
-import hu.bme.sch.cmsch.model.RiddleEntity
-import hu.bme.sch.cmsch.repository.RiddleCategoryRepository
-import hu.bme.sch.cmsch.repository.RiddleRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
+import hu.bme.sch.cmsch.component.token.TokenEntity
+import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.service.ProductService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -44,7 +46,7 @@ class TestConfig(
     private val guildToUserMapping: GuildToUserMappingRepository,
     private val submittedAchievements: SubmittedAchievementRepository,
     private val productsService: ProductService,
-    private val riddleRepository: RiddleRepository,
+    private val riddleRepository: RiddleEntityRepository,
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val tokenRepository: TokenRepository
 ) {
@@ -67,48 +69,60 @@ class TestConfig(
     }
 
     private fun addTokens() {
-        tokenRepository.save(TokenEntity(
+        tokenRepository.save(
+            TokenEntity(
             0,
             "Kir-Dev",
             "A5BCD8242".sha256(),
             true,
             "default"
-        ))
-        tokenRepository.save(TokenEntity(
+        )
+        )
+        tokenRepository.save(
+            TokenEntity(
             0,
             "Invisible token",
             "XDDD".sha256(),
             false,
             "default"
-        ))
-        tokenRepository.save(TokenEntity(
+        )
+        )
+        tokenRepository.save(
+            TokenEntity(
             0,
             "NFT-sch kör",
             "NFT".sha256(),
             true,
             "default"
-        ))
-        tokenRepository.save(TokenEntity(
+        )
+        )
+        tokenRepository.save(
+            TokenEntity(
             0,
             "Crypto Reszort",
             "crypto".sha256(),
             true,
             "default"
-        ))
-        tokenRepository.save(TokenEntity(
+        )
+        )
+        tokenRepository.save(
+            TokenEntity(
             0,
             "Kollégiumi Szak-Kollégium (KSZK)",
             "kszk".sha256(),
             true,
             "default"
-        ))
-        tokenRepository.save(TokenEntity(
+        )
+        )
+        tokenRepository.save(
+            TokenEntity(
             0,
             "Extra Token",
             "x".sha256(),
             true,
             "extra"
-        ))
+        )
+        )
     }
 
     private fun addRiddles() {

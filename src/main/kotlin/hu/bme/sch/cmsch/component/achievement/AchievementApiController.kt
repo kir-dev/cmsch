@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.component.achievement
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.dto.*
+import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.dto.config.OwnershipType
-import hu.bme.sch.cmsch.service.AchievementsService
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.LeaderBoardService
 import hu.bme.sch.cmsch.service.RealtimeConfigService

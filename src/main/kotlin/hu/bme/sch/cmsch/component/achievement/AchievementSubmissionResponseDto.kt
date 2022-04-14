@@ -14,5 +14,5 @@ enum class AchievementSubmissionStatus {
 }
 
 class AchievementSubmissionResponseDto(
-        var status: AchievementSubmissionStatus
+    var status: AchievementSubmissionStatus
 )

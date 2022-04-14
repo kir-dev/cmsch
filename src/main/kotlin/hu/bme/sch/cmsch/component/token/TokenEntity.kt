@@ -1,14 +1,18 @@
-package hu.bme.sch.cmsch.model
+package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.ManagedEntity
+import org.hibernate.Hibernate
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
 
 @Entity
 @Table(name="tokens")
+@ConditionalOnBean(TokenComponent::class)
 data class TokenEntity(
 
     @Id
@@ -49,8 +53,19 @@ data class TokenEntity(
 
 ): ManagedEntity {
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as TokenEntity
+
+        return id != 0 && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
     override fun toString(): String {
-        return "[$id] $title"
+        return this::class.simpleName + "(id = $id )"
     }
 
 }

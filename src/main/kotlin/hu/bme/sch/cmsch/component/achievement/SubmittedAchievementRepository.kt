@@ -1,10 +1,12 @@
 package hu.bme.sch.cmsch.component.achievement
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
+@ConditionalOnBean(AchievementComponent::class)
 interface SubmittedAchievementRepository : CrudRepository<SubmittedAchievementEntity, Int> {
     @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByAchievement_IdAndGroupId(achievementId: Int, groupId: Int): Optional<SubmittedAchievementEntity>
