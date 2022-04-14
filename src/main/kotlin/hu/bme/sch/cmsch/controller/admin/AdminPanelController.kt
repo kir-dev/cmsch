@@ -4,6 +4,8 @@ import hu.bme.sch.cmsch.component.achievement.AchievementCategoryEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementCategoryRepository
 import hu.bme.sch.cmsch.component.achievement.AchievementEntity
 import hu.bme.sch.cmsch.component.achievement.AchievementEntityRepository
+import hu.bme.sch.cmsch.component.event.EventEntity
+import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.repository.*
@@ -42,8 +44,8 @@ class NewsController(
 @Controller
 @RequestMapping("/admin/control/events")
 class EventsController(
-        repo: EventRepository,
-        importService: ImportService
+    repo: EventRepository,
+    importService: ImportService
 ) : AbstractAdminPanelController<EventEntity>(
         repo,
         "events", "Esemény", "Események",

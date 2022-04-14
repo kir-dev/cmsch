@@ -1,8 +1,8 @@
-package hu.bme.sch.cmsch.dto.view
+package hu.bme.sch.cmsch.component.event
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.model.EventEntity
+import hu.bme.sch.cmsch.component.event.EventEntity
 
 data class EventsView(
 

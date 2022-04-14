@@ -50,6 +50,10 @@ open class SettingProxy(
             componentPropertyService.persistSetting(this)
     }
 
+    fun isValueTrue(): Boolean {
+        return getValue().equals("true", ignoreCase = true)
+    }
+
 }
 
 class MinRoleSettingProxy(

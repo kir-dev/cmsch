@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.controller.api
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.achievement.AchievementsService
 import hu.bme.sch.cmsch.component.news.NewsRepository
-import hu.bme.sch.cmsch.component.news.NewsView
 import hu.bme.sch.cmsch.dto.DebtDto
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.LocationDto
@@ -16,7 +15,7 @@ import hu.bme.sch.cmsch.g7mobile.LocationResponse
 import hu.bme.sch.cmsch.model.ProductType
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.repository.EventRepository
+import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.repository.ExtraPageRepository
 import hu.bme.sch.cmsch.repository.ProductRepository
 import hu.bme.sch.cmsch.repository.SoldProductRepository
@@ -62,16 +61,6 @@ class MainController(
     @ResponseBody
     @GetMapping("/time")
     fun time(): String = formatter.format(clock.getTimeInSeconds())
-
-    @JsonView(Preview::class)
-//    @GetMapping("/news")
-    fun news(request: HttpServletRequest): NewsView {
-        val user = request.getUserOrNull()
-        return NewsView(
-                news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
-                        .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
-        )
-    }
 
     @JsonView(Preview::class)
 //    @GetMapping("/home")
