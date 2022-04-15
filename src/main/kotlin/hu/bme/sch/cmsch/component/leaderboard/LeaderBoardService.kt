@@ -1,13 +1,13 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
-import hu.bme.sch.cmsch.repository.*
+import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
 import hu.bme.sch.cmsch.dto.config.OwnershipType
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
+import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import org.slf4j.LoggerFactory
@@ -16,13 +16,14 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 import javax.annotation.PostConstruct
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
 open class LeaderBoardService(
-    private val achievementSubmissions: SubmittedAchievementRepository,
-    private val riddleSubmissions: RiddleMappingRepository,
+    private val achievementSubmissions: Optional<SubmittedAchievementRepository>,
+    private val riddleSubmissions: Optional<RiddleMappingRepository>,
     private val groups: GroupRepository,
     private val users: UserRepository,
     private val config: RealtimeConfigService,
@@ -88,7 +89,7 @@ open class LeaderBoardService(
         log.info("Recalculating group top list cache; hint:{}", hintPercentage)
         val achievements = when (achievementOwnershipMode) {
             OwnershipType.GROUP -> {
-                achievementSubmissions.findAll()
+                achievementSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.groupName }
                     .filter { groups.findByName(it.key).map { m -> m.races }.orElse(false) }
                     .map { TopListAsGroupEntryDto(it.key, it.value.sumOf { s -> s.score }, 0, 0) }
@@ -98,7 +99,7 @@ open class LeaderBoardService(
 
         val riddles = when (riddleOwnershipMode) {
             OwnershipType.GROUP -> {
-                riddleSubmissions.findAll()
+                riddleSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.ownerGroup }
                     .filter { it.key?.races ?: false }
                     .map {
@@ -134,15 +135,15 @@ open class LeaderBoardService(
         val achievements = when (achievementOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
-                achievementSubmissions.findAll()
+                achievementSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.userId }
-                    .map {
-                        val user = users.findById(it.key ?: 0)
+                    .map { entity ->
+                        val user = users.findById(entity.key ?: 0)
                         TopListAsUserEntryDto(
-                            it.key ?: 0,
+                            entity.key ?: 0,
                             user.map { it.fullName }.orElse("n/a"),
                             user.map { it.groupName }.orElse("-"),
-                            it.value.sumOf { s -> s.score }, 0, 0
+                            entity.value.sumOf { s -> s.score }, 0, 0
                         )
                     }
             }
@@ -151,7 +152,7 @@ open class LeaderBoardService(
         val riddles = when (riddleOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
-                riddleSubmissions.findAll()
+                riddleSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.ownerUser }
                     .map {
                         TopListAsUserEntryDto(it.key?.id ?: 0,

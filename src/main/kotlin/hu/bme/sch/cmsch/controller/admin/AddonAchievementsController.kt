@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import hu.bme.sch.cmsch.component.achievement.AchievementsService
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementEntity
-import hu.bme.sch.cmsch.service.AchievementsService
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Controller
 class AddonAchievementsController(
-        private val achievements: AchievementsService,
+    private val achievements: AchievementsService,
 ) {
 
     @GetMapping("/export-bucketlist")

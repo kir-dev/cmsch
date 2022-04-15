@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.component.achievement.*
+import hu.bme.sch.cmsch.component.debt.ProductEntity
 import hu.bme.sch.cmsch.component.debt.ProductRepository
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.event.EventRepository
@@ -17,6 +18,7 @@ import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
 import hu.bme.sch.cmsch.component.token.TokenEntity
 import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.component.debt.ProductService
+import hu.bme.sch.cmsch.component.debt.ProductType
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.sha256

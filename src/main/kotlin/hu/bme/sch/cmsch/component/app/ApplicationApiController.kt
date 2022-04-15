@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.app
 
-import hu.bme.sch.cmsch.component.profile.ProfileComponent
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 @ConditionalOnBean(ApplicationComponent::class)
 class ApplicationApiController {
 
-    @GetMapping
-    fun app() {
-
+    @GetMapping("/app")
+    fun app(): ApplicationConfigDto {
+        return ApplicationConfigDto(
+            listOf(),
+            mapOf())
     }
 
 }
