@@ -30,8 +30,8 @@ open class UserService(
     open fun exists(id: String) = users.existsByPekId(id)
 
     @Transactional(readOnly = true)
-    open fun searchByG7Id(g7id: String): Optional<UserEntity> {
-        return users.findByG7id(g7id)
+    open fun searchByCmschId(cmschId: String): Optional<UserEntity> {
+        return users.findByCmschId(cmschId)
     }
 
     @Transactional(readOnly = true)

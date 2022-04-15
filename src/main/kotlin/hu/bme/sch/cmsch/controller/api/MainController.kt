@@ -7,12 +7,12 @@ import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.news.NewsRepository
-import hu.bme.sch.cmsch.dto.DebtDto
+import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.LocationDto
+import hu.bme.sch.cmsch.component.location.LocationDto
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.dto.view.HomeView
-import hu.bme.sch.cmsch.g7mobile.LocationResponse
+import hu.bme.sch.cmsch.component.location.LocationResponse
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.ClockService

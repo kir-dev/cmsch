@@ -24,7 +24,6 @@ class ProfileComponent(
             countersGroup,
             showAchievements,
             achievementCounterName,
-            achievementCounterName,
             showRiddles,
             riddleCounterName,
             showTokens,

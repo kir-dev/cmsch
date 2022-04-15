@@ -25,8 +25,8 @@ open class ProductService(
     open fun getAllProducts() = productRepository.findAll()
 
     @Transactional
-    open fun sellProductByG7Id(productId: Int, seller: UserEntity, g7Id: String): SellStatus {
-        val user = userRepository.findByG7id(g7Id).orElse(null) ?: return SellStatus.BUYER_NOT_FOUND
+    open fun sellProductByCmschId(productId: Int, seller: UserEntity, cmschId: String): SellStatus {
+        val user = userRepository.findByCmschId(cmschId).orElse(null) ?: return SellStatus.BUYER_NOT_FOUND
         return sellProduct(productId, seller, user)
     }
 

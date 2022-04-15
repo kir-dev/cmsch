@@ -15,7 +15,8 @@ enum class RoleType(val value: Int) {
     ATTENDEE(2),
     STAFF(100),    // member of the organizer group
     ADMIN(200),    // the organizers of the event
-    SUPERUSER(500) // advanced user management (able to grant admin access)
+    SUPERUSER(500),// advanced user management (able to grant admin access)
+    NOBODY(Int.MAX_VALUE)
     ;
 
     companion object {

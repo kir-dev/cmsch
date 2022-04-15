@@ -1,5 +1,8 @@
 package hu.bme.sch.cmsch.component
 
+import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.service.AdminMenuGroup
+import hu.bme.sch.cmsch.service.AdminMenuService
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import javax.annotation.PostConstruct
@@ -11,13 +14,16 @@ abstract class ComponentBase(
     private val env: Environment
 ) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    internal val log = LoggerFactory.getLogger(javaClass)
 
     open val menuDisplayName: SettingProxy? = null
 
     abstract val minRole: MinRoleSettingProxy
 
     internal abstract val allSettings: List<SettingProxy>
+
+    val menuPriority: Int
+        get() = env.getProperty("hu.bme.sch.cmsch.${component}.priority")?.toIntOrNull() ?: 0
 
     @PostConstruct
     fun init() {

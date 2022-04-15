@@ -261,7 +261,7 @@ class LoginController(
     }
 
     fun generateLoginUrl(uniqueId: String): String {
-        return "${loginComponent.loginBaseUrl}?" +
+        return "${loginComponent.loginBaseUrl.getValue()}?" +
                 "response_type=code" +
                 "&client_id=${authSch.clientIdentifier}" +
                 "&state=${uniqueId}" +

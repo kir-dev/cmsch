@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-@ConditionalOnBean(AchievementComponent::class)
 interface ComponentSettingRepository : CrudRepository<ComponentSettingEntity, Int> {
 
     fun findByComponentAndProperty(component: String, property: String): Optional<ComponentSettingEntity>

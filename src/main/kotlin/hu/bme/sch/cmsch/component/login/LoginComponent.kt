@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.model.RoleType
 import hu.gerviba.authsch.struct.Scope
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -40,7 +41,7 @@ class LoginComponent(
     final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "",
+        "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
@@ -55,7 +56,7 @@ class LoginComponent(
     val authschScopesRaw = SettingProxy(componentSettingService, component,
         "authschScopes",
         listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT).joinToString(","),
-        type = SettingType.BOOLEAN, serverSideOnly = true,
+        type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Oauth scopeok",
         description = "Ezek lesznek elkérve a providertől; ezek vannak: "
                 + Scope.values().joinToString(",") { it.name }
@@ -65,12 +66,13 @@ class LoginComponent(
 
     override fun onValuesUpdated() {
         authschScopes.clear()
-        val scopes = authschScopesRaw.getValue().split(", ")
+        val scopes = authschScopesRaw.getValue().split(",")
             .filter { it.isNotBlank() }
-            .mapNotNull { Scope.byScopeOrNull(it) }
+            .mapNotNull { Scope.byNameOrNull(it) }
             .distinct()
         authschScopes.addAll(scopes)
         authschScopesRaw.setAndPersistValue(scopes.joinToString(",") { it.name })
+        log.info("Authsch scopes changed to '{}' and saved to the db as: '{}'", authschScopes.map { it.name }, authschScopesRaw.rawValue)
     }
 
     val loginBaseUrl = SettingProxy(componentSettingService, component,

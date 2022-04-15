@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.concurrent.ConcurrentHashMap
 import javax.annotation.PostConstruct
 
+@Deprecated("moved to another place")
 const val WARNING_MESSAGE = "WARNING_MESSAGE"
+@Deprecated("moved to another place")
 const val WARNING_TYPE = "WARNING_TYPE"
 @Deprecated("moved to another place")
 const val LEADER_BOARD_ENABLED = "LEADER_BOARD_ENABLED"
@@ -17,8 +19,11 @@ const val LEADER_BOARD_ENABLED = "LEADER_BOARD_ENABLED"
 const val LEADER_BOARD_UPDATES = "LEADER_BOARD_UPDATES"
 @Deprecated("feature is not supported")
 const val SITE_LOW_PROFILE = "SITE_LOW_PROFILE"
+@Deprecated("moved to another place")
 const val MESSAGE_OF_THE_DAY = "MESSAGE_OF_THE_DAY"
+@Deprecated("moved to another place")
 const val WEBSITE_URL = "WEBSITE_URL"
+@Deprecated("moved to another place")
 const val STAFF_MESSAGE = "STAFF_MESSAGE"
 @Deprecated("feature is not supported")
 const val EVENT_FINISHED = "EVENT_FINISHED"
@@ -32,6 +37,7 @@ const val MIN_TOKEN_TO_COMPLETE = "MIN_TOKEN_TO_COMPLETE"
 const val HINT_SCORE_PERCENTAGE = "HINT_SCORE_PERCENTAGE"
 
 @Service
+@Deprecated("refactored")
 class RealtimeConfigService(
         private val realtimeConfig: RealtimeConfigRepository,
         @Value("\${cmsch.website-default-url:http://127.0.0.1:8080/}") private val defaultWebsiteUrl: String,

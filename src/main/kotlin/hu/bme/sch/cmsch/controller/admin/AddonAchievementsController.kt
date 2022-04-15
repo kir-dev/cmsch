@@ -19,7 +19,7 @@ class AddonAchievementsController(
 
         model.addAttribute("groupName", user.groupName)
         model.addAttribute("achievements", listOf<SubmittedAchievementEntity>())
-        user.group?.also { model.addAttribute("achievements", achievements.getAllSubmissions(it).sortedBy { it.categoryId }) }
+        user.group?.also { group -> model.addAttribute("achievements", achievements.getAllSubmissions(group).sortedBy { it.categoryId }) }
         model.addAttribute("categories", achievements.getAllCategories().groupBy { it.categoryId })
 
         return "addonAchievements"

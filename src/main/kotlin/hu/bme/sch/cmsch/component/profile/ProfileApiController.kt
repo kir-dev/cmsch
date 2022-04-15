@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.achievement.AchievementsService
+import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.controller.api.UNKNOWN_USER

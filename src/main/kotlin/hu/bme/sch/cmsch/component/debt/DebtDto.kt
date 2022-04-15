@@ -1,7 +1,8 @@
-package hu.bme.sch.cmsch.dto
+package hu.bme.sch.cmsch.component.debt
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.dto.FullDetails
 
 data class DebtDto(
     @JsonView(FullDetails::class)

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto
+package hu.bme.sch.cmsch.component.location
 
 data class LocationDto(
         var token: String,

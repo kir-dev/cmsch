@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.debt.ProductService
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 
 const val CONTROL_MODE_TOPLIST = "toplist"
@@ -37,6 +39,8 @@ class AdminPanelCustomController(
     private val productService: ProductService,
     private val userService: UserService,
     private val config: RealtimeConfigService,
+    private val applicationComponent: ApplicationComponent,
+    private val adminMenuService: AdminMenuService,
     private val submittedRepository: SubmittedAchievementRepository,
     private val locationService: LocationService,
     @Value("\${cmsch.profile.qr-prefix:KIRDEV_}") private val prefix: String
@@ -49,6 +53,16 @@ class AdminPanelCustomController(
     private val submittedDescriptor = OverviewBuilder(CheckRatingVirtualEntity::class)
     private val trackDescriptor = OverviewBuilder(TrackGroupVirtualEntity::class)
 
+    @PostConstruct
+    fun init() {
+        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuGroup("Általános", 0))
+        adminMenuService.registerEntry(javaClass.simpleName, AdminMenuEntry("Kezdő menü", "home",
+                "/admin/control/basics", 1, PERMISSION_AT_LEAST_STAFF))
+        adminMenuService.registerEntry(javaClass.simpleName, AdminMenuEntry("Oldal megyitása", "launch",
+                "/control/open-site", 2, PERMISSION_AT_LEAST_STAFF))
+
+    }
+
     @GetMapping("")
     fun index(): String {
         return "redirect:/admin/control/basics"
@@ -56,10 +70,12 @@ class AdminPanelCustomController(
 
     @GetMapping("/basics")
     fun dashboard(model: Model, request: HttpServletRequest): String {
-        model.addAttribute("user", request.getUser())
-        model.addAttribute("motd", config.getMotd())
-        model.addAttribute("website", config.getWebsiteUrl())
-        model.addAttribute("staffMessage", config.getStaffMessage())
+        val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        model.addAttribute("user", user)
+        model.addAttribute("motd", applicationComponent.motd.getValue())
+        model.addAttribute("website", applicationComponent.siteUrl.getValue())
+        model.addAttribute("staffMessage", applicationComponent.staffMessage.getValue())
 
         return "admin"
     }
@@ -197,7 +213,7 @@ class AdminPanelCustomController(
 
     private fun fetchSubmittedChecks(): List<CheckRatingVirtualEntity> {
         return submittedRepository.findAllByScoreGreaterThanAndApprovedIsTrue(0)
-                .filter { it.score != it.achievement?.maxScore ?: 0 }
+                .filter { it.score != (it.achievement?.maxScore ?: 0) }
                 .map { CheckRatingVirtualEntity(it.id, it.groupName, it.score, it.achievement?.maxScore ?: 0) }
     }
 

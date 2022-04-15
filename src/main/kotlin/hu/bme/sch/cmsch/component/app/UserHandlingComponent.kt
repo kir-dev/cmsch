@@ -4,22 +4,24 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.ComponentSettingService
 import hu.bme.sch.cmsch.component.MinRoleSettingProxy
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.AdminMenuGroup
+import hu.bme.sch.cmsch.service.AdminMenuService
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import javax.annotation.PostConstruct
 
 @Service
-class StylingComponent(
+class UserHandlingComponent(
+    private val adminMenuService: AdminMenuService,
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("style", "/style", componentSettingService, env) {
+) : ComponentBase("userHandling", "/", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(
             minRole,
-
         )
     }
-
 
     final override val menuDisplayName = null
 
@@ -28,24 +30,9 @@ class StylingComponent(
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    /// -------------------------------------------------------------------------------------------------------------------
-
-//    // Colors
-//    var backgroundColor: String,
-//    var textColor1: String,
-//    var textColor2: String,
-//    var textColorAccent: String,
-//    var brandingColor1: String,
-//    var brandingColor2: String,
-//
-//    // Background images
-//    var backgroundUrl: String,
-//    var mobileBackgroundUrl: String,
-//
-//    // Typography
-//    var mainFontName: String,
-//    var mainFontCdn: String,
-//    var displayFontName: String,
-//    var displayFontCdn: String,
+    @PostConstruct
+    fun menuSetup() {
+        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuGroup("Felhasználó kezelés", this.menuPriority))
+    }
 
 }
