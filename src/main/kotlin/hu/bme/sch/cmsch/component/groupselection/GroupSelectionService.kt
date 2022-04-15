@@ -1,11 +1,11 @@
-package hu.bme.sch.cmsch.service
+package hu.bme.sch.cmsch.component.groupselection
 
-import hu.bme.sch.cmsch.controller.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
-import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.component.login.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
 import hu.bme.sch.cmsch.dto.GroupSelectionResponse
 import hu.bme.sch.cmsch.dto.GroupSelectionResponseType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation

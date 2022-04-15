@@ -24,7 +24,8 @@ open class SettingProxy(
     val serverSideOnly: Boolean = false,
     private val type: SettingType = SettingType.TEXT,
     val fieldName: String = property,
-    val description: String = ""
+    val description: String = "",
+    val minRoleToEdit: RoleType = RoleType.ADMIN
 ) {
 
     private var lastTimeUpdated = 0L

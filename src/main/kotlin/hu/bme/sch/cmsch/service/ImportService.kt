@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.service
 
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.achievement.AchievementType
+import hu.bme.sch.cmsch.component.debt.ProductType
 import hu.bme.sch.cmsch.model.*
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service

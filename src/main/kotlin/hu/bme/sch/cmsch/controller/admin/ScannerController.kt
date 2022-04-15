@@ -1,10 +1,10 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import hu.bme.sch.cmsch.component.debt.ProductService
+import hu.bme.sch.cmsch.component.debt.SellStatus
 import hu.bme.sch.cmsch.dto.scan.CmschIdBuyRequest
 import hu.bme.sch.cmsch.dto.scan.NeptunBuyRequest
 import hu.bme.sch.cmsch.dto.scan.ResolveRequest
-import hu.bme.sch.cmsch.dto.view.SellStatus
-import hu.bme.sch.cmsch.component.debt.ProductService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserOrNull

@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.util
 
-import hu.bme.sch.cmsch.controller.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
+import hu.bme.sch.cmsch.component.login.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
 import hu.bme.sch.cmsch.model.UserEntity
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

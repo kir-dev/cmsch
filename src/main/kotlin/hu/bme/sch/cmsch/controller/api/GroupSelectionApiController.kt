@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.controller.api
 
 import hu.bme.sch.cmsch.dto.GroupSelectionResponse
 import hu.bme.sch.cmsch.dto.GroupSelectionResponseType
-import hu.bme.sch.cmsch.service.GroupSelectionService
+import hu.bme.sch.cmsch.component.groupselection.GroupSelectionService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
