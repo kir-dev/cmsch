@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.dto.LocationDto
-import hu.bme.sch.cmsch.g7mobile.LocationResponse
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ClockService
 import org.springframework.beans.factory.annotation.Value
@@ -22,7 +20,7 @@ class LocationService(
 
     fun pushLocation(locationDto: LocationDto): LocationResponse {
         if (!tokenToLocationMapping.containsKey(locationDto.token)) {
-            val user = userRepository.findByG7id(prefix + locationDto.token)
+            val user = userRepository.findByCmschId(prefix + locationDto.token)
             if (user.isPresent) {
                 if (user.get().role.value >= RoleType.STAFF.value) {
                     tokenToLocationMapping[locationDto.token] =
@@ -65,7 +63,7 @@ class LocationService(
                 .asSequence()
                 .forEach { token ->
                     tokenToLocationMapping[token]?.let { it ->
-                        val user = userRepository.findByG7id(prefix + token)
+                        val user = userRepository.findByCmschId(prefix + token)
                         it.userId = user.get().id
                         it.userName = user.get().fullName
                         it.alias = user.get().alias

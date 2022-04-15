@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -20,18 +21,19 @@ val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
 
 @Controller
 class EntrypointController(
-        private val config: RealtimeConfigService
+        private val applicationComponent: ApplicationComponent
 ) {
 
     @GetMapping("/control/entrypoint")
     fun entrypoint(model: Model, request: HttpServletRequest): String {
-        val user = request.getUserOrNull() ?: return "redirect:/control/logged-out?error=invalid-permissions"
+        val user = request.getUserOrNull() ?:
+            return "redirect:/control/logged-out?error=invalid-permissions"
         if (user.role.value < RoleType.STAFF.value)
-            return "redirect:${config.getWebsiteUrl()}"
+            return "redirect:${applicationComponent.siteUrl.getValue()}"
 
         model.addAttribute("greetings", GREETINGS[Random.nextInt(GREETINGS.size)])
-        model.addAttribute("motd", config.getMotd())
-        model.addAttribute("website", config.getWebsiteUrl())
+        model.addAttribute("motd", applicationComponent.motd.getValue())
+        model.addAttribute("website", applicationComponent.siteUrl.getValue())
 
         return "entrypoint"
     }

@@ -3,9 +3,10 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.service.ImportService
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import hu.bme.sch.cmsch.util.uploadFile
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
 import java.lang.IllegalStateException
 import java.util.function.Supplier
+import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
@@ -40,23 +42,40 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         classType: KClass<T>,
         private val supplier: Supplier<T>,
         private val importService: ImportService,
+        private val adminMenuService: AdminMenuService,
+        private val component: ComponentBase,
         private val entitySourceMapping: Map<String, (T?) -> List<String>> =
                 mapOf(Nothing::class.simpleName!! to { listOf() }),
         private val controlMode: String = CONTROL_MODE_EDIT_DELETE,
-        private val permissionControl: (UserEntity?) -> Boolean = { false },
-        private val importable: Boolean = false
+        private val permissionControl: PermissionValidator,
+        private val importable: Boolean = false,
+        private val adminMenuIcon: String = "check_box_outline_blank",
+        private val adminMenuPriority: Int = 1
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val descriptor = OverviewBuilder(classType)
 
+    @PostConstruct
+    fun init() {
+        adminMenuService.registerEntry(component.javaClass.simpleName, AdminMenuEntry(
+            titlePlural,
+            adminMenuIcon,
+            "/admin/control/${view}",
+            adminMenuPriority,
+            permissionControl
+        ))
+    }
+
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
-        if (permissionControl(request.getUserOrNull()).not()) {
-            model.addAttribute("user", request.getUser())
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("user", user)
             return "admin403"
         }
 
+        adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -64,7 +83,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("columns", descriptor.getColumns())
         model.addAttribute("fields", descriptor.getColumnDefinitions())
         model.addAttribute("rows", repo.findAll())
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
         model.addAttribute("importable", importable)
 
@@ -73,18 +92,20 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("/edit/{id}")
     fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (permissionControl(request.getUserOrNull()).not()) {
-            model.addAttribute("user", request.getUser())
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("user", user)
             return "admin403"
         }
 
+        adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
         model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("mappings", entitySourceMapping)
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
 
         val entity = repo.findById(id)
@@ -98,18 +119,20 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("/create")
     fun create(model: Model, request: HttpServletRequest): String {
-        if (permissionControl(request.getUserOrNull()).not()) {
-            model.addAttribute("user", request.getUser())
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("user", user)
             return "admin403"
         }
 
+        adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", false)
         model.addAttribute("view", view)
         model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("data", null)
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
 
         return "details"
@@ -117,15 +140,17 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("/delete/{id}")
     fun deleteConfirm(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (permissionControl(request.getUserOrNull()).not()) {
-            model.addAttribute("user", request.getUser())
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("user", user)
             return "admin403"
         }
 
+        adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("title", titleSingular)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
 
         val entity = repo.findById(id)
         if (entity.isEmpty) {
@@ -138,7 +163,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @PostMapping("/delete/{id}")
     fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (permissionControl(request.getUserOrNull()).not()) {
+        if (permissionControl.validate(request.getUser()).not()) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -156,7 +181,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                model: Model,
                request: HttpServletRequest
     ): String {
-        if (permissionControl(request.getUserOrNull()).not()) {
+        if (permissionControl.validate(request.getUser()).not()) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -178,7 +203,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
              model: Model,
              request: HttpServletRequest
     ): String {
-        if (permissionControl(request.getUserOrNull()).not()) {
+        if (permissionControl.validate(request.getUser()).not()) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -235,7 +260,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @GetMapping("/resource")
     fun resource(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (PERMISSION_IMPORT_EXPORT.validate(request.getUser()).not()) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
@@ -249,7 +274,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @ResponseBody
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(request: HttpServletRequest, response: HttpServletResponse): ByteArray {
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (PERMISSION_IMPORT_EXPORT.validate(request.getUser()).not()) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
@@ -258,7 +283,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @PostMapping("/import/csv")
     fun import(file: MultipartFile?, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.isAdmin()?.not() ?: true) {
+        if (PERMISSION_IMPORT_EXPORT.validate(request.getUser()).not()) {
             throw IllegalStateException("Insufficient permissions")
         }
 

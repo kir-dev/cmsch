@@ -205,9 +205,9 @@ public enum Scope {
     }
 
     @Nullable
-    public static Scope byScopeOrNull(String scope) {
+    public static Scope byNameOrNull(String scope) {
         for (Scope s : values())
-            if (s.getScope().equals(scope))
+            if (s.name().equals(scope))
                 return s;
         return null;
     }

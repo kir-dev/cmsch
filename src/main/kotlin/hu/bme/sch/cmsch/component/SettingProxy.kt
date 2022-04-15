@@ -63,11 +63,13 @@ class MinRoleSettingProxy(
     property: String,
     defaultValue: String,
     fieldName: String = "",
-    description: String = ""
+    description: String = "",
+    minRoleToEdit: RoleType = RoleType.ADMIN
 ) : SettingProxy(
     componentPropertyService, component, property,
     defaultValue = defaultValue, type = SettingType.MIN_ROLE,
-    fieldName = fieldName, description = description
+    fieldName = fieldName, description = description,
+    minRoleToEdit = minRoleToEdit
 ) {
 
     fun isAvailableForRole(role: RoleType): Boolean {

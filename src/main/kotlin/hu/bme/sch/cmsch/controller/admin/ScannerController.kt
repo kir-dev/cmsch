@@ -39,7 +39,7 @@ class ScannerController(
     @PostMapping("/resolve")
     fun resolve(@RequestBody resolve: ResolveRequest): String {
         log.info("Scanning ${resolve.g7id}")
-        return userService.searchByG7Id(resolve.g7id)
+        return userService.searchByCmschId(resolve.g7id)
                 .map { it.fullName }
                 .orElse("Not Found")
     }
@@ -63,6 +63,6 @@ class ScannerController(
     ): SellStatus {
         val user = request.getUserOrNull() ?: return SellStatus.INVALID_PERMISSIONS
         log.info("Selling ${buyRequest.productId} to ${buyRequest.g7id} by ${user.fullName}")
-        return productService.sellProductByG7Id(buyRequest.productId, user, buyRequest.g7id)
+        return productService.sellProductByCmschId(buyRequest.productId, user, buyRequest.g7id)
     }
 }

@@ -798,11 +798,11 @@ class TestConfig(
         val user2 = users.findByNeptun("HITMAN").orElseThrow()
         val merchant = users.findByNeptun("FITYMA").orElseThrow()
 
-        productsService.sellProductByG7Id(product1.id, merchant, user1.cmschId)
+        productsService.sellProductByCmschId(product1.id, merchant, user1.cmschId)
         productsService.sellProductByNeptun(product2.id, merchant, user1.neptun)
-        productsService.sellProductByG7Id(product1.id, merchant, user2.cmschId)
+        productsService.sellProductByCmschId(product1.id, merchant, user2.cmschId)
         productsService.sellProductByNeptun(product1.id, merchant, user2.neptun)
-        productsService.sellProductByG7Id(product1.id, merchant, user2.cmschId)
+        productsService.sellProductByCmschId(product1.id, merchant, user2.cmschId)
     }
 
     private fun addExtraPages() {

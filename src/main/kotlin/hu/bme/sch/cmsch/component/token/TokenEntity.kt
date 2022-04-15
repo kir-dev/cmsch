@@ -51,6 +51,13 @@ data class TokenEntity(
     @property:ImportFormat(ignore = false, columnId = 3)
     var type: String = "",
 
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(maxLength = 32, order = 5, label = "Ikon")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 4)
+    var icon: String = "",
+
 ): ManagedEntity {
 
     override fun equals(other: Any?): Boolean {

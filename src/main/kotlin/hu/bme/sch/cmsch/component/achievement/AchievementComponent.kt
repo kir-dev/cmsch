@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.achievement
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.AdminMenuService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -27,12 +28,12 @@ class AchievementComponent(
     }
 
     final val title = SettingProxy(componentSettingService, component,
-        "title", "Profil",
+        "title", "BucketList",
         fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
     final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Profil", serverSideOnly = true,
+        "menuDisplayName", "BucketList", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 

@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.extrapage
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service
 class ExtraPageComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("event", "/event", componentSettingService, env) {
+) : ComponentBase("extraPage", "/page", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(
@@ -42,7 +43,7 @@ class ExtraPageComponent(
     )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "",
+        "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 

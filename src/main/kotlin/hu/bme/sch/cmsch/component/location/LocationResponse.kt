@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.g7mobile
+package hu.bme.sch.cmsch.component.location
 
 data class LocationResponse(
         var status: String,
