@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller.api
+package hu.bme.sch.cmsch.component.groupselection
 
 import hu.bme.sch.cmsch.dto.GroupSelectionResponse
 import hu.bme.sch.cmsch.dto.GroupSelectionResponseType

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.web.bind.annotation.*
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletRequest
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(EventComponent::class)
 class EventApiController(
-    private val config: RealtimeConfigService,
     private val eventsRepository: EventRepository,
     private val eventComponent: EventComponent
 ) {
@@ -28,7 +26,6 @@ class EventApiController(
             .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
 
         return EventsView(
-            warningMessage = config.getWarningMessage(),
             allEvents = events
         )
     }

@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.component.location.TrackGroupVirtualEntity
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.debt.SoldProductEntity
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.service.*
@@ -38,7 +39,7 @@ class AdminPanelCustomController(
     private val leaderBoardService: LeaderBoardService,
     private val productService: ProductService,
     private val userService: UserService,
-    private val config: RealtimeConfigService,
+    private val leaderBoardComponent: LeaderBoardComponent,
     private val applicationComponent: ApplicationComponent,
     private val adminMenuService: AdminMenuService,
     private val submittedRepository: SubmittedAchievementRepository,
@@ -97,8 +98,8 @@ class AdminPanelCustomController(
         model.addAttribute("rows", leaderBoardService.getBoardAnywaysForGroups())
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_TOPLIST)
-        model.addAttribute("leaderboardEnabled", config.isLeaderBoardEnabled())
-        model.addAttribute("leaderboardUpdates", config.isLeaderBoardUpdates())
+        model.addAttribute("leaderboardEnabled", leaderBoardComponent.leaderboardEnabled.isValueTrue())
+        model.addAttribute("leaderboardUpdates", !leaderBoardComponent.leaderboardFrozen.isValueTrue())
 
         return "overview"
     }
@@ -121,7 +122,7 @@ class AdminPanelCustomController(
             return "admin403"
         }
 
-        config.setLeaderboardUpdates(true)
+        leaderBoardComponent.leaderboardFrozen.setAndPersistValue("false")
         return "redirect:/admin/control/group-toplist"
     }
 
@@ -132,7 +133,7 @@ class AdminPanelCustomController(
             return "admin403"
         }
 
-        config.setLeaderboardUpdates(false)
+        leaderBoardComponent.leaderboardFrozen.setAndPersistValue("true")
         return "redirect:/admin/control/group-toplist"
     }
 
@@ -153,8 +154,8 @@ class AdminPanelCustomController(
         model.addAttribute("rows", leaderBoardService.getBoardAnywaysForUsers())
         model.addAttribute("user", request.getUser())
         model.addAttribute("controlMode", CONTROL_MODE_TOPLIST)
-        model.addAttribute("leaderboardEnabled", config.isLeaderBoardEnabled())
-        model.addAttribute("leaderboardUpdates", config.isLeaderBoardUpdates())
+        model.addAttribute("leaderboardEnabled", leaderBoardComponent.leaderboardEnabled.isValueTrue())
+        model.addAttribute("leaderboardUpdates", !leaderBoardComponent.leaderboardFrozen.isValueTrue())
 
         return "overview"
     }
@@ -177,7 +178,7 @@ class AdminPanelCustomController(
             return "admin403"
         }
 
-        config.setLeaderboardUpdates(true)
+        leaderBoardComponent.leaderboardEnabled.setAndPersistValue("true")
         return "redirect:/admin/control/user-toplist"
     }
 
@@ -188,7 +189,7 @@ class AdminPanelCustomController(
             return "admin403"
         }
 
-        config.setLeaderboardUpdates(false)
+        leaderBoardComponent.leaderboardEnabled.setAndPersistValue("false")
         return "redirect:/admin/control/user-toplist"
     }
 

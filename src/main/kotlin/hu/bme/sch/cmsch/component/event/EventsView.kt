@@ -7,9 +7,6 @@ import hu.bme.sch.cmsch.component.event.EventEntity
 data class EventsView(
 
     @JsonView(Preview::class)
-    val warningMessage: String = "",
-
-    @JsonView(Preview::class)
     val allEvents: List<EventEntity> = listOf(),
 
 )

@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
@@ -9,9 +10,9 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.service.RealtimeConfigService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -21,14 +22,16 @@ import javax.annotation.PostConstruct
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
+@ConditionalOnBean(LeaderBoardComponent::class)
 open class LeaderBoardService(
-    private val achievementSubmissions: Optional<SubmittedAchievementRepository>,
-    private val riddleSubmissions: Optional<RiddleMappingRepository>,
     private val groups: GroupRepository,
     private val users: UserRepository,
-    private val config: RealtimeConfigService,
+    private val leaderBoardComponent: LeaderBoardComponent,
     @Value("\${cmsch.achievement.ownership:USER}") private val achievementOwnershipMode: OwnershipType,
-    @Value("\${cmsch.riddle.ownership:USER}") private val riddleOwnershipMode: OwnershipType
+    @Value("\${cmsch.riddle.ownership:USER}") private val riddleOwnershipMode: OwnershipType,
+    private val achievementSubmissions: Optional<SubmittedAchievementRepository>,
+    private val riddleSubmissions: Optional<RiddleMappingRepository>,
+    private val riddleComponent: Optional<RiddleComponent>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -41,13 +44,13 @@ open class LeaderBoardService(
     }
 
     fun getBoardForGroups(): List<TopListAsGroupEntryDto> {
-        if (config.isLeaderBoardEnabled())
+        if (leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return cachedTopListForGroups
         return listOf()
     }
 
     fun getBoardForUsers(): List<TopListAsUserEntryDto> {
-        if (config.isLeaderBoardEnabled())
+        if (leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return cachedTopListForUsers
         return listOf()
     }
@@ -61,13 +64,13 @@ open class LeaderBoardService(
     }
 
     fun getScoreOfGroup(group: GroupEntity): Int? {
-        if (config.isLeaderBoardEnabled())
+        if (leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return cachedTopListForGroups.find { it.name == group.name }?.totalScore ?: 0
         return null
     }
 
     fun getScoreOfUser(user: UserEntity): Int? {
-        if (config.isLeaderBoardEnabled())
+        if (leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return cachedTopListForUsers.find { it.id == user.id }?.totalScore ?: 0
         return null
     }
@@ -75,7 +78,7 @@ open class LeaderBoardService(
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
     open fun recalculate() {
-        if (!config.isLeaderBoardUpdates()) {
+        if (leaderBoardComponent.leaderboardFrozen.isValueTrue()) {
             log.info("Recalculating is disabled now")
             return
         }
@@ -85,7 +88,7 @@ open class LeaderBoardService(
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForGroups() {
-        val hintPercentage: Float = config.getHintScorePercentage() / 100f
+        val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f
         log.info("Recalculating group top list cache; hint:{}", hintPercentage)
         val achievements = when (achievementOwnershipMode) {
             OwnershipType.GROUP -> {
@@ -130,7 +133,7 @@ open class LeaderBoardService(
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForUsers() {
-        val hintPercentage: Float = config.getHintScorePercentage() / 100f
+        val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f
         log.info("Recalculating user top list cache; hint:{}", hintPercentage)
         val achievements = when (achievementOwnershipMode) {
             OwnershipType.GROUP -> listOf()

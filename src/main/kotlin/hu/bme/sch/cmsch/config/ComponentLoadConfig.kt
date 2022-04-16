@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "hu.bme.sch.cmsch.component.load")
+@ConfigurationProperties("hu.bme.sch.cmsch.component.load")
 open class ComponentLoadConfig(
 
     val app: Boolean = true,

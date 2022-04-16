@@ -1,11 +1,11 @@
-package hu.bme.sch.cmsch.dto.view
+package hu.bme.sch.cmsch.component.home
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.achievement.AchievementEntityWrapperDto
-import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.news.NewsEntity
+import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
 
 data class HomeView(
 
@@ -20,11 +20,5 @@ data class HomeView(
 
     @JsonView(Preview::class)
     val leaderBoard: List<TopListAsGroupEntryDto>,
-
-    @JsonView(Preview::class)
-    val leaderBoardVisible: Boolean,
-
-    @JsonView(Preview::class)
-    val leaderBoardFrozen: Boolean,
 
 )

@@ -10,7 +10,8 @@ import java.time.ZoneOffset
 class ClockService(
     @Value("\${cmsch.zone-id:CET}") zoneId: String
 ) {
-    private val timeZone = ZoneId.of(zoneId)
+
+    val timeZone = ZoneId.of(zoneId)!!
 
     fun getTimeInSeconds() = LocalDateTime.now(timeZone).atZone(ZoneOffset.UTC)?.toInstant()?.epochSecond ?: 0
 

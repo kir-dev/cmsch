@@ -24,6 +24,7 @@ class TokenComponent(
             collectTokensGroup,
             collectFeatureEnabled,
             collectRequiredTokens,
+            collectRequiredType,
             minTokenNotEnoughMessage,
             minTokenDoneMessage,
 
@@ -66,6 +67,11 @@ class TokenComponent(
     val collectRequiredTokens = SettingProxy(componentSettingService, component,
         "collectRequired", "20", type = SettingType.NUMBER,
         fieldName = "Szükséges pecsét", description = "Ha min. ennyi pecséttel rendelkezik akkor megvan a státusz"
+    )
+
+    val collectRequiredType = SettingProxy(componentSettingService, component,
+        "collectType", "default", serverSideOnly = true, type = SettingType.BOOLEAN,
+        fieldName = "Pecsét token típusa", description = "Ebből a fajából kell összegyűjteni az n darabot; Ha '*' akkor bármilyen típust elfogad."
     )
 
     val minTokenNotEnoughMessage = SettingProxy(componentSettingService, component,

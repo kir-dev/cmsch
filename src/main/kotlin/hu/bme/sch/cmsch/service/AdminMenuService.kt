@@ -37,4 +37,10 @@ class AdminMenuService {
 
 data class AdminMenuGroup(val title: String, val priority: Int)
 
-data class AdminMenuEntry(val title: String, val icon: String, val target: String, val priority: Int, val showPermission: PermissionValidator)
+data class AdminMenuEntry(
+    val title: String,
+    val icon: String,
+    val target: String,
+    val priority: Int,
+    val showPermission: PermissionValidator
+)

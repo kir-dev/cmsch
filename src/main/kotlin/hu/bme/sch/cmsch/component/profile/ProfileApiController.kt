@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.groupselection.GroupSelectionService
 import hu.bme.sch.cmsch.component.location.LocationService
+import hu.bme.sch.cmsch.component.token.TokenComponent
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
@@ -26,14 +27,14 @@ import javax.servlet.http.HttpServletRequest
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(ProfileComponent::class)
 class ProfileApiController(
-    private val config: RealtimeConfigService,
+    // TODO: Add optionals
     private val debtsRepository: SoldProductRepository,
     private val groupRepository: GroupRepository,
     private val locationService: LocationService,
     private val tokenService: TokenCollectorService,
     private val riddleService: RiddleService,
     private val achievementsService: AchievementsService,
-    private val groupSelectionService: GroupSelectionService,
+    private val tokenComponent: TokenComponent,
     private val clock: ClockService,
     @Value("\${cmsch.group-select.fallback-group:Vendég}") private val fallbackGroup: String
 ) {
@@ -42,8 +43,6 @@ class ProfileApiController(
     @GetMapping("/profile")
     fun profile2(request: HttpServletRequest): Profile2View {
         val user = request.getUserOrNull() ?: return Profile2View()
-        if (config.isSiteLowProfile())
-            return Profile2View()
 
         val leavable = user.group?.leaveable ?: true
         return Profile2View(
@@ -65,7 +64,7 @@ class ProfileApiController(
 
             totalRiddleCount = riddleService.getTotalRiddleCount(user),
             completedRiddleCount = riddleService.getCompletedRiddleCount(user),
-            minTokenToComplete = config.getMinTokenToComplete()
+            minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE
         )
     }
 
@@ -77,10 +76,8 @@ class ProfileApiController(
 //    @GetMapping("/profile")
     fun profile(request: HttpServletRequest): ProfileView {
         val user = request.getUserOrNull() ?: return ProfileView(false, UNKNOWN_USER, group = null)
-        if (config.isSiteLowProfile())
-            return ProfileView(false, UNKNOWN_USER, group = null)
-
         val group = user.group?.let { GroupEntityDto(it) }
+
         return ProfileView(
             loggedin = true,
             user = user,
