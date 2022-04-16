@@ -44,3 +44,7 @@ val PERMISSION_IMPORT_EXPORT = PermissionValidator("PERMISSION_IMPORT_EXPORT")
 
 /// EDIT PERMISSIONS
 /// - to use different menus
+
+val PERMISSION_EDIT_TOKENS = PermissionValidator("PERMISSION_EDIT_TOKEN")
+    { user -> user.isAdmin() }
+

@@ -1,11 +1,11 @@
-package hu.bme.sch.cmsch.controller.admin
+package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.component.token.TokenStatVirtualEntity
-import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
+import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_NONE
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/control/stamps")
-class TokensStatsController(
+@ConditionalOnBean(TokenComponent::class)
+class TokenPublicTokensStatsController(
     private val tokenPropertyRepository: TokenPropertyRepository,
     @Value("\${cmsch.group-select.organizer-group:Kiállító}") private val organizerGroupName: String
 ) {
@@ -27,6 +28,7 @@ class TokensStatsController(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
+        // TODO: REFACTOR
         if (request.getUserOrNull()?.let { it.isAdmin() || it.groupName == organizerGroupName }?.not() ?: true) {
             model.addAttribute("user", request.getUser())
             return "admin403"

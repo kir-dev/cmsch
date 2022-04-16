@@ -1,17 +1,18 @@
 package hu.bme.sch.cmsch.component.achievement
 
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.dto.config.OwnershipType
 import hu.bme.sch.cmsch.service.ClockService
-import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
-import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -19,63 +20,58 @@ import javax.servlet.http.HttpServletRequest
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(AchievementComponent::class)
 class AchievementApiController(
-    private val config: RealtimeConfigService,
-    private val leaderBoardService: LeaderBoardService,
+    private val leaderBoardService: Optional<LeaderBoardService>,
+    private val leaderBoardComponent: Optional<LeaderBoardComponent>,
     private val achievements: AchievementsService,
     private val clock: ClockService,
-    @Value("\${cmsch.leaderboard.enabled:false}") private val leaderBoardAvailable: Boolean,
     @Value("\${cmsch.achievement.ownership:USER}") private val achievementOwnershipMode: OwnershipType
 ) {
 
     @JsonView(Preview::class)
     @GetMapping("/achievement")
     fun achievements(request: HttpServletRequest): AchievementsView {
-        if (config.isSiteLowProfile()) {
-            return AchievementsView(
-                score = null,
-                leaderBoard = listOf(),
-                leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
-                leaderBoardFrozen = !config.isLeaderBoardUpdates())
-        }
-
         val categories: List<AchievementCategoryDto>
         val score: Int?
+        val leaderBoardAvailable = leaderBoardComponent.map { it.leaderboardEnabled.isValueTrue() }.orElse(false)
+        val leaderBoardFrozen = leaderBoardComponent.map { it.leaderboardFrozen.isValueTrue() }.orElse(true)
 
         when (achievementOwnershipMode) {
             OwnershipType.USER -> {
                 val user = request.getUserOrNull() ?: return AchievementsView(
                     score = null,
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForUsers() else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
-                    leaderBoardFrozen = !config.isLeaderBoardUpdates())
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
+                    leaderBoardVisible = leaderBoardAvailable,
+                    leaderBoardFrozen = leaderBoardFrozen
+                )
                 categories = achievements.getCategoriesForUser(user.id)
-                score = if (leaderBoardAvailable) leaderBoardService.getScoreOfUser(user) else null
+                score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfUser(user) }.orElse(null) else null
 
                 return AchievementsView(
                     score = score,
                     categories = categories
                         .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForUsers() else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
-                    leaderBoardFrozen = !config.isLeaderBoardUpdates()
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
+                    leaderBoardVisible = leaderBoardAvailable,
+                    leaderBoardFrozen = leaderBoardFrozen
                 )
             }
             OwnershipType.GROUP -> {
                 val group = request.getUserOrNull()?.group ?: return AchievementsView(
                     score = null,
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForGroups() else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
-                    leaderBoardFrozen = !config.isLeaderBoardUpdates())
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
+                    leaderBoardVisible = leaderBoardAvailable,
+                    leaderBoardFrozen = leaderBoardFrozen
+                )
                 categories = achievements.getCategoriesForGroup(group.id)
-                score = if (leaderBoardAvailable) leaderBoardService.getScoreOfGroup(group) else null
+                score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfGroup(group) }.orElse(null) else null
 
                 return AchievementsView(
                     score = score,
                     categories = categories
                         .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.getBoardForGroups() else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable && config.isLeaderBoardEnabled(),
-                    leaderBoardFrozen = !config.isLeaderBoardUpdates()
+                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
+                    leaderBoardVisible = leaderBoardAvailable,
+                    leaderBoardFrozen = leaderBoardFrozen
                 )
             }
         }
@@ -88,13 +84,6 @@ class AchievementApiController(
             categoryName = "Nem található O.o",
             achievements = listOf()
         )
-
-        if (config.isSiteLowProfile() || category.availableFrom > clock.getTimeInSeconds() || category.availableTo < clock.getTimeInSeconds()) {
-            return AchievementCategoryView(
-                categoryName = "Még nem publikus O.o",
-                achievements = listOf()
-            )
-        }
 
         val achievements =  when (achievementOwnershipMode) {
             OwnershipType.USER -> {
@@ -123,7 +112,7 @@ class AchievementApiController(
     @GetMapping("/achievement/submit/{achievementId}")
     fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
         val achievement = achievements.getById(achievementId)
-        if (achievement.orElse(null)?.visible?.not() == true || config.isSiteLowProfile())
+        if (achievement.orElse(null)?.visible?.not() == true)
             return SingleAchievementView(achievement = null, submission = null)
 
         val submission = when (achievementOwnershipMode) {
@@ -162,9 +151,6 @@ class AchievementApiController(
         @RequestParam(required = false) file: MultipartFile?,
         request: HttpServletRequest
     ): AchievementSubmissionResponseDto {
-        if (config.isSiteLowProfile())
-            return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
-
         val user = request.getUserOrNull()
             ?: return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
 

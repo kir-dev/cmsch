@@ -2,7 +2,6 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

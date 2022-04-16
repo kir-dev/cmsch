@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller.admin
+package hu.bme.sch.cmsch.component.token
 
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.font.PdfFontFactory
@@ -13,14 +13,15 @@ import com.itextpdf.layout.properties.VerticalAlignment
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.achievement.AchievementsService
 import hu.bme.sch.cmsch.component.riddle.RiddleService
-import hu.bme.sch.cmsch.component.token.TokenCollectorGroupVirtualEntity
-import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
-import hu.bme.sch.cmsch.component.token.TokenVirtualEntity
+import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_PDF
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.service.RealtimeConfigService
+import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -33,34 +34,53 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
+import java.util.*
+import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-const val PREFERRED_TOKEN_TYPE = "default"
-
 @Controller
 @RequestMapping("/admin/control/token-properties-of-groups")
-class TokensByUsersOfGroupsController(
-    private val tokenPropertyRepository: TokenPropertyRepository,
+@ConditionalOnBean(TokenComponent::class)
+class TokenAdminTokensByUsersOfGroupsController(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
-    private val config: RealtimeConfigService,
-    private val riddleService: RiddleService,
-    private val achievementsService: AchievementsService
+    private val tokenComponent: TokenComponent,
+    private val riddleService: Optional<RiddleService>,
+    private val achievementsService: Optional<AchievementsService>,
+    private val tokenPropertyRepository: TokenPropertyRepository,
+    private val adminMenuService: AdminMenuService
 ) {
 
     private val view = "token-properties-of-groups"
-    private val titleSingular = "Tokenek tankörönként"
-    private val titlePlural = "Tokenek tankörönként"
-    private val description = "Beolvasott tokenek tankörönként csoportosítva"
+    private val titleSingular = "Jelenléti export"
+    private val titlePlural = "Jelenléti export"
+    private val description = "Beolvasott tokenek csoportonként csoportosítva. " +
+            "(Riddle modul: ${riddleService.map { _ -> "ON" }.orElse("OFF")} " +
+            "Achievement modul: ${achievementsService.map { _ -> "ON" }.orElse("OFF")} " +
+            "Token modul: ON*)"
+    private val permissionControl = PERMISSION_EDIT_TOKENS
 
     private val overviewDescriptor = OverviewBuilder(TokenCollectorGroupVirtualEntity::class)
-    private val propertyDescriptor = OverviewBuilder(TokenVirtualEntity::class)
+
+    @PostConstruct
+    fun init() {
+        adminMenuService.registerEntry(
+            TokenComponent::class.simpleName!!, AdminMenuEntry(
+                titlePlural,
+                "file_download",
+                "/admin/control/${view}",
+                4,
+                permissionControl
+            )
+        )
+    }
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() != false) {
-            model.addAttribute("user", request.getUser())
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("user", user)
             return "admin403"
         }
 
@@ -71,7 +91,7 @@ class TokensByUsersOfGroupsController(
         model.addAttribute("columns", overviewDescriptor.getColumns())
         model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
         model.addAttribute("rows", fetchOverview())
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_PDF)
 
         return "overview"
@@ -135,9 +155,10 @@ class TokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(20f))
 
-        val minTokenToComplete = config.getMinTokenToComplete()
+        val minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE
+        val preferredTokenType = tokenComponent.collectRequiredType.getValue()
         val signed = tokensByUsers
-            .filter { it.value.count { t -> t.token?.type == PREFERRED_TOKEN_TYPE } >= minTokenToComplete }
+            .filter { it.value.count { t -> preferredTokenType == "*" || t.token?.type == preferredTokenType } >= minTokenToComplete }
             .count()
         document.add(Paragraph("A hallgatók a rendezvény alatt ellátogathattak a Schönherz öntevékeny köreinek " +
                 "standjaihoz, ahol miután megismerkedtek az adott körrel, beolvashattak egy-egy QR kódot. Ezáltal digitális " +
@@ -177,7 +198,7 @@ class TokensByUsersOfGroupsController(
             table.addCell(Cell().add(Paragraph(user.key.fullName)
                 .setPaddingLeft(4f)
                 .setFont(font).setFontSize(12f)))
-            val tokens = user.value.count { it.token?.type == PREFERRED_TOKEN_TYPE }
+            val tokens = user.value.count { preferredTokenType == "*" || it.token?.type == preferredTokenType }
             table.addCell(Cell().add(Paragraph("$tokens db")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))
@@ -186,11 +207,11 @@ class TokensByUsersOfGroupsController(
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))
 
-            val riddles = riddleService.getCompletedRiddleCount(user.key)
+            val riddles = riddleService.map { it.getCompletedRiddleCount(user.key) }.orElse(0)
             table.addCell(Cell().add(Paragraph("$riddles db")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))
-            val achievemnts = achievementsService.getSubmittedAchievementsForUser(user.key)
+            val achievemnts = achievementsService.map{ it.getSubmittedAchievementsForUser(user.key) }.orElse(0)
             table.addCell(Cell().add(Paragraph("$achievemnts db")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))
@@ -220,7 +241,7 @@ class TokensByUsersOfGroupsController(
                 .setFont(font).setFontSize(12f)))
 
             user.value
-                .filter { it.token?.type == PREFERRED_TOKEN_TYPE }
+                .filter { preferredTokenType == "*" || it.token?.type == preferredTokenType }
                 .forEach {
                     userTable.addCell(Cell().add(Paragraph(it.token?.title ?: "n/a")
                         .setPaddingLeft(4f)
@@ -241,7 +262,7 @@ class TokensByUsersOfGroupsController(
             .setMarginTop(20f))
 
         document.close()
-        response.addHeader("Content-Disposition", "attachment; filename=jelenleti-export-2022-${group.name}.pdf")
+        response.addHeader("Content-Disposition", "attachment; filename=jelenleti-export-${group.name}.pdf")
         return ResponseEntity.ok(output.toByteArray())
     }
 

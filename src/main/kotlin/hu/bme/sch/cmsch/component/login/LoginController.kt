@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.login
 
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.token.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
 import hu.bme.sch.cmsch.model.GuildType
 import hu.bme.sch.cmsch.model.MajorType
@@ -8,7 +9,6 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
-import hu.bme.sch.cmsch.service.RealtimeConfigService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -49,7 +49,7 @@ class LoginController(
     private val groups: GroupRepository,
     @Value("\${cmsch.sysadmins:}") private val systemAdmins: String,
     @Value("\${cmsch.profile.qr-enabled:true}") private val profileQrEnabled: Boolean,
-    private val config: RealtimeConfigService,
+    private val applicationComponent: ApplicationComponent,
     private val loginComponent: LoginComponent
 ) {
 
@@ -301,14 +301,12 @@ class LoginController(
         } catch (e: Exception) {
             // Ignore it for now
         }
-        return "redirect:${config.getWebsiteUrl()}?logged-out=true"
+        return "redirect:${applicationComponent.siteUrl.getValue()}?logged-out=true"
     }
 
     @GetMapping("/control/open-site")
     fun openSite(request: HttpServletRequest): String {
-        if (config.isEventFinished())
-            return "redirect:/"
-        return "redirect:" + config.getWebsiteUrl()
+        return "redirect:${applicationComponent.siteUrl.getValue()}"
     }
 
 }
