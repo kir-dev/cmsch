@@ -51,10 +51,11 @@
 
                         <object th:if="${user.role.value >= input.second.minimumRole.value}" th:remove="tag">
 
-                            <object th:if="${input.second.type == 'text'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'text'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <input th:type="${input.second.type}"
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
@@ -64,17 +65,18 @@
                                        th:disabled="${!input.second.enabled}"
                                        th:autocomplete="${input.second.autocomplete}"
                                 />
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
-                            <object th:if="${input.second.type == 'text' && input.first.name == 'cmschId'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'text' && input.first.name == 'cmschId'}" class="field-group">
                                 <img src="#" th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|" height="180px" alt="QR code preview" class="qr-preview">
-                            </object>
+                            </div>
 
-                            <object th:if="${input.second.type == 'number'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'number'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <input th:type="${input.second.type}"
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
@@ -86,13 +88,14 @@
                                        th:autocomplete="${input.second.autocomplete}"
                                        required
                                 />
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
-                            <object th:if="${input.second.type == 'date'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'date'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <input type="text"
                                        class="datetime-picker"
                                        th:name="${input.first.name}"
@@ -101,13 +104,14 @@
                                        th:disabled="${!input.second.enabled}"
                                        required
                                 />
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
-                            <object th:if="${input.second.type == 'select'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'select'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <select th:id="|input${iter.index}|"
                                         th:name="${input.first.name}"
                                         th:disabled="${!input.second.enabled}">
@@ -121,13 +125,14 @@
                                             th:value="${opt}"
                                             th:text="${opt}"></option>
                                 </select>
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
-                            <object th:if="${input.second.type == 'entity-select'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'entity-select'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <select th:id="|input${iter.index}|"
                                         th:name="${input.first.name}"
                                         th:disabled="${!input.second.enabled}">
@@ -141,25 +146,27 @@
                                             th:value="${opt}"
                                             th:text="${opt}"></option>
                                 </select>
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
-                            <object th:if="${input.second.type == 'list-entities'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'list-entities'}" class="field-group">
                                 <label th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <ul>
                                     <li th:each="ent : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${ent}"
                                             th:text="${ent}">
                                     </li>
                                 </ul>
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
-                            <object th:if="${input.second.type == 'textarea'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'textarea'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <textarea
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
@@ -167,13 +174,14 @@
                                        th:disabled="${!input.second.enabled}"
                                        th:autocomplete="${input.second.autocomplete}">
                                 </textarea>
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
-                            <object th:if="${input.second.type == 'file'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'file'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <input type="file"
                                        class="file-input"
                                        th:name="|file${input.second.fileId}|"
@@ -206,14 +214,15 @@
                                     </p>
                                 </object>
 
-                                <span class="note" th:text="${input.second.note}"></span>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
 
-                            </object>
+                            </div>
 
-                            <object th:if="${input.second.type == 'checkbox'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'checkbox'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <label class="switch">
                                     <input type="checkbox"
                                            th:checked="${(!editMode) ? (input.second.defaultValue == 'true') : (input.first.get(data))}"
@@ -222,12 +231,14 @@
                                            th:disabled="${!input.second.enabled}" />
                                     <span class="slider"></span>
                                 </label>
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <div style="clear: both"></div>
+                            </div>
 
-                            <object th:if="${input.second.type == 'image-preview' && editMode}" th:remove="tag">
+                            <div th:if="${input.second.type == 'image-preview' && editMode}" class="field-group">
                                 <label th:text="${input.second.label}">
                                 </label>
+                                <div style="clear: both"></div>
                                 <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">
                                     <a href="#"
                                        target="_blank"
@@ -250,8 +261,8 @@
                                 <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
                                     Nincs kép feltöltve
                                 </p>
-                                <span class="note" th:text="${input.second.note}"></span>
-                            </object>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
 
                             <object th:if="${input.second.type == 'permissions'}" th:remove="tag">
                                 <label th:for="|input${iter.index}|"
@@ -262,7 +273,7 @@
 
                                 <div class="permission-box card" th:each="permission : ${staffPermissions}">
                                     <div class="permission-part">
-                                        <b th:text="${permission.permissionString}">PERMISSION_NAME</b>
+                                        <span class="material-icons fix-icons">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
                                         <span class="note" th:text="${permission.description}">description</span>
                                     </div>
                                     <div class="permission-part">
@@ -277,7 +288,7 @@
 
                                 <div class="permission-box card" th:each="permission : ${adminPermissions}">
                                     <div class="permission-part">
-                                        <b th:text="${permission.permissionString}">PERMISSION_NAME</b>
+                                        <span class="material-icons fix-icons">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
                                         <span class="note" th:text="${permission.description}">description</span>
                                     </div>
                                     <div class="permission-part">

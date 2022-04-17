@@ -22,7 +22,7 @@ open class SettingProxy(
     val persist: Boolean = true,
     val constant: Boolean = true,
     val serverSideOnly: Boolean = false,
-    private val type: SettingType = SettingType.TEXT,
+    val type: SettingType = SettingType.TEXT,
     val fieldName: String = property,
     val description: String = "",
     val minRoleToEdit: RoleType = RoleType.ADMIN
@@ -69,7 +69,7 @@ class MinRoleSettingProxy(
     componentPropertyService, component, property,
     defaultValue = defaultValue, type = SettingType.MIN_ROLE,
     fieldName = fieldName, description = description,
-    minRoleToEdit = minRoleToEdit
+    minRoleToEdit = minRoleToEdit, serverSideOnly = true
 ) {
 
     fun isAvailableForRole(role: RoleType): Boolean {

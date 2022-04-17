@@ -81,7 +81,7 @@ class TokenComponent(
 
     val minTokenDoneMessage = SettingProxy(componentSettingService, component,
         "minTokenAchievedMsg", "Megvan a tanköri jelenlét", type = SettingType.LONG_TEXT,
-        fieldName = "'Már van elég' üzenet", description = "ha üres, nem látszik"
+        fieldName = "'Már van elég' üzenet", description = "Ha üres, nem látszik"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -95,17 +95,17 @@ class TokenComponent(
     val showCollector = SettingProxy(componentSettingService, component,
         "showCollector", "false", serverSideOnly = true, type = SettingType.BOOLEAN,
         fieldName = "Megszerző neve látszik", description = "Ha a csoportos gyűjtés be van kapcsolva akkor kiírja-e, " +
-                "hogy ki szerezte meg a tokent"
+                "Látszódjön-e hogy ki szerezte meg a tokent?"
     )
 
     val defaultTokenIcon = SettingProxy(componentSettingService, component,
         "defaultIcon", "stamp", type = SettingType.TEXT,
-        fieldName = "Alapértelmezett ikon", description = "azoknak a tokeneknek ahova nincs egyedi megadva"
+        fieldName = "Alapértelmezett ikon", description = "Azoknak a tokeneknek ahova nincs egyedi megadva"
     )
 
     val defaultTestTokenIcon = SettingProxy(componentSettingService, component,
         "defaultTestIcon", "rocket", type = SettingType.TEXT,
-        fieldName = "Alapértelmezett test ikon", description = "azoknak a teszt tokeneknek ahova nincs egyedi megadva (0-100 egész szám)"
+        fieldName = "Alapértelmezett test ikon", description = "Azoknak a teszt tokeneknek ahova nincs egyedi megadva (0-100 egész szám)"
     )
 
 }

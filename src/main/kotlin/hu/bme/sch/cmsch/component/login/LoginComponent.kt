@@ -59,14 +59,14 @@ class LoginComponent(
         type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Oauth scopeok",
         description = "Ezek lesznek elkérve a providertől; ezek vannak: "
-                + Scope.values().joinToString(",") { it.name }
+                + Scope.values().joinToString(", ") { it.name }
     )
 
     val authschScopes = mutableListOf<Scope>()
 
     override fun onValuesUpdated() {
         authschScopes.clear()
-        val scopes = authschScopesRaw.getValue().split(",")
+        val scopes = authschScopesRaw.getValue().replace(" ", "").split(",")
             .filter { it.isNotBlank() }
             .mapNotNull { Scope.byNameOrNull(it) }
             .distinct()
