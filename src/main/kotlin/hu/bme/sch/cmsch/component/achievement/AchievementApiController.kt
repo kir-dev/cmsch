@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.dto.config.OwnershipType
+import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value

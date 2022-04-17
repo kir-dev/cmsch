@@ -2,9 +2,7 @@ package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.config.OwnershipType
-import hu.bme.sch.cmsch.component.token.TokenSubmittedView
-import hu.bme.sch.cmsch.component.token.TokenCollectorService
+import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value

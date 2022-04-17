@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuGroup
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PermissionValidator
-import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.getUser
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,15 +32,16 @@ abstract class ComponentApiBase(
 
     @GetMapping("/settings")
     fun settings(request: HttpServletRequest, model: Model): String {
-        val user = request.getUserOrNull() ?: return "admin403"
+        val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (!permissionToShow.validate(user)) {
             model.addAttribute("permission", permissionToShow.permissionString)
+            model.addAttribute("user", user)
             return "admin403"
         }
 
         model.addAttribute("title", componentMenuName)
         model.addAttribute("settings", component.allSettings)
-        adminMenuService.addPartsForMenu(user, model)
 
         return "componentSettings"
     }

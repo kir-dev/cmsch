@@ -16,10 +16,10 @@ const val HOUR = 60 * 60
 @Service
 @ConditionalOnBean(AchievementComponent::class)
 open class AchievementsService(
-    val achievements: AchievementEntityRepository,
-    val submitted: SubmittedAchievementRepository,
-    val categories: AchievementCategoryRepository,
-    val clock: ClockService
+    private val achievements: AchievementEntityRepository,
+    private val submitted: SubmittedAchievementRepository,
+    private val categories: AchievementCategoryRepository,
+    private val clock: ClockService
 ) {
 
     companion object {

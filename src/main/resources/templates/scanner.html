@@ -78,16 +78,16 @@
     const camQrResult = document.getElementById('cam-qr-result');
     const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
 
-    function showPaymentPrompt(g7id) {
+    function showPaymentPrompt(cmschId) {
         setTimeout(async () => {
             const name = await httpFetchData('POST', baseUrl + '/resolve', {
-                "g7id": g7id
+                "cmschId": cmschId
             });
             document.getElementById('prompt-name').innerText = name;
             if (confirm(`TRANZAKCIÓ JÓVÁHAGYÁSA\nTermék: ${itemName} (${itemPrice})\nVevő: ${name}`)) {
-                const result = await httpFetchData('POST', baseUrl + '/buy-g7id', {
+                const result = await httpFetchData('POST', baseUrl + '/buy-cmschid', {
                     "productId": itemId,
-                    "g7id": g7id
+                    "cmschId": cmschId
                 });
                 if (result === '"SOLD"') {
                     alert(`SIKERES TRANZAKCIÓ!`);

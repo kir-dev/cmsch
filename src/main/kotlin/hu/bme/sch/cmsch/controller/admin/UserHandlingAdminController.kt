@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
+import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.GroupToUserMappingEntity
 import hu.bme.sch.cmsch.model.GuildToUserMappingEntity

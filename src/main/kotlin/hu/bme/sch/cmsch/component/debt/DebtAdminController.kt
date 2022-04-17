@@ -1,9 +1,8 @@
 package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
-import hu.bme.sch.cmsch.component.news.NewsComponent
-import hu.bme.sch.cmsch.controller.admin.AbstractAdminPanelController
-import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_EDIT
+import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
+import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean

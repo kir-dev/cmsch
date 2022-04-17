@@ -1,10 +1,11 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
+import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_NONE
+import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -14,10 +15,11 @@ import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/control/stamps")
-@ConditionalOnBean(TokenComponent::class)
+@ConditionalOnBean(value = [TokenComponent::class, LoginComponent::class])
 class TokenPublicTokensStatsController(
+    private val loginComponent: LoginComponent,
     private val tokenPropertyRepository: TokenPropertyRepository,
-    @Value("\${cmsch.group-select.organizer-group:Kiállító}") private val organizerGroupName: String
+    private val adminMenuService: AdminMenuService
 ) {
 
     private val titleSingular = "Pecsét statisztika"
@@ -28,12 +30,13 @@ class TokenPublicTokensStatsController(
 
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
-        // TODO: REFACTOR
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.groupName == organizerGroupName }?.not() ?: true) {
+        val user = request.getUser()
+        if (request.getUserOrNull()?.let { it.isAdmin() || it.groupName == loginComponent.organizerGroupName.getValue() }?.not() != false) {
             model.addAttribute("user", request.getUser())
             return "admin403"
         }
 
+        adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
@@ -41,7 +44,7 @@ class TokenPublicTokensStatsController(
         model.addAttribute("columns", overviewDescriptor.getColumns())
         model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
         model.addAttribute("rows", fetchOverview())
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_NONE)
 
         return "overview"
@@ -59,7 +62,7 @@ class TokenPublicTokensStatsController(
                     id =    submissions[0].token?.id ?: 0,
                     token = submissions[0].token?.title ?: "n/a",
                     type =  submissions[0].token?.type ?: "n/a",
-                    count = submissions.count { it.ownerUser?.groupName != organizerGroupName }
+                    count = submissions.count { it.ownerUser?.groupName != loginComponent.organizerGroupName.getValue() }
                 )
             }
             .filter { it.count > 0 }

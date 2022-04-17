@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
-import hu.bme.sch.cmsch.controller.admin.AbstractAdminPanelController
+import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.PERMISSION_CONTROL_RIDDLE

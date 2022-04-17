@@ -1,18 +1,18 @@
 package hu.bme.sch.cmsch.component.groupselection
 
 import hu.bme.sch.cmsch.component.login.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
-import hu.bme.sch.cmsch.dto.GroupSelectionResponse
-import hu.bme.sch.cmsch.dto.GroupSelectionResponseType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import javax.servlet.http.HttpServletRequest
 
 @Service
+@ConditionalOnBean(GroupSelectionComponent::class)
 open class GroupSelectionService(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository

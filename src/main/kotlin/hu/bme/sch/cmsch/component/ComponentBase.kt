@@ -1,8 +1,5 @@
 package hu.bme.sch.cmsch.component
 
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuGroup
-import hu.bme.sch.cmsch.service.AdminMenuService
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import javax.annotation.PostConstruct

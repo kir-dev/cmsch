@@ -33,7 +33,10 @@ class LocationComponent(
             whiteGroupName,
             yellowGroupName,
             purpleGroupName,
-            grayGroupName
+            grayGroupName,
+
+            appGroup,
+            apkUrl
         )
     }
 
@@ -111,5 +114,19 @@ class LocationComponent(
         "grayGroupName", "", type = SettingType.TEXT,
         fieldName = "Szürke csoport neve"
     )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val appGroup = SettingProxy(componentSettingService, component,
+        "appGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Tracker alkalmazás",
+        description = ""
+    )
+
+    val apkUrl = SettingProxy(componentSettingService, component,
+        "apkUrl", "/files/cmsch-tracker-1.0.0.apk", type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "APK URL-je"
+    )
+
 
 }

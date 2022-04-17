@@ -2,8 +2,9 @@ package hu.bme.sch.cmsch.component.achievement
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
-import hu.bme.sch.cmsch.component.achievement.AchievementEntity
-import hu.bme.sch.cmsch.dto.*
+import hu.bme.sch.cmsch.dto.Edit
+import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.dto.Preview
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
