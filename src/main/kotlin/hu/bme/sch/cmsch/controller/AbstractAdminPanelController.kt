@@ -114,6 +114,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         } else {
             model.addAttribute("data", entity.orElseThrow())
         }
+        onDetailsView(user, model)
         return "details"
     }
 
@@ -136,6 +137,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
 
+        onDetailsView(user, model)
         return "details"
     }
 
@@ -321,4 +323,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         // Overridden when notification is required
     }
 
+    open fun onDetailsView(entity: UserEntity, model: Model) {
+        // Overridden when notification is required
+    }
 }

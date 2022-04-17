@@ -458,6 +458,35 @@ form p {
     padding: 10vh 20px;
 }
 
+h4.permission-header {
+    margin: 14px 0 8px 10px;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.permission-box {
+    max-width: 488px;
+    margin-top: 10px;
+    display: flex;
+}
+
+.permission-box span {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.permission-box:last-of-type {
+    margin-bottom: 10px;
+}
+
+.permission-part:first-of-type {
+    flex: 1 0 0;
+}
+
+.permission-part:last-of-type {
+    flex: 0 0 0;
+}
+
 .hr {
     margin: 20px 0;
     border-top: 4px solid #a0a0a0;

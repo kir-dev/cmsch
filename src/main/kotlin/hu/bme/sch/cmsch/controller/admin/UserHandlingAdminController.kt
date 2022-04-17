@@ -17,6 +17,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_USERS
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
 
@@ -58,6 +59,16 @@ class UserController(
         permissionControl = PERMISSION_EDIT_USERS,
         importable = true, adminMenuPriority = 2, adminMenuIcon = "person"
 ) {
+
+    override fun onDetailsView(entity: UserEntity, model: Model) {
+        val staffPermissions = StaffPermissions.allPermissions().filter { it.permissionString.isNotEmpty() }
+        val adminPermissions = ControlPermissions.allPermissions().filter { it.permissionString.isNotEmpty() }
+        model.addAttribute("staffPermissions", staffPermissions)
+        model.addAttribute("adminPermissions", adminPermissions)
+        model.addAttribute("staffPermissionList", staffPermissions.map { it.permissionString })
+        model.addAttribute("adminPermissionList", adminPermissions.map { it.permissionString })
+    }
+
     override fun onEntityPreSave(entity: UserEntity, request: HttpServletRequest) {
         if (profileQrEnabled) {
             profileService.generateFullProfileForUser(entity)
