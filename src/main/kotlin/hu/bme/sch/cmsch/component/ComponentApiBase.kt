@@ -17,17 +17,30 @@ abstract class ComponentApiBase(
     private val componentClass: Class<*>,
     val component: ComponentBase,
     private val permissionToShow: PermissionValidator,
-    private val componentCategoryName: String,
+    private val componentCategoryName: String = "",
     private val componentMenuName: String,
-    private val menuIcon: String = "settings"
+    private val componentMenuIcon: String = "settings",
+    private val componentMenuPriority: Int = 100,
+    private val insertComponentCategory: Boolean = true,
+    private val componentCategory: String = componentClass.simpleName
 ) {
 
     @PostConstruct
     fun init() {
-        adminMenuService.registerCategory(componentClass.simpleName, AdminMenuGroup(componentCategoryName, component.menuPriority))
-        adminMenuService.registerEntry(componentClass.simpleName, AdminMenuEntry(componentMenuName, menuIcon,
-            "/admin/control/component/${component.component}/settings",
-            100, permissionToShow))
+        if (insertComponentCategory) {
+            adminMenuService.registerCategory(
+                componentCategory,
+                AdminMenuGroup(componentCategoryName, component.menuPriority)
+            )
+        }
+        adminMenuService.registerEntry(
+            componentCategory, AdminMenuEntry(
+                componentMenuName, componentMenuIcon,
+                "/admin/control/component/${component.component}/settings",
+                componentMenuPriority,
+                permissionToShow
+            )
+        )
     }
 
     @GetMapping("/settings")

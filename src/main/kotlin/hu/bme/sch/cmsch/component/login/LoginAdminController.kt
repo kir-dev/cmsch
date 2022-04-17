@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.profile
+package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
@@ -9,19 +9,20 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/admin/control/component/profile")
-@ConditionalOnBean(ProfileComponent::class)
-class ProfileAdminController(
+@RequestMapping("/admin/control/component/login")
+@ConditionalOnBean(LoginComponent::class)
+class LoginAdminController(
     adminMenuService: AdminMenuService,
-    component: ProfileComponent,
+    component: LoginComponent,
 ) : ComponentApiBase(
     adminMenuService,
-    ProfileComponent::class.java,
+    LoginComponent::class.java,
     component,
     ControlPermissions.PERMISSION_CONTROL_PROFILE,
-    componentMenuName = "Profil beállítások",
-    componentMenuIcon = "account_circle",
+    componentMenuName = "Auth beállítások",
+    componentMenuIcon = "login",
     insertComponentCategory = false,
     componentCategory = ApplicationComponent::class.simpleName!!,
-    componentMenuPriority = 5
+    componentMenuPriority = 4
 )
+
