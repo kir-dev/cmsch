@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto.scan
+package hu.bme.sch.cmsch.dto
 
 data class CmschIdBuyRequest(
     var productId: Int,

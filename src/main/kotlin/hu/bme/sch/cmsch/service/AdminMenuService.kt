@@ -9,13 +9,13 @@ import java.util.concurrent.ConcurrentHashMap
 class AdminMenuService {
 
     private val entries: MutableMap<String, MutableList<AdminMenuEntry>> = ConcurrentHashMap()
-    private val categories: MutableMap<String, AdminMenuGroup> = ConcurrentHashMap()
+    private val categories: MutableMap<String, AdminMenuCategory> = ConcurrentHashMap()
 
     fun registerEntry(component: String, entry: AdminMenuEntry) {
         entries.computeIfAbsent(component) { mutableListOf() }.add(entry)
     }
 
-    fun registerCategory(component: String, category: AdminMenuGroup) {
+    fun registerCategory(component: String, category: AdminMenuCategory) {
         categories[component] = category
     }
 
@@ -35,7 +35,7 @@ class AdminMenuService {
 
 }
 
-data class AdminMenuGroup(val title: String, val priority: Int)
+data class AdminMenuCategory(val title: String, val priority: Int)
 
 data class AdminMenuEntry(
     val title: String,

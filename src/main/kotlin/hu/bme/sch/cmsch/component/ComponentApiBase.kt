@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component
 
 import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuGroup
+import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
@@ -30,7 +30,7 @@ abstract class ComponentApiBase(
         if (insertComponentCategory) {
             adminMenuService.registerCategory(
                 componentCategory,
-                AdminMenuGroup(componentCategoryName, component.menuPriority)
+                AdminMenuCategory(componentCategoryName, component.menuPriority)
             )
         }
         adminMenuService.registerEntry(
