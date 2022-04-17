@@ -32,17 +32,17 @@ object ControlPermissions : PermissionGroup {
 
     val PERMISSION_CONTROL_NEWS = PermissionValidator(
         "NEWS_CONTROL",
-        "News komponens testreszabása"
+        "Hírek komponens testreszabása"
     )
 
     val PERMISSION_CONTROL_ACHIEVEMENTS = PermissionValidator(
         "ACHIEVEMENT_CONTROL",
-        "Achievements komponens testreszabása"
+        "Bucketlist komponens testreszabása"
     )
 
     val PERMISSION_CONTROL_EVENTS = PermissionValidator(
         "EVENT_CONTROL",
-        "Event komponens testreszabása"
+        "Események komponens testreszabása"
     )
 
     val PERMISSION_CONTROL_DEBTS = PermissionValidator(
@@ -70,6 +70,11 @@ object ControlPermissions : PermissionGroup {
         "LeaderBoard komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_PROFILE = PermissionValidator(
+        "PROFILE_CONTROL",
+        "Profil komponens testreszabása"
+    )
+
     val PERMISSION_IMPORT_EXPORT = PermissionValidator(
         "ALL_IMPORT_EXPORT",
         "Az összes kezelt entitás exportálása és importálása"
@@ -94,6 +99,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_TOKEN,
         PERMISSION_CONTROL_EXTRA_PAGES,
         PERMISSION_CONTROL_LEADERBOARD,
+        PERMISSION_CONTROL_PROFILE,
         PERMISSION_IMPORT_EXPORT,
         PERMISSION_CONTROL_APP,
         PERMISSION_SHOW_DELETE_FILES,

@@ -51,7 +51,7 @@ class FilesByViewController(
                 titlePlural,
                 "folder",
                 "/admin/control/${view}",
-                10,
+                1,
                 permissionControl
             )
         )

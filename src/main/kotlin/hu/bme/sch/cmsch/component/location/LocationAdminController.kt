@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.leaderboard
+package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -8,16 +8,16 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/admin/control/component/leaderboard")
-@ConditionalOnBean(LeaderBoardComponent::class)
-class LeaderBoardAdminController(
+@RequestMapping("/admin/control/component/location")
+@ConditionalOnBean(LocationComponent::class)
+class LocationAdminController(
     adminMenuService: AdminMenuService,
-    component: LeaderBoardComponent,
+    component: LocationComponent,
 ) : ComponentApiBase(
     adminMenuService,
-    LeaderBoardComponent::class.java,
+    LocationComponent::class.java,
     component,
-    ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
-    componentCategoryName = "Toplista",
-    componentMenuName = "Toplista testreszabása",
+    ControlPermissions.PERMISSION_CONTROL_PROFILE,
+    componentCategoryName = "Helymegosztás",
+    componentMenuName = "H.megosztás testreszabása",
 )

@@ -32,7 +32,7 @@ class DebtAdminDebtsByUsersController(
 
     private val view = "debts-by-users"
     private val titleSingular = "Tartozás"
-    private val titlePlural = "Tartozások felhaszálónként"
+    private val titlePlural = "Felh. tartozásai"
     private val description = "Tartozások felhasználónként csoportosítva"
     private val permissionControl = PERMISSION_EDIT_DEBTS
 

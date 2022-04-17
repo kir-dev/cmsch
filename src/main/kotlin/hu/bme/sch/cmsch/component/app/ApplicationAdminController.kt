@@ -19,6 +19,7 @@ class ApplicationAdminController(
     component,
     PERMISSION_CONTROL_APP,
     "Admin",
-    "Oldal beállítások"
+    "Oldal beállítások",
+    componentMenuIcon = "functions"
 )
 
