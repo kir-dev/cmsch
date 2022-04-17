@@ -177,11 +177,6 @@ object StaffPermissions : PermissionGroup {
 
     /// Riddle Component
 
-    val PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS = PermissionValidator(
-        "RIDDLE_SUBMISSIONS_SHOW_DELETE",
-        ""
-    )
-
     val PERMISSION_EDIT_RIDDLES = PermissionValidator(
         "RIDDLE_EDIT",
         "Riddle létrehozása, szerkesztése és törlése"
@@ -190,6 +185,11 @@ object StaffPermissions : PermissionGroup {
     val PERMISSION_EDIT_RIDDLE_CATEGORIES = PermissionValidator(
         "RIDDLE_CATEGORY_EDIT",
         "Riddle kategória létrehozása, szerkesztése és törlése"
+    )
+
+    val PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS = PermissionValidator(
+        "RIDDLE_SUBMISSIONS_SHOW_DELETE",
+        "Riddle beadások listázása és törlése"
     )
 
     /// News Component
@@ -262,9 +262,9 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_TRACK_ONE_GROUP,
         PERMISSION_TRACK_EVERYBODY,
         PERMISSION_SHOW_LOCATIONS,
-        PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS,
         PERMISSION_EDIT_RIDDLES,
         PERMISSION_EDIT_RIDDLE_CATEGORIES,
+        PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS,
         PERMISSION_EDIT_NEWS,
         PERMISSION_EDIT_EVENTS,
         PERMISSION_EDIT_TOKENS,
