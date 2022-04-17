@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
-import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_DATE
 
 data class TokenStatVirtualEntity(
 

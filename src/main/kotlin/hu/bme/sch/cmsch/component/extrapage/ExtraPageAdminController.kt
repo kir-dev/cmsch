@@ -1,9 +1,11 @@
 package hu.bme.sch.cmsch.component.extrapage
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
-import hu.bme.sch.cmsch.component.token.TokenComponent
-import hu.bme.sch.cmsch.controller.admin.AbstractAdminPanelController
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.ImportService
+import hu.bme.sch.cmsch.service.PERMISSION_CONTROL_EXTRAPAGES
+import hu.bme.sch.cmsch.service.PermissionValidator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping

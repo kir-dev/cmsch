@@ -5,11 +5,10 @@ import hu.bme.sch.cmsch.component.achievement.AchievementsService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.component.token.TokenCollectorService
-import hu.bme.sch.cmsch.controller.api.UNKNOWN_USER
+import hu.bme.sch.cmsch.controller.UNKNOWN_USER
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
-import hu.bme.sch.cmsch.component.groupselection.GroupSelectionService
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.token.TokenComponent
 import hu.bme.sch.cmsch.service.*

@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.achievement
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.service.AdminMenuService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -22,6 +21,8 @@ class AchievementComponent(
         listOf(
             title, menuDisplayName, minRole,
 
+            exportGroup,
+            exportEnabled
         )
     }
 
@@ -38,6 +39,19 @@ class AchievementComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val exportGroup = SettingProxy(componentSettingService, component,
+        "exportGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Beadások exportálása",
+        description = ""
+    )
+
+    val exportEnabled = SettingProxy(componentSettingService, component,
+        "exportEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Endpoint elérhető"
     )
 
 }

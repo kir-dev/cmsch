@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.riddle
 
-import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
 import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.repository.CrudRepository

@@ -3,9 +3,7 @@ package hu.bme.sch.cmsch.component.leaderboard
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
-import hu.bme.sch.cmsch.dto.TopListAsGroupEntryDto
-import hu.bme.sch.cmsch.dto.TopListAsUserEntryDto
-import hu.bme.sch.cmsch.dto.config.OwnershipType
+import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository

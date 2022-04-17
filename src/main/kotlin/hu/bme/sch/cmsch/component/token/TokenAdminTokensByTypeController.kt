@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_DELETE
-import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_VIEW
-import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
+import hu.bme.sch.cmsch.controller.CONTROL_MODE_DELETE
+import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
+import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PERMISSION_EDIT_TOKENS
@@ -50,7 +50,9 @@ class TokenAdminTokensByTypeController(
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -85,7 +87,9 @@ class TokenAdminTokensByTypeController(
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -117,7 +121,9 @@ class TokenAdminTokensByTypeController(
     @GetMapping("/delete/{id}")
     fun deleteConfirm(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -140,6 +146,7 @@ class TokenAdminTokensByTypeController(
     fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }

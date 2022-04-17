@@ -48,7 +48,7 @@
                                 <span class="note" th:text="${input.second.note}"></span>
                             </object>
 
-                            <object th:if="${input.second.type == 'text' && input.first.name == 'g7id'}" th:remove="tag">
+                            <object th:if="${input.second.type == 'text' && input.first.name == 'cmschId'}" th:remove="tag">
                                 <img src="#" th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|" height="180px" alt="QR code preview" class="qr-preview">
                             </object>
 

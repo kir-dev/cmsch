@@ -1,15 +1,14 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
+import hu.bme.sch.cmsch.controller.CONTROL_MODE_DELETE
+import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
+import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_DELETE
-import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_VIEW
-import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -54,7 +53,9 @@ class TokenAdminTokensByUsersController(
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -90,7 +91,9 @@ class TokenAdminTokensByUsersController(
     @GetMapping("/view/{id}")
     fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -123,7 +126,9 @@ class TokenAdminTokensByUsersController(
     @GetMapping("/delete/{id}")
     fun deleteConfirm(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -144,8 +149,10 @@ class TokenAdminTokensByUsersController(
 
     @PostMapping("/delete/{id}")
     fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantRiddle }?.not() != false) {
-            model.addAttribute("user", request.getUser())
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
+            model.addAttribute("user", user)
             return "admin403"
         }
 

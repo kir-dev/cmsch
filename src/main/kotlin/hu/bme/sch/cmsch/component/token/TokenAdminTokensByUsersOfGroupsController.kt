@@ -79,7 +79,9 @@ class TokenAdminTokensByUsersOfGroupsController(
     @GetMapping("")
     fun view(model: Model, request: HttpServletRequest): String {
         val user = request.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }

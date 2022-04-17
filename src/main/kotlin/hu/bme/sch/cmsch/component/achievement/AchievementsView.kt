@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.achievement
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.dto.TopListAbstractEntryDto
+import hu.bme.sch.cmsch.component.leaderboard.TopListAbstractEntryDto
 
 data class AchievementsView(
 
