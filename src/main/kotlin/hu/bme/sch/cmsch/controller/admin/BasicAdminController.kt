@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuGroup
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.PERMISSION_IMPLICIT_ANYONE
+import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

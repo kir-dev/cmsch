@@ -10,10 +10,11 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.PermissionValidator
-import hu.bme.sch.cmsch.service.UserProfileGeneratorService
+import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GROUPS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_USERS
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -34,7 +35,7 @@ class GroupController(
         mapOf("UserEntity" to { it?.members?.map {
             member -> "${member.fullName} (${member.role.name})"
         }?.toList() ?: listOf("Üres") }),
-        permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantGroupManager ?: false },
+        permissionControl = PERMISSION_EDIT_GROUPS,
         importable = true, adminMenuPriority = 1, adminMenuIcon = "groups"
 )
 
@@ -54,7 +55,7 @@ class UserController(
         "Az összes felhasználó (gólyák és seniorok egyaránt) kezelése.",
         UserEntity::class, ::UserEntity, importService, adminMenuService, component,
         mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
-        permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantGroupManager ?: false || it?.grantListUsers ?: false },
+        permissionControl = PERMISSION_EDIT_USERS,
         importable = true, adminMenuPriority = 2, adminMenuIcon = "person"
 ) {
     override fun onEntityPreSave(entity: UserEntity, request: HttpServletRequest) {
@@ -87,7 +88,7 @@ class GuildToUserMappingController(
         "guild-to-user", "Gárda Tagság", "Gárda tagságok",
         "Felhasználók neptun kód alapján gárdába rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
         GuildToUserMappingEntity::class, ::GuildToUserMappingEntity, importService, adminMenuService, component,
-        permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantGroupManager ?: false || it.grantListUsers ?: false },
+        permissionControl = PERMISSION_EDIT_GUILD_MAPPINGS,
         importable = true, adminMenuPriority = 4, adminMenuIcon = "badge"
 )
 
@@ -105,6 +106,6 @@ class GroupToUserMappingController(
         "Felhasználók neptun kód alapján tankörbe és szakra rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
         GroupToUserMappingEntity::class, ::GroupToUserMappingEntity, importService, adminMenuService, component,
         mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
-        permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantGroupManager ?: false || it.grantListUsers ?: false },
+        permissionControl = PERMISSION_EDIT_GROUP_MAPPINGS,
         importable = true, adminMenuPriority = 3, adminMenuIcon = "people"
 )

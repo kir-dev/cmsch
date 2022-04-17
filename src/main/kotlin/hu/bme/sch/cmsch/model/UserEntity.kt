@@ -89,110 +89,29 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 21, label = "Becenév", enabled = true)
+    @property:GenerateInput(order = 5, label = "Becenév", enabled = true)
+    @property:ImportFormat(ignore = false, columnId = 4)
     var alias: String = "",
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 5, label = "Email cím", note = "Nem kell egyik funkcióhoz sem")
+    @property:GenerateInput(order = 6, label = "Email cím", note = "Nem kell egyik funkcióhoz sem")
     @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 5)
     var email: String = "",
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Jogkör",
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7, label = "Jogkör",
         source = [ "GUEST", "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
         note = "BASIC = gólya, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 6, enumSource = RoleType::class, defaultValue = "GUEST")
     var role: RoleType = RoleType.GUEST,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "JOG: Bármiylen termék eladása", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_BOOLEAN)
-    var grantSellProduct: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "JOG: Kaja eladása", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
-    var grantSellFood: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "JOG: Merch eladása", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_BOOLEAN)
-    var grantSellMerch: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "JOG: PR", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
-    var grantMedia: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "JOG: Bucketlist értékelés", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_BOOLEAN)
-    var grantRateAchievement: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "JOG: Bucketlist létrehozása", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
-    var grantCreateAchievement: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "JOG: Infópult", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_BOOLEAN)
-    var grantListUsers: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "JOG: Gárdatanköris", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_BOOLEAN)
-    var grantGroupManager: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "JOG: Tankörös pénzek intézése", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_BOOLEAN)
-    var grantGroupDebtsMananger: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 19, label = "JOG: Gazdaságis", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_BOOLEAN)
-    var grantFinance: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 20, label = "JOG: Térkép figyelő", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_BOOLEAN)
-    var grantTracker: Boolean = false,
-
-    @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 21, label = "JOG: Riddleök kezelése", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 17, type = IMPORT_BOOLEAN)
-    var grantRiddle: Boolean = false,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 7, label = "Tankör", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
+    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 8, label = "Tankör", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
     @property:GenerateOverview(columnName = "Tankör", centered = true, order = 3)
     var groupName: String = "",
 
@@ -202,17 +121,24 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 4)
-    @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
+    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
     var guild: GuildType = GuildType.UNKNOWN,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 10, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
+    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
     var major: MajorType = MajorType.UNKNOWN,
+
+    @Lob
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 11, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
+    @property:ImportFormat(ignore = false, columnId = 9)
+    var permissions: String = "",
 
 ): ManagedEntity {
 
@@ -241,5 +167,9 @@ data class UserEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
+    }
+
+    fun hasPermission(permission: String): Boolean {
+        return permissions.split(",").contains(permissions)
     }
 }

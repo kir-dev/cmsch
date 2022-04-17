@@ -2,10 +2,10 @@ package hu.bme.sch.cmsch.component.achievement
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.PERMISSION_CONTROL_ACHIEVEMENTS
-import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_ACHIEVEMENTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_ACHIEVEMENTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_ACHIEVEMENT_CATEGORIES
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,7 +38,7 @@ class AchievementController(
     "achievements", "Bucketlist Feladat", "Bucketlist feladatokek",
     "Bucketlist feladatok kezelése. A feladatok javítására használd a \"Bucketlist értékelése\" menüt!",
     AchievementEntity::class, ::AchievementEntity, importService, adminMenuService, component,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantCreateAchievement ?: false },
+    permissionControl = PERMISSION_EDIT_ACHIEVEMENTS,
     importable = true, adminMenuIcon = "emoji_events"
 )
 
@@ -52,9 +52,9 @@ class AchievementCategoryController(
     component: AchievementComponent
 ) : AbstractAdminPanelController<AchievementCategoryEntity>(
     repo,
-    "categories", "Feladat kategória", "Feladat kategóriák",
+    "categories", "Feladat Kategória", "Feladat kategóriák",
     "Bucketlist feladatok kategóriájának kezelése. A feladatok javítására használd a Javítások menüt!",
     AchievementCategoryEntity::class, ::AchievementCategoryEntity, importService, adminMenuService, component,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantCreateAchievement ?: false },
+    permissionControl = PERMISSION_EDIT_ACHIEVEMENT_CATEGORIES,
     importable = true, adminMenuPriority = 2, adminMenuIcon = "category"
 )

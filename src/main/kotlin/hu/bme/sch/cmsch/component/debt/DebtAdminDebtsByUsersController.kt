@@ -10,7 +10,7 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ClockService
-import hu.bme.sch.cmsch.service.PERMISSION_EDIT_DEBTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
@@ -32,7 +32,7 @@ class DebtAdminDebtsByUsersController(
 
     private val view = "debts-by-users"
     private val titleSingular = "Tartozás"
-    private val titlePlural = "Tartozások"
+    private val titlePlural = "Tartozások felhaszálónként"
     private val description = "Tartozások felhasználónként csoportosítva"
     private val permissionControl = PERMISSION_EDIT_DEBTS
 
