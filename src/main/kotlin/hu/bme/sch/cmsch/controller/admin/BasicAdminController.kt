@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuGroup
+import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
@@ -30,7 +30,7 @@ class BasicAdminController(
 
     @PostConstruct
     fun init() {
-        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuGroup("Általános", 0))
+        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuCategory("Általános", 0))
         adminMenuService.registerEntry(
             javaClass.simpleName, AdminMenuEntry(
                 "Kezdő menü",
@@ -50,7 +50,7 @@ class BasicAdminController(
             )
         )
 
-        adminMenuService.registerCategory(EXPERIMENTAL_CATEGORY, AdminMenuGroup("Experimental", 1000))
+        adminMenuService.registerCategory(EXPERIMENTAL_CATEGORY, AdminMenuCategory("Experimental", 1000))
     }
 
     @GetMapping("")

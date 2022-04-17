@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.debt
 
-import hu.bme.sch.cmsch.dto.scan.CmschIdBuyRequest
-import hu.bme.sch.cmsch.dto.scan.NeptunBuyRequest
-import hu.bme.sch.cmsch.dto.scan.ResolveRequest
+import hu.bme.sch.cmsch.dto.CmschIdBuyRequest
+import hu.bme.sch.cmsch.dto.NeptunBuyRequest
+import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -47,8 +47,8 @@ class ScannerController(
     @ResponseBody
     @PostMapping("/buy-neptun")
     fun buyNeptun(
-            @RequestBody buyRequest: NeptunBuyRequest,
-            request: HttpServletRequest
+        @RequestBody buyRequest: NeptunBuyRequest,
+        request: HttpServletRequest
     ): SellStatus {
         val user = request.getUserOrNull() ?: return SellStatus.INVALID_PERMISSIONS
         log.info("Selling ${buyRequest.productId} to ${buyRequest.neptun} by ${user.fullName}")

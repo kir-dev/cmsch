@@ -21,4 +21,4 @@ data class HomeView(
     @JsonView(Preview::class)
     val leaderBoard: List<TopListAsGroupEntryDto>,
 
-    )
+)

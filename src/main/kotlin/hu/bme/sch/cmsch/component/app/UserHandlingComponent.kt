@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.ComponentSettingService
 import hu.bme.sch.cmsch.component.MinRoleSettingProxy
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.AdminMenuGroup
+import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -32,7 +32,7 @@ class UserHandlingComponent(
 
     @PostConstruct
     fun menuSetup() {
-        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuGroup("Felhasználó kezelés", this.menuPriority))
+        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuCategory("Felhasználó kezelés", this.menuPriority))
     }
 
 }
