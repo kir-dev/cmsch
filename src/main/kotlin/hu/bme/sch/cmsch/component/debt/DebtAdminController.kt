@@ -4,6 +4,9 @@ import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_DEBTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_PRODUCTS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
@@ -38,7 +41,7 @@ class ProductController(
     "products", "Termék", "Termékek",
     "Az összes vásárolható termék kezelése. Az eladáshoz külön felület tartozik!",
     ProductEntity::class, ::ProductEntity, importService, adminMenuService, component,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false },
+    permissionControl = PERMISSION_EDIT_PRODUCTS,
     importable = true, adminMenuIcon = "inventory_2"
 )
 
@@ -57,7 +60,7 @@ class SoldProductController(
     "Az összes eladásból származó tranzakciók.",
     SoldProductEntity::class, ::SoldProductEntity, importService, adminMenuService, component,
     controlMode = CONTROL_MODE_EDIT,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantFinance ?: false },
+    permissionControl = PERMISSION_EDIT_DEBTS,
     importable = true, adminMenuIcon = "account_balance"
 ) {
     override fun onEntityPreSave(entity: SoldProductEntity, request: HttpServletRequest) {

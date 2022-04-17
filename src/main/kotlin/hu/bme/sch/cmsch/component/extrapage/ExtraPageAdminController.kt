@@ -2,10 +2,9 @@ package hu.bme.sch.cmsch.component.extrapage
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.PERMISSION_CONTROL_EXTRAPAGES
-import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_EXTRA_PAGES
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_EXTRA_PAGES
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -20,7 +19,7 @@ class ExtraPageAdminController(
     adminMenuService,
     ExtraPageComponent::class.java,
     component,
-    PERMISSION_CONTROL_EXTRAPAGES,
+    PERMISSION_CONTROL_EXTRA_PAGES,
     "Oldalak",
     "Oldalak testreszabása"
 )
@@ -35,9 +34,9 @@ class ExtraPageController(
     component: ExtraPageComponent
 ) : AbstractAdminPanelController<ExtraPageEntity>(
     repo,
-    "extra-pages", "Extra Oldal", "Extra Oldalak",
+    "extra-pages", "Extra Oldal", "Extra oldalak",
     "Egyedi oldalak kezelése.",
     ExtraPageEntity::class, ::ExtraPageEntity, importService, adminMenuService, component,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantMedia ?: false },
+    permissionControl = PERMISSION_EDIT_EXTRA_PAGES, // TODO: Additional permission check
     adminMenuIcon = "article"
 )

@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory

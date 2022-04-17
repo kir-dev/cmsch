@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.PERMISSION_CREATE_ACHIEVEMENT
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_ACHIEVEMENTS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
@@ -24,7 +24,7 @@ class CheckRatingsAdminController(
 
     private val view = "check-ratings"
     private val titlePlural = "Pontok ellenőrzése"
-    private val permissionControl = PERMISSION_CREATE_ACHIEVEMENT
+    private val permissionControl = PERMISSION_EDIT_ACHIEVEMENTS
 
     private val submittedDescriptor = OverviewBuilder(CheckRatingVirtualEntity::class)
 

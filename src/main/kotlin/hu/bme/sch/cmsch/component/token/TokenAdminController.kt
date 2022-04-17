@@ -2,10 +2,9 @@ package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.PERMISSION_CONTROL_TOKEN
-import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_TOKEN
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,7 +37,7 @@ class TokenController(
     "tokens", "Token", "Tokenek",
     "Képrejtvény kategóriák kezelése.",
     TokenEntity::class, ::TokenEntity, importService, adminMenuService, component,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantMedia ?: false },
+    permissionControl = PERMISSION_EDIT_TOKENS,
     importable = true, adminMenuIcon = "token"
 )
 

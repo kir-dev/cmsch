@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_PAYED
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.PERMISSION_IMPLICIT_HAS_GROUP
+import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller

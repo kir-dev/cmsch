@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.PERMISSION_IMPLICIT_HAS_GROUP
+import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.stereotype.Controller

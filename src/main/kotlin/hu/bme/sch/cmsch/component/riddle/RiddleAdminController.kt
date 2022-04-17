@@ -2,10 +2,10 @@ package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.PERMISSION_CONTROL_RIDDLE
-import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_RIDDLE
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_RIDDLES
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_RIDDLE_CATEGORIES
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,7 +38,7 @@ class RiddleController(
     "riddles", "Riddle", "Riddleök",
     "Képrejtvények kezelése.",
     RiddleEntity::class, ::RiddleEntity, importService, adminMenuService, component,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantRiddle ?: false },
+    permissionControl = PERMISSION_EDIT_RIDDLES,
     importable = true, adminMenuIcon = "task"
 )
 
@@ -55,7 +55,7 @@ class RiddleCategoryController(
     "riddle-categories", "Riddle Kategória", "Riddle Kategóriák",
     "Képrejtvény kategóriák kezelése.",
     RiddleCategoryEntity::class, ::RiddleCategoryEntity, importService, adminMenuService, component,
-    permissionControl = PermissionValidator() { it.isAdmin() ?: false || it.grantRiddle ?: false },
+    permissionControl = PERMISSION_EDIT_RIDDLE_CATEGORIES,
     importable = true, adminMenuPriority = 2, adminMenuIcon = "category"
 )
 

@@ -5,8 +5,8 @@ import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_NONE
 import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_TOPLIST
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.PERMISSION_CONTROL_LEADERBOARD
-import hu.bme.sch.cmsch.service.PERMISSION_SHOW_LEADERBOARD
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_LEADERBOARD
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_LEADERBOARD
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller

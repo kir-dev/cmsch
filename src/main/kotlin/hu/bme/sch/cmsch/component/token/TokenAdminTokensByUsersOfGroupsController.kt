@@ -18,7 +18,7 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.PERMISSION_EDIT_TOKENS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -113,7 +113,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     @ResponseBody
     @GetMapping(value = ["/pdf/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun generatePdf(@PathVariable id: Int, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.grantMedia }?.not() != false) {
+        if (permissionControl.validate(request.getUser()).not()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
 

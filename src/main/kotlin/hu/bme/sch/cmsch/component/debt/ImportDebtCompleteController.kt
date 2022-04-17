@@ -8,7 +8,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ClockService
-import hu.bme.sch.cmsch.service.PERMISSION_EXP_TRANSACTION_IMPORT
+import hu.bme.sch.cmsch.service.ExperimentalPermissions.PERMISSION_EXP_TRANSACTION_IMPORT
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller

@@ -2,6 +2,9 @@ package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_ANY_PRODUCT
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_FOOD
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_MERCH
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller

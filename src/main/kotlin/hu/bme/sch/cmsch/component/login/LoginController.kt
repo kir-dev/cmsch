@@ -91,11 +91,8 @@ class LoginController(
                         "",
                         profile.mail ?: "",
                         RoleType.BASIC,
-                        grantSellProduct = false, grantSellFood = false, grantSellMerch = false, grantMedia = false,
-                        grantRateAchievement = false, grantCreateAchievement = false, grantListUsers = false,
-                        grantGroupManager = false, grantGroupDebtsMananger = false,
-                        grantFinance = false, grantTracker = false, grantRiddle = false,
-                        groupName = "", group = null, guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN
+                        groupName = "", group = null,
+                        guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN
                 )
                 log.info("Logging in with new user ${user.fullName} pekId: ${user.pekId}")
             }
