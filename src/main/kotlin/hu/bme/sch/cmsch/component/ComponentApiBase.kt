@@ -53,8 +53,10 @@ abstract class ComponentApiBase(
             return "admin403"
         }
 
+        model.addAttribute("component", component.component)
         model.addAttribute("title", componentMenuName)
         model.addAttribute("settings", component.allSettings)
+        model.addAttribute("user", user)
 
         return "componentSettings"
     }

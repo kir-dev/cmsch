@@ -23,9 +23,13 @@ enum class RoleType(val value: Int) {
         fun atLeast(type: RoleType): List<RoleType> {
             return values().filter { it.value >= type.value }
         }
+
         fun atMost(type: RoleType): List<RoleType> {
             return values().filter { it.value <= type.value }
         }
+
+        @JvmStatic
+        fun names(): List<String> = values().map { it.name }
     }
 }
 

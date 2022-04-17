@@ -243,7 +243,8 @@ table a:hover {
     vertical-align: center;
 }
 
-form label {
+form label,
+.flagged-label {
     display: block;
     font-weight: 600;
     margin-top: 10px;
@@ -254,22 +255,28 @@ form label {
     color: #898fa9;
 }
 
+.flagged-label {
+    float: right;
+}
+
 form input[type="text"],
 form input[type="number"],
 form input[type="datetime-local"],
 form select,
 form textarea {
-    background-color: transparent;
+    background-color: #1e212a;
     border-bottom: 2px solid #2b2e3b;
     padding: 10px 14px;
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
     color: #c3cbe4;
     font-weight: 300;
-    width: 500px;
+    width: 100%;
     max-width: 100%;
     resize: vertical;
     line-height: 1.5;
+    box-sizing: border-box;
+    margin-top: 4px;
 }
 
 form input[type="text"]:focus,
@@ -283,7 +290,7 @@ form textarea:focus {
 }
 
 form textarea {
-    min-height: 200px;
+    min-height: 100px;
 }
 
 form select {
@@ -294,7 +301,6 @@ form span.note {
     display: block;
     font-size: 12px;
     color: #444;
-    margin-bottom: 20px;
     margin-top: 6px;
     padding: 0 4px;
 }
@@ -458,16 +464,74 @@ form p {
     padding: 10vh 20px;
 }
 
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+}
+
+.component-group {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    background-color: #2b2e3b;
+    padding: 20px 20px;
+    max-width: 490px;
+    border-top: 2px solid #898fa9;
+}
+
+.component-group span.note {
+    margin-bottom: 0;
+    padding: 0;
+    margin-top: 16px;
+}
+
+.component-group h3 {
+    font-size: 18px;
+    text-transform: uppercase;
+    color: #898fa9 !important;
+    margin-bottom: 0 !important;
+}
+
+.field-group {
+    padding: 10px 20px;
+    max-width: 490px;
+}
+
+.field-group label {
+    float: left;
+}
+
+.field-group .switch {
+    float: right !important;
+}
+
+.field-group input,
+.field-group textarea {
+    clear: both;
+}
+
+.field-group table td {
+    color: #c3cbe4;
+}
+
 h4.permission-header {
     margin: 14px 0 8px 10px;
     text-transform: uppercase;
     font-size: 14px;
 }
 
+.green-label {
+    color: #34c38f !important;
+}
+
+.red-label {
+    /*color: #ef4b4b !important;*/
+}
+
 .permission-box {
     max-width: 488px;
     margin-top: 10px;
     display: flex;
+    color: #898fa9;
 }
 
 .permission-box span {

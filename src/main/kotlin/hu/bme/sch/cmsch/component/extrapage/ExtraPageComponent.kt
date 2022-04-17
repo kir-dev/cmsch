@@ -20,7 +20,7 @@ class ExtraPageComponent(
 
     final override val allSettings by lazy {
         listOf(
-            title, menuDisplayName, minRole,
+            minRole,
 
             appearanceGroup,
             seekToCurrentCurrent,
@@ -32,15 +32,7 @@ class ExtraPageComponent(
         )
     }
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Programok",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Programok", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+    final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "", minRoleToEdit = RoleType.NOBODY,

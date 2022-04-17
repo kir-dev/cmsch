@@ -1,0 +1,186 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout :: head">
+</head>
+<body>
+<script>
+    function changeRoleText(property) {
+        const roles = document.getElementById(property).value.split(',');
+        /*<![CDATA[*/
+        const roleTypes = [[${T(hu.bme.sch.cmsch.model.RoleType).names()}]];
+        /*]]>*/
+        roleTypes.forEach(role => {
+            if (typeof document.getElementById(`property_${role}`) !== 'undefined')
+                document.getElementById(`property_${role}`).checked = roles.includes(role);
+        });
+    }
+    function changeRoleField(property, role) {
+        let roles = document.getElementById(property).value.split(',');
+        roles = roles.filter(item => item !== role && item !== '')
+        if (document.getElementById(`${property}_${role}`).checked)
+            roles.push(role)
+        document.getElementById(property).value = roles.join(",")
+    }
+</script>
+<div class="content">
+    <div class="split">
+        <div th:replace="layout :: mobile"></div>
+        <div th:replace="layout :: menu(${user})"></div>
+
+        <div class="payload">
+            <div class="page">
+                <h2 th:text="${title}">View edit</h2>
+
+                <form th:action="|@{/admin/control}/component/${component}/settings|" method="post">
+
+                    <object th:each="input : ${settings}" th:remove="tag">
+
+                        <object th:if="${user.role.value >= input.minRoleToEdit.value}" th:remove="tag">
+
+                            <div th:if="${input.type.name() == 'COMPONENT_GROUP'}" class="component-group">
+                                <h3 th:text="${input.fieldName}">Group Name</h3>
+                                <span class="note" th:text="${input.description}" th:if="${input.description != ''}"></span>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'TEXT'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <input type="text"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getValue()}"
+                                       autocomplete="off"
+                                />
+                                <span class="note" th:text="${input.description}"></span>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'NUMBER'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <input type="number"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getValue()}"
+                                       autocomplete="off"
+                                       required
+                                />
+                                <span class="note" th:text="${input.description}"></span>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'LONG_TEXT'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <textarea
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:text="${input.getValue()}"
+                                       autocomplete="off">
+                                </textarea>
+                                <span class="note" th:text="${input.description}"></span>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'BOOLEAN'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <label class="switch">
+                                    <input type="checkbox"
+                                           th:checked="${input.isValueTrue()}"
+                                           th:name="${input.property}"
+                                           th:id="${input.property}" />
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="note" th:text="${input.description}"></span>
+                                <div style="clear:both"></div>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'MIN_ROLE'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.serverSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <span class="note" th:text="${input.description}" style="margin-bottom: 20px;"></span>
+
+                                <table>
+                                    <tr th:each="role : ${T(hu.bme.sch.cmsch.model.RoleType).values()}"
+                                        th:if="${role.value < T(hu.bme.sch.cmsch.model.RoleType).ADMIN.value}">
+
+                                        <td th:text="${role.name()}">BASIC</td>
+                                        <td>
+                                            <label class="switch"
+                                                   th:data-param1="${input.property}" th:data-param2="${role.name()}"
+                                                   th:onclick="|changeRoleField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
+                                                <input type="checkbox"
+                                                       th:name="|${input.property}_${role.name()}|"
+                                                       th:id="|${input.property}_${role.name()}|"/>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td th:text="${T(hu.bme.sch.cmsch.model.RoleType).ADMIN.name()}" class="disabled">ADMIN</td>
+                                        <td>
+                                            <label class="switch disabled">
+                                                <input type="checkbox" th:name="|${input.property}_ADMIN|" checked disabled />
+                                                <span class="slider disabled"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td th:text="${T(hu.bme.sch.cmsch.model.RoleType).SUPERUSER.name()}" class="disabled">SUPERUSER</td>
+                                        <td>
+                                            <label class="switch disabled">
+                                                <input type="checkbox" th:name="|${input.property}_SUPERUSER|" checked disabled />
+                                                <span class="slider disabled"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <script th:inline="javascript">
+                                    changeRoleText(/*[[${input.property}]]*/ '');
+                                </script>
+
+                                <input type="text"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getValue()}"
+                                       autocomplete="off"
+                                       style="display: none"
+                                />
+                            </div>
+
+                        </object>
+
+                    </object>
+
+                    <input type="submit" value="Mentés"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

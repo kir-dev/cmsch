@@ -169,7 +169,7 @@ class ProfileComponent(
 
     val messageBoxContent = SettingProxy(componentSettingService, component,
         "messageBoxContent", "", type = SettingType.LONG_TEXT,
-        fieldName = "Üzenet doboz", description = "ha üres, nem látszik"
+        fieldName = "Üzenet doboz", description = "Ha üres, nem látszik"
     )
 
     val messageBoxLevel = SettingProxy(componentSettingService, component,
@@ -214,7 +214,7 @@ class ProfileComponent(
 
     val minTokenDoneMessage = SettingProxy(componentSettingService, component,
         "minTokenAchievedMsg", "Megvan a tanköri jelenlét", type = SettingType.LONG_TEXT,
-        fieldName = "'Már van elég' üzenet", description = "ha üres, nem látszik"
+        fieldName = "'Már van elég' üzenet", description = "Ha üres, nem látszik"
     )
 
 }

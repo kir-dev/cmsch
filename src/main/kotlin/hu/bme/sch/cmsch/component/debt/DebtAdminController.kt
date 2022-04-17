@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-@RequestMapping("/admin/control/component/debts")
+@RequestMapping("/admin/control/component/debt")
 @ConditionalOnBean(DebtComponent::class)
 class DebtAdminController(
     adminMenuService: AdminMenuService,
@@ -61,7 +61,7 @@ class SoldProductController(
     SoldProductEntity::class, ::SoldProductEntity, importService, adminMenuService, component,
     controlMode = CONTROL_MODE_EDIT,
     permissionControl = PERMISSION_EDIT_DEBTS,
-    importable = true, adminMenuIcon = "account_balance"
+    importable = true, adminMenuIcon = "sync_alt"
 ) {
     override fun onEntityPreSave(entity: SoldProductEntity, request: HttpServletRequest) {
         val date = clock.getTimeInSeconds()
