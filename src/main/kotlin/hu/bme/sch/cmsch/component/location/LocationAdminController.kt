@@ -19,5 +19,5 @@ class LocationAdminController(
     component,
     ControlPermissions.PERMISSION_CONTROL_PROFILE,
     componentCategoryName = "Helymegosztás",
-    componentMenuName = "Helymegosztás testreszabása",
+    componentMenuName = "Helymegosztás",
 )

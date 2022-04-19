@@ -9,14 +9,14 @@ import hu.bme.sch.cmsch.dto.Preview
 import org.hibernate.Hibernate
 import javax.persistence.*
 
-enum class RoleType(val value: Int) {
-    GUEST(0),      // anyone without login
-    BASIC(1),      // has auth.sch but not organizer
-    ATTENDEE(2),
-    STAFF(100),    // member of the organizer group
-    ADMIN(200),    // the organizers of the event
-    SUPERUSER(500),// advanced user management (able to grant admin access)
-    NOBODY(Int.MAX_VALUE)
+enum class RoleType(val value: Int, val description: String) {
+    GUEST(0, "Nem bejelentkezett felhasználó"),
+    BASIC(1, "Bejelentkezett felhasználó"),
+    ATTENDEE(2, "Résztvevő, de sima felhasználó"),
+    STAFF(100, "Rendező, akinek az admin felületre be kellhet lépnie"),
+    ADMIN(200, "Adminisztrátor aki mindenhez hozzáfér"),
+    SUPERUSER(500, "Adminisztrátor, de a fejlesztői menükkel"),
+    NOBODY(Int.MAX_VALUE, "")
     ;
 
     companion object {

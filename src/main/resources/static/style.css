@@ -93,6 +93,23 @@ h1 {
     font-weight: 600;
 }
 
+.content .split .menu h2.collapsable:hover {
+    color: #898fa9;
+    cursor: pointer;
+}
+
+.content .split .menu h2.collapsable:active {
+    color: #FFFFFF;
+}
+
+.content .split .menu .spoiler {
+    display: block;
+}
+
+.content .split .menu .spoiler.collapsed {
+    display: none;
+}
+
 .content .split .menu a {
     display: block;
     padding: 6px 12px;

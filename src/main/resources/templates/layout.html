@@ -20,6 +20,7 @@
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}" />
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../static/js/admin-script.js" th:src="@{/js/admin-script.js}"></script>
 </head>
 <body>
     <div class="content">
@@ -33,9 +34,11 @@
                 <div class="exit" onclick="document.getElementById('menu').style.display = 'none'">X</div>
                 <div class="separate"></div>
 
-                <object th:remove="tag" th:each="category : ${menu}" th:if="${menu} != null">
-                    <h2 th:text="${category.key.value.title}">Általános</h2>
-                    <a href="#" th:each="entry : ${category.value}" th:href="|${entry.target}|"><span class="material-icons fix-icons" th:text="${entry.icon}">home</span> <ins th:remove="tag" th:text="${entry.title}">Kezdő menü</ins></a>
+                <object th:remove="tag" th:each="category,iter : ${menu}" th:if="${menu} != null">
+                    <h2 th:text="${category.key.value.title}" class="collapsable" th:onclick="|toggleCollapse(${iter.index})|">Általános</h2>
+                    <div class="spoiler" th:id="|menu${iter.index}|">
+                        <a href="#" th:each="entry : ${category.value}" th:href="|${entry.target}|"><span class="material-icons fix-icons" th:text="${entry.icon}">home</span> <ins th:remove="tag" th:text="${entry.title}">Kezdő menü</ins></a>
+                    </div>
                 </object>
 
                 <div class="separate"></div>

@@ -44,11 +44,11 @@ import javax.servlet.http.HttpServletResponse
 class TokenAdminTokensByUsersOfGroupsController(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
-    private val tokenComponent: TokenComponent,
-    private val riddleService: Optional<RiddleService>,
-    private val achievementsService: Optional<AchievementsService>,
     private val tokenPropertyRepository: TokenPropertyRepository,
-    private val adminMenuService: AdminMenuService
+    private val tokenComponent: TokenComponent,
+    private val adminMenuService: AdminMenuService,
+    private val riddleService: Optional<RiddleService>,
+    private val achievementsService: Optional<AchievementsService>
 ) {
 
     private val view = "token-properties-of-groups"
