@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
+import hu.bme.sch.cmsch.component.extrapage.ExtraPageService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.GroupToUserMappingEntity
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @Controller
@@ -49,7 +51,8 @@ class UserController(
     importService: ImportService,
     @Value("\${cmsch.profile.qr-enabled:true}") private val profileQrEnabled: Boolean,
     adminMenuService: AdminMenuService,
-    component: UserHandlingComponent
+    component: UserHandlingComponent,
+    private val extraPageService: Optional<ExtraPageService>
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",
@@ -61,10 +64,22 @@ class UserController(
 ) {
 
     override fun onDetailsView(entity: UserEntity, model: Model) {
+        val customPermissions = extraPageService.map { service ->
+            service.getAll().groupBy { it.permissionToEdit }.map { group ->
+                PermissionValidator(
+                    group.key,
+                    "Szükséges a(z) '${group.value.joinToString("', '") { it.title }}' " +
+                            "nevű oldal(ak) szerkesztéséhez"
+                )
+            }
+        }.orElse(listOf())
+
         val staffPermissions = StaffPermissions.allPermissions().filter { it.permissionString.isNotEmpty() }
         val adminPermissions = ControlPermissions.allPermissions().filter { it.permissionString.isNotEmpty() }
+        model.addAttribute("customPermissions", customPermissions)
         model.addAttribute("staffPermissions", staffPermissions)
         model.addAttribute("adminPermissions", adminPermissions)
+        model.addAttribute("customPermissionList", customPermissions.map { it.permissionString })
         model.addAttribute("staffPermissionList", staffPermissions.map { it.permissionString })
         model.addAttribute("adminPermissionList", adminPermissions.map { it.permissionString })
     }

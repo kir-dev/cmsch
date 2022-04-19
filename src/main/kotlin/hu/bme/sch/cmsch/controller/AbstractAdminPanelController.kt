@@ -81,7 +81,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("view", view)
         model.addAttribute("columns", descriptor.getColumns())
         model.addAttribute("fields", descriptor.getColumnDefinitions())
-        model.addAttribute("rows", repo.findAll())
+        model.addAttribute("rows", filterOverview(user, repo.findAll()))
         model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
         model.addAttribute("importable", importable)
@@ -99,6 +99,18 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
+        val entity = repo.findById(id)
+        if (entity.isEmpty) {
+            model.addAttribute("error", INVALID_ID_ERROR)
+        } else {
+            val actualEntity = entity.orElseThrow()
+            model.addAttribute("data", actualEntity)
+            if (!editPermissionCheck(user, actualEntity)) {
+                model.addAttribute("user", user)
+                return "admin403"
+            }
+        }
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
         model.addAttribute("view", view)
@@ -108,12 +120,6 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
 
-        val entity = repo.findById(id)
-        if (entity.isEmpty) {
-            model.addAttribute("error", INVALID_ID_ERROR)
-        } else {
-            model.addAttribute("data", entity.orElseThrow())
-        }
         onDetailsView(user, model)
         return "details"
     }
@@ -160,20 +166,31 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
-            model.addAttribute("item", entity.orElseThrow().toString())
+            val actualEntity = entity.orElseThrow()
+            model.addAttribute("item", actualEntity.toString())
+            if (!editPermissionCheck(user, actualEntity)) {
+                model.addAttribute("user", user)
+                return "admin403"
+            }
         }
         return "delete"
     }
 
     @PostMapping("/delete/{id}")
     fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        if (permissionControl.validate(request.getUser()).not()) {
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", request.getUser())
+            model.addAttribute("user", user)
             return "admin403"
         }
 
         val entity = repo.findById(id).orElseThrow()
+        if (!editPermissionCheck(user, entity)) {
+            model.addAttribute("user", user)
+            return "admin403"
+        }
+
         repo.delete(entity)
         onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
@@ -209,9 +226,10 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
              model: Model,
              request: HttpServletRequest
     ): String {
-        if (permissionControl.validate(request.getUser()).not()) {
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", request.getUser())
+            model.addAttribute("user", user)
             return "admin403"
         }
 
@@ -219,12 +237,17 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"
         }
+        val actualEntity = entity.orElseThrow()
+        if (!editPermissionCheck(user, actualEntity)) {
+            model.addAttribute("user", user)
+            return "admin403"
+        }
 
-        updateEntity(descriptor, request.getUser(), entity.get(), dto, file0, file1)
-        entity.get().id = id
-        onEntityPreSave(entity.get(), request)
-        repo.save(entity.get())
-        onEntityChanged(entity.get())
+        updateEntity(descriptor, request.getUser(), actualEntity, dto, file0, file1)
+        actualEntity.id = id
+        onEntityPreSave(actualEntity, request)
+        repo.save(actualEntity)
+        onEntityChanged(actualEntity)
         return "redirect:/admin/control/$view"
     }
 
@@ -325,5 +348,13 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     open fun onDetailsView(entity: UserEntity, model: Model) {
         // Overridden when notification is required
+    }
+
+    open fun filterOverview(user: UserEntity, rows: Iterable<T>): Iterable<T> {
+        return rows
+    }
+
+    open fun editPermissionCheck(user: UserEntity, entity: T): Boolean {
+        return true
     }
 }

@@ -42,147 +42,138 @@ const val A_DAY = 60 * 60 * 24
 @Profile("test")
 @Configuration
 class TestConfig(
-    private val news: NewsRepository,
-    private val events: EventRepository,
-    private val achievements: AchievementEntityRepository,
-    private val categories: AchievementCategoryRepository,
     private val users: UserRepository,
-    private val extraPages: ExtraPageRepository,
     private val groups: GroupRepository,
-    private val products: ProductRepository,
-    private val profileService: UserProfileGeneratorService,
     private val groupToUserMapping: GroupToUserMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
-    private val submittedAchievements: SubmittedAchievementRepository,
-    private val productsService: ProductService,
-    private val riddleRepository: RiddleEntityRepository,
-    private val riddleCategoryRepository: RiddleCategoryRepository,
-    private val tokenRepository: TokenRepository
+    private val profileService: UserProfileGeneratorService,
+    private val news: Optional<NewsRepository>,
+    private val events: Optional<EventRepository>,
+    private val achievements: Optional<AchievementEntityRepository>,
+    private val submittedAchievements: Optional<SubmittedAchievementRepository>,
+    private val categories: Optional<AchievementCategoryRepository>,
+    private val extraPages: Optional<ExtraPageRepository>,
+    private val products: Optional<ProductRepository>,
+    private val productsService: Optional<ProductService>,
+    private val riddleRepository: Optional<RiddleEntityRepository>,
+    private val riddleCategoryRepository: Optional<RiddleCategoryRepository>,
+    private val tokenRepository: Optional<TokenRepository>
 ) {
 
     private var now = System.currentTimeMillis() / 1000
 
     @PostConstruct
     fun init() {
-        addNews()
-        addEvents()
+        news.ifPresent { addNews(it) }
+        events.ifPresent { addEvents(it) }
         addGroups()
         addUsers()
-        addAchievements()
-        addProducts()
-        addExtraPages()
+        achievements.ifPresent { achievement ->
+            submittedAchievements.ifPresent { submitted ->
+                categories.ifPresent { category ->
+                    addAchievements(achievement, submitted, category)
+                }
+            }
+        }
+        products.ifPresent { product ->
+            productsService.ifPresent { productService ->
+                addProducts(product, productService)
+            }
+        }
+        extraPages.ifPresent { addExtraPages(it) }
         addGroupMapping()
         addGuildMappings()
-        addRiddles()
-        addTokens()
+        riddleRepository.ifPresent { riddle ->
+            riddleCategoryRepository.ifPresent { category ->
+                addRiddles(riddle, category)
+            }
+        }
+        tokenRepository.ifPresent { addTokens(it) }
     }
 
-    private fun addTokens() {
-        tokenRepository.save(
-            TokenEntity(
+    private fun addTokens(tokenRepository: TokenRepository) {
+        tokenRepository.save(TokenEntity(
             0,
             "Kir-Dev",
             "A5BCD8242".sha256(),
             true,
             "default"
-        )
-        )
-        tokenRepository.save(
-            TokenEntity(
+        ))
+        tokenRepository.save(TokenEntity(
             0,
             "Invisible token",
             "XDDD".sha256(),
             false,
             "default"
-        )
-        )
-        tokenRepository.save(
-            TokenEntity(
+        ))
+        tokenRepository.save(TokenEntity(
             0,
             "NFT-sch kör",
             "NFT".sha256(),
             true,
             "default"
-        )
-        )
-        tokenRepository.save(
-            TokenEntity(
+        ))
+        tokenRepository.save(TokenEntity(
             0,
             "Crypto Reszort",
             "crypto".sha256(),
             true,
             "default"
-        )
-        )
-        tokenRepository.save(
-            TokenEntity(
+        ))
+        tokenRepository.save(TokenEntity(
             0,
             "Kollégiumi Szak-Kollégium (KSZK)",
             "kszk".sha256(),
             true,
             "default"
-        )
-        )
-        tokenRepository.save(
-            TokenEntity(
+        ))
+        tokenRepository.save(TokenEntity(
             0,
             "Extra Token",
             "x".sha256(),
             true,
             "extra"
-        )
-        )
+        ))
     }
 
-    private fun addRiddles() {
-        riddleCategoryRepository.save(
-            RiddleCategoryEntity(
+    private fun addRiddles(riddleRepository: RiddleEntityRepository, riddleCategoryRepository: RiddleCategoryRepository) {
+        riddleCategoryRepository.save(RiddleCategoryEntity(
             0,
             "Álalános",
             1,
             true,
             RoleType.BASIC
-        )
-        )
-        riddleCategoryRepository.save(
-            RiddleCategoryEntity(
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
             0,
             "Kir-Dev speciál",
             2,
             true,
             RoleType.BASIC
-        )
-        )
-        riddleCategoryRepository.save(
-            RiddleCategoryEntity(
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
             0,
             "Üres riddleök",
             5,
             true,
             RoleType.BASIC
-        )
-        )
-        riddleCategoryRepository.save(
-            RiddleCategoryEntity(
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
             0,
             "Nem látható",
             3,
             false,
             RoleType.BASIC
-        )
-        )
-        riddleCategoryRepository.save(
-            RiddleCategoryEntity(
+        ))
+        riddleCategoryRepository.save(RiddleCategoryEntity(
             0,
             "Admin riddleök",
             6,
             true,
             RoleType.ADMIN
-        )
-        )
+        ))
 
-        riddleRepository.save(
-            RiddleEntity(
+        riddleRepository.save(RiddleEntity(
             0,
             "Első riddle",
             "/image1.png",
@@ -191,10 +182,8 @@ class TestConfig(
             10,
             1,
             1
-        )
-        )
-        riddleRepository.save(
-            RiddleEntity(
+        ))
+        riddleRepository.save(RiddleEntity(
             0,
             "Második riddle",
             "/image2.png",
@@ -203,10 +192,8 @@ class TestConfig(
             10,
             2,
             1
-        )
-        )
-        riddleRepository.save(
-            RiddleEntity(
+        ))
+        riddleRepository.save(RiddleEntity(
             0,
             "Harmadik riddle",
             "/image3.png",
@@ -215,8 +202,7 @@ class TestConfig(
             20,
             3,
             1
-        )
-        )
+        ))
 
 
         riddleRepository.save(
@@ -307,42 +293,35 @@ class TestConfig(
         ))
     }
 
-    private fun addNews() {
-        news.save(
-            NewsEntity(title = "Az eslő hír",
+    private fun addNews(news: NewsRepository) {
+        news.save(NewsEntity(title = "Az eslő hír",
                 brief = LOREM_IPSUM_SHORT_1, content = LOREM_IPSUM_LONG_1,
-                visible = true, highlighted = false)
-        )
-        news.save(
-            NewsEntity(title = "A második highlightolt hír",
+                visible = true, highlighted = false
+        ))
+        news.save(NewsEntity(title = "A második highlightolt hír",
                 brief = LOREM_IPSUM_SHORT_2, content = LOREM_IPSUM_LONG_2,
-                visible = true, highlighted = true)
-        )
-        news.save(
-            NewsEntity(title = "Ez nem is hír, nem látszik",
+                visible = true, highlighted = true
+        ))
+        news.save(NewsEntity(title = "Ez nem is hír, nem látszik",
                 brief = LOREM_IPSUM_SHORT_3, content = LOREM_IPSUM_LONG_3,
-                visible = false, highlighted = false)
-        )
-        news.save(
-            NewsEntity(title = "Teszt hír 4",
+                visible = false, highlighted = false
+        ))
+        news.save(NewsEntity(title = "Teszt hír 4",
                 brief = LOREM_IPSUM_SHORT_4, content = LOREM_IPSUM_LONG_4,
-                visible = true, highlighted = false)
-        )
-        news.save(
-            NewsEntity(title = "Teszt hír 5",
+                visible = true, highlighted = false
+        ))
+        news.save(NewsEntity(title = "Teszt hír 5",
                 brief = LOREM_IPSUM_SHORT_3, content = LOREM_IPSUM_LONG_3,
-                visible = true, highlighted = false)
-        )
-        news.save(
-            NewsEntity(title = "Teszt hír 6",
+                visible = true, highlighted = false
+        ))
+        news.save(NewsEntity(title = "Teszt hír 6",
                 brief = LOREM_IPSUM_SHORT_3, content = LOREM_IPSUM_LONG_3,
-                visible = true, highlighted = false)
-        )
+                visible = true, highlighted = false
+        ))
     }
 
-    private fun addEvents() {
-        events.save(
-            EventEntity(
+    private fun addEvents(events: EventRepository) {
+        events.save(EventEntity(
                 url = "hetfoi-elso-program",
                 title = "Hétfői Első Program",
                 category = "Egyetemi",
@@ -354,11 +333,9 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        )
-        )
+        ))
 
-        events.save(
-            EventEntity(
+        events.save(EventEntity(
                 url = "hetfoi-masodik-program",
                 title = "Hétfői Második Program",
                 category = "Szórakozás",
@@ -370,11 +347,9 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "BUTTON TEXT",
                 extraButtonUrl = "http://example.com/target"
-        )
-        )
+        ))
 
-        events.save(
-            EventEntity(
+        events.save(EventEntity(
                 url = "hetfoi-tiltott-program",
                 title = "Hétfői Tiltott Program",
                 category = "Öhömm",
@@ -386,11 +361,9 @@ class TestConfig(
                 visible = false,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        )
-        )
+        ))
 
-        events.save(
-            EventEntity(
+        events.save(EventEntity(
                 url = "kedd-elso-program",
                 title = "Kedden Volt",
                 category = "Szórakozás",
@@ -402,11 +375,9 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        )
-        )
+        ))
 
-        events.save(
-            EventEntity(
+        events.save(EventEntity(
                 url = "fene-kedd",
                 title = "Fene Kedd",
                 category = "Szórakozás",
@@ -418,11 +389,9 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        )
-        )
+        ))
 
-        events.save(
-            EventEntity(
+        events.save(EventEntity(
                 url = "kopa-szi-get",
                 title = "Kopa-Sziget",
                 category = "Bulika",
@@ -434,11 +403,9 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        )
-        )
+        ))
 
-        events.save(
-            EventEntity(
+        events.save(EventEntity(
                 url = "watt-fesztivál",
                 title = "Watt",
                 category = "Egyetemi",
@@ -450,11 +417,9 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "",
                 extraButtonUrl = ""
-        )
-        )
+        ))
 
-        events.save(
-            EventEntity(
+        events.save(EventEntity(
                 url = "bika-sound",
                 title = "Bika Sound",
                 category = "Szórakozás",
@@ -466,11 +431,10 @@ class TestConfig(
                 visible = true,
                 extraButtonTitle = "BUTTON TEXT 2",
                 extraButtonUrl = "http://example.com/target2"
-        )
-        )
+        ))
     }
 
-    private fun addAchievements() {
+    private fun addAchievements(achievements: AchievementEntityRepository, submittedAchievements: SubmittedAchievementRepository, categories: AchievementCategoryRepository) {
         val achi1 = AchievementEntity(
                 title = "Merre van balra?",
                 expectedResultDescription = "Egy kép arról mere van balra",
@@ -728,7 +692,7 @@ class TestConfig(
         users.save(u3)
     }
 
-    private fun addProducts() {
+    private fun addProducts(products: ProductRepository, productsService: ProductService) {
         val product1 = ProductEntity(
                 name = "G7 Repohár",
                 description = "Feelinges repohár, amiből lehet inni is meg enni is.",
@@ -805,13 +769,13 @@ class TestConfig(
         productsService.sellProductByCmschId(product1.id, merchant, user2.cmschId)
     }
 
-    private fun addExtraPages() {
-        extraPages.save(
-            ExtraPageEntity(
+    private fun addExtraPages(extraPages: ExtraPageRepository) {
+        extraPages.save(ExtraPageEntity(
                 title = "Gyakran Ismételt Kérdések",
                 url = "gyik",
                 visible = true,
                 open = true,
+                permissionToEdit = "EXTRAPAGE_EDIT_GYIK",
                 content = "Gyakran Ismételt Kérdések\n" +
                         "===\n" +
                         "\n" +
@@ -826,15 +790,14 @@ class TestConfig(
                         "## Mi az amit te keresel?\n" +
                         "\n" +
                         "Na ezt most ne, pls!\n"
-        )
-        )
+        ))
 
-        extraPages.save(
-            ExtraPageEntity(
-                title = "Egy másik nemzedék\n",
+        extraPages.save(ExtraPageEntity(
+                title = "Egy másik nemzedék",
                 url = "egy-masik-nemzedek",
                 visible = false,
                 open = true,
+                permissionToEdit = "EXTRAPAGE_EDIT_OTHER",
                 content = "No Thanx - Egy masik nemzedek\n" +
                         "===\n" +
                         "\n" +
@@ -844,21 +807,30 @@ class TestConfig(
                         "> Ez egy másik nemzedék\n> Mert mi vagyunk a hurrikán,\n> Ezeréves út után mindent felkavar\n> Készülj fel, most mi jövünk!\n> Minden fejre áll holnap,\n> Ránk már senki sem szólhat\n> Nem kell többé a szentbeszéd\n> Ez egy másik nemzedék\n> Mondtuk szépen és durván\n> Lelkünk ébredő vulkán kitörni kész s ami régi mind elég,\n> S jön az újabb nemzedék\n> Minden fejre áll holnap\n> Ránk már senki sem szólhat\n> Nem kell többé a szent beszéd\n" +
                         "> Ez egy másik nemzedék\n> Mondtuk szépen és durván lelkünk ébredő vulkán\n> Kitörni kész s ami régi mind elég\n> S jön az újabb nemzedék\n> Minden fejre áll holnap\n> Ránk már senki sem szólhat\n> Nem kell többé a szent beszéd,\n> Ez egy másik nemzedék\n> Mondtuk szépen és durván\n> Lelkünk ébredő vulkán\n> Kitörni kész s ami régi mind elég\n> S jön az újabb nemzedék\n> Minden fejre áll holnap,\n> Ránk már senki sem szólhat\n" +
                         "> Nem kell többé a szent beszéd\n> Ez egy másik nemzedék\n"
-        )
-        )
+        ))
 
-        extraPages.save(
-            ExtraPageEntity(
+        extraPages.save(ExtraPageEntity(
                 title = "Az idei G7 költségvetése",
                 url = "koltsegvetes",
                 visible = false,
                 open = false,
+                permissionToEdit = "EXTRAPAGE_EDIT_OTHER",
                 content = "Az idei G7 költésgvetése\n" +
                         "===\n" +
                         "\n" +
                         "Ja persze, majd ideírjuk...\n"
-        )
-        )
+        ))
+
+        extraPages.save(ExtraPageEntity(
+            title = "Telejsen átlagos oldal",
+            url = "atlagos-oldal",
+            visible = true,
+            open = true,
+            content = "Az idei G7 költésgvetése\n" +
+                    "===\n" +
+                    "\n" +
+                    "Ja persze, majd ideírjuk...\n"
+        ))
     }
 
     private fun addGroupMapping() {

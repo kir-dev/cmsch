@@ -3,14 +3,16 @@
 <head th:replace="layout :: head">
 </head>
 <body>
-<script th:inline="javascript" th:if="${staffPermissionList != null && adminPermissionList != null}">
+<script th:inline="javascript" th:if="${staffPermissionList != null && customPermissionList != null && adminPermissionList != null}">
     function changePermissionText(inputId) {
         const permissions = document.getElementById(`input${inputId}`).value.split(',');
         /*<![CDATA[*/
         const staffPermissionList = [[${staffPermissionList}]];
+        const customPermissionList = [[${customPermissionList}]];
         const adminPermissionList = [[${adminPermissionList}]];
         /*]]>*/
         staffPermissionList.forEach(perm => document.getElementById(`input${inputId}_${perm}`).checked = permissions.includes(perm));
+        customPermissionList.forEach(perm => document.getElementById(`input${inputId}_${perm}`).checked = permissions.includes(perm));
         adminPermissionList.forEach(perm => document.getElementById(`input${inputId}_${perm}`).checked = permissions.includes(perm));
     }
 
@@ -284,6 +286,24 @@
                                     </div>
                                 </div>
 
+                                <h4 class="permission-header">Egyedi jogosultságok</h4>
+
+                                <div class="permission-box card" th:each="permission : ${customPermissions}">
+                                    <div class="permission-part">
+                                        <span class="material-icons fix-icons">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                                        <span class="note" th:text="${permission.description}">description</span>
+                                    </div>
+                                    <div class="permission-part">
+                                        <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
+                                            <input type="checkbox" th:id="|input${iter.index}_${permission.permissionString}|" />
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="permission-box card" th:if="${customPermissions.empty}">
+                                    Nincs egyetlen egyedi jogoultság sem
+                                </div>
+
                                 <h4 class="permission-header">Admin jogosultságok</h4>
 
                                 <div class="permission-box card" th:each="permission : ${adminPermissions}">
@@ -301,17 +321,19 @@
 
                                 <h4 class="permission-header">Nyers jogosultságok</h4>
 
-                                <input th:type="text"
-                                       th:name="${input.first.name}"
-                                       th:id="|input${iter.index}|"
-                                       th:maxlength="${input.second.maxLength}"
-                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
-                                       th:placeholder="${input.second.placeholder}"
-                                       th:disabled="${!input.second.enabled}"
-                                       th:autocomplete="${input.second.autocomplete}"
-                                       th:onchange="|changePermissionText(${iter.index})|"
-                                />
-                                <span class="note" th:text="${input.second.note}"></span>
+                                <div class="field-group">
+                                    <input th:type="text"
+                                           th:name="${input.first.name}"
+                                           th:id="|input${iter.index}|"
+                                           th:maxlength="${input.second.maxLength}"
+                                           th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                           th:placeholder="${input.second.placeholder}"
+                                           th:disabled="${!input.second.enabled}"
+                                           th:autocomplete="${input.second.autocomplete}"
+                                           th:onchange="|changePermissionText(${iter.index})|"
+                                    />
+                                    <span class="note" th:text="${input.second.note}"></span>
+                                </div>
                                 <script th:inline="javascript">
                                     changePermissionText(/*[[${iter.index}]]*/ 0)
                                 </script>

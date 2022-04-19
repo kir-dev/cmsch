@@ -77,7 +77,7 @@ object ControlPermissions : PermissionGroup {
 
     val PERMISSION_IMPORT_EXPORT = PermissionValidator(
         "ALL_IMPORT_EXPORT",
-        "Az összes kezelt entitás exportálása és importálása"
+        "Az összes kezelt entitás exportálása és importálása (ezáltal indirekt megtekintése és készítése is)"
     )
 
     val PERMISSION_CONTROL_APP = PermissionValidator(
@@ -240,6 +240,11 @@ object StaffPermissions : PermissionGroup {
     val PERMISSION_EDIT_EXTRA_PAGES = PermissionValidator(
         "EXTRAPAGE_EDIT",
         "Extra oldalak létrehozása, szerkesztése és törlése"
+    )
+
+    val PERMISSION_EDIT_ANY_EXTRA_PAGES = PermissionValidator(
+        "EXTRAPAGE_EDIT_ANY",
+        "Az összes extra oldal szerkesztése"
     )
 
     // LeaderBoard Component
