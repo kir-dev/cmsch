@@ -87,6 +87,9 @@
                                 </object>
                             </td>
                         </tr>
+                        <tr th:if="${rows.isEmpty()}">
+                            <td th:colspan="${columns.size() + 1}" class="centered-text">Nincs egyetlen megjelenítendő elem sem</td>
+                        </tr>
                     </table>
                 </div>
 
