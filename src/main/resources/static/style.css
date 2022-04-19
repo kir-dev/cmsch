@@ -545,6 +545,7 @@ h4.permission-header {
 
 .permission-part:first-of-type {
     flex: 1 0 0;
+    padding-right: 20px;
 }
 
 .permission-part:last-of-type {

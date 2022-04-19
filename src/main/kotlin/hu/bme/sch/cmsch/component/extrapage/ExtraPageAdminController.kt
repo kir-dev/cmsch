@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.extrapage
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
+import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_EXTRA_PAGES
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_EXTRA_PAGES
@@ -37,6 +38,16 @@ class ExtraPageController(
     "extra-pages", "Extra Oldal", "Extra oldalak",
     "Egyedi oldalak kezelése.",
     ExtraPageEntity::class, ::ExtraPageEntity, importService, adminMenuService, component,
-    permissionControl = PERMISSION_EDIT_EXTRA_PAGES, // TODO: Additional permission check
+    permissionControl = PERMISSION_EDIT_EXTRA_PAGES,
     adminMenuIcon = "article"
-)
+) {
+
+    override fun filterOverview(user: UserEntity, rows: Iterable<ExtraPageEntity>): Iterable<ExtraPageEntity> {
+        return rows.filter { editPermissionCheck(user, it) }
+    }
+
+    override fun editPermissionCheck(user: UserEntity, entity: ExtraPageEntity): Boolean {
+        return user.isAdmin() || entity.permissionToEdit.isBlank() || user.hasPermission(entity.permissionToEdit)
+    }
+
+}

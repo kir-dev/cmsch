@@ -58,9 +58,9 @@ data class ExtraPageEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 6, label = "Jog a szerkesztéshez", minimumRole = RoleType.ADMIN,
-        note = "pl.: EXTRAPAGE_EDIT_CONTACTS alapértelmezett: EXTRAPAGE_EDIT_DEFAULT (ezt mindenki tudja szerkeszteni aki am tud)")
+        note = "pl.: EXTRAPAGE_EDIT_CONTACTS alapértelmezett: EXTRAPAGE_EDIT (ezt mindenki tudja szerkeszteni aki látja a menüt is)")
     @property:GenerateOverview(visible = false)
-    var permissionToEdit: String = "EXTRAPAGE_EDIT_DEFAULT",
+    var permissionToEdit: String = "EXTRAPAGE_EDIT",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
