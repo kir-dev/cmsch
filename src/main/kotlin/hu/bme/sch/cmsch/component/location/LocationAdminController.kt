@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 class LocationAdminController(
     adminMenuService: AdminMenuService,
     component: LocationComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     LocationComponent::class.java,
@@ -20,4 +22,5 @@ class LocationAdminController(
     ControlPermissions.PERMISSION_CONTROL_PROFILE,
     componentCategoryName = "Helymegosztás",
     componentMenuName = "Helymegosztás",
+    menuService = menuService
 )

@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.achievement
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_ACHIEVEMENTS
@@ -16,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 class AchievementAdminController(
     adminMenuService: AdminMenuService,
     component: AchievementComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     AchievementComponent::class.java,
     component,
     PERMISSION_CONTROL_ACHIEVEMENTS,
     "Bucketlist",
-    "Bucketlist beállítások"
+    "Bucketlist beállítások",
+    menuService = menuService
 )
 
 @Controller

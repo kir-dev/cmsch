@@ -2,24 +2,30 @@ package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.model.RoleType
 import org.hibernate.Hibernate
+import java.io.Serializable
+import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name="users")
+@Table(name="menus")
+@IdClass(MenuId::class)
 data class MenuEntity(
+    @Id
+    @Column(nullable = false)
+    var menuId: String = "",
 
     @Id
-    @GeneratedValue
-    @Column(nullable = false)
-    var id: Int = 0,
-
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     var role: RoleType = RoleType.NOBODY,
 
-    @Lob
-    @Column(nullable = false)
-    var menuJson: String = "{}",
+    @Column(nullable = false, name = "`order`")
+    var order: Int = 0,
 
+    @Column(nullable = false)
+    var visible: Boolean = false,
+
+    @Column(nullable = false)
+    var subMenu: Boolean = false
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -27,14 +33,20 @@ data class MenuEntity(
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as MenuEntity
 
-        return id != 0 && id == other.id
+        return menuId == other.menuId
+                && role == other.role
     }
 
-    override fun hashCode(): Int = javaClass.hashCode()
+    override fun hashCode(): Int = Objects.hash(menuId, role)
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id )"
+        return this::class.simpleName + "(menuId = $menuId , role = $role )"
     }
 
 }
+
+data class MenuId(
+    var menuId: String = "",
+    var role: RoleType = RoleType.NOBODY
+) : Serializable

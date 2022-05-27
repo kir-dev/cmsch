@@ -64,7 +64,7 @@ class LoginComponent(
 
     val authschScopes = mutableListOf<Scope>()
 
-    override fun onValuesUpdated() {
+    override fun onInit() {
         authschScopes.clear()
         val scopes = authschScopesRaw.getValue().replace(" ", "").split(",")
             .filter { it.isNotBlank() }

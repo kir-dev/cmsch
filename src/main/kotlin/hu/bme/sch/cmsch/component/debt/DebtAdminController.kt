@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
 import hu.bme.sch.cmsch.service.*
@@ -19,13 +20,15 @@ import javax.servlet.http.HttpServletRequest
 class DebtAdminController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     DebtComponent::class.java,
     component,
     PERMISSION_CONTROL_DEBTS,
     "Tartozások",
-    "Tartozások testreszabása"
+    "Tartozások testreszabása",
+    menuService = menuService
 )
 
 @Controller

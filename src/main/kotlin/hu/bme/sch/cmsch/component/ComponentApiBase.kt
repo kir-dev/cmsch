@@ -1,14 +1,17 @@
 package hu.bme.sch.cmsch.component
 
-import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.component.app.MenuService
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuCategory
+import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
+import org.slf4j.LoggerFactory
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RequestParam
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 
@@ -22,8 +25,11 @@ abstract class ComponentApiBase(
     private val componentMenuIcon: String = "settings",
     private val componentMenuPriority: Int = 100,
     private val insertComponentCategory: Boolean = true,
-    private val componentCategory: String = componentClass.simpleName
+    private val componentCategory: String = componentClass.simpleName,
+    private val menuService: MenuService
 ) {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @PostConstruct
     fun init() {
@@ -61,10 +67,30 @@ abstract class ComponentApiBase(
         return "componentSettings"
     }
 
-    @ResponseBody
     @PostMapping("/settings")
-    fun update(): String {
-        return "not-implemented"
+    fun update(request: HttpServletRequest, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
+        val user = request.getUser()
+        if (!permissionToShow.validate(user)) {
+            model.addAttribute("permission", permissionToShow.permissionString)
+            model.addAttribute("user", user)
+            return "admin403"
+        }
+        component.allSettings.forEach { setting ->
+            if (setting.type == SettingType.BOOLEAN) {
+                val parsedValue = allRequestParams[setting.property] != null && allRequestParams[setting.property] != "off"
+                log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, parsedValue)
+                setting.setValue(if (parsedValue) "true" else "false")
+            } else {
+                allRequestParams[setting.property]?.let {
+                    log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, it)
+                    setting.setValue(it)
+                }
+            }
+        }
+        component.persistChanges()
+        RoleType.values().forEach { role -> menuService.regenerateMenuCache(role) }
+
+        return "redirect:/admin/control/component/${component.component}/settings"
     }
 
 }

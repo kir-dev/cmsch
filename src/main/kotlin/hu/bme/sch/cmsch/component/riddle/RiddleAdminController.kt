@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_RIDDLE
@@ -16,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 class RiddleAdminController(
     adminMenuService: AdminMenuService,
     component: RiddleComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     RiddleComponent::class.java,
     component,
     PERMISSION_CONTROL_RIDDLE,
     "Riddleök",
-    "Riddleök testreszabása"
+    "Riddleök testreszabása",
+    menuService = menuService
 )
 
 @Controller

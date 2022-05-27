@@ -142,6 +142,12 @@ h1 {
     width: 100%;
 }
 
+.content .split .payload .page-short {
+    max-width: 530px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .content .split .payload h2 {
     margin-bottom: 20px;
     font-weight: 500;
@@ -402,9 +408,10 @@ form .file-input::before {
     font-weight: 300;
     font-size: 16px;
     transition: color ease 0.2s, border-color ease 0.2s;
-    width: 496px;
+    width: 100%;
     text-align: center;
     margin: 0 auto;
+    box-sizing: border-box;
 }
 
 form .file-input:hover::before {
@@ -680,6 +687,10 @@ h4.permission-header {
     top: 8px;
     right: 40px;
     cursor: pointer;
+}
+
+.text-light {
+    color: #FFFFFF;
 }
 
 @media screen and (max-width: 800px) {

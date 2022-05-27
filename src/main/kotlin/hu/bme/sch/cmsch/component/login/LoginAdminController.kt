@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 class LoginAdminController(
     adminMenuService: AdminMenuService,
     component: LoginComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     LoginComponent::class.java,
@@ -23,6 +25,7 @@ class LoginAdminController(
     componentMenuIcon = "login",
     insertComponentCategory = false,
     componentCategory = ApplicationComponent::class.simpleName!!,
-    componentMenuPriority = 4
+    componentMenuPriority = 5,
+    menuService = menuService
 )
 
