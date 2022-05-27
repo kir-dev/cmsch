@@ -16,9 +16,7 @@ import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 
@@ -27,7 +25,8 @@ import javax.servlet.http.HttpServletRequest
 @ConditionalOnBean(ApplicationComponent::class)
 class MenuAdminController(
     private val adminMenuService: AdminMenuService,
-    private val menuRepository: MenuRepository
+    private val menuRepository: MenuRepository,
+    private val menuService: MenuService
 ) {
 
     private val view = "menu"
@@ -90,11 +89,36 @@ class MenuAdminController(
             return "admin403"
         }
         val role = RoleType.values()[id]
-//        model.addAttribute("user", menu.)
+        model.addAttribute("id", id)
+        model.addAttribute("role", role)
+        model.addAttribute("rows", menuService.getMenusForRole(role).sortedBy { it.order })
 
         return "menuSettings"
     }
 
+    @PostMapping("/edit/{id}")
+    fun editFormTarget(@PathVariable id: Int, request: HttpServletRequest, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
+        val user = request.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
+            model.addAttribute("user", user)
+            return "admin403"
+        }
+
+        val menus = mutableListOf<MenuSettingItem>()
+        var i = 0
+        while (allRequestParams["id_$i"] != null && allRequestParams["order_$i"] != null) {
+            menus.add(MenuSettingItem(id = allRequestParams["id_$i"]!!,
+                name ="", url = "",
+                order = allRequestParams["order_$i"]?.toIntOrNull() ?: 0,
+                visible = allRequestParams["visible_$i"] != null && allRequestParams["visible_$i"] != "off",
+                subMenu = allRequestParams["submenu_$i"] != null && allRequestParams["submenu_$i"] != "off"
+            ))
+            i++
+        }
+        menuService.persistSettings(menus, RoleType.values()[id])
+        return "redirect:/admin/control/menu/edit/$id"
+    }
 }
 
 class MenuSetupByRoleVirtualEntity(

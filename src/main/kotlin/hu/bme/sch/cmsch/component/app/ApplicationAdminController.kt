@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 class ApplicationAdminController(
     adminMenuService: AdminMenuService,
     component: ApplicationComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     ApplicationComponent::class.java,
@@ -20,6 +21,7 @@ class ApplicationAdminController(
     PERMISSION_CONTROL_APP,
     "Admin",
     "Oldal beállítások",
-    componentMenuIcon = "functions"
+    componentMenuIcon = "functions",
+    menuService = menuService
 )
 

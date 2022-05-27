@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_TOKEN
@@ -15,13 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 class TokenAdminController(
     adminMenuService: AdminMenuService,
     component: TokenComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     TokenComponent::class.java,
     component,
     PERMISSION_CONTROL_TOKEN,
     "Tokenek",
-    "Tokenek testreszabása"
+    "Tokenek testreszabása",
+    menuService = menuService
 )
 
 @Controller

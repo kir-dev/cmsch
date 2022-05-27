@@ -29,8 +29,11 @@ enum class RoleType(val value: Int, val description: String) {
         }
 
         @JvmStatic
-        fun names(): List<String> = values().map { it.name }
+        fun names(): List<String> = values().map { it.name }.toList()
     }
+
+    val isAdmin
+        get() = value >= ADMIN.value
 }
 
 enum class GuildType(val displayName: String) {

@@ -33,7 +33,7 @@ abstract class ComponentBase(
         loadFromSettings()
         updateFromDatabase()
 
-        onValuesUpdated()
+        onInit()
     }
 
     private fun validateNoDuplication() {
@@ -88,7 +88,11 @@ abstract class ComponentBase(
             .associate { it.property to it.getValue() }
     }
 
-    open fun onValuesUpdated() {
+    fun persistChanges() {
+        componentSettingService.persistSettings(allSettings)
+    }
+
+    open fun onInit() {
         // Empty implementation, override it when its needed
     }
 

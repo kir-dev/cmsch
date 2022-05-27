@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.extrapage
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.*
@@ -16,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 class ExtraPageAdminController(
     adminMenuService: AdminMenuService,
     component: ExtraPageComponent,
+    menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
     ExtraPageComponent::class.java,
     component,
     PERMISSION_CONTROL_EXTRA_PAGES,
     "Oldalak",
-    "Oldalak testreszabása"
+    "Oldalak testreszabása",
+    menuService = menuService
 )
 
 @Controller

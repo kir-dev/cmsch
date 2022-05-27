@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.component.achievement.*
+import hu.bme.sch.cmsch.component.app.ExtraMenuEntity
+import hu.bme.sch.cmsch.component.app.ExtraMenuRepository
 import hu.bme.sch.cmsch.component.debt.ProductEntity
 import hu.bme.sch.cmsch.component.debt.ProductRepository
 import hu.bme.sch.cmsch.component.event.EventEntity
@@ -57,7 +59,8 @@ class TestConfig(
     private val productsService: Optional<ProductService>,
     private val riddleRepository: Optional<RiddleEntityRepository>,
     private val riddleCategoryRepository: Optional<RiddleCategoryRepository>,
-    private val tokenRepository: Optional<TokenRepository>
+    private val tokenRepository: Optional<TokenRepository>,
+    private val extraMenuRepository: ExtraMenuRepository
 ) {
 
     private var now = System.currentTimeMillis() / 1000
@@ -89,6 +92,7 @@ class TestConfig(
             }
         }
         tokenRepository.ifPresent { addTokens(it) }
+        addExtraMenus()
     }
 
     private fun addTokens(tokenRepository: TokenRepository) {
@@ -776,6 +780,8 @@ class TestConfig(
                 visible = true,
                 open = true,
                 permissionToEdit = "EXTRAPAGE_EDIT_GYIK",
+                showAsMenu = true,
+                menuTitle = "GYIK",
                 content = "Gyakran Ismételt Kérdések\n" +
                         "===\n" +
                         "\n" +
@@ -798,6 +804,7 @@ class TestConfig(
                 visible = false,
                 open = true,
                 permissionToEdit = "EXTRAPAGE_EDIT_OTHER",
+                showAsMenu = false,
                 content = "No Thanx - Egy masik nemzedek\n" +
                         "===\n" +
                         "\n" +
@@ -814,6 +821,8 @@ class TestConfig(
                 url = "koltsegvetes",
                 visible = false,
                 open = false,
+                showAsMenu = false,
+                menuTitle = "Költségvetés",
                 permissionToEdit = "EXTRAPAGE_EDIT_OTHER",
                 content = "Az idei G7 költésgvetése\n" +
                         "===\n" +
@@ -822,14 +831,16 @@ class TestConfig(
         ))
 
         extraPages.save(ExtraPageEntity(
-            title = "Telejsen átlagos oldal",
-            url = "atlagos-oldal",
-            visible = true,
-            open = true,
-            content = "Az idei G7 költésgvetése\n" +
-                    "===\n" +
-                    "\n" +
-                    "Ja persze, majd ideírjuk...\n"
+                title = "Telejsen átlagos oldal",
+                url = "atlagos-oldal",
+                visible = true,
+                open = true,
+                showAsMenu = true,
+                menuTitle = "Átalg Oldal",
+                content = "Ez egy átlagos oldal\n" +
+                        "===\n" +
+                        "\n" +
+                        "Teljesen **átlagos**!\n"
         ))
     }
 
@@ -843,6 +854,11 @@ class TestConfig(
         guildToUserMapping.save(GuildToUserMappingEntity(0, "RZPZTT", GuildType.RED))
         guildToUserMapping.save(GuildToUserMappingEntity(0, "HITMAN", GuildType.WHITE))
         guildToUserMapping.save(GuildToUserMappingEntity(0, "BATMAN", GuildType.BLACK))
+    }
+
+    private fun addExtraMenus() {
+        extraMenuRepository.save(ExtraMenuEntity(0, "Feladatok", "", false))
+        extraMenuRepository.save(ExtraMenuEntity(0, "Facebook", "https://facebook.com/xddddddddddd", true))
     }
 
 }

@@ -3,15 +3,15 @@
 <head th:replace="layout :: head">
 </head>
 <body>
-<script>
+<script th:inline="javascript">
     function changeRoleText(property) {
         const roles = document.getElementById(property).value.split(',');
         /*<![CDATA[*/
         const roleTypes = [[${T(hu.bme.sch.cmsch.model.RoleType).names()}]];
         /*]]>*/
         roleTypes.forEach(role => {
-            if (typeof document.getElementById(`property_${role}`) !== 'undefined')
-                document.getElementById(`property_${role}`).checked = roles.includes(role);
+            if (document.getElementById(`${property}_${role}`) != null)
+                document.getElementById(`${property}_${role}`).checked = roles.includes(role);
         });
     }
     function changeRoleField(property, role) {
@@ -28,7 +28,7 @@
         <div th:replace="layout :: menu(${user})"></div>
 
         <div class="payload">
-            <div class="page">
+            <div class="page page-short">
                 <h2 th:text="${title}">View edit</h2>
 
                 <form th:action="|@{/admin/control}/component/${component}/settings|" method="post">
@@ -158,9 +158,6 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <script th:inline="javascript">
-                                    changeRoleText(/*[[${input.property}]]*/ '');
-                                </script>
 
                                 <input type="text"
                                        th:name="${input.property}"
@@ -169,6 +166,9 @@
                                        autocomplete="off"
                                        style="display: none"
                                 />
+                                <script th:inline="javascript">
+                                    changeRoleText(/*[[${input.property}]]*/ '');
+                                </script>
                             </div>
 
                         </object>
