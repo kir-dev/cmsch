@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.token.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GuildType
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType
@@ -9,6 +10,7 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -16,8 +18,8 @@ import hu.bme.sch.cmsch.util.sha256
 import hu.gerviba.authsch.AuthSchAPI
 import hu.gerviba.authsch.response.ProfileDataResponse
 import io.swagger.annotations.ApiOperation
+import org.apache.catalina.util.URLEncoder
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -28,15 +30,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import javax.servlet.http.Cookie
+import java.nio.charset.StandardCharsets
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-
-const val USER_SESSION_ATTRIBUTE_NAME = "user_id"
-const val USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME = "user"
-const val CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME = "circles"
-const val LOGGED_IN_COOKIE = "loggedIn"
-const val SESSION_TIMEOUT = 7 * 24 * 60 * 60
 
 @Controller
 @ConditionalOnBean(LoginComponent::class)
@@ -47,13 +43,14 @@ class LoginController(
     private val groupToUserMapping: GroupToUserMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
     private val groups: GroupRepository,
-    @Value("\${cmsch.sysadmins:}") private val systemAdmins: String,
-    @Value("\${cmsch.profile.qr-enabled:true}") private val profileQrEnabled: Boolean,
     private val applicationComponent: ApplicationComponent,
-    private val loginComponent: LoginComponent
+    private val loginComponent: LoginComponent,
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+    private val encoder = URLEncoder()
 
     @ResponseBody
     @GetMapping("/control/logged-out")
@@ -87,27 +84,24 @@ class LoginController(
                         profile.internalId.toString(),
                         profile.neptun ?: "N/A",
                         "",
-                        profile.surname + " " + profile.givenName,
+                        (profile.surname ?: "") + " " + (profile.givenName ?: ""),
                         "",
                         profile.mail ?: "",
                         RoleType.BASIC,
                         groupName = "", group = null,
                         guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN
                 )
-                log.info("Logging in with new user ${user.fullName} pekId: ${user.pekId}")
+                log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId}")
             }
             updateFields(user, profile)
-            auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
 
-            request.getSession(true).maxInactiveInterval = SESSION_TIMEOUT
-            request.getSession(true).setAttribute(USER_SESSION_ATTRIBUTE_NAME, user.pekId)
-            request.getSession(true).setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, user)
+            auth = UsernamePasswordAuthenticationToken(
+                getPrincipal(user, profile),
+                getCredentials(profile, user),
+                getAuthorities(user)
+            )
 
-            val cookie = Cookie(LOGGED_IN_COOKIE, "true")
-            cookie.maxAge = SESSION_TIMEOUT
-            cookie.path = "/"
-            httpResponse.addCookie(cookie)
-
+            request.getSession(true).maxInactiveInterval = (startupPropertyConfig.sessionValidityInMilliseconds / 1000).toInt()
             SecurityContextHolder.getContext().authentication = auth
         } catch (e: Exception) {
             auth?.isAuthenticated = false
@@ -121,10 +115,24 @@ class LoginController(
         httpResponse.sendRedirect(if (auth != null && auth.isAuthenticated) "/control/entrypoint" else "/control/logged-out?error")
     }
 
+    private fun getCredentials(profile: ProfileDataResponse, user: UserEntity): String {
+        return if (startupPropertyConfig.jwtEnabled)
+            jwtTokenProvider.createToken(user.id, profile.internalId.toString(), user.role, user.permissionsAsList)
+        else
+            ""
+    }
+
+    private fun getPrincipal(user: UserEntity, profile: ProfileDataResponse) = CmschUserPrincipal(
+        id = user.id,
+        internalId = profile.internalId.toString(),
+        role = user.role,
+        permissions = user.permissionsAsList
+    )
+
     private fun updateFields(user: UserEntity, profile: ProfileDataResponse) {
-        // Generate CMSch i if not present
+        // Generate CMSch id if not present
         if (user.cmschId.isBlank()) {
-            if (profileQrEnabled) {
+            if (startupPropertyConfig.profileQrEnabled) {
                 profileService.generateFullProfileForUser(user)
             } else {
                 profileService.generateProfileIdForUser(user)
@@ -153,7 +161,7 @@ class LoginController(
         }
 
         // Override superuser roles
-        if (systemAdmins.split(",").contains(user.pekId)) {
+        if (startupPropertyConfig.sysadmins.split(",").contains(user.internalId)) {
             log.info("Granting SUPERUSER for ${user.fullName}")
             user.role = RoleType.SUPERUSER
         }
@@ -265,36 +273,21 @@ class LoginController(
                 "&scope=${loginComponent.authschScopes.joinToString("+") { it.scope }}"
     }
 
-
     fun buildUniqueState(request: HttpServletRequest): String {
         return (request.session.id + request.localAddr).sha256()
     }
 
     @ApiOperation("Logout user")
     @GetMapping("/control/logout")
-    fun logout(request: HttpServletRequest, httpResponse: HttpServletResponse): String {
-        log.info("Logging out from user {}", request.getUserOrNull()?.fullName ?: "n/a")
+    fun logout(request: HttpServletRequest, auth: Authentication, httpResponse: HttpServletResponse): String {
+        log.info("Logging out from user {}", auth.getUserOrNull()?.internalId ?: "n/a")
 
         try {
-            request.getSession(false)
-
-            SecurityContextHolder.clearContext()
+            SecurityContextHolder.getContext().authentication = null
             val session = request.getSession(false)
             session?.invalidate()
-            for (cookie in request.cookies) {
-                cookie.value = ""
-                cookie.maxAge = 0
-                cookie.path = "/"
-                httpResponse.addCookie(cookie)
-            }
-
-            request.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)
-            request.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
-            request.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)
-            request.session.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)
-            request.session.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
-            request.session.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)
             request.changeSessionId()
+
         } catch (e: Exception) {
             // Ignore it for now
         }
@@ -302,7 +295,9 @@ class LoginController(
     }
 
     @GetMapping("/control/open-site")
-    fun openSite(request: HttpServletRequest): String {
+    fun openSite(auth: Authentication, request: HttpServletRequest): String {
+        if (startupPropertyConfig.jwtEnabled)
+            return "redirect:${applicationComponent.siteUrl.getValue()}?jwt=${encoder.encode(auth.credentials.toString(), StandardCharsets.UTF_8)}"
         return "redirect:${applicationComponent.siteUrl.getValue()}"
     }
 

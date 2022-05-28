@@ -1,18 +1,19 @@
 package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_ANY_PRODUCT
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_FOOD
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_MERCH
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 const val CONTROL_MODE_SELL = "sell"
 
@@ -65,8 +66,8 @@ class SellProductsController(
     }
 
     @GetMapping("/sell-products")
-    fun sellProduct(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun sellProduct(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (PERMISSION_SELL_ANY_PRODUCT.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_SELL_ANY_PRODUCT.permissionString)
@@ -81,15 +82,15 @@ class SellProductsController(
         model.addAttribute("columns", descriptor.getColumns())
         model.addAttribute("fields", descriptor.getColumnDefinitions())
         model.addAttribute("rows", productService.getAllProducts())
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_SELL)
 
         return "overview"
     }
 
     @GetMapping("/sell-food")
-    fun sellFood(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun sellFood(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (PERMISSION_SELL_FOOD.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_SELL_FOOD.permissionString)
@@ -104,15 +105,15 @@ class SellProductsController(
         model.addAttribute("columns", descriptor.getColumns())
         model.addAttribute("fields", descriptor.getColumnDefinitions())
         model.addAttribute("rows", productService.getAllFoods())
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_SELL)
 
         return "overview"
     }
 
     @GetMapping("/sell-merch")
-    fun sellMerch(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun sellMerch(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (PERMISSION_SELL_MERCH.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_SELL_MERCH.permissionString)
@@ -127,7 +128,7 @@ class SellProductsController(
         model.addAttribute("columns", descriptor.getColumns())
         model.addAttribute("fields", descriptor.getColumnDefinitions())
         model.addAttribute("rows", productService.getAllMerch())
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_SELL)
 
         return "overview"

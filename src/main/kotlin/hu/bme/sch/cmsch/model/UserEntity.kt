@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -53,7 +54,9 @@ enum class MajorType {
 }
 
 @Entity
-@Table(name="users")
+@Table(name = "users", indexes = [
+    Index(name = "idx_userentity_internalid_unq", columnList = "internalId", unique = true)
+])
 data class UserEntity(
     @Id
     @GeneratedValue
@@ -69,7 +72,7 @@ data class UserEntity(
         note = "Ez módosítható eseti hiba kezelésre", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 0)
-    var pekId: String = "",
+    override var internalId: String = "",
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
@@ -114,7 +117,7 @@ data class UserEntity(
         note = "BASIC = gólya, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6, enumSource = RoleType::class, defaultValue = "GUEST")
-    var role: RoleType = RoleType.GUEST,
+    override var role: RoleType = RoleType.GUEST,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
@@ -147,19 +150,7 @@ data class UserEntity(
     @property:ImportFormat(ignore = false, columnId = 9)
     var permissions: String = "",
 
-): ManagedEntity {
-
-    fun isStaff(): Boolean {
-        return role == RoleType.STAFF
-    }
-
-    fun isAdmin(): Boolean {
-        return role == RoleType.ADMIN || role == RoleType.SUPERUSER
-    }
-
-    fun isSuperuser(): Boolean {
-        return role == RoleType.SUPERUSER
-    }
+): ManagedEntity, CmschUser {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -176,7 +167,10 @@ data class UserEntity(
         return this::class.simpleName + "(id = $id )"
     }
 
-    fun hasPermission(permission: String): Boolean {
-        return permissions.split(",").contains(permissions)
+    val permissionsAsList
+        get() = permissions.split(",")
+
+    override fun hasPermission(permission: String): Boolean {
+        return permissionsAsList.contains(permission)
     }
 }

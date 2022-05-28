@@ -4,15 +4,18 @@ import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_DEBTS
+import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_PRODUCTS
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control/component/debt")
@@ -66,9 +69,9 @@ class SoldProductController(
     permissionControl = PERMISSION_EDIT_DEBTS,
     importable = true, adminMenuIcon = "sync_alt"
 ) {
-    override fun onEntityPreSave(entity: SoldProductEntity, request: HttpServletRequest) {
+    override fun onEntityPreSave(entity: SoldProductEntity, auth: Authentication) {
         val date = clock.getTimeInSeconds()
-        val user = request.getUser()
+        val user = auth.getUserFromDatabase()
         entity.log = "${entity.log} '${user.fullName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finsihed: ${entity.finsihed}] at $date;"
     }
 }

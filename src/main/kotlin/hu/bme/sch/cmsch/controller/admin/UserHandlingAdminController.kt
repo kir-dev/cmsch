@@ -2,6 +2,8 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.extrapage.ExtraPageService
+import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.GroupToUserMappingEntity
@@ -16,12 +18,11 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GROUPS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_USERS
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control/groups")
@@ -49,10 +50,10 @@ class UserController(
     private val profileService: UserProfileGeneratorService,
     private val groups: GroupRepository,
     importService: ImportService,
-    @Value("\${cmsch.profile.qr-enabled:true}") private val profileQrEnabled: Boolean,
     adminMenuService: AdminMenuService,
     component: UserHandlingComponent,
-    private val extraPageService: Optional<ExtraPageService>
+    private val extraPageService: Optional<ExtraPageService>,
+    private val startupPropertyConfig: StartupPropertyConfig
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",
@@ -63,7 +64,7 @@ class UserController(
         importable = true, adminMenuPriority = 2, adminMenuIcon = "person"
 ) {
 
-    override fun onDetailsView(entity: UserEntity, model: Model) {
+    override fun onDetailsView(entity: CmschUser, model: Model) {
         val customPermissions = extraPageService.map { service ->
             service.getAll().groupBy { it.permissionToEdit }.map { group ->
                 PermissionValidator(
@@ -84,8 +85,8 @@ class UserController(
         model.addAttribute("adminPermissionList", adminPermissions.map { it.permissionString })
     }
 
-    override fun onEntityPreSave(entity: UserEntity, request: HttpServletRequest) {
-        if (profileQrEnabled) {
+    override fun onEntityPreSave(entity: UserEntity, auth: Authentication) {
+        if (startupPropertyConfig.profileQrEnabled) {
             profileService.generateFullProfileForUser(entity)
         } else {
             profileService.generateProfileIdForUser(entity)

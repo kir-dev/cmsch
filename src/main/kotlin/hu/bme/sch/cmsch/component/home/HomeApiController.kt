@@ -8,15 +8,16 @@ import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
@@ -32,8 +33,8 @@ class HomeApiController(
 
     @JsonView(Preview::class)
     @GetMapping("/home")
-    fun home(request: HttpServletRequest): HomeView {
-        val user = request.getUserOrNull()
+    fun home(auth: Authentication): HomeView {
+        val user = auth.getUserFromDatabaseOrNull()
         val events = eventsRepository.map { it.findAllByVisibleTrueOrderByTimestampStart() }
             .orElse(listOf())
             .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
@@ -51,7 +52,7 @@ class HomeApiController(
                 .take(4),
             upcomingEvents = upcomingEvents,
             achievements = achievements.map { achievementsService ->
-                request.getUserOrNull()?.group?.let { achievementsService.getAllAchievementsForGroup(it) }
+                user?.group?.let { achievementsService.getAllAchievementsForGroup(it) }
                     ?: achievementsService.getAllAchievementsForGuests()
             }.orElse(listOf()),
             leaderBoard = leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()),

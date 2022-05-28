@@ -1,11 +1,13 @@
 package hu.bme.sch.cmsch.service
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.util.DI
 
 class PermissionValidator internal constructor(
     val permissionString: String = "",
     val description: String = "",
-    val validate: Function1<UserEntity, Boolean> = {
+    val validate: Function1<CmschUser, Boolean> = {
             user -> user.isAdmin() || (permissionString.isNotEmpty() && user.hasPermission(permissionString))
     }
 )
@@ -17,7 +19,7 @@ sealed interface PermissionGroup {
 object ImplicitPermissions : PermissionGroup {
 
     val PERMISSION_IMPLICIT_HAS_GROUP = PermissionValidator(description = "The user has a group")
-            { user -> user.group != null }
+            { user -> DI.instance.userService.getById(user.internalId).group != null }
 
     val PERMISSION_IMPLICIT_ANYONE = PermissionValidator(description = "Everyone has this permission")
             { _ -> true }

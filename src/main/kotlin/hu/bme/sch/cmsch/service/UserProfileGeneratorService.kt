@@ -6,10 +6,10 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.util.sha256
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.IOException
@@ -21,17 +21,14 @@ import javax.annotation.PostConstruct
 
 @Service
 class UserProfileGeneratorService(
-    @Value("\${cmsch.profile.qr-prefix:KIRDEV_}") val prefix: String,
-    @Value("\${cmsch.profile.salt:60_LONG_STRING}") private val salt: String,
-    @Value("\${cmsch.profile.generation-target:/etc/cmsch/external/profiles}") private val rootPath: String,
-    @Value("\${cmsch.profile.qr-code-size:360}") private val size: Int
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @PostConstruct
     fun init() {
-        File(rootPath).mkdirs()
+        File(startupPropertyConfig.profileGenerationTarget).mkdirs()
     }
 
     @Throws(WriterException::class, IOException::class)
@@ -39,7 +36,7 @@ class UserProfileGeneratorService(
         val matrix = MultiFormatWriter().encode(
                 String(data.toByteArray(StandardCharsets.UTF_8), StandardCharsets.UTF_8),
                 BarcodeFormat.QR_CODE,
-                size, size,
+                startupPropertyConfig.profileQrCodeSize, startupPropertyConfig.profileQrCodeSize,
                 mutableMapOf(
                         EncodeHintType.ERROR_CORRECTION to ErrorCorrectionLevel.M,
                         EncodeHintType.CHARACTER_SET to StandardCharsets.UTF_8.toString(),
@@ -54,7 +51,7 @@ class UserProfileGeneratorService(
 
     fun generateFullProfileForUser(user: UserEntity) {
         generateProfileIdForUser(user)
-        val fullPath = rootPath + File.separator + user.cmschId + ".png"
+        val fullPath = startupPropertyConfig.profileGenerationTarget + File.separator + user.cmschId + ".png"
         if (Files.exists(Path.of(fullPath))) {
             log.info("QR code already exists for user ${user.fullName}")
             return
@@ -64,7 +61,9 @@ class UserProfileGeneratorService(
     }
 
     fun generateProfileIdForUser(user: UserEntity) {
-        user.cmschId = (prefix + (user.pekId + salt).sha256().substring(prefix.length, 40))
+        user.cmschId = (startupPropertyConfig.profileQrPrefix + (user.internalId + startupPropertyConfig.profileSalt)
+            .sha256()
+            .substring(startupPropertyConfig.profileQrPrefix.length, 40))
     }
 
 }

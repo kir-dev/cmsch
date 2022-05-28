@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class AuthSchAPI implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 3441712708900902459L;
     private static final String FAILED_TO_PARSE_AUTH_RESPONSE = "Failed to parse auth hu.gerviba.authsch.response";
 
     private String tokenUrlBase = "https://auth.sch.bme.hu/oauth2/token";

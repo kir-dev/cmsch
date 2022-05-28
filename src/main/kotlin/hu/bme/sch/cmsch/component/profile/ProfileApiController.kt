@@ -3,23 +3,24 @@ package hu.bme.sch.cmsch.component.profile
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.achievement.AchievementsService
 import hu.bme.sch.cmsch.component.debt.DebtDto
-import hu.bme.sch.cmsch.component.riddle.RiddleService
-import hu.bme.sch.cmsch.component.token.TokenCollectorService
-import hu.bme.sch.cmsch.controller.UNKNOWN_USER
-import hu.bme.sch.cmsch.dto.*
-import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.location.LocationService
+import hu.bme.sch.cmsch.component.riddle.RiddleService
+import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.component.token.TokenComponent
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.controller.UNKNOWN_USER
+import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
@@ -40,8 +41,8 @@ class ProfileApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/profile")
-    fun profile2(request: HttpServletRequest): Profile2View {
-        val user = request.getUserOrNull() ?: return Profile2View()
+    fun profile2(auth: Authentication): Profile2View {
+        val user = auth.getUserFromDatabaseOrNull() ?: return Profile2View()
 
         val leavable = user.group?.leaveable ?: true
         return Profile2View(
@@ -73,8 +74,8 @@ class ProfileApiController(
 
     @JsonView(FullDetails::class)
 //    @GetMapping("/profile")
-    fun profile(request: HttpServletRequest): ProfileView {
-        val user = request.getUserOrNull() ?: return ProfileView(false, UNKNOWN_USER, group = null)
+    fun profile(auth: Authentication): ProfileView {
+        val user = auth.getUserFromDatabaseOrNull() ?: return ProfileView(false, UNKNOWN_USER, group = null)
         val group = user.group?.let { GroupEntityDto(it) }
 
         return ProfileView(

@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control/token-properties-group")
@@ -50,8 +50,8 @@ class TokenAdminTokensByGroupController(
     }
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -87,8 +87,8 @@ class TokenAdminTokensByGroupController(
     }
 
     @GetMapping("/view/{id}")
-    fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun viewAll(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -122,8 +122,8 @@ class TokenAdminTokensByGroupController(
     }
 
     @GetMapping("/delete/{id}")
-    fun deleteConfirm(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun deleteConfirm(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -146,8 +146,8 @@ class TokenAdminTokensByGroupController(
     }
 
     @PostMapping("/delete/{id}")
-    fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun delete(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)

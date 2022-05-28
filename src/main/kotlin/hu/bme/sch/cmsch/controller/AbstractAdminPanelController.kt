@@ -4,22 +4,26 @@ import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
+import hu.bme.sch.cmsch.service.ImportService
+import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.http.MediaType
+import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
 import java.util.function.Supplier
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
@@ -66,8 +70,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -90,8 +94,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @GetMapping("/edit/{id}")
-    fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun edit(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -125,8 +129,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @GetMapping("/create")
-    fun create(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun create(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -148,8 +152,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @GetMapping("/delete/{id}")
-    fun deleteConfirm(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun deleteConfirm(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -177,8 +181,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @PostMapping("/delete/{id}")
-    fun delete(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun delete(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
@@ -201,18 +205,19 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                @RequestParam(required = false) file0: MultipartFile?,
                @RequestParam(required = false) file1: MultipartFile?,
                model: Model,
-               request: HttpServletRequest
+               auth: Authentication
     ): String {
-        if (permissionControl.validate(request.getUser()).not()) {
+        val user = auth.getUser()
+        if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", request.getUser())
+            model.addAttribute("user", user)
             return "admin403"
         }
 
         val entity = supplier.get()
-        updateEntity(descriptor, request.getUser(), entity, dto, file0, file1)
+        updateEntity(descriptor, user, entity, dto, file0, file1)
         entity.id = 0
-        onEntityPreSave(entity, request)
+        onEntityPreSave(entity, auth)
         repo.save(entity)
         onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
@@ -224,9 +229,9 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
              @RequestParam(required = false) file0: MultipartFile?,
              @RequestParam(required = false) file1: MultipartFile?,
              model: Model,
-             request: HttpServletRequest
+             auth: Authentication
     ): String {
-        val user = request.getUser()
+        val user = auth.getUser()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
@@ -243,15 +248,15 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
-        updateEntity(descriptor, request.getUser(), actualEntity, dto, file0, file1)
+        updateEntity(descriptor, user, actualEntity, dto, file0, file1)
         actualEntity.id = id
-        onEntityPreSave(actualEntity, request)
+        onEntityPreSave(actualEntity, auth)
         repo.save(actualEntity)
         onEntityChanged(actualEntity)
         return "redirect:/admin/control/$view"
     }
 
-    private fun updateEntity(descriptor: OverviewBuilder, user: UserEntity, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
+    private fun updateEntity(descriptor: OverviewBuilder, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
                 when {
@@ -289,8 +294,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @GetMapping("/resource")
-    fun resource(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun resource(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (PERMISSION_IMPORT_EXPORT.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_IMPORT_EXPORT.permissionString)
@@ -306,8 +311,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     @ResponseBody
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
-    fun export(request: HttpServletRequest, response: HttpServletResponse): ByteArray {
-        if (PERMISSION_IMPORT_EXPORT.validate(request.getUser()).not()) {
+    fun export(auth: Authentication, response: HttpServletResponse): ByteArray {
+        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
@@ -315,15 +320,16 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     }
 
     @PostMapping("/import/csv")
-    fun import(file: MultipartFile?, model: Model, request: HttpServletRequest): String {
-        if (PERMISSION_IMPORT_EXPORT.validate(request.getUser()).not()) {
+    fun import(file: MultipartFile?, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
+        if (PERMISSION_IMPORT_EXPORT.validate(user).not()) {
             throw IllegalStateException("Insufficient permissions")
         }
 
         val out = ByteArrayOutputStream()
         file?.inputStream?.transferTo(out)
         val rawEntities = out.toString().split("\n").stream()
-                .map { it.split(";").map { it.trim() } }
+                .map { entity -> entity.split(";").map { it.trim() } }
                 .skip(1)
                 .toList()
         log.info("Importing {} bytes ({} lines) into {}", out.size(), rawEntities.size, view)
@@ -333,7 +339,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("importedCount", after - before)
         return "resource"
     }
@@ -342,19 +348,19 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         // Overridden when notification is required
     }
 
-    open fun onEntityPreSave(entity: T, request: HttpServletRequest) {
+    open fun onEntityPreSave(entity: T, auth: Authentication) {
         // Overridden when notification is required
     }
 
-    open fun onDetailsView(entity: UserEntity, model: Model) {
+    open fun onDetailsView(entity: CmschUser, model: Model) {
         // Overridden when notification is required
     }
 
-    open fun filterOverview(user: UserEntity, rows: Iterable<T>): Iterable<T> {
+    open fun filterOverview(user: CmschUser, rows: Iterable<T>): Iterable<T> {
         return rows
     }
 
-    open fun editPermissionCheck(user: UserEntity, entity: T): Boolean {
+    open fun editPermissionCheck(user: CmschUser, entity: T): Boolean {
         return true
     }
 }

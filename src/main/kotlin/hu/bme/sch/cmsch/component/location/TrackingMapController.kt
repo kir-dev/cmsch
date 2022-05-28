@@ -6,13 +6,13 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_TRACK_EVERYBODY
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_TRACK_ONE_GROUP
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @ConditionalOnBean(LocationComponent::class)
@@ -23,8 +23,8 @@ class TrackingMapController(
 
     @ResponseBody
     @GetMapping("/api/track")
-    fun api(request: HttpServletRequest): List<LocationEntity> {
-        if (PERMISSION_TRACK_EVERYBODY.validate(request.getUser()).not()) {
+    fun api(auth: Authentication): List<LocationEntity> {
+        if (PERMISSION_TRACK_EVERYBODY.validate(auth.getUser()).not()) {
             return listOf()
         }
         return locationService.findAllLocation()
@@ -32,8 +32,8 @@ class TrackingMapController(
 
     @ResponseBody
     @GetMapping("/api/track/{groupName}")
-    fun apiGroup(@PathVariable groupName: String, request: HttpServletRequest): List<LocationEntity> {
-        if (PERMISSION_TRACK_ONE_GROUP.validate(request.getUser()).not()) {
+    fun apiGroup(@PathVariable groupName: String, auth: Authentication): List<LocationEntity> {
+        if (PERMISSION_TRACK_ONE_GROUP.validate(auth.getUser()).not()) {
             return listOf()
         }
         return locationService.findLocationsOfGroup(groupName)
@@ -53,10 +53,11 @@ class TrackingMapController(
     }
 
     @GetMapping("/admin/control/tracking")
-    fun view(request: HttpServletRequest, model: Model): String {
-        if (PERMISSION_TRACK_EVERYBODY.validate(request.getUser()).not()) {
+    fun view(auth: Authentication, model: Model): String {
+        val user = auth.getUser()
+        if (PERMISSION_TRACK_EVERYBODY.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_TRACK_EVERYBODY.permissionString)
-            model.addAttribute("user", request.getUser())
+            model.addAttribute("user", user)
             return "admin403"
         }
 
@@ -65,10 +66,11 @@ class TrackingMapController(
     }
 
     @GetMapping("/admin/control/tracking/{groupName}")
-    fun viewGroup(@PathVariable groupName: String, request: HttpServletRequest, model: Model): String {
-        if (PERMISSION_TRACK_ONE_GROUP.validate(request.getUser()).not()) {
+    fun viewGroup(@PathVariable groupName: String, auth: Authentication, model: Model): String {
+        val user = auth.getUser()
+        if (PERMISSION_TRACK_ONE_GROUP.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_TRACK_ONE_GROUP.permissionString)
-            model.addAttribute("user", request.getUser())
+            model.addAttribute("user", user)
             return "admin403"
         }
 

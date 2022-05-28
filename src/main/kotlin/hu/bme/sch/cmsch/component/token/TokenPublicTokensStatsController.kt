@@ -5,13 +5,13 @@ import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_NONE
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/control/stamps")
@@ -29,10 +29,10 @@ class TokenPublicTokensStatsController(
     private val overviewDescriptor = OverviewBuilder(TokenStatVirtualEntity::class)
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
-        if (request.getUserOrNull()?.let { it.isAdmin() || it.groupName == loginComponent.organizerGroupName.getValue() }?.not() != false) {
-            model.addAttribute("user", request.getUser())
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUserFromDatabase()
+        if (user.isAdmin() || user.groupName == loginComponent.organizerGroupName.getValue()) {
+            model.addAttribute("user", user)
             return "admin403"
         }
 

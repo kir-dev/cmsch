@@ -3,17 +3,19 @@ package hu.bme.sch.cmsch.component.achievement
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
+import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
@@ -24,20 +26,20 @@ class AchievementApiController(
     private val leaderBoardComponent: Optional<LeaderBoardComponent>,
     private val achievements: AchievementsService,
     private val clock: ClockService,
-    @Value("\${cmsch.achievement.ownership:USER}") private val achievementOwnershipMode: OwnershipType
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     @JsonView(Preview::class)
     @GetMapping("/achievement")
-    fun achievements(request: HttpServletRequest): AchievementsView {
+    fun achievements(auth: Authentication): AchievementsView {
         val categories: List<AchievementCategoryDto>
         val score: Int?
         val leaderBoardAvailable = leaderBoardComponent.map { it.leaderboardEnabled.isValueTrue() }.orElse(false)
         val leaderBoardFrozen = leaderBoardComponent.map { it.leaderboardFrozen.isValueTrue() }.orElse(true)
 
-        when (achievementOwnershipMode) {
+        when (startupPropertyConfig.achievementOwnershipMode) {
             OwnershipType.USER -> {
-                val user = request.getUserOrNull() ?: return AchievementsView(
+                val user = auth.getUserOrNull() ?: return AchievementsView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
@@ -56,7 +58,7 @@ class AchievementApiController(
                 )
             }
             OwnershipType.GROUP -> {
-                val group = request.getUserOrNull()?.group ?: return AchievementsView(
+                val group = auth.getUserFromDatabaseOrNull()?.group ?: return AchievementsView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
@@ -79,22 +81,22 @@ class AchievementApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/achievement/category/{categoryId}")
-    fun achievementCategory(@PathVariable categoryId: Int, request: HttpServletRequest): AchievementCategoryView {
+    fun achievementCategory(@PathVariable categoryId: Int, auth: Authentication): AchievementCategoryView {
         val category = achievements.getCategory(categoryId) ?: return AchievementCategoryView(
             categoryName = "Nem található O.o",
             achievements = listOf()
         )
 
-        val achievements =  when (achievementOwnershipMode) {
+        val achievements =  when (startupPropertyConfig.achievementOwnershipMode) {
             OwnershipType.USER -> {
-                val user = request.getUserOrNull() ?: return AchievementCategoryView(
+                val user = auth.getUserOrNull() ?: return AchievementCategoryView(
                     categoryName = "Nem található",
                     achievements = listOf()
                 )
                 achievements.getAllAchievementsForUser(user)
             }
             OwnershipType.GROUP -> {
-                val group = request.getUserOrNull()?.group ?: return AchievementCategoryView(
+                val group = auth.getUserFromDatabaseOrNull()?.group ?: return AchievementCategoryView(
                     categoryName = "Nem található",
                     achievements = listOf()
                 )
@@ -110,14 +112,14 @@ class AchievementApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/achievement/submit/{achievementId}")
-    fun achievement(@PathVariable achievementId: Int, request: HttpServletRequest): SingleAchievementView {
+    fun achievement(@PathVariable achievementId: Int, auth: Authentication): SingleAchievementView {
         val achievement = achievements.getById(achievementId)
         if (achievement.orElse(null)?.visible?.not() == true)
             return SingleAchievementView(achievement = null, submission = null)
 
-        val submission = when (achievementOwnershipMode) {
+        val submission = when (startupPropertyConfig.achievementOwnershipMode) {
             OwnershipType.USER -> {
-                val user = request.getUserOrNull() ?: return SingleAchievementView(
+                val user = auth.getUserFromDatabaseOrNull() ?: return SingleAchievementView(
                     achievement = achievement.orElse(null),
                     submission = null,
                     status = AchievementStatus.NOT_SUBMITTED
@@ -125,7 +127,7 @@ class AchievementApiController(
                 achievements.getSubmissionForUserOrNull(user, achievement)
             }
             OwnershipType.GROUP -> {
-                val group = request.getUserOrNull()?.group ?: return SingleAchievementView(
+                val group = auth.getUserFromDatabaseOrNull()?.group ?: return SingleAchievementView(
                     achievement = achievement.orElse(null),
                     submission = null,
                     status = AchievementStatus.NOT_SUBMITTED
@@ -149,12 +151,12 @@ class AchievementApiController(
     fun submitAchievement(
         @ModelAttribute(binding = false) answer: AchievementSubmissionDto,
         @RequestParam(required = false) file: MultipartFile?,
-        request: HttpServletRequest
+        auth: Authentication
     ): AchievementSubmissionResponseDto {
-        val user = request.getUserOrNull()
+        val user = auth.getUserFromDatabaseOrNull()
             ?: return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
 
-        return when (achievementOwnershipMode) {
+        return when (startupPropertyConfig.achievementOwnershipMode) {
             OwnershipType.USER -> AchievementSubmissionResponseDto(achievements.submitAchievementForUser(answer, file, user))
             OwnershipType.GROUP -> AchievementSubmissionResponseDto(achievements.submitAchievementForGroup(answer, file, user))
         }

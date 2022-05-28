@@ -2,15 +2,15 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.dto.virtual.FileVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.FilesByViewVirtualEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_SHOW_DELETE_FILES
 import hu.bme.sch.cmsch.util.getUser
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 import kotlin.io.path.fileSize
 import kotlin.io.path.isRegularFile
 import kotlin.streams.asSequence
@@ -30,9 +29,8 @@ const val CONTROL_MODE_FILE = "file"
 @Controller
 @RequestMapping("/admin/control/files")
 class FilesByViewController(
-        @Value("\${cmsch.external:/etc/cmsch/external/}") private val root: String,
-        private val clock: ClockService,
-        private val adminMenuService: AdminMenuService
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val adminMenuService: AdminMenuService
 ) {
 
     private val view = "files"
@@ -58,8 +56,8 @@ class FilesByViewController(
     }
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -82,15 +80,15 @@ class FilesByViewController(
 
     private fun fetchOverview(): List<FilesByViewVirtualEntity> {
         return sequenceOf("profiles", "news", "events", "products", "groups", "achievement")
-                .filter { Files.exists(Path.of(root, it)) }
-                .map { FilesByViewVirtualEntity(it, Files.walk(Path.of(root, it)).count() - 1, "~${Path.of(root, it).fileSize() / 1024} KB") }
+                .filter { Files.exists(Path.of(startupPropertyConfig.external, it)) }
+                .map { FilesByViewVirtualEntity(it, Files.walk(Path.of(startupPropertyConfig.external, it)).count() - 1, "~${Path.of(startupPropertyConfig.external, it).fileSize() / 1024} KB") }
                 .toList()
 
     }
 
     @GetMapping("/view/{id}")
-    fun viewAll(@PathVariable id: String, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun viewAll(@PathVariable id: String, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -113,7 +111,7 @@ class FilesByViewController(
     }
 
     private fun listFilesInView(view: String): List<FileVirtualEntity> {
-        return Files.walk(Path.of(root, view))
+        return Files.walk(Path.of(startupPropertyConfig.external, view))
                 .asSequence()
                 .filter { it.isRegularFile() }
                 .sortedByDescending { it.fileSize() }
@@ -122,8 +120,8 @@ class FilesByViewController(
     }
 
     @GetMapping("/delete/{type}/{id}")
-    fun deleteConfirm(@PathVariable type: String, @PathVariable id: String, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun deleteConfirm(@PathVariable type: String, @PathVariable id: String, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -141,15 +139,15 @@ class FilesByViewController(
     }
 
     @PostMapping("/delete/{type}/{id}")
-    fun delete(@PathVariable type: String, @PathVariable id: String, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun delete(@PathVariable type: String, @PathVariable id: String, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
 
-        Files.deleteIfExists(Path.of(root, type, id))
+        Files.deleteIfExists(Path.of(startupPropertyConfig.external, type, id))
 
         return "redirect:/admin/control/$view/view/$type"
     }

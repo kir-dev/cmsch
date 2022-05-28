@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
@@ -20,9 +20,9 @@ class DebtApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/debts")
-    fun debts(request: HttpServletRequest): DebtsView {
+    fun debts(auth: Authentication): DebtsView {
         return DebtsView(
-            debts = debtsRepository.findAllByOwnerId(request.getUser().id)
+            debts = debtsRepository.findAllByOwnerId(auth.getUser().id)
                 .map { DebtDto(
                     it.product,
                     it.price,

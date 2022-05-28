@@ -1,12 +1,13 @@
 package hu.bme.sch.cmsch.controller
 
+import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import javax.servlet.http.HttpServletRequest
 
 @ConditionalOnProperty(
     prefix = "hu.bme.sch.cmsch.component.load",
@@ -28,9 +29,9 @@ class TestController {
 
     @ResponseBody
     @GetMapping("/control/test-user")
-    fun testUser(request: HttpServletRequest): String {
+    fun testUser(auth: Authentication): String {
         log.info("test user endpoint was fired")
-        return request.getUserOrNull()?.fullName ?: "not logged in"
+        return auth.getUserFromDatabaseOrNull()?.fullName ?: "not logged in"
     }
 
 }

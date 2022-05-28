@@ -7,7 +7,9 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control/debts-of-my-group")
@@ -45,8 +46,8 @@ class DebtsOfMyGroupAdminController(
     }
 
     @GetMapping("")
-    fun debtsOfMyGroup(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun debtsOfMyGroup(model: Model, auth: Authentication): String {
+        val user = auth.getUserFromDatabase()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -61,7 +62,7 @@ class DebtsOfMyGroupAdminController(
         model.addAttribute("view", view)
         model.addAttribute("columns", debtsDescriptor.getColumns())
         model.addAttribute("fields", debtsDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", productService.getAllDebtsByGroup(request.getUser()))
+        model.addAttribute("rows", productService.getAllDebtsByGroup(user))
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_PAYED)
 
@@ -69,8 +70,8 @@ class DebtsOfMyGroupAdminController(
     }
 
     @GetMapping("/payed/{id}")
-    fun setDebtsStatus(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun setDebtsStatus(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -93,17 +94,17 @@ class DebtsOfMyGroupAdminController(
     }
 
     @PostMapping("/payed/{id}")
-    fun payed(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun payed(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUserFromDatabase()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
 
-        // Check group here;
-        // we don't need it case the name of the resolver is stored, and
-        // they will be responsibe to pay the given amount
+        // Check group here: we don't need to!
+        // The name of the resolver is stored, and
+        // they will be responsible to pay the given amount
 
         productService.setTransactionPayed(id, user)
         return "redirect:/admin/control/debts-of-my-group"

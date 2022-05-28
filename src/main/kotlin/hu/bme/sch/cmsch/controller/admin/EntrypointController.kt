@@ -3,10 +3,10 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import javax.servlet.http.HttpServletRequest
 import kotlin.random.Random
 
 val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
@@ -24,8 +24,8 @@ class EntrypointController(
 ) {
 
     @GetMapping("/control/entrypoint")
-    fun entrypoint(model: Model, request: HttpServletRequest): String {
-        val user = request.getUserOrNull() ?:
+    fun entrypoint(model: Model, auth: Authentication): String {
+        val user = auth.getUserOrNull() ?:
             return "redirect:/control/logged-out?error=invalid-permissions"
         if (user.role.value < RoleType.STAFF.value)
             return "redirect:${applicationComponent.siteUrl.getValue()}"

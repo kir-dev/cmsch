@@ -49,6 +49,8 @@ dependencies {
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
     implementation("com.google.zxing:core:3.4.1")
     implementation("com.google.zxing:javase:3.4.1")
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("com.fasterxml.uuid:java-uuid-generator:3.2.0")
 }
 
 tasks.withType<KotlinCompile> {

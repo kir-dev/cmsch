@@ -1,15 +1,16 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
 import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -25,8 +26,7 @@ open class LeaderBoardService(
     private val groups: GroupRepository,
     private val users: UserRepository,
     private val leaderBoardComponent: LeaderBoardComponent,
-    @Value("\${cmsch.achievement.ownership:USER}") private val achievementOwnershipMode: OwnershipType,
-    @Value("\${cmsch.riddle.ownership:USER}") private val riddleOwnershipMode: OwnershipType,
+    private val startupPropertyConfig: StartupPropertyConfig,
     private val achievementSubmissions: Optional<SubmittedAchievementRepository>,
     private val riddleSubmissions: Optional<RiddleMappingRepository>,
     private val riddleComponent: Optional<RiddleComponent>
@@ -67,7 +67,7 @@ open class LeaderBoardService(
         return null
     }
 
-    fun getScoreOfUser(user: UserEntity): Int? {
+    fun getScoreOfUser(user: CmschUser): Int? {
         if (leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return cachedTopListForUsers.find { it.id == user.id }?.totalScore ?: 0
         return null
@@ -88,7 +88,7 @@ open class LeaderBoardService(
     open fun forceRecalculateForGroups() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f
         log.info("Recalculating group top list cache; hint:{}", hintPercentage)
-        val achievements = when (achievementOwnershipMode) {
+        val achievements = when (startupPropertyConfig.achievementOwnershipMode) {
             OwnershipType.GROUP -> {
                 achievementSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.groupName }
@@ -98,7 +98,7 @@ open class LeaderBoardService(
             OwnershipType.USER -> listOf()
         }
 
-        val riddles = when (riddleOwnershipMode) {
+        val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> {
                 riddleSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.ownerGroup }
@@ -133,7 +133,7 @@ open class LeaderBoardService(
     open fun forceRecalculateForUsers() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f
         log.info("Recalculating user top list cache; hint:{}", hintPercentage)
-        val achievements = when (achievementOwnershipMode) {
+        val achievements = when (startupPropertyConfig.achievementOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
                 achievementSubmissions.map { it.findAll() }.orElse(listOf())
@@ -150,7 +150,7 @@ open class LeaderBoardService(
             }
         }
 
-        val riddles = when (riddleOwnershipMode) {
+        val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
                 riddleSubmissions.map { it.findAll() }.orElse(listOf())

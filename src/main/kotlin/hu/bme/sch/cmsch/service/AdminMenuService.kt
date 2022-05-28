@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.service
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.UserEntity
 import org.springframework.stereotype.Service
 import org.springframework.ui.Model
@@ -19,13 +20,13 @@ class AdminMenuService {
         categories[component] = category
     }
 
-    private fun getMenusOfCategory(category: String, user: UserEntity): List<AdminMenuEntry> {
+    private fun getMenusOfCategory(category: String, user: CmschUser): List<AdminMenuEntry> {
         return entries.getOrDefault(category, listOf())
             .filter { it.showPermission.validate(user) }
             .sortedBy { it.priority }
     }
 
-    fun addPartsForMenu(user: UserEntity, model: Model) {
+    fun addPartsForMenu(user: CmschUser, model: Model) {
         model.addAttribute("menu", categories.entries
             .associateWith { getMenusOfCategory(it.key, user) }
             .entries

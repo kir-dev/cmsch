@@ -8,12 +8,12 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
 import org.slf4j.LoggerFactory
+import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 abstract class ComponentApiBase(
     val adminMenuService: AdminMenuService,
@@ -50,8 +50,8 @@ abstract class ComponentApiBase(
     }
 
     @GetMapping("/settings")
-    fun settings(request: HttpServletRequest, model: Model): String {
-        val user = request.getUser()
+    fun settings(auth: Authentication, model: Model): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (!permissionToShow.validate(user)) {
             model.addAttribute("permission", permissionToShow.permissionString)
@@ -68,8 +68,8 @@ abstract class ComponentApiBase(
     }
 
     @PostMapping("/settings")
-    fun update(request: HttpServletRequest, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
-        val user = request.getUser()
+    fun update(auth: Authentication, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
+        val user = auth.getUser()
         if (!permissionToShow.validate(user)) {
             model.addAttribute("permission", permissionToShow.permissionString)
             model.addAttribute("user", user)

@@ -4,11 +4,11 @@ import hu.bme.sch.cmsch.component.ComponentHandlerService
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
@@ -20,8 +20,8 @@ class ApplicationApiController(
 ) {
 
     @GetMapping("/app")
-    fun app(request: HttpServletRequest): ApplicationConfigDto {
-        val role = request.getUserOrNull()?.role ?: RoleType.GUEST
+    fun app(auth: Authentication): ApplicationConfigDto {
+        val role = auth.getUserOrNull()?.role ?: RoleType.GUEST
         return ApplicationConfigDto(
             role,
             menuService.getCachedMenuForRole(role),
