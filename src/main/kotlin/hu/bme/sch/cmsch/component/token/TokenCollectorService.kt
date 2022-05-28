@@ -1,8 +1,10 @@
 package hu.bme.sch.cmsch.component.token
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.UserService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -14,16 +16,18 @@ open class TokenCollectorService(
     private val tokenRepository: TokenRepository,
     private val tokenPropertyRepository: TokenPropertyRepository,
     private val groupRepository: GroupRepository,
+    private val userService: UserService,
     private val clock: ClockService
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun collectToken(userEntity: UserEntity, token: String): Pair<String?, TokenCollectorStatus> {
+    open fun collectToken(user: CmschUser, token: String): Pair<String?, TokenCollectorStatus> {
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
-            if (tokenPropertyRepository.findByToken_TokenAndOwnerUser(token, userEntity).isPresent)
+            if (tokenPropertyRepository.findByToken_TokenAndOwnerUser_Id(token, user.id).isPresent)
                 return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
 
+            val userEntity = userService.getById(user.internalId)
             tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity, clock.getTimeInSeconds()))
             return Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
         }

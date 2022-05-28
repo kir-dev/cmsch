@@ -9,26 +9,21 @@ import java.util.*
 
 @Repository
 @ConditionalOnBean(TokenComponent::class)
+@Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
 interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int> {
 
     override fun findAll(): List<TokenPropertyEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByOwnerUser_Id(owner: Int): List<TokenPropertyEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByToken_Id(token: Int): List<TokenPropertyEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByOwnerUser_IdAndToken_Type(owner: Int, type: String): List<TokenPropertyEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findAllByOwnerGroup_Id(owner: Int): List<TokenPropertyEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
-    fun findByToken_TokenAndOwnerUser(token: String, owner: UserEntity): Optional<TokenPropertyEntity>
+    fun findByToken_TokenAndOwnerUser_Id(token: String, ownerId: Int): Optional<TokenPropertyEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByToken_TokenAndOwnerGroup(token: String, owner: GroupEntity): Optional<TokenPropertyEntity>
 
 }

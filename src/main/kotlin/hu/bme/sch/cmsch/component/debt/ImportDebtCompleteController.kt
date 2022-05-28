@@ -10,12 +10,13 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.ExperimentalPermissions.PERMISSION_EXP_TRANSACTION_IMPORT
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 import kotlin.reflect.KProperty1
 
 @Controller
@@ -52,8 +53,8 @@ class ImportDebtCompleteController(
     }
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -75,8 +76,8 @@ class ImportDebtCompleteController(
     }
 
     @GetMapping("/create")
-    fun create(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun create(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -98,11 +99,12 @@ class ImportDebtCompleteController(
 
     @ResponseBody
     @PostMapping("/create")
-    fun create(@ModelAttribute(binding = false) dto: ImportDebtsCompleteVirtualEntity,
-               model: Model,
-               request: HttpServletRequest
+    fun create(
+        @ModelAttribute(binding = false) dto: ImportDebtsCompleteVirtualEntity,
+        model: Model,
+        auth: Authentication
     ): String {
-        val user = request.getUser()
+        val user = auth.getUserFromDatabase()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("user", user)
             return "403"
@@ -121,7 +123,7 @@ class ImportDebtCompleteController(
                             it.payed = true
                             it.payedAt = clock.getTimeInSeconds()
                             it.finsihed = true
-                            it.log += " autoclose by importer: ${request.getUser().fullName} at ${clock.getTimeInSeconds()};"
+                            it.log += " autoclose by importer: ${user.fullName} at ${clock.getTimeInSeconds()};"
                             transactions.save(it)
                             println("Closed #${it.id}")
                             "${it.id}: closed;"

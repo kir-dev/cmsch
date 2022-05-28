@@ -656,7 +656,7 @@ class TestConfig(
 
     private fun addUsers() {
         val u1 = UserEntity(
-                pekId = UUID.randomUUID().toString(),
+                internalId = UUID.randomUUID().toString(),
                 neptun = "HITMAN",
                 email = "hitman@beme.hu",
                 major = MajorType.EE,
@@ -670,7 +670,7 @@ class TestConfig(
         users.save(u1)
 
         val u2 = UserEntity(
-                pekId = UUID.randomUUID().toString(),
+                internalId = UUID.randomUUID().toString(),
                 neptun = "BATMAN",
                 email = "batman@beme.hu",
                 major = MajorType.IT,
@@ -684,7 +684,7 @@ class TestConfig(
         users.save(u2)
 
         val u3 = UserEntity(
-                pekId = UUID.randomUUID().toString(),
+                internalId = UUID.randomUUID().toString(),
                 neptun = "FITYMA",
                 email = "fityma@beme.hu",
                 major = MajorType.BPROF,

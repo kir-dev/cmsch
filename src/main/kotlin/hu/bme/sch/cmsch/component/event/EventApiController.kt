@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
@@ -20,8 +21,8 @@ class EventApiController(
 
     @JsonView(Preview::class)
     @GetMapping("/events")
-    fun events(request: HttpServletRequest): EventsView {
-        val user = request.getUserOrNull()
+    fun events(auth: Authentication): EventsView {
+        val user = auth.getUserOrNull()
         val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
             .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
 

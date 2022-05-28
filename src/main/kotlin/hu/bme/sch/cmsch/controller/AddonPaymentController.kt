@@ -5,8 +5,8 @@ import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUser
+import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
-import javax.servlet.http.HttpServletRequest
 
 //@Controller
 class AddonPaymentController(
@@ -15,8 +15,8 @@ class AddonPaymentController(
 
     @JsonView(FullDetails::class)
 //    @GetMapping("/pay")
-    fun profile(request: HttpServletRequest, model: Model): String {
-        val user = request.getUser()
+    fun profile(auth: Authentication, model: Model): String {
+        val user = auth.getUser()
 
         model.addAttribute("user", user)
         val debts = debtsRepository.findAllByOwnerId(user.id)

@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.extrapage
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.*
@@ -45,11 +46,11 @@ class ExtraPageController(
     adminMenuIcon = "article"
 ) {
 
-    override fun filterOverview(user: UserEntity, rows: Iterable<ExtraPageEntity>): Iterable<ExtraPageEntity> {
+    override fun filterOverview(user: CmschUser, rows: Iterable<ExtraPageEntity>): Iterable<ExtraPageEntity> {
         return rows.filter { editPermissionCheck(user, it) }
     }
 
-    override fun editPermissionCheck(user: UserEntity, entity: ExtraPageEntity): Boolean {
+    override fun editPermissionCheck(user: CmschUser, entity: ExtraPageEntity): Boolean {
         return user.isAdmin() || entity.permissionToEdit.isBlank() || user.hasPermission(entity.permissionToEdit)
     }
 

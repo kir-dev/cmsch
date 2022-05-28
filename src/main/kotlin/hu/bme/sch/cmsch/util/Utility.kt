@@ -1,17 +1,21 @@
 package hu.bme.sch.cmsch.util
 
-import hu.bme.sch.cmsch.component.login.USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME
+import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
-import org.springframework.beans.factory.annotation.Value
+import hu.bme.sch.cmsch.service.UserService
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 @Component
-class DI {
+class DI(
+    val userService: UserService,
+    val startupPropertyConfig: StartupPropertyConfig
+) {
     companion object {
         lateinit var instance: DI
     }
@@ -19,19 +23,16 @@ class DI {
     init {
         instance = this
     }
-
-    @Value("\${cmsch.external:/etc/cmsch/external}")
-    lateinit var uploadPath: String
 }
 
 fun MultipartFile.uploadFile(target: String): String? {
     if (this.isEmpty || this.contentType == null)
         return null
 
-    var path = if (!DI.instance.uploadPath.startsWith("/")) {
-        System.getProperty("user.dir") + "/" + DI.instance.uploadPath
+    var path = if (!DI.instance.startupPropertyConfig.external.startsWith("/")) {
+        System.getProperty("user.dir") + "/" + DI.instance.startupPropertyConfig.external
     } else {
-        DI.instance.uploadPath
+        DI.instance.startupPropertyConfig.external
     }
     val dir = File(path, target)
     dir.mkdirs()
@@ -48,10 +49,18 @@ fun MultipartFile.uploadFile(target: String): String? {
     return fileName
 }
 
-fun HttpServletRequest.getUser(): UserEntity {
-    return this.getSession(true).getAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME) as UserEntity
+fun Authentication.getUser(): CmschUserPrincipal {
+    return this.principal as CmschUserPrincipal
 }
 
-fun HttpServletRequest.getUserOrNull(): UserEntity? {
-    return this.getSession(true).getAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME) as UserEntity?
+fun Authentication?.getUserOrNull(): CmschUserPrincipal? {
+    return if (this == null) null else (this.principal as CmschUserPrincipal?)
+}
+
+fun Authentication.getUserFromDatabase(): UserEntity {
+    return DI.instance.userService.getById(this.name)
+}
+
+fun Authentication?.getUserFromDatabaseOrNull(): UserEntity? {
+    return if (this == null) null else DI.instance.userService.findById(this.name).orElse(null)
 }

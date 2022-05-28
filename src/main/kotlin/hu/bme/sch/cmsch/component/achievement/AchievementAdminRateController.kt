@@ -9,11 +9,11 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_RATE_ACHIEVEMENTS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 import kotlin.reflect.KMutableProperty1
 
 const val CONTROL_MODE_RATE = "rate"
@@ -53,8 +53,8 @@ class AchievementAdminRateController(
     }
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -93,8 +93,8 @@ class AchievementAdminRateController(
     }
 
     @GetMapping("/view/{id}")
-    fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun viewAll(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -116,8 +116,8 @@ class AchievementAdminRateController(
     }
 
     @GetMapping("/rate/{id}")
-    fun rate(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun rate(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -139,8 +139,8 @@ class AchievementAdminRateController(
     }
 
     @GetMapping("/grade/{id}")
-    fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun edit(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -175,9 +175,9 @@ class AchievementAdminRateController(
     fun edit(@PathVariable id: Int,
              @ModelAttribute(binding = false) dto: SubmittedAchievementEntity,
              model: Model,
-             request: HttpServletRequest
+             auth: Authentication
     ): String {
-        val user = request.getUser()
+        val user = auth.getUser()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)

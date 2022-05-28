@@ -25,6 +25,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -35,7 +36,6 @@ import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Controller
@@ -76,8 +76,8 @@ class TokenAdminTokensByUsersOfGroupsController(
     }
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -111,8 +111,8 @@ class TokenAdminTokensByUsersOfGroupsController(
 
     @ResponseBody
     @GetMapping(value = ["/pdf/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun generatePdf(@PathVariable id: Int, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
-        if (permissionControl.validate(request.getUser()).not()) {
+    fun generatePdf(@PathVariable id: Int, auth: Authentication, response: HttpServletResponse): ResponseEntity<ByteArray> {
+        if (permissionControl.validate(auth.getUser()).not()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
 

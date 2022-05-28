@@ -7,12 +7,12 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_TRACK_ONE_GROUP
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control/track-group")
@@ -41,8 +41,8 @@ class TrackOneGroupController(
     }
 
     @GetMapping("")
-    fun trackGroup(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun trackGroup(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)

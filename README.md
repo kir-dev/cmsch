@@ -85,7 +85,7 @@ and fill the file with these configurations (using your credentials):
 ```properties
 authsch.client-identifier=<insert the shorter key>
 authsch.client-key=<insert the long key>
-cmsch.sysadmins=<your pekId>
+hu.bme.sch.cmsch.startup.sysadmins=<your pekId>
 cmsch.website-default-url=http://<your ip>:8080/
 logging.level.web=DEBUG
 ```

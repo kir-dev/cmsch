@@ -9,12 +9,12 @@ import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_LEADERBOAR
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_LEADERBOARD
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control")
@@ -55,8 +55,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/user-toplist")
-    fun userToplist(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun userToplist(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControlShow.validate(user).not()) {
             model.addAttribute("permission", permissionControlShow.permissionString)
@@ -81,8 +81,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/user-toplist/refresh")
-    fun refreshUserTopList(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun refreshUserTopList(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControlControl.validate(user).not()) {
             model.addAttribute("permission", permissionControlControl.permissionString)
             model.addAttribute("user", user)
@@ -94,8 +94,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/user-toplist/refresh-enable")
-    fun enableRefreshUserTopList(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun enableRefreshUserTopList(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControlControl.validate(user).not()) {
             model.addAttribute("permission", permissionControlControl.permissionString)
             model.addAttribute("user", user)
@@ -107,8 +107,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/user-toplist/refresh-disable")
-    fun disableRefreshUserTopList(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun disableRefreshUserTopList(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControlControl.validate(user).not()) {
             model.addAttribute("permission", permissionControlControl.permissionString)
             model.addAttribute("user", user)
@@ -120,8 +120,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/group-toplist")
-    fun groupToplist(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun groupToplist(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControlShow.validate(user).not()) {
             model.addAttribute("permission", permissionControlShow.permissionString)
@@ -137,7 +137,7 @@ class LeaderBoardShowAdminController(
         model.addAttribute("columns", groupTopListDescriptor.getColumns())
         model.addAttribute("fields", groupTopListDescriptor.getColumnDefinitions())
         model.addAttribute("rows", leaderBoardService.getBoardAnywaysForGroups())
-        model.addAttribute("user", request.getUser())
+        model.addAttribute("user", user)
         model.addAttribute("controlMode", if (permissionControlShow.validate(user)) CONTROL_MODE_TOPLIST else CONTROL_MODE_NONE)
         model.addAttribute("leaderboardEnabled", leaderBoardComponent.leaderboardEnabled.isValueTrue())
         model.addAttribute("leaderboardUpdates", !leaderBoardComponent.leaderboardFrozen.isValueTrue())
@@ -146,8 +146,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/group-toplist/refresh")
-    fun refreshGroupTopList(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun refreshGroupTopList(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControlControl.validate(user).not()) {
             model.addAttribute("permission", permissionControlControl.permissionString)
             model.addAttribute("user", user)
@@ -159,8 +159,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/group-toplist/refresh-enable")
-    fun enableRefreshGroupTopList(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun enableRefreshGroupTopList(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControlControl.validate(user).not()) {
             model.addAttribute("permission", permissionControlControl.permissionString)
             model.addAttribute("user", user)
@@ -172,8 +172,8 @@ class LeaderBoardShowAdminController(
     }
 
     @GetMapping("/group-toplist/refresh-disable")
-    fun disableRefreshGroupTopList(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun disableRefreshGroupTopList(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         if (permissionControlControl.validate(user).not()) {
             model.addAttribute("permission", permissionControlControl.permissionString)
             model.addAttribute("user", user)

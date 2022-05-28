@@ -1,12 +1,14 @@
 package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.getUserOrNull
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import java.net.URLEncoder
@@ -21,56 +23,56 @@ const val SESSION_TOKEN_COLLECTOR_ATTRIBUTE = "TOKEN_COLLECTOR_ATTRIBUTE"
 @ConditionalOnBean(TokenComponent::class)
 class TokenApiController(
     private val tokens: TokenCollectorService,
-    @Value("\${cmsch.token.ownership:USER}") private val tokenOwnershipMode: OwnershipType
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     @ResponseBody
     @JsonView(FullDetails::class)
     @PostMapping("/token/{token}")
-    fun submitToken(@PathVariable token: String, request: HttpServletRequest): TokenSubmittedView {
-        return when (tokenOwnershipMode) {
+    fun submitToken(@PathVariable token: String, auth: Authentication): TokenSubmittedView {
+        return when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> {
-                val (title, status) = tokens.collectToken(request.getUser(), token)
+                val (title, status) = tokens.collectToken(auth.getUser(), token)
                 TokenSubmittedView(status, title)
             }
             OwnershipType.GROUP -> {
-                val (title, status) = tokens.collectTokenForGroup(request.getUser(), token)
+                val (title, status) = tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
                 TokenSubmittedView(status, title)
             }
         }
     }
 
     @GetMapping("/token-after-login")
-    fun submitTokenAfterLogin(request: HttpServletRequest): String {
+    fun submitTokenAfterLogin(request: HttpServletRequest, auth: Authentication): String {
         val token = request.getSession(true).getAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE)?.toString()
         request.getSession(true).setAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE, null)
         return if (token == null) {
             "redirect:/"
         } else {
-            return collectToken(request, token)
+            return collectToken(auth, token)
         }
     }
 
     @GetMapping("/qr/{token}")
-    fun readQrManually(@PathVariable token: String, request: HttpServletRequest): String {
-        val user = request.getUserOrNull()
+    fun readQrManually(@PathVariable token: String, request: HttpServletRequest, auth: Authentication): String {
+        val user = auth.getUserOrNull()
         return if (user == null) {
             request.getSession(true).setAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE, token)
             "redirect:/control/login"
         } else {
-            collectToken(request, token)
+            collectToken(auth, token)
         }
     }
 
-    private fun collectToken(request: HttpServletRequest, token: String) =
-        when (tokenOwnershipMode) {
+    private fun collectToken(auth: Authentication, token: String) =
+        when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> {
-                val (title, status) = tokens.collectToken(request.getUser(), token)
+                val (title, status) = tokens.collectToken(auth.getUser(), token)
                 "redirect:/qr-scanned?status=${status.name}" +
                         "&title=${URLEncoder.encode(title ?: "", StandardCharsets.UTF_8.toString())}"
             }
             OwnershipType.GROUP -> {
-                val (title, status) = tokens.collectTokenForGroup(request.getUser(), token)
+                val (title, status) = tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
                 "redirect:/qr-scanned?status=${status.name}" +
                         "&title=${URLEncoder.encode(title ?: "", StandardCharsets.UTF_8.toString())}"
             }

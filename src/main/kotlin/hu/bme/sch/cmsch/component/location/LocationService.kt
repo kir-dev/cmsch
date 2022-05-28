@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.component.location
 
-import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.ClockService
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
@@ -13,14 +13,14 @@ import java.util.concurrent.ConcurrentHashMap
 class LocationService(
     private val clock: ClockService,
     private val userRepository: UserRepository,
-    @Value("\${cmsch.profile.qr-prefix:KIRDEV_}") val prefix: String
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     private val tokenToLocationMapping = ConcurrentHashMap<String, LocationEntity>()
 
     fun pushLocation(locationDto: LocationDto): LocationResponse {
         if (!tokenToLocationMapping.containsKey(locationDto.token)) {
-            val user = userRepository.findByCmschId(prefix + locationDto.token)
+            val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + locationDto.token)
             if (user.isPresent) {
                 if (user.get().role.value >= RoleType.STAFF.value) {
                     tokenToLocationMapping[locationDto.token] =
@@ -63,7 +63,7 @@ class LocationService(
                 .asSequence()
                 .forEach { token ->
                     tokenToLocationMapping[token]?.let { it ->
-                        val user = userRepository.findByCmschId(prefix + token)
+                        val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
                         it.userId = user.get().id
                         it.userName = user.get().fullName
                         it.alias = user.get().alias

@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.config
 
+import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.gerviba.authsch.AuthSchAPI
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -13,7 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @EnableWebSecurity
 @Configuration
-open class SecurityConfig : WebSecurityConfigurerAdapter() {
+open class SecurityConfig(
+    private val jwtTokenProvider: JwtTokenProvider
+) : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
@@ -41,11 +45,12 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
 
                 .and().formLogin().disable()
                 .exceptionHandling().accessDeniedPage("/403")
+                .and().apply(JwtConfigurer(jwtTokenProvider))
         http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**")
     }
 
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.eraseCredentials(true)
+    override fun configure(auth: AuthenticationManagerBuilder) {
+        auth.eraseCredentials(true)
     }
 
     @Bean

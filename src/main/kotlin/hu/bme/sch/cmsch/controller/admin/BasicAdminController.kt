@@ -1,17 +1,17 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuCategory
+import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 const val CONTROL_MODE_TOPLIST = "toplist"
 const val CONTROL_MODE_PAYED = "payed"
@@ -59,8 +59,8 @@ class BasicAdminController(
     }
 
     @GetMapping("/basics")
-    fun dashboard(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun dashboard(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("user", user)
         model.addAttribute("motd", applicationComponent.motd.getValue())

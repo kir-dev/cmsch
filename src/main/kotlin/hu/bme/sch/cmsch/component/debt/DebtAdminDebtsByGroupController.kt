@@ -12,12 +12,13 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 import kotlin.reflect.KMutableProperty1
 
 @Controller
@@ -56,8 +57,8 @@ class DebtAdminDebtsByGroupController(
     }
 
     @GetMapping("")
-    fun view(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun view(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -95,8 +96,8 @@ class DebtAdminDebtsByGroupController(
     }
 
     @GetMapping("/view/{id}")
-    fun viewAll(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun viewAll(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -118,8 +119,8 @@ class DebtAdminDebtsByGroupController(
     }
 
     @GetMapping("/edit/{id}")
-    fun edit(@PathVariable id: Int, model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun edit(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
@@ -149,9 +150,9 @@ class DebtAdminDebtsByGroupController(
     fun edit(@PathVariable id: Int,
              @ModelAttribute(binding = false) dto: SoldProductEntity,
              model: Model,
-             request: HttpServletRequest
+             auth: Authentication
     ): String {
-        val user = request.getUser()
+        val user = auth.getUserFromDatabase()
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)

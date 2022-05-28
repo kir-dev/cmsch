@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.achievement
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.ClockService
@@ -62,7 +63,7 @@ open class AchievementsService(
     }
 
     @Transactional(readOnly = true)
-    open fun getAllAchievementsForUser(user: UserEntity): List<AchievementEntityWrapperDto> {
+    open fun getAllAchievementsForUser(user: CmschUser): List<AchievementEntityWrapperDto> {
         return achievements.findAllByVisibleTrue()
             .map { findSubmissionStatusForUser(it, user) }
     }
@@ -78,7 +79,7 @@ open class AchievementsService(
         return findSubmission(submission, achievementEntity)
     }
 
-    private fun findSubmissionStatusForUser(achievementEntity: AchievementEntity, user: UserEntity): AchievementEntityWrapperDto {
+    private fun findSubmissionStatusForUser(achievementEntity: AchievementEntity, user: CmschUser): AchievementEntityWrapperDto {
         val submission = submitted.findByAchievement_IdAndUserId(achievementEntity.id, user.id)
         return findSubmission(submission, achievementEntity)
     }
@@ -154,45 +155,50 @@ open class AchievementsService(
         val groupName = if (groupId != null) user.group?.name else null
         val userName = if (userId != null) user.fullName else null
 
-        if (achievement.type == AchievementType.TEXT) {
-            if (answer.textAnswer.isBlank())
-                return AchievementSubmissionStatus.EMPTY_ANSWER
+        when (achievement.type) {
+            AchievementType.TEXT -> {
+                if (answer.textAnswer.isBlank())
+                    return AchievementSubmissionStatus.EMPTY_ANSWER
 
-            submitted.save(SubmittedAchievementEntity(
-                0, achievement, groupId, groupName ?: "",
-                userId, userName ?: "",
-                achievement.categoryId, answer.textAnswer, "",
-                "", approved = false, rejected = false, score = 0
-            ))
-            return AchievementSubmissionStatus.OK
+                submitted.save(SubmittedAchievementEntity(
+                    0, achievement, groupId, groupName ?: "",
+                    userId, userName ?: "",
+                    achievement.categoryId, answer.textAnswer, "",
+                    "", approved = false, rejected = false, score = 0
+                ))
+                return AchievementSubmissionStatus.OK
 
-        } else if (achievement.type == AchievementType.IMAGE) {
-            if (file == null || fileNameInvalid(file))
-                return AchievementSubmissionStatus.INVALID_IMAGE
+            }
+            AchievementType.IMAGE -> {
+                if (file == null || fileNameInvalid(file))
+                    return AchievementSubmissionStatus.INVALID_IMAGE
 
-            val fileName = file.uploadFile(target)
+                val fileName = file.uploadFile(target)
 
-            submitted.save(SubmittedAchievementEntity(
-                0, achievement, groupId, groupName ?: "",
-                 userId, userName ?: "",
-                achievement.categoryId, "", "$target/$fileName",
-                "", approved = false, rejected = false, score = 0
-            ))
-            return AchievementSubmissionStatus.OK
+                submitted.save(SubmittedAchievementEntity(
+                    0, achievement, groupId, groupName ?: "",
+                    userId, userName ?: "",
+                    achievement.categoryId, "", "$target/$fileName",
+                    "", approved = false, rejected = false, score = 0
+                ))
+                return AchievementSubmissionStatus.OK
 
-        } else if (achievement.type == AchievementType.BOTH) {
-            val fileName = file?.uploadFile(target) ?: ""
+            }
+            AchievementType.BOTH -> {
+                val fileName = file?.uploadFile(target) ?: ""
 
-            submitted.save(SubmittedAchievementEntity(
-                0, achievement, groupId, groupName ?: "",
-                userId, userName ?: "",
-                achievement.categoryId, answer.textAnswer, "$target/$fileName",
-                "", approved = false, rejected = false, score = 0
-            ))
-            return AchievementSubmissionStatus.OK
+                submitted.save(SubmittedAchievementEntity(
+                    0, achievement, groupId, groupName ?: "",
+                    userId, userName ?: "",
+                    achievement.categoryId, answer.textAnswer, "$target/$fileName",
+                    "", approved = false, rejected = false, score = 0
+                ))
+                return AchievementSubmissionStatus.OK
 
-        } else {
-            throw IllegalStateException("Invalid achievement type: " + achievement.type)
+            }
+            else -> {
+                throw IllegalStateException("Invalid achievement type: " + achievement.type)
+            }
         }
     }
 
@@ -203,37 +209,42 @@ open class AchievementsService(
         submission: SubmittedAchievementEntity
     ): AchievementSubmissionStatus {
 
-        if (achievement.type == AchievementType.TEXT) {
-            if (answer.textAnswer.isBlank())
-                return AchievementSubmissionStatus.EMPTY_ANSWER
+        when (achievement.type) {
+            AchievementType.TEXT -> {
+                if (answer.textAnswer.isBlank())
+                    return AchievementSubmissionStatus.EMPTY_ANSWER
 
-            submission.textAnswer = answer.textAnswer
-            submission.rejected = false
-            submitted.save(submission)
-            return AchievementSubmissionStatus.OK
+                submission.textAnswer = answer.textAnswer
+                submission.rejected = false
+                submitted.save(submission)
+                return AchievementSubmissionStatus.OK
 
-        } else if (achievement.type == AchievementType.IMAGE) {
-            if (file == null || fileNameInvalid(file))
-                return AchievementSubmissionStatus.INVALID_IMAGE
-            val fileName = file.uploadFile(target)
-
-            submission.imageUrlAnswer = "$target/$fileName"
-            submission.rejected = false
-            submitted.save(submission)
-            return AchievementSubmissionStatus.OK
-
-        } else if (achievement.type == AchievementType.BOTH) {
-            if (file != null && !fileNameInvalid(file)) {
-                val fileName = file.uploadFile(target)
-                submission.imageUrlAnswer = "$target/$fileName"
             }
-            submission.textAnswer = answer.textAnswer
-            submission.rejected = false
-            submitted.save(submission)
-            return AchievementSubmissionStatus.OK
+            AchievementType.IMAGE -> {
+                if (file == null || fileNameInvalid(file))
+                    return AchievementSubmissionStatus.INVALID_IMAGE
+                val fileName = file.uploadFile(target)
 
-        } else {
-            throw IllegalStateException("Invalid achievement type: " + achievement.type)
+                submission.imageUrlAnswer = "$target/$fileName"
+                submission.rejected = false
+                submitted.save(submission)
+                return AchievementSubmissionStatus.OK
+
+            }
+            AchievementType.BOTH -> {
+                if (file != null && !fileNameInvalid(file)) {
+                    val fileName = file.uploadFile(target)
+                    submission.imageUrlAnswer = "$target/$fileName"
+                }
+                submission.textAnswer = answer.textAnswer
+                submission.rejected = false
+                submitted.save(submission)
+                return AchievementSubmissionStatus.OK
+
+            }
+            else -> {
+                throw IllegalStateException("Invalid achievement type: " + achievement.type)
+            }
         }
     }
 

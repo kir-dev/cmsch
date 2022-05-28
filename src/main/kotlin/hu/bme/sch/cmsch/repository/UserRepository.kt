@@ -7,8 +7,8 @@ import java.util.*
 
 @Repository
 interface UserRepository : CrudRepository<UserEntity, Int> {
-    fun findByPekId(pekId: String): Optional<UserEntity>
-    fun existsByPekId(pekId: String): Boolean
+    fun findByInternalId(internalId: String): Optional<UserEntity>
+    fun existsByInternalId(internalId: String): Boolean
     fun findByCmschId(cmschId: String): Optional<UserEntity>
     fun findByNeptun(neptun: String): Optional<UserEntity>
     fun findAllByGroupName(groupName: String): List<UserEntity>

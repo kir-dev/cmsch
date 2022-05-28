@@ -6,13 +6,14 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/control/my-debts")
@@ -42,8 +43,8 @@ class DebtsOfUserAdminController(
     }
 
     @GetMapping("")
-    fun myDebts(model: Model, request: HttpServletRequest): String {
-        val user = request.getUser()
+    fun myDebts(model: Model, auth: Authentication): String {
+        val user = auth.getUserFromDatabase()
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", "Saját tartozásaim")

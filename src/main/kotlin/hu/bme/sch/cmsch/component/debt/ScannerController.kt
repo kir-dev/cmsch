@@ -1,26 +1,27 @@
 package hu.bme.sch.cmsch.component.debt
 
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.CmschIdBuyRequest
 import hu.bme.sch.cmsch.dto.NeptunBuyRequest
 import hu.bme.sch.cmsch.dto.ResolveRequest
-import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
+import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import javax.servlet.http.HttpServletRequest
 
 @Controller
 @RequestMapping("/admin/sell")
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 @ConditionalOnBean(DebtComponent::class)
 class ScannerController(
-    val userService: UserService,
-    val productService: ProductService,
-    val profileService: UserProfileGeneratorService
+    private val userService: UserService,
+    private val productService: ProductService,
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -31,7 +32,7 @@ class ScannerController(
         model.addAttribute("itemName", product.map { it.name }.orElse("Hibás termék azonosító"))
         model.addAttribute("itemPrice", "${product.map { it.price }.orElse(0)} JMF")
         model.addAttribute("itemId", id)
-        model.addAttribute("prefix", profileService.prefix)
+        model.addAttribute("prefix", startupPropertyConfig.profileQrPrefix)
         return "scanner"
     }
 
@@ -48,9 +49,9 @@ class ScannerController(
     @PostMapping("/buy-neptun")
     fun buyNeptun(
         @RequestBody buyRequest: NeptunBuyRequest,
-        request: HttpServletRequest
+        auth: Authentication
     ): SellStatus {
-        val user = request.getUserOrNull() ?: return SellStatus.INVALID_PERMISSIONS
+        val user = auth.getUserFromDatabaseOrNull() ?: return SellStatus.INVALID_PERMISSIONS
         log.info("Selling ${buyRequest.productId} to ${buyRequest.neptun} by ${user.fullName}")
         return productService.sellProductByNeptun(buyRequest.productId, user, buyRequest.neptun.uppercase())
     }
@@ -59,9 +60,9 @@ class ScannerController(
     @PostMapping("/buy-cmschid")
     fun buyNeptun(
         @RequestBody buyRequest: CmschIdBuyRequest,
-        request: HttpServletRequest
+        auth: Authentication
     ): SellStatus {
-        val user = request.getUserOrNull() ?: return SellStatus.INVALID_PERMISSIONS
+        val user = auth.getUserFromDatabaseOrNull() ?: return SellStatus.INVALID_PERMISSIONS
         log.info("Selling ${buyRequest.productId} to ${buyRequest.cmschId} by ${user.fullName}")
         return productService.sellProductByCmschId(buyRequest.productId, user, buyRequest.cmschId)
     }

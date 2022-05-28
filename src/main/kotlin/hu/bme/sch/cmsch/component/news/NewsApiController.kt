@@ -5,11 +5,11 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
@@ -21,8 +21,8 @@ class NewsApiController(
 
     @JsonView(Preview::class)
     @GetMapping("/news")
-    fun news(request: HttpServletRequest): NewsView {
-        val user = request.getUserOrNull()
+    fun news(auth: Authentication): NewsView {
+        val user = auth.getUserOrNull()
         return NewsView(
             news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
