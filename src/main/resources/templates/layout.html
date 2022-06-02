@@ -9,7 +9,6 @@
     <title>CMSch Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../static/style.css" th:href="@{/style.css}">
     <meta name="theme-color" content="#444444">
     <meta name="msapplication-navbutton-color" content="#444444"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="#444444"/>
@@ -21,6 +20,9 @@
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="../static/js/admin-script.js" th:src="@{/js/admin-script.js}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <link rel="stylesheet" href="../static/style.css" th:href="@{/style.css}">
 </head>
 <body>
     <div class="content">
@@ -40,6 +42,13 @@
                         <a href="#" th:each="entry : ${category.value}" th:href="|${entry.target}|"><span class="material-icons fix-icons" th:text="${entry.icon}">home</span> <ins th:remove="tag" th:text="${entry.title}">Kezdő menü</ins></a>
                     </div>
                 </object>
+                <script th:inline="javascript">
+                    const count = /*[[${menu.size()}]]*/ 0;
+                    for (let i = 0; i < count; i++) {
+                        if (localStorage.getItem(`menu${i}`) === 'false')
+                            toggleCollapse(i);
+                    }
+                </script>
 
                 <div class="separate"></div>
 

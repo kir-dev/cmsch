@@ -179,6 +179,26 @@
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
                             </div>
 
+                            <div th:if="${input.second.type == 'markdown'}" class="field-group">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <div style="clear: both"></div>
+                                <textarea
+                                        th:name="${input.first.name}"
+                                        th:id="|input${iter.index}|"
+                                        th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}">
+                                </textarea>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <script th:inline="javascript">
+                                    var index = /*[[${iter.index}]]*/ 0;
+                                    var editor = new SimpleMDE({
+                                        element: document.getElementById(`input${index}`),
+                                        spellChecker: false
+                                    });
+                                </script>
+                            </div>
+
                             <div th:if="${input.second.type == 'file'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">

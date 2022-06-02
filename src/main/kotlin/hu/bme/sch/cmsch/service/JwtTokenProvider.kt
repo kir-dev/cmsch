@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
+const val JWT_CLAIM_PERMISSIONS = "permissions"
+const val JWT_CLAIM_ROLE = "role"
+const val JWT_CLAIM_USERID = "userId"
 
 @Service
 class JwtTokenProvider(
@@ -27,10 +30,9 @@ class JwtTokenProvider(
 
     fun createToken(userId: Int, internalId: String, role: RoleType, permissions: List<String>): String {
         val claims: Claims = Jwts.claims().setSubject(internalId)
-        claims["role"] = role.name
-        claims["internalId"] = internalId
-        claims["permissions"] = permissions
-        claims["userId"] = userId.toString()
+        claims[JWT_CLAIM_ROLE] = role.name
+        claims[JWT_CLAIM_PERMISSIONS] = permissions
+        claims[JWT_CLAIM_USERID] = userId.toString()
 
         val now = Date()
         val validity = Date(now.time + startupPropertyConfig.sessionValidityInMilliseconds)
@@ -45,11 +47,11 @@ class JwtTokenProvider(
     @Throws(NoSuchElementException::class)
     fun getAuthentication(token: String): Authentication {
         val parsed = parseToken(token)
-        val permissions = parsed["permissions"]!!
-        val role = RoleType.valueOf(parsed["role"]?.toString() ?: RoleType.GUEST.name)
+        val permissions = parsed[JWT_CLAIM_PERMISSIONS]!!
+        val role = RoleType.valueOf(parsed[JWT_CLAIM_ROLE]?.toString() ?: RoleType.GUEST.name)
         return UsernamePasswordAuthenticationToken(
             CmschUserPrincipal(
-                id = parsed["userId"]?.toString()?.toInt() ?: 0,
+                id = parsed[JWT_CLAIM_USERID]?.toString()?.toInt() ?: 0,
                 internalId = parsed.subject,
                 role = role,
                 permissions = if (permissions is List<*>) (permissions as List<String>) else listOf()
