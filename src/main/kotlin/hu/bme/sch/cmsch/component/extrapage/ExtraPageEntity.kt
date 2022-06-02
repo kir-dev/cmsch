@@ -39,7 +39,7 @@ data class ExtraPageEntity(
     @Lob
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_WYSIWYG, order = 3, label = "Az oldal tartalma")
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Az oldal tartalma")
     @property:GenerateOverview(visible = false)
     var content: String = "",
 

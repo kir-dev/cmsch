@@ -31,18 +31,9 @@ data class NewsEntity(
         var title: String = "",
 
         @Lob
-        @JsonView(value = [ Edit::class, FullDetails::class ])
-        @Column(nullable = false)
-        @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Hír szövege",
-                note = "Ez egyelőre nincs használva")
-        @property:GenerateOverview(visible = false)
-        @property:ImportFormat(ignore = false, columnId = 1)
-        var content: String = "",
-
-        @Lob
         @JsonView(value = [ Edit::class, Preview::class ])
         @Column(nullable = false)
-        @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 2, label = "Rövid összefoglaló",
+        @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 2, label = "Rövid összefoglaló",
                 note = "Ez a szöveg fog a főoldalon megjelenni")
         @property:GenerateOverview(visible = false)
         @property:ImportFormat(ignore = false, columnId = 2)

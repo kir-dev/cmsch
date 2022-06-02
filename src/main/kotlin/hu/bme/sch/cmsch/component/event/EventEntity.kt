@@ -77,7 +77,7 @@ data class EventEntity(
     @Lob
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 9, label = "Hosszú leírás")
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 9, label = "Hosszú leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7)
     var description: String = "",
