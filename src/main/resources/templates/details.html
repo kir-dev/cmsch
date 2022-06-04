@@ -286,6 +286,23 @@
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
                             </div>
 
+                            <div th:if="${input.second.type == 'image-preview' && editMode}" class="field-group">
+                                <label th:text="${input.second.label}">
+                                </label>
+                                <div style="clear: both"></div>
+                                <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">
+                                    <a href="#"
+                                       target="_blank"
+                                       th:href="|@{/cdn/}${input.first.get(data)}|"
+                                       th:text="|${input.first.get(data)}|">
+                                    </a>
+                                </object>
+                                <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
+                                    Nincs fájl feltöltve
+                                </p>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
+
                             <object th:if="${input.second.type == 'permissions'}" th:remove="tag">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">

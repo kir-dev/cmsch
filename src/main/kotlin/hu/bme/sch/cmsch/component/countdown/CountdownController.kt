@@ -4,8 +4,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 
-@ConditionalOnProperty(prefix = "cmsch.component", name = ["countdown"], havingValue = "true", matchIfMissing = false)
 @Controller
+@ConditionalOnProperty(
+    prefix = "hu.bme.sch.cmsch.component.load",
+    name = ["countdown"],
+    havingValue = "true",
+    matchIfMissing = false
+)
 class CountdownController {
 
     @GetMapping("/countdown")
