@@ -170,7 +170,7 @@ open class AchievementsService(
 
             }
             AchievementType.IMAGE -> {
-                if (file == null || fileNameInvalid(file))
+                if (file == null || imageFileNameInvalid(file))
                     return AchievementSubmissionStatus.INVALID_IMAGE
 
                 val fileName = file.uploadFile(target)
@@ -178,8 +178,8 @@ open class AchievementsService(
                 submitted.save(SubmittedAchievementEntity(
                     0, achievement, groupId, groupName ?: "",
                     userId, userName ?: "",
-                    achievement.categoryId, "", "$target/$fileName",
-                    "", approved = false, rejected = false, score = 0
+                    achievement.categoryId, "", imageUrlAnswer = "$target/$fileName",
+                    response = "", approved = false, rejected = false, score = 0
                 ))
                 return AchievementSubmissionStatus.OK
 
@@ -190,11 +190,25 @@ open class AchievementsService(
                 submitted.save(SubmittedAchievementEntity(
                     0, achievement, groupId, groupName ?: "",
                     userId, userName ?: "",
-                    achievement.categoryId, answer.textAnswer, "$target/$fileName",
-                    "", approved = false, rejected = false, score = 0
+                    achievement.categoryId, answer.textAnswer, imageUrlAnswer = "$target/$fileName",
+                    response = "", approved = false, rejected = false, score = 0
                 ))
                 return AchievementSubmissionStatus.OK
 
+            }
+            AchievementType.ONLY_PDF -> {
+                if (file == null || pdfFileNameInvalid(file))
+                    return AchievementSubmissionStatus.INVALID_PDF
+
+                val fileName = file.uploadFile(target)
+
+                submitted.save(SubmittedAchievementEntity(
+                    0, achievement, groupId, groupName ?: "",
+                    userId, userName ?: "",
+                    achievement.categoryId, "", fileUrlAnswer = "$target/$fileName",
+                    response = "", approved = false, rejected = false, score = 0
+                ))
+                return AchievementSubmissionStatus.OK
             }
             else -> {
                 throw IllegalStateException("Invalid achievement type: " + achievement.type)
@@ -221,7 +235,7 @@ open class AchievementsService(
 
             }
             AchievementType.IMAGE -> {
-                if (file == null || fileNameInvalid(file))
+                if (file == null || imageFileNameInvalid(file))
                     return AchievementSubmissionStatus.INVALID_IMAGE
                 val fileName = file.uploadFile(target)
 
@@ -232,11 +246,22 @@ open class AchievementsService(
 
             }
             AchievementType.BOTH -> {
-                if (file != null && !fileNameInvalid(file)) {
+                if (file != null && !imageFileNameInvalid(file)) {
                     val fileName = file.uploadFile(target)
                     submission.imageUrlAnswer = "$target/$fileName"
                 }
                 submission.textAnswer = answer.textAnswer
+                submission.rejected = false
+                submitted.save(submission)
+                return AchievementSubmissionStatus.OK
+
+            }
+            AchievementType.ONLY_PDF -> {
+                if (file == null || pdfFileNameInvalid(file))
+                    return AchievementSubmissionStatus.INVALID_PDF
+                val fileName = file.uploadFile(target)
+
+                submission.fileUrlAnswer = "$target/$fileName"
                 submission.rejected = false
                 submitted.save(submission)
                 return AchievementSubmissionStatus.OK
@@ -248,13 +273,17 @@ open class AchievementsService(
         }
     }
 
-    private fun fileNameInvalid(file: MultipartFile): Boolean {
+    private fun imageFileNameInvalid(file: MultipartFile): Boolean {
         return file.originalFilename == null || (
                 !file.originalFilename!!.lowercase().endsWith(".png")
                         && !file.originalFilename!!.lowercase().endsWith(".jpg")
                         && !file.originalFilename!!.lowercase().endsWith(".jpeg")
                         && !file.originalFilename!!.lowercase().endsWith(".gif")
                 )
+    }
+
+    private fun pdfFileNameInvalid(file: MultipartFile): Boolean {
+        return file.originalFilename == null || (!file.originalFilename!!.lowercase().endsWith(".pdf"))
     }
 
     @Transactional(readOnly = true)

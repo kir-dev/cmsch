@@ -564,10 +564,11 @@ class TestConfig(
                 2,
                 "Ezt adtuk be xd",
                 "",
+                "",
                 "Hát kár volt bazdmeg",
-                false,
-                true,
-                0
+                approved = false,
+                rejected = true,
+                score = 0
         )
         )
 
@@ -582,10 +583,11 @@ class TestConfig(
                 1,
                 "Szia Lajos!",
                 "",
+                "",
                 "Szia Bazdmeg!",
-                true,
-                false,
-                20
+                approved = true,
+                rejected = false,
+                score = 20
         )
         )
 
@@ -601,9 +603,10 @@ class TestConfig(
                 "Jobbra",
                 "",
                 "",
-                false,
-                false,
-                0
+                "",
+                approved = false,
+                rejected = false,
+                score = 0
         )
         )
 
@@ -619,9 +622,10 @@ class TestConfig(
                 "Ellipszilonos",
                 "",
                 "",
-                false,
-                false,
-                0
+                "",
+                approved = false,
+                rejected = false,
+                score = 0
         )
         )
 
@@ -637,11 +641,11 @@ class TestConfig(
                 "",
                 "achievements/test.png",
                 "",
-                false,
-                false,
-                0
-        )
-        )
+                "",
+                approved = false,
+                rejected = false,
+                score = 0
+        ))
 
         categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
         categories.save(
@@ -650,16 +654,14 @@ class TestConfig(
                 categoryId = 2,
                 availableFrom = 0,
                 availableTo = 3000000000
-        )
-        )
+        ))
         categories.save(
             AchievementCategoryEntity(
             name = "Mine Category3",
             categoryId = 3,
             availableFrom = 0,
             availableTo = 3000000000
-        )
-        )
+        ))
     }
 
     private fun addUsers() {

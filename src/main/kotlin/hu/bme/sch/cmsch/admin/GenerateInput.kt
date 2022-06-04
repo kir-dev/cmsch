@@ -15,6 +15,7 @@ const val INPUT_TYPE_PERMISSIONS = "permissions"
 const val INPUT_TYPE_ENTITY_SELECT = "entity-select"
 const val INPUT_TYPE_LIST_ENTITIES = "list-entities"
 const val INPUT_TYPE_IMAGE_PREVIEW = "image-preview"
+const val INPUT_TYPE_FILE_PREVIEW = "file-preview"
 
 const val INTERPRETER_INHERIT = "inherit"
 

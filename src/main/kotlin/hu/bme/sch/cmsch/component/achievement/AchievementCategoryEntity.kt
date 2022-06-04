@@ -10,6 +10,11 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
 
+enum class AchievementCategoryType {
+    REGULAR,
+    PROFILE_REQUIRED,
+}
+
 @Entity
 @Table(name="achievementCategories")
 @ConditionalOnBean(AchievementComponent::class)
@@ -49,6 +54,15 @@ data class AchievementCategoryEntity(
     @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LONG)
     var availableTo: Long = 0,
+
+    @Enumerated(EnumType.STRING)
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus", source = [ "REGULAR", "PROFILE_REQUIRED" ],
+        note = "A PROFILE_REQUIRED olyan task ami a többi feladattól külön jelenik meg, és külön van mutatva a profil oldalon. " +
+                "Ideális profilkép vagy motivációs levél feltöltéshez.")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = AchievementCategoryType::class)
+    var type: AchievementCategoryType = AchievementCategoryType.REGULAR,
 
 ): ManagedEntity {
 

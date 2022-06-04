@@ -1,7 +1,5 @@
 package hu.bme.sch.cmsch.component
 
-import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.dto.Edit
 import java.io.Serializable
 import javax.persistence.*
 
@@ -14,7 +12,6 @@ class ComponentSettingEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
     var id: Int = 0,
 
     @Column(nullable = false)

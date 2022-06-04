@@ -4,6 +4,7 @@ enum class AchievementSubmissionStatus {
     OK,
     EMPTY_ANSWER,
     INVALID_IMAGE,
+    INVALID_PDF,
     ALREADY_SUBMITTED,
     ALREADY_APPROVED,
     NO_ASSOCIATE_GROUP,

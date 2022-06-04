@@ -59,25 +59,31 @@ data class SubmittedAchievementEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 5, label = "Értékelés", note = "Ez a szöveg fog megjelenni a tankörnek")
+    @property:GenerateInput(type = INPUT_TYPE_FILE_PREVIEW, order = 5, label = "Beküldött fájl", enabled = false, ignore = true)
+    @property:GenerateOverview(visible = false)
+    var fileUrlAnswer: String = "",
+
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 6, label = "Értékelés", note = "Ez a szöveg fog megjelenni a tankörnek")
     @property:GenerateOverview(visible = false)
     var response: String = "",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Elfogadva", note = "Ha ez igaz az felülírja az elutasított státuszt")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Elfogadva", note = "Ha ez igaz az felülírja az elutasított státuszt")
     @property:GenerateOverview(columnName = "Elfogadva", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var approved: Boolean = false,
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Elutasítva")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Elutasítva")
     @property:GenerateOverview(columnName = "Elutasítva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var rejected: Boolean = false,
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 8, label = "Adott pont")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 9, label = "Adott pont")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     var score: Int = 0
 ) {
