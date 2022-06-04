@@ -92,6 +92,11 @@ object ControlPermissions : PermissionGroup {
         "Feltöltött fájlok megtekintése és törlése"
     )
 
+    val PERMISSION_CONTROL_IMPRESSUM = PermissionValidator(
+        "IMPRESSUM_CONTROL",
+        "Impresszum komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_ACHIEVEMENTS,
@@ -105,6 +110,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_IMPORT_EXPORT,
         PERMISSION_CONTROL_APP,
         PERMISSION_SHOW_DELETE_FILES,
+        PERMISSION_CONTROL_IMPRESSUM,
     )
 
 }
@@ -280,7 +286,8 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_GUILD_MAPPINGS,
         PERMISSION_EDIT_GROUP_MAPPINGS,
         PERMISSION_EDIT_EXTRA_PAGES,
-        PERMISSION_SHOW_LEADERBOARD
+        PERMISSION_EDIT_ANY_EXTRA_PAGES,
+        PERMISSION_SHOW_LEADERBOARD,
     )
 
 }

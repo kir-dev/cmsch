@@ -21,6 +21,66 @@
             roles.push(role)
         document.getElementById(property).value = roles.join(",")
     }
+    function changePeopleText(property) {
+        const people = JSON.parse(document.getElementById(property).value);
+        let resultHtml = "";
+        let id = 0;
+        people.forEach(person => {
+            if (typeof person.name !== 'undefined' && typeof person.roles !== 'undefined' && typeof person.avatar !== 'undefined' && person.name !== '') {
+                resultHtml += `
+                    <div class="card mb-3">
+                        <label for="${property}_${id}_name">Név</label>
+                        <input id="${property}_${id}_name" type="text" value="${person.name}" onchange="savePeople('${property}')">
+
+                        <label for="${property}_${id}_roles">Cimkék</label>
+                        <input id="${property}_${id}_roles" type="text" value="${person.roles}" onchange="savePeople('${property}')">
+
+                        <label for="${property}_${id}_avatar">Avatar url</label>
+                        <input id="${property}_${id}_avatar" type="text" value="${person.avatar}" onchange="savePeople('${property}')">
+                    </div>`;
+                ++id;
+            }
+        });
+
+        resultHtml += `<div class="card centered" id="people_${property}_add"><button type="button" class="btn" onclick="addPeople('${property}')">+</button></div>`;
+
+        document.getElementById(`people_${property}`).innerHTML = resultHtml;
+    }
+    function addPeople(property) {
+        let id = 0;
+        while (typeof document.getElementById(`${property}_${id}_name`) !== 'undefined' && document.getElementById(`${property}_${id}_name`) !== null) {
+            ++id;
+        }
+        const element = document.createElement('div');
+        element.innerHTML = `
+                    <div class="card mb-3">
+                        <label for="${property}_${id}_name">Név</label>
+                        <input id="${property}_${id}_name" type="text" value="" onchange="savePeople('${property}')">
+
+                        <label for="${property}_${id}_roles">Cimkék</label>
+                        <input id="${property}_${id}_roles" type="text" value="" onchange="savePeople('${property}')">
+
+                        <label for="${property}_${id}_avatar">Avatar url</label>
+                        <input id="${property}_${id}_avatar" type="text" value="" onchange="savePeople('${property}')">
+                    </div>`;
+        let target = document.getElementById(`people_${property}_add`);
+        target.parentNode.insertBefore(element, target);
+    }
+    function savePeople(property) {
+        let id = 0;
+        let result = [];
+        while (typeof document.getElementById(`${property}_${id}_name`) !== 'undefined' && document.getElementById(`${property}_${id}_name`) !== null) {
+            const name = document.getElementById(`${property}_${id}_name`).value;
+            const roles = document.getElementById(`${property}_${id}_roles`).value;
+            const avatar = document.getElementById(`${property}_${id}_avatar`).value;
+
+            if (name !== null && roles !== null && avatar !== null && name !== '') {
+                result.push({name: name, roles: roles, avatar: avatar});
+            }
+            ++id;
+        }
+        document.getElementById(property).value = JSON.stringify(result);
+    }
 </script>
 <div class="content">
     <div class="split">
@@ -94,6 +154,30 @@
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
 
+                            <div th:if="${input.type.name() == 'LONG_TEXT_MARKDOWN'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear: both"></div>
+                                <textarea
+                                        th:name="${input.property}"
+                                        th:id="${input.property}"
+                                        th:text="${input.getValue()}"
+                                        autocomplete="off">
+                                </textarea>
+                                <span class="note" th:text="${input.description}"></span>
+                                <script th:inline="javascript">
+                                    var name = /*[[${input.property}]]*/ '';
+                                    var editor = new SimpleMDE({
+                                        element: document.getElementById(name),
+                                        spellChecker: false
+                                    });
+                                </script>
+                            </div>
+
                             <div th:if="${input.type.name() == 'BOOLEAN'}" class="field-group">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
@@ -111,6 +195,32 @@
                                 </label>
                                 <span class="note" th:text="${input.description}"></span>
                                 <div style="clear:both"></div>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'MULTIPLE_PEOPLE'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.serverSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <span class="note" th:text="${input.description}" style="margin-bottom: 20px;"></span>
+
+                                <div th:id="|people_${input.property}|">
+
+                                </div>
+
+                                <input type="text"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getValue()}"
+                                       autocomplete="off"
+                                       style="display: none"
+                                />
+                                <script th:inline="javascript">
+                                    changePeopleText(/*[[${input.property}]]*/ '');
+                                </script>
                             </div>
 
                             <div th:if="${input.type.name() == 'MIN_ROLE'}" class="field-group">
