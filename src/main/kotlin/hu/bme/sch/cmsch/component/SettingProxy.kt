@@ -7,10 +7,12 @@ const val cachePeriod: Long = 60 * 60 * 1000
 enum class SettingType {
     TEXT,
     LONG_TEXT,
+    LONG_TEXT_MARKDOWN,
     NUMBER,
     BOOLEAN,
     MIN_ROLE,
-    COMPONENT_GROUP
+    COMPONENT_GROUP,
+    MULTIPLE_PEOPLE
 }
 
 open class SettingProxy(
@@ -71,6 +73,10 @@ class MinRoleSettingProxy(
     fieldName = fieldName, description = description,
     minRoleToEdit = minRoleToEdit, serverSideOnly = true
 ) {
+
+    companion object {
+        val ALL_ROLES by lazy { RoleType.values().joinToString(",") { it.name } }
+    }
 
     fun isAvailableForRole(role: RoleType): Boolean {
         return rawValue.split(",").contains(role.name)

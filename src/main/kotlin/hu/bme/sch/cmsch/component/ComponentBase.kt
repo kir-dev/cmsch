@@ -69,7 +69,7 @@ abstract class ComponentBase(
                 if (it.isNotBlank())
                     setting.rawValue = it
             }
-            log.info("Setting prepared from config: {}.{} = '{}'", setting.component, setting.property, setting.rawValue)
+            log.info(" - Setting prepared from config: {}.{} = '{}'", setting.component, setting.property, setting.rawValue)
         }
     }
 
@@ -77,7 +77,7 @@ abstract class ComponentBase(
         log.info("Loading {} component settings from database", component)
         componentSettingService.loadDefaultSettings(allSettings)
         allSettings.forEach {
-            log.info("Setting loaded from db: {}.{} = '{}'", it.component, it.property, it.getValue())
+            log.info(" - Setting loaded from db: {}.{} = '{}'", it.component, it.property, it.getValue())
         }
     }
 
