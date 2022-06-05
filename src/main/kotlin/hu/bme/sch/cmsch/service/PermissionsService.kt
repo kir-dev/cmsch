@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.service
 
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.util.DI
 
 class PermissionValidator internal constructor(
@@ -37,9 +36,9 @@ object ControlPermissions : PermissionGroup {
         "Hírek komponens testreszabása"
     )
 
-    val PERMISSION_CONTROL_ACHIEVEMENTS = PermissionValidator(
-        "ACHIEVEMENT_CONTROL",
-        "Bucketlist komponens testreszabása"
+    val PERMISSION_CONTROL_TASKS = PermissionValidator(
+        "TASK_CONTROL",
+        "Feladatok komponens testreszabása"
     )
 
     val PERMISSION_CONTROL_EVENTS = PermissionValidator(
@@ -99,7 +98,7 @@ object ControlPermissions : PermissionGroup {
 
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
-        PERMISSION_CONTROL_ACHIEVEMENTS,
+        PERMISSION_CONTROL_TASKS,
         PERMISSION_CONTROL_EVENTS,
         PERMISSION_CONTROL_DEBTS,
         PERMISSION_CONTROL_RIDDLE,
@@ -117,21 +116,21 @@ object ControlPermissions : PermissionGroup {
 
 object StaffPermissions : PermissionGroup {
 
-    /// Achievement Component
+    /// Tasks Component
 
-    val PERMISSION_RATE_ACHIEVEMENTS = PermissionValidator(
-        "ACHIEVEMENT_RATE",
-        "Az achievement beadások értékelése és megtekintése"
+    val PERMISSION_RATE_TASKS = PermissionValidator(
+        "TASK_RATE",
+        "A feladat beadások értékelése és megtekintése"
     )
 
-    val PERMISSION_EDIT_ACHIEVEMENTS = PermissionValidator(
-        "ACHIEVEMENT_EDIT",
-        "Achievement feladatok létrehozása, szerkesztése és törlése"
+    val PERMISSION_EDIT_TASKS = PermissionValidator(
+        "TASK_EDIT",
+        "Feladatok létrehozása, szerkesztése és törlése"
     )
 
-    val PERMISSION_EDIT_ACHIEVEMENT_CATEGORIES = PermissionValidator(
-        "ACHIEVEMENT_CATEGORY_EDIT",
-        "Achievement kategóriák létrehozása, szerkesztése és törlése"
+    val PERMISSION_EDIT_TASK_CATEGORIES = PermissionValidator(
+        "TASK_CATEGORY_EDIT",
+        "Feladat kategóriák létrehozása, szerkesztése és törlése"
     )
 
     /// Debt Component
@@ -263,9 +262,9 @@ object StaffPermissions : PermissionGroup {
     )
 
     override fun allPermissions() = listOf(
-        PERMISSION_RATE_ACHIEVEMENTS,
-        PERMISSION_EDIT_ACHIEVEMENTS,
-        PERMISSION_EDIT_ACHIEVEMENT_CATEGORIES,
+        PERMISSION_RATE_TASKS,
+        PERMISSION_EDIT_TASKS,
+        PERMISSION_EDIT_TASK_CATEGORIES,
         PERMISSION_EDIT_DEBTS,
         PERMISSION_EDIT_PRODUCTS,
         PERMISSION_SELL_FOOD,

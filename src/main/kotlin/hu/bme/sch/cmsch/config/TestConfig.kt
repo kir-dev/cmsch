@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.config
 
-import hu.bme.sch.cmsch.component.achievement.*
+import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.component.app.ExtraMenuEntity
 import hu.bme.sch.cmsch.component.app.ExtraMenuRepository
 import hu.bme.sch.cmsch.component.debt.ProductEntity
@@ -59,9 +59,9 @@ class TestConfig(
     private val profileService: UserProfileGeneratorService,
     private val news: Optional<NewsRepository>,
     private val events: Optional<EventRepository>,
-    private val achievements: Optional<AchievementEntityRepository>,
-    private val submittedAchievements: Optional<SubmittedAchievementRepository>,
-    private val categories: Optional<AchievementCategoryRepository>,
+    private val tasks: Optional<TaskEntityRepository>,
+    private val submittedTasks: Optional<SubmittedTaskRepository>,
+    private val categories: Optional<TaskCategoryRepository>,
     private val extraPages: Optional<ExtraPageRepository>,
     private val products: Optional<ProductRepository>,
     private val productsService: Optional<ProductService>,
@@ -79,10 +79,10 @@ class TestConfig(
         events.ifPresent { addEvents(it) }
         addGroups()
         addUsers()
-        achievements.ifPresent { achievement ->
-            submittedAchievements.ifPresent { submitted ->
+        tasks.ifPresent { task ->
+            submittedTasks.ifPresent { submitted ->
                 categories.ifPresent { category ->
-                    addAchievements(achievement, submitted, category)
+                    addTasks(task, submitted, category)
                 }
             }
         }
@@ -446,8 +446,8 @@ class TestConfig(
         ))
     }
 
-    private fun addAchievements(achievements: AchievementEntityRepository, submittedAchievements: SubmittedAchievementRepository, categories: AchievementCategoryRepository) {
-        val achi1 = AchievementEntity(
+    private fun addTasks(tasks: TaskEntityRepository, submittedTasks: SubmittedTaskRepository, categories: TaskCategoryRepository) {
+        val achi1 = TaskEntity(
                 title = "Merre van balra?",
                 expectedResultDescription = "Egy kép arról mere van balra",
                 categoryId = 1,
@@ -455,13 +455,13 @@ class TestConfig(
                 order = 1,
                 availableFrom = now - (12 * A_DAY),
                 availableTo = now + (4 * A_DAY),
-                type = AchievementType.TEXT,
+                type = TaskType.TEXT,
                 maxScore = 50,
                 description = LOREM_IPSUM_LONG_1
         )
-        achievements.save(achi1)
+        tasks.save(achi1)
 
-        val achi2 = AchievementEntity(
+        val achi2 = TaskEntity(
                 title = "Milyen 'Jé' a kamion?",
                 expectedResultDescription = "Egy fotó a kamilyonról",
                 categoryId = 2,
@@ -469,13 +469,13 @@ class TestConfig(
                 order = 2,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
-                type = AchievementType.IMAGE,
+                type = TaskType.IMAGE,
                 maxScore = 150,
                 description = LOREM_IPSUM_LONG_2
         )
-        achievements.save(achi2)
+        tasks.save(achi2)
 
-        val achi3 = AchievementEntity(
+        val achi3 = TaskEntity(
                 title = "Valami vicces megjegyzés az egyik gólyalányról",
                 expectedResultDescription = "Milyen szinű és miért kék?",
                 categoryId = 1,
@@ -483,14 +483,14 @@ class TestConfig(
                 order = 3,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
-                type = AchievementType.TEXT,
+                type = TaskType.TEXT,
                 maxScore = 69,
                 description = "Úgy sem látszik"
         )
-        achievements.save(achi3)
+        tasks.save(achi3)
 
-        achievements.save(
-            AchievementEntity(
+        tasks.save(
+            TaskEntity(
                 title = "Milyen lóról nevezték el a lóvagtermet?",
                 expectedResultDescription = "A ló neve kisbetűvel",
                 categoryId = 2,
@@ -498,14 +498,14 @@ class TestConfig(
                 order = 3,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
-                type = AchievementType.BOTH,
+                type = TaskType.BOTH,
                 maxScore = 30,
                 description = LOREM_IPSUM_LONG_3
         )
         )
 
-        achievements.save(
-            AchievementEntity(
+        tasks.save(
+            TaskEntity(
                 title = "Mingyá' lejár",
                 expectedResultDescription = "Kép a centrifugáról (am ez lejárt)",
                 categoryId = 3,
@@ -513,13 +513,13 @@ class TestConfig(
                 order = 2,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now - (2 * A_DAY),
-                type = AchievementType.IMAGE,
+                type = TaskType.IMAGE,
                 maxScore = 420,
                 description = "Ez lejárt"
         )
         )
 
-        val achi4 = AchievementEntity(
+        val achi4 = TaskEntity(
                 title = "Mit mér a mérnök?",
                 expectedResultDescription = "asszem sört, na mérjetek sört",
                 categoryId = 1,
@@ -527,15 +527,15 @@ class TestConfig(
                 order = 4,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
-                type = AchievementType.IMAGE,
+                type = TaskType.IMAGE,
                 maxScore = 150,
                 description = LOREM_IPSUM_LONG_4
         )
-        achievements.save(achi4)
+        tasks.save(achi4)
 
 
-        achievements.save(
-            AchievementEntity(
+        tasks.save(
+            TaskEntity(
                 title = "Milye van a fának?",
                 expectedResultDescription = "gráfelméleti tézis",
                 categoryId = 2,
@@ -543,7 +543,7 @@ class TestConfig(
                 order = 4,
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
-                type = AchievementType.TEXT,
+                type = TaskType.TEXT,
                 maxScore = 150,
                 description = "Levele van, vagy egyel több csúcsa mint éle?"
         )
@@ -553,8 +553,8 @@ class TestConfig(
         val groupI09 = groups.findByName("I09").orElseThrow()
         val groupV10 = groups.findByName("V10").orElseThrow()
 
-        submittedAchievements.save(
-            SubmittedAchievementEntity(
+        submittedTasks.save(
+            SubmittedTaskEntity(
                 0,
                 achi1,
                 groupI16.id,
@@ -572,8 +572,8 @@ class TestConfig(
         )
         )
 
-        submittedAchievements.save(
-            SubmittedAchievementEntity(
+        submittedTasks.save(
+            SubmittedTaskEntity(
                 0,
                 achi1,
                 groupI09.id,
@@ -591,8 +591,8 @@ class TestConfig(
         )
         )
 
-        submittedAchievements.save(
-            SubmittedAchievementEntity(
+        submittedTasks.save(
+            SubmittedTaskEntity(
                 0,
                 achi1,
                 groupV10.id,
@@ -610,8 +610,8 @@ class TestConfig(
         )
         )
 
-        submittedAchievements.save(
-            SubmittedAchievementEntity(
+        submittedTasks.save(
+            SubmittedTaskEntity(
                 0,
                 achi2,
                 groupI16.id,
@@ -629,8 +629,8 @@ class TestConfig(
         )
         )
 
-        submittedAchievements.save(
-            SubmittedAchievementEntity(
+        submittedTasks.save(
+            SubmittedTaskEntity(
                 0,
                 achi2,
                 groupI09.id,
@@ -639,7 +639,7 @@ class TestConfig(
                 "",
                 1,
                 "",
-                "achievements/test.png",
+                "task/test.png",
                 "",
                 "",
                 approved = false,
@@ -647,16 +647,16 @@ class TestConfig(
                 score = 0
         ))
 
-        categories.save(AchievementCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
+        categories.save(TaskCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
         categories.save(
-            AchievementCategoryEntity(
+            TaskCategoryEntity(
                 name = "Mine Category2",
                 categoryId = 2,
                 availableFrom = 0,
                 availableTo = 3000000000
         ))
         categories.save(
-            AchievementCategoryEntity(
+            TaskCategoryEntity(
             name = "Mine Category3",
             categoryId = 3,
             availableFrom = 0,

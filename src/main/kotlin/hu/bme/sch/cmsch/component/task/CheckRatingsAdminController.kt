@@ -1,10 +1,10 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_ACHIEVEMENTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TASKS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -16,22 +16,22 @@ import javax.annotation.PostConstruct
 
 @Controller
 @RequestMapping("/admin/control/check-ratings")
-@ConditionalOnBean(AchievementComponent::class)
+@ConditionalOnBean(TaskComponent::class)
 class CheckRatingsAdminController(
-    private val submittedRepository: SubmittedAchievementRepository,
+    private val submittedRepository: SubmittedTaskRepository,
     private val adminMenuService: AdminMenuService
 ) {
 
     private val view = "check-ratings"
     private val titlePlural = "Pontok ellenőrzése"
-    private val permissionControl = PERMISSION_EDIT_ACHIEVEMENTS
+    private val permissionControl = PERMISSION_EDIT_TASKS
 
     private val submittedDescriptor = OverviewBuilder(CheckRatingVirtualEntity::class)
 
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            AchievementComponent::class.simpleName!!, AdminMenuEntry(
+            TaskComponent::class.simpleName!!, AdminMenuEntry(
                 titlePlural,
                 "fact_check",
                 "/admin/control/${view}",
@@ -65,8 +65,8 @@ class CheckRatingsAdminController(
 
     private fun fetchSubmittedChecks(): List<CheckRatingVirtualEntity> {
         return submittedRepository.findAllByScoreGreaterThanAndApprovedIsTrue(0)
-            .filter { it.score != (it.achievement?.maxScore ?: 0) }
-            .map { CheckRatingVirtualEntity(it.id, it.groupName, it.score, it.achievement?.maxScore ?: 0) }
+            .filter { it.score != (it.task?.maxScore ?: 0) }
+            .map { CheckRatingVirtualEntity(it.id, it.groupName, it.score, it.task?.maxScore ?: 0) }
     }
 
 }

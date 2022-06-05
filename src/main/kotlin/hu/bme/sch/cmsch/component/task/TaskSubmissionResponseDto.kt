@@ -1,6 +1,6 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
-enum class AchievementSubmissionStatus {
+enum class TaskSubmissionStatus {
     OK,
     EMPTY_ANSWER,
     INVALID_IMAGE,
@@ -8,12 +8,12 @@ enum class AchievementSubmissionStatus {
     ALREADY_SUBMITTED,
     ALREADY_APPROVED,
     NO_ASSOCIATE_GROUP,
-    INVALID_ACHIEVEMENT_ID,
+    INVALID_TASK_ID,
     TOO_EARLY_OR_LATE,
     NO_PERMISSION,
     INVALID_BACKEND_CONFIG
 }
 
-class AchievementSubmissionResponseDto(
-    var status: AchievementSubmissionStatus
+class TaskSubmissionResponseDto(
+    var status: TaskSubmissionStatus
 )

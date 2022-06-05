@@ -4,7 +4,7 @@ interface TopListAbstractEntryDto {
 
     var name: String
 
-    var achievementScore: Int
+    var taskScore: Int
 
     var riddleScore: Int
 

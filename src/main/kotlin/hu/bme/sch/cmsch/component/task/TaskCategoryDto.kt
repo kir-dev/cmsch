@@ -1,10 +1,10 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 
-data class AchievementCategoryDto(
+data class TaskCategoryDto(
         @JsonView(value = [ Preview::class, FullDetails::class ])
         var name: String = "",
 

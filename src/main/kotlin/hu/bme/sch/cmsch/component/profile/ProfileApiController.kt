@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.component.achievement.AchievementsService
+import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.location.LocationService
@@ -13,7 +13,6 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
-import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -33,7 +32,7 @@ class ProfileApiController(
     private val locationService: LocationService,
     private val tokenService: TokenCollectorService,
     private val riddleService: RiddleService,
-    private val achievementsService: AchievementsService,
+    private val tasksService: TasksService,
     private val tokenComponent: TokenComponent,
     private val clock: ClockService,
     @Value("\${cmsch.group-select.fallback-group:Vendég}") private val fallbackGroup: String
@@ -58,9 +57,9 @@ class ProfileApiController(
             collectedTokenCount = tokenService.getTokensForUserWithCategory(user,"default"),
             totalTokenCount = tokenService.getTotalTokenCountWithCategory("default"),
 
-            totalAchievementCount = achievementsService.getTotalAchievementsForUser(user),
-            submittedAchievementCount = achievementsService.getSubmittedAchievementsForUser(user),
-            completedAchievementCount = achievementsService.getCompletedAchievementsForUser(user),
+            totalTaskCount = tasksService.getTotalTasksForUser(user),
+            submittedTaskCount = tasksService.getSubmittedTasksForUser(user),
+            completedTaskCount = tasksService.getCompletedTasksForUser(user),
 
             totalRiddleCount = riddleService.getTotalRiddleCount(user),
             completedRiddleCount = riddleService.getCompletedRiddleCount(user),

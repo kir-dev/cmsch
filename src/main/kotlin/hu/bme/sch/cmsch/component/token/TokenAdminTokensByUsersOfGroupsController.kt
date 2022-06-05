@@ -11,7 +11,7 @@ import com.itextpdf.layout.properties.TextAlignment
 import com.itextpdf.layout.properties.UnitValue
 import com.itextpdf.layout.properties.VerticalAlignment
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.component.achievement.AchievementsService
+import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_PDF
 import hu.bme.sch.cmsch.repository.GroupRepository
@@ -48,7 +48,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     private val tokenComponent: TokenComponent,
     private val adminMenuService: AdminMenuService,
     private val riddleService: Optional<RiddleService>,
-    private val achievementsService: Optional<AchievementsService>
+    private val tasksService: Optional<TasksService>
 ) {
 
     private val view = "token-properties-of-groups"
@@ -56,7 +56,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     private val titlePlural = "Jelenléti export"
     private val description = "Beolvasott tokenek csoportonként csoportosítva. " +
             "(Riddle modul: ${riddleService.map { _ -> "ON" }.orElse("OFF")} " +
-            "Achievement modul: ${achievementsService.map { _ -> "ON" }.orElse("OFF")} " +
+            "Task modul: ${tasksService.map { _ -> "ON" }.orElse("OFF")} " +
             "Token modul: ON*)"
     private val permissionControl = PERMISSION_EDIT_TOKENS
 
@@ -212,7 +212,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             table.addCell(Cell().add(Paragraph("$riddles db")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))
-            val achievemnts = achievementsService.map{ it.getSubmittedAchievementsForUser(user.key) }.orElse(0)
+            val achievemnts = tasksService.map{ it.getSubmittedTasksForUser(user.key) }.orElse(0)
             table.addCell(Cell().add(Paragraph("$achievemnts db")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))

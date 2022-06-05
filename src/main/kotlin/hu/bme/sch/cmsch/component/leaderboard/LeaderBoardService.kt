@@ -1,13 +1,12 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
-import hu.bme.sch.cmsch.component.achievement.SubmittedAchievementRepository
+import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import org.slf4j.LoggerFactory
@@ -27,7 +26,7 @@ open class LeaderBoardService(
     private val users: UserRepository,
     private val leaderBoardComponent: LeaderBoardComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val achievementSubmissions: Optional<SubmittedAchievementRepository>,
+    private val taskSubmissions: Optional<SubmittedTaskRepository>,
     private val riddleSubmissions: Optional<RiddleMappingRepository>,
     private val riddleComponent: Optional<RiddleComponent>
 ) {
@@ -88,9 +87,9 @@ open class LeaderBoardService(
     open fun forceRecalculateForGroups() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f
         log.info("Recalculating group top list cache; hint:{}", hintPercentage)
-        val achievements = when (startupPropertyConfig.achievementOwnershipMode) {
+        val tasks = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.GROUP -> {
-                achievementSubmissions.map { it.findAll() }.orElse(listOf())
+                taskSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.groupName }
                     .filter { groups.findByName(it.key).map { m -> m.races }.orElse(false) }
                     .map { TopListAsGroupEntryDto(it.key, it.value.sumOf { s -> s.score }, 0, 0) }
@@ -114,16 +113,16 @@ open class LeaderBoardService(
             OwnershipType.USER -> listOf()
         }
 
-        cachedTopListForGroups = sequenceOf(achievements, riddles)
+        cachedTopListForGroups = sequenceOf(tasks, riddles)
             .flatMap { it }
             .groupBy { it.name }
             .map { entries ->
-                val achievementScore = entries.value.maxOf { it.achievementScore }
+                val taskScore = entries.value.maxOf { it.taskScore }
                 val riddleScore = entries.value.maxOf { it.riddleScore }
                 TopListAsGroupEntryDto(entries.key,
-                    achievementScore,
+                    taskScore,
                     riddleScore,
-                    achievementScore + riddleScore)
+                    taskScore + riddleScore)
             }
             .sortedByDescending { it.totalScore }
         log.info("Recalculating finished")
@@ -133,10 +132,10 @@ open class LeaderBoardService(
     open fun forceRecalculateForUsers() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f
         log.info("Recalculating user top list cache; hint:{}", hintPercentage)
-        val achievements = when (startupPropertyConfig.achievementOwnershipMode) {
+        val tasks = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
-                achievementSubmissions.map { it.findAll() }.orElse(listOf())
+                taskSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.userId }
                     .map { entity ->
                         val user = users.findById(entity.key ?: 0)
@@ -168,17 +167,17 @@ open class LeaderBoardService(
             }
         }
 
-        cachedTopListForUsers = sequenceOf(achievements, riddles)
+        cachedTopListForUsers = sequenceOf(tasks, riddles)
             .flatMap { it }
             .groupBy { it.id }
             .map { entries ->
-                val achievementScore = entries.value.maxOf { it.achievementScore }
+                val taskScore = entries.value.maxOf { it.taskScore }
                 val riddleScore = entries.value.maxOf { it.riddleScore }
                 TopListAsUserEntryDto(entries.key, entries.value.firstOrNull()?.name ?: "n/a",
                     entries.value.firstOrNull()?.groupName ?: "n/a",
-                    achievementScore,
+                    taskScore,
                     riddleScore,
-                    achievementScore + riddleScore)
+                    taskScore + riddleScore)
             }
             .sortedByDescending { it.totalScore }
         log.info("Recalculating finished")

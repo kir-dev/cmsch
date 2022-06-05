@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
 
 @Entity
-@Table(name="submittedAchievements")
-@ConditionalOnBean(AchievementComponent::class)
-data class SubmittedAchievementEntity(
+@Table(name="submittedTasks")
+@ConditionalOnBean(TaskComponent::class)
+data class SubmittedTaskEntity(
     @Id
     @GeneratedValue
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -21,8 +21,8 @@ data class SubmittedAchievementEntity(
     @property:GenerateOverview(visible = false)
     var id: Int = 0,
 
-    @ManyToOne(targetEntity = AchievementEntity::class)
-    var achievement: AchievementEntity? = null,
+    @ManyToOne(targetEntity = TaskEntity::class)
+    var task: TaskEntity? = null,
 
     @Column(nullable = true)
     var groupId: Int? = null,
@@ -90,7 +90,7 @@ data class SubmittedAchievementEntity(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as SubmittedAchievementEntity
+        other as SubmittedTaskEntity
 
         return id != 0 && id == other.id
     }

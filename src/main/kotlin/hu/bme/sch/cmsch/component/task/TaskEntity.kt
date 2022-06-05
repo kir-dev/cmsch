@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
@@ -10,14 +10,14 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
 
-enum class AchievementType {
+enum class TaskType {
     TEXT,
     IMAGE,
     BOTH,
     ONLY_PDF
 }
 
-enum class AchievementFormat {
+enum class TaskFormat {
     NONE,
     TEXT,
     CODE,
@@ -25,9 +25,9 @@ enum class AchievementFormat {
 }
 
 @Entity
-@Table(name="achievements")
-@ConditionalOnBean(AchievementComponent::class)
-data class AchievementEntity(
+@Table(name="tasks")
+@ConditionalOnBean(TaskComponent::class)
+data class TaskEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
@@ -71,15 +71,15 @@ data class AchievementEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus", source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = AchievementType::class)
-    var type: AchievementType = AchievementType.TEXT,
+    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskType::class)
+    var type: TaskType = TaskType.TEXT,
 
     @Enumerated(EnumType.STRING)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Formátum", source = [ "NONE", "TEXT", "CODE", "FORM" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = AchievementFormat::class)
-    var format: AchievementFormat = AchievementFormat.NONE,
+    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = TaskFormat::class)
+    var format: TaskFormat = TaskFormat.NONE,
 
     @Lob
     @Column(nullable = false)
@@ -141,7 +141,7 @@ data class AchievementEntity(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as AchievementEntity
+        other as TaskEntity
 
         return id != 0 && id == other.id
     }

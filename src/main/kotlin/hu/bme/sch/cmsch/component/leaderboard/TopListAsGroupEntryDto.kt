@@ -11,11 +11,11 @@ data class TopListAsGroupEntryDto(
     override var name: String,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateOverview(columnName = "BucketList", order = 2, centered = true)
-    override var achievementScore: Int,
+    @property:GenerateOverview(columnName = "Feladatok", order = 2, centered = true)
+    override var taskScore: Int,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateOverview(columnName = "Riddle", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "Riddleök", order = 3, centered = true)
     override var riddleScore: Int,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])

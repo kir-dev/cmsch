@@ -1,12 +1,12 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 
-data class AchievementCategoryView(
+data class TaskCategoryView(
     @JsonView(FullDetails::class)
         val categoryName: String,
 
     @JsonView(FullDetails::class)
-        val achievements: List<AchievementEntityWrapperDto> = listOf(),
+        val tasks: List<TaskEntityWrapperDto> = listOf(),
 )
