@@ -51,68 +51,68 @@ class LocationComponent(
 
     val colorGroup = SettingProxy(componentSettingService, component,
         "colorGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csoport színek",
+        fieldName = "Csoport színek", serverSideOnly = true,
         description = ""
     )
 
     val defaultGroupColor = SettingProxy(componentSettingService, component,
         "defaultGroupColor", "#FF0000", type = SettingType.TEXT,
-        fieldName = "Alapértelmezett csoport színe"
+        fieldName = "Alapértelmezett csoport színe", serverSideOnly = true
     )
 
     val blackGroupName = SettingProxy(componentSettingService, component,
         "blackGroupName", "LEAD", type = SettingType.TEXT,
-        fieldName = "Fekete csoport színe"
+        fieldName = "Fekete csoport színe", serverSideOnly = true
     )
 
     val blueGroupName = SettingProxy(componentSettingService, component,
         "blueGroupName", "SENIOR", type = SettingType.TEXT,
-        fieldName = "Kék csoport neve"
+        fieldName = "Kék csoport neve", serverSideOnly = true
     )
 
     val cyanGroupName = SettingProxy(componentSettingService, component,
         "cyanGroupName", "CONTROL", type = SettingType.TEXT,
-        fieldName = "Türkiz csoport neve"
+        fieldName = "Türkiz csoport neve", serverSideOnly = true
     )
 
     val pinkGroupName = SettingProxy(componentSettingService, component,
         "pinkGroupName", "SUPPORT", type = SettingType.TEXT,
-        fieldName = "Rózsaszín csoport neve"
+        fieldName = "Rózsaszín csoport neve", serverSideOnly = true
     )
 
     val orangeGroupName = SettingProxy(componentSettingService, component,
         "orangeGroupName", "KIRDEV", type = SettingType.TEXT,
-        fieldName = "Narancs csoport neve"
+        fieldName = "Narancs csoport neve", serverSideOnly = true
     )
 
     val greenGroupName = SettingProxy(componentSettingService, component,
         "greenGroupName", "", type = SettingType.TEXT,
-        fieldName = "Zöld csoport neve"
+        fieldName = "Zöld csoport neve", serverSideOnly = true
     )
 
     val redGroupName = SettingProxy(componentSettingService, component,
         "redGroupName", "", type = SettingType.TEXT,
-        fieldName = "Piros csoport neve"
+        fieldName = "Piros csoport neve", serverSideOnly = true
     )
 
     val whiteGroupName = SettingProxy(componentSettingService, component,
         "whiteGroupName", "", type = SettingType.TEXT,
-        fieldName = "Fehér csoport neve"
+        fieldName = "Fehér csoport neve", serverSideOnly = true
     )
 
     val yellowGroupName = SettingProxy(componentSettingService, component,
         "yellowGroupName", "", type = SettingType.TEXT,
-        fieldName = "Sárga csoport neve"
+        fieldName = "Sárga csoport neve", serverSideOnly = true
     )
 
     val purpleGroupName = SettingProxy(componentSettingService, component,
         "purpleGroupName", "", type = SettingType.TEXT,
-        fieldName = "Lila csoport neve"
+        fieldName = "Lila csoport neve", serverSideOnly = true
     )
 
     val grayGroupName = SettingProxy(componentSettingService, component,
         "grayGroupName", "", type = SettingType.TEXT,
-        fieldName = "Szürke csoport neve"
+        fieldName = "Szürke csoport neve", serverSideOnly = true
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -120,12 +120,12 @@ class LocationComponent(
     val appGroup = SettingProxy(componentSettingService, component,
         "appGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Tracker alkalmazás",
-        description = ""
+        description = "", serverSideOnly = true
     )
 
     val apkUrl = SettingProxy(componentSettingService, component,
-        "apkUrl", "/files/cmsch-tracker-1.0.0.apk", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "APK URL-je"
+        "apkUrl", "/files/cmsch-tracker-1.0.0.apk", type = SettingType.TEXT,
+        serverSideOnly = true, fieldName = "APK URL-je"
     )
 
 

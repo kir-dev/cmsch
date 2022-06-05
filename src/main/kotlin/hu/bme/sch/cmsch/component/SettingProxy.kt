@@ -6,13 +6,16 @@ const val cachePeriod: Long = 60 * 60 * 1000
 
 enum class SettingType {
     TEXT,
+    URL,
     LONG_TEXT,
     LONG_TEXT_MARKDOWN,
     NUMBER,
     BOOLEAN,
     MIN_ROLE,
     COMPONENT_GROUP,
-    MULTIPLE_PEOPLE
+    MULTIPLE_PEOPLE,
+    DATE_TIME,
+    COMPONENT_NAME
 }
 
 open class SettingProxy(
@@ -23,7 +26,7 @@ open class SettingProxy(
     private val cache: Boolean = true,
     val persist: Boolean = true,
     val constant: Boolean = true,
-    val serverSideOnly: Boolean = false,
+    private val serverSideOnly: Boolean = false,
     val type: SettingType = SettingType.TEXT,
     val fieldName: String = property,
     val description: String = "",
@@ -33,6 +36,9 @@ open class SettingProxy(
     private var lastTimeUpdated = 0L
 
     var rawValue: String = defaultValue
+
+    val isServerSideOnly: Boolean
+        get() = (type == SettingType.COMPONENT_GROUP) || serverSideOnly
 
     fun setValue(value: String) {
         lastTimeUpdated = System.currentTimeMillis()

@@ -84,7 +84,7 @@ abstract class ComponentBase(
     fun attachConstants(): Map<String, String> {
         componentSettingService.refreshCachedSettings(allSettings)
         return allSettings
-            .filter { it.constant && !it.serverSideOnly }
+            .filter { it.constant && !it.isServerSideOnly }
             .associate { it.property to it.getValue() }
     }
 

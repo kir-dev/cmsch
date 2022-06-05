@@ -7,7 +7,7 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -24,7 +24,7 @@ class TaskApiController(
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val leaderBoardComponent: Optional<LeaderBoardComponent>,
     private val tasks: TasksService,
-    private val clock: ClockService,
+    private val clock: TimeService,
     private val startupPropertyConfig: StartupPropertyConfig
 ) {
 

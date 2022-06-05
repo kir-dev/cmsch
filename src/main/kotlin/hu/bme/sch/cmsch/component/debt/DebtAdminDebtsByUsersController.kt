@@ -9,7 +9,7 @@ import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
@@ -27,7 +27,7 @@ import kotlin.reflect.KMutableProperty1
 class DebtAdminDebtsByUsersController(
     private val soldProductRepository: SoldProductRepository,
     private val groupRepository: GroupRepository,
-    private val clock: ClockService,
+    private val clock: TimeService,
     private val adminMenuService: AdminMenuService
 ) {
 

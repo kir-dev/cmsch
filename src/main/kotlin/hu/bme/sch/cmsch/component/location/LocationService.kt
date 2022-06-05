@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.location
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 @Service
 @ConditionalOnBean(LocationComponent::class)
 class LocationService(
-    private val clock: ClockService,
+    private val clock: TimeService,
     private val userRepository: UserRepository,
     private val startupPropertyConfig: StartupPropertyConfig
 ) {

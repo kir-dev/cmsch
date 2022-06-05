@@ -106,8 +106,25 @@
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
-                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
-                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <input type="text"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getValue()}"
+                                       autocomplete="off"
+                                />
+                                <span class="note" th:text="${input.description}"></span>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'URL'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear:both"></div>
                                 <input type="text"
@@ -123,11 +140,30 @@
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
-                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
-                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear:both"></div>
                                 <input type="number"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getValue()}"
+                                       autocomplete="off"
+                                       required
+                                />
+                                <span class="note" th:text="${input.description}"></span>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'DATE_TIME'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <input type="text"
+                                       class="datetime-picker"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
                                        th:value="${input.getValue()}"
@@ -141,8 +177,8 @@
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
-                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
-                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear:both"></div>
                                 <textarea
@@ -158,8 +194,8 @@
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
-                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
-                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear: both"></div>
                                 <textarea
@@ -170,9 +206,8 @@
                                 </textarea>
                                 <span class="note" th:text="${input.description}"></span>
                                 <script th:inline="javascript">
-                                    var name = /*[[${input.property}]]*/ '';
-                                    var editor = new SimpleMDE({
-                                        element: document.getElementById(name),
+                                    new SimpleMDE({
+                                        element: document.getElementById(/*[[${input.property}]]*/ ''),
                                         spellChecker: false
                                     });
                                 </script>
@@ -182,8 +217,8 @@
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
-                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
-                                      th:text="${input.serverSideOnly ? 'PRiVATE': 'PUBLIC'}">
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear:both"></div>
                                 <label class="switch">
@@ -197,12 +232,27 @@
                                 <div style="clear:both"></div>
                             </div>
 
+                            <div th:if="${input.type.name() == 'COMPONENT_NAME'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <select th:name="${input.property}"
+                                        th:id="${input.property}">
+                                    <option th:each="opt : ${componentNames}" th:text="${obj}" th:selected="${input.getValue() == obj}"></option>
+                                </select>
+                                <span class="note" th:text="${input.description}"></span>
+                            </div>
+
                             <div th:if="${input.type.name() == 'MULTIPLE_PEOPLE'}" class="field-group">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
-                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
-                                      th:text="${input.serverSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear:both"></div>
                                 <span class="note" th:text="${input.description}" style="margin-bottom: 20px;"></span>
@@ -227,8 +277,8 @@
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
-                                <span th:class="|flagged-label ${input.serverSideOnly ? 'green-label' : 'red-label'}|"
-                                      th:text="${input.serverSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear:both"></div>
                                 <span class="note" th:text="${input.description}" style="margin-bottom: 20px;"></span>
@@ -291,6 +341,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    flatpickr(".datetime-picker", {
+        enableTime: true,
+        altInput: true,
+        altFormat: "Y-m-d H:i",
+        dateFormat: "U"
+    });
+</script>
 
 </body>
 </html>

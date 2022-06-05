@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.riddle
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.UserService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
@@ -17,7 +17,7 @@ open class RiddleService(
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
     private val userService: UserService,
-    private val clock: ClockService
+    private val clock: TimeService
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)

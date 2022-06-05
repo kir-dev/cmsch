@@ -138,4 +138,6 @@ open class MenuService(
         return menusForRoles[role]!!
     }
 
+    fun getComponentNames() = components.map { it.component }
+
 }

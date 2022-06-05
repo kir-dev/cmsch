@@ -189,6 +189,7 @@ h1 {
     margin-bottom: 20px;
     font-weight: 500;
     color: #f6f6f6;
+    text-align: center;
 }
 
 .content .split .payload h3 {

@@ -7,7 +7,7 @@ import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -23,7 +23,7 @@ import java.util.*
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(HomeComponent::class)
 class HomeApiController(
-    private val clock: ClockService,
+    private val clock: TimeService,
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val newsRepository: Optional<NewsRepository>,
     private val eventsRepository: Optional<EventRepository>,
