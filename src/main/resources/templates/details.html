@@ -192,7 +192,7 @@
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
                                 <script th:inline="javascript">
                                     var index = /*[[${iter.index}]]*/ 0;
-                                    var editor = new SimpleMDE({
+                                    new SimpleMDE({
                                         element: document.getElementById(`input${index}`),
                                         spellChecker: false
                                     });

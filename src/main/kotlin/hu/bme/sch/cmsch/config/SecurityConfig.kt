@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.config
 
+import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
 import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.JwtTokenProvider
@@ -11,12 +12,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import java.util.*
 
 
 @EnableWebSecurity
 @Configuration
 open class SecurityConfig(
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val countdownConfigurer: Optional<CountdownFilterConfigurer>
 ) : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
@@ -46,6 +49,8 @@ open class SecurityConfig(
                 .and().formLogin().disable()
                 .exceptionHandling().accessDeniedPage("/403")
                 .and().apply(JwtConfigurer(jwtTokenProvider))
+
+        countdownConfigurer.ifPresent { http.apply(it) }
         http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**")
     }
 

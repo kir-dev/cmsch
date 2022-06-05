@@ -7,12 +7,13 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 
 @Service
-class ClockService(
+class TimeService(
     private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     val timeZone = ZoneId.of(startupPropertyConfig.zoneId)!!
 
     fun getTimeInSeconds() = LocalDateTime.now(timeZone).atZone(ZoneOffset.UTC)?.toInstant()?.epochSecond ?: 0
+    fun getTime() = LocalDateTime.now(timeZone).atZone(ZoneOffset.UTC)?.toInstant()?.toEpochMilli() ?: 0
 
 }

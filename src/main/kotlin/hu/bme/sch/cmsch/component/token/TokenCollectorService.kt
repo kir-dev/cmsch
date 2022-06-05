@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.token
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.UserService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
@@ -17,7 +17,7 @@ open class TokenCollectorService(
     private val tokenPropertyRepository: TokenPropertyRepository,
     private val groupRepository: GroupRepository,
     private val userService: UserService,
-    private val clock: ClockService
+    private val clock: TimeService
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)

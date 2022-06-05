@@ -11,7 +11,7 @@ import hu.bme.sch.cmsch.component.token.TokenComponent
 import hu.bme.sch.cmsch.controller.UNKNOWN_USER
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -34,7 +34,7 @@ class ProfileApiController(
     private val riddleService: RiddleService,
     private val tasksService: TasksService,
     private val tokenComponent: TokenComponent,
-    private val clock: ClockService,
+    private val clock: TimeService,
     @Value("\${cmsch.group-select.fallback-group:Vendég}") private val fallbackGroup: String
 ) {
 

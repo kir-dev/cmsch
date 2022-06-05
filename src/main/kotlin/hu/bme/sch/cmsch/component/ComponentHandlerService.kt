@@ -10,7 +10,6 @@ class ComponentHandlerService(
 
     fun getComponentConstantsForRole(role: RoleType): Map<String, Map<String, String>> {
         return components
-            .filter { it.menuDisplayName != null }
             .filter { it.minRole.isAvailableForRole(role) || role.isAdmin }
             .associate { it.component to it.attachConstants() }
     }

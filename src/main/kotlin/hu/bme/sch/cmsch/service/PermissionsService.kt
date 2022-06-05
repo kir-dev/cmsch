@@ -96,6 +96,11 @@ object ControlPermissions : PermissionGroup {
         "Impresszum komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_COUNTDOWN = PermissionValidator(
+        "COUNTDOWN_CONTROL",
+        "Visszaszámlálás komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,

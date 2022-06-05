@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +14,7 @@ open class ProductService(
     private val productRepository: ProductRepository,
     private val soldProductRepository: SoldProductRepository,
     private val userRepository: UserRepository,
-    private val clock: ClockService
+    private val clock: TimeService
 ) {
 
     @Transactional(readOnly = true)

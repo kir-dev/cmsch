@@ -7,7 +7,7 @@ import hu.bme.sch.cmsch.controller.admin.EXPERIMENTAL_CATEGORY
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.ExperimentalPermissions.PERMISSION_EXP_TRANSACTION_IMPORT
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
@@ -24,7 +24,7 @@ import kotlin.reflect.KProperty1
 @ConditionalOnBean(DebtComponent::class)
 class ImportDebtCompleteController(
     private val transactions: SoldProductRepository,
-    private val clock: ClockService,
+    private val clock: TimeService,
     private val adminMenuService: AdminMenuService
 ) {
 

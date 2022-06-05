@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.impressum
+package hu.bme.sch.cmsch.component.countdown
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
@@ -14,21 +14,21 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/admin/control/component/impressum")
-@ConditionalOnBean(ImpressumComponent::class)
-class ImpressumAdminController(
+@RequestMapping("/admin/control/component/countdown")
+@ConditionalOnBean(CountdownComponent::class)
+class CountdownAdminController(
     adminMenuService: AdminMenuService,
-    component: ImpressumComponent,
+    component: CountdownComponent,
     menuService: MenuService
 ) : ComponentApiBase(
     adminMenuService,
-    ImpressumComponent::class.java,
+    CountdownComponent::class.java,
     component,
     PERMISSION_CONTROL_IMPRESSUM,
-    componentMenuName = "Impresszum",
+    componentMenuName = "Visszaszámlálás",
     menuService = menuService,
-    componentMenuIcon = "alternate_email",
+    componentMenuIcon = "alarm",
     insertComponentCategory = false,
     componentCategory = ApplicationComponent::class.simpleName!!,
-    componentMenuPriority = 21,
+    componentMenuPriority = 20,
 )

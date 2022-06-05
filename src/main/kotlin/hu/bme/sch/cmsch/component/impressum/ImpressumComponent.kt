@@ -43,7 +43,7 @@ class ImpressumComponent(
     }
 
     final val title = SettingProxy(componentSettingService, component,
-        "title", "Programok",
+        "title", "Impressum",
         fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
@@ -70,42 +70,42 @@ class ImpressumComponent(
     )
 
     val developerSchamiUrl = SettingProxy(componentSettingService, component,
-        "developerSchamiUrl", "https://warp.sch.bme.hu/kir-dev/profiles/schami.png", type = SettingType.TEXT,
+        "developerSchamiUrl", "https://warp.sch.bme.hu/kir-dev/profiles/schami.png", type = SettingType.URL,
         fieldName = "Schámi profilképe"
     )
 
     val developerBalintUrl = SettingProxy(componentSettingService, component,
-        "developerBalintUrl", "https://warp.sch.bme.hu/kir-dev/profiles/balint.png", type = SettingType.TEXT,
+        "developerBalintUrl", "https://warp.sch.bme.hu/kir-dev/profiles/balint.png", type = SettingType.URL,
         fieldName = "Bálint profilképe"
     )
 
     val developerLaciUrl = SettingProxy(componentSettingService, component,
-        "developerLaciUrl", "https://warp.sch.bme.hu/kir-dev/profiles/laci.png", type = SettingType.TEXT,
+        "developerLaciUrl", "https://warp.sch.bme.hu/kir-dev/profiles/laci.png", type = SettingType.URL,
         fieldName = "Laci profilképe"
     )
 
     val developerBeniUrl = SettingProxy(componentSettingService, component,
-        "developerBeniUrl", "https://warp.sch.bme.hu/kir-dev/profiles/beni.png", type = SettingType.TEXT,
+        "developerBeniUrl", "https://warp.sch.bme.hu/kir-dev/profiles/beni.png", type = SettingType.URL,
         fieldName = "Beni profilképe"
     )
 
     val developerTriszUrl = SettingProxy(componentSettingService, component,
-        "developerTriszUrl", "https://warp.sch.bme.hu/kir-dev/profiles/trisz.png", type = SettingType.TEXT,
+        "developerTriszUrl", "https://warp.sch.bme.hu/kir-dev/profiles/trisz.png", type = SettingType.URL,
         fieldName = "Trisz profilképe"
     )
 
     val developerSamuUrl = SettingProxy(componentSettingService, component,
-        "developerSamuUrl", "https://warp.sch.bme.hu/kir-dev/profiles/samu.png", type = SettingType.TEXT,
+        "developerSamuUrl", "https://warp.sch.bme.hu/kir-dev/profiles/samu.png", type = SettingType.URL,
         fieldName = "Samu profilképe"
     )
 
     val developerDaniUrl = SettingProxy(componentSettingService, component,
-        "developerDaniUrl", "https://warp.sch.bme.hu/kir-dev/profiles/dani.png", type = SettingType.TEXT,
+        "developerDaniUrl", "https://warp.sch.bme.hu/kir-dev/profiles/dani.png", type = SettingType.URL,
         fieldName = "Dani profilképe"
     )
 
     val developerMateUrl = SettingProxy(componentSettingService, component,
-        "developerMateUrl", "https://warp.sch.bme.hu/kir-dev/profiles/mate.png", type = SettingType.TEXT,
+        "developerMateUrl", "https://warp.sch.bme.hu/kir-dev/profiles/mate.png", type = SettingType.URL,
         fieldName = "Máté profilképe"
     )
 

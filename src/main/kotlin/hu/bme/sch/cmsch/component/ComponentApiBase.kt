@@ -62,6 +62,7 @@ abstract class ComponentApiBase(
         model.addAttribute("component", component.component)
         model.addAttribute("title", componentMenuName)
         model.addAttribute("settings", component.allSettings)
+        model.addAttribute("componentNames", menuService.getComponentNames())
         model.addAttribute("user", user)
 
         return "componentSettings"

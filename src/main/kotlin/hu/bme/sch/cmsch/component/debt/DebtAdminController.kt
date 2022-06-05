@@ -5,12 +5,11 @@ import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_DEBTS
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_PRODUCTS
-import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -56,7 +55,7 @@ class ProductController(
 @ConditionalOnBean(DebtComponent::class)
 class SoldProductController(
     repo: SoldProductRepository,
-    private val clock: ClockService,
+    private val clock: TimeService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: DebtComponent

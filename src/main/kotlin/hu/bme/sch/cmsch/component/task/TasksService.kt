@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.task
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
-import hu.bme.sch.cmsch.service.ClockService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.uploadFile
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
@@ -20,7 +20,7 @@ open class TasksService(
     private val taskRepository: TaskEntityRepository,
     private val submitted: SubmittedTaskRepository,
     private val categories: TaskCategoryRepository,
-    private val clock: ClockService
+    private val clock: TimeService
 ) {
 
     companion object {

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service
 class GroupSelectionComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("leaderboard", "/", componentSettingService, env) {
+) : ComponentBase("groupselection", "/", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(
