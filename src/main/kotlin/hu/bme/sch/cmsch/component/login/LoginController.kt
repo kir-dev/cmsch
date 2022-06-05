@@ -266,11 +266,20 @@ class LoginController(
     }
 
     fun generateLoginUrl(uniqueId: String): String {
-        return "${loginComponent.loginBaseUrl.getValue()}?" +
-                "response_type=code" +
-                "&client_id=${authSch.clientIdentifier}" +
-                "&state=${uniqueId}" +
-                "&scope=${loginComponent.authschScopes.joinToString("+") { it.scope }}"
+        return if (loginComponent.onlyBmeProvider.isValueTrue()) {
+            val target = "https://auth.sch.bme.hu/site/login/provider/bme?" +
+                    "response_type=code" +
+                    "&client_id=${authSch.clientIdentifier}" +
+                    "&state=${uniqueId}" +
+                    "&scope=${loginComponent.authschScopes.joinToString("+") { it.scope }}"
+            "https://auth.sch.bme.hu/Shibboleth.sso/Login?target=${encoder.encode(target, StandardCharsets.UTF_8)}"
+        } else {
+            "${authSch.loginUrlBase}?" +
+                    "response_type=code" +
+                    "&client_id=${authSch.clientIdentifier}" +
+                    "&state=${uniqueId}" +
+                    "&scope=${loginComponent.authschScopes.joinToString("+") { it.scope }}"
+        }
     }
 
     fun buildUniqueState(request: HttpServletRequest): String {

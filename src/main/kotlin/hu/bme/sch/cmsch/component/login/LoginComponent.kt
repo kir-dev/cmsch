@@ -25,7 +25,7 @@ class LoginComponent(
 
             authschGroup,
             authschScopesRaw,
-            loginBaseUrl,
+            onlyBmeProvider,
 
             grantRoleGroup,
             staffGroups,
@@ -75,9 +75,9 @@ class LoginComponent(
         log.info("Authsch scopes changed to '{}' and saved to the db as: '{}'", authschScopes.map { it.name }, authschScopesRaw.rawValue)
     }
 
-    val loginBaseUrl = SettingProxy(componentSettingService, component,
-        "loginBaseUrl", "https://auth.sch.bme.hu/site/login", serverSideOnly = true,
-        fieldName = "Belépés base url", description = ""
+    val onlyBmeProvider = SettingProxy(componentSettingService, component,
+        "onlyBmeProvider", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Címtáron keresztüli belépés", description = "Csak BME címtáron keresztüli belépés jelenik meg"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
