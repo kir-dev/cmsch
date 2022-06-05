@@ -78,32 +78,32 @@
 
         <blockquote>Nyomj Ctrl+P-t és mentsd el PDF-be, mert csak korlátozott ideig elérhető itt az oldalon!</blockquote>
 
-        <div class="submission" th:each="achi : ${achievements}">
-            <h2><span class="material-icons">emoji_events</span> <span th:text="|${categories[achi.achievement.categoryId]?.get(0)?.name ?: 'N/A'} - ${achi.achievement.title}|">Kategória - Feladat neve</span></h2>
+        <div class="submission" th:each="task : ${tasks}">
+            <h2><span class="material-icons">emoji_events</span> <span th:text="|${categories[task.task.categoryId]?.get(0)?.name ?: 'N/A'} - ${task.task.title}|">Kategória - Feladat neve</span></h2>
             <table>
                 <tr>
                     <td>Feladat:</td>
-                    <td th:text="${achi.achievement.description}">Feladat szövege</td>
+                    <td th:text="${task.task.description}">Feladat szövege</td>
                 </tr>
                 <tr>
                     <td>Státusz:</td>
-                    <td th:text="|${achi.approved ? 'Elfogadva' : (achi.rejected ? 'Visszautasítva' : 'Nincs értékelve')}|">Elfogadva</td>
+                    <td th:text="|${task.approved ? 'Elfogadva' : (task.rejected ? 'Visszautasítva' : 'Nincs értékelve')}|">Elfogadva</td>
                 </tr>
                 <tr>
                     <td>Kapott pontok:</td>
-                    <td th:text="|${achi.score}/${achi.achievement.maxScore}|">5/5</td>
+                    <td th:text="|${task.score}/${task.task.maxScore}|">5/5</td>
                 </tr>
-                <tr th:if="${achi.achievement.type.name != 'IMAGE'}">
+                <tr th:if="${task.task.type.name != 'IMAGE'}">
                     <td>Beadás:</td>
-                    <td th:text="${achi.textAnswer}">Szöveges beadás</td>
+                    <td th:text="${task.textAnswer}">Szöveges beadás</td>
                 </tr>
                 <tr>
                     <td>Értékelés:</td>
-                    <td th:text="${achi.response}">Jó lett</td>
+                    <td th:text="${task.response}">Jó lett</td>
                 </tr>
             </table>
-            <div class="image-holder" th:if="${achi.achievement.type.name != 'TEXT'}" >
-                <img src="" th:src="|@{/cdn}/${achi.imageUrlAnswer}|" alt="Beadás képe">
+            <div class="image-holder" th:if="${task.task.type.name != 'TEXT'}" >
+                <img src="" th:src="|@{/cdn}/${task.imageUrlAnswer}|" alt="Beadás képe">
             </div>
         </div>
 

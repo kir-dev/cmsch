@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.service
 
 import hu.bme.sch.cmsch.admin.*
-import hu.bme.sch.cmsch.component.achievement.AchievementType
+import hu.bme.sch.cmsch.component.task.TaskType
 import hu.bme.sch.cmsch.component.debt.ProductType
 import hu.bme.sch.cmsch.model.*
 import org.springframework.data.repository.CrudRepository
@@ -20,7 +20,7 @@ open class ImportService {
             MajorType::class to ({ MajorType.valueOf(it) }),
             GuildType::class to ({ GuildType.valueOf(it) }),
             ProductType::class to ({ ProductType.valueOf(it) }),
-            AchievementType::class to ({ AchievementType.valueOf(it) }),
+            TaskType::class to ({ TaskType.valueOf(it) }),
     )
 
     @Transactional(rollbackFor = [Throwable::class])

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_RATE_ACHIEVEMENTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_RATE_TASKS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -20,29 +20,29 @@ const val CONTROL_MODE_RATE = "rate"
 const val CONTROL_MODE_GRADE = "grade"
 
 @Controller
-@RequestMapping("/admin/control/rate-achievements")
-@ConditionalOnBean(AchievementComponent::class)
-class AchievementAdminRateController(
-    private val submittedRepository: SubmittedAchievementRepository,
+@RequestMapping("/admin/control/rate-tasks")
+@ConditionalOnBean(TaskComponent::class)
+class TaskAdminRateController(
+    private val submittedRepository: SubmittedTaskRepository,
     private val adminMenuService: AdminMenuService
 ) {
 
-    private val view = "rate-achievements"
+    private val view = "rate-tasks"
     private val titleSingular = "Értékelés"
     private val titlePlural = "Értékelések"
-    private val description = "A beadott bucketlistek értékelése"
-    private val permissionControl = PERMISSION_RATE_ACHIEVEMENTS
+    private val description = "A beadott feladatok értékelése"
+    private val permissionControl = PERMISSION_RATE_TASKS
 
-    private val entitySourceMapping: Map<String, (SubmittedAchievementEntity) -> List<String>> =
+    private val entitySourceMapping: Map<String, (SubmittedTaskEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
 
-    private val overviewDescriptor = OverviewBuilder(GradedAchievementGroupDto::class)
-    private val submittedDescriptor = OverviewBuilder(SubmittedAchievementEntity::class)
+    private val overviewDescriptor = OverviewBuilder(GradedTaskGroupDto::class)
+    private val submittedDescriptor = OverviewBuilder(SubmittedTaskEntity::class)
 
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            AchievementComponent::class.simpleName!!, AdminMenuEntry(
+            TaskComponent::class.simpleName!!, AdminMenuEntry(
                 titlePlural,
                 "thumbs_up_down",
                 "/admin/control/${view}",
@@ -75,15 +75,15 @@ class AchievementAdminRateController(
         return "overview"
     }
 
-    private fun fetchOverview(): List<GradedAchievementGroupDto> {
+    private fun fetchOverview(): List<GradedTaskGroupDto> {
         return submittedRepository.findAll().asSequence()
-            .groupBy { it.achievement }
+            .groupBy { it.task }
             .map { it.value }
             .filter { it.isNotEmpty() }
             .map { submissions ->
-                GradedAchievementGroupDto(
-                    submissions[0].achievement?.id ?: 0,
-                    submissions[0].achievement?.title ?: "n/a",
+                GradedTaskGroupDto(
+                    submissions[0].task?.id ?: 0,
+                    submissions[0].task?.title ?: "n/a",
                     submissions.count { it.approved },
                     submissions.count { it.rejected },
                     submissions.count { !it.approved && !it.rejected }
@@ -108,7 +108,7 @@ class AchievementAdminRateController(
         model.addAttribute("view", view)
         model.addAttribute("columns", submittedDescriptor.getColumns())
         model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", submittedRepository.findByAchievement_Id(id))
+        model.addAttribute("rows", submittedRepository.findByTask_Id(id))
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_GRADE)
 
@@ -131,7 +131,7 @@ class AchievementAdminRateController(
         model.addAttribute("view", view)
         model.addAttribute("columns", submittedDescriptor.getColumns())
         model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", submittedRepository.findByAchievement_IdAndRejectedIsFalseAndApprovedIsFalse(id))
+        model.addAttribute("rows", submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalse(id))
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_GRADE)
 
@@ -162,9 +162,9 @@ class AchievementAdminRateController(
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
             model.addAttribute("data", entity.orElseThrow())
-            model.addAttribute("taskTitle", entity.orElseThrow().achievement?.title)
-            model.addAttribute("taskDescription", entity.orElseThrow().achievement?.description)
-            val maxScore = entity.orElseThrow().achievement?.maxScore ?: 0
+            model.addAttribute("taskTitle", entity.orElseThrow().task?.title)
+            model.addAttribute("taskDescription", entity.orElseThrow().task?.description)
+            val maxScore = entity.orElseThrow().task?.maxScore ?: 0
             model.addAttribute("comment", "Feladványhoz tartozó max pont: $maxScore")
             model.addAttribute("maxScore", maxScore)
         }
@@ -173,7 +173,7 @@ class AchievementAdminRateController(
 
     @PostMapping("/grade/{id}")
     fun edit(@PathVariable id: Int,
-             @ModelAttribute(binding = false) dto: SubmittedAchievementEntity,
+             @ModelAttribute(binding = false) dto: SubmittedTaskEntity,
              model: Model,
              auth: Authentication
     ): String {
@@ -194,13 +194,13 @@ class AchievementAdminRateController(
             entity.get().rejected = false
         entity.get().id = id
         submittedRepository.save(entity.get())
-        return "redirect:/admin/control/$view/rate/${entity.get().achievement?.id ?: ""}"
+        return "redirect:/admin/control/$view/rate/${entity.get().task?.id ?: ""}"
     }
 
     private fun updateEntity(
         descriptor: OverviewBuilder,
-        entity: SubmittedAchievementEntity,
-        dto: SubmittedAchievementEntity
+        entity: SubmittedTaskEntity,
+        dto: SubmittedTaskEntity
     ) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore) {

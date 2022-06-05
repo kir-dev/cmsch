@@ -1,14 +1,14 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 
-data class GradedAchievementGroupDto(
+data class GradedTaskGroupDto(
 
     @property:GenerateOverview(visible = false)
     val id: Int,
 
     @property:GenerateOverview(columnName = "Cím", order = 1)
-    val achievementName: String,
+    val taskName: String,
 
     @property:GenerateOverview(columnName = "OK", order = 2, centered = true)
     val approved: Int,

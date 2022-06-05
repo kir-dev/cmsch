@@ -22,8 +22,8 @@ class ProfileComponent(
             title, menuDisplayName, minRole,
 
             countersGroup,
-            showAchievements,
-            achievementCounterName,
+            showTasks,
+            taskCounterName,
             showRiddles,
             riddleCounterName,
             showTokens,
@@ -78,14 +78,14 @@ class ProfileComponent(
                 "a komponenseknek is be kell kapcsolva legyenek, hogy az itteni beállítások működjenek"
     )
 
-    val showAchievements = SettingProxy(componentSettingService, component,
-        "showAchievements", "false", type = SettingType.BOOLEAN,
-        fieldName = "Achievement számláló aktív", description = "Legyen-e látató az achievement szmláló?"
+    val showTasks = SettingProxy(componentSettingService, component,
+        "showTasks", "false", type = SettingType.BOOLEAN,
+        fieldName = "Feladat számláló aktív", description = "Legyen-e látató a feladat számláló?"
     )
 
-    val achievementCounterName = SettingProxy(componentSettingService, component,
-        "achievementCounterName", "BucketList",
-        fieldName = "Achievement számláló neve", description = "Ez a felirata az achievement számlálónak"
+    val taskCounterName = SettingProxy(componentSettingService, component,
+        "taskCounterName", "BucketList",
+        fieldName = "Feladat számláló neve", description = "Ez a felirata a feladat számlálónak"
     )
 
     val showRiddles = SettingProxy(componentSettingService, component,

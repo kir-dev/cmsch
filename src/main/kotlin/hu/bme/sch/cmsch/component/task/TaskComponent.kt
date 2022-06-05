@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.component.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service
 @Service
 @ConditionalOnProperty(
     prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["achievement"],
+    name = ["task"],
     havingValue = "true",
     matchIfMissing = false
 )
-class AchievementComponent(
+class TaskComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("achievement", "/tasks", componentSettingService, env) {
+) : ComponentBase("task", "/tasks", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(

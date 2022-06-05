@@ -1,16 +1,16 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.component.leaderboard.TopListAbstractEntryDto
 
-data class AchievementsView(
+data class TasksView(
 
     @JsonView(Preview::class)
     val score: Int?,
 
     @JsonView(Preview::class)
-    val categories: List<AchievementCategoryDto> = listOf(),
+    val categories: List<TaskCategoryDto> = listOf(),
 
     @JsonView(Preview::class)
     val leaderBoard: List<TopListAbstractEntryDto>,

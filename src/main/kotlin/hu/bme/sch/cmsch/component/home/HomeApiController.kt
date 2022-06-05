@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.home
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.component.achievement.AchievementsService
+import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.news.NewsRepository
@@ -9,7 +9,6 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ClockService
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
-import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -28,7 +27,7 @@ class HomeApiController(
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val newsRepository: Optional<NewsRepository>,
     private val eventsRepository: Optional<EventRepository>,
-    private val achievements: Optional<AchievementsService>
+    private val tasks: Optional<TasksService>
 ) {
 
     @JsonView(Preview::class)
@@ -51,9 +50,9 @@ class HomeApiController(
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
                 .take(4),
             upcomingEvents = upcomingEvents,
-            achievements = achievements.map { achievementsService ->
-                user?.group?.let { achievementsService.getAllAchievementsForGroup(it) }
-                    ?: achievementsService.getAllAchievementsForGuests()
+            tasks = tasks.map { tasksService ->
+                user?.group?.let { tasksService.getAllTasksForGroup(it) }
+                    ?: tasksService.getAllTasksForGuests()
             }.orElse(listOf()),
             leaderBoard = leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()),
         )

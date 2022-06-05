@@ -7,47 +7,47 @@ import hu.bme.sch.cmsch.model.RoleType
 
 data class Profile2View(
     @JsonView(FullDetails::class)
-        val fullName: String = "",
+    val fullName: String = "",
 
     @JsonView(FullDetails::class)
-        val groupName: String? = null,
+    val groupName: String? = null,
 
     @JsonView(FullDetails::class)
-        val groupSelectionAllowed: Boolean = false,
+    val groupSelectionAllowed: Boolean = false,
 
     @JsonView(FullDetails::class)
-        val availableGroups: Map<Int, String> = mapOf(),
+    val availableGroups: Map<Int, String> = mapOf(),
 
     @JsonView(FullDetails::class)
-        val fallbackGroup: Int? = null,
+    val fallbackGroup: Int? = null,
 
     @JsonView(FullDetails::class)
-        val role: RoleType = RoleType.GUEST,
+    val role: RoleType = RoleType.GUEST,
 
     @JsonView(FullDetails::class)
-        val tokens: List<TokenDto> = listOf(),
+    val tokens: List<TokenDto> = listOf(),
 
     @JsonView(FullDetails::class)
-        val collectedTokenCount: Int = 0,
+    val collectedTokenCount: Int = 0,
 
     @JsonView(FullDetails::class)
-        val totalTokenCount: Int = 0,
+    val totalTokenCount: Int = 0,
 
     @JsonView(FullDetails::class)
-        val totalRiddleCount: Int = 0,
+    val totalRiddleCount: Int = 0,
 
     @JsonView(FullDetails::class)
-        val completedRiddleCount: Int = 0,
+    val completedRiddleCount: Int = 0,
 
     @JsonView(FullDetails::class)
-        val totalAchievementCount: Int = 0,
+    val totalTaskCount: Int = 0,
 
     @JsonView(FullDetails::class)
-        val submittedAchievementCount: Int = 0,
+    val submittedTaskCount: Int = 0,
 
     @JsonView(FullDetails::class)
-        val completedAchievementCount: Int = 0,
+    val completedTaskCount: Int = 0,
 
     @JsonView(FullDetails::class)
-        val minTokenToComplete: Int = 0,
+    val minTokenToComplete: Int = 0,
 )

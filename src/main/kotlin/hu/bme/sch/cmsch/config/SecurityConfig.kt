@@ -25,7 +25,7 @@ open class SecurityConfig(
                 .antMatchers("/", "/control/loggedin", "/control/login", "/control/logged-out", "/api/events",
                         "/api/events/**", "/api/extra-page/**", "/api/version", "/style.css", "/control/test-user",
                         "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/events/**", "/cdn/riddles/**",
-                        "/api/warning", "/countdown", "/control/logout", "/control/test", "/api/achievement", "/control/open-site",
+                        "/api/warning", "/countdown", "/control/logout", "/control/test", "/api/task/**", "/control/open-site",
                         "/api/qr/**")
                     .permitAll()
 
@@ -33,7 +33,7 @@ open class SecurityConfig(
                         "/api/profile",
                         "/api/riddle/**",
                         "/control/entrypoint",
-                        "/cdn/achievement/**",
+                        "/cdn/task/**",
                         "/api/token-after-login",
                         "/api/token/**",
                         "/api/riddle/**",

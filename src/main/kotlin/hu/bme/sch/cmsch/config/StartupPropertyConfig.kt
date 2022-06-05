@@ -25,7 +25,7 @@ data class StartupPropertyConfig(
     val profileQrCodeSize: Int = 360,
 
     // Strategies
-    val achievementOwnershipMode: OwnershipType = OwnershipType.USER,
+    val taskOwnershipMode: OwnershipType = OwnershipType.USER,
     val riddleOwnershipMode: OwnershipType = OwnershipType.USER,
     val tokenOwnershipMode: OwnershipType = OwnershipType.USER,
 ) {

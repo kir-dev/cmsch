@@ -11,7 +11,7 @@ data class ComponentLoadConfig(
 
     val app: Boolean = false,
     val login: Boolean = false,
-    val achievement: Boolean = false,
+    val task: Boolean = false,
     val profile: Boolean = false,
     val riddle: Boolean = false,
     val token: Boolean = false,
@@ -21,7 +21,7 @@ data class ComponentLoadConfig(
     val debt: Boolean = false,
     val location: Boolean = false,
     val leaderboard: Boolean = false,
-    val contdown: Boolean = false,
+    val countdown: Boolean = false,
     val home: Boolean = false,
     val groupselection: Boolean = false,
 

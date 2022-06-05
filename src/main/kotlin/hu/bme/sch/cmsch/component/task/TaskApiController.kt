@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
@@ -8,7 +8,6 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.ClockService
-import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -20,35 +19,35 @@ import java.util.*
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
-@ConditionalOnBean(AchievementComponent::class)
-class AchievementApiController(
+@ConditionalOnBean(TaskComponent::class)
+class TaskApiController(
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val leaderBoardComponent: Optional<LeaderBoardComponent>,
-    private val achievements: AchievementsService,
+    private val tasks: TasksService,
     private val clock: ClockService,
     private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     @JsonView(Preview::class)
-    @GetMapping("/achievement")
-    fun achievements(auth: Authentication): AchievementsView {
-        val categories: List<AchievementCategoryDto>
+    @GetMapping("/task")
+    fun tasks(auth: Authentication): TasksView {
+        val categories: List<TaskCategoryDto>
         val score: Int?
         val leaderBoardAvailable = leaderBoardComponent.map { it.leaderboardEnabled.isValueTrue() }.orElse(false)
         val leaderBoardFrozen = leaderBoardComponent.map { it.leaderboardFrozen.isValueTrue() }.orElse(true)
 
-        when (startupPropertyConfig.achievementOwnershipMode) {
+        when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth.getUserOrNull() ?: return AchievementsView(
+                val user = auth.getUserOrNull() ?: return TasksView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
                     leaderBoardFrozen = leaderBoardFrozen
                 )
-                categories = achievements.getCategoriesForUser(user.id)
+                categories = tasks.getCategoriesForUser(user.id)
                 score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfUser(user) }.orElse(null) else null
 
-                return AchievementsView(
+                return TasksView(
                     score = score,
                     categories = categories
                         .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
@@ -58,16 +57,16 @@ class AchievementApiController(
                 )
             }
             OwnershipType.GROUP -> {
-                val group = auth.getUserFromDatabaseOrNull()?.group ?: return AchievementsView(
+                val group = auth.getUserFromDatabaseOrNull()?.group ?: return TasksView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
                     leaderBoardFrozen = leaderBoardFrozen
                 )
-                categories = achievements.getCategoriesForGroup(group.id)
+                categories = tasks.getCategoriesForGroup(group.id)
                 score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfGroup(group) }.orElse(null) else null
 
-                return AchievementsView(
+                return TasksView(
                     score = score,
                     categories = categories
                         .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
@@ -80,85 +79,85 @@ class AchievementApiController(
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/achievement/category/{categoryId}")
-    fun achievementCategory(@PathVariable categoryId: Int, auth: Authentication): AchievementCategoryView {
-        val category = achievements.getCategory(categoryId) ?: return AchievementCategoryView(
+    @GetMapping("/task/category/{categoryId}")
+    fun taskCategory(@PathVariable categoryId: Int, auth: Authentication): TaskCategoryView {
+        val category = tasks.getCategory(categoryId) ?: return TaskCategoryView(
             categoryName = "Nem található O.o",
-            achievements = listOf()
+            tasks = listOf()
         )
 
-        val achievements =  when (startupPropertyConfig.achievementOwnershipMode) {
+        val tasks =  when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth.getUserOrNull() ?: return AchievementCategoryView(
+                val user = auth.getUserOrNull() ?: return TaskCategoryView(
                     categoryName = "Nem található",
-                    achievements = listOf()
+                    tasks = listOf()
                 )
-                achievements.getAllAchievementsForUser(user)
+                tasks.getAllTasksForUser(user)
             }
             OwnershipType.GROUP -> {
-                val group = auth.getUserFromDatabaseOrNull()?.group ?: return AchievementCategoryView(
+                val group = auth.getUserFromDatabaseOrNull()?.group ?: return TaskCategoryView(
                     categoryName = "Nem található",
-                    achievements = listOf()
+                    tasks = listOf()
                 )
-                achievements.getAllAchievementsForGroup(group)
+                tasks.getAllTasksForGroup(group)
             }
         }
 
-        return AchievementCategoryView(
+        return TaskCategoryView(
             categoryName = category.name,
-            achievements = achievements.filter { it.achievement.categoryId == categoryId }
+            tasks = tasks.filter { it.task.categoryId == categoryId }
         )
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/achievement/submit/{achievementId}")
-    fun achievement(@PathVariable achievementId: Int, auth: Authentication): SingleAchievementView {
-        val achievement = achievements.getById(achievementId)
-        if (achievement.orElse(null)?.visible?.not() == true)
-            return SingleAchievementView(achievement = null, submission = null)
+    @GetMapping("/task/submit/{taskId}")
+    fun task(@PathVariable taskId: Int, auth: Authentication): SingleTaskView {
+        val task = tasks.getById(taskId)
+        if (task.orElse(null)?.visible?.not() == true)
+            return SingleTaskView(task = null, submission = null)
 
-        val submission = when (startupPropertyConfig.achievementOwnershipMode) {
+        val submission = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth.getUserFromDatabaseOrNull() ?: return SingleAchievementView(
-                    achievement = achievement.orElse(null),
+                val user = auth.getUserFromDatabaseOrNull() ?: return SingleTaskView(
+                    task = task.orElse(null),
                     submission = null,
-                    status = AchievementStatus.NOT_SUBMITTED
+                    status = TaskStatus.NOT_SUBMITTED
                 )
-                achievements.getSubmissionForUserOrNull(user, achievement)
+                tasks.getSubmissionForUserOrNull(user, task)
             }
             OwnershipType.GROUP -> {
-                val group = auth.getUserFromDatabaseOrNull()?.group ?: return SingleAchievementView(
-                    achievement = achievement.orElse(null),
+                val group = auth.getUserFromDatabaseOrNull()?.group ?: return SingleTaskView(
+                    task = task.orElse(null),
                     submission = null,
-                    status = AchievementStatus.NOT_SUBMITTED
+                    status = TaskStatus.NOT_SUBMITTED
                 )
-                achievements.getSubmissionForGroupOrNull(group, achievement)
+                tasks.getSubmissionForGroupOrNull(group, task)
             }
         }
 
-        return SingleAchievementView(
-            achievement = achievement.orElse(null),
+        return SingleTaskView(
+            task = task.orElse(null),
             submission = submission,
-            status = if (submission?.approved == true) AchievementStatus.ACCEPTED
-            else if (submission?.rejected == true) AchievementStatus.REJECTED
-            else if (submission?.approved == false && !submission.rejected) AchievementStatus.SUBMITTED
-            else AchievementStatus.NOT_SUBMITTED
+            status = if (submission?.approved == true) TaskStatus.ACCEPTED
+            else if (submission?.rejected == true) TaskStatus.REJECTED
+            else if (submission?.approved == false && !submission.rejected) TaskStatus.SUBMITTED
+            else TaskStatus.NOT_SUBMITTED
         )
     }
 
     @ResponseBody
-    @PostMapping("/achievement/submit")
-    fun submitAchievement(
-        @ModelAttribute(binding = false) answer: AchievementSubmissionDto,
+    @PostMapping("/task/submit")
+    fun submitTask(
+        @ModelAttribute(binding = false) answer: TaskSubmissionDto,
         @RequestParam(required = false) file: MultipartFile?,
         auth: Authentication
-    ): AchievementSubmissionResponseDto {
+    ): TaskSubmissionResponseDto {
         val user = auth.getUserFromDatabaseOrNull()
-            ?: return AchievementSubmissionResponseDto(AchievementSubmissionStatus.NO_PERMISSION)
+            ?: return TaskSubmissionResponseDto(TaskSubmissionStatus.NO_PERMISSION)
 
-        return when (startupPropertyConfig.achievementOwnershipMode) {
-            OwnershipType.USER -> AchievementSubmissionResponseDto(achievements.submitAchievementForUser(answer, file, user))
-            OwnershipType.GROUP -> AchievementSubmissionResponseDto(achievements.submitAchievementForGroup(answer, file, user))
+        return when (startupPropertyConfig.taskOwnershipMode) {
+            OwnershipType.USER -> TaskSubmissionResponseDto(tasks.submitTaskForUser(answer, file, user))
+            OwnershipType.GROUP -> TaskSubmissionResponseDto(tasks.submitTaskForGroup(answer, file, user))
         }
     }
 

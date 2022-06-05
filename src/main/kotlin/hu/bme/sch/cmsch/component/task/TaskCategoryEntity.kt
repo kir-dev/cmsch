@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.achievement
+package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
@@ -10,15 +10,15 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
 
-enum class AchievementCategoryType {
+enum class TaskCategoryType {
     REGULAR,
     PROFILE_REQUIRED,
 }
 
 @Entity
-@Table(name="achievementCategories")
-@ConditionalOnBean(AchievementComponent::class)
-data class AchievementCategoryEntity(
+@Table(name="taskCategories")
+@ConditionalOnBean(TaskComponent::class)
+data class TaskCategoryEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
@@ -61,15 +61,15 @@ data class AchievementCategoryEntity(
         note = "A PROFILE_REQUIRED olyan task ami a többi feladattól külön jelenik meg, és külön van mutatva a profil oldalon. " +
                 "Ideális profilkép vagy motivációs levél feltöltéshez.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = AchievementCategoryType::class)
-    var type: AchievementCategoryType = AchievementCategoryType.REGULAR,
+    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskCategoryType::class)
+    var type: TaskCategoryType = TaskCategoryType.REGULAR,
 
-): ManagedEntity {
+    ): ManagedEntity {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as AchievementCategoryEntity
+        other as TaskCategoryEntity
 
         return id != 0 && id == other.id
     }

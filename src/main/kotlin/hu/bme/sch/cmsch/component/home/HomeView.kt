@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.home
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.component.achievement.AchievementEntityWrapperDto
+import hu.bme.sch.cmsch.component.task.TaskEntityWrapperDto
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.dto.Preview
@@ -16,7 +16,7 @@ data class HomeView(
     val upcomingEvents: List<EventEntity> = listOf(),
 
     @JsonView(Preview::class)
-    val achievements: List<AchievementEntityWrapperDto> = listOf(),
+    val tasks: List<TaskEntityWrapperDto> = listOf(),
 
     @JsonView(Preview::class)
     val leaderBoard: List<TopListAsGroupEntryDto>,
