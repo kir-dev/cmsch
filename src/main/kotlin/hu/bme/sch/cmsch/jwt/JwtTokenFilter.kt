@@ -23,14 +23,10 @@ class JwtTokenFilter(
     override fun doFilter(req: ServletRequest, res: ServletResponse, filterChain: FilterChain) {
         val httpRequest = req as HttpServletRequest
         if (httpRequest.servletPath.startsWith("/api/")) {
-            log.info("DEBUG: authenticating with token")
             val token: String? = jwtTokenProvider.resolveToken(httpRequest)
-            log.info("Token {}", token)
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 try {
-                    log.info("Token valid")
                     val auth: Authentication = jwtTokenProvider.getAuthentication(token)
-                    log.info("Auth: {}", auth)
                     SecurityContextHolder.getContext().authentication = auth
                 } catch (e: Exception) {
                     log.warn("Invalid token: {} user cannot be resolved", token, e)
