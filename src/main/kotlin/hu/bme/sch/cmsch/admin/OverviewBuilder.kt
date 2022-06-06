@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.admin
 
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
@@ -51,11 +52,23 @@ class OverviewBuilder(val type: KClass<*>) {
                 .asSequence()
                 .map {
                     val result = mutableListOf<String>()
-                    for (detail in details)
-                        result.add((detail.first.getter.call(it)?.toString() ?: detail.second.defaultValue)
-                                .replace(";", "")
-                                .replace("\n", " ")
-                                .replace("\r", ""))
+                    for (detail in details) {
+                        if (detail.second.type == IMPORT_LOB) {
+                            result.add(
+                                Base64.getEncoder().encodeToString(
+                                    (detail.first.getter.call(it)?.toString() ?: detail.second.defaultValue)
+                                        .toByteArray()
+                                )
+                            )
+                        } else {
+                            result.add(
+                                (detail.first.getter.call(it)?.toString() ?: detail.second.defaultValue)
+                                    .replace(";", "")
+                                    .replace("\n", " ")
+                                    .replace("\r", "")
+                            )
+                        }
+                    }
                     result.joinToString(";")
                 }
                 .joinToString("\n")

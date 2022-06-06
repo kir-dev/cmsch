@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.JwtException
 import org.springframework.stereotype.Service
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import javax.servlet.http.HttpServletRequest
 
 const val JWT_CLAIM_PERMISSIONS = "permissions"

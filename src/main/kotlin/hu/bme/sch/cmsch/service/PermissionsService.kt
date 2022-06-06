@@ -101,6 +101,11 @@ object ControlPermissions : PermissionGroup {
         "Visszaszámlálás komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_SIGNUP = PermissionValidator(
+        "SIGNUP_CONTROL",
+        "Jelentkezés komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -115,6 +120,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_APP,
         PERMISSION_SHOW_DELETE_FILES,
         PERMISSION_CONTROL_IMPRESSUM,
+        PERMISSION_CONTROL_COUNTDOWN,
+        PERMISSION_CONTROL_SIGNUP
     )
 
 }
@@ -266,6 +273,13 @@ object StaffPermissions : PermissionGroup {
         "Toplista megtekintése"
     )
 
+    // Signup Component
+
+    val PERMISSION_EDIT_SIGNUP_RESULTS = PermissionValidator(
+        "SIGNUP_EDIT",
+        "Jelentkezések megtekintése és szerkesztése"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_EDIT_TASKS,
@@ -292,6 +306,7 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_EXTRA_PAGES,
         PERMISSION_EDIT_ANY_EXTRA_PAGES,
         PERMISSION_SHOW_LEADERBOARD,
+        PERMISSION_EDIT_SIGNUP_RESULTS
     )
 
 }

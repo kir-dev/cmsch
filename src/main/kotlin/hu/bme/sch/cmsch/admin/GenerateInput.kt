@@ -16,8 +16,10 @@ const val INPUT_TYPE_ENTITY_SELECT = "entity-select"
 const val INPUT_TYPE_LIST_ENTITIES = "list-entities"
 const val INPUT_TYPE_IMAGE_PREVIEW = "image-preview"
 const val INPUT_TYPE_FILE_PREVIEW = "file-preview"
+const val INPUT_TYPE_FORM_EDITOR = "form-editor"
 
 const val INTERPRETER_INHERIT = "inherit"
+const val INTERPRETER_PATH = "path"
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)

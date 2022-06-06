@@ -114,7 +114,7 @@ data class UserEntity(
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7, label = "Jogkör",
         source = [ "GUEST", "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
-        note = "BASIC = gólya, STAFF = rendező, ADMIN = minden jog")
+        note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6, enumSource = RoleType::class, defaultValue = "GUEST")
     override var role: RoleType = RoleType.GUEST,

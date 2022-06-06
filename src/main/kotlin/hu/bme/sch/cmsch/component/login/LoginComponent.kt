@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 class LoginComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("login", "/profile", componentSettingService, env) {
+) : ComponentBase("login", "/", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(
