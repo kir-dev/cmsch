@@ -26,6 +26,7 @@ class ApplicationComponent(
 
             siteGroup,
             siteName,
+            defaultComponent,
             siteLogoUrl,
             faviconUrl,
 

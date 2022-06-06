@@ -7,6 +7,7 @@ const val IMPORT_BOOLEAN = "boolean"
 const val IMPORT_LONG = "long"
 const val IMPORT_INT = "int"
 const val IMPORT_ENUM = "enum"
+const val IMPORT_LOB = "lob"
 
 annotation class ImportFormat(
         val ignore: Boolean = true,

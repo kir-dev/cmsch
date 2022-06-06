@@ -26,7 +26,7 @@ data class EventEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
-            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett", interpreter = "path")
+            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 0)
     var url: String = "",
@@ -134,9 +134,10 @@ data class EventEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 18, label = "Minimum rang a megtekintéshez",
-            note = "GUEST = kijelentkezett, BASIC = gólya, STAFF = rendező",
+            note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező",
             source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_ENUM, enumSource = RoleType::class)
     var minRole: RoleType = RoleType.GUEST
 
 ): ManagedEntity {

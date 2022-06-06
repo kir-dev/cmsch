@@ -4,9 +4,11 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.task.TaskType
 import hu.bme.sch.cmsch.component.debt.ProductType
 import hu.bme.sch.cmsch.model.*
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 import java.util.function.Supplier
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
@@ -14,6 +16,8 @@ import kotlin.reflect.KProperty1
 
 @Service
 open class ImportService {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     private val mappings = mapOf<KClass<*>, (String) -> Enum<*>> (
             RoleType::class to ({ RoleType.valueOf(it) }),
@@ -42,7 +46,7 @@ open class ImportService {
                                     try {
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId])
                                     } catch (e: IllegalArgumentException) {
-                                        println("Invalid field ${it.first.name} as type ${it.second.type} (TEXT) with value ${dto[it.second.columnId]}")
+                                        log.error("Invalid field ${it.first.name} as type ${it.second.type} (TEXT) with value ${dto[it.second.columnId]}")
                                         throw e
                                     }
                                 }
@@ -50,7 +54,7 @@ open class ImportService {
                                     try {
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].equals("true", ignoreCase = true))
                                     } catch (e: IllegalArgumentException) {
-                                        println("Invalid field ${it.first.name} as type ${it.second.type} (BOOL) with value ${dto[it.second.columnId]}")
+                                        log.error("Invalid field ${it.first.name} as type ${it.second.type} (BOOL) with value ${dto[it.second.columnId]}")
                                         throw e
                                     }
                                 }
@@ -58,7 +62,7 @@ open class ImportService {
                                     try {
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, mappings[it.second.enumSource]?.invoke(dto[it.second.columnId])!!)
                                     } catch (e: IllegalArgumentException) {
-                                        println("Invalid field ${it.first.name} as type ${it.second.type} (ENUM) with value ${dto[it.second.columnId]}")
+                                        log.error("Invalid field ${it.first.name} as type ${it.second.type} (ENUM) with value ${dto[it.second.columnId]}")
                                         throw e
                                     }
                                 }
@@ -66,7 +70,7 @@ open class ImportService {
                                     try {
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toLong())
                                     } catch (e: IllegalArgumentException) {
-                                        println("Invalid field ${it.first.name} as type ${it.second.type} (LONG) with value ${dto[it.second.columnId]}")
+                                        log.error("Invalid field ${it.first.name} as type ${it.second.type} (LONG) with value ${dto[it.second.columnId]}")
                                         throw e
                                     }
                                 }
@@ -74,7 +78,15 @@ open class ImportService {
                                     try {
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toInt())
                                     } catch (e: IllegalArgumentException) {
-                                        println("Invalid field ${it.first.name} as type ${it.second.type} (INT) with value ${dto[it.second.columnId]}")
+                                        log.error("Invalid field ${it.first.name} as type ${it.second.type} (INT) with value ${dto[it.second.columnId]}")
+                                        throw e
+                                    }
+                                }
+                                IMPORT_LOB -> {
+                                    try {
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, String(Base64.getDecoder().decode(dto[it.second.columnId])))
+                                    } catch (e: IllegalArgumentException) {
+                                        log.error("Invalid field ${it.first.name} as type ${it.second.type} (LOB) with value ${dto[it.second.columnId]}")
                                         throw e
                                     }
                                 }

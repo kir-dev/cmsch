@@ -26,7 +26,7 @@ data class ExtraPageEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
-            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett", interpreter = "path")
+            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
     var url: String = "",
 
@@ -78,7 +78,7 @@ data class ExtraPageEntity(
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Minimum jogkör",
         source = [ "GUEST", "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
-        note = "BASIC = gólya, STAFF = rendező, ADMIN = minden jog")
+        note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
     var minRole: RoleType = RoleType.GUEST,
 

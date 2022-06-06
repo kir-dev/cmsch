@@ -48,7 +48,7 @@ data class RiddleCategoryEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Minimum rang",
-        note = "GUEST = kijelentkezett, BASIC = gólya, STAFF = rendező ",
+        note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező ",
         source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_ENUM, enumSource = RoleType::class)
