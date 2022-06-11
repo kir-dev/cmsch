@@ -98,8 +98,6 @@ Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active
 - `local,test` if you want test data in the database also
 - `local` if you don't
 
-![runconfig](.readme-files/runconfig.png)
-
 ## Sponsors
 
 <a href="https://vercel.com?utm_source=kir-dev&utm_campaign=oss"><img src="client/public/img/powered-by-vercel.svg" height="46" /></a>
