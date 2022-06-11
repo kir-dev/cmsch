@@ -17,7 +17,6 @@ import hu.bme.sch.cmsch.util.getUserOrNull
 import hu.bme.sch.cmsch.util.sha256
 import hu.gerviba.authsch.AuthSchAPI
 import hu.gerviba.authsch.response.ProfileDataResponse
-import io.swagger.annotations.ApiOperation
 import org.apache.catalina.util.URLEncoder
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -58,7 +57,6 @@ class LoginController(
         return "Sikeres kijelentkezés!"
     }
 
-    @ApiOperation("Login re-entry point")
     @GetMapping("/control/auth/authsch/callback")
     fun loggedIn(@RequestParam code: String,
                  @RequestParam state: String,
@@ -259,7 +257,6 @@ class LoginController(
         return authorities
     }
 
-    @ApiOperation("Redirection to the auth provider")
     @GetMapping("/control/login")
     fun items(request: HttpServletRequest): String {
         return "redirect:${generateLoginUrl(buildUniqueState(request))}"
@@ -286,7 +283,6 @@ class LoginController(
         return (request.session.id + request.localAddr).sha256()
     }
 
-    @ApiOperation("Logout user")
     @GetMapping("/control/logout")
     fun logout(request: HttpServletRequest, auth: Authentication, httpResponse: HttpServletResponse): String {
         log.info("Logging out from user {}", auth.getUserOrNull()?.internalId ?: "n/a")

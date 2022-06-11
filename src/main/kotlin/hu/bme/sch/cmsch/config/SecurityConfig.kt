@@ -29,7 +29,8 @@ open class SecurityConfig(
                         "/api/events/**", "/api/extra-page/**", "/api/version", "/style.css", "/control/test-user",
                         "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/events/**", "/cdn/riddles/**",
                         "/api/warning", "/countdown", "/control/logout", "/control/test", "/api/task/**", "/control/open-site",
-                        "/api/qr/**")
+                        "/api/qr/**",
+                        "swagger-ui.html", "/v3/api-docs/**")
                     .permitAll()
 
                 .antMatchers(
