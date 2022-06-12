@@ -242,7 +242,7 @@
                                 <div style="clear:both"></div>
                                 <select th:name="${input.property}"
                                         th:id="${input.property}">
-                                    <option th:each="opt : ${componentNames}" th:text="${obj}" th:selected="${input.getValue() == obj}"></option>
+                                    <option th:each="opt : ${componentNames}" th:value="${opt}" th:text="${opt}" th:selected="${input.getValue() == opt}"></option>
                                 </select>
                                 <span class="note" th:text="${input.description}"></span>
                             </div>

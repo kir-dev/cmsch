@@ -113,7 +113,7 @@ class ApplicationComponent(
 
     val defaultComponent = SettingProxy(componentSettingService, component,
         "defaultComponent", "home", type = SettingType.COMPONENT_NAME,
-        fieldName = "Oldal neve", description = "Oldal vagy esemény neve"
+        fieldName = "Kezdő komponens", description = "Az a komponens ami kezdőlapként töltődik be"
     )
 
     val siteLogoUrl = SettingProxy(componentSettingService, component,

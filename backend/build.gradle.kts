@@ -1,20 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.Properties
 
 plugins {
     id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.github.node-gradle.node") version "3.1.1"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
 }
 
-val applicationProperties = Properties()
-file("${projectDir}/src/main/resources/config/application.properties")
-    .reader()
-    .also {
-        applicationProperties.load(it)
-    }
 group = "hu.bme.sch"
 version = "3.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_17

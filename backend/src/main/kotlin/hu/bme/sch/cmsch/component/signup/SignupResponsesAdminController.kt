@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -31,10 +32,10 @@ class SignupResponsesAdminController(
 ) {
 
     private val view = "signup-responses"
-    private val titleSingular = "Jelentkezés"
-    private val titlePlural = "Jelentkezések"
-    private val description = "Tartozások felhasználónként csoportosítva"
-    private val permissionControl = PERMISSION_EDIT_DEBTS
+    private val titleSingular = "Kitöltés"
+    private val titlePlural = "Kitöltés"
+    private val description = "Kitöltések formonként csoportosítva"
+    private val permissionControl = PERMISSION_EDIT_SIGNUP_RESULTS
 
     private val entitySourceMapping: Map<String, (SignupResponseEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
@@ -47,7 +48,7 @@ class SignupResponsesAdminController(
         adminMenuService.registerEntry(
             SignupComponent::class.simpleName!!, AdminMenuEntry(
                 titlePlural,
-                "account_balance",
+                "inbox",
                 "/admin/control/${view}",
                 2,
                 permissionControl

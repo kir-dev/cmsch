@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentHandlerService
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -23,7 +22,7 @@ class ApplicationApiController(
     private val componentHandlerService: ComponentHandlerService,
     private val countdownComponent: Optional<CountdownComponent>,
     private val clock: TimeService,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val application: ApplicationComponent
 ) {
 
     @GetMapping("/app")
@@ -35,7 +34,9 @@ class ApplicationApiController(
                 return ApplicationConfigDto(
                     role = role,
                     menu = listOf(),
-                    components = mapOf(countdown.component to countdown.attachConstants())
+                    components = mapOf(
+                        countdown.component to countdown.attachConstants()
+                    )
                 )
             }
         }
