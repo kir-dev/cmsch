@@ -37,7 +37,7 @@ class NewsComponent(
     )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "",
+        "minRole", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
@@ -45,12 +45,12 @@ class NewsComponent(
 
     val newsEmbeddedComponentGroup = SettingProxy(componentSettingService, component,
         "embeddedGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Pontozás",
+        fieldName = "Beágyazott hírek komponensben megjelenő hírek száma",
         description = ""
     )
 
     val maxVisibleCount = SettingProxy(componentSettingService, component,
-        "maxVisibleCount", "3", serverSideOnly = true, type = SettingType.NUMBER,
+        "embeddedMaxVisibleCount", "3", serverSideOnly = true, type = SettingType.NUMBER,
         fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hírdetés komponensben"
     )
 

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 class LeaderBoardComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("leaderboard", "/", componentSettingService, env) {
+) : ComponentBase("leaderboard", "/leaderboard", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(

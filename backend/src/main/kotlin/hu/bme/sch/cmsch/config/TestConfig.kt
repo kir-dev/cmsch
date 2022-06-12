@@ -307,27 +307,27 @@ class TestConfig(
 
     private fun addNews(news: NewsRepository) {
         news.save(NewsEntity(title = "Az eslő hír",
-                brief = LOREM_IPSUM_SHORT_1,
+                content = LOREM_IPSUM_SHORT_1,
                 visible = true, highlighted = false
         ))
         news.save(NewsEntity(title = "A második highlightolt hír",
-                brief = LOREM_IPSUM_SHORT_2,
+                content = LOREM_IPSUM_SHORT_2,
                 visible = true, highlighted = true
         ))
         news.save(NewsEntity(title = "Ez nem is hír, nem látszik",
-                brief = LOREM_IPSUM_SHORT_3,
+                content = LOREM_IPSUM_SHORT_3,
                 visible = false, highlighted = false
         ))
         news.save(NewsEntity(title = "Teszt hír 4",
-                brief = LOREM_IPSUM_SHORT_4,
+                content = LOREM_IPSUM_SHORT_4,
                 visible = true, highlighted = false
         ))
         news.save(NewsEntity(title = "Teszt hír 5",
-                brief = LOREM_IPSUM_SHORT_3,
+                content = LOREM_IPSUM_SHORT_3,
                 visible = true, highlighted = false
         ))
         news.save(NewsEntity(title = "Markdown hír",
-                brief = LONG_MARKDOWN_DEMO,
+                content = LONG_MARKDOWN_DEMO,
                 visible = true, highlighted = false
         ))
     }
