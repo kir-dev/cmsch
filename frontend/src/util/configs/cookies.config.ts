@@ -1,0 +1,4 @@
+export enum CookieKeys {
+  JWT_TOKEN = 'CMSCH_JWT_TOKEN',
+  COOKIE_CONSENTED = 'CMSCH_COOKIE_CONSENTED'
+}
