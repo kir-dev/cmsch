@@ -1,10 +1,16 @@
-import { ColorModeScript } from '@chakra-ui/react'
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import React from 'react'
 import ReactDOM from 'react-dom'
+import { QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './api/contexts/auth/AuthContext'
 
 import { App } from './App'
 import reportWebVitals from './reportWebVitals'
 import * as serviceWorker from './serviceWorker'
-import { initAxios } from './util/configs/api.config'
+import { initAxios, queryClient } from './util/configs/api.config'
+import { customTheme } from './util/configs/theme.config'
 
 initAxios()
 
@@ -13,10 +19,12 @@ ReactDOM.render(
     <ColorModeScript />
     <ChakraProvider theme={customTheme}>
       <BrowserRouter>
-        <AuthProvider>
-          <App />
-          <ReactQueryDevtools />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <App />
+            <ReactQueryDevtools />
+          </AuthProvider>
+        </QueryClientProvider>
       </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,

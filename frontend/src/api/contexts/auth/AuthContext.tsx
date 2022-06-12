@@ -1,83 +1,56 @@
 import { useToast } from '@chakra-ui/react'
-import { UserView } from '@triszt4n/remark-types'
 import Cookies from 'js-cookie'
-import { createContext, FC, useState } from 'react'
-import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
-import { useMutation, useQuery } from 'react-query'
+import { createContext, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import { queryClient } from '../../../util/query-client'
-import { rconsole } from '../../../util/remark-console'
-import { userModule } from '../../modules/user.module'
-import { CookieKeys } from '../CookieKeys'
-import { useNotifContext } from '../notifications/useNotifContext'
+import { queryClient } from '../../../util/configs/api.config'
+import { CookieKeys } from '../../../util/configs/cookies.config'
+import { HasChildren } from '../../../util/react-types.util'
+import { ProfileView } from '../../../util/views/profile.view'
 
 export type AuthContextType = {
   isLoggedIn: boolean
-  loggedInUser: UserView | undefined
-  loggedInUserLoading: boolean
-  loggedInUserError: unknown
-  onLoginSuccess: (response: GoogleLoginResponseOffline | GoogleLoginResponse) => void
-  onLoginFailure: (response: GoogleLoginResponseOffline | GoogleLoginResponse) => void
+  profile: ProfileView | undefined
+  profileLoading: boolean
+  profileError: unknown
+  onLoginSuccess: (response: { jwt: string }) => void
+  onLoginFailure: (response: any) => void
   onLogout: () => void
-  loginLoading: boolean
 }
 
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
-  loggedInUser: undefined,
-  loggedInUserLoading: false,
-  loggedInUserError: undefined,
+  profile: undefined,
+  profileLoading: false,
+  profileError: undefined,
   onLoginSuccess: () => {},
   onLoginFailure: () => {},
-  onLogout: () => {},
-  loginLoading: false
+  onLogout: () => {}
 })
 
-export const AuthProvider: FC = ({ children }) => {
+export const AuthProvider = ({ children }: HasChildren) => {
   const toast = useToast()
   const navigate = useNavigate()
-  const { startNotificationReception, stopNotificationReception } = useNotifContext()
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(typeof Cookies.get(CookieKeys.REMARK_JWT_TOKEN) !== 'undefined')
-  const {
-    isLoading,
-    data: user,
-    error
-  } = useQuery('currentUser', userModule.fetchCurrentUser, {
-    enabled: !!isLoggedIn
-  })
+  // TODO: profile fetch logic
+  const fetchProfile = () => {
+    return undefined
+  }
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(typeof Cookies.get(CookieKeys.JWT_TOKEN) !== 'undefined')
+  const { isLoading: profileLoading, data: profile, error: profileError } = useQuery('currentUser', fetchProfile, { enabled: !!isLoggedIn })
 
-  const mutation = useMutation(userModule.loginUser, {
-    onSuccess: async ({ data }) => {
-      const { jwt, user } = data
-      Cookies.set(CookieKeys.REMARK_JWT_TOKEN, jwt, { expires: 2 })
-
-      await queryClient.invalidateQueries('currentUser', { refetchInactive: true })
-      setIsLoggedIn(true)
-      navigate('/profile')
-    },
-    onError: (error) => {
-      const err = error as any
-      rconsole.log('Error at loginUser', err.toJSON())
-      toast({
-        title: 'Error occured when logging in new user',
-        description: `${err.response.status} ${err.response.data.message} Try again later.`,
-        status: 'error',
-        isClosable: true
-      })
-    }
-  })
-
-  const onLoginSuccess = (response: GoogleLoginResponseOffline | GoogleLoginResponse) => {
-    const { accessToken } = response as GoogleLoginResponse
-    mutation.mutate(accessToken)
+  const onLoginSuccess = async ({ jwt }: { jwt: string }) => {
+    Cookies.set(CookieKeys.JWT_TOKEN, jwt, { expires: 2 })
+    await queryClient.invalidateQueries('currentUser', { refetchInactive: true })
+    setIsLoggedIn(true)
+    navigate('/profile')
   }
 
-  const onLoginFailure = (response: GoogleLoginResponseOffline | GoogleLoginResponse) => {
-    rconsole.log('Error at onLoginFailure', JSON.stringify(response, null, 2))
+  const onLoginFailure = (response: any) => {
+    console.log('[ERROR] at onLoginFailure', JSON.stringify(response, null, 2))
     toast({
-      title: 'Authentication error',
-      description: 'There was an error while authenticating you at Google!',
+      title: 'Authentikációs hiba',
+      description: 'Hiba esett a bejelentkezési folyamatba!',
       status: 'error',
       duration: 5000,
       isClosable: true
@@ -85,7 +58,7 @@ export const AuthProvider: FC = ({ children }) => {
   }
 
   const onLogout = () => {
-    Cookies.remove(CookieKeys.REMARK_JWT_TOKEN)
+    Cookies.remove(CookieKeys.JWT_TOKEN)
     setIsLoggedIn(false)
     queryClient.invalidateQueries('currentUser', { refetchInactive: true })
     navigate('/')
@@ -95,13 +68,12 @@ export const AuthProvider: FC = ({ children }) => {
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        loggedInUserLoading: isLoading,
-        loggedInUser: user,
-        loggedInUserError: error,
+        profileLoading,
+        profile,
+        profileError,
         onLoginSuccess,
         onLoginFailure,
-        onLogout,
-        loginLoading: mutation.isLoading
+        onLogout
       }}
     >
       {children}
