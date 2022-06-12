@@ -1,8 +1,9 @@
-import { Box, Flex, HStack, Popover, PopoverContent, Icon, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
+import { Box, HStack, Popover, PopoverContent, Icon, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
-import { FaChevronDown, FaChevronRight } from 'react-icons/fa'
+import { FaChevronDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { INavItem, NAV_ITEMS } from '../../util/configs/nav.config'
+import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { NAV_ITEMS } from '../../util/configs/nav.config'
 import { DesktopSubNav } from './DesktopSubNav'
 
 export const DesktopNav = () => {
@@ -14,7 +15,7 @@ export const DesktopNav = () => {
         <Box key={navItem.label} p={2}>
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
-              <Link to={navItem.path}>
+              <Link to={navItem.path || '#'}>
                 <HStack
                   _hover={{
                     textDecoration: 'none',

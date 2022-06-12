@@ -1,8 +1,9 @@
 import { ToastId, useToast, UseToastOptions } from '@chakra-ui/react'
 import Cookies from 'js-cookie'
 import { createContext, FC, useEffect, useRef, useState } from 'react'
-import { CookieConsentPopup } from '../../../components/commons/CookieConsentPopup'
-import { CookieKeys } from '../CookieKeys'
+import { CookieConsentPopup } from '../../../common-components/cookies/CookieConsentPopup'
+import { CookieKeys } from '../../../util/configs/cookies.config'
+import { HasChildren } from '../../../util/react-types.util'
 
 export type CookieConsentContextType = {
   isAccepted: boolean
@@ -12,10 +13,10 @@ export const CookieConsentContext = createContext<CookieConsentContextType>({
   isAccepted: false
 })
 
-export const CookieConsentProvider: FC = ({ children }) => {
+export const CookieConsentProvider = ({ children }: HasChildren) => {
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
-  const [isAccepted, setIsAccepted] = useState<boolean>(Cookies.get(CookieKeys.REMARK_COOKIE_CONSENTED) === 'true')
+  const [isAccepted, setIsAccepted] = useState<boolean>(Cookies.get(CookieKeys.COOKIE_CONSENTED) === 'true')
 
   const toastOptions: UseToastOptions = {
     containerStyle: {
@@ -28,7 +29,7 @@ export const CookieConsentProvider: FC = ({ children }) => {
   }
 
   useEffect(() => {
-    Cookies.set(CookieKeys.REMARK_COOKIE_CONSENTED, isAccepted ? 'true' : 'false')
+    Cookies.set(CookieKeys.COOKIE_CONSENTED, isAccepted ? 'true' : 'false')
     if (isAccepted && toastIdRef.current) {
       toast.close(toastIdRef.current)
     }

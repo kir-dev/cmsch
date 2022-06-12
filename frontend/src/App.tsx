@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { CmschLayout } from './common-components/layout/CmschLayout'
 import './global.css'
+import { IndexPage } from './pages/index/IndexPage'
 
 export function App() {
   return (
@@ -9,10 +10,6 @@ export function App() {
         <Route path="/">
           {/*Főoldal*/}
           <Route index element={<IndexPage />} />
-          {/*Impressum*/}
-          <Route path="impresszum">
-            <Route index element={<ImpressumPage />} />
-          </Route>
         </Route>
       </Routes>
     </CmschLayout>

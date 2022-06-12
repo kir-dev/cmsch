@@ -4,7 +4,7 @@ import { IconType } from 'react-icons/lib'
 interface INavItem {
   icon: IconType
   label: string
-  path: string
+  path: string | undefined
   shouldBeShown: (isLoggedIn: boolean) => boolean
   children?: INavItem[]
 }
