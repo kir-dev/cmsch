@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router-dom'
 import { CmschLayout } from './common-components/layout/CmschLayout'
-import './global.css'
-import { IndexPage } from './pages/index/IndexPage'
+import { IndexPage } from './pages/index/index.page'
+import { EnabledModules, GetRoutesForModules } from './util/configs/modules.config'
 
 export function App() {
   return (
     <CmschLayout>
       <Routes>
         <Route path="/">
-          {/*Főoldal*/}
+          {GetRoutesForModules(EnabledModules)}
           <Route index element={<IndexPage />} />
         </Route>
       </Routes>
