@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "files.encoding": "utf8",
+  "search.exclude": {
+    "public/**": true,
+    "node_modules/**": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.formatDocument": true,
+    "source.fixAll.eslint": true
+  }
+}
