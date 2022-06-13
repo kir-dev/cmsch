@@ -1,6 +1,5 @@
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { BrowserRouter } from 'react-router-dom'
@@ -11,10 +10,13 @@ import reportWebVitals from './reportWebVitals'
 import * as serviceWorker from './serviceWorker'
 import { initAxios, queryClient } from './util/configs/api.config'
 import { customTheme } from './util/configs/theme.config'
+import { createRoot } from 'react-dom/client'
 
 initAxios()
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!)
+
+root.render(
   <React.StrictMode>
     <ColorModeScript />
     <ChakraProvider theme={customTheme}>
@@ -27,8 +29,7 @@ ReactDOM.render(
         </QueryClientProvider>
       </BrowserRouter>
     </ChakraProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 )
 
 // If you want your app to work offline and load faster, you can change

@@ -1,6 +1,6 @@
 import { ToastId, useToast, UseToastOptions } from '@chakra-ui/react'
 import Cookies from 'js-cookie'
-import { createContext, FC, useEffect, useRef, useState } from 'react'
+import { createContext, useEffect, useRef, useState } from 'react'
 import { CookieConsentPopup } from '../../../common-components/cookies/CookieConsentPopup'
 import { CookieKeys } from '../../../util/configs/cookies.config'
 import { HasChildren } from '../../../util/react-types.util'

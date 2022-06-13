@@ -1,4 +1,4 @@
-import { Box, Stack, Flex, Icon, Text } from '@chakra-ui/react'
+import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { FaChevronRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'

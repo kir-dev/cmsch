@@ -1,4 +1,4 @@
-import { Box, Collapse, Flex, IconButton, useColorModeValue, useDisclosure, Image, Icon } from '@chakra-ui/react'
+import { Box, Collapse, Flex, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
 import { Link } from 'react-router-dom'

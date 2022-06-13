@@ -1,5 +1,5 @@
 import { CmschContainer } from './CmschContainer'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { HasChildren } from '../../util/react-types.util'
 
 type Props = {

@@ -1,4 +1,4 @@
-import { FaCompass, FaHome, FaSignInAlt, FaUserCircle } from 'react-icons/fa'
+import { FaHome, FaSignInAlt, FaUserCircle } from 'react-icons/fa'
 import { IconType } from 'react-icons/lib'
 
 interface INavItem {
@@ -14,13 +14,14 @@ class NavItem implements INavItem {
   public label: string
   public path: string
   public children?: INavItem[] = undefined
-  public shouldBeShown = (isLoggedIn: boolean) => true
 
   constructor({ icon, label, path }: { icon: IconType; label: string; path: string }) {
     this.icon = icon
     this.label = label
     this.path = path
   }
+
+  public shouldBeShown = (isLoggedIn: boolean) => true
 }
 
 const Item1 = new NavItem({
