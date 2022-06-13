@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 
 export const Warning = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isLoading, error, data: warning } = useWarningQuery()
+  const { error, data: warning } = useWarningQuery()
   useEffect(() => {
     if (warning?.message !== '') {
       onOpen()
@@ -13,7 +13,7 @@ export const Warning = () => {
   }, [warning])
 
   if (error) {
-    console.log('[ERROR] at useWarningQuery', error, (error as any)?.response.data.message)
+    console.log('[ERROR] at useWarningQuery', JSON.stringify(error, null, 2))
   }
 
   if (warning === undefined || !isOpen) return null
