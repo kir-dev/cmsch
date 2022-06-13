@@ -30,7 +30,7 @@ export const MobileNavItem = ({ navItem: { label, children, path } }: Props) => 
         <Stack pl={4} borderLeft={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.800')} align="start">
           {children &&
             children.map((child) => (
-              <Link to={child.path || '#'} className="navitem" style={{ width: '100%' }}>
+              <Link key={child.path} to={child.path || '#'} className="navitem" style={{ width: '100%' }}>
                 <Text key={child.label} py={2}>
                   {child.label}
                 </Text>
