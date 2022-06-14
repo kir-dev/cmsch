@@ -1,5 +1,6 @@
+import { lazy } from 'react'
 import { Route } from 'react-router-dom'
-import { ProfilePage } from '../pages/profile/profile.page'
+const ProfilePage = lazy(() => import('../pages/profile/profile.page'))
 
 export function ProfileModule() {
   return (

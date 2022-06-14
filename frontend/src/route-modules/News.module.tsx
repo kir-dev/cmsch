@@ -1,6 +1,7 @@
+import { lazy } from 'react'
 import { Route } from 'react-router-dom'
-import { NewsPage } from '../pages/news/news.page'
-import { NewsListPage } from '../pages/news/newsList.page'
+const NewsPage = lazy(() => import('../pages/news/news.page'))
+const NewsListPage = lazy(() => import('../pages/news/newsList.page'))
 
 export function NewsModule() {
   return (

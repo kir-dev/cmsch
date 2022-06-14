@@ -1,5 +1,6 @@
+import { lazy } from 'react'
 import { Route } from 'react-router-dom'
-import { ImpressumPage } from '../pages/impressum/impressum.page'
+const ImpressumPage = lazy(() => import('../pages/impressum/impressum.page'))
 
 export function ImpressumModule() {
   return (
