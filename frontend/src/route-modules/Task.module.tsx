@@ -1,7 +1,8 @@
+import { lazy } from 'react'
 import { Route } from 'react-router-dom'
-import { TaskPage } from '../pages/task/task.page'
-import { TaskListPage } from '../pages/task/taskList.page'
-import { TaskCategoryPage } from '../pages/task/taskCategory.page'
+const TaskPage = lazy(() => import('../pages/task/task.page'))
+const TaskListPage = lazy(() => import('../pages/task/taskList.page'))
+const TaskCategoryPage = lazy(() => import('../pages/task/taskCategory.page'))
 
 export function TaskModule() {
   return (

@@ -1,5 +1,6 @@
+import { lazy } from 'react'
 import { Route } from 'react-router-dom'
-import { CommunitiesPage } from '../pages/communities/communities.page'
+const CommunitiesPage = lazy(() => import('../pages/communities/communities.page'))
 
 export function CommunitiesModule() {
   return (

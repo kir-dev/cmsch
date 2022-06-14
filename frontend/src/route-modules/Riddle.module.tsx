@@ -1,5 +1,6 @@
+import { lazy } from 'react'
 import { Route } from 'react-router-dom'
-import { RiddlePage } from '../pages/riddle/riddle.page'
+const RiddlePage = lazy(() => import('../pages/riddle/riddle.page'))
 
 export function RiddleModule() {
   return (

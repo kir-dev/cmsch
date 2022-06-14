@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 
-export const ProfilePage = () => {
+const ProfilePage = () => {
   const { profile } = useAuthContext()
 
   return (
@@ -14,3 +14,5 @@ export const ProfilePage = () => {
     </CmschPage>
   )
 }
+
+export default ProfilePage
