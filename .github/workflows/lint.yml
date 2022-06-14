@@ -1,0 +1,45 @@
+name: Lint CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'frontend/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'frontend/**'
+
+jobs:
+  run-linters:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+    - name: Check out Git repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Install Node.js dependencies
+      run: yarn install
+
+    - name: ESLint + Prettier CI
+      uses: wearerequired/lint-action@v2
+      with:
+        eslint: true
+        eslint_args: "--ignore-path .gitignore ."
+        eslint_extensions: ts,tsx,js,jsx
+        eslint_dir: frontend/
+        prettier: true
+        prettier_args: "--check --ignore-path .gitignore ."
+        prettier_dir: frontend/
+        auto_fix: true
+        commit_message: "[lint] Fix code ${linter}"
