@@ -27,6 +27,7 @@ import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
+import kotlin.streams.toList
 
 const val INVALID_ID_ERROR = "INVALID_ID"
 const val CONTROL_MODE_EDIT_DELETE = "edit,delete"

@@ -805,7 +805,10 @@ class TestConfig(
                         "\n" +
                         "## Mi az amit te keresel?\n" +
                         "\n" +
-                        "Na ezt most ne, pls!\n"
+                        "Na ezt most ne, pls!\n",
+            ogDescription = "Ez a GYIK oldal, ide jön az open graph leírás",
+            ogImage = "https://dummyimage.com/940x768/ffffff/000000.png",
+            ogTitle = "CMSCH - GYIK"
         ))
 
         extraPages.save(ExtraPageEntity(

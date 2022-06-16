@@ -8,5 +8,6 @@ import java.util.*
 @Repository
 @ConditionalOnBean(ExtraPageComponent::class)
 interface ExtraPageRepository : CrudRepository<ExtraPageEntity, Int> {
+    fun findByUrl(path: String): Optional<ExtraPageEntity>
     fun findByUrlAndVisibleTrue(path: String): Optional<ExtraPageEntity>
 }

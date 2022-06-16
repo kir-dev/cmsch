@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.extrapage
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.opengraph.OpenGraphResource
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -26,7 +27,8 @@ data class ExtraPageEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
-            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett", interpreter = INTERPRETER_PATH)
+            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett. " +
+                    "Oldal megosztása: https://BASE_URL/share/event/{URL}", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
     var url: String = "",
 
@@ -86,21 +88,21 @@ data class ExtraPageEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 10, label = "OG:Title")
     @property:GenerateOverview(visible = false)
-    var ogTitle: String = "",
+    override var ogTitle: String = "",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 11, label = "OG:Image")
     @property:GenerateOverview(visible = false)
-    var ogImage: String = "",
+    override var ogImage: String = "",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 12, label = "OG:Description")
     @property:GenerateOverview(visible = false)
-    var ogDescription: String = ""
+    override var ogDescription: String = ""
 
-): ManagedEntity {
+): ManagedEntity, OpenGraphResource {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import kotlin.random.Random
 
 val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
@@ -22,6 +23,12 @@ val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
 class EntrypointController(
         private val applicationComponent: ApplicationComponent
 ) {
+
+    @GetMapping("")
+    @ResponseBody
+    fun index(): String {
+        return "hey!"
+    }
 
     @GetMapping("/control/entrypoint")
     fun entrypoint(model: Model, auth: Authentication): String {

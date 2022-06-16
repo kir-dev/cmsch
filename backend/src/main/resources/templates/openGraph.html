@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${ogTitle}">TITLE</title>
+    <meta name="description" th:content="${ogDescription}">
+
+    <meta property="og:url" th:content="${redirectUrl}" />
+    <meta property="og:title" th:content="${ogTitle}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" th:content="${ogImage}" />
+    <meta property="og:description" th:content="${ogDescription}" />
+
+    <style>* { color: #FFFFFF }</style>
+</head>
+<body>
+    <h1 th:text="${ogTitle}">TITLE</h1>
+    <p th:text="${ogDescription}">DESCRIPTION</p>
+<script th:inline="javascript">
+    window.location.replace(/*[[${redirectUrl}]]*/ 'about:blank')
+</script>
+</body>
+</html>
