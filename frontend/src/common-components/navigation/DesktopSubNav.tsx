@@ -2,19 +2,19 @@ import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { FaChevronRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { INavItem } from '../../util/configs/nav.config'
+import { Menu } from '../../api/contexts/config/types'
 
 type Props = {
-  navItem: INavItem
+  menu: Menu
 }
 
-export const DesktopSubNav = ({ navItem: { label, path, icon } }: Props) => (
-  <Link to={path || '#'}>
+export const DesktopSubNav = ({ menu }: Props) => (
+  <Link to={menu.url || '#'}>
     <Box role="group" display="block" p={2} rounded="md">
       <Stack direction="row" align="center">
         <Box>
           <Text transition="all .3s ease" _groupHover={{ color: useColorModeValue('brand.500', 'brand.600') }} fontWeight={500}>
-            {label}
+            {menu.name}
           </Text>
         </Box>
         <Flex
