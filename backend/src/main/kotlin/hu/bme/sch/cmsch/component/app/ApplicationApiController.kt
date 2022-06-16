@@ -26,8 +26,8 @@ class ApplicationApiController(
 ) {
 
     @GetMapping("/app")
-    fun app(auth: Authentication): ApplicationConfigDto {
-        val role = auth.getUserOrNull()?.role ?: RoleType.GUEST
+    fun app(auth: Authentication?): ApplicationConfigDto {
+        val role = auth?.getUserOrNull()?.role ?: RoleType.GUEST
         if (countdownComponent.isPresent) {
             val countdown = countdownComponent.orElseThrow()
             if (countdown.isBlockedAt(clock.getTimeInSeconds())) {

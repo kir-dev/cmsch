@@ -25,22 +25,29 @@ open class SecurityConfig(
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/", "/control/loggedin", "/control/login", "/control/logged-out", "/api/events",
-                        "/api/events/**", "/api/extra-page/**", "/api/version", "/style.css", "/control/test-user",
-                        "/images/**", "/js/**", "/files/**", "/admin/logout", "/cdn/events/**", "/cdn/riddles/**",
-                        "/api/warning", "/countdown", "/control/logout", "/control/test", "/api/task/**", "/control/open-site",
-                        "/api/qr/**",
+                .antMatchers("/",
+                        "/control/loggedin",
+                        "/control/login",
+                        "/control/logged-out",
+                        "/style.css",
+                        "/control/test-user",
+                        "/images/**",
+                        "/js/**",
+                        "/files/**",
+                        "/admin/logout",
+                        "/cdn/events/**",
+                        "/cdn/riddles/**",
+                        "/countdown",
+                        "/control/logout",
+                        "/control/test",
+                        "/control/open-site",
+                        "/api/**",
+                        "/share/**",
                         "swagger-ui.html", "/v3/api-docs/**")
                     .permitAll()
 
                 .antMatchers(
-                        "/api/profile",
-                        "/api/riddle/**",
                         "/control/entrypoint",
-                        "/cdn/task/**",
-                        "/api/token-after-login",
-                        "/api/token/**",
-                        "/api/riddle/**",
                         "/control/stamps")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 

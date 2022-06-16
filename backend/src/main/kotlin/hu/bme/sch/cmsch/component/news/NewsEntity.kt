@@ -66,24 +66,6 @@ data class NewsEntity(
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_LONG)
     var timestamp: Long = 0,
 
-    @JsonView(value = [ Edit::class, FullDetails::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 9, label = "OG:Title", note = "Ez egyelőre nincs használva")
-    @property:GenerateOverview(visible = false)
-    var ogTitle: String = "",
-
-    @JsonView(value = [ Edit::class, FullDetails::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 10, label = "OG:Image", note = "Ez egyelőre nincs használva")
-    @property:GenerateOverview(visible = false)
-    var ogImage: String = "",
-
-    @JsonView(value = [ Edit::class, FullDetails::class ])
-    @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 11, label = "OG:Description", note = "Ez egyelőre nincs használva")
-    @property:GenerateOverview(visible = false)
-    var ogDescription: String = "",
-
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Minimum rang a megtekintéshez",

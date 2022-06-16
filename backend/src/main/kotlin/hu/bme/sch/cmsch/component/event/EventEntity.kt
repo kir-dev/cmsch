@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.event
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.opengraph.OpenGraphResource
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -26,7 +27,8 @@ data class EventEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
-            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett", interpreter = INTERPRETER_PATH)
+            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett. " +
+                    "Oldal megosztása: https://BASE_URL/share/event/{URL}", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 0)
     var url: String = "",
@@ -110,19 +112,19 @@ data class EventEntity(
     @Column(nullable = false)
     @property:GenerateInput(order = 14, label = "OG:Title")
     @property:GenerateOverview(visible = false)
-    var ogTitle: String = "",
+    override var ogTitle: String = "",
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 15, label = "OG:Image")
     @property:GenerateOverview(visible = false)
-    var ogImage: String = "",
+    override var ogImage: String = "",
 
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 16, label = "OG:Description")
     @property:GenerateOverview(visible = false)
-    var ogDescription: String = "",
+    override var ogDescription: String = "",
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
@@ -140,7 +142,7 @@ data class EventEntity(
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_ENUM, enumSource = RoleType::class)
     var minRole: RoleType = RoleType.GUEST
 
-): ManagedEntity {
+): ManagedEntity, OpenGraphResource {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
