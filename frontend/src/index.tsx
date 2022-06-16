@@ -1,4 +1,4 @@
-import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import { ColorModeScript } from '@chakra-ui/react'
 import React from 'react'
 import { QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -9,8 +9,9 @@ import { App } from './App'
 import reportWebVitals from './reportWebVitals'
 import * as serviceWorker from './serviceWorker'
 import { initAxios, queryClient } from './util/configs/api.config'
-import { customTheme } from './util/configs/theme.config'
 import { createRoot } from 'react-dom/client'
+import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
+import { ConfigProvider } from './api/contexts/config/ConfigContext'
 
 initAxios()
 
@@ -19,16 +20,18 @@ const root = createRoot(document.getElementById('root')!)
 root.render(
   <React.StrictMode>
     <ColorModeScript />
-    <ChakraProvider theme={customTheme}>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <App />
-            <ReactQueryDevtools />
-          </AuthProvider>
-        </QueryClientProvider>
-      </BrowserRouter>
-    </ChakraProvider>
+    <ConfigProvider>
+      <ThemeConfig>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+              <App />
+              <ReactQueryDevtools />
+            </AuthProvider>
+          </QueryClientProvider>
+        </BrowserRouter>
+      </ThemeConfig>
+    </ConfigProvider>
   </React.StrictMode>
 )
 

@@ -111,7 +111,7 @@ const progressBaseStyle: PartsStyleFunction<typeof progressParts> = (props) => {
 }
 
 // See more: https://chakra-ui.com/docs/theming/customize-theme
-export const customTheme = extendTheme({
+export let customTheme = extendTheme({
   styles: {
     global: (props: any) => ({
       body: {
