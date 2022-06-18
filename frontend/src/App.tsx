@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { CmschLayout } from './common-components/layout/CmschLayout'
-import { IndexPage } from './pages/index/index.page'
-import { LoginPage } from './pages/login/login.page'
+import IndexPage from './pages/index/index.page'
+import LoginPage from './pages/login/login.page'
 import { EnabledModules, GetRoutesForModules } from './util/configs/modules.config'
 
 export function App() {
