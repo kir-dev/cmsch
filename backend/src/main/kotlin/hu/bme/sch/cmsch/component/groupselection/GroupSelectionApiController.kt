@@ -11,13 +11,20 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(GroupSelectionComponent::class)
 class GroupSelectionApiController(
-    private val groupSelectionService: GroupSelectionService
+    private val groupSelectionService: GroupSelectionService,
+    private val groupSelectionComponent: GroupSelectionComponent
 ) {
 
     @PostMapping("/group/select/{groupId}")
-    fun selectGroup(@PathVariable groupId: Int, auth: Authentication): GroupSelectionResponse {
-        val user = auth.getUserFromDatabaseOrNull()
+    fun selectGroup(@PathVariable groupId: Int, auth: Authentication?): GroupSelectionResponse {
+        val user = auth?.getUserFromDatabaseOrNull()
             ?: return GroupSelectionResponse(GroupSelectionResponseType.UNAUTHORIZED)
+
+        if (!groupSelectionComponent.selectionEnabled.isValueTrue()
+                || !groupSelectionComponent.minRole.isAvailableForRole(user.role)) {
+            return GroupSelectionResponse(GroupSelectionResponseType.PERMISSION_DENIED)
+        }
+
         return groupSelectionService.selectGroup(user, groupId)
     }
 

@@ -63,8 +63,13 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
+    fun getTotalTokenCount(): Int {
+        return tokenRepository.countAllByVisibleTrue().toInt()
+    }
+
+    @Transactional(readOnly = true)
     fun getTotalTokenCountWithCategory(category: String): Int {
-        return tokenRepository.findAllByTypeAndVisibleTrue(category).size
+        return tokenRepository.countAllByTypeAndVisibleTrue(category).toInt()
     }
 
 }

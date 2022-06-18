@@ -63,6 +63,14 @@ open class SettingProxy(
         return getValue().equals("true", ignoreCase = true)
     }
 
+    fun getIntValue(default: Int = 0): Int {
+        return getValue().toIntOrNull() ?: default
+    }
+
+    fun <T> mapIfTrue(mapper: () -> T?): T? {
+        return if (isValueTrue()) mapper.invoke() else null
+    }
+
 }
 
 class MinRoleSettingProxy(

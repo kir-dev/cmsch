@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.groupselection
 
-import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.ComponentSettingService
-import hu.bme.sch.cmsch.component.MinRoleSettingProxy
+import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -22,15 +20,21 @@ class GroupSelectionComponent(
 
     final override val allSettings by lazy {
         listOf(
+            selectionEnabled,
             minRole,
         )
     }
 
     final override val menuDisplayName = null
 
+    val selectionEnabled = SettingProxy(componentSettingService, component,
+        "selectionEnabled", "true", type = SettingType.BOOLEAN,
+        fieldName = "Választás engedélyezve", description = "Csak akkor jelenik meg a lehetőség ha ez be van kapcsolva"
+    )
+
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.STAFF,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+        "minRole", RoleType.BASIC.name, minRoleToEdit = RoleType.STAFF,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal lehetséges a csoport választás"
     )
 
 }

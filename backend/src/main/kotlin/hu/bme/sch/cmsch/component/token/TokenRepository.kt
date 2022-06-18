@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository
 @ConditionalOnBean(TokenComponent::class)
 interface TokenRepository : CrudRepository<TokenEntity, Int> {
     fun findAllByTokenAndVisibleTrue(token: String): List<TokenEntity>
-    fun findAllByTypeAndVisibleTrue(type: String): List<TokenEntity>
+    fun countAllByVisibleTrue(): Long
+    fun countAllByTypeAndVisibleTrue(type: String): Long
 }
