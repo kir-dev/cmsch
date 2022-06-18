@@ -65,7 +65,7 @@ class LoginController(
 
     ) {
         if (buildUniqueState(request) != state) {
-            httpResponse.sendRedirect("index?invalid-state")
+            httpResponse.sendRedirect("/?invalid-state")
             return
         }
 

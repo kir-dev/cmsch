@@ -33,20 +33,22 @@ class ProfileComponent(
             profileFieldsGroup,
             showFullName,
             showGuild,
+            showMajor,
+            showAlias,
+            showGroup,
             showNeptun,
+            showEmail,
             showProfilePicture,
             showQr,
 
-            groupGroup,
-            showGroupName,
             groupTitle,
-            allowGroupSelectWhenNotAssigned,
             messageBoxContent,
             messageBoxLevel,
 
             groupLeadersGroup,
             showGroupLeaders,
             showGroupLeadersLocations,
+            locationTimeout,
 
             tokenGoalGroup,
             showMinimumTokenMessage,
@@ -109,7 +111,7 @@ class ProfileComponent(
     )
 
     val tokenCounterCategory = SettingProxy(componentSettingService, component,
-        "tokenCounterCategory", "default", serverSideOnly = true, // TODO: * = minden
+        "tokenCounterCategory", "default", serverSideOnly = true,
         fieldName = "Token számláló kategóriái", description = "Ebből a kategóriából látszódnak a tokenek, * = minden"
     )
 
@@ -121,8 +123,18 @@ class ProfileComponent(
     )
 
     val showFullName = SettingProxy(componentSettingService, component,
-        "showFullName", "false", type = SettingType.BOOLEAN,
+        "showFullName", "true", type = SettingType.BOOLEAN,
         fieldName = "Teljes név látható", description = "Ha ez hamis, akkor a neve helyett a profil menü címe jelenik meg"
+    )
+
+    val showAlias = SettingProxy(componentSettingService, component,
+        "showAlias", "false", type = SettingType.BOOLEAN,
+        fieldName = "Becenév látható", description = "Ha van nickneve, akkor ki legyen-e írva"
+    )
+
+    val showGroup = SettingProxy(componentSettingService, component,
+        "showGroup", "false", type = SettingType.BOOLEAN,
+        fieldName = "Csoport tagság látható", description = "Ki van írva, hogy melyik csoportnak a tagja"
     )
 
     val showGuild = SettingProxy(componentSettingService, component,
@@ -130,9 +142,19 @@ class ProfileComponent(
         fieldName = "Gárda látható", description = "Ki van írva, hogy melyik gárda"
     )
 
+    val showMajor = SettingProxy(componentSettingService, component,
+        "showMajor", "false", type = SettingType.BOOLEAN,
+        fieldName = "Szak látható", description = "Ki van írva, hogy melyik szakra jár"
+    )
+
     val showNeptun = SettingProxy(componentSettingService, component,
         "showNeptun", "false", type = SettingType.BOOLEAN,
         fieldName = "Neptun kód látható", description = "Ki van írva a neptunkódja"
+    )
+
+    val showEmail = SettingProxy(componentSettingService, component,
+        "showEmail", "false", type = SettingType.BOOLEAN,
+        fieldName = "Emailcím látható", description = "Legyen kiírva az emailcíme"
     )
 
     val showProfilePicture = SettingProxy(componentSettingService, component,
@@ -145,26 +167,9 @@ class ProfileComponent(
         fieldName = "Egyedi QR kód látható", description = "Ezt lehet használni a fizetéshez, meg belépés szabályozáshoz"
     )
 
-    /// -------------------------------------------------------------------------------------------------------------------
-
-    val groupGroup = SettingProxy(componentSettingService, component,
-        "groupGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Felhasználó csoportja", description = "A csoport/tankör kiírása és választás lehetősége"
-    )
-
-    val showGroupName = SettingProxy(componentSettingService, component,
-        "showGroupName", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport név látható", description = "Csoport, csapat vagy tankör neve ki van írva"
-    )
-
     val groupTitle = SettingProxy(componentSettingService, component,
         "groupTitle", "Tankör",
-        fieldName = "Csoport név", description = "Csoport, csapat vagy tankör a csoport"
-    )
-
-    val allowGroupSelectWhenNotAssigned = SettingProxy(componentSettingService, component,
-        "allowGroupSelect", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport választás engedéyzett", description = "Ha nincsen csoportja engedje választani"
+        fieldName = "Csoport név", description = "Csoport, csapat vagy tankör a csoport. Így fog megjelenni."
     )
 
     val messageBoxContent = SettingProxy(componentSettingService, component,
@@ -194,12 +199,19 @@ class ProfileComponent(
         fieldName = "Csoport helyzetének mutatása", description = "Tankörseniorok pozíciójának mutatása"
     )
 
+    val locationTimeout = SettingProxy(componentSettingService, component,
+        "locationTimeout", "600", type = SettingType.NUMBER, serverSideOnly = true,
+        fieldName = "Helyzet lejárata", description = "Ennyi ideig (másodpercben) mutassa a " +
+                "helyzeteket ha nem érkezik újabb frissítés"
+    )
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val tokenGoalGroup = SettingProxy(componentSettingService, component,
         "tokenGoalGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Token célok kiírja üzenetként", description = "Tipikusan tanköri jelenétre használt funkció; " +
-                "a szám meghatározása a token komponens része (A token komponensnek is be kel kapcsolva legyen, hogy ez működjön)"
+                "a szám meghatározása a token komponens része (A token komponensnek is be kel " +
+                "kapcsolva legyen, hogy ez működjön)"
     )
 
     val showMinimumTokenMessage = SettingProxy(componentSettingService, component,
