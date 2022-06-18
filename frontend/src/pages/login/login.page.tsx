@@ -6,7 +6,7 @@ import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 
-export const LoginPage = () => {
+const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
 
   if (isLoggedIn) return <Navigate replace to="/" />
@@ -25,3 +25,5 @@ export const LoginPage = () => {
     </CmschPage>
   )
 }
+
+export default LoginPage

@@ -1,12 +1,103 @@
-import { Heading } from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
+import { useNavigate } from 'react-router-dom'
+import { RiddleCategory } from '../../util/views/riddle.view'
+import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 
-const RiddleListPage = () => (
-  <CmschPage>
-    <Helmet />
-    <Heading>Riddle list</Heading>
-  </CmschPage>
-)
+function progress(riddleCategory: RiddleCategory) {
+  if (riddleCategory.completed === 0) {
+    return 0
+  }
+  return riddleCategory.completed / riddleCategory.total
+}
 
-export default RiddleListPage
+const RiddleCategoryList = () => {
+  const bg = useColorModeValue('gray.200', 'gray.600')
+  const navigate = useNavigate()
+  const toast = useToast()
+
+  const [riddleCategoryList, setRiddleCategoryList] = useState<RiddleCategory[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    setLoading(true)
+    axios
+      .get<RiddleCategory[]>(`/api/riddle`)
+      .then((res) => {
+        setRiddleCategoryList(res.data)
+        setLoading(false)
+      })
+      .catch(() => {
+        console.error('Nem sikerült lekérni a Riddle-öket.')
+      })
+  }, [setRiddleCategoryList])
+
+  const onRiddleCategoryClick = (nextRiddle?: number) => {
+    if (nextRiddle) {
+      navigate(`/riddleok/${nextRiddle}`)
+    } else {
+      toast({
+        title: 'Mindet megcsináltad!',
+        description: 'Ebben a kategóriában nincs több riddle!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true
+      })
+    }
+  }
+
+  const progressGradient = (progress: number, color: string) => {
+    const endDeg = 360 * progress
+    if (progress === 1) {
+      return `conic-gradient(${color} 0deg, ${color} 360deg)`
+    }
+    if (progress === 0) {
+      return `conic-gradient(grey 0deg, gray 360deg)`
+    }
+    return `conic-gradient(grey 0deg,${color} 10deg, ${color} ${endDeg}deg, grey ${endDeg + 10}deg)`
+  }
+
+  if (loading) return <Loading />
+
+  return (
+    <CmschPage loginRequired groupRequired>
+      <Helmet title="Riddleök" />
+      <Heading>Riddleök</Heading>
+      <VStack spacing={4} mt={5} align="stretch">
+        {riddleCategoryList.length > 0 ? (
+          <>
+            {riddleCategoryList.map((riddleCategory) => (
+              <Box
+                key={riddleCategory.categoryId}
+                bg={bg}
+                px={6}
+                py={2}
+                borderRadius="md"
+                _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700'), cursor: 'pointer' }}
+                onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
+              >
+                <Flex align="center" justifyContent="space-between">
+                  <Text fontWeight="bold" fontSize="xl">
+                    {riddleCategory.title}
+                  </Text>
+                  <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
+                    <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
+                      {riddleCategory.completed} / {riddleCategory.total}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Box>
+            ))}
+          </>
+        ) : (
+          <Text>Nincs egyetlen riddle feladat se.</Text>
+        )}
+      </VStack>
+    </CmschPage>
+  )
+}
+
+export default RiddleCategoryList

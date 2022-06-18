@@ -19,3 +19,14 @@ export const toDateTimeString = (timestamp: number): string => format(new Date(t
 
 export const ellipsifyLongText = (text: string, maxLength: number = 100): string =>
   text.substring(0, maxLength - 1) + (text.length > maxLength - 1 ? '...' : '')
+
+export const TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
+  month: 'short',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit'
+}
+
+export const stringifyTimeStamp = (timeStamp: number, options: Intl.DateTimeFormatOptions = TIMESTAMP_OPTIONS): string => {
+  return new Date(timeStamp * 1000).toLocaleString('hu-HU', options)
+}

@@ -7,7 +7,7 @@ import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { ExampleComponent } from './components/ExampleComponent'
 
-export const IndexPage = () => {
+const IndexPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { onLogout, onLoginSuccess } = useAuthContext()
@@ -42,3 +42,5 @@ export const IndexPage = () => {
     </CmschPage>
   )
 }
+
+export default IndexPage
