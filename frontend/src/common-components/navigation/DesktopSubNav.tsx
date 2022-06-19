@@ -1,15 +1,15 @@
 import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { FaChevronRight } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
 import { Menu } from '../../api/contexts/config/types'
+import LinkComponent from './LinkComponent'
 
 type Props = {
   menu: Menu
 }
 
 export const DesktopSubNav = ({ menu }: Props) => (
-  <Link to={menu.url || '#'}>
+  <LinkComponent url={menu.url || '#'} external={menu.external}>
     <Box role="group" display="block" p={2} rounded="md">
       <Stack direction="row" align="center">
         <Box>
@@ -30,5 +30,5 @@ export const DesktopSubNav = ({ menu }: Props) => (
         </Flex>
       </Stack>
     </Box>
-  </Link>
+  </LinkComponent>
 )

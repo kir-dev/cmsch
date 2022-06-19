@@ -2,17 +2,19 @@ import { Collapse, Flex, Icon, Stack, Text, useDisclosure } from '@chakra-ui/rea
 import { useColorModeValue } from '@chakra-ui/system'
 import { FaChevronDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { INavItem } from '../../util/configs/nav.config'
+import { Menu } from '../../api/contexts/config/types'
+import LinkComponent from './LinkComponent'
 
 type Props = {
-  navItem: INavItem
+  navItem: { name: string; url: string; external: boolean; children: Menu[] | undefined }
 }
-export const MobileNavItem = ({ navItem: { label, children, path } }: Props) => {
+export const MobileNavItem = ({ navItem: { name, children, url, external } }: Props) => {
   const { isOpen, onToggle } = useDisclosure()
+  if (children && children.length === 0) children = undefined
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
-      <Link to={children || !path ? '#' : path} className={children ? undefined : 'navitem'}>
+      <LinkComponent url={url} external={external}>
         <Flex
           py={2}
           justify="space-between"
@@ -21,18 +23,18 @@ export const MobileNavItem = ({ navItem: { label, children, path } }: Props) => 
             textDecoration: 'none'
           }}
         >
-          <Text color={useColorModeValue('gray.800', 'gray.200')}>{label}</Text>
+          <Text color={useColorModeValue('gray.800', 'gray.200')}>{name}</Text>
           {children && <Icon as={FaChevronDown} transition="all .25s ease-in-out" transform={isOpen ? 'rotate(180deg)' : ''} w={6} h={6} />}
         </Flex>
-      </Link>
+      </LinkComponent>
 
       <Collapse in={isOpen} animateOpacity style={{ marginTop: '0' }}>
         <Stack pl={4} borderLeft={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.800')} align="start">
           {children &&
             children.map((child) => (
-              <Link key={child.path} to={child.path || '#'} className="navitem" style={{ width: '100%' }}>
-                <Text key={child.label} py={2}>
-                  {child.label}
+              <Link key={child.url} to={child.url || '#'} className="navitem" style={{ width: '100%' }}>
+                <Text key={child.url} py={2}>
+                  {child.name}
                 </Text>
               </Link>
             ))}
