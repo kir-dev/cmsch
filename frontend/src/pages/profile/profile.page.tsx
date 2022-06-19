@@ -9,86 +9,46 @@ import {
   Flex,
   Heading,
   Link,
-  Skeleton,
-  SkeletonCircle,
   Text,
   useColorModeValue,
-  VStack,
-  Wrap,
-  WrapItem
+  VStack
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
-import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { ProfileView, RoleType } from '../../util/views/profile.view'
+import { ErrorNavigate } from '../../common-components/error-handling/ErrorNavigate'
+import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
-import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { Loading } from '../../common-components/Loading'
+import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { API_BASE_URL } from '../../util/configs/environment.config'
+import { RoleType } from '../../util/views/profile.view'
+import { ProfilePageSkeleton } from './components/ProfilePageSkeleton'
+import { collectChallengeDetails } from './util/challengeFunctions'
+import { submittedPercent, completedPercent } from './util/percentFunctions'
 
-const challenges = (profile: ProfileView) => [
-  {
-    name: 'Riddle',
-    completed: profile?.completedRiddleCount,
-    total: profile?.totalRiddleCount,
-    link: '/riddleok',
-    percentage: profile?.totalRiddleCount === 0 ? 0 : (profile?.completedRiddleCount / profile?.totalRiddleCount) * 100
-  },
-  {
-    name: 'QR kód',
-    completed: profile?.collectedTokenCount,
-    total: profile?.totalTokenCount,
-    link: '/qr',
-    percentage: profile?.totalTokenCount === 0 ? 0 : (profile?.collectedTokenCount / profile?.totalTokenCount) * 100
-  }
-]
+type Props = {}
 
-type ProfilePageProps = {}
+const ProfilePage = ({}: Props) => {
+  const { onLogout, profile, profileLoading, profileError } = useAuthContext()
 
-function submittedPercent(profile: ProfileView) {
-  let res = (profile.submittedAchievementCount / profile.totalAchievementCount) * 100
-  return isNaN(res) ? 0 : res
-}
-
-function completedPercent(profile: ProfileView) {
-  let res = (profile.completedAchievementCount / profile.totalAchievementCount) * 100
-  return isNaN(res) ? 0 : res
-}
-
-//Had to create a separate skeleton layout so it wouldn't look strange
-const ProfilePageSkeleton = (props: ProfilePageProps) => (
-  <CmschPage {...props} loginRequired>
-    <VStack align="flex-start" mb="14" mt={6}>
-      <Skeleton h={12} w={['40%', null, null, '15%']} />
-      <Skeleton h={10} w={['50%', null, null, '20%']} />
-      <Skeleton h={10} w={['60%', null, null, '25%']} />
-    </VStack>
-    <Wrap spacing="3rem" justify="center" mt={3}>
-      {[0, 1, 2].map((challenge) => (
-        <WrapItem key={challenge}>
-          <Center w="10rem" h="12rem">
-            <Flex direction="column" align="center">
-              <Skeleton mb={3} w="90%" h={10} />
-              <SkeletonCircle size="10rem" />
-            </Flex>
-          </Center>
-        </WrapItem>
-      ))}
-    </Wrap>
-  </CmschPage>
-)
-
-export const ProfilePage = (props: ProfilePageProps) => {
-  const { onLogout, profile } = useAuthContext()
-  if (profile === undefined)
+  if (profileLoading)
     return (
       <Loading>
-        <ProfilePageSkeleton {...props} />
+        <ProfilePageSkeleton />
       </Loading>
     )
 
+  if (profileError) return <ErrorNavigate title="Profil betöltése sikertelen!" messages={(profileError as any).message} />
+  if (!profile)
+    return (
+      <ErrorNavigate
+        title="Profil betöltése sikertelen!"
+        messages={['A profil üres maradt.', 'Keresd az oldal fejlesztőit a hiba kinyomozása érdekében!']}
+      />
+    )
+
   return (
-    <CmschPage {...props} loginRequired>
+    <CmschPage loginRequired>
       <Helmet title="Profil" />
       <Flex justifyContent="space-between" flexDirection={{ base: 'column', sm: 'row' }}>
         <Box>
@@ -181,7 +141,7 @@ export const ProfilePage = (props: ProfilePageProps) => {
           </Flex>
         </Center>
 
-        {challenges(profile!).map((challenge) => (
+        {collectChallengeDetails(profile).map((challenge) => (
           <Center p={3}>
             <Flex direction="column" align="center">
               <Link
@@ -212,4 +172,5 @@ export const ProfilePage = (props: ProfilePageProps) => {
     </CmschPage>
   )
 }
+
 export default ProfilePage
