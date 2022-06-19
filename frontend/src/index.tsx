@@ -13,6 +13,7 @@ import { createRoot } from 'react-dom/client'
 import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
 import { ServiceProvider } from './api/contexts/service/ServiceContext'
+import { CookieConsentProvider } from './api/contexts/cookie-consent/CookieConsentContext'
 
 initAxios()
 
@@ -27,8 +28,10 @@ root.render(
           <ConfigProvider>
             <ThemeConfig>
               <AuthProvider>
-                <App />
-                <ReactQueryDevtools />
+                <CookieConsentProvider>
+                  <App />
+                  <ReactQueryDevtools />
+                </CookieConsentProvider>
               </AuthProvider>
             </ThemeConfig>
           </ConfigProvider>

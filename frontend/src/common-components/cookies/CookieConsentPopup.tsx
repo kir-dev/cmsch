@@ -6,7 +6,7 @@ type Props = {
 
 export const CookieConsentPopup = ({ onClick }: Props) => (
   <Box maxWidth="80rem" mx="auto" p={2}>
-    <Alert display={{ base: 'block', md: 'flex' }} colorScheme="brand" variant="solid" borderRadius={6} width="full">
+    <Alert display={{ base: 'block', md: 'flex' }} status="info" variant="solid" borderRadius={6} width="full">
       <Flex flex={1}>
         <AlertIcon alignSelf="flex-start" />
         <Box>
@@ -17,7 +17,7 @@ export const CookieConsentPopup = ({ onClick }: Props) => (
         </Box>
       </Flex>
       <Flex justifyContent="flex-end">
-        <Button colorScheme="blackAlpha" onClick={onClick} ml={2} mt={{ base: 2, md: 0 }}>
+        <Button variant="outline" _hover={{ bgColor: 'blue.600' }} onClick={onClick} ml={2} mt={{ base: 2, md: 0 }}>
           Megértettem.
         </Button>
       </Flex>
