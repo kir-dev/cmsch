@@ -1,6 +1,6 @@
 import { Box, Collapse, Flex, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
-import { DesktopNav } from './DesktopNav'
-import { MobileNav } from './MobileNav'
+import { DesktopNav } from './desktop/DesktopNav'
+import { MobileNav } from './mobile/MobileNav'
 import { Link } from 'react-router-dom'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { ColorModeSwitcher } from './ColorModeSwitcher'

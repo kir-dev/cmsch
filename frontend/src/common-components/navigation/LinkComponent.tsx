@@ -1,5 +1,5 @@
-import { HasChildren } from '../../util/react-types.util'
 import { Link } from 'react-router-dom'
+import { HasChildren } from '../../util/react-types.util'
 
 type Props = {
   url: string
