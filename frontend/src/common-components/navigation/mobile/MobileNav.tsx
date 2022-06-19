@@ -1,6 +1,5 @@
 import { Stack } from '@chakra-ui/react'
-import React from 'react'
-import { useConfigContext } from '../../../api/contexts/config/useConfigContext'
+import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { NavItemNoChildren } from './NavItemNoChildren'
 import { NavItemWithChildren } from './NavItemWithChildren'
 
