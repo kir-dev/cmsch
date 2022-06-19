@@ -9,7 +9,7 @@ export const ThemeConfig = ({ children }: HasChildren) => {
   const config = useConfigContext()
   // TODO: Should overwrite more fields if API supports it
   const chakraConfig = useMemo(() => {
-    if (config) customTheme.colors.brand = getColorShadesForColor(config.theme.brandColor)
+    if (config) customTheme.colors.brand = getColorShadesForColor(config.components.style.brandingColor)
     return customTheme
   }, [config])
   return <ChakraProvider theme={chakraConfig}>{children}</ChakraProvider>

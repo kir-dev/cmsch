@@ -11,9 +11,9 @@ export const ConfigProvider = ({ children }: HasChildren) => {
   const [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
     axios
-      .get<ConfigDto>(API_BASE_URL + '/app')
+      .get<ConfigDto>(API_BASE_URL + '/api/app')
       .then((res) => {
-        setConfig({ ...res.data, theme: { brandColor: '#ff7800' } })
+        setConfig(res.data)
       })
       .catch(() => console.error('Theme fetch failed!'))
       .finally(() => setLoading(false))

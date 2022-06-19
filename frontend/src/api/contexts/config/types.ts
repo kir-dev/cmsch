@@ -2,21 +2,50 @@ export interface ConfigDto {
   role: string
   menu: Menu[]
   components: Components
-  theme: Theme
-}
-
-export interface Theme {
-  brandColor: string
 }
 
 export interface Components {
+  app: App
+  style: Style
+  userHandling: Debt
   countdown: Countdown
-  extraPage: ExtraPage
+  debt: Debt
+  event: Event
+  extraPage: Debt
+  groupselection: Debt
+  home: Home
   impressum: Impressum
-  news: News
-  riddle: News
-  task: News
+  leaderboard: Leaderboard
+  location: Debt
+  login: Debt
+  news: Home
+  profile: Profile
+  riddle: Home
+  signup: Debt
+  task: Home
   token: Token
+}
+
+export interface App {
+  warningMessage: string
+  warningLevel: string
+  siteName: string
+  defaultComponent: string
+  siteLogoUrl: string
+  faviconUrl: string
+  hostLogo: string
+  hostAlt: string
+  hostWebsiteUrl: string
+  facebookUrl: string
+  instagramUrl: string
+  footerMessage: string
+  devLogo: string
+  devAlt: string
+  devWebsiteUrl: string
+  sponsorsEnabled: string
+  sponsorLogoUrls: string
+  sponsorAlts: string
+  sponsorWebsiteUrls: string
 }
 
 export interface Countdown {
@@ -29,7 +58,19 @@ export interface Countdown {
   blurredImage: string
 }
 
-export interface ExtraPage {}
+export interface Debt {}
+
+export interface Event {
+  title: string
+  seekToCurrentCurrent: string
+  separateDays: string
+  topMessage: string
+  enableDetailedView: string
+}
+
+export interface Home {
+  title: string
+}
 
 export interface Impressum {
   title: string
@@ -49,8 +90,48 @@ export interface Impressum {
   otherOrganizersMessage: string
 }
 
-export interface News {
+export interface Leaderboard {
+  leaderboardEnabled: string
+  leaderboardFrozen: string
+}
+
+export interface Profile {
   title: string
+  showTasks: string
+  taskCounterName: string
+  showRiddles: string
+  riddleCounterName: string
+  showTokens: string
+  tokenCounterName: string
+  showFullName: string
+  showGuild: string
+  showNeptun: string
+  showProfilePicture: string
+  showQr: string
+  showGroupName: string
+  groupTitle: string
+  allowGroupSelect: string
+  messageBoxContent: string
+  messageBoxLevel: string
+  showGroupLeadersLocations: string
+  showMinimumToken: string
+  minTokenMsg: string
+  minTokenAchievedMsg: string
+}
+
+export interface Style {
+  backgroundColor: string
+  textColor: string
+  textColorAccent: string
+  brandingColor: string
+  backgroundUrl: string
+  mobileBackgroundUrl: string
+  mainFontName: string
+  mainFontCdn: string
+  mainFontWeight: string
+  displayFontName: string
+  displayFontCdn: string
+  displayFontWeight: string
 }
 
 export interface Token {
@@ -63,8 +144,8 @@ export interface Token {
 }
 
 export interface Menu {
-  url: string
   name: string
+  url: string
   external: boolean
-  children: Menu[]
+  children: any[]
 }
