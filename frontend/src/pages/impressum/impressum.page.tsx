@@ -4,7 +4,7 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import DeveloperCard from './components/DeveloperCard'
-import { useDevelopers } from './components/developers'
+import { useDevelopers } from '../../api/hooks/useDevelopers'
 import { OrganizerSection } from './components/OrganizerSection'
 import { parseOrganizerArrayJSON } from './util/arrayFunctions'
 

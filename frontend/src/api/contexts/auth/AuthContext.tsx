@@ -6,7 +6,7 @@ import { queryClient } from '../../../util/configs/api.config'
 import { CookieKeys } from '../../../util/configs/cookies.config'
 import { HasChildren } from '../../../util/react-types.util'
 import { ProfileView } from '../../../util/views/profile.view'
-import { useProfileQuery } from '../../hooks/commons/useProfileQuery'
+import { useProfileQuery } from '../../hooks/useProfileQuery'
 
 export type AuthContextType = {
   isLoggedIn: boolean

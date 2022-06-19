@@ -1,7 +1,7 @@
 import { Flex, HStack, Tag, Text, Image, useColorModeValue, WrapItem } from '@chakra-ui/react'
 import { API_BASE_URL } from '../../../util/configs/environment.config'
 import { customTheme } from '../../../util/configs/theme.config'
-import { Dev } from './developers'
+import { Dev } from '../../../api/hooks/useDevelopers'
 
 type Props = {
   dev: Dev
