@@ -1,26 +1,15 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext } from 'react'
 import { HasChildren } from '../../../util/react-types.util'
-import axios from 'axios'
-import { API_BASE_URL } from '../../../util/configs/environment.config'
 import { ConfigDto } from './types'
+import { useConfigQuery } from './useConfigQuery'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
 export const ConfigProvider = ({ children }: HasChildren) => {
-  const [config, setConfig] = useState<ConfigDto>()
-  const [loading, setLoading] = useState<boolean>(true)
-  useEffect(() => {
-    axios
-      .get<ConfigDto>(API_BASE_URL + '/api/app')
-      .then((res) => {
-        setConfig(res.data)
-      })
-      .catch(() => console.error('Theme fetch failed!'))
-      .finally(() => setLoading(false))
-  }, [])
+  const { data, isLoading } = useConfigQuery((err) => console.error('[ERROR] at ConfigProvider', JSON.stringify(err, null, 2)))
   // TODO: add loading screen
-  if (loading) return null
-  return <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>
+  if (isLoading) return null
+  return <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>
 }
 
 export const useConfigContext = () => useContext<ConfigDto | undefined>(ConfigContext)

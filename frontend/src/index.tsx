@@ -20,18 +20,18 @@ const root = createRoot(document.getElementById('root')!)
 root.render(
   <React.StrictMode>
     <ColorModeScript />
-    <ConfigProvider>
-      <ThemeConfig>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ConfigProvider>
+        <ThemeConfig>
+          <BrowserRouter>
             <AuthProvider>
               <App />
               <ReactQueryDevtools />
             </AuthProvider>
-          </QueryClientProvider>
-        </BrowserRouter>
-      </ThemeConfig>
-    </ConfigProvider>
+          </BrowserRouter>
+        </ThemeConfig>
+      </ConfigProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 )
 
