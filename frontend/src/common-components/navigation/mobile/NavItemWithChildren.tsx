@@ -1,5 +1,7 @@
-import { Collapse, Flex, Icon, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Collapse, Flex, Icon, Stack, Text, useDisclosure, VStack } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { FaChevronDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { Menu } from '../../../api/contexts/config/types'
@@ -9,11 +11,16 @@ type Props = {
   menu: Menu
 }
 
+/** Small hack needed because the Chakra system is too strong to accept my overrides */
+const MyDiv = styled.div`
+  margin-top: 0 !important;
+`
+
 export const NavItemWithChildren = ({ menu: { external, url, children, name } }: Props) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Stack spacing={4} onClick={onToggle}>
+    <MyDiv onClick={onToggle}>
       <LinkComponent url={url} external={external}>
         <Flex
           py={2}
@@ -24,7 +31,7 @@ export const NavItemWithChildren = ({ menu: { external, url, children, name } }:
           }}
         >
           <Text color={useColorModeValue('gray.800', 'gray.200')}>{name}</Text>
-          <Icon as={FaChevronDown} transition="all .25s ease-in-out" transform={isOpen ? 'rotate(180deg)' : ''} w={6} h={6} />
+          <Icon as={FaChevronDown} transition="all .25s ease-in-out" transform={isOpen ? 'rotate(180deg)' : ''} w={4} h={4} />
         </Flex>
       </LinkComponent>
 
@@ -39,6 +46,6 @@ export const NavItemWithChildren = ({ menu: { external, url, children, name } }:
           ))}
         </Stack>
       </Collapse>
-    </Stack>
+    </MyDiv>
   )
 }

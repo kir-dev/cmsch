@@ -22,14 +22,14 @@ export const Navbar = () => {
         <Flex flex={{ base: 1, md: '1' }} ml={{ base: -2, md: 0 }} display={{ base: 'flex', md: 'none' }}>
           <IconButton
             onClick={onToggle}
-            icon={isOpen ? <Icon as={FaTimes} w={3} h={3} /> : <Icon as={FaBars} w={5} h={5} />}
+            icon={isOpen ? <Icon as={FaTimes} w={5} h={5} /> : <Icon as={FaBars} w={5} h={5} />}
             variant="ghost"
             aria-label="Navigáció megnyitása"
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
-            <Image src={config?.components.app.siteLogoUrl} width="12.938rem" alt="CMSch" />
+            <Image src={config?.components.app.siteLogoUrl} alt="CMSch" />
           </Link>
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>
