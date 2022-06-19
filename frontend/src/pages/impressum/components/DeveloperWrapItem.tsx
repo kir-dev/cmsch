@@ -7,7 +7,7 @@ type Props = {
   dev: Dev
 }
 
-const DeveloperCard = ({ dev: { name, img, tags } }: Props) => {
+export const DeveloperWrapItem = ({ dev: { name, img, tags } }: Props) => {
   return (
     <WrapItem border="2px" borderColor={useColorModeValue('gray.200', 'gray.700')} borderRadius="md">
       <Flex direction="column" align="center" w="20rem" h="20rem">
@@ -24,5 +24,3 @@ const DeveloperCard = ({ dev: { name, img, tags } }: Props) => {
     </WrapItem>
   )
 }
-
-export default DeveloperCard

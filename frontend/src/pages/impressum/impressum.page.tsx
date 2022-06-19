@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
-import DeveloperCard from './components/DeveloperCard'
 import { useDevelopers } from '../../api/hooks/useDevelopers'
 import { OrganizerSection } from './components/OrganizerSection'
 import { parseOrganizerArrayJSON } from './util/arrayFunctions'
+import { DeveloperWrapItem } from './components/DeveloperWrapItem'
 
 const ImpressumPage = () => {
   const config = useConfigContext()
@@ -25,7 +25,7 @@ const ImpressumPage = () => {
       </Heading>
       <Wrap justify="center">
         {developers.map((dev) => (
-          <DeveloperCard key={dev.name} dev={dev} />
+          <DeveloperWrapItem key={dev.name} dev={dev} />
         ))}
       </Wrap>
       <Markdown text={impressumConfig?.developersBottomMessage} />

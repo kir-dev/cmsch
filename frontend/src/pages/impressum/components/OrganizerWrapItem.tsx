@@ -6,7 +6,7 @@ type Props = {
   organizer: Organizer
 }
 
-const OrganizerCard = ({ organizer: { name, avatar, roles } }: Props) => {
+export const OrganizerWrapItem = ({ organizer: { name, avatar, roles } }: Props) => {
   return (
     <WrapItem border="2px" borderColor={useColorModeValue('gray.200', 'gray.700')} borderRadius="md">
       <HStack align="center" w="20rem" p={2}>
@@ -23,5 +23,3 @@ const OrganizerCard = ({ organizer: { name, avatar, roles } }: Props) => {
     </WrapItem>
   )
 }
-
-export default OrganizerCard
