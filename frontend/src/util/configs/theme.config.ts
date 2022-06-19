@@ -132,7 +132,8 @@ export let customTheme = extendTheme({
       700: '#177650',
       800: '#0f4e35',
       900: '#08271b'
-    }
+    },
+    kirDev: '#F15A29'
   },
   components: {
     Heading: {

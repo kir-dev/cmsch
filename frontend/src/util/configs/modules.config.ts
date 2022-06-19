@@ -5,6 +5,7 @@ import { NewsModule } from '../../route-modules/News.module'
 import { ProfileModule } from '../../route-modules/Profile.module'
 import { CommunitiesModule } from '../../route-modules/Communities.module'
 import { TokenModule } from '../../route-modules/Token.module'
+import { ImpressumModule } from '../../route-modules/Impressum.module'
 
 export enum AvailableModules {
   RIDDLE = 'RIDDLE',
@@ -19,7 +20,7 @@ export enum AvailableModules {
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
   [AvailableModules.RIDDLE]: RiddleModule,
   [AvailableModules.TASK]: TaskModule,
-  [AvailableModules.IMPRESSUM]: TaskModule,
+  [AvailableModules.IMPRESSUM]: ImpressumModule,
   [AvailableModules.NEWS]: NewsModule,
   [AvailableModules.PROFILE]: ProfileModule,
   [AvailableModules.COMMUNITIES]: CommunitiesModule,
@@ -34,5 +35,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.PROFILE,
   AvailableModules.RIDDLE,
   AvailableModules.COMMUNITIES,
-  AvailableModules.TOKEN
+  AvailableModules.TOKEN,
+  AvailableModules.IMPRESSUM
 ]
