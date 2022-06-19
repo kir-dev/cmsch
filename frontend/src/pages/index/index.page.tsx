@@ -1,4 +1,4 @@
-import { Heading } from '@chakra-ui/react'
+import { Heading, useToast } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
@@ -10,20 +10,24 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 const IndexPage = () => {
   const location = useLocation()
-  const navigate = useNavigate()
+  const toast = useToast()
   const { onLogout, onLoginSuccess } = useAuthContext()
   const config = useConfigContext()
 
   useEffect(() => {
     if (location.pathname === '/logout') {
       onLogout()
-      navigate('/')
     }
 
     const searchParams = new URLSearchParams(location.search)
     if (searchParams.get('logged-out') == 'true') {
-      onLogout()
-      navigate('/')
+      toast({
+        title: 'Kijelentkezés',
+        description: 'Sikeres kijelentkeztetés!',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      })
     }
     if (searchParams.has('jwt')) {
       onLoginSuccess({ jwt: searchParams.get('jwt')!! })
