@@ -12,7 +12,7 @@ const LinkComponent = ({ children, url, external }: Props) => {
       {children}
     </a>
   ) : (
-    <Link to={children || !url ? '#' : url} className={children ? undefined : 'navitem'}>
+    <Link to={url || '#'} className={children ? undefined : 'navitem'}>
       {children}
     </Link>
   )
