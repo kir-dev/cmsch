@@ -1,4 +1,4 @@
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
+import { useConfigContext } from '../contexts/config/ConfigContext'
 import { useMemo } from 'react'
 
 export type Dev = { name: string; img: string; tags: string[] }

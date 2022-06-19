@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useQuery } from 'react-query'
-import { ConfigDto } from './types'
+import { ConfigDto } from '../contexts/config/types'
 
 export const useConfigQuery = (onError: (err: any) => void) => {
   return useQuery<ConfigDto, Error, ConfigDto>(

@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react'
 import { HasChildren } from '../../../util/react-types.util'
 import { ConfigDto } from './types'
-import { useConfigQuery } from './useConfigQuery'
+import { useConfigQuery } from '../../hooks/useConfigQuery'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
