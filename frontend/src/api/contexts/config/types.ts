@@ -147,5 +147,5 @@ export interface Menu {
   name: string
   url: string
   external: boolean
-  children: any[]
+  children: Menu[]
 }

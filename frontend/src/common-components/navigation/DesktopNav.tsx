@@ -1,9 +1,9 @@
 import { Box, HStack, Icon, Popover, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { FaChevronDown } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
 import { DesktopSubNav } from './DesktopSubNav'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import LinkComponent from './LinkComponent'
 
 export const DesktopNav = () => {
   const config = useConfigContext()
@@ -15,7 +15,7 @@ export const DesktopNav = () => {
           <Box key={menu.name} p={2}>
             <Popover trigger="hover" placement="bottom-start">
               <PopoverTrigger>
-                <Link to={menu.url || '#'}>
+                <LinkComponent url={menu.url || '#'} external={menu.external}>
                   <HStack
                     _hover={{
                       textDecoration: 'none',
@@ -27,7 +27,7 @@ export const DesktopNav = () => {
                     </Text>
                     {menu.children && menu.children.length > 0 && <Icon as={FaChevronDown} w={6} h={6} m={0} />}
                   </HStack>
-                </Link>
+                </LinkComponent>
               </PopoverTrigger>
 
               {menu.children && menu.children.length > 0 && (
