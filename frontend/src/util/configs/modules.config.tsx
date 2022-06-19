@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import React, { FunctionComponent } from 'react'
 import { RiddleModule } from '../../route-modules/Riddle.module'
 import { TaskModule } from '../../route-modules/Task.module'
 import { NewsModule } from '../../route-modules/News.module'
@@ -28,7 +28,7 @@ export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
 }
 
 export function GetRoutesForModules(modules: AvailableModules[]) {
-  return modules.map((m) => RoutesForModules[m]([]))
+  return modules.map((m) => <React.Fragment key={m.valueOf()}>{RoutesForModules[m]([])}</React.Fragment>)
 }
 
 export const EnabledModules: AvailableModules[] = [
