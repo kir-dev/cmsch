@@ -1,30 +1,20 @@
 import { Alert, AlertDescription, AlertIcon, CloseButton, HStack, useDisclosure, VStack } from '@chakra-ui/react'
 import { CmschContainer } from './layout/CmschContainer'
-import { useWarningQuery } from '../api/hooks/commons/useWarningQuery'
-import { useEffect } from 'react'
+import { useConfigContext } from '../api/contexts/config/ConfigContext'
 
 export const Warning = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { error, data: warning } = useWarningQuery()
-  useEffect(() => {
-    if (warning?.message !== '') {
-      onOpen()
-    }
-  }, [warning])
+  const { isOpen, onClose } = useDisclosure()
+  const config = useConfigContext()
 
-  if (error) {
-    console.log('[ERROR] at useWarningQuery', JSON.stringify(error, null, 2))
-  }
-
-  if (warning === undefined || !isOpen) return null
+  if (!config || !isOpen) return null
 
   return (
     <CmschContainer>
-      <Alert status={warning.type || 'warning'} variant="left-accent">
+      <Alert status={config.components.app.warningLevel || 'warning'} variant="left-accent">
         <HStack justify="space-between" flex={1}>
           <AlertIcon />
           <VStack align="flex-start" flex={1}>
-            <AlertDescription wordBreak="break-word">{warning.message}</AlertDescription>
+            <AlertDescription wordBreak="break-word">{config.components.app.warningMessage}</AlertDescription>
           </VStack>
           <CloseButton onClick={onClose} />
         </HStack>
