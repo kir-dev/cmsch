@@ -52,16 +52,16 @@ const ProfilePage = ({}: Props) => {
       <Helmet title="Profil" />
       <Flex justifyContent="space-between" flexDirection={{ base: 'column', sm: 'row' }}>
         <Box>
-          <Heading>{profile?.fullName}</Heading>
-          <Text fontSize="3xl">Tankör: {profile?.groupName || 'nincs'}</Text>
+          <Heading>{profile.fullName}</Heading>
+          <Text fontSize="3xl">Tankör: {profile.groupName || 'nincs'}</Text>
         </Box>
         <VStack py={2} alignItems="flex-end">
-          {profile?.role && RoleType[profile.role] >= RoleType.STAFF && (
+          {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
             <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
               Admin panel
             </LinkButton>
           )}
-          {profile?.groupSelectionAllowed && (
+          {profile.groupSelectionAllowed && (
             <LinkButton colorScheme="brand" href="/profil/tankor-modositas">
               Tankör módosítása
             </LinkButton>
@@ -71,7 +71,7 @@ const ProfilePage = ({}: Props) => {
           </Button>
         </VStack>
       </Flex>
-      {!profile?.groupSelectionAllowed && (
+      {!profile.groupSelectionAllowed && (
         <Alert status="info" variant="left-accent" mt={5}>
           <AlertIcon />
           Ha a tanköröd nem helyes, akkor az infópultnál állíttasd át a megfelelőre! A sikeres tanköri jelenlétről csak a jelzett tankör
