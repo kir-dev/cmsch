@@ -84,10 +84,16 @@ export interface Impressum {
   developerDaniUrl: string
   developerMateUrl: string
   developersBottomMessage: string
-  leadOrganizers: string
+  leadOrganizers: string // JSONified Organizer[]
   leadOrganizersMessage: string
-  otherOrganizers: string
+  otherOrganizers: string // JSONified Organizer[]
   otherOrganizersMessage: string
+}
+
+export interface Organizer {
+  name: string
+  roles: string
+  avatar: string
 }
 
 export interface Leaderboard {
