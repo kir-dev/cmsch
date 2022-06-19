@@ -7,13 +7,18 @@ import { LinkButton } from '../../common-components/LinkButton'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { UnauthorizedPage } from './unauthorized.page'
 
-export const ErrorPage = () => {
+type Props = {
+  message?: string
+}
+
+export const ErrorPage = ({ message: messageProp }: Props) => {
   const { clearMessage, message, type } = useServiceContext()
   const [clonedMessage, setClonedMessage] = useState<string | undefined>('')
   const [clonedMessageType, setClonedMessageType] = useState<MessageTypes>(MessageTypes.GENERAL)
   useEffect(() => {
     // Cloning the error is needed to clear the error globally
-    setClonedMessage(message)
+    // The message from prop can override the message
+    setClonedMessage(messageProp || message)
     setClonedMessageType(type || MessageTypes.GENERAL)
     // Clear the error from the context since the user has already been notified, and prepare for navigation
     clearMessage()
