@@ -29,7 +29,7 @@ export const Navbar = () => {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
-            <Image src={config?.components.app.siteLogoUrl} width="12.938rem" />
+            <Image src={config?.components.app.siteLogoUrl} width="12.938rem" alt="CMSch" />
           </Link>
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>
