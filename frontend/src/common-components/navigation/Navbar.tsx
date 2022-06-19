@@ -4,10 +4,11 @@ import { MobileNav } from './MobileNav'
 import { Link } from 'react-router-dom'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
-
+  const config = useConfigContext()
   return (
     <Box mx="auto" maxW="6xl" w="full" fontFamily="heading">
       <Flex
@@ -28,7 +29,7 @@ export const Navbar = () => {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
-            <Image src={`/img/${useColorModeValue('navbar_logo.png', 'navbar_logo_white.png')}`} width="12.938rem" />
+            <Image src={config?.components.app.siteLogoUrl} width="12.938rem" />
           </Link>
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>

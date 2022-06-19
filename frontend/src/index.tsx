@@ -12,6 +12,7 @@ import { initAxios, queryClient } from './util/configs/api.config'
 import { createRoot } from 'react-dom/client'
 import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
+import { ServiceProvider } from './api/contexts/service/ServiceContext'
 
 initAxios()
 
@@ -21,16 +22,18 @@ root.render(
   <React.StrictMode>
     <ColorModeScript />
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider>
-        <ThemeConfig>
-          <BrowserRouter>
-            <AuthProvider>
-              <App />
-              <ReactQueryDevtools />
-            </AuthProvider>
-          </BrowserRouter>
-        </ThemeConfig>
-      </ConfigProvider>
+      <BrowserRouter>
+        <ServiceProvider>
+          <ConfigProvider>
+            <ThemeConfig>
+              <AuthProvider>
+                <App />
+                <ReactQueryDevtools />
+              </AuthProvider>
+            </ThemeConfig>
+          </ConfigProvider>
+        </ServiceProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
 )
