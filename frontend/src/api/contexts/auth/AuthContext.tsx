@@ -4,6 +4,7 @@ import { createContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { queryClient } from '../../../util/configs/api.config'
 import { CookieKeys } from '../../../util/configs/cookies.config'
+import { API_BASE_URL } from '../../../util/configs/environment.config'
 import { HasChildren } from '../../../util/react-types.util'
 import { ProfileView } from '../../../util/views/profile.view'
 import { useProfileQuery } from '../../hooks/useProfileQuery'
@@ -59,13 +60,7 @@ export const AuthProvider = ({ children }: HasChildren) => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
     setIsLoggedIn(false)
     queryClient.invalidateQueries('currentUser', { refetchInactive: true })
-    toast({
-      title: 'Kijelentkezés',
-      description: 'Sikeres kijelentkeztetés!',
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    })
+    window.location.href = `${API_BASE_URL}/control/logout`
   }
 
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery(isLoggedIn, onLoginFailure)

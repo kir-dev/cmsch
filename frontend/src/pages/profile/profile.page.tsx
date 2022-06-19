@@ -24,6 +24,7 @@ import { ProfileView, RoleType } from '../../util/views/profile.view'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { Loading } from '../../common-components/Loading'
+import { API_BASE_URL } from '../../util/configs/environment.config'
 
 const challenges = (profile: ProfileView) => [
   {
@@ -96,7 +97,7 @@ export const ProfilePage = (props: ProfilePageProps) => {
         </Box>
         <VStack py={2} alignItems="flex-end">
           {profile?.role && RoleType[profile.role] >= RoleType.STAFF && (
-            <LinkButton colorScheme="brand" href="/admin/control" external>
+            <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
               Admin panel
             </LinkButton>
           )}
