@@ -3,7 +3,7 @@ import { CmschContainer } from './layout/CmschContainer'
 import { useConfigContext } from '../api/contexts/config/ConfigContext'
 
 export const Warning = () => {
-  const { isOpen, onClose } = useDisclosure()
+  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
   const config = useConfigContext()
 
   if (!config || !isOpen) return null
