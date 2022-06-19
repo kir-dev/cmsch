@@ -1,7 +1,7 @@
 import { Box, Heading, Wrap } from '@chakra-ui/react'
 import { Organizer } from '../../../api/contexts/config/types'
 import Markdown from '../../../common-components/Markdown'
-import OrganizerCard from './OrganizerCard'
+import { OrganizerWrapItem } from './OrganizerWrapItem'
 
 type Props = {
   organizers: Organizer[]
@@ -18,7 +18,7 @@ export const OrganizerSection = ({ organizers, message, title }: Props) => {
       {organizers.length > 0 && (
         <Wrap justify="center" my={4}>
           {organizers.map((organizer) => (
-            <OrganizerCard key={organizer.name} organizer={organizer} />
+            <OrganizerWrapItem key={organizer.name} organizer={organizer} />
           ))}
         </Wrap>
       )}
