@@ -14,8 +14,9 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
+import { Navigate } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { ErrorNavigate } from '../../common-components/error-handling/ErrorNavigate'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { Loading } from '../../common-components/Loading'
@@ -30,22 +31,25 @@ type Props = {}
 
 const ProfilePage = ({}: Props) => {
   const { onLogout, profile, profileLoading, profileError } = useAuthContext()
+  const { sendMessage } = useServiceContext()
 
-  if (profileLoading)
+  if (profileLoading) {
     return (
       <Loading>
         <ProfilePageSkeleton />
       </Loading>
     )
+  }
 
-  if (profileError) return <ErrorNavigate title="Profil betöltése sikertelen!" messages={(profileError as any).message} />
-  if (!profile)
-    return (
-      <ErrorNavigate
-        title="Profil betöltése sikertelen!"
-        messages={['A profil üres maradt.', 'Keresd az oldal fejlesztőit a hiba kinyomozása érdekében!']}
-      />
-    )
+  if (profileError) {
+    sendMessage('Profil betöltése sikertelen! ' + (profileError as any).message)
+    return <Navigate replace to="/error" />
+  }
+
+  if (!profile) {
+    sendMessage('Profil betöltése sikertelen! A profil üres maradt. Keresd az oldal fejlesztőit a hiba kinyomozása érdekében!')
+    return <Navigate replace to="/error" />
+  }
 
   return (
     <CmschPage loginRequired>
