@@ -5,11 +5,22 @@ import { Link } from 'react-router-dom'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { Menu } from '../../api/contexts/config/types'
+
+const LoginMenu: Menu = {
+  name: 'Belépés',
+  url: '/login',
+  external: false,
+  children: []
+}
 
 export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
   const config = useConfigContext()
   const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
+  const menu = config?.menu || []
+  const menuWithLogin = [...menu, LoginMenu]
+
   return (
     <Box mx="auto" maxW="6xl" w="full" fontFamily="heading">
       <Flex
@@ -35,7 +46,7 @@ export const Navbar = () => {
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>
           <Flex display={{ base: 'none', md: 'flex' }} mx={4}>
-            <DesktopNav />
+            <DesktopNav menu={menuWithLogin} />
           </Flex>
         </Flex>
         <Flex flex={{ base: 1, md: 0 }} mr={{ base: -2, md: 0 }} justify="flex-end">
@@ -50,7 +61,7 @@ export const Navbar = () => {
           if ((evt.target as Element).closest('.navitem')) onToggle()
         }}
       >
-        <MobileNav />
+        <MobileNav menu={menuWithLogin} />
       </Collapse>
     </Box>
   )
