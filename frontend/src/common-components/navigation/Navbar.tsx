@@ -16,14 +16,7 @@ export const Navbar = () => {
 
   return (
     <Box mx="auto" w="full">
-      <Flex
-        minH={{ base: '3rem', md: '4.5rem' }}
-        maxW={['100%', '100%', '56rem', '72rem']}
-        py={2}
-        px={{ base: 2, md: 4 }}
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Flex minH={{ base: '3rem', md: '4.5rem' }} py={2} px={{ base: 2, md: 4 }} alignItems="center" justifyContent="space-between">
         <Flex>
           <IconButton
             ref={btnRef}
