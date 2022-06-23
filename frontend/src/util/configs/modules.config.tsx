@@ -37,5 +37,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.COMMUNITIES,
   AvailableModules.TOKEN,
   AvailableModules.IMPRESSUM,
+  AvailableModules.NEWS,
   AvailableModules.TASK
 ]

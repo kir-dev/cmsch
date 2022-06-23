@@ -1,6 +1,6 @@
 export interface NewsPreviewDTO {
   title: string
-  brief: string
+  content: string
   imageUrl: string
   highlighted: boolean
   timestamp: number
