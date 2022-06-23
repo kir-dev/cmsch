@@ -3,19 +3,20 @@ import axios from 'axios'
 import { FC, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, useParams } from 'react-router-dom'
-import { TaskCategory } from '../../util/views/task.view'
+import { TaskCategoryFullDetails } from '../../util/views/task.view'
 import { Loading } from '../../common-components/Loading'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
+import { TaskSkeleton } from './components/TaskListSkeleton'
 
-const TaskCategoryPage: FC = (props) => {
-  const [category, setCategory] = useState<TaskCategory | undefined>(undefined)
+const TaskCategoryPage = () => {
+  const [category, setCategory] = useState<TaskCategoryFullDetails | undefined>(undefined)
   const { id } = useParams()
 
   useEffect(() => {
     axios
-      .get<TaskCategory>(`/api/task/category/${id}`)
+      .get<TaskCategoryFullDetails>(`/api/task/category/${id}`)
       .then((res) => {
         setCategory(res.data)
       })
@@ -27,10 +28,7 @@ const TaskCategoryPage: FC = (props) => {
   if (!category) {
     return (
       <Loading>
-        <Stack marginTop="20px">
-          <Skeleton height="20px" />
-          <Skeleton height="20px" />
-        </Stack>
+        <TaskSkeleton height="3rem" />
       </Loading>
     )
   }
@@ -46,7 +44,7 @@ const TaskCategoryPage: FC = (props) => {
   ]
 
   return (
-    <CmschPage {...props} loginRequired groupRequired>
+    <CmschPage loginRequired groupRequired>
       <Helmet title={category.categoryName} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>Bucketlist kategória: {category.categoryName}</Heading>

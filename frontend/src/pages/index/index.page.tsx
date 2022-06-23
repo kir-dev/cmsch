@@ -2,7 +2,7 @@ import { Heading, useToast } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { ExampleComponent } from './components/ExampleComponent'
@@ -44,6 +44,7 @@ const IndexPage = () => {
         </Heading>{' '}
         portálon
       </Heading>
+      <Link to="/bucketlist">Tasks</Link>
       <ExampleComponent />
     </CmschPage>
   )

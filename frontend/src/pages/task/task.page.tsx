@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { TaskCategory, TaskFullDetailsView, taskStatus, taskType } from '../../util/views/task.view'
+import { TaskCategoryFullDetails, TaskFullDetailsView, taskStatus, taskType } from '../../util/views/task.view'
 import { FilePicker } from './components/FilePicker'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -12,6 +12,7 @@ import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { Paragraph } from '../../common-components/Paragraph'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
 import { stringifyTimeStamp } from '../../util/core-functions.util'
+import { TaskDetailsSkeleton } from './components/taskDetailsSkeleton'
 
 const TaskPage = () => {
   const [achDetails, setAchDetails] = useState<TaskFullDetailsView | undefined>(undefined)
@@ -41,7 +42,7 @@ const TaskPage = () => {
         } else {
           setAchDetails(res.data)
           axios
-            .get<TaskCategory>(`/api/task/category/${res.data.task.categoryId}`)
+            .get<TaskCategoryFullDetails>(`/api/task/category/${res.data.task.categoryId}`)
             .then((res) => {
               setCategoryName(res.data.categoryName || '')
             })
@@ -62,12 +63,7 @@ const TaskPage = () => {
   if (!achDetails) {
     return (
       <Loading>
-        <CmschPage>
-          <Skeleton height="40px" />
-          <Skeleton marginTop="20px" height="20px" />
-          <Skeleton marginTop="8px" height="20px" />
-          <Skeleton marginTop="8px" height="20px" />
-        </CmschPage>
+        <TaskDetailsSkeleton />
       </Loading>
     )
   }

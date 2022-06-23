@@ -1,28 +1,17 @@
-import { Box, Flex, Heading, Skeleton, Stack, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import { AllTaskCategories, TaskCategory } from '../../util/views/task.view'
+import { AllTaskCategories, TaskCategoryPreview } from '../../util/views/task.view'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-
-const progress = (category: TaskCategory) => (category.approved + category.notGraded) / category.sum
-
-const progressGradient = (progress: number, color: string) => {
-  const endDeg = 360 * progress
-  if (progress === 1) {
-    return `conic-gradient(${color} 0deg, ${color} 360deg)`
-  }
-  if (progress === 0) {
-    return `conic-gradient(grey 0deg, gray 360deg)`
-  }
-  return `conic-gradient(grey 0deg,${color} 10deg, ${color} ${endDeg}deg, grey ${endDeg + 10}deg)`
-}
+import { TaskSkeleton } from './components/TaskListSkeleton'
+import { progress, progressGradient } from './util/taskCategoryProgress'
 
 const TaskCategoryList = () => {
   const bg = useColorModeValue('gray.200', 'gray.600')
-  const [categories, setCategories] = useState<TaskCategory[]>([])
+  const [categories, setCategories] = useState<TaskCategoryPreview[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -40,13 +29,7 @@ const TaskCategoryList = () => {
   if (loading)
     return (
       <Loading>
-        {[0, 1, 2].map((idx) => (
-          <Stack key={idx} mt="20px">
-            <Skeleton height="40px" />
-            <Skeleton height="20px" />
-            <Skeleton height="20px" />
-          </Stack>
-        ))}
+        <TaskSkeleton height="4rem" title="Bucketlist" />
       </Loading>
     )
   return (
