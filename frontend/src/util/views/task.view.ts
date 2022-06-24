@@ -55,6 +55,7 @@ export interface TaskEntity {
   id: number
   title: string
   categoryId: number
+  categoryName?: string
   description: string
   expectedResultDescription: string
   type: taskType
