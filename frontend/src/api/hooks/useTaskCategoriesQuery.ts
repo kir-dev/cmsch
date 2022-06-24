@@ -1,14 +1,14 @@
 import axios from 'axios'
 import { useQuery } from 'react-query'
-import { TaskCategoryPreview } from '../../util/views/task.view'
+import { TaskCategoryPreview, AllTaskCategories } from '../../util/views/task.view'
 
-export const useTaskCategoriesQuery = (isLoggedIn: boolean, onLoginFailure: (err: any) => void) => {
+export const useTaskCategoriesQuery = (onError: (err: any) => void) => {
   return useQuery<TaskCategoryPreview[], Error, TaskCategoryPreview[]>(
     'taskCategories',
     async () => {
-      const response = await axios.get<TaskCategoryPreview[]>(`/api/task`)
-      return response.data
+      const response = await axios.get<AllTaskCategories>(`/api/task`)
+      return response.data.categories
     },
-    { enabled: isLoggedIn, onError: onLoginFailure }
+    { onError }
   )
 }
