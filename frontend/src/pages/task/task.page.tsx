@@ -1,11 +1,11 @@
 import { Alert, AlertIcon, Box, Button, FormLabel, Heading, Image, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
 import axios from 'axios'
-import { useRef, useState } from 'react'
+import { useRef, useState, lazy } from 'react'
 import { Helmet } from 'react-helmet'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { taskStatus, taskType } from '../../util/views/task.view'
+import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
 import { FilePicker } from './components/FilePicker'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -15,13 +15,18 @@ import { TaskStatusBadge } from './components/TaskStatusBadge'
 import { stringifyTimeStamp } from '../../util/core-functions.util'
 import { TaskDetailsSkeleton } from './components/taskDetailsSkeleton'
 import { useTaskFullDetailsQuery } from '../../api/hooks/useTaskFullDetailsQuery'
-import { TextInput } from './components/textInput'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
+import { CustomForm } from './components/CustomForm'
+import { useTaskSubmissionMutation } from '../../api/hooks/useTaskSubmissionMutation'
+const CodeEditor = lazy(() => import('./components/CodeEditor'))
 
-interface IFormInput {
+export interface FormInput {
   textAnswer?: string
   fileAnswer?: File
+  customForm?: ({
+    value: string | number
+  } & TaskFormatDescriptor)[]
 }
 
 const TaskPage = () => {
@@ -31,7 +36,8 @@ const TaskPage = () => {
   const toast = useToast()
   const { id } = useParams()
   const navigate = useNavigate()
-  const { setValue, handleSubmit, control } = useForm<IFormInput>()
+  const { setValue, handleSubmit, control } = useForm<FormInput>()
+  const customResults = useWatch({ control, name: 'customForm' })
 
   if (!id) return <Navigate to="/" replace />
 
@@ -44,6 +50,7 @@ const TaskPage = () => {
       isClosable: true
     })
   })
+  const taskSubmissionMutation = useTaskSubmissionMutation()
 
   if (taskDetailsQuery.isSuccess) {
     const taskDetails = taskDetailsQuery.data
@@ -53,8 +60,8 @@ const TaskPage = () => {
     const submissionAllowed = taskDetails?.status === taskStatus.NOT_SUBMITTED || taskDetails?.status === taskStatus.REJECTED
     const reviewed = taskDetails.status === taskStatus.ACCEPTED || taskDetails.status === taskStatus.REJECTED
 
-    const onSubmit: SubmitHandler<IFormInput> = (data) => {
-      if (((textAllowed && data.textAnswer) || (fileAllowed && fileAnswer)) && submissionAllowed) {
+    const onSubmit: SubmitHandler<FormInput> = async (data) => {
+      if ((!fileAllowed || fileAnswer) && submissionAllowed) {
         const formData = new FormData()
         formData.append('taskId', id)
         if (fileAnswer) {
@@ -70,17 +77,34 @@ const TaskPage = () => {
           formData.append('file', fileAnswer)
         }
         if (textAllowed) {
-          formData.append('textAnswer', data.textAnswer!!)
+          switch (taskDetails.task?.format) {
+            case taskFormat.TEXT:
+              if (data.textAnswer) {
+                formData.append('textAnswer', data.textAnswer)
+              } else {
+                toast({
+                  title: 'Üres megoldás',
+                  description: 'Üres megoldást nem küldhetsz be.',
+                  status: 'error',
+                  isClosable: true
+                })
+                return
+              }
+              break
+            case taskFormat.FORM:
+              if (customResults) {
+                formData.append(
+                  'textAnswer',
+                  customResults.reduce((acc, current) => acc + current.title + ': ' + current.value.toString() + current.suffix, '')
+                )
+              }
+              break
+          }
         }
 
-        axios
-          .post(`/api/task/submit`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-          .then((res) => {
-            if (res.data.status === 'OK') {
+        taskSubmissionMutation.mutate(formData, {
+          onSuccess: (result) => {
+            if (result.status === 'OK') {
               toast({
                 title: 'Megoldás elküldve',
                 status: 'success',
@@ -94,15 +118,20 @@ const TaskPage = () => {
               window.scrollTo(0, 0)
             } else {
               toast({
-                title: res.data.status,
+                title: result.status,
                 status: 'error',
                 isClosable: true
               })
             }
-          })
-          .catch(() => {
-            console.error('Hiba történt a beküldés közben.', { toast: true })
-          })
+          },
+          onError: (error) => {
+            toast({
+              title: error.message || 'Hiba a megoldása elküldése közben',
+              status: 'error',
+              isClosable: true
+            })
+          }
+        })
       } else {
         toast({
           title: 'Üres megoldás',
@@ -113,9 +142,31 @@ const TaskPage = () => {
       }
     }
 
-    const textInput = textAllowed && (
-      <TextInput format={taskDetails.task?.format} formatDescriptor={taskDetails.task?.formatDescriptor} control={control} />
-    )
+    let textInput = null
+    if (textAllowed && taskDetails.task) {
+      switch (taskDetails.task.format) {
+        case taskFormat.TEXT:
+          textInput = (
+            <Box mt={5}>
+              <FormLabel htmlFor="textAnswer">Szöveges válasz</FormLabel>
+              <Controller
+                name="textAnswer"
+                control={control}
+                render={({ field }) => <Textarea id="textAnswer" placeholder="Szöveges válasz" {...field} />}
+              />
+            </Box>
+          )
+          break
+        case taskFormat.FORM:
+          textInput = <CustomForm formatDescriptor={taskDetails.task.formatDescriptor} control={control} />
+          break
+        case taskFormat.CODE:
+          textInput = <CodeEditor />
+          break
+        default:
+          textInput = null
+      }
+    }
     const fileInput = fileAllowed && (
       <Box>
         <FormLabel>Csatolt fájl (max. méret: 30 MB)</FormLabel>
