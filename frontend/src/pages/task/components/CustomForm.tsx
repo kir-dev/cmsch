@@ -4,20 +4,20 @@ import { useFieldArray, Controller, Control, FieldValues } from 'react-hook-form
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
 
-export type CustomFormProps = {
+type CustomFormProps = {
   formatDescriptor: string | undefined
   control: Control<FieldValues, object>
 }
 
 export const CustomForm = ({ formatDescriptor, control }: CustomFormProps) => {
-  const { fields, replace } = useFieldArray<FormInput, 'customForm', 'id'>({
+  const { fields, replace } = useFieldArray<FormInput>({
     name: 'customForm',
     control
   })
   useEffect(() => {
     if (formatDescriptor) {
       const inputFields: TaskFormatDescriptor[] = JSON.parse(formatDescriptor)
-      replace(inputFields.map((field) => ({ value: '', title: field.title, type: field.type, suffix: field.suffix })))
+      replace(inputFields.map((field) => ({ value: '', ...field })))
     }
   }, [])
   return (

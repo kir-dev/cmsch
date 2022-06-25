@@ -11,7 +11,7 @@ const STATUS_TEXT_MAP = new Map<taskStatus, string>([
 ])
 
 const STATUS_COLOR_MAP = new Map<taskStatus, string>([
-  [taskStatus.ACCEPTED, 'brand'],
+  [taskStatus.ACCEPTED, 'green'],
   [taskStatus.NOT_SUBMITTED, 'gray'],
   [taskStatus.REJECTED, 'red'],
   [taskStatus.SUBMITTED, 'yellow'],

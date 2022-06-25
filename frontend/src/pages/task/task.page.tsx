@@ -1,6 +1,5 @@
 import { Alert, AlertIcon, Box, Button, FormLabel, Heading, Image, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
-import axios from 'axios'
 import { useRef, useState, lazy } from 'react'
 import { Helmet } from 'react-helmet'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
@@ -37,7 +36,7 @@ const TaskPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { setValue, handleSubmit, control } = useForm<FormInput>()
-  const customResults = useWatch({ control, name: 'customForm' })
+  const customFormData = useWatch({ control, name: 'customForm' })
 
   if (!id) return <Navigate to="/" replace />
 
@@ -67,8 +66,8 @@ const TaskPage = () => {
         if (fileAnswer) {
           if (fileAnswer.size > 31457280) {
             toast({
-              title: 'Túl nagy kép',
-              description: 'A feltöltött kép túllépte a 30 MB-os feltöltési korlátot!',
+              title: 'Túl nagy fájl',
+              description: 'A feltöltött fájl túllépte a 30 MB-os feltöltési korlátot!',
               status: 'error',
               isClosable: true
             })
@@ -92,13 +91,24 @@ const TaskPage = () => {
               }
               break
             case taskFormat.FORM:
-              if (customResults) {
+              if (customFormData) {
+                if (customFormData.some((field) => field.value === '')) {
+                  toast({
+                    title: 'Hiányos megoldás',
+                    description: 'Töltsd ki az összes mezőt!',
+                    status: 'error',
+                    isClosable: true
+                  })
+                  return
+                }
                 formData.append(
                   'textAnswer',
-                  customResults.reduce((acc, current) => acc + current.title + ': ' + current.value.toString() + current.suffix, '')
+                  customFormData.reduce((acc, current) => acc + current.title + ': ' + current.value.toString() + current.suffix, '')
                 )
               }
               break
+            case taskFormat.CODE:
+            //TODO
           }
         }
 
@@ -163,8 +173,6 @@ const TaskPage = () => {
         case taskFormat.CODE:
           textInput = <CodeEditor />
           break
-        default:
-          textInput = null
       }
     }
     const fileInput = fileAllowed && (
