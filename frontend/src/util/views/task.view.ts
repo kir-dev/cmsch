@@ -20,6 +20,17 @@ export enum taskStatus {
   SUBMITTED = 'SUBMITTED'
 }
 
+export enum taskCategoryType {
+  REGULAR = 'REGULAR',
+  PROFILE_REQUIRED = 'PROFILE_REQUIRED'
+}
+
+export interface TaskFormatDescriptor {
+  title: string
+  type: 'number' | 'text' | 'textarea'
+  suffix: string
+}
+
 export interface TaskCategoryPreview {
   categoryId: number
   name: string
@@ -29,6 +40,7 @@ export interface TaskCategoryPreview {
   notGraded: number
   rejected: number
   sum: number
+  //type: taskCategoryType
 }
 
 export interface TaskCategoryFullDetails {
