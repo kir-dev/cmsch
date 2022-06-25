@@ -14,7 +14,7 @@ const CodeEditor = () => {
       <Editor
         value={code}
         onValueChange={(code) => setCode(code)}
-        highlight={(code) => highlight(code, languages.python, 'python')}
+        highlight={(code) => highlight(code, languages.javascript, 'javascript')}
         padding={10}
         style={{
           fontFamily: '"Fira code", "Fira Mono", monospace',
