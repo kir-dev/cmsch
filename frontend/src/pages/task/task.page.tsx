@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useRef, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { taskStatus, taskType } from '../../util/views/task.view'
 import { FilePicker } from './components/FilePicker'
 import { Loading } from '../../common-components/Loading'
@@ -14,15 +15,23 @@ import { TaskStatusBadge } from './components/TaskStatusBadge'
 import { stringifyTimeStamp } from '../../util/core-functions.util'
 import { TaskDetailsSkeleton } from './components/taskDetailsSkeleton'
 import { useTaskFullDetailsQuery } from '../../api/hooks/useTaskFullDetailsQuery'
+import { TextInput } from './components/textInput'
+import { LinkButton } from '../../common-components/LinkButton'
+import Markdown from '../../common-components/Markdown'
+
+interface IFormInput {
+  textAnswer?: string
+  fileAnswer?: File
+}
 
 const TaskPage = () => {
-  const [textAnswer, setTextAnswer] = useState<string>('')
-  const [imageAnswer, setImageAnswer] = useState<File | undefined>(undefined)
+  const [fileAnswer, setFileAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
 
   const toast = useToast()
   const { id } = useParams()
   const navigate = useNavigate()
+  const { setValue, handleSubmit, control } = useForm<IFormInput>()
 
   if (!id) return <Navigate to="/" replace />
 
@@ -39,15 +48,17 @@ const TaskPage = () => {
   if (taskDetailsQuery.isSuccess) {
     const taskDetails = taskDetailsQuery.data
     const textAllowed = taskDetails.task?.type === taskType.TEXT || taskDetails.task?.type === taskType.BOTH
-    const imageAllowed = taskDetails.task?.type === taskType.IMAGE || taskDetails.task?.type === taskType.BOTH
+    const fileAllowed =
+      taskDetails.task?.type === taskType.IMAGE || taskDetails.task?.type === taskType.BOTH || taskDetails.task?.type === taskType.ONLY_PDF
     const submissionAllowed = taskDetails?.status === taskStatus.NOT_SUBMITTED || taskDetails?.status === taskStatus.REJECTED
     const reviewed = taskDetails.status === taskStatus.ACCEPTED || taskDetails.status === taskStatus.REJECTED
 
-    const handleSubmit = () => {
-      if (((textAllowed && textAnswer) || (imageAllowed && imageAnswer)) && submissionAllowed) {
+    const onSubmit: SubmitHandler<IFormInput> = (data) => {
+      if (((textAllowed && data.textAnswer) || (fileAllowed && fileAnswer)) && submissionAllowed) {
         const formData = new FormData()
-        if (imageAnswer) {
-          if (imageAnswer.size > 31457280) {
+        formData.append('taskId', id)
+        if (fileAnswer) {
+          if (fileAnswer.size > 31457280) {
             toast({
               title: 'Túl nagy kép',
               description: 'A feltöltött kép túllépte a 30 MB-os feltöltési korlátot!',
@@ -56,10 +67,12 @@ const TaskPage = () => {
             })
             return
           }
-          formData.append('file', imageAnswer)
+          formData.append('file', fileAnswer)
         }
-        formData.append('taskId', id)
-        formData.append('textAnswer', textAnswer)
+        if (textAllowed) {
+          formData.append('textAnswer', data.textAnswer!!)
+        }
+
         axios
           .post(`/api/task/submit`, formData, {
             headers: {
@@ -73,7 +86,7 @@ const TaskPage = () => {
                 status: 'success',
                 isClosable: true
               })
-              setTextAnswer('')
+              setValue('textAnswer', '')
               if (filePickerRef.current) {
                 filePickerRef.current.reset()
               }
@@ -101,26 +114,16 @@ const TaskPage = () => {
     }
 
     const textInput = textAllowed && (
-      <Box>
-        <FormLabel htmlFor="textAnswer">Szöveges válasz</FormLabel>
-        <Textarea
-          id="textAnswer"
-          name="textAnswer"
-          value={textAnswer}
-          onChange={(e) => setTextAnswer(e.target.value)}
-          placeholder="Szöveges válasz"
-        />
-      </Box>
+      <TextInput format={taskDetails.task?.format} formatDescriptor={taskDetails.task?.formatDescriptor} control={control} />
     )
-
-    const fileInput = imageAllowed && (
+    const fileInput = fileAllowed && (
       <Box>
         <FormLabel>Csatolt fájl (max. méret: 30 MB)</FormLabel>
         <FilePicker
-          onFileChange={(fileArray) => setImageAnswer(fileArray[0])}
+          onFileChange={(fileArray) => setFileAnswer(fileArray[0])}
           placeholder="Csatolt fájl"
           clearButtonLabel="Törlés"
-          accept="image/jpeg,image/png,image/jpg,image/gif"
+          accept={taskDetails.task?.type === taskType.ONLY_PDF ? '.pdf' : 'image/jpeg,image/png,image/jpg,image/gif'}
           ref={filePickerRef}
         />
       </Box>
@@ -146,7 +149,9 @@ const TaskPage = () => {
         <CustomBreadcrumb items={breadcrumbItems} />
         <Heading mb={5}>{taskDetails.task?.title}</Heading>
         <TaskStatusBadge status={taskDetails.status} fontSize="lg" />
-        <Paragraph mt={5}>{taskDetails.task?.description}</Paragraph>
+        <Box mt={5}>
+          <Markdown text={taskDetails.task?.description} />
+        </Box>
         {taskDetails.task?.expectedResultDescription && (
           <Text size="sm" mt={5}>
             <chakra.span fontWeight="bold">Beadandó formátum:</chakra.span>
@@ -159,10 +164,23 @@ const TaskPage = () => {
               Beküldött megoldás
             </Heading>
             {textAllowed && taskDetails.submission && <Paragraph mt={2}>{taskDetails.submission.textAnswer}</Paragraph>}
-            {imageAllowed && taskDetails.submission && (
+            {fileAllowed && taskDetails.submission && (
               <Box>
                 {taskDetails.submission.imageUrlAnswer && taskDetails.submission.imageUrlAnswer.length > 'task/'.length && (
-                  <Image src={`/cdn/${taskDetails.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
+                  <Image
+                    src={`${process.env.REACT_APP_API_BASE_URL}/cdn/${taskDetails.submission.imageUrlAnswer}`}
+                    alt="Beküldött megoldás"
+                  />
+                )}
+                {taskDetails.submission.fileUrlAnswer && taskDetails.submission.fileUrlAnswer.length > 'task/'.length && (
+                  <LinkButton
+                    href={`${process.env.REACT_APP_API_BASE_URL}/cdn/${taskDetails.submission.fileUrlAnswer}`}
+                    external
+                    colorScheme="brand"
+                    mt={5}
+                  >
+                    Letöltés
+                  </LinkButton>
                 )}
               </Box>
             )}
@@ -184,16 +202,18 @@ const TaskPage = () => {
               {taskDetails.status === taskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
             </Heading>
             <Stack mt={5}>
-              <Alert variant="left-accent" status="info">
-                <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(taskDetails.task?.availableTo || 0)}
-              </Alert>
-              {textInput}
-              {fileInput}
-              <Box>
-                <Button mt={3} colorScheme="brand" type="button" onClick={handleSubmit}>
-                  Küldés
-                </Button>
-              </Box>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Alert variant="left-accent" status="info">
+                  <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(taskDetails.task?.availableTo || 0)}
+                </Alert>
+                {textInput}
+                {fileInput}
+                <Box>
+                  <Button mt={3} colorScheme="brand" type="submit">
+                    Küldés
+                  </Button>
+                </Box>
+              </form>
             </Stack>
           </>
         )}
