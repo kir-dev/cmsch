@@ -1,6 +1,6 @@
 import { Heading, Text, Grid } from '@chakra-ui/react'
 import { NewsPreviewDTO } from '../../../util/views/news.view'
-import NewsListItem from './newsListItem'
+import NewsListItem from './NewsListItem'
 
 interface NewsListProps {
   newsList: NewsPreviewDTO[]
@@ -14,7 +14,7 @@ const NewsList = ({ newsList, warningMessage }: NewsListProps) => {
       <Text>{warningMessage}</Text>
       <Grid templateColumns={{ base: 'repeat(1, auto)', md: 'repeat(2, auto)' }} gap={10} marginTop={10}>
         {newsList.map((n: NewsPreviewDTO, i) => (
-          <NewsListItem news={n} index={i} />
+          <NewsListItem news={n} index={i} key={i} />
         ))}
       </Grid>
     </>

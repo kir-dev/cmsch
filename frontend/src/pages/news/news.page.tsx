@@ -4,11 +4,17 @@ import { Navigate, useParams } from 'react-router-dom'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useNewsListQuery } from '../../api/hooks/useNewsListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import News from './components/news'
+import { Loading } from '../../common-components/Loading'
+import News from './components/News'
 
 const NewsPage = () => {
   const news = useNewsListQuery(() => console.log('News list query failed!'))
   const { sendMessage } = useServiceContext()
+
+  if (news.isError) {
+    sendMessage('Hír betöltése sikertelen!')
+    return <Navigate replace to="/error" />
+  }
 
   if (news.isSuccess) {
     const params = useParams()
@@ -21,10 +27,9 @@ const NewsPage = () => {
         <News news={currentNews} />
       </CmschPage>
     )
-  } else {
-    sendMessage('Hír betöltése sikertelen!')
-    return <Navigate replace to="/error" />
   }
+
+  return <Loading />
 }
 
 export default NewsPage
