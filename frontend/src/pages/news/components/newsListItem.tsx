@@ -6,22 +6,20 @@ import { NewsPreviewDTO } from '../../../util/views/news.view'
 
 interface NewsListItemProps {
   news: NewsPreviewDTO
-  index: Key
+  index: Number
 }
 
 const NewsListItem = ({ news, index }: NewsListItemProps) => {
   return (
-    <>
-      <GridItem key={index}>
-        <Link to={'/hirek/' + index}>
-          <Heading size="md" mt={'3rem'} mb={'0.5rem'} as={news.highlighted ? 'mark' : 'text'}>
-            {news.title}
-          </Heading>
-          <Text>{stringifyTimeStamp(news.timestamp)}</Text>//TODO brief content?
-        </Link>
-        <Divider />
-      </GridItem>
-    </>
+    <GridItem>
+      <Link to={'/hirek/' + index}>
+        <Heading size="md" mt={'3rem'} mb={'0.5rem'} as={news.highlighted ? 'mark' : 'text'}>
+          {news.title}
+        </Heading>
+        <Text>{stringifyTimeStamp(news.timestamp)}</Text>//TODO brief content?
+      </Link>
+      <Divider />
+    </GridItem>
   )
 }
 
