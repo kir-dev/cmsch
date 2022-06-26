@@ -1,35 +1,28 @@
-import { Grid, GridItem, useColorModeValue, Text } from '@chakra-ui/react'
+import { GridItem, Heading, Text, Divider } from '@chakra-ui/react'
+import { Key } from 'react'
+import { Link } from 'react-router-dom'
+import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { NewsPreviewDTO } from '../../../util/views/news.view'
 
-type NewsListProps = {
-  newsList: NewsPreviewDTO[]
-}
-
-const NewsList = ({ newsList }: NewsListProps) => (
-  <Grid templateColumns="repeat(2, auto)" gap={10} marginTop={10}>
-    {newsList.map((n) => (
-      <NewsListItem news={n} />
-    ))}
-  </Grid>
-)
-
-type NewsDisplayProps = {
+interface NewsListItemProps {
   news: NewsPreviewDTO
+  index: Key
 }
 
-const NewsListItem = ({ news }: NewsDisplayProps) => {
+const NewsListItem = ({ news, index }: NewsListItemProps) => {
   return (
     <>
-      <GridItem textAlign="right">
-        <Text fontSize="2xl" color={useColorModeValue('brand.500', 'brand.600')}>
-          {news.title}
-        </Text>
-      </GridItem>
-      <GridItem>
-        <Text fontSize="2xl">{news.content}</Text>
+      <GridItem key={index}>
+        <Link to={'/hirek/' + index}>
+          <Heading size="md" mt={'3rem'} mb={'0.5rem'} as={news.highlighted ? 'mark' : 'text'}>
+            {news.title}
+          </Heading>
+          <Text>{stringifyTimeStamp(news.timestamp)}</Text>//TODO brief content?
+        </Link>
+        <Divider />
       </GridItem>
     </>
   )
 }
 
-export default NewsList
+export default NewsListItem
