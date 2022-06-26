@@ -1,11 +1,10 @@
-import { GridItem, Heading, Text, Divider } from '@chakra-ui/react'
-import { Key } from 'react'
+import { Divider, GridItem, Heading, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
-import { NewsPreviewDTO } from '../../../util/views/news.view'
+import { NewsArticleView } from '../../../util/views/news.view'
 
 interface NewsListItemProps {
-  news: NewsPreviewDTO
+  news: NewsArticleView
   index: Number
 }
 

@@ -8,11 +8,11 @@ type LoadingProps = {
 
 /**
  * Displays the given loading component or a Spinner after the given timeout or one second.
- * @param timeout Number, Optional - The timeout in millisec before the component appears. Default value is 1000
+ * @param timeout Number, Optional - The timeout in millisec before the component appears. Default value is 0
  * @param children ReactNode, Optional - The component to be displayed instead of a brand colored spinner.
  * @constructor
  */
-export const Loading = ({ timeout = 1000, children }: LoadingProps) => {
+export const Loading = ({ timeout = 0, children }: LoadingProps) => {
   const [show, setShow] = useState<boolean>(false)
   useEffect(() => {
     setTimeout(() => {

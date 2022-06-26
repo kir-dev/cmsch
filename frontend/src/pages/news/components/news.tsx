@@ -1,11 +1,11 @@
-import { Heading, Text, Image, Button } from '@chakra-ui/react'
+import { Button, Heading, Image, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
-import { NewsPreviewDTO } from '../../../util/views/news.view'
+import { NewsArticleView } from '../../../util/views/news.view'
 
 interface NewsProps {
-  news: NewsPreviewDTO
+  news: NewsArticleView
 }
 
 const News = ({ news }: NewsProps) => {
@@ -13,7 +13,6 @@ const News = ({ news }: NewsProps) => {
     <>
       <Heading>{news.title}</Heading>
       <Text mb="1rem">{stringifyTimeStamp(news.timestamp)}</Text>
-      <Markdown text={news.content} />
       <Image
         mt="2rem"
         mb="2rem"
@@ -22,8 +21,9 @@ const News = ({ news }: NewsProps) => {
         mr="auto"
         src={news.imageUrl == '' ? 'https://picsum.photos/200' : news.imageUrl} //TODO random képet kivenni
         placeholder="ide kéne kép"
-        w="20rem"
+        h="20rem"
       />
+      <Markdown text={news.content} />
       <Link to="/hirek">
         <Button>Vissza a hírekhez</Button>
       </Link>

@@ -13,7 +13,7 @@ export type AuthContextType = {
   isLoggedIn: boolean
   profile: ProfileView | undefined
   profileLoading: boolean
-  profileError: unknown
+  profileError: Error | null
   onLoginSuccess: (response: { jwt: string }) => void
   onLoginFailure: (response: any) => void
   onLogout: () => void
@@ -23,7 +23,7 @@ export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   profile: undefined,
   profileLoading: false,
-  profileError: undefined,
+  profileError: null,
   onLoginSuccess: () => {},
   onLoginFailure: () => {},
   onLogout: () => {}
