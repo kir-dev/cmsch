@@ -12,24 +12,29 @@ const NewsPage = () => {
   const { sendMessage } = useServiceContext()
   const params = useParams()
 
+  if (newsList.isLoading) {
+    return <Loading />
+  }
+
   if (newsList.isError) {
     sendMessage('Hír betöltése sikertelen!')
     return <Navigate replace to="/error" />
   }
 
-  if (newsList.isSuccess) {
-    const id = toInteger(params.id)
-    const currentNews = newsList.data.news[id]
-
-    return (
-      <CmschPage>
-        <Helmet title={currentNews.title} />
-        <News news={currentNews} />
-      </CmschPage>
-    )
+  if (typeof newsList.data === 'undefined') {
+    sendMessage('Hír betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
+    return <Navigate replace to="/error" />
   }
 
-  return <Loading />
+  const id = toInteger(params.id)
+  const currentNews = newsList.data[id]
+
+  return (
+    <CmschPage>
+      <Helmet title={currentNews.title} />
+      <News news={currentNews} />
+    </CmschPage>
+  )
 }
 
 export default NewsPage

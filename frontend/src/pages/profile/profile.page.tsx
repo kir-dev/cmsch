@@ -42,7 +42,7 @@ const ProfilePage = ({}: Props) => {
   }
 
   if (profileError) {
-    sendMessage('Profil betöltése sikertelen! ' + (profileError as any).message)
+    sendMessage('Profil betöltése sikertelen! ' + profileError.message)
     return <Navigate replace to="/error" />
   }
 

@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { useQuery } from 'react-query'
-import { NewsView } from '../../util/views/news.view'
+import { NewsArticleView } from '../../util/views/news.view'
 
 export const useNewsListQuery = (onError: (err: any) => void) => {
-  return useQuery<NewsView, Error, NewsView>(
+  return useQuery<NewsArticleView[], Error, NewsArticleView[]>(
     'news',
     async () => {
-      const response = await axios.get<NewsView>(`/api/news`)
-      return response.data
+      const response = await axios.get<{ news: NewsArticleView[] }>(`/api/news`)
+      return response.data.news
     },
     { onError: onError }
   )

@@ -8,7 +8,7 @@ type Props = {
 
 export const CmschLink = ({ isExternal, to, children, ...props }: Props) => {
   const Component = (
-    <ChakraLink as="span" color={useColorModeValue('themeHelper.500', 'themeHelper.300')} {...props}>
+    <ChakraLink as="span" color={useColorModeValue('brand.500', 'brand.300')} {...props}>
       {children}
     </ChakraLink>
   )
