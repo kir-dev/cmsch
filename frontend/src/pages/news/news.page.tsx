@@ -8,18 +8,18 @@ import { Loading } from '../../common-components/Loading'
 import News from './components/News'
 
 const NewsPage = () => {
-  const news = useNewsListQuery(() => console.log('News list query failed!'))
+  const newsList = useNewsListQuery(() => console.log('News list query failed!'))
   const { sendMessage } = useServiceContext()
+  const params = useParams()
 
-  if (news.isError) {
+  if (newsList.isError) {
     sendMessage('Hír betöltése sikertelen!')
     return <Navigate replace to="/error" />
   }
 
-  if (news.isSuccess) {
-    const params = useParams()
+  if (newsList.isSuccess) {
     const id = toInteger(params.id)
-    const currentNews = news.data.news[id]
+    const currentNews = newsList.data.news[id]
 
     return (
       <CmschPage>
