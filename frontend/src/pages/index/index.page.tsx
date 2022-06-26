@@ -1,4 +1,4 @@
-import { Heading, useToast } from '@chakra-ui/react'
+import { Button, Heading, useToast } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
@@ -46,6 +46,9 @@ const IndexPage = () => {
       </Heading>
       <Link to="/bucketlist">Tasks</Link>
       <ExampleComponent />
+      <Link to="/hirek">
+        <Button>Hírek</Button>
+      </Link>
     </CmschPage>
   )
 }
