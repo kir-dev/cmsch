@@ -14,8 +14,7 @@ const News = ({ news }: NewsProps) => {
       <Heading>{news.title}</Heading>
       <Text mb="1rem">{stringifyTimeStamp(news.timestamp)}</Text>
       <Image
-        mt="2rem"
-        mb="2rem"
+        mb="1.5rem"
         display="block"
         ml="auto"
         mr="auto"
@@ -25,7 +24,7 @@ const News = ({ news }: NewsProps) => {
       />
       <Markdown text={news.content} />
       <Link to="/hirek">
-        <Button>Vissza a hírekhez</Button>
+        <Button mt="2rem">Vissza a hírekhez</Button>
       </Link>
     </>
   )

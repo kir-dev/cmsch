@@ -5,6 +5,7 @@ import { useNewsListQuery } from '../../api/hooks/useNewsListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import NewsList from './components/NewsList'
+import { sortNewsList } from './util/sortNewsList'
 
 const NewsListPage = () => {
   const newsList = useNewsListQuery(() => console.log('News list query failed!'))
@@ -27,7 +28,7 @@ const NewsListPage = () => {
   return (
     <CmschPage>
       <Helmet title="Hírek" />
-      <NewsList newsList={newsList.data} />
+      <NewsList newsList={sortNewsList(newsList.data)} />
     </CmschPage>
   )
 }
