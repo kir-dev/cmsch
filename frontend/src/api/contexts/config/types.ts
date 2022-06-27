@@ -65,7 +65,7 @@ export interface Event {
   seekToCurrentCurrent: string
   separateDays: string
   topMessage: string
-  enableDetailedView: string
+  enableDetailedView: string //TODO ez miért string??
 }
 
 export interface Home {
