@@ -5,17 +5,19 @@ import { NewsArticleView } from '../../../util/views/news.view'
 
 interface NewsListItemProps {
   news: NewsArticleView
+  fontSize: string
   index: Number
 }
 
-const NewsListItem = ({ news, index }: NewsListItemProps) => {
+const NewsListItem = ({ news, fontSize, index }: NewsListItemProps) => {
   return (
     <GridItem>
       <Link to={'/hirek/' + index}>
-        <Heading size="md" mt={'3rem'} mb={'0.5rem'} as={news.highlighted ? 'mark' : 'text'}>
+        <Heading size={fontSize} mt={'2rem'} mb={'0.5rem'}>
           {news.title}
         </Heading>
-        <Text>{stringifyTimeStamp(news.timestamp)}</Text>//TODO brief content?
+        <Text fontSize={fontSize}>{stringifyTimeStamp(news.timestamp)}</Text>
+        <Text fontSize={fontSize}>TODO brief content?</Text>
       </Link>
       <Divider />
     </GridItem>

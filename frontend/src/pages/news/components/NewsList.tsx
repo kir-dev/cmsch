@@ -12,7 +12,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
       <Heading>Hírek</Heading>
       <Grid templateColumns={{ base: 'repeat(1, auto)', md: 'repeat(2, auto)' }} gap={10} marginTop={10}>
         {newsList.map((n: NewsArticleView, i) => (
-          <NewsListItem news={n} index={i} key={n.title + n.timestamp} />
+          <NewsListItem news={n} fontSize={n.highlighted ? 'lg' : 'md'} index={i} key={n.title + n.timestamp} />
         ))}
       </Grid>
     </>

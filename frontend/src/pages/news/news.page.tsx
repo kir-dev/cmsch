@@ -6,6 +6,7 @@ import { useNewsListQuery } from '../../api/hooks/useNewsListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import News from './components/News'
+import { sortNewsList } from './util/sortNewsList'
 
 const NewsPage = () => {
   const newsList = useNewsListQuery(() => console.log('News list query failed!'))
@@ -27,7 +28,7 @@ const NewsPage = () => {
   }
 
   const id = toInteger(params.id)
-  const currentNews = newsList.data[id]
+  const currentNews = sortNewsList(newsList.data)[id]
 
   return (
     <CmschPage>
