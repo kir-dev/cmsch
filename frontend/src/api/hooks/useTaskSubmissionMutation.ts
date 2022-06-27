@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useMutation } from 'react-query'
+import { taskSubmissionStatus } from '../../util/views/task.view'
 
 interface TaskSubmissionResponse {
-  status: string
+  status: taskSubmissionStatus
 }
 
 export const useTaskSubmissionMutation = () => {

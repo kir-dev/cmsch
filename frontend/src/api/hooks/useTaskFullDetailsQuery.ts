@@ -4,7 +4,7 @@ import { TaskCategoryFullDetails, TaskFullDetailsView } from '../../util/views/t
 
 export const useTaskFullDetailsQuery = (taskId: string | undefined, onError: (err: any) => void) => {
   return useQuery<TaskFullDetailsView, Error, TaskFullDetailsView>(
-    'taskFullDetails',
+    ['taskFullDetails', taskId],
     async () => {
       let taskDetailsResponse = await axios.get<TaskFullDetailsView>(`/api/task/submit/${taskId}`)
       if (!taskDetailsResponse.data.task) {
