@@ -1,27 +1,60 @@
 import Editor from 'react-simple-code-editor'
-import { useState } from 'react'
-import { highlight, languages } from 'prismjs'
-import 'prismjs/components/prism-clike'
-import 'prismjs/components/prism-javascript'
+import { Grammar, highlight, languages } from 'prismjs'
+import 'prismjs/components/prism-c'
+import 'prismjs/components/prism-cpp'
+import 'prismjs/components/prism-csharp'
+import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-python'
-import 'prismjs/themes/prism.css'
-import { Box } from '@chakra-ui/react'
+import 'prismjs/themes/prism-okaidia.css'
+import { Box, Flex, Select, Stack } from '@chakra-ui/react'
+import { codeLanguage } from '../../../util/views/task.view'
+import { useState } from 'react'
 
-const CodeEditor = () => {
-  const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`)
+interface CodeEditorProps {
+  code: string
+  setCode: React.Dispatch<React.SetStateAction<string>>
+  readonly: boolean
+}
+
+const LANGUAGE_GRAMMAR_MAP = new Map<string, Grammar>([
+  [codeLanguage.C, languages.c],
+  [codeLanguage.CPP, languages.cpp],
+  [codeLanguage.CSHARP, languages.csharp],
+  [codeLanguage.JAVA, languages.java],
+  [codeLanguage.PYTHON, languages.python]
+])
+
+const CodeEditor = ({ code, setCode, readonly }: CodeEditorProps) => {
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(codeLanguage.C)
   return (
-    <Box my={5}>
-      <Editor
-        value={code}
-        onValueChange={(code) => setCode(code)}
-        highlight={(code) => highlight(code, languages.javascript, 'javascript')}
-        padding={10}
-        style={{
-          fontFamily: '"Fira code", "Fira Mono", monospace',
-          fontSize: 12
-        }}
-      />
-    </Box>
+    <Stack mt={5}>
+      <Flex justify="flex-end">
+        <Select onChange={(e) => setSelectedLanguage(e.target.value)} w="10rem" value={selectedLanguage}>
+          <option value={codeLanguage.C}>C</option>
+          <option value={codeLanguage.CPP}>C++</option>
+          <option value={codeLanguage.CSHARP}>C#</option>
+          <option value={codeLanguage.JAVA}>JAVA</option>
+          <option value={codeLanguage.PYTHON}>Python</option>
+        </Select>
+      </Flex>
+
+      <Box my={5}>
+        <Editor
+          value={code}
+          onValueChange={(code) => setCode(code)}
+          highlight={(code) => highlight(code, LANGUAGE_GRAMMAR_MAP.get(selectedLanguage)!!, selectedLanguage)}
+          padding={10}
+          readOnly={readonly}
+          style={{
+            fontFamily: '"Fira code", "Fira Mono", monospace',
+            fontSize: 14,
+            borderRadius: '0.375rem',
+            backgroundColor: '#272822',
+            color: 'white'
+          }}
+        />
+      </Box>
+    </Stack>
   )
 }
 

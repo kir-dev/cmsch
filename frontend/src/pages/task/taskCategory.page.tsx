@@ -7,19 +7,24 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
 import { TaskSkeleton } from './components/TaskListSkeleton'
 import { useTasksInCategoryQuery } from '../../api/hooks/useTasksInCategoryQuery'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
+  const bg = useColorModeValue('gray.200', 'gray.600')
+  const hoverBg = useColorModeValue('brand.300', 'brand.700')
 
   const tasksQuery = useTasksInCategoryQuery(id, () => {
-    console.error('Nem sikerült lekérdezni a Bucketlist feladatokat ehhez a kategóriához.')
+    console.error('Nem sikerült lekérdezni a feladatokat ehhez a kategóriához.')
   })
+
+  const taskConfig = useConfigContext()?.components.task
 
   if (tasksQuery.isSuccess) {
     const category = tasksQuery.data
     const breadcrumbItems = [
       {
-        title: 'Bucketlist',
+        title: taskConfig?.title,
         to: '/bucketlist'
       },
       {
@@ -31,31 +36,24 @@ const TaskCategoryPage = () => {
       <CmschPage loginRequired groupRequired>
         <Helmet title={category.categoryName} />
         <CustomBreadcrumb items={breadcrumbItems} />
-        <Heading>Bucketlist kategória: {category.categoryName}</Heading>
+        <Heading>{`${taskConfig?.title} kategória: ${category.categoryName}`}</Heading>
         {category.tasks && category.tasks.length > 0 ? (
           <VStack spacing={4} mt={5} align="stretch">
-            {category.tasks.map((ach) => (
-              <Box
-                key={ach.task.id}
-                bg={useColorModeValue('gray.200', 'gray.600')}
-                px={6}
-                py={2}
-                borderRadius="md"
-                _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700') }}
-              >
-                <Link to={`/bucketlist/${ach.task.id}`}>
+            {category.tasks.map((task) => (
+              <Box key={task.task.id} bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>
+                <Link to={`/bucketlist/${task.task.id}`}>
                   <Flex align="center" justifyContent="space-between">
                     <Text fontWeight="bold" fontSize="xl">
-                      {ach.task.title}
+                      {task.task.title}
                     </Text>
-                    <TaskStatusBadge status={ach.status} fontSize="sm" />
+                    <TaskStatusBadge status={task.status} fontSize="sm" />
                   </Flex>
                 </Link>
               </Box>
             ))}
           </VStack>
         ) : (
-          <Text>Nincs egyetlen bucketlist feladat se ebben a kategóriában.</Text>
+          <Text>Nincs egyetlen feladat se ebben a kategóriában.</Text>
         )}
       </CmschPage>
     )

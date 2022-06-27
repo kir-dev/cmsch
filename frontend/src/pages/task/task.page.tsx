@@ -18,6 +18,10 @@ import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { CustomForm } from './components/CustomForm'
 import { useTaskSubmissionMutation } from '../../api/hooks/useTaskSubmissionMutation'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { API_BASE_URL } from '../../util/configs/environment.config'
+import { useEffect } from 'react'
+import { taskSubmissionResponseMap } from './util/taskSubmissionResponseMap'
 const CodeEditor = lazy(() => import('./components/CodeEditor'))
 
 export interface FormInput {
@@ -31,7 +35,9 @@ export interface FormInput {
 const TaskPage = () => {
   const [fileAnswer, setFileAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
+  const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
 
+  const taskConfig = useConfigContext()?.components.task
   const toast = useToast()
   const { id } = useParams()
   const navigate = useNavigate()
@@ -40,16 +46,21 @@ const TaskPage = () => {
 
   if (!id) return <Navigate to="/" replace />
 
+  const taskSubmissionMutation = useTaskSubmissionMutation()
   const taskDetailsQuery = useTaskFullDetailsQuery(id, () => {
     navigate('/bucketlist')
     toast({
-      title: 'Challange nem található',
-      description: 'Ilyen challange nem létezik vagy nincs jogosultságod hozzá.',
+      title: 'Feladat nem található',
+      description: 'Ilyen feladat nem létezik vagy nincs jogosultságod hozzá.',
       status: 'error',
       isClosable: true
     })
   })
-  const taskSubmissionMutation = useTaskSubmissionMutation()
+  useEffect(() => {
+    if (taskDetailsQuery.isSuccess && taskDetailsQuery.data.submission && taskDetailsQuery.data.task?.format === taskFormat.CODE) {
+      setCodeAnswer(taskDetailsQuery.data.submission.textAnswer)
+    }
+  }, [taskDetailsQuery.status])
 
   if (taskDetailsQuery.isSuccess) {
     const taskDetails = taskDetailsQuery.data
@@ -59,7 +70,7 @@ const TaskPage = () => {
     const submissionAllowed = taskDetails?.status === taskStatus.NOT_SUBMITTED || taskDetails?.status === taskStatus.REJECTED
     const reviewed = taskDetails.status === taskStatus.ACCEPTED || taskDetails.status === taskStatus.REJECTED
 
-    const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    const onSubmit: SubmitHandler<FormInput> = (data) => {
       if ((!fileAllowed || fileAnswer) && submissionAllowed) {
         const formData = new FormData()
         formData.append('taskId', id)
@@ -108,7 +119,17 @@ const TaskPage = () => {
               }
               break
             case taskFormat.CODE:
-            //TODO
+              if (codeAnswer) {
+                formData.append('textAnswer', codeAnswer)
+              } else {
+                toast({
+                  title: 'Üres megoldás',
+                  description: 'Üres megoldást nem küldhetsz be.',
+                  status: 'error',
+                  isClosable: true
+                })
+                return
+              }
           }
         }
 
@@ -128,7 +149,7 @@ const TaskPage = () => {
               window.scrollTo(0, 0)
             } else {
               toast({
-                title: result.status,
+                title: taskSubmissionResponseMap.get(result.status),
                 status: 'error',
                 isClosable: true
               })
@@ -171,10 +192,21 @@ const TaskPage = () => {
           textInput = <CustomForm formatDescriptor={taskDetails.task.formatDescriptor} control={control} />
           break
         case taskFormat.CODE:
-          textInput = <CodeEditor />
+          textInput = <CodeEditor code={codeAnswer} setCode={setCodeAnswer} readonly={false} />
           break
       }
     }
+
+    let submittedText = null
+    if (textAllowed && taskDetails.submission) {
+      submittedText =
+        taskDetails.task?.format === taskFormat.CODE ? (
+          <CodeEditor code={taskDetails.submission?.textAnswer} setCode={() => {}} readonly={true} />
+        ) : (
+          <Paragraph mt={2}>{taskDetails.submission.textAnswer}</Paragraph>
+        )
+    }
+
     const fileInput = fileAllowed && (
       <Box>
         <FormLabel>Csatolt fájl (max. méret: 30 MB)</FormLabel>
@@ -190,7 +222,7 @@ const TaskPage = () => {
 
     const breadcrumbItems = [
       {
-        title: 'Bucketlist',
+        title: taskConfig?.title,
         to: '/bucketlist'
       },
       {
@@ -222,22 +254,14 @@ const TaskPage = () => {
             <Heading size="md" mt={8}>
               Beküldött megoldás
             </Heading>
-            {textAllowed && taskDetails.submission && <Paragraph mt={2}>{taskDetails.submission.textAnswer}</Paragraph>}
+            {submittedText}
             {fileAllowed && taskDetails.submission && (
               <Box>
                 {taskDetails.submission.imageUrlAnswer && taskDetails.submission.imageUrlAnswer.length > 'task/'.length && (
-                  <Image
-                    src={`${process.env.REACT_APP_API_BASE_URL}/cdn/${taskDetails.submission.imageUrlAnswer}`}
-                    alt="Beküldött megoldás"
-                  />
+                  <Image src={`${API_BASE_URL}/cdn/${taskDetails.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
                 )}
                 {taskDetails.submission.fileUrlAnswer && taskDetails.submission.fileUrlAnswer.length > 'task/'.length && (
-                  <LinkButton
-                    href={`${process.env.REACT_APP_API_BASE_URL}/cdn/${taskDetails.submission.fileUrlAnswer}`}
-                    external
-                    colorScheme="brand"
-                    mt={5}
-                  >
+                  <LinkButton href={`${API_BASE_URL}/cdn/${taskDetails.submission.fileUrlAnswer}`} external colorScheme="brand" mt={5}>
                     Letöltés
                   </LinkButton>
                 )}

@@ -1,3 +1,5 @@
+import { TopListAbstractEntryView } from './toplistAbstractEntry.view'
+
 export enum taskType {
   TEXT = 'TEXT',
   IMAGE = 'IMAGE',
@@ -20,9 +22,31 @@ export enum taskStatus {
   SUBMITTED = 'SUBMITTED'
 }
 
+export enum taskSubmissionStatus {
+  OK = 'OK',
+  EMPTY_ANSWER = 'EMPTY_ANSWER',
+  INVALID_IMAGE = 'INVALID_IMAGE',
+  INVALID_PDF = 'INVALID_PDF',
+  ALREADY_SUBMITTED = 'ALREADY_SUBMITTED',
+  ALREADY_APPROVED = 'ALREADY_APPROVED',
+  NO_ASSOCIATE_GROUP = 'NO_ASSOCIATE_GROUP',
+  INVALID_TASK_ID = 'INVALID_TASK_ID',
+  TOO_EARLY_OR_LATE = 'TOO_EARLY_OR_LATE',
+  NO_PERMISSION = 'NO_PERMISSION',
+  INVALID_BACKEND_CONFIG = 'INVALID_BACKEND_CONFIG'
+}
+
 export enum taskCategoryType {
   REGULAR = 'REGULAR',
   PROFILE_REQUIRED = 'PROFILE_REQUIRED'
+}
+
+export enum codeLanguage {
+  C = 'c',
+  CPP = 'cpp',
+  CSHARP = 'csharp',
+  JAVA = 'java',
+  PYTHON = 'python'
 }
 
 export interface TaskFormatDescriptor {
@@ -51,16 +75,9 @@ export interface TaskCategoryFullDetails {
 export interface AllTaskCategories {
   score?: number
   categories: TaskCategoryPreview[]
-  leaderboard: LeaderboardEntity[]
+  leaderboard: TopListAbstractEntryView[]
   leaderBoardVisible: boolean
   leaderBoardFrozen: boolean
-}
-
-export interface LeaderboardEntity {
-  name: string
-  totalScore: number
-  riddleScore: number
-  taskScore: number
 }
 
 export interface TaskEntity {
