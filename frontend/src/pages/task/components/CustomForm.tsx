@@ -1,6 +1,7 @@
-import { Box, FormLabel, Textarea, Input } from '@chakra-ui/react'
+import { Box, FormLabel, Textarea, Input, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useFieldArray, Controller, Control, FieldValues } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
 
@@ -10,14 +11,26 @@ type CustomFormProps = {
 }
 
 export const CustomForm = ({ formatDescriptor, control }: CustomFormProps) => {
+  const toast = useToast()
+  const navigate = useNavigate()
   const { fields, replace } = useFieldArray<FormInput>({
     name: 'customForm',
     control
   })
   useEffect(() => {
     if (formatDescriptor) {
-      const inputFields: TaskFormatDescriptor[] = JSON.parse(formatDescriptor)
-      replace(inputFields.map((field) => ({ value: '', ...field })))
+      try {
+        const inputFields: TaskFormatDescriptor[] = JSON.parse(formatDescriptor)
+        replace(inputFields.map((field) => ({ value: '', ...field })))
+      } catch (e) {
+        toast({
+          title: 'Érvénytelen feladat',
+          description: 'A feladat űrlapjának formátuma érvénytelen.',
+          status: 'error',
+          isClosable: true
+        })
+        navigate('/bucketlist')
+      }
     }
   }, [])
   return (
