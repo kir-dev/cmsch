@@ -8,8 +8,7 @@ import CurrentEvent from './components/CurrentEvent'
 
 const EventPage = () => {
   const params = useParams()
-  console.log(params)
-  const currentEvent = useEventQuery(params.path ?? 'TODO NAJDBJDSKDAJBNNJLDFAN', () => console.log('Event query failed!'))
+  const currentEvent = useEventQuery(params.path!!, () => console.log('Event query failed!'))
   const { sendMessage } = useServiceContext()
 
   if (currentEvent.isLoading) {
@@ -25,8 +24,6 @@ const EventPage = () => {
     sendMessage('Esemény betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
     return <Navigate replace to="/error" />
   }
-
-  console.log(currentEvent.data)
 
   return (
     <CmschPage>
