@@ -6,8 +6,8 @@ const TaskCategoryPage = lazy(() => import('../pages/task/taskCategory.page'))
 
 export function TaskModule() {
   return (
-    <Route path="bucketlist">
-      <Route path="kategoria/:id" element={<TaskCategoryPage />} />
+    <Route path="tasks">
+      <Route path="category/:id" element={<TaskCategoryPage />} />
       <Route path=":id" element={<TaskPage />} />
       <Route index element={<TaskListPage />} />
     </Route>
