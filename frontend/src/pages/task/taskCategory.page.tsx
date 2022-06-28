@@ -1,6 +1,6 @@
-import { Box, Flex, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Loading } from '../../common-components/Loading'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -13,9 +13,15 @@ const TaskCategoryPage = () => {
   const { id } = useParams()
   const bg = useColorModeValue('gray.200', 'gray.600')
   const hoverBg = useColorModeValue('brand.300', 'brand.700')
-
+  const toast = useToast()
+  const navigate = useNavigate()
   const tasksQuery = useTasksInCategoryQuery(id, () => {
-    console.error('Nem sikerült lekérdezni a feladatokat ehhez a kategóriához.')
+    navigate('/tasks')
+    toast({
+      title: 'Nem sikerült lekérni ezt a feladat kategóriát',
+      status: 'error',
+      isClosable: true
+    })
   })
 
   const taskConfig = useConfigContext()?.components.task
@@ -24,8 +30,8 @@ const TaskCategoryPage = () => {
     const category = tasksQuery.data
     const breadcrumbItems = [
       {
-        title: taskConfig?.title,
-        to: '/bucketlist'
+        title: taskConfig?.title || 'Bucketlist',
+        to: '/tasks'
       },
       {
         title: category.categoryName
@@ -41,7 +47,7 @@ const TaskCategoryPage = () => {
           <VStack spacing={4} mt={5} align="stretch">
             {category.tasks.map((task) => (
               <Box key={task.task.id} bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>
-                <Link to={`/bucketlist/${task.task.id}`}>
+                <Link to={`/tasks/${task.task.id}`}>
                   <Flex align="center" justifyContent="space-between">
                     <Text fontWeight="bold" fontSize="xl">
                       {task.task.title}

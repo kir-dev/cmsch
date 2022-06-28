@@ -1,6 +1,6 @@
-import { Box, Flex, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TaskSkeleton } from './components/TaskListSkeleton'
@@ -13,8 +13,15 @@ const TaskCategoryList = () => {
   const bg = useColorModeValue('gray.200', 'gray.600')
   const hoverBg = useColorModeValue('brand.300', 'brand.700')
   const gradientBg = useColorModeValue('brand.500', 'brand.600')
+  const toast = useToast()
+  const navigate = useNavigate()
   const categoriesQuery = useTaskCategoriesQuery(() => {
-    console.error('Nem sikerült lekérdezni a feladatokat.')
+    navigate('/')
+    toast({
+      title: 'Nem sikerült lekérni a feladatokat',
+      status: 'error',
+      isClosable: true
+    })
   })
 
   if (categoriesQuery.isSuccess) {
@@ -27,7 +34,7 @@ const TaskCategoryList = () => {
           <VStack spacing={4} mt={5} align="stretch">
             {categories.map((category) => (
               <Box key={category.categoryId} bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>
-                <Link to={`/bucketlist/kategoria/${category.categoryId}`}>
+                <Link to={`/tasks/category/${category.categoryId}`}>
                   <Flex align="center" justifyContent="space-between">
                     <Text fontWeight="bold" fontSize="xl">
                       {category.name}

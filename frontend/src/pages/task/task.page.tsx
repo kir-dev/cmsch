@@ -48,7 +48,7 @@ const TaskPage = () => {
 
   const taskSubmissionMutation = useTaskSubmissionMutation()
   const taskDetailsQuery = useTaskFullDetailsQuery(id, () => {
-    navigate('/bucketlist')
+    navigate('/tasks')
     toast({
       title: 'Feladat nem található',
       description: 'Ilyen feladat nem létezik vagy nincs jogosultságod hozzá.',
@@ -222,12 +222,12 @@ const TaskPage = () => {
 
     const breadcrumbItems = [
       {
-        title: taskConfig?.title,
-        to: '/bucketlist'
+        title: taskConfig?.title || 'Bucketlist',
+        to: '/tasks'
       },
       {
         title: taskDetails.task?.categoryName,
-        to: `/bucketlist/kategoria/${taskDetails.task?.categoryId}`
+        to: `/tasks/category/${taskDetails.task?.categoryId}`
       },
       {
         title: taskDetails.task?.title
