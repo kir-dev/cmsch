@@ -1,6 +1,5 @@
-import { Button, Heading, Image, Text } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
-import { CmschLink } from '../../../common-components/CmschLink'
+import { Heading, Image, Text } from '@chakra-ui/react'
+import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { EventView } from '../../../util/views/event.view'
@@ -11,16 +10,13 @@ interface EventProps {
 }
 
 const CurrentEvent = ({ event }: EventProps) => {
-  console.log('ITT KEZDŐDIK-----------------')
-  console.log(event)
-  console.log(event.description)
-  console.log('DAKJHLHJKLDADAHHIOLADOLIHJADOLI')
   return (
     <>
       <Heading>{event.title}</Heading>
       <Text>{stringifyTimeStamp(event.timestampStart) + '-' + stringifyTimeStamp(event.timestampEnd)}</Text>
       <EventTags my={1} tags={[event.category, event.place]} />
       <Image
+        mb="1rem"
         display="block"
         ml="auto"
         mr="auto"
@@ -30,13 +26,13 @@ const CurrentEvent = ({ event }: EventProps) => {
       />
       <Markdown text={event.description} />
       {event.extraButtonUrl && (
-        <Link to={event.extraButtonUrl}>
-          <Button>{event.extraButtonTitle}</Button>
-        </Link>
+        <LinkButton w="13rem" mt="1rem" href={event.extraButtonUrl} external>
+          {event.extraButtonTitle}
+        </LinkButton>
       )}
-      <Link to="/esemenyek">
-        <Button mt="2rem">Vissza az eseményekhez</Button>
-      </Link>
+      <LinkButton w="13rem" mt="2rem" href={'/esemenyek'}>
+        Vissza az eseményekhez
+      </LinkButton>
     </>
   )
 }
