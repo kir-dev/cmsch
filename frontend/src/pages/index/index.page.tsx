@@ -38,7 +38,7 @@ const IndexPage = () => {
   return (
     <CmschPage>
       <Helmet />
-      <Heading size="3xl" textAlign="center" marginTop={10}>
+      <Heading size="3xl" textAlign="center" marginTop={10} color="accent">
         Üdvözlünk a{' '}
         <Heading as="span" color={useColorModeValue('brand.500', 'brand.600')} size="3xl">
           {config?.components.app.siteName || 'CMSch'}
