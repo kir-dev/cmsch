@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, Button, FormLabel, Heading, Image, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
+import { Alert, AlertIcon, Badge, Box, Button, Flex, FormLabel, Heading, Image, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
 import { useRef, useState, lazy } from 'react'
 import { Helmet } from 'react-helmet'
@@ -64,10 +64,11 @@ const TaskPage = () => {
 
   if (taskDetailsQuery.isSuccess) {
     const taskDetails = taskDetailsQuery.data
+    const expired = taskDetails.task?.availableTo ? taskDetails.task?.availableTo < new Date().valueOf() / 1000 : false
     const textAllowed = taskDetails.task?.type === taskType.TEXT || taskDetails.task?.type === taskType.BOTH
     const fileAllowed =
       taskDetails.task?.type === taskType.IMAGE || taskDetails.task?.type === taskType.BOTH || taskDetails.task?.type === taskType.ONLY_PDF
-    const submissionAllowed = taskDetails?.status === taskStatus.NOT_SUBMITTED || taskDetails?.status === taskStatus.REJECTED
+    const submissionAllowed = (taskDetails?.status === taskStatus.NOT_SUBMITTED || taskDetails?.status === taskStatus.REJECTED) && !expired
     const reviewed = taskDetails.status === taskStatus.ACCEPTED || taskDetails.status === taskStatus.REJECTED
 
     const onSubmit: SubmitHandler<FormInput> = (data) => {
@@ -239,7 +240,14 @@ const TaskPage = () => {
         <Helmet title={taskDetails.task?.title} />
         <CustomBreadcrumb items={breadcrumbItems} />
         <Heading mb={5}>{taskDetails.task?.title}</Heading>
-        <TaskStatusBadge status={taskDetails.status} fontSize="lg" />
+        <Flex>
+          <TaskStatusBadge status={taskDetails.status} fontSize="lg" />
+          {expired && (
+            <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
+              LEJÁRT
+            </Badge>
+          )}
+        </Flex>
         <Box mt={5}>
           <Markdown text={taskDetails.task?.description} />
         </Box>

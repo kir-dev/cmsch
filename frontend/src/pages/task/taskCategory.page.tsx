@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import { Badge, Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Loading } from '../../common-components/Loading'
@@ -49,9 +49,16 @@ const TaskCategoryPage = () => {
               <Box key={task.task.id} bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>
                 <Link to={`/tasks/${task.task.id}`}>
                   <Flex align="center" justifyContent="space-between">
-                    <Text fontWeight="bold" fontSize="xl">
-                      {task.task.title}
-                    </Text>
+                    <Flex align="center">
+                      <Text fontWeight="bold" fontSize="xl">
+                        {task.task.title}
+                      </Text>
+                      {task.task.availableTo < new Date().valueOf() / 1000 && (
+                        <Badge ml={5} variant="solid" colorScheme="red" fontSize="sm">
+                          LEJÁRT
+                        </Badge>
+                      )}
+                    </Flex>
                     <TaskStatusBadge status={task.status} fontSize="sm" />
                   </Flex>
                 </Link>
