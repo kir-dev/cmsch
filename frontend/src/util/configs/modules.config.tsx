@@ -42,4 +42,5 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.IMPRESSUM,
   AvailableModules.TASK,
   AvailableModules.EVENTS
+  AvailableModules.NEWS,
 ]

@@ -49,6 +49,9 @@ const IndexPage = () => {
       <Link to="/esemenyek">
         <Button>Események</Button>
       </Link>
+      <Link to="/hirek">
+        <Button>Hírek</Button>
+      </Link>
     </CmschPage>
   )
 }

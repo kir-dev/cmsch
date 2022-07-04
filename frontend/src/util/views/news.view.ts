@@ -1,12 +1,7 @@
-export interface NewsPreviewDTO {
+export interface NewsArticleView {
   title: string
-  brief: string
+  content: string
   imageUrl: string
   highlighted: boolean
   timestamp: number
-}
-
-export interface NewsView {
-  warningMessage: string
-  news: NewsPreviewDTO[]
 }
