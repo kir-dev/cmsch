@@ -46,6 +46,9 @@ const IndexPage = () => {
       </Heading>
       <Link to="/bucketlist">Tasks</Link>
       <ExampleComponent />
+      <Link to="/esemenyek">
+        <Button>Események</Button>
+      </Link>
       <Link to="/hirek">
         <Button>Hírek</Button>
       </Link>
