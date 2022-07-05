@@ -64,11 +64,6 @@ class LoginController(
                  httpResponse: HttpServletResponse
 
     ) {
-        if (buildUniqueState(request) != state) {
-            httpResponse.sendRedirect("/?invalid-state")
-            return
-        }
-
         var auth: Authentication? = null
         try {
             val response = authSch.validateAuthentication(code)
