@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.component.task.TasksService
+import hu.bme.sch.cmsch.component.token.ALL_TOKEN_TYPE
 import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.component.token.TokenComponent
 import hu.bme.sch.cmsch.config.OwnershipType
@@ -47,7 +48,7 @@ open class ProfileService(
     open fun getProfileForUser(user: UserEntity): ProfileView {
         val group = user.group
         val leavable = fetchWhetherGroupLeavable(group)
-        val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType.getValue() }.orElse("*")
+        val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType.getValue() }.orElse(ALL_TOKEN_TYPE)
 
         return ProfileView(
             loggedIn = true,
@@ -112,7 +113,7 @@ open class ProfileService(
 
     private fun fetchTotalTokenCount(tokenCategoryToDisplay: String) =
         tokenService.map { repo ->
-            if (tokenCategoryToDisplay == "*") {
+            if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
                 repo.getTotalTokenCount()
             } else {
                 repo.getTotalTokenCountWithCategory(tokenCategoryToDisplay)
@@ -121,7 +122,7 @@ open class ProfileService(
 
     private fun fetchCollectedTokenCount(user: UserEntity, tokenCategoryToDisplay: String) =
         tokenService.map { repo ->
-            if (tokenCategoryToDisplay == "*") {
+            if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
                 repo.getTokensForUser(user).size
             } else {
                 repo.getTokensForUserWithCategory(user, tokenCategoryToDisplay)

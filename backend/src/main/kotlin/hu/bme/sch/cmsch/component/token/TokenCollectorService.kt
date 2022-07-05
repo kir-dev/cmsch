@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
@@ -10,12 +11,15 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
+const val ALL_TOKEN_TYPE = "*"
+
 @Service
 @ConditionalOnBean(TokenComponent::class)
 open class TokenCollectorService(
     private val tokenRepository: TokenRepository,
     private val tokenPropertyRepository: TokenPropertyRepository,
     private val groupRepository: GroupRepository,
+    private val tokenComponent: TokenComponent,
     private val userService: UserService,
     private val clock: TimeService
 ) {
@@ -52,24 +56,55 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
-    fun getTokensForUser(user: UserEntity): List<TokenDto> {
+    open fun getTokensForUser(user: CmschUserPrincipal): List<TokenDto> {
         return tokenPropertyRepository.findAllByOwnerUser_Id(user.id)
-            .map { TokenDto(it.token?.title ?: "n/a", it.token?.type ?: "n/a") }
+            .map {
+                TokenDto(
+                    it.token?.title ?: "n/a",
+                    it.token?.type ?: "n/a",
+                    it.token?.icon ?: "not_found"
+                )
+            }
     }
 
     @Transactional(readOnly = true)
-    fun getTokensForUserWithCategory(user: UserEntity, category: String): Int {
+    open fun getTokensForUserWithCategory(user: CmschUserPrincipal, category: String): Int {
         return tokenPropertyRepository.findAllByOwnerUser_IdAndToken_Type(user.id, category).size
     }
 
     @Transactional(readOnly = true)
-    fun getTotalTokenCount(): Int {
+    open fun getTotalTokenCount(): Int {
         return tokenRepository.countAllByVisibleTrue().toInt()
     }
 
     @Transactional(readOnly = true)
-    fun getTotalTokenCountWithCategory(category: String): Int {
+    open fun getTotalTokenCountWithCategory(category: String): Int {
         return tokenRepository.countAllByTypeAndVisibleTrue(category).toInt()
     }
+
+    @Transactional(readOnly = true)
+    open fun getTokenViewForUser(user: CmschUserPrincipal): TokenView {
+        val tokenCategoryToDisplay = tokenComponent.collectRequiredType.getValue()
+        return TokenView(
+            tokens = getTokensForUser(user),
+            collectedTokenCount = fetchCollectedTokenCount(user, tokenCategoryToDisplay),
+            totalTokenCount = fetchTotalTokenCount(tokenCategoryToDisplay),
+            minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE
+        )
+    }
+
+    private fun fetchTotalTokenCount(tokenCategoryToDisplay: String) =
+        if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
+            getTotalTokenCount()
+        } else {
+            getTotalTokenCountWithCategory(tokenCategoryToDisplay)
+        }
+
+    private fun fetchCollectedTokenCount(user: CmschUserPrincipal, tokenCategoryToDisplay: String) =
+        if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
+            getTokensForUser(user).size
+        } else {
+            getTokensForUserWithCategory(user, tokenCategoryToDisplay)
+        }
 
 }
