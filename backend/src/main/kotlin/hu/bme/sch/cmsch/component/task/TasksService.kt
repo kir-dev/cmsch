@@ -300,6 +300,7 @@ open class TasksService(
                             categoryId = category.categoryId,
                             availableFrom = category.availableFrom,
                             availableTo = category.availableTo,
+                            type = category.type,
 
                             sum = taskByCategory.count { it.categoryId == category.categoryId },
                             approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,
@@ -323,6 +324,7 @@ open class TasksService(
                     categoryId = category.categoryId,
                     availableFrom = category.availableFrom,
                     availableTo = category.availableTo,
+                    type = category.type,
 
                     sum = taskByCategory.count { it.categoryId == category.categoryId },
                     approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,

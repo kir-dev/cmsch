@@ -36,7 +36,8 @@ data class TaskCategoryEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je. " +
+            "Egyedinek kell lennie, különben összeakad a rendszer!")
     @property:GenerateOverview(columnName = "ID", order = 2)
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var categoryId: Int = 0,
@@ -64,7 +65,7 @@ data class TaskCategoryEntity(
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskCategoryType::class)
     var type: TaskCategoryType = TaskCategoryType.REGULAR,
 
-    ): ManagedEntity {
+): ManagedEntity {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
