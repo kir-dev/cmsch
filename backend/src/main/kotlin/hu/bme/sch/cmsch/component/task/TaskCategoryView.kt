@@ -5,8 +5,17 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class TaskCategoryView(
     @JsonView(FullDetails::class)
-        val categoryName: String,
+    val categoryName: String,
 
     @JsonView(FullDetails::class)
-        val tasks: List<TaskEntityWrapperDto> = listOf(),
+    val tasks: List<TaskEntityWrapperDto> = listOf(),
+
+    @JsonView(FullDetails::class)
+    val availableFrom: Long = 0,
+
+    @JsonView(FullDetails::class)
+    val availableTo: Long = 0,
+
+    @JsonView(FullDetails::class)
+    val type: TaskCategoryType = TaskCategoryType.REGULAR
 )

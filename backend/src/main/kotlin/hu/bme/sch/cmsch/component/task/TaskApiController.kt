@@ -105,7 +105,10 @@ class TaskApiController(
 
         return TaskCategoryView(
             categoryName = category.name,
-            tasks = tasks.filter { it.task.categoryId == categoryId }
+            tasks = tasks.filter { it.task.categoryId == categoryId },
+            availableFrom = category.availableFrom,
+            availableTo = category.availableTo,
+            type = category.type
         )
     }
 
