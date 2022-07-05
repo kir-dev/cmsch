@@ -1,15 +1,18 @@
 package hu.bme.sch.cmsch.component.opengraph
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.news.NewsComponent
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import java.util.*
 
 @Controller
 class ShareController(
     private val openGraphService: OpenGraphService,
-    private val applicationComponent: ApplicationComponent
+    private val applicationComponent: ApplicationComponent,
+    private val newsComponent: Optional<NewsComponent>
 ) {
 
     @GetMapping("/share/page/{url}")
@@ -37,9 +40,13 @@ class ShareController(
     @GetMapping("/share/news/{url}")
     fun shareNews(@PathVariable url: String, model: Model): String {
         return openGraphService.findNews(url)
-            .map {
-                fillModelWithCommon(model, it)
-                model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news/${url}")
+            .map { resource ->
+                fillModelWithCommon(model, resource)
+                if (newsComponent.map { it.showDetails.isValueTrue() }.orElse(false)) {
+                    model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news/${url}")
+                } else {
+                    model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news#${url}")
+                }
                 return@map "openGraph"
             }
             .orElse("redirect:/404")

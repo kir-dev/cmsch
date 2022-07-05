@@ -46,9 +46,13 @@ class NewsApiController(
     @Operation(summary = "Detailed view of the selected news article")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "The news article"),
+        ApiResponse(responseCode = "400", description = "Detailed mode is not enabled"),
         ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header")
     ])
     fun newsArticle(@PathVariable path: String, auth: Authentication): ResponseEntity<NewsEntity> {
+        if (!newsComponent.showDetails.isValueTrue())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
         val user = auth.getUserOrNull()
         if (!newsComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
@@ -56,7 +60,7 @@ class NewsApiController(
         return newsRepository.findByUrlAndVisibleTrue(path)
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
                 .map { ResponseEntity.ok(it) }
-                .orElseGet { ResponseEntity.status(HttpStatus.BAD_REQUEST).build() }
+                .orElseGet { ResponseEntity.status(HttpStatus.FORBIDDEN).build() }
     }
 
 }
