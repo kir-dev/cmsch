@@ -34,6 +34,17 @@ class ShareController(
             .orElse("redirect:/404")
     }
 
+    @GetMapping("/share/news/{url}")
+    fun shareNews(@PathVariable url: String, model: Model): String {
+        return openGraphService.findNews(url)
+            .map {
+                fillModelWithCommon(model, it)
+                model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news/${url}")
+                return@map "openGraph"
+            }
+            .orElse("redirect:/404")
+    }
+
     private fun fillModelWithCommon(model: Model, it: OpenGraphResource) {
         model.addAttribute("ogTitle", it.ogTitle)
         model.addAttribute("ogImage", it.ogImage)

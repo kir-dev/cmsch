@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.news
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.opengraph.OpenGraphResource
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -23,17 +24,26 @@ data class NewsEntity(
     @property:GenerateOverview(visible = false)
     override var id: Int = 0,
 
+    @JsonView(value = [ Edit::class, Preview::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
+        note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett. " +
+                "Oldal megosztása: https://BASE_URL/share/news/{URL}", interpreter = INTERPRETER_PATH)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 0)
+    var url: String = "",
+
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat(ignore = false, columnId = 1)
     var title: String = "",
 
     @Lob
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 2, label = "Rövid összefoglaló",
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Rövid összefoglaló",
             note = "Ez a hír teljes tartalma")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2)
@@ -59,9 +69,10 @@ data class NewsEntity(
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_BOOLEAN)
     var highlighted: Boolean = false,
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja (ez csak tájékoztató jellegű, a hír hamarabb is megjelenik)", defaultValue = "0")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja (ez csak tájékoztató " +
+            "jellegű, a hír hamarabb is megjelenik)", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_LONG)
     var timestamp: Long = 0,
@@ -73,9 +84,27 @@ data class NewsEntity(
             source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_ENUM, enumSource = RoleType::class)
-    var minRole: RoleType = RoleType.GUEST
+    var minRole: RoleType = RoleType.GUEST,
 
-): ManagedEntity {
+    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 9, label = "OG:Title")
+    @property:GenerateOverview(visible = false)
+    override var ogTitle: String = "",
+
+    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 10, label = "OG:Image")
+    @property:GenerateOverview(visible = false)
+    override var ogImage: String = "",
+
+    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 11, label = "OG:Description")
+    @property:GenerateOverview(visible = false)
+    override var ogDescription: String = "",
+
+): ManagedEntity, OpenGraphResource {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -89,6 +118,6 @@ data class NewsEntity(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id )"
+        return "id = $id, title = $title"
     }
 }
