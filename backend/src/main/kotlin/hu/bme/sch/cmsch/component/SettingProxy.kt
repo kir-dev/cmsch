@@ -1,21 +1,41 @@
 package hu.bme.sch.cmsch.component
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectReader
+import hu.bme.sch.cmsch.component.impressum.OrganizerDto
 import hu.bme.sch.cmsch.model.RoleType
 
 const val cachePeriod: Long = 60 * 60 * 1000
+
+val multiplePeopleMapper: ObjectReader = ObjectMapper().readerForListOf(OrganizerDto::class.java)
 
 enum class SettingType {
     TEXT,
     URL,
     LONG_TEXT,
     LONG_TEXT_MARKDOWN,
-    NUMBER,
-    BOOLEAN,
+    NUMBER {
+        override fun process(value: String) = value.toLongOrNull() ?: 0
+    },
+    BOOLEAN {
+        override fun process(value: String) = value.equals("true", ignoreCase = true)
+    },
     MIN_ROLE,
     COMPONENT_GROUP,
-    MULTIPLE_PEOPLE,
-    DATE_TIME,
-    COMPONENT_NAME
+    MULTIPLE_PEOPLE {
+        override fun process(value: String): List<OrganizerDto> = try {
+            multiplePeopleMapper.readValue(value)
+        } catch (e: Throwable) {
+            listOf()
+        }
+    },
+    DATE_TIME {
+        override fun process(value: String) = value.toLongOrNull() ?: 0
+    },
+    COMPONENT_NAME;
+
+    open fun process(value: String): Any = value
+
 }
 
 open class SettingProxy(
@@ -69,6 +89,10 @@ open class SettingProxy(
 
     fun <T> mapIfTrue(mapper: () -> T?): T? {
         return if (isValueTrue()) mapper.invoke() else null
+    }
+
+    fun getMappedValue(): Any {
+        return type.process(getValue())
     }
 
 }

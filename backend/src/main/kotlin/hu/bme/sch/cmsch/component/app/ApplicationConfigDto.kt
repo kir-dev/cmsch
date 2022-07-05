@@ -7,5 +7,5 @@ data class ApplicationConfigDto(
     var menu: List<MenuItem>,
 
     // Components -> properties -> values
-    var components: Map<String, Map<String, String>>,
+    var components: Map<String, Map<String, Any>>,
 )

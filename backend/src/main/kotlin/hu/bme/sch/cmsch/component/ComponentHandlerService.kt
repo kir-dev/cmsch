@@ -8,7 +8,7 @@ class ComponentHandlerService(
     val components: List<ComponentBase>
 ) {
 
-    fun getComponentConstantsForRole(role: RoleType): Map<String, Map<String, String>> {
+    fun getComponentConstantsForRole(role: RoleType): Map<String, Map<String, Any>> {
         return components
             .filter { it.minRole.isAvailableForRole(role) || role.isAdmin }
             .associate { it.component to it.attachConstants() }

@@ -81,11 +81,11 @@ abstract class ComponentBase(
         }
     }
 
-    fun attachConstants(): Map<String, String> {
+    fun attachConstants(): Map<String, Any> {
         componentSettingService.refreshCachedSettings(allSettings)
         return allSettings
             .filter { it.constant && !it.isServerSideOnly }
-            .associate { it.property to it.getValue() }
+            .associate { it.property to it.getMappedValue() }
     }
 
     fun persistChanges() {

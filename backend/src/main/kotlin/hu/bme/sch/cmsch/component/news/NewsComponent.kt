@@ -20,6 +20,7 @@ class NewsComponent(
     final override val allSettings by lazy {
         listOf(
             title, menuDisplayName, minRole,
+            showDetails,
 
             newsEmbeddedComponentGroup,
             maxVisibleCount
@@ -39,6 +40,12 @@ class NewsComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    val showDetails = SettingProxy(componentSettingService, component,
+        "showDetails", "false", type = SettingType.BOOLEAN,
+        fieldName = "Részletes nézet",
+        description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
