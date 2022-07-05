@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.news
 
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
@@ -11,10 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
@@ -41,6 +39,24 @@ class NewsApiController(
             news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
         ))
+    }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/news/{path}")
+    @Operation(summary = "Detailed view of the selected news article")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "The news article"),
+        ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header")
+    ])
+    fun newsArticle(@PathVariable path: String, auth: Authentication): ResponseEntity<NewsEntity> {
+        val user = auth.getUserOrNull()
+        if (!newsComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return newsRepository.findByUrlAndVisibleTrue(path)
+                .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
+                .map { ResponseEntity.ok(it) }
+                .orElseGet { ResponseEntity.status(HttpStatus.BAD_REQUEST).build() }
     }
 
 }
