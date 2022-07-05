@@ -159,7 +159,7 @@ class TokenAdminTokensByUsersOfGroupsController(
         val minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE
         val preferredTokenType = tokenComponent.collectRequiredType.getValue()
         val signed = tokensByUsers
-            .filter { it.value.count { t -> preferredTokenType == "*" || t.token?.type == preferredTokenType } >= minTokenToComplete }
+            .filter { it.value.count { t -> preferredTokenType == ALL_TOKEN_TYPE || t.token?.type == preferredTokenType } >= minTokenToComplete }
             .count()
         document.add(Paragraph("A hallgatók a rendezvény alatt ellátogathattak a Schönherz öntevékeny köreinek " +
                 "standjaihoz, ahol miután megismerkedtek az adott körrel, beolvashattak egy-egy QR kódot. Ezáltal digitális " +
@@ -199,7 +199,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             table.addCell(Cell().add(Paragraph(user.key.fullName)
                 .setPaddingLeft(4f)
                 .setFont(font).setFontSize(12f)))
-            val tokens = user.value.count { preferredTokenType == "*" || it.token?.type == preferredTokenType }
+            val tokens = user.value.count { preferredTokenType == ALL_TOKEN_TYPE || it.token?.type == preferredTokenType }
             table.addCell(Cell().add(Paragraph("$tokens db")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))
@@ -242,7 +242,7 @@ class TokenAdminTokensByUsersOfGroupsController(
                 .setFont(font).setFontSize(12f)))
 
             user.value
-                .filter { preferredTokenType == "*" || it.token?.type == preferredTokenType }
+                .filter { preferredTokenType == ALL_TOKEN_TYPE || it.token?.type == preferredTokenType }
                 .forEach {
                     userTable.addCell(Cell().add(Paragraph(it.token?.title ?: "n/a")
                         .setPaddingLeft(4f)

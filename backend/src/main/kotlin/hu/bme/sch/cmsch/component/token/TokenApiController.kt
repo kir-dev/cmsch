@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.component.riddle.RiddleView
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -8,6 +9,7 @@ import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -25,6 +27,13 @@ class TokenApiController(
     private val tokens: TokenCollectorService,
     private val startupPropertyConfig: StartupPropertyConfig
 ) {
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/tokens")
+    fun riddle(auth: Authentication): ResponseEntity<TokenView> {
+        val user = auth.getUserOrNull() ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(tokens.getTokenViewForUser(user))
+    }
 
     @ResponseBody
     @JsonView(FullDetails::class)
