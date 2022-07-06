@@ -5,7 +5,7 @@ const NewsListPage = lazy(() => import('../pages/news/newsList.page'))
 
 export function NewsModule() {
   return (
-    <Route path="hirek">
+    <Route path="news">
       <Route path=":id" element={<NewsPage />} />
       <Route index element={<NewsListPage />} />
     </Route>

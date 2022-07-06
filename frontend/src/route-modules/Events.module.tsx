@@ -5,7 +5,7 @@ const EventListPage = lazy(() => import('../pages/events/eventList.page'))
 
 export function EventsModule() {
   return (
-    <Route path="esemenyek">
+    <Route path="event">
       <Route path=":path" element={<EventPage />} />
       <Route index element={<EventListPage />} />
     </Route>

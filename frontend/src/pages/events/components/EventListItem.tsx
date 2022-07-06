@@ -16,7 +16,7 @@ const EventListItem = ({ event }: EventListItemProps) => {
     return <Navigate replace to="/error" />
   }
 
-  const isEnabled = config.components.event.enableDetailedView == 'true'
+  const isEnabled = config.components.event?.enableDetailedView == 'true'
   const innerComponent = (
     <>
       <Heading mb={'0.5rem'}>{event.title}</Heading>
