@@ -1,6 +1,6 @@
 import { Alert, AlertIcon, Badge, Box, Button, Flex, FormLabel, Heading, Image, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
-import { useRef, useState, lazy } from 'react'
+import { lazy, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
@@ -20,8 +20,9 @@ import { CustomForm } from './components/CustomForm'
 import { useTaskSubmissionMutation } from '../../api/hooks/useTaskSubmissionMutation'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { API_BASE_URL } from '../../util/configs/environment.config'
-import { useEffect } from 'react'
 import { taskSubmissionResponseMap } from './util/taskSubmissionResponseMap'
+import { AbsolutePaths } from '../../util/paths'
+
 const CodeEditor = lazy(() => import('./components/CodeEditor'))
 
 export interface FormInput {
@@ -48,7 +49,7 @@ const TaskPage = () => {
 
   const taskSubmissionMutation = useTaskSubmissionMutation()
   const taskDetailsQuery = useTaskFullDetailsQuery(id, () => {
-    navigate('/tasks')
+    navigate(AbsolutePaths.TASKS)
     toast({
       title: 'Feladat nem található',
       description: 'Ilyen feladat nem létezik vagy nincs jogosultságod hozzá.',
@@ -223,12 +224,12 @@ const TaskPage = () => {
 
     const breadcrumbItems = [
       {
-        title: taskConfig?.title || 'Bucketlist',
-        to: '/tasks'
+        title: taskConfig?.title || 'Feladatok',
+        to: AbsolutePaths.TASKS
       },
       {
         title: taskDetails.task?.categoryName,
-        to: `/tasks/category/${taskDetails.task?.categoryId}`
+        to: `${AbsolutePaths.TASKS}/category/${taskDetails.task?.categoryId}`
       },
       {
         title: taskDetails.task?.title

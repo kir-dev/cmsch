@@ -7,11 +7,12 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 import { Paragraph } from '../../common-components/Paragraph'
+import { AbsolutePaths } from '../../util/paths'
 
 const CommunityPage = () => {
   const params = useParams()
   const community = ([] as Community[]).find((c) => c.id === params.name)
-  if (!community) return <Navigate to="/korok" />
+  if (!community) return <Navigate to={AbsolutePaths.COMMUNITIES} />
   const resort = ([] as Community[]).find((r) => r.id === community.resortId)
   const breadcrumbItems = [
     {

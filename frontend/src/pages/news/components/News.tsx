@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { NewsArticleView } from '../../../util/views/news.view'
+import { AbsolutePaths } from '../../../util/paths'
 
 interface NewsProps {
   news: NewsArticleView
@@ -23,7 +24,7 @@ const News = ({ news }: NewsProps) => {
         h="20rem"
       />
       <Markdown text={news.content} />
-      <Link to="/hirek">
+      <Link to={AbsolutePaths.NEWS}>
         <Button mt="2rem">Vissza a hírekhez</Button>
       </Link>
     </>

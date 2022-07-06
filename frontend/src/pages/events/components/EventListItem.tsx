@@ -4,6 +4,7 @@ import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
+import { AbsolutePaths } from '../../../util/paths'
 
 interface EventListItemProps {
   event: EventListView
@@ -13,7 +14,7 @@ const EventListItem = ({ event }: EventListItemProps) => {
   const config = useConfigContext()
 
   if (typeof config === 'undefined') {
-    return <Navigate replace to="/error" />
+    return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   const isEnabled = config.components.event?.enableDetailedView == 'true'
@@ -35,7 +36,7 @@ const EventListItem = ({ event }: EventListItemProps) => {
     </>
   )
 
-  return <GridItem>{isEnabled ? <Link to={'/esemenyek/' + event.url}> {innerComponent} </Link> : innerComponent}</GridItem>
+  return <GridItem>{isEnabled ? <Link to={`${AbsolutePaths.EVENTS}/${event.url}`}> {innerComponent} </Link> : innerComponent}</GridItem>
 }
 
 export default EventListItem

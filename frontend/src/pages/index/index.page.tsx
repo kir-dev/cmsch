@@ -2,11 +2,12 @@ import { Button, Heading, useToast } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { ExampleComponent } from './components/ExampleComponent'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { AbsolutePaths } from '../../util/paths'
 
 const IndexPage = () => {
   const location = useLocation()
@@ -44,12 +45,12 @@ const IndexPage = () => {
         </Heading>{' '}
         portálon
       </Heading>
-      <Link to="/bucketlist">Tasks</Link>
+      <Link to={AbsolutePaths.TASKS}>Tasks</Link>
       <ExampleComponent />
-      <Link to="/esemenyek">
+      <Link to={AbsolutePaths.EVENTS}>
         <Button>Események</Button>
       </Link>
-      <Link to="/hirek">
+      <Link to={AbsolutePaths.NEWS}>
         <Button>Hírek</Button>
       </Link>
     </CmschPage>

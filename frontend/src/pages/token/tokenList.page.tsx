@@ -11,6 +11,7 @@ import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { Paragraph } from '../../common-components/Paragraph'
 import { LinkButton } from '../../common-components/LinkButton'
 import { StampComponent } from './components/StampComponent'
+import { AbsolutePaths } from '../../util/paths'
 
 interface TokenProgress {
   totalTokenCount: number
@@ -64,7 +65,7 @@ const TokenList = () => {
       </Paragraph>
 
       <ButtonGroup mt="5">
-        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href="/qr/scan">
+        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           QR kód beolvasása
         </LinkButton>
         {progress?.groupName === 'Kiállító' && (

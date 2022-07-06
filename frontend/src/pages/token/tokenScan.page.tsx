@@ -9,6 +9,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 import { LinkButton } from '../../common-components/LinkButton'
+import { AbsolutePaths } from '../../util/paths'
 
 enum ScanViewState {
   Scanning,
@@ -74,7 +75,7 @@ const TokenScan = () => {
       )}
 
       <ButtonGroup alignSelf="center" mt="5">
-        <LinkButton leftIcon={<FaArrowLeft />} size="lg" href="/qr">
+        <LinkButton leftIcon={<FaArrowLeft />} size="lg" href={AbsolutePaths.TOKEN}>
           Vissza
         </LinkButton>
         {state.state !== ScanViewState.Scanning && (

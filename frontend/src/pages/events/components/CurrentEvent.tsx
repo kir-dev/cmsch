@@ -4,6 +4,7 @@ import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { EventView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
+import { AbsolutePaths } from '../../../util/paths'
 
 interface EventProps {
   event: EventView
@@ -30,7 +31,7 @@ const CurrentEvent = ({ event }: EventProps) => {
           {event.extraButtonTitle}
         </LinkButton>
       )}
-      <LinkButton w="13rem" mt="2rem" href={'/esemenyek'}>
+      <LinkButton w="13rem" mt="2rem" href={AbsolutePaths.EVENTS}>
         Vissza az eseményekhez
       </LinkButton>
     </>

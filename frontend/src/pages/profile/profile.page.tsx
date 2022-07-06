@@ -26,6 +26,7 @@ import { RoleType } from '../../util/views/profile.view'
 import { ProfilePageSkeleton } from './components/ProfilePageSkeleton'
 import { collectChallengeDetails } from './util/challengeFunctions'
 import { submittedPercent, completedPercent } from './util/percentFunctions'
+import { AbsolutePaths } from '../../util/paths'
 
 type Props = {}
 
@@ -43,12 +44,12 @@ const ProfilePage = ({}: Props) => {
 
   if (profileError) {
     sendMessage('Profil betöltése sikertelen! ' + profileError.message)
-    return <Navigate replace to="/error" />
+    return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (!profile) {
     sendMessage('Profil betöltése sikertelen! A profil üres maradt. Keresd az oldal fejlesztőit a hiba kinyomozása érdekében!')
-    return <Navigate replace to="/error" />
+    return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   return (
@@ -92,7 +93,7 @@ const ProfilePage = ({}: Props) => {
         <Center p={3}>
           <Flex direction="column" align="center">
             <Link
-              href="/bucketlist"
+              href={AbsolutePaths.TASKS}
               fontSize="3xl"
               fontWeight={500}
               _hover={{
@@ -100,7 +101,7 @@ const ProfilePage = ({}: Props) => {
                 color: useColorModeValue('brand.500', 'brand.600')
               }}
             >
-              Bucketlist
+              Feladatok
             </Link>
             <Box>
               <CircularProgress

@@ -7,6 +7,7 @@ import { TaskSkeleton } from './components/TaskListSkeleton'
 import { progress, progressGradient } from './util/taskCategoryProgress'
 import { useTaskCategoriesQuery } from '../../api/hooks/useTaskCategoriesQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { AbsolutePaths } from '../../util/paths'
 
 const TaskCategoryList = () => {
   const taskConfig = useConfigContext()?.components.task
@@ -34,7 +35,7 @@ const TaskCategoryList = () => {
           <VStack spacing={4} mt={5} align="stretch">
             {categories.map((category) => (
               <Box key={category.categoryId} bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>
-                <Link to={`/tasks/category/${category.categoryId}`}>
+                <Link to={`${AbsolutePaths.TASKS}/category/${category.categoryId}`}>
                   <Flex align="center" justifyContent="space-between">
                     <Text fontWeight="bold" fontSize="xl">
                       {category.name}

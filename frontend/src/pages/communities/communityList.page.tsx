@@ -7,6 +7,7 @@ import { Paragraph } from '../../common-components/Paragraph'
 import { CardListItem } from './components/CardListItem'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Community } from '../../util/views/organization'
+import { AbsolutePaths } from '../../util/paths'
 
 const CommunityList = () => {
   // TODO: use backend for content
@@ -45,7 +46,7 @@ const CommunityList = () => {
         Kollégiumban működnek.
       </Paragraph>
       {filteredCommunities.map((community) => (
-        <CardListItem key={community.id} data={community} link={'/korok/' + community.id} />
+        <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITIES}/${community.id}`} />
       ))}
     </CmschPage>
   )

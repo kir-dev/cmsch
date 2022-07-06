@@ -22,6 +22,7 @@ import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from '../.
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import { AbsolutePaths, Paths } from '../../util/paths'
 
 const RiddlePage = () => {
   const { id } = useParams()
@@ -38,7 +39,7 @@ const RiddlePage = () => {
   useEffect(() => {
     setLoading(true)
     axios
-      .get<Riddle>(`/api/riddle/${id}`)
+      .get<Riddle>(`/api/${Paths.RIDDLE}/${id}`)
       .then((res) => {
         setRiddle(res.data)
         setLoading(false)
@@ -52,7 +53,7 @@ const RiddlePage = () => {
     event.preventDefault()
     const solution = solutionInput?.current?.value
     axios
-      .post<RiddleSubmissonResult>(`/api/riddle/${id}`, { solution: solution })
+      .post<RiddleSubmissonResult>(`/api/${Paths.RIDDLE}/${id}`, { solution: solution })
       .then((res) => {
         if (res.data.status === RiddleSubmissonStatus.WRONG) {
           if (toastIdRef.current) {
@@ -68,10 +69,10 @@ const RiddlePage = () => {
             }) || null
         }
         if (res.data.status === RiddleSubmissonStatus.CORRECT && res.data.nextId) {
-          navigate(`/riddleok/${res.data.nextId}`)
+          navigate(`${AbsolutePaths.RIDDLE}/${res.data.nextId}`)
           const input = document.getElementById('solution') as HTMLInputElement
           input.value = ''
-          axios.get<Riddle>(`/api/riddle/${res.data.nextId}`).then((resp) => {
+          axios.get<Riddle>(`/api/${Paths.RIDDLE}/${res.data.nextId}`).then((resp) => {
             setRiddle(resp.data)
           })
           toast({
@@ -83,7 +84,7 @@ const RiddlePage = () => {
           })
         }
         if (res.data.status === RiddleSubmissonStatus.CORRECT && !res.data.nextId) {
-          navigate(`/riddleok/`)
+          navigate(AbsolutePaths.RIDDLE)
           toast({
             title: 'Minden megvan!',
             description: 'Igazán ügyi voltál!',
@@ -100,7 +101,7 @@ const RiddlePage = () => {
 
   const getHint = () => {
     return axios
-      .put<Hint>(`/api/riddle/${id}/hint`)
+      .put<Hint>(`/api/${Paths.RIDDLE}/${id}/hint`)
       .then((res) => {
         const newRiddle = { ...riddle, hint: res.data.hint }
         setRiddle(newRiddle)
@@ -113,7 +114,7 @@ const RiddlePage = () => {
   const breadcrumbItems = [
     {
       title: 'Riddle',
-      to: '/riddleok'
+      to: AbsolutePaths.RIDDLE
     },
     {
       title: riddle.title

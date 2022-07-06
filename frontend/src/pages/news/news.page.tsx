@@ -7,6 +7,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import News from './components/News'
 import { sortNewsList } from './util/sortNewsList'
+import { AbsolutePaths } from '../../util/paths'
 
 const NewsPage = () => {
   const newsList = useNewsListQuery(() => console.log('News list query failed!'))
@@ -19,12 +20,12 @@ const NewsPage = () => {
 
   if (newsList.isError) {
     sendMessage('Hír betöltése sikertelen!')
-    return <Navigate replace to="/error" />
+    return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof newsList.data === 'undefined') {
     sendMessage('Hír betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
-    return <Navigate replace to="/error" />
+    return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   const id = toInteger(params.id)

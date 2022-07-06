@@ -6,6 +6,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { ScanResponseView, ScanStatus } from '../../util/views/token.view'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 import { LinkButton } from '../../common-components/LinkButton'
+import { AbsolutePaths } from '../../util/paths'
 
 const TokenScanResult = () => {
   const [searchParams] = useSearchParams()
@@ -18,10 +19,10 @@ const TokenScanResult = () => {
       <Helmet title="QR eredmény" />
       <QRScanResultComponent response={server_response} />
       <ButtonGroup spacing="6" alignSelf="center">
-        <LinkButton leftIcon={<FaArrowLeft />} href="/qr">
+        <LinkButton leftIcon={<FaArrowLeft />} href={AbsolutePaths.TOKEN}>
           Vissza
         </LinkButton>
-        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href="/qr/scan">
+        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           Új QR-kód scannelése
         </LinkButton>
       </ButtonGroup>

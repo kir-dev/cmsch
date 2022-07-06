@@ -2,6 +2,7 @@ import { useToast } from '@chakra-ui/react'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HasChildren } from '../../../util/react-types.util'
+import { AbsolutePaths } from '../../../util/paths'
 
 export enum MessageTypes {
   GENERAL = 'general',
@@ -45,7 +46,7 @@ export const ServiceProvider = ({ children }: HasChildren) => {
   }
 
   useEffect(() => {
-    if (message !== undefined) navigate('/error')
+    if (message !== undefined) navigate(AbsolutePaths.ERROR)
   }, [message])
 
   const clearMessage = () => {
