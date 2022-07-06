@@ -8,6 +8,7 @@ import { TaskStatusBadge } from './components/TaskStatusBadge'
 import { TaskSkeleton } from './components/TaskListSkeleton'
 import { useTasksInCategoryQuery } from '../../api/hooks/useTasksInCategoryQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { AbsolutePaths } from '../../util/paths'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
@@ -16,7 +17,7 @@ const TaskCategoryPage = () => {
   const toast = useToast()
   const navigate = useNavigate()
   const tasksQuery = useTasksInCategoryQuery(id, () => {
-    navigate('/tasks')
+    navigate(AbsolutePaths.TASKS)
     toast({
       title: 'Nem sikerült lekérni ezt a feladat kategóriát',
       status: 'error',
@@ -30,8 +31,8 @@ const TaskCategoryPage = () => {
     const category = tasksQuery.data
     const breadcrumbItems = [
       {
-        title: taskConfig?.title || 'Bucketlist',
-        to: '/tasks'
+        title: taskConfig?.title || 'Feladatok',
+        to: AbsolutePaths.TASKS
       },
       {
         title: category.categoryName
@@ -47,7 +48,7 @@ const TaskCategoryPage = () => {
           <VStack spacing={4} mt={5} align="stretch">
             {category.tasks.map((task) => (
               <Box key={task.task.id} bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>
-                <Link to={`/tasks/${task.task.id}`}>
+                <Link to={`${AbsolutePaths.TASKS}/${task.task.id}`}>
                   <Flex align="center" justifyContent="space-between">
                     <Flex align="center">
                       <Text fontWeight="bold" fontSize="xl">

@@ -5,6 +5,7 @@ import { useEventQuery } from '../../api/hooks/useEventQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import CurrentEvent from './components/CurrentEvent'
+import { AbsolutePaths } from '../../util/paths'
 
 const EventPage = () => {
   const params = useParams()
@@ -17,12 +18,12 @@ const EventPage = () => {
 
   if (currentEvent.isError) {
     sendMessage('Esemény betöltése sikertelen!\n' + currentEvent.error.message)
-    return <Navigate replace to="/error" />
+    return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof currentEvent.data === 'undefined') {
     sendMessage('Esemény betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
-    return <Navigate replace to="/error" />
+    return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   return (

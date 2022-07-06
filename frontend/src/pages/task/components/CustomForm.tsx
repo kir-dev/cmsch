@@ -4,6 +4,7 @@ import { useFieldArray, Controller, Control, FieldValues } from 'react-hook-form
 import { useNavigate } from 'react-router-dom'
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
+import { AbsolutePaths } from '../../../util/paths'
 
 type CustomFormProps = {
   formatDescriptor: string | undefined
@@ -29,7 +30,7 @@ export const CustomForm = ({ formatDescriptor, control }: CustomFormProps) => {
           status: 'error',
           isClosable: true
         })
-        navigate('/bucketlist')
+        navigate(AbsolutePaths.TASKS)
       }
     }
   }, [])

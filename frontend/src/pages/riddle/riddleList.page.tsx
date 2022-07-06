@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { RiddleCategory } from '../../util/views/riddle.view'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import { AbsolutePaths, Paths } from '../../util/paths'
 
 function progress(riddleCategory: RiddleCategory) {
   if (riddleCategory.completed === 0) {
@@ -25,7 +26,7 @@ const RiddleCategoryList = () => {
   useEffect(() => {
     setLoading(true)
     axios
-      .get<RiddleCategory[]>(`/api/riddle`)
+      .get<RiddleCategory[]>(`/api/${Paths.RIDDLE}`)
       .then((res) => {
         setRiddleCategoryList(res.data)
         setLoading(false)
@@ -37,7 +38,7 @@ const RiddleCategoryList = () => {
 
   const onRiddleCategoryClick = (nextRiddle?: number) => {
     if (nextRiddle) {
-      navigate(`/riddle/${nextRiddle}`)
+      navigate(`${AbsolutePaths.RIDDLE}/${nextRiddle}`)
     } else {
       toast({
         title: 'Mindet megcsináltad!',

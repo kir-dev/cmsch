@@ -2,6 +2,7 @@ import { Divider, GridItem, Heading, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { NewsArticleView } from '../../../util/views/news.view'
+import { AbsolutePaths } from '../../../util/paths'
 
 interface NewsListItemProps {
   news: NewsArticleView
@@ -12,7 +13,7 @@ interface NewsListItemProps {
 const NewsListItem = ({ news, fontSize, index }: NewsListItemProps) => {
   return (
     <GridItem>
-      <Link to={'/hirek/' + index}>
+      <Link to={`${AbsolutePaths.NEWS}/${index}`}>
         <Heading size={fontSize} mt={'2rem'} mb={'0.5rem'}>
           {news.title}
         </Heading>
