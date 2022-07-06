@@ -6,7 +6,7 @@ export const Warning = () => {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
   const config = useConfigContext()
 
-  if (!config || !isOpen) return null
+  if (!config || !config.components.app.warningMessage || !isOpen) return null
 
   return (
     <CmschContainer>
