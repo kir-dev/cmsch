@@ -37,7 +37,7 @@ const RiddleCategoryList = () => {
 
   const onRiddleCategoryClick = (nextRiddle?: number) => {
     if (nextRiddle) {
-      navigate(`/riddleok/${nextRiddle}`)
+      navigate(`/riddle/${nextRiddle}`)
     } else {
       toast({
         title: 'Mindet megcsináltad!',
