@@ -1,0 +1,50 @@
+import { Flex, Heading, Icon, Text, VStack } from '@chakra-ui/react'
+import { intervalToDuration } from 'date-fns'
+import { BsDashLg } from 'react-icons/bs'
+import { useEffect, useState } from 'react'
+
+interface ClockProps {
+  countTo: Date
+}
+
+const Clock = ({ countTo }: ClockProps) => {
+  const target = countTo.getTime() > Date.now() ? countTo : new Date()
+  const [duration, setDuration] = useState(intervalToDuration({ start: target, end: new Date() }))
+  const update = () => {
+    if (countTo.getTime() > Date.now()) setDuration(intervalToDuration({ start: countTo, end: new Date() }))
+  }
+  useEffect(() => {
+    setInterval(update, 1000)
+  }, [])
+  return (
+    <Flex w="100%" flexDirection={['column', 'row']} alignItems="center" justifyContent="center">
+      <ClockSegment value={duration.days?.toString()} label={'nap'} />
+      <Dash />
+      <ClockSegment value={duration.hours?.toString()} label={'óra'} />
+      <Dash />
+      <ClockSegment value={duration.minutes?.toString()} label={'perc'} />
+      <Dash />
+      <ClockSegment value={duration.seconds?.toString()} label={'másodperc'} />
+    </Flex>
+  )
+}
+
+interface ClockSegmentProps {
+  value: string | undefined
+  label: string
+}
+
+const ClockSegment = ({ value, label }: ClockSegmentProps) => {
+  return (
+    <VStack w="20%" m={5}>
+      <Heading fontSize={60} verticalAlign="center" lineHeight={10}>
+        {value || '00'}
+      </Heading>
+      <Text>{label}</Text>
+    </VStack>
+  )
+}
+
+const Dash = () => <Icon as={BsDashLg} />
+
+export default Clock
