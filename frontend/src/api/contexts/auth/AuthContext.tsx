@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { queryClient } from '../../../util/configs/api.config'
 import { CookieKeys } from '../../../util/configs/cookies.config'
 import { API_BASE_URL } from '../../../util/configs/environment.config'
+import { AbsolutePaths } from '../../../util/paths'
 import { HasChildren } from '../../../util/react-types.util'
 import { ProfileView } from '../../../util/views/profile.view'
 import { useProfileQuery } from '../../hooks/useProfileQuery'
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }: HasChildren) => {
     try {
       await queryClient.invalidateQueries('currentUser', { refetchInactive: true }, { throwOnError: true })
       setIsLoggedIn(true)
-      navigate('/profil')
+      navigate(AbsolutePaths.PROFILE)
     } catch (err) {
       console.log('[ERROR] at onLoginSuccess', JSON.stringify(err, null, 2))
     }
