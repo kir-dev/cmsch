@@ -67,7 +67,7 @@ const ProfilePage = ({}: Props) => {
             </LinkButton>
           )}
           {profile.groupSelectionAllowed && (
-            <LinkButton colorScheme="brand" href="/profil/tankor-modositas">
+            <LinkButton colorScheme="brand" href={`${AbsolutePaths.PROFILE}/tankor-modositas`}>
               Tankör módosítása
             </LinkButton>
           )}
