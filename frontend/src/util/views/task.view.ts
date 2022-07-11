@@ -46,13 +46,17 @@ export enum codeLanguage {
   CPP = 'cpp',
   CSHARP = 'csharp',
   JAVA = 'java',
+  JAVASCRIPT = 'javascript',
+  TYPESCRIPT = 'typescript',
+  SQL = 'sql',
+  KOTLIN = 'kotlin',
   PYTHON = 'python'
 }
 
 export interface TaskFormatDescriptor {
   title: string
   type: 'number' | 'text' | 'textarea'
-  suffix: string
+  suffix?: string
 }
 
 export interface TaskCategoryPreview {
@@ -64,7 +68,7 @@ export interface TaskCategoryPreview {
   notGraded: number
   rejected: number
   sum: number
-  //type: taskCategoryType
+  type: taskCategoryType
 }
 
 export interface TaskCategoryFullDetails {

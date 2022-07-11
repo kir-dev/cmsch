@@ -4,6 +4,10 @@ import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
 import 'prismjs/components/prism-csharp'
 import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-kotlin'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-python'
 import 'prismjs/themes/prism-okaidia.css'
 import { Box, Flex, Select, Stack } from '@chakra-ui/react'
@@ -21,6 +25,10 @@ const LANGUAGE_GRAMMAR_MAP = new Map<string, Grammar>([
   [codeLanguage.CPP, languages.cpp],
   [codeLanguage.CSHARP, languages.csharp],
   [codeLanguage.JAVA, languages.java],
+  [codeLanguage.JAVASCRIPT, languages.javascript],
+  [codeLanguage.TYPESCRIPT, languages.typescript],
+  [codeLanguage.SQL, languages.sql],
+  [codeLanguage.KOTLIN, languages.kotlin],
   [codeLanguage.PYTHON, languages.python]
 ])
 
@@ -34,6 +42,10 @@ const CodeEditor = ({ code, setCode, readonly }: CodeEditorProps) => {
           <option value={codeLanguage.CPP}>C++</option>
           <option value={codeLanguage.CSHARP}>C#</option>
           <option value={codeLanguage.JAVA}>JAVA</option>
+          <option value={codeLanguage.JAVASCRIPT}>JavaScript</option>
+          <option value={codeLanguage.TYPESCRIPT}>TypeScript</option>
+          <option value={codeLanguage.SQL}>SQL</option>
+          <option value={codeLanguage.KOTLIN}>Kotlin</option>
           <option value={codeLanguage.PYTHON}>Python</option>
         </Select>
       </Flex>

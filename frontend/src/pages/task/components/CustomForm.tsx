@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
 import { AbsolutePaths } from '../../../util/paths'
+import { InputWithAddon } from './InputWithAddon'
 
 type CustomFormProps = {
   formatDescriptor: string | undefined
@@ -42,13 +43,15 @@ export const CustomForm = ({ formatDescriptor, control }: CustomFormProps) => {
           <Controller
             name={`customForm.${idx}.value`}
             control={control}
-            render={({ field }) =>
-              f.type === 'textarea' ? (
-                <Textarea id={`customForm.${idx}.value`} placeholder={f.title} {...field} />
-              ) : (
-                <Input id={`customForm.${idx}.value`} placeholder={f.title} {...field} type={f.type} />
-              )
-            }
+            render={({ field }) => (
+              <InputWithAddon suffix={f.suffix}>
+                {f.type === 'textarea' ? (
+                  <Textarea id={`customForm.${idx}.value`} placeholder={f.title} {...field} />
+                ) : (
+                  <Input id={`customForm.${idx}.value`} placeholder={f.title} {...field} type={f.type} />
+                )}
+              </InputWithAddon>
+            )}
           />
         </Box>
       ))}

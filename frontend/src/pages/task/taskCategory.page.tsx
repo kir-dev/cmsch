@@ -43,7 +43,7 @@ const TaskCategoryPage = () => {
       <CmschPage loginRequired groupRequired>
         <Helmet title={category.categoryName} />
         <CustomBreadcrumb items={breadcrumbItems} />
-        <Heading>{`${taskConfig?.title} kategória: ${category.categoryName}`}</Heading>
+        <Heading>{category.categoryName}</Heading>
         {category.tasks && category.tasks.length > 0 ? (
           <VStack spacing={4} mt={5} align="stretch">
             {category.tasks.map((task) => (
