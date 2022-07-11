@@ -12,8 +12,10 @@ val multiplePeopleMapper: ObjectReader = ObjectMapper().readerForListOf(Organize
 enum class SettingType {
     TEXT,
     URL,
+    COLOR,
     LONG_TEXT,
     LONG_TEXT_MARKDOWN,
+    IMAGE,
     NUMBER {
         override fun process(value: String) = value.toLongOrNull() ?: 0
     },

@@ -909,6 +909,14 @@ h4.permission-header {
     margin-top: 20px;
 }
 
+.color-watch {
+    padding-left: 20px;
+    display: inline;
+    left: -28px;
+    position: relative;
+    height: 21px;
+}
+
 @media screen and (max-width: 800px) {
     .content .split {
         display: block;

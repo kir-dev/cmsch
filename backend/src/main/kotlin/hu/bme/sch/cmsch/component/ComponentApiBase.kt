@@ -7,12 +7,14 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartRequest
 import javax.annotation.PostConstruct
 
 abstract class ComponentApiBase(
@@ -69,7 +71,12 @@ abstract class ComponentApiBase(
     }
 
     @PostMapping("/settings")
-    fun update(auth: Authentication, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
+    fun update(
+        auth: Authentication,
+        model: Model,
+        @RequestParam allRequestParams: Map<String, String>,
+        multipartRequest: MultipartRequest
+    ): String {
         val user = auth.getUser()
         if (!permissionToShow.validate(user)) {
             model.addAttribute("permission", permissionToShow.permissionString)
@@ -77,14 +84,25 @@ abstract class ComponentApiBase(
             return "admin403"
         }
         component.allSettings.forEach { setting ->
-            if (setting.type == SettingType.BOOLEAN) {
-                val parsedValue = allRequestParams[setting.property] != null && allRequestParams[setting.property] != "off"
-                log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, parsedValue)
-                setting.setValue(if (parsedValue) "true" else "false")
-            } else {
-                allRequestParams[setting.property]?.let {
-                    log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, it)
-                    setting.setValue(it)
+            when (setting.type) {
+                SettingType.BOOLEAN -> {
+                    val parsedValue = allRequestParams[setting.property] != null && allRequestParams[setting.property] != "off"
+                    log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, parsedValue)
+                    setting.setValue(if (parsedValue) "true" else "false")
+                }
+                SettingType.IMAGE -> {
+                    multipartRequest.fileMap[setting.property]?.let {
+                        if (it.size > 0) {
+                            log.info("Uploading image {}.{} size: {}", setting.component, setting.property, it.size)
+                            it.uploadFile("manifest", setting.rawValue.split("/").last())
+                        }
+                    }
+                }
+                else -> {
+                    allRequestParams[setting.property]?.let {
+                        log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, it)
+                        setting.setValue(it)
+                    }
                 }
             }
         }

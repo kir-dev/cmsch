@@ -21,6 +21,7 @@ class ApplicationComponent(
 
             adminGroup,
             siteUrl,
+            adminSiteUrl,
             motd,
             staffMessage,
 
@@ -86,6 +87,11 @@ class ApplicationComponent(
     val siteUrl = SettingProxy(componentSettingService, component,
         "siteUrl", "http://127.0.0.1:3000/", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
+    )
+
+    val adminSiteUrl = SettingProxy(componentSettingService, component,
+        "adminSiteUrl", "http://127.0.0.1:8080/", type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Admin Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
     )
 
     val motd = SettingProxy(componentSettingService, component,

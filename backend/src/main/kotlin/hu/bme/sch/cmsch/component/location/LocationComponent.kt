@@ -56,7 +56,7 @@ class LocationComponent(
     )
 
     val defaultGroupColor = SettingProxy(componentSettingService, component,
-        "defaultGroupColor", "#FF0000", type = SettingType.TEXT,
+        "defaultGroupColor", "#FF0000", type = SettingType.COLOR,
         fieldName = "Alapértelmezett csoport színe", serverSideOnly = true
     )
 

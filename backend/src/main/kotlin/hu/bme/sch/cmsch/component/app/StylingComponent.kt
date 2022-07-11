@@ -59,22 +59,22 @@ class StylingComponent(
     )
 
     val lightBackgroundColor = SettingProxy(componentSettingService, component,
-        "lightBackgroundColor", "#FFFFFF", type = SettingType.TEXT,
+        "lightBackgroundColor", "#FFFFFF", type = SettingType.COLOR,
         fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik"
     )
 
     val lightContainerColor = SettingProxy(componentSettingService, component,
-        "lightContainerColor", "transparent", type = SettingType.TEXT,
+        "lightContainerColor", "transparent", type = SettingType.COLOR,
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
     )
 
     val lightTextColor = SettingProxy(componentSettingService, component,
-        "lightTextColor", "#000000", type = SettingType.TEXT,
+        "lightTextColor", "#000000", type = SettingType.COLOR,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe"
     )
 
     val lightBrandingColor = SettingProxy(componentSettingService, component,
-        "lightBrandingColor", "#880000", type = SettingType.TEXT,
+        "lightBrandingColor", "#880000", type = SettingType.COLOR,
         fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre"
     )
 
@@ -108,22 +108,22 @@ class StylingComponent(
     )
 
     val darkBackgroundColor = SettingProxy(componentSettingService, component,
-        "darkBackgroundColor", "#FFFFFF", type = SettingType.TEXT,
+        "darkBackgroundColor", "#FFFFFF", type = SettingType.COLOR,
         fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik"
     )
 
     val darkContainerColor = SettingProxy(componentSettingService, component,
-        "darkContainerColor", "transparent", type = SettingType.TEXT,
+        "darkContainerColor", "transparent", type = SettingType.COLOR,
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
     )
 
     val darkTextColor = SettingProxy(componentSettingService, component,
-        "darkTextColor", "#000000", type = SettingType.TEXT,
+        "darkTextColor", "#000000", type = SettingType.COLOR,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe"
     )
 
     val darkBrandingColor = SettingProxy(componentSettingService, component,
-        "darkBrandingColor", "#880000", type = SettingType.TEXT,
+        "darkBrandingColor", "#880000", type = SettingType.COLOR,
         fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre"
     )
 
