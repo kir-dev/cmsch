@@ -9,21 +9,29 @@ import org.springframework.stereotype.Service
 class StylingComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("style", "/style", componentSettingService, env) {
+) : ComponentBase("style", "/", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(
             minRole,
 
-            colorGroup,
-            backgroundColor,
-            textColor,
-            textColorAccent,
-            brandingColor,
+            lightGroup,
+            lightBackgroundColor,
+            lightContainerColor,
+            lightTextColor,
+            lightBrandingColor,
+            lightBackgroundUrl,
+            lightMobileBackgroundUrl,
 
-            imageGroup,
-            backgroundUrl,
-            mobileBackgroundUrl,
+            darkGroup,
+            darkModeEnabled,
+            deviceTheme,
+            darkBackgroundColor,
+            darkContainerColor,
+            darkTextColor,
+            darkBrandingColor,
+            darkBackgroundUrl,
+            darkMobileBackgroundUrl,
 
             typographyGroup,
             mainFontName,
@@ -44,47 +52,88 @@ class StylingComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val colorGroup = SettingProxy(componentSettingService, component,
-        "colorGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Színek",
-        description = "Az oldal stílusának színei"
+    val lightGroup = SettingProxy(componentSettingService, component,
+        "lightGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Világos téma",
+        description = "Az oldal világos stílusának színei"
     )
 
-    val backgroundColor = SettingProxy(componentSettingService, component,
-        "backgroundColor", "#FFFFFF", type = SettingType.TEXT,
+    val lightBackgroundColor = SettingProxy(componentSettingService, component,
+        "lightBackgroundColor", "#FFFFFF", type = SettingType.TEXT,
         fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik"
     )
 
-    val textColor = SettingProxy(componentSettingService, component,
-        "textColor", "#000000", type = SettingType.TEXT,
+    val lightContainerColor = SettingProxy(componentSettingService, component,
+        "lightContainerColor", "transparent", type = SettingType.TEXT,
+        fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
+    )
+
+    val lightTextColor = SettingProxy(componentSettingService, component,
+        "lightTextColor", "#000000", type = SettingType.TEXT,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe"
     )
 
-    val textColorAccent = SettingProxy(componentSettingService, component,
-        "textColorAccent", "#FF0000", type = SettingType.TEXT,
-        fieldName = "Szöveg kiemelés színe", description = "Linkek és fontos szövegek színe"
+    val lightBrandingColor = SettingProxy(componentSettingService, component,
+        "lightBrandingColor", "#880000", type = SettingType.TEXT,
+        fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre"
     )
 
-    val brandingColor = SettingProxy(componentSettingService, component,
-        "brandingColor", "#880000", type = SettingType.TEXT,
-        fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre"
+    val lightBackgroundUrl = SettingProxy(componentSettingService, component,
+        "lightBackgroundUrl", "", type = SettingType.URL,
+        fieldName = "Háttérkép", description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva."
+    )
+
+    val lightMobileBackgroundUrl = SettingProxy(componentSettingService, component,
+        "lightMobileBackgroundUrl", "", type = SettingType.URL,
+        fieldName = "Mobil háttérkép", description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val imageGroup = SettingProxy(componentSettingService, component,
-        "imageGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Képek",
-        description = ""
+    val darkGroup = SettingProxy(componentSettingService, component,
+        "darkGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Sötét téma",
+        description = "Az oldal világos stílusának színei"
     )
 
-    val backgroundUrl = SettingProxy(componentSettingService, component,
-        "backgroundUrl", "", type = SettingType.URL,
+    val darkModeEnabled = SettingProxy(componentSettingService, component,
+        "darkModeEnabled", "true", type = SettingType.BOOLEAN,
+        fieldName = "Sötét téma elérhető", description = "Ha ez ki van kapcsolva, akkor nincs téma váltó"
+    )
+
+    val deviceTheme = SettingProxy(componentSettingService, component,
+        "deviceTheme", "false", type = SettingType.BOOLEAN,
+        fieldName = "Séma az eszköz alapján", description = "Ha be van kapcsolva, akkor lekéri, " +
+                "hogy világos vagy sötét módban fut az eszkőz. Csak akkor működik ha a sötét mód be van kapcsolva."
+    )
+
+    val darkBackgroundColor = SettingProxy(componentSettingService, component,
+        "darkBackgroundColor", "#FFFFFF", type = SettingType.TEXT,
+        fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik"
+    )
+
+    val darkContainerColor = SettingProxy(componentSettingService, component,
+        "darkContainerColor", "transparent", type = SettingType.TEXT,
+        fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
+    )
+
+    val darkTextColor = SettingProxy(componentSettingService, component,
+        "darkTextColor", "#000000", type = SettingType.TEXT,
+        fieldName = "Szövegszín", description = "A megjelenő szövegek színe"
+    )
+
+    val darkBrandingColor = SettingProxy(componentSettingService, component,
+        "darkBrandingColor", "#880000", type = SettingType.TEXT,
+        fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre"
+    )
+
+    val darkBackgroundUrl = SettingProxy(componentSettingService, component,
+        "darkBackgroundUrl", "", type = SettingType.URL,
         fieldName = "Háttérkép", description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 
-    val mobileBackgroundUrl = SettingProxy(componentSettingService, component,
-        "mobileBackgroundUrl", "", type = SettingType.URL,
+    val darkMobileBackgroundUrl = SettingProxy(componentSettingService, component,
+        "darkMobileBackgroundUrl", "", type = SettingType.URL,
         fieldName = "Mobil háttérkép", description = "MObilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 

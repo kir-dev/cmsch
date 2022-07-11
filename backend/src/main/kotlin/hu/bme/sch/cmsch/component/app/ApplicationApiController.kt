@@ -22,7 +22,7 @@ class ApplicationApiController(
     private val componentHandlerService: ComponentHandlerService,
     private val countdownComponent: Optional<CountdownComponent>,
     private val clock: TimeService,
-    private val application: ApplicationComponent
+    private val stylingComponent: StylingComponent
 ) {
 
     @GetMapping("/app")
@@ -35,7 +35,8 @@ class ApplicationApiController(
                     role = role,
                     menu = listOf(),
                     components = mapOf(
-                        countdown.component to countdown.attachConstants()
+                        countdown.component to countdown.attachConstants(),
+                        stylingComponent.component to stylingComponent.attachConstants()
                     )
                 )
             }

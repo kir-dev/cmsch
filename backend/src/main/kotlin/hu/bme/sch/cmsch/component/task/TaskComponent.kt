@@ -21,24 +21,60 @@ class TaskComponent(
         listOf(
             title, menuDisplayName, minRole,
 
+            langGroup,
+            profileRequiredTitle,
+            profileRequiredMessage,
+            regularTitle,
+            regularMessage,
+
             exportGroup,
             exportEnabled
         )
     }
 
     final val title = SettingProxy(componentSettingService, component,
-        "title", "BucketList",
+        "title", "Feladatok",
         fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
     final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "BucketList", serverSideOnly = true,
+        "menuDisplayName", "Feladatok", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val langGroup = SettingProxy(componentSettingService, component,
+        "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Nyelvi bellítások",
+        description = ""
+    )
+
+    val profileRequiredTitle = SettingProxy(componentSettingService, component,
+        "profileRequiredTitle", "Kötelezően kitöltendő", type = SettingType.TEXT,
+        fieldName = "Kötelező feladatok fejléc szövege", description = "Feladatok (PROFILE_REQUIRED) fejléc szövege"
+    )
+
+    val profileRequiredMessage = SettingProxy(componentSettingService, component,
+        "profileRequiredMessage", "", type = SettingType.LONG_TEXT,
+        fieldName = "Kötelező feladatok alatti szöveg",
+        description = "Kötelező feladatok (PROFILE_REQUIRED) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs."
+    )
+
+    val regularTitle = SettingProxy(componentSettingService, component,
+        "regularTitle", "Feladatok", type = SettingType.TEXT,
+        fieldName = "Feladatok fejléc szövege", description = "Feladatok (REGULAR) fejléc szövege"
+    )
+
+    val regularMessage = SettingProxy(componentSettingService, component,
+        "regularMessage", "", type = SettingType.LONG_TEXT,
+        fieldName = "Feladatok alatti szöveg",
+        description = "Feladatok (REGULAR) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.leaderboard.TopListAbstractEntryDto
 import hu.bme.sch.cmsch.component.location.LocationService
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.component.task.TasksService
@@ -49,6 +50,7 @@ open class ProfileService(
         val group = user.group
         val leavable = fetchWhetherGroupLeavable(group)
         val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType.getValue() }.orElse(ALL_TOKEN_TYPE)
+        val incompleteTasks = tasksService.map { it.getTasksThatNeedsToBeCompleted(user) }.orElse(null)
 
         return ProfileView(
             loggedIn = true,
@@ -82,6 +84,8 @@ open class ProfileService(
             totalTaskCount = tasksService.map { it.getTotalTasksForUser(user) }.orElse(null),
             submittedTaskCount = tasksService.map { it.getSubmittedTasksForUser(user) }.orElse(null),
             completedTaskCount = tasksService.map { it.getCompletedTasksForUser(user) }.orElse(null),
+            profileIsComplete = incompleteTasks.isEmpty(),
+            incompleteTasks = incompleteTasks,
 
             // Riddle cmponent
             totalRiddleCount = riddleService.map { it.getTotalRiddleCount(user) }.orElse(null),
@@ -120,7 +124,7 @@ open class ProfileService(
             }
         }
 
-    private fun fetchCollectedTokenCount(user: UserEntity, tokenCategoryToDisplay: String) =
+    private fun fetchCollectedTokenCount(user: CmschUser, tokenCategoryToDisplay: String) =
         tokenService.map { repo ->
             if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
                 repo.getTokensForUser(user).size

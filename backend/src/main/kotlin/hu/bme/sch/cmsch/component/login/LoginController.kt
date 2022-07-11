@@ -105,7 +105,7 @@ class LoginController(
             httpResponse.sendRedirect("/api/token-after-login")
             return
         }
-        httpResponse.sendRedirect(if (auth != null && auth.isAuthenticated) "/control/entrypoint" else "/control/logged-out?error")
+        httpResponse.sendRedirect(if (auth != null && auth.isAuthenticated) "/control/open-site" else "/control/logged-out?error")
     }
 
     private fun getCredentials(profile: ProfileDataResponse, user: UserEntity): String {

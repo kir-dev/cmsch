@@ -47,7 +47,7 @@ data class SubmittedTaskEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 3, label = "Szöveges válasz", enabled = false, ignore = true)
+    @property:GenerateInput(order = 3, label = "Szöveges válasz", enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     var textAnswer: String = "",
 

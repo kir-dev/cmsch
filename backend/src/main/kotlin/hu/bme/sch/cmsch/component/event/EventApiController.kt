@@ -34,8 +34,8 @@ class EventApiController(
         ApiResponse(responseCode = "200", description = "List of events available"),
         ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header")
     ])
-    fun events(auth: Authentication): ResponseEntity<EventsView> {
-        val user = auth.getUserOrNull()
+    fun events(auth: Authentication?): ResponseEntity<EventsView> {
+        val user = auth?.getUserOrNull()
         if (!eventComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
@@ -54,11 +54,11 @@ class EventApiController(
                 "or 'eventComponent.enableDetailedView' is false"),
         ApiResponse(responseCode = "404", description = "No events found with this path")
     ])
-    fun event(@PathVariable path: String, auth: Authentication): ResponseEntity<SingleEventView> {
+    fun event(@PathVariable path: String, auth: Authentication?): ResponseEntity<SingleEventView> {
         if (!eventComponent.enableDetailedView.isValueTrue())
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        val user = auth.getUserOrNull()
+        val user = auth?.getUserOrNull()
         if (!eventComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 

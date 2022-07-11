@@ -56,7 +56,7 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
-    open fun getTokensForUser(user: CmschUserPrincipal): List<TokenDto> {
+    open fun getTokensForUser(user: CmschUser): List<TokenDto> {
         return tokenPropertyRepository.findAllByOwnerUser_Id(user.id)
             .map {
                 TokenDto(
@@ -68,7 +68,7 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
-    open fun getTokensForUserWithCategory(user: CmschUserPrincipal, category: String): Int {
+    open fun getTokensForUserWithCategory(user: CmschUser, category: String): Int {
         return tokenPropertyRepository.findAllByOwnerUser_IdAndToken_Type(user.id, category).size
     }
 
