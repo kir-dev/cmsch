@@ -16,7 +16,7 @@ enum class RoleType(val value: Int, val description: String) {
     ATTENDEE(2, "Résztvevő, de sima felhasználó"),
     STAFF(100, "Rendező, akinek az admin felületre be kellhet lépnie"),
     ADMIN(200, "Adminisztrátor, aki mindenhez hozzáfér"),
-    SUPERUSER(500, "Adminisztrátor, de a fejlesztői menükkel"),
+    SUPERUSER(500, "Adminisztrátor, de a fejlesztői menük is látszanak"),
     NOBODY(Int.MAX_VALUE, "")
     ;
 
