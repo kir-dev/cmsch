@@ -501,7 +501,7 @@ class TestConfig(
                 availableTo = now + (4 * A_DAY),
                 type = TaskType.TEXT,
                 format = TaskFormat.FORM,
-                formatDescriptor = """[{"title": "Név","type":"text","suffix":"\n"},{"title": "Életkor","type":"number","suffix":"\n"},{"title": "Magadról","type":"textarea","suffix":"\n"}]""",
+                formatDescriptor = """[{"title": "Név","type":"text"},{"title": "Testmagasság","type":"number","suffix":"cm"},{"title": "Magadról","type":"textarea"}]""",
                 maxScore = 50,
                 description = LOREM_IPSUM_LONG_1
         )
@@ -580,6 +580,20 @@ class TestConfig(
                 description = LOREM_IPSUM_LONG_4
         )
         tasks.save(achi4)
+
+        val achi5 = TaskEntity(
+            title = "Profilkép",
+            expectedResultDescription = "kép a fejedről",
+            categoryId = 4,
+            visible = true,
+            order = 4,
+            availableFrom = now - (3 * A_DAY),
+            availableTo = now + (2 * A_DAY),
+            type = TaskType.IMAGE,
+            maxScore = 150,
+            description = LOREM_IPSUM_LONG_4
+        )
+        tasks.save(achi5)
 
 
         tasks.save(
@@ -711,6 +725,14 @@ class TestConfig(
             availableFrom = 0,
             availableTo = 3000000000
         ))
+        categories.save(
+            TaskCategoryEntity(
+                name = "muszájj",
+                categoryId = 4,
+                availableFrom = 0,
+                availableTo = 3000000000,
+                type = TaskCategoryType.PROFILE_REQUIRED
+            ))
     }
 
     private fun addUsers() {

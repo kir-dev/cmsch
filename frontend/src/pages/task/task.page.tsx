@@ -105,18 +105,12 @@ const TaskPage = () => {
               break
             case taskFormat.FORM:
               if (customFormData) {
-                if (customFormData.some((field) => field.value === '')) {
-                  toast({
-                    title: 'Hiányos megoldás',
-                    description: 'Töltsd ki az összes mezőt!',
-                    status: 'error',
-                    isClosable: true
-                  })
-                  return
-                }
                 formData.append(
                   'textAnswer',
-                  customFormData.reduce((acc, current) => acc + current.title + ': ' + current.value.toString() + current.suffix, '')
+                  customFormData.reduce(
+                    (acc, current) => acc + current.title + ': ' + current.value.toString() + ` ${current.suffix}\n`,
+                    ''
+                  )
                 )
               }
               break

@@ -22,7 +22,7 @@ export interface Components {
   profile: Profile
   riddle: Home
   signup: Debt
-  task: Home
+  task: Task
   token: Token
 }
 
@@ -138,6 +138,14 @@ export interface Style {
   displayFontName: string
   displayFontCdn: string
   displayFontWeight: string
+}
+
+export interface Task {
+  title: string
+  profileRequiredTitle: string
+  profileRequiredMessage: string
+  regularTitle: string
+  regularMessage: string
 }
 
 export interface Token {
