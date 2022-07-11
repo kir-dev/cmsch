@@ -80,6 +80,12 @@ data class ProfileView(
     val completedTaskCount: Int? = null,
 
     @JsonView(FullDetails::class)
+    val profileIsComplete: Boolean? = null,
+
+    @JsonView(FullDetails::class)
+    val incompleteTasks: List<String>? = null,
+
+    @JsonView(FullDetails::class)
     val locations: List<GroupMemberLocationDto>? = null,
 
     @JsonView(FullDetails::class)

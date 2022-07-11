@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository
 interface TaskEntityRepository : CrudRepository<TaskEntity, Int> {
     fun findAllByHighlightedTrueAndVisibleTrue(): List<TaskEntity>
     fun findAllByVisibleTrue(): List<TaskEntity>
+    fun findAllByCategoryIdAndVisibleTrue(categoryId: Int): List<TaskEntity>
 }

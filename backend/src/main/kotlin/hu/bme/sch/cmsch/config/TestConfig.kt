@@ -456,54 +456,54 @@ class TestConfig(
                 availableFrom = now - (12 * A_DAY),
                 availableTo = now + (4 * A_DAY),
                 type = TaskType.TEXT,
-            format = TaskFormat.TEXT,
+                format = TaskFormat.TEXT,
                 maxScore = 50,
                 description = LOREM_IPSUM_LONG_1
         )
         tasks.save(achi1)
 
         val achi11 = TaskEntity(
-            title = "Kód beadás",
-            expectedResultDescription = "valami kód",
-            categoryId = 1,
-            visible = true,
-            order = 1,
-            availableFrom = now - (12 * A_DAY),
-            availableTo = now + (4 * A_DAY),
-            type = TaskType.TEXT,
-            format = TaskFormat.CODE,
-            maxScore = 50,
-            description = LOREM_IPSUM_LONG_1
+                title = "Kód beadás",
+                expectedResultDescription = "valami kód",
+                categoryId = 1,
+                visible = true,
+                order = 1,
+                availableFrom = now - (12 * A_DAY),
+                availableTo = now + (4 * A_DAY),
+                type = TaskType.TEXT,
+                format = TaskFormat.CODE,
+                maxScore = 50,
+                description = LOREM_IPSUM_LONG_1
         )
         tasks.save(achi11)
 
         val achi12 = TaskEntity(
-            title = "Pdf beadás",
-            expectedResultDescription = "valami pdf",
-            categoryId = 1,
-            visible = true,
-            order = 1,
-            availableFrom = now - (12 * A_DAY),
-            availableTo = now + (4 * A_DAY),
-            type = TaskType.ONLY_PDF,
-            maxScore = 50,
-            description = LOREM_IPSUM_LONG_1
+                title = "Pdf beadás",
+                expectedResultDescription = "valami pdf",
+                categoryId = 1,
+                visible = true,
+                order = 1,
+                availableFrom = now - (12 * A_DAY),
+                availableTo = now + (4 * A_DAY),
+                type = TaskType.ONLY_PDF,
+                maxScore = 50,
+                description = LOREM_IPSUM_LONG_1
         )
         tasks.save(achi12)
 
         val achi13 = TaskEntity(
-            title = "Custom form",
-            expectedResultDescription = "töltsd ki a formot",
-            categoryId = 1,
-            visible = true,
-            order = 1,
-            availableFrom = now - (12 * A_DAY),
-            availableTo = now + (4 * A_DAY),
-            type = TaskType.TEXT,
-            format = TaskFormat.FORM,
-            formatDescriptor = """[{"title": "Név","type":"text","suffix":"\n"},{"title": "Életkor","type":"number","suffix":"\n"},{"title": "Magadról","type":"textarea","suffix":"\n"}]""",
-            maxScore = 50,
-            description = LOREM_IPSUM_LONG_1
+                title = "Custom form",
+                expectedResultDescription = "töltsd ki a formot",
+                categoryId = 1,
+                visible = true,
+                order = 1,
+                availableFrom = now - (12 * A_DAY),
+                availableTo = now + (4 * A_DAY),
+                type = TaskType.TEXT,
+                format = TaskFormat.FORM,
+                formatDescriptor = """[{"title": "Név","type":"text","suffix":"\n"},{"title": "Életkor","type":"number","suffix":"\n"},{"title": "Magadról","type":"textarea","suffix":"\n"}]""",
+                maxScore = 50,
+                description = LOREM_IPSUM_LONG_1
         )
         tasks.save(achi13)
 
@@ -530,6 +530,7 @@ class TestConfig(
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
                 type = TaskType.TEXT,
+                format = TaskFormat.TEXT,
                 maxScore = 69,
                 description = "Úgy sem látszik"
         )
@@ -545,6 +546,7 @@ class TestConfig(
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
                 type = TaskType.BOTH,
+                format = TaskFormat.TEXT,
                 maxScore = 30,
                 description = LOREM_IPSUM_LONG_3
         )
@@ -590,6 +592,7 @@ class TestConfig(
                 availableFrom = now - (3 * A_DAY),
                 availableTo = now + (2 * A_DAY),
                 type = TaskType.TEXT,
+                format = TaskFormat.TEXT,
                 maxScore = 150,
                 description = "Levele van, vagy egyel több csúcsa mint éle?"
         )

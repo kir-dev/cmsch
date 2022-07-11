@@ -23,6 +23,7 @@ class CountdownComponent(
             title, minRole,
 
             enabled,
+            showOnly,
             topMessage,
             timeToCountTo,
             informativeOnly,
@@ -32,7 +33,7 @@ class CountdownComponent(
     }
 
     fun isBlockedAt(timeInSec: Long): Boolean {
-        return enabled.isValueTrue() && (informativeOnly.isValueTrue() || ((timeToCountTo.getValue().toLongOrNull() ?: 0) > timeInSec))
+        return enabled.isValueTrue() && showOnly.isValueTrue() && (informativeOnly.isValueTrue() || ((timeToCountTo.getValue().toLongOrNull() ?: 0) > timeInSec))
     }
 
     final val title = SettingProxy(componentSettingService, component,
@@ -51,6 +52,12 @@ class CountdownComponent(
     val enabled = SettingProxy(componentSettingService, component,
         "enabled", "false", type = SettingType.BOOLEAN,
         fieldName = "Bekapcsolva", description = "Legyen aktív a visszaszélálás komponens"
+    )
+
+    val showOnly = SettingProxy(componentSettingService, component,
+        "showOnly", "true", type = SettingType.BOOLEAN,
+        fieldName = "Erőltetett", description = "Más komponensek ne legyenek elérhetőek. " +
+                "Csak akkor működik, ha be van kapcsolva  a komponens."
     )
 
     val topMessage = SettingProxy(componentSettingService, component,

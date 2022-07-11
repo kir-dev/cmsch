@@ -69,14 +69,18 @@ data class TaskEntity(
 
     @Enumerated(EnumType.STRING)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus", source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus",
+        source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF" ],
+        note = "Mit tároljon el a szerver? A BOTH az szöveg és kép is. A PDF csak önmagában használható.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskType::class)
     var type: TaskType = TaskType.TEXT,
 
     @Enumerated(EnumType.STRING)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Formátum", source = [ "NONE", "TEXT", "CODE", "FORM" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Formátum",
+        source = [ "NONE", "TEXT", "CODE", "FORM" ],
+        note = "Mi legyen a beadás módja. Ha a típus TEXT, csak akkor van értelmezve.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = TaskFormat::class)
     var format: TaskFormat = TaskFormat.NONE,
@@ -85,7 +89,8 @@ data class TaskEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 7, label = "Formátum leírása",
-        note = "Ha a formátum FORM akkor ide kell beírni a form jsonját. Formátum: [{'title':'','type':'number|text|textarea','suffix':''}]")
+        note = "Ha a formátum FORM akkor ide kell beírni a form jsonját. " +
+                "Formátum: [{'title':'','type':'number|text|textarea','suffix':''}]")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var formatDescriptor: String = "",

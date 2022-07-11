@@ -905,6 +905,10 @@ h4.permission-header {
     margin-bottom: 20px;
 }
 
+.mt-3 {
+    margin-top: 20px;
+}
+
 @media screen and (max-width: 800px) {
     .content .split {
         display: block;

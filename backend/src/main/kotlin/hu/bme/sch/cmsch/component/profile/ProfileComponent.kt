@@ -54,6 +54,10 @@ class ProfileComponent(
             showMinimumTokenMessage,
             minTokenNotEnoughMessage,
             minTokenDoneMessage,
+
+            fillProfileGroup,
+            profileIncomplete,
+            profileComplete,
         )
     }
 
@@ -227,6 +231,26 @@ class ProfileComponent(
     val minTokenDoneMessage = SettingProxy(componentSettingService, component,
         "minTokenAchievedMsg", "Megvan a tanköri jelenlét", type = SettingType.LONG_TEXT,
         fieldName = "'Már van elég' üzenet", description = "Ha üres, nem látszik"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val fillProfileGroup = SettingProxy(componentSettingService, component,
+        "fillProfileGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Profil kitöltöttsége", description = "Ha egy Feladat Kategória PROFILE_REQUIRED-re van állítva, " +
+                "akkor a bennelévő feladatok szükségesek ahhoz, hogy a profil teljes legyen."
+    )
+
+    val profileIncomplete = SettingProxy(componentSettingService, component,
+        "profileIncomplete", "A profil nem teljes! A következő dolgok hiányoznak: {}",
+        type = SettingType.LONG_TEXT,
+        fieldName = "'Profil hiányos' üzenet", description = "A profil még nincs teljesen kitöltve üzenet, " +
+                "{} = az összes kitöltendő feladat neve felsorolva. (Ha üres, nem látszik.)"
+    )
+
+    val profileComplete = SettingProxy(componentSettingService, component,
+        "profileComplete", "A profil sikeresen ki lett töltve!", type = SettingType.LONG_TEXT,
+        fieldName = "'Profil kitöltve' üzenet", description = "Ha üres, nem látszik, ha ki van töltve a profil akkor sem."
     )
 
 }

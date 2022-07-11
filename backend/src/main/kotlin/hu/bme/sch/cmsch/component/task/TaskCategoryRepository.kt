@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository
 interface TaskCategoryRepository : CrudRepository<TaskCategoryEntity, Int> {
     override fun findAll(): List<TaskCategoryEntity>
     fun findAllByCategoryId(categoryId: Int): List<TaskCategoryEntity>
+    fun findAllByType(type: TaskCategoryType): List<TaskCategoryEntity>
 }

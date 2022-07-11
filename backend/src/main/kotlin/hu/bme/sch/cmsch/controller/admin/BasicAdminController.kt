@@ -1,9 +1,8 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.service.AdminMenuCategory
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.component.extrapage.ExtraPageService
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.security.core.Authentication
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import java.util.*
 import javax.annotation.PostConstruct
 
 const val CONTROL_MODE_TOPLIST = "toplist"
@@ -26,6 +26,7 @@ const val EXPERIMENTAL_CATEGORY = "EXPERIMENTAL_CATEGORY"
 class BasicAdminController(
     private val applicationComponent: ApplicationComponent,
     private val adminMenuService: AdminMenuService,
+    private val extraPageService: Optional<ExtraPageService>
 ) {
 
     @PostConstruct
@@ -63,8 +64,29 @@ class BasicAdminController(
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("user", user)
+
+        val userPermissions = user.permissions
+
+        model.addAttribute("customPermissions", extraPageService.map { service ->
+            service.getAll().groupBy { it.permissionToEdit }.map { group ->
+                PermissionValidator(
+                    group.key,
+                    "Szükséges a(z) '${group.value.joinToString("', '") { it.title }}' " +
+                            "nevű oldal(ak) szerkesztéséhez"
+                )
+            }
+        }.orElse(listOf())
+            .filter { userPermissions.contains(it.permissionString) })
+
+        model.addAttribute("staffPermissions", StaffPermissions.allPermissions()
+            .filter { it.permissionString.isNotEmpty() }
+            .filter { userPermissions.contains(it.permissionString) })
+
+        model.addAttribute("adminPermissions", ControlPermissions.allPermissions()
+            .filter { it.permissionString.isNotEmpty() }
+            .filter { userPermissions.contains(it.permissionString) })
+
         model.addAttribute("motd", applicationComponent.motd.getValue())
-        model.addAttribute("website", applicationComponent.siteUrl.getValue())
         model.addAttribute("staffMessage", applicationComponent.staffMessage.getValue())
 
         return "admin"

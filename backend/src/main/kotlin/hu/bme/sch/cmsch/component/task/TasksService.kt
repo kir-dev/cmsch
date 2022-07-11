@@ -374,4 +374,11 @@ open class TasksService(
         return submitted.findAllByUserIdAndRejectedFalseAndApprovedTrue(user.id).size
     }
 
+    @Transactional(readOnly = true)
+    open fun getTasksThatNeedsToBeCompleted(user: UserEntity): List<String> {
+        return categories.findAllByType(TaskCategoryType.PROFILE_REQUIRED)
+            .flatMap { taskRepository.findAllByCategoryIdAndVisibleTrue(it.categoryId) }
+            .map { it.title }
+    }
+
 }
