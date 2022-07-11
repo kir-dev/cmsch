@@ -81,6 +81,9 @@
         }
         document.getElementById(property).value = JSON.stringify(result);
     }
+    function recalculateColor(colorId, colorValue) {
+        document.getElementById(colorId).style.backgroundColor = document.getElementById(colorValue).value;
+    }
 </script>
 <div class="content">
     <div class="split">
@@ -91,7 +94,9 @@
             <div class="page page-short">
                 <h2 th:text="${title}">View edit</h2>
 
-                <form th:action="|@{/admin/control}/component/${component}/settings|" method="post">
+                <form th:action="|@{/admin/control}/component/${component}/settings|"
+                      method="post"
+                      enctype="multipart/form-data">
 
                     <object th:each="input : ${settings}" th:remove="tag">
 
@@ -136,6 +141,29 @@
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
 
+                            <div th:if="${input.type.name() == 'COLOR'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <input type="text"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getValue()}"
+                                       th:data-param1="|color_${input.property}|" th:data-param2="${input.property}"
+                                       th:onchange="|recalculateColor(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|"
+                                       autocomplete="off"
+                                />
+                                <div class="color-watch" th:id="|color_${input.property}|"></div>
+                                <span class="note" th:text="${input.description}"></span>
+                                <script th:inline="javascript">
+                                    recalculateColor('color_' + /*[[${input.property}]]*/ 'na', /*[[${input.property}]]*/ 'na');
+                                </script>
+                            </div>
+
                             <div th:if="${input.type.name() == 'NUMBER'}" class="field-group">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
@@ -152,6 +180,24 @@
                                        required
                                 />
                                 <span class="note" th:text="${input.description}"></span>
+                            </div>
+
+
+                            <div th:if="${input.type.name() == 'IMAGE'}" class="field-group">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <input type="file"
+                                       class="file-input"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                />
+                                <span class="note" th:text="${input.description}"></span>
+                                <img th:src="|${input.rawValue}|" />
                             </div>
 
                             <div th:if="${input.type.name() == 'DATE_TIME'}" class="field-group">

@@ -43,7 +43,8 @@ open class SecurityConfig(
                         "/control/open-site",
                         "/api/**",
                         "/share/**",
-                        "swagger-ui.html", "/v3/api-docs/**")
+                        "swagger-ui.html", "/v3/api-docs/**",
+                        "/cdn/manifest/**", "/manifest/manifest.json")
                     .permitAll()
 
                 .antMatchers(

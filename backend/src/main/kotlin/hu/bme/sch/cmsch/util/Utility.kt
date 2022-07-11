@@ -25,7 +25,7 @@ class DI(
     }
 }
 
-fun MultipartFile.uploadFile(target: String): String? {
+fun MultipartFile.uploadFile(target: String, overrideName: String? = null): String? {
     if (this.isEmpty || this.contentType == null)
         return null
 
@@ -37,8 +37,9 @@ fun MultipartFile.uploadFile(target: String): String? {
     val dir = File(path, target)
     dir.mkdirs()
     val originalFilename = this.originalFilename ?: ""
-    val fileName = (UUID(System.currentTimeMillis(), Random().nextLong()).toString()
-            + originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0))
+    val fileName = overrideName
+        ?: (UUID(System.currentTimeMillis(), Random().nextLong()).toString()
+                + originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0))
 
     path += (if (path.endsWith("/")) "" else "/") + "$target/$fileName"
     try {
