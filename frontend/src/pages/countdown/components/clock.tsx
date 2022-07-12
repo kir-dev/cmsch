@@ -17,7 +17,7 @@ const Clock = ({ countTo }: ClockProps) => {
     setInterval(update, 1000)
   }, [])
   return (
-    <Flex w="100%" flexDirection={['column', 'row']} alignItems="center" justifyContent="center">
+    <Flex flexDirection={['column', 'row']} alignItems="center" justifyContent="center">
       <ClockSegment value={duration.days?.toString()} label={'nap'} />
       <Dash />
       <ClockSegment value={duration.hours?.toString()} label={'óra'} />
@@ -36,7 +36,7 @@ interface ClockSegmentProps {
 
 const ClockSegment = ({ value, label }: ClockSegmentProps) => {
   return (
-    <VStack w="20%" m={5}>
+    <VStack w="20%" mx={10} my={5}>
       <Heading fontSize={60} verticalAlign="center" lineHeight={10}>
         {value || '00'}
       </Heading>
@@ -45,6 +45,6 @@ const ClockSegment = ({ value, label }: ClockSegmentProps) => {
   )
 }
 
-const Dash = () => <Icon as={BsDashLg} />
+const Dash = () => <Icon size={30} as={BsDashLg} />
 
 export default Clock
