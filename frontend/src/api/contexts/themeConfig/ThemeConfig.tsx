@@ -11,19 +11,21 @@ export const ThemeConfig = ({ children }: HasChildren) => {
   const config = useConfigContext()
   const chakraConfig = useMemo(() => {
     if (config) {
-      customTheme.colors.brand = getColorShadesForColor(config.components.style.brandingColor)
-      customTheme.colors.accent = config.components.style.textColorAccent
-      const bgColor = new Values(config.components.style.backgroundColor)
-      const textColor = new Values(config.components.style.textColor)
-      const backgrounds = getOppositeColor(bgColor, 90)
-      const texts = getOppositeColor(textColor, 1000)
+      customTheme.colors.brand = getColorShadesForColor(config.components.style.lightBrandingColor)
+      customTheme.colors.lightContainerBg = config.components.style.lightContainerColor
+      customTheme.colors.darkContainerBg = config.components.style.darkContainerColor
+      customTheme.initialColorMode = config.components.style.deviceTheme ? 'system' : 'light'
       customTheme.styles.global = (props: any) => ({
         body: {
-          bg: mode(backgrounds.light.hexString(), backgrounds.dark.hexString())(props),
-          color: mode(texts.dark.hexString(), texts.light.hexString())(props),
-          bgImage: `url(${config.components.style.backgroundUrl})`,
+          bg: mode(config.components.style.lightBackgroundColor, config.components.style.darkBackgroundColor)(props),
+          color: mode(config.components.style.lightTextColor, config.components.style.darkTextColor)(props),
+          bgImage: mode(`url(${config.components.style.lightBackgroundUrl})`, `url(${config.components.style.darkBackgroundUrl})`)(props),
+          bgRepeat: 'no-repeat',
           [`@media screen and (max-width: ${props.theme.breakpoints.sm})`]: {
-            bgImage: `url(${config.components.style.mobileBackgroundUrl})`
+            bgImage: mode(
+              `url(${config.components.style.lightMobileBackgroundUrl})`,
+              `url(${config.components.style.darkMobileBackgroundUrl})`
+            )
           }
         }
       })
@@ -64,12 +66,4 @@ function getColorShadesForColor(color: string) {
     result[(i + 6) * 100] = t.hexString()
   })
   return result
-}
-
-function getOppositeColor(color: Values, weight: number): { light: Values; dark: Values } {
-  if (color.getBrightness() < 50) {
-    return { light: color.tint(weight), dark: color }
-  } else {
-    return { light: color, dark: color.shade(weight) }
-  }
 }
