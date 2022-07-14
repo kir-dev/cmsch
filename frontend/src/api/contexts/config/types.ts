@@ -126,18 +126,26 @@ export interface Profile {
 }
 
 export interface Style {
-  backgroundColor: string
-  textColor: string
-  textColorAccent: string
-  brandingColor: string
-  backgroundUrl: string
-  mobileBackgroundUrl: string
+  lightBackgroundColor: string
+  lightContainerColor: string
+  lightTextColor: string
+  lightBrandingColor: string
+  lightBackgroundUrl: string
+  lightMobileBackgroundUrl: string
+  darkModeEnabled: boolean
+  deviceTheme: boolean
+  darkBackgroundColor: string
+  darkContainerColor: string
+  darkTextColor: string
+  darkBrandingColor: string
+  darkBackgroundUrl: string
+  darkMobileBackgroundUrl: string
   mainFontName: string
   mainFontCdn: string
-  mainFontWeight: string
+  mainFontWeight: number
   displayFontName: string
   displayFontCdn: string
-  displayFontWeight: string
+  displayFontWeight: number
 }
 
 export interface Task {
