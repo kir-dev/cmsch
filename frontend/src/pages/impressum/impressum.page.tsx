@@ -5,15 +5,12 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { useDevelopers } from '../../api/hooks/useDevelopers'
 import { OrganizerSection } from './components/OrganizerSection'
-import { parseOrganizerArrayJSON } from './util/arrayFunctions'
 import { DeveloperWrapItem } from './components/DeveloperWrapItem'
 
 const ImpressumPage = () => {
   const config = useConfigContext()
   const developers = useDevelopers()
   const impressumConfig = config?.components?.impressum
-  const leadOrganizers = parseOrganizerArrayJSON(impressumConfig?.leadOrganizers)
-  const otherOrganizers = parseOrganizerArrayJSON(impressumConfig?.otherOrganizers)
 
   return (
     <CmschPage>
@@ -29,8 +26,16 @@ const ImpressumPage = () => {
         ))}
       </Wrap>
       <Markdown text={impressumConfig?.developersBottomMessage} />
-      <OrganizerSection organizers={leadOrganizers} message={impressumConfig?.leadOrganizersMessage} title="Rendezők" />
-      <OrganizerSection organizers={otherOrganizers} message={impressumConfig?.otherOrganizersMessage} title="Stáb további tagjai" />
+      <OrganizerSection
+        organizers={impressumConfig?.leadOrganizers || []}
+        message={impressumConfig?.leadOrganizersMessage}
+        title="Rendezők"
+      />
+      <OrganizerSection
+        organizers={impressumConfig?.otherOrganizers || []}
+        message={impressumConfig?.otherOrganizersMessage}
+        title="Stáb további tagjai"
+      />
     </CmschPage>
   )
 }

@@ -98,9 +98,9 @@ export interface Impressum {
   developerDaniUrl: string
   developerMateUrl: string
   developersBottomMessage: string
-  leadOrganizers: string // JSONified Organizer[]
+  leadOrganizers: Organizer[] // JSONified Organizer[]
   leadOrganizersMessage: string
-  otherOrganizers: string // JSONified Organizer[]
+  otherOrganizers: Organizer[] // JSONified Organizer[]
   otherOrganizersMessage: string
 }
 
