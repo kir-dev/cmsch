@@ -30,9 +30,8 @@ const RiddlePage = () => {
   const toast = useToast()
   const toastIdRef = useRef<ToastId | null>(null)
 
-  if (!id) return <Navigate to="/" replace />
-
   const [riddle, setRiddle] = useState<Riddle>({ id: 1, title: '', imageUrl: '', solved: false, hint: undefined })
+
   const [loading, setLoading] = useState<boolean>(false)
   const solutionInput = useRef<HTMLInputElement>(null)
 
@@ -48,6 +47,8 @@ const RiddlePage = () => {
         console.error('Nem sikerült lekérni a Riddle-t.')
       })
   }, [setRiddle])
+
+  if (!id) return <Navigate to="/" replace />
 
   const submitSolution = (event: FormEvent) => {
     event.preventDefault()

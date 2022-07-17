@@ -1,4 +1,5 @@
 export enum Paths {
+  HOME = 'home',
   PROFILE = 'profile',
   RIDDLE = 'riddle',
   TASKS = 'tasks',
@@ -13,6 +14,7 @@ export enum Paths {
 }
 
 export enum AbsolutePaths {
+  HOME = '/home',
   PROFILE = '/profile',
   RIDDLE = '/riddle',
   TASKS = '/tasks',
