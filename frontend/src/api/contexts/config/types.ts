@@ -4,24 +4,31 @@ export interface ConfigDto {
   components: Components
 }
 
+export interface Menu {
+  name: string
+  url: string
+  external: boolean
+  children: Menu[]
+}
+
 export interface Components {
   app: App
   style: Style
-  userHandling: Debt
+  userHandling: UserHandling
   countdown: Countdown
   debt: Debt
   event: Event
-  extraPage: Debt
-  groupselection: Debt
+  extraPage: ExtraPage
+  groupselection: GroupSelection
   home: Home
   impressum: Impressum
   leaderboard: Leaderboard
-  location: Debt
-  login: Debt
+  location: Location
+  login: Login
   news: Home
   profile: Profile
-  riddle: Home
-  signup: Debt
+  riddle: Riddle
+  signup: Signup
   task: Task
   token: Token
 }
@@ -42,7 +49,7 @@ export interface App {
   devLogo: string
   devAlt: string
   devWebsiteUrl: string
-  sponsorsEnabled: string
+  sponsorsEnabled: boolean
   sponsorLogoUrls: string
   sponsorAlts: string
   sponsorWebsiteUrls: string
@@ -50,25 +57,32 @@ export interface App {
 
 export interface Countdown {
   title: string
-  enabled: string
+  enabled: boolean
+  showOnly: boolean
   topMessage: string
-  timeToCountTo: string
-  informativeOnly: string
+  timeToCountTo: number
+  informativeOnly: boolean
   imageUrl: string
-  blurredImage: string
+  blurredImage: boolean
 }
 
-export interface Debt {}
+export interface GroupSelection {
+  selectionEnabled: boolean
+}
 
 export interface Event {
   title: string
-  seekToCurrentCurrent: string
-  separateDays: string
+  seekToCurrentCurrent: boolean
+  separateDays: boolean
   topMessage: string
-  enableDetailedView: string //TODO ez miért string??
+  enableDetailedView: boolean
 }
 
 export interface Home {
+  title: string
+}
+
+export interface Riddle {
   title: string
 }
 
@@ -103,26 +117,31 @@ export interface Leaderboard {
 
 export interface Profile {
   title: string
-  showTasks: string
+  showTasks: boolean
   taskCounterName: string
-  showRiddles: string
+  showRiddles: boolean
   riddleCounterName: string
-  showTokens: string
+  showTokens: boolean
   tokenCounterName: string
-  showFullName: string
-  showGuild: string
-  showNeptun: string
-  showProfilePicture: string
-  showQr: string
-  showGroupName: string
+  showFullName: boolean
+  showGuild: boolean
+  showMajor: boolean
+  showAlias: boolean
+  showGroup: boolean
+  showNeptun: boolean
+  showEmail: boolean
+  showProfilePicture: boolean
+  showQr: boolean
   groupTitle: string
-  allowGroupSelect: string
   messageBoxContent: string
   messageBoxLevel: string
-  showGroupLeadersLocations: string
-  showMinimumToken: string
+  showGroupName: boolean
+  showGroupLeadersLocations: boolean
+  showMinimumToken: boolean
   minTokenMsg: string
   minTokenAchievedMsg: string
+  profileIncomplete: string
+  profileComplete: string
 }
 
 export interface Style {
@@ -165,9 +184,9 @@ export interface Token {
   defaultTestIcon: string
 }
 
-export interface Menu {
-  name: string
-  url: string
-  external: boolean
-  children: Menu[]
-}
+export interface Debt {}
+export interface UserHandling {}
+export interface ExtraPage {}
+export interface Location {}
+export interface Login {}
+export interface Signup {}

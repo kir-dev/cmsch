@@ -31,24 +31,20 @@ export const ThemeConfig = ({ children }: HasChildren) => {
       })
       customTheme.fonts = {
         heading: config.components.style.displayFontName,
-        body: config.components.style.mainFontName
+        body: config.components.style.displayFontName
       }
     }
     return customTheme
   }, [config])
   return (
     <ChakraProvider theme={chakraConfig}>
-      <>
-        {(config?.components.style.mainFontCdn || config?.components.style.displayFontCdn) && (
-          <Helmet>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link href={config?.components.style.displayFontCdn} rel="stylesheet" />
-            <link href={config?.components.style.mainFontCdn} rel="stylesheet" />
-          </Helmet>
-        )}
-        {children}
-      </>
+      {(config?.components.style.mainFontCdn || config?.components.style.displayFontCdn) && (
+        <Helmet>
+          <link href={config?.components.style.displayFontCdn} rel="stylesheet" />
+          <link href={config?.components.style.mainFontCdn} rel="stylesheet" />
+        </Helmet>
+      )}
+      {children}
     </ChakraProvider>
   )
 }

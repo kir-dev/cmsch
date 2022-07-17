@@ -1,6 +1,6 @@
-import { Box, FormLabel, Textarea, Input, useToast } from '@chakra-ui/react'
+import { Box, FormLabel, Input, Textarea, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { useFieldArray, Controller, Control, FieldValues } from 'react-hook-form'
+import { Control, Controller, useFieldArray } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
@@ -9,7 +9,7 @@ import { InputWithAddon } from './InputWithAddon'
 
 type CustomFormProps = {
   formatDescriptor: string | undefined
-  control: Control<FieldValues, object>
+  control: Control<FormInput, object>
 }
 
 export const CustomForm = ({ formatDescriptor, control }: CustomFormProps) => {

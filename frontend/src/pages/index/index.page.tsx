@@ -1,4 +1,4 @@
-import { Button, Heading, useToast } from '@chakra-ui/react'
+import { Button, Heading, Text, useToast } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
@@ -45,6 +45,7 @@ const IndexPage = () => {
         </Heading>{' '}
         portálon
       </Heading>
+      <Text>Hello</Text>
       <Link to={AbsolutePaths.TASKS}>Tasks</Link>
       <ExampleComponent />
       <Link to={AbsolutePaths.EVENTS}>
