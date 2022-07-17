@@ -8,7 +8,8 @@ export enum Paths {
   TOKEN = 'token',
   TOKEN_SCANNED = 'token-scanned',
   COMMUNITIES = 'communities',
-  ERROR = 'error'
+  ERROR = 'error',
+  EXTRA_PAGE = 'page'
 }
 
 export enum AbsolutePaths {
@@ -21,5 +22,6 @@ export enum AbsolutePaths {
   TOKEN = '/token',
   TOKEN_SCANNED = 'token-scanned',
   COMMUNITIES = '/communities',
-  ERROR = '/error'
+  ERROR = '/error',
+  EXTRA_PAGE = '/page'
 }

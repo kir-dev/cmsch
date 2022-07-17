@@ -7,6 +7,7 @@ import { CommunitiesModule } from '../../route-modules/Communities.module'
 import { TokenModule } from '../../route-modules/Token.module'
 import { ImpressumModule } from '../../route-modules/Impressum.module'
 import { EventsModule } from '../../route-modules/Events.module'
+import { ExtraPageModule } from '../../route-modules/ExtraPage.module'
 
 export enum AvailableModules {
   RIDDLE = 'RIDDLE',
@@ -16,7 +17,8 @@ export enum AvailableModules {
   PROFILE = 'PROFILE',
   COMMUNITIES = 'COMMUNITIES',
   TOKEN = 'TOKEN',
-  EVENTS = 'EVENTS'
+  EVENTS = 'EVENTS',
+  EXTRA = 'EXTRA'
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
@@ -27,7 +29,8 @@ export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
   [AvailableModules.PROFILE]: ProfileModule,
   [AvailableModules.COMMUNITIES]: CommunitiesModule,
   [AvailableModules.TOKEN]: TokenModule,
-  [AvailableModules.EVENTS]: EventsModule
+  [AvailableModules.EVENTS]: EventsModule,
+  [AvailableModules.EXTRA]: ExtraPageModule
 }
 
 export function GetRoutesForModules(modules: AvailableModules[]) {
@@ -42,5 +45,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.IMPRESSUM,
   AvailableModules.TASK,
   AvailableModules.EVENTS,
-  AvailableModules.NEWS
+  AvailableModules.NEWS,
+  AvailableModules.EXTRA
 ]
