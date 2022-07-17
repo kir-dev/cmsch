@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { HasChildren } from '../../util/react-types.util'
 import Clock from './components/clock'
-import { Center, Flex, Heading, VStack } from '@chakra-ui/react'
+import { Center, Flex, Heading, useColorModeValue, VStack } from '@chakra-ui/react'
 import { useMemo } from 'react'
 
 const CountdownPage = ({ children }: HasChildren) => {
@@ -11,12 +11,12 @@ const CountdownPage = ({ children }: HasChildren) => {
   const countTo = useMemo(() => {
     try {
       if (!component) return new Date()
-      return new Date(parseInt(component?.timeToCountTo) * 1000)
+      return new Date(component?.timeToCountTo * 1000)
     } catch (e) {
       return new Date()
     }
   }, [component])
-  if (component?.enabled && (component?.informativeOnly === 'true' || countTo.getTime() > Date.now())) {
+  if (component?.enabled && component?.showOnly && (component?.informativeOnly || countTo.getTime() > Date.now())) {
     return (
       <Flex h="100%" w="100%">
         <Helmet title={component?.title} />
@@ -30,11 +30,11 @@ const CountdownPage = ({ children }: HasChildren) => {
           backgroundPosition="center"
           backgroundSize="cover"
           backgroundImage={`url(${component.imageUrl})`}
-          filter={component.blurredImage && 'blur(10px)'}
+          filter={component.blurredImage ? 'blur(10px)' : undefined}
         />
-        <Flex flexDirection="column" h="100%" w="100%" zIndex={1}>
+        <Flex flexDirection="column" h="100%" w="100%" zIndex={1} backgroundColor={useColorModeValue('#FFFFFFAA', '#000000AA')}>
           <Center h="100vh">
-            <VStack w="100%">
+            <VStack w="100%" color={useColorModeValue('#000000', '#FFFFFF')}>
               <Heading textAlign="center">{component.topMessage}</Heading>
               <Clock countTo={countTo} />
             </VStack>
