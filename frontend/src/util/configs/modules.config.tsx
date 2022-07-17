@@ -8,8 +8,10 @@ import { TokenModule } from '../../route-modules/Token.module'
 import { ImpressumModule } from '../../route-modules/Impressum.module'
 import { EventsModule } from '../../route-modules/Events.module'
 import { ExtraPageModule } from '../../route-modules/ExtraPage.module'
+import { HomeModule } from '../../route-modules/Home.module'
 
 export enum AvailableModules {
+  HOME = 'HOME',
   RIDDLE = 'RIDDLE',
   TASK = 'TASK',
   IMPRESSUM = 'IMPRESSUM',
@@ -22,6 +24,7 @@ export enum AvailableModules {
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
+  [AvailableModules.HOME]: HomeModule,
   [AvailableModules.RIDDLE]: RiddleModule,
   [AvailableModules.TASK]: TaskModule,
   [AvailableModules.IMPRESSUM]: ImpressumModule,
@@ -38,6 +41,7 @@ export function GetRoutesForModules(modules: AvailableModules[]) {
 }
 
 export const EnabledModules: AvailableModules[] = [
+  AvailableModules.HOME,
   AvailableModules.PROFILE,
   AvailableModules.RIDDLE,
   AvailableModules.COMMUNITIES,
