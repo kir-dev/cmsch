@@ -7,6 +7,7 @@ import LoginPage from './pages/login/login.page'
 import { EnabledModules, GetRoutesForModules } from './util/configs/modules.config'
 import CountdownPage from './pages/countdown/countdown.page'
 import { useConfigContext } from './api/contexts/config/ConfigContext'
+import { MetaTags } from './metaTags'
 
 export function App() {
   const config = useConfigContext()
@@ -15,6 +16,7 @@ export function App() {
     <CountdownPage>
       <CmschLayout>
         <Suspense>
+          <MetaTags />
           <Routes>
             <Route path="/">
               {GetRoutesForModules(EnabledModules)}
