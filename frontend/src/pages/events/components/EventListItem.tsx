@@ -17,7 +17,6 @@ const EventListItem = ({ event }: EventListItemProps) => {
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
-  const isEnabled = config.components.event?.enableDetailedView == 'true'
   const innerComponent = (
     <>
       <Heading mb={'0.5rem'}>{event.title}</Heading>
@@ -36,7 +35,15 @@ const EventListItem = ({ event }: EventListItemProps) => {
     </>
   )
 
-  return <GridItem>{isEnabled ? <Link to={`${AbsolutePaths.EVENTS}/${event.url}`}> {innerComponent} </Link> : innerComponent}</GridItem>
+  return (
+    <GridItem>
+      {config.components.event?.enableDetailedView ? (
+        <Link to={`${AbsolutePaths.EVENTS}/${event.url}`}> {innerComponent} </Link>
+      ) : (
+        innerComponent
+      )}
+    </GridItem>
+  )
 }
 
 export default EventListItem
