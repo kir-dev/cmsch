@@ -24,6 +24,164 @@
         document.getElementById(`input${inputId}`).value = permissions.join(",")
     }
 </script>
+
+<script th:inline="javascript">
+    function changeFieldsText(property) {
+        /*<![CDATA[*/
+        const elementTypes = [[${T(hu.bme.sch.cmsch.component.signup.FormElementType).values()}]];
+        /*]]>*/
+        const fields = JSON.parse(document.getElementById(property).value);
+        let resultHtml = "";
+        let id = 0;
+        fields.forEach(field => {
+            if (typeof field.fieldName !== 'undefined'
+                && typeof field.label !== 'undefined'
+                && typeof field.type !== 'undefined'
+                && typeof field.formatRegex !== 'undefined'
+                && typeof field.invalidFormatMessage !== 'undefined'
+                && typeof field.values !== 'undefined'
+                && typeof field.note !== 'undefined'
+                && typeof field.required !== 'undefined'
+                && typeof field.permanent !== 'undefined'
+                && field.fieldName !== ''
+            ) {
+                resultHtml += `
+                    <div class="card mb-3">
+                        <label for="${property}_${id}_fieldName">Mező neve *</label>
+                        <input id="${property}_${id}_fieldName" type="text" value="${field.fieldName}" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_type">Típus *</label>
+                        <div style="clear:both"></div>
+                        <select id="${property}_${id}_type" onchange="saveField('${property}')">
+                            ${elementTypes.map(opt => `<option value="${opt}" ${opt === field.type ? 'selected' : ''}>${opt}</option>`).join('')}
+                        </select><br/>
+
+                        <label for="${property}_${id}_label">Cimke *</label>
+                        <input id="${property}_${id}_label" type="text" value="${field.label}" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_values">Értékek</label>
+                        <input id="${property}_${id}_values" type="text" value="${field.values}" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_note">Leírás</label>
+                        <input id="${property}_${id}_note" type="text" value="${field.note}" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_required">Kötelező kitölteni</label>
+                        <div style="clear:both"></div>
+                        <label class="switch">
+                            <input type="checkbox" id="${property}_${id}_required" ${field.required ? 'checked' : ''} onchange="saveField('${property}')" />
+                            <span class="slider"></span>
+                        </label><br/>
+
+                        <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
+                        <div style="clear:both"></div>
+                        <label class="switch">
+                            <input type="checkbox" id="${property}_${id}_permanent" ${field.permanent ? 'checked' : ''} onchange="saveField('${property}')" />
+                            <span class="slider"></span>
+                        </label><br/>
+
+                        <label for="${property}_${id}_formatRegex">RegEx minta</label>
+                        <input id="${property}_${id}_formatRegex" type="text" value="${field.formatRegex}" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
+                        <input id="${property}_${id}_invalidFormatMessage" type="text" value="${field.invalidFormatMessage}" onchange="saveField('${property}')">
+                    </div>`;
+                ++id;
+            }
+        });
+
+        resultHtml += `<div class="card centered" id="field_${property}_add"><button type="button" class="btn" onclick="addField('${property}')">+</button></div>`;
+
+        document.getElementById(`field_${property}`).innerHTML = resultHtml;
+    }
+
+    function addField(property) {
+        /*<![CDATA[*/
+        const elementTypes = [[${T(hu.bme.sch.cmsch.component.signup.FormElementType).values()}]];
+        /*]]>*/
+        let id = 0;
+        while (typeof document.getElementById(`${property}_${id}_fieldName`) !== 'undefined'
+                && document.getElementById(`${property}_${id}_fieldName`) !== null) {
+            ++id;
+        }
+        const element = document.createElement('div');
+        element.innerHTML = `
+                    <div class="card mb-3">
+                        <label for="${property}_${id}_fieldName">Mező neve *</label>
+                        <input id="${property}_${id}_fieldName" type="text" value="" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_type">Típus *</label>
+                        <div style="clear:both"></div>
+                        <select id="${property}_${id}_type" onchange="saveField('${property}')">
+                            ${elementTypes.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                        </select><br/>
+
+                        <label for="${property}_${id}_label">Cimke *</label>
+                        <input id="${property}_${id}_label" type="text" value="" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_values">Értékek</label>
+                        <input id="${property}_${id}_values" type="text" value="" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_note">Leírás</label>
+                        <input id="${property}_${id}_note" type="text" value="" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_required">Kötelező kitölteni</label>
+                        <div style="clear:both"></div>
+                        <label class="switch">
+                            <input type="checkbox" id="${property}_${id}_required" onchange="saveField('${property}')" />
+                            <span class="slider"></span>
+                        </label><br/>
+
+                        <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
+                        <div style="clear:both"></div>
+                        <label class="switch">
+                            <input type="checkbox" id="${property}_${id}_permanent" onchange="saveField('${property}')" />
+                            <span class="slider"></span>
+                        </label><br/>
+
+                        <label for="${property}_${id}_formatRegex">RegEx minta</label>
+                        <input id="${property}_${id}_formatRegex" type="text" value=".*" onchange="saveField('${property}')">
+
+                        <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
+                        <input id="${property}_${id}_invalidFormatMessage" type="text" value="" onchange="saveField('${property}')">
+                    </div>`;
+        let target = document.getElementById(`field_${property}_add`);
+        target.parentNode.insertBefore(element, target);
+    }
+
+    function saveField(property) {
+        let id = 0;
+        let result = [];
+        while (typeof document.getElementById(`${property}_${id}_fieldName`) !== 'undefined'
+                && document.getElementById(`${property}_${id}_fieldName`) !== null) {
+
+            const fieldName = document.getElementById(`${property}_${id}_fieldName`).value;
+            const label = document.getElementById(`${property}_${id}_label`).value;
+            const type = document.getElementById(`${property}_${id}_type`).value;
+            const formatRegex = document.getElementById(`${property}_${id}_formatRegex`).value;
+            const invalidFormatMessage = document.getElementById(`${property}_${id}_invalidFormatMessage`).value;
+            const values = document.getElementById(`${property}_${id}_values`).value;
+            const note = document.getElementById(`${property}_${id}_note`).value;
+            const required = document.getElementById(`${property}_${id}_required`).checked;
+            const permanent = document.getElementById(`${property}_${id}_permanent`).checked;
+
+            if (fieldName !== null && label !== null && type !== null && fieldName !== '') {
+                result.push({
+                    fieldName : fieldName,
+                    label : label,
+                    type : type,
+                    formatRegex : formatRegex,
+                    invalidFormatMessage : invalidFormatMessage,
+                    values : values,
+                    note : note,
+                    required : required,
+                    permanent : permanent
+                });
+            }
+            ++id;
+        }
+        document.getElementById(property).value = JSON.stringify(result);
+    }
+</script>
 <div class="content">
     <div class="split">
         <div th:replace="layout :: mobile"></div>
@@ -301,6 +459,28 @@
                                     Nincs fájl feltöltve
                                 </p>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
+
+                            <div th:if="${input.second.type == 'form-editor'}" class="field-group">
+                                <label th:text="${input.second.label}">
+                                </label>
+                                <div style="clear:both"></div>
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+
+                                <div th:id="|field_${input.first.name}|">
+
+                                </div>
+
+                                <input type="text"
+                                       th:name="${input.first.name}"
+                                       th:id="${input.first.name}"
+                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       autocomplete="off"
+                                       style="display: none"
+                                />
+                                <script th:inline="javascript">
+                                    changeFieldsText(/*[[${input.first.name}]]*/ '');
+                                </script>
                             </div>
 
                             <object th:if="${input.second.type == 'permissions'}" th:remove="tag">

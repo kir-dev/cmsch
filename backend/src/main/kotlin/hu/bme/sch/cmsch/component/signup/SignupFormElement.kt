@@ -26,6 +26,7 @@ enum class FormElementType(
 }
 
 data class SignupFormElement(
+    var fieldName: String,
     var label: String,
     var type: FormElementType,
     var formatRegex: String,

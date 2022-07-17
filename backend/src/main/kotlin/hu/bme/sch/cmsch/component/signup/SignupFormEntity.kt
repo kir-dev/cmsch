@@ -50,7 +50,7 @@ data class SignupFormEntity(
     @Lob
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_FORM_EDITOR, order = 4, label = "Kitöltendő űrlap")
+    @property:GenerateInput(type = INPUT_TYPE_FORM_EDITOR, order = 4, label = "Kitöltendő űrlap", defaultValue = "[]")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LOB)
     var formJson: String = "[]",
@@ -60,7 +60,7 @@ data class SignupFormEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5,
         label = "Minimum rang a megtekintéshez",
         note = "A ranggal rendelkező már megtekintheti (BASIC = belépett, STAFF = rendező)",
-        source = [ "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
+        source = [ "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = RoleType::class)
     var minRole: RoleType = RoleType.BASIC,
@@ -70,7 +70,7 @@ data class SignupFormEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6,
         label = "Maximum rang a megtekintéshez",
         note = "A ranggal rendelkező még megtekintheti (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező)",
-        source = [ "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
+        source = [ "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = RoleType::class)
     var maxRole: RoleType = RoleType.SUPERUSER,
@@ -93,14 +93,14 @@ data class SignupFormEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Kitölthető innentől")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Kitölthető innentől", defaultValue = "0")
     @property:GenerateOverview(columnName = "Ettől", order = 2, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_LONG)
     var availableFrom: Long = 0,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Kitölthető eddig")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Kitölthető eddig", defaultValue = "0")
     @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_LONG)
     var availableUntil: Long = 0,
