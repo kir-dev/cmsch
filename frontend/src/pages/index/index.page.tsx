@@ -1,6 +1,6 @@
-import { Button, Heading, Text, useToast } from '@chakra-ui/react'
+import { Button, Heading, useToast } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
@@ -8,12 +8,23 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { ExampleComponent } from './components/ExampleComponent'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../util/paths'
+import Clock from '../countdown/components/clock'
 
 const IndexPage = () => {
   const location = useLocation()
   const toast = useToast()
   const { onLogout, onLoginSuccess } = useAuthContext()
   const config = useConfigContext()
+
+  const countTo = useMemo(() => {
+    const component = config?.components.countdown
+    try {
+      if (!component) return new Date()
+      return new Date(component?.timeToCountTo * 1000)
+    } catch (e) {
+      return new Date()
+    }
+  }, [config?.components.countdown])
 
   useEffect(() => {
     if (location.pathname === '/logout') {
@@ -45,7 +56,12 @@ const IndexPage = () => {
         </Heading>{' '}
         portálon
       </Heading>
-      <Text>Hello</Text>
+      {config?.components.countdown?.enabled && (
+        <>
+          <Heading textAlign="center">{config?.components.countdown?.topMessage}</Heading>
+          <Clock countTo={countTo} />
+        </>
+      )}
       <Link to={AbsolutePaths.TASKS}>Tasks</Link>
       <ExampleComponent />
       <Link to={AbsolutePaths.EVENTS}>
