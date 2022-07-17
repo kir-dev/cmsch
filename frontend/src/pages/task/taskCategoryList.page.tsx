@@ -1,4 +1,4 @@
-import { Divider, Heading, Text, useToast, VStack } from '@chakra-ui/react'
+import { Heading, Text, useToast, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 import { Loading } from '../../common-components/Loading'
@@ -37,7 +37,6 @@ const TaskCategoryList = () => {
             <TaskCategoryListItem key={category.categoryId} category={category} />
           ))}
         </VStack>
-        <Divider />
       </>
     )
     return (
