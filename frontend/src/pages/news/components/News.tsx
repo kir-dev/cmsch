@@ -4,14 +4,25 @@ import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { NewsArticleView } from '../../../util/views/news.view'
 import { AbsolutePaths } from '../../../util/paths'
+import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
 
 interface NewsProps {
   news: NewsArticleView
 }
 
 const News = ({ news }: NewsProps) => {
+  const breadcrumbItems = [
+    {
+      title: 'Hírek',
+      to: AbsolutePaths.NEWS
+    },
+    {
+      title: news.title
+    }
+  ]
   return (
     <>
+      <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{news.title}</Heading>
       <Text mb="1rem">{stringifyTimeStamp(news.timestamp)}</Text>
       <Image

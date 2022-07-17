@@ -19,7 +19,9 @@ const EventListItem = ({ event }: EventListItemProps) => {
 
   const innerComponent = (
     <>
-      <Heading mb={'0.5rem'}>{event.title}</Heading>
+      <Heading fontSize={25} mb={'0.5rem'}>
+        {event.title}
+      </Heading>
       <EventTags my={1} tags={[event.category, event.place]} />
       <Text mb="0.5rem">{stringifyTimeStamp(event.timestampStart) + ' - ' + stringifyTimeStamp(event.timestampEnd)}</Text>
       <Text>{event.previewDescription}</Text>

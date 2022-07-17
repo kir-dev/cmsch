@@ -5,14 +5,25 @@ import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { EventView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 import { AbsolutePaths } from '../../../util/paths'
+import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
 
 interface EventProps {
   event: EventView
 }
 
 const CurrentEvent = ({ event }: EventProps) => {
+  const breadcrumbItems = [
+    {
+      title: 'Események',
+      to: AbsolutePaths.EVENTS
+    },
+    {
+      title: event.title
+    }
+  ]
   return (
     <>
+      <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{event.title}</Heading>
       <Text>{stringifyTimeStamp(event.timestampStart) + '-' + stringifyTimeStamp(event.timestampEnd)}</Text>
       <EventTags my={1} tags={[event.category, event.place]} />
