@@ -37,6 +37,9 @@ export interface ProfileView {
   locations: GroupMemberLocationView[]
   debts: DebtView[]
   leaderboard: TopListAbstractEntryView[]
+
+  profileIsComplete: boolean
+  incompleteTasks?: string[]
 }
 
 //cannot compare roles if the enums values are strings use the RoleType[role] syntax

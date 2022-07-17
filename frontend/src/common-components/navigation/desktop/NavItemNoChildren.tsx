@@ -16,6 +16,7 @@ export const NavItemNoChildren = ({ menu }: Props) => {
             textDecoration: 'none',
             color: useColorModeValue('brand.500', 'brand.600')
           }}
+          whiteSpace="nowrap"
           fontSize="md"
           fontWeight={500}
         >
