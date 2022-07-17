@@ -14,6 +14,7 @@ type LoadingProps = {
  */
 export const Loading = ({ timeout = 0, children }: LoadingProps) => {
   const [show, setShow] = useState<boolean>(false)
+  const color = useColorModeValue('brand.500', 'brand.600')
   useEffect(() => {
     setTimeout(() => {
       setShow(true)
@@ -24,7 +25,7 @@ export const Loading = ({ timeout = 0, children }: LoadingProps) => {
     <>{children}</>
   ) : (
     <Center>
-      <Spinner color={useColorModeValue('brand.500', 'brand.600')} size="xl" thickness="0.3rem" />
+      <Spinner color={color} size="xl" thickness="0.3rem" />
     </Center>
   )
 }

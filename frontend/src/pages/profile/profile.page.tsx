@@ -37,7 +37,7 @@ const ProfilePage = ({}: Props) => {
   const config = useConfigContext()
   const component = config?.components.profile
 
-  if (profileLoading) {
+  if (profileLoading && !profile) {
     return (
       <Loading>
         <ProfilePageSkeleton />

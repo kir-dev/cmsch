@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: HasChildren) => {
     Cookies.set(CookieKeys.JWT_TOKEN, jwt, { expires: 2 })
     try {
       await queryClient.invalidateQueries('currentUser', { refetchInactive: true }, { throwOnError: true })
+      await queryClient.invalidateQueries('config', { refetchInactive: true }, { throwOnError: true })
       setIsLoggedIn(true)
       navigate(AbsolutePaths.PROFILE)
     } catch (err) {
@@ -59,6 +60,7 @@ export const AuthProvider = ({ children }: HasChildren) => {
 
   const onLogout = () => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
+    Cookies.remove(CookieKeys.SESSION_ID)
     setIsLoggedIn(false)
     queryClient.invalidateQueries('currentUser', { refetchInactive: true })
     window.location.href = `${API_BASE_URL}/control/logout`
