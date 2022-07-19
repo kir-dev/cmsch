@@ -39,7 +39,7 @@ data class SignupFormEntity(
     @property:ImportFormat(ignore = false, columnId = 1)
     var url: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 3, label = "Menüben megjelenő neve",
         note = "Csak akkor szükséges ha menüből lesz megnyitható")
@@ -75,50 +75,58 @@ data class SignupFormEntity(
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = RoleType::class)
     var maxRole: RoleType = RoleType.SUPERUSER,
 
-    @JsonView(value = [ Edit::class ])
+    @Lob
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 128, order = 7, label = "Átirányítási URL",
-        note = "Ha nincs ilyen, akkor hagyd üresen. BME Jegy integrációhoz kell.")
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 7, label = "Sikeres leadás utáni üzenet")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6)
-    var redirectUrl: String = "",
+    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LOB)
+    var submittedMessage: String = "",
+
+    @Lob
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 8, label = "Elfogadás utáni üzenet")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_LOB)
+    var acceptedMessage: String = "",
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "ATTENDEE jog automatikusan",
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "ATTENDEE jog automatikusan",
         note = "Automatikus ATTENDEE jog adása sikeres kitöltésért")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
+    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_BOOLEAN)
     var grantAttendeeRole: Boolean = false,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Kitölthető innentől", defaultValue = "0")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Kitölthető innentől", defaultValue = "0")
     @property:GenerateOverview(columnName = "Ettől", order = 2, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_LONG)
+    @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_LONG)
     var availableFrom: Long = 0,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Kitölthető eddig", defaultValue = "0")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 11, label = "Kitölthető eddig", defaultValue = "0")
     @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_LONG)
+    @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LONG)
     var availableUntil: Long = 0,
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "Kitölthető-e",
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "Kitölthető-e",
         note = "Ha be van kapcsolva és az idő intervallum is megfelel, akkor lehet beküldeni")
     @property:GenerateOverview(columnName = "Kitölthető", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_BOOLEAN)
+    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_BOOLEAN)
     var open: Boolean = false,
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 12, label = "Maximum kitöltés",
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 13, label = "Maximum kitöltés",
         note = "Ennyi ember töltheti ki maximum. (-1 = végtelen)", min = -1, defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_INT)
     var submissionLimit: Int = 0,
 
 ) : ManagedEntity {

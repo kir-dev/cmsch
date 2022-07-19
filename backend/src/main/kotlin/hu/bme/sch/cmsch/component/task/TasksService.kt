@@ -378,6 +378,10 @@ open class TasksService(
     open fun getTasksThatNeedsToBeCompleted(user: UserEntity): List<String> {
         return categories.findAllByType(TaskCategoryType.PROFILE_REQUIRED)
             .flatMap { taskRepository.findAllByCategoryIdAndVisibleTrue(it.categoryId) }
+            .filter { task -> submitted.findByTask_IdAndUserId(task.id, user.id)
+                .map { !it.approved }
+                .orElse(true)
+            }
             .map { it.title }
     }
 
