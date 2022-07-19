@@ -57,7 +57,7 @@ class ExportAdminController(
                     .filter { it.persist }
                     .map {
                     "hu.bme.sch.cmsch.${component.key.component}.${it.property}=" +
-                            it.getValue().replace("\n", "\\\n    ")
+                            it.getValue().replace("\r", "").replace("\n", "\\\n    ")
                 }
             }
             .joinToString("\n")

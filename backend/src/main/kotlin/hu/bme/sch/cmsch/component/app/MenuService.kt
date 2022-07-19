@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
+import hu.bme.sch.cmsch.component.signup.SignupFormRepository
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -20,6 +21,7 @@ open class MenuService(
     private val extraMenuRepository: ExtraMenuRepository,
     private val components: List<ComponentBase>,
     private val extraPages: Optional<ExtraPageRepository>,
+    private val forms: Optional<SignupFormRepository>,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -63,6 +65,18 @@ open class MenuService(
                     MenuSettingItem(
                         it.javaClass.simpleName + "@" + it.id,
                         it.menuTitle, "/page/${it.url}", 0, it.showAsMenu,
+                        subMenu = false, external = false
+                    )
+                })
+        }
+
+        forms.ifPresent { pages ->
+            possibleMenus.addAll(pages.findAll()
+                .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
+                .map {
+                    MenuSettingItem(
+                        it.javaClass.simpleName + "@" + it.id,
+                        it.menuName, "/form/${it.url}", 0, false,
                         subMenu = false, external = false
                     )
                 })

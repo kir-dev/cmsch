@@ -28,8 +28,6 @@ class ApplicationComponent(
             siteGroup,
             siteName,
             defaultComponent,
-            siteLogoUrl,
-            faviconUrl,
 
             footerGroup,
             hostLogo,
@@ -118,18 +116,8 @@ class ApplicationComponent(
     )
 
     val defaultComponent = SettingProxy(componentSettingService, component,
-        "defaultComponent", "home", type = SettingType.COMPONENT_NAME,
+        "defaultComponent", "/home", type = SettingType.TEXT,
         fieldName = "Kezdő komponens", description = "Az a komponens ami kezdőlapként töltődik be"
-    )
-
-    val siteLogoUrl = SettingProxy(componentSettingService, component,
-        "siteLogoUrl", "https://", type = SettingType.TEXT,
-        fieldName = "Oldal logója", description = "Oldal vagy esemény logójának url-je"
-    )
-
-    val faviconUrl = SettingProxy(componentSettingService, component,
-        "faviconUrl", "https://", type = SettingType.TEXT,
-        fieldName = "Oldal ikonja", description = "Oldal ikonjának url-je"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.config
 
+import hu.bme.sch.cmsch.component.SettingType
 import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.component.app.ExtraMenuEntity
 import hu.bme.sch.cmsch.component.app.ExtraMenuRepository

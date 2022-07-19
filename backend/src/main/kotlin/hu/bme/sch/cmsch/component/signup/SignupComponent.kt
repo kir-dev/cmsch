@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.signup
 
-import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.ComponentSettingService
-import hu.bme.sch.cmsch.component.MinRoleSettingProxy
+import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -24,6 +22,16 @@ class SignupComponent(
     final override val allSettings by lazy {
         listOf(
             minRole,
+
+            langGroup,
+            langTooEarly,
+            langTooLate,
+            langNotEnabled,
+            langFull,
+            langNotFound,
+            langSubmitted,
+            langRejected,
+            langAccepted
         )
     }
 
@@ -34,12 +42,53 @@ class SignupComponent(
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
+    // -------------------------------------------------------------------------------------------------------------------
 
-    // A jelentkezés még nem tölthető ki
-    // A jelentkezés már nem tölthető ki
-    // Nincs több férőhely
-    // A jelentkezésed vissza lett utasítva
-    // Jelentkezés elfogadva
+    val langGroup = SettingProxy(componentSettingService, component,
+        "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Nyelvi bellítások",
+        description = ""
+    )
 
+    val langTooEarly = SettingProxy(componentSettingService, component,
+        "langTooEarly", "A jelentkezés még nem tölthető ki", type = SettingType.TEXT,
+        fieldName = "'Túl korán' szöveg", description = "Akkor jelenik meg amikor a jelentkezés még nem tölthető ki"
+    )
+
+    val langTooLate = SettingProxy(componentSettingService, component,
+        "langTooLate", "A jelentkezés már nem tölthető ki", type = SettingType.TEXT,
+        fieldName = "'Túl késő' szöveg", description = "Akkor jelenik meg amikor a jelentkezési időszak már lejárt"
+    )
+
+    val langNotEnabled = SettingProxy(componentSettingService, component,
+        "langNotEnabled", "A jelentkezés nem érhető el", type = SettingType.TEXT,
+        fieldName = "'Nem elérhető' szöveg", description = "Akkor jelenik meg amikor a jelentkezés ki van kapcsolva"
+    )
+
+    val langFull = SettingProxy(componentSettingService, component,
+        "langFull", "Nincs több férőhely", type = SettingType.TEXT,
+        fieldName = "'Betelt' szöveg", description = "Akkor jelenik meg amikor a betelt az összes férőhely"
+    )
+
+    val langNotFound = SettingProxy(componentSettingService, component,
+        "langNotFound", "Jelentkezés nem található", type = SettingType.TEXT,
+        fieldName = "'Nem található' szöveg", description = "Akkor jelenik meg amikor az adott url-el nincs jelenetkezés " +
+                "vagy a felhasználónak nincs rá joga megtekinteni."
+    )
+
+    val langSubmitted = SettingProxy(componentSettingService, component,
+        "langSubmitted", "Jelentkezés beadva", type = SettingType.TEXT,
+        fieldName = "'Beadva' szöveg", description = "Akkor jelenik meg amikor jelentkezés be lett adva, de még se elfogadva, se elutsítva nem lett."
+    )
+
+    val langRejected = SettingProxy(componentSettingService, component,
+        "langRejected", "Jelentkezés el lett utasítva", type = SettingType.TEXT,
+        fieldName = "'Elutasítva' szöveg", description = "Akkor jelenik meg amikor jelentkezés kézzel el lett utasítva."
+    )
+
+    val langAccepted = SettingProxy(componentSettingService, component,
+        "langAccepted", "Jelentkezés el lett fogadva (fizetés sikeres)", type = SettingType.TEXT,
+        fieldName = "'Elfogadva' szöveg", description = "Akkor jelenik meg amikor jelentkezés el lett fogadva."
+    )
 
 }
