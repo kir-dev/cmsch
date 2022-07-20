@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.config
 
-import hu.bme.sch.cmsch.component.SettingType
 import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.component.app.ExtraMenuEntity
 import hu.bme.sch.cmsch.component.app.ExtraMenuRepository
@@ -22,6 +21,10 @@ import hu.bme.sch.cmsch.component.token.TokenEntity
 import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.component.debt.ProductService
 import hu.bme.sch.cmsch.component.debt.ProductType
+import hu.bme.sch.cmsch.component.signup.SignupFormEntity
+import hu.bme.sch.cmsch.component.signup.SignupFormRepository
+import hu.bme.sch.cmsch.component.signup.SignupResponseEntity
+import hu.bme.sch.cmsch.component.signup.SignupResponseRepository
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.sha256
@@ -69,10 +72,13 @@ class TestConfig(
     private val riddleRepository: Optional<RiddleEntityRepository>,
     private val riddleCategoryRepository: Optional<RiddleCategoryRepository>,
     private val tokenRepository: Optional<TokenRepository>,
+    private val formRepository: Optional<SignupFormRepository>,
+    private val formResponseRepository: Optional<SignupResponseRepository>,
     private val extraMenuRepository: ExtraMenuRepository
 ) {
 
     private var now = System.currentTimeMillis() / 1000
+    private var user1: UserEntity? = null
 
     @PostConstruct
     fun init() {
@@ -102,6 +108,49 @@ class TestConfig(
         }
         tokenRepository.ifPresent { addTokens(it) }
         addExtraMenus()
+        formRepository.ifPresent { form ->
+            formResponseRepository.ifPresent { response ->
+                addForms(form, response)
+            }
+        }
+    }
+
+    private fun addForms(form: SignupFormRepository, response: SignupResponseRepository) {
+        val signupFormEntity = SignupFormEntity(
+            0,
+            "Teszt Form",
+            "test-from",
+            "Form",
+            "[{\"fieldName\":\"phone\",\"label\":\"Telefonszám\",\"type\":\"PHONE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"allergy\",\"label\":\"Étel érzékenység\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Nincs, Glutén, Laktóz, Glutés és laktóz\",\"note\":\"Ha egyéb is van, kérem írja megjegyzésbe\",\"required\":true,\"permanent\":true},{\"fieldName\":\"love-trains\",\"label\":\"Szereted a mozdonyokat?\",\"type\":\"CHECKBOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"warn1\",\"label\":\"FIGYELEM\",\"type\":\"WARNING_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Ha nem szereti a mozdonyokat, akkor nagyon kellemetlen élete lesz magának kolléga!\",\"required\":false,\"permanent\":false},{\"fieldName\":\"text1\",\"label\":\"Szabályzat\",\"type\":\"TEXT_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"A tábor szabályzata itt olvasható: https://szabalyzat.ssl.nincs.ilyen.domain.hu/asdasdasd/kutya\",\"note\":\"\",\"required\":false,\"permanent\":false},{\"fieldName\":\"agree\",\"label\":\"A szabályzatot elfogadom\",\"type\":\"MUST_AGREE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Különben nem jöhet am\",\"required\":false,\"permanent\":false},{\"fieldName\":\"food\",\"label\":\"Mit enne?\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Gyros tál, Brassói, Pho Leves\",\"note\":\"Első napi kaja\",\"required\":true,\"permanent\":true}]",
+            RoleType.BASIC,
+            RoleType.SUPERUSER,
+            "form submitted",
+            "form accepted",
+            true,
+            now - 1000,
+            now + A_DAY,
+            true,
+            2,
+            true
+        )
+        form.save(signupFormEntity)
+
+        response.save(SignupResponseEntity(
+            0,
+            user1?.id,
+            user1?.fullName ?: "",
+            null,
+            "",
+            signupFormEntity.id,
+            now,
+            0,
+            false,
+            0,
+            false,
+            "",
+            user1?.email ?: "n/a",
+            "{\"field\":\"val\"}"
+        ))
     }
 
     private fun addTokens(tokenRepository: TokenRepository) {
@@ -737,7 +786,7 @@ class TestConfig(
     }
 
     private fun addUsers() {
-        val u1 = UserEntity(
+        user1 = UserEntity(
                 internalId = UUID.randomUUID().toString(),
                 neptun = "HITMAN",
                 email = "hitman@beme.hu",
@@ -748,8 +797,8 @@ class TestConfig(
                 groupName = "V10",
                 group = groups.findByName("V10").orElse(null)
         )
-        profileService.generateFullProfileForUser(u1)
-        users.save(u1)
+        profileService.generateFullProfileForUser(user1!!)
+        users.save(user1!!)
 
         val u2 = UserEntity(
                 internalId = UUID.randomUUID().toString(),

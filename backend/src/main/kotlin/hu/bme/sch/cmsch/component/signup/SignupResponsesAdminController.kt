@@ -90,8 +90,8 @@ class SignupResponsesAdminController(
                             form.name,
                             form.submissionLimit,
                             it.size,
-                            it.count { !it.accepted },
-                            it.count { !it.rejected }
+                            it.count { it.accepted },
+                            it.count { it.rejected }
                     )
                 }
     }

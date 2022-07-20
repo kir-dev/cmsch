@@ -85,10 +85,26 @@ data class SignupResponseEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 255, order = 1, label = "Elutasítás indoka", note = "Csak akkor kell ha elutasított")
+    @property:GenerateInput(maxLength = 255, order = 8, label = "Elutasítás indoka", note = "Csak akkor kell ha elutasított")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10)
     var rejectionMessage: String = "",
+
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(maxLength = 255, order = 9, label = "Email", note = "Az inas email címe")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 11)
+    var email: String = "",
+
+    @Lob
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(maxLength = 255, order = 10, label = "Kitöltés",
+        note = "A kitöltés JSON formátumban", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_LOB)
+    var submission: String = "",
 
 ) : ManagedEntity {
 

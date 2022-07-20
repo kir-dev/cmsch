@@ -129,6 +129,14 @@ data class SignupFormEntity(
     @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_INT)
     var submissionLimit: Int = 0,
 
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "BME jegy integráció",
+        note = "Ha be van kapcsolva, akkor elfogad emailcímeket a BME jegy integrációból")
+    @property:GenerateOverview(columnName = "BME Jegy", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
+    var selected: Boolean = false,
+
 ) : ManagedEntity {
 
     override fun equals(other: Any?): Boolean {
