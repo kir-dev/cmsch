@@ -41,6 +41,43 @@ class NovaIntegrationController(
         return ResponseEntity.ok("OK")
     }
 
+    @GetMapping("/validate/{mode}/{email}/{value}")
+    fun changeUserValidation(
+        @RequestHeader(defaultValue = "none") token: String,
+        @PathVariable mode: String,
+        @PathVariable email: String,
+        @PathVariable value: String,
+    ): ResponseEntity<Any> {
+        if (token == "none") {
+            log.info("[NOVA/VALID-USERS] No token presents")
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        }
+        if (token != validTokenIn) {
+            log.info("[NOVA/VALID-USERS] Invalid token")
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid token")
+        }
+
+        return when (mode) {
+            "payment" -> {
+                service.setPaymentStatus(email, value.equals("ok", ignoreCase = true))
+                ResponseEntity.ok("ok")
+            }
+            "avatar" -> {
+                service.setAvatarStatus(email, value.equals("ok", ignoreCase = true))
+                ResponseEntity.ok("ok")
+            }
+            "cv" -> {
+                service.setCvStatus(email, value.equals("ok", ignoreCase = true))
+                ResponseEntity.ok("ok")
+            }
+            "details" -> {
+                service.setDetailsStatus(email, value.equals("ok", ignoreCase = true))
+                ResponseEntity.ok("not-yet-implemented")
+            }
+            else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid mode! Use: payment, avatar, cv, details")
+        }
+    }
+
     @GetMapping("/users")
     fun fetchSubmissions(
         @RequestHeader(defaultValue = "none") token: String,

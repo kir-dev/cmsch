@@ -6,12 +6,10 @@ import com.fasterxml.jackson.databind.ObjectReader
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
-import hu.bme.sch.cmsch.component.signup.FilledOutFormDto
 
 @Service
 @ConditionalOnProperty(
@@ -69,14 +67,16 @@ open class NovaIntegrationService(
         val readerForSubmission = objectMapper.readerFor(object : TypeReference<Map<String, String>>() {})
 
         return signupResponseRepository.findAllByFormId(form.id)
+            .filter { !it.rejected }
             .map { response ->
                 val user = userRepository.findById(response.submitterUserId ?: 0)
                 if (user.isEmpty)
                     log.error("User not found in submission list {} {}", response.submitterUserId, response.submitterUserName)
                 return@map FilledOutFormDto(
+                    internalId = user.map { it.internalId }.orElse("n/a"),
                     email = response.email,
                     name = response.submitterUserName,
-                    neptun = user.map { it.neptun }.orElse("n/a"),
+                    neptun = user.map { it.neptun }.orElse(null),
                     submittedAt = response.creationDate,
                     accepted = response.accepted,
                     rejected = response.rejected,
@@ -96,6 +96,22 @@ open class NovaIntegrationService(
             log.error("Failed to map submission: {}", response.submission, e)
             mapOf()
         }
+    }
+
+    fun setPaymentStatus(email: String, equals: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    fun setAvatarStatus(email: String, equals: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    fun setCvStatus(email: String, equals: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    fun setDetailsStatus(email: String, equals: Boolean) {
+        TODO("Not yet implemented")
     }
 
 

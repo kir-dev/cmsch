@@ -136,9 +136,17 @@ data class TaskEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 13, label = "Sorrend")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_LONG)
-    var order: Long = 0
+    var order: Long = 0,
+
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 14, label = "Cimke", note = "Ha nem tudod mi ez, hagyd üresen!")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 14)
+    var tag: String = "",
 
 ): ManagedEntity {
+
     override fun toString(): String {
         return "[$id]: $title"
     }

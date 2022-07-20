@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.component.signup
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -49,20 +48,26 @@ open class SignupService(
         if (form.availableUntil < now)
             return SignupFormView(status = FormStatus.TOO_LATE)
 
+        if (form.allowedGroups.isNotBlank() && userRepository.findById(user.id)
+                .map { it.groupName !in form.allowedGroups.split(Regex(",[ ]*")) }
+                .orElse(true)) {
+            return SignupFormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
+        }
+
         val submission = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id)
         if (submission.isPresent) {
             val entity = submission.orElseThrow()
             return when {
-                entity.rejected -> SignupFormView(form = form, submission = entity, status = FormStatus.REJECTED, message = entity.rejectionMessage)
-                entity.accepted -> SignupFormView(form = form, submission = entity, status = FormStatus.ACCEPTED, message = form.acceptedMessage)
-                else -> SignupFormView(form = form, submission = entity, status = FormStatus.SUBMITTED, message = form.submittedMessage)
+                entity.rejected -> SignupFormView(form = SignupFormEntityDto(form), submission = entity, status = FormStatus.REJECTED, message = entity.rejectionMessage)
+                entity.accepted -> SignupFormView(form = SignupFormEntityDto(form), submission = entity, status = FormStatus.ACCEPTED, message = form.acceptedMessage)
+                else -> SignupFormView(form = SignupFormEntityDto(form), submission = entity, status = FormStatus.SUBMITTED, message = form.submittedMessage)
             }
         }
 
         if (isFull(form))
             return SignupFormView(status = FormStatus.FULL)
 
-        return SignupFormView(form = form, submission = null, status = FormStatus.NO_SUBMISSION, message = null)
+        return SignupFormView(form = SignupFormEntityDto(form), submission = null, status = FormStatus.NO_SUBMISSION, message = null)
     }
 
     private fun isFull(form: SignupFormEntity): Boolean {
@@ -83,6 +88,10 @@ open class SignupService(
 
         if (signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).isPresent)
             return FormSubmissionStatus.ALREADY_SUBMITTED
+
+        if (form.allowedGroups.isNotBlank() && user.groupName !in form.allowedGroups.split(Regex(",[ ]*"))) {
+            return FormSubmissionStatus.FORM_NOT_AVAILABLE
+        }
 
         if (isFull(form))
             return FormSubmissionStatus.FORM_IS_FULL

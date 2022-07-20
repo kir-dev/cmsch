@@ -137,6 +137,22 @@ data class SignupFormEntity(
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
     var selected: Boolean = false,
 
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 15, label = "Csapatra korlátozás",
+        note = "Csak ezek a csoportok tölthetik ki, ha üres akkor mindenki")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 14)
+    var allowedGroups: String = "",
+
+    @Lob
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 16, label = "Csoport tagság miatt eltiltva üzenet")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_LOB)
+    var groupRejectedMessage: String = "",
+
 ) : ManagedEntity {
 
     override fun equals(other: Any?): Boolean {
