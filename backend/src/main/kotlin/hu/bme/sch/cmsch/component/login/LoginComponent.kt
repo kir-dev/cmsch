@@ -89,7 +89,7 @@ class LoginComponent(
     )
 
     val staffGroups = SettingProxy(componentSettingService, component,
-        "staffGroups", "18,106", serverSideOnly = true,
+        "staffGroups", "", serverSideOnly = true,
         fieldName = "STAFF jogú Pék coportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
@@ -99,7 +99,7 @@ class LoginComponent(
     )
 
     val adminGroups = SettingProxy(componentSettingService, component,
-        "adminGroups", "18,106", serverSideOnly = true,
+        "adminGroups", "", serverSideOnly = true,
         fieldName = "ADMIN jogú Pék coportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
@@ -112,7 +112,7 @@ class LoginComponent(
     )
 
     val organizerGroups = SettingProxy(componentSettingService, component,
-        "organizerGroups", "1,2", serverSideOnly = true,
+        "organizerGroups", "", serverSideOnly = true,
         fieldName = "Szervező Pék csoportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
