@@ -9,6 +9,7 @@ import { ImpressumModule } from '../../route-modules/Impressum.module'
 import { EventsModule } from '../../route-modules/Events.module'
 import { ExtraPageModule } from '../../route-modules/ExtraPage.module'
 import { HomeModule } from '../../route-modules/Home.module'
+import { FormModule } from '../../route-modules/Form.module'
 
 export enum AvailableModules {
   HOME = 'HOME',
@@ -20,7 +21,8 @@ export enum AvailableModules {
   COMMUNITIES = 'COMMUNITIES',
   TOKEN = 'TOKEN',
   EVENTS = 'EVENTS',
-  EXTRA = 'EXTRA'
+  EXTRA = 'EXTRA',
+  FORM = 'FORM'
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
@@ -33,7 +35,8 @@ export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
   [AvailableModules.COMMUNITIES]: CommunitiesModule,
   [AvailableModules.TOKEN]: TokenModule,
   [AvailableModules.EVENTS]: EventsModule,
-  [AvailableModules.EXTRA]: ExtraPageModule
+  [AvailableModules.EXTRA]: ExtraPageModule,
+  [AvailableModules.FORM]: FormModule
 }
 
 export function GetRoutesForModules(modules: AvailableModules[]) {
@@ -50,5 +53,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.TASK,
   AvailableModules.EVENTS,
   AvailableModules.NEWS,
-  AvailableModules.EXTRA
+  AvailableModules.EXTRA,
+  AvailableModules.FORM
 ]
