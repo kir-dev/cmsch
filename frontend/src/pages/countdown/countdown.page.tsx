@@ -30,7 +30,7 @@ const CountdownPage = ({ children }: HasChildren) => {
           backgroundPosition="center"
           backgroundSize="cover"
           backgroundImage={`url(${component.imageUrl})`}
-          filter={component.blurredImage ? 'blur(10px)' : undefined}
+          filter={component.blurredImage ? 'blur(15px)' : undefined}
         />
         <Flex flexDirection="column" h="100%" w="100%" zIndex={1} backgroundColor={useColorModeValue('#FFFFFFAA', '#000000AA')}>
           <Center h="100vh">

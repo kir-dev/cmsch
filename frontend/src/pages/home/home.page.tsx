@@ -1,9 +1,7 @@
-import { Alert, AlertIcon, Box, Divider, Heading, Text, useToast, VStack } from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, Divider, Heading, Text, VStack } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Helmet } from 'react-helmet'
-import { useLocation } from 'react-router-dom'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../util/paths'
@@ -13,9 +11,6 @@ import { useEventListQuery } from '../../api/hooks/useEventListQuery'
 import { LinkButton } from '../../common-components/LinkButton'
 
 const HomePage = () => {
-  const location = useLocation()
-  const toast = useToast()
-  const { onLogout, onLoginSuccess } = useAuthContext()
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))
   const config = useConfigContext()
 
@@ -28,26 +23,6 @@ const HomePage = () => {
       return new Date()
     }
   }, [config?.components.countdown])
-
-  useEffect(() => {
-    if (location.pathname === '/logout') {
-      onLogout()
-    }
-
-    const searchParams = new URLSearchParams(location.search)
-    if (searchParams.get('logged-out') == 'true') {
-      toast({
-        title: 'Kijelentkezés',
-        description: 'Sikeres kijelentkeztetés!',
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      })
-    }
-    if (searchParams.has('jwt')) {
-      onLoginSuccess({ jwt: searchParams.get('jwt')!! })
-    }
-  }, [location])
 
   const events = useMemo(() => {
     const timestampCorrectedEventList = eventList.data?.map((li) => {
