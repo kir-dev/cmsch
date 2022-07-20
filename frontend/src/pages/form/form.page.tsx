@@ -1,16 +1,14 @@
 import { FunctionComponent } from 'react'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Heading } from '@chakra-ui/react'
-import Markdown from '../../common-components/Markdown'
+import { Box, Heading } from '@chakra-ui/react'
 import { Navigate, useParams } from 'react-router-dom'
-import { useExtraPage } from '../../api/hooks/useExtraPage'
 import { Helmet } from 'react-helmet'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { RoleType } from '../../util/views/profile.view'
 import { Loading } from '../../common-components/Loading'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useFormPage } from '../../api/hooks/useFormPage'
+import { AutoFormField } from './components/autoFormField'
 
 interface FormPageProps {}
 
@@ -33,16 +31,19 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
     sendMessage('Űrlap betöltése sikertelen!\n Keresd az oldal fejlesztőit!')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
-  //
-  // if (RoleType[data.minRole] > RoleType.GUEST && profile && RoleType[profile.role] < RoleType[data.minRole]) {
-  //   sendMessage('Nincs jogosultságod ezt megtekinteni!')
-  //   return <Navigate replace to={AbsolutePaths.ERROR} />
-  // }
+  const {
+    form: { formJson, name, url, availableFrom, availableUntil },
+    status
+  } = data
   return (
     <CmschPage>
-      {/*<Helmet title={data.title} />*/}
-      {/*<Heading>{data.title}</Heading>*/}
-      {/*<Markdown text={data.content} />*/}
+      <Helmet title={name} />
+      <Box w="30rem" maxW="100%">
+        <Heading>{name}</Heading>
+        {formJson.map((formField) => (
+          <AutoFormField key={formField.fieldName} field={formField} />
+        ))}
+      </Box>
     </CmschPage>
   )
 }
