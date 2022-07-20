@@ -13,7 +13,8 @@ enum class FormStatus {
     TOO_LATE,
     NOT_ENABLED,
     NOT_FOUND,
-    FULL
+    FULL,
+    GROUP_NOT_PERMITTED
 }
 
 enum class FormSubmissionStatus {
@@ -28,7 +29,7 @@ enum class FormSubmissionStatus {
 data class SignupFormView(
 
     @JsonView(FullDetails::class)
-    val form: SignupFormEntity? = null,
+    val form: SignupFormEntityDto? = null,
 
     @JsonView(FullDetails::class)
     val submission: SignupResponseEntity? = null,

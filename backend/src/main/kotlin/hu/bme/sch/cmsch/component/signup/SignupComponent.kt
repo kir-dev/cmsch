@@ -31,7 +31,8 @@ class SignupComponent(
             langNotFound,
             langSubmitted,
             langRejected,
-            langAccepted
+            langAccepted,
+            langGroupInsufficient
         )
     }
 
@@ -89,6 +90,11 @@ class SignupComponent(
     val langAccepted = SettingProxy(componentSettingService, component,
         "langAccepted", "Jelentkezés el lett fogadva (fizetés sikeres)", type = SettingType.TEXT,
         fieldName = "'Elfogadva' szöveg", description = "Akkor jelenik meg amikor jelentkezés el lett fogadva."
+    )
+
+    val langGroupInsufficient = SettingProxy(componentSettingService, component,
+        "langGroupInsufficient", "Nincs megfelelő csoportja", type = SettingType.TEXT,
+        fieldName = "'Csoport nem jó' szöveg", description = "Akkor jelenik meg amikor a felhasználónak nincs megfelelő csoportja."
     )
 
 }

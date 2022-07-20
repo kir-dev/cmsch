@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.component.signup
 
+import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.UserEntity
 
 enum class FormElementType(
@@ -58,13 +60,30 @@ enum class FormElementType(
 }
 
 data class SignupFormElement(
-    var fieldName: String,
-    var label: String,
-    var type: FormElementType,
-    var formatRegex: String,
-    var invalidFormatMessage: String,
-    var values: String,
-    var note: String,
-    var required: Boolean,
-    var permanent: Boolean, // Cannot be edited after submission
+    @JsonView(FullDetails::class)
+    var fieldName: String = "",
+
+    @JsonView(FullDetails::class)
+    var label: String = "",
+
+    @JsonView(FullDetails::class)
+    var type: FormElementType = FormElementType.TEXT,
+
+    @JsonView(FullDetails::class)
+    var formatRegex: String = "",
+
+    @JsonView(FullDetails::class)
+    var invalidFormatMessage: String = "",
+
+    @JsonView(FullDetails::class)
+    var values: String = "",
+
+    @JsonView(FullDetails::class)
+    var note: String = "",
+
+    @JsonView(FullDetails::class)
+    var required: Boolean = false,
+
+    @JsonView(FullDetails::class)
+    var permanent: Boolean = false, // Cannot be edited after submission
 )
