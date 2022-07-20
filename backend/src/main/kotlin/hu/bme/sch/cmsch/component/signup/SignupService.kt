@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 open class SignupService(
     private val signupFormRepository: SignupFormRepository,
     private val signupResponseRepository: SignupResponseRepository,
+    private val userRepository: UserRepository,
     private val clock: TimeService,
     private val objectMapper: ObjectMapper
 ) {
@@ -26,7 +28,7 @@ open class SignupService(
 
     @Transactional(readOnly = true)
     open fun getAllForms(role: RoleType): List<SignupFormEntity> {
-        val now = clock.getTime()
+        val now = clock.getTimeInSeconds()
         return signupFormRepository.findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
@@ -39,7 +41,7 @@ open class SignupService(
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
             return SignupFormView(status = FormStatus.NOT_FOUND)
 
-        val now = clock.getTime()
+        val now = clock.getTimeInSeconds()
         if (!form.open)
             return SignupFormView(status = FormStatus.NOT_ENABLED)
         if (form.availableFrom > now)
@@ -75,7 +77,7 @@ open class SignupService(
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
-        val now = clock.getTime()
+        val now = clock.getTimeInSeconds()
         if (!form.open || form.availableFrom > now || form.availableUntil < now)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
@@ -148,8 +150,17 @@ open class SignupService(
             formId = form.id,
             creationDate = now,
             accepted = false,
-            rejected = false
+            rejected = false,
+            email = user.email,
+            submission = objectMapper.writeValueAsString(submission)
         ))
+
+        if (form.grantAttendeeRole) {
+            user.role = RoleType.ATTENDEE
+            userRepository.save(user)
+            log.info("Granting ATTENDEE for user {} by filling form {} successfully", user.id, form.id)
+            return FormSubmissionStatus.OK_RELOG_REQUIRED
+        }
 
         return FormSubmissionStatus.OK
     }

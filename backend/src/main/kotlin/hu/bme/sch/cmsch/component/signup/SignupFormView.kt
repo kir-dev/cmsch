@@ -18,6 +18,7 @@ enum class FormStatus {
 
 enum class FormSubmissionStatus {
     OK,
+    OK_RELOG_REQUIRED,
     ALREADY_SUBMITTED,
     INVALID_VALUES,
     FORM_NOT_AVAILABLE,
