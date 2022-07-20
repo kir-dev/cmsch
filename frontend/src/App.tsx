@@ -1,17 +1,15 @@
 import { Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { CmschLayout } from './common-components/layout/CmschLayout'
 import { ErrorPage } from './pages/error/error.page'
 import HomePage from './pages/home/home.page'
 import LoginPage from './pages/login/login.page'
 import { EnabledModules, GetRoutesForModules } from './util/configs/modules.config'
 import CountdownPage from './pages/countdown/countdown.page'
-import { useConfigContext } from './api/contexts/config/ConfigContext'
 import { MetaTags } from './metaTags'
+import IndexPage from './pages/index/index.page'
 
 export function App() {
-  const config = useConfigContext()
-  const defaultPage = config?.components.app.defaultComponent || '/home'
   return (
     <CountdownPage>
       <CmschLayout>
@@ -20,7 +18,7 @@ export function App() {
           <Routes>
             <Route path="/">
               {GetRoutesForModules(EnabledModules)}
-              <Route index element={<Navigate to={defaultPage} />} />
+              <Route index element={<IndexPage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="logout" element={<HomePage />} />
               {/** Error handling pages */}
