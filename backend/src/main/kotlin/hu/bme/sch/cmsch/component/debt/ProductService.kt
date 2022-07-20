@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
-@ConditionalOnBean(ProductService::class)
+@ConditionalOnBean(DebtComponent::class)
 open class ProductService(
     private val productRepository: ProductRepository,
     private val soldProductRepository: SoldProductRepository,
@@ -57,7 +57,7 @@ open class ProductService(
                 false,
                 " '${seller.fullName}'(${seller.id}) sold '${product.name}'(${product.price} JMF) to '${buyer.fullName}'(${buyer.id}) at $date;",
                 product.materialIcon
-        )
+            )
         )
         return SellStatus.SOLD
     }

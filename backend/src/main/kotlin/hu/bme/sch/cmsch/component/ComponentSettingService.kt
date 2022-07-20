@@ -1,13 +1,10 @@
 package hu.bme.sch.cmsch.component
 
-import hu.bme.sch.cmsch.component.task.TaskComponent
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@ConditionalOnBean(TaskComponent::class)
 open class ComponentSettingService(
     private val componentSettingRepository: ComponentSettingRepository
 ) {
