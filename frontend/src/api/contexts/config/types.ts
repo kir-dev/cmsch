@@ -189,4 +189,15 @@ export interface UserHandling {}
 export interface ExtraPage {}
 export interface Location {}
 export interface Login {}
-export interface Signup {}
+export interface Signup {
+  langTooEarly: string
+  langTooLate: string
+  langNotEnabled: string
+  langFull: string
+  langNotFound: string
+  langSubmitted: string
+  langRejected: string
+  langAccepted: string
+  langGroupInsufficient: string
+  langNoSubmission?: string
+}

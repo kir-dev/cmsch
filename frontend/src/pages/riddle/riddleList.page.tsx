@@ -61,6 +61,8 @@ const RiddleCategoryList = () => {
     return `conic-gradient(grey 0deg,${color} 10deg, ${color} ${endDeg}deg, grey ${endDeg + 10}deg)`
   }
 
+  const riddleHoverBgColor = useColorModeValue('brand.300', 'brand.700')
+
   if (loading) return <Loading />
 
   return (
@@ -77,7 +79,7 @@ const RiddleCategoryList = () => {
                 px={6}
                 py={2}
                 borderRadius="md"
-                _hover={{ bgColor: useColorModeValue('brand.300', 'brand.700'), cursor: 'pointer' }}
+                _hover={{ bgColor: riddleHoverBgColor, cursor: 'pointer' }}
                 onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
               >
                 <Flex align="center" justifyContent="space-between">
