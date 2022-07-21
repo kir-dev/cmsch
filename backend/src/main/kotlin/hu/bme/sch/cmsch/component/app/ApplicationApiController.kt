@@ -19,6 +19,7 @@ import java.util.*
 @ConditionalOnBean(ApplicationComponent::class)
 class ApplicationApiController(
     private val menuService: MenuService,
+    private val applicationComponent: ApplicationComponent,
     private val componentHandlerService: ComponentHandlerService,
     private val countdownComponent: Optional<CountdownComponent>,
     private val clock: TimeService,
@@ -35,6 +36,7 @@ class ApplicationApiController(
                     role = role,
                     menu = listOf(),
                     components = mapOf(
+                        applicationComponent.component to appComponentFields(),
                         countdown.component to countdown.attachConstants(),
                         stylingComponent.component to stylingComponent.attachConstants()
                     )
@@ -47,5 +49,8 @@ class ApplicationApiController(
             components = componentHandlerService.getComponentConstantsForRole(role)
         )
     }
+
+    private fun appComponentFields() =
+        mapOf(applicationComponent.defaultComponent.property to applicationComponent.defaultComponent.getValue())
 
 }
