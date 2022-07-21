@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
 import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
 import hu.bme.sch.cmsch.component.task.TaskEntityRepository
+import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
@@ -89,9 +90,31 @@ open class NovaIntegrationService(
                     accepted = response.accepted,
                     rejected = response.rejected,
                     lastUpdatedAt = response.lastUpdatedDate,
-                    formSubmission = tryToParseSubmission(readerForSubmission, response)
+                    formSubmission = tryToParseSubmission(readerForSubmission, response),
+                    profilePictureUrl = user.map { fetchAvatar(it) }.orElse(""),
+                    cvUrl = user.map { fetchCv(it) }.orElse("")
                 )
             }
+    }
+
+    private fun fetchAvatar(user: UserEntity): String {
+        return taskRepository.map { tasks ->
+            tasks.findAllByTag(AVATAR_TAG).firstOrNull()?.let { task ->
+                submittedTaskRepository.map { submissions ->
+                    submissions.findAllByUserIdAndTask_Id(user.id, task.id).firstOrNull()?.imageUrlAnswer ?: ""
+                }.orElse("")
+            } ?: ""
+        }.orElse("")
+    }
+
+    private fun fetchCv(user: UserEntity): String {
+        return taskRepository.map { tasks ->
+            tasks.findAllByTag(CV_TAG).firstOrNull()?.let { task ->
+                submittedTaskRepository.map { submissions ->
+                    submissions.findAllByUserIdAndTask_Id(user.id, task.id).firstOrNull()?.fileUrlAnswer ?: ""
+                }.orElse("")
+            } ?: ""
+        }.orElse("")
     }
 
     private fun tryToParseSubmission(
