@@ -14,6 +14,8 @@ import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
 import { ServiceProvider } from './api/contexts/service/ServiceContext'
 import { CookieConsentProvider } from './api/contexts/cookie-consent/CookieConsentContext'
+import { ChakraProvider } from '@chakra-ui/react'
+import { customTheme } from './util/configs/theme.config'
 
 initAxios()
 
@@ -25,16 +27,18 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <ServiceProvider>
-          <ConfigProvider>
-            <ThemeConfig>
-              <AuthProvider>
-                <CookieConsentProvider>
-                  <App />
-                  <ReactQueryDevtools />
-                </CookieConsentProvider>
-              </AuthProvider>
-            </ThemeConfig>
-          </ConfigProvider>
+          <ChakraProvider theme={customTheme}>
+            <ConfigProvider>
+              <ThemeConfig>
+                <AuthProvider>
+                  <CookieConsentProvider>
+                    <App />
+                    <ReactQueryDevtools />
+                  </CookieConsentProvider>
+                </AuthProvider>
+              </ThemeConfig>
+            </ConfigProvider>
+          </ChakraProvider>
         </ServiceProvider>
       </BrowserRouter>
     </QueryClientProvider>

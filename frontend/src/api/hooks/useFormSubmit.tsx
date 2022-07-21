@@ -11,7 +11,9 @@ export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
         setData(res.data)
       })
       .catch(onError)
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
   }
   return { result: data, submit, submitLoading: loading }
 }
