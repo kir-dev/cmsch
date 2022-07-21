@@ -15,6 +15,7 @@ export const ThemeConfig = ({ children }: HasChildren) => {
       customTheme.colors.lightContainerBg = config.components.style.lightContainerColor
       customTheme.colors.darkContainerBg = config.components.style.darkContainerColor
       customTheme.initialColorMode = config.components.style.deviceTheme ? 'system' : 'light'
+      const defaultGlobal = customTheme.styles.global
       customTheme.styles.global = (props: any) => ({
         body: {
           bg: mode(config.components.style.lightBackgroundColor, config.components.style.darkBackgroundColor)(props),
@@ -27,11 +28,12 @@ export const ThemeConfig = ({ children }: HasChildren) => {
               `url(${config.components.style.darkMobileBackgroundUrl})`
             )
           }
-        }
+        },
+        ...defaultGlobal(props)
       })
       customTheme.fonts = {
         heading: config.components.style.displayFontName,
-        body: config.components.style.displayFontName
+        body: config.components.style.mainFontName
       }
     }
     return customTheme

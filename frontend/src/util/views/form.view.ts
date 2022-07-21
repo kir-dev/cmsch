@@ -1,25 +1,14 @@
-export type FormDataDto = {
-  form: FormDto
-  status: FormStatus
-}
+import { Signup } from '../../api/contexts/config/types'
 
 export type FormData = {
   form: Form
   status: FormStatus
 }
 
-export type FormDto = {
-  name: string
-  url: string
-  formJson: string
-  availableFrom: number
-  availableUntil: number
-}
-
 export type Form = {
   name: string
   url: string
-  formJson: FormField[]
+  formFields: FormField[]
   availableFrom: number
   availableUntil: number
 }
@@ -45,7 +34,21 @@ export enum FormStatus {
   TOO_LATE = 'TOO_LATE',
   NOT_ENABLED = 'NOT_ENABLED',
   NOT_FOUND = 'NOT_FOUND',
-  FULL = 'FULL'
+  FULL = 'FULL',
+  GROUP_NOT_PERMITTED = 'GROUP_NOT_PERMITTED'
+}
+
+export const FormStatusLangKeys: Record<FormStatus, keyof Signup> = {
+  [FormStatus.NO_SUBMISSION]: 'langNoSubmission',
+  [FormStatus.SUBMITTED]: 'langSubmitted',
+  [FormStatus.REJECTED]: 'langRejected',
+  [FormStatus.ACCEPTED]: 'langAccepted',
+  [FormStatus.TOO_EARLY]: 'langTooEarly',
+  [FormStatus.TOO_LATE]: 'langTooLate',
+  [FormStatus.NOT_ENABLED]: 'langNotEnabled',
+  [FormStatus.NOT_FOUND]: 'langNotFound',
+  [FormStatus.FULL]: 'langFull',
+  [FormStatus.GROUP_NOT_PERMITTED]: 'langGroupInsufficient'
 }
 
 export enum FormFieldVariants {
