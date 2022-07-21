@@ -107,6 +107,7 @@ abstract class ComponentApiBase(
             }
         }
         component.persistChanges()
+        component.onPersis()
         RoleType.values().forEach { role -> menuService.regenerateMenuCache(role) }
 
         return "redirect:/admin/control/component/${component.component}/settings"

@@ -33,8 +33,8 @@ class GroupController(
         component: UserHandlingComponent
 ) : AbstractAdminPanelController<GroupEntity>(
         repo,
-        "groups", "Tankör", "Tankörök",
-        "Az összes tankör kezelése. A tankörbe való hozzárendelés a felhasználók menüből érhető el!",
+        "groups", "Csoport", "Csoportok",
+        "Az összes csoport kezelése. A csoportba való hozzárendelés a felhasználók menüből érhető el!",
         GroupEntity::class, ::GroupEntity, importService, adminMenuService, component,
         mapOf("UserEntity" to { it?.members?.map {
             member -> "${member.fullName} (${member.role.name})"
@@ -129,8 +129,8 @@ class GroupToUserMappingController(
         component: UserHandlingComponent
 ) : AbstractAdminPanelController<GroupToUserMappingEntity>(
         repo,
-        "group-to-user", "Tankör Tagság", "Tankör tagságok",
-        "Felhasználók neptun kód alapján tankörbe és szakra rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
+        "group-to-user", "Csoport Tagság", "Csoport tagságok",
+        "Felhasználók neptun kód alapján csoportba és szakra rendelése. A hozzárendelés minden bejelentkezésnél megtörténik ha van egyezés és még nincs beállítva.",
         GroupToUserMappingEntity::class, ::GroupToUserMappingEntity, importService, adminMenuService, component,
         mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
         permissionControl = PERMISSION_EDIT_GROUP_MAPPINGS,

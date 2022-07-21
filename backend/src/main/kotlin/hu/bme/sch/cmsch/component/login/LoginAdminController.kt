@@ -25,7 +25,7 @@ class LoginAdminController(
     componentMenuIcon = "login",
     insertComponentCategory = false,
     componentCategory = ApplicationComponent::class.simpleName!!,
-    componentMenuPriority = 5,
+    componentMenuPriority = 6,
     menuService = menuService
 )
 

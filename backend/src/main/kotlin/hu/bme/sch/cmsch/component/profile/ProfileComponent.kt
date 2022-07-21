@@ -190,17 +190,17 @@ class ProfileComponent(
 
     val groupLeadersGroup = SettingProxy(componentSettingService, component,
         "groupLeadersGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Tankörvezek adatai", description = ""
+        fieldName = "Csport vezetők adatai", description = ""
     )
 
     val showGroupLeaders = SettingProxy(componentSettingService, component,
         "showGroupName", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport mutatása", description = "Tankörseniorok elérhetősége"
+        fieldName = "Csoport mutatása", description = "Csoport vezetők elérhetősége"
     )
 
     val showGroupLeadersLocations = SettingProxy(componentSettingService, component,
         "showGroupLeadersLocations", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport helyzetének mutatása", description = "Tankörseniorok pozíciójának mutatása"
+        fieldName = "Csoport helyzetének mutatása", description = "Csoport vezetők pozíciójának mutatása"
     )
 
     val locationTimeout = SettingProxy(componentSettingService, component,

@@ -24,7 +24,7 @@ class MembersOfMyGroupAdminController(
 ) {
 
     private val view = "members-of-my-group"
-    private val titlePlural = "Tanköröm tagjai"
+    private val titlePlural = "Csoportom tagjai"
     private val permissionControl = PERMISSION_IMPLICIT_HAS_GROUP
     private val membersDescriptor = OverviewBuilder(GroupMemberVirtualEntity::class)
 
@@ -52,7 +52,7 @@ class MembersOfMyGroupAdminController(
         }
 
         model.addAttribute("title", titlePlural)
-        model.addAttribute("description", "A tankörödben lévő emberek. Ameddig valaki nem jelentkezik be, addig itt nem látszik, hogy rendező-e.")
+        model.addAttribute("description", "A csoportodban lévő emberek. Ameddig valaki nem jelentkezik be, addig itt nem látszik, hogy rendező-e.")
         model.addAttribute("view", view)
         model.addAttribute("columns", membersDescriptor.getColumns())
         model.addAttribute("fields", membersDescriptor.getColumnDefinitions())

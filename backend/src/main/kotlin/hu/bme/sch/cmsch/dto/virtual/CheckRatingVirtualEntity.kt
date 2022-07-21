@@ -7,7 +7,7 @@ data class CheckRatingVirtualEntity(
     @property:GenerateOverview(visible = false)
     val id: Int,
 
-    @property:GenerateOverview(columnName = "Tankör", order = 1)
+    @property:GenerateOverview(columnName = "Csoport", order = 1)
     val groupName: String,
 
     @property:GenerateOverview(columnName = "Pont", order = 2)

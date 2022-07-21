@@ -7,7 +7,7 @@ import hu.bme.sch.cmsch.dto.Preview
 
 data class TopListAsGroupEntryDto(
     @JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateOverview(columnName = "Tankör", order = 1)
+    @property:GenerateOverview(columnName = "Csoport", order = 1)
     override var name: String,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])

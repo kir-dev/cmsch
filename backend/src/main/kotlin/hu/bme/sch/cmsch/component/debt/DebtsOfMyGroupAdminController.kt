@@ -27,7 +27,7 @@ class DebtsOfMyGroupAdminController(
 ) {
 
     private val view = "debts-of-my-group"
-    private val titlePlural = "Tanköröm tartozásai"
+    private val titlePlural = "Csoportom tartozásai"
     private val permissionControl = PERMISSION_IMPLICIT_HAS_GROUP
 
     private val debtsDescriptor = OverviewBuilder(SoldProductEntity::class)

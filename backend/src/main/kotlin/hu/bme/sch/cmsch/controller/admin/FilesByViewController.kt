@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_SHOW_DELETE_FILES
 import hu.bme.sch.cmsch.util.getUser
+import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.annotation.PostConstruct
@@ -32,6 +34,8 @@ class FilesByViewController(
     private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService
 ) {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     private val view = "files"
     private val titleSingular = "Fájl"
@@ -79,7 +83,7 @@ class FilesByViewController(
     }
 
     private fun fetchOverview(): List<FilesByViewVirtualEntity> {
-        return sequenceOf("profiles", "news", "events", "products", "groups", "task")
+        return sequenceOf("profiles", "news", "events", "products", "groups", "task", "public")
                 .filter { Files.exists(Path.of(startupPropertyConfig.external, it)) }
                 .map { FilesByViewVirtualEntity(it, Files.walk(Path.of(startupPropertyConfig.external, it)).count() - 1, "~${Path.of(startupPropertyConfig.external, it).fileSize() / 1024} KB") }
                 .toList()
@@ -111,12 +115,17 @@ class FilesByViewController(
     }
 
     private fun listFilesInView(view: String): List<FileVirtualEntity> {
-        return Files.walk(Path.of(startupPropertyConfig.external, view))
+        return try {
+            Files.walk(Path.of(startupPropertyConfig.external, view))
                 .asSequence()
                 .filter { it.isRegularFile() }
                 .sortedByDescending { it.fileSize() }
                 .map { FileVirtualEntity(it.fileName.toString(), "${it.fileSize() / 1024} KB") }
                 .toList()
+        } catch (e: IOException) {
+            log.warn("No file or directory found: {}", e.message)
+            listOf()
+        }
     }
 
     @GetMapping("/delete/{type}/{id}")

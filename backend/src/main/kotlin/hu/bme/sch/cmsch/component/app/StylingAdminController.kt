@@ -23,6 +23,6 @@ class StylingAdminController(
     componentMenuIcon = "style",
     insertComponentCategory = false,
     componentCategory = ApplicationComponent::class.simpleName!!,
-    componentMenuPriority = 4,
+    componentMenuPriority = 5,
     menuService = menuService
 )

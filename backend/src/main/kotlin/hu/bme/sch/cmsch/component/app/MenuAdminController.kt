@@ -39,7 +39,7 @@ class MenuAdminController(
                 titlePlural,
                 "menu_open",
                 "/admin/control/${view}",
-                2,
+                3,
                 permissionControl
             )
         )

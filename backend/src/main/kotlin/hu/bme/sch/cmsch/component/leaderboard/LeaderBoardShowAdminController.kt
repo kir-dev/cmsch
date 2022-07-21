@@ -45,7 +45,7 @@ class LeaderBoardShowAdminController(
 
         adminMenuService.registerEntry(
             LeaderBoardComponent::class.simpleName!!, AdminMenuEntry(
-                "Tankör toplista",
+                "Csoport toplista",
                 "leaderboard",
                 "/admin/control/group-toplist",
                 2,
@@ -129,8 +129,8 @@ class LeaderBoardShowAdminController(
             return "admin403"
         }
 
-        model.addAttribute("title", "Tankör Toplista")
-        model.addAttribute("description", "Tankörök helyezése a pontversenyben. " +
+        model.addAttribute("title", "Csoport Toplista")
+        model.addAttribute("description", "Csoportok helyezése a pontversenyben. " +
                 "A pontok 10 percenként számítódnak újra. " +
                 "Manuális újrageneráláshoz van egy gomb a lap alján.")
         model.addAttribute("view", "group-toplist")

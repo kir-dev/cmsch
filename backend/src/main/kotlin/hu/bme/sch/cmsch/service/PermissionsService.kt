@@ -236,7 +236,7 @@ object StaffPermissions : PermissionGroup {
 
     val PERMISSION_EDIT_GROUPS = PermissionValidator(
         "GROUP_EDIT",
-        "Csoportok (tankörök) létrehozása, szerkesztése és törlése"
+        "Csoportok létrehozása, szerkesztése és törlése"
     )
 
     val PERMISSION_EDIT_USERS = PermissionValidator(
@@ -251,7 +251,7 @@ object StaffPermissions : PermissionGroup {
 
     val PERMISSION_EDIT_GROUP_MAPPINGS = PermissionValidator(
         "GROUP_MAPPING_EDIT",
-        "Csoport (tankör) hozzárendelések létrehozása, szerkesztése és törlése"
+        "Csoport hozzárendelések létrehozása, szerkesztése és törlése"
     )
 
     /// ExtraPages Component

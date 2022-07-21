@@ -23,6 +23,6 @@ class ExtraMenuAdminController(
     ExtraMenuEntity::class, ::ExtraMenuEntity, importService, adminMenuService, component,
     permissionControl = ControlPermissions.PERMISSION_CONTROL_APP,
     importable = false, adminMenuIcon = "new_label",
-    adminMenuPriority = 3
+    adminMenuPriority = 4
 )
 

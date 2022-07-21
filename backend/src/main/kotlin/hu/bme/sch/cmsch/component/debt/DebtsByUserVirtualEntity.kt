@@ -10,7 +10,7 @@ data class DebtsByUserVirtualEntity(
         @property:GenerateOverview(columnName = "Felhasználó", order = 1)
         val username: String,
 
-        @property:GenerateOverview(columnName = "Tanköre", order = 2, centered = true)
+        @property:GenerateOverview(columnName = "Csoport", order = 2, centered = true)
         val groupName: String,
 
         @property:GenerateOverview(columnName = "Totál [JMF]", order = 3, centered = true)

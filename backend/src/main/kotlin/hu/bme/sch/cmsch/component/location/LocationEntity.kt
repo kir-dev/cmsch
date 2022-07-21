@@ -42,8 +42,8 @@ data class LocationEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 64, order = 1, label = "Tankör neve")
-    @property:GenerateOverview(columnName = "Tankör", order = 2, centered = true)
+    @property:GenerateInput(maxLength = 64, order = 1, label = "Csoport neve")
+    @property:GenerateOverview(columnName = "Csoport", order = 2, centered = true)
     var groupName: String = "",
 
     @Column(nullable = false)

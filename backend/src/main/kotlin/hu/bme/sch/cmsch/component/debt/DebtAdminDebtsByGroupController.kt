@@ -32,9 +32,9 @@ class DebtAdminDebtsByGroupController(
 ) {
 
     private val view = "debts-by-group"
-    private val titleSingular = "Tankör Tartozása"
-    private val titlePlural = "Tankörök tartozásai"
-    private val description = "Tartozások tankörönként csoportosítva"
+    private val titleSingular = "Csoport Tartozása"
+    private val titlePlural = "Csoportok tartozásai"
+    private val description = "Tartozások csoportonként csoportosítva"
     private val permissionControl = PERMISSION_EDIT_DEBTS
 
     private val entitySourceMapping: Map<String, (SoldProductEntity) -> List<String>> =
