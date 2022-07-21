@@ -38,8 +38,16 @@ class FormApiController(
     @PostMapping("/form/{path}")
     fun fillOutForm(@PathVariable path: String, auth: Authentication?, @RequestBody data: Map<String, String>): FormSubmissionStatus {
         val user = auth?.getUserFromDatabaseOrNull() ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
-        val status = signupService.submitForm(user, path, data)
+        val status = signupService.submitForm(user, path, data, false)
         log.info("User '{}' filling out form '{}' status: {}", user.fullName, path, status)
+        return status
+    }
+
+    @PutMapping("/form/{path}")
+    fun updateForm(@PathVariable path: String, auth: Authentication?, @RequestBody data: Map<String, String>): FormSubmissionStatus {
+        val user = auth?.getUserFromDatabaseOrNull() ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
+        val status = signupService.submitForm(user, path, data, true)
+        log.info("User '{}' updating form '{}' status: {}", user.fullName, path, status)
         return status
     }
 

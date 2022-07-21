@@ -12,4 +12,5 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     fun findByCmschId(cmschId: String): Optional<UserEntity>
     fun findByNeptun(neptun: String): Optional<UserEntity>
     fun findAllByGroupName(groupName: String): List<UserEntity>
+    fun findByEmail(email: String): Optional<UserEntity>
 }
