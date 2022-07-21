@@ -57,6 +57,8 @@ class NovaIntegrationController(
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid token")
         }
 
+        log.info("[NOVA/VALID-USERS] Setting status {} of {} to '{}'", mode, email, value)
+
         return when (mode) {
             "payment" -> {
                 service.setPaymentStatus(email, value.equals("ok", ignoreCase = true))

@@ -75,66 +75,87 @@ open class SignupService(
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitForm(user: UserEntity, path: String, data: Map<String, String>): FormSubmissionStatus {
+    open fun submitForm(user: UserEntity, path: String, data: Map<String, String>, update: Boolean): FormSubmissionStatus {
         val form = signupFormRepository.findAllByUrl(path).getOrNull(0)
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
-
         val now = clock.getTimeInSeconds()
         if (!form.open || form.availableFrom > now || form.availableUntil < now)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
-
         if (signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).isPresent)
             return FormSubmissionStatus.ALREADY_SUBMITTED
-
         if (form.allowedGroups.isNotBlank() && user.groupName !in form.allowedGroups.split(Regex(",[ ]*"))) {
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
         }
 
-        if (isFull(form))
+        if (!update && isFull(form))
             return FormSubmissionStatus.FORM_IS_FULL
+
+        val submissionEntity = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
+        if (update && submissionEntity == null)
+            return FormSubmissionStatus.EDIT_SUBMISSION_NOT_FOUND
+        if (update && submissionEntity.detailsValidated)
+            return FormSubmissionStatus.EDIT_CANNOT_BE_CHANGED
 
         val formStruct = objectMapper.readerFor(object : TypeReference<List<SignupFormElement>>() {})
             .readValue<List<SignupFormElement>>(form.formJson)
 
         val submission = mutableMapOf<String, String>()
-        for (signupFormElement in formStruct) {
-            if (!signupFormElement.type.persist)
+        if (update) {
+            objectMapper.readerFor(object : TypeReference<Map<String, String>>() {})
+                .readValue<Map<String, String>>(submissionEntity.submission)
+                .entries
+                .forEach {
+                    submission[it.key] = it.value
+                }
+        }
+
+        for (field in formStruct) {
+            if (!field.type.persist)
                 continue
 
-            if (signupFormElement.type.serverSide) {
-                submission[signupFormElement.fieldName] = signupFormElement.type.fetchValue(user)
+            if (update && field.permanent)
+                continue
+
+            if (field.type.serverSide) {
+                submission[field.fieldName] = field.type.fetchValue(user)
             } else {
-                val value = data[signupFormElement.fieldName]
+                val value = data[field.fieldName]
                 if (value == null) {
-                    log.info("User {} missing value {}", user.id, signupFormElement.fieldName)
+                    log.info("User {} missing value {}", user.id, field.fieldName)
                     return FormSubmissionStatus.INVALID_VALUES
                 }
 
-                when (signupFormElement.type) {
+                when (field.type) {
                     FormElementType.NUMBER -> {
                         if (!value.matches(Regex("[0-9]+"))) {
-                            log.info("User {} invalid NUMBER value {} = {}", user.id, signupFormElement.fieldName, value)
+                            log.info("User {} invalid NUMBER value {} = {}", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
                     FormElementType.EMAIL -> {
                         if (!value.matches(Regex(".+@.+\\..+"))) {
-                            log.info("User {} invalid EMAIL value {} = {}", user.id, signupFormElement.fieldName, value)
+                            log.info("User {} invalid EMAIL value {} = {}", user.id, field.fieldName, value)
+                            return FormSubmissionStatus.INVALID_VALUES
+                        }
+                    }
+                    FormElementType.CHECKBOX -> {
+                        if (!value.equals("true", ignoreCase = true) && !value.equals("false", ignoreCase = true)) {
+                            log.info("User {} invalid CHECKBOX value {} = {}", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
                     FormElementType.SELECT -> {
-                        if (value !in signupFormElement.values.split(Regex(",[ ]*"))) {
-                            log.info("User {} invalid SELECT value {} = {}", user.id, signupFormElement.fieldName, value)
+                        if (value !in field.values.split(Regex(",[ ]*"))) {
+                            log.info("User {} invalid SELECT value {} = {}", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
                     FormElementType.MUST_AGREE -> {
                         if (value != "true") {
-                            log.info("User {} invalid MUST_AGREE value {} = {}", user.id, signupFormElement.fieldName, value)
+                            log.info("User {} invalid MUST_AGREE value {} = {}", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
@@ -143,12 +164,12 @@ open class SignupService(
                     }
                 }
 
-                if (!value.matches(Regex(signupFormElement.formatRegex))) {
-                    log.info("User {} invalid REGEX value {} = {}", user.id, signupFormElement.fieldName, value)
+                if (!value.matches(Regex(field.formatRegex))) {
+                    log.info("User {} invalid REGEX value {} = {}", user.id, field.fieldName, value)
                     return FormSubmissionStatus.INVALID_VALUES
                 }
 
-                submission[signupFormElement.fieldName] = data[signupFormElement.fieldName]!!
+                submission[field.fieldName] = data[field.fieldName]!!
             }
         }
 
@@ -165,9 +186,13 @@ open class SignupService(
         ))
 
         if (form.grantAttendeeRole) {
-            user.role = RoleType.ATTENDEE
-            userRepository.save(user)
-            log.info("Granting ATTENDEE for user {} by filling form {} successfully", user.id, form.id)
+            if (user.role.value <= RoleType.ATTENDEE.value) {
+                user.role = RoleType.ATTENDEE
+                userRepository.save(user)
+                log.info("Granting ATTENDEE for user {} by filling form {} successfully", user.id, form.id)
+            } else {
+                log.info("NOT granting ATTENDEE for user {} for filling form {} successfully because higher role", user.id, form.id)
+            }
             return FormSubmissionStatus.OK_RELOG_REQUIRED
         }
 
