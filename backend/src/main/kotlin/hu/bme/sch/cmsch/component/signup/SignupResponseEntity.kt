@@ -106,6 +106,20 @@ data class SignupResponseEntity(
     @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_LOB)
     var submission: String = "",
 
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "Adatok elfogadva", minimumRole = RoleType.ADMIN)
+    @property:GenerateOverview(columnName = "Adatok", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
+    var detailsValidated: Boolean = false,
+
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Adatok elfogadva ekkor", enabled = false, ignore = true)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LONG)
+    var detailsValidatedAt: Long = 0,
+
 ) : ManagedEntity {
 
     override fun equals(other: Any?): Boolean {

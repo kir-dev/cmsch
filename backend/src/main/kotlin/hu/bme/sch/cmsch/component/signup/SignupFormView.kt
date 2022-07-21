@@ -23,7 +23,9 @@ enum class FormSubmissionStatus {
     ALREADY_SUBMITTED,
     INVALID_VALUES,
     FORM_NOT_AVAILABLE,
-    FORM_IS_FULL
+    FORM_IS_FULL,
+    EDIT_SUBMISSION_NOT_FOUND,
+    EDIT_CANNOT_BE_CHANGED
 }
 
 data class SignupFormView(

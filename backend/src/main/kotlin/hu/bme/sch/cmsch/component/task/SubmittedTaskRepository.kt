@@ -7,17 +7,14 @@ import java.util.*
 
 @Repository
 @ConditionalOnBean(TaskComponent::class)
+@Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
 interface SubmittedTaskRepository : CrudRepository<SubmittedTaskEntity, Int> {
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByTask_IdAndGroupId(taskId: Int, groupId: Int): Optional<SubmittedTaskEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByTask_IdAndUserId(taskId: Int, groupId: Int): Optional<SubmittedTaskEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByTask_Id(taskId: Int): List<SubmittedTaskEntity>
 
-    @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
     fun findByTask_IdAndRejectedIsFalseAndApprovedIsFalse(taskId: Int): List<SubmittedTaskEntity>
 
     fun findAllByScoreGreaterThanAndApprovedIsTrue(zero: Int): List<SubmittedTaskEntity>
@@ -29,4 +26,6 @@ interface SubmittedTaskRepository : CrudRepository<SubmittedTaskEntity, Int> {
     fun findAllByUserIdAndRejectedFalseAndApprovedFalse(userId: Int): List<SubmittedTaskEntity>
 
     fun findAllByUserIdAndRejectedFalseAndApprovedTrue(userId: Int): List<SubmittedTaskEntity>
+
+    fun findAllByUserIdAndTask_Id(userId: Int, taskId: Int): List<SubmittedTaskEntity>
 }
