@@ -29,8 +29,8 @@ data class SubmittedTaskEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 1, label = "Beadó tankör", enabled = false, ignore = true)
-    @property:GenerateOverview(columnName = "Tankör", order = 1)
+    @property:GenerateInput(order = 1, label = "Beadó csoport", enabled = false, ignore = true)
+    @property:GenerateOverview(columnName = "Csoport", order = 1)
     var groupName: String = "",
 
     @Column(nullable = true)
@@ -65,7 +65,7 @@ data class SubmittedTaskEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 6, label = "Értékelés", note = "Ez a szöveg fog megjelenni a tankörnek")
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 6, label = "Értékelés", note = "Ez a szöveg fog megjelenni a csoportoknak/beadóknak")
     @property:GenerateOverview(visible = false)
     var response: String = "",
 

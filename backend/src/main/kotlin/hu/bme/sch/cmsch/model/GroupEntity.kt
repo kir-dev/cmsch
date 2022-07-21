@@ -22,8 +22,8 @@ data class GroupEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 64, order = 1, label = "Tankör neve")
-    @property:GenerateOverview(columnName = "Tankör", order = 1)
+    @property:GenerateInput(maxLength = 64, order = 1, label = "Csoport neve")
+    @property:GenerateOverview(columnName = "Csoport", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var name: String = "",
 
@@ -68,20 +68,20 @@ data class GroupEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 7, label = "Tankör borítóképe")
+    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 7, label = "Csoport borítóképe")
     @property:GenerateOverview(visible = false)
     var coverImageUrl: String = "",
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserEntity::class, mappedBy = "group")
-    @property:GenerateInput(type = INPUT_TYPE_LIST_ENTITIES, order = 12, label = "Tankör tagjai",
+    @property:GenerateInput(type = INPUT_TYPE_LIST_ENTITIES, order = 12, label = "Csoport tagjai",
             ignore = true, enabled = false, entitySource = "UserEntity")
     @property:GenerateOverview(visible = false)
     var members: List<UserEntity> = listOf(),
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Játszik a tankör versenyben?")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Játszik a csoport a versenyben?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
     var races: Boolean = false,

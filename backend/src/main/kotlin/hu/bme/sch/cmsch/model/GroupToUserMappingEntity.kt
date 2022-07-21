@@ -35,8 +35,8 @@ data class GroupToUserMappingEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Tankör", entitySource = "GroupEntity")
-    @property:GenerateOverview(columnName = "Tankör", order = 3, centered = true)
+    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Csoport", entitySource = "GroupEntity")
+    @property:GenerateOverview(columnName = "Csoport", order = 3, centered = true)
     @property:ImportFormat(ignore = false, columnId = 1)
     var groupName: String = "",
 

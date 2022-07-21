@@ -1,0 +1,44 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout :: head">
+</head>
+<body>
+<div class="content">
+    <div class="split">
+        <div th:replace="layout :: mobile"></div>
+        <div th:replace="layout :: menu(${user})"></div>
+
+        <div class="payload">
+            <div class="page page-short">
+                <h2>Fájl feltöltése</h2>
+
+                <form th:action="|@{/admin/control}/upload-file|" method="post" enctype="multipart/form-data">
+
+                    <div th:if="${uploaded}">Feltöltés sikeres!</div>
+
+                    <div class="field-group">
+                        <label for="name">Név</label>
+                        <div style="clear: both"></div>
+                        <input type="text" name="name" id="name" />
+                    </div>
+
+                    <div class="field-group">
+                        <label for="imageField">Fájl</label>
+                        <div style="clear: both"></div>
+                        <input type="file"
+                               class="file-input"
+                               name="file"
+                               id="imageField"
+                        />
+                    </div>
+
+                    <input type="submit" value="Feltöltés"/>
+                    <a th:href="@{/admin/control/files/view/public}" class="btn btn-secondary">Fájlok megtekintése</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

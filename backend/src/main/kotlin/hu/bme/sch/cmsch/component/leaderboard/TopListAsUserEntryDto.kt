@@ -15,7 +15,7 @@ data class TopListAsUserEntryDto(
     override var name: String,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateOverview(columnName = "Tankör", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Csoport", order = 2, centered = true)
     var groupName: String,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])

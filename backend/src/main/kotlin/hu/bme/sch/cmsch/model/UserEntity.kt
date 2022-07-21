@@ -121,8 +121,8 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 8, label = "Tankör", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
-    @property:GenerateOverview(columnName = "Tankör", centered = true, order = 3)
+    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 8, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
+    @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3)
     var groupName: String = "",
 
     @JsonIgnore

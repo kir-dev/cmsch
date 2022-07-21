@@ -7,7 +7,7 @@ data class DebtsByGroupVirtualEntity(
         @property:GenerateOverview(visible = false)
         val id: Int,
 
-        @property:GenerateOverview(columnName = "Tankör", order = 1)
+        @property:GenerateOverview(columnName = "Csoport", order = 1)
         val groupName: String,
 
         @property:GenerateOverview(columnName = "Forgalom [JMF]", order = 2, centered = true)

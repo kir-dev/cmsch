@@ -31,7 +31,7 @@ class TokenAdminTokensByGroupController(
     private val view = "token-properties-group"
     private val titleSingular = "Csoportos tokenek"
     private val titlePlural = "Csoportos tokenek"
-    private val description = "Tokenek tankörönként csoportosítva"
+    private val description = "Tokenek csoportonként csoportosítva"
     private val permissionControl = PERMISSION_EDIT_TOKENS
 
     private val overviewDescriptor = OverviewBuilder(TokenListByGroupVirtualEntity::class)

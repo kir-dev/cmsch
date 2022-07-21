@@ -132,6 +132,12 @@ class LoginController(
             }
         }
 
+        // Update user profile values
+        if (profile.neptun != null)
+            user.neptun = profile.neptun
+        if (profile.mail != null)
+            user.email = profile.mail
+
         // Check neptun; grant group and guild if mapping present
         if (user.neptun.isNotBlank() && user.groupName.isBlank()) {
             groupToUserMapping.findByNeptun(user.neptun).ifPresent {
@@ -295,8 +301,8 @@ class LoginController(
     }
 
     @GetMapping("/control/open-site")
-    fun openSite(auth: Authentication, request: HttpServletRequest): String {
-        if (startupPropertyConfig.jwtEnabled)
+    fun openSite(auth: Authentication?, request: HttpServletRequest): String {
+        if (auth != null && startupPropertyConfig.jwtEnabled)
             return "redirect:${applicationComponent.siteUrl.getValue()}?jwt=${encoder.encode(auth.credentials.toString(), StandardCharsets.UTF_8)}"
         return "redirect:${applicationComponent.siteUrl.getValue()}"
     }

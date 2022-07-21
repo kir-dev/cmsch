@@ -84,14 +84,14 @@ data class SignupResponseEntity(
     var rejected: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 255, order = 8, label = "Elutasítás indoka", note = "Csak akkor kell ha elutasított")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10)
     var rejectionMessage: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class ])
     @property:GenerateInput(maxLength = 255, order = 9, label = "Email", note = "Az inas email címe")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 11)

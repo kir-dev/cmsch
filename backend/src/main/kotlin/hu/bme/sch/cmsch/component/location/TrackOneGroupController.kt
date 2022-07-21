@@ -23,7 +23,7 @@ class TrackOneGroupController(
 ) {
 
     private val view = "track-group"
-    private val titlePlural = "Tankör követése"
+    private val titlePlural = "Csoport követése"
     private val permissionControl = PERMISSION_TRACK_ONE_GROUP
     private val trackDescriptor = OverviewBuilder(TrackGroupVirtualEntity::class)
 
@@ -51,7 +51,7 @@ class TrackOneGroupController(
         }
 
         model.addAttribute("title", titlePlural)
-        model.addAttribute("description", "A tankörben lévő emberek követése a térképen")
+        model.addAttribute("description", "A csoportban lévő emberek követése a térképen")
         model.addAttribute("view", view)
         model.addAttribute("columns", trackDescriptor.getColumns())
         model.addAttribute("fields", trackDescriptor.getColumnDefinitions())

@@ -92,6 +92,10 @@ abstract class ComponentBase(
         componentSettingService.persistSettings(allSettings)
     }
 
+    open fun onPersis() {
+        // Empty implementation, override it when its needed
+    }
+
     open fun onInit() {
         // Empty implementation, override it when its needed
     }

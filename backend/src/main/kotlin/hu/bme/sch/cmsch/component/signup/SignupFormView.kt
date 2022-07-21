@@ -34,7 +34,10 @@ data class SignupFormView(
     val form: SignupFormEntityDto? = null,
 
     @JsonView(FullDetails::class)
-    val submission: SignupResponseEntity? = null,
+    val submission: Map<String, String>? = null,
+
+    @JsonView(FullDetails::class)
+    val detailsValidated: Boolean? = null,
 
     @JsonView(FullDetails::class)
     val status: FormStatus = FormStatus.NO_SUBMISSION,
