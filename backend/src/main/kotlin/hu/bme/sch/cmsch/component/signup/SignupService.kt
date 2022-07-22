@@ -57,10 +57,31 @@ open class SignupService(
         val submission = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id)
         if (submission.isPresent) {
             val entity = submission.orElseThrow()
+            val submittedFields = objectMapper.readerFor(object : TypeReference<Map<String, String>>() {})
+                .readValue<Map<String, String>>(entity.submission)
+
             return when {
-                entity.rejected -> SignupFormView(form = SignupFormEntityDto(form), submission = entity, status = FormStatus.REJECTED, message = entity.rejectionMessage)
-                entity.accepted -> SignupFormView(form = SignupFormEntityDto(form), submission = entity, status = FormStatus.ACCEPTED, message = form.acceptedMessage)
-                else -> SignupFormView(form = SignupFormEntityDto(form), submission = entity, status = FormStatus.SUBMITTED, message = form.submittedMessage)
+                entity.rejected -> SignupFormView(
+                    form = SignupFormEntityDto(form),
+                    submission = submittedFields,
+                    detailsValidated = entity.detailsValidated,
+                    status = FormStatus.REJECTED,
+                    message = entity.rejectionMessage
+                )
+                entity.accepted -> SignupFormView(
+                    form = SignupFormEntityDto(form),
+                    submission = submittedFields,
+                    detailsValidated = entity.detailsValidated,
+                    status = FormStatus.ACCEPTED,
+                    message = form.acceptedMessage
+                )
+                else -> SignupFormView(
+                    form = SignupFormEntityDto(form),
+                    submission = submittedFields,
+                    detailsValidated = entity.detailsValidated,
+                    status = FormStatus.SUBMITTED,
+                    message = form.submittedMessage
+                )
             }
         }
 
@@ -84,20 +105,20 @@ open class SignupService(
         val now = clock.getTimeInSeconds()
         if (!form.open || form.availableFrom > now || form.availableUntil < now)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
-        if (signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).isPresent)
+
+        val submissionEntity = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
+        if (!update && submissionEntity != null)
             return FormSubmissionStatus.ALREADY_SUBMITTED
+        if (update && submissionEntity == null)
+            return FormSubmissionStatus.EDIT_SUBMISSION_NOT_FOUND
+        if (update && submissionEntity.detailsValidated)
+            return FormSubmissionStatus.EDIT_CANNOT_BE_CHANGED
         if (form.allowedGroups.isNotBlank() && user.groupName !in form.allowedGroups.split(Regex(",[ ]*"))) {
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
         }
 
         if (!update && isFull(form))
             return FormSubmissionStatus.FORM_IS_FULL
-
-        val submissionEntity = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
-        if (update && submissionEntity == null)
-            return FormSubmissionStatus.EDIT_SUBMISSION_NOT_FOUND
-        if (update && submissionEntity.detailsValidated)
-            return FormSubmissionStatus.EDIT_CANNOT_BE_CHANGED
 
         val formStruct = objectMapper.readerFor(object : TypeReference<List<SignupFormElement>>() {})
             .readValue<List<SignupFormElement>>(form.formJson)
@@ -148,7 +169,7 @@ open class SignupService(
                         }
                     }
                     FormElementType.SELECT -> {
-                        if (value !in field.values.split(Regex(",[ ]*"))) {
+                        if (value !in field.values.split(Regex(",[ ]*")).map { it.trim() }) {
                             log.info("User {} invalid SELECT value {} = {}", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
@@ -160,7 +181,7 @@ open class SignupService(
                         }
                     }
                     else -> {
-                        // more validators not necessarry
+                        // more validators not necessary
                     }
                 }
 
