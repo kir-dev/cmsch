@@ -17,19 +17,21 @@ export const ThemeConfig = ({ children }: HasChildren) => {
       customTheme.initialColorMode = config.components.style.deviceTheme ? 'system' : 'light'
       const defaultGlobal = customTheme.styles.global
       customTheme.styles.global = (props: any) => ({
+        ...defaultGlobal(props),
         body: {
           bg: mode(config.components.style.lightBackgroundColor, config.components.style.darkBackgroundColor)(props),
           color: mode(config.components.style.lightTextColor, config.components.style.darkTextColor)(props),
           bgImage: mode(`url(${config.components.style.lightBackgroundUrl})`, `url(${config.components.style.darkBackgroundUrl})`)(props),
           bgRepeat: 'no-repeat',
+          bgSize: 'cover',
+          bgPosition: 'center',
           [`@media screen and (max-width: ${props.theme.breakpoints.sm})`]: {
             bgImage: mode(
               `url(${config.components.style.lightMobileBackgroundUrl})`,
               `url(${config.components.style.darkMobileBackgroundUrl})`
             )
           }
-        },
-        ...defaultGlobal(props)
+        }
       })
       customTheme.fonts = {
         heading: config.components.style.displayFontName,
