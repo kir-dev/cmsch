@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 import { createContext, useEffect, useRef, useState } from 'react'
 import { CookieConsentPopup } from '../../../common-components/cookies/CookieConsentPopup'
 import { CookieKeys } from '../../../util/configs/cookies.config'
+import { SHOW_COOKIE_CONSENT_POPUP } from '../../../util/configs/environment.config'
 import { HasChildren } from '../../../util/react-types.util'
 
 export type CookieConsentContextType = {
@@ -36,7 +37,7 @@ export const CookieConsentProvider = ({ children }: HasChildren) => {
   }, [isAccepted])
 
   useEffect(() => {
-    if (!isAccepted) {
+    if (SHOW_COOKIE_CONSENT_POPUP && !isAccepted) {
       toastIdRef.current = toast(toastOptions)
     }
   }, [])

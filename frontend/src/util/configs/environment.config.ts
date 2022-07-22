@@ -4,3 +4,4 @@ export const BUGREPORT_URL = process.env.REACT_APP_BUGREPORT_URL || 'https://kir
 export const APP_NAME = process.env.REACT_APP_NAME || 'CMSch'
 export const GITHUB_ORG_URL = process.env.REACT_APP_GITHUB_ORG_URL || 'https://github.com/kir-dev/cmsch'
 export const CLIENT_BASE_URL = process.env.REACT_APP_CLIENT_BASE_URL || 'http://127.0.0.1:3000'
+export const SHOW_COOKIE_CONSENT_POPUP = process.env.REACT_APP_SHOW_COOKIE_CONSENT_POPUP || false
