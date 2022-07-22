@@ -13,7 +13,7 @@ export const Footer = () => {
   const component = config?.components.app
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   return (
-    <Box borderTopWidth={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')}>
+    <Box borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')}>
       <CmschContainer>
         {component?.sponsorsEnabled && sponsors.length > 0 && (
           <>

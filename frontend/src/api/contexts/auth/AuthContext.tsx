@@ -36,6 +36,8 @@ export const AuthProvider = ({ children }: HasChildren) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(typeof Cookies.get(CookieKeys.JWT_TOKEN) !== 'undefined')
 
   const onLoginFailure = (err: any) => {
+    Cookies.remove(CookieKeys.JWT_TOKEN)
+    Cookies.remove(CookieKeys.SESSION_ID)
     console.log('[ERROR] at onLoginFailure', JSON.stringify(err, null, 2))
     toast({
       title: 'Authentikációs hiba',
