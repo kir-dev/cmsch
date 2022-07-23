@@ -1,8 +1,8 @@
 import { Signup } from '../../api/contexts/config/types'
 
 export type FormData = {
-  form: Form
-  submission?: Submission
+  form?: Form
+  submission?: Record<string, string>
   status: FormStatus
   message?: string
 }
@@ -13,13 +13,6 @@ export type Form = {
   formFields: FormField[]
   availableFrom: number
   availableUntil: number
-}
-
-export type Submission = {
-  rejectionMessage: string
-  email: string
-  submission: string
-  detailsValidated: boolean
 }
 
 export type FormField = {

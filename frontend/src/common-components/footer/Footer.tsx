@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Image, Link, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Center, Flex, HStack, Image, Link, Text, useColorModeValue } from '@chakra-ui/react'
 import { FaFacebook, FaHeart, FaInstagram } from 'react-icons/fa'
 import { CmschContainer } from '../layout/CmschContainer'
 import { BUGREPORT_URL } from '../../util/configs/environment.config'
@@ -28,9 +28,9 @@ export const Footer = () => {
           </>
         )}
         {component?.footerMessage && (
-          <CmschContainer>
+          <Center flexDirection="column" px="4" py="4" mx="auto" maxWidth="100%">
             <Markdown text={component?.footerMessage} />
-          </CmschContainer>
+          </Center>
         )}
         <Flex justify="center" align="center" flexDirection={['column', null, 'row']}>
           <Flex align="center" flexDirection="column" justifyContent="center" mb={10} mx={10}>
