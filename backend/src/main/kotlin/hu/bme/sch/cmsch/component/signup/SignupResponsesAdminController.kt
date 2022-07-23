@@ -33,7 +33,7 @@ class SignupResponsesAdminController(
 
     private val view = "signup-responses"
     private val titleSingular = "Kitöltés"
-    private val titlePlural = "Kitöltés"
+    private val titlePlural = "Kitöltések"
     private val description = "Kitöltések formonként csoportosítva"
     private val permissionControl = PERMISSION_EDIT_SIGNUP_RESULTS
 
