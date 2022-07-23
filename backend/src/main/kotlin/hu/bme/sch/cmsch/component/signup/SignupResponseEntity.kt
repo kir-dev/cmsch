@@ -67,7 +67,7 @@ data class SignupResponseEntity(
 
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(columnName = "Fizetve", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateOverview(columnName = "Fizetve", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
     var accepted: Boolean = false,
 
@@ -79,7 +79,7 @@ data class SignupResponseEntity(
 
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Elutasítva", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(columnName = "Elutasítva", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
     var rejected: Boolean = false,
 
@@ -92,8 +92,9 @@ data class SignupResponseEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(maxLength = 255, order = 9, label = "Email", note = "Az inas email címe")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateInput(maxLength = 255, order = 9, label = "Email",
+        note = "A felhasználó email címe, ez a BME Jegy integrációhoz kell")
+    @property:GenerateOverview(columnName = "Beküldő emailje", order = 2)
     @property:ImportFormat(ignore = false, columnId = 11)
     var email: String = "",
 
@@ -109,7 +110,7 @@ data class SignupResponseEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "Adatok elfogadva", minimumRole = RoleType.ADMIN)
-    @property:GenerateOverview(columnName = "Adatok", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateOverview(columnName = "Adatok", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
     var detailsValidated: Boolean = false,
 
