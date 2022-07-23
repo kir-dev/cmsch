@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.controller
 
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
-import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.security.core.Authentication

@@ -8,9 +8,8 @@ import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.TimeService
-import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
