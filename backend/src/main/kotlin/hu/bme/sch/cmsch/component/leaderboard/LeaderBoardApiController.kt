@@ -50,14 +50,20 @@ class LeaderBoardApiController(
     }
 
     private fun fetchUserBoard(): List<LeaderBoardEntryDto> {
-        val limit = leaderBoardComponent.maxUserEntryToShow.getIntValue(0)
+        var limit = leaderBoardComponent.maxUserEntryToShow.getIntValue(0)
+        if (limit < 0)
+            limit = Int.MAX_VALUE
+        val minScore = leaderBoardComponent.minScoreToShow.getIntValue(0)
+
         if (leaderBoardComponent.showScores.isValueTrue())
             return leaderBoardService.getBoardForUsers()
                 .take(limit)
+                .filter { it.totalScore >= minScore }
                 .map { LeaderBoardEntryDto(it.name, it.totalScore) }
 
         return leaderBoardService.getBoardForUsers()
             .take(limit)
+            .filter { it.totalScore >= minScore }
             .map { LeaderBoardEntryDto(it.name, null) }
     }
 
@@ -68,14 +74,20 @@ class LeaderBoardApiController(
     }
 
     private fun fetchGroupBoard(): List<LeaderBoardEntryDto> {
-        val limit = leaderBoardComponent.maxGroupEntryToShow.getIntValue(0)
+        var limit = leaderBoardComponent.maxGroupEntryToShow.getIntValue(0)
+        if (limit < 0)
+            limit = Int.MAX_VALUE
+        val minScore = leaderBoardComponent.minScoreToShow.getIntValue(0)
+
         if (leaderBoardComponent.showScores.isValueTrue())
             return leaderBoardService.getBoardForGroups()
                 .take(limit)
+                .filter { it.totalScore >= minScore }
                 .map { LeaderBoardEntryDto(it.name, it.totalScore) }
 
         return leaderBoardService.getBoardForGroups()
             .take(limit)
+            .filter { it.totalScore >= minScore }
             .map { LeaderBoardEntryDto(it.name, null) }
     }
 
