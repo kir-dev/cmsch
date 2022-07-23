@@ -1,10 +1,6 @@
 package hu.bme.sch.cmsch.component.app
 
-import hu.bme.sch.cmsch.admin.GenerateOverview
-import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentHandlerService
-import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
-import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
@@ -13,7 +9,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
 
 @Controller

@@ -20,6 +20,8 @@ import hu.gerviba.authsch.response.ProfileDataResponse
 import org.apache.catalina.util.URLEncoder
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -27,6 +29,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.nio.charset.StandardCharsets
@@ -305,6 +308,16 @@ class LoginController(
         if (auth != null && startupPropertyConfig.jwtEnabled)
             return "redirect:${applicationComponent.siteUrl.getValue()}?jwt=${encoder.encode(auth.credentials.toString(), StandardCharsets.UTF_8)}"
         return "redirect:${applicationComponent.siteUrl.getValue()}"
+    }
+
+    @PostMapping("/control/refresh")
+    fun refreshToken(auth: Authentication?): ResponseEntity<String> {
+        if (auth == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        if (!startupPropertyConfig.jwtEnabled)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT not enabled")
+
+        return ResponseEntity.ok(jwtTokenProvider.refreshToken(auth))
     }
 
 }

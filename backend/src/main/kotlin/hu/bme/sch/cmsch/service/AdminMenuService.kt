@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.service
 
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.model.UserEntity
 import org.springframework.stereotype.Service
 import org.springframework.ui.Model
 import java.util.concurrent.ConcurrentHashMap
