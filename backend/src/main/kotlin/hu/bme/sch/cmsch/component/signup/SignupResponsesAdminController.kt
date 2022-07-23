@@ -80,7 +80,8 @@ class SignupResponsesAdminController(
     }
 
     private fun fetchOverview(): List<FormVirtualEntity> {
-        return signupResponseRepository.findAll().groupBy { it.submitterUserId }
+        return signupResponseRepository.findAll()
+                .groupBy { it.formId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { it ->
@@ -91,7 +92,8 @@ class SignupResponsesAdminController(
                             form.submissionLimit,
                             it.size,
                             it.count { it.accepted },
-                            it.count { it.rejected }
+                            it.count { it.rejected },
+                            it.count { it.detailsValidated },
                     )
                 }
     }
