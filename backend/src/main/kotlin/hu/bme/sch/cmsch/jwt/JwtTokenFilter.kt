@@ -24,13 +24,13 @@ class JwtTokenFilter(
         val httpRequest = req as HttpServletRequest
         if (httpRequest.servletPath.startsWith("/api/")) {
             val token: String? = jwtTokenProvider.resolveToken(httpRequest)
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                try {
+            try {
+                if (token != null && jwtTokenProvider.validateToken(token)) {
                     val auth: Authentication = jwtTokenProvider.getAuthentication(token)
                     SecurityContextHolder.getContext().authentication = auth
-                } catch (e: Exception) {
-                    log.warn("Invalid token: {} user cannot be resolved", token, e)
                 }
+            } catch (e: Exception) {
+                log.warn("Invalid token: {} user cannot be resolved", token, e)
             }
         }
         filterChain.doFilter(req, res)

@@ -45,7 +45,8 @@ open class SecurityConfig(
                         "/share/**",
                         "swagger-ui.html", "/v3/api-docs/**",
                         "/cdn/manifest/**", "/manifest/manifest.json",
-                        "/cdn/public/**")
+                        "/cdn/public/**",
+                        "/control/refresh")
                     .permitAll()
 
                 .antMatchers(

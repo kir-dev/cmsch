@@ -6,7 +6,6 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.ManagedEntity
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
@@ -27,7 +26,6 @@ import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
-import kotlin.streams.toList
 
 const val INVALID_ID_ERROR = "INVALID_ID"
 const val CONTROL_MODE_EDIT_DELETE = "edit,delete"

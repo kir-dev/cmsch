@@ -6,7 +6,6 @@ import hu.bme.sch.cmsch.dto.NeptunBuyRequest
 import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
-import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication

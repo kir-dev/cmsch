@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.component.riddle
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication

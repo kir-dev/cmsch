@@ -4,7 +4,6 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_NONE
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication

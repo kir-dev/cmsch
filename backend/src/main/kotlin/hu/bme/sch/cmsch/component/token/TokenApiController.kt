@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.component.riddle.RiddleView
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails

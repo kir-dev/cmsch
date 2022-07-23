@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_SHOW_DELETE_FILES
