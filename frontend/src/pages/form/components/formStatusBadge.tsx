@@ -27,7 +27,7 @@ export const FormStatusBadge = ({ status }: FormStatusBadgeProps) => {
   }
   return (
     <Badge my={5} colorScheme={color}>
-      {component?.[FormStatusLangKeys[status] as keyof Signup] || (status === FormStatus.NO_SUBMISSION ? 'Nincs beküldve' : 'Ismeretlen')}
+      {component?.[FormStatusLangKeys[status] as keyof Signup] || 'Ismeretlen'}
     </Badge>
   )
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
+import { FormSubmitResult } from '../../util/views/form.view'
 
 export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -7,7 +8,7 @@ export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
   const submit = (formBody: Record<string, unknown>, edit?: boolean) => {
     if (edit) {
       axios
-        .put(`/api/form/${slug}`, formBody)
+        .put<FormSubmitResult>(`/api/form/${slug}`, formBody)
         .then((res) => {
           setData(res.data)
         })
@@ -17,7 +18,7 @@ export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
         })
     } else {
       axios
-        .post(`/api/form/${slug}`, formBody)
+        .post<FormSubmitResult>(`/api/form/${slug}`, formBody)
         .then((res) => {
           setData(res.data)
         })

@@ -14,8 +14,7 @@ interface AutoFormFieldProps {
 export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: AutoFormFieldProps) => {
   const selectValues = fieldProps.values.split(',').map((opt) => opt.trim())
   if (!defaultValue) {
-    if (fieldProps.type === FormFieldVariants.CHECKBOX || fieldProps.type === FormFieldVariants.MUST_AGREE) defaultValue = true
-    if (fieldProps.type === FormFieldVariants.SELECT) defaultValue = selectValues[0] || ''
+    if (fieldProps.type === FormFieldVariants.CHECKBOX || fieldProps.type === FormFieldVariants.MUST_AGREE) defaultValue = 'true'
     if (fieldProps.type === FormFieldVariants.NUMBER) defaultValue = 0
   }
 
@@ -34,7 +33,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: A
   let component: ReactNode = null
   switch (fieldProps.type) {
     case FormFieldVariants.CHECKBOX:
-      component = <Checkbox {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={defaultValue === 'true'} />
       break
     case FormFieldVariants.EMAIL:
       component = <Input type="email" {...field} isInvalid={!!error} disabled={disabled} />
@@ -43,7 +42,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: A
       component = <Textarea {...field} isInvalid={!!error} disabled={disabled} />
       break
     case FormFieldVariants.MUST_AGREE:
-      component = <Checkbox {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={defaultValue === 'true'} />
       break
     case FormFieldVariants.NUMBER:
       component = <Input type="number" {...field} isInvalid={!!error} disabled={disabled} />
@@ -55,7 +54,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: A
       component = (
         <Select {...field} disabled={disabled}>
           {selectValues.map((opt) => (
-            <option key={opt} value={opt} selected={defaultValue === opt}>
+            <option key={opt} value={opt}>
               {opt}
             </option>
           ))}
