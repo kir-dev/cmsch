@@ -28,6 +28,7 @@ class LeaderBoardComponent(
             showScores,
 
             displayGroup,
+            minScoreToShow,
             showUserBoard,
             maxUserEntryToShow,
             showGroupBoard,
@@ -82,6 +83,12 @@ class LeaderBoardComponent(
         description = ""
     )
 
+    val minScoreToShow = SettingProxy(componentSettingService, component,
+        "minScoreToShow", "1", type = SettingType.NUMBER,
+        fieldName = "Legalább ennyi ponttal",
+        description = "Legalább ennyi ponttal mutassa a felhasználókat és csoportokat"
+    )
+
     val showUserBoard = SettingProxy(componentSettingService, component,
         "showUserBoard", "false", type = SettingType.BOOLEAN,
         fieldName = "Felhasználói toplista mutatása",
@@ -105,5 +112,6 @@ class LeaderBoardComponent(
         fieldName = "Toplista sorainak száma",
         description = "Hány csoportot mutasson, -1 = az összeset"
     )
+
 
 }
