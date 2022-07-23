@@ -5,6 +5,7 @@ export type FormData = {
   submission?: Record<string, string>
   status: FormStatus
   message?: string
+  detailsValidated?: boolean
 }
 
 export type Form = {
@@ -66,4 +67,26 @@ export enum FormFieldVariants {
   WARNING_BOX = 'WARNING_BOX',
   TEXT_BOX = 'TEXT_BOX',
   SECTION_START = 'SECTION_START'
+}
+
+export enum FormSubmitResult {
+  OK = 'OK',
+  OK_RELOG_REQUIRED = 'OK_RELOG_REQUIRED',
+  ALREADY_SUBMITTED = 'ALREADY_SUBMITTED',
+  INVALID_VALUES = 'INVALID_VALUES',
+  FORM_NOT_AVAILABLE = 'FORM_NOT_AVAILABLE',
+  FORM_IS_FULL = 'FORM_IS_FULL',
+  EDIT_SUBMISSION_NOT_FOUND = 'EDIT_SUBMISSION_NOT_FOUND',
+  EDIT_CANNOT_BE_CHANGED = 'EDIT_CANNOT_BE_CHANGED'
+}
+
+export const FormSubmitMessage: Record<FormSubmitResult, string> = {
+  OK: 'Sikeres beküldés!',
+  OK_RELOG_REQUIRED: 'Sikeres beküldés!',
+  ALREADY_SUBMITTED: 'Már be lett küldve',
+  INVALID_VALUES: 'Érvénytelen kitöltés.',
+  FORM_NOT_AVAILABLE: 'Űrlap nem elérhető.',
+  FORM_IS_FULL: 'Jelentkezés megtelt.',
+  EDIT_SUBMISSION_NOT_FOUND: 'A kitöltés nem található, így nem módosítható.',
+  EDIT_CANNOT_BE_CHANGED: 'Nem módosítható.'
 }
