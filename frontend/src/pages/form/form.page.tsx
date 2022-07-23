@@ -36,60 +36,51 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
     sendMessage('Űrlap betöltése sikertelen!\n Keresd az oldal fejlesztőit!')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
-  const {
-    form: { formFields, name, availableFrom, availableUntil },
-    submission,
-    message,
-    status
-  } = data
-  const available = availableFrom * 1000 < Date.now() && availableUntil * 1000 > Date.now() && !submission?.detailsValidated
+  const { form, submission, message, status } = data
+  const available =
+    form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !submission?.detailsValidated
   const onSubmit = (values: Record<string, unknown>) => {
     if (available) {
-      submit(values)
+      submit(values, status !== FormStatus.NO_SUBMISSION)
       refetch()
     }
   }
-  let defaultValues: Record<string, unknown> = {}
-  try {
-    if (submission?.submission) defaultValues = JSON.parse(submission?.submission)
-  } catch (e) {
-    console.error('[ERROR] JSON parse error')
-  }
   return (
     <CmschPage>
-      <Helmet title={name} />
+      <Helmet title={form?.name || 'Űrlap'} />
       <Box w="30rem" maxW="100%" mx="auto">
-        <Heading>{name}</Heading>
+        <Heading>{form?.name || 'Űrlap'}</Heading>
         <FormStatusBadge status={status} />
 
         {(submission?.rejectionMessage || message) && (
           <>
-            <Text mt={5}>Státusz:</Text>
             <Markdown text={submission?.rejectionMessage || message} />
             {submission?.email && <Text>Kapcsolat: {submission?.email}</Text>}
           </>
         )}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {formFields.map((formField) => (
-            <FormControl key={formField.fieldName} mt={5}>
-              {formField.label && (
-                <FormLabel mb={2} fontSize={20} htmlFor={formField.fieldName}>
-                  {formField.label}
-                </FormLabel>
-              )}
-              <AutoFormField
-                defaultValue={defaultValues?.[formField.fieldName]}
-                disabled={(status !== FormStatus.NO_SUBMISSION && formField.permanent) || !available}
-                control={control}
-                fieldProps={formField}
-              />
-              {formField.note && <Markdown text={formField.note} />}
-            </FormControl>
-          ))}
-          <Button disabled={!available} type="submit" isLoading={submitLoading}>
-            Beküldés
-          </Button>
-        </form>
+        {form && (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {form.formFields.map((formField) => (
+              <FormControl key={formField.fieldName} mt={5}>
+                {formField.label && (
+                  <FormLabel mb={2} fontSize={20} htmlFor={formField.fieldName}>
+                    {formField.label}
+                  </FormLabel>
+                )}
+                <AutoFormField
+                  defaultValue={submission?.[formField.fieldName]}
+                  disabled={(status !== FormStatus.NO_SUBMISSION && formField.permanent) || !available}
+                  control={control}
+                  fieldProps={formField}
+                />
+                {formField.note && <Markdown text={formField.note} />}
+              </FormControl>
+            ))}
+            <Button disabled={!available} type="submit" isLoading={submitLoading}>
+              {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
+            </Button>
+          </form>
+        )}
       </Box>
     </CmschPage>
   )
