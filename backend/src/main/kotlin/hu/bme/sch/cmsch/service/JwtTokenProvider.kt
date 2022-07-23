@@ -4,10 +4,7 @@ import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.jwt.InvalidJwtAuthenticationException
 import hu.bme.sch.cmsch.model.RoleType
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jws
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.*
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -24,7 +21,6 @@ const val JWT_CLAIM_USERID = "userId"
 @Service
 class JwtTokenProvider(
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val userService: UserService,
 ){
 
     private val secretKey = Base64.getEncoder().encodeToString(startupPropertyConfig.secretKey.toByteArray())
@@ -86,6 +82,8 @@ class JwtTokenProvider(
         } catch (e: JwtException) {
             throw InvalidJwtAuthenticationException("Expired or invalid JWT token")
         } catch (e: IllegalArgumentException) {
+            throw InvalidJwtAuthenticationException("Expired or invalid JWT token")
+        } catch (e: SignatureException) {
             throw InvalidJwtAuthenticationException("Expired or invalid JWT token")
         }
     }

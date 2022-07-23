@@ -19,7 +19,6 @@ import kotlin.math.absoluteValue
 @Controller
 @RequestMapping("/admin/control/upload-file")
 class ImageUploadController(
-    private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService
 ) {
 

@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
-interface TopListAbstractEntryDto {
+interface TopListAbstractEntry {
 
     var name: String
 

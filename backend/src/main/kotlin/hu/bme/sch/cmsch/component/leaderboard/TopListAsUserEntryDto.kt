@@ -29,4 +29,4 @@ data class TopListAsUserEntryDto(
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Totál", order = 5, centered = true)
     override var totalScore: Int,
-) : TopListAbstractEntryDto
+) : TopListAbstractEntry
