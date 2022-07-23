@@ -1,6 +1,6 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useEffect } from 'react'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Box, Button, FormControl, FormLabel, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, FormControl, FormLabel, Heading, Text, useToast } from '@chakra-ui/react'
 import { Navigate, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Loading } from '../../common-components/Loading'
@@ -12,16 +12,24 @@ import { useForm } from 'react-hook-form'
 import Markdown from '../../common-components/Markdown'
 import { useFormSubmit } from '../../api/hooks/useFormSubmit'
 import { FormStatusBadge } from './components/formStatusBadge'
-import { FormStatus } from '../../util/views/form.view'
+import { FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 
 interface FormPageProps {}
 
 const FormPage: FunctionComponent<FormPageProps> = () => {
   const params = useParams()
-  const { submit, submitLoading } = useFormSubmit(params.slug || '')
+  const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
   const { data, isLoading, error, refetch } = useFormPage(params.slug || '')
   const { sendMessage } = useServiceContext()
+  const toast = useToast()
   const { control, handleSubmit } = useForm()
+
+  useEffect(() => {
+    if (result) {
+      const success = result === FormSubmitResult.OK || result === FormSubmitResult.OK_RELOG_REQUIRED
+      toast({ title: FormSubmitMessage[result as FormSubmitResult], status: success ? 'success' : 'error' })
+    }
+  }, [result])
 
   if (isLoading) {
     return <Loading />
@@ -36,13 +44,13 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
     sendMessage('Űrlap betöltése sikertelen!\n Keresd az oldal fejlesztőit!')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
-  const { form, submission, message, status } = data
-  const available =
-    form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !submission?.detailsValidated
+  const { form, submission, message, status, detailsValidated } = data
+  const available = form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !detailsValidated
   const onSubmit = (values: Record<string, unknown>) => {
     if (available) {
       submit(values, status !== FormStatus.NO_SUBMISSION)
       refetch()
+      window.scrollTo(0, 0)
     }
   }
   return (
