@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.debt.DebtDto
-import hu.bme.sch.cmsch.component.leaderboard.TopListAbstractEntryDto
+import hu.bme.sch.cmsch.component.leaderboard.TopListAbstractEntry
 import hu.bme.sch.cmsch.component.token.TokenDto
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.model.GuildType
@@ -92,6 +92,6 @@ data class ProfileView(
     val debts: List<DebtDto>? = null,
 
     @JsonView(FullDetails::class)
-    val leaderboard: List<TopListAbstractEntryDto>? = null,
+    val leaderboard: List<TopListAbstractEntry>? = null,
 
-)
+    )

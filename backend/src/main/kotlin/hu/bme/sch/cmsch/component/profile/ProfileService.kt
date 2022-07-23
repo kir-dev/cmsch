@@ -5,7 +5,6 @@ import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
-import hu.bme.sch.cmsch.component.leaderboard.TopListAbstractEntryDto
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.LoginComponent
@@ -14,7 +13,6 @@ import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.token.ALL_TOKEN_TYPE
 import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.component.token.TokenComponent
-import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
@@ -98,18 +96,8 @@ open class ProfileService(
             debts = fetchDebts(user).orElse(null),
 
             // Leaderboard controller
-            leaderboard = fetchLeaderboard()
+            leaderboard = null
         )
-    }
-
-    private fun fetchLeaderboard(): List<TopListAbstractEntryDto>? {
-        if (!leaderBoardComponent.map { it.leaderboardEnabled.isValueTrue() }.orElse(false))
-            return null
-
-        return when (startupPropertyConfig.taskOwnershipMode) {
-            OwnershipType.USER -> leaderBoardService.map { it.getBoardForUsers() }.orElse(null)
-            OwnershipType.GROUP -> leaderBoardService.map { it.getBoardForGroups() }.orElse(null)
-        }
     }
 
     private fun fetchWhetherGroupLeavable(group: GroupEntity?) =

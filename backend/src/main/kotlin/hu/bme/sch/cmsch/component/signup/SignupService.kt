@@ -194,17 +194,24 @@ open class SignupService(
             }
         }
 
-        log.info("User {} filled out form {} successfully", user.id, form.id)
-        signupResponseRepository.save(SignupResponseEntity(
-            submitterUserId = user.id,
-            submitterUserName = user.fullName,
-            formId = form.id,
-            creationDate = now,
-            accepted = false,
-            rejected = false,
-            email = user.email,
-            submission = objectMapper.writeValueAsString(submission)
-        ))
+        if (update) {
+            log.info("User {} changed form {} successfully", user.id, form.id)
+            submissionEntity.submission = objectMapper.writeValueAsString(submission)
+            submissionEntity.lastUpdatedDate = now
+            signupResponseRepository.save(submissionEntity)
+        } else {
+            log.info("User {} filled out form {} successfully", user.id, form.id)
+            signupResponseRepository.save(SignupResponseEntity(
+                submitterUserId = user.id,
+                submitterUserName = user.fullName,
+                formId = form.id,
+                creationDate = now,
+                accepted = false,
+                rejected = false,
+                email = user.email,
+                submission = objectMapper.writeValueAsString(submission)
+            ))
+        }
 
         if (form.grantAttendeeRole) {
             if (user.role.value <= RoleType.ATTENDEE.value) {
