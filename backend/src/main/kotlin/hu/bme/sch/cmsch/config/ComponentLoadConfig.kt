@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct
 data class ComponentLoadConfig(
 
     val app: Boolean = false,
+    val challenge: Boolean = false,
     val countdown: Boolean = false,
     val debt: Boolean = false,
     val event: Boolean = false,

@@ -68,9 +68,10 @@ class SoldProductController(
     permissionControl = PERMISSION_EDIT_DEBTS,
     importable = true, adminMenuIcon = "sync_alt"
 ) {
-    override fun onEntityPreSave(entity: SoldProductEntity, auth: Authentication) {
+    override fun onEntityPreSave(entity: SoldProductEntity, auth: Authentication): Boolean {
         val date = clock.getTimeInSeconds()
         val user = auth.getUserFromDatabase()
         entity.log = "${entity.log} '${user.fullName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finsihed: ${entity.finsihed}] at $date;"
+        return true
     }
 }

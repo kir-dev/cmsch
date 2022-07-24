@@ -12,13 +12,17 @@ data class TopListAsGroupEntryDto(
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Feladatok", order = 2, centered = true)
-    override var taskScore: Int,
+    override var taskScore: Int = 0,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Riddleök", order = 3, centered = true)
-    override var riddleScore: Int,
+    override var riddleScore: Int = 0,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateOverview(columnName = "Totál", order = 4, centered = true)
-    override var totalScore: Int,
+    @property:GenerateOverview(columnName = "Beadások", order = 4, centered = true)
+    override var challengeScore: Int = 0,
+
+    @JsonView(value = [ Preview::class, FullDetails::class ])
+    @property:GenerateOverview(columnName = "Totál", order = 100, centered = true)
+    override var totalScore: Int = 0,
 ) : TopListAbstractEntry

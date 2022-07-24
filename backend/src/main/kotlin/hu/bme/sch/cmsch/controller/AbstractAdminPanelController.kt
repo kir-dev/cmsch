@@ -216,8 +216,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         val entity = supplier.get()
         updateEntity(descriptor, user, entity, dto, file0, file1)
         entity.id = 0
-        onEntityPreSave(entity, auth)
-        repo.save(entity)
+        if (onEntityPreSave(entity, auth))
+            repo.save(entity)
         onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
     }
@@ -249,8 +249,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
         updateEntity(descriptor, user, actualEntity, dto, file0, file1)
         actualEntity.id = id
-        onEntityPreSave(actualEntity, auth)
-        repo.save(actualEntity)
+        if (onEntityPreSave(actualEntity, auth))
+            repo.save(actualEntity)
         onEntityChanged(actualEntity)
         return "redirect:/admin/control/$view"
     }
@@ -347,8 +347,9 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         // Overridden when notification is required
     }
 
-    open fun onEntityPreSave(entity: T, auth: Authentication) {
+    open fun onEntityPreSave(entity: T, auth: Authentication): Boolean {
         // Overridden when notification is required
+        return true
     }
 
     open fun onDetailsView(entity: CmschUser, model: Model) {

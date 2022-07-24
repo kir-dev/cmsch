@@ -46,6 +46,7 @@ open class SecurityConfig(
                         "swagger-ui.html", "/v3/api-docs/**",
                         "/cdn/manifest/**", "/manifest/manifest.json",
                         "/cdn/public/**",
+                        "/cdn/task/**",
                         "/control/refresh")
                     .permitAll()
 
