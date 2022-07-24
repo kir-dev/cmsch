@@ -30,6 +30,7 @@ class ApplicationComponent(
             defaultComponent,
 
             footerGroup,
+            minimalisticFooter,
             hostLogo,
             hostAlt,
             hostWebsiteUrl,
@@ -125,6 +126,11 @@ class ApplicationComponent(
     val footerGroup = SettingProxy(componentSettingService, component,
         "footerGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Lábléc", description = ""
+    )
+
+    val minimalisticFooter = SettingProxy(componentSettingService, component,
+        "minimalisticFooter", "false", type = SettingType.BOOLEAN,
+        fieldName = "Minimalisztikus lábléc", description = "Ha be van kapcsolva, akkor nem foglal olyan sok helyet a footer"
     )
 
     val hostLogo = SettingProxy(componentSettingService, component,
