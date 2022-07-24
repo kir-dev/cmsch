@@ -9,7 +9,7 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
   const config = useConfigContext()
-  const logoUrl = useColorModeValue(config?.components.style.lightLogoUrl, config?.components.style.darkLogoUrl)
+  const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
   return (
     <Box mx="auto" maxW="6xl" w="full" fontFamily="heading">
       <Flex
