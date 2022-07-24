@@ -27,7 +27,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: A
     defaultValue: defaultValue,
     rules: {
       required: { value: fieldProps.required || fieldProps.type === FormFieldVariants.MUST_AGREE, message: 'Ez a mező kötelező!' },
-      pattern: { value: new RegExp(fieldProps.formatRegex), message: 'Ellenőrizd a formátumot!' }
+      pattern: { value: new RegExp(fieldProps.formatRegex), message: 'Ellenőrizze a formátumot!' }
     }
   })
   let component: ReactNode = null

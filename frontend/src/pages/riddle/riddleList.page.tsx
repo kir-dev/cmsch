@@ -41,7 +41,7 @@ const RiddleCategoryList = () => {
       navigate(`${AbsolutePaths.RIDDLE}/${nextRiddle}`)
     } else {
       toast({
-        title: 'Mindet megcsináltad!',
+        title: 'Mindet megcsinálta, kolléga!',
         description: 'Ebben a kategóriában nincs több riddle!',
         status: 'success',
         duration: 9000,

@@ -23,7 +23,7 @@ export function App() {
               <Route path="logout" element={<HomePage />} />
               {/** Error handling pages */}
               <Route path="error" element={<ErrorPage />} />
-              <Route path="*" element={<ErrorPage message="Hoppá, úgy tűnik egy olyan oldalt találtál, amely nem létezik többé!" />} />
+              <Route path="*" element={<ErrorPage message="Hoppá, úgy tűnik egy olyan oldalra került, amely nem létezik többé!" />} />
             </Route>
           </Routes>
         </Suspense>
