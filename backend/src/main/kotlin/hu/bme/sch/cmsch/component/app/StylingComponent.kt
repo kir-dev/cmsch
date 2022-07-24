@@ -22,15 +22,18 @@ class StylingComponent(
             lightBrandingColor,
             lightBackgroundUrl,
             lightMobileBackgroundUrl,
+            lightLogoUrl,
 
             darkGroup,
             darkModeEnabled,
             deviceTheme,
+            forceDarkMode,
             darkBackgroundColor,
             darkContainerColor,
             darkTextColor,
             darkBackgroundUrl,
             darkMobileBackgroundUrl,
+            darkLogoUrl,
 
             typographyGroup,
             mainFontName,
@@ -87,6 +90,11 @@ class StylingComponent(
         fieldName = "Mobil háttérkép", description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 
+    val lightLogoUrl = SettingProxy(componentSettingService, component,
+        "lightLogoUrl", "", type = SettingType.URL,
+        fieldName = "Oldal logója", description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg."
+    )
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val darkGroup = SettingProxy(componentSettingService, component,
@@ -104,6 +112,11 @@ class StylingComponent(
         "deviceTheme", "false", type = SettingType.BOOLEAN,
         fieldName = "Séma az eszköz alapján", description = "Ha be van kapcsolva, akkor lekéri, " +
                 "hogy világos vagy sötét módban fut az eszköz. Csak akkor működik ha a sötét mód be van kapcsolva."
+    )
+
+    val forceDarkMode = SettingProxy(componentSettingService, component,
+        "forceDarkMode", "false", type = SettingType.BOOLEAN,
+        fieldName = "Csak a sötét téma érhető el", description = "Ha be van kapcsolva, akkor csak a sötét téma használható"
     )
 
     val darkBackgroundColor = SettingProxy(componentSettingService, component,
@@ -129,6 +142,11 @@ class StylingComponent(
     val darkMobileBackgroundUrl = SettingProxy(componentSettingService, component,
         "darkMobileBackgroundUrl", "", type = SettingType.URL,
         fieldName = "Mobil háttérkép", description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
+    )
+
+    val darkLogoUrl = SettingProxy(componentSettingService, component,
+        "darkLogoUrl", "", type = SettingType.URL,
+        fieldName = "Oldal logója", description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

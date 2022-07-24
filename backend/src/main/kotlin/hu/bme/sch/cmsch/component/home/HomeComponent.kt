@@ -1,9 +1,6 @@
 package hu.bme.sch.cmsch.component.home
 
-import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.ComponentSettingService
-import hu.bme.sch.cmsch.component.MinRoleSettingProxy
-import hu.bme.sch.cmsch.component.SettingProxy
+import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -24,6 +21,10 @@ class HomeComponent(
     final override val allSettings by lazy {
         listOf(
             title, menuDisplayName, minRole,
+
+            displayGroup,
+            welcomeMessage,
+            content
         )
     }
 
@@ -40,6 +41,25 @@ class HomeComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val displayGroup = SettingProxy(componentSettingService, component,
+        "displayGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Megjelenés",
+        description = "A kezdőlap megjelenése"
+    )
+
+    val welcomeMessage = SettingProxy(componentSettingService, component,
+        "welcomeMessage", "Üdvözlünk a {} portálon", type = SettingType.TEXT,
+        fieldName = "Üdvözlő üzenet ", description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
+    )
+
+    val content = SettingProxy(componentSettingService, component,
+        "content", "",
+        type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen."
     )
 
 }
