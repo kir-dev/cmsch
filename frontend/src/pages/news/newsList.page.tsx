@@ -22,7 +22,7 @@ const NewsListPage = () => {
   }
 
   if (typeof newsList.data === 'undefined') {
-    sendMessage('Hírek betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
+    sendMessage('Hírek betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 

@@ -29,12 +29,12 @@ const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   }
 
   if (typeof data === 'undefined') {
-    sendMessage('Hír betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
+    sendMessage('Hír betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (RoleType[data.minRole] > RoleType.GUEST && profile && RoleType[profile.role] < RoleType[data.minRole]) {
-    sendMessage('Nincs jogosultságod ezt megtekinteni!')
+    sendMessage('Nincs jogosultsága ezt megtekinteni!')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
   return (

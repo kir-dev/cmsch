@@ -61,7 +61,7 @@ const TokenList = () => {
       <Heading as="h1">QR kód pecsétek</Heading>
       <PresenceAlert acquired={progress.acquiredTokenCount} needed={progress.minTokenToComplete} />
       <Paragraph>
-        A standoknál végzett aktív tevékenyégért QR kódokat lehet beolvasni. Ha eleget összegyűjtesz, beválthatod egy tanköri jelenlétre.
+        A standoknál végzett aktív tevékenyégért QR kódokat lehet beolvasni. Ha eleget összegyűjt, beválthatja egy tanköri jelenlétre.
       </Paragraph>
 
       <ButtonGroup mt="5">
@@ -85,7 +85,7 @@ const TokenList = () => {
       {progress.tokens.length > 0 ? (
         <>
           <Heading as="h4" size="md" mt="5">
-            Ahol eddig jártál
+            Ahol eddig járt
           </Heading>
           <Stack spacing="5" mt="1">
             {progress.tokens.map((token, i) => {
@@ -95,7 +95,7 @@ const TokenList = () => {
         </>
       ) : (
         <Heading as="h4" size="md" mt="5">
-          Még nem szereztél pecsétet
+          Még nem szerzett pecsétet
         </Heading>
       )}
     </CmschPage>

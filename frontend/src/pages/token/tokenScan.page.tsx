@@ -65,7 +65,7 @@ const TokenScan = () => {
   return (
     <CmschPage loginRequired groupRequired>
       <Helmet title="QR beolvasás" />
-      <Heading>Scanneld be a QR kódot</Heading>
+      <Heading>Scannelje be a QR kódot</Heading>
       {state.state == ScanViewState.Scanning && <QRreader delay={300} onError={handleError} onScan={handleScan} />}
 
       {state.state == ScanViewState.Success && (
