@@ -9,6 +9,7 @@ import Clock from '../countdown/components/clock'
 import { Schedule } from './components/Schedule'
 import { useEventListQuery } from '../../api/hooks/useEventListQuery'
 import { LinkButton } from '../../common-components/LinkButton'
+import Markdown from '../../common-components/Markdown'
 
 const HomePage = () => {
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))
@@ -38,13 +39,21 @@ const HomePage = () => {
   return (
     <CmschPage>
       <Helmet />
-      <Heading size="3xl" textAlign="center" marginTop={10}>
-        Üdvözlünk a{' '}
-        <Heading as="span" color={useColorModeValue('brand.500', 'brand.600')} size="3xl">
-          {config?.components.app.siteName || 'CMSch'}
-        </Heading>{' '}
-        portálon
-      </Heading>
+      {config?.components.home.welcomeMessage && (
+        <Heading size="3xl" textAlign="center" marginTop={10}>
+          {config?.components.home.welcomeMessage.split('{}')[0] + ' '}
+          {config?.components.home.welcomeMessage.split('{}').length > 1 && (
+            <>
+              <Heading as="span" color={useColorModeValue('brand.500', 'brand.600')} size="3xl">
+                {config?.components.app.siteName || 'CMSch'}
+              </Heading>{' '}
+              {config?.components.home.welcomeMessage.split('{}')[1]}
+            </>
+          )}
+        </Heading>
+      )}
+      {config?.components.home.content && <Markdown text={config?.components.home.content} />}
+
       {config?.components.countdown?.enabled && (
         <>
           <Heading textAlign="center">{config?.components.countdown?.topMessage}</Heading>
@@ -58,7 +67,7 @@ const HomePage = () => {
           </Heading>
           <Alert marginTop={4} variant="left-accent" width="fit-content" marginX="auto">
             <AlertIcon />
-            <Box>A változás jogát fenntartjuk! Kísérd figyelemmel az oldal tetején megjelenő értesítéseket!</Box>
+            <Box>A változás jogát fenntartjuk! Kísérje figyelemmel az oldal tetején megjelenő értesítéseket!</Box>
           </Alert>
           <VStack spacing={10}>
             <Text textAlign="center" fontSize={25} fontWeight="bolder" marginTop={10}>

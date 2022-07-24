@@ -1,4 +1,4 @@
-import { Box, Collapse, Flex, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
+import { Box, Collapse, Flex, Heading, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { DesktopNav } from './desktop/DesktopNav'
 import { MobileNav } from './mobile/MobileNav'
 import { Link } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
   const config = useConfigContext()
+  const logoUrl = useColorModeValue(config?.components.style.lightLogoUrl, config?.components.style.darkLogoUrl)
   return (
     <Box mx="auto" maxW="6xl" w="full" fontFamily="heading">
       <Flex
@@ -29,7 +30,7 @@ export const Navbar = () => {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
-            <Image maxH={16} maxW={16} src={config?.components.app.siteLogoUrl} alt="CMSch" />
+            {logoUrl ? <Image maxH={16} maxW={16} src={logoUrl} alt="CMSch" /> : <Heading>{config?.components.app.siteName}</Heading>}
           </Link>
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>
