@@ -1,9 +1,10 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
-import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
+import hu.bme.sch.cmsch.component.challange.ChallengeSubmissionRepository
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
+import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
@@ -28,7 +29,8 @@ open class LeaderBoardService(
     private val startupPropertyConfig: StartupPropertyConfig,
     private val taskSubmissions: Optional<SubmittedTaskRepository>,
     private val riddleSubmissions: Optional<RiddleMappingRepository>,
-    private val riddleComponent: Optional<RiddleComponent>
+    private val riddleComponent: Optional<RiddleComponent>,
+    private val challengeSubmissions: Optional<ChallengeSubmissionRepository>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -92,7 +94,7 @@ open class LeaderBoardService(
                 taskSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.groupName }
                     .filter { groups.findByName(it.key).map { m -> m.races }.orElse(false) }
-                    .map { TopListAsGroupEntryDto(it.key, it.value.sumOf { s -> s.score }, 0, 0) }
+                    .map { TopListAsGroupEntryDto(it.key, taskScore = it.value.sumOf { s -> s.score }) }
             }
             OwnershipType.USER -> listOf()
         }
@@ -103,26 +105,38 @@ open class LeaderBoardService(
                     .groupBy { it.ownerGroup }
                     .filter { it.key?.races ?: false }
                     .map {
-                        TopListAsGroupEntryDto(it.key?.name ?: "n/a", 0, it.value
+                        TopListAsGroupEntryDto(it.key?.name ?: "n/a", riddleScore = it.value
                             .sumOf { s ->
                                 ((s.riddle?.score?.toFloat() ?: 0f) * (if (s.hintUsed) hintPercentage else 1f)).toInt()
-                            }, 0
+                            }
                         )
                     }
             }
             OwnershipType.USER -> listOf()
         }
 
-        cachedTopListForGroups = sequenceOf(tasks, riddles)
+        val challenge = when (startupPropertyConfig.challengeOwnershipMode) {
+            OwnershipType.GROUP -> {
+                challengeSubmissions.map { it.findAll() }.orElse(listOf())
+                    .groupBy { it.groupName }
+                    .filter { groups.findByName(it.key).map { m -> m.races }.orElse(false) }
+                    .map { TopListAsGroupEntryDto(it.key, challengeScore = it.value.sumOf { s -> s.score }) }
+            }
+            OwnershipType.USER -> listOf()
+        }
+
+        cachedTopListForGroups = sequenceOf(tasks, riddles, challenge)
             .flatMap { it }
             .groupBy { it.name }
             .map { entries ->
                 val taskScore = entries.value.maxOf { it.taskScore }
                 val riddleScore = entries.value.maxOf { it.riddleScore }
+                val challengeScore = entries.value.maxOf { it.challengeScore }
                 TopListAsGroupEntryDto(entries.key,
-                    taskScore,
-                    riddleScore,
-                    taskScore + riddleScore)
+                    taskScore = taskScore,
+                    riddleScore = riddleScore,
+                    challengeScore = challengeScore,
+                    totalScore = taskScore + riddleScore + challengeScore)
             }
             .sortedByDescending { it.totalScore }
         log.info("Recalculating finished")
@@ -167,17 +181,35 @@ open class LeaderBoardService(
             }
         }
 
-        cachedTopListForUsers = sequenceOf(tasks, riddles)
+        val challenges = when (startupPropertyConfig.challengeOwnershipMode) {
+            OwnershipType.GROUP -> listOf()
+            OwnershipType.USER -> {
+                challengeSubmissions.map { it.findAll() }.orElse(listOf())
+                    .groupBy { it.userId }
+                    .map { entity ->
+                        TopListAsUserEntryDto(
+                            entity.key ?: 0,
+                            entity.value[0].userName,
+                            entity.value[0].groupName,
+                            challengeScore = entity.value.sumOf { s -> s.score }
+                        )
+                    }
+            }
+        }
+
+        cachedTopListForUsers = sequenceOf(tasks, riddles, challenges)
             .flatMap { it }
             .groupBy { it.id }
             .map { entries ->
                 val taskScore = entries.value.maxOf { it.taskScore }
                 val riddleScore = entries.value.maxOf { it.riddleScore }
+                val challengeScore = entries.value.maxOf { it.challengeScore }
                 TopListAsUserEntryDto(entries.key, entries.value.firstOrNull()?.name ?: "n/a",
                     entries.value.firstOrNull()?.groupName ?: "n/a",
-                    taskScore,
-                    riddleScore,
-                    taskScore + riddleScore)
+                    taskScore = taskScore,
+                    riddleScore = riddleScore,
+                    challengeScore = challengeScore,
+                    totalScore = taskScore + riddleScore + challengeScore)
             }
             .sortedByDescending { it.totalScore }
         log.info("Recalculating finished")

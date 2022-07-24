@@ -8,6 +8,8 @@ interface TopListAbstractEntry {
 
     var riddleScore: Int
 
+    var challengeScore: Int
+
     var totalScore: Int
 
 }

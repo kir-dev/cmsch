@@ -57,7 +57,7 @@ class UserController(
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",
-        "Az összes felhasználó (gólyák és seniorok egyaránt) kezelése.",
+        "Az összes felhasználó (résztvevők és rendezők egyaránt) kezelése.",
         UserEntity::class, ::UserEntity, importService, adminMenuService, component,
         mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
         permissionControl = PERMISSION_EDIT_USERS,
@@ -85,7 +85,7 @@ class UserController(
         model.addAttribute("adminPermissionList", adminPermissions.map { it.permissionString })
     }
 
-    override fun onEntityPreSave(entity: UserEntity, auth: Authentication) {
+    override fun onEntityPreSave(entity: UserEntity, auth: Authentication): Boolean {
         if (startupPropertyConfig.profileQrEnabled) {
             profileService.generateFullProfileForUser(entity)
         } else {
@@ -100,6 +100,7 @@ class UserController(
                 entity.group = null
             })
         }
+        return true
     }
 }
 

@@ -68,7 +68,7 @@ open class ImportService {
                                 }
                                 IMPORT_LONG -> {
                                     try {
-                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toLong())
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toLongOrNull())
                                     } catch (e: IllegalArgumentException) {
                                         log.error("Invalid field ${it.first.name} as type ${it.second.type} (LONG) with value ${dto[it.second.columnId]}")
                                         throw e
@@ -76,7 +76,7 @@ open class ImportService {
                                 }
                                 IMPORT_INT -> {
                                     try {
-                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toInt())
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toIntOrNull())
                                     } catch (e: IllegalArgumentException) {
                                         log.error("Invalid field ${it.first.name} as type ${it.second.type} (INT) with value ${dto[it.second.columnId]}")
                                         throw e

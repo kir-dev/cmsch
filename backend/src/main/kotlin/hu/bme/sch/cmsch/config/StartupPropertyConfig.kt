@@ -29,6 +29,7 @@ data class StartupPropertyConfig(
     val riddleOwnershipMode: OwnershipType = OwnershipType.USER,
     val tokenOwnershipMode: OwnershipType = OwnershipType.USER,
     val formOwnershipMode: OwnershipType = OwnershipType.USER,
+    val challengeOwnershipMode: OwnershipType = OwnershipType.USER,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
