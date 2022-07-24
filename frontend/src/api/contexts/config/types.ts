@@ -80,6 +80,8 @@ export interface Event {
 
 export interface Home {
   title: string
+  welcomeMessage: string
+  content: string
 }
 
 export interface Riddle {
@@ -151,14 +153,16 @@ export interface Style {
   lightBrandingColor: string
   lightBackgroundUrl: string
   lightMobileBackgroundUrl: string
+  lightLogoUrl: string
   darkModeEnabled: boolean
   deviceTheme: boolean
+  forceDarkMode: boolean
   darkBackgroundColor: string
   darkContainerColor: string
   darkTextColor: string
-  darkBrandingColor: string
   darkBackgroundUrl: string
   darkMobileBackgroundUrl: string
+  darkLogoUrl: string
   mainFontName: string
   mainFontCdn: string
   mainFontWeight: number
@@ -188,7 +192,10 @@ export interface Debt {}
 export interface UserHandling {}
 export interface ExtraPage {}
 export interface Location {}
-export interface Login {}
+export interface Login {
+  onlyBmeProvider: boolean
+  langLoginMenu: string
+}
 export interface Signup {
   langTooEarly: string
   langTooLate: string

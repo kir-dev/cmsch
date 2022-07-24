@@ -14,7 +14,11 @@ export const ThemeConfig = ({ children }: HasChildren) => {
       customTheme.colors.brand = getColorShadesForColor(config.components.style.lightBrandingColor)
       customTheme.colors.lightContainerBg = config.components.style.lightContainerColor
       customTheme.colors.darkContainerBg = config.components.style.darkContainerColor
-      customTheme.initialColorMode = config.components.style.deviceTheme ? 'system' : 'light'
+      customTheme.initialColorMode = config.components.style.deviceTheme
+        ? 'system'
+        : config.components.style.forceDarkMode
+        ? 'dark'
+        : 'light'
       const defaultGlobal = customTheme.styles.global
       customTheme.styles.global = (props: any) => ({
         ...defaultGlobal(props),
