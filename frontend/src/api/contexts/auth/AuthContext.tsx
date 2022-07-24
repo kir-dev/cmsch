@@ -1,6 +1,7 @@
 import { useToast } from '@chakra-ui/react'
+import axios from 'axios'
 import Cookies from 'js-cookie'
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { queryClient } from '../../../util/configs/api.config'
 import { CookieKeys } from '../../../util/configs/cookies.config'
@@ -34,6 +35,29 @@ export const AuthProvider = ({ children }: HasChildren) => {
   const toast = useToast()
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(typeof Cookies.get(CookieKeys.JWT_TOKEN) !== 'undefined')
+
+  useEffect(() => {
+    axios
+      .post<string>('/control/refresh')
+      .then((res) => {
+        if (res.status === 200) {
+          const newJwt = res.data
+          Cookies.set(CookieKeys.JWT_TOKEN, newJwt, { expires: 2 })
+        } else {
+          // todo? logout?
+        }
+      })
+      .catch((err) => {
+        console.log('[ERROR] at refreshing login token', JSON.stringify(err, null, 2))
+        // toast({
+        //   title: 'Authentikációs hiba',
+        //   description: 'Hiba esett az autentikációs token frissítésekor!',
+        //   status: 'error',
+        //   duration: 5000,
+        //   isClosable: true
+        // })
+      })
+  })
 
   const onLoginFailure = (err: any) => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
