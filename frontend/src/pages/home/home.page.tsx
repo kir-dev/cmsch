@@ -39,7 +39,7 @@ const HomePage = () => {
   return (
     <CmschPage>
       <Helmet />
-      {config?.components.home.welcomeMessage && (
+      {config?.components.home?.welcomeMessage && (
         <Heading size="3xl" textAlign="center" marginTop={10}>
           {config?.components.home.welcomeMessage.split('{}')[0] + ' '}
           {config?.components.home.welcomeMessage.split('{}').length > 1 && (
@@ -52,7 +52,7 @@ const HomePage = () => {
           )}
         </Heading>
       )}
-      {config?.components.home.content && <Markdown text={config?.components.home.content} />}
+      {config?.components.home?.content && <Markdown text={config?.components.home?.content} />}
 
       {config?.components.countdown?.enabled && (
         <>
