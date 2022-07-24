@@ -51,7 +51,7 @@ const ProfilePage = ({}: Props) => {
   }
 
   if (!profile) {
-    sendMessage('Profil betöltése sikertelen! A profil üres maradt. Keresd az oldal fejlesztőit a hiba kinyomozása érdekében!')
+    sendMessage('Profil betöltése sikertelen! A profil üres maradt. Keresse az oldal fejlesztőit a hiba kinyomozása érdekében!')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 

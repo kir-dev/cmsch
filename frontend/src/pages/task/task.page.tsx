@@ -52,7 +52,7 @@ const TaskPage = () => {
     navigate(AbsolutePaths.TASKS)
     toast({
       title: 'Feladat nem található',
-      description: 'Ilyen feladat nem létezik vagy nincs jogosultságod hozzá.',
+      description: 'Ilyen feladat nem létezik vagy nincs jogosultsága hozzá.',
       status: 'error',
       isClosable: true
     })
@@ -96,7 +96,7 @@ const TaskPage = () => {
               } else {
                 toast({
                   title: 'Üres megoldás',
-                  description: 'Üres megoldást nem küldhetsz be.',
+                  description: 'Üres megoldást nem küldhet be.',
                   status: 'error',
                   isClosable: true
                 })
@@ -120,7 +120,7 @@ const TaskPage = () => {
               } else {
                 toast({
                   title: 'Üres megoldás',
-                  description: 'Üres megoldást nem küldhetsz be.',
+                  description: 'Üres megoldást nem küldhet be.',
                   status: 'error',
                   isClosable: true
                 })
@@ -162,7 +162,7 @@ const TaskPage = () => {
       } else {
         toast({
           title: 'Üres megoldás',
-          description: 'Üres megoldást nem küldhetsz be.',
+          description: 'Üres megoldást nem küldhet be.',
           status: 'error',
           isClosable: true
         })

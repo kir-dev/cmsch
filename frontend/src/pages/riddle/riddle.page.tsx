@@ -63,7 +63,7 @@ const RiddlePage = () => {
           toastIdRef.current =
             toast({
               title: 'Helytelen válasz!',
-              description: 'Próbáld meg újra, sikerülni fog!',
+              description: 'Próbálja meg újra, sikerülni fog!',
               status: 'error',
               duration: 9000,
               isClosable: true
@@ -88,7 +88,7 @@ const RiddlePage = () => {
           navigate(AbsolutePaths.RIDDLE)
           toast({
             title: 'Minden megvan!',
-            description: 'Igazán ügyi voltál!',
+            description: 'Igazán szép munka, kolléga!',
             status: 'success',
             duration: 9000,
             isClosable: true

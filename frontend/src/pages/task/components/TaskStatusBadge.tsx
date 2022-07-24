@@ -7,7 +7,7 @@ const STATUS_TEXT_MAP = new Map<taskStatus, string>([
   [taskStatus.NOT_SUBMITTED, 'BEADÁSRA VÁR'],
   [taskStatus.REJECTED, 'ELUTASÍTVA'],
   [taskStatus.SUBMITTED, 'ÉRTÉKELÉSRE VÁR'],
-  [taskStatus.NOT_LOGGED_IN, 'NEM VAGY BEJELENTKEZVE']
+  [taskStatus.NOT_LOGGED_IN, 'ÖN NINCS BEJELENTKEZVE']
 ])
 
 const STATUS_COLOR_MAP = new Map<taskStatus, string>([
