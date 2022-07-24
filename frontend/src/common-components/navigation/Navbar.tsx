@@ -1,17 +1,15 @@
-import { Box, Collapse, Flex, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
-import { DesktopNav } from './desktop/DesktopNav'
-import { MobileNav } from './mobile/MobileNav'
+import { Box, Flex, Heading, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { SidebarMenu } from './sidebar/SidebarMenu'
+import { useRef } from 'react'
+import { FaBars } from 'react-icons/fa'
 
 export const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const config = useConfigContext()
   const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
-  const menu = config?.menu || []
-  const menuWithLogin = [...menu, LoginMenu]
   const btnRef = useRef(null)
 
   return (
