@@ -35,6 +35,9 @@ class LoginComponent(
             organizerGroups,
             organizerGroupName,
             fallbackGroupName,
+
+            langGroup,
+            langLoginMenu
         )
     }
 
@@ -80,7 +83,7 @@ class LoginComponent(
     }
 
     val onlyBmeProvider = SettingProxy(componentSettingService, component,
-        "onlyBmeProvider", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        "onlyBmeProvider", "false", type = SettingType.BOOLEAN, serverSideOnly = false,
         fieldName = "Címtáron keresztüli belépés", description = "Csak BME címtáron keresztüli belépés jelenik meg"
     )
 
@@ -128,6 +131,19 @@ class LoginComponent(
     val fallbackGroupName = SettingProxy(componentSettingService, component,
         "fallbackGroupName", "Vendég", serverSideOnly = true,
         fieldName = "Alap csoport neve", description = "Csoport neve, pl: Vendég; Ha nem létező, akkor nem kapják meg."
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val langGroup = SettingProxy(componentSettingService, component,
+        "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Nyelvi bellítások",
+        description = ""
+    )
+
+    val langLoginMenu = SettingProxy(componentSettingService, component,
+        "langLoginMenu", "Válassz bejelentkezési módot", type = SettingType.TEXT,
+        fieldName = "Belépés menü címsora", description = "A belépési mód választásánál megjelenő szöveg"
     )
 
 }
