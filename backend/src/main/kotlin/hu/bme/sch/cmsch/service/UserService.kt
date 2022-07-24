@@ -47,7 +47,7 @@ open class UserService(
                 .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, findGuildFor(it.neptun), "-") }
         val users = users.findAllByGroupName(groupName)
                 .asSequence()
-                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, it.guild.displayName, if (it.role.value <= RoleType.BASIC.value) "Gólya" else "Rendező" ) }
+                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, it.guild.displayName, if (it.role.value <= RoleType.BASIC.value) "Résztvevő" else "Rendező" ) }
 
         return (mappings + users)
                 .groupBy { it.neptun }
