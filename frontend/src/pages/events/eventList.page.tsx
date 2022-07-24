@@ -21,7 +21,7 @@ const EventListPage = () => {
   }
 
   if (typeof eventList.data === 'undefined') {
-    sendMessage('Események betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
+    sendMessage('Események betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 

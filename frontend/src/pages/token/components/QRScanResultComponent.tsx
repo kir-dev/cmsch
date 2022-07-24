@@ -25,7 +25,7 @@ export const QRScanResultComponent = ({ response }: QrScanResultProps) => {
       case ScanStatus.SCANNED:
         return 'Állomás lepecsételve'
       case ScanStatus.ALREADY_SCANNED:
-        return 'Ezt a kódot már egyszer beolvastad'
+        return 'Ezt a kódot már egyszer beolvasta'
       case ScanStatus.WRONG:
         return 'Ez a QR-kód nem jó a pontgyűjtéshez'
       default:

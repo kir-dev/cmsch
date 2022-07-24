@@ -22,7 +22,7 @@ const EventPage = () => {
   }
 
   if (typeof currentEvent.data === 'undefined') {
-    sendMessage('Esemény betöltése sikertelen!\n Keresd az oldal fejlesztőit.')
+    sendMessage('Esemény betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 

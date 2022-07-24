@@ -19,7 +19,7 @@ const LoginPage = () => {
       <Helmet />
       <VStack>
         <Heading size="lg" textAlign="center" mt={10} mb={2}>
-          Kérem jelentkezzen be {component?.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'} fiókkal!
+          Kérem, jelentkezzen be {component?.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'} fiókkal!
         </Heading>
         <Button colorScheme="brand" onClick={() => (window.location.href = `${API_BASE_URL}/control/login`)} leftIcon={<FaSignInAlt />}>
           Bejelentkezés

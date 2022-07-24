@@ -41,7 +41,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   }
 
   if (typeof data === 'undefined') {
-    sendMessage('Űrlap betöltése sikertelen!\n Keresd az oldal fejlesztőit!')
+    sendMessage('Űrlap betöltése sikertelen!\n Keresse az oldal fejlesztőit!')
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
   const { form, submission, message, status, detailsValidated } = data
