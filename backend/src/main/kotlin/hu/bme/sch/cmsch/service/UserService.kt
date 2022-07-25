@@ -25,7 +25,7 @@ open class UserService(
     }
 
     @Transactional(readOnly = true)
-    open fun getById(id: String): UserEntity = users.findByInternalId(id).orElseThrow()
+git    open fun getById(id: String): UserEntity = users.findByInternalId(id).orElseThrow()
 
     @Transactional(readOnly = true)
     open fun findById(internalId: String): Optional<UserEntity> {
