@@ -7,6 +7,7 @@ import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
 import { ScrollToTop } from './ScrollToTop'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { MinimalisticFooter } from '../footer/MinimalisticFooter'
 
 type Props = {
   background?: string
@@ -27,7 +28,7 @@ export const CmschLayout = ({ background, children }: Props) => {
           <Warning />
           {children}
         </Box>
-        <Footer />
+        {config?.components.app.minimalisticFooter ? <MinimalisticFooter /> : <Footer />}
       </Flex>
     </>
   )
