@@ -11,11 +11,12 @@ import parseSponsors from './utils/parseSponsors'
 export const Footer = () => {
   const config = useConfigContext()
   const component = config?.components.app
+  const minimalistic = false
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   return (
     <Box borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')}>
       <CmschContainer>
-        {component?.sponsorsEnabled && sponsors.length > 0 && (
+        {!minimalistic && component?.sponsorsEnabled && sponsors.length > 0 && (
           <>
             <Text textAlign="center">Támogatóink:</Text>
             <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
