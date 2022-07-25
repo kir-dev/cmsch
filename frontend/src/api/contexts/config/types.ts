@@ -36,6 +36,7 @@ export interface Components {
 export interface App {
   warningMessage: string
   warningLevel: 'success' | 'info' | 'warning' | 'error'
+  minimalisticFooter: boolean
   siteName: string
   defaultComponent: string
   siteLogoUrl: string
