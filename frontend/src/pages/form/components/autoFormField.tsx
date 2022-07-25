@@ -14,8 +14,7 @@ interface AutoFormFieldProps {
 export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: AutoFormFieldProps) => {
   const selectValues = fieldProps.values.split(',').map((opt) => opt.trim())
   if (!defaultValue) {
-    if (fieldProps.type === FormFieldVariants.CHECKBOX || fieldProps.type === FormFieldVariants.MUST_AGREE) defaultValue = 'true'
-    if (fieldProps.type === FormFieldVariants.NUMBER) defaultValue = 0
+    if (fieldProps.type === FormFieldVariants.SELECT) defaultValue = selectValues[0]
   }
 
   const {
