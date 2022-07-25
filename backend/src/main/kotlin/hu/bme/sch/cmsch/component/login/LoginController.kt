@@ -310,7 +310,8 @@ class LoginController(
         return "redirect:${applicationComponent.siteUrl.getValue()}"
     }
 
-    @PostMapping("/control/refresh")
+    @ResponseBody
+    @PostMapping("/api/control/refresh")
     fun refreshToken(auth: Authentication?): ResponseEntity<String> {
         if (auth == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
