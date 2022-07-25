@@ -26,6 +26,7 @@ export const ThemeConfig = ({ children }: HasChildren) => {
           bgRepeat: 'no-repeat',
           bgSize: 'cover',
           bgPosition: 'center',
+          bgAttachment: 'fixed',
           [`@media screen and (max-width: ${props.theme.breakpoints.sm})`]: {
             bgImage: mode(
               `url(${config.components.style.lightMobileBackgroundUrl})`,
