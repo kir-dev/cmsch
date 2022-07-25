@@ -13,6 +13,9 @@ import Markdown from '../../common-components/Markdown'
 import { useFormSubmit } from '../../api/hooks/useFormSubmit'
 import { FormStatusBadge } from './components/formStatusBadge'
 import { FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
+import Cookies from 'js-cookie'
+import { CookieKeys } from '../../util/configs/cookies.config'
+import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
 
 interface FormPageProps {}
 
@@ -20,6 +23,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const params = useParams()
   const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
   const { data, isLoading, error, refetch } = useFormPage(params.slug || '')
+  const { refresh } = useTokenRefresh()
   const { sendMessage } = useServiceContext()
   const toast = useToast()
   const { control, handleSubmit } = useForm()
@@ -29,6 +33,10 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
       const success = result === FormSubmitResult.OK || result === FormSubmitResult.OK_RELOG_REQUIRED
       toast({ title: FormSubmitMessage[result as FormSubmitResult], status: success ? 'success' : 'error' })
     }
+    if (result === FormSubmitResult.OK_RELOG_REQUIRED && Cookies.get(CookieKeys.JWT_TOKEN)) {
+      refresh((token) => Cookies.set(CookieKeys.JWT_TOKEN, token))
+    }
+    refetch()
   }, [result])
 
   if (isLoading) {
@@ -49,10 +57,10 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const onSubmit = (values: Record<string, unknown>) => {
     if (available) {
       submit(values, status !== FormStatus.NO_SUBMISSION)
-      refetch()
       window.scrollTo(0, 0)
     }
   }
+
   return (
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />

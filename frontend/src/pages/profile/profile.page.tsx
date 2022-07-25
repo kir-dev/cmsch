@@ -55,6 +55,10 @@ const ProfilePage = ({}: Props) => {
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
+  if (!profile.loggedIn || profile.role === 'GUEST') {
+    return <Navigate replace to="/" />
+  }
+
   return (
     <CmschPage loginRequired>
       <Helmet title={component?.title} />
