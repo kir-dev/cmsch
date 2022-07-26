@@ -37,7 +37,7 @@ export const CookieConsentProvider = ({ children }: HasChildren) => {
   }, [isAccepted])
 
   useEffect(() => {
-    if (SHOW_COOKIE_CONSENT_POPUP && !isAccepted) {
+    if (SHOW_COOKIE_CONSENT_POPUP === 'true' && !isAccepted) {
       toastIdRef.current = toast(toastOptions)
     }
   }, [])
