@@ -1,5 +1,5 @@
 import { Image } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Navigate, useParams } from 'react-router-dom'
 import { Community } from '../../util/views/organization'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'

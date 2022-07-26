@@ -1,6 +1,6 @@
 import { ButtonGroup, Heading, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { MessageTypes, useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { LinkButton } from '../../common-components/LinkButton'

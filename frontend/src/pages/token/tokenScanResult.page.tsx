@@ -1,5 +1,5 @@
 import { ButtonGroup } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { useSearchParams } from 'react-router-dom'
 import { CmschPage } from '../../common-components/layout/CmschPage'

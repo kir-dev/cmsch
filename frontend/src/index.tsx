@@ -16,6 +16,7 @@ import { ServiceProvider } from './api/contexts/service/ServiceContext'
 import { CookieConsentProvider } from './api/contexts/cookie-consent/CookieConsentContext'
 import { ChakraProvider } from '@chakra-ui/react'
 import { customTheme } from './util/configs/theme.config'
+import { HelmetProvider } from 'react-helmet-async-async'
 
 initAxios()
 
@@ -25,22 +26,24 @@ root.render(
   <React.StrictMode>
     <ColorModeScript />
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ServiceProvider>
-          <ChakraProvider theme={customTheme}>
-            <ConfigProvider>
-              <ThemeConfig>
-                <AuthProvider>
-                  <CookieConsentProvider>
-                    <App />
-                    <ReactQueryDevtools />
-                  </CookieConsentProvider>
-                </AuthProvider>
-              </ThemeConfig>
-            </ConfigProvider>
-          </ChakraProvider>
-        </ServiceProvider>
-      </BrowserRouter>
+      <HelmetProvider>
+        <BrowserRouter>
+          <ServiceProvider>
+            <ChakraProvider theme={customTheme}>
+              <ConfigProvider>
+                <ThemeConfig>
+                  <AuthProvider>
+                    <CookieConsentProvider>
+                      <App />
+                      <ReactQueryDevtools />
+                    </CookieConsentProvider>
+                  </AuthProvider>
+                </ThemeConfig>
+              </ConfigProvider>
+            </ChakraProvider>
+          </ServiceProvider>
+        </BrowserRouter>
+      </HelmetProvider>
     </QueryClientProvider>
   </React.StrictMode>
 )

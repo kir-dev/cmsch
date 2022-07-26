@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from './api/contexts/config/ConfigContext'
 import { API_BASE_URL } from './util/configs/environment.config'
 

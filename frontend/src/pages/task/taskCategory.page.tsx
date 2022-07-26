@@ -1,5 +1,5 @@
 import { Badge, Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Loading } from '../../common-components/Loading'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
@@ -12,8 +12,8 @@ import { AbsolutePaths } from '../../util/paths'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
-  const bg = useColorModeValue('gray.200', 'gray.600')
-  const hoverBg = useColorModeValue('brand.300', 'brand.700')
+  const bg = useColorModeValue('gray.200', 'whiteAlpha.200')
+  const hoverBg = useColorModeValue('brand.300', 'whiteAlpha.300')
   const toast = useToast()
   const navigate = useNavigate()
   const tasksQuery = useTasksInCategoryQuery(id, () => {

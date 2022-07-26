@@ -4,7 +4,7 @@ import { ConfigDto } from './types'
 import { useConfigQuery } from '../../hooks/useConfigQuery'
 import { Loading } from '../../../common-components/Loading'
 import { Button, ButtonGroup, Heading, Text } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
