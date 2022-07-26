@@ -17,7 +17,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
         ))}
       </Grid>
       <Grid
-        templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 2 })}, 1fr)`}
+        templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 1 })}, 1fr)`}
         gap={4}
         marginTop={highlighted.length === 0 ? 4 : 20}
       >
