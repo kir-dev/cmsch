@@ -56,9 +56,9 @@ const RiddleCategoryList = () => {
       return `conic-gradient(${color} 0deg, ${color} 360deg)`
     }
     if (progress === 0) {
-      return `conic-gradient(grey 0deg, gray 360deg)`
+      return `conic-gradient(white 0deg, white 360deg)`
     }
-    return `conic-gradient(grey 0deg,${color} 10deg, ${color} ${endDeg}deg, grey ${endDeg + 10}deg)`
+    return `conic-gradient(white 0deg,${color} 10deg, ${color} ${endDeg}deg, white ${endDeg + 10}deg)`
   }
 
   const riddleHoverBgColor = useColorModeValue('brand.300', 'brand.700')

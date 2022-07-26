@@ -41,9 +41,18 @@ data class NewsEntity(
     var title: String = "",
 
     @Lob
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class, Preview::class, ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Rövid összefoglaló",
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Rövid tartalom",
+        note = "Ez a hír összesítésben megjelenő tartalma")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 2)
+    var briefContent: String = "",
+
+    @Lob
+    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Tartalom",
             note = "Ez a hír teljes tartalma")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2)
