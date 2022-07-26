@@ -30,8 +30,8 @@ class ExtraPageApiController(
         ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header"),
         ApiResponse(responseCode = "404", description = "No extra page found with this path")
     ])
-    fun extraPage(@PathVariable path: String, auth: Authentication): ResponseEntity<ExtraPageView> {
-        val user = auth.getUserOrNull()
+    fun extraPage(@PathVariable path: String, auth: Authentication?): ResponseEntity<ExtraPageView> {
+        val user = auth?.getUserOrNull()
         if (!extraPageComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 

@@ -30,7 +30,7 @@ class TaskApiController(
 
     @JsonView(Preview::class)
     @GetMapping("/task")
-    fun tasks(auth: Authentication): TasksView {
+    fun tasks(auth: Authentication?): TasksView {
         val categories: List<TaskCategoryDto>
         val score: Int?
         val leaderBoardAvailable = leaderBoardComponent.map { it.leaderboardEnabled.isValueTrue() }.orElse(false)
@@ -38,7 +38,7 @@ class TaskApiController(
 
         when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth.getUserOrNull() ?: return TasksView(
+                val user = auth?.getUserOrNull() ?: return TasksView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
@@ -57,7 +57,7 @@ class TaskApiController(
                 )
             }
             OwnershipType.GROUP -> {
-                val group = auth.getUserFromDatabaseOrNull()?.group ?: return TasksView(
+                val group = auth?.getUserFromDatabaseOrNull()?.group ?: return TasksView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
@@ -80,7 +80,7 @@ class TaskApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/task/category/{categoryId}")
-    fun taskCategory(@PathVariable categoryId: Int, auth: Authentication): TaskCategoryView {
+    fun taskCategory(@PathVariable categoryId: Int, auth: Authentication?): TaskCategoryView {
         val category = tasks.getCategory(categoryId) ?: return TaskCategoryView(
             categoryName = "Nem található O.o",
             tasks = listOf()
@@ -88,14 +88,14 @@ class TaskApiController(
 
         val tasks =  when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth.getUserOrNull() ?: return TaskCategoryView(
+                val user = auth?.getUserOrNull() ?: return TaskCategoryView(
                     categoryName = "Nem található",
                     tasks = listOf()
                 )
                 tasks.getAllTasksForUser(user)
             }
             OwnershipType.GROUP -> {
-                val group = auth.getUserFromDatabaseOrNull()?.group ?: return TaskCategoryView(
+                val group = auth?.getUserFromDatabaseOrNull()?.group ?: return TaskCategoryView(
                     categoryName = "Nem található",
                     tasks = listOf()
                 )
@@ -114,14 +114,14 @@ class TaskApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/task/submit/{taskId}")
-    fun task(@PathVariable taskId: Int, auth: Authentication): SingleTaskView {
+    fun task(@PathVariable taskId: Int, auth: Authentication?): SingleTaskView {
         val task = tasks.getById(taskId)
         if (task.orElse(null)?.visible?.not() == true)
             return SingleTaskView(task = null, submission = null)
 
         val submission = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth.getUserFromDatabaseOrNull() ?: return SingleTaskView(
+                val user = auth?.getUserFromDatabaseOrNull() ?: return SingleTaskView(
                     task = task.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
@@ -129,7 +129,7 @@ class TaskApiController(
                 tasks.getSubmissionForUserOrNull(user, task)
             }
             OwnershipType.GROUP -> {
-                val group = auth.getUserFromDatabaseOrNull()?.group ?: return SingleTaskView(
+                val group = auth?.getUserFromDatabaseOrNull()?.group ?: return SingleTaskView(
                     task = task.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
@@ -153,9 +153,9 @@ class TaskApiController(
     fun submitTask(
         @ModelAttribute(binding = false) answer: TaskSubmissionDto,
         @RequestParam(required = false) file: MultipartFile?,
-        auth: Authentication
+        auth: Authentication?
     ): TaskSubmissionResponseDto {
-        val user = auth.getUserFromDatabaseOrNull()
+        val user = auth?.getUserFromDatabaseOrNull()
             ?: return TaskSubmissionResponseDto(TaskSubmissionStatus.NO_PERMISSION)
 
         return when (startupPropertyConfig.taskOwnershipMode) {

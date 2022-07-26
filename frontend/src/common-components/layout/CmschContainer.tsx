@@ -9,8 +9,8 @@ export const CmschContainer = ({ children }: Props) => (
     px="4"
     py="4"
     mx="auto"
-    maxWidth={['100%', '48rem', '48rem', '64rem']}
-    borderRadius={[0, 10]}
+    maxWidth={['100%', '48rem', '48rem', '48rem']}
+    borderRadius={[0, 0]}
     bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
   >
     {children}

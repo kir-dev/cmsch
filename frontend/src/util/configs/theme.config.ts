@@ -36,16 +36,16 @@ const buttonVariantGhost: SystemStyleFunction = (props) => {
 const buttonVariantSolid: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
   if (c === 'gray') {
-    const bg = mode(`gray.100`, `whiteAlpha.200`)(props)
+    const bg = mode(`gray.100`, `whiteAlpha.300`)(props)
     return {
       bg,
       _hover: {
-        bg: mode(`gray.200`, `whiteAlpha.300`)(props),
+        bg: mode(`gray.200`, `whiteAlpha.400`)(props),
         _disabled: {
           bg
         }
       },
-      _active: { bg: mode(`gray.300`, `whiteAlpha.400`)(props) }
+      _active: { bg: mode(`gray.300`, `whiteAlpha.500`)(props) }
     }
   }
   const yellowOrCyan = c === 'yellow' || c === 'cyan'
