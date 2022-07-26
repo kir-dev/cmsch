@@ -5,8 +5,8 @@ import { TaskCategoryPreview } from '../../../util/views/task.view'
 import { progressGradient, progress } from '../util/taskCategoryProgress'
 
 export const TaskCategoryListItem = ({ category }: { category: TaskCategoryPreview }) => {
-  const bg = useColorModeValue('gray.200', 'gray.600')
-  const hoverBg = useColorModeValue('brand.300', 'brand.700')
+  const bg = useColorModeValue('gray.200', 'whiteAlpha.200')
+  const hoverBg = useColorModeValue('brand.300', 'whiteAlpha.300')
   const gradientBg = useColorModeValue('brand.500', 'brand.600')
   return (
     <Box bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>

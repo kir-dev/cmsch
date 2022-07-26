@@ -14,7 +14,7 @@ export const NavItemNoChildren = ({ menu }: Props) => {
         <chakra.span
           _hover={{
             textDecoration: 'none',
-            color: useColorModeValue('brand.500', 'brand.600')
+            color: useColorModeValue('brand.500', 'brand.400')
           }}
           whiteSpace="nowrap"
           fontSize="md"

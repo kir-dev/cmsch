@@ -111,6 +111,11 @@ object ControlPermissions : PermissionGroup {
         "Beadások komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_HOME = PermissionValidator(
+        "HOME_CONTROL",
+        "Kezdőlap komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -127,7 +132,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_IMPRESSUM,
         PERMISSION_CONTROL_COUNTDOWN,
         PERMISSION_CONTROL_SIGNUP,
-        PERMISSION_CONTROL_CHALLENGE
+        PERMISSION_CONTROL_CHALLENGE,
+        PERMISSION_CONTROL_HOME
     )
 
 }

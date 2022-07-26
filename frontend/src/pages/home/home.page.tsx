@@ -44,7 +44,7 @@ const HomePage = () => {
           {config?.components.home.welcomeMessage.split('{}')[0] + ' '}
           {config?.components.home.welcomeMessage.split('{}').length > 1 && (
             <>
-              <Heading as="span" color={useColorModeValue('brand.500', 'brand.600')} size="3xl">
+              <Heading as="span" color={useColorModeValue('brand.500', 'brand.500')} size="3xl">
                 {config?.components.app.siteName || 'CMSch'}
               </Heading>{' '}
               {config?.components.home.welcomeMessage.split('{}')[1]}
@@ -52,7 +52,6 @@ const HomePage = () => {
           )}
         </Heading>
       )}
-      {config?.components.home?.content && <Markdown text={config?.components.home?.content} />}
 
       {config?.components.countdown?.enabled && (
         <>
@@ -60,6 +59,9 @@ const HomePage = () => {
           <Clock countTo={countTo} />
         </>
       )}
+
+      {config?.components.home?.content && <Markdown text={config?.components.home?.content} />}
+
       {eventList.data && (
         <VStack>
           <Heading as="h2" size="lg" textAlign="center">

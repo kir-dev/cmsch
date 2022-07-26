@@ -18,7 +18,7 @@ export const NavItemWithChildren = ({ menu }: Props) => (
             <HStack
               _hover={{
                 textDecoration: 'none',
-                color: useColorModeValue('brand.500', 'brand.600')
+                color: useColorModeValue('brand.500', 'brand.400')
               }}
             >
               <chakra.span fontSize="md" fontWeight={500}>

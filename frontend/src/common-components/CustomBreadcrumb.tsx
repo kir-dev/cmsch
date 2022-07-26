@@ -11,7 +11,7 @@ type BreadcrumbProps = {
 } & SpaceProps
 
 export const CustomBreadcrumb: FC<BreadcrumbProps> = ({ items, ...spaceProps }) => (
-  <Breadcrumb {...spaceProps} spacing={2} separator={<ChevronRightIcon color={useColorModeValue('brand.500', 'brand.600')} />}>
+  <Breadcrumb {...spaceProps} spacing={2} separator={<ChevronRightIcon color={useColorModeValue('brand.500', 'brand.400')} />}>
     {items.map((item, idx) => (
       <BreadcrumbItem key={idx}>
         <BreadcrumbLink
@@ -21,7 +21,7 @@ export const CustomBreadcrumb: FC<BreadcrumbProps> = ({ items, ...spaceProps }) 
           fontWeight={500}
           _hover={{
             textDecoration: 'none',
-            color: useColorModeValue('brand.500', 'brand.600')
+            color: useColorModeValue('brand.500', 'brand.400')
           }}
         >
           {item.title}
