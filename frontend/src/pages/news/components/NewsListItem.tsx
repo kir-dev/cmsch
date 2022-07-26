@@ -1,9 +1,12 @@
-import { Divider, GridItem, Heading, Text } from '@chakra-ui/react'
+import { Divider, GridItem, Heading, Text, Link as ChakraLink, Box, HStack, Icon } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { NewsArticleView } from '../../../util/views/news.view'
 import { AbsolutePaths } from '../../../util/paths'
 import Markdown from '../../../common-components/Markdown'
+import { ExternalLinkIcon, StarIcon } from '@chakra-ui/icons'
+import { BsExclamationCircle } from 'react-icons/bs'
+import { FaStar } from 'react-icons/fa'
 
 interface NewsListItemProps {
   news: NewsArticleView
@@ -13,15 +16,23 @@ interface NewsListItemProps {
 
 const NewsListItem = ({ news, fontSize, index }: NewsListItemProps) => {
   return (
-    <GridItem>
+    <GridItem borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
       <Link to={`${AbsolutePaths.NEWS}/${news.url}`}>
-        <Heading size={fontSize} mt={'2rem'} mb={'0.5rem'}>
+        <HStack justifyContent="space-between">
+          <Box fontSize="sm" mb={2} fontWeight={300}>
+            Közzétéve: {stringifyTimeStamp(news.timestamp)}
+          </Box>
+          {news.highlighted && (
+            <Box>
+              <Icon as={FaStar} color="brand.100" w={8} h={8} />
+            </Box>
+          )}
+        </HStack>
+        <Heading size={fontSize} my={2}>
           {news.title}
         </Heading>
-        <Text fontSize={fontSize}>{stringifyTimeStamp(news.timestamp)}</Text>
-        <Markdown text={news.briefContent || ''} />
+        {news.briefContent && <Markdown text={news.briefContent} />}
       </Link>
-      <Divider />
     </GridItem>
   )
 }
