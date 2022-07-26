@@ -92,7 +92,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
                 {formField.note && <Markdown text={formField.note} />}
               </FormControl>
             ))}
-            <Button disabled={!available} type="submit" isLoading={submitLoading}>
+            <Button mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
               {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
             </Button>
           </form>
