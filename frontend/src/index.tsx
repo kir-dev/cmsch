@@ -16,7 +16,7 @@ import { ServiceProvider } from './api/contexts/service/ServiceContext'
 import { CookieConsentProvider } from './api/contexts/cookie-consent/CookieConsentContext'
 import { ChakraProvider } from '@chakra-ui/react'
 import { customTheme } from './util/configs/theme.config'
-import { HelmetProvider } from 'react-helmet-async-async'
+import { HelmetProvider } from 'react-helmet-async'
 
 initAxios()
 
