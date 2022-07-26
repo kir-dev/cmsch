@@ -17,7 +17,6 @@ import { CookieConsentProvider } from './api/contexts/cookie-consent/CookieConse
 import { ChakraProvider } from '@chakra-ui/react'
 import { customTheme } from './util/configs/theme.config'
 import { HelmetProvider } from 'react-helmet-async'
-import { Fonts } from './common-components/Fonts'
 
 initAxios()
 
@@ -31,7 +30,6 @@ root.render(
         <BrowserRouter>
           <ServiceProvider>
             <ChakraProvider theme={customTheme}>
-              <Fonts />
               <ConfigProvider>
                 <ThemeConfig>
                   <AuthProvider>
