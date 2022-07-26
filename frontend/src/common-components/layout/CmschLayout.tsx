@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react'
 import * as React from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Footer } from '../footer/Footer'
 import { HasChildren } from '../../util/react-types.util'
 import { Navbar } from '../navigation/Navbar'

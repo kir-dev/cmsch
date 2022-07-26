@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Fade, Heading } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import QRreader from 'react-qr-reader'
 import { ScanResponseView, ScanStatus } from '../../util/views/token.view'

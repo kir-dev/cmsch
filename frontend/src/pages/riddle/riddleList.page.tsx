@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
 import { RiddleCategory } from '../../util/views/riddle.view'
 import { Loading } from '../../common-components/Loading'
