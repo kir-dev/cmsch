@@ -1,9 +1,9 @@
-import { Flex, useColorModeValue } from '@chakra-ui/react'
+import { BoxProps, Flex, useColorModeValue } from '@chakra-ui/react'
 import { HasChildren } from '../../util/react-types.util'
 
-type Props = {} & HasChildren
+type Props = {} & HasChildren & BoxProps
 
-export const CmschContainer = ({ children }: Props) => (
+export const CmschContainer = ({ children, ...props }: Props) => (
   <Flex
     flexDirection="column"
     px="4"
@@ -12,6 +12,7 @@ export const CmschContainer = ({ children }: Props) => (
     maxWidth={['100%', '48rem', '48rem', '48rem']}
     borderRadius={[0, 0]}
     bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
+    {...props}
   >
     {children}
   </Flex>

@@ -16,7 +16,7 @@ export const CmschPage = ({ loginRequired, groupRequired, children, ...props }: 
   // if (groupRequired && profile?.groupSelectionAllowed) return <Navigate to={`${AbsolutePaths.PROFILE}tankor-modositas`} />
 
   return (
-    <CmschContainer {...props}>
+    <CmschContainer {...props} pb={10}>
       <Outlet />
       {children}
     </CmschContainer>
