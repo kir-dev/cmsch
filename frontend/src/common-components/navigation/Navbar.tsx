@@ -39,7 +39,7 @@ export const Navbar = () => {
           </Flex>
         </Flex>
         <Flex flex={{ base: 1, md: 0 }} mr={{ base: -2, md: 0 }} justify="flex-end">
-          <ColorModeSwitcher />
+          {!config?.components?.style?.forceDarkMode && <ColorModeSwitcher />}
         </Flex>
       </Flex>
       {/*The method in onClick hides the menu items when a menu item is clicked. Works for collapsible items too!*/}
