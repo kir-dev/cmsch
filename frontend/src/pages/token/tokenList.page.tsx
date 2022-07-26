@@ -1,7 +1,7 @@
 import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { FaQrcode, FaStamp } from 'react-icons/fa'
 import { ProfileView } from '../../util/views/profile.view'
 import { TokenView } from '../../util/views/token.view'

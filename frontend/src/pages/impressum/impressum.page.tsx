@@ -1,5 +1,5 @@
 import { Heading, Wrap } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'

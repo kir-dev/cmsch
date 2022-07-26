@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, Badge, Box, Button, Flex, FormLabel, Heading, Image, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
 import { lazy, useEffect, useRef, useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'

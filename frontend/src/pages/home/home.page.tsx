@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, Box, Divider, Heading, Text, VStack } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useMemo } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../util/paths'

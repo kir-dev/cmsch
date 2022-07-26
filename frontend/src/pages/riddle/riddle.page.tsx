@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { FormEvent, useEffect, useRef, useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from '../../util/views/riddle.view'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'

@@ -5,7 +5,7 @@ import { ChakraProvider, useColorMode } from '@chakra-ui/react'
 import Values from 'values.js'
 import { useMemo } from 'react'
 import { mode } from '@chakra-ui/theme-tools'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 export const ThemeConfig = ({ children }: HasChildren) => {
   const config = useConfigContext()
