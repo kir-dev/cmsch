@@ -38,7 +38,8 @@ export const ThemeConfig = ({ children }: HasChildren) => {
       })
       customTheme.fonts = {
         heading: config.components.style.displayFontName,
-        body: config.components.style.mainFontName
+        body: config.components.style.mainFontName,
+        mono: 'monospace'
       }
     }
     return customTheme
