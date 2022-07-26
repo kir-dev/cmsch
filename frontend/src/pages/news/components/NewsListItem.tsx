@@ -3,11 +3,7 @@ import { Link } from 'react-router-dom'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { NewsArticleView } from '../../../util/views/news.view'
 import { AbsolutePaths } from '../../../util/paths'
-<<<<<<< HEAD
 import Markdown from '../../../common-components/Markdown'
-=======
-import Markdown from "../../../common-components/Markdown";
->>>>>>> 30dc211... Fix styling
 
 interface NewsListItemProps {
   news: NewsArticleView
