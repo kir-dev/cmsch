@@ -1,7 +1,7 @@
 import { HasChildren } from '../../../util/react-types.util'
 import { customTheme } from '../../../util/configs/theme.config'
 import { useConfigContext } from '../config/ConfigContext'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, useColorMode } from '@chakra-ui/react'
 import Values from 'values.js'
 import { useMemo } from 'react'
 import { mode } from '@chakra-ui/theme-tools'
@@ -9,13 +9,14 @@ import { Helmet } from 'react-helmet'
 
 export const ThemeConfig = ({ children }: HasChildren) => {
   const config = useConfigContext()
+  const { setColorMode } = useColorMode()
+
   const chakraConfig = useMemo(() => {
     if (config?.components.style) {
       customTheme.colors.brand = getColorShadesForColor(config.components.style.lightBrandingColor)
       customTheme.colors.lightContainerBg = config.components.style.lightContainerColor
       customTheme.colors.darkContainerBg = config.components.style.darkContainerColor
-      customTheme.initialColorMode =
-        (config.components.style.deviceTheme && 'system') || (config.components.style.forceDarkMode && 'dark') || 'light'
+      setColorMode((config.components.style.deviceTheme && 'system') || (config.components.style.forceDarkMode && 'dark') || 'light')
       const defaultGlobal = customTheme.styles.global
       customTheme.styles.global = (props: any) => ({
         ...defaultGlobal(props),
