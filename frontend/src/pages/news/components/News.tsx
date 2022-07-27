@@ -23,20 +23,16 @@ const News = ({ news }: NewsProps) => {
   return (
     <>
       <CustomBreadcrumb items={breadcrumbItems} />
-      <Heading>{news.title}</Heading>
-      <Text mb="1rem">{stringifyTimeStamp(news.timestamp)}</Text>
-      <Image
-        mb="1.5rem"
-        display="block"
-        ml="auto"
-        mr="auto"
-        src={news.imageUrl == '' ? 'https://picsum.photos/200' : news.imageUrl} //TODO random képet kivenni
-        placeholder="ide kéne kép"
-        h="20rem"
-      />
+      <Text fontSize="xs" fontWeight={300} textAlign="end">
+        {stringifyTimeStamp(news.timestamp)}
+      </Text>
+      <Heading mb={2}>{news.title}</Heading>
+      {news.imageUrl && news.imageUrl !== '' && (
+        <Image mb={4} display="block" ml="auto" mr="auto" src={news.imageUrl} alt={news.title} maxH="20rem" />
+      )}
       <Markdown text={news.content} />
       <Link to={AbsolutePaths.NEWS}>
-        <Button mt="2rem">Vissza a hírekhez</Button>
+        <Button mt={4}>Vissza a hírekhez</Button>
       </Link>
     </>
   )
