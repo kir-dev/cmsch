@@ -9,9 +9,9 @@ interface ClockProps {
 
 const Clock = ({ countTo }: ClockProps) => {
   const target = countTo.getTime() > Date.now() ? countTo : new Date()
-  const [duration, setDuration] = useState(intervalToDuration({ start: target, end: new Date() }))
+  const [duration, setDuration] = useState(intervalToDuration({ start: new Date(), end: target }))
   const update = () => {
-    if (countTo.getTime() > Date.now()) setDuration(intervalToDuration({ start: countTo, end: new Date() }))
+    if (countTo.getTime() > Date.now()) setDuration(intervalToDuration({ start: new Date(), end: countTo }))
   }
   useEffect(() => {
     setInterval(update, 1000)
