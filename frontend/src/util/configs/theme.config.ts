@@ -148,14 +148,14 @@ export let customTheme = extendTheme({
     },
     Button: {
       variants: {
-        solid: buttonVariantSolid,
-        ghost: buttonVariantGhost,
-        outline: buttonVariantOutline
+        // solid: buttonVariantSolid,
+        // ghost: buttonVariantGhost
+        // outline: buttonVariantOutline
       }
     },
     Alert: {
       variants: {
-        solid: alertVariantSolid
+        // solid: alertVariantSolid
       }
     },
     Progress: {

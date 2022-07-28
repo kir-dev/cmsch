@@ -60,7 +60,11 @@ const HomePage = () => {
         </>
       )}
 
-      {config?.components.home?.content && <Markdown text={config?.components.home?.content} />}
+      {config?.components.home?.content && (
+        <Box mt={10}>
+          <Markdown text={config?.components.home?.content} />
+        </Box>
+      )}
 
       {eventList.data && (
         <VStack>

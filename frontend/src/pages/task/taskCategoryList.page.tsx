@@ -8,7 +8,7 @@ import { useTaskCategoriesQuery } from '../../api/hooks/useTaskCategoriesQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { taskCategoryType } from '../../util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
-import { Paragraph } from '../../common-components/Paragraph'
+import Markdown from '../../common-components/Markdown'
 
 const TaskCategoryList = () => {
   const taskConfig = useConfigContext()?.components.task
@@ -31,7 +31,7 @@ const TaskCategoryList = () => {
     const required = prCategories.length > 0 && (
       <>
         <Heading>{taskConfig?.profileRequiredTitle}</Heading>
-        {taskConfig?.profileRequiredMessage && <Paragraph>{taskConfig?.profileRequiredMessage}</Paragraph>}
+        {taskConfig?.profileRequiredMessage && <Markdown text={taskConfig?.profileRequiredMessage} />}
         <VStack spacing={4} mt={5} align="stretch">
           {prCategories.map((category) => (
             <TaskCategoryListItem key={category.categoryId} category={category} />
@@ -44,7 +44,7 @@ const TaskCategoryList = () => {
         <Helmet title={taskConfig?.title} />
         {required}
         <Heading>{taskConfig?.regularTitle}</Heading>
-        {taskConfig?.regularMessage && <Paragraph>{taskConfig?.regularMessage}</Paragraph>}
+        {taskConfig?.regularMessage && <Markdown text={taskConfig?.regularMessage} />}
         {normalCategories.length > 0 ? (
           <VStack spacing={4} mt={5} align="stretch">
             {normalCategories.map((category) => (
