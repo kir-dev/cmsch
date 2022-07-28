@@ -64,8 +64,8 @@ const HomePage = () => {
 
       {eventList.data && (
         <VStack>
-          <Heading as="h2" size="lg" textAlign="center">
-            Események
+          <Heading as="h2" size="lg" textAlign="center" mb={5} mt={20}>
+            {config?.components.event.title}
           </Heading>
           <Alert marginTop={4} variant="left-accent" width="fit-content" marginX="auto">
             <AlertIcon />
