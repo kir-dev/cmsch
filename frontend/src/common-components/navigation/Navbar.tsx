@@ -30,7 +30,11 @@ export const Navbar = () => {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
-            {logoUrl ? <Image maxH={16} maxW={16} src={logoUrl} alt="CMSch" /> : <Heading>{config?.components.app.siteName}</Heading>}
+            {logoUrl ? (
+              <Image maxH={16} maxW={28} src={logoUrl} alt={config?.components.app.siteName} />
+            ) : (
+              <Heading>{config?.components.app.siteName}</Heading>
+            )}
           </Link>
         </Flex>
         <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>

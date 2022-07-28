@@ -13,9 +13,12 @@ export const TaskCategoryListItem = ({ category }: { category: TaskCategoryPrevi
           <Text fontWeight="bold" fontSize="xl">
             {category.name}
           </Text>
-          <CircularProgress value={((category.approved + category.notGraded) / category.sum) * 100} color="brand.400">
+          <CircularProgress
+            value={((category.approved + category.notGraded) / category.sum) * 100}
+            color={category.notGraded > 0 ? 'yellow.400' : 'green.400'}
+          >
             <CircularProgressLabel>
-              {category.approved + category.notGraded} / {category.sum}
+              {category.approved + category.notGraded}/{category.sum}
             </CircularProgressLabel>
           </CircularProgress>
         </Flex>

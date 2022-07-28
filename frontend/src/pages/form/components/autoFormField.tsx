@@ -1,5 +1,5 @@
 import { FormField, FormFieldVariants } from '../../../util/views/form.view'
-import { Alert, AlertIcon, Checkbox, Input, Select, Textarea, Text } from '@chakra-ui/react'
+import { Alert, AlertIcon, Checkbox, Input, Select, Text, Textarea } from '@chakra-ui/react'
 import { Control, useController } from 'react-hook-form'
 import Markdown from '../../../common-components/Markdown'
 import { ReactNode } from 'react'
@@ -15,6 +15,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: A
   const selectValues = fieldProps.values.split(',').map((opt) => opt.trim())
   if (!defaultValue) {
     if (fieldProps.type === FormFieldVariants.SELECT) defaultValue = selectValues[0]
+    else defaultValue = ''
   }
 
   const {

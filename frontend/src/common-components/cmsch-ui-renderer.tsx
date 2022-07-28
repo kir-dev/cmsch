@@ -2,6 +2,8 @@ import ChakraUIRenderer from 'chakra-ui-markdown-renderer'
 import { ReactNode } from 'react-markdown/lib/react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
 import { CmschLink } from './CmschLink'
+import { ListItem, UnorderedList } from '@chakra-ui/react'
+import { HasChildren } from '../util/react-types.util'
 
 const sliceHref = (href: string, pattern: string): string => {
   if (href.indexOf(pattern) === 0) {
@@ -23,6 +25,16 @@ const cmschTheme: any = {
         {children}
       </CmschLink>
     )
+  },
+  ul: ({ children }: HasChildren) => {
+    return (
+      <UnorderedList mb={3} pl={3}>
+        {children}
+      </UnorderedList>
+    )
+  },
+  li: ({ children }: HasChildren) => {
+    return <ListItem>{children}</ListItem>
   }
 }
 

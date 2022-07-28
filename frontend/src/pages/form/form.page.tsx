@@ -54,7 +54,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   }
   const { form, submission, message, status, detailsValidated } = data
   const available = form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !detailsValidated
-  const onSubmit = (values: Record<string, unknown>) => {
+  const onSubmit = (values: Object) => {
     if (available) {
       submit(values, status !== FormStatus.NO_SUBMISSION)
       window.scrollTo(0, 0)
