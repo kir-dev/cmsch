@@ -61,7 +61,7 @@ class TaskComponent(
     )
 
     val profileRequiredMessage = SettingProxy(componentSettingService, component,
-        "profileRequiredMessage", "", type = SettingType.LONG_TEXT,
+        "profileRequiredMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Kötelező feladatok alatti szöveg",
         description = "Kötelező feladatok (PROFILE_REQUIRED) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs."
     )
@@ -72,7 +72,7 @@ class TaskComponent(
     )
 
     val regularMessage = SettingProxy(componentSettingService, component,
-        "regularMessage", "", type = SettingType.LONG_TEXT,
+        "regularMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Feladatok alatti szöveg",
         description = "Feladatok (REGULAR) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs."
     )

@@ -41,12 +41,13 @@ class NovaIntegrationController(
         return ResponseEntity.ok("OK")
     }
 
-    @GetMapping("/validate/{mode}/{email}/{value}")
+    @PostMapping("/validate/{mode}/{email}/{value}")
     fun changeUserValidation(
         @RequestHeader(defaultValue = "none") token: String,
         @PathVariable mode: String,
         @PathVariable email: String,
         @PathVariable value: String,
+        @RequestBody(required = false) body: String?
     ): ResponseEntity<Any> {
         if (token == "none") {
             log.info("[NOVA/VALID-USERS] No token presents")
@@ -61,7 +62,7 @@ class NovaIntegrationController(
 
         return when (mode) {
             "payment" -> {
-                service.setPaymentStatus(email, value.equals("ok", ignoreCase = true))
+                service.setPaymentStatus(email, value.equals("ok", ignoreCase = true), body)
                 ResponseEntity.ok("ok")
             }
             "avatar" -> {
@@ -73,8 +74,8 @@ class NovaIntegrationController(
                 ResponseEntity.ok("ok")
             }
             "details" -> {
-                service.setDetailsStatus(email, value.equals("ok", ignoreCase = true))
-                ResponseEntity.ok("not-yet-implemented")
+                service.setDetailsStatus(email, value.equals("ok", ignoreCase = true), body)
+                ResponseEntity.ok("ok")
             }
             else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid mode! Use: payment, avatar, cv, details")
         }

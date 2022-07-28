@@ -81,6 +81,8 @@ open class SignupService(
                     detailsValidated = entity.detailsValidated,
                     status = FormStatus.SUBMITTED,
                     message = form.submittedMessage
+                            + (if (!entity.detailsValidated && entity.rejectionMessage.isNotBlank())
+                                    ("\n\n**Üzenet a rendezőktől:** " + entity.rejectionMessage) else "")
                 )
             }
         }

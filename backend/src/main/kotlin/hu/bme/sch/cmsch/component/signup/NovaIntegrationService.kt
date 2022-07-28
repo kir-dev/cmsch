@@ -130,7 +130,7 @@ open class NovaIntegrationService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
-    open fun setPaymentStatus(email: String, status: Boolean) {
+    open fun setPaymentStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = signupFormRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with non empty url")
@@ -143,14 +143,15 @@ open class NovaIntegrationService(
                 it.accepted = status
                 it.acceptedAt = now
                 it.lastUpdatedDate = now
+                it.rejectionMessage = rejectionMessage ?: ""
 
                 signupResponseRepository.save(it)
-                log.info("[NOVA/VALID-USERS] User response accepted={} for {}", status, it.email)
+                log.info("[NOVA/VALID-USERS] User response accepted={} for {} rej:{}", status, it.email, rejectionMessage)
             }
     }
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
-    open fun setDetailsStatus(email: String, status: Boolean) {
+    open fun setDetailsStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = signupFormRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with non empty url")
@@ -163,6 +164,7 @@ open class NovaIntegrationService(
                 it.detailsValidated = status
                 it.detailsValidatedAt = now
                 it.lastUpdatedDate = now
+                it.rejectionMessage = rejectionMessage ?: ""
 
                 signupResponseRepository.save(it)
                 log.info("[NOVA/VALID-USERS] User response validated={} for {}", status, it.email)
