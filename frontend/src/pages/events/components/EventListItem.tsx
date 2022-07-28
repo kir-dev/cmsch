@@ -1,4 +1,4 @@
-import { GridItem, Heading, Image, Text } from '@chakra-ui/react'
+import { Box, GridItem, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
@@ -8,9 +8,10 @@ import { AbsolutePaths } from '../../../util/paths'
 
 interface EventListItemProps {
   event: EventListView
+  useLink?: boolean
 }
 
-const EventListItem = ({ event }: EventListItemProps) => {
+const EventListItem = ({ event, useLink }: EventListItemProps) => {
   const config = useConfigContext()
 
   if (typeof config === 'undefined') {
@@ -18,23 +19,23 @@ const EventListItem = ({ event }: EventListItemProps) => {
   }
 
   const innerComponent = (
-    <>
-      <Heading fontSize={25} mb={'0.5rem'}>
-        {event.title}
+    <GridItem as={LinkBox} borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
+      <Heading fontSize={25} my={0}>
+        {useLink ? (
+          <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
+            {event.title}
+          </LinkOverlay>
+        ) : (
+          event.title
+        )}
       </Heading>
-      <EventTags my={1} tags={[event.category, event.place]} />
-      <Text mb="0.5rem">{stringifyTimeStamp(event.timestampStart) + ' - ' + stringifyTimeStamp(event.timestampEnd)}</Text>
-      <Text>{event.previewDescription}</Text>
-      <Image
-        mt="1rem"
-        display="block"
-        ml="auto"
-        mr="auto"
-        src={event.previewImageUrl == '' ? 'https://picsum.photos/200' : event.previewImageUrl} //TODO random képet kivenni
-        placeholder="ide kéne kép"
-        h="10rem"
-      />
-    </>
+      <Text mb={2}>{stringifyTimeStamp(event.timestampStart) + ' - ' + stringifyTimeStamp(event.timestampEnd)}</Text>
+      {event.previewImageUrl && event.previewImageUrl !== '' && (
+        <Image display="block" ml="auto" mr="auto" src={event.previewImageUrl} maxH="8rem" />
+      )}
+      <Text my={2}>{event.previewDescription}</Text>
+      <EventTags tags={[event.category, event.place]} />
+    </GridItem>
   )
 
   return (
