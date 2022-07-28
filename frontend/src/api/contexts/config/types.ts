@@ -25,7 +25,7 @@ export interface Components {
   leaderboard: Leaderboard
   location: Location
   login: Login
-  news: Home
+  news: News
   profile: Profile
   riddle: Riddle
   signup: Signup
@@ -83,6 +83,11 @@ export interface Home {
   title: string
   welcomeMessage: string
   content: string
+}
+
+export interface News {
+  title: string
+  showDetails: boolean
 }
 
 export interface Riddle {

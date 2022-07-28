@@ -10,12 +10,13 @@ interface NewsListProps {
 const NewsList = ({ newsList }: NewsListProps) => {
   const highlighted = newsList.filter((news) => news.highlighted).sort((a, b) => b.timestamp - a.timestamp) // desc
   const config = useConfigContext()
+  console.log('asd', config?.components.news)
   return (
     <>
       <Heading>{config?.components.news.title}</Heading>
       <Grid templateColumns="repeat(1, 1fr)" gap={4} marginTop={4}>
         {highlighted.map((n: NewsArticleView, i) => (
-          <NewsListItem news={n} fontSize="2xl" index={i} key={n.title + n.timestamp} />
+          <NewsListItem news={n} fontSize="2xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
         ))}
       </Grid>
       <Grid
@@ -27,7 +28,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
           .filter((news) => !news.highlighted)
           .sort((a, b) => b.timestamp - a.timestamp) // desc
           .map((n: NewsArticleView, i) => (
-            <NewsListItem news={n} fontSize="xl" index={i} key={n.title + n.timestamp} />
+            <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
           ))}
       </Grid>
     </>
