@@ -145,7 +145,7 @@ const ProfilePage = ({}: Props) => {
                   size="10rem"
                   position="absolute"
                   value={submittedPercent(profile) + completedPercent(profile)}
-                  trackColor={useColorModeValue('gray.200', 'gray.700')}
+                  trackColor={useColorModeValue('gray.200', 'gray.500')}
                 />
                 <CircularProgress
                   color={useColorModeValue('green.500', 'green.600')}
@@ -201,7 +201,7 @@ const ProfilePage = ({}: Props) => {
                 color={useColorModeValue('green.500', 'green.600')}
                 size="10rem"
                 value={(profile.completedRiddleCount / profile.totalRiddleCount) * 100}
-                trackColor={useColorModeValue('gray.200', 'gray.700')}
+                trackColor={useColorModeValue('gray.200', 'gray.500')}
               >
                 <CircularProgressLabel
                   color={profile.completedRiddleCount === 0 ? 'gray.500' : useColorModeValue('green.500', 'green.600')}
@@ -230,7 +230,7 @@ const ProfilePage = ({}: Props) => {
                 color={useColorModeValue('green.500', 'green.600')}
                 size="10rem"
                 value={(profile.collectedTokenCount / profile.totalTokenCount) * 100}
-                trackColor={useColorModeValue('gray.200', 'gray.700')}
+                trackColor={useColorModeValue('gray.200', 'gray.500')}
               >
                 <CircularProgressLabel color={profile.collectedTokenCount === 0 ? 'gray.500' : useColorModeValue('green.500', 'green.600')}>
                   {(profile.collectedTokenCount / profile.totalTokenCount) * 100}%

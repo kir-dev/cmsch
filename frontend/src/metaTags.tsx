@@ -7,8 +7,6 @@ export const MetaTags = () => {
   const style = config?.components.style
   return (
     <Helmet>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="icon" type="image/png" sizes="192x192" href={`${API_BASE_URL}/cdn/manifest/icon-192x192.png`} />
       <link rel="icon" type="image/png" sizes="256x256" href={`${API_BASE_URL}/cdn/manifest/icon-256x256.png`} />
       <link rel="icon" type="image/png" sizes="384x384" href={`${API_BASE_URL}/cdn/manifest/icon-384x384.png`} />
