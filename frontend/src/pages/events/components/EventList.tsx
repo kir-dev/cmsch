@@ -17,7 +17,7 @@ const EventList = ({ eventList }: EventListProps) => {
       </Box>
       <Grid templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 2 })}, 1fr)`} gap={3}>
         {eventList.map((e: EventListView) => (
-          <EventListItem event={e} key={e.url + e.timestampStart} />
+          <EventListItem event={e} key={e.url + e.timestampStart} useLink={config?.components.event.enableDetailedView} />
         ))}
       </Grid>
     </>
