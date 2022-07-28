@@ -1,4 +1,19 @@
-import { Alert, AlertIcon, Badge, Box, Button, Flex, FormLabel, Heading, Image, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  Badge,
+  Box,
+  Button,
+  Flex,
+  FormLabel,
+  Heading,
+  Image,
+  Stack,
+  Text,
+  Textarea,
+  useToast,
+  VStack
+} from '@chakra-ui/react'
 import { chakra } from '@chakra-ui/system'
 import { lazy, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
@@ -234,14 +249,18 @@ const TaskPage = () => {
       <CmschPage loginRequired groupRequired>
         <Helmet title={taskDetails.task?.title} />
         <CustomBreadcrumb items={breadcrumbItems} />
-        <Heading mb={5}>{taskDetails.task?.title}</Heading>
-        <Flex>
-          <TaskStatusBadge status={taskDetails.status} fontSize="lg" />
-          {expired && (
-            <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
-              LEJÁRT
-            </Badge>
-          )}
+        <Flex my={5} flexWrap="wrap" alignItems="center">
+          <Box>
+            <Heading my={0}>{taskDetails.task?.title}</Heading>
+          </Box>
+          <VStack flex={1} alignItems="end" py={2}>
+            <TaskStatusBadge status={taskDetails.status} fontSize="lg" />
+            {expired && (
+              <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
+                LEJÁRT
+              </Badge>
+            )}
+          </VStack>
         </Flex>
         <Box mt={5}>
           <Markdown text={taskDetails.task?.description} />
@@ -294,11 +313,11 @@ const TaskPage = () => {
                 </Alert>
                 {textInput}
                 {fileInput}
-                <Box>
+                <Flex justifyContent="end" mt={4}>
                   <Button mt={3} colorScheme="brand" type="submit">
                     Küldés
                   </Button>
-                </Box>
+                </Flex>
               </form>
             </Stack>
           </>
