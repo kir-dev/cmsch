@@ -1,4 +1,4 @@
-import { Heading, Image, Text } from '@chakra-ui/react'
+import { ButtonGroup, Heading, Image, Text } from '@chakra-ui/react'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
@@ -25,26 +25,24 @@ const CurrentEvent = ({ event }: EventProps) => {
     <>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{event.title}</Heading>
-      <Text>{stringifyTimeStamp(event.timestampStart) + '-' + stringifyTimeStamp(event.timestampEnd)}</Text>
+      <Text>
+        {stringifyTimeStamp(event.timestampStart)} &mdash; {stringifyTimeStamp(event.timestampEnd)}
+      </Text>
       <EventTags my={1} tags={[event.category, event.place]} />
-      <Image
-        mb="1rem"
-        display="block"
-        ml="auto"
-        mr="auto"
-        src={event.fullImageUrl == '' ? 'https://picsum.photos/200' : event.fullImageUrl} //TODO random képet kivenni
-        placeholder="ide kéne kép"
-        h="20rem"
-      />
-      <Markdown text={event.description} />
-      {event.extraButtonUrl && (
-        <LinkButton w="13rem" mt="1rem" href={event.extraButtonUrl} external>
-          {event.extraButtonTitle}
-        </LinkButton>
+      {event.fullImageUrl && event.fullImageUrl !== '' && (
+        <Image mb="1rem" display="block" ml="auto" mr="auto" src={event.fullImageUrl} h="20rem" />
       )}
-      <LinkButton w="13rem" mt="2rem" href={AbsolutePaths.EVENTS}>
-        Vissza az eseményekhez
-      </LinkButton>
+      <Markdown text={event.description} />
+      <ButtonGroup justifyContent="space-between" mt={10}>
+        <LinkButton href={AbsolutePaths.EVENTS} variant="outline">
+          Vissza
+        </LinkButton>
+        {event.extraButtonUrl && (
+          <LinkButton href={event.extraButtonUrl} external>
+            {event.extraButtonTitle}
+          </LinkButton>
+        )}
+      </ButtonGroup>
     </>
   )
 }
