@@ -108,14 +108,18 @@ const ProfilePage = ({}: Props) => {
 
       <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mt={5}>
         <AlertIcon />
-        <Flex flexWrap="wrap" alignItems="center">
-          {profile.profileIsComplete
-            ? component?.profileComplete
-            : templateStringReplace(component?.profileIncomplete, profile?.incompleteTasks?.join(', '))}
+        <Flex flexWrap="wrap" alignItems="center" w="full">
+          <Box py={2}>
+            {profile.profileIsComplete
+              ? component?.profileComplete
+              : templateStringReplace(component?.profileIncomplete, profile?.incompleteTasks?.join(', '))}
+          </Box>
           {!profile.profileIsComplete && (
-            <LinkButton href={AbsolutePaths.TASKS} ml={5} colorScheme="red">
-              Feladatok
-            </LinkButton>
+            <Flex flex={1} justifyContent="end">
+              <LinkButton href={AbsolutePaths.TASKS} ml={5} colorScheme="red">
+                Feladatok
+              </LinkButton>
+            </Flex>
           )}
         </Flex>
       </Alert>
