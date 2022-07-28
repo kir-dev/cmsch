@@ -7,7 +7,7 @@ interface EventTagsProps {
 
 const EventTags = ({ tags, my }: EventTagsProps) => {
   return (
-    <HStack spacing={2} my={my}>
+    <HStack spacing={2} my={my} justifyContent="end">
       {tags.map((tag, i) => {
         return (
           <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
