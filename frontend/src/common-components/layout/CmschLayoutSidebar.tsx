@@ -20,6 +20,15 @@ export const CmschLayoutSidebar = ({ background, headingTitle, children }: Props
   const location = useLocation()
   if (!headingTitle) {
     headingTitle = config?.menu.find((menu) => menu.url === location.pathname)?.name
+
+    if (config && !headingTitle) {
+      const keyFromPathname = location.pathname.substring(1)
+      const componentTitle = (config?.components as any)?.[keyFromPathname]?.['title']
+      if (componentTitle) {
+        headingTitle = componentTitle
+      }
+    }
+
     if (location.pathname === config?.components.app.defaultComponent) headingTitle = 'Kezdőlap'
   }
 
