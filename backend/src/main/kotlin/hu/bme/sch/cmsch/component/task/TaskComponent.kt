@@ -32,7 +32,8 @@ class TaskComponent(
 
             logicGroup,
             resubmissionEnabled,
-            scoreVisible
+            scoreVisible,
+            scoreVisibleAtAll
         )
     }
 
@@ -110,12 +111,14 @@ class TaskComponent(
 
     val scoreVisible = SettingProxy(componentSettingService, component,
         "scoreVisible", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "A beadási határidő vége előtt is látszik a pont az értékelt feladatokra"
+        fieldName = "Pontok látszódnak közben",
+        description = "A beadási határidő vége előtt is látszik a pont az értékelt feladatokra"
     )
 
     val scoreVisibleAtAll = SettingProxy(componentSettingService, component,
         "scoreVisibleAtAll", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Bármikor látszódjon-e a megszerzett pont"
+        fieldName = "Pontok látszódnak egyáltalán", description = "Bármikor látszódjon-e a megszerzett pont (ha ki van " +
+                "kapcsolva az nem látszik egyáltalán a feladatnál, csak az összesítésben)"
     )
 
 }
