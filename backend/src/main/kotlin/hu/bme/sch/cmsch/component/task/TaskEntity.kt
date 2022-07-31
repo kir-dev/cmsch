@@ -70,7 +70,7 @@ data class TaskEntity(
     @Lob
     @Column(nullable = false, columnDefinition = "CLOB default ''")
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 15, label = "Mintamegoldás",
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",
         note = "A leadási határidő után jelenik meg")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_LOB)
