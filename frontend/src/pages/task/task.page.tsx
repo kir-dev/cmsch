@@ -18,7 +18,7 @@ import { chakra } from '@chakra-ui/system'
 import { lazy, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm, useWatch, useFieldArray } from 'react-hook-form'
 import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
 import { FilePicker } from './components/FilePicker'
 import { Loading } from '../../common-components/Loading'
@@ -58,6 +58,10 @@ const TaskPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { setValue, handleSubmit, control } = useForm<FormInput>()
+  const { fields, replace, update } = useFieldArray<FormInput>({
+    name: 'customForm',
+    control
+  })
   const customFormData = useWatch({ control, name: 'customForm' })
 
   if (!id) return <Navigate to="/" replace />
@@ -84,7 +88,11 @@ const TaskPage = () => {
     const textAllowed = taskDetails.task?.type === taskType.TEXT || taskDetails.task?.type === taskType.BOTH
     const fileAllowed =
       taskDetails.task?.type === taskType.IMAGE || taskDetails.task?.type === taskType.BOTH || taskDetails.task?.type === taskType.ONLY_PDF
-    const submissionAllowed = (taskDetails?.status === taskStatus.NOT_SUBMITTED || taskDetails?.status === taskStatus.REJECTED) && !expired
+    const submissionAllowed =
+      (taskDetails?.status === taskStatus.NOT_SUBMITTED ||
+        taskDetails?.status === taskStatus.REJECTED ||
+        (taskConfig?.resubmissionEnabled && taskDetails.status === taskStatus.SUBMITTED)) &&
+      !expired
     const reviewed = taskDetails.status === taskStatus.ACCEPTED || taskDetails.status === taskStatus.REJECTED
 
     const onSubmit: SubmitHandler<FormInput> = (data) => {
@@ -156,6 +164,7 @@ const TaskPage = () => {
               if (filePickerRef.current) {
                 filePickerRef.current.reset()
               }
+              fields.forEach((field, idx) => update(idx, { ...field, value: '' }))
               taskDetailsQuery.refetch()
               window.scrollTo(0, 0)
             } else {
@@ -200,7 +209,9 @@ const TaskPage = () => {
           )
           break
         case taskFormat.FORM:
-          textInput = <CustomForm formatDescriptor={taskDetails.task.formatDescriptor} control={control} />
+          textInput = (
+            <CustomForm formatDescriptor={taskDetails.task.formatDescriptor} control={control} fields={fields} replace={replace} />
+          )
           break
         case taskFormat.CODE:
           textInput = <CodeEditor code={codeAnswer} setCode={setCodeAnswer} readonly={false} />
@@ -297,7 +308,7 @@ const TaskPage = () => {
               Értékelés
             </Heading>
             <Text mt={2}>Javító üzenete: {taskDetails.submission.response}</Text>
-            <Text>Pont: {taskDetails.submission.score} pont</Text>
+            {taskDetails.submission.score && <Text>Pont: {taskDetails.submission.score} pont</Text>}
           </>
         )}
 
