@@ -99,6 +99,7 @@ open class NovaIntegrationService(
                     profileStatus = avatar.map { it.second }.orElse(TaskStatus.NOT_SUBMITTED),
                     cvUrl = cv.map { it.first }.orElse(""),
                     cvStatus = cv.map { it.second }.orElse(TaskStatus.NOT_SUBMITTED),
+                    detailsValidated = response.detailsValidated
                 )
             }
     }
