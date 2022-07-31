@@ -225,7 +225,9 @@ const TaskPage = () => {
         taskDetails.task?.format === taskFormat.CODE ? (
           <CodeEditor code={taskDetails.submission?.textAnswer} setCode={() => {}} readonly={true} />
         ) : (
-          <Paragraph mt={2}>{taskDetails.submission.textAnswer}</Paragraph>
+          <Paragraph mt={2} whiteSpace="pre-wrap">
+            {taskDetails.submission.textAnswer}
+          </Paragraph>
         )
     }
 
@@ -267,9 +269,11 @@ const TaskPage = () => {
           <VStack flex={1} alignItems="end" py={2}>
             <TaskStatusBadge status={taskDetails.status} fontSize="lg" />
             {expired && (
-              <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
-                LEJÁRT
-              </Badge>
+              <Box>
+                <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
+                  LEJÁRT
+                </Badge>
+              </Box>
             )}
           </VStack>
         </Flex>
