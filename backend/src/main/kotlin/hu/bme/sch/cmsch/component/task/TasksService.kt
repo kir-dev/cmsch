@@ -109,7 +109,7 @@ open class TasksService(
             val submission = previous.get()
             if (submission.approved)
                 return TaskSubmissionStatus.ALREADY_APPROVED
-            if (!submission.approved && !submission.rejected && taskComponent.resubmissionEnabled.isValueTrue())
+            if (!submission.approved && !submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
             return updateSubmission(task, answer, file, submission)
 
@@ -133,7 +133,7 @@ open class TasksService(
             val submission = previous.get()
             if (submission.approved)
                 return TaskSubmissionStatus.ALREADY_APPROVED
-            if (!submission.approved && !submission.rejected)
+            if (!submission.approved && !submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
             return updateSubmission(task, answer, file, submission)
 
@@ -229,6 +229,7 @@ open class TasksService(
 
                 submission.textAnswer = answer.textAnswer
                 submission.rejected = false
+                submission.approved = false
                 submitted.save(submission)
                 return TaskSubmissionStatus.OK
 
@@ -240,6 +241,7 @@ open class TasksService(
 
                 submission.imageUrlAnswer = "$target/$fileName"
                 submission.rejected = false
+                submission.approved = false
                 submitted.save(submission)
                 return TaskSubmissionStatus.OK
 
@@ -251,6 +253,7 @@ open class TasksService(
                 }
                 submission.textAnswer = answer.textAnswer
                 submission.rejected = false
+                submission.approved = false
                 submitted.save(submission)
                 return TaskSubmissionStatus.OK
 
@@ -262,6 +265,7 @@ open class TasksService(
 
                 submission.fileUrlAnswer = "$target/$fileName"
                 submission.rejected = false
+                submission.approved = false
                 submitted.save(submission)
                 return TaskSubmissionStatus.OK
 

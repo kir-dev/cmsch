@@ -16,4 +16,5 @@ data class FilledOutFormDto(
     val profileStatus: TaskStatus,
     var cvUrl: String = "",
     val cvStatus: TaskStatus,
+    val detailsValidated: Boolean,
 )
