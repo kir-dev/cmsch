@@ -95,6 +95,7 @@ class NovaIntegrationController(
         }
 
         val users = service.fetchSubmissions()
+            .filter { it.email.isNotBlank() }
         log.info("[NOVA/VALID-USERS] Listing {} users", users.size)
         return ResponseEntity.ok(users)
     }

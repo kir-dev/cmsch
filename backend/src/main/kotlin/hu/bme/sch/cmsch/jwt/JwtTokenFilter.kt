@@ -30,7 +30,7 @@ class JwtTokenFilter(
                     SecurityContextHolder.getContext().authentication = auth
                 }
             } catch (e: Exception) {
-                log.warn("Invalid token: {} user cannot be resolved", token, e)
+                log.warn("Invalid token: {} user cannot be resolved because: {}", token, e.message)
             }
         }
         filterChain.doFilter(req, res)

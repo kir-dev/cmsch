@@ -142,7 +142,7 @@ open class NovaIntegrationService(
         }
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun setPaymentStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = signupFormRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
@@ -163,7 +163,7 @@ open class NovaIntegrationService(
             }
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun setDetailsStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = signupFormRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
@@ -180,11 +180,11 @@ open class NovaIntegrationService(
                 it.rejectionMessage = rejectionMessage ?: ""
 
                 signupResponseRepository.save(it)
-                log.info("[NOVA/VALID-USERS] User response validated={} for {}", status, it.email)
+                log.info("[NOVA/VALID-USERS] User response validated={} for {} reason: {}", status, it.email, rejectionMessage)
             }
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun setAvatarStatus(email: String, status: Boolean) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return
 
@@ -205,7 +205,7 @@ open class NovaIntegrationService(
         }
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun setCvStatus(email: String, status: Boolean) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return
 
