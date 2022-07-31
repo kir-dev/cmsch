@@ -183,6 +183,7 @@ export interface Task {
   profileRequiredMessage: string
   regularTitle: string
   regularMessage: string
+  resubmissionEnabled: boolean
 }
 
 export interface Token {
