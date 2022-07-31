@@ -312,7 +312,7 @@ const TaskPage = () => {
               Értékelés
             </Heading>
             <Text mt={2}>Javító üzenete: {taskDetails.submission.response}</Text>
-            {taskDetails.submission.score && <Text>Pont: {taskDetails.submission.score} pont</Text>}
+            {typeof taskDetails.submission.score !== 'undefined' && <Text>Pont: {taskDetails.submission.score} pont</Text>}
           </>
         )}
 
