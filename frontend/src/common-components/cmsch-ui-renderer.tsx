@@ -2,7 +2,7 @@ import ChakraUIRenderer from 'chakra-ui-markdown-renderer'
 import { ReactNode } from 'react-markdown/lib/react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
 import { CmschLink } from './CmschLink'
-import { ListItem, UnorderedList } from '@chakra-ui/react'
+import { ListItem, UnorderedList, Divider, useColorModeValue } from '@chakra-ui/react'
 import { HasChildren } from '../util/react-types.util'
 
 const sliceHref = (href: string, pattern: string): string => {
@@ -35,6 +35,9 @@ const cmschTheme: any = {
   },
   li: ({ children }: HasChildren) => {
     return <ListItem>{children}</ListItem>
+  },
+  hr: () => {
+    return <Divider my={3} borderColor={useColorModeValue('brand.800', 'brand.200')} borderBottomWidth={2} />
   }
 }
 
