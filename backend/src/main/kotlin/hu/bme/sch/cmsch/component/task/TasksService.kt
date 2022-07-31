@@ -12,15 +12,14 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
-const val HOUR = 60 * 60
-
 @Service
 @ConditionalOnBean(TaskComponent::class)
 open class TasksService(
     private val taskRepository: TaskEntityRepository,
     private val submitted: SubmittedTaskRepository,
     private val categories: TaskCategoryRepository,
-    private val clock: TimeService
+    private val clock: TimeService,
+    private val taskComponent: TaskComponent
 ) {
 
     companion object {
@@ -100,8 +99,8 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
                 ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        if (task.availableFrom - (4 * HOUR) > clock.getTimeInSeconds()
-                || task.availableTo + (4 * HOUR) < clock.getTimeInSeconds()) {
+        if (task.availableFrom > clock.getTimeInSeconds()
+                || task.availableTo < clock.getTimeInSeconds()) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
 
@@ -110,7 +109,7 @@ open class TasksService(
             val submission = previous.get()
             if (submission.approved)
                 return TaskSubmissionStatus.ALREADY_APPROVED
-            if (!submission.approved && !submission.rejected)
+            if (!submission.approved && !submission.rejected && taskComponent.resubmissionEnabled.isValueTrue())
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
             return updateSubmission(task, answer, file, submission)
 
@@ -124,8 +123,8 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        if (task.availableFrom - (4 * HOUR) > clock.getTimeInSeconds()
-            || task.availableTo + (4 * HOUR) < clock.getTimeInSeconds()) {
+        if (task.availableFrom > clock.getTimeInSeconds()
+            || task.availableTo < clock.getTimeInSeconds()) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
 
