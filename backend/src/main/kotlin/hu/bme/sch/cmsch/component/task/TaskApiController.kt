@@ -25,7 +25,8 @@ class TaskApiController(
     private val leaderBoardComponent: Optional<LeaderBoardComponent>,
     private val tasks: TasksService,
     private val clock: TimeService,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val taskComponent: TaskComponent
 ) {
 
     @JsonView(Preview::class)
@@ -116,13 +117,14 @@ class TaskApiController(
     @GetMapping("/task/submit/{taskId}")
     fun task(@PathVariable taskId: Int, auth: Authentication?): SingleTaskView {
         val task = tasks.getById(taskId)
+        val now = clock.getTimeInSeconds()
         if (task.orElse(null)?.visible?.not() == true)
             return SingleTaskView(task = null, submission = null)
 
         val submission = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
                 val user = auth?.getUserFromDatabaseOrNull() ?: return SingleTaskView(
-                    task = task.orElse(null),
+                    task = task.map { TaskEntityDto(it, now) }.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
                 )
@@ -130,7 +132,7 @@ class TaskApiController(
             }
             OwnershipType.GROUP -> {
                 val group = auth?.getUserFromDatabaseOrNull()?.group ?: return SingleTaskView(
-                    task = task.orElse(null),
+                    task = task.map { TaskEntityDto(it, now) }.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
                 )
@@ -138,15 +140,25 @@ class TaskApiController(
             }
         }
 
+        val taskOptional = task.map { TaskEntityDto(it, now) }.orElse(null)
         return SingleTaskView(
-            task = task.orElse(null),
-            submission = submission,
-            status = if (submission?.approved == true) TaskStatus.ACCEPTED
-            else if (submission?.rejected == true) TaskStatus.REJECTED
-            else if (submission?.approved == false && !submission.rejected) TaskStatus.SUBMITTED
-            else TaskStatus.NOT_SUBMITTED
+            task = taskOptional,
+            submission = submission?.let { sub -> mapSubmittedTaskEntityDto(sub, task, now) },
+            status = resolveTaskStatus(submission)
         )
     }
+
+    private fun mapSubmittedTaskEntityDto(
+        sub: SubmittedTaskEntity,
+        task: Optional<TaskEntity>,
+        now: Long
+    ) =
+        SubmittedTaskEntityDto(
+            sub,
+            taskComponent.scoreVisibleAtAll.isValueTrue()
+                    && (taskComponent.scoreVisible.isValueTrue()
+                    || (sub.approved && task.map { it.availableTo + (TWO_HOURS) < now }.orElse(false)))
+        )
 
     @ResponseBody
     @PostMapping("/task/submit")

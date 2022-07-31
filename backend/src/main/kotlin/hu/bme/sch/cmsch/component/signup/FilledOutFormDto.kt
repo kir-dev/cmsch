@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.component.signup
 
+import hu.bme.sch.cmsch.component.task.TaskStatus
+
 data class FilledOutFormDto(
     var internalId: String = "",
     var email: String = "",
@@ -11,5 +13,7 @@ data class FilledOutFormDto(
     var lastUpdatedAt: Long = 0,
     var formSubmission: Map<String, String> = mapOf(),
     var profilePictureUrl: String = "",
+    val profileStatus: TaskStatus,
     var cvUrl: String = "",
+    val cvStatus: TaskStatus,
 )
