@@ -28,7 +28,11 @@ class TaskComponent(
             regularMessage,
 
             exportGroup,
-            exportEnabled
+            exportEnabled,
+
+            logicGroup,
+            resubmissionEnabled,
+            scoreVisible
         )
     }
 
@@ -88,6 +92,30 @@ class TaskComponent(
     val exportEnabled = SettingProxy(componentSettingService, component,
         "exportEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "Endpoint elérhető"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val logicGroup = SettingProxy(componentSettingService, component,
+        "logicGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Működés",
+        description = ""
+    )
+
+    val resubmissionEnabled = SettingProxy(componentSettingService, component,
+        "resubmissionEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Újraküldés lehetséges",
+        description = "A lejárati idő végéig újraküldhetőek a beadások, ha már javítva volt, akkor nullázódik a pont."
+    )
+
+    val scoreVisible = SettingProxy(componentSettingService, component,
+        "scoreVisible", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "A beadási határidő vége előtt is látszik a pont az értékelt feladatokra"
+    )
+
+    val scoreVisibleAtAll = SettingProxy(componentSettingService, component,
+        "scoreVisibleAtAll", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Bármikor látszódjon-e a megszerzett pont"
     )
 
 }

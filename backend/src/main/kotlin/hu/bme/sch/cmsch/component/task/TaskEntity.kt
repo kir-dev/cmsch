@@ -55,7 +55,7 @@ data class TaskEntity(
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_LOB)
     var description: String = "",
 
     @Lob
@@ -64,8 +64,17 @@ data class TaskEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Beadandó formátum",
             note = "Ez a beadó mező mellett jelenik meg, külön a leírástól")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LOB)
     var expectedResultDescription: String = "",
+
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 15, label = "Mintamegoldás",
+        note = "A leadási határidő után jelenik meg")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_LOB)
+    var solution: String? = "",
 
     @Enumerated(EnumType.STRING)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -92,7 +101,7 @@ data class TaskEntity(
         note = "Ha a formátum FORM akkor ide kell beírni a form jsonját. " +
                 "Formátum: [{'title':'','type':'number|text|textarea','suffix':''}]")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6)
+    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LOB)
     var formatDescriptor: String = "",
 
     @Column(nullable = false)
