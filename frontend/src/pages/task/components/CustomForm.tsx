@@ -1,6 +1,6 @@
 import { Box, FormLabel, Input, Textarea, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { Control, Controller, useFieldArray } from 'react-hook-form'
+import { Control, Controller, FieldArrayWithId, UseFieldArrayReplace } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
@@ -10,15 +10,14 @@ import { InputWithAddon } from './InputWithAddon'
 type CustomFormProps = {
   formatDescriptor: string | undefined
   control: Control<FormInput, object>
+  fields: FieldArrayWithId<FormInput, 'customForm', 'id'>[]
+  replace: UseFieldArrayReplace<FormInput, 'customForm'>
 }
 
-export const CustomForm = ({ formatDescriptor, control }: CustomFormProps) => {
+export const CustomForm = ({ formatDescriptor, control, fields, replace }: CustomFormProps) => {
   const toast = useToast()
   const navigate = useNavigate()
-  const { fields, replace } = useFieldArray<FormInput>({
-    name: 'customForm',
-    control
-  })
+
   useEffect(() => {
     if (formatDescriptor) {
       try {

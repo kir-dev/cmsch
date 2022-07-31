@@ -121,6 +121,6 @@ export interface TaskFullDetailsView {
     response: string
     approved: boolean
     rejected: boolean
-    score: number
+    score?: number
   }
 }
