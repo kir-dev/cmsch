@@ -135,7 +135,7 @@ class LoginController(
         // Update user profile values
         if (profile.neptun != null)
             user.neptun = profile.neptun
-        if (profile.mail != null)
+        if (profile.mail != null && profile.mail.isNotBlank())
             user.email = profile.mail
 
         // Check neptun; grant group and guild if mapping present
