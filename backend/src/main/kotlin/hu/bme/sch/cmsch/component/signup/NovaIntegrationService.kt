@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
 import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
 import hu.bme.sch.cmsch.component.task.TaskEntityRepository
+import hu.bme.sch.cmsch.component.task.TaskStatus
+import hu.bme.sch.cmsch.component.task.resolveTaskStatus
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
@@ -81,6 +83,8 @@ open class NovaIntegrationService(
                 val user = userRepository.findById(response.submitterUserId ?: 0)
                 if (user.isEmpty)
                     log.error("User not found in submission list {} {}", response.submitterUserId, response.submitterUserName)
+                val avatar = user.map { fetchAvatar(it) }
+                val cv = user.map { fetchCv(it) }
                 return@map FilledOutFormDto(
                     internalId = user.map { it.internalId }.orElse("n/a"),
                     email = response.email,
@@ -91,31 +95,39 @@ open class NovaIntegrationService(
                     rejected = response.rejected,
                     lastUpdatedAt = response.lastUpdatedDate,
                     formSubmission = tryToParseSubmission(readerForSubmission, response),
-                    profilePictureUrl = user.map { fetchAvatar(it) }.orElse(""),
-                    cvUrl = user.map { fetchCv(it) }.orElse("")
+                    profilePictureUrl = avatar.map { it.first }.orElse(""),
+                    profileStatus = avatar.map { it.second }.orElse(TaskStatus.NOT_SUBMITTED),
+                    cvUrl = cv.map { it.first }.orElse(""),
+                    cvStatus = cv.map { it.second }.orElse(TaskStatus.NOT_SUBMITTED),
                 )
             }
     }
 
-    private fun fetchAvatar(user: UserEntity): String {
+    private fun fetchAvatar(user: UserEntity): Pair<String, TaskStatus> {
         return taskRepository.map { tasks ->
             tasks.findAllByTag(AVATAR_TAG).firstOrNull()?.let { task ->
                 submittedTaskRepository.map { submissions ->
-                    submissions.findAllByUserIdAndTask_Id(user.id, task.id).firstOrNull()?.imageUrlAnswer ?: ""
-                }.orElse("")
-            } ?: ""
-        }.orElse("")
+                    submissions.findAllByUserIdAndTask_Id(user.id, task.id).firstOrNull()?.let {
+                        Pair(it.imageUrlAnswer, resolveTaskStatus(it))
+                    } ?: taskNotSubmitted()
+                }.orElse(taskNotSubmitted())
+            } ?: taskNotSubmitted()
+        }.orElse(taskNotSubmitted())
     }
 
-    private fun fetchCv(user: UserEntity): String {
+    private fun fetchCv(user: UserEntity): Pair<String, TaskStatus> {
         return taskRepository.map { tasks ->
             tasks.findAllByTag(CV_TAG).firstOrNull()?.let { task ->
                 submittedTaskRepository.map { submissions ->
-                    submissions.findAllByUserIdAndTask_Id(user.id, task.id).firstOrNull()?.fileUrlAnswer ?: ""
-                }.orElse("")
-            } ?: ""
-        }.orElse("")
+                    submissions.findAllByUserIdAndTask_Id(user.id, task.id).firstOrNull()?.let {
+                        Pair(it.fileUrlAnswer, resolveTaskStatus(it))
+                    } ?: taskNotSubmitted()
+                }.orElse(taskNotSubmitted())
+            } ?: taskNotSubmitted()
+        }.orElse(taskNotSubmitted())
     }
+
+    private fun taskNotSubmitted() = Pair("", TaskStatus.NOT_SUBMITTED)
 
     private fun tryToParseSubmission(
         readerForSubmission: ObjectReader,
