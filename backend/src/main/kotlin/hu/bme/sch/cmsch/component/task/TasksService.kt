@@ -162,8 +162,11 @@ open class TasksService(
                 submitted.save(SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
-                    task.categoryId, answer.textAnswer, "",
-                    "", approved = false, rejected = false, score = 0
+                    task.categoryId,
+                    textAnswer = "", textAnswerLob = answer.textAnswer,
+                    imageUrlAnswer = "",
+                    fileUrlAnswer = "",
+                    approved = false, rejected = false, score = 0
                 ))
                 return TaskSubmissionStatus.OK
 
@@ -177,7 +180,10 @@ open class TasksService(
                 submitted.save(SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
-                    task.categoryId, "", imageUrlAnswer = "$target/$fileName",
+                    task.categoryId,
+                    textAnswer = "", textAnswerLob = "",
+                    imageUrlAnswer = "$target/$fileName",
+                    fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
                 ))
                 return TaskSubmissionStatus.OK
@@ -189,7 +195,10 @@ open class TasksService(
                 submitted.save(SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
-                    task.categoryId, answer.textAnswer, imageUrlAnswer = "$target/$fileName",
+                    task.categoryId,
+                    textAnswer = "", textAnswerLob = answer.textAnswer,
+                    imageUrlAnswer = "$target/$fileName",
+                    fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
                 ))
                 return TaskSubmissionStatus.OK
@@ -204,7 +213,10 @@ open class TasksService(
                 submitted.save(SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
-                    task.categoryId, "", fileUrlAnswer = "$target/$fileName",
+                    task.categoryId,
+                    textAnswer = "", textAnswerLob = "",
+                    imageUrlAnswer = "",
+                    fileUrlAnswer = "$target/$fileName",
                     response = "", approved = false, rejected = false, score = 0
                 ))
                 return TaskSubmissionStatus.OK
@@ -227,7 +239,8 @@ open class TasksService(
                 if (answer.textAnswer.isBlank())
                     return TaskSubmissionStatus.EMPTY_ANSWER
 
-                submission.textAnswer = answer.textAnswer
+                submission.textAnswer = ""
+                submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false
                 submitted.save(submission)
@@ -251,7 +264,8 @@ open class TasksService(
                     val fileName = file.uploadFile(target)
                     submission.imageUrlAnswer = "$target/$fileName"
                 }
-                submission.textAnswer = answer.textAnswer
+                submission.textAnswer = ""
+                submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false
                 submitted.save(submission)
