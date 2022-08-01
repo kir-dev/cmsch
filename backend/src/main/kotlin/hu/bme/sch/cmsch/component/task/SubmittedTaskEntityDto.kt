@@ -42,7 +42,7 @@ data class SubmittedTaskEntityDto(
         other.id,
         other.groupName,
         other.userName,
-        other.textAnswer,
+        if (other.textAnswerLob?.isNotBlank() == true) (other.textAnswerLob ?: other.textAnswer) else other.textAnswer,
         other.imageUrlAnswer,
         other.fileUrlAnswer,
         other.response,
