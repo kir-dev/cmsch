@@ -66,11 +66,11 @@ class NovaIntegrationController(
                 ResponseEntity.ok("ok")
             }
             "avatar" -> {
-                service.setAvatarStatus(email, value.equals("ok", ignoreCase = true))
+                service.setAvatarStatus(email, value.equals("ok", ignoreCase = true), body)
                 ResponseEntity.ok("ok")
             }
             "cv" -> {
-                service.setCvStatus(email, value.equals("ok", ignoreCase = true))
+                service.setCvStatus(email, value.equals("ok", ignoreCase = true), body)
                 ResponseEntity.ok("ok")
             }
             "details" -> {
