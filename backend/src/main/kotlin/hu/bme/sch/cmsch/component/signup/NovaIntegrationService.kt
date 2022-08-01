@@ -185,7 +185,7 @@ open class NovaIntegrationService(
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun setAvatarStatus(email: String, status: Boolean) {
+    open fun setAvatarStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return
 
         taskRepository.ifPresent { tasks ->
@@ -195,9 +195,10 @@ open class NovaIntegrationService(
                         submission.approved = status
                         submission.rejected = !status
                         submission.score = if (status) task.maxScore else 0
+                        submission.response = rejectionMessage ?: ""
 
-                        log.info("[NOVA/VALID-USERS] User AVATAR ok={} for email:{} sub:{} task:{}",
-                            status, email, submission.id, task.id)
+                        log.info("[NOVA/VALID-USERS] User AVATAR ok={} for email:{} sub:{} task:{} rej:{}",
+                            status, email, submission.id, task.id, rejectionMessage)
                         submissions.save(submission)
                     }
                 }
@@ -206,7 +207,7 @@ open class NovaIntegrationService(
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun setCvStatus(email: String, status: Boolean) {
+    open fun setCvStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return
 
         taskRepository.ifPresent { tasks ->
@@ -216,9 +217,10 @@ open class NovaIntegrationService(
                         submission.approved = status
                         submission.rejected = !status
                         submission.score = if (status) task.maxScore else 0
+                        submission.response = rejectionMessage ?: ""
 
-                        log.info("[NOVA/VALID-USERS] User CV ok={} for email:{} sub:{} task:{}",
-                            status, email, submission.id, task.id)
+                        log.info("[NOVA/VALID-USERS] User CV ok={} for email:{} sub:{} task:{} rej:{}",
+                            status, email, submission.id, task.id, rejectionMessage)
                         submissions.save(submission)
                     }
                 }
