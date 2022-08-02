@@ -82,7 +82,7 @@ export interface Event {
 export interface Home {
   title: string
   welcomeMessage: string
-  content: string,
+  content: string
   youtubeVideoId: string
 }
 
