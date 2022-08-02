@@ -10,6 +10,7 @@ import { Schedule } from './components/Schedule'
 import { useEventListQuery } from '../../api/hooks/useEventListQuery'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
+import { EmbeddedVideo } from './components/EmbeddedVideo'
 
 const HomePage = () => {
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))
@@ -58,6 +59,10 @@ const HomePage = () => {
           <Heading textAlign="center">{config?.components.countdown?.topMessage}</Heading>
           <Clock countTo={countTo} />
         </>
+      )}
+
+      {config?.components.home?.youtubeVideoId && (
+        <EmbeddedVideo key={config?.components.home?.youtubeVideoId} id={config?.components.home?.youtubeVideoId} />
       )}
 
       {config?.components.home?.content && (

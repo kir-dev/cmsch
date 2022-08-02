@@ -24,6 +24,7 @@ class HomeComponent(
 
             displayGroup,
             welcomeMessage,
+            youtubeVideoId,
             content
         )
     }
@@ -53,7 +54,13 @@ class HomeComponent(
 
     val welcomeMessage = SettingProxy(componentSettingService, component,
         "welcomeMessage", "Üdvözlünk a {} portálon", type = SettingType.TEXT,
-        fieldName = "Üdvözlő üzenet ", description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
+        fieldName = "Üdvözlő üzenet", description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
+    )
+
+    val youtubeVideoId = SettingProxy(componentSettingService, component,
+        "youtubeVideoId", "", type = SettingType.TEXT,
+        fieldName = "Promó videó", description = "Ha üres akkor nincs, csak youtube videó id-vel működik," +
+                " pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)"
     )
 
     val content = SettingProxy(componentSettingService, component,
