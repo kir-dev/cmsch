@@ -213,4 +213,43 @@ class TaskAdminRateController(
         }
     }
 
+    @GetMapping("/delete/{id}")
+    fun deleteConfirm(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
+            model.addAttribute("user", user)
+            return "admin403"
+        }
+
+        model.addAttribute("title", titleSingular)
+        model.addAttribute("view", view)
+        model.addAttribute("id", id)
+        model.addAttribute("user", user)
+
+        val entity = submittedRepository.findById(id)
+        if (entity.isEmpty) {
+            model.addAttribute("error", INVALID_ID_ERROR)
+        } else {
+            model.addAttribute("item", entity.orElseThrow().toString())
+        }
+        return "delete"
+    }
+
+    @PostMapping("/delete/{id}")
+    fun delete(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
+        if (permissionControl.validate(user).not()) {
+            model.addAttribute("permission", permissionControl.permissionString)
+            model.addAttribute("user", user)
+            return "admin403"
+        }
+
+        val entity = submittedRepository.findById(id).orElseThrow()
+        submittedRepository.delete(entity)
+        return "redirect:/admin/control/$view/"
+    }
+
+
 }
