@@ -122,6 +122,13 @@ export interface Organizer {
 export interface Leaderboard {
   leaderboardEnabled: string
   leaderboardFrozen: string
+  maxGroupEntryToShow: number
+  maxUserEntryToShow: number
+  minScoreToShow: number
+  showGroupBoard: boolean
+  showScores: boolean
+  showUserBoard: boolean
+  title: string
 }
 
 export interface Profile {

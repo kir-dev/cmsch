@@ -11,7 +11,8 @@ export enum Paths {
   COMMUNITIES = 'communities',
   ERROR = 'error',
   EXTRA_PAGE = 'page',
-  FORM = 'form'
+  FORM = 'form',
+  LEADER_BOARD = 'leader-board'
 }
 
 export enum AbsolutePaths {

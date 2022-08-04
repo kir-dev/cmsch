@@ -7,6 +7,8 @@ import { CommunitiesModule } from '../../route-modules/Communities.module'
 import { TokenModule } from '../../route-modules/Token.module'
 import { ImpressumModule } from '../../route-modules/Impressum.module'
 import { EventsModule } from '../../route-modules/Events.module'
+import { LeaderBoardModule } from '../../route-modules/LeaderBoard.module'
+
 import { ExtraPageModule } from '../../route-modules/ExtraPage.module'
 import { HomeModule } from '../../route-modules/Home.module'
 import { FormModule } from '../../route-modules/Form.module'
@@ -22,7 +24,8 @@ export enum AvailableModules {
   TOKEN = 'TOKEN',
   EVENTS = 'EVENTS',
   EXTRA = 'EXTRA',
-  FORM = 'FORM'
+  FORM = 'FORM',
+  LEADER_BOARD = 'LEADER_BOARD'
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
@@ -36,7 +39,8 @@ export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
   [AvailableModules.TOKEN]: TokenModule,
   [AvailableModules.EVENTS]: EventsModule,
   [AvailableModules.EXTRA]: ExtraPageModule,
-  [AvailableModules.FORM]: FormModule
+  [AvailableModules.FORM]: FormModule,
+  [AvailableModules.LEADER_BOARD]: LeaderBoardModule
 }
 
 export function GetRoutesForModules(modules: AvailableModules[]) {
@@ -54,5 +58,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.EVENTS,
   AvailableModules.NEWS,
   AvailableModules.EXTRA,
-  AvailableModules.FORM
+  AvailableModules.FORM,
+  AvailableModules.LEADER_BOARD
 ]
