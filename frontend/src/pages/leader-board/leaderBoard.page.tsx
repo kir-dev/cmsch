@@ -1,6 +1,5 @@
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Box, Divider, Flex, GridItem, Hide, HStack, Link, SimpleGrid, useColorModeValue, VStack, Text } from '@chakra-ui/react'
-import { LeaderBoardListItem } from './components/LeaderBoardListIem'
 import { ArrowDownIcon, ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { useLeaderBoardQuery } from '../../api/hooks/useLeaderBoardQuery'
 import { LeaderBoardView } from '../../util/views/leaderBoardView'
@@ -8,7 +7,7 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { Helmet } from 'react-helmet-async'
 
 const LeaderboardPage = () => {
-  const { data } = useLeaderBoardQuery(() => console.log('Event query failed!'))
+  const { data } = useLeaderBoardQuery(() => console.log('Leaderboard query failed!'))
 
   const userBg = useColorModeValue('purple.400', 'purple.400')
   const userHoverBg = useColorModeValue('purple.300', 'purple.300')

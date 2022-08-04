@@ -12,7 +12,7 @@ export enum Paths {
   ERROR = 'error',
   EXTRA_PAGE = 'page',
   FORM = 'form',
-  LEADER_BOARD = 'leader-board'
+  LEADER_BOARD = 'leaderboard'
 }
 
 export enum AbsolutePaths {
