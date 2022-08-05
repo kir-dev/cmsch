@@ -16,9 +16,9 @@ export const Footer = () => {
   return (
     <Box borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')}>
       <CmschContainer>
-        {!minimalistic && component?.sponsorsEnabled && sponsors.length > 0 && (
+        {component?.sponsorsEnabled && sponsors.length > 0 && (
           <>
-            <Text textAlign="center">Támogatóink:</Text>
+            <Text textAlign="center">Támogatóink</Text>
             <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
               {sponsors.map((sp) => (
                 <Link href={sp.url} m={5} key={sp.image}>
