@@ -77,6 +77,9 @@ export interface Event {
   separateDays: boolean
   topMessage: string
   enableDetailedView: boolean
+  filterByCategory: boolean
+  filterByLocation: boolean
+  filterByDay: boolean
 }
 
 export interface Home {
