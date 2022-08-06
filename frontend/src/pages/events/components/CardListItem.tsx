@@ -14,21 +14,19 @@ export const CardListItem = ({ title, open, toggle }: CardListItemProps) => {
       borderRadius="lg"
       padding={4}
       backgroundColor={useColorModeValue('gray.100', 'gray.700')}
-      marginTop={5}
-      transition="transform .2s ease-in-out"
-      _hover={{ transform: 'translateX(0.5em)' }}
+      _hover={{ bg: useColorModeValue('gray.200', 'gray.600') }}
+      marginTop={2}
+      cursor="pointer"
     >
-      <HStack spacing={4}>
-        <VStack align="flex-start" overflow="hidden">
-          <Heading as="h3" size="md" marginY={0} maxWidth="100%">
-            {title}
-          </Heading>
-        </VStack>
+      <HStack>
+        <Heading as="h3" size="md" marginY={0} maxWidth="100%">
+          {title}
+        </Heading>
         <Spacer />
         {open ? (
-          <ChevronUpIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />
+          <ChevronUpIcon boxSize={{ base: 5, md: 8 }} color={useColorModeValue('gray.700', 'gray.300')} />
         ) : (
-          <ChevronDownIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />
+          <ChevronDownIcon boxSize={{ base: 5, md: 8 }} color={useColorModeValue('gray.700', 'gray.300')} />
         )}
       </HStack>
     </Box>
