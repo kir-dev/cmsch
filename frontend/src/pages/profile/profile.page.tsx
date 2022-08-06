@@ -28,11 +28,19 @@ import { completedPercent, submittedPercent } from './util/percentFunctions'
 import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import templateStringReplace from '../../util/templateStringReplace'
+import { useEffect } from 'react'
 
 type Props = {}
 
 const ProfilePage = ({}: Props) => {
-  const { onLogout, profile, profileLoading, profileError } = useAuthContext()
+  const { onLogout, profile, profileLoading, profileError, refetch } = useAuthContext()
+
+  // The currentUser query is define in the Auth context, so it doesn't automatically run it when the profile page loads
+  //(since the context provider component is already mounted)
+  useEffect(() => {
+    refetch()
+  }, [])
+
   const { sendMessage } = useServiceContext()
   const config = useConfigContext()
   const component = config?.components.profile
