@@ -19,6 +19,7 @@ export type AuthContextType = {
   onLoginSuccess: (response: { jwt: string }) => void
   onLoginFailure: (response: any) => void
   onLogout: () => void
+  refetch: () => void
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -28,7 +29,8 @@ export const AuthContext = createContext<AuthContextType>({
   profileError: null,
   onLoginSuccess: () => {},
   onLoginFailure: () => {},
-  onLogout: () => {}
+  onLogout: () => {},
+  refetch: () => {}
 })
 
 export const AuthProvider = ({ children }: HasChildren) => {
@@ -68,7 +70,7 @@ export const AuthProvider = ({ children }: HasChildren) => {
     window.location.href = `${API_BASE_URL}/control/logout`
   }
 
-  const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery(onLoginFailure)
+  const { isLoading: profileLoading, data: profile, error: profileError, refetch } = useProfileQuery(onLoginFailure)
   const { refresh } = useTokenRefresh()
 
   useEffect(() => {
@@ -86,7 +88,8 @@ export const AuthProvider = ({ children }: HasChildren) => {
         profileError,
         onLoginSuccess,
         onLoginFailure,
-        onLogout
+        onLogout,
+        refetch
       }}
     >
       {children}
