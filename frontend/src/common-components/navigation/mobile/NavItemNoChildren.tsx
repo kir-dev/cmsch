@@ -18,7 +18,9 @@ export const NavItemNoChildren = ({ menu: { external, name, url } }: Props) => {
           textDecoration: 'none'
         }}
       >
-        <chakra.span color={useColorModeValue('gray.800', 'gray.200')}>{name}</chakra.span>
+        <chakra.span className="navitem" color={useColorModeValue('gray.800', 'gray.200')}>
+          {name}
+        </chakra.span>
       </Flex>
     </LinkComponent>
   )
