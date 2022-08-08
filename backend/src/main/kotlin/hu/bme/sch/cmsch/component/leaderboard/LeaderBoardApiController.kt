@@ -37,6 +37,7 @@ class LeaderBoardApiController(
 
         val userScore = user?.let { fetchUserScore(it) }
         val groupScore = user?.group?.let { fetchGroupScore(it) }
+
         return ResponseEntity.ok(LeaderBoardView(
             userScore = userScore,
             userBoard = if (leaderBoardComponent.showUserBoard.isValueTrue()) fetchUserBoard() else null,
