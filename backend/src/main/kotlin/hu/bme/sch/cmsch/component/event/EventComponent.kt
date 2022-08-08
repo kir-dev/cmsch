@@ -27,7 +27,10 @@ class EventComponent(
             topMessage,
 
             logicGroup,
-            enableDetailedView
+            enableDetailedView,
+            filterByCategory,
+            filterByLocation,
+            filterByDay
         )
     }
 
@@ -65,7 +68,7 @@ class EventComponent(
     )
 
     val topMessage = SettingProxy(componentSettingService, component,
-        "topMessage", "Rövid szöveg a programokról általánosságban", type = SettingType.LONG_TEXT,
+        "topMessage", "Rövid szöveg a programokról általánosságban", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
@@ -81,4 +84,20 @@ class EventComponent(
         "enableDetailedView", "false", type = SettingType.BOOLEAN,
         fieldName = "Elérhető a részletes nézet (külön lapon)"
     )
+
+    val filterByCategory = SettingProxy(componentSettingService, component,
+        "filterByCategory", "false", type = SettingType.BOOLEAN,
+        fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni"
+    )
+
+    val filterByLocation = SettingProxy(componentSettingService, component,
+        "filterByLocation", "false", type = SettingType.BOOLEAN,
+        fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni"
+    )
+
+    val filterByDay = SettingProxy(componentSettingService, component,
+        "filterByDay", "false", type = SettingType.BOOLEAN,
+        fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni"
+    )
+
 }
