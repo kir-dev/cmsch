@@ -5,6 +5,8 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
+import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
+import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
@@ -30,7 +32,8 @@ open class LeaderBoardService(
     private val taskSubmissions: Optional<SubmittedTaskRepository>,
     private val riddleSubmissions: Optional<RiddleMappingRepository>,
     private val riddleComponent: Optional<RiddleComponent>,
-    private val challengeSubmissions: Optional<ChallengeSubmissionRepository>
+    private val challengeSubmissions: Optional<ChallengeSubmissionRepository>,
+    private val tokenSubmissions: Optional<TokenPropertyRepository>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -125,18 +128,25 @@ open class LeaderBoardService(
             OwnershipType.USER -> listOf()
         }
 
-        cachedTopListForGroups = sequenceOf(tasks, riddles, challenge)
+        val tokens = when (startupPropertyConfig.tokenOwnershipMode) {
+            OwnershipType.GROUP -> listOf() // TODO: Not implemented token collection for groups
+            OwnershipType.USER -> listOf<TopListAsGroupEntryDto>()
+        }
+
+        cachedTopListForGroups = sequenceOf(tasks, riddles, challenge, tokens)
             .flatMap { it }
             .groupBy { it.name }
             .map { entries ->
                 val taskScore = entries.value.maxOf { it.taskScore }
                 val riddleScore = entries.value.maxOf { it.riddleScore }
                 val challengeScore = entries.value.maxOf { it.challengeScore }
+                val tokenScore = entries.value.maxOf { it.tokenScore }
                 TopListAsGroupEntryDto(entries.key,
                     taskScore = taskScore,
                     riddleScore = riddleScore,
                     challengeScore = challengeScore,
-                    totalScore = taskScore + riddleScore + challengeScore)
+                    tokenScore = tokenScore,
+                    totalScore = taskScore + riddleScore + challengeScore + tokenScore)
             }
             .sortedByDescending { it.totalScore }
         log.info("Recalculating finished")
@@ -197,19 +207,37 @@ open class LeaderBoardService(
             }
         }
 
-        cachedTopListForUsers = sequenceOf(tasks, riddles, challenges)
+        val tokens = when (startupPropertyConfig.tokenOwnershipMode) {
+            OwnershipType.GROUP -> listOf()
+            OwnershipType.USER -> {
+                tokenSubmissions.map { it.findAll() }.orElse(listOf())
+                    .groupBy { it.ownerUser?.id ?: 0 }
+                    .map { entity ->
+                        TopListAsUserEntryDto(
+                            entity.key ?: 0,
+                            entity.value[0].ownerUser?.fullName ?: "n/a",
+                            entity.value[0].ownerGroup?.name ?: "n/a",
+                            tokenScore = entity.value.sumOf { s -> s.token?.score ?: 0 }
+                        )
+                    }
+            }
+        }
+
+        cachedTopListForUsers = sequenceOf(tasks, riddles, challenges, tokens)
             .flatMap { it }
             .groupBy { it.id }
             .map { entries ->
                 val taskScore = entries.value.maxOf { it.taskScore }
                 val riddleScore = entries.value.maxOf { it.riddleScore }
                 val challengeScore = entries.value.maxOf { it.challengeScore }
+                val tokenScore = entries.value.maxOf { it.tokenScore }
                 TopListAsUserEntryDto(entries.key, entries.value.firstOrNull()?.name ?: "n/a",
                     entries.value.firstOrNull()?.groupName ?: "n/a",
                     taskScore = taskScore,
                     riddleScore = riddleScore,
                     challengeScore = challengeScore,
-                    totalScore = taskScore + riddleScore + challengeScore)
+                    tokenScore = tokenScore,
+                    totalScore = taskScore + riddleScore + challengeScore + tokenScore)
             }
             .sortedByDescending { it.totalScore }
         log.info("Recalculating finished")

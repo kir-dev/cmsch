@@ -10,7 +10,7 @@ export const QRScanResultComponent = ({ response }: QrScanResultProps) => {
   const renderIcon = () => {
     switch (response.status) {
       case ScanStatus.SCANNED:
-        return <CheckCircleIcon color={useColorModeValue('brand.500', 'brand.600')} boxSize="120px" />
+        return <CheckCircleIcon color="green.500" boxSize="120px" />
       case ScanStatus.ALREADY_SCANNED:
         return <InfoIcon color="orange.500" boxSize="120px" />
       case ScanStatus.WRONG:
@@ -23,7 +23,7 @@ export const QRScanResultComponent = ({ response }: QrScanResultProps) => {
   const getInfoText = () => {
     switch (response.status) {
       case ScanStatus.SCANNED:
-        return 'Állomás lepecsételve'
+        return 'QR kód feljegyezve'
       case ScanStatus.ALREADY_SCANNED:
         return 'Ezt a kódot már egyszer beolvasta'
       case ScanStatus.WRONG:

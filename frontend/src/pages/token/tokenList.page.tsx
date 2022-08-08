@@ -2,48 +2,38 @@ import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { FaQrcode, FaStamp } from 'react-icons/fa'
-import { ProfileView } from '../../util/views/profile.view'
+import { FaQrcode } from 'react-icons/fa'
 import { TokenView } from '../../util/views/token.view'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
-import { Paragraph } from '../../common-components/Paragraph'
 import { LinkButton } from '../../common-components/LinkButton'
 import { StampComponent } from './components/StampComponent'
 import { AbsolutePaths } from '../../util/paths'
-
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 interface TokenProgress {
   totalTokenCount: number
+  collectedTokenCount: number
   minTokenToComplete: number
-  acquiredTokenCount: number
   tokens: TokenView[]
-  groupName: string
 }
 
 const TokenList = () => {
   const [progress, setProgress] = useState<TokenProgress>({
     totalTokenCount: 0,
+    collectedTokenCount: 0,
     minTokenToComplete: 0,
-    acquiredTokenCount: 0,
-    tokens: [],
-    groupName: ''
+    tokens: []
   })
   const [loading, setLoading] = useState<boolean>(false)
+  const config = useConfigContext()
 
   useEffect(() => {
     setLoading(true)
     axios
-      .get(`/api/profile`)
+      .get(`/api/tokens`)
       .then((res) => {
-        const profile = res.data as ProfileView
-        setProgress({
-          tokens: profile.tokens,
-          minTokenToComplete: profile.minTokenToComplete,
-          totalTokenCount: profile.totalTokenCount,
-          acquiredTokenCount: profile.collectedTokenCount,
-          groupName: profile.groupName
-        })
+        setProgress(res.data)
         setLoading(false)
       })
       .catch(() => {
@@ -57,31 +47,31 @@ const TokenList = () => {
 
   return (
     <CmschPage loginRequired groupRequired>
-      <Helmet title="QR pecsétek" />
-      <Heading as="h1">QR kód pecsétek</Heading>
-      <PresenceAlert acquired={progress.acquiredTokenCount} needed={progress.minTokenToComplete} />
-      <Paragraph>
+      <Helmet title={config?.components.token.title || 'QR kódok'} />
+      <Heading as="h1">{config?.components.token.title || 'QR kódok'}</Heading>
+      <PresenceAlert acquired={progress.collectedTokenCount} needed={progress.minTokenToComplete} />
+      {/* <Paragraph>
         A standoknál végzett aktív tevékenyégért QR kódokat lehet beolvasni. Ha eleget összegyűjt, beválthatja egy tanköri jelenlétre.
-      </Paragraph>
+      </Paragraph> */}
 
       <ButtonGroup mt="5">
         <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           QR kód beolvasása
         </LinkButton>
-        {progress?.groupName === 'Kiállító' && (
+        {/* {progress?.groupName === 'Kiállító' && (
           <LinkButton colorScheme="brand" leftIcon={<FaStamp />} href="/control/stamps" external newTab={false}>
             Pecsét statisztika
           </LinkButton>
-        )}
+        )} */}
       </ButtonGroup>
 
       <Heading as="h3" mt="10" size="lg">
         Haladás
       </Heading>
       <Heading as="h4" size="md" mt={5}>
-        Eddig beolvasott kódok: {progress.acquiredTokenCount} / {progress.totalTokenCount}
+        Eddig beolvasott kódok: {progress.collectedTokenCount} / {progress.totalTokenCount}
       </Heading>
-      <Progress hasStripe colorScheme="brand" mt="1" value={calculate_progress(progress.acquiredTokenCount, progress.totalTokenCount)} />
+      <Progress hasStripe colorScheme="green" mt="1" value={calculate_progress(progress.collectedTokenCount, progress.totalTokenCount)} />
       {progress.tokens.length > 0 ? (
         <>
           <Heading as="h4" size="md" mt="5">

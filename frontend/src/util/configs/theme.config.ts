@@ -159,7 +159,7 @@ export let customTheme = extendTheme({
       }
     },
     Progress: {
-      baseStyle: progressBaseStyle
+      //baseStyle: progressBaseStyle
     }
   }
 })
