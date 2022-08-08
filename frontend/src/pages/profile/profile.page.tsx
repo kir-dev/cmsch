@@ -106,13 +106,7 @@ const ProfilePage = ({}: Props) => {
           {component?.messageBoxContent}
         </Alert>
       )}
-      {component?.showMinimumToken && (
-        <PresenceAlert
-          acquired={profile.tokens?.filter((token) => token.type === 'default').length}
-          needed={profile.minTokenToComplete}
-          mt={5}
-        />
-      )}
+      <PresenceAlert acquired={profile.collectedTokenCount} needed={profile.minTokenToComplete} mt={5} />
 
       <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mt={5}>
         <AlertIcon />
@@ -220,11 +214,11 @@ const ProfilePage = ({}: Props) => {
             </Flex>
           </Center>
         )}
-        {component?.showQr && (
+        {component?.showTokens && (
           <Center p={3}>
             <Flex direction="column" align="center">
               <Link
-                href={AbsolutePaths.RIDDLE}
+                href={AbsolutePaths.TOKEN}
                 fontSize="3xl"
                 fontWeight={500}
                 _hover={{

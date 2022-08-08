@@ -59,7 +59,7 @@ class TokenComponent(
     )
 
     val collectFeatureEnabled = SettingProxy(componentSettingService, component,
-        "collectFeature", "false", serverSideOnly = true, type = SettingType.BOOLEAN,
+        "collectFeature", "false", serverSideOnly = false, type = SettingType.BOOLEAN,
         fieldName = "Pecsét gyűjtés aktív", description = "Bizonyos mennyiségű pecsét összegyűjtésének " +
                 "sikeressége külön kijelezve"
     )
@@ -70,7 +70,7 @@ class TokenComponent(
     )
 
     val collectRequiredType = SettingProxy(componentSettingService, component,
-        "collectType", "default", serverSideOnly = true, type = SettingType.BOOLEAN,
+        "collectType", "default", serverSideOnly = false, type = SettingType.TEXT,
         fieldName = "Pecsét token típusa", description = "Ebből a fajából kell összegyűjteni az n darabot; Ha '*' akkor bármilyen típust elfogad."
     )
 

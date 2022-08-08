@@ -3,6 +3,7 @@ import { useColorModeValue } from '@chakra-ui/system'
 import { FC } from 'react'
 import { FaRocket, FaStamp } from 'react-icons/fa'
 import { IconType } from 'react-icons/lib'
+import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 
 interface StampComponentProps {
   title?: string
@@ -11,9 +12,10 @@ interface StampComponentProps {
 
 export const StampComponent: FC<StampComponentProps> = ({ title, type }: StampComponentProps) => {
   const backgroundBase = useColorModeValue('gray.100', 'gray.700')
-  const stampCorner = useColorModeValue('gray.200', 'gray.600')
+  const stampCorner = useColorModeValue('gray.800', 'gray.200')
+  const component = useConfigContext()?.components.token
 
-  const icon: IconType = type === 'default' ? FaStamp : FaRocket
+  const icon: IconType = type === component?.collectType ? FaStamp : FaRocket
 
   return (
     <Box maxW="md" minW={['100%', 'md']} borderRadius="lg" bg={backgroundBase}>
