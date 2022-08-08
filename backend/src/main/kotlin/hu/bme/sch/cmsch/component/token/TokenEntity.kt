@@ -58,6 +58,14 @@ data class TokenEntity(
     @property:ImportFormat(ignore = false, columnId = 4)
     var icon: String = "",
 
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 6, label = "Pont", type = INPUT_TYPE_NUMBER, defaultValue = "0",
+        note = "Egész szám, hány pontot ér a megszerzése")
+    @property:GenerateOverview(columnName = "Pont", order = 4, centered = true)
+    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
+    var score: Int? = 0,
+
 ): ManagedEntity {
 
     override fun equals(other: Any?): Boolean {

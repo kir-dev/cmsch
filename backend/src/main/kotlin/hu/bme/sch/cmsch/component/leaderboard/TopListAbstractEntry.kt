@@ -10,6 +10,8 @@ interface TopListAbstractEntry {
 
     var challengeScore: Int
 
+    var tokenScore: Int
+
     var totalScore: Int
 
 }
