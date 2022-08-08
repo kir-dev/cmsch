@@ -10,13 +10,14 @@ type PresenceAlertProps = {
 
 export const PresenceAlert: FC<PresenceAlertProps> = ({ acquired, needed, mt = 5 }) => {
   const config = useConfigContext()
-  const component = config?.components.profile
-  if (acquired == null || needed == null) return null
+  const component = config?.components.token
+  const messageParts = component?.minTokenMsg.split('{}') || ['']
+  if (acquired == null || needed == null || !component?.collectFeature) return null
   else if (acquired < needed)
     return (
       <Alert variant="left-accent" status="info" mt={mt}>
         <AlertIcon />
-        {component?.minTokenMsg}
+        {messageParts[0] + (messageParts.length > 1 ? (needed - acquired).toString() + messageParts[1] : '')}
       </Alert>
     )
   else

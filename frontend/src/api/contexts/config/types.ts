@@ -150,7 +150,6 @@ export interface Profile {
   showNeptun: boolean
   showEmail: boolean
   showProfilePicture: boolean
-  showQr: boolean
   groupTitle: string
   messageBoxContent: string
   messageBoxLevel: string
@@ -199,6 +198,8 @@ export interface Task {
 
 export interface Token {
   title: string
+  collectFeature: boolean
+  collectType: string
   collectRequired: string
   minTokenMsg: string
   minTokenAchievedMsg: string

@@ -31,6 +31,10 @@ data class TopListAsUserEntryDto(
     @property:GenerateOverview(columnName = "Beadások", order = 5, centered = true)
     override var challengeScore: Int = 0,
 
+    @JsonView(value = [Preview::class, FullDetails::class])
+    @property:GenerateOverview(columnName = "QR Kódok", order = 6, centered = true)
+    override var tokenScore: Int = 0,
+
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Totál", order = 100, centered = true)
     override var totalScore: Int = 0,

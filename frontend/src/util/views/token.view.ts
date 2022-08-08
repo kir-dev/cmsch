@@ -1,6 +1,7 @@
 export interface TokenView {
   title: string
   type: string
+  icon: string
 }
 
 export enum ScanStatus {
