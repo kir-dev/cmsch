@@ -208,7 +208,7 @@ const ProfilePage = ({}: Props) => {
                 <CircularProgressLabel
                   color={profile.completedRiddleCount === 0 ? 'gray.500' : useColorModeValue('green.500', 'green.600')}
                 >
-                  {(profile.completedRiddleCount / profile.totalRiddleCount) * 100}%
+                  {Math.round((profile.completedRiddleCount / profile.totalRiddleCount) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
             </Flex>
@@ -235,7 +235,7 @@ const ProfilePage = ({}: Props) => {
                 trackColor={useColorModeValue('gray.200', 'gray.500')}
               >
                 <CircularProgressLabel color={profile.collectedTokenCount === 0 ? 'gray.500' : useColorModeValue('green.500', 'green.600')}>
-                  {(profile.collectedTokenCount / profile.totalTokenCount) * 100}%
+                  {Math.round((profile.collectedTokenCount / profile.totalTokenCount) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
             </Flex>
