@@ -17,6 +17,7 @@ import { CookieConsentProvider } from './api/contexts/cookie-consent/CookieConse
 import { ChakraProvider } from '@chakra-ui/react'
 import { customTheme } from './util/configs/theme.config'
 import { HelmetProvider } from 'react-helmet-async'
+import { ErrorBoundary } from './util/errorBoundary'
 
 initAxios()
 
@@ -32,12 +33,14 @@ root.render(
             <ChakraProvider theme={customTheme}>
               <ConfigProvider>
                 <ThemeConfig>
-                  <AuthProvider>
-                    <CookieConsentProvider>
-                      <App />
-                      <ReactQueryDevtools />
-                    </CookieConsentProvider>
-                  </AuthProvider>
+                  <ErrorBoundary>
+                    <AuthProvider>
+                      <CookieConsentProvider>
+                        <App />
+                        <ReactQueryDevtools />
+                      </CookieConsentProvider>
+                    </AuthProvider>
+                  </ErrorBoundary>
                 </ThemeConfig>
               </ConfigProvider>
             </ChakraProvider>
