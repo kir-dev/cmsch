@@ -1,130 +1,90 @@
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Box, Divider, Flex, GridItem, Hide, HStack, Link, SimpleGrid, useColorModeValue, VStack, Text } from '@chakra-ui/react'
-import { ArrowDownIcon, ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { useLeaderBoardQuery } from '../../api/hooks/useLeaderBoardQuery'
-import { LeaderBoardView } from '../../util/views/leaderBoardView'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import {
+  Divider,
+  HStack,
+  Table,
+  TableContainer,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Tbody,
+  Td,
+  Text,
+  Tr,
+  useBreakpoint,
+  useBreakpointValue
+} from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
+
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import { useLeaderBoardQuery } from '../../api/hooks/useLeaderBoardQuery'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { BoardStat } from './components/BoardStat'
+import { CustomTab } from '../events/components/CustomTab'
+import { isEmpty } from 'lodash'
+import { Navigate } from 'react-router-dom'
 
 const LeaderboardPage = () => {
   const { data } = useLeaderBoardQuery(() => console.log('Leaderboard query failed!'))
 
-  const userBg = useColorModeValue('purple.400', 'purple.400')
-  const userHoverBg = useColorModeValue('purple.300', 'purple.300')
-
-  const userBgDark = useColorModeValue('purple.600', 'purple.600')
-  const userHoverBgDark = useColorModeValue('purple.400', 'purple.400')
-
-  const groupBg = useColorModeValue('pink.400', 'pink.400')
-  const groupHoverBg = useColorModeValue('pink.300', 'pink.300')
-
-  const groupBgDark = useColorModeValue('pink.600', 'pink.600')
-  const groupHoverBgDark = useColorModeValue('pink.400', 'pink.400')
-
-  function gridColCount() {
-    let count = 0
-    if (data?.userScore) {
-      count++
-    }
-    if (data?.groupScore) {
-      count++
-    }
-
-    return count
-  }
+  const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
+  const breakpoint = useBreakpoint()
 
   const leadboardConfig = useConfigContext()?.components.leaderboard
   const title = leadboardConfig?.title || 'Toplista'
+  if (isEmpty(data)) return <Navigate to="/" />
   return (
     <CmschPage>
       <Helmet title={title} />
-      <SimpleGrid columns={{ sm: 1, md: gridColCount() }} spacing={5}>
-        {data?.userScore !== undefined && (
-          <Link href="#user_scores">
-            <Box bg={userBgDark} px={6} py={2} borderRadius="md" _hover={{ bgColor: userHoverBgDark }}>
-              <Flex align="center" justifyContent="space-between">
-                <Text fontWeight="bold" fontSize="xl">
-                  Saját pont:
-                </Text>
-                <Text fontWeight="bold" fontSize="xl" decoration="underline" mx={5}>
-                  {data.userScore}
-                </Text>
-                <ArrowRightIcon></ArrowRightIcon>
-              </Flex>
-            </Box>
-          </Link>
-        )}
-        {data?.groupScore !== undefined && (
-          <Link href="#group_scores">
-            <Box bg={groupBgDark} px={6} py={2} borderRadius="md" _hover={{ bgColor: groupHoverBgDark }}>
-              <Flex align="center" justifyContent="space-between">
-                <Text fontWeight="bold" fontSize="xl">
-                  Csapat pont:
-                </Text>
-                <Text fontWeight="bold" fontSize="xl" decoration="underline" mx={5}>
-                  {data?.groupScore}
-                </Text>
-                <ArrowRightIcon></ArrowRightIcon>
-              </Flex>
-            </Box>
-          </Link>
-        )}
-        <GridItem colSpan={{ sm: 1, md: 2 }}>
-          <Divider bg="gray.400" height={2}></Divider>
-        </GridItem>
+      <HStack my={5}>
+        {data?.userScore !== undefined && <BoardStat label="Saját pont" value={data.userScore} />}
+        {data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={data.groupScore} />}
+      </HStack>
+      <Divider mb={10} />
 
-        {data?.userBoard && data?.userBoard?.length > 0 && (
-          <VStack align="stretch" spacing={5}>
-            <Box id="user_scores" bg={userBgDark} px={6} py={4} borderRadius="md" _hover={{ bgColor: userHoverBgDark }}>
-              <Flex align="center" justifyContent="space-between">
-                <Text fontWeight="bold" fontSize="xl">
-                  Egyéni toplista
-                </Text>
-                <ChevronDownIcon />
-              </Flex>
-            </Box>
+      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="unstyled">
+        <TabList>
+          {data?.userBoard && <CustomTab>Egyéni</CustomTab>}
+          {data?.groupBoard && <CustomTab>Csoportos</CustomTab>}
+        </TabList>
+        <TabPanels>
+          {data?.userBoard && (
+            <TabPanel>
+              <TableContainer>
+                <Table variant="striped" colorScheme="brand">
+                  <Tbody>
+                    {data.userBoard.map((item) => (
+                      <Tr key={item.name}>
+                        <Td>{item.name}</Td>
+                        <Td>{item.score}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+              {data.userBoard.length === 0 && <Text>Nincs megjeleníthető információ.</Text>}
+            </TabPanel>
+          )}
 
-            {data.userBoard.map((item) => (
-              <Box bg={userBg} px={6} py={2} borderRadius="md" _hover={{ bgColor: userHoverBg }}>
-                <Flex align="center" justifyContent="space-between">
-                  <Text fontWeight="bold" fontSize="xl">
-                    {item.name}
-                  </Text>
-                  <Text fontWeight="bold" fontSize="xl">
-                    {item.score}
-                  </Text>
-                </Flex>
-              </Box>
-            ))}
-          </VStack>
-        )}
-
-        {data?.groupBoard && data.groupBoard.length > 0 && (
-          <VStack align="stretch" spacing={5}>
-            <Box id="group_scores" bg={groupBgDark} px={6} py={4} borderRadius="md" _hover={{ bgColor: groupHoverBgDark }}>
-              <Flex align="center" justifyContent="space-between">
-                <Text fontWeight="bold" fontSize="xl">
-                  Csapat toplista
-                </Text>
-                <ChevronDownIcon />
-              </Flex>
-            </Box>
-
-            {data?.groupBoard.map((item) => (
-              <Box bg={groupBg} px={6} py={2} borderRadius="md" _hover={{ bgColor: groupHoverBg }}>
-                <Flex align="center" justifyContent="space-between">
-                  <Text fontWeight="bold" fontSize="xl">
-                    {item.name}
-                  </Text>
-                  <Text fontWeight="bold" fontSize="xl">
-                    {item.score}
-                  </Text>
-                </Flex>
-              </Box>
-            ))}
-          </VStack>
-        )}
-      </SimpleGrid>
+          {data?.groupBoard && (
+            <TabPanel>
+              <TableContainer>
+                <Table variant="striped" colorScheme="brand">
+                  <Tbody>
+                    {data.groupBoard.map((item) => (
+                      <Tr key={item.name}>
+                        <Td>{item.name}</Td>
+                        <Td>{item.score}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+              {data.groupBoard.length === 0 && <Text>Nincs megjeleníthető információ.</Text>}
+            </TabPanel>
+          )}
+        </TabPanels>
+      </Tabs>
     </CmschPage>
   )
 }
