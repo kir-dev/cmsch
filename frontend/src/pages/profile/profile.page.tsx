@@ -128,19 +128,27 @@ const ProfilePage = ({}: Props) => {
 
       <Flex justify="center" alignItems="center" flexWrap="wrap" mt="10">
         {component?.showTasks && (
-          <Center p={3}>
-            <Flex direction="column" align="center">
-              <Link
-                href={AbsolutePaths.TASKS}
-                fontSize="3xl"
-                fontWeight={500}
-                _hover={{
-                  textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.600')
-                }}
-              >
-                {component?.taskCounterName}
-              </Link>
+          <Flex direction="column" align="center" mx={5}>
+            <Link
+              href={AbsolutePaths.TASKS}
+              _hover={{
+                textDecoration: 'none'
+              }}
+            >
+              <Center>
+                <Heading
+                  mt={0}
+                  mb={2}
+                  fontSize="3xl"
+                  fontWeight={500}
+                  _hover={{
+                    color: useColorModeValue('brand.500', 'brand.600')
+                  }}
+                >
+                  {component?.taskCounterName}
+                </Heading>
+              </Center>
+
               <Box>
                 <CircularProgress
                   color={useColorModeValue('yellow.400', 'yellow.500')}
@@ -181,24 +189,32 @@ const ProfilePage = ({}: Props) => {
                   )}
                 </CircularProgress>
               </Box>
-            </Flex>
-          </Center>
+            </Link>
+          </Flex>
         )}
 
         {component?.showRiddles && (
-          <Center p={3}>
-            <Flex direction="column" align="center">
-              <Link
-                href={AbsolutePaths.RIDDLE}
-                fontSize="3xl"
-                fontWeight={500}
-                _hover={{
-                  textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.600')
-                }}
-              >
-                {component?.riddleCounterName}
-              </Link>
+          <Flex direction="column" align="center" mx={5}>
+            <Link
+              href={AbsolutePaths.RIDDLE}
+              _hover={{
+                textDecoration: 'none'
+              }}
+            >
+              <Center>
+                <Heading
+                  mt={0}
+                  mb={2}
+                  fontSize="3xl"
+                  fontWeight={500}
+                  _hover={{
+                    color: useColorModeValue('brand.500', 'brand.600')
+                  }}
+                >
+                  {component?.riddleCounterName}
+                </Heading>
+              </Center>
+
               <CircularProgress
                 color={useColorModeValue('green.500', 'green.600')}
                 size="10rem"
@@ -211,23 +227,32 @@ const ProfilePage = ({}: Props) => {
                   {Math.round((profile.completedRiddleCount / profile.totalRiddleCount) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
-            </Flex>
-          </Center>
+            </Link>
+          </Flex>
         )}
         {component?.showTokens && (
-          <Center p={3}>
-            <Flex direction="column" align="center">
-              <Link
-                href={AbsolutePaths.TOKEN}
-                fontSize="3xl"
-                fontWeight={500}
-                _hover={{
-                  textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.600')
-                }}
-              >
-                {component?.tokenCounterName}
-              </Link>
+          <Flex direction="column" align="center" mx={5}>
+            <Link
+              href={AbsolutePaths.TOKEN}
+              cursor="pointer"
+              _hover={{
+                textDecoration: 'none'
+              }}
+            >
+              <Center>
+                <Heading
+                  mt={0}
+                  mb={2}
+                  fontSize="3xl"
+                  fontWeight={500}
+                  _hover={{
+                    color: useColorModeValue('brand.500', 'brand.600')
+                  }}
+                >
+                  {component?.tokenCounterName}
+                </Heading>
+              </Center>
+
               <CircularProgress
                 color={useColorModeValue('green.500', 'green.600')}
                 size="10rem"
@@ -238,8 +263,8 @@ const ProfilePage = ({}: Props) => {
                   {Math.round((profile.collectedTokenCount / profile.totalTokenCount) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
-            </Flex>
-          </Center>
+            </Link>
+          </Flex>
         )}
       </Flex>
     </CmschPage>

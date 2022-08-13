@@ -24,7 +24,7 @@ export enum AbsolutePaths {
   EVENTS = '/event',
   IMPRESSUM = '/impressum',
   TOKEN = '/token',
-  TOKEN_SCANNED = 'token-scanned',
+  TOKEN_SCANNED = '/token-scanned',
   COMMUNITIES = '/communities',
   ERROR = '/error',
   EXTRA_PAGE = '/page',
