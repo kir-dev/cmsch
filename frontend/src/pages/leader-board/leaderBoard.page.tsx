@@ -21,8 +21,6 @@ import { useLeaderBoardQuery } from '../../api/hooks/useLeaderBoardQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { BoardStat } from './components/BoardStat'
 import { CustomTab } from '../events/components/CustomTab'
-import { isEmpty } from 'lodash'
-import { Navigate } from 'react-router-dom'
 
 const LeaderboardPage = () => {
   const { data } = useLeaderBoardQuery(() => console.log('Leaderboard query failed!'))
@@ -32,7 +30,7 @@ const LeaderboardPage = () => {
 
   const leadboardConfig = useConfigContext()?.components.leaderboard
   const title = leadboardConfig?.title || 'Toplista'
-  if (isEmpty(data)) return <Navigate to="/" />
+
   return (
     <CmschPage>
       <Helmet title={title} />
