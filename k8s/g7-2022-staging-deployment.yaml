@@ -125,7 +125,11 @@ spec:
                   key: AuthSCH_KEY
           resources:
             limits:
+              cpu: 2
               memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 200Mi
           volumeMounts:
             - name: g7-staging
               mountPath: /pv
