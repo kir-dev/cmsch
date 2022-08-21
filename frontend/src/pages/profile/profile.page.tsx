@@ -31,6 +31,7 @@ import templateStringReplace from '../../util/templateStringReplace'
 import { useEffect } from 'react'
 import { GroupComponent } from './components/Group'
 import { ProfileQR } from './components/ProfileQR'
+import { MapContainer } from './components/MapContainer'
 
 type Props = {}
 
@@ -245,6 +246,7 @@ const ProfilePage = ({}: Props) => {
           </Center>
         )}
       </Flex>
+      {config?.components.profile.showGroupLeadersLocations && <MapContainer groupName={profile.groupName} />}
     </CmschPage>
   )
 }
