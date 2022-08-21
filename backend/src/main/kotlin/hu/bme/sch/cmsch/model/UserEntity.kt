@@ -43,7 +43,8 @@ enum class GuildType(val displayName: String) {
     BLUE("kék"),
     RED("piros"),
     WHITE("fehér"),
-    YELLOW("sárga")
+    YELLOW("sárga"),
+    PURPLE("lila"),
 }
 
 enum class MajorType {
