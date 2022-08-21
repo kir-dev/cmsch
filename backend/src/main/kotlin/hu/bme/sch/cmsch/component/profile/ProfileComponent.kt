@@ -46,6 +46,7 @@ class ProfileComponent(
             messageBoxLevel,
 
             groupLeadersGroup,
+            groupLeadersHeader,
             showGroupLeaders,
             showGroupLeadersLocations,
             locationTimeout,
@@ -56,6 +57,7 @@ class ProfileComponent(
             minTokenDoneMessage,
 
             fillProfileGroup,
+            showIncompleteProfile,
             profileIncomplete,
             profileComplete,
         )
@@ -198,6 +200,11 @@ class ProfileComponent(
         fieldName = "Csoport mutatása", description = "Csoport vezetők elérhetősége"
     )
 
+    val groupLeadersHeader = SettingProxy(componentSettingService, component,
+        "groupLeadersHeader", "Tankörseniorok",
+        fieldName = "Csoport modul fejléce", description = "Ez a felirata a csoport vezetőinek elérhetőségeinek"
+    )
+
     val showGroupLeadersLocations = SettingProxy(componentSettingService, component,
         "showGroupLeadersLocations", "false", type = SettingType.BOOLEAN,
         fieldName = "Csoport helyzetének mutatása", description = "Csoport vezetők pozíciójának mutatása"
@@ -239,6 +246,11 @@ class ProfileComponent(
         "fillProfileGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Profil kitöltöttsége", description = "Ha egy Feladat Kategória PROFILE_REQUIRED-re van állítva, " +
                 "akkor a bennelévő feladatok szükségesek ahhoz, hogy a profil teljes legyen."
+    )
+
+    val showIncompleteProfile = SettingProxy(componentSettingService, component,
+        "showIncompleteProfile", "false", type = SettingType.BOOLEAN,
+        fieldName = "Profil kitöltöttsége üzenet akítv", description = "Megjelenlen-e a profil kitöltöttségére vonatkozó üzenet a profilban?"
     )
 
     val profileIncomplete = SettingProxy(componentSettingService, component,
