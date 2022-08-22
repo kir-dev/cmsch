@@ -22,13 +22,15 @@ import { LinkButton } from '../../common-components/LinkButton'
 import { Loading } from '../../common-components/Loading'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { API_BASE_URL } from '../../util/configs/environment.config'
-import { RoleType } from '../../util/views/profile.view'
+import { GuildType, RoleType } from '../../util/views/profile.view'
 import { ProfilePageSkeleton } from './components/ProfilePageSkeleton'
 import { completedPercent, submittedPercent } from './util/percentFunctions'
 import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import templateStringReplace from '../../util/templateStringReplace'
 import { useEffect } from 'react'
+import { GroupComponent } from './components/Group'
+import { ProfileQR } from './components/ProfileQR'
 
 type Props = {}
 
@@ -70,21 +72,20 @@ const ProfilePage = ({}: Props) => {
   return (
     <CmschPage loginRequired>
       <Helmet title={component?.title} />
-      <Flex justifyContent="space-between" flexDirection={{ base: 'column', sm: 'row' }}>
+      <Flex justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>
         <Box>
+          {/*{component?.showProfilePicture && <Heading>{profile.groupLeaders}</Heading>}*/}
           {component?.showFullName && <Heading>{profile.fullName}</Heading>}
-          {component?.showAlias && <Text fontSize="3xl">Becenév: {profile.alias || 'nincs'}</Text>}
-          {component?.showNeptun && <Text fontSize="3xl">Neptun: {profile.neptun || 'nincs'}</Text>}
-          {component?.showEmail && <Text fontSize="3xl">E-mail: {profile.email || 'nincs'}</Text>}
-          {component?.showGroup && (
-            <Text fontSize="3xl">
-              {component?.groupTitle}: {profile.groupName || 'nincs'}
-            </Text>
-          )}
-          {component?.showGuild && <Text fontSize="3xl">Gárda: {profile.guild || 'nincs'}</Text>}
-          {component?.showMajor && <Text fontSize="3xl">Szak: {profile.major || 'nincs'}</Text>}
+          {component?.showAlias && <Text fontSize="xl">Becenév: {profile.alias || 'nincs'}</Text>}
+          {component?.showNeptun && <Text fontSize="xl">Neptun: {profile.neptun || 'nincs'}</Text>}
+          {component?.showEmail && <Text fontSize="xl">E-mail: {profile.email || 'nincs'}</Text>}
+
+          {component?.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
+          {component?.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
+          {component?.showGroup && <GroupComponent profile={profile} />}
+          {component?.showQr && <ProfileQR profile={profile} />}
         </Box>
-        <VStack py={2} alignItems="flex-end">
+        <VStack py={2} alignItems={{ base: 'flex-start', md: 'flex-end' }} mt={{ base: 5, md: 0 }}>
           {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
             <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
               Admin panel
@@ -108,23 +109,25 @@ const ProfilePage = ({}: Props) => {
       )}
       <PresenceAlert acquired={profile.collectedTokenCount} needed={profile.minTokenToComplete} mt={5} />
 
-      <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mt={5}>
-        <AlertIcon />
-        <Flex flexWrap="wrap" alignItems="center" w="full">
-          <Box py={2}>
-            {profile.profileIsComplete
-              ? component?.profileComplete
-              : templateStringReplace(component?.profileIncomplete, profile?.incompleteTasks?.join(', '))}
-          </Box>
-          {!profile.profileIsComplete && (
-            <Flex flex={1} justifyContent="end">
-              <LinkButton href={AbsolutePaths.TASKS} ml={5} colorScheme="red">
-                Feladatok
-              </LinkButton>
-            </Flex>
-          )}
-        </Flex>
-      </Alert>
+      {component?.showIncompleteProfile && (
+        <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mt={5}>
+          <AlertIcon />
+          <Flex flexWrap="wrap" alignItems="center" w="full">
+            <Box py={2}>
+              {profile.profileIsComplete
+                ? component?.profileComplete
+                : templateStringReplace(component?.profileIncomplete, profile?.incompleteTasks?.join(', '))}
+            </Box>
+            {!profile.profileIsComplete && (
+              <Flex flex={1} justifyContent="end">
+                <LinkButton href={AbsolutePaths.TASKS} ml={5} colorScheme="red">
+                  Feladatok
+                </LinkButton>
+              </Flex>
+            )}
+          </Flex>
+        </Alert>
+      )}
 
       <Flex justify="center" alignItems="center" flexWrap="wrap" mt="10">
         {component?.showTasks && (
