@@ -26,7 +26,7 @@ const Map = ({ children }: HasChildren) => {
 
   map?.on('click', (e) => {
     map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
-      console.log(feature.getGeometry())
+      console.log(feature.get('alias'))
     })
   })
 
