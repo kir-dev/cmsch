@@ -246,7 +246,7 @@ const ProfilePage = ({}: Props) => {
           </Center>
         )}
       </Flex>
-      {config?.components.profile.showGroupLeadersLocations && <MapContainer groupName={profile.groupName} />}
+      {config?.components.profile.showGroupLeadersLocations && <MapContainer />}
     </CmschPage>
   )
 }

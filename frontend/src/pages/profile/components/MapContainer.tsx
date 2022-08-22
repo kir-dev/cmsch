@@ -25,25 +25,21 @@ const addMarkers = (data: GroupMemberLocationView[]) => {
   })
   const features = data.map((item) => {
     const feature = new Feature({
-      geometry: new Point(fromLonLat([item.logitude, item.latitude]))
+      geometry: new Point(fromLonLat([item.longitude, item.latitude]))
     })
     feature.setStyle(iconStyle)
-    feature.set('name', item.name)
+    feature.set('alias', item.alias)
     feature.set('timestamp', item.timestamp)
     return feature
   })
   return features
 }
 
-type MapContainerProps = {
-  groupName: string
-}
-
-export const MapContainer = ({ groupName }: MapContainerProps) => {
+export const MapContainer = () => {
   const [showUserLocation, setShowUserLocation] = useState<boolean>(false)
   const [watchStarted, setWatchStarted] = useState<boolean>(false)
   const toast = useToast()
-  const locationQuery = useLocationQuery(groupName, () =>
+  const locationQuery = useLocationQuery(() =>
     toast({
       title: 'A pozíciók nem érhetőek el.',
       status: 'error'
@@ -54,7 +50,7 @@ export const MapContainer = ({ groupName }: MapContainerProps) => {
     positionOptions: {
       enableHighAccuracy: false
     },
-    userDecisionTimeout: 5000,
+    userDecisionTimeout: 10000,
     suppressLocationOnMount: true,
     watchPosition: true
   })
@@ -87,8 +83,9 @@ export const MapContainer = ({ groupName }: MapContainerProps) => {
                 new VectorSource({
                   features: addMarkers([
                     {
-                      name: 'A te pozíciód',
-                      logitude: coords.longitude,
+                      id: 0,
+                      alias: 'A te pozíciód',
+                      longitude: coords.longitude,
                       latitude: coords.latitude,
                       accuracy: coords.accuracy,
                       timestamp: timestamp || 0
