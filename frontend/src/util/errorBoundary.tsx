@@ -32,7 +32,13 @@ export class ErrorBoundary extends React.Component<HasChildren, State> {
             Sajnos ilyennel még nem találkoztunk. Légyszíves ezt jelezd a fejlesztőknek!
           </Text>
           <ButtonGroup justifyContent="center" marginTop={10}>
-            <LinkButton href="/" colorScheme="brand">
+            <LinkButton
+              onClick={() => {
+                this.setState({ hasError: false })
+              }}
+              href="/"
+              colorScheme="brand"
+            >
               Főoldal
             </LinkButton>
           </ButtonGroup>

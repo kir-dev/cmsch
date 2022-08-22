@@ -6,14 +6,16 @@ export type LinkProps = {
   external?: boolean
   href: string
   newTab?: boolean
+  onClick?: () => void
 }
 
-export const LinkButton: FC<LinkProps & ButtonProps> = ({ external, href, children, newTab = true, ...props }) => {
+export const LinkButton: FC<LinkProps & ButtonProps> = ({ external, href, children, newTab = true, onClick = () => {}, ...props }) => {
   const navigate = useNavigate()
   return (
     <Button
       {...props}
       onClick={() => {
+        onClick()
         if (external) {
           if (newTab) {
             window.open(href)
