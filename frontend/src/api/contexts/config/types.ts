@@ -148,9 +148,11 @@ export interface Profile {
   showAlias: boolean
   showGroup: boolean
   showNeptun: boolean
+  showQr: boolean
   showEmail: boolean
   showProfilePicture: boolean
   groupTitle: string
+  groupLeadersHeader: string
   messageBoxContent: string
   messageBoxLevel: string
   showGroupName: boolean
@@ -159,6 +161,7 @@ export interface Profile {
   minTokenMsg: string
   minTokenAchievedMsg: string
   profileIncomplete: string
+  showIncompleteProfile: boolean
   profileComplete: string
 }
 

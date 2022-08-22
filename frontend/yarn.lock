@@ -5684,7 +5684,7 @@ __metadata:
     eslint-plugin-react-hooks: 4.6.0
     framer-motion: 6.5.1
     js-cookie: 3.0.1
-    lodash: ^4.17.21
+    lodash: 4.17.21
     npm-run-all: 4.1.5
     prettier: 2.7.1
     prismjs: 1.28.0
@@ -5694,6 +5694,7 @@ __metadata:
     react-hook-form: 7.33.1
     react-icons: 4.4.0
     react-markdown: 8.0.3
+    react-qr-code: ^2.0.7
     react-qr-reader: 2.2.1
     react-query: 3.39.1
     react-router-dom: 6.3.0
@@ -10018,7 +10019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:4.17.21, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -12687,6 +12688,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qr.js@npm:0.0.0":
+  version: 0.0.0
+  resolution: "qr.js@npm:0.0.0"
+  checksum: 5ac6c393967bdeaa660e7fd3a501a25eb538c1f6008a4d30ab2b97bbe520e5c236530090773f1578aa0a523cdaa6923c866615e21143f9e7cd22abd41c789b69
+  languageName: node
+  linkType: hard
+
 "qs@npm:6.10.3":
   version: 6.10.3
   resolution: "qs@npm:6.10.3"
@@ -12928,6 +12936,22 @@ __metadata:
     "@types/react": ">=16"
     react: ">=16"
   checksum: 66c0b45889d0262168547d9356145ced276993dac1d441c5c1cf2371fe71f347419696f9040c084c7d77c1caced21d358677c38f66edae736f942ac5964c032f
+  languageName: node
+  linkType: hard
+
+"react-qr-code@npm:^2.0.7":
+  version: 2.0.7
+  resolution: "react-qr-code@npm:2.0.7"
+  dependencies:
+    prop-types: ^15.7.2
+    qr.js: 0.0.0
+  peerDependencies:
+    react: ^16.x || ^17.x || ^18.x
+    react-native-svg: "*"
+  peerDependenciesMeta:
+    react-native-svg:
+      optional: true
+  checksum: f79d6ae9756b722afe59fe2f86ae6e810a13bc91d72c019f529f87e30dc3dfe1a46f8f2cbb57a05f149f32efe91012ca22d0a700a81b392135cdaa3e8ea1794e
   languageName: node
   linkType: hard
 

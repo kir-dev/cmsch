@@ -11,7 +11,7 @@ export interface ProfileView {
   alias: string
   email: string
   neptun: string
-  guild: GuildType
+  guild: keyof typeof GuildType
   major: MajorType
 
   groupName: string
@@ -52,12 +52,13 @@ export enum RoleType {
 }
 
 export enum GuildType {
-  UNKNOWN = 'n/a',
-  BLACK = 'fekete',
-  BLUE = 'kék',
-  RED = 'piros',
-  WHITE = 'fehér',
-  YELLOW = 'sárga'
+  UNKNOWN = 'Nincs',
+  RED = 'Piros',
+  BLACK = 'Fekete',
+  BLUE = 'Kék',
+  WHITE = 'Fehér',
+  YELLOW = 'Sárga',
+  PURPLE = 'Lila'
 }
 
 export enum MajorType {
