@@ -1,13 +1,12 @@
 import { Box, Checkbox, useToast } from '@chakra-ui/react'
 import Map from './openlayers/Map'
 import { Layers, TileLayer } from './openlayers/Layers/'
-import { Controls, FullScreenControl } from './openlayers/Controls'
+import FullScreenControl from './openlayers/FullScreenControl'
 import Stamen from 'ol/source/Stamen'
 import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
 import { fromLonLat } from 'ol/proj'
-import Icon from 'ol/style/Icon'
-import { Style } from 'ol/style'
+import { Circle, Fill, Stroke, Style } from 'ol/style'
 import { VectorLayer } from './openlayers/Layers'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useState } from 'react'
@@ -16,19 +15,27 @@ import { GroupMemberLocationView } from '../../../util/views/groupMemberLocation
 import { useLocationQuery } from '../../../api/hooks/useLocationQuery'
 
 const addMarkers = (data: GroupMemberLocationView[]) => {
-  const iconStyle = new Style({
-    image: new Icon({
-      anchor: [0.5, 1],
-      src: 'img/marker.png',
-      scale: 0.05
+  const stroke = new Stroke({ color: 'white', width: 2 })
+  const regularIconStyle = new Style({
+    image: new Circle({
+      fill: new Fill({ color: 'blue' }),
+      radius: 10,
+      stroke
+    })
+  })
+  const userIconStyle = new Style({
+    image: new Circle({
+      fill: new Fill({ color: 'orange' }),
+      radius: 10,
+      stroke
     })
   })
   const features = data.map((item) => {
     const feature = new Feature({
       geometry: new Point(fromLonLat([item.longitude, item.latitude]))
     })
-    feature.setStyle(iconStyle)
-    feature.set('alias', item.alias)
+    feature.setStyle(item.id === -1 ? userIconStyle : regularIconStyle)
+    feature.set('person', item)
     feature.set('timestamp', item.timestamp)
     return feature
   })
@@ -39,6 +46,7 @@ export const MapContainer = () => {
   const [showUserLocation, setShowUserLocation] = useState<boolean>(false)
   const [watchStarted, setWatchStarted] = useState<boolean>(false)
   const toast = useToast()
+
   const locationQuery = useLocationQuery(() =>
     toast({
       title: 'A pozíciók nem érhetőek el.',
@@ -83,7 +91,7 @@ export const MapContainer = () => {
                 new VectorSource({
                   features: addMarkers([
                     {
-                      id: 0,
+                      id: -1,
                       alias: 'A te pozíciód',
                       longitude: coords.longitude,
                       latitude: coords.latitude,
@@ -97,9 +105,8 @@ export const MapContainer = () => {
             />
           )}
         </Layers>
-        <Controls>
-          <FullScreenControl />
-        </Controls>
+
+        <FullScreenControl />
       </Map>
     </Box>
   )
