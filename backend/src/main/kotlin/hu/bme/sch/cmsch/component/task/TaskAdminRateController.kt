@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_RATE_TASKS
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.markdownToHtml
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -163,7 +164,7 @@ class TaskAdminRateController(
         } else {
             model.addAttribute("data", entity.orElseThrow())
             model.addAttribute("taskTitle", entity.orElseThrow().task?.title)
-            model.addAttribute("taskDescription", entity.orElseThrow().task?.description)
+            model.addAttribute("taskDescription", entity.orElseThrow().task?.description?.let { markdownToHtml(it) })
             val maxScore = entity.orElseThrow().task?.maxScore ?: 0
             model.addAttribute("comment", "Feladványhoz tartozó max pont: $maxScore")
             model.addAttribute("maxScore", maxScore)

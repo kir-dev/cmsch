@@ -20,6 +20,8 @@ class ApplicationComponent(
             warningLevel,
 
             adminGroup,
+            adminPanelName,
+            isLive,
             siteUrl,
             adminSiteUrl,
             motd,
@@ -83,6 +85,16 @@ class ApplicationComponent(
         description = ""
     )
 
+    val adminPanelName = SettingProxy(componentSettingService, component,
+        "adminPanelName", "ADMIN", type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Admin panel neve", description = "Az admin panel neve"
+    )
+
+    val isLive = SettingProxy(componentSettingService, component,
+        "isLive", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Production oldal", description = "Ha be van kapcsolva akkor az oldal productionben van"
+    )
+
     val siteUrl = SettingProxy(componentSettingService, component,
         "siteUrl", "http://127.0.0.1:3000/", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
@@ -99,7 +111,7 @@ class ApplicationComponent(
     )
 
     val staffMessage = SettingProxy(componentSettingService, component,
-        "staffMessage", "http://127.0.0.1:8080/", type = SettingType.LONG_TEXT, serverSideOnly = true,
+        "staffMessage", "...", type = SettingType.LONG_TEXT_MARKDOWN, serverSideOnly = true,
         fieldName = "Szolgálati közlemény", description = "Ez fog megjelenni az admin oldal kezdőlapján"
     )
 

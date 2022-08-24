@@ -215,14 +215,14 @@ h1 {
 .content .split .payload p a {
     display: inline-block;
     text-decoration: none;
-    color: #000;
-    border-bottom: 2px dashed #000000;
+    color: #cd9941;
+    border-bottom: 2px dashed #cd9941;
     transition: background-color ease 0.2s;
 }
 
 .content .split .payload p a:hover {
     background-color: rgba(0, 0, 0, 0.05);
-    border-bottom: 2px solid #000000;
+    border-bottom: 2px solid #ffd18c;
 }
 
 .card,

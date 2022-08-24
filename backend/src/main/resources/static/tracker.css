@@ -67,10 +67,6 @@ td {
     background-color: #FFFFFF;
 }
 
-.cat-1 {
-    background-color: #FF0000;
-}
-
 .cat-3 {
     background-color: #FF00FF;
 }
@@ -85,4 +81,52 @@ td {
 
 .cat-5 {
     background-color: #2B2E88;
+}
+
+.cat-10 {
+    background-color: #000000;
+}
+
+.cat-11 {
+    background-color: #5fa8d3;
+}
+
+.cat-12 {
+    background-color: #70d6ff;
+}
+
+.cat-13 {
+    background-color: #ff70a6;
+}
+
+.cat-14 {
+    background-color: #f8961e;
+}
+
+.cat-15 {
+    background-color: #a7c957;
+}
+
+.cat-16 {
+    background-color: #ef233c;
+}
+
+.cat-17 {
+    background-color: #ffffff;
+}
+
+.cat-18 {
+    background-color: #fee440;
+}
+
+.cat-19 {
+    background-color: #9d4edd;
+}
+
+.cat-20 {
+    background-color: #c0c0c0;
+}
+
+.ol-control {
+    display: none;
 }
