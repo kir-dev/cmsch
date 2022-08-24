@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.component.extrapage.ExtraPageService
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.markdownToHtml
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -87,7 +88,7 @@ class BasicAdminController(
             .filter { userPermissions.contains(it.permissionString) })
 
         model.addAttribute("motd", applicationComponent.motd.getValue())
-        model.addAttribute("staffMessage", applicationComponent.staffMessage.getValue())
+        model.addAttribute("staffMessage", markdownToHtml(applicationComponent.staffMessage.getValue()))
 
         return "admin"
     }

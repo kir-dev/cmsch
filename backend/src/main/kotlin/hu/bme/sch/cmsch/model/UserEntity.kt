@@ -107,7 +107,7 @@ data class UserEntity(
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 6, label = "Email cím", note = "Nem kell egyik funkcióhoz sem")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(columnName = "Email", order = 4)
     @property:ImportFormat(ignore = false, columnId = 5)
     var email: String = "",
 
@@ -133,7 +133,7 @@ data class UserEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
-    @property:GenerateOverview(columnName = "Gárda", centered = true, order = 4)
+    @property:GenerateOverview(columnName = "Gárda", centered = true, order = 5)
     @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
     var guild: GuildType = GuildType.UNKNOWN,
 

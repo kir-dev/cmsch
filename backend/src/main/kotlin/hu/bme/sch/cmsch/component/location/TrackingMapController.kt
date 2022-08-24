@@ -18,13 +18,15 @@ import javax.annotation.PostConstruct
 @ConditionalOnBean(LocationComponent::class)
 class TrackingMapController(
     private val locationService: LocationService,
-    private val adminMenuService: AdminMenuService
+    private val adminMenuService: AdminMenuService,
+    private val locationComponent: LocationComponent
 ) {
 
     @ResponseBody
     @GetMapping("/api/track")
-    fun api(auth: Authentication): List<LocationEntity> {
-        if (PERMISSION_TRACK_EVERYBODY.validate(auth.getUser()).not()) {
+    fun api(auth: Authentication?): List<LocationEntity> {
+        val user = auth?.getUser() ?: return listOf()
+        if (PERMISSION_TRACK_EVERYBODY.validate(user).not()) {
             return listOf()
         }
         return locationService.findAllLocation()
@@ -32,8 +34,9 @@ class TrackingMapController(
 
     @ResponseBody
     @GetMapping("/api/track/{groupName}")
-    fun apiGroup(@PathVariable groupName: String, auth: Authentication): List<LocationEntity> {
-        if (PERMISSION_TRACK_ONE_GROUP.validate(auth.getUser()).not()) {
+    fun apiGroup(@PathVariable groupName: String, auth: Authentication?): List<LocationEntity> {
+        val user = auth?.getUser() ?: return listOf()
+        if (PERMISSION_TRACK_ONE_GROUP.validate(user).not()) {
             return listOf()
         }
         return locationService.findLocationsOfGroup(groupName)
@@ -62,6 +65,7 @@ class TrackingMapController(
         }
 
         model.addAttribute("url", "/api/track")
+        attachComponentProperties(model)
         return "tracker"
     }
 
@@ -75,7 +79,23 @@ class TrackingMapController(
         }
 
         model.addAttribute("url", "/api/track/${groupName}")
+        attachComponentProperties(model)
         return "tracker"
+    }
+
+    private fun attachComponentProperties(model: Model) {
+        model.addAttribute("defaultGroupColor", locationComponent.defaultGroupColor.getValue())
+        model.addAttribute("blackGroupName", locationComponent.blackGroupName.getValue())
+        model.addAttribute("blueGroupName", locationComponent.blueGroupName.getValue())
+        model.addAttribute("cyanGroupName", locationComponent.cyanGroupName.getValue())
+        model.addAttribute("pinkGroupName", locationComponent.pinkGroupName.getValue())
+        model.addAttribute("orangeGroupName", locationComponent.orangeGroupName.getValue())
+        model.addAttribute("greenGroupName", locationComponent.greenGroupName.getValue())
+        model.addAttribute("redGroupName", locationComponent.redGroupName.getValue())
+        model.addAttribute("whiteGroupName", locationComponent.whiteGroupName.getValue())
+        model.addAttribute("yellowGroupName", locationComponent.yellowGroupName.getValue())
+        model.addAttribute("purpleGroupName", locationComponent.purpleGroupName.getValue())
+        model.addAttribute("grayGroupName", locationComponent.grayGroupName.getValue())
     }
 
 }

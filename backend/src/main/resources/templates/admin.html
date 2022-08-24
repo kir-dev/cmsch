@@ -23,7 +23,7 @@
 
                 <div th:if="${staffMessage != ''}"  class="card">
                     <h3 class="centered-text">SZOLGÁLATI KÖZLEMÉNY</h3>
-                    <p th:text="${staffMessage}" class="centered-text"></p>
+                    <p th:utext="${staffMessage}" class="centered-text"></p>
                 </div>
 
                 <div class="mt-3">
