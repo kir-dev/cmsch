@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -43,7 +44,7 @@ class LocationComponent(
     final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "",
+        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
@@ -127,6 +128,5 @@ class LocationComponent(
         "apkUrl", "/files/cmsch-tracker-1.0.0.apk", type = SettingType.TEXT,
         serverSideOnly = true, fieldName = "APK URL-je"
     )
-
 
 }

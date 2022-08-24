@@ -4,12 +4,16 @@ import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.UserService
+import org.commonmark.node.Node
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
 import java.util.*
+
 
 @Component
 class DI(
@@ -64,4 +68,11 @@ fun Authentication.getUserFromDatabase(): UserEntity {
 
 fun Authentication?.getUserFromDatabaseOrNull(): UserEntity? {
     return if (this == null) null else DI.instance.userService.findById(this.name).orElse(null)
+}
+
+fun markdownToHtml(markdown: String): String {
+    val parser: Parser = Parser.builder().build()
+    val document: Node = parser.parse(markdown)
+    val renderer = HtmlRenderer.builder().build()
+    return renderer.render(document)
 }

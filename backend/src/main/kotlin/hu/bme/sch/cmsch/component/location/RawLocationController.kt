@@ -75,8 +75,13 @@ class RawLocationController(
 
     @GetMapping("/admin/control/locations/refresh")
     fun refresh(auth: Authentication): String {
-        if (permissionControl.validate(auth.getUser()))
-            locationService.refresh()
+        try {
+            if (permissionControl.validate(auth.getUser()))
+                locationService.refresh()
+            return "redirect:/admin/control/$view"
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         return "redirect:/admin/control/$view"
     }
 

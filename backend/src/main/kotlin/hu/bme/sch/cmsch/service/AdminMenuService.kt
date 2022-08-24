@@ -1,12 +1,15 @@
 package hu.bme.sch.cmsch.service
 
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import org.springframework.stereotype.Service
 import org.springframework.ui.Model
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
-class AdminMenuService {
+class AdminMenuService(
+    private val applicationComponent: ApplicationComponent
+) {
 
     private val entries: MutableMap<String, MutableList<AdminMenuEntry>> = ConcurrentHashMap()
     private val categories: MutableMap<String, AdminMenuCategory> = ConcurrentHashMap()
@@ -31,6 +34,8 @@ class AdminMenuService {
             .entries
             .toList()
             .sortedBy { it.key.value.priority })
+        model.addAttribute("adminPanelName", applicationComponent.adminPanelName.getValue())
+        model.addAttribute("isLive", applicationComponent.isLive.getValue())
     }
 
 }

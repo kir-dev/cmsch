@@ -19,6 +19,11 @@
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon-32x32.png}" />
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}" />
     <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.6.1/css/ol.css" type="text/css">
+    <style th:inline="text">
+        .cat-1 {
+            background-color: [[@{(${defaultGroupColor})}]];
+        }
+    </style>
 </head>
 <body onload="onInit();">
 
@@ -56,6 +61,18 @@
 
 <script th:inline="javascript">
     const apiUrl = /*[[${url}]]*/ "/api/track";
+    const defaultGroupColor = /*[[${defaultGroupColor}]]*/ "";
+    const blackGroupName = /*[[${blackGroupName}]]*/ "";
+    const blueGroupName = /*[[${blueGroupName}]]*/ "";
+    const cyanGroupName = /*[[${cyanGroupName}]]*/ "";
+    const pinkGroupName = /*[[${pinkGroupName}]]*/ "";
+    const orangeGroupName = /*[[${orangeGroupName}]]*/ "";
+    const greenGroupName = /*[[${greenGroupName}]]*/ "";
+    const redGroupName = /*[[${redGroupName}]]*/ "";
+    const whiteGroupName = /*[[${whiteGroupName}]]*/ "";
+    const yellowGroupName = /*[[${yellowGroupName}]]*/ "";
+    const purpleGroupName = /*[[${purpleGroupName}]]*/ "";
+    const grayGroupName = /*[[${grayGroupName}]]*/ "";
 
     var attribution = new ol.control.Attribution({
         collapsible: false
@@ -64,9 +81,6 @@
     var map = new ol.Map({
         controls: ol.control.defaults({attribution: false}).extend([attribution]),
         layers: [
-            // new ol.layer.Tile({
-            //     source: new ol.source.OSM()
-            // })
             new ol.layer.Tile({
                 title:'terrain-background',
                 source: new ol.source.Stamen({ layer: 'terrain' })
@@ -81,39 +95,99 @@
     });
 
 
-    var iconStyle1 = new ol.style.Style({
-        image:  new ol.style.Circle({
+    var iconStyleDefault = new ol.style.Style({
+        image: new ol.style.Circle({
             radius: 4,
-            stroke: new ol.style.Stroke({
-                color: '#fff'
-            }),
-            fill: new ol.style.Fill({
-                color: '#FF0000'
-            })
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: defaultGroupColor })
         })
     });
 
-    var iconStyle2 = new ol.style.Style({
-        image:  new ol.style.Circle({
+    var iconStyleBlack = new ol.style.Style({
+        image: new ol.style.Circle({
             radius: 4,
-            stroke: new ol.style.Stroke({
-                color: '#fff'
-            }),
-            fill: new ol.style.Fill({
-                color: '#FF00FF'
-            })
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#000000' })
         })
     });
 
-    var iconStyle3 = new ol.style.Style({
-        image:  new ol.style.Circle({
+    var iconStyleBlue = new ol.style.Style({
+        image: new ol.style.Circle({
             radius: 4,
-            stroke: new ol.style.Stroke({
-                color: '#fff'
-            }),
-            fill: new ol.style.Fill({
-                color: '#00AAAA'
-            })
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#5fa8d3' })
+        })
+    });
+
+    var iconStyleCyan = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#70d6ff' })
+        })
+    });
+
+    var iconStylePink = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#ff70a6' })
+        })
+    });
+
+    var iconStyleOrange = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#f8961e' })
+        })
+    });
+
+    var iconStyleGreen = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#a7c957' })
+        })
+    });
+
+    var iconStyleRed = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#ef233c' })
+        })
+    });
+
+    var iconStyleWhite = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#000' }),
+            fill: new ol.style.Fill({ color: '#ffffff' })
+        })
+    });
+
+    var iconStyleYellow = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#000' }),
+            fill: new ol.style.Fill({ color: '#fee440' })
+        })
+    });
+
+    var iconStylePurple = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#9d4edd' })
+        })
+    });
+
+    var iconStyleGray = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 4,
+            stroke: new ol.style.Stroke({ color: '#fff' }),
+            fill: new ol.style.Fill({ color: '#c0c0c0' })
         })
     });
 
@@ -133,35 +207,18 @@
         })
     });
 
-    var iconStyle4 = new ol.style.Style({
-        image:  new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({
-                color: '#fff'
-            }),
-            fill: new ol.style.Fill({
-                color: '#444444'
-            })
-        })
-    });
-
-    var iconStyle5 = new ol.style.Style({
-        image:  new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({
-                color: '#fff'
-            }),
-            fill: new ol.style.Fill({
-                color: '#2B2E88'
-            })
-        })
-    });
-
-    var style = [iconStyle1, labelStyle];
-    var styleAdmin = [iconStyle2, labelStyle];
-    var styleGroup = [iconStyle3, labelStyle];
-    var styleSupport = [iconStyle4, labelStyle];
-    var styleSenior = [iconStyle5, labelStyle];
+    var style = [iconStyleDefault, labelStyle];
+    var styleBlack = [iconStyleBlack, labelStyle];
+    var styleBlue = [iconStyleBlue, labelStyle];
+    var styleCyan = [iconStyleCyan, labelStyle];
+    var stylePink = [iconStylePink, labelStyle];
+    var styleOrange = [iconStyleOrange, labelStyle];
+    var styleGreen = [iconStyleGreen, labelStyle];
+    var styleRed = [iconStyleRed, labelStyle];
+    var styleWhite = [iconStyleWhite, labelStyle];
+    var styleYellow = [iconStyleYellow, labelStyle];
+    var stylePurple = [iconStylePurple, labelStyle];
+    var styleGray = [iconStyleGray, labelStyle];
 
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector({
@@ -171,14 +228,28 @@
         }),
         style: function(feature) {
             labelStyle.getText().setText(feature.get('name'));
-            if (feature.get('category') === 3) {
-                return styleAdmin;
-            } else if (feature.get('category') === 2) {
-                return styleGroup;
-            } else if (feature.get('category') === 4) {
-                return styleSupport;
-            } else if (feature.get('category') === 5) {
-                return styleSenior;
+            if (feature.get('category') === 10) {
+                return styleBlack;
+            } else if (feature.get('category') === 11) {
+                return styleBlue;
+            } else if (feature.get('category') === 12) {
+                return styleCyan;
+            } else if (feature.get('category') === 13) {
+                return stylePink;
+            } else if (feature.get('category') === 14) {
+                return styleOrange;
+            } else if (feature.get('category') === 15) {
+                return styleGreen;
+            } else if (feature.get('category') === 16) {
+                return styleRed;
+            } else if (feature.get('category') === 17) {
+                return styleWhite;
+            } else if (feature.get('category') === 18) {
+                return styleYellow;
+            } else if (feature.get('category') === 19) {
+                return stylePurple;
+            } else if (feature.get('category') === 20) {
+                return styleGray;
             } else {
                 return style;
             }
@@ -220,34 +291,85 @@
                     elapsedStr = elapsed.toFixed(0) + "m";
                 }
                 if (currentTime - parseInt(data[feature].timestamp) <= 600) {
-                    if (data[feature].groupName === "LEAD") {
+                    let name = data[feature].alias !== "" ? data[feature].alias : data[feature].groupName;
+                    if (data[feature].groupName === blackGroupName) {
                         layer.getSource().addFeature(new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: data[feature].alias,
-                            category: 3
+                            name: name,
+                            category: 10
                         }));
-                        tableData += `<tr><td><div class="cat cat-3"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === "MANAGER") {
+                        tableData += `<tr><td><div class="cat cat-10"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === blueGroupName) {
                         layer.getSource().addFeature(new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: data[feature].alias,
-                            category: 2
+                            name: name,
+                            category: 11
                         }));
-                        tableData += `<tr><td><div class="cat cat-2"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === "SUPPORT") {
+                        tableData += `<tr><td><div class="cat cat-11"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === cyanGroupName) {
                         layer.getSource().addFeature(new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: data[feature].alias,
-                            category: 4
+                            name: name,
+                            category: 12
                         }));
-                        tableData += `<tr><td><div class="cat cat-4"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === "SENIOR") {
+                        tableData += `<tr><td><div class="cat cat-12"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === pinkGroupName) {
                         layer.getSource().addFeature(new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: data[feature].alias,
-                            category: 5
+                            name: name,
+                            category: 13
                         }));
-                        tableData += `<tr><td><div class="cat cat-4"></td><td>${data[feature].alias}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                        tableData += `<tr><td><div class="cat cat-13"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === orangeGroupName) {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: name,
+                            category: 14
+                        }));
+                        tableData += `<tr><td><div class="cat cat-14"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === greenGroupName) {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: name,
+                            category: 15
+                        }));
+                        tableData += `<tr><td><div class="cat cat-15"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === redGroupName) {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: name,
+                            category: 16
+                        }));
+                        tableData += `<tr><td><div class="cat cat-16"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === whiteGroupName) {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: name,
+                            category: 17
+                        }));
+                        tableData += `<tr><td><div class="cat cat-17"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === yellowGroupName) {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: name,
+                            category: 18
+                        }));
+                        tableData += `<tr><td><div class="cat cat-18"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === purpleGroupName) {
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: name,
+                            category: 19
+                        }));
+                        tableData += `<tr><td><div class="cat cat-19"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
+                    } else if (data[feature].groupName === grayGroupName) {
+                        let name = data[feature].alias !== "" ? data[feature].alias : data[feature].groupName;
+                        layer.getSource().addFeature(new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
+                            name: name,
+                            category: 20
+                        }));
+                        tableData += `<tr><td><div class="cat cat-20"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
                     } else {
                         layer.getSource().addFeature(new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
