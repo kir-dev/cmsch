@@ -87,6 +87,7 @@ export interface Home {
   welcomeMessage: string
   content: string
   youtubeVideoId: string
+  showEvents: boolean
 }
 
 export interface News {
