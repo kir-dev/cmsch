@@ -6,6 +6,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import CurrentEvent from './components/CurrentEvent'
 import { AbsolutePaths } from '../../util/paths'
+import { l } from '../../util/language'
 
 const EventPage = () => {
   const params = useParams()
@@ -17,12 +18,12 @@ const EventPage = () => {
   }
 
   if (currentEvent.isError) {
-    sendMessage('Esemény betöltése sikertelen!\n' + currentEvent.error.message)
+    sendMessage(l('event-load-failed') + currentEvent.error.message)
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof currentEvent.data === 'undefined') {
-    sendMessage('Esemény betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
+    sendMessage(l('event-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 

@@ -16,6 +16,7 @@ import { FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/view
 import Cookies from 'js-cookie'
 import { CookieKeys } from '../../util/configs/cookies.config'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
+import { l } from '../../util/language'
 
 interface FormPageProps {}
 
@@ -44,12 +45,12 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   }
 
   if (error) {
-    sendMessage('Űrlap betöltése sikertelen!')
+    sendMessage(l('form-load-failed'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof data === 'undefined') {
-    sendMessage('Űrlap betöltése sikertelen!\n Keresse az oldal fejlesztőit!')
+    sendMessage(l('form-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
   const { form, submission, message, status, detailsValidated } = data

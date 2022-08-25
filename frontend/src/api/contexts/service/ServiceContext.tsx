@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HasChildren } from '../../../util/react-types.util'
 import { AbsolutePaths } from '../../../util/paths'
+import { l } from '../../../util/language'
 
 export enum MessageTypes {
   GENERAL = 'general',
@@ -59,13 +60,13 @@ export const ServiceProvider = ({ children }: HasChildren) => {
 export function getToastTitle(type?: string) {
   switch (type) {
     case 'success':
-      return 'Siker'
+      return l('toast-title-success')
     case 'error':
-      return 'Hiba'
+      return l('toast-title-error')
     case 'warning':
-      return 'Figyelmeztetés'
+      return l('toast-title-warning')
     default:
-      return 'Információ'
+      return l('toast-title-info')
   }
 }
 

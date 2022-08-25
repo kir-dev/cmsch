@@ -6,6 +6,7 @@ import { MessageTypes, useServiceContext } from '../../api/contexts/service/Serv
 import { LinkButton } from '../../common-components/LinkButton'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { UnauthorizedPage } from './unauthorized.page'
+import { l } from '../../util/language'
 
 type Props = {
   message?: string
@@ -30,8 +31,8 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   if (clonedMessageType === MessageTypes.AUTHENTICATION) return <UnauthorizedPage />
   return (
     <CmschPage>
-      <Helmet title="Hiba" />
-      <Heading textAlign="center">Hiba történt</Heading>
+      <Helmet title={l('error-page-helmet')} />
+      <Heading textAlign="center">{l('error-page-title')}</Heading>
       <Text textAlign="center" color="gray.500" marginTop={10}>
         {clonedMessage}
       </Text>

@@ -10,6 +10,7 @@ import { HasChildren } from '../../../util/react-types.util'
 import { ProfileView } from '../../../util/views/profile.view'
 import { useProfileQuery } from '../../hooks/useProfileQuery'
 import { useTokenRefresh } from '../../hooks/useTokenRefresh'
+import { l } from '../../../util/language'
 
 export type AuthContextType = {
   isLoggedIn: boolean
@@ -43,8 +44,8 @@ export const AuthProvider = ({ children }: HasChildren) => {
     queryClient.invalidateQueries('currentUser', { refetchInactive: true })
     console.log('[ERROR] at onLoginFailure', JSON.stringify(err, null, 2))
     toast({
-      title: 'Bejelentkezés lejárt',
-      description: 'Hiba esett a bejelentkezési folyamatba!',
+      title: l('login-expired-title'),
+      description: l('login-expired-description'),
       status: 'error',
       duration: 5000,
       isClosable: true

@@ -11,6 +11,8 @@ import { LinkButton } from '../../common-components/LinkButton'
 import { StampComponent } from './components/StampComponent'
 import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { l } from '../../util/language'
+
 interface TokenProgress {
   totalTokenCount: number
   collectedTokenCount: number
@@ -75,7 +77,7 @@ const TokenList = () => {
       {progress.tokens.length > 0 ? (
         <>
           <Heading as="h4" size="md" mt="5">
-            Ahol eddig járt
+            {l('token-completed')}
           </Heading>
           <Stack spacing="5" mt="1">
             {progress.tokens.map((token, i) => {
@@ -85,7 +87,7 @@ const TokenList = () => {
         </>
       ) : (
         <Heading as="h4" size="md" mt="5">
-          Még nem szerzett pecsétet
+          {l('token-empty')}
         </Heading>
       )}
     </CmschPage>
