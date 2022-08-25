@@ -1,16 +1,24 @@
-import { Box } from '@chakra-ui/layout'
+import { Heading, Flex, Box, Text, CloseButton } from '@chakra-ui/react'
 import { forwardRef } from 'react'
 import { GroupMemberLocationView } from '../../../util/views/groupMemberLocation.view'
+import { timestampToTimePassedStr } from '../util/timestampToTimePassedStr'
 
 type PopupProps = {
   person?: GroupMemberLocationView
+  onClose: () => void
 }
 
-export const Popup = forwardRef<HTMLDivElement, PopupProps>(({ person }, ref) => {
-  if (!person) return null
+export const Popup = forwardRef<HTMLDivElement, PopupProps>(({ person, onClose }, ref) => {
   return (
-    <Box ref={ref} style={{ backgroundColor: 'white', color: 'black', position: 'absolute' }}>
-      {person.alias}: {person.timestamp}
+    <Box ref={ref} hidden={!person} bg="white" color="black" zIndex={1} borderRadius="1rem" p="0.5rem">
+      <Flex justify="space-between" align="center">
+        <Heading fontSize="sm" mt="0">
+          {person?.alias}
+        </Heading>
+        <CloseButton onClick={onClose} />
+      </Flex>
+      <Text>{person?.userName}</Text>
+      <Text as="i">{timestampToTimePassedStr(person?.timestamp)}</Text>
     </Box>
   )
 })
