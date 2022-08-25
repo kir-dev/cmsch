@@ -25,7 +25,8 @@ class HomeComponent(
             displayGroup,
             welcomeMessage,
             youtubeVideoId,
-            content
+            content,
+            showEvents
         )
     }
 
@@ -67,6 +68,11 @@ class HomeComponent(
         "content", "",
         type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen."
+    )
+
+    val showEvents = SettingProxy(componentSettingService, component,
+        "showEvents", "false", type = SettingType.BOOLEAN,
+        fieldName = "Események láthatóak", description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon"
     )
 
 }

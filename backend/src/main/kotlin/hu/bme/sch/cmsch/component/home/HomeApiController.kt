@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
+import hu.bme.sch.cmsch.component.news.NewsComponent
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
@@ -26,6 +27,7 @@ class HomeApiController(
     private val clock: TimeService,
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val newsRepository: Optional<NewsRepository>,
+    private val newsComponent: Optional<NewsComponent>,
     private val eventsRepository: Optional<EventRepository>,
     private val tasks: Optional<TasksService>
 ) {
@@ -48,7 +50,7 @@ class HomeApiController(
             news = newsRepository.map { it.findAllByVisibleTrueOrderByTimestampDesc() }
                 .orElse(listOf())
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
-                .take(4),
+                .take(newsComponent.map { it.maxVisibleCount.getValue().toIntOrNull() ?: 0 }.orElse(0)),
             upcomingEvents = upcomingEvents,
             tasks = tasks.map { tasksService ->
                 user?.group?.let { tasksService.getAllTasksForGroup(it) }
@@ -57,6 +59,5 @@ class HomeApiController(
             leaderBoard = leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()),
         )
     }
-
 
 }
