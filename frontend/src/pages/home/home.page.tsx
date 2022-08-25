@@ -71,7 +71,7 @@ const HomePage = () => {
         </Box>
       )}
 
-      {eventList.data && (
+      {eventList.data && config?.components.home?.showEvents && (
         <VStack>
           <Heading as="h2" size="lg" textAlign="center" mb={5} mt={20}>
             {config?.components.event.title}
