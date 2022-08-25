@@ -7,6 +7,7 @@ import { RiddleCategory } from '../../util/views/riddle.view'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths, Paths } from '../../util/paths'
+import { l } from '../../util/language'
 
 function progress(riddleCategory: RiddleCategory) {
   if (riddleCategory.completed === 0) {
@@ -41,8 +42,8 @@ const RiddleCategoryList = () => {
       navigate(`${AbsolutePaths.RIDDLE}/${nextRiddle}`)
     } else {
       toast({
-        title: 'Mindet megcsinálta, kolléga!',
-        description: 'Ebben a kategóriában nincs több riddle!',
+        title: l('riddle-completed-category-title'),
+        description: l('riddle-completed-category-description'),
         status: 'success',
         duration: 9000,
         isClosable: true

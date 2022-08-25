@@ -6,6 +6,7 @@ import { Loading } from '../../../common-components/Loading'
 import { Button, ButtonGroup, Heading, Text } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
+import { l } from '../../../util/language'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
@@ -17,10 +18,10 @@ export const ConfigProvider = ({ children }: HasChildren) => {
   if (error)
     return (
       <CmschPage>
-        <Helmet title="Hiba" />
-        <Heading textAlign="center">Hiba történt</Heading>
+        <Helmet title={l('error-page-helmet')} />
+        <Heading textAlign="center">l("error-page-title")</Heading>
         <Text textAlign="center" color="gray.500" marginTop={10}>
-          Kapcsolódás sikertelen.
+          {l('error-connection-unsuccessful')}
         </Text>
         <ButtonGroup justifyContent="center" marginTop={10}>
           <Button

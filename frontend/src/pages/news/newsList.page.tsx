@@ -7,6 +7,7 @@ import { Loading } from '../../common-components/Loading'
 import NewsList from './components/NewsList'
 import { sortNewsList } from './util/sortNewsList'
 import { AbsolutePaths } from '../../util/paths'
+import { l } from '../../util/language'
 
 const NewsListPage = () => {
   const newsList = useNewsListQuery(() => console.log('News list query failed!'))
@@ -17,12 +18,12 @@ const NewsListPage = () => {
   }
 
   if (newsList.isError) {
-    sendMessage('Hírek betöltése sikertelen!\n' + newsList.error.message)
+    sendMessage(l('news-list-load-failed') + newsList.error.message)
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof newsList.data === 'undefined') {
-    sendMessage('Hírek betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
+    sendMessage(l('news-list-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 

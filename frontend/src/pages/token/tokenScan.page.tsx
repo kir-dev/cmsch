@@ -10,6 +10,7 @@ import { Loading } from '../../common-components/Loading'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 import { LinkButton } from '../../common-components/LinkButton'
 import { AbsolutePaths } from '../../util/paths'
+import { l } from '../../util/language'
 
 enum ScanViewState {
   Scanning,
@@ -42,7 +43,7 @@ const TokenScan = () => {
           setState({ state: ScanViewState.Success, response: res.data })
         })
         .catch(() => {
-          console.error('Hálózati hiba a token érvényesítésénél', { toast: true })
+          console.error(l('token-scan-network-error'), { toast: true })
           // wait a few moments, so users wont spam error messages.
           setTimeout(() => {
             setState({ state: ScanViewState.Scanning })
@@ -53,7 +54,7 @@ const TokenScan = () => {
   //handle any scanner error
   const handleError = (err: any) => {
     console.log(err)
-    console.error('Beolvasási hiba.', { toast: true })
+    console.error(l('token-scan-read-error'), { toast: true })
   }
 
   const resetButtonHandler = () => {

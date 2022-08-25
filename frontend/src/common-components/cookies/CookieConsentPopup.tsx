@@ -1,4 +1,5 @@
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex } from '@chakra-ui/react'
+import { l } from '../../util/language'
 
 type Props = {
   onClick: () => void
@@ -10,15 +11,13 @@ export const CookieConsentPopup = ({ onClick }: Props) => (
       <Flex flex={1}>
         <AlertIcon alignSelf="flex-start" />
         <Box>
-          <AlertTitle>Fogadd el cookie-jainkat!</AlertTitle>
-          <AlertDescription display="block">
-            Ezen az oldalon cookie-kat használunk a megfelelő működés érdekében. A weboldal használatával ebbe beleegyezel.
-          </AlertDescription>
+          <AlertTitle>{l('cookie-consent-title')}</AlertTitle>
+          <AlertDescription display="block">{l('cookie-consent-description')}</AlertDescription>
         </Box>
       </Flex>
       <Flex justifyContent="flex-end">
         <Button variant="outline" _hover={{ bgColor: 'blue.600' }} onClick={onClick} ml={2} mt={{ base: 2, md: 0 }}>
-          Megértettem.
+          Elfogadom
         </Button>
       </Flex>
     </Alert>

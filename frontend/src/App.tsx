@@ -8,6 +8,7 @@ import { EnabledModules, GetRoutesForModules } from './util/configs/modules.conf
 import CountdownPage from './pages/countdown/countdown.page'
 import { MetaTags } from './metaTags'
 import IndexPage from './pages/index/index.page'
+import { l } from './util/language'
 
 export function App() {
   return (
@@ -23,7 +24,7 @@ export function App() {
               <Route path="logout" element={<HomePage />} />
               {/** Error handling pages */}
               <Route path="error" element={<ErrorPage />} />
-              <Route path="*" element={<ErrorPage message="Hoppá, úgy tűnik egy olyan oldalra került, amely nem létezik többé!" />} />
+              <Route path="*" element={<ErrorPage message={l('not-found-message')} />} />
             </Route>
           </Routes>
         </Suspense>

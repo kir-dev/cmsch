@@ -37,6 +37,7 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { taskSubmissionResponseMap } from './util/taskSubmissionResponseMap'
 import { AbsolutePaths } from '../../util/paths'
+import { l } from '../../util/language'
 
 const CodeEditor = lazy(() => import('./components/CodeEditor'))
 
@@ -70,8 +71,8 @@ const TaskPage = () => {
   const taskDetailsQuery = useTaskFullDetailsQuery(id, () => {
     navigate(AbsolutePaths.TASKS)
     toast({
-      title: 'Feladat nem található',
-      description: 'Ilyen feladat nem létezik vagy nincs jogosultsága hozzá.',
+      title: l('task-not-found-title'),
+      description: l('task-not-found-description'),
       status: 'error',
       isClosable: true
     })
@@ -102,8 +103,8 @@ const TaskPage = () => {
         if (fileAnswer) {
           if (fileAnswer.size > 31457280) {
             toast({
-              title: 'Túl nagy fájl',
-              description: 'A feltöltött fájl túllépte a 30 MB-os feltöltési korlátot!',
+              title: l('task-too-large-title'),
+              description: l('task-too-large-description'),
               status: 'error',
               isClosable: true
             })
@@ -118,8 +119,8 @@ const TaskPage = () => {
                 formData.append('textAnswer', data.textAnswer)
               } else {
                 toast({
-                  title: 'Üres megoldás',
-                  description: 'Üres megoldást nem küldhet be.',
+                  title: l('task-empty-title'),
+                  description: l('task-empty-description'),
                   status: 'error',
                   isClosable: true
                 })
@@ -142,8 +143,8 @@ const TaskPage = () => {
                 formData.append('textAnswer', codeAnswer)
               } else {
                 toast({
-                  title: 'Üres megoldás',
-                  description: 'Üres megoldást nem küldhet be.',
+                  title: l('task-empty-title'),
+                  description: l('task-empty-description'),
                   status: 'error',
                   isClosable: true
                 })
@@ -185,8 +186,8 @@ const TaskPage = () => {
         })
       } else {
         toast({
-          title: 'Üres megoldás',
-          description: 'Üres megoldást nem küldhet be.',
+          title: l('task-empty-title'),
+          description: l('task-empty-description'),
           status: 'error',
           isClosable: true
         })
