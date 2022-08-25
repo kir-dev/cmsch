@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { ButtonGroup, Heading, Text } from '@chakra-ui/react'
 import { LinkButton } from '../common-components/LinkButton'
 import { CmschPage } from '../common-components/layout/CmschPage'
+import { l } from './language'
 
 interface State {
   hasError: boolean
@@ -27,9 +28,9 @@ export class ErrorBoundary extends React.Component<HasChildren, State> {
       return (
         <CmschPage>
           <Helmet title="Hiba" />
-          <Heading textAlign="center">Hiba történt</Heading>
+          <Heading textAlign="center">{l('error-boundary-title')}</Heading>
           <Text textAlign="center" color="gray.500" marginTop={10}>
-            Sajnos ilyennel még nem találkoztunk. Légyszíves ezt jelezd a fejlesztőknek!
+            {l('error-boundary-message')}
           </Text>
           <ButtonGroup justifyContent="center" marginTop={10}>
             <LinkButton

@@ -14,6 +14,7 @@ import { mapper, FILTER } from './util/filter'
 import { EventFilterOption } from './components/EventFilterOption'
 import { CardListItem } from './components/CardListItem'
 import { CustomTab } from './components/CustomTab'
+import { l } from '../../util/language'
 
 const EventListPage = () => {
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))
@@ -28,12 +29,12 @@ const EventListPage = () => {
   }
 
   if (eventList.isError) {
-    sendMessage('Események betöltése sikertelen!\n' + eventList.error.message)
+    sendMessage(l('event-load-failed') + eventList.error.message)
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof eventList.data === 'undefined') {
-    sendMessage('Események betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
+    sendMessage(l('event-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
   const availableFilters = []

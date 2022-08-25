@@ -10,6 +10,7 @@ import { RoleType } from '../../util/views/profile.view'
 import { Loading } from '../../common-components/Loading'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { l } from '../../util/language'
 
 interface ExtraPageProps {}
 
@@ -24,17 +25,17 @@ const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   }
 
   if (error) {
-    sendMessage('Hír betöltése sikertelen!')
+    sendMessage(l('article-load-failed'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof data === 'undefined') {
-    sendMessage('Hír betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
+    sendMessage(l('article-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (RoleType[data.minRole] > RoleType.GUEST && profile && RoleType[profile.role] < RoleType[data.minRole]) {
-    sendMessage('Nincs jogosultsága ezt megtekinteni!')
+    sendMessage(l('no-permission'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
   return (

@@ -9,6 +9,7 @@ import { TaskSkeleton } from './components/TaskListSkeleton'
 import { useTasksInCategoryQuery } from '../../api/hooks/useTasksInCategoryQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../util/paths'
+import { l } from '../../util/language'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
@@ -19,7 +20,7 @@ const TaskCategoryPage = () => {
   const tasksQuery = useTasksInCategoryQuery(id, () => {
     navigate(AbsolutePaths.TASKS)
     toast({
-      title: 'Nem sikerült lekérni ezt a feladat kategóriát',
+      title: l('task-category-failed'),
       status: 'error',
       isClosable: true
     })

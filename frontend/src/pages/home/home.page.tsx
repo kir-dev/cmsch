@@ -11,6 +11,7 @@ import { useEventListQuery } from '../../api/hooks/useEventListQuery'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
+import { l } from '../../util/language'
 
 const HomePage = () => {
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))
@@ -78,7 +79,7 @@ const HomePage = () => {
           </Heading>
           <Alert marginTop={4} variant="left-accent" width="fit-content" marginX="auto">
             <AlertIcon />
-            <Box>A változás jogát fenntartjuk! Kísérje figyelemmel az oldal tetején megjelenő értesítéseket!</Box>
+            <Box>{l('event-list-message')}</Box>
           </Alert>
           <VStack spacing={10}>
             <Text textAlign="center" fontSize={25} fontWeight="bolder" marginTop={10}>

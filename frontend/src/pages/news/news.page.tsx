@@ -6,6 +6,7 @@ import { Loading } from '../../common-components/Loading'
 import News from './components/News'
 import { AbsolutePaths } from '../../util/paths'
 import { useNewsQuery } from '../../api/hooks/useNewsQuery'
+import { l } from '../../util/language'
 
 const NewsPage = () => {
   const { id } = useParams()
@@ -17,12 +18,12 @@ const NewsPage = () => {
   }
 
   if (isError) {
-    sendMessage('Hír betöltése sikertelen!')
+    sendMessage(l('news-item-load-failed'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (typeof data === 'undefined') {
-    sendMessage('Hír betöltése sikertelen!\n Keresse az oldal fejlesztőit.')
+    sendMessage(l('news-item-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 

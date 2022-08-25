@@ -23,6 +23,7 @@ import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths, Paths } from '../../util/paths'
+import { l } from '../../util/language'
 
 const RiddlePage = () => {
   const { id } = useParams()
@@ -62,8 +63,8 @@ const RiddlePage = () => {
           }
           toastIdRef.current =
             toast({
-              title: 'Helytelen válasz!',
-              description: 'Próbálja meg újra, sikerülni fog!',
+              title: l('riddle-incorrect-title'),
+              description: l('riddle-incorrect-description'),
               status: 'error',
               duration: 9000,
               isClosable: true
@@ -77,8 +78,8 @@ const RiddlePage = () => {
             setRiddle(resp.data)
           })
           toast({
-            title: 'Helyes megoldás!',
-            description: 'Csak így tovább!',
+            title: l('riddle-correct-title'),
+            description: l('riddle-correct-description'),
             status: 'success',
             duration: 9000,
             isClosable: true
@@ -87,8 +88,8 @@ const RiddlePage = () => {
         if (res.data.status === RiddleSubmissonStatus.CORRECT && !res.data.nextId) {
           navigate(AbsolutePaths.RIDDLE)
           toast({
-            title: 'Minden megvan!',
-            description: 'Igazán szép munka, kolléga!',
+            title: l('riddle-completed-title'),
+            description: l('riddle-completed-description'),
             status: 'success',
             duration: 9000,
             isClosable: true

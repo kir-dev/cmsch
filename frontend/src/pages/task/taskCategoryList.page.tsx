@@ -9,6 +9,7 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { taskCategoryType } from '../../util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
 import Markdown from '../../common-components/Markdown'
+import { l } from '../../util/language'
 
 const TaskCategoryList = () => {
   const taskConfig = useConfigContext()?.components.task
@@ -18,7 +19,7 @@ const TaskCategoryList = () => {
   const categoriesQuery = useTaskCategoriesQuery(() => {
     navigate('/')
     toast({
-      title: 'Nem sikerült lekérni a feladatokat',
+      title: l('task-list-failed'),
       status: 'error',
       isClosable: true
     })
