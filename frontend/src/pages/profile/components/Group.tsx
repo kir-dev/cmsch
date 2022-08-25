@@ -8,7 +8,7 @@ export const GroupComponent = ({ profile }: { profile: ProfileView }) => {
   const config = useConfigContext()
   const component = config?.components.profile
   return (
-    <Box>
+    <Box mt={3}>
       <Text fontSize="xl">
         {component?.groupTitle}: {profile.groupName || 'nincs'}
       </Text>
@@ -16,19 +16,23 @@ export const GroupComponent = ({ profile }: { profile: ProfileView }) => {
         <>
           <TableContainer>
             <Table>
-              <Th>{component?.groupLeadersHeader}</Th>
+              <Th colSpan={3}>{component?.groupLeadersHeader}</Th>
               {profile.groupLeaders.map((gl) => (
                 <Tr>
                   <Td>{gl.name}</Td>
                   <Td>
-                    <LinkButton leftIcon={<FaFacebook />} href={gl.facebookUrl} external newTab>
-                      Facebook
-                    </LinkButton>
+                    {gl.facebookUrl && (
+                      <LinkButton leftIcon={<FaFacebook />} href={gl.facebookUrl} external newTab>
+                        Facebook
+                      </LinkButton>
+                    )}
                   </Td>
                   <Td>
-                    <LinkButton leftIcon={<FaPhone />} href={'tel:' + gl.mobilePhone} external>
-                      Telefon
-                    </LinkButton>
+                    {gl.mobilePhone && (
+                      <LinkButton leftIcon={<FaPhone />} href={'tel:' + gl.mobilePhone} external>
+                        {gl.mobilePhone}
+                      </LinkButton>
+                    )}
                   </Td>
                 </Tr>
               ))}
