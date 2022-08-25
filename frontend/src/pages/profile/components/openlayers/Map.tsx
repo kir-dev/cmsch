@@ -4,18 +4,21 @@ import * as ol from 'ol'
 import './Map.css'
 import { HasChildren } from '../../../../util/react-types.util'
 import { fromLonLat } from 'ol/proj'
+import OLOVerlay from 'ol/Overlay'
 import { Box } from '@chakra-ui/react'
 import { GroupMemberLocationView } from '../../../../util/views/groupMemberLocation.view'
 import { Popup } from '../Popup'
-import Overlay from './Overlay'
-import { Coordinate } from 'ol/coordinate'
+import { EventsKey } from 'ol/events'
+import { unByKey } from 'ol/Observable'
+
+const overlay = new OLOVerlay({ id: 'ov' })
 
 const Map = ({ children }: HasChildren) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<ol.Map | null>(null)
   const [selectedPerson, setSelectedPerson] = useState<GroupMemberLocationView | undefined>(undefined)
-  const [coords, setCoords] = useState<Coordinate | undefined>()
+  const [listenerKey, setListenerKey] = useState<EventsKey | undefined>()
 
   useEffect(() => {
     let options = {
@@ -31,19 +34,42 @@ const Map = ({ children }: HasChildren) => {
     return () => mapObject.setTarget(undefined)
   }, [])
 
-  map?.on('click', (e) => {
-    map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
-      setSelectedPerson(feature.get('person'))
-      setCoords(e.coordinate)
+  useEffect(() => {
+    if (listenerKey) unByKey(listenerKey)
+    setListenerKey(
+      map?.on('click', (e) => {
+        onMapClicked(e)
+      })
+    )
+  }, [map, selectedPerson])
+
+  const onMapClicked = (e: ol.MapBrowserEvent<any>) => {
+    let featureCount = 0
+    map?.forEachFeatureAtPixel(e.pixel, (feature) => {
+      featureCount++
+      const person = feature.get('person')
+      const coords = fromLonLat([person.longitude, person.latitude])
+      if (map?.getOverlays().getLength() === 0) {
+        overlay.setPosition(coords)
+        overlay.setElement(popupRef.current || undefined)
+        map?.addOverlay(overlay)
+      } else {
+        if (person.id !== selectedPerson?.id) {
+          map?.getOverlayById('ov').setPosition(coords)
+        }
+      }
+      setSelectedPerson(person)
     })
-  })
+    if (featureCount === 0) {
+      setSelectedPerson(undefined)
+    }
+  }
 
   return (
     <MapContext.Provider value={map}>
       <Box ref={mapRef} className="ol-map">
         {children}
-        <Popup ref={popupRef} person={selectedPerson} />
-        {coords && <Overlay element={popupRef.current} position={coords} />}
+        <Popup ref={popupRef} person={selectedPerson} onClose={() => setSelectedPerson(undefined)} />
       </Box>
     </MapContext.Provider>
   )
