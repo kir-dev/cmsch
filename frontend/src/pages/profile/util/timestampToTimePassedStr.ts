@@ -1,6 +1,6 @@
 export const timestampToTimePassedStr = (timestamp: number | undefined) => {
   if (!timestamp) return ''
-  const currentTime = Date.now() / 1000
+  const currentTime = (new Date(Date.now() + -new Date().getTimezoneOffset() * 60000).getTime() / 1000) | 0
   let elapsed = currentTime - timestamp
   let elapsedStr = elapsed.toFixed(0) + ' másodperce'
 

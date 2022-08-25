@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react'
 import { useGeolocated } from 'react-geolocated'
 import { GroupMemberLocationView } from '../../../util/views/groupMemberLocation.view'
 import { useLocationQuery } from '../../../api/hooks/useLocationQuery'
-import { config } from 'process'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 
 const addMarkers = (data: GroupMemberLocationView[]) => {
@@ -62,21 +61,26 @@ export const MapContainer = () => {
   const toast = useToast()
   const profileConfig = useConfigContext()?.components.profile
 
-  const locationQuery = useLocationQuery(() =>
-    toast({
-      title: 'A pozíciók nem érhetőek el.',
-      status: 'error'
-    })
-  )
-
   const { coords, isGeolocationAvailable, isGeolocationEnabled, timestamp, getPosition } = useGeolocated({
     positionOptions: {
       enableHighAccuracy: false
     },
     userDecisionTimeout: 10000,
-    suppressLocationOnMount: true,
-    watchPosition: true
+    suppressLocationOnMount: true
   })
+
+  const locationQuery = useLocationQuery(
+    () =>
+      toast({
+        title: 'A pozíciók nem érhetőek el.',
+        status: 'error'
+      }),
+    () => {
+      if (watchStarted) {
+        getPosition()
+      }
+    }
+  )
 
   useEffect(() => {
     if (showUserLocation && !watchStarted) {
@@ -91,16 +95,18 @@ export const MapContainer = () => {
     }
   }, [showUserLocation, isGeolocationAvailable, isGeolocationEnabled])
 
+  const features = locationQuery.isSuccess ? addMarkers(locationQuery.data) : undefined
+
   return (
     <Box>
-      {profileConfig && <Heading>{profileConfig.groupLeadersHeader} pozicíója</Heading>}
+      {profileConfig && <Heading my={5}>{profileConfig.groupLeadersHeader} pozicíója</Heading>}
       <Checkbox ml={1} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
         Saját helyzetem mutatása
       </Checkbox>
       <Map>
         <Layers>
           <TileLayer source={new Stamen({ layer: 'terrain' })} />
-          {locationQuery.isSuccess && <VectorLayer source={new VectorSource({ features: addMarkers(mockdata) })} zIndex={2} />}
+          {locationQuery.isSuccess && <VectorLayer source={new VectorSource({ features: features })} zIndex={2} />}
           {showUserLocation && coords && (
             <VectorLayer
               source={
@@ -113,7 +119,7 @@ export const MapContainer = () => {
                       longitude: coords.longitude,
                       latitude: coords.latitude,
                       accuracy: coords.accuracy,
-                      timestamp: (timestamp || 0) / 1000
+                      timestamp: ((timestamp || 0) - new Date().getTimezoneOffset() * 60000) / 1000
                     }
                   ])
                 })
