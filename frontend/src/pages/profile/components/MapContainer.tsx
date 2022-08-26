@@ -1,4 +1,4 @@
-import { Box, Checkbox, Heading, useToast } from '@chakra-ui/react'
+import {Box, Checkbox, Heading, Text, useToast} from '@chakra-ui/react'
 import Map from './openlayers/Map'
 import { Layers, TileLayer } from './openlayers/Layers/'
 import FullScreenControl from './openlayers/FullScreenControl'
@@ -16,17 +16,17 @@ import { useLocationQuery } from '../../../api/hooks/useLocationQuery'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 
 const addMarkers = (data: GroupMemberLocationView[]) => {
-  const stroke = new Stroke({ color: 'white', width: 2 })
+  const stroke = new Stroke({ color: 'white', width: 4 })
   const regularIconStyle = new Style({
     image: new Circle({
-      fill: new Fill({ color: 'blue' }),
+      fill: new Fill({ color: '#ef7564' }),
       radius: 10,
       stroke
     })
   })
   const userIconStyle = new Style({
     image: new Circle({
-      fill: new Fill({ color: 'orange' }),
+      fill: new Fill({ color: '#172b4d' }),
       radius: 10,
       stroke
     })
@@ -115,7 +115,7 @@ export const MapContainer = () => {
                     {
                       id: -1,
                       alias: 'A te pozíciód',
-                      userName: 'Fekete Sámuel',
+                      userName: '(GPS szenzor alapján)',
                       longitude: coords.longitude,
                       latitude: coords.latitude,
                       accuracy: coords.accuracy,
@@ -131,6 +131,7 @@ export const MapContainer = () => {
 
         <FullScreenControl />
       </Map>
+      <Text>Csak akkor jelennek meg a helyzetek, ha a helymegosztás használatban van.</Text>
     </Box>
   )
 }

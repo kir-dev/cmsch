@@ -8,14 +8,14 @@ export const GroupComponent = ({ profile }: { profile: ProfileView }) => {
   const config = useConfigContext()
   const component = config?.components.profile
   return (
-    <Box mt={3}>
+    <Box>
       <Text fontSize="xl">
         {component?.groupTitle}: {profile.groupName || 'nincs'}
       </Text>
       {profile?.groupLeaders?.length > 0 && (
         <>
           <TableContainer>
-            <Table>
+            <Table mt={3}>
               <Th colSpan={3}>{component?.groupLeadersHeader}</Th>
               {profile.groupLeaders.map((gl) => (
                 <Tr>
