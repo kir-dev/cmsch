@@ -1,4 +1,4 @@
-import {Box, Checkbox, Heading, Text, useToast} from '@chakra-ui/react'
+import { Box, Checkbox, Heading, Text, useToast } from '@chakra-ui/react'
 import Map from './openlayers/Map'
 import { Layers, TileLayer } from './openlayers/Layers/'
 import FullScreenControl from './openlayers/FullScreenControl'
