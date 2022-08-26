@@ -13,10 +13,11 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(({ person, onClose }
     <Box ref={ref} hidden={!person} bg="white" color="black" zIndex={1} borderRadius="1rem" p="0.5rem">
       <Flex justify="space-between" align="center">
         <Heading fontSize="sm" mt="0">
-          {person?.alias}
+          {person?.groupName || ''}
         </Heading>
         <CloseButton onClick={onClose} />
       </Flex>
+      <Text>{person?.alias}</Text>
       <Text>{person?.userName}</Text>
       <Text as="i">{timestampToTimePassedStr(person?.timestamp)}</Text>
     </Box>
