@@ -43,18 +43,6 @@ const addMarkers = (data: GroupMemberLocationView[]) => {
   return features
 }
 
-const mockdata: GroupMemberLocationView[] = [
-  {
-    id: 2,
-    alias: 'Szenyor Csávó',
-    userName: 'szenorusz maximus',
-    longitude: 19.056084,
-    latitude: 47.4752744,
-    accuracy: 3,
-    timestamp: 1661452901
-  }
-]
-
 export const MapContainer = () => {
   const [showUserLocation, setShowUserLocation] = useState<boolean>(false)
   const [watchStarted, setWatchStarted] = useState<boolean>(false)
@@ -95,18 +83,16 @@ export const MapContainer = () => {
     }
   }, [showUserLocation, isGeolocationAvailable, isGeolocationEnabled])
 
-  const features = locationQuery.isSuccess ? addMarkers(locationQuery.data) : undefined
-
   return (
     <Box>
       {profileConfig && <Heading my={5}>{profileConfig.groupLeadersHeader} pozicíója</Heading>}
-      <Checkbox ml={1} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
-        Saját helyzetem mutatása
+      <Checkbox ml={1} checked={showUserLocation} disabled={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
+        Saját pozícióm mutatása
       </Checkbox>
       <Map>
         <Layers>
           <TileLayer source={new Stamen({ layer: 'terrain' })} />
-          {locationQuery.isSuccess && <VectorLayer source={new VectorSource({ features: features })} zIndex={2} />}
+          {locationQuery.isSuccess && <VectorLayer source={new VectorSource({ features: addMarkers(locationQuery.data) })} zIndex={2} />}
           {showUserLocation && coords && (
             <VectorLayer
               source={
@@ -131,7 +117,7 @@ export const MapContainer = () => {
 
         <FullScreenControl />
       </Map>
-      <Text>Csak akkor jelennek meg a helyzetek, ha a helymegosztás használatban van.</Text>
+      <Text>Csak akkor jelennek meg a pizíciók, ha a helymegosztás használatban van.</Text>
     </Box>
   )
 }
