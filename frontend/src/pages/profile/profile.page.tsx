@@ -6,6 +6,7 @@ import {
   Center,
   CircularProgress,
   CircularProgressLabel,
+  Divider,
   Flex,
   Heading,
   Link,
@@ -32,6 +33,7 @@ import { useEffect } from 'react'
 import { GroupComponent } from './components/Group'
 import { ProfileQR } from './components/ProfileQR'
 import { MapContainer } from './components/MapContainer'
+import { l } from '../../util/language'
 
 type Props = {}
 
@@ -57,12 +59,12 @@ const ProfilePage = ({}: Props) => {
   }
 
   if (profileError) {
-    sendMessage('Profil betöltése sikertelen! ' + profileError.message)
+    sendMessage(l('profile-load-failed') + profileError.message)
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   if (!profile) {
-    sendMessage('Profil betöltése sikertelen! A profil üres maradt. Keresse az oldal fejlesztőit a hiba kinyomozása érdekében!')
+    sendMessage(l('profile-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
@@ -73,35 +75,6 @@ const ProfilePage = ({}: Props) => {
   return (
     <CmschPage loginRequired>
       <Helmet title={component?.title} />
-      <Flex justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>
-        <Box>
-          {/*{component?.showProfilePicture && <Heading>{profile.groupLeaders}</Heading>}*/}
-          {component?.showFullName && <Heading>{profile.fullName}</Heading>}
-          {component?.showAlias && <Text fontSize="xl">Becenév: {profile.alias || 'nincs'}</Text>}
-          {component?.showNeptun && <Text fontSize="xl">Neptun: {profile.neptun || 'nincs'}</Text>}
-          {component?.showEmail && <Text fontSize="xl">E-mail: {profile.email || 'nincs'}</Text>}
-
-          {component?.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
-          {component?.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
-          {component?.showGroup && <GroupComponent profile={profile} />}
-          {component?.showQr && <ProfileQR profile={profile} />}
-        </Box>
-        <VStack py={2} alignItems={{ base: 'flex-start', md: 'flex-end' }} mt={{ base: 5, md: 0 }}>
-          {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
-            <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
-              Admin panel
-            </LinkButton>
-          )}
-          {profile.groupSelectionAllowed && (
-            <LinkButton colorScheme="brand" href={`${AbsolutePaths.PROFILE}/tankor-modositas`}>
-              {component?.groupTitle} módosítása
-            </LinkButton>
-          )}
-          <Button colorScheme="brand" variant="outline" onClick={onLogout}>
-            Kijelentkezés
-          </Button>
-        </VStack>
-      </Flex>
       {component?.messageBoxContent && (
         <Alert status="info" variant="left-accent" mt={5}>
           <AlertIcon />
@@ -111,7 +84,7 @@ const ProfilePage = ({}: Props) => {
       <PresenceAlert acquired={profile.collectedTokenCount} needed={profile.minTokenToComplete} mt={5} />
 
       {component?.showIncompleteProfile && (
-        <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mt={5}>
+        <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mb={5}>
           <AlertIcon />
           <Flex flexWrap="wrap" alignItems="center" w="full">
             <Box py={2}>
@@ -129,8 +102,36 @@ const ProfilePage = ({}: Props) => {
           </Flex>
         </Alert>
       )}
+      <Flex justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>
+        <Box>
+          {component?.showFullName && <Heading>{profile.fullName}</Heading>}
+          {component?.showAlias && <Text fontSize="xl">Becenév: {profile.alias || 'nincs'}</Text>}
+          {component?.showNeptun && <Text fontSize="xl">Neptun: {profile.neptun || 'nincs'}</Text>}
+          {component?.showEmail && <Text fontSize="xl">E-mail: {profile.email || 'nincs'}</Text>}
 
-      <Flex justify="center" alignItems="center" flexWrap="wrap" mt="10">
+          {component?.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
+          {component?.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
+          {component?.showGroup && <GroupComponent profile={profile} />}
+        </Box>
+        <VStack py={2} alignItems={{ base: 'flex-start', md: 'flex-end' }} mt={{ base: 5, md: 0 }}>
+          {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
+            <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
+              Admin panel
+            </LinkButton>
+          )}
+          {profile.groupSelectionAllowed && (
+            <LinkButton colorScheme="brand" href={`${AbsolutePaths.PROFILE}/tankor-modositas`}>
+              {component?.groupTitle} módosítása
+            </LinkButton>
+          )}
+          <Button colorScheme="brand" variant="outline" onClick={onLogout}>
+            Kijelentkezés
+          </Button>
+        </VStack>
+      </Flex>
+      {component?.showQr && <ProfileQR profile={profile} />}
+      {(component?.showTasks || component?.showRiddles || component?.showTokens) && <Divider my={10} borderWidth={2} />}
+      <Flex justify="center" alignItems="center" flexWrap="wrap">
         {component?.showTasks && (
           <Center p={3}>
             <Flex direction="column" align="center">

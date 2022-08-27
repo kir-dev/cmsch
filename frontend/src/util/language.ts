@@ -62,5 +62,7 @@ const languageData = {
   'token-scan-helmet': 'QR beolvasás',
   'token-scan-consent': 'Szkenneld be a QR kódot!',
   'token-scan-network-error': 'Hálózati hiba a token érvényesítésénél',
-  'token-scan-read-error': 'Beolvasási hiba.'
+  'token-scan-read-error': 'Beolvasási hiba.',
+  'profile-load-failed': 'Profil betöltése sikertelen!\n',
+  'profile-load-failed-contact-developers': 'Profil betöltése sikertelen!\nKeresse az oldal fejlesztőit a hiba kinyomozása érdekében!'
 }
