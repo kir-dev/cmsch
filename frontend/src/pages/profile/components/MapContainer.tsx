@@ -1,4 +1,4 @@
-import { Box, Checkbox, Heading, Text, useToast } from '@chakra-ui/react'
+import { Box, Checkbox, Divider, Heading, Text, useToast } from '@chakra-ui/react'
 import Map from './openlayers/Map'
 import { Layers, TileLayer } from './openlayers/Layers/'
 import FullScreenControl from './openlayers/FullScreenControl'
@@ -85,6 +85,7 @@ export const MapContainer = () => {
 
   return (
     <Box>
+      <Divider my={10} borderWidth={2} />
       {profileConfig && <Heading my={5}>{profileConfig.groupLeadersHeader} pozicíója</Heading>}
       <Checkbox ml={1} checked={showUserLocation} disabled={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
         Saját pozícióm mutatása
@@ -117,7 +118,7 @@ export const MapContainer = () => {
 
         <FullScreenControl />
       </Map>
-      <Text>Csak akkor jelennek meg a pizíciók, ha a helymegosztás használatban van.</Text>
+      <Text>Csak annak a helyzete látható, akinél a helymegosztás engedélyezve (használatban) van.</Text>
     </Box>
   )
 }
