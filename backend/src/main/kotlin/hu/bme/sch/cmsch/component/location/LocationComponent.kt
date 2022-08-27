@@ -37,6 +37,7 @@ class LocationComponent(
             grayGroupName,
 
             appGroup,
+            installGuide,
             apkUrl
         )
     }
@@ -122,6 +123,15 @@ class LocationComponent(
         "appGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Tracker alkalmazás",
         description = "", serverSideOnly = true
+    )
+
+    val installGuide = SettingProxy(componentSettingService, component,
+        "installGuide",
+        "Annak érdekében, hogy a tanköröd elveszett tagjai és a gárdatankörisek is mindig megtaláljanak\n" +
+                " egyszerűen, létre hoztunk egy helymegosztási lehetőséget. A használatához le kell töltened egy\n" +
+                " Android appot.",
+        type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Telepítési útmtató", description = "A Helymeghatározás menüben látszik"
     )
 
     val apkUrl = SettingProxy(componentSettingService, component,

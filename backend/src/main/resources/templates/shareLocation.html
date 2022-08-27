@@ -11,10 +11,8 @@
         <div class="payload">
             <div class="page">
                 <h2>Helymeghatározás</h2>
-                <p class="highlight">
-                    Annak érdekében, hogy a tanköröd elveszett tagjai és a gárdatankörisek is mindig megtaláljanak
-                    egyszerűen, létre hoztunk egy helymegosztási lehetőséget. A használatához le kell töltened egy
-                    Android appot.
+                <p class="highlight" th:utext="${installGuide}">
+
                 </p>
 
                 <p>Tokened: <b th:text="${accessToken}"></b> (A tokenedet ne oszd meg mással!)</p>

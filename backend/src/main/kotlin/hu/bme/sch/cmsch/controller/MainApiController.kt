@@ -18,10 +18,10 @@ class MainApiController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "3.0.420"
+    fun version(): String = "3.0.610"
 
     @ResponseBody
     @GetMapping("/time")
-    fun time(): String = formatter.format(clock.getTimeInSeconds())
+    fun time(): String = formatter.format(clock.getTimeInSeconds() * 1000)
 
 }
