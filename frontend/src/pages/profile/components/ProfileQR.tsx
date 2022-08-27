@@ -1,16 +1,49 @@
 import { ProfileView } from '../../../util/views/profile.view'
-import { Box, Flex, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure
+} from '@chakra-ui/react'
 import QRCode from 'react-qr-code'
+import { FaQrcode } from 'react-icons/fa'
 
 export const ProfileQR = ({ profile }: { profile: ProfileView }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <Box mt={5}>
-      <Text fontSize="xl">QR kódom</Text>
-      <Flex justifyContent={{ base: 'center', md: 'flex-start' }}>
-        <Box w="fit-content" maxW="100%" p={2} mt={2} borderRadius={3} backgroundColor="white">
-          <QRCode value={profile.cmschId} />
-        </Box>
-      </Flex>
-    </Box>
+    <>
+      <Divider my={10} borderWidth={2} w={'100%'} />
+      <Center flexDirection="column">
+        <Text fontSize="3xl" fontWeight={500}>
+          CMSch ID
+        </Text>
+        <Button mt={5} leftIcon={<FaQrcode />} onClick={onOpen}>
+          QR kód felmutatása
+        </Button>
+      </Center>
+
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{profile.fullName}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Center flexDirection="column">
+              <Box w="fit-content" maxW="100%" p={2} mb={5} borderRadius={3} backgroundColor="white">
+                <QRCode value={profile.cmschId} />
+              </Box>
+            </Center>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
