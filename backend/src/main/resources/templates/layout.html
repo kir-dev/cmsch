@@ -32,7 +32,7 @@
                 <span>CM<b>SCH</b> <insert th:remove="tag" th:text="${adminPanelName}">ADMIN</insert></span>
                 <span class="material-icons fix-icons menu-icon" onclick="document.getElementById('menu').style.display = 'block'">menu</span>
             </div>
-            <div class="menu" th:fragment="menu(user)" id="menu" th:style="${isLive ? '' : 'border-right: 2px solid #f1b44c;'}">
+            <div class="menu" th:fragment="menu(user)" id="menu" th:style="${isLive != null && isLive ? '' : 'border-right: 2px solid #f1b44c;'}">
                 <h1>CM<b>SCH</b> <insert th:remove="tag" th:text="${adminPanelName}">ADMIN</insert></h1>
                 <div class="exit" onclick="document.getElementById('menu').style.display = 'none'">X</div>
                 <div class="separate"></div>

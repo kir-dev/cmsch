@@ -340,6 +340,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("view", view)
         model.addAttribute("user", user)
         model.addAttribute("importedCount", after - before)
+        adminMenuService.addPartsForMenu(user, model)
         return "resource"
     }
 

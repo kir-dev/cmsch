@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.markdownToHtml
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -51,6 +52,7 @@ class LocationSharingAdminController(
 
         model.addAttribute("user", user)
         model.addAttribute("accessToken", user.cmschId.substring(startupPropertyConfig.profileQrPrefix.length))
+        model.addAttribute("installGuide", markdownToHtml(locationComponent.installGuide.getValue()))
         model.addAttribute("apkUrl", locationComponent.apkUrl.getValue())
 
         return "shareLocation"
