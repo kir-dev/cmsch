@@ -64,5 +64,8 @@ const languageData = {
   'token-scan-network-error': 'Hálózati hiba a token érvényesítésénél',
   'token-scan-read-error': 'Beolvasási hiba.',
   'profile-load-failed': 'Profil betöltése sikertelen!\n',
-  'profile-load-failed-contact-developers': 'Profil betöltése sikertelen!\nKeresse az oldal fejlesztőit a hiba kinyomozása érdekében!'
+  'profile-load-failed-contact-developers': 'Profil betöltése sikertelen!\nKeresse az oldal fejlesztőit a hiba kinyomozása érdekében!',
+  'location-query-failed': 'A pozíciók nem érhetőek el.',
+  'location-sensor-denied': 'Helymeghatározás nem elérhető',
+  'users-location-title': 'A te pozíciód'
 }

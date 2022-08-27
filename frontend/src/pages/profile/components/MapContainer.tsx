@@ -3,45 +3,14 @@ import Map from './openlayers/Map'
 import { Layers, TileLayer } from './openlayers/Layers/'
 import FullScreenControl from './openlayers/FullScreenControl'
 import Stamen from 'ol/source/Stamen'
-import Feature from 'ol/Feature'
-import Point from 'ol/geom/Point'
-import { fromLonLat } from 'ol/proj'
-import { Circle, Fill, Stroke, Style } from 'ol/style'
 import { VectorLayer } from './openlayers/Layers'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useState } from 'react'
 import { useGeolocated } from 'react-geolocated'
-import { GroupMemberLocationView } from '../../../util/views/groupMemberLocation.view'
 import { useLocationQuery } from '../../../api/hooks/useLocationQuery'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-
-const addMarkers = (data: GroupMemberLocationView[]) => {
-  const stroke = new Stroke({ color: 'white', width: 4 })
-  const regularIconStyle = new Style({
-    image: new Circle({
-      fill: new Fill({ color: '#ef7564' }),
-      radius: 10,
-      stroke
-    })
-  })
-  const userIconStyle = new Style({
-    image: new Circle({
-      fill: new Fill({ color: '#172b4d' }),
-      radius: 10,
-      stroke
-    })
-  })
-  const features = data.map((item) => {
-    const feature = new Feature({
-      geometry: new Point(fromLonLat([item.longitude, item.latitude]))
-    })
-    feature.setStyle(item.id === -1 ? userIconStyle : regularIconStyle)
-    feature.set('person', item)
-    feature.set('timestamp', item.timestamp)
-    return feature
-  })
-  return features
-}
+import { l } from '../../../util/language'
+import { addMarkers } from '../util/addMarkers'
 
 export const MapContainer = () => {
   const [showUserLocation, setShowUserLocation] = useState<boolean>(false)
@@ -60,7 +29,7 @@ export const MapContainer = () => {
   const locationQuery = useLocationQuery(
     () =>
       toast({
-        title: 'A pozíciók nem érhetőek el.',
+        title: l('location-query-failed'),
         status: 'error'
       }),
     () => {
@@ -79,7 +48,7 @@ export const MapContainer = () => {
 
   useEffect(() => {
     if (showUserLocation && (!isGeolocationAvailable || !isGeolocationEnabled)) {
-      toast({ title: 'Helymeghatározás nem elérhető', status: 'error' })
+      toast({ title: l('location-sensor-denied'), status: 'error' })
     }
   }, [showUserLocation, isGeolocationAvailable, isGeolocationEnabled])
 
@@ -87,13 +56,13 @@ export const MapContainer = () => {
     <Box>
       <Divider my={10} borderWidth={2} />
       {profileConfig && <Heading my={5}>{profileConfig.groupLeadersHeader} pozicíója</Heading>}
-      <Checkbox ml={1} checked={showUserLocation} disabled={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
+      <Checkbox ml={1} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
         Saját pozícióm mutatása
       </Checkbox>
       <Map>
         <Layers>
           <TileLayer source={new Stamen({ layer: 'terrain' })} />
-          {locationQuery.isSuccess && <VectorLayer source={new VectorSource({ features: addMarkers(locationQuery.data) })} zIndex={2} />}
+          {locationQuery.isSuccess && <VectorLayer source={new VectorSource({ features: addMarkers(locationQuery.data) })} zIndex={3} />}
           {showUserLocation && coords && (
             <VectorLayer
               source={
@@ -101,8 +70,8 @@ export const MapContainer = () => {
                   features: addMarkers([
                     {
                       id: -1,
-                      alias: 'A te pozíciód',
-                      userName: '(GPS szenzor alapján)',
+                      groupName: l('users-location-title'),
+                      alias: '(GPS szenzor alapján)',
                       longitude: coords.longitude,
                       latitude: coords.latitude,
                       accuracy: coords.accuracy,
@@ -111,7 +80,7 @@ export const MapContainer = () => {
                   ])
                 })
               }
-              zIndex={1}
+              zIndex={2}
             />
           )}
         </Layers>
@@ -119,6 +88,7 @@ export const MapContainer = () => {
         <FullScreenControl />
       </Map>
       <Text>Csak annak a helyzete látható, akinél a helymegosztás engedélyezve (használatban) van.</Text>
+      <Text>A saját pozíciódat csak te látod, nem kerül megosztásra mással.</Text>
     </Box>
   )
 }
