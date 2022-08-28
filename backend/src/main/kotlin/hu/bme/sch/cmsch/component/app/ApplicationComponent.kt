@@ -227,11 +227,11 @@ class ApplicationComponent(
 
     val debugGroup = SettingProxy(componentSettingService, component,
         "debugGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Ehhez ne nyúlj", description = ""
+        fieldName = "DEBUG | Ehhez ne nyúlj", description = ""
     )
 
     val submitDiff = SettingProxy(componentSettingService, component,
-        "submitDiff", "7200", type = SettingType.NUMBER,
+        "submitDiff", "-7200", type = SettingType.NUMBER,
         fieldName = "Task beadás diff"
     )
 

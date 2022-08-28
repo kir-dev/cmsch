@@ -18,7 +18,7 @@ class MainApiController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "3.0.610"
+    fun version(): String = "3.0.616"
 
     @ResponseBody
     @GetMapping("/time")
