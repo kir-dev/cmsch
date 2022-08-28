@@ -3,6 +3,8 @@ package hu.bme.sch.cmsch.service
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.task.TaskType
 import hu.bme.sch.cmsch.component.debt.ProductType
+import hu.bme.sch.cmsch.component.task.TaskCategoryType
+import hu.bme.sch.cmsch.component.task.TaskFormat
 import hu.bme.sch.cmsch.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
@@ -25,6 +27,8 @@ open class ImportService {
             GuildType::class to ({ GuildType.valueOf(it) }),
             ProductType::class to ({ ProductType.valueOf(it) }),
             TaskType::class to ({ TaskType.valueOf(it) }),
+            TaskFormat::class to ({ TaskFormat.valueOf(it) }),
+            TaskCategoryType::class to ({ TaskCategoryType.valueOf(it) }),
     )
 
     @Transactional(rollbackFor = [Throwable::class])
