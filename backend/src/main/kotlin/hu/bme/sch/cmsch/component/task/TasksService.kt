@@ -125,8 +125,8 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        if (task.availableFrom > clock.getTimeInSeconds()
-            || task.availableTo < clock.getTimeInSeconds()) {
+        val now = clock.getTimeInSeconds() + (applicationComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
 
