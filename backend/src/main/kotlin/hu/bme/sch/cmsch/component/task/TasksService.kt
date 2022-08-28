@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.task
 
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
@@ -19,7 +20,8 @@ open class TasksService(
     private val submitted: SubmittedTaskRepository,
     private val categories: TaskCategoryRepository,
     private val clock: TimeService,
-    private val taskComponent: TaskComponent
+    private val taskComponent: TaskComponent,
+    private val applicationComponent: ApplicationComponent
 ) {
 
     companion object {
@@ -99,8 +101,8 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
                 ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        if (task.availableFrom > clock.getTimeInSeconds()
-                || task.availableTo < clock.getTimeInSeconds()) {
+        val now = clock.getTimeInSeconds() + (applicationComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
 

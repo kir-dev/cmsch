@@ -48,6 +48,9 @@ class ApplicationComponent(
             sponsorLogoUrls,
             sponsorAlts,
             sponsorWebsiteUrls,
+
+            debugGroup,
+            submitDiff
         )
     }
 
@@ -218,6 +221,18 @@ class ApplicationComponent(
     val sponsorWebsiteUrls = SettingProxy(componentSettingService, component,
         "sponsorWebsiteUrls", "url1,url2", type = SettingType.LONG_TEXT,
         fieldName = "Sponsor weblapok", description = "URL-ek vesszővel (,) elválasztva"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val debugGroup = SettingProxy(componentSettingService, component,
+        "debugGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Ehhez ne nyúlj", description = ""
+    )
+
+    val submitDiff = SettingProxy(componentSettingService, component,
+        "submitDiff", "7200", type = SettingType.NUMBER,
+        fieldName = "Task beadás diff"
     )
 
 }
