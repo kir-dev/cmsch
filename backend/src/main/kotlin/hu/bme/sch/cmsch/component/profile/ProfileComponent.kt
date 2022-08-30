@@ -40,6 +40,7 @@ class ProfileComponent(
             showEmail,
             showProfilePicture,
             showQr,
+            qrTitle,
 
             groupTitle,
             messageBoxContent,
@@ -171,6 +172,11 @@ class ProfileComponent(
     val showQr = SettingProxy(componentSettingService, component,
         "showQr", "false", type = SettingType.BOOLEAN,
         fieldName = "Egyedi QR kód látható", description = "Ezt lehet használni a fizetéshez, meg belépés szabályozáshoz"
+    )
+
+    val qrTitle = SettingProxy(componentSettingService, component,
+        "qrTitle", "CMSCH ID",
+        fieldName = "QR kód fejléc", description = "Ez a fejléc jelenik meg a QR kód felett"
     )
 
     val groupTitle = SettingProxy(componentSettingService, component,

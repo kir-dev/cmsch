@@ -116,6 +116,11 @@ object ControlPermissions : PermissionGroup {
         "Kezdőlap komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_ADMISSION = PermissionValidator(
+        "ADMISSION_CONTROL",
+        "Beléptetés komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -133,7 +138,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_COUNTDOWN,
         PERMISSION_CONTROL_SIGNUP,
         PERMISSION_CONTROL_CHALLENGE,
-        PERMISSION_CONTROL_HOME
+        PERMISSION_CONTROL_HOME,
+        PERMISSION_CONTROL_ADMISSION
     )
 
 }
@@ -299,6 +305,13 @@ object StaffPermissions : PermissionGroup {
         "Beadások megtekintése és szerkesztése"
     )
 
+    // Admission Component
+
+    val PERMISSION_VALIDATE_ADMISSION = PermissionValidator(
+        "ADMISSION_VALIDATE",
+        "Beléptetés kezelése"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_EDIT_TASKS,
@@ -326,7 +339,8 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_ANY_EXTRA_PAGES,
         PERMISSION_SHOW_LEADERBOARD,
         PERMISSION_EDIT_SIGNUP_RESULTS,
-        PERMISSION_EDIT_CHALLENGES
+        PERMISSION_EDIT_CHALLENGES,
+        PERMISSION_VALIDATE_ADMISSION
     )
 
 }

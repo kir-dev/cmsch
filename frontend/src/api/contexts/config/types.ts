@@ -150,6 +150,7 @@ export interface Profile {
   showGroup: boolean
   showNeptun: boolean
   showQr: boolean
+  qrTitle: string
   showEmail: boolean
   showProfilePicture: boolean
   groupTitle: string

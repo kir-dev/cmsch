@@ -15,15 +15,16 @@ import {
 } from '@chakra-ui/react'
 import QRCode from 'react-qr-code'
 import { FaQrcode } from 'react-icons/fa'
+import { Profile } from '../../../api/contexts/config/types'
 
-export const ProfileQR = ({ profile }: { profile: ProfileView }) => {
+export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
       <Divider my={10} borderWidth={2} w={'100%'} />
       <Center flexDirection="column">
         <Text fontSize="3xl" fontWeight={500}>
-          CMSch ID
+          {component.qrTitle}
         </Text>
         <Button mt={5} leftIcon={<FaQrcode />} onClick={onOpen}>
           QR kód felmutatása
