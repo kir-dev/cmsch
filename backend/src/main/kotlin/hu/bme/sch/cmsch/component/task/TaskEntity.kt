@@ -73,7 +73,7 @@ data class TaskEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",
         note = "A leadási határidő után jelenik meg")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_LOB)
+    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
     var solution: String? = "",
 
     @Enumerated(EnumType.STRING)
@@ -151,7 +151,7 @@ data class TaskEntity(
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 14, label = "Cimke", note = "Ha nem tudod mi ez, hagyd üresen!")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 14)
+    @property:ImportFormat(ignore = false, columnId = 13)
     var tag: String = "",
 
 ): ManagedEntity {

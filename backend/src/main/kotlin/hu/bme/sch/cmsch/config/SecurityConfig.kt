@@ -63,7 +63,7 @@ open class SecurityConfig(
                 .and().apply(JwtConfigurer(jwtTokenProvider))
 
         countdownConfigurer.ifPresent { http.apply(it) }
-        http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**")
+        http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**", "/admin/admission/**")
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {

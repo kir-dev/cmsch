@@ -1,0 +1,195 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <title>Beengedés</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../static/scanner.css" th:href="@{/scanner.css}">
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-navbutton-color" content="#000000"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#000000"/>
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}" />
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/apple-touch-icon.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}" />
+    <style>
+        #flash-toggle {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <video id="qr-video" class="background"></video>
+        <div class="cover"></div>
+    </div>
+    <div class="info">
+        <h1 id="item-name" ondblclick="document.getElementById('debug-box').style.display = 'none'"></h1>
+        <h2 id="item-price" ondblclick="document.getElementById('debug-box').style.display = 'block'"></h2>
+    </div>
+    <div class="controls">
+        <button id="exit"><span class="material-icons">arrow_back</span></button>
+        <button id="flash-toggle"><span id="flash-state" class="material-icons">flashlight_off</span></button>
+        <button id="start-button"><span class="material-icons">videocam_off</span></button>
+        <button id="stop-button"><span class="material-icons">videocam</span></button>
+
+        <div class="hidden">
+            <b>Device has camera: </b><span id="cam-has-camera"></span><br>
+            <b>Device has flash: </b><span id="cam-has-flash"></span><br>
+            <b>Last detected at: </b><span id="cam-qr-result-timestamp"></span><br>
+        </div>
+    </div>
+
+    <div class="display" id="debug-box">
+        <span id="cam-qr-result"></span><br>
+        <span id="prompt-name"></span><br>
+        <span id="debug"></span>
+    </div>
+
+    <!-- Igen, tudom, hogy ez egy fos! De ha nem tetszik lehet feladni pull requestet! :P -->
+<script type="module" th:inline="javascript">
+
+    import QrScanner from "/js/qr-scanner.min.js";
+    QrScanner.WORKER_PATH = '/js/qr-scanner-worker.min.js';
+
+    const codePrefix = /*[[${prefix}]]*/ "G7_";
+    const parentUrl = "/admin/control";
+    const baseUrl = /*[[@{/admin/admission}]]*/ "https://192.168.0.60:8080/scan";
+
+    let lastReading = "n/a";
+    let lastSuccessful = 0;
+    let scanning = true;
+
+    const ROLE_MAPPING = {
+        'BANNED': 'KITILTVA',
+        'CANNOT_ATTEND': 'NEM JOGOSULT',
+        'USER': 'BELÉPHET',
+        'VIP': 'VIP',
+        'ORGANIZER': 'RENDEZŐ',
+        'PERFORMER': 'FELLÉPŐ',
+        'LEAD_ORGANIZER': 'FŐRENDEZŐ'
+    };
+
+    const video = document.getElementById('qr-video');
+    const camHasCamera = document.getElementById('cam-has-camera');
+    const camHasFlash = document.getElementById('cam-has-flash');
+    const flashToggle = document.getElementById('flash-toggle');
+    const flashState = document.getElementById('flash-state');
+    const camQrResult = document.getElementById('cam-qr-result');
+    const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
+
+    function validatePromt(cmschId) {
+        setTimeout(async () => {
+            const raw = await httpFetchData('POST', baseUrl + '/resolve', {
+                "cmschId": cmschId
+            });
+            try {
+                const result = JSON.parse(raw);
+
+                if (result.accessGranted) {
+                    alert(`-------------------\nRENDBEN\n-------------------\n\nNév: ${result.userName}\nCsoport: ${result.groupName}\n\nJOGKÖR: ${ROLE_MAPPING[result.entryRole]}\n${result.comment}`)
+                } else {
+                    alert(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nBELÉPÉS MEGTAGADVA\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nNév: ${result.userName}\nCsoport: ${result.groupName}\n\nJOGKÖR: ${ROLE_MAPPING[result.entryRole]}\n${result.comment}`)
+                }
+                lastSuccessful = Date.now();
+            } catch (e) {
+                alert('Lekérés sikertelen!\nLehet, hogy lejárt a bejelentkezés!')
+            }
+        }, 0)
+    }
+
+    function setResult(label, result) {
+        if (!result.startsWith(codePrefix)) {
+            document.getElementById('debug').innerText = "Nem VALID QR kód!";
+            return;
+        }
+        if (result === lastReading && (Date.now() - lastSuccessful) < 5000) {
+            document.getElementById('debug').innerText = "Cooldown nem járt le!";
+            return;
+        }
+
+        document.getElementById('debug').innerText = "Feloldás";
+        lastReading = result;
+        lastSuccessful = Date.now();
+
+        validatePromt(result);
+
+        label.textContent = result;
+        camQrResultTimestamp.textContent = new Date().toString();
+        label.style.color = '#00FF00';
+        clearTimeout(label.highlightTimeout);
+        label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
+    }
+
+    QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
+
+    const scanner = new QrScanner(video, result => setResult(camQrResult, result), error => {
+        camQrResult.textContent = error;
+        camQrResult.style.color = 'inherit';
+    });
+    scanner.start().then(() => {
+
+        scanner.hasFlash().then(hasFlash => {
+            camHasFlash.textContent = hasFlash;
+            if (hasFlash) {
+                flashToggle.style.display = 'inline-block';
+                flashToggle.addEventListener('click', () => {
+                    scanner.toggleFlash().then(() => flashState.textContent = scanner.isFlashOn() ? 'flashlight_on' : 'flashlight_off');
+                });
+            }
+        });
+    });
+    document.getElementById('item-name').innerText = "";
+    document.getElementById('item-price').innerText = "";
+    document.getElementById('stop-button').style.display = 'inline-block';
+    document.getElementById('start-button').style.display = 'none';
+
+    window.scanner = scanner;
+
+    document.getElementById('start-button').addEventListener('click', () => {
+        scanner.start();
+        document.getElementById('stop-button').style.display = 'inline-block';
+        document.getElementById('start-button').style.display = 'none';
+        scanning = true;
+    });
+
+    document.getElementById('stop-button').addEventListener('click', () => {
+        scanner.stop();
+        document.getElementById('start-button').style.display = 'inline-block';
+        document.getElementById('stop-button').style.display = 'none';
+        scanning = false;
+    });
+
+    document.getElementById('exit').addEventListener('click', () => {
+        document.location.href = document.referrer;
+    });
+
+    async function httpFetchData(method = 'POST', url = '', data = {}) {
+        const response = await fetch(url, {
+            method: method,
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify(data)
+        });
+        return response.text();
+    }
+
+    window.addEventListener("orientationchange", function() {
+        if (scanning) {
+            scanner.stop();
+            setTimeout(() => scanner.start(), 200);
+        }
+    }, false);
+
+</script>
+</body>
+</html>
