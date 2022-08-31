@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.uploadFile
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -23,6 +24,8 @@ open class TasksService(
     private val taskComponent: TaskComponent,
     private val applicationComponent: ApplicationComponent
 ) {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     companion object {
         private val target = "task"
@@ -76,13 +79,23 @@ open class TasksService(
     }
 
     private fun findSubmissionStatusForGroup(taskEntity: TaskEntity, group: GroupEntity): TaskEntityWrapperDto {
-        val submission = submitted.findByTask_IdAndGroupId(taskEntity.id, group.id)
-        return findSubmission(submission, taskEntity)
+        try {
+            val submission = submitted.findByTask_IdAndGroupId(taskEntity.id, group.id)
+            return findSubmission(submission, taskEntity)
+        } catch (e: Exception) {
+            log.error("Failed to fetch TASK_SUBMISSION: {} for group {}", taskEntity.title, group.id, e)
+            throw e
+        }
     }
 
     private fun findSubmissionStatusForUser(taskEntity: TaskEntity, user: CmschUser): TaskEntityWrapperDto {
-        val submission = submitted.findByTask_IdAndUserId(taskEntity.id, user.id)
-        return findSubmission(submission, taskEntity)
+        try {
+            val submission = submitted.findByTask_IdAndUserId(taskEntity.id, user.id)
+            return findSubmission(submission, taskEntity)
+        } catch (e: Exception) {
+            log.error("Failed to fetch TASK_SUBMISSION: {} for user {}", taskEntity.title, user.id, e)
+            throw e
+        }
     }
 
     private fun findSubmission(submission: Optional<SubmittedTaskEntity>, taskEntity: TaskEntity): TaskEntityWrapperDto {
