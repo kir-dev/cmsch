@@ -29,6 +29,8 @@ class TaskComponent(
 
             exportGroup,
             exportEnabled,
+            leadOrganizerQuote,
+            logoUrl,
 
             logicGroup,
             resubmissionEnabled,
@@ -92,7 +94,17 @@ class TaskComponent(
 
     val exportEnabled = SettingProxy(componentSettingService, component,
         "exportEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Endpoint elérhető"
+        fieldName = "Endpoint elérhető", description = "Ha be van kapcsolva akkor, a /export-tasks endpoint elérhetővé válik"
+    )
+
+    val leadOrganizerQuote = SettingProxy(componentSettingService, component,
+        "leadOrganizerQuote", "\"Gratulálunk a csapatoknak!\"\n\n- A főrendezők",
+        type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Főrendezők üzenete", description = "Ha üres akkor nincs ilyen"
+    )
+
+    val logoUrl = SettingProxy(componentSettingService, component,
+        "logoUrl", "https://", type = SettingType.URL,
+        fieldName = "Logó URL-je", description = "Az esemény logójának az URL-je"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

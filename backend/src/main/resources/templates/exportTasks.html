@@ -62,6 +62,17 @@
         .image-holder {
             text-align: center;
         }
+        .lead-organizer-quote {
+            text-align: center;
+            color: #2E2F37;
+            margin: 40px 0;
+            padding-bottom: 40px;
+            border-bottom: 2px solid #2E2F37;
+        }
+        .logo-holder {
+            margin: 40px auto;
+            text-align: center;
+        }
     </style>
     <style media="print">
         blockquote {
@@ -73,10 +84,17 @@
     <div class="content">
 
         <h1 th:text="|A ${groupName} BucketList beadásai|">A G07 BucketList beadásai</h1>
-        <h3>2021-es gólyahét folyamán</h3>
-        <h4>Gratulálunk a tankörnek az elért helyezéséért, reméljük jól éreztétek magatokat!</h4>
+        <h3>2022-es gólyahét folyamán</h3>
+        <h4 th:if="${place > 0}">Gratulálunk a tankörnek az elért - <insert th:remove="tag" th:text="${place}"></insert>. - helyezéséért, reméljük jól éreztétek magatokat!</h4>
+        <h4 th:unless="${place > 0}">Gratulálunk a tankörnek az elért helyezéséért, reméljük jól éreztétek magatokat!</h4>
 
         <blockquote>Nyomj Ctrl+P-t és mentsd el PDF-be, mert csak korlátozott ideig elérhető itt az oldalon!</blockquote>
+
+        <div class="logo-holder">
+            <img th:src="${logoSrc}" height="250" width="250" alt="Logo" class="logo">
+        </div>
+
+        <h2 class="lead-organizer-quote" th:utext="${notes}">"Ez a főrendezők üzenete"<br />- A Főrendezők</h2>
 
         <div class="submission" th:each="task : ${tasks}">
             <h2><span class="material-icons">emoji_events</span> <span th:text="|${categories[task.task.categoryId]?.get(0)?.name ?: 'N/A'} - ${task.task.title}|">Kategória - Feladat neve</span></h2>
@@ -95,7 +113,7 @@
                 </tr>
                 <tr th:if="${task.task.type.name != 'IMAGE'}">
                     <td>Beadás:</td>
-                    <td th:text="${task.textAnswer}">Szöveges beadás</td>
+                    <td th:text="${task.textAnswerLob}">Szöveges beadás</td>
                 </tr>
                 <tr>
                     <td>Értékelés:</td>
