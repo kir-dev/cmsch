@@ -71,7 +71,7 @@ class LeaderBoardComponent(
     val showScores = SettingProxy(componentSettingService, component,
         "showScores", "false", type = SettingType.BOOLEAN,
         fieldName = "Pontok mutatása",
-        description = "Ha igaz, akkor látzódnak a pontok, ha hamis, akkor csak a sorrend"
+        description = "Ha igaz, akkor látszódnak a pontok, ha hamis, akkor csak a sorrend"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

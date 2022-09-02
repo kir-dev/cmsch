@@ -52,7 +52,8 @@ open class SecurityConfig(
 
                 .antMatchers(
                         "/control/entrypoint",
-                        "/control/stamps")
+                        "/control/stamps",
+                        "/export-tasks")
                     .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 
                 .antMatchers("/admin/**", "/cdn/**")
