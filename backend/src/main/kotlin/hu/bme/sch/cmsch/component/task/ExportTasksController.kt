@@ -31,7 +31,7 @@ class ExportTasksController(
             .orElse(0))
 
         model.addAttribute("notes", markdownToHtml(taskComponent.leadOrganizerQuote.getValue()))
-        model.addAttribute("logoSrc", taskComponent.logoSrc.getValue())
+        model.addAttribute("logoUrl", taskComponent.logoUrl.getValue())
         model.addAttribute("tasks", listOf<SubmittedTaskEntity>())
         user.group?.also { group -> model.addAttribute("tasks", tasks.getAllSubmissions(group).sortedBy { it.categoryId }) }
         model.addAttribute("categories", tasks.getAllCategories().groupBy { it.categoryId })
