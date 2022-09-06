@@ -13,7 +13,7 @@ export const CustomTab = ({ children }: HasChildren) => {
     bg: useColorModeValue('brand.500', 'brand.500')
   }
   return (
-    <Tab _selected={selectedStyles} style={styles}>
+    <Tab px={2} _selected={selectedStyles} style={styles}>
       {children}
     </Tab>
   )
