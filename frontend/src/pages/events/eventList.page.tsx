@@ -42,6 +42,9 @@ const EventListPage = () => {
   if (config?.components.event.filterByLocation) availableFilters.push(FILTER.PLACE)
   if (config?.components.event.filterByDay) availableFilters.push(FILTER.DAY)
 
+  const pastEvents = eventList.data.filter((event) => event.timestampEnd * 1000 < Date.now())
+  const upcomingEvents = eventList.data.filter((event) => event.timestampEnd * 1000 >= Date.now())
+
   return (
     <CmschPage>
       <Helmet title="Események" />
@@ -60,17 +63,18 @@ const EventListPage = () => {
         )}
         <TabPanels>
           <TabPanel>
-            <EventList eventList={eventList.data} />
+            <EventList eventList={upcomingEvents} />
           </TabPanel>
           {availableFilters.map((filter) => (
             <TabPanel key={filter}>
               <Stack>
                 <CardListItem title="Mind" open={isOpen} toggle={onToggle} />
-                {_.uniq(eventList.data?.map((event) => mapper(filter, event))).map((option) => (
+                {filter === FILTER.DAY && <EventFilterOption name="Korábbi" events={pastEvents} forceOpen={isOpen} />}
+                {_.uniq(upcomingEvents.map((event) => mapper(filter, event))).map((option) => (
                   <EventFilterOption
                     key={option}
                     name={option}
-                    events={eventList.data!!.filter((e) => mapper(filter, e) === option)}
+                    events={upcomingEvents.filter((e) => mapper(filter, e) === option)}
                     forceOpen={isOpen}
                   />
                 ))}
