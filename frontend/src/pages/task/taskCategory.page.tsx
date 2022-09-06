@@ -13,8 +13,8 @@ import { l } from '../../util/language'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
-  const bg = useColorModeValue('gray.200', 'whiteAlpha.200')
-  const hoverBg = useColorModeValue('brand.300', 'whiteAlpha.300')
+  const bg = useColorModeValue('brand.100', 'brand.500')
+  const hoverBg = useColorModeValue('brand.200', 'brand.400')
   const toast = useToast()
   const navigate = useNavigate()
   const tasksQuery = useTasksInCategoryQuery(id, () => {
