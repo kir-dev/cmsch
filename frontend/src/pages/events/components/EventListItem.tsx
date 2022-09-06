@@ -1,7 +1,7 @@
-import { Box, GridItem, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
+import { GridItem, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { stringifyTimeStamp } from '../../../util/core-functions.util'
+import { stringifyTimeRange, stringifyTimeStamp } from '../../../util/core-functions.util'
 import { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 import { AbsolutePaths } from '../../../util/paths'
@@ -29,7 +29,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
           event.title
         )}
       </Heading>
-      <Text mb={2}>{stringifyTimeStamp(event.timestampStart) + ' - ' + stringifyTimeStamp(event.timestampEnd)}</Text>
+      <Text mb={2}>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</Text>
       {event.previewImageUrl && event.previewImageUrl !== '' && (
         <Image display="block" ml="auto" mr="auto" src={event.previewImageUrl} maxH="8rem" />
       )}

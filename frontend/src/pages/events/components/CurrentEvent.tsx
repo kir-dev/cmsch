@@ -1,7 +1,7 @@
 import { ButtonGroup, Heading, Image, Text } from '@chakra-ui/react'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
-import { stringifyTimeStamp } from '../../../util/core-functions.util'
+import { DETAILED_TIMESTAMP_OPTIONS, stringifyTimeStamp } from '../../../util/core-functions.util'
 import { EventView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 import { AbsolutePaths } from '../../../util/paths'
@@ -26,7 +26,8 @@ const CurrentEvent = ({ event }: EventProps) => {
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{event.title}</Heading>
       <Text>
-        {stringifyTimeStamp(event.timestampStart)} &mdash; {stringifyTimeStamp(event.timestampEnd)}
+        {stringifyTimeStamp(event.timestampStart, DETAILED_TIMESTAMP_OPTIONS)} &mdash;{' '}
+        {stringifyTimeStamp(event.timestampEnd, DETAILED_TIMESTAMP_OPTIONS)}
       </Text>
       <EventTags my={1} tags={[event.category, event.place]} />
       {event.fullImageUrl && event.fullImageUrl !== '' && (
