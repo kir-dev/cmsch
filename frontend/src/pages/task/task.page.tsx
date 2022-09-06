@@ -263,7 +263,7 @@ const TaskPage = () => {
       <CmschPage loginRequired groupRequired>
         <Helmet title={taskDetails.task?.title} />
         <CustomBreadcrumb items={breadcrumbItems} />
-        <Flex my={5} flexWrap="wrap" alignItems="center">
+        <Flex my={5} justify="space-between" flexWrap="wrap" alignItems="center">
           <Box>
             <Heading my={0}>{taskDetails.task?.title}</Heading>
           </Box>
