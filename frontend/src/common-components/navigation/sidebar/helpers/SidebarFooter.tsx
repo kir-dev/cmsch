@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Heading, HStack, Icon, Stack } from '@chakra-ui/re
 import { FaRegHandPeace, FaSignInAlt } from 'react-icons/fa'
 import { useAuthContext } from '../../../../api/contexts/auth/useAuthContext'
 import { Menu } from '../../../../api/contexts/config/types'
+import { l } from '../../../../util/language'
 
 type Props = {
   onLoginClick: () => void
@@ -16,7 +17,7 @@ export const SidebarFooter = ({ onLoginClick, loginMenu }: Props) => {
       <Stack w="full" p={4} alignItems="stretch">
         <HStack justifyContent="center">
           <Icon as={FaRegHandPeace} w={4} h={4} />
-          <Box>Üdv újra itt,</Box>
+          <Box>{l('footer-welcome')}</Box>
         </HStack>
         <HStack justifyContent="center">
           <Avatar name={profile?.fullName} size="sm" />
@@ -29,7 +30,7 @@ export const SidebarFooter = ({ onLoginClick, loginMenu }: Props) => {
 
   return (
     <Stack w="full" p={4} alignItems="stretch">
-      <Box textAlign="center">Még nem jelentkezett be!</Box>
+      <Box textAlign="center">{l('footer-not-logged-in')}</Box>
       <Button onClick={onLoginClick} variant="outline" size="lg" leftIcon={<FaSignInAlt />}>
         {loginMenu.name}
       </Button>

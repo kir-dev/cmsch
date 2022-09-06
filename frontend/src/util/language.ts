@@ -3,6 +3,8 @@ export const l = (key: keyof typeof languageData) => {
 }
 
 const languageData = {
+  'footer-welcome': 'Üdv újra itt,',
+  'footer-not-logged-in': 'Még nincs bejelentkezve!',
   'error-boundary-title': 'Hiba történt!',
   'error-boundary-message': 'Sajnos ilyennel még nem találkoztunk. Légyszíves ezt jelezd a fejlesztőknek!',
   'not-found-message': 'Hoppá, úgy tűnik egy olyan oldalra kerültél, amely nem létezik többé!',

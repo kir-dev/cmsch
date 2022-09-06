@@ -1,4 +1,13 @@
-import { Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay } from '@chakra-ui/react'
+import {
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  useColorModeValue
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { Menu } from '../../../api/contexts/config/types'
 import { SidebarContent } from './helpers/SidebarContent'
@@ -27,7 +36,7 @@ export const SidebarMenu = ({ isOpen, onClose, openerButtonRef }: Props) => {
   return (
     <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={openerButtonRef}>
       <DrawerOverlay />
-      <DrawerContent>
+      <DrawerContent bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}>
         <DrawerCloseButton />
         <DrawerHeader>
           <SidebarHeading />
