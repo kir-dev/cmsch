@@ -29,11 +29,11 @@ import { completedPercent, submittedPercent } from './util/percentFunctions'
 import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import templateStringReplace from '../../util/templateStringReplace'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { GroupComponent } from './components/Group'
 import { ProfileQR } from './components/ProfileQR'
-import { MapContainer } from './components/MapContainer'
 import { l } from '../../util/language'
+const MapContainer = React.lazy(() => import('./components/MapContainer'))
 
 type Props = {}
 

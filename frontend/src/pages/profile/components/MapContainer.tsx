@@ -12,7 +12,7 @@ import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { l } from '../../../util/language'
 import { addMarkers } from '../util/addMarkers'
 
-export const MapContainer = () => {
+const MapContainer = () => {
   const [showUserLocation, setShowUserLocation] = useState<boolean>(false)
   const [watchStarted, setWatchStarted] = useState<boolean>(false)
   const toast = useToast()
@@ -92,3 +92,5 @@ export const MapContainer = () => {
     </Box>
   )
 }
+
+export default MapContainer
