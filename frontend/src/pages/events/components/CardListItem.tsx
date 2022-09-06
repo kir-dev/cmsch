@@ -13,8 +13,8 @@ export const CardListItem = ({ title, open, toggle }: CardListItemProps) => {
       onClick={toggle}
       borderRadius="lg"
       padding={4}
-      backgroundColor={useColorModeValue('gray.100', 'gray.700')}
-      _hover={{ bg: useColorModeValue('gray.200', 'gray.600') }}
+      backgroundColor={useColorModeValue('brand.100', 'brand.500')}
+      _hover={{ bg: useColorModeValue('brand.200', 'brand.400') }}
       marginTop={2}
       cursor="pointer"
     >
