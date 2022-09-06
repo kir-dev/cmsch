@@ -1,13 +1,12 @@
 import { Box, Flex } from '@chakra-ui/react'
-import * as React from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Footer } from '../footer/Footer'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { HasChildren } from '../../util/react-types.util'
+import { Footer } from '../footer/Footer'
+import { MinimalisticFooter } from '../footer/MinimalisticFooter'
 import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
 import { ScrollToTop } from './ScrollToTop'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { MinimalisticFooter } from '../footer/MinimalisticFooter'
 
 type Props = {
   background?: string

@@ -8,27 +8,38 @@ import { EnabledModules, GetRoutesForModules } from './util/configs/modules.conf
 import CountdownPage from './pages/countdown/countdown.page'
 import { MetaTags } from './metaTags'
 import IndexPage from './pages/index/index.page'
-import { l } from './util/language'
+import { CmschLayoutSidebar } from './common-components/layout/CmschLayoutSidebar'
+import { USE_SIDENAVBAR } from './util/configs/environment.config'
 
 export function App() {
   return (
     <CountdownPage>
-      <CmschLayout>
-        <Suspense>
-          <MetaTags />
-          <Routes>
-            <Route path="/">
-              {GetRoutesForModules(EnabledModules)}
-              <Route index element={<IndexPage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="logout" element={<HomePage />} />
-              {/** Error handling pages */}
-              <Route path="error" element={<ErrorPage />} />
-              <Route path="*" element={<ErrorPage message={l('not-found-message')} />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </CmschLayout>
+      {USE_SIDENAVBAR !== 'false' ? (
+        <CmschLayoutSidebar>
+          <ComponentsUnderSuspense />
+        </CmschLayoutSidebar>
+      ) : (
+        <CmschLayout>
+          <ComponentsUnderSuspense />
+        </CmschLayout>
+      )}
     </CountdownPage>
   )
 }
+
+const ComponentsUnderSuspense = () => (
+  <Suspense>
+    <MetaTags />
+    <Routes>
+      <Route path="/">
+        {GetRoutesForModules(EnabledModules)}
+        <Route index element={<IndexPage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="logout" element={<HomePage />} />
+        {/** Error handling pages */}
+        <Route path="error" element={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage message="Hoppá, úgy tűnik egy olyan oldalra került, amely nem létezik többé!" />} />
+      </Route>
+    </Routes>
+  </Suspense>
+)
