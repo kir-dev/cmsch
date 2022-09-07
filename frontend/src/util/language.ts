@@ -67,5 +67,7 @@ const languageData = {
   'profile-load-failed-contact-developers': 'Profil betöltése sikertelen!\nKeresse az oldal fejlesztőit a hiba kinyomozása érdekében!',
   'location-query-failed': 'A pozíciók nem érhetőek el.',
   'location-sensor-denied': 'Helymeghatározás nem elérhető',
-  'users-location-title': 'A te pozíciód'
+  'users-location-title': 'A te pozíciód',
+  'component-unavailable': 'Ez a komponens nem elérhető.',
+  'result-query-failed': 'Nem sikerült lekérni az eredményeket.'
 }
