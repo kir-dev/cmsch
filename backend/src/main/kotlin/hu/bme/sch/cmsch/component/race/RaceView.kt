@@ -1,15 +1,17 @@
-package hu.bme.sch.cmsch.component.leaderboard
+package hu.bme.sch.cmsch.component.race
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 
-data class LeaderBoardEntryDto(
-    @JsonView(FullDetails::class)
-    val name: String,
+data class RaceView(
 
     @JsonView(FullDetails::class)
-    val groupName: String? = null,
+    val place: Int? = null,
 
     @JsonView(FullDetails::class)
-    val score: Int?,
+    val bestTime: Float? = null,
+
+    @JsonView(FullDetails::class)
+    val board: List<RaceEntryDto> = listOf(),
+
 )

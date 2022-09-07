@@ -140,7 +140,7 @@ data class EventEntity(
             source = [ "GUEST", "BASIC", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_ENUM, enumSource = RoleType::class)
-    var minRole: RoleType = RoleType.GUEST
+    var minRole: RoleType = RoleType.GUEST,
 
 ): ManagedEntity, OpenGraphResource {
 
