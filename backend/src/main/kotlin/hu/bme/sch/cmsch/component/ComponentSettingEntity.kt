@@ -21,7 +21,7 @@ class ComponentSettingEntity(
     var property: String = "",
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, name = "`value`")
     var value: String = "",
 
 ) : Serializable
