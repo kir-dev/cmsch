@@ -27,6 +27,7 @@ export interface Components {
   login: Login
   news: News
   profile: Profile
+  race: Race
   riddle: Riddle
   signup: Signup
   task: Task
@@ -95,6 +96,11 @@ export interface News {
   showDetails: boolean
 }
 
+export interface Race {
+  title: string
+  visible: boolean
+}
+
 export interface Riddle {
   title: string
 }
@@ -131,6 +137,7 @@ export interface Leaderboard {
   minScoreToShow: number
   showGroupBoard: boolean
   showScores: boolean
+  showGroupOfUser: boolean
   showUserBoard: boolean
   title: string
 }
