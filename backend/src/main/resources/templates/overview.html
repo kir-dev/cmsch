@@ -47,6 +47,11 @@
                                         th:class="${field.second.centered ? 'centered' : ''}">
                                     </td>
                                 </object>
+                                <object th:if="${field.second.renderer == 'time'}" th:remove="tag">
+                                    <td th:text="${#dates.format(new java.util.Date(field.first.get(row) * 1000), 'mm:ss.SSS')}"
+                                        th:class="${field.second.centered ? 'centered' : ''}">
+                                    </td>
+                                </object>
                             </object>
                             <td class="actions">
                                 <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">

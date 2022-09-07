@@ -181,6 +181,9 @@
         }
         document.getElementById(property).value = JSON.stringify(result);
     }
+    function updateTime(id) {
+        document.getElementById(id).value = parseInt(document.getElementById(`${id}_ss`).value) + (parseInt(document.getElementById(`${id}_SSS`).value) / 1000.0)
+    }
 </script>
 <div class="content">
     <div class="split">
@@ -263,6 +266,51 @@
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:disabled="${!input.second.enabled}"
                                        required
+                                />
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                            </div>
+
+                            <div th:if="${input.second.type == 'time'}" class="field-group">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="|${input.second.label} (s)|">
+                                </label>
+                                <div style="clear: both"></div>
+                                <input th:type="number"
+                                       th:name="|${input.first.name}_ss|"
+                                       th:id="|input${iter.index}_ss|"
+                                       th:max="86400"
+                                       th:min="0"
+                                       th:value="${#numbers.formatInteger(T(java.lang.Math).floor((!editMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)), 0)}"
+                                       th:placeholder="${input.second.placeholder}"
+                                       th:disabled="${!input.second.enabled}"
+                                       th:autocomplete="${input.second.autocomplete}"
+                                       required
+                                       th:data-field-name="|input${iter.index}|"
+                                       onchange="updateTime(this.getAttribute('data-field-name'))"
+                                />
+                                <label th:for="|input${iter.index}|"
+                                       th:text="|${input.second.label} (ms)|">
+                                </label>
+                                <div style="clear: both"></div>
+                                <input th:type="number"
+                                       th:name="|${input.first.name}_SSS|"
+                                       th:id="|input${iter.index}_SSS|"
+                                       th:max="999"
+                                       th:min="0"
+                                       th:value="${#numbers.formatInteger((((!editMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)) * 1000) % 1000, 0)}"
+                                       th:placeholder="${input.second.placeholder}"
+                                       th:disabled="${!input.second.enabled}"
+                                       th:autocomplete="${input.second.autocomplete}"
+                                       required
+                                       th:data-field-name="|input${iter.index}|"
+                                       onchange="updateTime(this.getAttribute('data-field-name'))"
+                                />
+                                <input th:type="text"
+                                       th:name="${input.first.name}"
+                                       th:id="|input${iter.index}|"
+                                       th:value="${#numbers.formatInteger((!editMode) ? input.second.defaultValue : input.first.get(data), 0)}"
+                                       readonly
+                                       style="display: none"
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
                             </div>

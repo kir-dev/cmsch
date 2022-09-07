@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.model.RoleType
 const val INPUT_TYPE_TEXT = "text"
 const val INPUT_TYPE_NUMBER = "number"
 const val INPUT_TYPE_DATE = "date"
+const val INPUT_TYPE_TIME = "time"
 const val INPUT_TYPE_BLOCK_TEXT = "textarea"
 const val INPUT_TYPE_BLOCK_TEXT_MARKDOWN = "markdown"
 const val INPUT_TYPE_FILE = "file"
