@@ -30,7 +30,7 @@ class RaceAdminPanelController(
     private val clock: TimeService
 ) : AbstractAdminPanelController<RaceRecordEntity>(
     repo,
-    "race", "Mérés", "Mérések",
+    "race", "Eredmény", "Mérések",
     "Időmérő eredmények nyers időeredményei",
     RaceRecordEntity::class, ::RaceRecordEntity, importService, adminMenuService, component,
     mapOf(
