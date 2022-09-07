@@ -121,6 +121,11 @@ object ControlPermissions : PermissionGroup {
         "Beléptetés komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_RACE = PermissionValidator(
+        "RACE_CONTROL",
+        "Verseny (sörmérés) komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -139,7 +144,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_SIGNUP,
         PERMISSION_CONTROL_CHALLENGE,
         PERMISSION_CONTROL_HOME,
-        PERMISSION_CONTROL_ADMISSION
+        PERMISSION_CONTROL_ADMISSION,
+        PERMISSION_CONTROL_RACE
     )
 
 }
@@ -312,6 +318,13 @@ object StaffPermissions : PermissionGroup {
         "Beléptetés kezelése"
     )
 
+    // Race Comonent
+
+    val PERMISSION_EDIT_RACE = PermissionValidator(
+        "RACE_EDIT",
+        "Verseny eredmények kezelése"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_EDIT_TASKS,
@@ -340,7 +353,8 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_SHOW_LEADERBOARD,
         PERMISSION_EDIT_SIGNUP_RESULTS,
         PERMISSION_EDIT_CHALLENGES,
-        PERMISSION_VALIDATE_ADMISSION
+        PERMISSION_VALIDATE_ADMISSION,
+        PERMISSION_EDIT_RACE
     )
 
 }

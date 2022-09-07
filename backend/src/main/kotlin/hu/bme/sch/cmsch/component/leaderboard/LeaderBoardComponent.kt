@@ -31,17 +31,18 @@ class LeaderBoardComponent(
             showUserBoard,
             maxUserEntryToShow,
             showGroupBoard,
-            maxGroupEntryToShow
+            maxGroupEntryToShow,
+            showGroupOfUser
         )
     }
 
     final val title = SettingProxy(componentSettingService, component,
-        "title", "Programok",
+        "title", "Toplista",
         fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
     final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Programok", serverSideOnly = true,
+        "menuDisplayName", "Toplista", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
@@ -112,5 +113,10 @@ class LeaderBoardComponent(
         description = "Hány csoportot mutasson, -1 = az összeset"
     )
 
+    val showGroupOfUser = SettingProxy(componentSettingService, component,
+        "showGroupOfUser", "false", type = SettingType.BOOLEAN,
+        fieldName = "Felhaszáló csoportjának kijelzése",
+        description = "A felhasználói listán a felhasználó csoportja látható legyen-e"
+    )
 
 }

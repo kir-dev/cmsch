@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.admin
 const val OVERVIEW_TYPE_TEXT = "text"
 const val OVERVIEW_TYPE_DATE = "date"
 const val OVERVIEW_TYPE_BOOLEAN = "boolean"
+const val OVERVIEW_TYPE_TIME = "time"
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)

@@ -21,6 +21,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
+import java.util.*
 import java.util.function.Supplier
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
@@ -35,7 +36,7 @@ const val CONTROL_MODE_VIEW = "view"
 const val CONTROL_MODE_LOCATION = "location"
 
 open class AbstractAdminPanelController<T : ManagedEntity>(
-        private val repo: CrudRepository<T, Int>,
+        private val repo: CrudRepository<T, Int>?,
         private val view: String,
         private val titleSingular: String,
         private val titlePlural: String,
@@ -51,7 +52,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val permissionControl: PermissionValidator,
         private val importable: Boolean = false,
         private val adminMenuIcon: String = "check_box_outline_blank",
-        private val adminMenuPriority: Int = 1
+        private val adminMenuPriority: Int = 1,
+        private val virtualEntity: Boolean = false
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -84,7 +86,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("view", view)
         model.addAttribute("columns", descriptor.getColumns())
         model.addAttribute("fields", descriptor.getColumnDefinitions())
-        model.addAttribute("rows", filterOverview(user, repo.findAll()))
+        model.addAttribute("rows", filterOverview(user, fetchOverview()))
         model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
         model.addAttribute("importable", importable)
@@ -102,7 +104,10 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
-        val entity = repo.findById(id)
+        if (virtualEntity)
+            return "redirect:/admin/control/$view/"
+
+        val entity = repo?.findById(id) ?: findByIdFallback(id)
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -137,6 +142,9 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
+        if (virtualEntity)
+            return "redirect:/admin/control/$view/"
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", false)
         model.addAttribute("view", view)
@@ -160,12 +168,15 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
+        if (virtualEntity)
+            return "redirect:/admin/control/$view/"
+
         model.addAttribute("title", titleSingular)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
         model.addAttribute("user", user)
 
-        val entity = repo.findById(id)
+        val entity = repo?.findById(id) ?: findByIdFallback(id)
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -188,14 +199,17 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
-        val entity = repo.findById(id).orElseThrow()
+        val entity = repo?.findById(id)?.orElseThrow() ?: findByIdFallback(id).orElseThrow()
         if (!editPermissionCheck(user, entity)) {
             model.addAttribute("user", user)
             return "admin403"
         }
 
-        repo.delete(entity)
-        onEntityChanged(entity)
+        if (virtualEntity)
+            return "redirect:/admin/control/$view/"
+
+        repo?.delete(entity)
+        onEntityDeleted(entity)
         return "redirect:/admin/control/$view/"
     }
 
@@ -213,11 +227,14 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
+        if (virtualEntity)
+            return "redirect:/admin/control/$view/"
+
         val entity = supplier.get()
         updateEntity(descriptor, user, entity, dto, file0, file1)
         entity.id = 0
         if (onEntityPreSave(entity, auth))
-            repo.save(entity)
+            repo?.save(entity)
         onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
     }
@@ -237,7 +254,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
-        val entity = repo.findById(id)
+        val entity = repo?.findById(id) ?: findByIdFallback(id)
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"
         }
@@ -247,10 +264,13 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             return "admin403"
         }
 
+        if (virtualEntity)
+            return "redirect:/admin/control/$view/"
+
         updateEntity(descriptor, user, actualEntity, dto, file0, file1)
         actualEntity.id = id
         if (onEntityPreSave(actualEntity, auth))
-            repo.save(actualEntity)
+            repo?.save(actualEntity)
         onEntityChanged(actualEntity)
         return "redirect:/admin/control/$view"
     }
@@ -315,7 +335,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
-        return descriptor.exportToCsv(repo.findAll().toList()).toByteArray()
+        return descriptor.exportToCsv(fetchOverview().toList()).toByteArray()
     }
 
     @PostMapping("/import/csv")
@@ -325,26 +345,35 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             throw IllegalStateException("Insufficient permissions")
         }
 
-        val out = ByteArrayOutputStream()
-        file?.inputStream?.transferTo(out)
-        val rawEntities = out.toString().split("\n").stream()
+        if (repo != null) {
+            val out = ByteArrayOutputStream()
+            file?.inputStream?.transferTo(out)
+            val rawEntities = out.toString().split("\n").stream()
                 .map { entity -> entity.split(";").map { it.trim() } }
                 .skip(1)
                 .toList()
-        log.info("Importing {} bytes ({} lines) into {}", out.size(), rawEntities.size, view)
-        val before = repo.count()
-        importService.importEntities(repo, rawEntities, supplier, descriptor.getImportModifiers())
-        val after = repo.count()
+            log.info("Importing {} bytes ({} lines) into {}", out.size(), rawEntities.size, view)
+            val before = repo.count()
+            importService.importEntities(repo, rawEntities, supplier, descriptor.getImportModifiers())
+            val after = repo.count()
+            model.addAttribute("importedCount", after - before)
+        } else {
+            log.info("Importing is disabled for vistual entities (on view: {})", view)
+            model.addAttribute("importedCount", 0)
+        }
 
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
         model.addAttribute("user", user)
-        model.addAttribute("importedCount", after - before)
         adminMenuService.addPartsForMenu(user, model)
         return "resource"
     }
 
     open fun onEntityChanged(entity: T) {
+        // Overridden when notification is required
+    }
+
+    open fun onEntityDeleted(entity: T) {
         // Overridden when notification is required
     }
 
@@ -364,4 +393,14 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     open fun editPermissionCheck(user: CmschUser, entity: T): Boolean {
         return true
     }
+
+    open fun findByIdFallback(id: Int): Optional<T> {
+        return Optional.empty()
+    }
+
+    open fun fetchOverview(): Iterable<T> {
+        return repo?.findAll() ?: mutableListOf()
+    }
+
+
 }
