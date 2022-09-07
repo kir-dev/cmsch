@@ -7,5 +7,6 @@ export type LeaderBoardView = {
 
 export type LeaderBoardItemView = {
   name: string
+  groupName: string
   score?: number
 }
