@@ -12,6 +12,7 @@ import { LeaderBoardModule } from '../../route-modules/LeaderBoard.module'
 import { ExtraPageModule } from '../../route-modules/ExtraPage.module'
 import { HomeModule } from '../../route-modules/Home.module'
 import { FormModule } from '../../route-modules/Form.module'
+import { RaceModule } from '../../route-modules/Race.module'
 
 export enum AvailableModules {
   HOME = 'HOME',
@@ -25,7 +26,8 @@ export enum AvailableModules {
   EVENTS = 'EVENTS',
   EXTRA = 'EXTRA',
   FORM = 'FORM',
-  LEADER_BOARD = 'LEADER_BOARD'
+  LEADER_BOARD = 'LEADER_BOARD',
+  RACE = 'RACE'
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
@@ -40,7 +42,8 @@ export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
   [AvailableModules.EVENTS]: EventsModule,
   [AvailableModules.EXTRA]: ExtraPageModule,
   [AvailableModules.FORM]: FormModule,
-  [AvailableModules.LEADER_BOARD]: LeaderBoardModule
+  [AvailableModules.LEADER_BOARD]: LeaderBoardModule,
+  [AvailableModules.RACE]: RaceModule
 }
 
 export function GetRoutesForModules(modules: AvailableModules[]) {
@@ -59,5 +62,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.NEWS,
   AvailableModules.EXTRA,
   AvailableModules.FORM,
-  AvailableModules.LEADER_BOARD
+  AvailableModules.LEADER_BOARD,
+  AvailableModules.RACE
 ]
