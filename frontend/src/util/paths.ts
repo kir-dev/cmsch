@@ -13,7 +13,8 @@ export enum Paths {
   EXTRA_PAGE = 'page',
   FORM = 'form',
   LEADER_BOARD = 'leaderboard',
-  RACE = 'race'
+  RACE = 'race',
+  TEAM = 'team'
 }
 
 export enum AbsolutePaths {
@@ -30,5 +31,6 @@ export enum AbsolutePaths {
   ERROR = '/error',
   EXTRA_PAGE = '/page',
   FORM = '/form',
+  TEAM = '/team',
   RACE = '/race'
 }
