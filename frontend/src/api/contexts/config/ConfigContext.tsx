@@ -19,7 +19,7 @@ export const ConfigProvider = ({ children }: HasChildren) => {
     return (
       <CmschPage>
         <Helmet title={l('error-page-helmet')} />
-        <Heading textAlign="center">l("error-page-title")</Heading>
+        <Heading textAlign="center">{l('error-page-title')}</Heading>
         <Text textAlign="center" color="gray.500" marginTop={10}>
           {l('error-connection-unsuccessful')}
         </Text>
