@@ -1,7 +1,7 @@
 import AppleWalletImage from '../assets/AppleWalletHu.svg'
 import { PASS_SERVER_URL } from '../util/configs/environment.config'
 import { useMemo } from 'react'
-import { Image } from '@chakra-ui/react'
+import { Center, Image, Text } from '@chakra-ui/react'
 
 interface AppleWalletButtonProps {
   queryDto: Record<string, string>
@@ -20,16 +20,24 @@ export function AppleWalletButton({ queryDto }: AppleWalletButtonProps) {
   if (!url) return null
 
   return (
-    <Image
-      cursor="pointer"
-      maxW="100%"
-      w={48}
-      m={5}
-      src={AppleWalletImage}
-      onClick={() => {
-        if (!url) return
-        window.open(url)
-      }}
-    />
+    <Center maxW={80} flexDirection="column" mt={5}>
+      <Text fontSize="sm" color="brand.300">
+        vagy
+      </Text>
+      <Image
+        cursor="pointer"
+        maxW="100%"
+        w={48}
+        m={5}
+        src={AppleWalletImage}
+        onClick={() => {
+          if (!url) return
+          window.open(url)
+        }}
+      />
+      <Text fontSize="sm" color="brand.300">
+        Apple felhasználók részére (Beta)
+      </Text>
+    </Center>
   )
 }
