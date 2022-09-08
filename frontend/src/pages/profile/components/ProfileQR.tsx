@@ -16,6 +16,7 @@ import {
 import QRCode from 'react-qr-code'
 import { FaQrcode } from 'react-icons/fa'
 import { Profile } from '../../../api/contexts/config/types'
+import { AppleWalletButton } from '../../../common-components/AppleWalletButton'
 
 export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -29,6 +30,7 @@ export const ProfileQR = ({ profile, component }: { profile: ProfileView; compon
         <Button mt={5} leftIcon={<FaQrcode />} onClick={onOpen}>
           QR kód felmutatása
         </Button>
+        <AppleWalletButton queryDto={{ name: profile.fullName, userId: profile.cmschId }} />
       </Center>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
