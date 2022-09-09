@@ -58,7 +58,7 @@ class RaceComponent(
     )
 
     val ascendingOrder = SettingProxy(componentSettingService, component,
-        "ascendingOrder", "true", type = SettingType.BOOLEAN,
+        "ascendingOrder", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "Növekvő sorrend",
         description = "A toplista elemei növekvő sorrendben vannak"
     )

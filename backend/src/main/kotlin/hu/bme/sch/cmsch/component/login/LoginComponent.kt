@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.login.authsch.Scope
 import hu.bme.sch.cmsch.model.RoleType
-import hu.gerviba.authsch.struct.Scope
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -17,15 +17,20 @@ import org.springframework.stereotype.Service
 class LoginComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("login", "/", componentSettingService, env) {
+) : ComponentBase("login", "/login", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(
-            minRole,
+            title, menuDisplayName, minRole,
 
             authschGroup,
             authschScopesRaw,
             onlyBmeProvider,
+            authschPromoted,
+
+            googleSsoGroup,
+            googleSsoEnabled,
+            googleAdminAddresses,
 
             grantRoleGroup,
             staffGroups,
@@ -37,14 +42,22 @@ class LoginComponent(
             fallbackGroupName,
 
             langGroup,
-            langLoginMenu
+            bottomMessage
         )
     }
 
-    final override val menuDisplayName = null
+    final val title = SettingProxy(componentSettingService, component,
+        "title", "Belépés",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    )
+
+    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+        "menuDisplayName", "Belépés", serverSideOnly = true,
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
+    )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.NOBODY,
+        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
@@ -85,6 +98,30 @@ class LoginComponent(
     val onlyBmeProvider = SettingProxy(componentSettingService, component,
         "onlyBmeProvider", "false", type = SettingType.BOOLEAN, serverSideOnly = false,
         fieldName = "Címtáron keresztüli belépés", description = "Csak BME címtáron keresztüli belépés jelenik meg"
+    )
+
+    val authschPromoted = SettingProxy(componentSettingService, component,
+        "authschPromoted", "true", type = SettingType.BOOLEAN,
+        fieldName = "Authsch opció látszik", description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az AuthSCH SSO"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val googleSsoGroup = SettingProxy(componentSettingService, component,
+        "googleSsoGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
+        fieldName = "Google SSO",
+        description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan"
+    )
+
+    val googleSsoEnabled = SettingProxy(componentSettingService, component,
+        "googleSsoEnabled", "true", type = SettingType.BOOLEAN,
+        fieldName = "Google opció látszik", description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Google SSO"
+    )
+
+    val googleAdminAddresses = SettingProxy(componentSettingService, component,
+        "googleAdminAddresses", "", serverSideOnly = true,
+        fieldName = "ADMIN jogú emailcímek", description = "Google auth esetén csak! Ezeknek a felhasználóknak ADMIN " +
+                "joga lesz belépésnél. Az emailcímek vesszővel felsorolva."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -141,9 +178,11 @@ class LoginComponent(
         description = ""
     )
 
-    val langLoginMenu = SettingProxy(componentSettingService, component,
-        "langLoginMenu", "Válassz bejelentkezési módot", type = SettingType.TEXT,
-        fieldName = "Belépés menü címsora", description = "A belépési mód választásánál megjelenő szöveg"
+    val bottomMessage = SettingProxy(componentSettingService, component,
+        "bottomMessage", "Mind a két belépési móddal külön felhasználód keletkezik",
+        type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Alsó szöveg", description = "Ha üres akkor nincs ilyen"
     )
+
 
 }

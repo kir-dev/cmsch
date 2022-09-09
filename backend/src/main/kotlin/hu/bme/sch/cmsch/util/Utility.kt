@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.util
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
@@ -54,12 +55,12 @@ fun MultipartFile.uploadFile(target: String, overrideName: String? = null): Stri
     return fileName
 }
 
-fun Authentication.getUser(): CmschUserPrincipal {
-    return this.principal as CmschUserPrincipal
+fun Authentication.getUser(): CmschUser {
+    return this.principal as CmschUser
 }
 
-fun Authentication?.getUserOrNull(): CmschUserPrincipal? {
-    return if (this == null) null else (this.principal as CmschUserPrincipal?)
+fun Authentication?.getUserOrNull(): CmschUser? {
+    return if (this == null) null else (this.principal as CmschUser?)
 }
 
 fun Authentication.getUserFromDatabase(): UserEntity {

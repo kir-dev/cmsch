@@ -970,7 +970,7 @@ class TestConfig(
                 visible = true,
                 open = true,
                 showAsMenu = true,
-                menuTitle = "Átalg Oldal",
+                menuTitle = "Átlag Oldal",
                 content = "Ez egy átlagos oldal\n" +
                         "===\n" +
                         "\n" +

@@ -66,7 +66,7 @@ class BasicAdminController(
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("user", user)
 
-        val userPermissions = user.permissions
+        val userPermissions = user.permissionsAsList
 
         model.addAttribute("customPermissions", extraPageService.map { service ->
             service.getAll().groupBy { it.permissionToEdit }.map { group ->

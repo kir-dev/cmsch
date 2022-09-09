@@ -226,6 +226,9 @@ export interface Location {}
 export interface Login {
   onlyBmeProvider: boolean
   langLoginMenu: string
+  authschPromoted: boolean
+  googleSsoEnabled: boolean
+  bottomMessage: string
 }
 export interface Signup {
   langTooEarly: string
