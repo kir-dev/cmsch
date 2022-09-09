@@ -8,13 +8,14 @@ data class CmschUserPrincipal(
     override val id: Int,
     override val internalId: String,
     override val role: RoleType,
-    val permissions: List<String>
+    override val permissionsAsList: List<String>,
+    override val userName: String
 ) : Serializable, Principal, CmschUser {
 
     override fun getName() = internalId
 
     override fun hasPermission(permission: String): Boolean {
-        return permissions.contains(permission)
+        return permissionsAsList.contains(permission)
     }
 
 }

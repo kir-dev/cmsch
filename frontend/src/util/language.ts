@@ -9,7 +9,7 @@ const languageData = {
   'no-permission': 'Nincs jogosultságod megtekinteni!',
   'login-expired-title': 'Bejelentkezés lejárt',
   'login-expired-description': 'Hiba esett a bejelentkezési folyamatba!',
-  'login-consent': 'Kérlek, jelentkezz be {} fiókkal!',
+  'login-consent': 'Válassz bejelentkezési módot!',
   'logout-title': 'Kijelentkezés',
   'logout-description': 'Sikeres kijelentkezés!',
   'error-page-helmet': 'Hiba',

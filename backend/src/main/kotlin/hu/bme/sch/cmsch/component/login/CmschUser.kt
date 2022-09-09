@@ -6,6 +6,8 @@ interface CmschUser {
     val id: Int
     val internalId: String
     val role: RoleType
+    val permissionsAsList: List<String>
+    val userName: String
 
     fun hasPermission(permission: String): Boolean
 
