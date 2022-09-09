@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.service
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.jwt.InvalidJwtAuthenticationException
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest
 const val JWT_CLAIM_PERMISSIONS = "permissions"
 const val JWT_CLAIM_ROLE = "role"
 const val JWT_CLAIM_USERID = "userId"
+const val JWT_CLAIM_USERNAME = "userName"
 
 @Service
 class JwtTokenProvider(
@@ -25,11 +27,22 @@ class JwtTokenProvider(
 
     private val secretKey = Base64.getEncoder().encodeToString(startupPropertyConfig.secretKey.toByteArray())
 
-    fun createToken(userId: Int, internalId: String, role: RoleType, permissions: List<String>): String {
+    fun createToken(cmschUser: CmschUser): String {
+        return createToken(
+            cmschUser.id,
+            cmschUser.internalId,
+            cmschUser.role,
+            cmschUser.permissionsAsList,
+            cmschUser.userName
+        )
+    }
+
+    fun createToken(userId: Int, internalId: String, role: RoleType, permissions: List<String>, fullName: String): String {
         val claims: Claims = Jwts.claims().setSubject(internalId)
         claims[JWT_CLAIM_ROLE] = role.name
         claims[JWT_CLAIM_PERMISSIONS] = permissions
         claims[JWT_CLAIM_USERID] = userId.toString()
+        claims[JWT_CLAIM_USERNAME] = fullName
 
         val now = Date()
         val validity = Date(now.time + startupPropertyConfig.sessionValidityInMilliseconds)
@@ -51,7 +64,8 @@ class JwtTokenProvider(
                 id = parsed[JWT_CLAIM_USERID]?.toString()?.toInt() ?: 0,
                 internalId = parsed.subject,
                 role = role,
-                permissions = if (permissions is List<*>) (permissions as List<String>) else listOf()
+                permissionsAsList = if (permissions is List<*>) (permissions as List<String>) else listOf(),
+                userName = parsed[JWT_CLAIM_USERNAME]?.toString() ?: "unnamed"
             ),
             "",
             listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
@@ -90,6 +104,6 @@ class JwtTokenProvider(
 
     fun refreshToken(auth: Authentication): String {
         val user = auth.getUserFromDatabase()
-        return createToken(user.id, user.internalId, user.role, user.permissionsAsList)
+        return createToken(user.id, user.internalId, user.role, user.permissionsAsList, user.fullName)
     }
 }

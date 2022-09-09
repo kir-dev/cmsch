@@ -26,8 +26,8 @@ class EntrypointController(
 
     @GetMapping("")
     @ResponseBody
-    fun index(): String {
-        return "hey!"
+    fun index(auth: Authentication?): String {
+        return if (auth == null) "hey!" else "hoo!"
     }
 
     @GetMapping("/control/entrypoint")

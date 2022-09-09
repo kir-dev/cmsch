@@ -83,7 +83,7 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
-    open fun getTokenViewForUser(user: CmschUserPrincipal): TokenView {
+    open fun getTokenViewForUser(user: CmschUser): TokenView {
         val tokenCategoryToDisplay = tokenComponent.collectRequiredType.getValue()
         return TokenView(
             tokens = getTokensForUser(user),
@@ -100,7 +100,7 @@ open class TokenCollectorService(
             getTotalTokenCountWithCategory(tokenCategoryToDisplay)
         }
 
-    private fun fetchCollectedTokenCount(user: CmschUserPrincipal, tokenCategoryToDisplay: String) =
+    private fun fetchCollectedTokenCount(user: CmschUser, tokenCategoryToDisplay: String) =
         if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
             getTokensForUser(user).size
         } else {

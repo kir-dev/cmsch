@@ -77,13 +77,13 @@ class TokenApiController(
             val user = auth?.getUserOrNull()
             return if (user == null) {
                 request.getSession(true).setAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE, token)
-                "redirect:/control/login"
+                "redirect:${applicationComponent.siteUrl.getValue()}login"
             } else {
                 collectToken(auth, token)
             }
         } catch (e: Throwable) {
             log.error("Failed to redeem token: '{}'", token, e)
-            return "redirect:/control/login"
+            return "redirect:${applicationComponent.siteUrl.getValue()}login?error=failed-to-redeem"
         }
     }
 
@@ -91,13 +91,13 @@ class TokenApiController(
         return when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> {
                 val (title, status) = tokens.collectToken(auth.getUser(), token)
-                log.info("Token collected for USER '{}' token '{}'", auth.getUser().name, token)
+                log.info("Token collected for USER '{}' token '{}'", auth.getUser().userName, token)
                 "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${status.name}" +
                         "&title=${URLEncoder.encode(title ?: "", StandardCharsets.UTF_8.toString())}"
             }
             OwnershipType.GROUP -> {
                 val (title, status) = tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
-                log.info("Token collected for GROUP by user '{}' token '{}'", auth.getUser().name, token)
+                log.info("Token collected for GROUP by user '{}' token '{}'", auth.getUser().userName, token)
                 "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${status.name}" +
                         "&title=${URLEncoder.encode(title ?: "", StandardCharsets.UTF_8.toString())}"
             }
