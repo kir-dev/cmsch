@@ -147,11 +147,25 @@ data class UserEntity(
     @Lob
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 11, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
+    @property:GenerateInput(order = 13, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
     @property:ImportFormat(ignore = false, columnId = 9)
     var permissions: String = "",
 
-): ManagedEntity, CmschUser {
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 11, label = "Forrás", note = "Honnan jön az adat (authsch, google)")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 10)
+    var provider: String = "",
+
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 12, label = "Profilkép", enabled = true)
+    @property:ImportFormat(ignore = false, columnId = 11)
+    var profilePicture: String = "",
+
+
+    ): ManagedEntity, CmschUser {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -168,8 +182,11 @@ data class UserEntity(
         return this::class.simpleName + "(id = $id )"
     }
 
-    val permissionsAsList
+    override val permissionsAsList
         get() = permissions.split(",")
+
+    override val userName
+        get() = fullName
 
     override fun hasPermission(permission: String): Boolean {
         return permissionsAsList.contains(permission)
