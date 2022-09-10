@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.config
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,9 +28,16 @@ class AuthConfig(
     @Value("\${authsch.config.user-info-uri:https://auth.sch.bme.hu/api/profile}") private val userInfoUri: String,
 ) {
 
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Bean
     fun clientRegistrationRepository(): ClientRegistrationRepository {
-        return InMemoryClientRegistrationRepository(authschClientRegistration(), googleClientRegistration())
+        if (googleId.isNotBlank()) {
+            log.info("Using oauth2 sso: authsch, google")
+            return InMemoryClientRegistrationRepository(authschClientRegistration(), googleClientRegistration())
+        }
+        log.info("Using oauth2 sso: authsch")
+        return InMemoryClientRegistrationRepository(authschClientRegistration())
     }
 
     private fun authschClientRegistration(): ClientRegistration {
