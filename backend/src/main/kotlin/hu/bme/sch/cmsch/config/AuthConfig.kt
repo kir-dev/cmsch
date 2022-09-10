@@ -32,7 +32,7 @@ class AuthConfig(
 
     @Bean
     fun clientRegistrationRepository(): ClientRegistrationRepository {
-        if (googleId.isNotBlank()) {
+        if (googleId.isNotBlank() && googleId != "no") {
             log.info("Using oauth2 sso: authsch, google")
             return InMemoryClientRegistrationRepository(authschClientRegistration(), googleClientRegistration())
         }
