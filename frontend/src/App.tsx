@@ -6,7 +6,6 @@ import HomePage from './pages/home/home.page'
 import LoginPage from './pages/login/login.page'
 import { EnabledModules, GetRoutesForModules } from './util/configs/modules.config'
 import CountdownPage from './pages/countdown/countdown.page'
-import { MetaTags } from './metaTags'
 import IndexPage from './pages/index/index.page'
 import { l } from './util/language'
 
@@ -15,7 +14,6 @@ export function App() {
     <CountdownPage>
       <CmschLayout>
         <Suspense>
-          <MetaTags />
           <Routes>
             <Route path="/">
               {GetRoutesForModules(EnabledModules)}
