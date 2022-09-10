@@ -25,7 +25,7 @@ export const Loading = ({ timeout = 0, children }: LoadingProps) => {
     <>{children}</>
   ) : (
     <Center>
-      <Spinner color={color} size="xl" thickness="0.3rem" />
+      <Spinner color={color} size="xl" thickness="0.3rem" my={10} />
     </Center>
   )
 }
