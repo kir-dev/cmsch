@@ -75,7 +75,7 @@ You must install:
 
 - Node v16
 - Yarn v1.22.17
-- IDEA or at least Gradle
+- optional: IDEA
 
 ## Application local properties
 
@@ -83,10 +83,13 @@ Create an application-local.properties file in the `src/main/resources/config` f
 and fill the file with these configurations (using your credentials): 
 
 ```properties
-authsch.client-identifier=<insert the shorter key>
-authsch.client-key=<insert the long key>
+spring.security.oauth2.client.registration.authsch.client-id=<insert the shorter key>
+spring.security.oauth2.client.registration.authsch.client-secret=<insert the long key>
+spring.security.oauth2.client.registration.google.client-id=<google client-id>
+spring.security.oauth2.client.registration.google.client-secret=<google client-secret>
 hu.bme.sch.cmsch.startup.sysadmins=<your pekId>
 cmsch.website-default-url=http://<your ip>:8080/
+hu.bme.sch.cmsch.login.googleAdminAddresses=<your email address>
 logging.level.web=DEBUG
 ```
 
