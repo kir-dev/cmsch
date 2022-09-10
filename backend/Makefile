@@ -1,3 +1,5 @@
+.PHONY: all build push-rc push-r
+
 all:
 	echo "build|push-rc|push-r"
 
