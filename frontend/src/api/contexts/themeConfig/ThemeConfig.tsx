@@ -37,8 +37,8 @@ export const ThemeConfig = ({ children }: HasChildren) => {
         }
       })
       customTheme.fonts = {
-        heading: config.components.style.displayFontName,
-        body: config.components.style.mainFontName,
+        heading: "'Roboto Condensed', sans-serif",
+        body: "'Roboto', sans-serif",
         mono: 'monospace'
       }
     }
