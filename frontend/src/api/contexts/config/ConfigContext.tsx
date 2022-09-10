@@ -3,7 +3,7 @@ import { HasChildren } from '../../../util/react-types.util'
 import { ConfigDto } from './types'
 import { useConfigQuery } from '../../hooks/useConfigQuery'
 import { Loading } from '../../../common-components/Loading'
-import { Button, ButtonGroup, Heading, Text } from '@chakra-ui/react'
+import { Button, ButtonGroup, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
 import { l } from '../../../util/language'
@@ -14,10 +14,17 @@ export const ConfigProvider = ({ children }: HasChildren) => {
   const { data, isLoading, error, refetch } = useConfigQuery((err) =>
     console.error('[ERROR] at ConfigProvider', JSON.stringify(err, null, 2))
   )
-  if (isLoading) return <Loading />
+  const kirDevLogo = useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')
+  if (isLoading)
+    return (
+      <CmschPage h="100vh" justifyContent="center" alignItems="center">
+        <Loading />
+        <Image src={kirDevLogo} maxW={40} maxH={40} my={3} />
+      </CmschPage>
+    )
   if (error)
     return (
-      <CmschPage>
+      <CmschPage h="100vh" justifyContent="center" alignItems="center">
         <Helmet title={l('error-page-helmet')} />
         <Heading textAlign="center">{l('error-page-title')}</Heading>
         <Text textAlign="center" color="gray.500" marginTop={10}>
