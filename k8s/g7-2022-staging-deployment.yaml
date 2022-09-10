@@ -9,6 +9,7 @@ metadata:
     volume.beta.kubernetes.io/storage-provisioner: csi.vsphere.vmware.com
   finalizers:
     - kubernetes.io/pvc-protection
+spec:
   accessModes:
     - ReadWriteOnce
   resources:
