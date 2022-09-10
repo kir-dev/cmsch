@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: HasChildren) => {
     window.location.href = `${API_BASE_URL}/control/logout`
   }
 
-  const { isLoading: profileLoading, data: profile, error: profileError, refetch } = useProfileQuery(onLoginFailure)
+  const { isLoading: profileLoading, data: profile, error: profileError, refetch } = useProfileQuery()
   const { refresh } = useTokenRefresh(onLoginFailure)
 
   useEffect(() => {
