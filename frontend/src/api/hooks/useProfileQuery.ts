@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useQuery } from 'react-query'
 import { ProfileView } from '../../util/views/profile.view'
 
-export const useProfileQuery = (onLoginFailure: (err: any) => void) => {
+export const useProfileQuery = (onLoginFailure?: (err: any) => void) => {
   return useQuery<ProfileView, Error, ProfileView>(
     'currentUser',
     async () => {
