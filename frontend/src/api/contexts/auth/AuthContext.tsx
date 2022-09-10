@@ -1,4 +1,3 @@
-import { useToast } from '@chakra-ui/react'
 import Cookies from 'js-cookie'
 import { createContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -10,7 +9,6 @@ import { HasChildren } from '../../../util/react-types.util'
 import { ProfileView } from '../../../util/views/profile.view'
 import { useProfileQuery } from '../../hooks/useProfileQuery'
 import { useTokenRefresh } from '../../hooks/useTokenRefresh'
-import { l } from '../../../util/language'
 
 export type AuthContextType = {
   isLoggedIn: boolean
@@ -35,21 +33,13 @@ export const AuthContext = createContext<AuthContextType>({
 })
 
 export const AuthProvider = ({ children }: HasChildren) => {
-  const toast = useToast()
   const navigate = useNavigate()
 
   const onLoginFailure = (err: any) => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
     Cookies.remove(CookieKeys.SESSION_ID)
-    queryClient.invalidateQueries('currentUser', { refetchInactive: true })
+    queryClient.invalidateQueries('currentUser', { refetchInactive: false })
     console.log('[ERROR] at onLoginFailure', JSON.stringify(err, null, 2))
-    toast({
-      title: l('login-expired-title'),
-      description: l('login-expired-description'),
-      status: 'error',
-      duration: 5000,
-      isClosable: true
-    })
     navigate('/')
   }
 
@@ -67,12 +57,12 @@ export const AuthProvider = ({ children }: HasChildren) => {
   const onLogout = () => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
     Cookies.remove(CookieKeys.SESSION_ID)
-    queryClient.invalidateQueries('currentUser', { refetchInactive: true })
+    queryClient.invalidateQueries('currentUser', { refetchInactive: false })
     window.location.href = `${API_BASE_URL}/control/logout`
   }
 
   const { isLoading: profileLoading, data: profile, error: profileError, refetch } = useProfileQuery(onLoginFailure)
-  const { refresh } = useTokenRefresh()
+  const { refresh } = useTokenRefresh(onLoginFailure)
 
   useEffect(() => {
     if (Cookies.get(CookieKeys.JWT_TOKEN)) {
