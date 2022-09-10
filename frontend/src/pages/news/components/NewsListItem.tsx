@@ -13,7 +13,6 @@ type Props = {
 }
 
 const NewsListItem = ({ news, fontSize, useLink }: Props) => {
-  console.log('asd', useLink)
   return (
     <GridItem as={LinkBox} borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
       <HStack justifyContent="space-between">
