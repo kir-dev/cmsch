@@ -33,7 +33,7 @@ const LeaderboardPage = () => {
   }
 
   const userBoard = <LeaderBoardTable data={leaderboardQuery.data?.userBoard || []} showGroup={leadboardConfig?.showGroupOfUser} />
-  const groupBpard = <LeaderBoardTable data={leaderboardQuery.data?.groupBoard || []} />
+  const groupBoard = <LeaderBoardTable data={leaderboardQuery.data?.groupBoard || []} />
 
   return (
     <CmschPage>
@@ -54,13 +54,13 @@ const LeaderboardPage = () => {
           <TabPanels>
             {leaderboardQuery.data?.userBoard && <TabPanel>{userBoard}</TabPanel>}
 
-            {leaderboardQuery.data?.groupBoard && <TabPanel>{groupBpard}</TabPanel>}
+            {leaderboardQuery.data?.groupBoard && <TabPanel>{groupBoard}</TabPanel>}
           </TabPanels>
         </Tabs>
       ) : (
         <>
           {leaderboardQuery.data?.userBoard && userBoard}
-          {leaderboardQuery.data?.groupBoard && groupBpard}
+          {leaderboardQuery.data?.groupBoard && groupBoard}
         </>
       )}
     </CmschPage>
