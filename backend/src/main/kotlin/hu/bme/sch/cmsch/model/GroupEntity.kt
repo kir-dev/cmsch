@@ -102,13 +102,29 @@ data class GroupEntity(
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "Felhasználó készítette", note = "A csoportot egy felhasználó hozta létre és nem egy admin")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Felhasználó készítette", note = "A csoportot egy felhasználó hozta létre és nem egy admin")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
     var manuallyCreated: Boolean = false,
 
+    @Lob
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(order = 17, label = "Leírás", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
+    var description: String = "",
 
-    ): ManagedEntity {
+    @Lob
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz",
+        note = "Ez a feature jelenleg nem használt! Hagyd üresen!", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_LOB)
+    var profileTopMessage: String = "",
+
+): ManagedEntity {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

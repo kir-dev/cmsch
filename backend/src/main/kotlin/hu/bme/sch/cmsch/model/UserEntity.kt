@@ -183,6 +183,9 @@ data class UserEntity(
         return this::class.simpleName + "(id = $id )"
     }
 
+    val fullNameWithAlias: String
+        get() = if (alias != "") "${fullName} ($alias)" else fullName
+
     override val permissionsAsList
         get() = permissions.split(",")
 

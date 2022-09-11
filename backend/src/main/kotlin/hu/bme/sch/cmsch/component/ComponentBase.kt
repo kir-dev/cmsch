@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.component
 
+import hu.bme.sch.cmsch.component.app.MenuSettingItem
+import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import javax.annotation.PostConstruct
@@ -98,6 +100,10 @@ abstract class ComponentBase(
 
     open fun onInit() {
         // Empty implementation, override it when its needed
+    }
+
+    open fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
+        return listOf()
     }
 
 }

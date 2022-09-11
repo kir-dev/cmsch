@@ -1,22 +1,226 @@
 package hu.bme.sch.cmsch.component.team
 
-import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
+import hu.bme.sch.cmsch.model.GroupEntity
+import hu.bme.sch.cmsch.model.MajorType
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserRepository
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 @ConditionalOnBean(TeamComponent::class)
-class TeamService {
+open class TeamService(
+    private val teamComponent: TeamComponent,
+    private val groupRepository: GroupRepository,
+    private val userRepository: UserRepository,
+    private val teamJoinRequestRepository: TeamJoinRequestRepository,
+    private val leaderBoardService: Optional<LeaderBoardService>
+) {
 
-    fun createTeam(user: UserEntity): TeamCreationStatus {
-        val groupLeavable = user.group?.leaveable ?: true
-        if (groupLeavable)
+    private val log = LoggerFactory.getLogger(javaClass)
+    private val teamNameRegex = Regex("^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+$")
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun createTeam(user: UserEntity, name: String): TeamCreationStatus {
+        if (user.group?.leaveable == false)
             return TeamCreationStatus.ALREADY_IN_GROUP
 
-        // TODO: impl required
+        if (!teamComponent.creationEnabled.isValueTrue())
+            return TeamCreationStatus.CREATION_DISABLED
 
-        return TeamCreationStatus.OK
+        val finalName = name.trim()
+        if (finalName.length > 32 || !finalName.matches(teamNameRegex))
+            return TeamCreationStatus.INVALID_NAME
+
+        if (teamComponent.nameBlocklist.getValue().lowercase().split(Regex(", *")).contains(finalName.lowercase())) {
+            log.info("Failed to create group with denied name: '{}' by user '{}'", finalName, user.fullName)
+            return TeamCreationStatus.USED_NAME
+        }
+
+        if (groupRepository.findByNameIgnoreCase(finalName).isPresent) {
+            log.info("Failed to create group with denied name: '{}' by user '{}'", finalName, user.fullName)
+            return TeamCreationStatus.USED_NAME
+        }
+
+        val groupEntity = GroupEntity(
+            0, finalName, MajorType.UNKNOWN,
+            "${user.fullName}||", "", "", "",
+            "", listOf(),
+            teamComponent.racesByDefault.isValueTrue(),
+            teamComponent.racesByDefault.isValueTrue(),
+            leaveable = true,
+            manuallyCreated = true,
+            description = "",
+            profileTopMessage = ""
+        )
+
+        groupRepository.save(groupEntity)
+        return userRepository.findByInternalId(user.internalId).map {
+            it.groupName = groupEntity.name
+            it.group = groupEntity
+            if (teamComponent.grantPrivilegedRole.isValueTrue() && it.role.value < RoleType.PRIVILEGED.value) {
+                log.info("Group '{}' #{} successfully created by user '{}' (PRIVILEGED granted)", finalName, groupEntity.id, user.fullName)
+                it.role = RoleType.PRIVILEGED
+            } else {
+                log.info("Group '{}' #{} successfully created by user '{}' (PRIVILEGED not granted)", finalName, groupEntity.id, user.fullName)
+            }
+            userRepository.save(it)
+            TeamCreationStatus.OK
+        }.orElseGet {
+            log.error("Group '{}' #{} successfully created by user '{}' (but user not found)", finalName, groupEntity.id, user.fullName)
+            TeamCreationStatus.INTERNAL_ERROR
+        }
     }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun joinTeam(user: UserEntity, groupId: Int): TeamJoinStatus {
+        if (user.group?.leaveable == false)
+            return TeamJoinStatus.ALREADY_IN_GROUP
+
+        if (!teamComponent.joinEnabled.isValueTrue())
+            return TeamJoinStatus.JOINING_DISABLED
+
+        val group = groupRepository.findById(groupId)
+        if (group.isEmpty)
+            return TeamJoinStatus.GROUP_NOT_FOUND
+
+        if (!group.get().selectable)
+            return TeamJoinStatus.NOT_JOINABLE
+
+        if (teamJoinRequestRepository.existsByUserId(user.id))
+            return TeamJoinStatus.ALREADY_SUBMITTED_JOIN_REQUEST
+
+        teamJoinRequestRepository.save(TeamJoinRequestEntity(0, user.fullNameWithAlias, user.id, group.get().name, groupId))
+        log.info("Join request recorded for user '{}' to group '{}'", user.fullName, group.get().name)
+        return TeamJoinStatus.OK
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun cancelJoin(user: UserEntity): TeamJoinStatus {
+        if (!teamComponent.joinEnabled.isValueTrue())
+            return TeamJoinStatus.JOINING_DISABLED
+
+        teamJoinRequestRepository.deleteAllByUserId(user.id)
+        log.info("Join request cancelled for user '{}'", user.fullName)
+        return TeamJoinStatus.OK
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun leaveTeam(user: UserEntity): TeamLeaveStatus {
+        if (!teamComponent.joinEnabled.isValueTrue())
+            return TeamLeaveStatus.LEAVING_DISABLED
+
+        if (user.role == RoleType.PRIVILEGED)
+            return TeamLeaveStatus.LEADERS_CANNOT_LEAVE
+
+        user.groupName = ""
+        user.group = null
+        userRepository.save(user)
+        log.info("User '{}' left their group", user.fullName)
+        return TeamLeaveStatus.OK
+    }
+
+    @Transactional(readOnly = true)
+    open fun listAllTeams(): List<TeamListView>? {
+        var teams = groupRepository.findAll()
+            .filter { showThisTeam(it) }
+            .map { TeamListView(it.id, it.name) }
+
+        if (teamComponent.sortByName.isValueTrue())
+            teams = teams.sortedBy { it.name }
+
+        return teams
+    }
+
+    private fun showThisTeam(team: GroupEntity): Boolean {
+        if (!teamComponent.showTeamsAtAll.isValueTrue())
+            return false
+        if (!teamComponent.showNotRacingTeams.isValueTrue() && !team.races)
+            return false
+        if (!teamComponent.showNotManualTeams.isValueTrue() && !team.manuallyCreated)
+            return false
+        return true
+    }
+
+    @Transactional(readOnly = true)
+    open fun showTeam(teamId: Int, user: UserEntity?): TeamView? {
+        val team = groupRepository.findById(teamId)
+        if (team.isEmpty)
+            return null
+        return if (showThisTeam(team.orElseThrow())) mapTeam(team.orElseThrow(), user, user?.group?.id == teamId) else null
+    }
+
+    private fun mapTeam(team: GroupEntity, user: UserEntity?, forceShowMembers: Boolean): TeamView {
+        val joinEnabled = user != null
+                && teamComponent.joinEnabled.isValueTrue()
+                && (user.group?.leaveable ?: true)
+                && user.role.value < RoleType.PRIVILEGED.value
+        val leaveEnabled = user != null
+                && teamComponent.leaveEnabled.isValueTrue()
+                && user.group?.id == team.id
+                && user.role.value < RoleType.PRIVILEGED.value
+        val score = leaderBoardService.map { it.getScoreOfGroup(team) }.orElse(null)
+        val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || forceShowMembers) mapMembers(team) else null
+        val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value) mapRequests(team) else null
+        return TeamView(team.id, team.name, score,
+            members,
+            requests,
+            joinEnabled, leaveEnabled
+        )
+    }
+
+    private fun mapMembers(team: GroupEntity): List<TeamMemberView> {
+        return userRepository.findAllByGroupName(team.name)
+            .map { TeamMemberView(it.fullNameWithAlias, it.id, it.role == RoleType.PRIVILEGED) }
+    }
+
+    private fun mapRequests(team: GroupEntity): List<TeamMemberView> {
+        return teamJoinRequestRepository.findAllByGroupId(team.id)
+            .map { TeamMemberView(it.userName, it.userId, false) }
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun acceptJoin(userId: Int, group: GroupEntity?): Boolean {
+        if (group == null)
+            return false
+
+        if (teamJoinRequestRepository.existsByUserIdAndGroupId(userId, group.id)) {
+            val user = userRepository.findById(userId).orElse(null) ?: return false
+            user.groupName = group.name
+            user.group = group
+            if (teamComponent.grantAttendeeRole.isValueTrue() && user.role.value <= RoleType.ATTENDEE.value) {
+                log.info("User '{}' accepted for group '{}' (ATTENDEE granted)", user.fullName, group.name)
+                user.role = RoleType.ATTENDEE
+            } else {
+                log.info("User '{}' accepted for group '{}' (ATTENDEE not granted)", user.fullName, group.name)
+            }
+            userRepository.save(user)
+            teamJoinRequestRepository.deleteAllByUserId(userId)
+            return true
+        }
+        return false
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun rejectJoin(userId: Int, group: GroupEntity?): Boolean {
+        if (group == null)
+            return false
+
+        if (teamJoinRequestRepository.existsByUserIdAndGroupId(userId, group.id)) {
+            val user = userRepository.findById(userId).orElse(null) ?: return false
+            log.info("User '{}' rejected for group '{}'", user.fullName, group.name)
+            teamJoinRequestRepository.deleteAllByUserId(userId)
+            return true
+        }
+        return false
+    }
+
 
 }

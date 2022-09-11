@@ -44,4 +44,13 @@ class EntrypointController(
         return "entrypoint"
     }
 
+    @GetMapping("/c/e")
+    fun controlEntrypoint() = "redirect:/admin/control/basics"
+
+    @GetMapping("/c/a")
+    fun controlAuthAuthsch() = "redirect:/oauth2/authorization/authsch"
+
+    @GetMapping("/c/g")
+    fun controlAuthGoogle() = "redirect:/oauth2/authorization/google"
+
 }
