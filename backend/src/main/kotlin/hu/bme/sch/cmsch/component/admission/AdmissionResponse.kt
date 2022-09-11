@@ -9,8 +9,8 @@ enum class EntryRole(
     BANNED(0, false),
     CANNOT_ATTEND(1, false),
     USER(10, true),
-    VIP(20, true),
-    ORGANIZER(30, true),
+    ORGANIZER(20, true),
+    VIP(30, true),
     PERFORMER(40, true),
     LEAD_ORGANIZER(100, true)
 }

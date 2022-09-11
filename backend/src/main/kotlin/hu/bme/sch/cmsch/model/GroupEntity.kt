@@ -98,9 +98,17 @@ data class GroupEntity(
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 15, label = "Elhagyható", note = "A csoport tagjai megváltoztathatják a csoportjukat")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_BOOLEAN)
-    var leaveable: Boolean = false
+    var leaveable: Boolean = false,
 
-): ManagedEntity {
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 14, label = "Felhasználó készítette", note = "A csoportot egy felhasználó hozta létre és nem egy admin")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
+    var manuallyCreated: Boolean = false,
+
+
+    ): ManagedEntity {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
