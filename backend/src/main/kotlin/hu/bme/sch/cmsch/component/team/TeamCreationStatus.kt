@@ -7,5 +7,5 @@ enum class TeamCreationStatus {
     CREATION_DISABLED,
     INSUFFICIENT_PERMISSIONS,
     OK,
-    OK_RELOG_REQUIRED
+    INTERNAL_ERROR
 }
