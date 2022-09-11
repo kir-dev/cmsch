@@ -1,5 +1,5 @@
-import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
-import { Box, Heading, HStack, Spacer, useColorModeValue, VStack } from '@chakra-ui/react'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { Box, Heading, HStack, Spacer, useColorModeValue } from '@chakra-ui/react'
 
 type CardListItemProps = {
   title: string
