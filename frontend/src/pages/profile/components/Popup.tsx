@@ -1,4 +1,4 @@
-import { Heading, Flex, Box, Text, CloseButton } from '@chakra-ui/react'
+import { Box, CloseButton, Flex, Heading, Text } from '@chakra-ui/react'
 import { forwardRef } from 'react'
 import { GroupMemberLocationView } from '../../../util/views/groupMemberLocation.view'
 import { timestampToTimePassedStr } from '../util/timestampToTimePassedStr'
