@@ -14,6 +14,7 @@ export enum Paths {
   FORM = 'form',
   LEADER_BOARD = 'leaderboard',
   RACE = 'race',
+  QR_FIGHT = 'qr-fight',
   TEAMS = 'teams',
   CREATE_TEAM = 'create-team',
   MY_TEAM = 'my-team',
@@ -38,5 +39,6 @@ export enum AbsolutePaths {
   TEAMS = '/teams',
   CREATE_TEAM = '/create-team',
   MY_TEAM = '/my-team',
-  TEAM_ADMIN = '/team-admin'
+  TEAM_ADMIN = '/team-admin',
+  QR_FIGHT = '/qr-fight'
 }
