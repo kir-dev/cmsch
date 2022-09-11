@@ -48,7 +48,7 @@ data class SignupFormView(
      * - status = SUBMITTED -> how to pay
      * - status = ACCEPTED -> what to do
      * - else -> just print to the top of the page
-      */
+     */
     @JsonView(FullDetails::class)
     val message: String? = null
 

@@ -14,6 +14,7 @@ enum class RoleType(val value: Int, val description: String) {
     GUEST(0, "Nem bejelentkezett felhasználó"),
     BASIC(1, "Bejelentkezett felhasználó"),
     ATTENDEE(2, "Résztvevő, de sima felhasználó"),
+    PRIVILEGED(3, "Résztvevő, de megemelt jogkörökkel"),
     STAFF(100, "Rendező, akinek az admin felületre be kellhet lépnie"),
     ADMIN(200, "Adminisztrátor, aki mindenhez hozzáfér"),
     SUPERUSER(500, "Adminisztrátor, de a fejlesztői menük is látszanak"),
