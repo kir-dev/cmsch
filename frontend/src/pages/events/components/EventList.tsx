@@ -1,4 +1,4 @@
-import { Grid, useBreakpointValue, VStack } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { EventListView } from '../../../util/views/event.view'
 import EventListItem from './EventListItem'

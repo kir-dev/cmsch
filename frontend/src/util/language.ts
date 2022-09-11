@@ -64,10 +64,14 @@ const languageData = {
   'token-scan-network-error': 'Hálózati hiba a token érvényesítésénél',
   'token-scan-read-error': 'Beolvasási hiba.',
   'profile-load-failed': 'Profil betöltése sikertelen!\n',
-  'profile-load-failed-contact-developers': 'Profil betöltése sikertelen!\nKeresse az oldal fejlesztőit a hiba kinyomozása érdekében!',
+  'profile-load-failed-contact-developers': 'Profil betöltése sikertelen!\nKeresd az oldal fejlesztőit a hiba kinyomozása érdekében!',
   'location-query-failed': 'A pozíciók nem érhetőek el.',
   'location-sensor-denied': 'Helymeghatározás nem elérhető',
   'users-location-title': 'A te pozíciód',
   'component-unavailable': 'Ez a komponens nem elérhető.',
-  'result-query-failed': 'Nem sikerült lekérni az eredményeket.'
+  'result-query-failed': 'Nem sikerült lekérni az eredményeket.',
+  'team-list-load-failed': 'Nem sikerült lekérni a csapatlistát.',
+  'team-list-load-failed-contact-developers': 'Nem sikerült lekérni a csapatlistát.\n Keresd az oldal fejlesztőit!',
+  'team-load-failed': 'Nem sikerült lekérni a csapatot.',
+  'team-load-failed-contact-developers': 'Nem sikerült lekérni a csapatot.\n Keresd az oldal fejlesztőit!'
 }

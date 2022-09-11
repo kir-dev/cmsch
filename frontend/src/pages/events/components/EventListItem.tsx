@@ -1,7 +1,7 @@
 import { GridItem, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { stringifyTimeRange, stringifyTimeStamp } from '../../../util/core-functions.util'
+import { stringifyTimeRange } from '../../../util/core-functions.util'
 import { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 import { AbsolutePaths } from '../../../util/paths'

@@ -1,5 +1,5 @@
 import { CheckCircleIcon, InfoIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons'
-import { Box, Center, Heading, useColorModeValue } from '@chakra-ui/react'
+import { Box, Center, Heading } from '@chakra-ui/react'
 import { ScanResponseView, ScanStatus } from '../../../util/views/token.view'
 
 interface QrScanResultProps {

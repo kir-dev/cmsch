@@ -5,24 +5,43 @@ import { Navigate, useParams } from 'react-router-dom'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths } from '../../util/paths'
-import { TeamMock } from './mock'
 import { BoardStat } from '../../common-components/BoardStat'
 import { MemberRow } from './components/MemberRow'
+import { useTeamDetails } from '../../api/hooks/team/useTeamDetails'
+import { useMyTeam } from '../../api/hooks/team/useMyTeam'
+import { Loading } from '../../common-components/Loading'
+import { l } from '../../util/language'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 
 export default function TeamDetailsPage() {
   const { id } = useParams()
-  const team = TeamMock.find((t) => t.id === id)
-  if (!team) return <Navigate to={AbsolutePaths.TEAM} />
+  const { data: team, isLoading, error, isError } = useTeamDetails(id)
+  const { data: myTeam, isLoading: isMyTeamLoading } = useMyTeam()
+  const { sendMessage } = useServiceContext()
+
+  if (isLoading || isMyTeamLoading) {
+    return <Loading />
+  }
+
+  if (isError) {
+    sendMessage(l('team-load-failed') + error.message)
+    return <Navigate replace to={AbsolutePaths.ERROR} />
+  }
+
+  if (typeof team === 'undefined') {
+    sendMessage(l('team-load-failed-contact-developers'))
+    return <Navigate replace to={AbsolutePaths.ERROR} />
+  }
+
   const breadcrumbItems = [
     {
       title: 'Csapatok',
-      to: AbsolutePaths.TEAM
+      to: AbsolutePaths.TEAMS
     },
     {
       title: team.name
     }
   ]
-  const isAdmin = true
   return (
     <CmschPage>
       <Helmet title={team.name} />
@@ -36,7 +55,7 @@ export default function TeamDetailsPage() {
           <Button colorScheme="brand">Jelentkezés a csapatba</Button>
         </VStack>
       </Flex>
-      {isAdmin && team.applicants.length > 0 && (
+      {team.applicants.length > 0 && (
         <>
           <Divider mt={10} borderWidth={2} />
           <Heading fontSize="lg">Jelentkezők</Heading>
