@@ -79,6 +79,6 @@ data class TaskCategoryEntity(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id )"
+        return this::class.simpleName + "(id = $id, name = $name)"
     }
 }

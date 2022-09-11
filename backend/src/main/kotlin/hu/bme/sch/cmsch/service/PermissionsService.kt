@@ -126,6 +126,11 @@ object ControlPermissions : PermissionGroup {
         "Verseny (sörmérés) komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_TEAM = PermissionValidator(
+        "TEAM_CONTROL",
+        "Csapat komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -145,7 +150,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_CHALLENGE,
         PERMISSION_CONTROL_HOME,
         PERMISSION_CONTROL_ADMISSION,
-        PERMISSION_CONTROL_RACE
+        PERMISSION_CONTROL_RACE,
+        PERMISSION_CONTROL_TEAM
     )
 
 }

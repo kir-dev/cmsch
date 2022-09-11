@@ -57,6 +57,8 @@ open class MenuService(
                 )
             })
 
+        possibleMenus.addAll(components.flatMap { it.getAdditionalMenus(role) })
+
         extraPages.ifPresent { pages ->
             possibleMenus.addAll(pages.findAll()
                 .filter { it.showAsMenu }
