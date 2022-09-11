@@ -82,7 +82,7 @@ open class ProfileService(
             totalTaskCount = tasksService.map { it.getTotalTasksForUser(user) }.orElse(null),
             submittedTaskCount = tasksService.map { it.getSubmittedTasksForUser(user) }.orElse(null),
             completedTaskCount = tasksService.map { it.getCompletedTasksForUser(user) }.orElse(null),
-            profileIsComplete = incompleteTasks.isEmpty(),
+            profileIsComplete = incompleteTasks?.isEmpty() ?: false,
             incompleteTasks = incompleteTasks,
 
             // Riddle cmponent
