@@ -1,4 +1,5 @@
 import { format, formatDistance } from 'date-fns'
+import Values from 'values.js'
 
 export const toReadableNumber = (num: number): string =>
   Intl.NumberFormat('en-US', {
@@ -61,4 +62,19 @@ export const stringifyTimeRange = (fromTimeStamp: number, toTimeStamp: number) =
   } else {
     return `${from.toLocaleString('hu-HU', TIMESTAMP_OPTIONS)} - ${to.toLocaleString('hu-HU', TIMESTAMP_OPTIONS)}`
   }
+}
+
+export function getColorShadesForColor(color: string) {
+  const colors = new Values(color)
+  const tints = colors.tints(21).reverse()
+  const shades = colors.shades(21)
+  let result: Record<number, string> = {}
+  tints.forEach((t, i) => {
+    result[(i + 1) * 100] = t.hexString()
+  })
+  result[500] = color
+  shades.forEach((t, i) => {
+    result[(i + 6) * 100] = t.hexString()
+  })
+  return result
 }

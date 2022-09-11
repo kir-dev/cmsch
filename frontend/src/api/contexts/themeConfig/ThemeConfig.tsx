@@ -2,10 +2,10 @@ import { HasChildren } from '../../../util/react-types.util'
 import { customTheme } from '../../../util/configs/theme.config'
 import { useConfigContext } from '../config/ConfigContext'
 import { ChakraProvider, useColorMode } from '@chakra-ui/react'
-import Values from 'values.js'
 import { useMemo } from 'react'
 import { mode } from '@chakra-ui/theme-tools'
 import { Helmet } from 'react-helmet-async'
+import { getColorShadesForColor } from '../../../util/core-functions.util'
 
 export const ThemeConfig = ({ children }: HasChildren) => {
   const config = useConfigContext()
@@ -55,19 +55,4 @@ export const ThemeConfig = ({ children }: HasChildren) => {
       {children}
     </ChakraProvider>
   )
-}
-
-function getColorShadesForColor(color: string) {
-  const colors = new Values(color)
-  const tints = colors.tints(21).reverse()
-  const shades = colors.shades(21)
-  let result: Record<number, string> = {}
-  tints.forEach((t, i) => {
-    result[(i + 1) * 100] = t.hexString()
-  })
-  result[500] = color
-  shades.forEach((t, i) => {
-    result[(i + 6) * 100] = t.hexString()
-  })
-  return result
 }
