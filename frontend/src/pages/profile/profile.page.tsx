@@ -33,6 +33,7 @@ import React, { useEffect } from 'react'
 import { GroupComponent } from './components/Group'
 import { ProfileQR } from './components/ProfileQR'
 import { l } from '../../util/language'
+
 const MapContainer = React.lazy(() => import('./components/MapContainer'))
 
 type Props = {}

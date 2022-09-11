@@ -220,9 +220,13 @@ export interface Token {
 }
 
 export interface Debt {}
+
 export interface UserHandling {}
+
 export interface ExtraPage {}
+
 export interface Location {}
+
 export interface Login {
   onlyBmeProvider: boolean
   langLoginMenu: string
@@ -230,6 +234,7 @@ export interface Login {
   googleSsoEnabled: boolean
   bottomMessage: string
 }
+
 export interface Signup {
   langTooEarly: string
   langTooLate: string

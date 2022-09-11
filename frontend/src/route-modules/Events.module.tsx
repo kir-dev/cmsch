@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { Route } from 'react-router-dom'
 import { Paths } from '../util/paths'
+
 const EventPage = lazy(() => import('../pages/events/event.page'))
 const EventListPage = lazy(() => import('../pages/events/eventList.page'))
 

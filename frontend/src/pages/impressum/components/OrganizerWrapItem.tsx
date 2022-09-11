@@ -1,6 +1,5 @@
-import { Avatar, HStack, Tag, Text, useColorModeValue, VStack, WrapItem } from '@chakra-ui/react'
+import { Avatar, HStack, Text, useColorModeValue, VStack, WrapItem } from '@chakra-ui/react'
 import { Organizer } from '../../../api/contexts/config/types'
-import { customTheme } from '../../../util/configs/theme.config'
 
 type Props = {
   organizer: Organizer

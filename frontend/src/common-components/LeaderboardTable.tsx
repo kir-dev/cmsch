@@ -1,4 +1,4 @@
-import { TableContainer, Table, Tbody, Tr, Td, Text } from '@chakra-ui/react'
+import { Table, TableContainer, Tbody, Td, Text, Tr } from '@chakra-ui/react'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 
 type LeaderboardTableProps = {

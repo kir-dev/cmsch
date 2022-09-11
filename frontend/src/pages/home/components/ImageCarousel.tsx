@@ -71,10 +71,12 @@ type DirectionButtonProps = {
   direction: Directions
   onClick: () => void
 }
+
 enum Directions {
   LEFT = 'left',
   RIGHT = 'right'
 }
+
 const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => (
   <Button onClick={onClick} fontSize="6xl" padding={0} variant="ghost" color="gray.500">
     {direction === Directions.LEFT ? <ChevronLeftIcon /> : <ChevronRightIcon />}

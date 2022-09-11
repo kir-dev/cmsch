@@ -1,6 +1,5 @@
-import { Box, Collapse, Flex, Icon, Stack, Text, useDisclosure, VStack } from '@chakra-ui/react'
+import { Collapse, Flex, Icon, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { FaChevronDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'

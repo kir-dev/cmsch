@@ -1,4 +1,4 @@
-import { VStack, Skeleton, Wrap, WrapItem, Center, Flex, SkeletonCircle } from '@chakra-ui/react'
+import { Center, Flex, Skeleton, SkeletonCircle, VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
 
 export const ProfilePageSkeleton = () => (

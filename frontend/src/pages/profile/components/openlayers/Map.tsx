@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import MapContext from './MapContext'
 import * as ol from 'ol'
 import './Map.css'
