@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.app.MenuSettingItem
+import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -19,52 +21,85 @@ class TeamComponent(
 
     final override val allSettings by lazy {
         listOf(
-            title, menuDisplayName, minRole,
-
-            langGroup,
-
+            myTeamGroup,
+            myTitle, myMenuDisplayName, myMinRole,
 
             teamListGroup,
-            showGroupsAtAll,
-            showEmptyGroups,
-            showNotRacingGroups,
+            title, menuDisplayName, minRole,
+            showTeamsAtAll,
+            showNotRacingTeams,
+            showNotManualTeams,
             sortByName,
 
             teamCreateGroup,
+            createTitle, createMenuDisplayName, createMinRole,
             creationEnabled,
             joinEnabled,
             grantPrivilegedRole,
             grantAttendeeRole,
+            nameBlocklist,
+            racesByDefault,
+            selectableByDefault,
+            adminTitle,
+            adminMenuDisplayName,
+            adminMinRole,
 
             teamDetailsGroup,
             showTeamDetails,
             showTeamMembersPublicly,
             showTeamScore,
-            showTeamScoreDetailsButton,
+            showTeamScoreDetailsButton
+
         )
     }
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Feladatok",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Feladatok", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
-
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "",
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
+        val result = mutableListOf<MenuSettingItem>()
+        if (myMinRole.isAvailableForRole(role) || role.isAdmin) {
+            result.add(MenuSettingItem(
+                this.javaClass.simpleName + "@my",
+                myMenuDisplayName.getValue(), "/my-team", 0,
+                visible = false, subMenu = false, external = false
+            ))
+        }
+        if (createMinRole.isAvailableForRole(role) || role.isAdmin) {
+            result.add(MenuSettingItem(
+                this.javaClass.simpleName + "@create",
+                createMenuDisplayName.getValue(), "/create-team", 0,
+                visible = false, subMenu = false, external = false
+            ))
+        }
+        if (adminMinRole.isAvailableForRole(role) || role.isAdmin) {
+            result.add(MenuSettingItem(
+                this.javaClass.simpleName + "@admin",
+                adminMenuDisplayName.getValue(), "/team-admin", 0,
+                visible = false, subMenu = false, external = false
+            ))
+        }
+        return result
+    }
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val langGroup = SettingProxy(componentSettingService, component,
-        "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Nyelvi bellítások",
+    val myTeamGroup = SettingProxy(componentSettingService, component,
+        "myTeamGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Csapatom",
         description = ""
+    )
+
+    val myTitle = SettingProxy(componentSettingService, component,
+        "myTitle", "Csapatom",
+        fieldName = "Csapatom lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    )
+
+    val myMenuDisplayName = SettingProxy(componentSettingService, component,
+        "myMenuDisplayName", "Csapatom", serverSideOnly = true,
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
+    )
+
+    val myMinRole = MinRoleSettingProxy(componentSettingService, component,
+        "myMinRole", MinRoleSettingProxy.ALL_ROLES_FROM_ATTENDEE,
+        fieldName = "Csapatom menü jogosultságai", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -75,19 +110,34 @@ class TeamComponent(
         description = ""
     )
 
-    val showGroupsAtAll = SettingProxy(componentSettingService, component,
-        "showGroupsAtAll", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+    final val title = SettingProxy(componentSettingService, component,
+        "title", "Csapatok",
+        fieldName = "Csapatok lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    )
+
+    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+        "menuDisplayName", "Csapatok", serverSideOnly = true,
+        fieldName = "Csapatok menü neve", description = "Ez lesz a neve a menünek"
+    )
+
+    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+        "minRole", MinRoleSettingProxy.ALL_ROLES,
+        fieldName = "Csapatok menü jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    val showTeamsAtAll = SettingProxy(componentSettingService, component,
+        "showTeamsAtAll", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "Csapat lista kijelzése", description = "Ha ki van kapcsolva a kkor a csapat lista nincs leküldve"
     )
 
-    val showEmptyGroups = SettingProxy(componentSettingService, component,
-        "showEmptyGroups", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Üres csapat kijelzése", description = "A tagnélküli csapatok is látszódjanak-e"
+    val showNotRacingTeams = SettingProxy(componentSettingService, component,
+        "showNotRacingTeams", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Nem versenyző csapatok kijelzése", description = "Azoknak is a kijelzése akik nem versenyeznek"
     )
 
-    val showNotRacingGroups = SettingProxy(componentSettingService, component,
-        "showNotRacingGroups", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Nem versenyző csapatok kijelzése", description = "Azoknak is a kijelzése akik nem versenyeznek"
+    val showNotManualTeams = SettingProxy(componentSettingService, component,
+        "showNotManualTeams", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Admin által nevezett csapatok is látszanak", description = "Azoknak is a kijelzése akiket az admin panelről neveztek"
     )
 
     val sortByName = SettingProxy(componentSettingService, component,
@@ -101,6 +151,21 @@ class TeamComponent(
         "teamCreateGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Csapat létrehozás",
         description = ""
+    )
+
+    val createTitle = SettingProxy(componentSettingService, component,
+        "createTitle", "Csapat készítés",
+        fieldName = "Csapat készítés lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    )
+
+    val createMenuDisplayName = SettingProxy(componentSettingService, component,
+        "createMenuDisplayName", "Csapat készítés", serverSideOnly = true,
+        fieldName = "Csapat készítés neve", description = "Ez lesz a neve a menünek"
+    )
+
+    val createMinRole = MinRoleSettingProxy(componentSettingService, component,
+        "createMinRole", RoleType.BASIC.name,
+        fieldName = "Csapat készítés menü jogosultságai", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     val creationEnabled = SettingProxy(componentSettingService, component,
@@ -126,6 +191,36 @@ class TeamComponent(
     val grantAttendeeRole = SettingProxy(componentSettingService, component,
         "grantAttendeeRole", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "ATTENDEE jog a cspattagoknak", description = "Ha be val kapcsolva, akkor a csapat tagjai ATTENDEE jogot kapnak (onnantól él, hogy be lett kapcsolva)"
+    )
+
+    val nameBlocklist = SettingProxy(componentSettingService, component,
+        "nameBlocklist", "test, dev", type = SettingType.TEXT,
+        fieldName = "Tiltott nevek", description = "Tiltott csapatnevek vesszővel elválasztva"
+    )
+
+    val racesByDefault = SettingProxy(componentSettingService, component,
+        "racesByDefault", "true", type = SettingType.BOOLEAN,
+        fieldName = "Alapól versenyzik", description = "Ha be van kapcsolva, akkor a csapat automatikusan versenyző státuszban van"
+    )
+
+    val selectableByDefault = SettingProxy(componentSettingService, component,
+        "selectableByDefault", "true", type = SettingType.BOOLEAN,
+        fieldName = "Alapól lehet bele jelentkezni", description = "Ha be van kapcsolva, akkor a csapatba automatikusan lehet jelentkezni"
+    )
+
+    val adminTitle = SettingProxy(componentSettingService, component,
+        "title", "Csapatom kezelése",
+        fieldName = "Admin lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    )
+
+    val adminMenuDisplayName = SettingProxy(componentSettingService, component,
+        "adminMenuDisplayName", "Csapatom kezelése", serverSideOnly = true,
+        fieldName = "Admin menü neve", description = "Ez lesz a neve a menünek"
+    )
+
+    val adminMinRole = MinRoleSettingProxy(componentSettingService, component,
+        "adminMinRole", MinRoleSettingProxy.ALL_ROLES_FROM_PRIVILEGED,
+        fieldName = "Admin oldal jogosultságai", description = "Melyik roleokkal nyitható meg az admin oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

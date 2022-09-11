@@ -8,5 +8,6 @@ import java.util.*
 @Repository
 interface GroupRepository : CrudRepository<GroupEntity, Int> {
     fun findByName(name: String): Optional<GroupEntity>
+    fun findByNameIgnoreCase(name: String): Optional<GroupEntity>
     fun findAllBySelectableTrue(): List<GroupEntity>
 }

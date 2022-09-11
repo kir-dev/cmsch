@@ -78,7 +78,8 @@ open class SecurityConfig(
                         "/cdn/manifest/**", "/manifest/manifest.json",
                         "/cdn/public/**",
                         "/cdn/task/**",
-                        "/control/refresh")
+                        "/control/refresh",
+                        "/c/**")
                     .permitAll()
 
                 .antMatchers(
