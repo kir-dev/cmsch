@@ -144,7 +144,7 @@ open class TeamService(
             return false
         if (!teamComponent.showNotRacingTeams.isValueTrue() && !team.races)
             return false
-        if (!teamComponent.showNotManualTeams.isValueTrue() && !team.manuallyCreated)
+        if (!teamComponent.showNotManualTeams.isValueTrue() && team.manuallyCreated != true)
             return false
         return true
     }
