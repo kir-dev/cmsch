@@ -14,7 +14,7 @@ export type TeamListItemView = {
 export type TeamMemberView = {
   name: string
   id: number
-  isAdmin: boolean
+  admin: boolean
 }
 
 export enum TeamResponses {
@@ -28,7 +28,8 @@ export enum TeamResponses {
   CREATION_DISABLED = 'CREATION_DISABLED',
   INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
   OK_RELOG_REQUIRED = 'OK_RELOG_REQUIRED',
-  LEAVE_DISABLED = 'LEAVE_DISABLED'
+  LEAVE_DISABLED = 'LEAVE_DISABLED',
+  ERROR = 'ERROR'
 }
 
 export const TeamResponseMessages: Record<TeamResponses, string> = {
@@ -42,13 +43,10 @@ export const TeamResponseMessages: Record<TeamResponses, string> = {
   [TeamResponses.CREATION_DISABLED]: 'Létrehozás letiltva.',
   [TeamResponses.INSUFFICIENT_PERMISSIONS]: 'Nincs jogosultságod.',
   [TeamResponses.OK_RELOG_REQUIRED]: 'Sikeres, újboli bejelentkezés szükséges.',
-  [TeamResponses.LEAVE_DISABLED]: 'Távozás letiltva.'
+  [TeamResponses.LEAVE_DISABLED]: 'Távozás letiltva.',
+  [TeamResponses.ERROR]: 'Sikertelen művelet!'
 }
 
 export interface CreateTeamDto {
   name: string
-}
-
-export interface TeamIdDto {
-  id: number
 }
