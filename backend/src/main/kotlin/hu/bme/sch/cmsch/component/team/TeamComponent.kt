@@ -241,12 +241,12 @@ class TeamComponent(
     )
 
     val togglePermissionEnabled = SettingProxy(componentSettingService, component,
-        "togglePermissionEnabled", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
+        "togglePermissionEnabled", "true", type = SettingType.BOOLEAN,
         fieldName = "Jogosultság adás álltása", description = "Ha be val kapcsolva, akkor lehet jogosultásokat állítani"
     )
 
     val kickEnabled = SettingProxy(componentSettingService, component,
-        "kickEnabled", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
+        "kickEnabled", "true", type = SettingType.BOOLEAN,
         fieldName = "Kidobás gomb", description = "Ha be val kapcsolva, akkor csapat vezetők kirakhatnak embereket"
     )
 
