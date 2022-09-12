@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 
-import { useTeamDetails } from '../../api/hooks/team/useTeamDetails'
+import { useTeamDetails } from '../../api/hooks/team/queries/useTeamDetails'
 import { TeamDetailsCore } from './components/teamDetailsCore'
 
 export default function TeamDetailsPage() {

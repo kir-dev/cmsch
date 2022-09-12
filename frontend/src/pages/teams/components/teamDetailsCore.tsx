@@ -11,12 +11,12 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
 import { useServiceContext } from '../../../api/contexts/service/ServiceContext'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { useTeamJoin } from '../../../api/hooks/team/useTeamJoin'
-import { useTeamLeave } from '../../../api/hooks/team/useTeamLeave'
-import { useTeamAcceptJoin } from '../../../api/hooks/team/useTeamAcceptJoin'
-import { useTeamRejectJoin } from '../../../api/hooks/team/useTeamRejectJoin'
-import { useTeamTogglePermissions } from '../../../api/hooks/team/useTeamTogglePermissions'
-import { useTeamMemberKick } from '../../../api/hooks/team/useTeamMemberKick'
+import { useTeamJoin } from '../../../api/hooks/team/actions/useTeamJoin'
+import { useTeamLeave } from '../../../api/hooks/team/actions/useTeamLeave'
+import { useTeamAcceptJoin } from '../../../api/hooks/team/actions/useTeamAcceptJoin'
+import { useTeamRejectJoin } from '../../../api/hooks/team/actions/useTeamRejectJoin'
+import { useTeamTogglePermissions } from '../../../api/hooks/team/actions/useTeamTogglePermissions'
+import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMemberKick'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -42,11 +42,19 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
     }
   }
 
+  const onPutActionSuccess = () => {
+    toast({ status: 'success', title: 'Sikeres művelet!' })
+    refetch()
+  }
+  const onPutActionFail = () => {
+    toast({ status: 'error', title: 'Sikertelen művelet!' })
+  }
+
   const { joinTeam, joinTeamLoading } = useTeamJoin(actionResponseCallback)
-  const { acceptJoin } = useTeamAcceptJoin(actionResponseCallback)
-  const { rejectJoin } = useTeamRejectJoin(actionResponseCallback)
-  const { togglePermissions } = useTeamTogglePermissions(actionResponseCallback)
-  const { kickMember } = useTeamMemberKick(actionResponseCallback)
+  const { acceptJoin } = useTeamAcceptJoin(onPutActionSuccess, onPutActionFail)
+  const { rejectJoin } = useTeamRejectJoin(onPutActionSuccess, onPutActionFail)
+  const { togglePermissions } = useTeamTogglePermissions(onPutActionSuccess, onPutActionFail)
+  const { kickMember } = useTeamMemberKick(onPutActionSuccess, onPutActionFail)
   const { leaveTeam, leaveTeamLoading } = useTeamLeave((response) => {
     actionResponseCallback(response)
     if (response === TeamResponses.OK) navigate(AbsolutePaths.TEAMS)
