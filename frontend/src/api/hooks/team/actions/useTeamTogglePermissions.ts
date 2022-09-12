@@ -1,18 +1,20 @@
 import axios from 'axios'
-import { TeamResponses } from '../../../util/views/team.view'
 import { useState } from 'react'
 
-export const useTeamTogglePermissions = (onResponse: (response: TeamResponses) => void) => {
+export const useTeamTogglePermissions = (onSuccess: (response: boolean) => void, onError = () => {}) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const togglePermissions = (id: number) => {
     setLoading(true)
     axios
-      .put<TeamResponses>(`/api/team/admin/toggle-permissions`, id)
+      .put<boolean>(`/api/team/admin/toggle-permissions`, { id })
       .then((res) => {
-        onResponse(res.data)
+        onSuccess(res.data)
       })
-      .catch(setError)
+      .catch((err) => {
+        setError(err)
+        onError()
+      })
       .finally(() => {
         setLoading(false)
       })

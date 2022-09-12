@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useQuery } from 'react-query'
-import { TeamView } from '../../../util/views/team.view'
+import { TeamView } from '../../../../util/views/team.view'
 
 export const useTeamDetails = (id?: string, onError?: (err: any) => void) => {
   return useQuery<TeamView, Error>(

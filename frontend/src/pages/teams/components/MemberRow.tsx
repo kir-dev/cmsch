@@ -40,11 +40,11 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange }: MemberRo
             <Heading as="h3" size="md" marginY={0} maxWidth="100%">
               {member.name}
             </Heading>
-            {!onAccept && <Text>{member.isAdmin ? 'Admin' : 'Tag'}</Text>}
+            {!onAccept && <Text>{member.admin ? 'Admin' : 'Tag'}</Text>}
           </VStack>
           <Spacer />
           <HStack>
-            {onRoleChange && <RoleButton isAdmin={member.isAdmin} onRoleChange={onRoleChange} />}
+            {onRoleChange && <RoleButton isAdmin={member.admin} onRoleChange={onRoleChange} />}
             {onAccept && <AcceptButton onAccept={onAccept} />}
             {onDelete && <DeleteButton onDelete={onOpen} />}
           </HStack>
