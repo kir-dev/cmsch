@@ -19,7 +19,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
   }
 
   const innerComponent = (
-    <GridItem as={LinkBox} borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
+    <GridItem as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
       <Heading fontSize={25} my={0}>
         {useLink ? (
           <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
