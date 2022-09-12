@@ -1,11 +1,10 @@
-import { createRef, useState } from 'react'
+import { createRef, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { InputGroup } from '@chakra-ui/input'
 import { SearchIcon } from '@chakra-ui/icons'
 import { Heading, Input, InputLeftElement } from '@chakra-ui/react'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { TeamListItemView } from '../../util/views/team.view'
 import { TeamListItem } from './components/TeamListItem'
 import { useTeamList } from '../../api/hooks/team/useTeamList'
 import { Loading } from '../../common-components/Loading'
@@ -13,10 +12,18 @@ import { l } from '../../util/language'
 import { Navigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 export default function TeamListPage() {
+  const config = useConfigContext()
+  const component = config?.components.team
   const { data: teams, isLoading, isError, error } = useTeamList()
-  const [filteredTeams, setFilteredTeams] = useState<TeamListItemView[] | undefined>(teams)
+  const [search, setSearch] = useState('')
+  const filteredTeams = useMemo(() => {
+    return teams?.filter((c) => {
+      return c.name.toLocaleLowerCase().includes(search)
+    })
+  }, [teams, search])
   const { sendMessage } = useServiceContext()
   const inputRef = createRef<HTMLInputElement>()
 
@@ -29,26 +36,21 @@ export default function TeamListPage() {
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
-  if (typeof teams === 'undefined') {
+  if (typeof teams === 'undefined' || !component) {
     sendMessage(l('team-list-load-failed-contact-developers'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
   const handleInput = () => {
-    const search = inputRef?.current?.value.toLowerCase()
-    if (!search) setFilteredTeams(teams)
-    else
-      setFilteredTeams(
-        teams?.filter((c) => {
-          return c.name.toLocaleLowerCase().includes(search)
-        })
-      )
+    const searchFieldValue = inputRef?.current?.value.toLowerCase()
+    if (!searchFieldValue) setSearch('')
+    else setSearch(searchFieldValue)
   }
 
   return (
     <CmschPage>
-      <Helmet title="Csapatok" />
-      <Heading>Csapatok</Heading>
+      <Helmet title={component.title} />
+      <Heading>{component.title}</Heading>
       <InputGroup mt={5}>
         <InputLeftElement h="100%">
           <SearchIcon />

@@ -31,6 +31,7 @@ export interface Components {
   riddle: Riddle
   signup: Signup
   task: Task
+  team: Team
   token: Token
 }
 
@@ -233,6 +234,19 @@ export interface Login {
   authschPromoted: boolean
   googleSsoEnabled: boolean
   bottomMessage: string
+}
+
+export interface Team {
+  myTitle: string
+  title: string
+  createTitle: string
+  creationEnabled: boolean
+  joinEnabled: boolean
+  nameBlocklist: string
+  racesByDefault: boolean
+  selectableByDefault: boolean
+  showTeamScore: boolean
+  showTeamScoreDetailsButton: boolean
 }
 
 export interface Signup {

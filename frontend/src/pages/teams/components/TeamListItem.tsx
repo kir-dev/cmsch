@@ -8,9 +8,10 @@ import { AbsolutePaths } from '../../../util/paths'
 
 type TeamListItemProps = {
   team: TeamListItemView
+  detailEnabled?: boolean
 }
 
-export const TeamListItem = ({ team }: TeamListItemProps) => {
+export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps) => {
   return (
     <Link to={AbsolutePaths.TEAMS + '/details/' + team.id}>
       <Box
@@ -18,8 +19,8 @@ export const TeamListItem = ({ team }: TeamListItemProps) => {
         padding={4}
         backgroundColor={useColorModeValue('brand.200', 'brand.600')}
         marginTop={5}
-        transition="transform .2s ease-in-out"
-        _hover={{ transform: 'translateX(0.5em)' }}
+        transition={detailEnabled ? 'transform .2s ease-in-out' : undefined}
+        _hover={{ transform: detailEnabled ? 'translateX(0.5em)' : undefined }}
       >
         <HStack spacing={4}>
           <VStack align="flex-start" overflow="hidden">
@@ -28,7 +29,7 @@ export const TeamListItem = ({ team }: TeamListItemProps) => {
             </Heading>
           </VStack>
           <Spacer />
-          <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />
+          {detailEnabled && <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />}
         </HStack>
       </Box>
     </Link>
