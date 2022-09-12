@@ -4,6 +4,8 @@ export type TeamView = {
   applicants: TeamMemberView[]
   joinEnabled: boolean
   leaveEnabled: boolean
+  joinCancellable: boolean
+  ownTeam: boolean
 } & TeamListItemView
 
 export type TeamListItemView = {

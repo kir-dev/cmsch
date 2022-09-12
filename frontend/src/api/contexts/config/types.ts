@@ -240,6 +240,7 @@ export interface Team {
   myTitle: string
   title: string
   createTitle: string
+  teamCreationTopMessage: string
   creationEnabled: boolean
   joinEnabled: boolean
   nameBlocklist: string
