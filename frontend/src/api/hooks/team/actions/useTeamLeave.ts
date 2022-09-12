@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { TeamResponses } from '../../../util/views/team.view'
+import { TeamResponses } from '../../../../util/views/team.view'
 import { useState } from 'react'
 
 export const useTeamLeave = (onResponse: (response: TeamResponses) => void) => {
@@ -12,7 +12,10 @@ export const useTeamLeave = (onResponse: (response: TeamResponses) => void) => {
       .then((res) => {
         onResponse(res.data)
       })
-      .catch(setError)
+      .catch((err) => {
+        setError(err)
+        onResponse(TeamResponses.ERROR)
+      })
       .finally(() => {
         setLoading(false)
       })

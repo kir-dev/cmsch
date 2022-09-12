@@ -6,7 +6,7 @@ import { Heading, Input, InputLeftElement } from '@chakra-ui/react'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TeamListItem } from './components/TeamListItem'
-import { useTeamList } from '../../api/hooks/team/useTeamList'
+import { useTeamList } from '../../api/hooks/team/queries/useTeamList'
 import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
 import { Navigate } from 'react-router-dom'
