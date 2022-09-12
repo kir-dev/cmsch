@@ -159,18 +159,19 @@ open class TeamService(
     }
 
     private fun mapTeam(team: GroupEntity, user: UserEntity?, forceShowMembers: Boolean): TeamView {
+        val joinCancellable = user != null && teamJoinRequestRepository.existsByUserIdAndGroupId(user.id, team.id)
         val joinEnabled = user != null
                 && teamComponent.joinEnabled.isValueTrue()
                 && (user.group?.leaveable ?: true)
                 && user.role.value < RoleType.PRIVILEGED.value
+                && !joinCancellable
         val leaveEnabled = user != null
                 && teamComponent.leaveEnabled.isValueTrue()
                 && user.group?.id == team.id
                 && user.role.value < RoleType.PRIVILEGED.value
         val score = leaderBoardService.map { it.getScoreOfGroup(team) }.orElse(null)
-        val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || forceShowMembers) mapMembers(team) else null
+        val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || forceShowMembers) mapMembers(team, user?.id) else null
         val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value) mapRequests(team) else null
-        val joinCancellable = user != null && teamJoinRequestRepository.existsByUserIdAndGroupId(user.id, team.id)
         val ownTeam = user?.group?.id == team.id
         return TeamView(team.id, team.name, score,
             members,
@@ -182,14 +183,14 @@ open class TeamService(
         )
     }
 
-    private fun mapMembers(team: GroupEntity): List<TeamMemberView> {
+    private fun mapMembers(team: GroupEntity, userId: Int?): List<TeamMemberView> {
         return userRepository.findAllByGroupName(team.name)
-            .map { TeamMemberView(it.fullNameWithAlias, it.id, it.role.value >= RoleType.PRIVILEGED.value) }
+            .map { TeamMemberView(it.fullNameWithAlias, it.id, it.role.value >= RoleType.PRIVILEGED.value, it.id == userId) }
     }
 
     private fun mapRequests(team: GroupEntity): List<TeamMemberView> {
         return teamJoinRequestRepository.findAllByGroupId(team.id)
-            .map { TeamMemberView(it.userName, it.userId, false) }
+            .map { TeamMemberView(it.userName, it.userId, isAdmin = false, isYou = false) }
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
@@ -295,7 +296,7 @@ open class TeamService(
                 user.fullName, group.name, adminUser.userName)
             return false
         }
-        if (user.role.value <= RoleType.PRIVILEGED.value) {
+        if (user.role.value >= RoleType.PRIVILEGED.value) {
             log.info("Failed to kick user '{}' from '{}' by '{}', reason: admins cannot be kicked",
                 user.fullName, group.name, adminUser.userName)
             return false

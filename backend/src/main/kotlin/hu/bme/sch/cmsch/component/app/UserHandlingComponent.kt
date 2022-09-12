@@ -26,7 +26,7 @@ class UserHandlingComponent(
     final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.NOBODY,
+        "minRole", "", minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
