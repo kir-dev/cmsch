@@ -7,7 +7,9 @@ data class TeamView(
     var members: List<TeamMemberView>? = null,
     var applicants: List<TeamMemberView>? = null,
     var joinEnabled: Boolean = false,
-    var leaveEnabled: Boolean = false
+    var leaveEnabled: Boolean = false,
+    var joinCancellable: Boolean = false,
+    var ownTeam: Boolean = false
 )
 
 data class TeamMemberView(

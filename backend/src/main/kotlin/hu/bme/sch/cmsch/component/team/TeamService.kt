@@ -170,16 +170,21 @@ open class TeamService(
         val score = leaderBoardService.map { it.getScoreOfGroup(team) }.orElse(null)
         val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || forceShowMembers) mapMembers(team) else null
         val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value) mapRequests(team) else null
+        val joinCancellable = user != null && teamJoinRequestRepository.existsByUserIdAndGroupId(user.id, team.id)
+        val ownTeam = user?.group?.id == team.id
         return TeamView(team.id, team.name, score,
             members,
             requests,
-            joinEnabled, leaveEnabled
+            joinEnabled,
+            leaveEnabled,
+            joinCancellable,
+            ownTeam
         )
     }
 
     private fun mapMembers(team: GroupEntity): List<TeamMemberView> {
         return userRepository.findAllByGroupName(team.name)
-            .map { TeamMemberView(it.fullNameWithAlias, it.id, it.role == RoleType.PRIVILEGED) }
+            .map { TeamMemberView(it.fullNameWithAlias, it.id, it.role.value >= RoleType.PRIVILEGED.value) }
     }
 
     private fun mapRequests(team: GroupEntity): List<TeamMemberView> {
