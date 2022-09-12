@@ -8,6 +8,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
 import { useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import Markdown from '../../common-components/Markdown'
 
 export default function CreateTeamPage() {
   const navigate = useNavigate()
@@ -42,6 +43,7 @@ export default function CreateTeamPage() {
     <CmschPage>
       <Helmet title={component.createTitle} />
       <Heading>{component.createTitle}</Heading>
+      <Markdown text={component.teamCreationTopMessage} />
       <form onSubmit={handleSubmit(submit)}>
         <FormControl my={10}>
           <FormLabel>Név</FormLabel>
