@@ -90,36 +90,38 @@ class TeamApiController(
         return ResponseEntity.ok(teamService.listAllTeams())
     }
 
+    data class UserIdRequest(var id: Int = 0)
+
     @PutMapping("/team/admin/accept-join")
-    fun acceptJoin(@RequestBody userId: Int, auth: Authentication?): Boolean {
+    fun acceptJoin(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
         val user = auth?.getUserFromDatabaseOrNull()
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
-        return teamService.acceptJoin(userId, user.group)
+        return teamService.acceptJoin(request.id, user.group)
     }
 
     @PutMapping("/team/admin/reject-join")
-    fun rejectJoin(@RequestBody userId: Int, auth: Authentication?): Boolean {
+    fun rejectJoin(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
         val user = auth?.getUserFromDatabaseOrNull()
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
-        return teamService.rejectJoin(userId, user.group)
+        return teamService.rejectJoin(request.id, user.group)
     }
 
     @PutMapping("/team/admin/toggle-permissions")
-    fun togglePermissions(@RequestBody userId: Int, auth: Authentication?): Boolean {
+    fun togglePermissions(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
         val user = auth?.getUserFromDatabaseOrNull()
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
-        return teamService.toggleUserPermissions(userId, user.group, user)
+        return teamService.toggleUserPermissions(request.id, user.group, user)
     }
 
     @PutMapping("/team/admin/kick-user")
-    fun kickUser(@RequestBody userId: Int, auth: Authentication?): Boolean {
+    fun kickUser(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
         val user = auth?.getUserFromDatabaseOrNull()
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
-        return teamService.kickUser(userId, user.group, user)
+        return teamService.kickUser(request.id, user.group, user)
     }
 
 }
