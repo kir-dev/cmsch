@@ -16,7 +16,8 @@ export enum Paths {
   RACE = 'race',
   TEAMS = 'teams',
   CREATE_TEAM = 'create-team',
-  MY_TEAM = 'my-team'
+  MY_TEAM = 'my-team',
+  TEAM_ADMIN = 'team-admin'
 }
 
 export enum AbsolutePaths {
@@ -36,5 +37,6 @@ export enum AbsolutePaths {
   RACE = '/race',
   TEAMS = '/teams',
   CREATE_TEAM = '/create-team',
-  MY_TEAM = '/my-team'
+  MY_TEAM = '/my-team',
+  TEAM_ADMIN = '/team-admin'
 }
