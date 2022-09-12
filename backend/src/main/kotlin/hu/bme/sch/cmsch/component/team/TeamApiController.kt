@@ -21,7 +21,7 @@ class TeamApiController(
     @PostMapping("/team/create")
     fun createTeam(@RequestBody teamCreationDto: TeamCreationDto, auth: Authentication?): TeamCreationStatus {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.minRole.isAvailableForRole(user.role))
+        if (user == null || teamComponent.createMinRole.isAvailableForRole(user.role))
             return TeamCreationStatus.INSUFFICIENT_PERMISSIONS
 
         return teamService.createTeam(user, teamCreationDto.name)
@@ -54,7 +54,7 @@ class TeamApiController(
     @GetMapping("/team/my")
     fun showMyGroup(auth: Authentication?): ResponseEntity<TeamView> {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.minRole.isAvailableForRole(user.role))
+        if (user == null || teamComponent.myMinRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         val groupId = user.group?.id
