@@ -21,7 +21,7 @@ class TeamApiController(
     @PostMapping("/team/create")
     fun createTeam(@RequestBody teamCreationDto: TeamCreationDto, auth: Authentication?): TeamCreationStatus {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.createMinRole.isAvailableForRole(user.role))
+        if (user == null || !teamComponent.createMinRole.isAvailableForRole(user.role))
             return TeamCreationStatus.INSUFFICIENT_PERMISSIONS
 
         return teamService.createTeam(user, teamCreationDto.name)
@@ -30,7 +30,7 @@ class TeamApiController(
     @PostMapping("/team/join")
     fun joinTeam(@RequestBody teamJoinDto: TeamJoinDto, auth: Authentication?): TeamJoinStatus {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.minRole.isAvailableForRole(user.role))
+        if (user == null || !teamComponent.minRole.isAvailableForRole(user.role))
             return TeamJoinStatus.INSUFFICIENT_PERMISSIONS
         return teamService.joinTeam(user, teamJoinDto.id)
     }
@@ -38,7 +38,7 @@ class TeamApiController(
     @PostMapping("/team/cancel-join")
     fun cancelJoinTeam(auth: Authentication?): TeamJoinStatus {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.minRole.isAvailableForRole(user.role))
+        if (user == null || !teamComponent.minRole.isAvailableForRole(user.role))
             return TeamJoinStatus.INSUFFICIENT_PERMISSIONS
         return teamService.cancelJoin(user)
     }
@@ -54,7 +54,7 @@ class TeamApiController(
     @GetMapping("/team/my")
     fun showMyGroup(auth: Authentication?): ResponseEntity<TeamView> {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.myMinRole.isAvailableForRole(user.role))
+        if (user == null || !teamComponent.myMinRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         val groupId = user.group?.id
@@ -70,7 +70,7 @@ class TeamApiController(
     @GetMapping("/team/{teamId}")
     fun showGroupDetails(@PathVariable teamId: Int, auth: Authentication?): ResponseEntity<TeamView> {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+        if (!teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         if (!teamComponent.showTeamDetails.isValueTrue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
@@ -82,7 +82,7 @@ class TeamApiController(
     @GetMapping("/teams")
     fun listAllTeams(auth: Authentication?): ResponseEntity<List<TeamListView>> {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+        if (!teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(listOf())
         if (!teamComponent.showTeamsAtAll.isValueTrue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
@@ -93,7 +93,7 @@ class TeamApiController(
     @PutMapping("/team/admin/accept-join")
     fun acceptJoin(@RequestBody userId: Int, auth: Authentication?): Boolean {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.adminMinRole.isAvailableForRole(user.role))
+        if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.acceptJoin(userId, user.group)
     }
@@ -101,7 +101,7 @@ class TeamApiController(
     @PutMapping("/team/admin/reject-join")
     fun rejectJoin(@RequestBody userId: Int, auth: Authentication?): Boolean {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.adminMinRole.isAvailableForRole(user.role))
+        if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.rejectJoin(userId, user.group)
     }
