@@ -21,7 +21,6 @@ import { TeamMemberView } from '../../../util/views/team.view'
 import { DeleteButton } from './DeleteButton'
 import { RoleButton } from './RoleButton'
 import { AcceptButton } from './AcceptButton'
-import { useServiceContext } from '../../../api/contexts/service/ServiceContext'
 
 interface MemberRowProps {
   member: TeamMemberView
@@ -33,7 +32,6 @@ interface MemberRowProps {
 export function MemberRow({ member, onDelete, onAccept, onRoleChange }: MemberRowProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef<any>()
-  const { sendMessage } = useServiceContext()
   return (
     <>
       <Box borderRadius="lg" padding={4} backgroundColor={useColorModeValue('brand.200', 'brand.600')} marginTop={5}>
@@ -46,23 +44,8 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange }: MemberRo
           </VStack>
           <Spacer />
           <HStack>
-            {onRoleChange && (
-              <RoleButton
-                isAdmin={member.isAdmin}
-                onRoleChange={() => {
-                  onRoleChange()
-                  sendMessage('Jogosultság módosítva!', { toast: true, toastStatus: 'warning' })
-                }}
-              />
-            )}
-            {onAccept && (
-              <AcceptButton
-                onAccept={() => {
-                  onAccept()
-                  sendMessage('Jelentkezés elfogadva!', { toast: true, toastStatus: 'success' })
-                }}
-              />
-            )}
+            {onRoleChange && <RoleButton isAdmin={member.isAdmin} onRoleChange={onRoleChange} />}
+            {onAccept && <AcceptButton onAccept={onAccept} />}
             {onDelete && <DeleteButton onDelete={onOpen} />}
           </HStack>
         </HStack>
