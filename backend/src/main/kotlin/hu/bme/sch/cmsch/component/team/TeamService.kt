@@ -236,6 +236,13 @@ open class TeamService(
         if (userId == adminUser.id) {
             log.info("Failed to switch user permissions '{}' from '{}', reason: can't revoke your permissions",
                 adminUser.userName, group.name, adminUser.userName)
+            return false
+        }
+
+        if (!teamComponent.togglePermissionEnabled.isValueTrue()) {
+            log.info("Failed to switch user permissions '{}' from '{}', reason: disabled by config",
+                adminUser.userName, group.name, adminUser.userName)
+            return false
         }
 
         val user = userRepository.findById(userId).orElse(null)
@@ -271,6 +278,13 @@ open class TeamService(
         if (userId == adminUser.id) {
             log.info("Failed to kick user '{}' from '{}' by '{}', reason: can't kick yourself",
                 adminUser.userName, group.name, adminUser.userName)
+            return false
+        }
+
+        if (!teamComponent.kickEnabled.isValueTrue()) {
+            log.info("Failed to kick user '{}' from '{}' by '{}', reason: disabled by config",
+                adminUser.userName, group.name, adminUser.userName)
+            return false
         }
 
         val user = userRepository.findById(userId).orElse(null)
