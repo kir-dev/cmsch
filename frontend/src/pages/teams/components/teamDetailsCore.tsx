@@ -17,6 +17,7 @@ import { useTeamAcceptJoin } from '../../../api/hooks/team/actions/useTeamAccept
 import { useTeamRejectJoin } from '../../../api/hooks/team/actions/useTeamRejectJoin'
 import { useTeamTogglePermissions } from '../../../api/hooks/team/actions/useTeamTogglePermissions'
 import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMemberKick'
+import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -51,6 +52,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
   }
 
   const { joinTeam, joinTeamLoading } = useTeamJoin(actionResponseCallback)
+  const { cancelJoin, cancelLoading } = useTeamCancelJoin(actionResponseCallback)
   const { acceptJoin } = useTeamAcceptJoin(onPutActionSuccess, onPutActionFail)
   const { rejectJoin } = useTeamRejectJoin(onPutActionSuccess, onPutActionFail)
   const { togglePermissions } = useTeamTogglePermissions(onPutActionSuccess, onPutActionFail)
@@ -94,12 +96,17 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
           {component.showTeamScore && <BoardStat label="Csapat pont" value={team.points} />}
         </VStack>
         <VStack mt={10}>
-          {!myTeam && !admin && team.joinEnabled && component.joinEnabled && (
+          {team.joinEnabled && (
             <Button isLoading={joinTeamLoading} colorScheme="brand" onClick={() => joinTeam(team?.id)}>
               Jelentkezés a csapatba
             </Button>
           )}
-          {myTeam && !admin && team.leaveEnabled && (
+          {team.joinCancellable && (
+            <Button isLoading={cancelLoading} variant="outline" colorScheme="brand" onClick={cancelJoin}>
+              Jelentkezés visszavonása
+            </Button>
+          )}
+          {team.leaveEnabled && (
             <Button isLoading={leaveTeamLoading} colorScheme="brand" onClick={leaveTeam}>
               Csoport elhagyása
             </Button>
