@@ -46,7 +46,7 @@ class TeamApiController(
     @PostMapping("/team/leave")
     fun leaveTeam(auth: Authentication?): TeamLeaveStatus {
         val user = auth?.getUserFromDatabaseOrNull()
-        if (user == null || teamComponent.minRole.isAvailableForRole(user.role))
+        if (user == null || !teamComponent.minRole.isAvailableForRole(user.role))
             return TeamLeaveStatus.INSUFFICIENT_PERMISSIONS
         return teamService.leaveTeam(user)
     }
@@ -104,6 +104,22 @@ class TeamApiController(
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.rejectJoin(userId, user.group)
+    }
+
+    @PutMapping("/team/admin/toggle-permissions")
+    fun togglePermissions(@RequestBody userId: Int, auth: Authentication?): Boolean {
+        val user = auth?.getUserFromDatabaseOrNull()
+        if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
+            return false
+        return teamService.toggleUserPermissions(userId, user.group)
+    }
+
+    @PutMapping("/team/admin/kick-user")
+    fun kickUser(@RequestBody userId: Int, auth: Authentication?): Boolean {
+        val user = auth?.getUserFromDatabaseOrNull()
+        if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
+            return false
+        return teamService.kickUser(userId, user.group)
     }
 
 }

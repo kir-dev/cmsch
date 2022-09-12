@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType
@@ -54,8 +55,8 @@ open class TeamService(
             "${user.fullName}||", "", "", "",
             "", listOf(),
             teamComponent.racesByDefault.isValueTrue(),
-            teamComponent.racesByDefault.isValueTrue(),
-            leaveable = true,
+            teamComponent.selectableByDefault.isValueTrue(),
+            leaveable = false,
             manuallyCreated = true,
             description = "",
             profileTopMessage = ""
@@ -114,7 +115,7 @@ open class TeamService(
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun leaveTeam(user: UserEntity): TeamLeaveStatus {
-        if (!teamComponent.joinEnabled.isValueTrue())
+        if (!teamComponent.leaveEnabled.isValueTrue())
             return TeamLeaveStatus.LEAVING_DISABLED
 
         if (user.role == RoleType.PRIVILEGED)
@@ -220,6 +221,74 @@ open class TeamService(
             return true
         }
         return false
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun toggleUserPermissions(userId: Int, group: GroupEntity?, adminUser: CmschUser): Boolean {
+        if (group == null)
+            return false
+
+        if (userId == adminUser.id) {
+            log.info("Failed to switch user permissions '{}' from '{}', reason: can't revoke your permissions",
+                adminUser.userName, group.name, adminUser.userName)
+        }
+
+        val user = userRepository.findById(userId).orElse(null)
+            ?: return false
+
+        if (user.group?.id != group.id) {
+            log.info("Failed to switch user permissions '{}' from '{}', reason: groups does not match",
+                user.fullName, group.name)
+            return false
+        }
+
+        return if (user.role.value >= RoleType.STAFF.value) {
+            log.info("User '{}' is at least staff, cannot be revoked", user.fullName)
+            true
+        } else if (user.role.value < RoleType.PRIVILEGED.value) {
+            user.role = RoleType.PRIVILEGED
+            userRepository.save(user)
+            log.info("User '{}' is now group leader at '{}' by '{}'", user.fullName, group.name, adminUser.userName)
+            true
+        } else {
+            user.role = if (teamComponent.grantPrivilegedRole.isValueTrue()) RoleType.ATTENDEE else RoleType.BASIC
+            userRepository.save(user)
+            log.info("User '{}' is now regular group member at '{}' by '{}'", user.fullName, group.name, adminUser.userName)
+            true
+        }
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun kickUser(userId: Int, group: GroupEntity?, adminUser: CmschUser): Boolean {
+        if (group == null)
+            return false
+
+        if (userId == adminUser.id) {
+            log.info("Failed to kick user '{}' from '{}' by '{}', reason: can't kick yourself",
+                adminUser.userName, group.name, adminUser.userName)
+        }
+
+        val user = userRepository.findById(userId).orElse(null)
+            ?: return false
+
+        if (user.group?.id != group.id) {
+            log.info("Failed to kick user '{}' from '{}' by '{}', reason: groups does not match",
+                user.fullName, group.name, adminUser.userName)
+            return false
+        }
+        if (user.role.value <= RoleType.PRIVILEGED.value) {
+            log.info("Failed to kick user '{}' from '{}' by '{}', reason: admins cannot be kicked",
+                user.fullName, group.name, adminUser.userName)
+            return false
+        }
+
+        user.group = null
+        user.groupName = ""
+        if (user.role.value < RoleType.STAFF.value)
+            user.role = RoleType.BASIC
+        userRepository.save(user)
+        log.info("User '{}' kicked from '{}', reason: by admin '{}'", user.fullName, group.name, adminUser.userName)
+        return true
     }
 
 
