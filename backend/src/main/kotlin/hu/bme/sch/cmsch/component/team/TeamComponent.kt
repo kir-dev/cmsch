@@ -33,6 +33,7 @@ class TeamComponent(
 
             teamCreateGroup,
             createTitle, createMenuDisplayName, createMinRole,
+            teamCreationTopMessage,
             creationEnabled,
             joinEnabled,
             grantPrivilegedRole,
@@ -40,16 +41,19 @@ class TeamComponent(
             nameBlocklist,
             racesByDefault,
             selectableByDefault,
+
+            teamAdminGroup,
             adminTitle,
             adminMenuDisplayName,
             adminMinRole,
+            togglePermissionEnabled,
+            kickEnabled,
 
             teamDetailsGroup,
             showTeamDetails,
             showTeamMembersPublicly,
             showTeamScore,
             showTeamScoreDetailsButton
-
         )
     }
 
@@ -168,6 +172,11 @@ class TeamComponent(
         fieldName = "Csapat készítés menü jogosultságai", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
+    val teamCreationTopMessage = SettingProxy(componentSettingService, component,
+        "teamCreationTopMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Csapat készítés felső szöveg", description = "Ha üres, akkor nincs ilyen"
+    )
+
     val creationEnabled = SettingProxy(componentSettingService, component,
         "creationEnabled", "false", type = SettingType.BOOLEAN,
         fieldName = "Csoport készítés engedélyezve", description = "Ha igaz, lehet csapatot készíteni"
@@ -208,6 +217,14 @@ class TeamComponent(
         fieldName = "Alapól lehet bele jelentkezni", description = "Ha be van kapcsolva, akkor a csapatba automatikusan lehet jelentkezni"
     )
 
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val teamAdminGroup = SettingProxy(componentSettingService, component,
+        "teamAdminGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Csapat admin felület",
+        description = ""
+    )
+
     val adminTitle = SettingProxy(componentSettingService, component,
         "title", "Csapatom kezelése",
         fieldName = "Admin lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -223,6 +240,16 @@ class TeamComponent(
         fieldName = "Admin oldal jogosultságai", description = "Melyik roleokkal nyitható meg az admin oldal"
     )
 
+    val togglePermissionEnabled = SettingProxy(componentSettingService, component,
+        "togglePermissionEnabled", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Jogosultság adás álltása", description = "Ha be val kapcsolva, akkor lehet jogosultásokat állítani"
+    )
+
+    val kickEnabled = SettingProxy(componentSettingService, component,
+        "kickEnabled", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Kidobás gomb", description = "Ha be val kapcsolva, akkor csapat vezetők kirakhatnak embereket"
+    )
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val teamDetailsGroup = SettingProxy(componentSettingService, component,
@@ -232,12 +259,12 @@ class TeamComponent(
     )
 
     val showTeamDetails = SettingProxy(componentSettingService, component,
-        "showTeamDetails", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        "showTeamDetails", "false", type = SettingType.BOOLEAN,
         fieldName = "Csoport részleteinek mutatása", description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek"
     )
 
     val showTeamMembersPublicly = SettingProxy(componentSettingService, component,
-        "showTeamMembersPublicly", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        "showTeamMembersPublicly", "false", type = SettingType.BOOLEAN,
         fieldName = "Csoport tagjai publikusak", description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek"
     )
 
