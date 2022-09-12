@@ -111,7 +111,7 @@ class TeamApiController(
         val user = auth?.getUserFromDatabaseOrNull()
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
-        return teamService.toggleUserPermissions(userId, user.group)
+        return teamService.toggleUserPermissions(userId, user.group, user)
     }
 
     @PutMapping("/team/admin/kick-user")
@@ -119,7 +119,7 @@ class TeamApiController(
         val user = auth?.getUserFromDatabaseOrNull()
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
-        return teamService.kickUser(userId, user.group)
+        return teamService.kickUser(userId, user.group, user)
     }
 
 }
