@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentHandlerService
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -28,7 +29,7 @@ class ApplicationApiController(
 
     @GetMapping("/app")
     fun app(auth: Authentication?): ApplicationConfigDto {
-        val role = auth?.getUserOrNull()?.role ?: RoleType.GUEST
+        val role = auth?.getUserFromDatabaseOrNull()?.role ?: RoleType.GUEST
         if (countdownComponent.isPresent) {
             val countdown = countdownComponent.orElseThrow()
             if (countdown.isBlockedAt(clock.getTimeInSeconds())) {
