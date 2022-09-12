@@ -248,6 +248,9 @@ export interface Team {
   selectableByDefault: boolean
   showTeamScore: boolean
   showTeamScoreDetailsButton: boolean
+  showTeamDetails: boolean
+  kickEnabled: boolean
+  togglePermissionEnabled: boolean
 }
 
 export interface Signup {

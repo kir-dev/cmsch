@@ -58,7 +58,7 @@ export default function TeamListPage() {
         <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
       </InputGroup>
       {filteredTeams?.map((team) => (
-        <TeamListItem key={team.id} team={team} />
+        <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />
       ))}
     </CmschPage>
   )

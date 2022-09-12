@@ -97,12 +97,27 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
         </VStack>
         <VStack mt={10}>
           {team.joinEnabled && (
-            <Button isLoading={joinTeamLoading} colorScheme="brand" onClick={() => joinTeam(team?.id)}>
+            <Button
+              isLoading={joinTeamLoading}
+              colorScheme="brand"
+              onClick={() => {
+                joinTeam(team?.id)
+                refetch()
+              }}
+            >
               Jelentkezés a csapatba
             </Button>
           )}
           {team.joinCancellable && (
-            <Button isLoading={cancelLoading} variant="outline" colorScheme="brand" onClick={cancelJoin}>
+            <Button
+              isLoading={cancelLoading}
+              variant="outline"
+              colorScheme="brand"
+              onClick={() => {
+                cancelJoin()
+                refetch()
+              }}
+            >
               Jelentkezés visszavonása
             </Button>
           )}
@@ -140,14 +155,14 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
               key={m.id}
               member={m}
               onRoleChange={
-                admin
+                admin && component?.togglePermissionEnabled && !m.isYou
                   ? () => {
                       togglePermissions(m.id)
                     }
                   : undefined
               }
               onDelete={
-                admin
+                admin && component?.kickEnabled && !m.admin && !m.isYou
                   ? () => {
                       kickMember(m.id)
                     }
