@@ -15,7 +15,8 @@ data class TeamView(
 data class TeamMemberView(
     var name: String = "",
     var id: Int = 0,
-    var isAdmin: Boolean = false
+    var isAdmin: Boolean = false,
+    var isYou: Boolean = false
 )
 
 data class TeamListView(
