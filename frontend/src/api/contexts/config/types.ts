@@ -250,6 +250,7 @@ export interface Team {
   showTeamDetails: boolean
   kickEnabled: boolean
   togglePermissionEnabled: boolean
+  promoteLeadershipEnabled: boolean
 }
 
 export interface Signup {

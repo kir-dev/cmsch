@@ -19,6 +19,7 @@ import { useTeamTogglePermissions } from '../../../api/hooks/team/actions/useTea
 import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMemberKick'
 import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'
 import { RoleType } from '../../../util/views/profile.view'
+import { useTeamPromoteLeadership } from '../../../api/hooks/team/actions/useTeamPromoteLeadership'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -51,12 +52,17 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
   const onPutActionFail = () => {
     toast({ status: 'error', title: 'Sikertelen művelet!' })
   }
+  const onPromoteSuccess = () => {
+    toast({ status: 'success', title: 'Sikeres művelet!' })
+    navigate(AbsolutePaths.MY_TEAM)
+  }
 
   const { joinTeam, joinTeamLoading } = useTeamJoin(actionResponseCallback)
   const { cancelJoin, cancelLoading } = useTeamCancelJoin(actionResponseCallback)
   const { acceptJoin } = useTeamAcceptJoin(onPutActionSuccess, onPutActionFail)
   const { rejectJoin } = useTeamRejectJoin(onPutActionSuccess, onPutActionFail)
   const { togglePermissions } = useTeamTogglePermissions(onPutActionSuccess, onPutActionFail)
+  const { promoteLeadership } = useTeamPromoteLeadership(onPromoteSuccess, onPutActionFail)
   const { kickMember } = useTeamMemberKick(onPutActionSuccess, onPutActionFail)
   const { leaveTeam, leaveTeamLoading } = useTeamLeave((response) => {
     actionResponseCallback(response)
@@ -155,15 +161,22 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
             <MemberRow
               key={m.id}
               member={m}
+              onPromoteLeadership={
+                admin && component?.promoteLeadershipEnabled && !m.admin && !m.you
+                  ? () => {
+                      promoteLeadership(m.id)
+                    }
+                  : undefined
+              }
               onRoleChange={
-                admin && component?.togglePermissionEnabled && !m.isYou
+                admin && component?.togglePermissionEnabled && !m.you
                   ? () => {
                       togglePermissions(m.id)
                     }
                   : undefined
               }
               onDelete={
-                admin && component?.kickEnabled && !m.admin && !m.isYou
+                admin && component?.kickEnabled && !m.admin && !m.you
                   ? () => {
                       kickMember(m.id)
                     }

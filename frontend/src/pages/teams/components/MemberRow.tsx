@@ -15,23 +15,36 @@ import {
   useDisclosure,
   VStack
 } from '@chakra-ui/react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 import { TeamMemberView } from '../../../util/views/team.view'
 import { DeleteButton } from './DeleteButton'
 import { RoleButton } from './RoleButton'
 import { AcceptButton } from './AcceptButton'
+import { LeaderButton } from './LeaderButton'
 
 interface MemberRowProps {
   member: TeamMemberView
+  onPromoteLeadership?: () => void
   onRoleChange?: () => void
   onAccept?: () => void
   onDelete?: () => void
 }
 
-export function MemberRow({ member, onDelete, onAccept, onRoleChange }: MemberRowProps) {
+export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteLeadership }: MemberRowProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const onContinue = useRef(() => {})
+  const [title, setTitle] = useState('')
+  const [prompt, setPrompt] = useState('')
   const cancelRef = useRef<any>()
+  const dialogAction = (title: string, prompt: string, action: () => void) => {
+    return () => {
+      setTitle(title)
+      setPrompt(prompt)
+      onOpen()
+      onContinue.current = action
+    }
+  }
   return (
     <>
       <Box borderRadius="lg" padding={4} backgroundColor={useColorModeValue('brand.200', 'brand.600')} marginTop={5}>
@@ -44,41 +57,59 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange }: MemberRo
           </VStack>
           <Spacer />
           <HStack>
-            {onRoleChange && <RoleButton isAdmin={member.admin} onRoleChange={onRoleChange} />}
+            {onPromoteLeadership && (
+              <LeaderButton
+                onPromoteLeadership={dialogAction(
+                  'Csapatkapitány váltás',
+                  'Biztosan átadod a csapatkapitányságot neki: ' + member.name,
+                  onPromoteLeadership
+                )}
+              />
+            )}
+            {onRoleChange && (
+              <RoleButton
+                isAdmin={member.admin}
+                onRoleChange={dialogAction(
+                  member.admin ? 'Jogosultság elvétele' : 'Jogosultság adása',
+                  `Biztosan jogosultságot változtatsz nála: ${member.name}?`,
+                  onRoleChange
+                )}
+              />
+            )}
             {onAccept && <AcceptButton onAccept={onAccept} />}
-            {onDelete && <DeleteButton onDelete={onOpen} />}
+            {onDelete && (
+              <DeleteButton
+                onDelete={onAccept ? onDelete : dialogAction('Tag törlése', `Biztosan szeretnéd törölni őt: ${member.name}?`, onDelete)}
+              />
+            )}
           </HStack>
         </HStack>
       </Box>
-      {onDelete && (
-        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                {onAccept ? 'Jelentkező' : 'Tag'} eltávolítása
-              </AlertDialogHeader>
-
-              <AlertDialogBody>Biztosan szeretnéd törölni őt: {member.name}?</AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Button ref={cancelRef} onClick={onClose}>
-                  Mégse
-                </Button>
-                <Button
-                  colorScheme="red"
-                  onClick={() => {
-                    onDelete()
-                    onClose()
-                  }}
-                  ml={3}
-                >
-                  Törlés
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
-      )}
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {title}
+            </AlertDialogHeader>
+            <AlertDialogBody>{prompt}</AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Mégse
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  onContinue.current()
+                  onClose()
+                }}
+                ml={3}
+              >
+                Rendben
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   )
 }
