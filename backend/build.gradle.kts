@@ -46,6 +46,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("com.fasterxml.uuid:java-uuid-generator:3.2.0")
     implementation("org.commonmark:commonmark:0.19.0")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.4")
 }
 
 tasks.withType<KotlinCompile> {

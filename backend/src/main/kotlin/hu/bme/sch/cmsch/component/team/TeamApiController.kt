@@ -124,4 +124,12 @@ class TeamApiController(
         return teamService.kickUser(request.id, user.group, user)
     }
 
+    @PutMapping("/team/admin/switch-leadership")
+    fun switchLeadership(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
+        val user = auth?.getUserFromDatabaseOrNull()
+        if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
+            return false
+        return teamService.promoteLeader(request.id, user.group, user)
+    }
+
 }

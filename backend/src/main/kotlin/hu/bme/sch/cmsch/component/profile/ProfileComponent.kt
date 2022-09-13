@@ -35,6 +35,8 @@ class ProfileComponent(
             showGuild,
             showMajor,
             showAlias,
+            aliasChangeEnabled,
+            aliasRegex,
             showGroup,
             showNeptun,
             showEmail,
@@ -137,6 +139,16 @@ class ProfileComponent(
     val showAlias = SettingProxy(componentSettingService, component,
         "showAlias", "false", type = SettingType.BOOLEAN,
         fieldName = "Becenév látható", description = "Ha van nickneve, akkor ki legyen-e írva"
+    )
+
+    val aliasChangeEnabled = SettingProxy(componentSettingService, component,
+        "aliasChangeEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Becenév szerkeszthető", description = "Lehet-e megváltoztatni a becenevet"
+    )
+
+    val aliasRegex = SettingProxy(componentSettingService, component,
+        "aliasRegex", "^[A-Za-z0-9 \\-_ÁáÉéÍíÓóÖöŐőÚúÜüŰű\\/]*$", serverSideOnly = true,
+        fieldName = "QR kód fejléc", description = "Ez a fejléc jelenik meg a QR kód felett"
     )
 
     val showGroup = SettingProxy(componentSettingService, component,
