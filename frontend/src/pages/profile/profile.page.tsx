@@ -125,6 +125,11 @@ const ProfilePage = ({}: Props) => {
               {component?.groupTitle} módosítása
             </LinkButton>
           )}
+          {component?.aliasChangeEnabled && (
+            <LinkButton colorScheme="brand" href={`${AbsolutePaths.PROFILE}/change-alias`}>
+              Becenév módosítása
+            </LinkButton>
+          )}
           <Button colorScheme="brand" variant="outline" onClick={onLogout}>
             Kijelentkezés
           </Button>

@@ -75,5 +75,8 @@ const languageData = {
   'team-list-load-failed': 'Nem sikerült lekérni a csapatlistát.',
   'team-list-load-failed-contact-developers': 'Nem sikerült lekérni a csapatlistát.\n Keresd az oldal fejlesztőit!',
   'team-load-failed': 'Nem sikerült lekérni a csapatot.',
-  'team-load-failed-contact-developers': 'Nem sikerült lekérni a csapatot.\n Keresd az oldal fejlesztőit!'
+  'team-load-failed-contact-developers': 'Nem sikerült lekérni a csapatot.\n Keresd az oldal fejlesztőit!',
+  'alias-change-successful': 'Becenév sikeresen módosítva',
+  'alias-change-failure': 'Nem sikerült megváltztatni a becenevet',
+  'alias-change-not-allowed': 'A becenév szerkesztése nem egedélyezett!'
 }
