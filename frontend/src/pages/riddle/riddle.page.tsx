@@ -3,7 +3,6 @@ import {
   AlertIcon,
   Box,
   Button,
-  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -14,15 +13,14 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react'
-import axios from 'axios'
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { Hint, Riddle, RiddleSubmissonResult, RiddleSubmissonStatus } from '../../util/views/riddle.view'
+import { RiddleSubmissonStatus } from '../../util/views/riddle.view'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { AbsolutePaths, Paths } from '../../util/paths'
+import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
 import { useRiddleDetailsQuery } from '../../api/hooks/useRiddleDeatilsQuery'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
@@ -68,7 +66,7 @@ const RiddlePage = () => {
                 title: l('riddle-incorrect-title'),
                 description: l('riddle-incorrect-description'),
                 status: 'error',
-                duration: 9000,
+                duration: 5000,
                 isClosable: true
               }) || null
           }
@@ -76,6 +74,13 @@ const RiddlePage = () => {
             navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
             const input = document.getElementById('solution') as HTMLInputElement
             input.value = ''
+            toast({
+              title: l('riddle-correct-title'),
+              description: l('riddle-correct-description'),
+              status: 'success',
+              duration: 5000,
+              isClosable: true
+            })
             hintQuery = useRiddleHintQuery(
               () => toast({ title: l('riddle-query-failed'), status: 'error' }),
               result.nextId.toString() || ''
@@ -84,13 +89,6 @@ const RiddlePage = () => {
               () => toast({ title: l('riddle-query-failed'), status: 'error' }),
               result.nextId.toString() || ''
             )
-            toast({
-              title: l('riddle-correct-title'),
-              description: l('riddle-correct-description'),
-              status: 'success',
-              duration: 9000,
-              isClosable: true
-            })
           }
           if (result.status === RiddleSubmissonStatus.CORRECT && !result.nextId) {
             navigate(AbsolutePaths.RIDDLE)
@@ -98,7 +96,7 @@ const RiddlePage = () => {
               title: l('riddle-completed-title'),
               description: l('riddle-completed-description'),
               status: 'success',
-              duration: 9000,
+              duration: 5000,
               isClosable: true
             })
           }

@@ -1,12 +1,10 @@
 import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { RiddleCategory } from '../../util/views/riddle.view'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { AbsolutePaths, Paths } from '../../util/paths'
+import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
 import { useRiddleListQuery } from '../../api/hooks/useRiddleListQuery'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
@@ -83,7 +81,7 @@ const RiddleCategoryList = () => {
                   <Text fontWeight="bold" fontSize="xl">
                     {riddleCategory.title}
                   </Text>
-                  <Box bgGradient={progressGradient(progress(riddleCategory), 'brand.600')} px={1} py={1} borderRadius="6px">
+                  <Box bgGradient={progressGradient(progress(riddleCategory), 'green.400')} px={1} py={1} borderRadius="6px">
                     <Text bg={bg} px={4} py={2} borderRadius="6px" fontWeight="bold">
                       {riddleCategory.completed} / {riddleCategory.total}
                     </Text>
