@@ -1,4 +1,4 @@
-import { Box, Button, Heading, VStack } from '@chakra-ui/react'
+import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { FaGoogle, FaSignInAlt } from 'react-icons/fa'
 import { Navigate } from 'react-router-dom'
@@ -18,8 +18,8 @@ const LoginPage = () => {
 
   return (
     <CmschPage>
-      <Helmet />
-      <VStack>
+      <Helmet title={l('login-helmet')} />
+      <VStack spacing={10} mb={10}>
         <Heading size="lg" textAlign="center" mt={10} mb={2}>
           {l('login-consent')}
         </Heading>
@@ -33,17 +33,18 @@ const LoginPage = () => {
           </Button>
         )}
         {component?.googleSsoEnabled && (
-          <Button
-            colorScheme="brand"
-            onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/google`)}
-            leftIcon={<FaGoogle />}
-          >
-            Google SSO
-          </Button>
+          <>
+            <Text>vagy</Text>
+            <Button
+              colorScheme="brand"
+              onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/google`)}
+              leftIcon={<FaGoogle />}
+            >
+              Google SSO
+            </Button>
+          </>
         )}
-        <Box mt={5}>
-          <Markdown text={component?.bottomMessage} />
-        </Box>
+        {component?.bottomMessage && <Markdown text={component.bottomMessage} />}
       </VStack>
     </CmschPage>
   )
