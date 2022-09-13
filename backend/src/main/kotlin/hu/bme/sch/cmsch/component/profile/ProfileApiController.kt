@@ -41,4 +41,20 @@ class ProfileApiController(
         return ResponseEntity.ok(profileService.getProfileForUser(user))
     }
 
+    data class ProfileChangeRequest(var alias: String = "")
+
+    @PutMapping("/profile/change-alias")
+    fun changeAlias(@RequestBody body: ProfileChangeRequest, auth: Authentication?): ResponseEntity<Boolean> {
+        val user = auth?.getUserFromDatabaseOrNull()
+            ?: return ResponseEntity.ok(false)
+
+        if (!profileComponent.minRole.isAvailableForRole(user.role))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        if (!profileComponent.aliasChangeEnabled.isValueTrue())
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return ResponseEntity.ok(profileService.changeAlias(user, body.alias))
+    }
+
 }

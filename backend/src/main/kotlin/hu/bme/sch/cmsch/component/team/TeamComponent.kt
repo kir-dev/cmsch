@@ -38,6 +38,7 @@ class TeamComponent(
             joinEnabled,
             grantPrivilegedRole,
             grantAttendeeRole,
+            nameRegex,
             nameBlocklist,
             racesByDefault,
             selectableByDefault,
@@ -48,6 +49,7 @@ class TeamComponent(
             adminMinRole,
             togglePermissionEnabled,
             kickEnabled,
+            promoteLeadershipEnabled,
 
             teamDetailsGroup,
             showTeamDetails,
@@ -202,8 +204,13 @@ class TeamComponent(
         fieldName = "ATTENDEE jog a cspattagoknak", description = "Ha be val kapcsolva, akkor a csapat tagjai ATTENDEE jogot kapnak (onnantól él, hogy be lett kapcsolva)"
     )
 
+    val nameRegex = SettingProxy(componentSettingService, component,
+        "nameRegex", "^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]{1,32}\$", type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Csapatnév regex", description = "Ez alapján megy majd a vaidálás"
+    )
+
     val nameBlocklist = SettingProxy(componentSettingService, component,
-        "nameBlocklist", "test, dev", type = SettingType.TEXT,
+        "nameBlocklist", "test, dev", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Tiltott nevek", description = "Tiltott csapatnevek vesszővel elválasztva"
     )
 
@@ -226,7 +233,7 @@ class TeamComponent(
     )
 
     val adminTitle = SettingProxy(componentSettingService, component,
-        "title", "Csapatom kezelése",
+        "adminTitle", "Csapatom kezelése",
         fieldName = "Admin lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
@@ -248,6 +255,11 @@ class TeamComponent(
     val kickEnabled = SettingProxy(componentSettingService, component,
         "kickEnabled", "true", type = SettingType.BOOLEAN,
         fieldName = "Kidobás gomb", description = "Ha be val kapcsolva, akkor csapat vezetők kirakhatnak embereket"
+    )
+
+    val promoteLeadershipEnabled = SettingProxy(componentSettingService, component,
+        "promoteLeadershipEnabled", "true", type = SettingType.BOOLEAN,
+        fieldName = "Jogosultság átadása", description = "Ha be val kapcsolva, akkor át lehet adni a vezetőséget másnak"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

@@ -33,6 +33,7 @@ const val CONTROL_MODE_EDIT_DELETE = "edit,delete"
 const val CONTROL_MODE_DELETE = "delete"
 const val CONTROL_MODE_EDIT = "edit"
 const val CONTROL_MODE_VIEW = "view"
+const val CONTROL_MODE_VIEW_EXPORT2 = "view,export2"
 const val CONTROL_MODE_LOCATION = "location"
 
 open class AbstractAdminPanelController<T : ManagedEntity>(
