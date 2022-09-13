@@ -17,7 +17,7 @@ export type TeamMemberView = {
   name: string
   id: number
   admin: boolean
-  isYou: boolean
+  you: boolean
 }
 
 export enum TeamResponses {
