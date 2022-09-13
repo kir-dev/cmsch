@@ -208,7 +208,7 @@ class TokenAdminTokensByUsersOfGroupsController(
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))
 
-            val riddles = riddleService.map { it.getCompletedRiddleCount(user.key) }.orElse(0)
+            val riddles = riddleService.map { it.getCompletedRiddleCountUser(user.key) }.orElse(0)
             table.addCell(Cell().add(Paragraph("$riddles db")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setFont(font).setFontSize(12f)))

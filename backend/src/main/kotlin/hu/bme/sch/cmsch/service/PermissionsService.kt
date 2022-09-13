@@ -131,6 +131,11 @@ object ControlPermissions : PermissionGroup {
         "Csapat komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_QR_FIGHT = PermissionValidator(
+        "QR_FIGHT_CONTROL",
+        "QR Fight komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -151,7 +156,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_HOME,
         PERMISSION_CONTROL_ADMISSION,
         PERMISSION_CONTROL_RACE,
-        PERMISSION_CONTROL_TEAM
+        PERMISSION_CONTROL_TEAM,
+        PERMISSION_CONTROL_QR_FIGHT
     )
 
 }
@@ -331,6 +337,13 @@ object StaffPermissions : PermissionGroup {
         "Verseny eredmények kezelése"
     )
 
+    // QR Fight
+
+    val PERMISSION_EDIT_QR_FIGHT = PermissionValidator(
+        "QR_FIGHT_EDIT",
+        "QR Fight eredmények kezelése"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_EDIT_TASKS,
@@ -360,7 +373,8 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_SIGNUP_RESULTS,
         PERMISSION_EDIT_CHALLENGES,
         PERMISSION_VALIDATE_ADMISSION,
-        PERMISSION_EDIT_RACE
+        PERMISSION_EDIT_RACE,
+        PERMISSION_EDIT_QR_FIGHT
     )
 
 }

@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.signup
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
@@ -20,7 +21,8 @@ open class SignupService(
     private val signupResponseRepository: SignupResponseRepository,
     private val userRepository: UserRepository,
     private val clock: TimeService,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val applicationComponent: ApplicationComponent
 ) {
 
     internal val log = LoggerFactory.getLogger(javaClass)
@@ -40,7 +42,7 @@ open class SignupService(
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
             return SignupFormView(status = FormStatus.NOT_FOUND)
 
-        val now = clock.getTimeInSeconds()
+        val now = clock.getTimeInSeconds() + (applicationComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (!form.open)
             return SignupFormView(status = FormStatus.NOT_ENABLED)
         if (form.availableFrom > now)
@@ -105,7 +107,7 @@ open class SignupService(
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
         val now = clock.getTimeInSeconds()
-        if (!form.open || form.availableFrom > now || form.availableUntil < now)
+        if (!form.open || !clock.inRange(form.availableFrom, form.availableUntil, now))
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         val submissionEntity = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)

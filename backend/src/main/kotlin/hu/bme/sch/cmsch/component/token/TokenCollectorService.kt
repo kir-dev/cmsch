@@ -1,7 +1,9 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
+import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
+import hu.bme.sch.cmsch.component.qrfight.QrFightService
+import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
@@ -10,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 const val ALL_TOKEN_TYPE = "*"
 
@@ -21,7 +24,9 @@ open class TokenCollectorService(
     private val groupRepository: GroupRepository,
     private val tokenComponent: TokenComponent,
     private val userService: UserService,
-    private val clock: TimeService
+    private val clock: TimeService,
+    private val qrFightService: Optional<QrFightService>,
+    private val qrFightComponent: Optional<QrFightComponent>
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
@@ -32,8 +37,14 @@ open class TokenCollectorService(
                 return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
 
             val userEntity = userService.getById(user.internalId)
-            tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity, clock.getTimeInSeconds()))
-            return Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
+            return qrFightService
+                .filter { qrFightComponent.map { it.enabled.isValueTrue() }.orElse(false) }
+                .map {
+                    return@map it.onTokenScanForUser(userEntity, tokenEntity)
+                }.orElseGet {
+                    tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity, clock.getTimeInSeconds()))
+                    return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
+                }
         }
         return Pair(null, TokenCollectorStatus.WRONG)
     }
@@ -49,8 +60,14 @@ open class TokenCollectorService(
             if (tokenPropertyRepository.findByToken_TokenAndOwnerGroup(token, groupEntity.get()).isPresent)
                 return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
 
-            tokenPropertyRepository.save(TokenPropertyEntity(0, null, groupEntity.get(), tokenEntity, clock.getTimeInSeconds()))
-            return Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
+            return qrFightService
+                .filter { qrFightComponent.map { it.enabled.isValueTrue() }.orElse(false) }
+                .map {
+                    return@map it.onTokenScanForGroup(userEntity, groupEntity.get(), tokenEntity)
+                }.orElseGet {
+                    tokenPropertyRepository.save(TokenPropertyEntity(0, null, groupEntity.get(), tokenEntity, clock.getTimeInSeconds()))
+                    return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
+                }
         }
         return Pair(null, TokenCollectorStatus.WRONG)
     }
@@ -68,8 +85,25 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
+    open fun getTokensForGroup(group: GroupEntity): List<TokenDto> {
+        return tokenPropertyRepository.findAllByOwnerGroup_Id(group.id)
+            .map {
+                TokenDto(
+                    it.token?.title ?: "n/a",
+                    it.token?.type ?: "n/a",
+                    it.token?.icon ?: "not_found"
+                )
+            }
+    }
+
+    @Transactional(readOnly = true)
     open fun getTokensForUserWithCategory(user: CmschUser, category: String): Int {
         return tokenPropertyRepository.findAllByOwnerUser_IdAndToken_Type(user.id, category).size
+    }
+
+    @Transactional(readOnly = true)
+    open fun getTokensForGroupWithCategory(group: GroupEntity, category: String): Int {
+        return tokenPropertyRepository.findAllByOwnerGroup_IdAndToken_Type(group.id, category).size
     }
 
     @Transactional(readOnly = true)
