@@ -40,7 +40,7 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange }: MemberRo
             <Heading as="h3" size="md" marginY={0} maxWidth="100%">
               {member.name}
             </Heading>
-            {!onAccept && <Text>{member.admin ? 'Admin' : 'Tag'}</Text>}
+            {!onAccept && <Text>{member.admin ? 'Csapatkapitány' : 'Tag'}</Text>}
           </VStack>
           <Spacer />
           <HStack>
