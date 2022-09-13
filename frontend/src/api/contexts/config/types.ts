@@ -243,7 +243,6 @@ export interface Team {
   teamCreationTopMessage: string
   creationEnabled: boolean
   joinEnabled: boolean
-  nameBlocklist: string
   racesByDefault: boolean
   selectableByDefault: boolean
   showTeamScore: boolean
