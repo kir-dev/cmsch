@@ -18,6 +18,7 @@ import { useTeamRejectJoin } from '../../../api/hooks/team/actions/useTeamReject
 import { useTeamTogglePermissions } from '../../../api/hooks/team/actions/useTeamTogglePermissions'
 import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMemberKick'
 import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'
+import { RoleType } from '../../../util/views/profile.view'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -86,7 +87,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
   ]
   const title = admin ? component.myTitle + ' kezelése' : myTeam ? component.myTitle : team.name
   return (
-    <CmschPage>
+    <CmschPage minRole={admin ? RoleType.PRIVILEGED : myTeam ? RoleType.ATTENDEE : undefined}>
       <Helmet title={title} />
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <Flex justify="space-between" wrap="wrap">
