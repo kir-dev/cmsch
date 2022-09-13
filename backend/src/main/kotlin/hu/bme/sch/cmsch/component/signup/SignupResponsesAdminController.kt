@@ -1,10 +1,14 @@
 package hu.bme.sch.cmsch.component.signup
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
+import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW_EXPORT2
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -13,6 +17,7 @@ import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -27,7 +32,8 @@ class SignupResponsesAdminController(
     private val signupResponseRepository: SignupResponseRepository,
     private val signupFormRepository: SignupFormRepository,
     private val clock: TimeService,
-    private val adminMenuService: AdminMenuService
+    private val adminMenuService: AdminMenuService,
+    private val objectMapper: ObjectMapper
 ) {
 
     private val view = "signup-responses"
@@ -73,7 +79,7 @@ class SignupResponsesAdminController(
         model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
         model.addAttribute("rows", fetchOverview())
         model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_VIEW)
+        model.addAttribute("controlMode", CONTROL_MODE_VIEW_EXPORT2)
 
         return "overview"
     }
@@ -118,6 +124,41 @@ class SignupResponsesAdminController(
         model.addAttribute("controlMode", CONTROL_MODE_EDIT)
 
         return "overview"
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/export/csv/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    fun exportCsv(@PathVariable id: Int, auth: Authentication): String {
+        val user = auth.getUser()
+        if (permissionControl.validate(user).not()) {
+            return "403"
+        }
+
+        val objReader = objectMapper.readerFor(object : TypeReference<Map<String, Any>>() {})
+        val entries = signupResponseRepository.findAllByFormId(id)
+            .map { objReader.readValue<Map<String, Any>>(it.submission) }
+            .map { it.values }
+            .toList()
+
+        val headers = objReader.readValue<Map<String, Any>>(signupResponseRepository.findAllByFormId(id).firstOrNull()?.submission ?: "{}")
+            .keys
+            .joinToString(",")
+        val result = CsvMapper().writeValueAsString(entries)
+
+        return headers + "\n" + result
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/export/json/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    fun exportJson(@PathVariable id: Int, auth: Authentication): String {
+        val user = auth.getUser()
+        if (permissionControl.validate(user).not()) {
+            return "403"
+        }
+
+        val entries = signupResponseRepository.findAllByFormId(id).joinToString(",") { it.submission }
+
+        return "[${entries}]"
     }
 
     @GetMapping("/edit/{id}")

@@ -17,6 +17,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
@@ -28,6 +29,7 @@ import java.util.*
 @ConditionalOnBean(ProfileService::class)
 open class ProfileService(
     private val groupRepository: GroupRepository,
+    private val userRepository: UserRepository,
     private val profileComponent: ProfileComponent,
     private val debtsRepository: Optional<SoldProductRepository>,
     private val locationService: Optional<LocationService>,
@@ -36,11 +38,8 @@ open class ProfileService(
     private val tokenComponent: Optional<TokenComponent>,
     private val tasksService: Optional<TasksService>,
     private val riddleService: Optional<RiddleService>,
-    private val leaderBoardService: Optional<LeaderBoardService>,
-    private val leaderBoardComponent: Optional<LeaderBoardComponent>,
     private val loginComponent: Optional<LoginComponent>,
     private val clock: TimeService,
-    private val startupPropertyConfig: StartupPropertyConfig,
 ) {
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
@@ -175,6 +174,17 @@ open class ProfileService(
 
     private fun fetchSelectableGroups(): Map<Int, String> {
         return groupRepository.findAllBySelectableTrue().associate { Pair(it.id, it.name) }
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun changeAlias(user: UserEntity, newAlias: String): Boolean {
+        return if (newAlias.matches(Regex(profileComponent.aliasRegex.getValue()))) {
+            user.alias = newAlias.trim()
+            userRepository.save(user)
+            true
+        } else {
+            false
+        }
     }
 
 }
