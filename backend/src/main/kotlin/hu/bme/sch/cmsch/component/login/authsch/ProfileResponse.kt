@@ -19,11 +19,11 @@ data class ProfileResponse(
     @set:JsonProperty("niifPersonOrgID")
     var neptun: String? = null,
 
-    var linkedAccounts: Map<String, String> = mapOf(),
+    var linkedAccounts: Map<String, String>? = mapOf(),
 
-    var lastSync: Map<String, Long> = mapOf(),
+    var lastSync: Map<String, Long>? = mapOf(),
 
-    var eduPersonEntitlement: List<PersonEntitlement> = listOf(),
+    var eduPersonEntitlement: List<PersonEntitlement>? = listOf(),
 
     var roomNumber: String? = null,
 
@@ -34,7 +34,7 @@ data class ProfileResponse(
 
     var entrants: List<Entrant>? = listOf(),
 
-    var admembership: List<String> = listOf(),
+    var admembership: List<String>? = listOf(),
 
-    var bmeunitscope: List<BMEUnitScope> = listOf(),
+    var bmeunitscope: List<BMEUnitScope>? = listOf(),
 )
