@@ -10,6 +10,7 @@ const languageData = {
   'login-expired-title': 'Bejelentkezés lejárt',
   'login-expired-description': 'Hiba esett a bejelentkezési folyamatba!',
   'login-consent': 'Válassz bejelentkezési módot!',
+  'login-helmet': 'Bejelentkezés',
   'logout-title': 'Kijelentkezés',
   'logout-description': 'Sikeres kijelentkezés!',
   'error-page-helmet': 'Hiba',
