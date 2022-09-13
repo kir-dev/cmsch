@@ -209,12 +209,12 @@ class TeamComponent(
 
     val racesByDefault = SettingProxy(componentSettingService, component,
         "racesByDefault", "true", type = SettingType.BOOLEAN,
-        fieldName = "Alapól versenyzik", description = "Ha be van kapcsolva, akkor a csapat automatikusan versenyző státuszban van"
+        fieldName = "Alapból versenyzik", description = "Ha be van kapcsolva, akkor a csapat automatikusan versenyző státuszban van"
     )
 
     val selectableByDefault = SettingProxy(componentSettingService, component,
         "selectableByDefault", "true", type = SettingType.BOOLEAN,
-        fieldName = "Alapól lehet bele jelentkezni", description = "Ha be van kapcsolva, akkor a csapatba automatikusan lehet jelentkezni"
+        fieldName = "Alapból lehet bele jelentkezni", description = "Ha be van kapcsolva, akkor a csapatba automatikusan lehet jelentkezni"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -226,7 +226,7 @@ class TeamComponent(
     )
 
     val adminTitle = SettingProxy(componentSettingService, component,
-        "title", "Csapatom kezelése",
+        "adminTitle", "Csapatom kezelése",
         fieldName = "Admin lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
