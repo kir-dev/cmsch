@@ -26,7 +26,6 @@ open class TeamService(
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-    private val teamNameRegex = Regex("^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+$")
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun createTeam(user: UserEntity, name: String): TeamCreationStatus {
@@ -37,7 +36,7 @@ open class TeamService(
             return TeamCreationStatus.CREATION_DISABLED
 
         val finalName = name.trim()
-        if (finalName.length > 32 || !finalName.matches(teamNameRegex))
+        if (finalName.length > 64 || !finalName.matches(Regex(teamComponent.nameRegex.getValue())))
             return TeamCreationStatus.INVALID_NAME
 
         if (teamComponent.nameBlocklist.getValue().lowercase().split(Regex(", *")).contains(finalName.lowercase())) {
@@ -235,13 +234,13 @@ open class TeamService(
             return false
 
         if (userId == adminUser.id) {
-            log.info("Failed to switch user permissions '{}' from '{}', reason: can't revoke your permissions",
+            log.info("Failed to switch user permissions '{}' from '{}' by '{}', reason: can't revoke your permissions",
                 adminUser.userName, group.name, adminUser.userName)
             return false
         }
 
         if (!teamComponent.togglePermissionEnabled.isValueTrue()) {
-            log.info("Failed to switch user permissions '{}' from '{}', reason: disabled by config",
+            log.info("Failed to switch user permissions '{}' from '{}' by '{}', reason: disabled by config",
                 adminUser.userName, group.name, adminUser.userName)
             return false
         }
@@ -269,6 +268,42 @@ open class TeamService(
             log.info("User '{}' is now regular group member at '{}' by '{}'", user.fullName, group.name, adminUser.userName)
             true
         }
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun promoteLeader(userId: Int, group: GroupEntity?, adminUser: UserEntity): Boolean {
+        if (group == null)
+            return false
+
+        if (userId == adminUser.id) {
+            log.info("Failed to promote leadership to user '{}' from '{}' by '{}', reason: can't revoke your permissions",
+                adminUser.userName, group.name, adminUser.userName)
+            return false
+        }
+
+        if (!teamComponent.promoteLeadershipEnabled.isValueTrue()) {
+            log.info("Failed to promote leadership to user '{}' from '{}' by '{}', reason: disabled by config",
+                adminUser.userName, group.name, adminUser.userName)
+            return false
+        }
+
+        val user = userRepository.findById(userId).orElse(null)
+            ?: return false
+
+        if (user.group?.id != group.id) {
+            log.info("Failed to promote leadership to user '{}' from '{}', reason: groups does not match",
+                user.fullName, group.name)
+            return false
+        }
+
+        if (user.role.value < RoleType.STAFF.value)
+            user.role = RoleType.PRIVILEGED
+        userRepository.save(user)
+        if (adminUser.role.value < RoleType.STAFF.value)
+            adminUser.role = if (teamComponent.grantPrivilegedRole.isValueTrue()) RoleType.ATTENDEE else RoleType.BASIC
+        userRepository.save(adminUser)
+        log.info("User '{}' is now group leader at '{}' switched with '{}'", user.fullName, group.name, adminUser.userName)
+        return true
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
