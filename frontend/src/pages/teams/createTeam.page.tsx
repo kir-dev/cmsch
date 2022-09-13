@@ -17,7 +17,6 @@ export default function CreateTeamPage() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors }
   } = useForm<CreateTeamDto>()
 
@@ -31,20 +30,12 @@ export default function CreateTeamPage() {
   const component = config?.components.team
   if (!component || !component.creationEnabled) return <Navigate to="/" />
 
-  const submit = (values: CreateTeamDto) => {
-    if (component.nameBlocklist.includes(values.name)) {
-      setError('name', { message: 'Nem megengedett név!' })
-    } else {
-      createTeam(values)
-    }
-  }
-
   return (
     <CmschPage>
       <Helmet title={component.createTitle} />
       <Heading>{component.createTitle}</Heading>
       <Markdown text={component.teamCreationTopMessage} />
-      <form onSubmit={handleSubmit(submit)}>
+      <form onSubmit={handleSubmit(createTeam)}>
         <FormControl my={10}>
           <FormLabel>Név</FormLabel>
           <Input {...register('name', { required: true })} isInvalid={!!errors.name} placeholder="Kedves csapatom" />
