@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.token.ALL_TOKEN_TYPE
 import hu.bme.sch.cmsch.component.token.TokenCollectorService
 import hu.bme.sch.cmsch.component.token.TokenComponent
+import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
@@ -40,6 +41,7 @@ open class ProfileService(
     private val riddleService: Optional<RiddleService>,
     private val loginComponent: Optional<LoginComponent>,
     private val clock: TimeService,
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
@@ -56,12 +58,14 @@ open class ProfileService(
             fullName = profileComponent.showFullName.mapIfTrue { user.fullName },
             groupName = profileComponent.showGroup.mapIfTrue { group?.name ?: "nincs" },
             role = user.role,
-            alias =  profileComponent.showAlias.mapIfTrue { user.alias },
+            alias = profileComponent.showAlias.mapIfTrue { user.alias },
 
             guild = profileComponent.showGuild.mapIfTrue { user.guild },
             email = profileComponent.showEmail.mapIfTrue { user.email },
             neptun = profileComponent.showNeptun.mapIfTrue { user.neptun },
-            cmschId = if (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue()) { user.cmschId } else null,
+            cmschId = if (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue()) {
+                user.cmschId
+            } else null,
             major = profileComponent.showMajor.mapIfTrue { user.major },
 
             groupLeaders = profileComponent.showGroupLeaders.mapIfTrue { fetchGroupLeaders(group) },
@@ -73,9 +77,10 @@ open class ProfileService(
 
             // Token component
             tokens = tokenService.map { repo -> repo.getTokensForUser(user) }.orElse(null),
-            collectedTokenCount = fetchCollectedTokenCount(user, tokenCategoryToDisplay).orElse(null),
+            collectedTokenCount = fetchCollectedTokenCount(user, group, tokenCategoryToDisplay).orElse(null),
             totalTokenCount = fetchTotalTokenCount(tokenCategoryToDisplay).orElse(null),
-            minTokenToComplete = tokenComponent.map {it.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE }.orElse(null),
+            minTokenToComplete = tokenComponent.map { it.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE }
+                .orElse(null),
 
             // Task component
             totalTaskCount = tasksService.map { it.getTotalTasksForUser(user) }.orElse(null),
@@ -86,7 +91,12 @@ open class ProfileService(
 
             // Riddle cmponent
             totalRiddleCount = riddleService.map { it.getTotalRiddleCount(user) }.orElse(null),
-            completedRiddleCount = riddleService.map { it.getCompletedRiddleCount(user) }.orElse(null),
+            completedRiddleCount = riddleService.map {
+                when (startupPropertyConfig.riddleOwnershipMode) {
+                    OwnershipType.USER -> it.getCompletedRiddleCountUser(user)
+                    OwnershipType.GROUP -> it.getCompletedRiddleCountGroup(user, user.group)
+                }
+            }.orElse(null),
 
             // Locations component
             locations = profileComponent.showGroupLeadersLocations.mapIfTrue { fetchLocations(group).orElse(null) },
@@ -111,12 +121,21 @@ open class ProfileService(
             }
         }
 
-    private fun fetchCollectedTokenCount(user: CmschUser, tokenCategoryToDisplay: String) =
-        tokenService.map { repo ->
-            if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
-                repo.getTokensForUser(user).size
-            } else {
-                repo.getTokensForUserWithCategory(user, tokenCategoryToDisplay)
+    private fun fetchCollectedTokenCount(user: CmschUser, group: GroupEntity?, tokenCategoryToDisplay: String) =
+        when (startupPropertyConfig.riddleOwnershipMode) {
+            OwnershipType.USER -> tokenService.map { repo ->
+                if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
+                    repo.getTokensForUser(user).size
+                } else {
+                    repo.getTokensForUserWithCategory(user, tokenCategoryToDisplay)
+                }
+            }
+            OwnershipType.GROUP -> if (group == null) Optional.of(0) else tokenService.map { repo ->
+                if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
+                    repo.getTokensForGroup(group).size
+                } else {
+                    repo.getTokensForGroupWithCategory(group, tokenCategoryToDisplay)
+                }
             }
         }
 

@@ -66,6 +66,14 @@ data class TokenEntity(
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
     var score: Int? = 0,
 
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) default ''")
+    @property:GenerateInput(maxLength = 32, order = 6, label = "Kiváltott esemény",
+        note = "QR fighthoz az akció amit kivált. capture:<tower> vagy history:<tower>")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 6)
+    var action: String? = "",
+
 ): ManagedEntity {
 
     override fun equals(other: Any?): Boolean {
