@@ -1,4 +1,4 @@
-import { GridItem, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
+import { Box, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { stringifyTimeRange } from '../../../util/core-functions.util'
@@ -19,7 +19,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
   }
 
   const innerComponent = (
-    <GridItem as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
+    <Box as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
       <Heading fontSize={25} my={0}>
         {useLink ? (
           <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
@@ -35,17 +35,17 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
       )}
       <Text my={2}>{event.previewDescription}</Text>
       <EventTags tags={[event.category, event.place]} />
-    </GridItem>
+    </Box>
   )
 
   return (
-    <GridItem>
+    <Box w="100%">
       {config.components.event?.enableDetailedView ? (
         <Link to={`${AbsolutePaths.EVENTS}/${event.url}`}> {innerComponent} </Link>
       ) : (
         innerComponent
       )}
-    </GridItem>
+    </Box>
   )
 }
 
