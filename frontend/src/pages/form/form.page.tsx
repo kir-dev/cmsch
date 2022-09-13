@@ -61,7 +61,8 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
       window.scrollTo(0, 0)
     }
   }
-
+  if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED)
+    return <Navigate to="/" replace />
   return (
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />
