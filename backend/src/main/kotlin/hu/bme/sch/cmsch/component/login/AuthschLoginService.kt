@@ -175,8 +175,9 @@ open class AuthschLoginService(
             return
 
         val grantStaffRole = profile.eduPersonEntitlement
-            .filter { it.end == null }
-            .any { staffGroups.contains(it.id) }
+            ?.filter { it.end == null }
+            ?.any { staffGroups.contains(it.id) }
+            ?: false
 
         if (grantStaffRole) {
             log.info("Granting STAFF for ${user.fullName}")
@@ -203,8 +204,9 @@ open class AuthschLoginService(
             return
 
         val grantAdminRole = profile.eduPersonEntitlement
-            .filter { it.end == null }
-            .any { adminGroups.contains(it.id) }
+            ?.filter { it.end == null }
+            ?.any { adminGroups.contains(it.id) }
+            ?: false
 
         if (grantAdminRole) {
             log.info("Granting ADMIN for ${user.fullName}")
@@ -224,8 +226,9 @@ open class AuthschLoginService(
             return
 
         val memberOfAnyOrganizerGroups = profile.eduPersonEntitlement
-            .filter { it.end == null }
-            .any { organizerGroups.contains(it.id) }
+            ?.filter { it.end == null }
+            ?.any { organizerGroups.contains(it.id) }
+            ?: false
 
         if (memberOfAnyOrganizerGroups && user.role.value < RoleType.STAFF.value) {
             groups.findByName(loginComponent.organizerGroupName.getValue()).ifPresent {
@@ -235,26 +238,5 @@ open class AuthschLoginService(
             }
         }
     }
-
-    private fun getAuthorities(user: UserEntity): List<GrantedAuthority> {
-        val authorities: MutableList<GrantedAuthority> = ArrayList()
-        authorities.add(SimpleGrantedAuthority("ROLE_${user.role.name}"))
-        return authorities
-    }
-
-    private fun getCredentials(profile: ProfileResponse, user: UserEntity): String {
-        return if (startupPropertyConfig.jwtEnabled)
-            jwtTokenProvider.createToken(user.id, profile.internalId, user.role, user.permissionsAsList, user.fullName)
-        else
-            ""
-    }
-
-    private fun getPrincipal(user: UserEntity, profile: ProfileResponse) = CmschUserPrincipal(
-        id = user.id,
-        internalId = profile.internalId,
-        role = user.role,
-        permissionsAsList = user.permissionsAsList,
-        userName = user.fullName
-    )
 
 }
