@@ -144,6 +144,7 @@ export interface Leaderboard {
 }
 
 export interface Profile {
+  aliasChangeEnabled: boolean
   title: string
   showTasks: boolean
   taskCounterName: string

@@ -9,7 +9,7 @@ interface RiddleSubmissionParams {
 }
 
 export const useRiddleSubmitMutation = () => {
-  return useMutation<RiddleSubmissonResult, Error, RiddleSubmissionParams>('taskSubmission', async (params: RiddleSubmissionParams) => {
+  return useMutation<RiddleSubmissonResult, Error, RiddleSubmissionParams>('riddleSubmission', async (params: RiddleSubmissionParams) => {
     const res = await axios.post(
       `/api/${Paths.RIDDLE}/${params.id}`,
       { solution: params.solution },
