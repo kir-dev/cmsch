@@ -60,7 +60,7 @@ data class SignupFormEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5,
         label = "Minimum rang a megtekintéshez",
         note = "A ranggal rendelkező már megtekintheti (BASIC = belépett, STAFF = rendező)",
-        source = [ "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ])
+        source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = RoleType::class)
     var minRole: RoleType = RoleType.BASIC,
@@ -70,7 +70,7 @@ data class SignupFormEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6,
         label = "Maximum rang a megtekintéshez",
         note = "A ranggal rendelkező még megtekintheti (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező)",
-        source = [ "BASIC", "ATTENDEE", "STAFF", "ADMIN", "SUPERUSER" ])
+        source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = RoleType::class)
     var maxRole: RoleType = RoleType.SUPERUSER,
