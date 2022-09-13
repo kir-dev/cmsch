@@ -51,7 +51,7 @@ class TaskApiController(
                 return TasksView(
                     score = score,
                     categories = categories
-                        .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
+                        .filter { clock.inRange(it.availableFrom, it.availableTo, clock.getTimeInSeconds()) },
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
                     leaderBoardFrozen = leaderBoardFrozen
@@ -70,7 +70,7 @@ class TaskApiController(
                 return TasksView(
                     score = score,
                     categories = categories
-                        .filter { it.availableFrom < clock.getTimeInSeconds() && it.availableTo > clock.getTimeInSeconds() },
+                        .filter { clock.inRange(it.availableFrom, it.availableTo, clock.getTimeInSeconds()) },
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
                     leaderBoardFrozen = leaderBoardFrozen
