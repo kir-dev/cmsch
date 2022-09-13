@@ -2,12 +2,14 @@ import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { RiddleCategory } from '../../util/views/riddle.view'
 import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths, Paths } from '../../util/paths'
 import { l } from '../../util/language'
+import { useRiddleListQuery } from '../../api/hooks/useRiddleListQuery'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 
 function progress(riddleCategory: RiddleCategory) {
   if (riddleCategory.completed === 0) {
@@ -17,25 +19,20 @@ function progress(riddleCategory: RiddleCategory) {
 }
 
 const RiddleCategoryList = () => {
-  const bg = useColorModeValue('gray.200', 'gray.600')
   const navigate = useNavigate()
+  const { sendMessage } = useServiceContext()
   const toast = useToast()
 
-  const [riddleCategoryList, setRiddleCategoryList] = useState<RiddleCategory[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const queryResult = useRiddleListQuery(() => toast({ title: l('riddle-query-failed'), status: 'error' }))
 
-  useEffect(() => {
-    setLoading(true)
-    axios
-      .get<RiddleCategory[]>(`/api/${Paths.RIDDLE}`)
-      .then((res) => {
-        setRiddleCategoryList(res.data)
-        setLoading(false)
-      })
-      .catch(() => {
-        console.error('Nem sikerült lekérni a Riddle-öket.')
-      })
-  }, [setRiddleCategoryList])
+  if (queryResult.isError) {
+    sendMessage(l('riddle-query-failed') + queryResult.error.message)
+    return <Navigate replace to={AbsolutePaths.ERROR} />
+  }
+
+  if (queryResult.isLoading) {
+    return <Loading />
+  }
 
   const onRiddleCategoryClick = (nextRiddle?: number) => {
     if (nextRiddle) {
@@ -62,25 +59,24 @@ const RiddleCategoryList = () => {
     return `conic-gradient(white 0deg,${color} 10deg, ${color} ${endDeg}deg, white ${endDeg + 10}deg)`
   }
 
-  const riddleHoverBgColor = useColorModeValue('brand.300', 'brand.700')
-
-  if (loading) return <Loading />
+  const bg = useColorModeValue('brand.100', 'brand.500')
+  const hoverBg = useColorModeValue('brand.200', 'brand.400')
 
   return (
     <CmschPage loginRequired groupRequired>
       <Helmet title="Riddleök" />
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">
-        {riddleCategoryList.length > 0 ? (
+        {(queryResult.data || []).length > 0 ? (
           <>
-            {riddleCategoryList.map((riddleCategory) => (
+            {queryResult.data?.map((riddleCategory) => (
               <Box
                 key={riddleCategory.categoryId}
                 bg={bg}
                 px={6}
                 py={2}
                 borderRadius="md"
-                _hover={{ bgColor: riddleHoverBgColor, cursor: 'pointer' }}
+                _hover={{ bgColor: hoverBg, cursor: 'pointer' }}
                 onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
               >
                 <Flex align="center" justifyContent="space-between">
