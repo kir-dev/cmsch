@@ -26,7 +26,7 @@ class LeaderBoardApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/leaderboard")
-    fun profile(auth: Authentication?): ResponseEntity<LeaderBoardView> {
+    fun leaderboard(auth: Authentication?): ResponseEntity<LeaderBoardView> {
         val user = auth?.getUserFromDatabaseOrNull()
 
         if (!leaderBoardComponent.leaderboardEnabled.isValueTrue())
@@ -45,6 +45,25 @@ class LeaderBoardApiController(
             groupBoard = if (leaderBoardComponent.showGroupBoard.isValueTrue()) fetchGroupBoard() else null
         ))
     }
+
+    @GetMapping("/detailed-leaderboard")
+    fun detailedLeaderboard(auth: Authentication?): ResponseEntity<DetailedLeaderBoardView> {
+        val user = auth?.getUserFromDatabaseOrNull()
+
+        if (!leaderBoardComponent.leaderboardDetailsEnabled.isValueTrue())
+            return ResponseEntity.ok(DetailedLeaderBoardView())
+
+        if (!leaderBoardComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return ResponseEntity.ok(DetailedLeaderBoardView(
+            user?.id,
+            leaderBoardService.getBoardDetailsForUsers(),
+            user?.group?.id,
+            leaderBoardService.getBoardDetailsForGroups()
+        ))
+    }
+
 
     private fun fetchUserScore(user: CmschUser): Int? {
         if (!leaderBoardComponent.showUserBoard.isValueTrue())
