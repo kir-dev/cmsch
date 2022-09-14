@@ -200,13 +200,13 @@ open class QrFightService(
         val dependencyLevel = dependencyLevels.first()
 
         val completedTokens = tokenPropertyRepository.orElseThrow()
-            .findAllByOwnerGroup_IdAndToken_Type(group.id, dependencyLevel.category).size
+            .findAllByOwnerGroup_IdAndToken_TypeAndToken_ActiveTargetTrue(group.id, dependencyLevel.category).size
         return completedTokens >= dependencyLevel.minAmountToComplete
     }
 
     private fun isLevelCompletedForGroup(level: QrLevelEntity, group: GroupEntity): Boolean {
         val completedTokens = tokenPropertyRepository.orElseThrow()
-            .findAllByOwnerGroup_IdAndToken_Type(group.id, level.category).size
+            .findAllByOwnerGroup_IdAndToken_TypeAndToken_ActiveTargetTrue(group.id, level.category).size
         return completedTokens >= level.minAmountToComplete
     }
 
@@ -282,13 +282,13 @@ open class QrFightService(
         val dependencyLevel = dependencyLevels.first()
 
         val completedTokens = tokenPropertyRepository.orElseThrow()
-            .findAllByOwnerUser_IdAndToken_Type(user.id, dependencyLevel.category).size
+            .findAllByOwnerUser_IdAndToken_TypeAndToken_ActiveTargetTrue(user.id, dependencyLevel.category).size
         return completedTokens >= dependencyLevel.minAmountToComplete
     }
 
     private fun isLevelCompletedForUser(level: QrLevelEntity, user: UserEntity): Boolean {
         val completedTokens = tokenPropertyRepository.orElseThrow()
-            .findAllByOwnerUser_IdAndToken_Type(user.id, level.category).size
+            .findAllByOwnerUser_IdAndToken_TypeAndToken_ActiveTargetTrue(user.id, level.category).size
         return completedTokens >= level.minAmountToComplete
     }
 

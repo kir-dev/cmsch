@@ -26,11 +26,11 @@ data class RaceRecordEntity(
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 2, label = "Kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat(ignore = false, columnId = 0)
     var category: String = "",
 
     @Column(nullable = true)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var userId: Int? = null,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -38,11 +38,11 @@ data class RaceRecordEntity(
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
         note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot")
     @property:GenerateOverview(columnName = "Felhasználó", order = 3, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat(ignore = false, columnId = 2)
     var userName: String = "",
 
     @Column(nullable = true)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     var groupId: Int? = null,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -50,21 +50,21 @@ data class RaceRecordEntity(
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Csoport", entitySource = "GroupEntity",
         note = "Csak akkor kell kijelölni ha csoportok kapnak pontot")
     @property:GenerateOverview(columnName = "Csoport", order = 3, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 5)
+    @property:ImportFormat(ignore = false, columnId = 4)
     var groupName: String = "",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_TIME, order = 9, label = "Mért idő", defaultValue = "0", note = "A mért idő másodperc és ezredmásodperc részét külön kell felvinni")
     @property:GenerateOverview(columnName = "Idő", order = 5, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 6)
+    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_FLOAT)
     var time: Float = 0.0f,
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Időbélyeg", enabled = false, visible = false)
     @property:GenerateOverview(columnName = "Időbélyeg", order = 6, centered = true, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 7)
+    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)
     var timestamp: Long = 0,
 
 ) : ManagedEntity {

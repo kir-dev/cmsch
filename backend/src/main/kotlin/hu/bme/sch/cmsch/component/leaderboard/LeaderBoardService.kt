@@ -129,18 +129,32 @@ open class LeaderBoardService(
         }
 
         val tokens = when (startupPropertyConfig.tokenOwnershipMode) {
-            OwnershipType.GROUP -> listOf() // TODO: Not implemented token collection for groups
-            OwnershipType.USER -> listOf<TopListAsGroupEntryDto>()
+            OwnershipType.GROUP -> {
+                tokenSubmissions.map { it.findAll() }.orElse(listOf())
+                    .groupBy { it.ownerGroup?.id ?: 0 }
+                    .map { entity ->
+                        TopListAsGroupEntryDto(
+                            entity.value[0].ownerGroup?.name ?: "n/a",
+                            tokenScore = entity.value.sumOf { s -> s.token?.score ?: 0 }
+                        )
+                    }
+            }
+            OwnershipType.USER -> listOf()
         }
+
+        val tasksPercent = leaderBoardComponent.tasksPercent.getIntValue(100) / 100.0f
+        val riddlesPercent = leaderBoardComponent.riddlesPercent.getIntValue(100) / 100.0f
+        val challengesPercent = leaderBoardComponent.challengesPercent.getIntValue(100) / 100.0f
+        val tokenPercent = leaderBoardComponent.tokenPercent.getIntValue(100) / 100.0f
 
         cachedTopListForGroups = sequenceOf(tasks, riddles, challenge, tokens)
             .flatMap { it }
             .groupBy { it.name }
             .map { entries ->
-                val taskScore = entries.value.maxOf { it.taskScore }
-                val riddleScore = entries.value.maxOf { it.riddleScore }
-                val challengeScore = entries.value.maxOf { it.challengeScore }
-                val tokenScore = entries.value.maxOf { it.tokenScore }
+                val taskScore = (entries.value.maxOf { it.taskScore } * tasksPercent).toInt()
+                val riddleScore = (entries.value.maxOf { it.riddleScore } * riddlesPercent).toInt()
+                val challengeScore = (entries.value.maxOf { it.challengeScore } * challengesPercent).toInt()
+                val tokenScore = (entries.value.maxOf { it.tokenScore } * tokenPercent).toInt()
                 TopListAsGroupEntryDto(entries.key,
                     taskScore = taskScore,
                     riddleScore = riddleScore,
@@ -223,14 +237,19 @@ open class LeaderBoardService(
             }
         }
 
+        val tasksPercent = leaderBoardComponent.tasksPercent.getIntValue(100) / 100.0f
+        val riddlesPercent = leaderBoardComponent.riddlesPercent.getIntValue(100) / 100.0f
+        val challengesPercent = leaderBoardComponent.challengesPercent.getIntValue(100) / 100.0f
+        val tokenPercent = leaderBoardComponent.tokenPercent.getIntValue(100) / 100.0f
+
         cachedTopListForUsers = sequenceOf(tasks, riddles, challenges, tokens)
             .flatMap { it }
             .groupBy { it.id }
             .map { entries ->
-                val taskScore = entries.value.maxOf { it.taskScore }
-                val riddleScore = entries.value.maxOf { it.riddleScore }
-                val challengeScore = entries.value.maxOf { it.challengeScore }
-                val tokenScore = entries.value.maxOf { it.tokenScore }
+                val taskScore = (entries.value.maxOf { it.taskScore } * tasksPercent).toInt()
+                val riddleScore = (entries.value.maxOf { it.riddleScore } * riddlesPercent).toInt()
+                val challengeScore = (entries.value.maxOf { it.challengeScore } * challengesPercent).toInt()
+                val tokenScore = (entries.value.maxOf { it.tokenScore } * tokenPercent).toInt()
                 TopListAsUserEntryDto(entries.key, entries.value.firstOrNull()?.name ?: "n/a",
                     entries.value.firstOrNull()?.groupName ?: "n/a",
                     taskScore = taskScore,

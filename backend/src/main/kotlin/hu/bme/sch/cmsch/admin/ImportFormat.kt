@@ -8,6 +8,7 @@ const val IMPORT_LONG = "long"
 const val IMPORT_INT = "int"
 const val IMPORT_ENUM = "enum"
 const val IMPORT_LOB = "lob"
+const val IMPORT_FLOAT = "float"
 
 annotation class ImportFormat(
         val ignore: Boolean = true,

@@ -26,11 +26,11 @@ data class ChallengeSubmissionEntity(
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 2, label = "Kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat(ignore = false, columnId = 0)
     var category: String = "",
 
     @Column(nullable = true)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var userId: Int? = null,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -38,11 +38,11 @@ data class ChallengeSubmissionEntity(
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
         note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot")
     @property:GenerateOverview(columnName = "Felhasználó", order = 3, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat(ignore = false, columnId = 2)
     var userName: String = "",
 
     @Column(nullable = true)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     var groupId: Int? = null,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -50,14 +50,14 @@ data class ChallengeSubmissionEntity(
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Csoport", entitySource = "GroupEntity",
         note = "Csak akkor kell kijelölni ha csoportok kapnak pontot")
     @property:GenerateOverview(columnName = "Csoport", order = 3, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 5)
+    @property:ImportFormat(ignore = false, columnId = 4)
     var groupName: String = "",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 9, label = "Adott pont")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 6)
+    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
     var score: Int = 0,
 
 ) : ManagedEntity {

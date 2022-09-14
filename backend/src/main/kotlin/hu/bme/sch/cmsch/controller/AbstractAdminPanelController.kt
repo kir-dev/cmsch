@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_PURGE
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
@@ -54,8 +55,11 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val importable: Boolean = false,
         private val adminMenuIcon: String = "check_box_outline_blank",
         private val adminMenuPriority: Int = 1,
-        private val virtualEntity: Boolean = false
-) {
+        private val virtualEntity: Boolean = false,
+        private val allowedToPurge: Boolean = importable,
+        private val savable: Boolean = false,
+        private val purgeRepo: CrudRepository<*, Int>? = repo,
+) : AbstractPurgeAdminPageController<T>(repo, adminMenuService, titlePlural, view, allowedToPurge) {
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val descriptor = OverviewBuilder(classType)
@@ -90,7 +94,9 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("rows", filterOverview(user, fetchOverview()))
         model.addAttribute("user", user)
         model.addAttribute("controlMode", controlMode)
-        model.addAttribute("importable", importable)
+        model.addAttribute("importable", importable && PERMISSION_IMPORT_EXPORT.validate(user))
+        model.addAttribute("allowedToPurge", allowedToPurge && PERMISSION_PURGE.validate(user))
+        model.addAttribute("savable", savable)
 
         return "overview"
     }
@@ -317,7 +323,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     fun resource(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (PERMISSION_IMPORT_EXPORT.validate(user).not()) {
+        if (!importable || PERMISSION_IMPORT_EXPORT.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_IMPORT_EXPORT.permissionString)
             model.addAttribute("user", user)
             return "admin403"
@@ -332,7 +338,17 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @ResponseBody
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(auth: Authentication, response: HttpServletResponse): ByteArray {
-        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+        if (!importable || PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
+        return descriptor.exportToCsv(fetchOverview().toList()).toByteArray()
+    }
+
+    @ResponseBody
+    @GetMapping("/save/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun saveAsCsv(auth: Authentication, response: HttpServletResponse): ByteArray {
+        if (!savable || PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
@@ -342,7 +358,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @PostMapping("/import/csv")
     fun import(file: MultipartFile?, model: Model, auth: Authentication): String {
         val user = auth.getUser()
-        if (PERMISSION_IMPORT_EXPORT.validate(user).not()) {
+        if (!importable || PERMISSION_IMPORT_EXPORT.validate(user).not()) {
             throw IllegalStateException("Insufficient permissions")
         }
 
@@ -359,7 +375,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
             val after = repo.count()
             model.addAttribute("importedCount", after - before)
         } else {
-            log.info("Importing is disabled for vistual entities (on view: {})", view)
+            log.info("Importing is disabled for virtual entities (on view: {})", view)
             model.addAttribute("importedCount", 0)
         }
 
@@ -402,6 +418,5 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     open fun fetchOverview(): Iterable<T> {
         return repo?.findAll() ?: mutableListOf()
     }
-
 
 }
