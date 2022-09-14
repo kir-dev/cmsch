@@ -11,42 +11,41 @@ data class TopListAsUserEntryDto(
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 0)
     var id: Int,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat(ignore = false, columnId = 0)
     override var name: String,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Csoport", order = 2, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var groupName: String,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Feladatok", order = 3, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
     override var taskScore: Int = 0,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Riddleök", order = 4, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     override var riddleScore: Int = 0,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Beadások", order = 5, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
     override var challengeScore: Int = 0,
 
     @JsonView(value = [Preview::class, FullDetails::class])
     @property:GenerateOverview(columnName = "QR Kódok", order = 6, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
     override var tokenScore: Int = 0,
 
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Totál", order = 100, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_INT)
     override var totalScore: Int = 0,
 
 ) : TopListAbstractEntry
