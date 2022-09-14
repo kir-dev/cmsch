@@ -35,8 +35,9 @@ const RiddlePage = () => {
   const toastIdRef = useRef<ToastId | null>(null)
   const { sendMessage } = useServiceContext()
   const solutionInput = useRef<HTMLInputElement>(null)
-  let queryResult = useRiddleDetailsQuery(() => toast({ title: l('riddle-query-failed'), status: 'error' }), id || '')
-  let hintQuery = useRiddleHintQuery(() => toast({ title: l('riddle-query-failed'), status: 'error' }), id || '')
+  const onRiddleQueryFailed = () => toast({ title: l('riddle-query-failed'), status: 'error' })
+  const queryResult = useRiddleDetailsQuery(onRiddleQueryFailed, id || '')
+  const hintQuery = useRiddleHintQuery(onRiddleQueryFailed, id || '')
   const submissionMutation = useRiddleSubmitMutation()
 
   if (queryResult.isError) {
@@ -81,14 +82,6 @@ const RiddlePage = () => {
               duration: 5000,
               isClosable: true
             })
-            hintQuery = useRiddleHintQuery(
-              () => toast({ title: l('riddle-query-failed'), status: 'error' }),
-              result.nextId.toString() || ''
-            )
-            queryResult = useRiddleDetailsQuery(
-              () => toast({ title: l('riddle-query-failed'), status: 'error' }),
-              result.nextId.toString() || ''
-            )
           }
           if (result.status === RiddleSubmissonStatus.CORRECT && !result.nextId) {
             navigate(AbsolutePaths.RIDDLE)
@@ -146,10 +139,10 @@ const RiddlePage = () => {
             <Button type="submit" colorScheme="brand" width="100%">
               Beadom
             </Button>
-            {hintQuery.isSuccess ? (
+            {hintQuery.isSuccess || queryResult.data?.hint ? (
               <Alert status="info" borderRadius="md">
                 <AlertIcon />
-                {hintQuery.data.hint}
+                {hintQuery.data?.hint || queryResult.data?.hint}
               </Alert>
             ) : (
               <Button onClick={() => hintQuery.refetch()} width="100%" colorScheme="blue" variant="outline">
