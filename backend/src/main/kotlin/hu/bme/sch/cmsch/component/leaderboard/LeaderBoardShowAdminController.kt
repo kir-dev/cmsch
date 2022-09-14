@@ -5,16 +5,21 @@ import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_NONE
 import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_TOPLIST
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_LEADERBOARD
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_LEADERBOARD
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import javax.annotation.PostConstruct
+import javax.servlet.http.HttpServletResponse
 
 @Controller
 @RequestMapping("/admin/control")
@@ -76,6 +81,7 @@ class LeaderBoardShowAdminController(
         model.addAttribute("controlMode", if (permissionControlShow.validate(user)) CONTROL_MODE_TOPLIST else CONTROL_MODE_NONE)
         model.addAttribute("leaderboardEnabled", leaderBoardComponent.leaderboardEnabled.isValueTrue())
         model.addAttribute("leaderboardUpdates", !leaderBoardComponent.leaderboardFrozen.isValueTrue())
+        model.addAttribute("savable", true)
 
         return "overview"
     }
@@ -119,6 +125,16 @@ class LeaderBoardShowAdminController(
         return "redirect:/admin/control/user-toplist"
     }
 
+    @ResponseBody
+    @GetMapping("/user-toplist/save/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun saveUserAsCsv(auth: Authentication, response: HttpServletResponse): ByteArray {
+        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\"user-toplist-export.csv\"")
+        return userTopListDescriptor.exportToCsv(leaderBoardService.getBoardAnywaysForUsers()).toByteArray()
+    }
+
     @GetMapping("/group-toplist")
     fun groupToplist(model: Model, auth: Authentication): String {
         val user = auth.getUser()
@@ -141,6 +157,7 @@ class LeaderBoardShowAdminController(
         model.addAttribute("controlMode", if (permissionControlShow.validate(user)) CONTROL_MODE_TOPLIST else CONTROL_MODE_NONE)
         model.addAttribute("leaderboardEnabled", leaderBoardComponent.leaderboardEnabled.isValueTrue())
         model.addAttribute("leaderboardUpdates", !leaderBoardComponent.leaderboardFrozen.isValueTrue())
+        model.addAttribute("savable", true)
 
         return "overview"
     }
@@ -183,5 +200,16 @@ class LeaderBoardShowAdminController(
         leaderBoardComponent.leaderboardFrozen.setAndPersistValue("true")
         return "redirect:/admin/control/group-toplist"
     }
+
+    @ResponseBody
+    @GetMapping("/group-toplist/save/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun saveGroupAsCsv(auth: Authentication, response: HttpServletResponse): ByteArray {
+        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\"group-toplist-export.csv\"")
+        return groupTopListDescriptor.exportToCsv(leaderBoardService.getBoardAnywaysForGroups()).toByteArray()
+    }
+
 
 }

@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository
 @ConditionalOnBean(ChallengeComponent::class)
 interface ChallengeSubmissionRepository : CrudRepository<ChallengeSubmissionEntity, Int> {
 
-
-
 }

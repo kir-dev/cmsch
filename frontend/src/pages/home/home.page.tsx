@@ -77,10 +77,6 @@ const HomePage = () => {
           <Heading as="h2" size="lg" textAlign="center" mb={5} mt={20}>
             {config?.components.event.title}
           </Heading>
-          <Alert marginTop={4} variant="left-accent" width="fit-content" marginX="auto">
-            <AlertIcon />
-            <Box>{l('event-list-message')}</Box>
-          </Alert>
           <VStack spacing={10}>
             <Text textAlign="center" fontSize={25} fontWeight="bolder" marginTop={10}>
               Mai nap

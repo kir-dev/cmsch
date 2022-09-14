@@ -81,6 +81,11 @@ object ControlPermissions : PermissionGroup {
         "Az összes kezelt entitás exportálása és importálása (ezáltal indirekt megtekintése és készítése is)"
     )
 
+    val PERMISSION_PURGE = PermissionValidator(
+        "PURGE_ENTITIES",
+        "Az összes kezelt entitás törlése egyszerre"
+    )
+
     val PERMISSION_CONTROL_APP = PermissionValidator(
         "APP_CONTROL",
         "Az alkalazás testreszabása"
@@ -147,6 +152,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_LEADERBOARD,
         PERMISSION_CONTROL_PROFILE,
         PERMISSION_IMPORT_EXPORT,
+        PERMISSION_PURGE,
         PERMISSION_CONTROL_APP,
         PERMISSION_SHOW_DELETE_FILES,
         PERMISSION_CONTROL_IMPRESSUM,

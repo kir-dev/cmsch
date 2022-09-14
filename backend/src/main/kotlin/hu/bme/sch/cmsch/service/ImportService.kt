@@ -86,6 +86,14 @@ open class ImportService {
                                         throw e
                                     }
                                 }
+                                IMPORT_FLOAT -> {
+                                    try {
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, dto[it.second.columnId].toFloatOrNull())
+                                    } catch (e: IllegalArgumentException) {
+                                        log.error("Invalid field ${it.first.name} as type ${it.second.type} (FLOAT) with value ${dto[it.second.columnId]}")
+                                        throw e
+                                    }
+                                }
                                 IMPORT_LOB -> {
                                     try {
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, String(Base64.getDecoder().decode(dto[it.second.columnId])))

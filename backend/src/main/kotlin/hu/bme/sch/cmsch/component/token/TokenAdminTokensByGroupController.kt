@@ -1,12 +1,14 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
+import hu.bme.sch.cmsch.controller.AbstractPurgeAdminPageController
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_DELETE
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -26,6 +28,12 @@ class TokenAdminTokensByGroupController(
     private val tokenPropertyRepository: TokenPropertyRepository,
     private val groupRepository: GroupRepository,
     private val adminMenuService: AdminMenuService
+) : AbstractPurgeAdminPageController<TokenPropertyEntity>(
+    tokenPropertyRepository,
+    adminMenuService,
+    "Csoportos tokenek",
+    "token-properties-group",
+    true
 ) {
 
     private val view = "token-properties-group"
@@ -68,6 +76,7 @@ class TokenAdminTokensByGroupController(
         model.addAttribute("rows", fetchOverview())
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_VIEW)
+        model.addAttribute("allowedToPurge", ControlPermissions.PERMISSION_PURGE.validate(user))
 
         return "overview"
     }
