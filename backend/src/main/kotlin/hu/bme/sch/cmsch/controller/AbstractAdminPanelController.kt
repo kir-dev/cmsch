@@ -118,7 +118,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
-            val actualEntity = entity.orElseThrow()
+            val actualEntity = onPreEdit(entity.orElseThrow())
             model.addAttribute("data", actualEntity)
             if (!editPermissionCheck(user, actualEntity)) {
                 model.addAttribute("user", user)
@@ -401,6 +401,11 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
 
     open fun onDetailsView(entity: CmschUser, model: Model) {
         // Overridden when notification is required
+    }
+
+    open fun onPreEdit(actualEntity: T): T {
+        // Overridden when notification is required
+        return actualEntity
     }
 
     open fun filterOverview(user: CmschUser, rows: Iterable<T>): Iterable<T> {
