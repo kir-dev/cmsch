@@ -23,6 +23,7 @@ class LeaderBoardComponent(
 
             logicGroup,
             leaderboardEnabled,
+            leaderboardDetailsEnabled,
             leaderboardFrozen,
             showScores,
 
@@ -68,6 +69,11 @@ class LeaderBoardComponent(
     val leaderboardEnabled = SettingProxy(componentSettingService, component,
         "leaderboardEnabled", "true", type = SettingType.BOOLEAN,
         fieldName = "Toplista akítv", description = "A toplista leküldésre kerül"
+    )
+
+    val leaderboardDetailsEnabled = SettingProxy(componentSettingService, component,
+        "leaderboardDetailsEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Toplista részletek akítv", description = "A részletes toplista leküldésre kerül"
     )
 
     val leaderboardFrozen = SettingProxy(componentSettingService, component,

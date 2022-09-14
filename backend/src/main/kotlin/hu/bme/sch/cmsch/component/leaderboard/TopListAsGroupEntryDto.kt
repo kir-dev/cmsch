@@ -8,6 +8,11 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 
 data class TopListAsGroupEntryDto(
+
+    @JsonView(value = [ Preview::class, FullDetails::class ])
+    @property:GenerateOverview(visible = false)
+    var id: Int,
+
     @JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Csoport", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
