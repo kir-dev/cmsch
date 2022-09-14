@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.ManagedEntity
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import javax.persistence.*
@@ -19,7 +20,7 @@ data class SubmittedTaskEntity(
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(visible = false)
-    var id: Int = 0,
+    override var id: Int = 0,
 
     @ManyToOne(targetEntity = TaskEntity::class)
     var task: TaskEntity? = null,
@@ -45,7 +46,7 @@ data class SubmittedTaskEntity(
     @Column(nullable = false)
     var categoryId: Int = 0,
 
-    // TODO: Add @Lob here after GTB completes
+    // TODO: Remove textAnswer
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 3, label = "Szöveges válasz", enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT,
@@ -95,7 +96,7 @@ data class SubmittedTaskEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 10, label = "Adott pont")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     var score: Int = 0
-) {
+) : ManagedEntity {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false

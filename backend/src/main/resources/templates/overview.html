@@ -120,8 +120,14 @@
                     </p>
                 </object>
 
-                <object th:if="${importable != null && importable && user.isAdmin()}" th:remove="tag">
+                <object th:if="${importable != null && importable}" th:remove="tag">
                     <a href="#" th:href="|@{/admin/control}/${view}/resource|" class="btn btn-secondary">Import és export</a>
+                </object>
+                <object th:if="${allowedToPurge != null && allowedToPurge}" th:remove="tag">
+                    <a href="#" th:href="|@{/admin/control}/${view}/purge|" class="btn btn-secondary">Teljes törlés</a>
+                </object>
+                <object th:if="${savable != null && savable}" th:remove="tag">
+                    <a href="#" target="_blank" th:href="|@{/admin/control}/${view}/save/csv|" class="btn btn-secondary">Mentés (CSV)</a>
                 </object>
 
                 <object th:if="${controlMode == 'location'}" th:remove="tag">

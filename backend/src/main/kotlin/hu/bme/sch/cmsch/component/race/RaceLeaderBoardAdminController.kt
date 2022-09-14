@@ -31,7 +31,8 @@ class RaceLeaderBoardAdminController(
     permissionControl = PERMISSION_EDIT_RACE,
     importable = false,
     adminMenuPriority = 2, adminMenuIcon = "leaderboard",
-    virtualEntity = true
+    virtualEntity = true,
+    savable = true
 ) {
 
     override fun fetchOverview(): Iterable<RaceEntryDto> {
