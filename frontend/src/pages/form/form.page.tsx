@@ -73,7 +73,6 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
         {(submission?.rejectionMessage || message) && (
           <>
             <Markdown text={submission?.rejectionMessage || message} />
-            {submission?.email && <Text>Kapcsolat: {submission?.email}</Text>}
           </>
         )}
         {form && (

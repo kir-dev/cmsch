@@ -36,7 +36,6 @@ const languageData = {
   'news-list-load-failed-contact-developers': 'Hírek betöltése sikertelen!\n Keresd az oldal fejlesztőit.',
   'form-load-failed': 'Oldal betöltése sikertelen!',
   'form-load-failed-contact-developers': 'Űrlap betöltése sikertelen!\n Keresd az oldal fejlesztőit.',
-  'event-list-message': 'A változás jogát fenntartjuk! Kísérd figyelemmel az oldal tetején megjelenő értesítéseket!',
   'riddle-incorrect-title': 'Helytelen válasz!',
   'riddle-incorrect-description': 'Próbáld meg újra, sikerülni fog!',
   'riddle-correct-title': 'Helyes válasz!',

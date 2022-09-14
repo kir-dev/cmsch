@@ -26,6 +26,12 @@ class LeaderBoardComponent(
             leaderboardFrozen,
             showScores,
 
+            calcGroup,
+            tasksPercent,
+            riddlesPercent,
+            challengesPercent,
+            tokenPercent,
+
             displayGroup,
             minScoreToShow,
             showUserBoard,
@@ -73,6 +79,34 @@ class LeaderBoardComponent(
         "showScores", "false", type = SettingType.BOOLEAN,
         fieldName = "Pontok mutatása",
         description = "Ha igaz, akkor látszódnak a pontok, ha hamis, akkor csak a sorrend"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val calcGroup = SettingProxy(componentSettingService, component,
+        "calcGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Pont számítás",
+        description = ""
+    )
+
+    val tasksPercent = SettingProxy(componentSettingService, component,
+        "tasksPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+        fieldName = "Feladatok szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
+    )
+
+    val riddlesPercent = SettingProxy(componentSettingService, component,
+        "riddlesPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+        fieldName = "Riddle szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
+    )
+
+    val challengesPercent = SettingProxy(componentSettingService, component,
+        "challengesPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+        fieldName = "Beadások szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
+    )
+
+    val tokenPercent = SettingProxy(componentSettingService, component,
+        "tokenPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+        fieldName = "QR Kódok szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

@@ -68,11 +68,19 @@ data class TokenEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false, columnDefinition = "VARCHAR(255) default ''")
-    @property:GenerateInput(maxLength = 32, order = 6, label = "Kiváltott esemény",
+    @property:GenerateInput(maxLength = 32, order = 7, label = "Kiváltott esemény",
         note = "QR fighthoz az akció amit kivált. capture:<tower> vagy history:<tower>")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var action: String? = "",
+
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Aktív cél",
+        note = "Csak akkor ha a QR Fight komponens is be van töltve")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
+    var activeTarget: Boolean? = false,
 
 ): ManagedEntity {
 

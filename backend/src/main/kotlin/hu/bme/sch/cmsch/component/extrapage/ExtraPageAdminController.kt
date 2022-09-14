@@ -43,7 +43,8 @@ class ExtraPageController(
     "Egyedi oldalak kezelése.",
     ExtraPageEntity::class, ::ExtraPageEntity, importService, adminMenuService, component,
     permissionControl = PERMISSION_EDIT_EXTRA_PAGES,
-    adminMenuIcon = "article"
+    adminMenuIcon = "article",
+    importable = true
 ) {
 
     override fun filterOverview(user: CmschUser, rows: Iterable<ExtraPageEntity>): Iterable<ExtraPageEntity> {
