@@ -81,12 +81,12 @@ export const AliasChangePage = () => {
           />
         </FormControl>
 
-        <HStack spacing={5} mt={10}>
+        <HStack spacing={3} mt={10}>
           <Button type="submit" colorScheme="brand" width="100%">
             Mentés
           </Button>
           <Button type="button" onClick={removeAlias} colorScheme="red" width="100%">
-            Becenév törlése
+            Törlés
           </Button>
           <Button type="button" onClick={() => navigate(AbsolutePaths.PROFILE)} colorScheme="gray" width="100%">
             Mégse
