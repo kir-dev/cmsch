@@ -75,7 +75,7 @@ data class TokenEntity(
     var action: String? = "",
 
     @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BOOLEAN default FALSE")
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Aktív cél",
         note = "Csak akkor ha a QR Fight komponens is be van töltve")
     @property:GenerateOverview(visible = false)

@@ -10,14 +10,16 @@ enum class LevelStatus {
 
 data class TowerView(
     val name: String = "",
-    val ownerNow: String? = null
+    val ownerNow: String? = null,
+    val holder: String? = null,
+    val holdingFor: Int? = null
 )
 
 data class QrFightLevelView(
     val name: String = "",
     val description: String = "",
     val status: LevelStatus = LevelStatus.NOT_LOGGED_IN,
-    val owner: String? = null,
+    val owners: String = "",
     val teams: Map<String, Int> = mapOf(),
     val towers: List<TowerView> = listOf()
 )
