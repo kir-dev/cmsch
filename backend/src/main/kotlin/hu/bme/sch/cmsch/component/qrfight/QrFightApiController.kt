@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
-@ConditionalOnBean(QrFightApiController::class)
+@ConditionalOnBean(QrFightComponent::class)
 class QrFightApiController(
     private val qrFightService: QrFightService,
     private val startupPropertyConfig: StartupPropertyConfig
