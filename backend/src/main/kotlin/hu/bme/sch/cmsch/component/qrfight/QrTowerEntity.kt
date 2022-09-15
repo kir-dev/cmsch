@@ -136,6 +136,21 @@ data class QrTowerEntity(
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
     var state: String = "",
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(64) DEFAULT ''")
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 16, label = "Helytartó",
+        note = "Ha a birtokos felhasználó az ID-je, ha csoport akkor a neve")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_INT)
+    var holder: String? = null,
+
+    @Column(nullable = false, columnDefinition = "integer DEFAULT 0")
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 17, label = "Helytartás ennyi időegysége (perc)")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_INT)
+    var holderFor: Int? = null,
+
 ) : ManagedEntity {
 
     override fun equals(other: Any?): Boolean {

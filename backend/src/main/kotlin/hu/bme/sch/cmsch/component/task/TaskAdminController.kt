@@ -68,6 +68,7 @@ class TaskCategoryController(
     importable = true, adminMenuPriority = 2, adminMenuIcon = "category"
 )
 
+// FIXME 1
 @Controller
 @RequestMapping("/admin/control/submitted-tasks")
 @ConditionalOnBean(TaskComponent::class)
