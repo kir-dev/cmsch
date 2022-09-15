@@ -42,6 +42,9 @@ open class TokenCollectorService(
                 .map {
                     return@map it.onTokenScanForUser(userEntity, tokenEntity)
                 }.orElseGet {
+                    if (tokenPropertyRepository.findByToken_TokenAndOwnerUser_Id(token, user.id).isPresent)
+                        return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
+
                     tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity, clock.getTimeInSeconds()))
                     return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
                 }
@@ -57,14 +60,14 @@ open class TokenCollectorService(
 
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
-            if (tokenPropertyRepository.findByToken_TokenAndOwnerGroup(token, groupEntity.get()).isPresent)
-                return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
-
             return qrFightService
                 .filter { qrFightComponent.map { it.enabled.isValueTrue() }.orElse(false) }
                 .map {
                     return@map it.onTokenScanForGroup(userEntity, groupEntity.get(), tokenEntity)
                 }.orElseGet {
+                    if (tokenPropertyRepository.findByToken_TokenAndOwnerGroup(token, groupEntity.get()).isPresent)
+                        return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
+
                     tokenPropertyRepository.save(TokenPropertyEntity(0, null, groupEntity.get(), tokenEntity, clock.getTimeInSeconds()))
                     return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
                 }

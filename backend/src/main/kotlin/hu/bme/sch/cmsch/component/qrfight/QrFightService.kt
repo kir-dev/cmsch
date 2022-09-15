@@ -10,18 +10,21 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
+@ConditionalOnBean(QrFightComponent::class)
 open class QrFightService(
     private val qrTowerRepository: QrTowerRepository,
     private val qrLevelRepository: QrLevelRepository,
+    private val userRepository: UserRepository,
     private val tokenPropertyRepository: Optional<TokenPropertyRepository>,
     private val clock: TimeService,
     private val objectMapper: ObjectMapper,
@@ -29,7 +32,6 @@ open class QrFightService(
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-
 
     open fun getLevelsForGroups(group: GroupEntity?): QrFightOverviewView {
         val levels = qrLevelRepository.findAllByVisibleTrueAndEnabledTrue()
@@ -64,8 +66,16 @@ open class QrFightService(
             .toMap()
 
         val towers = qrTowerRepository.findAllByCategory(level.category)
-            .map { TowerView(it.displayName, it.ownerGroupName) }
+            .map {
+                TowerView(
+                    it.displayName,
+                    it.ownerGroupName,
+                    it.holder,
+                    it.holderFor
+                )
+            }
 
+        val maxCollected = teams.maxOf { it.value }
         return QrFightLevelView(
             name = level.displayName,
             description = when (status) {
@@ -74,7 +84,7 @@ open class QrFightService(
                 else -> level.hintBeforeEnabled
             },
             status = status,
-            owner = teams.maxByOrNull { it.value }?.key,
+            owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
             teams = teams,
             towers = towers
         )
@@ -113,8 +123,16 @@ open class QrFightService(
             .toMap()
 
         val towers = qrTowerRepository.findAllByCategory(level.category)
-            .map { TowerView(it.displayName, it.ownerUserName) }
+            .map { t ->
+                TowerView(
+                    t.displayName,
+                    t.ownerUserName,
+                    userRepository.findById(t.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
+                    t.holderFor
+                )
+            }
 
+        val maxCollected = teams.maxOf { it.value }
         return QrFightLevelView(
             name = level.displayName,
             description = when (status) {
@@ -123,7 +141,7 @@ open class QrFightService(
                 else -> level.hintBeforeEnabled
             },
             status = status,
-            owner = teams.maxByOrNull { it.value }?.key,
+            owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
             teams = teams,
             towers = towers
         )
@@ -166,8 +184,9 @@ open class QrFightService(
             towerEntity.ownerGroupId = group.id
             towerEntity.ownerGroupName = group.name
             towerEntity.history += "${user.fullNameWithAlias};${user.id};${group.name};${group.id};${clock.getTimeInSeconds()};\n"
-
             qrTowerRepository.save(towerEntity)
+            log.info("Tower '{}' captured by by group:{} (user:{})", token.title, group.name, user.fullName)
+            return Pair(token.title, TokenCollectorStatus.QR_TOWER_CAPTURED)
 
         } else if (action.startsWith("history:")) {
             val tower = action.split(":")[1]
@@ -182,8 +201,14 @@ open class QrFightService(
             }
 
             towerEntity.history += "${user.fullNameWithAlias};${user.id};${group.name};${group.id};${clock.getTimeInSeconds()};\n"
-
             qrTowerRepository.save(towerEntity)
+            log.info("Tower '{}' logged by by group:{} (user:{})", token.title, group.name, user.fullName)
+            return Pair(token.title, TokenCollectorStatus.QR_TOWER_LOGGED)
+        }
+
+        if (repo.findByToken_TokenAndOwnerGroup(token.token, group).isPresent) {
+            log.info("Token '{}' already collected by group:{} (user:{})", token.title, group.name, user.fullName)
+            return Pair(token.title, TokenCollectorStatus.ALREADY_SCANNED)
         }
 
         log.info("Token '{}' collected for user:{} group:{}", token.title, user.fullName, group.name)
@@ -249,6 +274,8 @@ open class QrFightService(
             towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
 
             qrTowerRepository.save(towerEntity)
+            log.info("Tower '{}' captured by by user:{}", token.title, user.fullName)
+            return Pair(token.title, TokenCollectorStatus.QR_TOWER_CAPTURED)
 
         } else if (action.startsWith("history:")) {
             val tower = action.split(":")[1]
@@ -263,12 +290,17 @@ open class QrFightService(
             }
 
             towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
-
             qrTowerRepository.save(towerEntity)
+            log.info("Tower '{}' logged by by user:{}", token.title, user.fullName)
+            return Pair(token.title, TokenCollectorStatus.QR_TOWER_LOGGED)
+        }
+
+        if (repo.findByToken_TokenAndOwnerUser_Id(token.token, user.id).isPresent) {
+            log.info("Token '{}' already collected by user:{}", token.title, user.fullName)
+            return Pair(token.title, TokenCollectorStatus.ALREADY_SCANNED)
         }
 
         log.info("Token '{}' collected for user:{}", token.title, user.fullName)
-
         repo.save(TokenPropertyEntity(0, user, null, token, clock.getTimeInSeconds()))
         return Pair(token.title, TokenCollectorStatus.SCANNED)
     }
@@ -292,9 +324,8 @@ open class QrFightService(
         return completedTokens >= level.minAmountToComplete
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 10)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun towerTimer() {
+    open fun executeTowerTimer() {
         log.info("Tower time!")
         val now = clock.getTimeInSeconds()
         val towers = qrTowerRepository.findAllByRecordTimeTrue()
@@ -303,10 +334,10 @@ open class QrFightService(
         when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> {
                 val updated = towers.map {
-                    val state = mutableMapOf<Int, Long>()
+                    val state = mutableMapOf<String, Long>()
                     if (it.state.isNotBlank())
                         state.putAll(parseState(it.state))
-                    state[it.ownerUserId] = (state[it.ownerUserId] ?: 0) + 1
+                    state[it.ownerUserId.toString()] = (state[it.ownerUserId.toString()] ?: 0) + 10
                     it.state = serializeState(state)
                     it
                 }
@@ -315,10 +346,10 @@ open class QrFightService(
             }
             OwnershipType.GROUP -> {
                 val updated = towers.map {
-                    val state = mutableMapOf<Int, Long>()
+                    val state = mutableMapOf<String, Long>()
                     if (it.state.isNotBlank())
                         state.putAll(parseState(it.state))
-                    state[it.ownerGroupId] = (state[it.ownerGroupId] ?: 0) + 1
+                    state[it.ownerGroupName] = (state[it.ownerGroupName] ?: 0) + 1
                     it.state = serializeState(state)
                     it
                 }
@@ -328,12 +359,12 @@ open class QrFightService(
         }
     }
 
-    private fun serializeState(state: MutableMap<Int, Long>): String {
+    private fun serializeState(state: MutableMap<String, Long>): String {
         return objectMapper.writeValueAsString(state)
     }
 
-    private fun parseState(state: String): MutableMap<Int, Long> {
-        return objectMapper.readValue(state, object : TypeReference<MutableMap<Int, Long>>() {})
+    private fun parseState(state: String): MutableMap<String, Long> {
+        return objectMapper.readValue(state, object : TypeReference<MutableMap<String, Long>>() {})
     }
 
 }
