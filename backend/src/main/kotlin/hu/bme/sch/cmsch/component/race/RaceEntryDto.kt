@@ -22,7 +22,7 @@ data class RaceEntryDto(
     var groupName: String? = null,
 
     @JsonView(FullDetails::class)
-    @JsonProperty("score")
+    @get:JsonProperty("score")
     @property:GenerateOverview(columnName = "Idő", order = 3, renderer = OVERVIEW_TYPE_TIME)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_FLOAT)
     var time: Float = 0.0f,
