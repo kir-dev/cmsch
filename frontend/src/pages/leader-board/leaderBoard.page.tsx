@@ -1,4 +1,4 @@
-import { Divider, Heading, HStack, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue } from '@chakra-ui/react'
+import { Divider, Heading, HStack, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -12,15 +12,20 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { AbsolutePaths } from '../../util/paths'
 import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
+import { useDetailedLeaderBoardQuery } from '../../api/hooks/useDetailedLeaderBoardQuery'
 
 const LeaderboardPage = () => {
-  const leaderboardQuery = useLeaderBoardQuery(() => console.log('Leaderboard query failed!'))
+  const leadboardConfig = useConfigContext()?.components.leaderboard
+  const toast = useToast()
+  const onQueryFail = () => toast({ title: l('result-query-failed'), status: 'error' })
+  const leaderboardQuery = leadboardConfig?.leaderboardDetailsEnabled
+    ? useDetailedLeaderBoardQuery(onQueryFail)
+    : useLeaderBoardQuery(onQueryFail)
 
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
   const { sendMessage } = useServiceContext()
 
-  const leadboardConfig = useConfigContext()?.components.leaderboard
   const title = leadboardConfig?.title || 'Toplista'
 
   if (leaderboardQuery.isError) {
