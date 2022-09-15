@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.challange
 
+import hu.bme.sch.cmsch.component.race.RaceRecordEntity
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
@@ -41,9 +42,7 @@ class ChallengeAdminPanelController(
         "UserEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(users.findAll().map {
-                if (it.alias.isNotBlank()) "${it.fullName} (${it.alias})" else it.fullName
-            }.sorted().toList())
+            results.addAll(users.findAll().sortedBy { it.fullName }.map { mapUsername(it) }.toList())
             return@to results
         },
     ),
@@ -77,27 +76,14 @@ class ChallengeAdminPanelController(
     }
 
     private fun processUserSubmission(entity: ChallengeSubmissionEntity): Boolean {
-        if (entity.userName.isNotBlank()) {
-            val username: String
-            val alias: String
-            if (entity.userName.contains(" (") && entity.userName.endsWith(")")) {
-                val nameParts = entity.userName.split(Regex(" \\("), 2)
-                username = nameParts[0]
-                alias = if (nameParts.isEmpty()) "" else nameParts[1]
-            } else {
-                username = entity.userName
-                alias = ""
-            }
+        if (entity.userName.isNotBlank() && entity.userName != "-") {
+            val user = users.findById(entity.userName.split("|")[0].trim().toIntOrNull() ?: 0)
 
-            val users = users.findAllByFullName(username)
-            if (users.size > 1) {
-                tryToMatchByAlias(users, alias, entity)
-
-            } else if (users.size == 1) {
-                entity.userName = users.first().fullName
-                entity.userId = users.first().id
-                entity.groupId = users.first().group?.id
-                entity.groupName = users.first().groupName
+            if (user.isPresent) {
+                entity.userName = user.orElseThrow().fullName
+                entity.userId = user.orElseThrow().id
+                entity.groupId = user.orElseThrow().group?.id
+                entity.groupName = user.orElseThrow().groupName
             } else {
                 log.error("User not found: {} so rejected", entity.userName)
                 return false
@@ -106,39 +92,15 @@ class ChallengeAdminPanelController(
         return true
     }
 
-    private fun tryToMatchByAlias(
-        users: List<UserEntity>,
-        alias: String,
-        entity: ChallengeSubmissionEntity
-    ) {
-        val matchingUsers = users.filter { it.alias == alias }
-        if (matchingUsers.isEmpty()) {
-            log.warn(
-                "Name duplication found: {} (but alias did not match: {}) using first user {}",
-                entity.userName,
-                alias,
-                users.first().id
-            )
-            entity.userName = users.first().fullName
-            entity.userId = users.first().id
-            entity.groupId = users.first().group?.id
-            entity.groupName = users.first().groupName
-        } else if (matchingUsers.size > 1) {
-            log.warn(
-                "Name duplication found: {} (alias duplicate as well: {}) using first user {}",
-                entity.userName,
-                alias,
-                matchingUsers.first().id
-            )
-            entity.userName = matchingUsers.first().fullName
-            entity.userId = matchingUsers.first().id
-            entity.groupId = matchingUsers.first().group?.id
-            entity.groupName = matchingUsers.first().groupName
-        } else {
-            entity.userName = matchingUsers.first().fullName
-            entity.userId = matchingUsers.first().id
-            entity.groupId = matchingUsers.first().group?.id
-            entity.groupName = matchingUsers.first().groupName
-        }
+    override fun onPreEdit(actualEntity: ChallengeSubmissionEntity): ChallengeSubmissionEntity {
+        val userId = actualEntity.userId ?: return actualEntity
+        val copy = actualEntity.copy()
+        val user = users.findById(userId).orElse(null) ?: return actualEntity
+        copy.userName = mapUsername(user)
+        return copy
     }
+
 }
+
+private fun mapUsername(it: UserEntity) =
+    "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
