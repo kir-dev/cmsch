@@ -133,6 +133,7 @@ export interface Organizer {
 
 export interface Leaderboard {
   leaderboardEnabled: string
+  leaderboardDetailsEnabled: boolean
   leaderboardFrozen: string
   maxGroupEntryToShow: number
   maxUserEntryToShow: number
