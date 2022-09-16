@@ -34,7 +34,7 @@ const CountdownPage = ({ children }: HasChildren) => {
         />
         <Flex flexDirection="column" h="100%" w="100%" zIndex={1} backgroundColor={useColorModeValue('#FFFFFFAA', '#000000AA')}>
           <Center h="100vh">
-            <VStack w="100%" color={useColorModeValue('#000000', '#FFFFFF')}>
+            <VStack w="100%" maxH="100%" overflow="auto" color={useColorModeValue('#000000', '#FFFFFF')}>
               <Heading textAlign="center">{component.topMessage}</Heading>
               <Clock countTo={countTo} />
             </VStack>
