@@ -8,6 +8,7 @@ import {
   Heading,
   Image,
   Input,
+  Text,
   ToastId,
   useColorModeValue,
   useToast,
@@ -121,6 +122,10 @@ const RiddlePage = () => {
         {queryResult.data?.imageUrl && (
           <Image width="100%" src={`${API_BASE_URL}/cdn/${queryResult.data?.imageUrl}`} alt="Riddle Kép" borderRadius="md" />
         )}
+        <VStack mt={5} align="flex-start">
+          {<Text>Létrehozó: {queryResult.data?.creator}</Text>}
+          {<Text>Első megoldó: {queryResult.data?.firstSolver}</Text>}
+        </VStack>
         <Box
           as="form"
           onSubmit={submitSolution}
