@@ -14,16 +14,21 @@ interface LevelDataDisplayProps {
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 export function LevelDataDisplay({ level }: LevelDataDisplayProps) {
+  const teams = useMemo(() => {
+    return Object.keys(level.teams)
+      .map((team) => ({ name: team, value: level.teams[team] }))
+      .sort((a, b) => b.value - a.value)
+  }, [level.teams])
   const colors = Object.keys(level.teams).map(() => randomColor())
   const config = useConfigContext()
   const color = useColorModeValue(config?.components.style.lightTextColor, config?.components.style.darkTextColor)
   const data = useMemo<ChartData<'doughnut', number[]>>(() => {
     return {
-      labels: Object.keys(level.teams),
+      labels: teams.map((t, index) => index + 1 + '. ' + t.name),
       datasets: [
         {
           label: 'Elfoglalt címkék',
-          data: Object.keys(level.teams).map((t) => level.teams[t]),
+          data: teams.map((t) => t.value),
           backgroundColor: colors.map((c) => c + '60'),
           borderColor: colors
         }
@@ -48,7 +53,7 @@ export function LevelDataDisplay({ level }: LevelDataDisplayProps) {
               labels: {
                 color: color,
                 filter(item: LegendItem, _: ChartData): boolean {
-                  return item.index !== undefined && item.index < 6
+                  return item.index !== undefined && item.index < 5
                 }
               }
             }
