@@ -94,7 +94,9 @@ open class RiddleService(
                 riddle.imageUrl,
                 riddle.title,
                 if (submission.hintUsed) riddle.hint else null,
-                submission.completed
+                submission.completed,
+                riddle.creator,
+                riddle.firstSolver
             )
 
         val riddles = riddleRepository.findAllByCategoryId(riddle.categoryId)
@@ -105,7 +107,7 @@ open class RiddleService(
 
         if (nextId != riddle.id)
             return null
-        return RiddleView(riddle.imageUrl, riddle.title, null, false)
+        return RiddleView(riddle.imageUrl, riddle.title, null, false, riddle.creator, riddle.firstSolver)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
@@ -180,6 +182,10 @@ open class RiddleService(
             submissionEntity.attemptCount += 1
             submissionEntity.completedAt = clock.getTimeInSeconds()
             riddleMappingRepository.save(submissionEntity)
+            if (riddle.firstSolver?.isBlank() != false) {
+                riddle.firstSolver = user.userName
+                riddleRepository.save(riddle)
+            }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextIdUser(user, riddle))
 
         } else {
@@ -195,6 +201,10 @@ open class RiddleService(
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
+            if (riddle.firstSolver?.isBlank() != false) {
+                riddle.firstSolver = user.userName
+                riddleRepository.save(riddle)
+            }
             riddleMappingRepository.save(
                 RiddleMappingEntity(0, riddle, userEntity, null,
                 hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds(), attemptCount = 1)
@@ -226,6 +236,10 @@ open class RiddleService(
             submissionEntity.attemptCount += 1
             submissionEntity.completedAt = clock.getTimeInSeconds()
             riddleMappingRepository.save(submissionEntity)
+            if (riddle.firstSolver?.isBlank() != false) {
+                riddle.firstSolver = group.name
+                riddleRepository.save(riddle)
+            }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextIdGroup(group, riddle))
 
         } else {
@@ -244,6 +258,10 @@ open class RiddleService(
                 RiddleMappingEntity(0, riddle, null, group,
                     hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds(), attemptCount = 1)
             )
+            if (riddle.firstSolver?.isBlank() != false) {
+                riddle.firstSolver = group.name
+                riddleRepository.save(riddle)
+            }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextIdGroup(group, riddle))
         }
     }
