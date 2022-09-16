@@ -46,6 +46,6 @@ class QrFightApiController(
         }
 
         log.info("[QRFIGHT] Fetched {} by {}", selector, token)
-        return ResponseEntity.ok(qrFightService.getTowerDetails())
+        return ResponseEntity.ok(qrFightService.getTowerDetails(selector))
     }
 }
