@@ -36,8 +36,8 @@ const RacePage = () => {
       <Helmet title={raceComponent.title} />
       <Heading>{raceComponent.title}</Heading>
       <HStack my={5}>
-        <BoardStat label="Helyezésed" value={queryResult.data?.place + '.' || '-'} />
-        <BoardStat label="Legjobb időd" value={queryResult.data?.bestTime + ' mp' || '-'} />
+        <BoardStat label="Helyezésed" value={queryResult.data?.place || '-'} />
+        <BoardStat label="Legjobb időd" value={(queryResult.data?.bestTime || '-') + ' mp'} />
       </HStack>
       <Divider mb={10} />
       <LeaderBoardTable data={queryResult.data?.board || []} showGroup={true} suffix="mp" />
