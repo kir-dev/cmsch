@@ -27,4 +27,9 @@ data class RaceEntryDto(
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_FLOAT)
     var time: Float = 0.0f,
 
+    @JsonView(FullDetails::class)
+    @property:GenerateOverview(columnName = "Email", order = 4)
+    @property:ImportFormat(ignore = false, columnId = 4)
+    var email: String = "",
+
 ) : ManagedEntity
