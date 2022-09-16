@@ -9,7 +9,8 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 import { l } from '../../util/language'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 
 enum ScanViewState {
   Scanning,
@@ -24,6 +25,7 @@ interface ScanView {
 
 const TokenScan = () => {
   const [state, setState] = useState<ScanView>({ state: ScanViewState.Scanning })
+  const { isLoggedIn } = useAuthContext()
   const navigate = useNavigate()
   const handleScan = (qrData: any) => {
     if (qrData) {
@@ -62,6 +64,8 @@ const TokenScan = () => {
   }
 
   if (state.state == ScanViewState.Loading) return <Loading timeout={0} />
+  // TODO: ezt nagyon átgondolni, lehet buggy lesz
+  if (state.state === ScanViewState.Scanning && !isLoggedIn) return <Navigate to="/login" />
 
   return (
     <CmschPage loginRequired>
