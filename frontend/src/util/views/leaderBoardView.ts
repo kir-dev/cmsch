@@ -6,21 +6,15 @@ export type LeaderBoardView = {
 }
 
 export type LeaderBoardItemView = {
+  id?: number
   name: string
   groupName: string
   score?: number
+  items?: LeaderBoardDetail[]
+  total?: number
 }
 
-export type DetailedLeaderBoardView = {
-  userScore?: number
-  userBoard?: Array<DetailedLeaderBoardItemView>
-  groupScore?: number
-  groupBoard?: Array<DetailedLeaderBoardItemView>
-}
-
-export type DetailedLeaderBoardItemView = {
-  id: number
+export type LeaderBoardDetail = {
   name: string
-  items: Map<string, number>
-  total: number
+  value: number
 }

@@ -12,21 +12,18 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { AbsolutePaths } from '../../util/paths'
 import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
-import { useDetailedLeaderBoardQuery } from '../../api/hooks/useDetailedLeaderBoardQuery'
 
 const LeaderboardPage = () => {
-  const leadboardConfig = useConfigContext()?.components.leaderboard
+  const leaderboardConfig = useConfigContext()?.components.leaderboard
   const toast = useToast()
   const onQueryFail = () => toast({ title: l('result-query-failed'), status: 'error' })
-  const leaderboardQuery = leadboardConfig?.leaderboardDetailsEnabled
-    ? useDetailedLeaderBoardQuery(onQueryFail)
-    : useLeaderBoardQuery(onQueryFail)
+  const leaderboardQuery = useLeaderBoardQuery(onQueryFail, leaderboardConfig?.leaderboardDetailsEnabled)
 
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
   const { sendMessage } = useServiceContext()
 
-  const title = leadboardConfig?.title || 'Toplista'
+  const title = leaderboardConfig?.title || 'Toplista'
 
   if (leaderboardQuery.isError) {
     sendMessage(l('result-query-failed') + leaderboardQuery.error.message)
@@ -37,8 +34,16 @@ const LeaderboardPage = () => {
     return <Loading />
   }
 
-  const userBoard = <LeaderBoardTable data={leaderboardQuery.data?.userBoard || []} showGroup={leadboardConfig?.showGroupOfUser} />
-  const groupBoard = <LeaderBoardTable data={leaderboardQuery.data?.groupBoard || []} />
+  const userBoard = leaderboardConfig?.showUserBoard && (
+    <LeaderBoardTable
+      data={leaderboardQuery.data?.userBoard || []}
+      showGroup={leaderboardConfig?.showGroupOfUser}
+      detailed={leaderboardConfig?.leaderboardDetailsEnabled}
+    />
+  )
+  const groupBoard = leaderboardConfig?.showGroupBoard && (
+    <LeaderBoardTable data={leaderboardQuery.data?.groupBoard || []} detailed={leaderboardConfig?.leaderboardDetailsEnabled} />
+  )
 
   return (
     <CmschPage>
@@ -50,7 +55,7 @@ const LeaderboardPage = () => {
       </HStack>
       <Divider mb={10} />
 
-      {leaderboardQuery.data?.userBoard && leaderboardQuery.data?.groupBoard ? (
+      {leaderboardConfig?.showUserBoard && leaderboardConfig?.showGroupBoard ? (
         <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="unstyled">
           <TabList>
             {leaderboardQuery.data?.userBoard && <CustomTab>Egyéni</CustomTab>}
