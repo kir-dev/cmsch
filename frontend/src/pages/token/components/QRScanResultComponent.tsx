@@ -1,6 +1,6 @@
 import { CheckCircleIcon, InfoIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons'
-import { Box, Center, Heading } from '@chakra-ui/react'
-import { ScanResponseView, ScanStatus } from '../../../util/views/token.view'
+import { Box, Center, Heading, Text } from '@chakra-ui/react'
+import { ScanMessages, ScanResponseView, ScanStatus } from '../../../util/views/token.view'
 
 interface QrScanResultProps {
   response: ScanResponseView
@@ -12,24 +12,23 @@ export const QRScanResultComponent = ({ response }: QrScanResultProps) => {
       case ScanStatus.SCANNED:
         return <CheckCircleIcon color="green.500" boxSize="120px" />
       case ScanStatus.ALREADY_SCANNED:
+        return <InfoIcon color="blue.500" boxSize="120px" />
+      case ScanStatus.WRONG:
+        return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+      case ScanStatus.CANNOT_COLLECT:
+        return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+      case ScanStatus.QR_FIGHT_LEVEL_LOCKED:
         return <InfoIcon color="orange.500" boxSize="120px" />
-      case ScanStatus.WRONG:
-        return <WarningTwoIcon color="red.500" boxSize="120px" />
+      case ScanStatus.QR_FIGHT_LEVEL_NOT_OPEN:
+        return <InfoIcon color="orange.500" boxSize="120px" />
+      case ScanStatus.QR_FIGHT_TOWER_LOCKED:
+        return <InfoIcon color="orange.500" boxSize="120px" />
+      case ScanStatus.QR_TOWER_CAPTURED:
+        return <CheckCircleIcon color="green.500" boxSize="120px" />
+      case ScanStatus.QR_TOWER_LOGGED:
+        return <CheckCircleIcon color="green.500" boxSize="120px" />
       default:
-        return <WarningIcon color="red.600" boxSize="120px" />
-    }
-  }
-
-  const getInfoText = () => {
-    switch (response.status) {
-      case ScanStatus.SCANNED:
-        return 'QR kód feljegyezve'
-      case ScanStatus.ALREADY_SCANNED:
-        return 'Ezt a kódot már egyszer beolvasta'
-      case ScanStatus.WRONG:
-        return 'Ez a QR-kód nem jó a pontgyűjtéshez'
-      default:
-        return 'Hibás státusz kód'
+        return <WarningIcon color="red.500" boxSize="120px" />
     }
   }
 
@@ -37,16 +36,14 @@ export const QRScanResultComponent = ({ response }: QrScanResultProps) => {
     <Box>
       {response.title && (
         <Center>
-          <Heading size="md">{response.title}</Heading>
+          <Heading>{response.title}</Heading>
         </Center>
       )}
       <Center p="40px" mt="4">
         {renderIcon()}
       </Center>
       <Center>
-        <Heading mb={5} size="md">
-          {getInfoText()}
-        </Heading>
+        <Text fontSize="lg">{ScanMessages[response.status] || 'Ismeretlen eredmény'}</Text>
       </Center>
     </Box>
   )
