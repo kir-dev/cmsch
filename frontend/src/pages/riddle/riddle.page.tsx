@@ -123,8 +123,8 @@ const RiddlePage = () => {
           <Image width="100%" src={`${API_BASE_URL}/cdn/${queryResult.data?.imageUrl}`} alt="Riddle Kép" borderRadius="md" />
         )}
         <VStack mt={5} align="flex-start">
-          {<Text>Létrehozó: {queryResult.data?.creator}</Text>}
-          {<Text>Első megoldó: {queryResult.data?.firstSolver}</Text>}
+          {queryResult.data?.creator && <Text>Létrehozó: {queryResult.data?.creator}</Text>}
+          {queryResult.data?.firstSolver && <Text>Első megoldó: {queryResult.data?.firstSolver}</Text>}
         </VStack>
         <Box
           as="form"
