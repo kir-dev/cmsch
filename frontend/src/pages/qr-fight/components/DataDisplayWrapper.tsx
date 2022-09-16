@@ -30,7 +30,7 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
         </VStack>
       </HStack>
       <LevelDataDisplay level={level} />
-      <TowerDataDisplay level={level} />
+      {level.towers?.length > 0 && <TowerDataDisplay level={level} />}
     </VStack>
   )
 }
