@@ -4,6 +4,8 @@ export interface Riddle {
   imageUrl: string
   solved: boolean
   hint?: string
+  firstSolver?: string
+  creator?: string
 }
 
 export interface RiddleCategory {
