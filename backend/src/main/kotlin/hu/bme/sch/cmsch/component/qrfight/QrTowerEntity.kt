@@ -69,7 +69,8 @@ data class QrTowerEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 7, label = "Tulajdonos felhasználó ID-je")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 7, label = "Tulajdonos felhasználó ID-je", defaultValue = "0",
+        note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_INT)
     var ownerUserId: Int = 0,
@@ -77,14 +78,16 @@ data class QrTowerEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 8, label = "Tulajdonos felhasználó neve",
-        note = "Ez csak megjegyzés, nem ez alapján számolódik")
+        note = "Ez csak megjegyzés, nem ez alapján számolódik. " +
+                "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7)
     var ownerUserName: String = "",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 9, label = "Tulajdonos csoport ID-je")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 9, label = "Tulajdonos csoport ID-je", defaultValue = "0",
+        note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_INT)
     var ownerGroupId: Int = 0,
@@ -92,7 +95,8 @@ data class QrTowerEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 10, label = "Tulajdonos csoport neve",
-        note = "Ez csak megjegyzés, nem ez alapján számolódik")
+        note = "Ez csak megjegyzés, nem ez alapján számolódik. " +
+                "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9)
     var ownerGroupName: String = "",
@@ -139,14 +143,16 @@ data class QrTowerEntity(
     @Column(nullable = false, columnDefinition = "VARCHAR(64) DEFAULT ''")
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 16, label = "Helytartó",
-        note = "Ha a birtokos felhasználó az ID-je, ha csoport akkor a neve")
+        note = "Ha a birtokos felhasználó az ID-je, ha csoport akkor a neve. " +
+                "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 15)
     var holder: String? = null,
 
     @Column(nullable = false, columnDefinition = "integer DEFAULT 0")
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 17, label = "Helytartás ennyi időegysége (perc)")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 17, label = "Helytartás ennyi időegysége (perc)",
+        note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_INT)
     var holderFor: Int? = null,
