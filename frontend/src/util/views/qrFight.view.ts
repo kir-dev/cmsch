@@ -1,13 +1,28 @@
-export type QrArea = {
-  id?: string
-  name?: string
-  status?: 'completed' | 'current' | 'unavailable'
-  level: number
-  unlocked: boolean
-  teams: QrTeamStat[]
+export type QrDto = {
+  mainLevels: QrLevelDto[]
+  extraLevels: QrLevelDto[]
 }
 
-type QrTeamStat = {
+export type QrLevelDto = {
   name: string
-  value: number
+  description: string
+  status: LevelStatus
+  owner: string
+  teams: Record<string, number>
+  towers: Tower[]
+}
+
+export type Tower = {
+  name: string
+  ownerNow?: string
+  holder?: string
+  holdingFor?: number
+}
+
+export enum LevelStatus {
+  NOT_LOGGED_IN = 'NOT_LOGGED_IN',
+  NOT_ENABLED = 'NOT_ENABLED',
+  NOT_UNLOCKED = 'NOT_UNLOCKED',
+  OPEN = 'OPEN',
+  COMPLETED = 'COMPLETED'
 }
