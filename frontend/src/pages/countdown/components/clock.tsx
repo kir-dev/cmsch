@@ -18,6 +18,12 @@ const Clock = ({ countTo }: ClockProps) => {
   }, [])
   return (
     <Flex flexDirection={['column', 'row']} alignItems="center" justifyContent="center">
+      {(duration.months || 0) > 0 && (
+        <>
+          <ClockSegment value={duration.months?.toString()} label={'hónap'} />
+          <Dash />
+        </>
+      )}
       <ClockSegment value={duration.days?.toString()} label={'nap'} />
       <Dash />
       <ClockSegment value={duration.hours?.toString()} label={'óra'} />
