@@ -33,6 +33,7 @@ export interface Components {
   task: Task
   team: Team
   token: Token
+  qrFight: QrFight
 }
 
 export interface App {
@@ -252,6 +253,12 @@ export interface Team {
   kickEnabled: boolean
   togglePermissionEnabled: boolean
   promoteLeadershipEnabled: boolean
+}
+
+export interface QrFight {
+  title: string
+  enabled: boolean
+  topMessage: string
 }
 
 export interface Signup {

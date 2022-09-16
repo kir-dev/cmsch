@@ -1,29 +1,29 @@
-import { QrArea } from '../../../util/views/qrFight.view'
+import { QrLevelDto } from '../../../util/views/qrFight.view'
 import { Box } from '@chakra-ui/react'
-import { ArcElement, Chart as ChartJS, ChartData, Legend, Tooltip } from 'chart.js'
+import { ArcElement, Chart as ChartJS, ChartData, Legend, LegendItem, Tooltip } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 import { useMemo } from 'react'
 import { randomColor } from '@chakra-ui/theme-tools'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { useColorModeValue } from '@chakra-ui/system'
 
-interface AreaDataDisplayProps {
-  area: QrArea
+interface LevelDataDisplayProps {
+  level: QrLevelDto
 }
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-export function AreaDataDisplay({ area }: AreaDataDisplayProps) {
-  const colors = area.teams.map(() => randomColor())
+export function LevelDataDisplay({ level }: LevelDataDisplayProps) {
+  const colors = Object.keys(level.teams).map(() => randomColor())
   const config = useConfigContext()
   const color = useColorModeValue(config?.components.style.lightTextColor, config?.components.style.darkTextColor)
   const data = useMemo<ChartData<'doughnut', number[]>>(() => {
     return {
-      labels: area.teams.map((t) => t.name),
+      labels: Object.keys(level.teams),
       datasets: [
         {
           label: 'Elfoglalt címkék',
-          data: area.teams.map((t) => t.value),
+          data: Object.keys(level.teams).map((t) => level.teams[t]),
           backgroundColor: colors.map((c) => c + '60'),
           borderColor: colors
         }
@@ -31,17 +31,26 @@ export function AreaDataDisplay({ area }: AreaDataDisplayProps) {
     }
   }, [])
   return (
-    <Box>
+    <Box w="100%">
       <Doughnut
         data={data}
-        id={area.id}
+        id={level.name}
+        width="100%"
         options={{
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false,
-              position: 'right',
-              labels: { color: color }
+              title: {
+                text: 'Top csapatok',
+                display: true
+              },
+              position: 'top',
+              labels: {
+                color: color,
+                filter(item: LegendItem, _: ChartData): boolean {
+                  return item.index !== undefined && item.index < 6
+                }
+              }
             }
           }
         }}

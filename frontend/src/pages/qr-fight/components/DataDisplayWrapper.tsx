@@ -1,40 +1,36 @@
 import { Heading, HStack, Text, VStack } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
 
-import { QrArea } from '../../../util/views/qrFight.view'
-import { AreaStatusBadge } from './AreaStatusBadge'
-import { AreaDataDisplay } from './AreaDataDisplay'
-import { AbsolutePaths } from '../../../util/paths'
+import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
+import { LevelStatusBadge } from './LevelStatusBadge'
+import { LevelDataDisplay } from './LevelDataDisplay'
+import { TowerDataDisplay } from './TowerDataDisplay'
+import { useColorModeValue } from '@chakra-ui/system'
 
 interface DataDisplayWrapperProps {
-  area: QrArea
+  level: QrLevelDto
 }
-export function DataDisplayWrapper({ area }: DataDisplayWrapperProps) {
-  const navigate = useNavigate()
+export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
   return (
     <VStack
+      spacing={5}
       p={5}
       mt={5}
       borderRadius={10}
-      borderColor="brand.500"
+      borderColor={useColorModeValue('gray.400', 'gray.600')}
       borderWidth="1px"
-      cursor={area.unlocked ? 'pointer' : 'auto'}
-      opacity={area.unlocked ? 1 : 0.2}
-      _hover={{ backgroundColor: area.unlocked && 'brand.500' }}
-      onClick={() => {
-        if (area.unlocked) navigate(AbsolutePaths.QR_FIGHT + '/' + area.id)
-      }}
+      opacity={level.status === LevelStatus.COMPLETED || level.status === LevelStatus.OPEN ? 1 : 0.2}
     >
-      <VStack align="flex-start" w="100%">
-        <HStack>
-          <Heading m={0} fontSize="lg">
-            {area.level}. szint
+      <HStack justifyContent="flex-start" w="100%">
+        <VStack align="flex-start">
+          <Heading m={0} fontSize="xl">
+            {level.name}
           </Heading>
-          <AreaStatusBadge area={area} />
-        </HStack>
-        {area.name && <Text>{area.name}</Text>}
-      </VStack>
-      <AreaDataDisplay area={area} />
+          <LevelStatusBadge level={level} />
+          <Text>{level.description}</Text>
+        </VStack>
+      </HStack>
+      <LevelDataDisplay level={level} />
+      <TowerDataDisplay level={level} />
     </VStack>
   )
 }

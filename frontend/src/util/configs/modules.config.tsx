@@ -31,7 +31,7 @@ export enum AvailableModules {
   LEADER_BOARD = 'LEADER_BOARD',
   TEAM = 'TEAM',
   RACE = 'RACE',
-  QR_FIGHT
+  QR_FIGHT = 'QR_FIGHT'
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
