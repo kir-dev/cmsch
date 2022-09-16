@@ -1,4 +1,4 @@
-import { Divider, Heading, HStack, useToast } from '@chakra-ui/react'
+import { Divider, Flex, Heading, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -35,10 +35,10 @@ const RacePage = () => {
     <CmschPage>
       <Helmet title={raceComponent.title} />
       <Heading>{raceComponent.title}</Heading>
-      <HStack my={5}>
+      <Flex my={5} gap={5} flexWrap="wrap">
         <BoardStat label="Helyezésed" value={queryResult.data?.place || '-'} />
         <BoardStat label="Legjobb időd" value={(queryResult.data?.bestTime || '-') + ' mp'} />
-      </HStack>
+      </Flex>
       <Divider mb={10} />
       <LeaderBoardTable data={queryResult.data?.board || []} showGroup={true} suffix="mp" />
     </CmschPage>
