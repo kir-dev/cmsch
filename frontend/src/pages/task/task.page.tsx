@@ -95,6 +95,7 @@ const TaskPage = () => {
         (taskConfig?.resubmissionEnabled && taskDetails.status === taskStatus.SUBMITTED)) &&
       !expired
     const reviewed = taskDetails.status === taskStatus.ACCEPTED || taskDetails.status === taskStatus.REJECTED
+    const localSubmission = taskDetails?.task?.format === taskFormat.NONE
 
     const onSubmit: SubmitHandler<FormInput> = (data) => {
       if ((!fileAllowed || fileAnswer) && submissionAllowed) {
@@ -317,24 +318,31 @@ const TaskPage = () => {
           </>
         )}
 
+        {taskDetails.task?.availableTo && (
+          <Alert variant="left-accent" status="info" mt={5}>
+            <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(taskDetails.task?.availableTo || 0)}
+          </Alert>
+        )}
+
         {submissionAllowed && (
           <>
-            <Heading size="md" mt={8}>
+            <Heading size="md" mt={5}>
               {taskDetails.status === taskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
             </Heading>
             <Stack mt={5}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Alert variant="left-accent" status="info">
-                  <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(taskDetails.task?.availableTo || 0)}
-                </Alert>
-                {textInput}
-                {fileInput}
-                <Flex justifyContent="end" mt={4}>
-                  <Button mt={3} colorScheme="brand" type="submit">
-                    Küldés
-                  </Button>
-                </Flex>
-              </form>
+              {localSubmission ? (
+                <Text>Beadás személyesen!</Text>
+              ) : (
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  {textInput}
+                  {fileInput}
+                  <Flex justifyContent="end" mt={4}>
+                    <Button mt={3} colorScheme="brand" type="submit">
+                      Küldés
+                    </Button>
+                  </Flex>
+                </form>
+              )}
             </Stack>
           </>
         )}
