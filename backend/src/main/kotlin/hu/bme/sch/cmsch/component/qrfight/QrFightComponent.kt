@@ -23,7 +23,8 @@ class QrFightComponent(
             title, menuDisplayName, minRole,
 
             enabled,
-            topMessage
+            topMessage,
+            apiTokens
         )
     }
 
@@ -51,6 +52,11 @@ class QrFightComponent(
         "topMessage", "",
         type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
+    )
+
+    val apiTokens = SettingProxy(componentSettingService, component,
+        "apiTokens", "tower:token", type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "API tokenek", description = "Formátum: towerSelector:token, ..."
     )
 
 }

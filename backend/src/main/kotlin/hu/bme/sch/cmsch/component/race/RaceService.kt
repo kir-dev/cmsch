@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.race
 
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
@@ -12,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional
 @ConditionalOnBean(RaceComponent::class)
 open class RaceService(
     private val raceRecordRepository: RaceRecordRepository,
-    private val raceComponent: RaceComponent
+    private val raceComponent: RaceComponent,
+    private val userRepository: UserRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -41,7 +43,8 @@ open class RaceService(
                     submission.key ?: 0,
                     submission.value.first().groupName,
                     submission.value.first().groupName,
-                    submission.value.minOf { it.time }
+                    submission.value.minOf { it.time },
+                    email = ""
                 )
             }
             .sortedBy { it.time }
@@ -53,7 +56,8 @@ open class RaceService(
                     submission.key ?: 0,
                     submission.value.first().groupName,
                     submission.value.first().groupName,
-                    submission.value.maxOf { it.time }
+                    submission.value.maxOf { it.time },
+                    email = ""
                 )
             }
             .sortedByDescending { it.time }
@@ -80,11 +84,15 @@ open class RaceService(
         raceRecordRepository.findAll()
             .groupBy { it.userId }
             .map { submission ->
+                val email = userRepository.findById(submission.key ?: 0)
+                    .map { it.email }
+                    .orElse("n/a")
                 RaceEntryDto(
                     submission.key ?: 0,
                     submission.value.first().userName,
                     submission.value.first().groupName,
-                    submission.value.minOf { it.time }
+                    submission.value.minOf { it.time },
+                    email
                 )
             }
             .sortedBy { it.time }
@@ -92,11 +100,15 @@ open class RaceService(
         raceRecordRepository.findAll()
             .groupBy { it.userId }
             .map { submission ->
+                val email = userRepository.findById(submission.key ?: 0)
+                    .map { it.email }
+                    .orElse("n/a")
                 RaceEntryDto(
                     submission.key ?: 0,
                     submission.value.first().userName,
                     submission.value.first().groupName,
-                    submission.value.maxOf { it.time }
+                    submission.value.maxOf { it.time },
+                    email
                 )
             }
             .sortedByDescending { it.time }
