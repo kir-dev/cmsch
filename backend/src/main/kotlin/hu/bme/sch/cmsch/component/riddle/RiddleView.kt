@@ -15,6 +15,12 @@ data  class RiddleView(
     var hint: String? = null,
 
     @JsonView(FullDetails::class)
-    var solved: Boolean = false
+    var solved: Boolean = false,
+
+    @JsonView(FullDetails::class)
+    var creator: String? = null,
+
+    @JsonView(FullDetails::class)
+    var firstSolver: String? = null,
 
 )

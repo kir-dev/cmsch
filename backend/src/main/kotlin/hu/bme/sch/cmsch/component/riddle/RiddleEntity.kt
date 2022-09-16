@@ -69,7 +69,22 @@ data class RiddleEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 7, label = "Kategória id-je")
     @property:GenerateOverview(columnName = "Kategória", order = 4, centered = true)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
-    var categoryId: Int = 0
+    var categoryId: Int = 0,
+
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @Column(nullable = false, columnDefinition = "varchar(64) default ''")
+    @property:GenerateInput(maxLength = 64, order = 8, label = "Riddle készítője", note = "Akkor jelenik meg ha nem üres")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 6)
+    var creator: String? = "",
+
+    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @Column(nullable = false, columnDefinition = "varchar(64) default ''")
+    @property:GenerateInput(maxLength = 64, order = 9, label = "Első megoldó",
+        note = "Ezt automatikusan tölti ki a rendszer")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 7)
+    var firstSolver: String? = "",
 
 ) : ManagedEntity {
 
