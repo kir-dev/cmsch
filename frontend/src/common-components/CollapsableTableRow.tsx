@@ -1,8 +1,6 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Td, useColorModeValue, useDisclosure, Box, Tr, Collapse, Table, TableContainer, Tbody, Text } from '@chakra-ui/react'
-import { NavItem } from '../util/configs/nav.config'
-import { HasChildren } from '../util/react-types.util'
-import { LeaderBoardDetail, LeaderBoardItemView } from '../util/views/leaderBoardView'
+import { Td, useDisclosure, Tr } from '@chakra-ui/react'
+import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 
 type CollapsableTableRowProps = {
   collapsable: boolean
@@ -15,34 +13,29 @@ type CollapsableTableRowProps = {
 export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup }: CollapsableTableRowProps) => {
   const { isOpen, onToggle } = useDisclosure()
   return (
-    <Tr onClick={onToggle} _hover={{ cursor: 'pointer' }}>
-      <>
-        <Td w="1rem">{collapsable && (isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />)}</Td>
-        <Td>{idx + 1}.</Td>
-        <Td>
-          {data.name}
-          {collapsable &&
-            isOpen &&
-            data.items?.map((item) => (
-              <>
-                <br />
-                {item.name}
-              </>
-            ))}
-        </Td>
-        {showGroup && <Td>{data.groupName}</Td>}
-        <Td>
-          {`${data.score || data.total} ${suffix || ''}`}
-          {collapsable &&
-            isOpen &&
-            data.items?.map((item) => (
-              <>
-                <br />
-                {item.value}
-              </>
-            ))}
-        </Td>
-      </>
-    </Tr>
+    <>
+      <Tr onClick={onToggle} _hover={{ cursor: collapsable ? 'pointer' : 'default' }} alignItems="start" fontWeight="bold">
+        <>
+          <Td p={1} w="1rem">
+            {collapsable && (isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />)}
+          </Td>
+          <Td w="1rem">{idx + 1}.</Td>
+          <Td>{data.name}</Td>
+          {showGroup && <Td>{data.groupName}</Td>}
+          <Td w="5rem">{`${data.score || data.total} ${suffix || ''}`}</Td>
+        </>
+      </Tr>
+      {isOpen &&
+        data.items?.map((item) => (
+          <>
+            <Tr></Tr>
+            <Tr>
+              <Td colSpan={2}></Td>
+              <Td>{item.name}</Td>
+              <Td>{`${item.value} ${suffix || ''}`}</Td>
+            </Tr>
+          </>
+        ))}
+    </>
   )
 }

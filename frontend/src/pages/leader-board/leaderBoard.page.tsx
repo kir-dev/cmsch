@@ -39,10 +39,15 @@ const LeaderboardPage = () => {
       data={leaderboardQuery.data?.userBoard || []}
       showGroup={leaderboardConfig?.showGroupOfUser}
       detailed={leaderboardConfig?.leaderboardDetailsEnabled}
+      suffix="pont"
     />
   )
   const groupBoard = leaderboardConfig?.showGroupBoard && (
-    <LeaderBoardTable data={leaderboardQuery.data?.groupBoard || []} detailed={leaderboardConfig?.leaderboardDetailsEnabled} />
+    <LeaderBoardTable
+      data={leaderboardQuery.data?.groupBoard || []}
+      detailed={leaderboardConfig?.leaderboardDetailsEnabled}
+      suffix="pont"
+    />
   )
 
   return (
