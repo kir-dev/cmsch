@@ -75,7 +75,7 @@ open class QrFightService(
                 )
             }
 
-        val maxCollected = teams.maxOf { it.value }
+        val maxCollected = teams.maxOfOrNull { it.value } ?: 0
         return QrFightLevelView(
             name = level.displayName,
             description = when (status) {
@@ -132,7 +132,7 @@ open class QrFightService(
                 )
             }
 
-        val maxCollected = teams.maxOf { it.value }
+        val maxCollected = teams.maxOfOrNull { it.value } ?: 0
         return QrFightLevelView(
             name = level.displayName,
             description = when (status) {
@@ -365,6 +365,20 @@ open class QrFightService(
 
     private fun parseState(state: String): MutableMap<String, Long> {
         return objectMapper.readValue(state, object : TypeReference<MutableMap<String, Long>>() {})
+    }
+
+    @Transactional(readOnly = true)
+    open fun getTowerDetails(selector: String): QrFightTowerDto {
+        val tower = qrTowerRepository.findAllBySelector(selector).firstOrNull()
+            ?: return QrFightTowerDto("TOWER NOT FOUND")
+        return when (startupPropertyConfig.tokenOwnershipMode) {
+            OwnershipType.GROUP -> QrFightTowerDto(tower.displayName, tower.ownerGroupName, tower.holder ?: "")
+            OwnershipType.USER -> QrFightTowerDto(
+                tower.displayName,
+                tower.ownerUserName,
+                userRepository.findById(tower.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null)
+            )
+        }
     }
 
 }
