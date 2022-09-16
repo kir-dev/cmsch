@@ -1,25 +1,29 @@
 import { Table, TableContainer, Tbody, Td, Text, Tr } from '@chakra-ui/react'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
+import { CollapsableTableRow } from './CollapsableTableRow'
 
 type LeaderboardTableProps = {
   data: LeaderBoardItemView[]
   showGroup?: boolean
   suffix?: string
+  detailed?: boolean
 }
 
-export const LeaderBoardTable = ({ data, showGroup = false, suffix }: LeaderboardTableProps) => {
+export const LeaderBoardTable = ({ data, showGroup = false, suffix, detailed = false }: LeaderboardTableProps) => {
   return (
     <>
       <TableContainer>
         <Table variant="striped" colorScheme="brand">
           <Tbody>
             {data.map((item, idx) => (
-              <Tr key={item.name}>
-                <Td>{idx + 1}.</Td>
-                <Td>{item.name}</Td>
-                {showGroup && <Td>{item.groupName}</Td>}
-                <Td>{`${item.score} ${suffix || ''}`}</Td>
-              </Tr>
+              <CollapsableTableRow
+                collapsable={detailed && (item.items || false) && item.items.length > 0}
+                key={item.name}
+                data={item}
+                idx={idx}
+                showGroup={showGroup}
+                suffix={suffix}
+              />
             ))}
           </Tbody>
         </Table>
