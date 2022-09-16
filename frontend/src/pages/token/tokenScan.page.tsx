@@ -8,9 +8,8 @@ import { ScanResponseView, ScanStatus } from '../../util/views/token.view'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
-import { LinkButton } from '../../common-components/LinkButton'
-import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
+import { useNavigate } from 'react-router-dom'
 
 enum ScanViewState {
   Scanning,
@@ -25,6 +24,7 @@ interface ScanView {
 
 const TokenScan = () => {
   const [state, setState] = useState<ScanView>({ state: ScanViewState.Scanning })
+  const navigate = useNavigate()
   const handleScan = (qrData: any) => {
     if (qrData) {
       // set state to loading
@@ -64,9 +64,9 @@ const TokenScan = () => {
   if (state.state == ScanViewState.Loading) return <Loading timeout={0} />
 
   return (
-    <CmschPage loginRequired groupRequired>
+    <CmschPage loginRequired>
       <Helmet title="QR beolvasás" />
-      <Heading>Scannelje be a QR kódot</Heading>
+      <Heading mb={5}>QR beolvasás</Heading>
       {state.state == ScanViewState.Scanning && <QRreader delay={300} onError={handleError} onScan={handleScan} />}
 
       {state.state == ScanViewState.Success && (
@@ -75,10 +75,16 @@ const TokenScan = () => {
         </Fade>
       )}
 
-      <ButtonGroup alignSelf="center" mt="5">
-        <LinkButton leftIcon={<FaArrowLeft />} size="lg" href={AbsolutePaths.TOKEN}>
+      <ButtonGroup alignSelf="center" mt={10}>
+        <Button
+          leftIcon={<FaArrowLeft />}
+          size="lg"
+          onClick={() => {
+            navigate(-1)
+          }}
+        >
           Vissza
-        </LinkButton>
+        </Button>
         {state.state !== ScanViewState.Scanning && (
           <Button colorScheme="brand" leftIcon={<FaQrcode />} onClick={resetButtonHandler} size="lg">
             Új QR scannelése
