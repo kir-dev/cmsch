@@ -7,7 +7,7 @@ export type QrLevelDto = {
   name: string
   description: string
   status: LevelStatus
-  owner: string
+  owners: string
   teams: Record<string, number>
   towers: Tower[]
 }
