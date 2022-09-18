@@ -4,6 +4,7 @@ import { HasChildren } from '../../util/react-types.util'
 import Clock from './components/clock'
 import { Center, Flex, Heading, useColorModeValue, VStack } from '@chakra-ui/react'
 import { useMemo } from 'react'
+import { parseTopMessage } from './countdown.util'
 
 const CountdownPage = ({ children }: HasChildren) => {
   const config = useConfigContext()
@@ -35,7 +36,7 @@ const CountdownPage = ({ children }: HasChildren) => {
         <Flex flexDirection="column" h="100%" w="100%" zIndex={1} backgroundColor={useColorModeValue('#FFFFFFAA', '#000000AA')}>
           <Center h="100vh">
             <VStack w="100%" maxH="100%" overflow="auto" color={useColorModeValue('#000000', '#FFFFFF')}>
-              <Heading textAlign="center">{component.topMessage}</Heading>
+              <Heading textAlign="center">{parseTopMessage(component.topMessage)}</Heading>
               <Clock countTo={countTo} />
             </VStack>
           </Center>
