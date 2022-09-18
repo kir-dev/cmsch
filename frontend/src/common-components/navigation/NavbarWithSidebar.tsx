@@ -46,7 +46,13 @@ export const NavbarWithSidebar = ({ headingTitle }: Props) => {
             {logoUrl ? <Image maxH={16} maxW={16} src={logoUrl} alt="CMSch" /> : <Heading>{config?.components.app.siteName}</Heading>}
           </Link>
         </Flex>
-        <Flex justifyContent="flex-end">{!config?.components?.style?.forceDarkMode && <ColorModeSwitcher />}</Flex>
+        <Flex justifyContent="flex-end">
+          {config?.components?.style?.forceDarkMode ? (
+            <Image maxH={5} px={2} src="/img/favicon.png" alt="Kir-Dev" />
+          ) : (
+            <ColorModeSwitcher />
+          )}
+        </Flex>
       </Flex>
       <SidebarMenu isOpen={isOpen} onClose={onClose} openerButtonRef={btnRef} />
     </Box>
