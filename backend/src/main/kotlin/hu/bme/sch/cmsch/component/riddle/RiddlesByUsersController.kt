@@ -28,7 +28,7 @@ class RiddlesByUsersController(
 
     private val view = "riddles-by-users"
     private val titleSingular = "Riddle beadás felhasználónként"
-    private val titlePlural = "Riddle beadások"
+    private val titlePlural = "Riddle felasználónként"
     private val description = "Beadott riddleök felhasználónként csoportosítva"
     private val permissionControl = PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
 

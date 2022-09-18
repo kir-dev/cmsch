@@ -24,7 +24,14 @@ class QrFightComponent(
 
             enabled,
             topMessage,
-            apiTokens
+            apiTokens,
+
+            indulaschGroup,
+            indulaschTowerEnabled,
+            indulaschMessageFormat,
+            indulaschMessagePrefix,
+            indulaschMessageLevel,
+            indulaschTowerSelector
         )
     }
 
@@ -57,6 +64,42 @@ class QrFightComponent(
     val apiTokens = SettingProxy(componentSettingService, component,
         "apiTokens", "tower:token", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "API tokenek", description = "Formátum: towerSelector:token, ..."
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val indulaschGroup = SettingProxy(componentSettingService, component,
+        "indulaschGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Indulásch integráció"
+    )
+
+    val indulaschTowerEnabled = SettingProxy(componentSettingService, component,
+        "indulaschTowerEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Indulásch torony", description = "Ha be van kapcsolva, akkor az indulásch apin állítja a tábla szövegét"
+    )
+
+    val indulaschMessageFormat = SettingProxy(componentSettingService, component,
+        "indulaschMessageFormat", "[QR FIGHT] AZ INDULÁSCH TORNYOT JELELEG A(Z) >> {OWNER} << FOGLALJA, ÉS {TIME} PERCCEL A(Z) >> {HOLDER} << BIRTOKOLJA!",
+        type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Üzenet formátum", description = "Változók: {OWNER} {TIME} {HOLDER}"
+    )
+
+    val indulaschMessagePrefix = SettingProxy(componentSettingService, component,
+        "indulaschMessagePrefix", "[QR FIGHT] ",
+        type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Üzenet prefix", description = "Ez alapján törli ki az api a többi üzenetet"
+    )
+
+    val indulaschMessageLevel = SettingProxy(componentSettingService, component,
+        "indulaschMessageLevel", "FUN",
+        type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Üzenet szintje", description = "INFO | WARNING | SUCCESS | FUN"
+    )
+
+    val indulaschTowerSelector = SettingProxy(componentSettingService, component,
+        "indulaschTowerSelector", "indulasch",
+        type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Torony selector", description = ""
     )
 
 }

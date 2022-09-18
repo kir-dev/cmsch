@@ -5,6 +5,7 @@ import { LevelStatusBadge } from './LevelStatusBadge'
 import { LevelDataDisplay } from './LevelDataDisplay'
 import { TowerDataDisplay } from './TowerDataDisplay'
 import { useColorModeValue } from '@chakra-ui/system'
+import Markdown from '../../../common-components/Markdown'
 
 interface DataDisplayWrapperProps {
   level: QrLevelDto
@@ -27,7 +28,7 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
           </Heading>
           <LevelStatusBadge level={level} />
           <Text>Birtokló: {level.owners}</Text>
-          <Text>{level.description}</Text>
+          <Markdown text={level.description} />
         </VStack>
       </HStack>
       <LevelDataDisplay level={level} />

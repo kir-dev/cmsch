@@ -14,7 +14,10 @@ data class TokenVirtualEntity(
     @property:GenerateOverview(columnName = "Típus", order = 2)
     val type: String,
 
-    @property:GenerateOverview(columnName = "Beolvasva", order = 3, centered = true, renderer = OVERVIEW_TYPE_DATE)
+    @property:GenerateOverview(columnName = "Pont", order = 3, centered = true)
+    val score: Int,
+
+    @property:GenerateOverview(columnName = "Beolvasva", order = 4, centered = true, renderer = OVERVIEW_TYPE_DATE)
     val timestamp: Long
 
 )

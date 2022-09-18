@@ -10,6 +10,7 @@ enum class LevelStatus {
 
 data class TowerView(
     val name: String = "",
+    val description: String = "",
     val ownerNow: String? = null,
     val holder: String? = null,
     val holdingFor: Int? = null

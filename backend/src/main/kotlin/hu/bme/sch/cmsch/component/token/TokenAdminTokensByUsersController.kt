@@ -127,6 +127,7 @@ class TokenAdminTokensByUsersController(
                     it.id,
                     it.token?.title ?: "n/a",
                     it.token?.type ?: "n/a",
+                    it.token?.score ?: 0,
                     it.recieved
                 )
             }

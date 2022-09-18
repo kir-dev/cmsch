@@ -142,7 +142,7 @@ data class QrTowerEntity(
 
     @Column(nullable = false, columnDefinition = "VARCHAR(64) DEFAULT ''")
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 16, label = "Helytartó",
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 16, label = "Helytartó",
         note = "Ha a birtokos felhasználó az ID-je, ha csoport akkor a neve. " +
                 "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
@@ -152,7 +152,7 @@ data class QrTowerEntity(
     @Column(nullable = false, columnDefinition = "integer DEFAULT 0")
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 17, label = "Helytartás ennyi időegysége (perc)",
-        note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
+        note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_INT)
     var holderFor: Int? = null,
