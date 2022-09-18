@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
+const val TIMER_OCCURRENCE = 10
+
 @Service
 @ConditionalOnBean(QrFightComponent::class)
 open class QrFightService(
@@ -28,7 +30,9 @@ open class QrFightService(
     private val tokenPropertyRepository: Optional<TokenPropertyRepository>,
     private val clock: TimeService,
     private val objectMapper: ObjectMapper,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val indulaschIntegrationService: IndulaschIntegrationService,
+    private val qrFightComponent: QrFightComponent
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -69,6 +73,7 @@ open class QrFightService(
             .map {
                 TowerView(
                     it.displayName,
+                    if (group?.name == it.ownerGroupName) it.ownerMessage else it.publicMessage,
                     it.ownerGroupName,
                     it.holder,
                     it.holderFor
@@ -126,6 +131,7 @@ open class QrFightService(
             .map { t ->
                 TowerView(
                     t.displayName,
+                    if (user?.id == t.ownerUserId) t.ownerMessage else t.publicMessage,
                     t.ownerUserName,
                     userRepository.findById(t.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
                     t.holderFor
@@ -333,38 +339,43 @@ open class QrFightService(
 
         when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> {
-                val updated = towers.map {
-                    val state = mutableMapOf<String, Long>()
-                    if (it.state.isNotBlank())
-                        state.putAll(parseState(it.state))
-                    state[it.ownerUserId.toString()] = (state[it.ownerUserId.toString()] ?: 0) + 10
-                    it.state = serializeState(state)
-                    it
+                val updated = towers.map { tower ->
+                    val state = mutableMapOf<String, Int>()
+                    if (tower.state.isNotBlank())
+                        state.putAll(parseState(tower.state))
+                    state[tower.ownerUserId.toString()] = (state[tower.ownerUserId.toString()] ?: 0) + 10
+                    tower.state = serializeState(state)
+                    tower.holder = state.entries.maxByOrNull { it.value }?.key ?: "0"
+                    tower.holderFor = (state.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
+                    tower
                 }
                 qrTowerRepository.saveAll(updated)
                 log.info("Tower for USER timer executed, and updated {}/{} towers", updated.size, towers.size)
             }
             OwnershipType.GROUP -> {
-                val updated = towers.map {
-                    val state = mutableMapOf<String, Long>()
-                    if (it.state.isNotBlank())
-                        state.putAll(parseState(it.state))
-                    state[it.ownerGroupName] = (state[it.ownerGroupName] ?: 0) + 1
-                    it.state = serializeState(state)
-                    it
+                val updated = towers.map { tower ->
+                    val state = mutableMapOf<String, Int>()
+                    if (tower.state.isNotBlank())
+                        state.putAll(parseState(tower.state))
+                    state[tower.ownerGroupName] = (state[tower.ownerGroupName] ?: 0) + 1
+                    tower.state = serializeState(state)
+                    tower.holder = state.entries.maxByOrNull { it.value }?.key ?: ""
+                    tower.holderFor = (state.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
+                    tower
                 }
                 qrTowerRepository.saveAll(updated)
                 log.info("Tower for GROUP timer executed, and updated {}/{} towers", updated.size, towers.size)
             }
         }
+        replaceIndulaschMessage()
     }
 
-    private fun serializeState(state: MutableMap<String, Long>): String {
+    private fun serializeState(state: MutableMap<String, Int>): String {
         return objectMapper.writeValueAsString(state)
     }
 
-    private fun parseState(state: String): MutableMap<String, Long> {
-        return objectMapper.readValue(state, object : TypeReference<MutableMap<String, Long>>() {})
+    private fun parseState(state: String): MutableMap<String, Int> {
+        return objectMapper.readValue(state, object : TypeReference<MutableMap<String, Int>>() {})
     }
 
     @Transactional(readOnly = true)
@@ -377,6 +388,47 @@ open class QrFightService(
                 tower.displayName,
                 tower.ownerUserName,
                 userRepository.findById(tower.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null)
+            )
+        }
+    }
+
+    fun replaceIndulaschMessage() {
+        if (!qrFightComponent.indulaschTowerEnabled.isValueTrue())
+            return
+
+        indulaschIntegrationService.fetchIndulasch().forEach {
+            if (it.text.startsWith(qrFightComponent.indulaschMessagePrefix.getValue())) {
+                indulaschIntegrationService.deleteMessage(it.id)
+            }
+        }
+
+        val tower = qrTowerRepository.findAllBySelector(qrFightComponent.indulaschTowerSelector.getValue())
+            .firstOrNull()
+            ?: return
+
+        when (startupPropertyConfig.tokenOwnershipMode) {
+            OwnershipType.USER -> indulaschIntegrationService.insertMessage(
+                IndulaschNewMessageDto(
+                    IndulaschMessageType.getByNameOrNull(qrFightComponent.indulaschMessageLevel.getValue())
+                        ?: IndulaschMessageType.INFO,
+                    qrFightComponent.indulaschMessageFormat.getValue()
+                        .replace("{HOLDER}",
+                            userRepository.findById(tower.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }
+                                .orElse("senki")
+                        )
+                        .replace("{TIME}", (tower.holderFor ?: 0).toString())
+                        .replace("{OWNER}", tower.ownerUserName.ifBlank { "senki" })
+                )
+            )
+            OwnershipType.GROUP -> indulaschIntegrationService.insertMessage(
+                IndulaschNewMessageDto(
+                    IndulaschMessageType.getByNameOrNull(qrFightComponent.indulaschMessageLevel.getValue())
+                        ?: IndulaschMessageType.INFO,
+                    qrFightComponent.indulaschMessageFormat.getValue()
+                        .replace("{HOLDER}", tower.holder ?: "senki")
+                        .replace("{TIME}", (tower.holderFor ?: 0).toString())
+                        .replace("{OWNER}", tower.ownerGroupName.ifBlank { "senki" })
+                )
             )
         }
     }

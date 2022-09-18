@@ -24,12 +24,16 @@ data class TokenPropertyRawView(
     @property:ImportFormat(ignore = false, columnId = 3)
     var ownerGroupName: String = "",
 
-    @property:GenerateOverview(columnName = "Token", order = 5)
+    @property:GenerateOverview(columnName = "Pont", order = 5)
     @property:ImportFormat(ignore = false, columnId = 4)
+    var score: Int = 0,
+
+    @property:GenerateOverview(columnName = "Token", order = 6)
+    @property:ImportFormat(ignore = false, columnId = 5)
     var token: String = "",
 
-    @property:GenerateOverview(columnName = "Beolvasva", order = 6, centered = true, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_LONG)
+    @property:GenerateOverview(columnName = "Beolvasva", order = 7, centered = true, renderer = OVERVIEW_TYPE_DATE)
+    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)
     var timestamp: Long = 0
 
 ) : ManagedEntity
