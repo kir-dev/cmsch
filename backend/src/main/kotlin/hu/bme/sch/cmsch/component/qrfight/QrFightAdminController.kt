@@ -8,8 +8,11 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -18,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class QrFightAdminController(
     adminMenuService: AdminMenuService,
     component: QrFightComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    private val qrFightService: QrFightService
 ) : ComponentApiBase(
     adminMenuService,
     QrFightComponent::class.java,
@@ -27,7 +31,18 @@ class QrFightAdminController(
     "QR Fight",
     "QR Fight beállítások",
     menuService = menuService
-)
+) {
+
+    @GetMapping("/execute-towers")
+    fun forceExecuteTowers(auth: Authentication): String {
+        if (auth.getUserFromDatabaseOrNull()?.isSuperuser() != true) {
+            return "redirect:/admin/control/component/qrFight/settings?error=filed-to-execute"
+        }
+        qrFightService.executeTowerTimer()
+        return "redirect:/admin/control/component/qrFight/settings?status=executed"
+    }
+
+}
 
 @Controller
 @RequestMapping("/admin/control/qr-levels")

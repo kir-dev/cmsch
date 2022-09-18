@@ -77,7 +77,8 @@ class TokenSubmissionsController(
             it.ownerUser?.userName ?: "",
             it.ownerGroup?.id ?: 0,
             it.ownerGroup?.name ?: "",
-            it.token?.token ?: "no-token",
+            it.token?.score ?: 0,
+            it.token?.title ?: "no-token",
             it.recieved
         ) }
     }

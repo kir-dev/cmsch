@@ -1,15 +1,12 @@
-package hu.bme.sch.cmsch.component.token
+package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.controller.AbstractPurgeAdminPageController
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_DELETE
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
-import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -22,39 +19,33 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.annotation.PostConstruct
 
 @Controller
-@RequestMapping("/admin/control/token-properties-group")
-@ConditionalOnBean(TokenComponent::class)
-class TokenAdminTokensByGroupController(
-    private val tokenPropertyRepository: TokenPropertyRepository,
-    private val groupRepository: GroupRepository,
+@RequestMapping("/admin/control/riddles-by-groups")
+@ConditionalOnBean(RiddleComponent::class)
+class RiddlesByGroupsController(
+    private val riddleMappingRepository: RiddleMappingRepository,
     private val adminMenuService: AdminMenuService
-) : AbstractPurgeAdminPageController<TokenPropertyEntity>(
-    tokenPropertyRepository,
-    adminMenuService,
-    "Csoportos tokenek",
-    "token-properties-group",
-    true
 ) {
 
-    private val view = "token-properties-group"
-    private val titleSingular = "Csoportos tokenek"
-    private val titlePlural = "Csoportos tokenek"
-    private val description = "Tokenek csoportonként csoportosítva"
-    private val permissionControl = PERMISSION_EDIT_TOKENS
+    private val view = "riddles-by-groups"
+    private val titleSingular = "Riddle beadás csoportonként"
+    private val titlePlural = "Riddle csapatonként"
+    private val description = "Beadott riddleök csoportonként csoportosítva"
+    private val permissionControl = PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
 
-    private val overviewDescriptor = OverviewBuilder(TokenListByGroupVirtualEntity::class)
-    private val propertyDescriptor = OverviewBuilder(TokenVirtualEntity::class)
+    private val overviewDescriptor = OverviewBuilder(RiddleStatsVirtualEntity::class)
+    private val propertyDescriptor = OverviewBuilder(RiddleMappingVirtualEntity::class)
 
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            TokenComponent::class.simpleName!!, AdminMenuEntry(
-            titlePlural,
-            "local_activity",
-            "/admin/control/${view}",
-            3,
-            permissionControl
-        ))
+            RiddleComponent::class.simpleName!!, AdminMenuEntry(
+                titlePlural,
+                "checklist_rtl",
+                "/admin/control/${view}",
+                4,
+                permissionControl
+            )
+        )
     }
 
     @GetMapping("")
@@ -76,21 +67,20 @@ class TokenAdminTokensByGroupController(
         model.addAttribute("rows", fetchOverview())
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_VIEW)
-        model.addAttribute("allowedToPurge", ControlPermissions.PERMISSION_PURGE.validate(user))
 
         return "overview"
     }
 
-    private fun fetchOverview(): List<TokenListByGroupVirtualEntity> {
-        return tokenPropertyRepository.findAll().groupBy { it.ownerGroup?.id ?: 0 }
+    private fun fetchOverview(): List<RiddleStatsVirtualEntity> {
+        return riddleMappingRepository.findAll().groupBy { it.ownerGroup?.id ?: 0 }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
-                .map { it ->
-                    val groupName = groupRepository.findById(it[0].ownerGroup?.id ?: 0).map { it.name }.orElse("n/a")
-                    TokenListByGroupVirtualEntity(
-                            it[0].ownerGroup?.id ?: 0,
-                            groupName,
-                            it.count()
+                .map { submissions ->
+                    RiddleStatsVirtualEntity(
+                            submissions[0].ownerGroup?.id ?: 0,
+                            submissions[0].ownerGroup?.name ?: "n/a",
+                            submissions.count { it.completed },
+                            submissions.count { it.hintUsed }
                     )
                 }
     }
@@ -118,15 +108,17 @@ class TokenAdminTokensByGroupController(
         return "overview"
     }
 
-    private fun fetchProperties(group: Int): List<TokenVirtualEntity> {
-        return tokenPropertyRepository.findAllByOwnerGroup_Id(group)
-            .map {
-                TokenVirtualEntity(
-                    it.id,
-                    it.token?.title ?: "n/a",
-                    it.token?.type ?: "n/a",
-                    it.token?.score ?: 0,
-                    it.recieved
+    private fun fetchProperties(user: Int): List<RiddleMappingVirtualEntity> {
+        return riddleMappingRepository.findAllByOwnerGroup_Id(user)
+            .map { submission ->
+                RiddleMappingVirtualEntity(
+                    submission.id,
+                    submission.riddle?.categoryId ?: 0,
+                    submission.riddle?.title ?: "n/a",
+                    submission.hintUsed,
+                    submission.completed,
+                    submission.attemptCount,
+                    submission.completedAt
                 )
             }
     }
@@ -146,7 +138,7 @@ class TokenAdminTokensByGroupController(
         model.addAttribute("id", id)
         model.addAttribute("user", user)
 
-        val entity = tokenPropertyRepository.findById(id)
+        val entity = riddleMappingRepository.findById(id)
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -164,8 +156,8 @@ class TokenAdminTokensByGroupController(
             return "admin403"
         }
 
-        val entity = tokenPropertyRepository.findById(id).orElseThrow()
-        tokenPropertyRepository.delete(entity)
+        val entity = riddleMappingRepository.findById(id).orElseThrow()
+        riddleMappingRepository.delete(entity)
         return "redirect:/admin/control/$view/"
     }
 
