@@ -26,7 +26,7 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
             {level.name}
           </Heading>
           <LevelStatusBadge level={level} />
-          <Text>Birtokló: {level.owner}</Text>
+          <Text>Birtokló: {level.owners}</Text>
           <Text>{level.description}</Text>
         </VStack>
       </HStack>
