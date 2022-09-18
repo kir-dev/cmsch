@@ -61,7 +61,7 @@ data class RiddleEntity(
     @Column(nullable = false, name = "`order`")
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 6, label = "Sorrend")
     @property:GenerateOverview(columnName = "Sorrend", order = 3, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_LONG)
+    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
     var order: Int = 0,
 
     @Column(nullable = false)
