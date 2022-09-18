@@ -63,7 +63,7 @@ class CountdownComponent(
     val topMessage = SettingProxy(componentSettingService, component,
         "topMessage", "Az esemény kezdetéig hátralévő idő:",
         type = SettingType.TEXT,
-        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen. A [[ és ]] jelek között írt szöveg brand színű lesz."
     )
 
     val timeToCountTo = SettingProxy(componentSettingService, component,
