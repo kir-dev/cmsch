@@ -12,7 +12,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name="riddles")
-@ConditionalOnBean(RiddleService::class)
+@ConditionalOnBean(RiddleComponent::class)
 data class RiddleEntity(
 
     @Id
