@@ -326,20 +326,21 @@ open class TasksService(
         val taskByCategory = taskRepository.findAllByVisibleTrue()
 
         return categories.findAll()
-                .map { category ->
-                    return@map TaskCategoryDto(
-                            name = category.name,
-                            categoryId = category.categoryId,
-                            availableFrom = category.availableFrom,
-                            availableTo = category.availableTo,
-                            type = category.type,
+            .map { category ->
+                return@map TaskCategoryDto(
+                    name = category.name,
+                    categoryId = category.categoryId,
+                    availableFrom = category.availableFrom,
+                    availableTo = category.availableTo,
+                    type = category.type,
 
-                            sum = taskByCategory.count { it.categoryId == category.categoryId },
-                            approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,
-                            rejected = submissionByCategory[category.categoryId]?.count { it.rejected } ?: 0,
-                            notGraded = submissionByCategory[category.categoryId]?.count { !it.approved && !it.rejected } ?: 0
-                    )
-                }
+                    sum = taskByCategory.count { it.categoryId == category.categoryId },
+                    approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,
+                    rejected = submissionByCategory[category.categoryId]?.count { it.rejected } ?: 0,
+                    notGraded = submissionByCategory[category.categoryId]?.count { !it.approved && !it.rejected } ?: 0
+                )
+            }
+            .sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)
@@ -364,6 +365,7 @@ open class TasksService(
                     notGraded = submissionByCategory[category.categoryId]?.count { !it.approved && !it.rejected } ?: 0
                 )
             }
+            .sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)
@@ -389,6 +391,7 @@ open class TasksService(
     @Transactional(readOnly = true)
     open fun getAllCategories(): List<TaskCategoryEntity> {
         return categories.findAll()
+            .sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)

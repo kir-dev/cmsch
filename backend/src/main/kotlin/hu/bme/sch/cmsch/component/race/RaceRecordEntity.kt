@@ -25,7 +25,7 @@ data class RaceRecordEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 2, label = "Kategória")
-    @property:GenerateOverview(columnName = "Kategória", order = 2)
+    @property:GenerateOverview(columnName = "Kategória", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var category: String = "",
 
@@ -36,8 +36,9 @@ data class RaceRecordEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
-        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `id| Teljes Név [a/g] email` ahol az: a = authsch, g = google")
-    @property:GenerateOverview(columnName = "Felhasználó", order = 3, centered = true)
+        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `id| Teljes Név [a/g] email` ahol az: a = authsch, g = google",
+        interpreter = INTERPRETER_SEARCH)
+    @property:GenerateOverview(columnName = "Felhasználó", order = 2, centered = true)
     @property:ImportFormat(ignore = false, columnId = 2)
     var userName: String = "",
 
@@ -47,7 +48,7 @@ data class RaceRecordEntity(
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Csoport", entitySource = "GroupEntity",
+    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 3, label = "Csoport", entitySource = "GroupEntity",
         note = "Csak akkor kell kijelölni ha csoportok kapnak pontot")
     @property:GenerateOverview(columnName = "Csoport", order = 3, centered = true)
     @property:ImportFormat(ignore = false, columnId = 4)
@@ -55,16 +56,16 @@ data class RaceRecordEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_FLOAT, order = 9, label = "Mért idő", defaultValue = "0.0",
+    @property:GenerateInput(type = INPUT_TYPE_FLOAT, order = 4, label = "Mért idő", defaultValue = "0.0",
         note = "Másodpercben kell megadni, és ponttal (.) van elválasztva, nem vesszővel! 3 tizedes pontig lehet megadni pontosságot.")
-    @property:GenerateOverview(columnName = "Idő", order = 5, centered = true)
+    @property:GenerateOverview(columnName = "Idő", order = 4, centered = true)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_FLOAT)
     var time: Float = 0.0f,
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 10, label = "Időbélyeg", enabled = false, visible = false)
-    @property:GenerateOverview(columnName = "Időbélyeg", order = 6, centered = true, renderer = OVERVIEW_TYPE_DATE)
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Időbélyeg", enabled = false, visible = false)
+    @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)
     var timestamp: Long = 0,
 

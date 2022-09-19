@@ -22,7 +22,8 @@ class RiddleComponent(
             title, menuDisplayName, minRole,
 
             scoringGroup,
-            hintScorePercent
+            hintScorePercent,
+            saveFailedAttempts
         )
     }
 
@@ -53,6 +54,12 @@ class RiddleComponent(
         "hintScorePercent", "100", serverSideOnly = true, type = SettingType.NUMBER,
         fieldName = "Hint pont érték", description = "Ennyi százaléka lesz a hinttel megoldott riddle pont " +
                 "értéke a hint élkül megoldottnak"
+    )
+
+    val saveFailedAttempts = SettingProxy(componentSettingService, component,
+        "saveFailedAttempts", "false", type = SettingType.BOOLEAN,
+        fieldName = "Hibás válaszok számának mentése",
+        description = "Jelentős plusz erőforrással jár ennek a hazsnálata ha sokan riddleöznek"
     )
 
 }
