@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
-@ConditionalOnBean(RiddleService::class)
+@ConditionalOnBean(RiddleComponent::class)
 class RiddleApiController(
     private val riddleService: RiddleService,
     private val startupPropertyConfig: StartupPropertyConfig,

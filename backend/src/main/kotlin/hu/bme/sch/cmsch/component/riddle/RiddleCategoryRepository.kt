@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-@ConditionalOnBean(RiddleService::class)
+@ConditionalOnBean(RiddleComponent::class)
 interface RiddleCategoryRepository : CrudRepository<RiddleCategoryEntity, Int> {
     fun findAllByVisibleTrueAndMinRoleIn(roles: List<RoleType>): List<RiddleCategoryEntity>
     fun findByCategoryIdAndVisibleTrueAndMinRoleIn(categoryId: Int, roles: List<RoleType>): Optional<RiddleCategoryEntity>
