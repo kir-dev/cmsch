@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.UserService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
@@ -18,7 +19,8 @@ open class RiddleService(
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
     private val userService: UserService,
-    private val clock: TimeService
+    private val clock: TimeService,
+    private val riddleComponent: RiddleComponent
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
@@ -162,7 +164,7 @@ open class RiddleService(
         return riddle.hint
     }
 
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun submitRiddleForUser(user: CmschUser, riddleId: Int, solution: String): RiddleSubmissionView? {
         val riddle = riddleRepository.findById(riddleId).orElse(null) ?: return null
         if (riddleCategoryRepository.findByCategoryIdAndVisibleTrueAndMinRoleIn(riddle.categoryId, RoleType.atMost(user.role)).isEmpty)
@@ -171,10 +173,12 @@ open class RiddleService(
         val submission = riddleMappingRepository.findByOwnerUser_IdAndRiddle_Id(user.id, riddleId)
         if (submission.isPresent) {
             val submissionEntity = submission.get()
-            if (checkSolution(solution, riddle)) {
-                submissionEntity.attemptCount += 1
-                submissionEntity.completedAt = clock.getTimeInSeconds()
-                riddleMappingRepository.save(submissionEntity)
+            if (checkSolutionIsWrong(solution, riddle)) {
+                if (riddleComponent.saveFailedAttempts.isValueTrue()) {
+                    submissionEntity.attemptCount += 1
+                    submissionEntity.completedAt = clock.getTimeInSeconds()
+                    riddleMappingRepository.save(submissionEntity)
+                }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
@@ -193,11 +197,15 @@ open class RiddleService(
             if (nextId != riddle.id)
                 return null
             val userEntity = userService.getById(user.internalId)
-            if (checkSolution(solution, riddle)) {
-                riddleMappingRepository.save(
-                    RiddleMappingEntity(0, riddle, userEntity, null,
-                    hintUsed = false, completed = false, completedAt = clock.getTimeInSeconds(), attemptCount = 1)
-                )
+            if (checkSolutionIsWrong(solution, riddle)) {
+                if (riddleComponent.saveFailedAttempts.isValueTrue()) {
+                    riddleMappingRepository.save(
+                        RiddleMappingEntity(
+                            0, riddle, userEntity, null,
+                            hintUsed = false, completed = false, completedAt = clock.getTimeInSeconds(), attemptCount = 1
+                        )
+                    )
+                }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
@@ -213,7 +221,7 @@ open class RiddleService(
         }
     }
 
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun submitRiddleForGroup(user: CmschUser, group: GroupEntity?, riddleId: Int, solution: String): RiddleSubmissionView? {
         if (group == null)
             return null
@@ -225,10 +233,12 @@ open class RiddleService(
         val submission = riddleMappingRepository.findByOwnerGroup_IdAndRiddle_Id(group.id, riddleId)
         if (submission.isPresent) {
             val submissionEntity = submission.get()
-            if (checkSolution(solution, riddle)) {
-                submissionEntity.attemptCount += 1
-                submissionEntity.completedAt = clock.getTimeInSeconds()
-                riddleMappingRepository.save(submissionEntity)
+            if (checkSolutionIsWrong(solution, riddle)) {
+                if (riddleComponent.saveFailedAttempts.isValueTrue()) {
+                    submissionEntity.attemptCount += 1
+                    submissionEntity.completedAt = clock.getTimeInSeconds()
+                    riddleMappingRepository.save(submissionEntity)
+                }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
@@ -246,11 +256,15 @@ open class RiddleService(
             val nextId = getNextIdGroup(group, riddle)
             if (nextId != riddle.id)
                 return null
-            if (checkSolution(solution, riddle)) {
-                riddleMappingRepository.save(
-                    RiddleMappingEntity(0, riddle, null, group,
-                        hintUsed = false, completed = false, completedAt = clock.getTimeInSeconds(), attemptCount = 1)
-                )
+            if (checkSolutionIsWrong(solution, riddle)) {
+                if (riddleComponent.saveFailedAttempts.isValueTrue()) {
+                    riddleMappingRepository.save(
+                        RiddleMappingEntity(
+                            0, riddle, null, group,
+                            hintUsed = false, completed = false, completedAt = clock.getTimeInSeconds(), attemptCount = 1
+                        )
+                    )
+                }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
@@ -266,7 +280,7 @@ open class RiddleService(
         }
     }
 
-    private fun checkSolution(solution: String, riddle: RiddleEntity) =
+    private fun checkSolutionIsWrong(solution: String, riddle: RiddleEntity) =
         solution.lowercase() != riddle.solution.lowercase()
 
     private fun getNextIdUser(user: CmschUser, riddle: RiddleEntity): Int? {

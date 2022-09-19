@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.controller
 
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
+import hu.bme.sch.cmsch.admin.INTERPRETER_SEARCH
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -303,7 +304,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                             }
                         }
                     }
-                    it.second.interpreter == INTERPRETER_INHERIT && it.second.type != INPUT_TYPE_FILE -> {
+                    (it.second.interpreter == INTERPRETER_INHERIT || it.second.interpreter == INTERPRETER_SEARCH) && it.second.type != INPUT_TYPE_FILE -> {
                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, it.first.getter.call(dto))
                     }
                     it.second.interpreter == "path" -> {

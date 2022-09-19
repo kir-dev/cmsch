@@ -20,7 +20,12 @@ data class GoogleUserInfoResponse(
     @set:JsonProperty("email_verified")
     var emailVerified: Boolean = false,
 
-    var locale: String = ""
+    var locale: String = "",
+
+    @set:JsonProperty(required = false)
+    @get:JsonProperty(required = false)
+    @field:JsonProperty(required = false)
+    var hd: String? = null
 ) {
 
     val internalId: String
