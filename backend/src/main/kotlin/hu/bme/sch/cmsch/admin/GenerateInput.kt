@@ -22,6 +22,7 @@ const val INPUT_TYPE_FORM_EDITOR = "form-editor"
 
 const val INTERPRETER_INHERIT = "inherit"
 const val INTERPRETER_PATH = "path"
+const val INTERPRETER_SEARCH = "search"
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)

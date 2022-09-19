@@ -68,6 +68,7 @@ class RaceAdminPanelController(
                 entity.groupName = groupEntity.orElseThrow().name
                 entity.userName = ""
                 entity.userId = 0
+                entity.timestamp = clock.getTimeInSeconds()
             } else {
                 log.error("Group not found: {} so rejected", entity.userName)
                 return false
