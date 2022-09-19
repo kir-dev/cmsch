@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@ConditionalOnBean(RiddleService::class)
+@ConditionalOnBean(RiddleComponent::class)
 open class RiddleService(
     private val riddleRepository: RiddleEntityRepository,
     private val riddleCategoryRepository: RiddleCategoryRepository,
