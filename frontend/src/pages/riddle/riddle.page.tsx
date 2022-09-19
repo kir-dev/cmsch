@@ -14,7 +14,7 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { FormEvent, useRef } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { RiddleSubmissonStatus } from '../../util/views/riddle.view'
@@ -40,6 +40,7 @@ const RiddlePage = () => {
   const queryResult = useRiddleDetailsQuery(onRiddleQueryFailed, id || '')
   const hintQuery = useRiddleHintQuery(onRiddleQueryFailed, id || '')
   const submissionMutation = useRiddleSubmitMutation()
+  const [allowSubmission, setAllowSubmission] = useState(true)
 
   if (queryResult.isError) {
     sendMessage(l('riddle-query-failed') + queryResult.error.message)
@@ -53,6 +54,9 @@ const RiddlePage = () => {
   if (!id) return <Navigate to="/" replace />
 
   const submitSolution = (event: FormEvent) => {
+    if (!allowSubmission) return
+    setAllowSubmission(false)
+    setTimeout(() => setAllowSubmission(true), 1000)
     event.preventDefault()
     const solution = solutionInput?.current?.value
     submissionMutation.mutate(
@@ -141,7 +145,7 @@ const RiddlePage = () => {
           </FormControl>
 
           <VStack spacing={5} mt={10}>
-            <Button type="submit" colorScheme="brand" width="100%">
+            <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme="brand" width="100%">
               Beadom
             </Button>
             {hintQuery.isSuccess || queryResult.data?.hint ? (
