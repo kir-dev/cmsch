@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-@ConditionalOnBean(RiddleService::class)
+@ConditionalOnBean(RiddleComponent::class)
 @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
 interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
     fun findAllByOwnerUser_IdAndCompletedTrue(userId: Int): List<RiddleMappingEntity>

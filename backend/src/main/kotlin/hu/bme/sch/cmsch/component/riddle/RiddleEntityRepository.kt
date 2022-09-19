@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-@ConditionalOnBean(RiddleService::class)
+@ConditionalOnBean(RiddleComponent::class)
 interface RiddleEntityRepository : CrudRepository<RiddleEntity, Int> {
     override fun findAll(): List<RiddleEntity>
     fun findAllByCategoryId(categoryId: Int): List<RiddleEntity>
