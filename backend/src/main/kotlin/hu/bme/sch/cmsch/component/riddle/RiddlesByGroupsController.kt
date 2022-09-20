@@ -1,22 +1,23 @@
 package hu.bme.sch.cmsch.component.riddle
 
-import hu.bme.sch.cmsch.admin.OverviewBuilder
+import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_DELETE
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 import javax.annotation.PostConstruct
+import javax.servlet.http.HttpServletResponse
 
 @Controller
 @RequestMapping("/admin/control/riddles-by-groups")
@@ -67,6 +68,7 @@ class RiddlesByGroupsController(
         model.addAttribute("rows", fetchOverview())
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_VIEW)
+        model.addAttribute("filteredExport", PERMISSION_IMPORT_EXPORT.validate(user))
 
         return "overview"
     }
@@ -159,6 +161,57 @@ class RiddlesByGroupsController(
         val entity = riddleMappingRepository.findById(id).orElseThrow()
         riddleMappingRepository.delete(entity)
         return "redirect:/admin/control/$view/"
+    }
+
+    data class RiddleByGroupFilteredView(
+        @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
+        var riddleId: Int = 0,
+
+        @property:ImportFormat(ignore = false, columnId = 1)
+        var riddleName: String = "",
+
+        @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
+        var groupId: Int = 0,
+
+        @property:ImportFormat(ignore = false, columnId = 3)
+        var groupName: String = "",
+
+        @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
+        var score: Int = 0,
+
+        @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
+        var hint: Boolean = false,
+
+        @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_BOOLEAN)
+        var completed: Boolean = false,
+
+        @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_INT)
+        var attemptCount: Int = 0,
+    )
+
+    private val filterDescriptor = OverviewBuilder(RiddleByGroupFilteredView::class)
+
+    @ResponseBody
+    @GetMapping("/filtered-export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun filteredExport(auth: Authentication, response: HttpServletResponse): ByteArray {
+        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\"$view-filtered-export.csv\"")
+        return filterDescriptor.exportToCsv(riddleMappingRepository.findAll()
+            .filter { it.completed }
+            .map {
+            RiddleByGroupFilteredView(
+                it.riddle?.id ?: 0,
+                it.riddle?.title ?: "-",
+                it.ownerGroup?.id ?: 0,
+                it.ownerGroup?.name ?: "",
+                it.riddle?.score ?: 0,
+                it.hintUsed,
+                it.completed,
+                it.attemptCount
+            )
+        }).toByteArray()
     }
 
 }
