@@ -27,7 +27,7 @@ class QrFightAdminController(
     adminMenuService,
     QrFightComponent::class.java,
     component,
-    ControlPermissions.PERMISSION_CONTROL_TASKS,
+    ControlPermissions.PERMISSION_CONTROL_QR_FIGHT,
     "QR Fight",
     "QR Fight beállítások",
     menuService = menuService

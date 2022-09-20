@@ -1,11 +1,9 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.component.login.LoginComponent
-import hu.bme.sch.cmsch.component.login.authsch.Scope
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver
-import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
 import javax.servlet.http.HttpServletRequest
 

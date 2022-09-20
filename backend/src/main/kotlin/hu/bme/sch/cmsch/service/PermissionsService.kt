@@ -91,6 +91,11 @@ object ControlPermissions : PermissionGroup {
         "Az alkalazás testreszabása"
     )
 
+    val PERMISSION_INCREASED_SESSION_DURATION = PermissionValidator(
+        "INCREASED_SESSION_DURATION",
+        "Megnövelt session idő"
+    )
+
     val PERMISSION_SHOW_DELETE_FILES = PermissionValidator(
         "SHOW_FILES",
         "Feltöltött fájlok megtekintése és törlése"
@@ -154,6 +159,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_IMPORT_EXPORT,
         PERMISSION_PURGE,
         PERMISSION_CONTROL_APP,
+        PERMISSION_INCREASED_SESSION_DURATION,
         PERMISSION_SHOW_DELETE_FILES,
         PERMISSION_CONTROL_IMPRESSUM,
         PERMISSION_CONTROL_COUNTDOWN,
