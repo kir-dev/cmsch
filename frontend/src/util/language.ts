@@ -45,6 +45,7 @@ const languageData = {
   'riddle-completed-category-title': 'Minden megvan!',
   'riddle-completed-category-description': 'Igazán szép munka, kolléga!',
   'riddle-query-failed': 'Nem sikerült lekérni a Riddle-öket.',
+  'riddle-submission-failed': 'Nem sikerült beadni a Riddle-t.',
   'task-empty-title': 'Üres megoldás',
   'task-empty-description': 'Üres megoldást nem küldhetsz be.',
   'task-too-large-title': 'Túl nagy a fájl',
