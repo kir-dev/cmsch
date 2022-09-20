@@ -1,5 +1,8 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import hu.bme.sch.cmsch.admin.IMPORT_INT
+import hu.bme.sch.cmsch.admin.ImportFormat
+import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.extrapage.ExtraPageService
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -18,11 +21,16 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GROUPS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_USERS
+import hu.bme.sch.cmsch.util.getUser
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import java.util.*
+import javax.servlet.http.HttpServletResponse
 
 @Controller
 @RequestMapping("/admin/control/groups")
@@ -41,7 +49,29 @@ class GroupController(
         }?.toList() ?: listOf("Üres") }),
         permissionControl = PERMISSION_EDIT_GROUPS,
         importable = true, adminMenuPriority = 1, adminMenuIcon = "groups"
-)
+) {
+
+    data class IdExportGroupView(
+        @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
+        var groupId: Int = 0,
+
+        @property:ImportFormat(ignore = false, columnId = 1)
+        var groupName: String = ""
+    )
+
+    private val idDescriptor = OverviewBuilder(IdExportGroupView::class)
+
+    @ResponseBody
+    @GetMapping("/id-export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun idExport(auth: Authentication, response: HttpServletResponse): ByteArray {
+        if (ControlPermissions.PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\"$view-filtered-export.csv\"")
+        return idDescriptor.exportToCsv(fetchOverview().map { IdExportGroupView(it.id, it.name) }).toByteArray()
+    }
+
+}
 
 @Controller
 @RequestMapping("/admin/control/users")

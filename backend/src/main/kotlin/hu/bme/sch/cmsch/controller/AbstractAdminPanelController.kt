@@ -40,7 +40,7 @@ const val CONTROL_MODE_LOCATION = "location"
 
 open class AbstractAdminPanelController<T : ManagedEntity>(
         private val repo: CrudRepository<T, Int>?,
-        private val view: String,
+        internal val view: String,
         private val titleSingular: String,
         private val titlePlural: String,
         private val description: String,
@@ -58,7 +58,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val adminMenuPriority: Int = 1,
         private val virtualEntity: Boolean = false,
         private val allowedToPurge: Boolean = importable,
-        private val savable: Boolean = false,
+        internal val savable: Boolean = false,
         private val purgeRepo: CrudRepository<*, Int>? = repo,
 ) : AbstractPurgeAdminPageController<T>(repo, adminMenuService, titlePlural, view, allowedToPurge) {
 
