@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.repository
 
+import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
@@ -14,4 +15,5 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     fun findAllByGroupName(groupName: String): List<UserEntity>
     fun findByEmail(email: String): Optional<UserEntity>
     fun findAllByFullName(fullName: String): List<UserEntity>
+    fun countAllByGroup(group: GroupEntity): Long
 }

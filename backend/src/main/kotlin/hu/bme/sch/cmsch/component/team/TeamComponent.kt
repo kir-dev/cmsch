@@ -55,7 +55,17 @@ class TeamComponent(
             showTeamDetails,
             showTeamMembersPublicly,
             showTeamScore,
-            showTeamScoreDetailsButton
+            showTeamScoreDetailsButton,
+
+            statGroup,
+            membersStatEnabled,
+            membersStatHeader,
+            placeStatEnabled,
+            placeStatHeader,
+            scoreStatEnabled,
+            scoreStatHeader,
+            raceStatEnabled,
+            raceStatHeader,
         )
     }
 
@@ -288,6 +298,61 @@ class TeamComponent(
     val showTeamScoreDetailsButton = SettingProxy(componentSettingService, component,
         "showTeamScoreDetailsButton", "false", type = SettingType.BOOLEAN,
         fieldName = "Csoport részletes pontjaihoz gomb", description = "Ha be val kapcsolva, akkor megjelenik egy gomb a csapat részletes pont listájához"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val statGroup = SettingProxy(componentSettingService, component,
+        "statGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Csapat statisztika",
+        description = ""
+    )
+
+    val membersStatEnabled = SettingProxy(componentSettingService, component,
+        "membersStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Tagok számának kijelzése",
+        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hányan vannak"
+    )
+
+    val membersStatHeader = SettingProxy(componentSettingService, component,
+        "membersStatHeader", "Tagok", serverSideOnly = true,
+        fieldName = "Tagok fejléce", description = "Ez lesz a neve a statisztikának"
+    )
+
+    val placeStatEnabled = SettingProxy(componentSettingService, component,
+        "placeStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Helyezés kijelzése",
+        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hanyadik a csapat " +
+                "(Leaderboard komponens kell hozzá)"
+    )
+
+    val placeStatHeader = SettingProxy(componentSettingService, component,
+        "placeStatHeader", "Helyezés", serverSideOnly = true,
+        fieldName = "Helyezés fejléce", description = "Ez lesz a neve a statisztikának"
+    )
+
+    val scoreStatEnabled = SettingProxy(componentSettingService, component,
+        "scoreStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Pontszám kijelzése",
+        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hány pontja van a csapatnak " +
+                "(Leaderboard komponens kell hozzá)"
+    )
+
+    val scoreStatHeader = SettingProxy(componentSettingService, component,
+        "scoreStatHeader", "Pontszám", serverSideOnly = true,
+        fieldName = "Pontszám fejléce", description = "Ez lesz a neve a statisztikának"
+    )
+
+    val raceStatEnabled = SettingProxy(componentSettingService, component,
+        "raceStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Verseny eredmény kijelzése",
+        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy ki és milyen eredménnyel a legjobb " +
+                "(Leaderboard komponens kell hozzá)"
+    )
+
+    val raceStatHeader = SettingProxy(componentSettingService, component,
+        "raceStatHeader", "Sörmérés", serverSideOnly = true,
+        fieldName = "Verseny fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
 }
