@@ -57,6 +57,7 @@ const RiddlePage = () => {
     if (!allowSubmission) return
     setAllowSubmission(false)
     setTimeout(() => setAllowSubmission(true), 1000)
+    solutionInput.current?.blur()
     event.preventDefault()
     const solution = solutionInput?.current?.value
     submissionMutation.mutate(
@@ -100,7 +101,7 @@ const RiddlePage = () => {
           }
         },
         onError: () => {
-          console.error('Nem sikerült beküldeni a Riddle-t.', { toast: true })
+          toast({ title: l('riddle-submission-failed'), status: 'error' })
         }
       }
     )
