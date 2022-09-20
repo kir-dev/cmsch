@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.race.RaceService
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType
@@ -22,7 +23,8 @@ open class TeamService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val teamJoinRequestRepository: TeamJoinRequestRepository,
-    private val leaderBoardService: Optional<LeaderBoardService>
+    private val leaderBoardService: Optional<LeaderBoardService>,
+    private val raceService: Optional<RaceService>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -172,14 +174,60 @@ open class TeamService(
         val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || forceShowMembers) mapMembers(team, user?.id) else null
         val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value) mapRequests(team) else null
         val ownTeam = user?.group?.id == team.id
+        val stats = user?.group?.let { mapStats(it) } ?: listOf()
+
         return TeamView(team.id, team.name, score,
             members,
             requests,
             joinEnabled,
             leaveEnabled,
             joinCancellable,
-            ownTeam
+            ownTeam,
+            stats
         )
+    }
+
+    private fun mapStats(group: GroupEntity): List<TeamStatView> {
+        val stats = mutableListOf<TeamStatView>()
+
+        if (teamComponent.membersStatEnabled.isValueTrue()) {
+            stats.add(
+                TeamStatView(
+                    teamComponent.membersStatHeader.getValue(),
+                    "${userRepository.countAllByGroup(group)} db",
+                    null,
+                    null
+                )
+            )
+        }
+
+        if (teamComponent.placeStatEnabled.isValueTrue()) {
+            val place = leaderBoardService.map { it.getPlaceOfGroup(group) }.orElse(0)
+            if (place > 0)
+                stats.add(TeamStatView(teamComponent.placeStatHeader.getValue(), "$place.", null, "/leaderboard"))
+        }
+
+        if (teamComponent.scoreStatEnabled.isValueTrue()) {
+            val score = leaderBoardService.map { it.getScoreOfGroup(group) }.orElse(null)
+            if (score != null)
+                stats.add(TeamStatView(teamComponent.scoreStatHeader.getValue(), "$score pont", null, "/leaderboard"))
+        }
+
+        if (teamComponent.raceStatEnabled.isValueTrue()) {
+            val race = raceService.map { service -> service.getBoardForGroups().firstOrNull { it.groupName == group.name } }
+                    .orElse(null)
+            if (race != null)
+                stats.add(
+                    TeamStatView(
+                        teamComponent.raceStatHeader.getValue(),
+                        race.name,
+                        "${race.time} s",
+                        "/race"
+                    )
+                )
+        }
+
+        return stats
     }
 
     private fun mapMembers(team: GroupEntity, userId: Int?): List<TeamMemberView> {
