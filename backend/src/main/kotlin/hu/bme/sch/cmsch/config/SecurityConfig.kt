@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
 import hu.bme.sch.cmsch.component.login.AuthschLoginService
 import hu.bme.sch.cmsch.component.login.LoginComponent
+import hu.bme.sch.cmsch.component.login.SessionFilterConfigurer
+import hu.bme.sch.cmsch.component.login.SessionIncreaseFilter
 import hu.bme.sch.cmsch.component.login.authsch.CmschAuthschUser
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.CmschGoogleUser
@@ -37,7 +39,8 @@ open class SecurityConfig(
     private val jwtTokenProvider: JwtTokenProvider,
     private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
     private val authschLoginService: AuthschLoginService,
-    private val loginComponent: LoginComponent
+    private val loginComponent: LoginComponent,
+    private val startupPropertyConfig: StartupPropertyConfig
 ) : WebSecurityConfigurerAdapter() {
 
     var authschUserServiceClient = WebClient.builder()
@@ -94,6 +97,7 @@ open class SecurityConfig(
                 .and().formLogin().disable()
                 .exceptionHandling().accessDeniedPage("/403")
                 .and().apply(JwtConfigurer(jwtTokenProvider))
+                .and().apply(SessionFilterConfigurer(startupPropertyConfig))
                 .and().oauth2Login()
                 .authorizationEndpoint()
                 .authorizationRequestResolver(
@@ -112,12 +116,12 @@ open class SecurityConfig(
         http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**", "/admin/admission/**")
     }
 
-    private fun resolveAuthschUser(x: OAuth2UserRequest): DefaultOAuth2User {
+    private fun resolveAuthschUser(request: OAuth2UserRequest): DefaultOAuth2User {
         // The API returns `test/json` which is an invalid mime type
         val authschProfileJson: String? = authschUserServiceClient.get()
             .uri { uriBuilder ->
                 uriBuilder.path("/profile/")
-                    .queryParam("access_token", x.accessToken.tokenValue)
+                    .queryParam("access_token", request.accessToken.tokenValue)
                     .build()
             }
             .retrieve()
@@ -138,13 +142,13 @@ open class SecurityConfig(
         )
     }
 
-    private fun resolveGoogleUser(it: OidcUserRequest): DefaultOidcUser {
+    private fun resolveGoogleUser(request: OidcUserRequest): DefaultOidcUser {
         val googleProfileJson: String? = googleUserServiceClient.get()
             .uri { uriBuilder ->
                 uriBuilder.path("/userinfo")
                     .build()
             }
-            .header("Authorization", "Bearer " + it.accessToken.tokenValue)
+            .header("Authorization", "Bearer " + request.accessToken.tokenValue)
             .retrieve()
             .bodyToMono(String::class.java)
             .block()
@@ -160,7 +164,7 @@ open class SecurityConfig(
             userEntity.permissionsAsList,
             userEntity.fullName,
             mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
-            it.idToken
+            request.idToken
         )
     }
 

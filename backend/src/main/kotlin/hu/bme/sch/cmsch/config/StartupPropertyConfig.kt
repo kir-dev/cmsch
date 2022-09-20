@@ -31,6 +31,9 @@ data class StartupPropertyConfig(
     val formOwnershipMode: OwnershipType = OwnershipType.USER,
     val challengeOwnershipMode: OwnershipType = OwnershipType.USER,
     val raceOwnershipMode: OwnershipType = OwnershipType.USER,
+
+    // Increased session
+    val increasedSessionTime: Int = 60 * 60 * 24 * 2
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
