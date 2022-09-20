@@ -351,4 +351,8 @@ open class LeaderBoardService(
         log.info("Recalculating finished")
     }
 
+    fun getPlaceOfGroup(group: GroupEntity): Int {
+        return getBoardForUsers().indexOfFirst { it.groupName == group.name } + 1
+    }
+
 }
