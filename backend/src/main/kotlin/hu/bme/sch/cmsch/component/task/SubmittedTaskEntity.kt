@@ -26,6 +26,7 @@ data class SubmittedTaskEntity(
     var task: TaskEntity? = null,
 
     @Column(nullable = true)
+    @property:ImportFormat(ignore = false, columnId = 0)
     var groupId: Int? = null,
 
     @Column(nullable = false)

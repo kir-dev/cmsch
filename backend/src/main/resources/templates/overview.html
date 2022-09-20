@@ -129,8 +129,8 @@
                 <object th:if="${savable != null && savable}" th:remove="tag">
                     <a href="#" target="_blank" th:href="|@{/admin/control}/${view}/save/csv|" class="btn btn-secondary">Mentés (CSV)</a>
                 </object>
-                <object th:if="${importable != null && importable && view != null && view == 'groups'}" th:remove="tag">
-                    <a href="#" target="_blank" th:href="|@{/admin/control}/${view}/id-export/csv|" class="btn btn-secondary">Szűrt mentés (CSV)</a>
+                <object th:if="${filteredExport != null && filteredExport}" th:remove="tag">
+                    <a href="#" target="_blank" th:href="|@{/admin/control}/${view}/filtered-export/csv|" class="btn btn-secondary">Szűrt mentés (CSV)</a>
                 </object>
 
                 <object th:if="${controlMode == 'location'}" th:remove="tag">

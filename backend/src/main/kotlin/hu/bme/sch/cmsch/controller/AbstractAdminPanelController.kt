@@ -60,6 +60,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val allowedToPurge: Boolean = importable,
         internal val savable: Boolean = false,
         private val purgeRepo: CrudRepository<*, Int>? = repo,
+        private val filteredExport: Boolean = false
 ) : AbstractPurgeAdminPageController<T>(repo, adminMenuService, titlePlural, view, allowedToPurge) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -97,7 +98,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         model.addAttribute("controlMode", controlMode)
         model.addAttribute("importable", importable && PERMISSION_IMPORT_EXPORT.validate(user))
         model.addAttribute("allowedToPurge", allowedToPurge && PERMISSION_PURGE.validate(user))
-        model.addAttribute("savable", savable)
+        model.addAttribute("savable", savable && PERMISSION_IMPORT_EXPORT.validate(user))
+        model.addAttribute("filteredExport", filteredExport && PERMISSION_IMPORT_EXPORT.validate(user))
 
         return "overview"
     }

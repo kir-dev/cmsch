@@ -48,10 +48,11 @@ class GroupController(
             member -> "${member.fullName} (${member.role.name})"
         }?.toList() ?: listOf("Üres") }),
         permissionControl = PERMISSION_EDIT_GROUPS,
-        importable = true, adminMenuPriority = 1, adminMenuIcon = "groups"
+        importable = true, adminMenuPriority = 1, adminMenuIcon = "groups",
+        filteredExport = true
 ) {
 
-    data class IdExportGroupView(
+    data class GroupFilteredExportView(
         @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
         var groupId: Int = 0,
 
@@ -59,16 +60,16 @@ class GroupController(
         var groupName: String = ""
     )
 
-    private val idDescriptor = OverviewBuilder(IdExportGroupView::class)
+    private val filterDescriptor = OverviewBuilder(GroupFilteredExportView::class)
 
     @ResponseBody
-    @GetMapping("/id-export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
-    fun idExport(auth: Authentication, response: HttpServletResponse): ByteArray {
+    @GetMapping("/filtered-export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun filteredExport(auth: Authentication, response: HttpServletResponse): ByteArray {
         if (ControlPermissions.PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-filtered-export.csv\"")
-        return idDescriptor.exportToCsv(fetchOverview().map { IdExportGroupView(it.id, it.name) }).toByteArray()
+        return filterDescriptor.exportToCsv(fetchOverview().map { GroupFilteredExportView(it.id, it.name) }).toByteArray()
     }
 
 }
