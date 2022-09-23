@@ -88,6 +88,7 @@ open class QrFightService(
                 LevelStatus.COMPLETED -> level.hintAfterCompleted
                 else -> level.hintBeforeEnabled
             },
+            tokenCount = teams[group?.name] ?: 0,
             status = status,
             owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
             teams = teams,
@@ -146,6 +147,7 @@ open class QrFightService(
                 LevelStatus.COMPLETED -> level.hintAfterCompleted
                 else -> level.hintBeforeEnabled
             },
+            tokenCount = teams[user?.fullNameWithAlias] ?: 0,
             status = status,
             owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
             teams = teams,
