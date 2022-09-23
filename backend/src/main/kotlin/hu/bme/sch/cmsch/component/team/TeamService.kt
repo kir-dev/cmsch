@@ -3,6 +3,8 @@ package hu.bme.sch.cmsch.component.team
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.race.RaceService
+import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType
@@ -24,7 +26,8 @@ open class TeamService(
     private val userRepository: UserRepository,
     private val teamJoinRequestRepository: TeamJoinRequestRepository,
     private val leaderBoardService: Optional<LeaderBoardService>,
-    private val raceService: Optional<RaceService>
+    private val raceService: Optional<RaceService>,
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -174,16 +177,16 @@ open class TeamService(
         val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || forceShowMembers) mapMembers(team, user?.id) else null
         val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value) mapRequests(team) else null
         val ownTeam = user?.group?.id == team.id
-        val stats = user?.group?.let { mapStats(it) } ?: listOf()
 
-        return TeamView(team.id, team.name, score,
+        return TeamView(
+            team.id, team.name, score,
             members,
             requests,
             joinEnabled,
             leaveEnabled,
             joinCancellable,
             ownTeam,
-            stats
+            mapStats(team)
         )
     }
 
@@ -214,14 +217,21 @@ open class TeamService(
         }
 
         if (teamComponent.raceStatEnabled.isValueTrue()) {
-            val race = raceService.map { service -> service.getBoardForGroups().firstOrNull { it.groupName == group.name } }
-                    .orElse(null)
+            val race = raceService
+                .map { service ->
+                    when (startupPropertyConfig.raceOwnershipMode) {
+                        OwnershipType.USER -> service.getBoardForUsers()
+                        OwnershipType.GROUP -> service.getBoardForGroups()
+                    }
+                }
+                .map { collection -> collection.firstOrNull { it.groupName == group.name } }
+                .orElse(null)
             if (race != null)
                 stats.add(
                     TeamStatView(
                         teamComponent.raceStatHeader.getValue(),
                         race.name,
-                        "${race.time} s",
+                        "${race.time} mp",
                         "/race"
                     )
                 )
