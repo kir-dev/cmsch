@@ -6,6 +6,7 @@ import { createRef, useMemo, useState } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { NewsArticleView } from '../../../util/views/news.view'
 import NewsListItem from './NewsListItem'
+import { debounce } from 'lodash'
 
 interface NewsListProps {
   newsList: NewsArticleView[]
@@ -36,7 +37,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
         <InputLeftElement h="100%">
           <SearchIcon />
         </InputLeftElement>
-        <Input ref={inputRef} placeholder="Keresés címre..." size="lg" onChange={handleInput} autoFocus={true} />
+        <Input ref={inputRef} placeholder="Keresés címre..." size="lg" onChange={debounce(handleInput, 500)} autoFocus={true} />
       </InputGroup>
       <Grid templateColumns="repeat(1, 1fr)" gap={4}>
         {highlighted.map((n: NewsArticleView) => (
