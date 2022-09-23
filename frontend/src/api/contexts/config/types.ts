@@ -248,12 +248,14 @@ export interface Team {
   joinEnabled: boolean
   racesByDefault: boolean
   selectableByDefault: boolean
+  adminTitle: string
+  togglePermissionEnabled: boolean
+  kickEnabled: boolean
+  promoteLeadershipEnabled: boolean
+  showTeamDetails: boolean
+  showTeamMembersPublicly: boolean
   showTeamScore: boolean
   showTeamScoreDetailsButton: boolean
-  showTeamDetails: boolean
-  kickEnabled: boolean
-  togglePermissionEnabled: boolean
-  promoteLeadershipEnabled: boolean
 }
 
 export interface QrFight {
