@@ -19,7 +19,9 @@ export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup 
           <Td p={1} w="1rem">
             {collapsable && (isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />)}
           </Td>
-          <Td w="1rem">{idx + 1}.</Td>
+          <Td p={1} w="1rem">
+            {idx + 1}.
+          </Td>
           <Td>{data.name}</Td>
           {showGroup && <Td>{data.groupName}</Td>}
           <Td w="5rem">{`${data.score || data.total} ${suffix || ''}`}</Td>
