@@ -100,7 +100,11 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
         <VStack align="flex-start">
           <Heading>{title}</Heading>
           {(myTeam || admin) && <Text>{team.name}</Text>}
-          {component.showTeamScore && <BoardStat label="Csapat pont" value={team.points} />}
+          <Flex wrap="wrap" gap={3}>
+            {team.stats.map((stat) => (
+              <BoardStat label={stat.name} value={stat.value1} subValue={stat.value2} navigateTo={stat.navigate} />
+            ))}
+          </Flex>
         </VStack>
         <VStack mt={10}>
           {team.joinEnabled && (
