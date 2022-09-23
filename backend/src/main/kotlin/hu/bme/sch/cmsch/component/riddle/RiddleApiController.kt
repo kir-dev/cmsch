@@ -94,4 +94,16 @@ class RiddleApiController(
         }
     }
 
+    @GetMapping("/riddle-history")
+    fun riddleHistory(auth: Authentication?): ResponseEntity<Map<String, List<RiddleView>>> {
+        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.ok(mapOf())
+        if (!riddleComponent.minRole.isAvailableForRole(user.role))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
+        return ResponseEntity.ok(when (startupPropertyConfig.riddleOwnershipMode) {
+            OwnershipType.USER -> riddleService.listRiddleHistoryForUser(user)
+            OwnershipType.GROUP -> riddleService.listRiddleHistoryForGroup(user, user.group)
+        })
+    }
+
 }

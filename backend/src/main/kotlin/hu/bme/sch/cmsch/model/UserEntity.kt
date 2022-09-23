@@ -107,7 +107,7 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 6, label = "Email cím", note = "Nem kell egyik funkcióhoz sem")
+    @property:GenerateInput(order = 6, label = "Email cím")
     @property:GenerateOverview(columnName = "Email", order = 4)
     @property:ImportFormat(ignore = false, columnId = 5)
     var email: String = "",

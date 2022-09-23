@@ -23,7 +23,12 @@ class RiddleComponent(
 
             scoringGroup,
             hintScorePercent,
-            saveFailedAttempts
+            saveFailedAttempts,
+
+            answerGroup,
+            ignoreCase,
+            ignoreWhitespace,
+            ignoreAccent
         )
     }
 
@@ -59,7 +64,33 @@ class RiddleComponent(
     val saveFailedAttempts = SettingProxy(componentSettingService, component,
         "saveFailedAttempts", "false", type = SettingType.BOOLEAN,
         fieldName = "Hibás válaszok számának mentése",
-        description = "Jelentős plusz erőforrással jár ennek a hazsnálata ha sokan riddleöznek"
+        description = "Jelentős plusz erőforrással jár ennek a használata ha sokan riddleöznek"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val answerGroup = SettingProxy(componentSettingService, component,
+        "answerGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Válaszok ellenőrzése",
+        description = "A transzformációt a beküldött és a riddleben található megoldásra is futtatjuk"
+    )
+
+    val ignoreCase = SettingProxy(componentSettingService, component,
+        "ignoreCase", "true", type = SettingType.BOOLEAN,
+        fieldName = "Kis/nagy betű ignorálása",
+        description = "A válaszoknál nem számít a kis- és nagybetű"
+    )
+
+    val ignoreWhitespace = SettingProxy(componentSettingService, component,
+        "ignoreWhitespace", "false", type = SettingType.BOOLEAN,
+        fieldName = "Elválasztás ignorálása",
+        description = "A válaszoknál nem számít a szavak elválasztása (szóköz, kötőjel, &, +, vessző)"
+    )
+
+    val ignoreAccent = SettingProxy(componentSettingService, component,
+        "ignoreAccent", "false", type = SettingType.BOOLEAN,
+        fieldName = "Ékezetek ignorálása",
+        description = "A válaszoknál nem számítanak az ékezetek (áéíóöőúüű)"
     )
 
 }

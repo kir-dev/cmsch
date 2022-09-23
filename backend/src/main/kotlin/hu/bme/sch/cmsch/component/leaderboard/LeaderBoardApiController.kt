@@ -64,6 +64,23 @@ class LeaderBoardApiController(
         ))
     }
 
+    @GetMapping("/detailed-leaderboard-by-category")
+    fun detailedLeaderboardByCategory(auth: Authentication?): ResponseEntity<DetailedCategoryLeaderBoardView> {
+        val user = auth?.getUserFromDatabaseOrNull()
+
+        if (!leaderBoardComponent.leaderboardDetailsByCategoryEnabled.isValueTrue())
+            return ResponseEntity.ok(DetailedCategoryLeaderBoardView())
+
+        if (!leaderBoardComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return ResponseEntity.ok(DetailedCategoryLeaderBoardView(
+            user?.id,
+            leaderBoardService.getBoardDetailsByCategoryForUsers(),
+            user?.group?.id,
+            leaderBoardService.getBoardDetailsByCategoryForGroups()
+        ))
+    }
 
     private fun fetchUserScore(user: CmschUser): Int? {
         if (!leaderBoardComponent.showUserBoard.isValueTrue())
