@@ -28,6 +28,7 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
           </Heading>
           <LevelStatusBadge level={level} />
           <Text>Birtokló: {level.owners}</Text>
+          <Text>A te csapatodnak van: {level.tokenCount}db</Text>
           <Markdown text={level.description} />
         </VStack>
       </HStack>

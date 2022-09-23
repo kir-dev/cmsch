@@ -19,6 +19,7 @@ data class TowerView(
 data class QrFightLevelView(
     val name: String = "",
     val description: String = "",
+    val tokenCount: Int = 0,
     val status: LevelStatus = LevelStatus.NOT_LOGGED_IN,
     val owners: String = "",
     val teams: Map<String, Int> = mapOf(),
