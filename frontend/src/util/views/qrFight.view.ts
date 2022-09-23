@@ -6,6 +6,7 @@ export type QrDto = {
 export type QrLevelDto = {
   name: string
   description: string
+  tokenCount: number
   status: LevelStatus
   owners: string
   teams: Record<string, number>
