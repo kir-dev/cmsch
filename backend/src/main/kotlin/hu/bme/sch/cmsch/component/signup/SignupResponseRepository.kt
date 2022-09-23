@@ -15,6 +15,8 @@ interface SignupResponseRepository : JpaRepository<SignupResponseEntity, Int> {
 
     fun findByFormIdAndSubmitterUserId(formId: Int, submitterUserId: Int): Optional<SignupResponseEntity>
 
+    fun findByFormIdAndSubmitterGroupId(formId: Int, submitterGroupId: Int): Optional<SignupResponseEntity>
+
     fun countAllByFormIdAndRejectedFalse(formId: Int): Long
 
 }

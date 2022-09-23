@@ -280,8 +280,55 @@ open class RiddleService(
         }
     }
 
-    private fun checkSolutionIsWrong(solution: String, riddle: RiddleEntity) =
-        solution.lowercase() != riddle.solution.lowercase()
+    private fun checkSolutionIsWrong(solution: String, riddle: RiddleEntity): Boolean {
+        var transformedSubmittedSolution = solution
+        var transformedRiddleSolution = riddle.solution
+
+        if (riddleComponent.ignoreAccent.isValueTrue()) {
+            transformedSubmittedSolution = replaceAccent(transformedSubmittedSolution)
+            transformedRiddleSolution = replaceAccent(transformedRiddleSolution)
+        }
+        if (riddleComponent.ignoreCase.isValueTrue()) {
+            transformedSubmittedSolution = transformedSubmittedSolution.lowercase()
+            transformedRiddleSolution = transformedRiddleSolution.lowercase()
+        }
+        if (riddleComponent.ignoreWhitespace.isValueTrue()) {
+            transformedSubmittedSolution = transformedSubmittedSolution
+                .replace(" ", "")
+                .replace("-", "")
+                .replace("&", "")
+                .replace("+", "")
+                .replace(",", "")
+            transformedRiddleSolution = transformedRiddleSolution
+                .replace(" ", "")
+                .replace("-", "")
+                .replace("&", "")
+                .replace("+", "")
+                .replace(",", "")
+        }
+
+        return transformedSubmittedSolution != transformedRiddleSolution
+    }
+
+    private fun replaceAccent(transformedSubmittedSolution: String) = transformedSubmittedSolution
+        .replace("Á", "A")
+        .replace("É", "E")
+        .replace("Í", "I")
+        .replace("Ó", "O")
+        .replace("Ö", "O")
+        .replace("Ő", "O")
+        .replace("Ú", "U")
+        .replace("Ü", "U")
+        .replace("Ű", "U")
+        .replace("á", "a")
+        .replace("é", "e")
+        .replace("í", "i")
+        .replace("ó", "o")
+        .replace("ö", "o")
+        .replace("ő", "o")
+        .replace("ú", "u")
+        .replace("ü", "u")
+        .replace("ű", "u")
 
     private fun getNextIdUser(user: CmschUser, riddle: RiddleEntity): Int? {
         val submissions = riddleMappingRepository.findAllByOwnerUser_IdAndRiddle_CategoryId(user.id, riddle.categoryId)
@@ -325,6 +372,50 @@ open class RiddleService(
         val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
             .map { it.categoryId }
         return riddleRepository.findAllByCategoryIdIn(categories).size
+    }
+
+    @Transactional(readOnly = true)
+    open fun listRiddleHistoryForUser(user: UserEntity): Map<String, List<RiddleView>> {
+        val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
+        val submissions = riddleMappingRepository.findAllByOwnerUser_IdAndCompletedTrue(user.id)
+            .groupBy { it.riddle?.categoryId ?: 0 }
+            .toMap()
+
+        return categories.associate { category ->
+            category.title to
+                    submissions.getOrDefault(category.id, listOf())
+                        .mapNotNull { riddle -> riddle.riddle?.let { mapRiddle(riddle, it) } }
+                        .toList()
+        }
+    }
+
+    @Transactional(readOnly = true)
+    open fun listRiddleHistoryForGroup(user: UserEntity, group: GroupEntity?): Map<String, List<RiddleView>> {
+        if (group == null)
+            return mapOf()
+
+        val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
+        val submissions = riddleMappingRepository.findAllByOwnerGroup_IdAndCompletedTrue(group.id)
+            .groupBy { it.riddle?.categoryId ?: 0 }
+            .toMap()
+
+        return categories.associate { category ->
+            category.title to
+                    submissions.getOrDefault(category.id, listOf())
+                        .mapNotNull { riddle -> riddle.riddle?.let { mapRiddle(riddle, it) } }
+                        .toList()
+        }
+    }
+
+    private fun mapRiddle(mapping: RiddleMappingEntity, riddle: RiddleEntity): RiddleView {
+        return RiddleView(
+            riddle.imageUrl,
+            riddle.title,
+            if (mapping.hintUsed) riddle.hint else "",
+            mapping.completed,
+            riddle.creator,
+            riddle.firstSolver
+        )
     }
 
 }
