@@ -35,7 +35,7 @@ open class SignupService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
-    open fun fetchForm(user: CmschUser, path: String): SignupFormView {
+    open fun fetchForm(user: UserEntity, path: String): SignupFormView {
         val form = signupFormRepository.findAllByUrl(path).getOrNull(0)
             ?: return SignupFormView(status = FormStatus.NOT_FOUND)
 
@@ -56,7 +56,15 @@ open class SignupService(
             return SignupFormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
         }
 
-        val submission = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id)
+        val groupId = user.group?.id
+        if (form.ownerIsGroup == true && groupId == null)
+            return SignupFormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
+
+        val submission = if (form.ownerIsGroup == true) {
+            signupResponseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0)
+        } else {
+            signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id)
+        }
         if (submission.isPresent) {
             val entity = submission.orElseThrow()
             val submittedFields = objectMapper.readerFor(object : TypeReference<Map<String, String>>() {})
@@ -82,6 +90,7 @@ open class SignupService(
                     submission = submittedFields,
                     detailsValidated = entity.detailsValidated,
                     status = FormStatus.SUBMITTED,
+                    // TODO: Remove hardcoded string
                     message = form.submittedMessage
                             + (if (!entity.detailsValidated && entity.rejectionMessage.isNotBlank())
                                     ("\n\n**Üzenet a rendezőktől:** " + entity.rejectionMessage) else "")
@@ -110,7 +119,16 @@ open class SignupService(
         if (!form.open || !clock.inRange(form.availableFrom, form.availableUntil, now))
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
-        val submissionEntity = signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
+        val groupId = user.group?.id
+        if (form.ownerIsGroup == true && groupId == null)
+            return FormSubmissionStatus.FORM_NOT_AVAILABLE
+
+        val submissionEntity = if (form.ownerIsGroup == true) {
+            signupResponseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0).orElse(null)
+        } else {
+            signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
+        }
+
         if (!update && submissionEntity != null)
             return FormSubmissionStatus.ALREADY_SUBMITTED
         if (update && submissionEntity == null)
@@ -206,8 +224,10 @@ open class SignupService(
         } else {
             log.info("User {} filled out form {} successfully", user.id, form.id)
             signupResponseRepository.save(SignupResponseEntity(
-                submitterUserId = user.id,
-                submitterUserName = user.fullName,
+                submitterUserId = if (form.ownerIsGroup == true) null else user.id,
+                submitterUserName = if (form.ownerIsGroup == true) "" else user.fullName,
+                submitterGroupId = if (form.ownerIsGroup == true) groupId else null,
+                submitterGroupName = if (form.ownerIsGroup == true) (user.group?.name ?: "") else "",
                 formId = form.id,
                 creationDate = now,
                 accepted = false,

@@ -30,7 +30,7 @@ class FormApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/form/{path}")
     fun specificForm(@PathVariable path: String, auth: Authentication?): SignupFormView {
-        val user = auth?.getUserOrNull() ?: return SignupFormView(status = FormStatus.NOT_FOUND)
+        val user = auth?.getUserFromDatabaseOrNull() ?: return SignupFormView(status = FormStatus.NOT_FOUND)
         return signupService.fetchForm(user, path)
     }
 

@@ -50,11 +50,16 @@ open class LeaderBoardService(
             get() = items.values.sumOf { it }
     }
 
+    class TopListByCategoryDetails(
+        var name: String,
+        var items: Map<String, Int> = mapOf()
+    )
+
     private val log = LoggerFactory.getLogger(javaClass)
     private var cachedTopListForGroups: List<TopListAsGroupEntryDto> = listOf()
     private var cachedTopListForUsers: List<TopListAsUserEntryDto> = listOf()
-    private var cachedDetailsForUsers: List<TopListDetails> = listOf()
     private var cachedDetailsForGroups: List<TopListDetails> = listOf()
+    private var cachedDetailsForUsers: List<TopListDetails> = listOf()
 
     @PostConstruct
     fun init() {
@@ -82,6 +87,26 @@ open class LeaderBoardService(
     fun getBoardDetailsForUsers(): List<TopListDetails> {
         if (leaderBoardComponent.leaderboardDetailsEnabled.isValueTrue())
             return cachedDetailsForUsers
+        return listOf()
+    }
+
+    fun getBoardDetailsByCategoryForGroups(): List<TopListByCategoryDetails> {
+        if (leaderBoardComponent.leaderboardDetailsByCategoryEnabled.isValueTrue())
+            return transpose(cachedDetailsForGroups)
+        return listOf()
+    }
+
+    private fun transpose(cachedDetailsForGroups: List<TopListDetails>): List<TopListByCategoryDetails> {
+        return cachedDetailsForGroups
+            .flatMap { record -> record.items.entries.map { Triple(it.key, record.name, it.value) } }
+            .groupBy { it.first }
+            .map { category -> TopListByCategoryDetails(category.key, category.value.associate { it.second to it.third }) }
+            .sortedBy { it.name }
+    }
+
+    fun getBoardDetailsByCategoryForUsers(): List<TopListByCategoryDetails> {
+        if (leaderBoardComponent.leaderboardDetailsByCategoryEnabled.isValueTrue())
+            return transpose(cachedDetailsForUsers)
         return listOf()
     }
 
@@ -352,7 +377,7 @@ open class LeaderBoardService(
     }
 
     fun getPlaceOfGroup(group: GroupEntity): Int {
-        return getBoardForUsers().indexOfFirst { it.groupName == group.name } + 1
+        return getBoardForGroups().indexOfFirst { it.name == group.name } + 1
     }
 
 }

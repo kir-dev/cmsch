@@ -345,8 +345,8 @@ open class QrFightService(
                         state.putAll(parseState(tower.state))
                     state[tower.ownerUserId.toString()] = (state[tower.ownerUserId.toString()] ?: 0) + 10
                     tower.state = serializeState(state)
-                    tower.holder = state.entries.maxByOrNull { it.value }?.key ?: "0"
-                    tower.holderFor = (state.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
+                    tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: "0"
+                    tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
                     tower
                 }
                 qrTowerRepository.saveAll(updated)
@@ -359,8 +359,8 @@ open class QrFightService(
                         state.putAll(parseState(tower.state))
                     state[tower.ownerGroupName] = (state[tower.ownerGroupName] ?: 0) + 1
                     tower.state = serializeState(state)
-                    tower.holder = state.entries.maxByOrNull { it.value }?.key ?: ""
-                    tower.holderFor = (state.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
+                    tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: ""
+                    tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
                     tower
                 }
                 qrTowerRepository.saveAll(updated)
@@ -383,11 +383,17 @@ open class QrFightService(
         val tower = qrTowerRepository.findAllBySelector(selector).firstOrNull()
             ?: return QrFightTowerDto("TOWER NOT FOUND")
         return when (startupPropertyConfig.tokenOwnershipMode) {
-            OwnershipType.GROUP -> QrFightTowerDto(tower.displayName, tower.ownerGroupName, tower.holder ?: "")
+            OwnershipType.GROUP -> QrFightTowerDto(
+                tower.displayName,
+                tower.ownerGroupName,
+                tower.holder ?: "",
+                tower.holderFor ?: 0
+            )
             OwnershipType.USER -> QrFightTowerDto(
                 tower.displayName,
                 tower.ownerUserName,
-                userRepository.findById(tower.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null)
+                userRepository.findById(tower.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
+                tower.holderFor ?: 0
             )
         }
     }
