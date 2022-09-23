@@ -1,4 +1,8 @@
-import { Grid, Heading, useBreakpointValue } from '@chakra-ui/react'
+import { Divider, Grid, Heading, Input, InputLeftElement, useBreakpointValue } from '@chakra-ui/react'
+import { SearchIcon } from '@chakra-ui/icons'
+import { InputGroup } from '@chakra-ui/input'
+import { createRef, useMemo, useState } from 'react'
+
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { NewsArticleView } from '../../../util/views/news.view'
 import NewsListItem from './NewsListItem'
@@ -8,27 +12,42 @@ interface NewsListProps {
 }
 
 const NewsList = ({ newsList }: NewsListProps) => {
-  const highlighted = newsList.filter((news) => news.highlighted).sort((a, b) => b.timestamp - a.timestamp) // desc
   const config = useConfigContext()
+  const [search, setSearch] = useState('')
+  const sortedNewsList = useMemo(() => newsList.sort((a, b) => b.timestamp - a.timestamp), [newsList])
+  const filteredNews = useMemo(() => {
+    return sortedNewsList?.filter((c) => {
+      return c.title.toLocaleLowerCase().includes(search)
+    })
+  }, [sortedNewsList, search])
+  const inputRef = createRef<HTMLInputElement>()
+  const handleInput = () => {
+    const searchFieldValue = inputRef?.current?.value.toLowerCase()
+    if (!searchFieldValue) setSearch('')
+    else setSearch(searchFieldValue)
+  }
+  const highlighted = filteredNews.filter((news) => news.highlighted)
+  const common = filteredNews.filter((news) => !news.highlighted)
+
   return (
     <>
       <Heading>{config?.components.news.title}</Heading>
-      <Grid templateColumns="repeat(1, 1fr)" gap={4} marginTop={4}>
+      <InputGroup my={10}>
+        <InputLeftElement h="100%">
+          <SearchIcon />
+        </InputLeftElement>
+        <Input ref={inputRef} placeholder="Keresés címre..." size="lg" onChange={handleInput} autoFocus={true} />
+      </InputGroup>
+      <Grid templateColumns="repeat(1, 1fr)" gap={4}>
         {highlighted.map((n: NewsArticleView) => (
           <NewsListItem news={n} fontSize="2xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
         ))}
       </Grid>
-      <Grid
-        templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 1 })}, 1fr)`}
-        gap={4}
-        marginTop={highlighted.length === 0 ? 4 : 20}
-      >
-        {newsList
-          .filter((news) => !news.highlighted)
-          .sort((a, b) => b.timestamp - a.timestamp) // desc
-          .map((n: NewsArticleView) => (
-            <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
-          ))}
+      {highlighted.length > 0 && common.length > 0 && <Divider my={10} />}
+      <Grid templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 1 })}, 1fr)`} gap={4}>
+        {common.map((n: NewsArticleView) => (
+          <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
+        ))}
       </Grid>
     </>
   )
