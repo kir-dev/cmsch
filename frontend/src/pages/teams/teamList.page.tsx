@@ -1,8 +1,8 @@
 import { createRef, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { InputGroup } from '@chakra-ui/input'
-import { SearchIcon } from '@chakra-ui/icons'
-import { Heading, Input, InputLeftElement } from '@chakra-ui/react'
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
+import { Heading, Input, InputLeftElement, InputRightElement } from '@chakra-ui/react'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TeamListItem } from './components/TeamListItem'
@@ -56,6 +56,17 @@ export default function TeamListPage() {
           <SearchIcon />
         </InputLeftElement>
         <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
+        {search && (
+          <InputRightElement
+            h="100%"
+            onClick={() => {
+              setSearch('')
+              if (inputRef.current?.value) inputRef.current.value = ''
+            }}
+          >
+            <CloseIcon />
+          </InputRightElement>
+        )}
       </InputGroup>
       {filteredTeams?.map((team) => (
         <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />
