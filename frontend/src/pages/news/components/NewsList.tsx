@@ -1,5 +1,5 @@
-import { Divider, Grid, Heading, Input, InputLeftElement, useBreakpointValue } from '@chakra-ui/react'
-import { SearchIcon } from '@chakra-ui/icons'
+import { Divider, Grid, Heading, Input, InputLeftElement, InputRightElement, useBreakpointValue } from '@chakra-ui/react'
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { InputGroup } from '@chakra-ui/input'
 import { createRef, useMemo, useState } from 'react'
 
@@ -38,6 +38,17 @@ const NewsList = ({ newsList }: NewsListProps) => {
           <SearchIcon />
         </InputLeftElement>
         <Input ref={inputRef} placeholder="Keresés címre..." size="lg" onChange={debounce(handleInput, 500)} autoFocus={true} />
+        {search && (
+          <InputRightElement
+            h="100%"
+            onClick={() => {
+              setSearch('')
+              if (inputRef.current?.value) inputRef.current.value = ''
+            }}
+          >
+            <CloseIcon />
+          </InputRightElement>
+        )}
       </InputGroup>
       <Grid templateColumns="repeat(1, 1fr)" gap={4}>
         {highlighted.map((n: NewsArticleView) => (
