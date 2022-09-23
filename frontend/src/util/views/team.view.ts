@@ -6,6 +6,7 @@ export type TeamView = {
   leaveEnabled: boolean
   joinCancellable: boolean
   ownTeam: boolean
+  stats: { name: string; value1: string; value2?: string; navigate?: string }[]
 } & TeamListItemView
 
 export type TeamListItemView = {
