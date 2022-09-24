@@ -14,7 +14,7 @@ const STATUS_COLOR_MAP = new Map<taskStatus, string>([
   [taskStatus.ACCEPTED, 'green'],
   [taskStatus.NOT_SUBMITTED, 'gray'],
   [taskStatus.REJECTED, 'red'],
-  [taskStatus.SUBMITTED, 'yellow'],
+  [taskStatus.SUBMITTED, '#DE970B'], //dark yellow
   [taskStatus.NOT_LOGGED_IN, 'gray']
 ])
 
@@ -25,7 +25,7 @@ type TaskStatusBadgeProps = {
 
 export const TaskStatusBadge: FC<TaskStatusBadgeProps> = ({ status, fontSize }) => (
   <Box>
-    <Badge variant="solid" colorScheme={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
+    <Badge variant="solid" bg={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
       {STATUS_TEXT_MAP.get(status)}
     </Badge>
   </Box>
