@@ -1,6 +1,6 @@
 import { Divider, Flex, Heading, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useRaceQuery } from '../../api/hooks/useRaceQuery'
@@ -10,10 +10,12 @@ import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { BoardStat } from '../../common-components/BoardStat'
+import Markdown from '../../common-components/Markdown'
 
 const RacePage = () => {
   const toast = useToast()
-  const queryResult = useRaceQuery(() => toast({ title: l('result-query-failed'), status: 'error' }))
+  const params = useParams()
+  const queryResult = useRaceQuery(params.category ?? '', () => toast({ title: l('result-query-failed'), status: 'error' }))
   const raceComponent = useConfigContext()?.components.race
   const { sendMessage } = useServiceContext()
 
@@ -33,8 +35,9 @@ const RacePage = () => {
 
   return (
     <CmschPage>
-      <Helmet title={raceComponent.title} />
-      <Heading>{raceComponent.title}</Heading>
+      <Helmet title={queryResult.data?.categoryName} />
+      <Heading mb={3}>{queryResult.data?.categoryName}</Heading>
+      <Markdown text={queryResult.data?.description || raceComponent.defaultCategoryDescription} />
       <Flex my={5} gap={5} flexWrap="wrap">
         <BoardStat label="Helyezésed" value={queryResult.data?.place || '-'} />
         <BoardStat label="Legjobb időd" value={(queryResult.data?.bestTime || '-') + ' mp'} />
