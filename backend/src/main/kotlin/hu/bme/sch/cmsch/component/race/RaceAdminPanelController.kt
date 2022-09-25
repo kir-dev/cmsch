@@ -23,6 +23,7 @@ class RaceAdminPanelController(
     repo: RaceRecordRepository,
     private val groups: GroupRepository,
     private val users: UserRepository,
+    private val raceCategories: RaceCategoryRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: RaceComponent,
@@ -34,6 +35,12 @@ class RaceAdminPanelController(
     "Időmérő eredmények nyers időeredményei",
     RaceRecordEntity::class, ::RaceRecordEntity, importService, adminMenuService, component,
     mapOf(
+        "RaceCategoryEntity" to {
+            val results = mutableListOf<String>()
+            results.add("")
+            results.addAll(raceCategories.findAll().map { it.slug }.sorted().toList())
+            return@to results
+        },
         "GroupEntity" to {
             val results = mutableListOf<String>()
             results.add("-")

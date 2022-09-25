@@ -10,4 +10,6 @@ interface RaceRecordRepository : CrudRepository<RaceRecordEntity, Int> {
 
     override fun findAll(): List<RaceRecordEntity>
 
+    fun findAllByCategory(category: String): List<RaceRecordEntity>
+
 }

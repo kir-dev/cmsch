@@ -128,7 +128,8 @@ class LeaderBoardShowAdminController(
     @ResponseBody
     @GetMapping("/user-toplist/save/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun saveUserAsCsv(auth: Authentication, response: HttpServletResponse): ByteArray {
-        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+        val user = auth.getUser()
+        if (!permissionControlShow.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"user-toplist-export.csv\"")
@@ -204,7 +205,8 @@ class LeaderBoardShowAdminController(
     @ResponseBody
     @GetMapping("/group-toplist/save/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun saveGroupAsCsv(auth: Authentication, response: HttpServletResponse): ByteArray {
-        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+        val user = auth.getUser()
+        if (!permissionControlShow.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"group-toplist-export.csv\"")
