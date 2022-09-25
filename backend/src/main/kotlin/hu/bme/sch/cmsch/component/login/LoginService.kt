@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.login
 
+import hu.bme.sch.cmsch.component.SettingProxy
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
 import hu.bme.sch.cmsch.config.AUTHSCH
@@ -12,25 +13,22 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
-import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import org.slf4j.LoggerFactory
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-open class AuthschLoginService(
+open class LoginService(
     private val users: UserService,
     private val profileService: UserProfileGeneratorService,
     private val groupToUserMapping: GroupToUserMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
     private val groups: GroupRepository,
     private val loginComponent: LoginComponent,
-    private val jwtTokenProvider: JwtTokenProvider,
+    private val unitScopeComponent: UnitScopeComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
 ) {
 
@@ -150,6 +148,43 @@ open class AuthschLoginService(
             user.role = RoleType.SUPERUSER
         }
 
+        // Assign using unit-scope
+        val bmeUnitScopes = profile.bmeunitscope
+        if (unitScopeComponent.unitScopeGrantsEnabled.isValueTrue() && bmeUnitScopes != null) {
+            if (bmeUnitScopes.any { it.bme }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.bmeGrantRoleAttendee,
+                    unitScopeComponent.bmeGrantRolePrivileged,
+                    unitScopeComponent.bmeGrantGroupName)
+            }
+            if (bmeUnitScopes.any { it.vik }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.vikGrantRoleAttendee,
+                    unitScopeComponent.vikGrantRolePrivileged,
+                    unitScopeComponent.vikGrantGroupName)
+            }
+            if (bmeUnitScopes.any { it.vbk }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.vbkGrantRoleAttendee,
+                    unitScopeComponent.vbkGrantRolePrivileged,
+                    unitScopeComponent.vbkGrantGroupName)
+            }
+            if (bmeUnitScopes.any { it.active }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.activeGrantRoleAttendee,
+                    unitScopeComponent.activeGrantRolePrivileged,
+                    unitScopeComponent.activeGrantGroupName)
+            }
+            if (bmeUnitScopes.any { it.newbie }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.newbieGrantRoleAttendee,
+                    unitScopeComponent.newbieGrantRolePrivileged,
+                    unitScopeComponent.newbieGrantGroupName)
+            }
+            user.unitScopes = bmeUnitScopes.joinToString(", ")
+
+        }
+
         // Assign fallback group if user still don't have one
         if (user.groupName.isBlank()) {
             groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
@@ -161,6 +196,24 @@ open class AuthschLoginService(
         // If fallback is still not found, set the group name to empty string
         if (user.groupName != user.group?.name)
             user.groupName = user.group?.name ?: ""
+    }
+
+    private fun processUnitScopeStatus(
+        user: UserEntity,
+        grantRoleAttendee: SettingProxy,
+        grantRolePrivileged: SettingProxy,
+        grantGroupName: SettingProxy
+    ) {
+        if (grantRoleAttendee.isValueTrue() && user.role < RoleType.STAFF)
+            user.role = RoleType.ATTENDEE
+        if (grantRolePrivileged.isValueTrue() && user.role < RoleType.STAFF)
+            user.role = RoleType.PRIVILEGED
+        if (grantGroupName.getValue().isNotBlank() && user.group?.leaveable != false) {
+            groups.findByName(grantGroupName.getValue()).ifPresent {
+                user.groupName = it.name
+                user.group = it
+            }
+        }
     }
 
     private fun assignStaffRole(

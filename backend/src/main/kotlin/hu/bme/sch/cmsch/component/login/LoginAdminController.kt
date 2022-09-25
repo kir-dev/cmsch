@@ -29,3 +29,23 @@ class LoginAdminController(
     menuService = menuService
 )
 
+@Controller
+@RequestMapping("/admin/control/component/unit-scope")
+@ConditionalOnBean(LoginComponent::class)
+class UnitScopeAdminController(
+    adminMenuService: AdminMenuService,
+    component: UnitScopeComponent,
+    menuService: MenuService
+) : ComponentApiBase(
+    adminMenuService,
+    UnitScopeComponent::class.java,
+    component,
+    ControlPermissions.PERMISSION_CONTROL_PROFILE,
+    componentMenuName = "Jogviszony beállítások",
+    componentMenuIcon = "verified",
+    insertComponentCategory = false,
+    componentCategory = ApplicationComponent::class.simpleName!!,
+    componentMenuPriority = 7,
+    menuService = menuService
+)
+

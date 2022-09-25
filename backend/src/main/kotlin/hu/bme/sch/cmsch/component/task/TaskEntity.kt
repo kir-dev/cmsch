@@ -99,7 +99,7 @@ data class TaskEntity(
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 7, label = "Formátum leírása",
         note = "Ha a formátum FORM akkor ide kell beírni a form jsonját. " +
-                "Formátum: [{'title':'','type':'number|text|textarea','suffix':''}]")
+                "Formátum: [{\"title\":\"\",\"type\":\"number|text|textarea\",\"suffix\":\"\"}]")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LOB)
     var formatDescriptor: String = "",

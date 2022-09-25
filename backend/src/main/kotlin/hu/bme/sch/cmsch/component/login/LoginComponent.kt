@@ -42,7 +42,7 @@ class LoginComponent(
             fallbackGroupName,
 
             langGroup,
-            bottomMessage
+            bottomMessage,
         )
     }
 
@@ -167,7 +167,7 @@ class LoginComponent(
 
     val fallbackGroupName = SettingProxy(componentSettingService, component,
         "fallbackGroupName", "Vendég", serverSideOnly = true,
-        fieldName = "Alap csoport neve", description = "Csoport neve, pl: Vendég; Ha nem létező, akkor nem kapják meg."
+        fieldName = "Fallback csoport neve", description = "Csoport neve, pl: Vendég; Ha nem létező, akkor nem kapják meg."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -183,6 +183,5 @@ class LoginComponent(
         type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Alsó szöveg", description = "Ha üres akkor nincs ilyen"
     )
-
 
 }

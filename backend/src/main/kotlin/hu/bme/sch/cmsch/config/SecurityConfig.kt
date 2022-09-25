@@ -2,10 +2,9 @@ package hu.bme.sch.cmsch.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
-import hu.bme.sch.cmsch.component.login.AuthschLoginService
+import hu.bme.sch.cmsch.component.login.LoginService
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.component.login.SessionFilterConfigurer
-import hu.bme.sch.cmsch.component.login.SessionIncreaseFilter
 import hu.bme.sch.cmsch.component.login.authsch.CmschAuthschUser
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.CmschGoogleUser
@@ -38,7 +37,7 @@ open class SecurityConfig(
     private val objectMapper: ObjectMapper,
     private val jwtTokenProvider: JwtTokenProvider,
     private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
-    private val authschLoginService: AuthschLoginService,
+    private val authschLoginService: LoginService,
     private val loginComponent: LoginComponent,
     private val startupPropertyConfig: StartupPropertyConfig
 ) : WebSecurityConfigurerAdapter() {
