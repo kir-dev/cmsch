@@ -52,7 +52,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         private val entitySourceMapping: Map<String, (T?) -> List<String>> =
                 mapOf(Nothing::class.simpleName!! to { listOf() }),
         private val controlMode: String = CONTROL_MODE_EDIT_DELETE,
-        private val permissionControl: PermissionValidator,
+        internal val permissionControl: PermissionValidator,
         private val importable: Boolean = false,
         private val adminMenuIcon: String = "check_box_outline_blank",
         private val adminMenuPriority: Int = 1,
@@ -326,7 +326,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     fun resource(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (!importable || PERMISSION_IMPORT_EXPORT.validate(user).not()) {
+        if (!importable || !permissionControl.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(user)) {
             model.addAttribute("permission", PERMISSION_IMPORT_EXPORT.permissionString)
             model.addAttribute("user", user)
             return "admin403"
@@ -341,7 +341,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @ResponseBody
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(auth: Authentication, response: HttpServletResponse): ByteArray {
-        if (!importable || PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+        val user = auth.getUser()
+        if (!importable || !permissionControl.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(auth.getUser())) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
@@ -351,7 +352,8 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @ResponseBody
     @GetMapping("/save/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun saveAsCsv(auth: Authentication, response: HttpServletResponse): ByteArray {
-        if (!savable || PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+        val user = auth.getUser()
+        if (!savable || !permissionControl.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(auth.getUser())) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
@@ -361,7 +363,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
     @PostMapping("/import/csv")
     fun import(file: MultipartFile?, model: Model, auth: Authentication): String {
         val user = auth.getUser()
-        if (!importable || PERMISSION_IMPORT_EXPORT.validate(user).not()) {
+        if (!importable || !permissionControl.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
 

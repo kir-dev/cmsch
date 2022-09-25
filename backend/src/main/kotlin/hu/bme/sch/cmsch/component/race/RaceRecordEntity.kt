@@ -24,7 +24,8 @@ data class RaceRecordEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 2, label = "Kategória")
+    @property:GenerateInput(order = 2, label = "Kategória", type = INPUT_TYPE_ENTITY_SELECT,
+        entitySource = "RaceCategoryEntity", note = "Az üres az alapértelmezett kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var category: String = "",

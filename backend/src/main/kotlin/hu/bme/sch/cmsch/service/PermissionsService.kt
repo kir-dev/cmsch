@@ -349,6 +349,11 @@ object StaffPermissions : PermissionGroup {
         "Verseny eredmények kezelése"
     )
 
+    val PERMISSION_EDIT_RACE_CATEGORY = PermissionValidator(
+        "RACE_CATEGORY_EDIT",
+        "Verseny kategóriák kezelése"
+    )
+
     // QR Fight
 
     val PERMISSION_EDIT_QR_FIGHT = PermissionValidator(
@@ -386,6 +391,7 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_CHALLENGES,
         PERMISSION_VALIDATE_ADMISSION,
         PERMISSION_EDIT_RACE,
+        PERMISSION_EDIT_RACE_CATEGORY,
         PERMISSION_EDIT_QR_FIGHT
     )
 

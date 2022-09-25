@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
+import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
 import hu.bme.sch.cmsch.component.signup.SignupFormRepository
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
@@ -22,6 +23,7 @@ open class MenuService(
     private val components: List<ComponentBase>,
     private val extraPages: Optional<ExtraPageRepository>,
     private val forms: Optional<SignupFormRepository>,
+    private val races: Optional<RaceCategoryRepository>,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -79,6 +81,17 @@ open class MenuService(
                     MenuSettingItem(
                         it.javaClass.simpleName + "@" + it.id,
                         it.menuName, "/form/${it.url}", 0, false,
+                        subMenu = false, external = false
+                    )
+                })
+        }
+
+        races.ifPresent { pages ->
+            possibleMenus.addAll(pages.findAllByVisibleTrue()
+                .map {
+                    MenuSettingItem(
+                        it.javaClass.simpleName + "@" + it.id,
+                        it.name, "/race/${it.slug}", 0, false,
                         subMenu = false, external = false
                     )
                 })
