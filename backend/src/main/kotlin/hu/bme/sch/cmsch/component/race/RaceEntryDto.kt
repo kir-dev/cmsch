@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.race
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.ManagedEntity
 
@@ -27,7 +28,7 @@ data class RaceEntryDto(
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_FLOAT)
     var time: Float = 0.0f,
 
-    @JsonView(FullDetails::class)
+    @JsonView(Edit::class)
     @property:GenerateOverview(columnName = "Email", order = 4)
     @property:ImportFormat(ignore = false, columnId = 4)
     var email: String = "",

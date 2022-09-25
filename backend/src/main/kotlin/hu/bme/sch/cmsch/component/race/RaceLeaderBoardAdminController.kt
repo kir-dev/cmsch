@@ -37,8 +37,8 @@ class RaceLeaderBoardAdminController(
 
     override fun fetchOverview(): Iterable<RaceEntryDto> {
         return when (startupPropertyConfig.raceOwnershipMode) {
-            OwnershipType.USER -> raceService.getBoardForUsers()
-            OwnershipType.GROUP -> raceService.getBoardForGroups()
+            OwnershipType.USER -> raceService.getBoardForUsers(DEFAULT_CATEGORY, true)
+            OwnershipType.GROUP -> raceService.getBoardForGroups(DEFAULT_CATEGORY)
         }
     }
 

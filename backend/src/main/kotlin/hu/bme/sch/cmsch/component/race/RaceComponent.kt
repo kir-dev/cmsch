@@ -24,7 +24,9 @@ class RaceComponent(
 
             displayGroup,
             visible,
-            ascendingOrder
+            extraCategoriesVisible,
+            ascendingOrder,
+            defaultCategoryDescription
         )
     }
 
@@ -57,10 +59,23 @@ class RaceComponent(
         description = "Leküldésre kerüljön-e a toplista"
     )
 
+    val extraCategoriesVisible = SettingProxy(componentSettingService, component,
+        "visible", "false", type = SettingType.BOOLEAN,
+        fieldName = "Extra kategóriák láthatóak",
+        description = "Leküldésre kerüljön-e az extra kategóriás toplista"
+    )
+
     val ascendingOrder = SettingProxy(componentSettingService, component,
         "ascendingOrder", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "Növekvő sorrend",
         description = "A toplista elemei növekvő sorrendben vannak"
     )
+
+    val defaultCategoryDescription = SettingProxy(componentSettingService, component,
+        "defaultCategoryDescription", "", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Alapértelmezett kategória leírása",
+        description = ""
+    )
+
 
 }

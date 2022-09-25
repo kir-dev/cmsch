@@ -194,7 +194,8 @@ class RiddlesByGroupsController(
     @ResponseBody
     @GetMapping("/filtered-export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun filteredExport(auth: Authentication, response: HttpServletResponse): ByteArray {
-        if (PERMISSION_IMPORT_EXPORT.validate(auth.getUser()).not()) {
+        val user = auth.getUser()
+        if (!permissionControl.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-filtered-export.csv\"")

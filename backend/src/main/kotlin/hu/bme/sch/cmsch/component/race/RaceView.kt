@@ -6,6 +6,12 @@ import hu.bme.sch.cmsch.dto.FullDetails
 data class RaceView(
 
     @JsonView(FullDetails::class)
+    val categoryName: String = "",
+
+    @JsonView(FullDetails::class)
+    val description: String = "",
+
+    @JsonView(FullDetails::class)
     val place: Int? = null,
 
     @JsonView(FullDetails::class)

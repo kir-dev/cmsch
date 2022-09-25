@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.race.DEFAULT_CATEGORY
 import hu.bme.sch.cmsch.component.race.RaceService
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
@@ -220,8 +221,8 @@ open class TeamService(
             val race = raceService
                 .map { service ->
                     when (startupPropertyConfig.raceOwnershipMode) {
-                        OwnershipType.USER -> service.getBoardForUsers()
-                        OwnershipType.GROUP -> service.getBoardForGroups()
+                        OwnershipType.USER -> service.getBoardForUsers(DEFAULT_CATEGORY, false)
+                        OwnershipType.GROUP -> service.getBoardForGroups(DEFAULT_CATEGORY)
                     }
                 }
                 .map { collection -> collection.firstOrNull { it.groupName == group.name } }
