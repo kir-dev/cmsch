@@ -36,9 +36,9 @@ export function LevelDataDisplay({ level }: LevelDataDisplayProps) {
     }
   }, [])
   return (
-    <Box w="100%">
+    <Box w="100%" h={300}>
       <Doughnut
-        height={300}
+        height="100%"
         data={data}
         id={level.name}
         width="100%"
