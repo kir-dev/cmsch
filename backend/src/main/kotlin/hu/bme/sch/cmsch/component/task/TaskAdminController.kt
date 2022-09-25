@@ -143,7 +143,7 @@ class TaskSubmissionsController(
                 it.score,
                 it.approved,
                 it.rejected,
-                it.textAnswer,
+                it.textAnswerLob ?: "",
                 it.imageUrlAnswer,
                 it.fileUrlAnswer,
                 it.response
