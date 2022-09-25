@@ -101,6 +101,7 @@ export interface News {
 export interface Race {
   title: string
   visible: boolean
+  defaultCategoryDescription: string
 }
 
 export interface Riddle {
