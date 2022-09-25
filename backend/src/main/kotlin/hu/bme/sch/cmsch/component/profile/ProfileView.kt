@@ -94,4 +94,9 @@ data class ProfileView(
     @JsonView(FullDetails::class)
     val leaderboard: List<TopListAbstractEntry>? = null,
 
-    )
+    @JsonView(FullDetails::class)
+    val groupMessage: String? = null,
+
+    @JsonView(FullDetails::class)
+    val userMessage: String? = null,
+)

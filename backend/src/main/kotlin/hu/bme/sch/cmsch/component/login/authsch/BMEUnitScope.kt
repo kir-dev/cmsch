@@ -1,11 +1,11 @@
 package hu.bme.sch.cmsch.component.login.authsch
 
 enum class BMEUnitScope(
-    private val bme: Boolean,
-    private val vik: Boolean,
-    private val vbk: Boolean,
-    private val active: Boolean,
-    private val newbie: Boolean
+    val bme: Boolean,
+    val vik: Boolean,
+    val vbk: Boolean,
+    val active: Boolean,
+    val newbie: Boolean
 ) {
     BME(true, false, false,false, false),
     BME_VIK(true, true, false,false, false),

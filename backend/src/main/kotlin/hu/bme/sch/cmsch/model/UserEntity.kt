@@ -165,8 +165,14 @@ data class UserEntity(
     @property:ImportFormat(ignore = false, columnId = 11)
     var profilePicture: String = "",
 
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false, columnDefinition = "varchar(255) default ''")
+    @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Honnan jön az adat (authsch, google)")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 12)
+    var unitScopes: String? = "",
 
-    ): ManagedEntity, CmschUser {
+): ManagedEntity, CmschUser {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
