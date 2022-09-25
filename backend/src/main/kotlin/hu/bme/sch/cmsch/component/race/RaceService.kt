@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.Throws
 
 const val DEFAULT_CATEGORY = ""
 
@@ -41,10 +42,11 @@ open class RaceService(
         }
     }
 
+    @Throws(NoSuchElementException::class)
     @Transactional(readOnly = true)
     open fun getViewForGroups(user: UserEntity?, slug: String): RaceView {
         val category = raceCategoryRepository.findByVisibleTrueAndSlug(slug).orElse(null)
-            ?: return RaceView("not found", "", null, null, listOf())
+            ?: throw NoSuchElementException()
         val board = getBoardForGroups(category.slug)
 
         return if (user == null) {
@@ -112,10 +114,11 @@ open class RaceService(
         }
     }
 
+    @Throws(NoSuchElementException::class)
     @Transactional(readOnly = true)
     open fun getViewForUsers(user: CmschUser?, slug: String): RaceView {
         val category = raceCategoryRepository.findByVisibleTrueAndSlug(slug).orElse(null)
-            ?: return RaceView("not found", "", null, null, listOf())
+            ?: throw NoSuchElementException()
         val board = getBoardForUsers(category.slug, false)
 
         return if (user == null) {

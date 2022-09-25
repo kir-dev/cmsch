@@ -45,14 +45,18 @@ class RaceApiController(
         val user = auth?.getUserFromDatabaseOrNull()
 
         if (!raceComponent.extraCategoriesVisible.isValueTrue())
-            return ResponseEntity.ok(RaceView())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         if (!raceComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        return when (startupPropertyConfig.raceOwnershipMode) {
-            OwnershipType.USER -> ResponseEntity.ok(raceService.getViewForUsers(user, category))
-            OwnershipType.GROUP -> ResponseEntity.ok(raceService.getViewForGroups(user, category))
+        return try {
+            when (startupPropertyConfig.raceOwnershipMode) {
+                OwnershipType.USER -> ResponseEntity.ok(raceService.getViewForUsers(user, category))
+                OwnershipType.GROUP -> ResponseEntity.ok(raceService.getViewForGroups(user, category))
+            }
+        } catch (e: NoSuchElementException) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
     }
 
