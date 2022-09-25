@@ -148,7 +148,7 @@ class ProfileComponent(
 
     val aliasRegex = SettingProxy(componentSettingService, component,
         "aliasRegex", "^[A-Za-z0-9 \\-_ÁáÉéÍíÓóÖöŐőÚúÜüŰű\\/]*$", serverSideOnly = true,
-        fieldName = "QR kód fejléc", description = "Ez a fejléc jelenik meg a QR kód felett"
+        fieldName = "Becenév minta", description = "Ennek a regex mintának kell megfeleljen a beceneveknek"
     )
 
     val showGroup = SettingProxy(componentSettingService, component,
