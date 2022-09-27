@@ -95,7 +95,7 @@ class RiddleApiController(
     }
 
     @GetMapping("/riddle-history")
-    fun riddleHistory(auth: Authentication?): ResponseEntity<Map<String, List<RiddleView>>> {
+    fun riddleHistory(auth: Authentication?): ResponseEntity<Map<String, List<RiddleViewWithSolution>>> {
         val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.ok(mapOf())
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()

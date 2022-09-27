@@ -375,7 +375,7 @@ open class RiddleService(
     }
 
     @Transactional(readOnly = true)
-    open fun listRiddleHistoryForUser(user: UserEntity): Map<String, List<RiddleView>> {
+    open fun listRiddleHistoryForUser(user: UserEntity): Map<String, List<RiddleViewWithSolution>> {
         val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
         val submissions = riddleMappingRepository.findAllByOwnerUser_IdAndCompletedTrue(user.id)
             .groupBy { it.riddle?.categoryId ?: 0 }
@@ -390,7 +390,7 @@ open class RiddleService(
     }
 
     @Transactional(readOnly = true)
-    open fun listRiddleHistoryForGroup(user: UserEntity, group: GroupEntity?): Map<String, List<RiddleView>> {
+    open fun listRiddleHistoryForGroup(user: UserEntity, group: GroupEntity?): Map<String, List<RiddleViewWithSolution>> {
         if (group == null)
             return mapOf()
 
@@ -407,14 +407,15 @@ open class RiddleService(
         }
     }
 
-    private fun mapRiddle(mapping: RiddleMappingEntity, riddle: RiddleEntity): RiddleView {
-        return RiddleView(
+    private fun mapRiddle(mapping: RiddleMappingEntity, riddle: RiddleEntity): RiddleViewWithSolution {
+        return RiddleViewWithSolution(
             riddle.imageUrl,
             riddle.title,
             if (mapping.hintUsed) riddle.hint else "",
             mapping.completed,
             riddle.creator,
-            riddle.firstSolver
+            riddle.firstSolver,
+            if (mapping.completed) riddle.solution else ""
         )
     }
 
