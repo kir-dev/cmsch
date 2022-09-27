@@ -94,6 +94,7 @@ class RiddleApiController(
         }
     }
 
+    @JsonView(FullDetails::class)
     @GetMapping("/riddle-history")
     fun riddleHistory(auth: Authentication?): ResponseEntity<Map<String, List<RiddleViewWithSolution>>> {
         val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.ok(mapOf())
