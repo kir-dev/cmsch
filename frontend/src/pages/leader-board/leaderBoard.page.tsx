@@ -1,4 +1,17 @@
-import { Divider, Heading, HStack, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue, useToast } from '@chakra-ui/react'
+import {
+  Divider,
+  Flex,
+  Heading,
+  HStack,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useBreakpoint,
+  useBreakpointValue,
+  useToast,
+  VStack
+} from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -12,12 +25,13 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { AbsolutePaths } from '../../util/paths'
 import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
+import { LinkButton } from '../../common-components/LinkButton'
 
 const LeaderboardPage = () => {
   const leaderboardConfig = useConfigContext()?.components.leaderboard
   const toast = useToast()
   const onQueryFail = () => toast({ title: l('result-query-failed'), status: 'error' })
-  const leaderboardQuery = useLeaderBoardQuery(onQueryFail, leaderboardConfig?.leaderboardDetailsEnabled)
+  const leaderboardQuery = useLeaderBoardQuery(leaderboardConfig?.leaderboardDetailsEnabled ? 'detailed' : 'short', onQueryFail)
 
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
@@ -53,7 +67,18 @@ const LeaderboardPage = () => {
   return (
     <CmschPage>
       <Helmet title={title} />
-      <Heading>{title}</Heading>
+      <Flex wrap="wrap" justify="space-between">
+        <VStack>
+          <Heading>{title}</Heading>
+        </VStack>
+        {leaderboardConfig?.leaderboardDetailsByCategoryEnabled && (
+          <VStack>
+            <LinkButton href={AbsolutePaths.LEADER_BOARD + '/category'} my={5}>
+              Kategóriák nézet
+            </LinkButton>
+          </VStack>
+        )}
+      </Flex>
       <HStack my={5}>
         {leaderboardQuery.data?.userScore !== undefined && <BoardStat label="Saját pont" value={leaderboardQuery.data.userScore} />}
         {leaderboardQuery.data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={leaderboardQuery.data.groupScore} />}

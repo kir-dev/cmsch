@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Td, useDisclosure, Tr } from '@chakra-ui/react'
+import { Td, Tr, useDisclosure } from '@chakra-ui/react'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 
 type CollapsableTableRowProps = {
@@ -8,33 +8,38 @@ type CollapsableTableRowProps = {
   idx: number
   showGroup: boolean
   suffix?: string
+  categorized?: boolean
 }
 
-export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup }: CollapsableTableRowProps) => {
+export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup, categorized = false }: CollapsableTableRowProps) => {
   const { isOpen, onToggle } = useDisclosure()
   return (
     <>
-      <Tr onClick={onToggle} _hover={{ cursor: collapsable ? 'pointer' : 'default' }} alignItems="start" fontWeight="bold">
+      <Tr
+        onClick={() => {
+          if (collapsable) onToggle()
+        }}
+        _hover={{ cursor: collapsable ? 'pointer' : 'default' }}
+        alignItems="start"
+        fontWeight="bold"
+      >
         <>
-          <Td p={1} w="1rem">
-            {collapsable && (isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />)}
-          </Td>
-          <Td p={1} w="1rem">
-            {idx + 1}.
-          </Td>
-          <Td>{data.name}</Td>
-          {showGroup && <Td>{data.groupName}</Td>}
-          <Td w="5rem">{`${data.score || data.total} ${suffix || ''}`}</Td>
+          <Td w="1rem">{collapsable && (isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />)}</Td>
+          {!categorized && <Td w="1rem">{idx + 1}.</Td>}
+          <Td colSpan={categorized ? 3 : 2}>{data.name}</Td>
+          {showGroup && 'groupName' in data ? <Td>{data.groupName}</Td> : <Td />}
+          {data.score || data.total ? <Td w="5rem">{`${data.score || data.total} ${suffix || ''}`}</Td> : <Td w="5rem" />}
         </>
       </Tr>
       {isOpen &&
-        data.items?.map((item) => (
+        data.items?.map((item, itemIndex) => (
           <>
-            <Tr></Tr>
+            <Tr />
             <Tr>
-              <Td colSpan={2}></Td>
-              <Td>{item.name}</Td>
-              <Td>{`${item.value} ${suffix || ''}`}</Td>
+              <Td w="1rem" />
+              {categorized && <Td w="1rem">{itemIndex + 1}.</Td>}
+              <Td colSpan={categorized ? 3 : 4}>{item.name}</Td>
+              <Td w="5rem">{`${item.value} ${suffix || ''}`}</Td>
             </Tr>
           </>
         ))}

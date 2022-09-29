@@ -40,5 +40,6 @@ export enum AbsolutePaths {
   CREATE_TEAM = '/create-team',
   MY_TEAM = '/my-team',
   TEAM_ADMIN = '/team-admin',
-  QR_FIGHT = '/qr-fight'
+  QR_FIGHT = '/qr-fight',
+  LEADER_BOARD = '/leaderboard'
 }

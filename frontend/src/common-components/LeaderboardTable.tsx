@@ -1,4 +1,4 @@
-import { Table, TableContainer, Tbody, Td, Text, Tr } from '@chakra-ui/react'
+import { Table, TableContainer, Tbody, Text } from '@chakra-ui/react'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 import { CollapsableTableRow } from './CollapsableTableRow'
 
@@ -7,9 +7,10 @@ type LeaderboardTableProps = {
   showGroup?: boolean
   suffix?: string
   detailed?: boolean
+  categorized?: boolean
 }
 
-export const LeaderBoardTable = ({ data, showGroup = false, suffix, detailed = false }: LeaderboardTableProps) => {
+export const LeaderBoardTable = ({ data, showGroup = false, suffix, detailed = false, categorized = false }: LeaderboardTableProps) => {
   return (
     <>
       <TableContainer>
@@ -23,6 +24,7 @@ export const LeaderBoardTable = ({ data, showGroup = false, suffix, detailed = f
                 idx={idx}
                 showGroup={showGroup}
                 suffix={suffix}
+                categorized={categorized}
               />
             ))}
           </Tbody>
