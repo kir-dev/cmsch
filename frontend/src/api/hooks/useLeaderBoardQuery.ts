@@ -18,9 +18,18 @@ export type TempLeaderBoardView = {
   groupBoard?: Array<TempLeaderBoardItemView>
 }
 
-export const useLeaderBoardQuery = (onError: (err: any) => void, detailed: boolean = false) => {
+export const useLeaderBoardQuery = (type: 'short' | 'detailed' | 'categorized' = 'short', onError?: (err: any) => void) => {
+  let url = 'leaderboard'
+  switch (type) {
+    case 'detailed':
+      url = 'detailed-leaderboard'
+      break
+    case 'categorized':
+      url = 'detailed-leaderboard-by-category'
+      break
+  }
   async function fetchLeaderBoard() {
-    const result = await axios.get<TempLeaderBoardView>(`/api/${detailed ? 'detailed-' : ''}leaderboard`)
+    const result = await axios.get<TempLeaderBoardView>(`/api/${url}`)
     return {
       ...result.data,
       userBoard: result.data.userBoard
