@@ -135,6 +135,7 @@ export interface Organizer {
 export interface Leaderboard {
   leaderboardEnabled: string
   leaderboardDetailsEnabled: boolean
+  leaderboardDetailsByCategoryEnabled: boolean
   leaderboardFrozen: string
   maxGroupEntryToShow: number
   maxUserEntryToShow: number
