@@ -28,7 +28,11 @@ export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup,
           {!categorized && <Td w="1rem">{idx + 1}.</Td>}
           <Td colSpan={categorized ? 3 : 2}>{data.name}</Td>
           {showGroup && 'groupName' in data ? <Td>{data.groupName}</Td> : <Td />}
-          {data.score || data.total ? <Td w="5rem">{`${data.score || data.total} ${suffix || ''}`}</Td> : <Td w="5rem" />}
+          {data.score || data.total ? (
+            <Td w="5rem">{`${new Intl.NumberFormat('hu-HU').format(data.score || data.total || 0)} ${suffix || ''}`}</Td>
+          ) : (
+            <Td w="5rem" />
+          )}
         </>
       </Tr>
       {isOpen &&
@@ -41,7 +45,7 @@ export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup,
                 <Td w="1rem" />
                 {categorized && <Td w="1rem">{itemIndex + 1}.</Td>}
                 <Td colSpan={categorized ? 3 : 4}>{item.name}</Td>
-                <Td w="5rem">{`${item.value} ${suffix || ''}`}</Td>
+                <Td w="5rem">{`${new Intl.NumberFormat('hu-HU').format(item.value)} ${suffix || ''}`}</Td>
               </Tr>
             </>
           ))}
