@@ -32,17 +32,19 @@ export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup,
         </>
       </Tr>
       {isOpen &&
-        data.items?.map((item, itemIndex) => (
-          <>
-            <Tr />
-            <Tr>
-              <Td w="1rem" />
-              {categorized && <Td w="1rem">{itemIndex + 1}.</Td>}
-              <Td colSpan={categorized ? 3 : 4}>{item.name}</Td>
-              <Td w="5rem">{`${item.value} ${suffix || ''}`}</Td>
-            </Tr>
-          </>
-        ))}
+        data.items
+          ?.sort((a, b) => b.value - a.value)
+          .map((item, itemIndex) => (
+            <>
+              <Tr />
+              <Tr>
+                <Td w="1rem" />
+                {categorized && <Td w="1rem">{itemIndex + 1}.</Td>}
+                <Td colSpan={categorized ? 3 : 4}>{item.name}</Td>
+                <Td w="5rem">{`${item.value} ${suffix || ''}`}</Td>
+              </Tr>
+            </>
+          ))}
     </>
   )
 }
