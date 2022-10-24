@@ -12,10 +12,13 @@ import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
 import { l } from '../../util/language'
+import { OrganizerSection } from '../impressum/components/OrganizerSection'
 
 const HomePage = () => {
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))
   const config = useConfigContext()
+
+  const impressumConfig = config?.components?.impressum
 
   const countTo = useMemo(() => {
     const component = config?.components.countdown
@@ -103,6 +106,22 @@ const HomePage = () => {
           </VStack>
         </VStack>
       )}
+
+      <Box my={4}>
+        <Heading size="3xl" textAlign="center">
+          Akikhez fordulhatsz segítségért a versenyen
+        </Heading>
+        <OrganizerSection
+          organizers={impressumConfig?.leadOrganizers || []}
+          message={impressumConfig?.leadOrganizersMessage}
+          title="Rendezők"
+        />
+        <OrganizerSection
+          organizers={impressumConfig?.otherOrganizers || []}
+          message={impressumConfig?.otherOrganizersMessage}
+          title="Stáb további tagjai"
+        />
+      </Box>
     </CmschPage>
   )
 }
