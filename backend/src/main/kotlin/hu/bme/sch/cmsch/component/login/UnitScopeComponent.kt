@@ -185,7 +185,7 @@ class UnitScopeComponent(
 
     val vikNewbieGroup = SettingProxy(componentSettingService, component,
         "vikNewbieGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "VIK-es felhasználók",
+        fieldName = "VIK-es elsőéves felhasználók",
         description = "Érvényesülési sorrend: 5. " +
                 "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
@@ -237,7 +237,7 @@ class UnitScopeComponent(
 
     val vbkNewbieGroup = SettingProxy(componentSettingService, component,
         "vbkNewbieGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "VBK-s felhasználók",
+        fieldName = "VBK-s elsőéves felhasználók",
         description = "Érvényesülési sorrend: 7. " +
                 "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
