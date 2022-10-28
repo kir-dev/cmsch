@@ -157,18 +157,6 @@ open class LoginService(
                     unitScopeComponent.bmeGrantRolePrivileged,
                     unitScopeComponent.bmeGrantGroupName)
             }
-            if (bmeUnitScopes.any { it.vik }) {
-                processUnitScopeStatus(user,
-                    unitScopeComponent.vikGrantRoleAttendee,
-                    unitScopeComponent.vikGrantRolePrivileged,
-                    unitScopeComponent.vikGrantGroupName)
-            }
-            if (bmeUnitScopes.any { it.vbk }) {
-                processUnitScopeStatus(user,
-                    unitScopeComponent.vbkGrantRoleAttendee,
-                    unitScopeComponent.vbkGrantRolePrivileged,
-                    unitScopeComponent.vbkGrantGroupName)
-            }
             if (bmeUnitScopes.any { it.active }) {
                 processUnitScopeStatus(user,
                     unitScopeComponent.activeGrantRoleAttendee,
@@ -181,8 +169,33 @@ open class LoginService(
                     unitScopeComponent.newbieGrantRolePrivileged,
                     unitScopeComponent.newbieGrantGroupName)
             }
+            if (bmeUnitScopes.any { it.vik }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.vikGrantRoleAttendee,
+                    unitScopeComponent.vikGrantRolePrivileged,
+                    unitScopeComponent.vikGrantGroupName)
+            }
+            if (bmeUnitScopes.any { it.vik && it.newbie }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.vikNewbieGrantRoleAttendee,
+                    unitScopeComponent.vikNewbieGrantRolePrivileged,
+                    unitScopeComponent.vikNewbieGrantGroupName)
+            }
+            if (bmeUnitScopes.any { it.vbk }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.vbkGrantRoleAttendee,
+                    unitScopeComponent.vbkGrantRolePrivileged,
+                    unitScopeComponent.vbkGrantGroupName)
+            }
+            if (bmeUnitScopes.any { it.vbk && it.newbie }) {
+                processUnitScopeStatus(user,
+                    unitScopeComponent.vbkNewbieGrantRoleAttendee,
+                    unitScopeComponent.vbkNewbieGrantRolePrivileged,
+                    unitScopeComponent.vbkNewbieGrantGroupName)
+            }
+        }
+        if (bmeUnitScopes != null) {
             user.unitScopes = bmeUnitScopes.joinToString(", ")
-
         }
 
         // Assign fallback group if user still don't have one
