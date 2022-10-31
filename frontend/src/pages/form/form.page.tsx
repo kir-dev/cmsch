@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from 'react'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Box, Button, FormControl, FormLabel, Heading, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
 import { Navigate, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Loading } from '../../common-components/Loading'
@@ -66,7 +66,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   return (
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />
-      <Box w="30rem" maxW="100%" mx="auto">
+      <Box w="100%" mx="auto">
         <Heading>{form?.name || 'Űrlap'}</Heading>
         <FormStatusBadge status={status} />
 

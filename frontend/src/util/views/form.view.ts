@@ -56,6 +56,7 @@ export const FormStatusLangKeys: Record<FormStatus, keyof Signup> = {
 
 export enum FormFieldVariants {
   TEXT = 'TEXT',
+  VOTE = 'VOTE',
   LONG_TEXT = 'LONG_TEXT',
   NUMBER = 'NUMBER',
   EMAIL = 'EMAIL',
@@ -89,4 +90,11 @@ export const FormSubmitMessage: Record<FormSubmitResult, string> = {
   FORM_IS_FULL: 'Jelentkezés megtelt.',
   EDIT_SUBMISSION_NOT_FOUND: 'A kitöltés nem található, így nem módosítható.',
   EDIT_CANNOT_BE_CHANGED: 'Nem módosítható.'
+}
+
+export type VotingFieldOption = {
+  title: string
+  value: string
+  img: string
+  text: string
 }
