@@ -10,6 +10,7 @@ enum class BMEUnitScope(
     BME(true, false, false,false, false),
     BME_VIK(true, true, false,false, false),
     BME_ACTIVE(true, false, false,true, false),
+    BME_NEWBIE(true, false, false,false, true),
     BME_VIK_ACTIVE(true, true, false,true, false),
     BME_VIK_NEWBIE(true, true, false,true, true),
     BME_VBK(true, false, true,false, false),

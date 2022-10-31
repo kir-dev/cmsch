@@ -17,6 +17,7 @@ enum class FormElementType(
     CHECKBOX,
     SELECT,
     MUST_AGREE,
+    VOTE, // [{"title":"","value":"","img":"","text":""}, {...}]
 
     INFO_BOX(persist = false),
     WARNING_BOX(persist = false),
@@ -51,6 +52,16 @@ enum class FormElementType(
     INJECT_GROUP_NAME(serverSide = true) {
         override fun fetchValue(user: UserEntity): String {
             return user.groupName
+        }
+    },
+    INJECT_UNIT_SCOPE(serverSide = true) {
+        override fun fetchValue(user: UserEntity): String {
+            return user.unitScopes ?: ""
+        }
+    },
+    INJECT_PROFILE_PICTURE(serverSide = true) {
+        override fun fetchValue(user: UserEntity): String {
+            return user.profilePicture
         }
     };
 
