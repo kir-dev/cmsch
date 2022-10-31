@@ -149,6 +149,7 @@ open class LoginService(
         }
 
         // Assign using unit-scope
+        println(profile.bmeunitscope)
         val bmeUnitScopes = profile.bmeunitscope
         if (unitScopeComponent.unitScopeGrantsEnabled.isValueTrue() && bmeUnitScopes != null) {
             if (bmeUnitScopes.any { it.bme }) {
