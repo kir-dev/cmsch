@@ -90,3 +90,10 @@ export const FormSubmitMessage: Record<FormSubmitResult, string> = {
   EDIT_SUBMISSION_NOT_FOUND: 'A kitöltés nem található, így nem módosítható.',
   EDIT_CANNOT_BE_CHANGED: 'Nem módosítható.'
 }
+
+export type VotingFieldOption = {
+  title: string
+  value: string
+  img: string
+  text: string
+}

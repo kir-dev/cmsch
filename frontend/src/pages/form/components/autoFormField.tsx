@@ -1,8 +1,9 @@
-import { FormField, FormFieldVariants } from '../../../util/views/form.view'
+import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
 import { Alert, AlertIcon, Checkbox, Input, Select, Text, Textarea } from '@chakra-ui/react'
 import { Control, useController } from 'react-hook-form'
 import Markdown from '../../../common-components/Markdown'
 import { ReactNode } from 'react'
+import { VotingField } from '../../../common-components/VotingField'
 
 interface AutoFormFieldProps {
   fieldProps: FormField
@@ -65,7 +66,12 @@ export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: A
       )
       break
     case FormFieldVariants.TEXT:
-      component = <Input isInvalid={!!error} type="text" {...field} disabled={disabled} />
+      if (fieldProps.values) {
+        const parsed: VotingFieldOption[] = JSON.parse(fieldProps.values)
+        component = (
+          <VotingField onChange={field.onChange} value={field.value} options={parsed} required={fieldProps.required} disabled={disabled} />
+        )
+      } else component = <Input isInvalid={!!error} type="text" {...field} disabled={disabled} />
       break
     case FormFieldVariants.INFO_BOX:
       component = (
