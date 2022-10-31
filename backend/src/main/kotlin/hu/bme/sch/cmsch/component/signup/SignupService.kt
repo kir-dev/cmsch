@@ -251,4 +251,14 @@ open class SignupService(
         return FormSubmissionStatus.OK
     }
 
+    @Transactional(readOnly = true)
+    open fun getSelectedForms(): List<SignupFormEntity> {
+        return signupFormRepository.findAllBySelectedTrue()
+    }
+
+    @Transactional(readOnly = true)
+    open fun getSubmissions(form: SignupFormEntity): List<SignupResponseEntity> {
+        return signupResponseRepository.findAllByFormId(form.id)
+    }
+
 }

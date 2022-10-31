@@ -146,6 +146,11 @@ object ControlPermissions : PermissionGroup {
         "QR Fight komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_BMEJEGY = PermissionValidator(
+        "BMEJEGY_CONTROL",
+        "Bmejegy komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -169,7 +174,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_ADMISSION,
         PERMISSION_CONTROL_RACE,
         PERMISSION_CONTROL_TEAM,
-        PERMISSION_CONTROL_QR_FIGHT
+        PERMISSION_CONTROL_QR_FIGHT,
+        PERMISSION_CONTROL_BMEJEGY
     )
 
 }

@@ -1,5 +1,15 @@
 package hu.bme.sch.cmsch.component.bmejegy
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.signup.SignupService
+import hu.bme.sch.cmsch.model.GroupEntity
+import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.service.TimeService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpHeaders
@@ -8,12 +18,14 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
-import javax.annotation.PostConstruct
+import java.util.*
 
 const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
 
@@ -22,39 +34,200 @@ const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53
 open class BmejegyService(
     @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.username:}") private val bmejegyUsername: String,
     @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.password:}") private val bmejegyPassword: String,
-    private val bmejegy: BmejegyComponent
+    private val bmejegy: BmejegyComponent,
+    private val objectMapper: ObjectMapper,
+    private val clock: TimeService,
+    private val bmejegyRecordRepository: BmejegyRecordRepository,
+    private val signupService: SignupService,
+    private val userRepository: UserRepository,
+    private val groupRepository: GroupRepository
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
 
-    fun logRequest(): ExchangeFilterFunction {
-        return ExchangeFilterFunction.ofRequestProcessor({ clientRequest ->
-            val sb = StringBuilder("Request: \n")
-            clientRequest
-                .headers()
-                .forEach({ name, values -> sb.append("h ").append(name).append("=").append(values).append("\n")})
-            clientRequest
-                .cookies()
-                .forEach({ name, values -> sb.append("c ").append(name).append("=").append(values).append("\n")})
+//    fun logRequest(): ExchangeFilterFunction {
+//        return ExchangeFilterFunction.ofRequestProcessor({ clientRequest ->
+//            val sb = StringBuilder("Request: \n")
+//            clientRequest
+//                .headers()
+//                .forEach({ name, values -> sb.append("h ").append(name).append("=").append(values).append("\n")})
+//            clientRequest
+//                .cookies()
+//                .forEach({ name, values -> sb.append("c ").append(name).append("=").append(values).append("\n")})
+//
+//            println(sb.toString())
+//            return@ofRequestProcessor Mono.just(clientRequest)
+//        })
+//    }
 
-            println(sb.toString())
-            return@ofRequestProcessor Mono.just(clientRequest)
-        })
+    private fun extractNonceFromResponse(response: ResponseEntity<String>): String {
+        val body = response.body ?: ""
+        val pattern = "name=\"woocommerce-login-nonce\" value=\""
+        val indexOf = body.indexOf(pattern).coerceAtLeast(0)
+        return body.substring(indexOf + pattern.length, body.indexOf("\"", indexOf + pattern.length + 1))
     }
 
-    @Async
-    open fun fetchData() {
-        println("fetchData()")
+    @Transactional(readOnly = true)
+    open fun findUserByVoucher(qr: String): Optional<BmejegyRecordEntity> {
+        return Optional.ofNullable(bmejegyRecordRepository.findAllByQrCode(qr).firstOrNull())
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun updateTickets(tickets: BmeJegyResponse) {
+        val registered = bmejegyRecordRepository.findAll().associateBy { it.itemId }
+        val newTickets = mutableListOf<BmejegyRecordEntity>()
+        tickets.rows?.forEach {
+            val cell = it.cell
+            if (cell != null && !registered.containsKey(cell.order_item_id)) {
+                newTickets.add(BmejegyRecordEntity(
+                    id = 0,
+                    item = cell.order_item_name ?: "",
+                    fullName = cell.full_name ?: "",
+                    status = cell.post_status ?: "N/A",
+                    orderKey = cell.order_key ?: "",
+                    email = cell.email ?: "",
+                    qrCode = cell.voucher_code ?: "INVALID",
+                    photoId = cell.ic_4?.uppercase() ?: "",
+                    date = cell.post_date ?: "",
+                    registered = clock.getTimeInSeconds(),
+                    idId = cell.id ?: "",
+                    itemId = cell.order_item_id ?: "",
+                    total = cell.line_total ?: "",
+                    faculty = cell.ic_0?.uppercase() ?: "",
+                    matchedUserId = 0
+                ))
+            }
+        }
+        log.info("[BMEJEGY] Found new tickets: {}", newTickets.size)
+        bmejegyRecordRepository.saveAll(newTickets)
+    }
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun updateUserStatuses() {
+        val unmatched = bmejegyRecordRepository.findAllByMatchedUserId(0)
+        val changedTickets = mutableListOf<BmejegyRecordEntity>()
+        val changedUsers = mutableListOf<UserEntity>()
+
+        if (bmejegy.completeByPhotoId.isValueTrue()) {
+            log.info("[BMEJEGY] Completing by photoId")
+
+            val reader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
+            val forms = signupService.getSelectedForms()
+
+            val group1 = if (bmejegy.grantGroupName1.getValue().isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName1.getValue()).orElse(null) else null
+            val group2 = if (bmejegy.grantGroupName2.getValue().isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName2.getValue()).orElse(null) else null
+            val group3 = if (bmejegy.grantGroupName3.getValue().isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName3.getValue()).orElse(null) else null
+
+            forms.forEach { form ->
+                signupService.getSubmissions(form).forEach { raw ->
+                    val submission = reader.readValue<MutableMap<String, String>>(raw.submission)
+                    // TODO: This implementation is only for GÓLYABÁL 2022
+                    val photoId = (submission["szig"] ?: "").uppercase()
+                    val ticket = unmatched.firstOrNull { it.photoId == photoId }
+                    if (ticket != null) {
+                        ticket.matchedUserId = raw.submitterUserId ?: 0
+                        val user = updateUser(ticket.matchedUserId, ticket.item, group1, group2, group3)
+                        if (user != null)
+                            changedUsers.add(user)
+                        changedTickets.add(ticket)
+                    }
+                }
+            }
+
+        }
+
+        log.info("[BMEJEGY] Newly matched users: {}", changedTickets.size)
+        bmejegyRecordRepository.saveAll(changedTickets)
+
+        log.info("[BMEJEGY] Updated users: {}", changedUsers.size)
+        userRepository.saveAll(changedUsers)
+    }
+
+    private fun updateUser(
+        submitterUserId: Int,
+        item: String,
+        group1: GroupEntity?,
+        group2: GroupEntity?,
+        group3: GroupEntity?
+    ) : UserEntity? {
+        val userEntityOptional = userRepository.findById(submitterUserId)
+        if (userEntityOptional.isPresent) {
+            val user = userEntityOptional.orElseThrow()
+            var changed = false
+
+            if (bmejegy.forOrder1.getValue().isNotBlank() && item.contains(bmejegy.forOrder1.getValue())) {
+                if (bmejegy.grantAttendee1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                    user.role = RoleType.ATTENDEE
+                    changed = true
+                }
+                if (bmejegy.grantPrivileged1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                    user.role = RoleType.PRIVILEGED
+                    changed = true
+                }
+                if (group1 != null) {
+                    user.group = group1
+                    user.groupName = group1.name
+                    changed = true
+                }
+            }
+
+            if (bmejegy.forOrder2.getValue().isNotBlank() && item.contains(bmejegy.forOrder2.getValue())) {
+                if (bmejegy.grantAttendee2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                    user.role = RoleType.ATTENDEE
+                    changed = true
+                }
+                if (bmejegy.grantPrivileged2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                    user.role = RoleType.PRIVILEGED
+                    changed = true
+                }
+                if (group2 != null) {
+                    user.group = group2
+                    user.groupName = group2.name
+                    changed = true
+                }
+            }
+
+            if (bmejegy.forOrder3.getValue().isNotBlank() && item.contains(bmejegy.forOrder3.getValue())) {
+                if (bmejegy.grantAttendee3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                    user.role = RoleType.ATTENDEE
+                    changed = true
+                }
+                if (bmejegy.grantPrivileged3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                    user.role = RoleType.PRIVILEGED
+                    changed = true
+                }
+                if (group3 != null) {
+                    user.group = group3
+                    user.groupName = group3.name
+                    changed = true
+                }
+            }
+
+            if (changed) {
+                log.info("[BMEJEGY] Updating user {} to role={} group={}", user.fullName, user.role.name, user.groupName)
+                return user
+            }
+        }
+        return null
+    }
+
+    fun fetchData(): BmeJegyResponse {
+        log.info("[BMEJEGY] Fetching started")
+
         val client = WebClient.builder()
             .baseUrl("https://www.bmejegy.hu")
             .clientConnector(
                 ReactorClientHttpConnector(HttpClient.create()
                     .followRedirect(true)
                     .keepAlive(true)
-                    .wiretap(true)
+//                    .wiretap(true)
                 )
             )
-            .filters {
-                it.add(logRequest())
-            }
+//            .filters {
+//                it.add(logRequest())
+//            }
             .build()
 
         val responseLogin1 = client.get()
@@ -66,7 +239,7 @@ open class BmejegyService(
             .block()!!
 
         val nonce = extractNonceFromResponse(responseLogin1)
-        println("Nonce $nonce")
+        log.info("[BMEJEGY] Nonce ok, {}", nonce)
 
         val login = client.post()
             .uri("/fiokom/")
@@ -84,7 +257,7 @@ open class BmejegyService(
             .toEntity(String::class.java)
             .block()!!
 
-        println("Login ${login.statusCode}")
+        log.info("[BMEJEGY] Login {}", login.statusCode)
 
         val sessionCookieWpAdmin = login.headers["Set-Cookie"]?.get(1)?.split("=", ";")
             ?: throw IllegalStateException("Invalid cookie")
@@ -99,22 +272,18 @@ open class BmejegyService(
             .toEntity(String::class.java)
             .block()!!
 
-        println("Account ${responseLogin2.statusCode}")
+        log.info("[BMEJEGY] Account {}", responseLogin2.statusCode)
 
         val reportResponse = client.get()
             .uri("/rendeles-riportok/")
             .header(HttpHeaders.USER_AGENT, USER_AGENT)
             .accept(MediaType.TEXT_HTML, MediaType.APPLICATION_XHTML_XML)
-//            .header(HttpHeaders.COOKIE, sessionCookieSite[0] + "=" + sessionCookieSite[1])
             .cookie(sessionCookieSite[0], sessionCookieSite[1])
-//            .header("Cookie", sessionCookieWpAdmin[0] + "=" + sessionCookieWpAdmin[1] + "; "
-//                    + sessionCookieSite[0] + "=" + sessionCookieSite[1] + "; " +
-//                    "euCookie=set; _icl_current_language=hu")
             .retrieve()
             .toEntity(String::class.java)
             .block()!!
 
-        println("Reports GET ${reportResponse.statusCode}")
+        log.info("[BMEJEGY] Reports GET {}", reportResponse.statusCode)
 
         val ajaxResponse = client.post()
             .uri {
@@ -137,8 +306,8 @@ open class BmejegyService(
                     "euCookie=set; _icl_current_language=hu")
             .body(
                 BodyInserters.fromFormData("_search", "false")
-                    .with("nd", "1666878881355") // bmejegy.minTimestamp.getValue()
-                    .with("rows", "25") // 100000
+                    .with("nd", bmejegy.minTimestamp.getValue())
+                    .with("rows", bmejegy.countToFetch.getValue())
                     .with("page", "1")
                     .with("sidx", "")
                     .with("sord", "asc")
@@ -147,17 +316,10 @@ open class BmejegyService(
             .toEntity(String::class.java)
             .block()!!
 
-        println("---")
 
-        println(ajaxResponse.body)
-
-    }
-
-    private fun extractNonceFromResponse(response: ResponseEntity<String>): String {
-        val body = response.body ?: ""
-        val pattern = "name=\"woocommerce-login-nonce\" value=\""
-        val indexOf = body.indexOf(pattern).coerceAtLeast(0)
-        return body.substring(indexOf + pattern.length, body.indexOf("\"", indexOf + pattern.length + 1))
+        val ajaxBody = ajaxResponse.body
+        log.info("[BMEJEGY] Full response is {} long", ajaxBody?.length ?: -1)
+        return objectMapper.readerFor(BmeJegyResponse::class.java).readValue(ajaxBody ?: "[]")
     }
 
 }

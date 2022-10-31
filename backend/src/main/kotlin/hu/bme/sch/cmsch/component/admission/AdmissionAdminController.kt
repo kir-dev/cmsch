@@ -2,10 +2,11 @@ package hu.bme.sch.cmsch.component.admission
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.component.event.EventComponent
+import hu.bme.sch.cmsch.component.event.EventEntity
+import hu.bme.sch.cmsch.component.event.EventRepository
+import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
+import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -36,4 +37,3 @@ class AdmissionAdminController(
         ))
     }
 }
-

@@ -28,6 +28,9 @@ open class UserService(
     open fun getById(id: String): UserEntity = users.findByInternalId(id).orElseThrow()
 
     @Transactional(readOnly = true)
+    open fun getByUserId(id: Int): UserEntity = users.findById(id).orElseThrow()
+
+    @Transactional(readOnly = true)
     open fun findById(internalId: String): Optional<UserEntity> {
         return users.findByInternalId(internalId)
     }

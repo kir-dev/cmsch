@@ -11,5 +11,6 @@ interface SignupFormRepository : JpaRepository<SignupFormEntity, Int> {
     fun findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now1: Long, now2: Long): List<SignupFormEntity>
 
     fun findAllByUrl(url: String): List<SignupFormEntity>
+    fun findAllBySelectedTrue(): List<SignupFormEntity>
 
 }
