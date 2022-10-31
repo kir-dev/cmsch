@@ -105,10 +105,11 @@
     }
 
     function setResult(label, result) {
-        if (!result.startsWith(codePrefix)) {
-            document.getElementById('debug').innerText = "Nem VALID QR kód!";
-            return;
-        }
+        // if (!result.startsWith(codePrefix)) {
+        //     document.getElementById('debug').innerText = "Nem VALID QR kód!";
+        //     return;
+        // }
+
         if (result === lastReading && (Date.now() - lastSuccessful) < 5000) {
             document.getElementById('debug').innerText = "Cooldown nem járt le!";
             return;

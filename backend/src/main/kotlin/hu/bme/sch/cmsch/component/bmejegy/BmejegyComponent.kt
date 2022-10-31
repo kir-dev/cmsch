@@ -27,7 +27,9 @@ class BmejegyComponent(
             syncInterval,
             completeByNeptun,
             completeByEmail,
+            completeByPhotoId,
             minTimestamp,
+            countToFetch,
 
             grantGroup1,
             forOrder1,
@@ -76,17 +78,27 @@ class BmejegyComponent(
 
     val completeByNeptun = SettingProxy(componentSettingService, component,
         "completeByNeptun", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Keresés NEPTUN alapján", description = "Neptun alapján keresi a fizetett jegyeket"
+        fieldName = "Keresés NEPTUN alapján", description = "Neptun alapján keresi a fizetett jegyeket (NINCS IMPLEMENTÁLVA)"
     )
 
     val completeByEmail = SettingProxy(componentSettingService, component,
         "completeByEmail", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Keresés EMAIL alapján", description = "Email alapján keresi a fizetett jegyeket"
+        fieldName = "Keresés EMAIL alapján", description = "Email alapján keresi a fizetett jegyeket (NINCS IMPLEMENTÁLVA)"
+    )
+
+    val completeByPhotoId = SettingProxy(componentSettingService, component,
+        "completeByEmail", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Keresés SZIGSZÁM alapján", description = "Szigszám alapján keresi a fizetett jegyeket (ellenőrizni kell, hogy jó-e a formátum)"
     )
 
     val minTimestamp = SettingProxy(componentSettingService, component,
         "minTimestamp", "1666721741000", type = SettingType.NUMBER, serverSideOnly = true,
         fieldName = "Ekkortól nézve", description = "Unix timestamp (ms pontossággal)"
+    )
+
+    val countToFetch = SettingProxy(componentSettingService, component,
+        "countToFetch", "10000", type = SettingType.NUMBER, serverSideOnly = true,
+        fieldName = "Ennyit töltsön le", description = "Az első ennyi darabot syncelje fel"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -99,7 +111,7 @@ class BmejegyComponent(
 
     val forOrder1 = SettingProxy(componentSettingService, component,
         "forOrder1", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (* = bármi, üres = ki van kapcsolva)"
+        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
     )
 
     val grantAttendee1 = SettingProxy(componentSettingService, component,
@@ -114,7 +126,7 @@ class BmejegyComponent(
 
     val grantGroupName1 = SettingProxy(componentSettingService, component,
         "grantGroupName1", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Csoport tagság állítása (ha üres akkor nem állít)"
+        fieldName = "Csoportba helyezés", description = "Csoport tagság állítása (ha üres akkor nem állít)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -127,7 +139,7 @@ class BmejegyComponent(
 
     val forOrder2 = SettingProxy(componentSettingService, component,
         "forOrder2", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (* = bármi, üres = ki van kapcsolva)"
+        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
     )
 
     val grantAttendee2 = SettingProxy(componentSettingService, component,
@@ -142,7 +154,7 @@ class BmejegyComponent(
 
     val grantGroupName2 = SettingProxy(componentSettingService, component,
         "grantGroupName2", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Csoport tagság állítása (ha üres akkor nem állít)"
+        fieldName = "Csoportba helyezés", description = "Csoport tagság állítása (ha üres akkor nem állít)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -155,7 +167,7 @@ class BmejegyComponent(
 
     val forOrder3 = SettingProxy(componentSettingService, component,
         "forOrder3", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (* = bármi, üres = ki van kapcsolva)"
+        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
     )
 
     val grantAttendee3 = SettingProxy(componentSettingService, component,
@@ -170,7 +182,7 @@ class BmejegyComponent(
 
     val grantGroupName3 = SettingProxy(componentSettingService, component,
         "grantGroupName3", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Csoport tagság állítása (ha üres akkor nem állít)"
+        fieldName = "Csoportba helyezés", description = "Csoport tagság állítása (ha üres akkor nem állít)"
     )
 
 }

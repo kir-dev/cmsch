@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.component.admission
 
+import hu.bme.sch.cmsch.component.bmejegy.BmejegyRecordEntity
+import hu.bme.sch.cmsch.component.bmejegy.BmejegyService
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.model.RoleType
@@ -13,6 +15,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @Controller
 @RequestMapping("/admin/admission")
@@ -21,7 +24,8 @@ import org.springframework.web.bind.annotation.*
 class AdmissionApiController(
     private val userService: UserService,
     private val admissionComponent: AdmissionComponent,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val bmejegyService: Optional<BmejegyService>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -43,14 +47,46 @@ class AdmissionApiController(
     @PostMapping("/resolve")
     fun resolve(@RequestBody resolve: ResolveRequest): AdmissionResponse {
         log.info("Resolving admission for: ${resolve.cmschId}")
-        return userService.searchByCmschId(resolve.cmschId)
-            .map { mapUser(it) }
-            .orElse(
+        if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
+            return userService.searchByCmschId(resolve.cmschId)
+                .map { mapUser(it) }
+                .orElse(
+                    AdmissionResponse(
+                        "NOT FOUND BY CMSCHID", "NOT FOUND BY CMSCH",
+                        RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
+                    )
+                )
+
+        } else if (bmejegyService.isPresent) {
+            val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
+            return if (ticket.isEmpty) {
                 AdmissionResponse(
-                    "NOT FOUND", "NOT FOUND",
+                    "NOT FOUND BY BMEJEGY", "NOT FOUND BY BMEJEGY",
                     RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
                 )
+
+            } else if (ticket.orElseThrow().matchedUserId > 0) {
+                mapUser(userService.getByUserId(ticket.orElseThrow().matchedUserId))
+
+            } else {
+                mapTicket(ticket.orElseThrow())
+            }
+
+        } else {
+            return AdmissionResponse(
+                "NOT FOUND AT ALL", "NOT FOUND AT ALL",
+                RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
             )
+        }
+    }
+
+    // TODO: This implementation is created for GÓLYABÁL 2022. Generalize it in the future if needed.
+    private fun mapTicket(ticket: BmejegyRecordEntity): AdmissionResponse {
+        return AdmissionResponse("NOT SYNCED : ${ticket.faculty.ifBlank { "KÜLSŐS" }}",
+            "${ticket.fullName} @ ${ticket.photoId}",
+            RoleType.BASIC,
+            EntryRole.USER,
+            true)
     }
 
     private fun mapUser(user: UserEntity): AdmissionResponse {
@@ -64,7 +100,7 @@ class AdmissionApiController(
         addGrantsByGroup(user.groupName.lowercase(), grants)
 
         val grant = grants.maxByOrNull { it.value } ?: EntryRole.CANNOT_ATTEND
-        log.info("Admission is ${if (grant.canAttend) "OK" else "DENIED"} for user '${user.fullName}' with group '${user.groupName}' as ${grant}")
+        log.info("Admission is ${if (grant.canAttend) "OK" else "DENIED"} for user '${user.fullName}' with group '${user.groupName}' as $grant")
         return AdmissionResponse(user.groupName, user.fullName, user.role, grant, grant.canAttend)
     }
 

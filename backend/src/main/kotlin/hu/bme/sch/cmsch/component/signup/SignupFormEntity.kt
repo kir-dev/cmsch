@@ -156,7 +156,7 @@ data class SignupFormEntity(
     // TODO: Remove nullability after migration
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "BOOLEAN default FALSE")
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "Csoport a bitokos",
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "Csoport a birtokos",
         note = "Ha be van kapcsolva, akkor a csoport a beadások birtokosa, ha ki an kapcsolva, akkor felhasználók")
     @property:GenerateOverview(columnName = "Csoportos", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_BOOLEAN)
