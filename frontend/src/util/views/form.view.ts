@@ -56,6 +56,7 @@ export const FormStatusLangKeys: Record<FormStatus, keyof Signup> = {
 
 export enum FormFieldVariants {
   TEXT = 'TEXT',
+  VOTE = 'VOTE',
   LONG_TEXT = 'LONG_TEXT',
   NUMBER = 'NUMBER',
   EMAIL = 'EMAIL',

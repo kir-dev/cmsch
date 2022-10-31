@@ -66,12 +66,18 @@ export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: A
       )
       break
     case FormFieldVariants.TEXT:
-      if (fieldProps.values) {
-        const parsed: VotingFieldOption[] = JSON.parse(fieldProps.values)
-        component = (
-          <VotingField onChange={field.onChange} value={field.value} options={parsed} required={fieldProps.required} disabled={disabled} />
-        )
-      } else component = <Input isInvalid={!!error} type="text" {...field} disabled={disabled} />
+      component = <Input isInvalid={!!error} type="text" {...field} disabled={disabled} />
+      break
+    case FormFieldVariants.VOTE:
+      let values: VotingFieldOption[] = []
+      try {
+        values = JSON.parse(fieldProps.values)
+      } catch (_) {
+        values = []
+      }
+      component = (
+        <VotingField onChange={field.onChange} value={field.value} options={values} required={fieldProps.required} disabled={disabled} />
+      )
       break
     case FormFieldVariants.INFO_BOX:
       component = (
