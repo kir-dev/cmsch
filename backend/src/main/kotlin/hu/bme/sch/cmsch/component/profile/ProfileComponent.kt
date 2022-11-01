@@ -43,7 +43,7 @@ class ProfileComponent(
             showProfilePicture,
             showQr,
             qrTitle,
-
+            bmejegyQrIfPresent,
             groupTitle,
             messageBoxContent,
             messageBoxLevel,
@@ -189,6 +189,11 @@ class ProfileComponent(
     val qrTitle = SettingProxy(componentSettingService, component,
         "qrTitle", "CMSCH ID",
         fieldName = "QR kód fejléc", description = "Ez a fejléc jelenik meg a QR kód felett"
+    )
+
+    val bmejegyQrIfPresent = SettingProxy(componentSettingService, component,
+        "bmejegyQrIfPresent", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "BMEJEGY kód küldése", description = "A bmejegyes voucher kód leküldése, ha van valid jegye"
     )
 
     val groupTitle = SettingProxy(componentSettingService, component,
