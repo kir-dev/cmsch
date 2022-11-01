@@ -17,7 +17,7 @@ enum class FormElementType(
     CHECKBOX,
     SELECT,
     MUST_AGREE,
-    VOTE, // [{"title":"","value":"","img":"","text":""}, {...}]
+    VOTE, // value = [{"title":"","value":"","img":"","text":""}, {...}]
 
     INFO_BOX(persist = false),
     WARNING_BOX(persist = false),

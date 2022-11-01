@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
-import hu.bme.sch.cmsch.component.challange.ChallengeComponent
 import hu.bme.sch.cmsch.component.challange.ChallengeSubmissionRepository
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent

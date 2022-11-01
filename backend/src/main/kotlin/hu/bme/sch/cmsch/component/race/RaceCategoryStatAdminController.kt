@@ -4,7 +4,6 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.TwoLevelAdminPanel
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY
 import hu.bme.sch.cmsch.util.getUser
