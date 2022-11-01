@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.util.concurrent.Executors
-import javax.annotation.PostConstruct
 
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
@@ -15,7 +14,7 @@ open class BmejegyTimer(
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-    private val executor = Executors.newSingleThreadExecutor()
+    private var executor = Executors.newSingleThreadExecutor()
 
     private var ticks = 65535
 
@@ -27,6 +26,16 @@ open class BmejegyTimer(
             bmejegyService.updateUserStatuses()
             log.info("[BMEJEGY] Synchronizing finished")
         }
+    }
+
+    fun clean() {
+        log.info("Cleaning executor pool")
+        try {
+            executor.shutdownNow()
+        } catch (e: Throwable) {
+            log.error("Exception during executor cleanup")
+        }
+        executor = Executors.newSingleThreadExecutor()
     }
 
     @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000 * 10)

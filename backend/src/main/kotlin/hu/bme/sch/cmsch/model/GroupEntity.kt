@@ -118,8 +118,7 @@ data class GroupEntity(
     @Lob
     @Column(nullable = false, columnDefinition = "CLOB default ''")
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz",
-        note = "Ez a feature jelenleg nem használt! Hagyd üresen!", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
+    @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_LOB)
     var profileTopMessage: String? = "",

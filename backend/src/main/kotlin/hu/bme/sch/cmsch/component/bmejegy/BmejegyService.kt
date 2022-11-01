@@ -44,21 +44,6 @@ open class BmejegyService(
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
-//    fun logRequest(): ExchangeFilterFunction {
-//        return ExchangeFilterFunction.ofRequestProcessor({ clientRequest ->
-//            val sb = StringBuilder("Request: \n")
-//            clientRequest
-//                .headers()
-//                .forEach({ name, values -> sb.append("h ").append(name).append("=").append(values).append("\n")})
-//            clientRequest
-//                .cookies()
-//                .forEach({ name, values -> sb.append("c ").append(name).append("=").append(values).append("\n")})
-//
-//            println(sb.toString())
-//            return@ofRequestProcessor Mono.just(clientRequest)
-//        })
-//    }
-
     private fun extractNonceFromResponse(response: ResponseEntity<String>): String {
         val body = response.body ?: ""
         val pattern = "name=\"woocommerce-login-nonce\" value=\""
@@ -222,12 +207,8 @@ open class BmejegyService(
                 ReactorClientHttpConnector(HttpClient.create()
                     .followRedirect(true)
                     .keepAlive(true)
-//                    .wiretap(true)
                 )
             )
-//            .filters {
-//                it.add(logRequest())
-//            }
             .build()
 
         val responseLogin1 = client.get()
@@ -320,6 +301,12 @@ open class BmejegyService(
         val ajaxBody = ajaxResponse.body
         log.info("[BMEJEGY] Full response is {} long", ajaxBody?.length ?: -1)
         return objectMapper.readerFor(BmeJegyResponse::class.java).readValue(ajaxBody ?: "[]")
+    }
+
+    @Transactional(readOnly = true)
+    open fun findVoucherByUser(userId: Int): Optional<String> {
+        return Optional.ofNullable(bmejegyRecordRepository.findAllByMatchedUserId(userId).firstOrNull())
+            .map { it.qrCode }
     }
 
 }

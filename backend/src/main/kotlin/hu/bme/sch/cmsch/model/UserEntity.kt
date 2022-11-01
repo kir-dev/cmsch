@@ -148,7 +148,7 @@ data class UserEntity(
     @Lob
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 14, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
+    @property:GenerateInput(order = 15, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
     @property:ImportFormat(ignore = false, columnId = 9)
     var permissions: String = "",
 
@@ -171,6 +171,14 @@ data class UserEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12)
     var unitScopes: String? = "",
+
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(order = 15, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_LOB)
+    var profileTopMessage: String? = "",
 
 ): ManagedEntity, CmschUser {
 

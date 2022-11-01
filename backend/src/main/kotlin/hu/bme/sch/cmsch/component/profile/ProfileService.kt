@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.profile
 
+import hu.bme.sch.cmsch.component.bmejegy.BmejegyService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
@@ -40,6 +41,7 @@ open class ProfileService(
     private val tasksService: Optional<TasksService>,
     private val riddleService: Optional<RiddleService>,
     private val loginComponent: Optional<LoginComponent>,
+    private val bmejegyService: Optional<BmejegyService>,
     private val clock: TimeService,
     private val startupPropertyConfig: StartupPropertyConfig
 ) {
@@ -64,11 +66,13 @@ open class ProfileService(
             email = profileComponent.showEmail.mapIfTrue { user.email },
             neptun = profileComponent.showNeptun.mapIfTrue { user.neptun },
             cmschId = if (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue()) {
-                user.cmschId
+                if (profileComponent.bmejegyQrIfPresent.isValueTrue()) fetchBmejegyTicket(user) else user.cmschId
             } else null,
             major = profileComponent.showMajor.mapIfTrue { user.major },
 
             groupLeaders = profileComponent.showGroupLeaders.mapIfTrue { fetchGroupLeaders(group) },
+            groupMessage = group?.profileTopMessage,
+            userMessage = user.profileTopMessage,
 
             // Group selection component
             groupSelectionAllowed = leavable,
@@ -107,6 +111,10 @@ open class ProfileService(
             // Leaderboard controller
             leaderboard = null
         )
+    }
+
+    private fun fetchBmejegyTicket(user: UserEntity): String {
+        return bmejegyService.flatMap { it.findVoucherByUser(user.id) }.orElse(user.cmschId)
     }
 
     private fun fetchWhetherGroupLeavable(group: GroupEntity?) =

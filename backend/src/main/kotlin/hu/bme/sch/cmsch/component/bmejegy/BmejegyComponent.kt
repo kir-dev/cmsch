@@ -87,7 +87,7 @@ class BmejegyComponent(
     )
 
     val completeByPhotoId = SettingProxy(componentSettingService, component,
-        "completeByEmail", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        "completeByPhotoId", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "Keresés SZIGSZÁM alapján", description = "Szigszám alapján keresi a fizetett jegyeket (ellenőrizni kell, hogy jó-e a formátum)"
     )
 
