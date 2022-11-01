@@ -44,6 +44,8 @@ class ProfileComponent(
             showQr,
             qrTitle,
             bmejegyQrIfPresent,
+            showGroupMessage,
+            showUserMessage,
             groupTitle,
             messageBoxContent,
             messageBoxLevel,
@@ -209,6 +211,16 @@ class ProfileComponent(
     val messageBoxLevel = SettingProxy(componentSettingService, component,
         "messageBoxLevel", "", type = SettingType.TEXT,
         fieldName = "Üzenet doboz típusa", description = "success, info, warning, error"
+    )
+
+    val showGroupMessage = SettingProxy(componentSettingService, component,
+        "showGroupMessage", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Csoporthoz üzenet mutatása", description = "A csoporthoz tartozó üzenet kijelzése a profilban"
+    )
+
+    val showUserMessage = SettingProxy(componentSettingService, component,
+        "showUserMessage", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Felhasználi üzenet mutatása", description = "A felhasználóhoz tartozó üzenet kijelzése a profilban"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

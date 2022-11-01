@@ -71,8 +71,8 @@ open class ProfileService(
             major = profileComponent.showMajor.mapIfTrue { user.major },
 
             groupLeaders = profileComponent.showGroupLeaders.mapIfTrue { fetchGroupLeaders(group) },
-            groupMessage = group?.profileTopMessage,
-            userMessage = user.profileTopMessage,
+            groupMessage = profileComponent.showGroupMessage.mapIfTrue { group?.profileTopMessage },
+            userMessage = profileComponent.showUserMessage.mapIfTrue { user.profileTopMessage },
 
             // Group selection component
             groupSelectionAllowed = leavable,
