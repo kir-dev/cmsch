@@ -40,6 +40,9 @@ export interface ProfileView {
 
   profileIsComplete: boolean
   incompleteTasks?: string[]
+
+  groupMessage: string
+  userMessage: string
 }
 
 //cannot compare roles if the enums values are strings use the RoleType[role] syntax

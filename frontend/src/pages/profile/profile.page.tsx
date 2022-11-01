@@ -33,6 +33,7 @@ import React, { useEffect } from 'react'
 import { GroupComponent } from './components/Group'
 import { ProfileQR } from './components/ProfileQR'
 import { l } from '../../util/language'
+import Markdown from '../../common-components/Markdown'
 
 const MapContainer = React.lazy(() => import('./components/MapContainer'))
 
@@ -135,6 +136,21 @@ const ProfilePage = ({}: Props) => {
           </Button>
         </VStack>
       </Flex>
+
+      {profile.userMessage && (
+        <>
+          <Divider my={8} borderWidth={2} />
+          <Markdown text={profile.userMessage} />
+        </>
+      )}
+
+      {profile.groupMessage && (
+        <>
+          <Divider my={8} borderWidth={2} />
+          <Markdown text={profile.groupMessage} />
+        </>
+      )}
+
       {component?.showQr && <ProfileQR profile={profile} component={component} />}
       {(component?.showTasks || component?.showRiddles || component?.showTokens) && <Divider my={10} borderWidth={2} />}
       <Flex justify="center" alignItems="center" flexWrap="wrap">
