@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.qrfight
 
-import hu.bme.sch.cmsch.component.riddle.RiddleService
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull

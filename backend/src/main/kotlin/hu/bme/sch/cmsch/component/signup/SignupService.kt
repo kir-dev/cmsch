@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.component.signup
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository

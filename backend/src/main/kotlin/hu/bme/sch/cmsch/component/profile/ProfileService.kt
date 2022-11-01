@@ -4,8 +4,6 @@ import hu.bme.sch.cmsch.component.bmejegy.BmejegyService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
-import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
-import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.LoginComponent

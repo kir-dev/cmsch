@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.challange
 
-import hu.bme.sch.cmsch.component.race.RaceRecordEntity
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController

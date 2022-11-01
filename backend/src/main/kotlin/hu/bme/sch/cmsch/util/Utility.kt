@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.util
 
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.UserService

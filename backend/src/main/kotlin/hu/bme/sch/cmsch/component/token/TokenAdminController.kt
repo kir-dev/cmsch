@@ -2,9 +2,6 @@ package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
-import hu.bme.sch.cmsch.component.task.SubmittedTaskEntity
-import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
-import hu.bme.sch.cmsch.component.task.TaskComponent
 import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_DELETE
 import hu.bme.sch.cmsch.service.*

@@ -6,7 +6,6 @@ import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
 import hu.bme.sch.cmsch.util.getUser

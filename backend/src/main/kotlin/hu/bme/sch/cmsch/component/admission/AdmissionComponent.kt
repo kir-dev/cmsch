@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.admission
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
