@@ -99,10 +99,23 @@ open class LoginService(
             }
         }
 
+        // Grant admin by email
         if (loginComponent.googleAdminAddresses.getValue().split(Regex(", *")).contains(user.email)) {
             log.info("Granting ADMIN for ${user.fullName}")
             user.role = RoleType.ADMIN
         }
+
+        // Assign fallback group if user still don't have one
+        if (user.groupName.isBlank()) {
+            groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
+                user.groupName = it.name
+                user.group = it
+            }
+        }
+
+        // If fallback is still not found, set the group name to empty string
+        if (user.groupName != user.group?.name)
+            user.groupName = user.group?.name ?: ""
     }
 
     private fun updateFieldsForAuthsch(user: UserEntity, profile: ProfileResponse) {
@@ -149,7 +162,6 @@ open class LoginService(
         }
 
         // Assign using unit-scope
-        println(profile.bmeunitscope)
         val bmeUnitScopes = profile.bmeunitscope
         if (unitScopeComponent.unitScopeGrantsEnabled.isValueTrue() && bmeUnitScopes != null) {
             if (bmeUnitScopes.any { it.bme }) {
