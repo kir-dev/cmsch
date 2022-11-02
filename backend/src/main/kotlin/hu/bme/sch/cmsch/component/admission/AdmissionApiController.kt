@@ -66,7 +66,7 @@ class AdmissionApiController(
                 )
 
             } else if (ticket.orElseThrow().matchedUserId > 0) {
-                mapUser(userService.getByUserId(ticket.orElseThrow().matchedUserId))
+                mapTicketUser(userService.getByUserId(ticket.orElseThrow().matchedUserId), ticket.orElseThrow())
 
             } else {
                 mapTicket(ticket.orElseThrow())
@@ -87,6 +87,24 @@ class AdmissionApiController(
             RoleType.BASIC,
             EntryRole.USER,
             true)
+    }
+
+    private fun mapTicketUser(user: UserEntity, ticket: BmejegyRecordEntity): AdmissionResponse {
+        if (isBanned(user.cmschId, user.groupName))
+            return AdmissionResponse(user.groupName, user.fullName, user.role, EntryRole.BANNED, false)
+
+        val grants = mutableSetOf<EntryRole>()
+
+        addGrantsByRole(user, grants)
+        addGrantsByCmschId(user.cmschId.lowercase(), grants)
+        addGrantsByGroup(user.groupName.lowercase(), grants)
+
+        val grant = grants.maxByOrNull { it.value } ?: EntryRole.CANNOT_ATTEND
+        log.info("Admission (with voucher) is ${if (grant.canAttend) "OK" else "DENIED"} for user '${user.fullName}' with group '${user.groupName}' as $grant")
+        return AdmissionResponse(
+            "${user.groupName} ${ticket.faculty.ifBlank { "KÜLSŐS" }}",
+            "${ticket.fullName} @ ${ticket.photoId}",
+            user.role, grant, grant.canAttend)
     }
 
     private fun mapUser(user: UserEntity): AdmissionResponse {
