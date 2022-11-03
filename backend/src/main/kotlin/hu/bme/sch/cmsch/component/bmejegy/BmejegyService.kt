@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import java.util.*
@@ -198,6 +199,10 @@ open class BmejegyService(
     fun fetchData(): BmeJegyResponse {
         log.info("[BMEJEGY] Fetching started")
 
+        val strategies: ExchangeStrategies = ExchangeStrategies.builder()
+            .codecs { codecs -> codecs.defaultCodecs().maxInMemorySize(bmejegy.bufferSize.getIntValue(262144)) }
+            .build()
+
         val client = WebClient.builder()
             .baseUrl("https://www.bmejegy.hu")
             .clientConnector(
@@ -206,6 +211,7 @@ open class BmejegyService(
                     .keepAlive(true)
                 )
             )
+            .exchangeStrategies(strategies)
             .build()
 
         val responseLogin1 = client.get()

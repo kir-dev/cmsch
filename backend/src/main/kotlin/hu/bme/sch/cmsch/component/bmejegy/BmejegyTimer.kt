@@ -21,9 +21,13 @@ open class BmejegyTimer(
     fun syncronize() {
         executor.submit {
             log.info("[BMEJEGY] Synchronizing started")
-            val responseData = bmejegyService.fetchData()
-            bmejegyService.updateTickets(responseData)
-            bmejegyService.updateUserStatuses()
+            try {
+                val responseData = bmejegyService.fetchData()
+                bmejegyService.updateTickets(responseData)
+                bmejegyService.updateUserStatuses()
+            } catch (e: Throwable) {
+                log.error("[BMEJEGY] Exception during fetch", e)
+            }
             log.info("[BMEJEGY] Synchronizing finished")
         }
     }
