@@ -5759,7 +5759,7 @@ __metadata:
     react-query: 3.39.1
     react-router-dom: 6.3.0
     react-scripts: 5.0.1
-    react-simple-code-editor: 0.11.2
+    react-simple-code-editor: 0.13.1
     remark-gfm: 3.0.1
     typescript: 4.7.4
     values.js: 2.1.1
@@ -13328,13 +13328,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-simple-code-editor@npm:0.11.2":
-  version: 0.11.2
-  resolution: "react-simple-code-editor@npm:0.11.2"
+"react-simple-code-editor@npm:0.13.1":
+  version: 0.13.1
+  resolution: "react-simple-code-editor@npm:0.13.1"
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 219e1d8972678a99f01097f6545a7d050825c8803a6e6b4d5257cf4ff123af95c9a409e8beba28d091507f92cb903ec1eccfc2b861fb4a11cfbeb0dcf48439be
+  checksum: 1d223e34ccac5d7f91318f28d5edab6ccb13c51b1afb502094b8475214321263bb44258d355978e1714e9360c9081fb9f38d3ae89071a06628407627c362cc45
   languageName: node
   linkType: hard
 
