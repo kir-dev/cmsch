@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.repository.UserDetailsByInternalIdMappingRepository
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import org.slf4j.LoggerFactory
@@ -25,6 +26,7 @@ open class LoginService(
     private val users: UserService,
     private val profileService: UserProfileGeneratorService,
     private val groupToUserMapping: GroupToUserMappingRepository,
+    private val userDetailsByInternalIdMapping: UserDetailsByInternalIdMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
     private val groups: GroupRepository,
     private val loginComponent: LoginComponent,
@@ -103,6 +105,7 @@ open class LoginService(
         if (loginComponent.googleAdminAddresses.getValue().split(Regex(", *")).contains(user.email)) {
             log.info("Granting ADMIN for ${user.fullName}")
             user.role = RoleType.ADMIN
+            user.detailsImported = true
         }
 
         // Assign fallback group if user still don't have one
@@ -110,6 +113,7 @@ open class LoginService(
             groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
                 user.groupName = it.name
                 user.group = it
+                user.detailsImported = true
             }
         }
 
@@ -129,10 +133,15 @@ open class LoginService(
         }
 
         // Update user profile values
-        if (profile.neptun != null)
+        if (profile.neptun != null){
             user.neptun = profile.neptun ?: user.neptun
-        if (profile.email != null && profile.email?.isNotBlank() == true)
+            user.detailsImported = true
+        }
+        if (profile.email != null && profile.email?.isNotBlank() == true){
             user.email = profile.email ?: user.email
+            user.detailsImported = true
+        }
+
 
         // Check neptun; grant group and guild if mapping present
         if (user.neptun.isNotBlank() && user.groupName.isBlank()) {
@@ -140,11 +149,31 @@ open class LoginService(
                 user.major = it.major
                 user.groupName = it.groupName
                 user.group = groups.findByName(it.groupName).orElse(null)
+                user.detailsImported = true
             }
         }
+
+        if(user.internalId.isNotBlank() && !user.detailsImported){
+            userDetailsByInternalIdMapping.findByInternalId(user.internalId).ifPresent {
+                if(it.allDetailsImported()){
+                    user.neptun = it.neptun!!
+                    user.role = it.role!!
+                    user.groupName = it.groupName!!
+                    user.group = groups.findByName(it.groupName.toString()).orElse(null)
+                    user.guild = it.guild!!
+                    user.major = it.major!!
+                    user.permissions = it.permissions!!
+                    user.profilePicture = it.profilePicture!!
+                    user.profileTopMessage = it.profileTopMessage!!
+                    user.detailsImported = true
+                }
+            }
+        }
+
         if (user.neptun.isNotBlank() && user.guild == GuildType.UNKNOWN) {
             guildToUserMapping.findByNeptun(user.neptun).ifPresent {
                 user.guild = it.guild
+                user.detailsImported = true
             }
         }
 
