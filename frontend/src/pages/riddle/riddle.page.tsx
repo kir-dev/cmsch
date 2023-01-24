@@ -28,6 +28,7 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useRiddleSubmitMutation } from '../../api/hooks/useRiddleSubmitMutation'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { useRiddleHintQuery } from '../../api/hooks/useRiddleHintQuery'
+import { ConfirmDialogButton } from '../../common-components/ConfirmDialogButton'
 
 const RiddlePage = () => {
   const { id } = useParams()
@@ -155,9 +156,16 @@ const RiddlePage = () => {
                 {hintQuery.data?.hint || queryResult.data?.hint}
               </Alert>
             ) : (
-              <Button onClick={() => hintQuery.refetch()} width="100%" colorScheme="blue" variant="outline">
-                Hintet kérek!
-              </Button>
+              <>
+                <ConfirmDialogButton
+                  buttonColorSchene="blue"
+                  buttonVariant="outline"
+                  buttonText="Hintet kérek"
+                  headerText="Hint kérés"
+                  bodyText="Biztos hintet szeretnél kérni?"
+                  confirmAction={() => hintQuery.refetch()}
+                />
+              </>
             )}
           </VStack>
         </Box>
