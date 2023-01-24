@@ -29,7 +29,7 @@ export const ConfirmDialogButton = ({
   buttonText = '',
   buttonColorSchene,
   buttonVariant,
-  buttonWidth = '100%',
+  buttonWidth,
   confirmButtonText = 'Igen',
   refuseButtonText = 'Mégse',
   confirmAction
