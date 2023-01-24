@@ -163,6 +163,7 @@ const RiddlePage = () => {
                   buttonText="Hintet kérek"
                   headerText="Hint kérés"
                   bodyText="Biztos hintet szeretnél kérni?"
+                  confirmButtonText="Hint kérése"
                   confirmAction={() => hintQuery.refetch()}
                 />
               </>
