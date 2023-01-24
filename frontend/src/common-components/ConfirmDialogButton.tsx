@@ -29,7 +29,7 @@ export const ConfirmDialogButton = ({
   buttonColorSchene,
   buttonVariant,
   confirmButtonText = 'Igen',
-  refuseButtonText = 'Nem',
+  refuseButtonText = 'Mégse',
   confirmAction
 }: ConfirmDialogButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -57,7 +57,7 @@ export const ConfirmDialogButton = ({
             <Button ref={cancelRef} onClick={onClose}>
               {refuseButtonText}
             </Button>
-            <Button colorScheme="red" ml={3} onClick={confirmAction}>
+            <Button colorScheme="brand" ml={3} onClick={confirmAction}>
               {confirmButtonText}
             </Button>
           </AlertDialogFooter>
