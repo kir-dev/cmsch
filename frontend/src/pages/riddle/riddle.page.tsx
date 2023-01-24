@@ -160,6 +160,7 @@ const RiddlePage = () => {
                 <ConfirmDialogButton
                   buttonColorSchene="blue"
                   buttonVariant="outline"
+                  buttonWidth="100%"
                   buttonText="Hintet kérek"
                   headerText="Hint kérés"
                   bodyText="Biztos hintet szeretnél kérni?"
