@@ -133,13 +133,11 @@ open class LoginService(
         }
 
         // Update user profile values
-        if (profile.neptun != null){
+        if (profile.neptun != null) {
             user.neptun = profile.neptun ?: user.neptun
-            user.detailsImported = true
         }
-        if (profile.email != null && profile.email?.isNotBlank() == true){
+        if (profile.email != null && profile.email?.isNotBlank() == true) {
             user.email = profile.email ?: user.email
-            user.detailsImported = true
         }
 
 
@@ -153,9 +151,9 @@ open class LoginService(
             }
         }
 
-        if(user.internalId.isNotBlank() && !user.detailsImported){
+        if (user.internalId.isNotBlank() && !user.detailsImported) {
             userDetailsByInternalIdMapping.findByInternalId(user.internalId).ifPresent {
-                if(it.allDetailsImported()){
+                if(it.allDetailsImported()) {
                     user.neptun = it.neptun!!
                     user.role = it.role!!
                     user.groupName = it.groupName!!
@@ -165,8 +163,8 @@ open class LoginService(
                     user.permissions = it.permissions!!
                     user.profilePicture = it.profilePicture!!
                     user.profileTopMessage = it.profileTopMessage!!
-                    user.detailsImported = true
                 }
+                user.detailsImported = true
             }
         }
 
