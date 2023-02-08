@@ -180,9 +180,16 @@ data class UserEntity(
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_LOB)
     var profileTopMessage: String? = "",
 
+    @JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Importált adatok", note = "Volt-e már máshonnan importálva adat")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
+    var detailsImported: Boolean = false
+
 ): ManagedEntity, CmschUser {
 
-    var detailsImported: Boolean = false
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
