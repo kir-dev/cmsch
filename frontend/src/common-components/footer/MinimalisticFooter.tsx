@@ -7,7 +7,6 @@ export const MinimalisticFooter = () => {
   const config = useConfigContext()
   const component = config?.components.app
   return (
-    // <Box borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.700')}>
     <CmschContainer mb={5}>
       {component?.footerMessage && (
         <Center flexDirection="column" px="4" py="4" mx="auto" maxWidth="100%">
@@ -19,6 +18,5 @@ export const MinimalisticFooter = () => {
         <Image src={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')} maxW="10rem" maxH="10rem" ml={3} />
       </Flex>
     </CmschContainer>
-    // </Box>
   )
 }

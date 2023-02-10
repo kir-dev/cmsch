@@ -78,3 +78,7 @@ export function getColorShadesForColor(color: string) {
   })
   return result
 }
+
+export function joinPath(...parts: (string | number | undefined)[]) {
+  return parts.join('/')
+}
