@@ -6,11 +6,11 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { Navigate } from 'react-router-dom'
 import Markdown from '../../common-components/Markdown'
 import { useQrLevelsQuery } from '../../api/hooks/useQrLevelsQuery'
-import { Loading } from '../../common-components/Loading'
 import { FaQrcode } from 'react-icons/fa'
 import { AbsolutePaths } from '../../util/paths'
 import { LinkButton } from '../../common-components/LinkButton'
 import { CustomTab } from '../events/components/CustomTab'
+import { LoadingPage } from '../loading/loading.page'
 
 export default function QrLevelsPage() {
   const component = useConfigContext()?.components.qrFight
@@ -18,8 +18,11 @@ export default function QrLevelsPage() {
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
   if (!component || !component.enabled) return <Navigate to="/" replace />
-  if (isLoading) return <Loading />
+
+  if (isLoading) return <LoadingPage />
+
   if (!data) return <Navigate to="/" />
+
   return (
     <CmschPage>
       <Helmet>{component.title}</Helmet>

@@ -1,3 +1,10 @@
+export interface TokenProgress {
+  totalTokenCount: number
+  collectedTokenCount: number
+  minTokenToComplete: number
+  tokens: TokenView[]
+}
+
 export interface TokenView {
   title: string
   type: string

@@ -6,12 +6,12 @@ import { Heading, Input, InputGroup, InputLeftElement, InputRightElement } from 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TeamListItem } from './components/TeamListItem'
 import { useTeamList } from '../../api/hooks/team/queries/useTeamList'
-import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
 import { Navigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { LoadingPage } from '../loading/loading.page'
 
 export default function TeamListPage() {
   const config = useConfigContext()
@@ -27,7 +27,7 @@ export default function TeamListPage() {
   const inputRef = createRef<HTMLInputElement>()
 
   if (isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (isError) {

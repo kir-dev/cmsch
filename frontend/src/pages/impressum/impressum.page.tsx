@@ -6,17 +6,29 @@ import Markdown from '../../common-components/Markdown'
 import { useDevelopers } from '../../api/hooks/useDevelopers'
 import { OrganizerSection } from './components/OrganizerSection'
 import { DeveloperWrapItem } from './components/DeveloperWrapItem'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { l } from '../../util/language'
+import { Navigate } from 'react-router-dom'
+import { AbsolutePaths } from '../../util/paths'
+import * as React from 'react'
 
 const ImpressumPage = () => {
   const config = useConfigContext()
   const developers = useDevelopers()
-  const impressumConfig = config?.components?.impressum
+  const { sendMessage } = useServiceContext()
+
+  const component = config?.components?.impressum
+
+  if (!component) {
+    sendMessage(l('component-unavailable'))
+    return <Navigate to={AbsolutePaths.ERROR} />
+  }
 
   return (
     <CmschPage>
-      <Helmet title={impressumConfig?.title} />
-      <Heading>{impressumConfig?.title}</Heading>
-      <Markdown text={impressumConfig?.topMessage} />
+      <Helmet title={component.title} />
+      <Heading>{component.title}</Heading>
+      <Markdown text={component.topMessage} />
       <Heading as="h2" size="lg" my="5" textAlign="center">
         Fejlesztők
       </Heading>
@@ -25,15 +37,11 @@ const ImpressumPage = () => {
           <DeveloperWrapItem key={dev.name} dev={dev} />
         ))}
       </Wrap>
-      <Markdown text={impressumConfig?.developersBottomMessage} />
+      <Markdown text={component.developersBottomMessage} />
+      <OrganizerSection organizers={component.leadOrganizers || []} message={component.leadOrganizersMessage} title="Rendezők" />
       <OrganizerSection
-        organizers={impressumConfig?.leadOrganizers || []}
-        message={impressumConfig?.leadOrganizersMessage}
-        title="Rendezők"
-      />
-      <OrganizerSection
-        organizers={impressumConfig?.otherOrganizers || []}
-        message={impressumConfig?.otherOrganizersMessage}
+        organizers={component.otherOrganizers || []}
+        message={component.otherOrganizersMessage}
         title="Stáb további tagjai"
       />
     </CmschPage>

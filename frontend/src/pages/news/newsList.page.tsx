@@ -3,18 +3,18 @@ import { Navigate } from 'react-router-dom'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useNewsListQuery } from '../../api/hooks/useNewsListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Loading } from '../../common-components/Loading'
 import NewsList from './components/NewsList'
 import { sortNewsList } from './util/sortNewsList'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
+import { LoadingPage } from '../loading/loading.page'
 
 const NewsListPage = () => {
   const newsList = useNewsListQuery(() => console.log('News list query failed!'))
   const { sendMessage } = useServiceContext()
 
   if (newsList.isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (newsList.isError) {

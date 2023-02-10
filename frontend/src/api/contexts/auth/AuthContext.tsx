@@ -8,6 +8,7 @@ import { AbsolutePaths } from '../../../util/paths'
 import { ProfileView } from '../../../util/views/profile.view'
 import { useProfileQuery } from '../../hooks/useProfileQuery'
 import { useTokenRefresh } from '../../hooks/useTokenRefresh'
+import { QueryKeys } from '../../hooks/queryKeys'
 
 export type AuthContextType = {
   isLoggedIn: boolean
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const onLoginFailure = (err: any) => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
     Cookies.remove(CookieKeys.SESSION_ID)
-    queryClient.invalidateQueries('currentUser', { refetchInactive: false })
+    queryClient.invalidateQueries(QueryKeys.USER, { refetchInactive: false })
     console.log('[ERROR] at onLoginFailure', JSON.stringify(err, null, 2))
     navigate('/')
   }
@@ -45,8 +46,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const onLoginSuccess = async ({ jwt }: { jwt: string }) => {
     Cookies.set(CookieKeys.JWT_TOKEN, jwt, { expires: 2 })
     try {
-      await queryClient.invalidateQueries('currentUser', { refetchInactive: true }, { throwOnError: true })
-      await queryClient.invalidateQueries('config', { refetchInactive: true }, { throwOnError: true })
+      await queryClient.invalidateQueries(QueryKeys.USER, { refetchInactive: true }, { throwOnError: true })
+      await queryClient.invalidateQueries(QueryKeys.CONFIG, { refetchInactive: true }, { throwOnError: true })
       navigate(AbsolutePaths.PROFILE)
     } catch (err) {
       console.log('[ERROR] at onLoginSuccess', JSON.stringify(err, null, 2))
@@ -56,7 +57,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const onLogout = () => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
     Cookies.remove(CookieKeys.SESSION_ID)
-    queryClient.invalidateQueries('currentUser', { refetchInactive: false })
     window.location.href = `${API_BASE_URL}/control/logout`
   }
 
