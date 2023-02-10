@@ -1,9 +1,9 @@
-import ChakraUIRenderer from 'chakra-ui-markdown-renderer'
 import { ReactNode } from 'react-markdown/lib/react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
 import { CmschLink } from './CmschLink'
 import { Divider, ListItem, Table, TableContainer, UnorderedList, useColorModeValue } from '@chakra-ui/react'
 import { HasChildren } from '../util/react-types.util'
+import ChakraUIRenderer from './chakra-md-renderer'
 
 const sliceHref = (href: string, pattern: string): string => {
   if (href.indexOf(pattern) === 0) {

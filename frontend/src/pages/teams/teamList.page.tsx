@@ -1,8 +1,7 @@
 import { createRef, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { InputGroup } from '@chakra-ui/input'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
-import { Heading, Input, InputLeftElement, InputRightElement } from '@chakra-ui/react'
+import { Heading, Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TeamListItem } from './components/TeamListItem'

@@ -1,6 +1,5 @@
-import { Divider, Grid, Heading, Input, InputLeftElement, InputRightElement, useBreakpointValue } from '@chakra-ui/react'
+import { Divider, Grid, Heading, Input, InputGroup, InputLeftElement, InputRightElement, useBreakpointValue } from '@chakra-ui/react'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
-import { InputGroup } from '@chakra-ui/input'
 import { createRef, useMemo, useState } from 'react'
 
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
