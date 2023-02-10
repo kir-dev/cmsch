@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { useMutation } from 'react-query'
-import { Paths } from '../../util/paths'
+import { ApiPaths } from '../../util/paths'
 import { RiddleSubmissonResult } from '../../util/views/riddle.view'
+import { joinPath } from '../../util/core-functions.util'
+import { QueryKeys } from './queryKeys'
 
 interface RiddleSubmissionParams {
   solution: string
@@ -9,16 +11,19 @@ interface RiddleSubmissionParams {
 }
 
 export const useRiddleSubmitMutation = () => {
-  return useMutation<RiddleSubmissonResult, Error, RiddleSubmissionParams>('riddleSubmission', async (params: RiddleSubmissionParams) => {
-    const res = await axios.post(
-      `/api/${Paths.RIDDLE}/${params.id}`,
-      { solution: params.solution },
-      {
-        headers: {
-          'Content-Type': 'application/json'
+  return useMutation<RiddleSubmissonResult, Error, RiddleSubmissionParams>(
+    QueryKeys.RIDDLE_SUBMIT,
+    async ({ id, solution }: RiddleSubmissionParams) => {
+      const res = await axios.post(
+        joinPath(ApiPaths.RIDDLE, id),
+        { solution },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    )
-    return res.data
-  })
+      )
+      return res.data
+    }
+  )
 }

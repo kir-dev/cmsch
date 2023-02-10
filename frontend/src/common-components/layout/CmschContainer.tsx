@@ -1,8 +1,10 @@
-import { Card, CardBody, CardProps, useColorModeValue } from '@chakra-ui/react'
+import { Card, CardBody, CardHeader, CardProps, useColorModeValue } from '@chakra-ui/react'
 
-export interface CmschContainerProps extends CardProps {}
+export interface CmschContainerProps extends CardProps {
+  title?: string
+}
 
-export const CmschContainer = ({ children, ...props }: CmschContainerProps) => (
+export const CmschContainer = ({ children, title, ...props }: CmschContainerProps) => (
   <Card
     flexDirection="column"
     px="4"
@@ -13,6 +15,7 @@ export const CmschContainer = ({ children, ...props }: CmschContainerProps) => (
     bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
     {...props}
   >
+    {title && <CardHeader>{title}</CardHeader>}
     <CardBody>{children}</CardBody>
   </Card>
 )
