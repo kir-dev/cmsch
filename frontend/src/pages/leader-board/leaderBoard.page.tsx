@@ -23,45 +23,46 @@ import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { Navigate } from 'react-router-dom'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { AbsolutePaths } from '../../util/paths'
-import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
 import { LinkButton } from '../../common-components/LinkButton'
+import { LoadingPage } from '../loading/loading.page'
 
 const LeaderboardPage = () => {
-  const leaderboardConfig = useConfigContext()?.components.leaderboard
   const toast = useToast()
+  const component = useConfigContext()?.components.leaderboard
   const onQueryFail = () => toast({ title: l('result-query-failed'), status: 'error' })
-  const leaderboardQuery = useLeaderBoardQuery(leaderboardConfig?.leaderboardDetailsEnabled ? 'detailed' : 'short', onQueryFail)
+  const { data, isError, isLoading, error } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short', onQueryFail)
 
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
   const { sendMessage } = useServiceContext()
 
-  const title = leaderboardConfig?.title || 'Toplista'
+  if (!component) {
+    sendMessage(l('component-unavailable'))
+    return <Navigate to={AbsolutePaths.ERROR} />
+  }
 
-  if (leaderboardQuery.isError) {
-    sendMessage(l('result-query-failed') + leaderboardQuery.error.message)
+  const title = component.title || 'Toplista'
+
+  if (isError) {
+    sendMessage(l('result-query-failed') + error.message)
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
-  if (leaderboardQuery.isLoading) {
-    return <Loading />
+  if (isLoading) {
+    return <LoadingPage />
   }
 
-  const userBoard = leaderboardConfig?.showUserBoard && (
+  const userBoard = component.showUserBoard && (
     <LeaderBoardTable
-      data={leaderboardQuery.data?.userBoard || []}
-      showGroup={leaderboardConfig?.showGroupOfUser}
-      detailed={leaderboardConfig?.leaderboardDetailsEnabled}
+      data={data?.userBoard || []}
+      showGroup={component.showGroupOfUser}
+      detailed={component.leaderboardDetailsEnabled}
       suffix="pont"
     />
   )
-  const groupBoard = leaderboardConfig?.showGroupBoard && (
-    <LeaderBoardTable
-      data={leaderboardQuery.data?.groupBoard || []}
-      detailed={leaderboardConfig?.leaderboardDetailsEnabled}
-      suffix="pont"
-    />
+  const groupBoard = component.showGroupBoard && (
+    <LeaderBoardTable data={data?.groupBoard || []} detailed={component.leaderboardDetailsEnabled} suffix="pont" />
   )
 
   return (
@@ -71,7 +72,7 @@ const LeaderboardPage = () => {
         <VStack>
           <Heading>{title}</Heading>
         </VStack>
-        {leaderboardConfig?.leaderboardDetailsByCategoryEnabled && (
+        {component.leaderboardDetailsByCategoryEnabled && (
           <VStack>
             <LinkButton href={AbsolutePaths.LEADER_BOARD + '/category'} my={5}>
               Kategóriák nézet
@@ -80,27 +81,27 @@ const LeaderboardPage = () => {
         )}
       </Flex>
       <HStack my={5}>
-        {leaderboardQuery.data?.userScore !== undefined && <BoardStat label="Saját pont" value={leaderboardQuery.data.userScore} />}
-        {leaderboardQuery.data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={leaderboardQuery.data.groupScore} />}
+        {data?.userScore !== undefined && <BoardStat label="Saját pont" value={data.userScore} />}
+        {data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={data.groupScore} />}
       </HStack>
       <Divider mb={10} />
 
-      {leaderboardConfig?.showUserBoard && leaderboardConfig?.showGroupBoard ? (
+      {component.showUserBoard && component.showGroupBoard ? (
         <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="unstyled">
           <TabList>
-            {leaderboardQuery.data?.userBoard && <CustomTab>Egyéni</CustomTab>}
-            {leaderboardQuery.data?.groupBoard && <CustomTab>Csoportos</CustomTab>}
+            {data?.userBoard && <CustomTab>Egyéni</CustomTab>}
+            {data?.groupBoard && <CustomTab>Csoportos</CustomTab>}
           </TabList>
           <TabPanels>
-            {leaderboardQuery.data?.userBoard && <TabPanel>{userBoard}</TabPanel>}
+            {data?.userBoard && <TabPanel>{userBoard}</TabPanel>}
 
-            {leaderboardQuery.data?.groupBoard && <TabPanel>{groupBoard}</TabPanel>}
+            {data?.groupBoard && <TabPanel>{groupBoard}</TabPanel>}
           </TabPanels>
         </Tabs>
       ) : (
         <>
-          {leaderboardQuery.data?.userBoard && userBoard}
-          {leaderboardQuery.data?.groupBoard && groupBoard}
+          {data?.userBoard && userBoard}
+          {data?.groupBoard && groupBoard}
         </>
       )}
     </CmschPage>

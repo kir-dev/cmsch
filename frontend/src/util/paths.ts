@@ -60,5 +60,6 @@ export enum ApiPaths {
   PROFILE = '/api/profile',
   LEVELS = '/api/LEVELS',
   LOCATION = '/api/track-my-group',
+  TOKENS = '/api/tokens',
   CHANGE_ALIAS = '/api/profile/change-alias'
 }

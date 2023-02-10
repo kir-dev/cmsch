@@ -5,7 +5,6 @@ import { Button, Divider, Flex, Heading, Text, useToast, VStack } from '@chakra-
 import { BoardStat } from '../../../common-components/BoardStat'
 import { MemberRow } from './MemberRow'
 import { AbsolutePaths } from '../../../util/paths'
-import { Loading } from '../../../common-components/Loading'
 import { l } from '../../../util/language'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
@@ -20,6 +19,7 @@ import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMember
 import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'
 import { RoleType } from '../../../util/views/profile.view'
 import { useTeamPromoteLeadership } from '../../../api/hooks/team/actions/useTeamPromoteLeadership'
+import { LoadingPage } from '../../loading/loading.page'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -70,7 +70,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
   })
 
   if (isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (error) {

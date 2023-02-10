@@ -7,9 +7,9 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useAliasChangeMutation } from '../../api/hooks/useAliasChangeMutation'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
+import { LoadingPage } from '../loading/loading.page'
 
 export const AliasChangePage = () => {
   const { sendMessage } = useServiceContext()
@@ -20,7 +20,9 @@ export const AliasChangePage = () => {
   const submissionMutation = useAliasChangeMutation()
   const bordetColor = useColorModeValue('gray.200', 'gray.600')
   const [alias, setAlias] = useState<string>(profile?.alias || '')
-  if (profileLoading) return <Loading />
+
+  if (profileLoading) return <LoadingPage />
+
   if (profileError || !profileComponent) {
     sendMessage(l('profile-load-failed') + profileError?.message || '')
     return <Navigate replace to={AbsolutePaths.ERROR} />

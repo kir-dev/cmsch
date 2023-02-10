@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useEventListQuery } from '../../api/hooks/useEventListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Loading } from '../../common-components/Loading'
 import EventList from './components/EventList'
 import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -15,6 +14,7 @@ import { EventFilterOption } from './components/EventFilterOption'
 import { CardListItem } from './components/CardListItem'
 import { CustomTab } from './components/CustomTab'
 import { l } from '../../util/language'
+import { LoadingPage } from '../loading/loading.page'
 
 const EventListPage = () => {
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))
@@ -25,7 +25,7 @@ const EventListPage = () => {
   const breakpoint = useBreakpoint()
 
   if (eventList.isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (eventList.isError) {

@@ -8,6 +8,10 @@ import { Warning } from '../Warning'
 import { ScrollToTop } from './ScrollToTop'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { MinimalisticFooter } from '../footer/MinimalisticFooter'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { Navigate } from 'react-router-dom'
+import { AbsolutePaths } from '../../util/paths'
+import { l } from '../../util/language'
 
 interface CmschLayoutProps extends PropsWithChildren {
   background?: string
@@ -15,12 +19,17 @@ interface CmschLayoutProps extends PropsWithChildren {
 
 export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
   const config = useConfigContext()
+  const { sendMessage } = useServiceContext()
+  const component = config?.components.app
+
+  if (!component) {
+    sendMessage(l('component-unavailable'))
+    return <Navigate to={AbsolutePaths.ERROR} />
+  }
+
   return (
     <>
-      <Helmet
-        titleTemplate={`%s | ${config?.components.app.siteName || 'CMSch'}`}
-        defaultTitle={config?.components.app.siteName || 'CMSch'}
-      />
+      <Helmet titleTemplate={`%s | ${component.siteName || 'CMSch'}`} defaultTitle={component.siteName || 'CMSch'} />
       <Flex direction="column" minHeight="100vh">
         <ScrollToTop />
         <Navbar />
@@ -28,7 +37,7 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
           <Warning />
           {children}
         </Box>
-        {config?.components.app.minimalisticFooter ? <MinimalisticFooter /> : <Footer />}
+        {component.minimalisticFooter ? <MinimalisticFooter /> : <Footer />}
       </Flex>
     </>
   )

@@ -3,10 +3,10 @@ import { Navigate, useParams } from 'react-router-dom'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useEventQuery } from '../../api/hooks/useEventQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Loading } from '../../common-components/Loading'
 import CurrentEvent from './components/CurrentEvent'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
+import { LoadingPage } from '../loading/loading.page'
 
 const EventPage = () => {
   const params = useParams()
@@ -14,7 +14,7 @@ const EventPage = () => {
   const { sendMessage } = useServiceContext()
 
   if (currentEvent.isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (currentEvent.isError) {

@@ -19,7 +19,6 @@ import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { RiddleSubmissonStatus } from '../../util/views/riddle.view'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
-import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
@@ -29,6 +28,7 @@ import { useRiddleSubmitMutation } from '../../api/hooks/useRiddleSubmitMutation
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { useRiddleHintQuery } from '../../api/hooks/useRiddleHintQuery'
 import { ConfirmDialogButton } from '../../common-components/ConfirmDialogButton'
+import { LoadingPage } from '../loading/loading.page'
 
 const RiddlePage = () => {
   const { id } = useParams()
@@ -49,7 +49,7 @@ const RiddlePage = () => {
   }
 
   if (queryResult.isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (!id) return <Navigate to="/" replace />

@@ -20,11 +20,9 @@ import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
-import { Loading } from '../../common-components/Loading'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { GuildType, RoleType } from '../../util/views/profile.view'
-import { ProfilePageSkeleton } from './components/ProfilePageSkeleton'
 import { completedPercent, submittedPercent } from './util/percentFunctions'
 import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -34,6 +32,7 @@ import { GroupComponent } from './components/Group'
 import { ProfileQR } from './components/ProfileQR'
 import { l } from '../../util/language'
 import Markdown from '../../common-components/Markdown'
+import { LoadingPage } from '../loading/loading.page'
 
 const MapContainer = React.lazy(() => import('./components/MapContainer'))
 
@@ -53,11 +52,7 @@ const ProfilePage = ({}: Props) => {
   const component = config?.components.profile
 
   if (profileLoading && !profile) {
-    return (
-      <Loading>
-        <ProfilePageSkeleton />
-      </Loading>
-    )
+    return <LoadingPage />
   }
 
   if (profileError) {
