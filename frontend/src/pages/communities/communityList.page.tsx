@@ -1,6 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons'
-import { InputGroup } from '@chakra-ui/input'
-import { Heading, Input, InputLeftElement } from '@chakra-ui/react'
+import { Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import { createRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Paragraph } from '../../common-components/Paragraph'

@@ -1,7 +1,6 @@
 // from https://github.com/PedroDBFlores/chakra-ui-file-picker
 
-import { Input, InputGroup, InputGroupProps } from '@chakra-ui/input'
-import { Button, InputRightElement } from '@chakra-ui/react'
+import { Button, InputRightElement, Input, InputGroup, InputGroupProps } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
 import { ChangeEvent, Component, createRef, VFC } from 'react'
 
