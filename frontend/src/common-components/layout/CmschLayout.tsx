@@ -1,19 +1,19 @@
 import { Box, Flex } from '@chakra-ui/react'
 import * as React from 'react'
+import { PropsWithChildren } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Footer } from '../footer/Footer'
-import { HasChildren } from '../../util/react-types.util'
 import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
 import { ScrollToTop } from './ScrollToTop'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { MinimalisticFooter } from '../footer/MinimalisticFooter'
 
-type Props = {
+interface CmschLayoutProps extends PropsWithChildren {
   background?: string
-} & HasChildren
+}
 
-export const CmschLayout = ({ background, children }: Props) => {
+export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
   const config = useConfigContext()
   return (
     <>

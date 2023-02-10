@@ -1,7 +1,6 @@
 import { useToast } from '@chakra-ui/react'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { HasChildren } from '../../../util/react-types.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { l } from '../../../util/language'
 
@@ -30,7 +29,7 @@ export const ServiceContext = createContext<ServiceContextType>({
   type: MessageTypes.GENERAL
 })
 
-export const ServiceProvider = ({ children }: HasChildren) => {
+export const ServiceProvider = ({ children }: PropsWithChildren) => {
   const [message, setMessage] = useState<string | undefined>(undefined)
   const [type, setType] = useState<MessageTypes>(MessageTypes.GENERAL)
   const toast = useToast()

@@ -1,12 +1,11 @@
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { HasChildren } from '../../util/react-types.util'
 import Clock from './components/clock'
 import { Center, Flex, Heading, useColorModeValue, VStack } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { parseTopMessage } from './countdown.util'
 
-const CountdownPage = ({ children }: HasChildren) => {
+const CountdownPage = ({ children }: PropsWithChildren) => {
   const config = useConfigContext()
   const component = config?.components?.countdown
   const countTo = useMemo(() => {

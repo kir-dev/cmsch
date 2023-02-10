@@ -1,11 +1,11 @@
 import { InputGroup, InputRightAddon } from '@chakra-ui/react'
-import { HasChildren } from '../../../util/react-types.util'
+import { PropsWithChildren } from 'react'
 
-type InputProps = {
+interface InputWithAddonProps extends PropsWithChildren {
   suffix: string | undefined
-} & HasChildren
+}
 
-export const InputWithAddon = ({ suffix, children }: InputProps) => {
+export const InputWithAddon = ({ suffix, children }: InputWithAddonProps) => {
   if (suffix) {
     return (
       <InputGroup>

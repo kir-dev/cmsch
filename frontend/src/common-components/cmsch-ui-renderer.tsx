@@ -2,8 +2,8 @@ import { ReactNode } from 'react-markdown/lib/react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
 import { CmschLink } from './CmschLink'
 import { Divider, ListItem, Table, TableContainer, UnorderedList, useColorModeValue } from '@chakra-ui/react'
-import { HasChildren } from '../util/react-types.util'
 import ChakraUIRenderer from './chakra-md-renderer'
+import { PropsWithChildren } from 'react'
 
 const sliceHref = (href: string, pattern: string): string => {
   if (href.indexOf(pattern) === 0) {
@@ -26,20 +26,20 @@ const cmschTheme: any = {
       </CmschLink>
     )
   },
-  ul: ({ children }: HasChildren) => {
+  ul: ({ children }: PropsWithChildren) => {
     return (
       <UnorderedList mb={3} pl={3}>
         {children}
       </UnorderedList>
     )
   },
-  li: ({ children }: HasChildren) => {
+  li: ({ children }: PropsWithChildren) => {
     return <ListItem>{children}</ListItem>
   },
   hr: () => {
     return <Divider my={3} borderColor={useColorModeValue('brand.800', 'brand.200')} borderBottomWidth={2} />
   },
-  table: ({ children }: HasChildren) => {
+  table: ({ children }: PropsWithChildren) => {
     return (
       <TableContainer>
         <Table>{children}</Table>
