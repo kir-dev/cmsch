@@ -1,30 +1,28 @@
-import { createContext, useContext } from 'react'
-import { HasChildren } from '../../../util/react-types.util'
+import React, { createContext, PropsWithChildren, useContext } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { ConfigDto } from './types'
 import { useConfigQuery } from '../../hooks/useConfigQuery'
 import { Loading } from '../../../common-components/Loading'
-import { Button, ButtonGroup, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
-import { CmschPage } from '../../../common-components/layout/CmschPage'
+import { Button, ButtonGroup, Center, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
 import { l } from '../../../util/language'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
-export const ConfigProvider = ({ children }: HasChildren) => {
+export const ConfigProvider = ({ children }: PropsWithChildren) => {
   const { data, isLoading, error, refetch } = useConfigQuery((err) =>
     console.error('[ERROR] at ConfigProvider', JSON.stringify(err, null, 2))
   )
   const kirDevLogo = useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')
   if (isLoading)
     return (
-      <CmschPage h="100vh" justifyContent="center" alignItems="center">
+      <Center flexDirection="column" h="100vh">
         <Loading />
         <Image src={kirDevLogo} maxW={40} maxH={40} my={3} />
-      </CmschPage>
+      </Center>
     )
   if (error)
     return (
-      <CmschPage h="100vh" justifyContent="center" alignItems="center">
+      <Center flexDirection="column" h="100vh">
         <Helmet title={l('error-page-helmet')} />
         <Heading textAlign="center">{l('error-page-title')}</Heading>
         <Text textAlign="center" color="gray.500" marginTop={10}>
@@ -40,7 +38,7 @@ export const ConfigProvider = ({ children }: HasChildren) => {
             Újra
           </Button>
         </ButtonGroup>
-      </CmschPage>
+      </Center>
     )
   return <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>
 }

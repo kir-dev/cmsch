@@ -1,13 +1,12 @@
-import { HasChildren } from '../../../util/react-types.util'
 import { customTheme } from '../../../util/configs/theme.config'
 import { useConfigContext } from '../config/ConfigContext'
 import { ChakraProvider, useColorMode } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { mode } from '@chakra-ui/theme-tools'
 import { Helmet } from 'react-helmet-async'
 import { getColorShadesForColor } from '../../../util/core-functions.util'
 
-export const ThemeConfig = ({ children }: HasChildren) => {
+export const ThemeConfig = ({ children }: PropsWithChildren) => {
   const config = useConfigContext()
   const { setColorMode } = useColorMode()
 

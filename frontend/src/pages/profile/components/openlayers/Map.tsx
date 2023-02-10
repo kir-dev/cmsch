@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { PropsWithChildren, useEffect, useRef, useState } from 'react'
 import MapContext from './MapContext'
 import * as ol from 'ol'
 import './Map.css'
-import { HasChildren } from '../../../../util/react-types.util'
 import { fromLonLat } from 'ol/proj'
 import OLOVerlay from 'ol/Overlay'
 import { Box } from '@chakra-ui/react'
@@ -13,7 +12,7 @@ import { unByKey } from 'ol/Observable'
 
 const overlay = new OLOVerlay({ id: 'ov' })
 
-const Map = ({ children }: HasChildren) => {
+const Map = ({ children }: PropsWithChildren) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<ol.Map | null>(null)
