@@ -1,5 +1,4 @@
-import React, { ErrorInfo } from 'react'
-import { HasChildren } from './react-types.util'
+import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { ButtonGroup, Heading, Text } from '@chakra-ui/react'
 import { LinkButton } from '../common-components/LinkButton'
@@ -10,7 +9,7 @@ interface State {
   hasError: boolean
 }
 
-export class ErrorBoundary extends React.Component<HasChildren, State> {
+export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   public state: State = {
     hasError: false
   }

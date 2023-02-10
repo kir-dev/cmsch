@@ -1,20 +1,18 @@
-import { CmschContainer } from './CmschContainer'
+import { CmschContainer, CmschContainerProps } from './CmschContainer'
 import { Navigate, Outlet } from 'react-router-dom'
-import { HasChildren } from '../../util/react-types.util'
-import { BoxProps } from '@chakra-ui/react'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { RoleType } from '../../util/views/profile.view'
 import { Loading } from '../Loading'
+
 //import { AbsolutePaths } from '../../util/paths'
 
-type Props = {
+interface CmschPageProps extends CmschContainerProps {
   loginRequired?: boolean
   groupRequired?: boolean
   minRole?: RoleType
-} & HasChildren &
-  BoxProps
+}
 
-export const CmschPage = ({ loginRequired, groupRequired, children, minRole, ...props }: Props) => {
+export const CmschPage = ({ loginRequired, groupRequired, children, minRole, ...props }: CmschPageProps) => {
   const { profile, profileLoading } = useAuthContext()
 
   if (minRole && minRole > 0) {

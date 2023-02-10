@@ -1,6 +1,6 @@
-import { HasChildren } from '../../../../../util/react-types.util'
+import { PropsWithChildren } from 'react'
 
-const Layers = ({ children }: HasChildren) => {
+const Layers = ({ children }: PropsWithChildren) => {
   return <>{children}</>
 }
 export default Layers

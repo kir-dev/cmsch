@@ -1,19 +1,18 @@
-import { BoxProps, Flex, useColorModeValue } from '@chakra-ui/react'
-import { HasChildren } from '../../util/react-types.util'
+import { Card, CardBody, CardProps, useColorModeValue } from '@chakra-ui/react'
 
-type Props = {} & HasChildren & BoxProps
+export interface CmschContainerProps extends CardProps {}
 
-export const CmschContainer = ({ children, ...props }: Props) => (
-  <Flex
+export const CmschContainer = ({ children, ...props }: CmschContainerProps) => (
+  <Card
     flexDirection="column"
     px="4"
     py="4"
     mx="auto"
+    w="100%"
     maxWidth={['100%', '48rem']}
-    borderRadius={[0, 0]}
     bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
     {...props}
   >
-    {children}
-  </Flex>
+    <CardBody>{children}</CardBody>
+  </Card>
 )

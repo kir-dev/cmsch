@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
-import { HasChildren } from '../../util/react-types.util'
+import { PropsWithChildren } from 'react'
 
-type Props = {
+interface LinkComponentProps extends PropsWithChildren {
   url: string
   external: boolean
-} & HasChildren
+}
 
-const LinkComponent = ({ children, url, external }: Props) => {
+const LinkComponent = ({ children, url, external }: LinkComponentProps) => {
   return external ? (
     <a href={url} target="_blank" referrerPolicy="no-referrer">
       {children}
