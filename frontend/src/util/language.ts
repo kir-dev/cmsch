@@ -78,5 +78,6 @@ const languageData = {
   'team-load-failed-contact-developers': 'Nem sikerült lekérni a csapatot.\n Keresd az oldal fejlesztőit!',
   'alias-change-successful': 'Becenév sikeresen módosítva',
   'alias-change-failure': 'Nem sikerült megváltztatni a becenevet',
-  'alias-change-not-allowed': 'A becenév szerkesztése nem egedélyezett!'
+  'alias-change-not-allowed': 'A becenév szerkesztése nem egedélyezett!',
+  'component-unavaliable': 'Komponens nem elérhető!'
 }

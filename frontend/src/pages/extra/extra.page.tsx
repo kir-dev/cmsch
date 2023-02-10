@@ -7,10 +7,10 @@ import { useExtraPage } from '../../api/hooks/useExtraPage'
 import { Helmet } from 'react-helmet-async'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { RoleType } from '../../util/views/profile.view'
-import { Loading } from '../../common-components/Loading'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { l } from '../../util/language'
+import { LoadingPage } from '../loading/loading.page'
 
 interface ExtraPageProps {}
 
@@ -21,7 +21,7 @@ const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   const { sendMessage } = useServiceContext()
 
   if (isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (error) {

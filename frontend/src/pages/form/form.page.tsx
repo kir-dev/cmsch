@@ -3,7 +3,6 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Box, Button, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
 import { Navigate, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Loading } from '../../common-components/Loading'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useFormPage } from '../../api/hooks/useFormPage'
@@ -17,6 +16,7 @@ import Cookies from 'js-cookie'
 import { CookieKeys } from '../../util/configs/cookies.config'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
 import { l } from '../../util/language'
+import { LoadingPage } from '../loading/loading.page'
 
 interface FormPageProps {}
 
@@ -41,7 +41,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   }, [result])
 
   if (isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   if (error) {

@@ -6,11 +6,11 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useRaceQuery } from '../../api/hooks/useRaceQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
-import { Loading } from '../../common-components/Loading'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { BoardStat } from '../../common-components/BoardStat'
 import Markdown from '../../common-components/Markdown'
+import { LoadingPage } from '../loading/loading.page'
 
 const RacePage = () => {
   const toast = useToast()
@@ -30,7 +30,7 @@ const RacePage = () => {
   }
 
   if (queryResult.isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   return (

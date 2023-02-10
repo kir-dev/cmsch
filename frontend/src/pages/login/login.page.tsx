@@ -8,11 +8,20 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { l } from '../../util/language'
 import Markdown from '../../common-components/Markdown'
+import { AbsolutePaths } from '../../util/paths'
+import * as React from 'react'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
+  const { sendMessage } = useServiceContext()
   const config = useConfigContext()
   const component = config?.components.login
+
+  if (!component) {
+    sendMessage(l('component-unavailable'))
+    return <Navigate to={AbsolutePaths.ERROR} />
+  }
 
   if (isLoggedIn) return <Navigate replace to="/" />
 
@@ -23,7 +32,7 @@ const LoginPage = () => {
         <Heading size="lg" textAlign="center" mt={10} mb={2}>
           {l('login-consent')}
         </Heading>
-        {component?.authschPromoted && (
+        {component.authschPromoted && (
           <Button
             colorScheme="brand"
             onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}
@@ -32,7 +41,7 @@ const LoginPage = () => {
             {component?.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'}
           </Button>
         )}
-        {component?.googleSsoEnabled && (
+        {component.googleSsoEnabled && (
           <>
             <Text>vagy</Text>
             <Button
@@ -44,7 +53,7 @@ const LoginPage = () => {
             </Button>
           </>
         )}
-        {component?.bottomMessage && <Markdown text={component.bottomMessage} />}
+        {component.bottomMessage && <Markdown text={component.bottomMessage} />}
       </VStack>
     </CmschPage>
   )

@@ -2,12 +2,12 @@ import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { RiddleCategory } from '../../util/views/riddle.view'
-import { Loading } from '../../common-components/Loading'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
 import { useRiddleListQuery } from '../../api/hooks/useRiddleListQuery'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { LoadingPage } from '../loading/loading.page'
 
 function progress(riddleCategory: RiddleCategory) {
   if (riddleCategory.completed === 0) {
@@ -29,7 +29,7 @@ const RiddleCategoryList = () => {
   }
 
   if (queryResult.isLoading) {
-    return <Loading />
+    return <LoadingPage />
   }
 
   const onRiddleCategoryClick = (nextRiddle?: number) => {
