@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { FormSubmitResult } from '../../util/views/form.view'
+import { joinPath } from '../../util/core-functions.util'
+import { ApiPaths } from '../../util/paths'
 
 export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -8,7 +10,7 @@ export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
   const submit = (formBody: Object, edit?: boolean) => {
     if (edit) {
       axios
-        .put<FormSubmitResult>(`/api/form/${slug}`, formBody)
+        .put<FormSubmitResult>(joinPath(ApiPaths.FORM, slug), formBody)
         .then((res) => {
           setData(res.data)
         })
@@ -18,7 +20,7 @@ export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
         })
     } else {
       axios
-        .post<FormSubmitResult>(`/api/form/${slug}`, formBody)
+        .post<FormSubmitResult>(joinPath(ApiPaths.FORM, slug), formBody)
         .then((res) => {
           setData(res.data)
         })

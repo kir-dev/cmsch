@@ -43,3 +43,22 @@ export enum AbsolutePaths {
   QR_FIGHT = '/qr-fight',
   LEADER_BOARD = '/leaderboard'
 }
+
+export enum ApiPaths {
+  CONFIG = '/api/app',
+  EVENTS = '/api/events',
+  FORM = '/api/form',
+  PAGE = '/api/page',
+  NEWS = '/api/news',
+  RACE = '/api/race',
+  RIDDLE = '/api/riddle',
+  TASK = '/api/task',
+  TASK_SUBMIT = '/api/task/submit',
+  REFRESH = '/api/control/refresh',
+  WARNING = '/api/warning',
+  TASK_CATEGORY = '/api/task/category',
+  PROFILE = '/api/profile',
+  LEVELS = '/api/LEVELS',
+  LOCATION = '/api/track-my-group',
+  CHANGE_ALIAS = '/api/profile/change-alias'
+}

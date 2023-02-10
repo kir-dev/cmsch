@@ -13,7 +13,6 @@ import { createRoot } from 'react-dom/client'
 import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
 import { ServiceProvider } from './api/contexts/service/ServiceContext'
-import { CookieConsentProvider } from './api/contexts/cookie-consent/CookieConsentContext'
 import { customTheme } from './util/configs/theme.config'
 import { HelmetProvider } from 'react-helmet-async'
 import { ErrorBoundary } from './util/errorBoundary'
@@ -34,10 +33,8 @@ root.render(
                 <ThemeConfig>
                   <ErrorBoundary>
                     <AuthProvider>
-                      <CookieConsentProvider>
-                        <App />
-                        <ReactQueryDevtools />
-                      </CookieConsentProvider>
+                      <App />
+                      <ReactQueryDevtools />
                     </AuthProvider>
                   </ErrorBoundary>
                 </ThemeConfig>

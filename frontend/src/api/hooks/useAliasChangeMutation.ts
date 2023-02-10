@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { useMutation } from 'react-query'
+import { ApiPaths } from '../../util/paths'
+import { QueryKeys } from './queryKeys'
 
 export const useAliasChangeMutation = () => {
-  return useMutation<boolean, Error, string>('aliasChange', async (alias: string) => {
+  return useMutation<boolean, Error, string>(QueryKeys.ALIAS_CHANGE, async (alias: string) => {
     const res = await axios.put(
-      `/api/profile/change-alias`,
+      ApiPaths.CHANGE_ALIAS,
       { alias },
       {
         headers: {

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { useQuery } from 'react-query'
 import { LeaderBoardView } from '../../util/views/leaderBoardView'
+import { joinPath } from '../../util/core-functions.util'
+import { QueryKeys } from './queryKeys'
 
 type TempLeaderBoardItemView = {
   id?: number
@@ -29,23 +31,18 @@ export const useLeaderBoardQuery = (type: 'short' | 'detailed' | 'categorized' =
       break
   }
   async function fetchLeaderBoard() {
-    const result = await axios.get<TempLeaderBoardView>(`/api/${url}`)
+    const result = await axios.get<TempLeaderBoardView>(joinPath('/api', url))
     return {
       ...result.data,
-      userBoard: result.data.userBoard
-        ? result.data.userBoard.map((boardItems) => ({
-            ...boardItems,
-            items: Object.entries(boardItems.items || {}).map(([key, value]) => ({ name: key, value }))
-          }))
-        : undefined,
-      groupBoard: result.data.groupBoard
-        ? result.data.groupBoard.map((boardItems) => ({
-            ...boardItems,
-            items: Object.entries(boardItems.items || {}).map(([key, value]) => ({ name: key, value }))
-          }))
-        : undefined
+      userBoard: result.data.userBoard ? result.data.userBoard.map(mapBoard) : undefined,
+      groupBoard: result.data.groupBoard ? result.data.groupBoard.map(mapBoard) : undefined
     }
   }
 
-  return useQuery<TempLeaderBoardView, Error, LeaderBoardView>(['leaderboard'], fetchLeaderBoard, { onError: onError })
+  return useQuery<TempLeaderBoardView, Error, LeaderBoardView>(QueryKeys.LEADERBOARD, fetchLeaderBoard, { onError: onError })
 }
+
+const mapBoard = (boardItems: TempLeaderBoardItemView) => ({
+  ...boardItems,
+  items: Object.entries(boardItems.items || {}).map(([key, value]) => ({ name: key, value }))
+})
