@@ -67,7 +67,7 @@ class BmejegyComponent(
     )
 
     val syncEnabled = SettingProxy(componentSettingService, component,
-        "syncEnabled", "true", type = SettingType.BOOLEAN,
+        "syncEnabled", "false", type = SettingType.BOOLEAN,
         fieldName = "Szinkronizáció", description = "Ha be van kapcsolva, akkor automatikusan szinkronizál a BME JEGY-ről"
     )
 
@@ -78,7 +78,7 @@ class BmejegyComponent(
 
     val bufferSize = SettingProxy(componentSettingService, component,
         "bufferSize", "524288", type = SettingType.NUMBER, serverSideOnly = true,
-        fieldName = "Buffer méret", description = "[ADVANCED] Az API válasz mérete. Alapból 262144, de ez 300 entryig elég csak."
+        fieldName = "Buffer méret", description = "[ADVANCED] Az API válasz mérete. Alapból 262144, de ez 300 entryig elég csak (kb)."
     )
 
     val completeByNeptun = SettingProxy(componentSettingService, component,
