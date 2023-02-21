@@ -126,6 +126,11 @@ object ControlPermissions : PermissionGroup {
         "Kezdőlap komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_COMMUNITIES = PermissionValidator(
+        "COMMUNITIES_CONTROL",
+        "Kezdőlap komponens testreszabása"
+    )
+
     val PERMISSION_CONTROL_ADMISSION = PermissionValidator(
         "ADMISSION_CONTROL",
         "Beléptetés komponens testreszabása"
@@ -171,6 +176,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_SIGNUP,
         PERMISSION_CONTROL_CHALLENGE,
         PERMISSION_CONTROL_HOME,
+        PERMISSION_CONTROL_COMMUNITIES,
         PERMISSION_CONTROL_ADMISSION,
         PERMISSION_CONTROL_RACE,
         PERMISSION_CONTROL_TEAM,
@@ -367,6 +373,13 @@ object StaffPermissions : PermissionGroup {
         "QR Fight eredmények kezelése"
     )
 
+    // Communities
+
+    val PERMISSION_EDIT_COMMUNITIES = PermissionValidator(
+        "COMMUNITIES_EDIT",
+        "Körök és reszortok kezelése"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_EDIT_TASKS,
@@ -398,7 +411,8 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_VALIDATE_ADMISSION,
         PERMISSION_EDIT_RACE,
         PERMISSION_EDIT_RACE_CATEGORY,
-        PERMISSION_EDIT_QR_FIGHT
+        PERMISSION_EDIT_QR_FIGHT,
+        PERMISSION_EDIT_COMMUNITIES
     )
 
 }

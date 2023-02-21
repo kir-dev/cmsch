@@ -26,25 +26,25 @@ data class SignupResponseEntity(
     @Column(nullable = true)
     @property:GenerateInput(visible = false, ignore = true)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
     var submitterUserId: Int? = null,
 
     @Column(nullable = false)
     @property:GenerateInput(order = 3, label = "Beküldő neve", enabled = false, ignore = true)
     @property:GenerateOverview(columnName = "Beküldő", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 1)
     var submitterUserName: String = "",
 
     @Column(nullable = true)
     @property:GenerateInput(visible = false, ignore = true)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
     var submitterGroupId: Int? = null,
 
     @Column(nullable = false)
     @property:GenerateInput(order = 3, label = "Beküldő csoport", enabled = false, ignore = true)
     @property:GenerateOverview(columnName = "", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false, columnId = 3)
     var submitterGroupName: String = "",
 
     @Column(nullable = true)
