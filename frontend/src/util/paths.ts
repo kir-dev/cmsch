@@ -8,7 +8,8 @@ export enum Paths {
   IMPRESSUM = 'impressum',
   TOKEN = 'token',
   TOKEN_SCANNED = 'token-scanned',
-  COMMUNITIES = 'communities',
+  COMMUNITY = 'community',
+  ORGANIZATION = 'orgaization',
   ERROR = 'error',
   EXTRA_PAGE = 'page',
   FORM = 'form',
@@ -31,7 +32,8 @@ export enum AbsolutePaths {
   IMPRESSUM = '/impressum',
   TOKEN = '/token',
   TOKEN_SCANNED = 'token-scanned',
-  COMMUNITIES = '/communities',
+  COMMUNITY = '/community',
+  ORGANIZATION = '/organization',
   ERROR = '/error',
   EXTRA_PAGE = '/page',
   FORM = '/form',
@@ -61,5 +63,7 @@ export enum ApiPaths {
   LEVELS = '/api/LEVELS',
   LOCATION = '/api/track-my-group',
   TOKENS = '/api/tokens',
-  CHANGE_ALIAS = '/api/profile/change-alias'
+  CHANGE_ALIAS = '/api/profile/change-alias',
+  COMMUNITY = '/api//community',
+  ORGANIZATION = '/api/organization'
 }
