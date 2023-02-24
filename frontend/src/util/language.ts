@@ -79,5 +79,11 @@ const languageData = {
   'alias-change-successful': 'Becenév sikeresen módosítva',
   'alias-change-failure': 'Nem sikerült megváltztatni a becenevet',
   'alias-change-not-allowed': 'A becenév szerkesztése nem egedélyezett!',
-  'component-unavaliable': 'Komponens nem elérhető!'
+  'component-unavaliable': 'Komponens nem elérhető!',
+  'organization-title': 'Reszortok',
+  'organization-description': 'Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.',
+  'community-title': 'Körök',
+  'community-description':
+    'A karon számtalan öntevékeny kör működik, mindenki megtalálhatja az' +
+    'érdeklődési körének megfelelő csoportot. A körök a Schönherz Kollégiumban működnek.'
 }
