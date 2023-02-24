@@ -5,7 +5,7 @@ import { RiddleCategory } from '../../util/views/riddle.view'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
-import { useRiddleListQuery } from '../../api/hooks/useRiddleListQuery'
+import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { LoadingPage } from '../loading/loading.page'
 

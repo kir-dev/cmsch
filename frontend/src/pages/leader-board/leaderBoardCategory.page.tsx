@@ -8,7 +8,7 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { Navigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
-import { useLeaderBoardQuery } from '../../api/hooks/useLeaderBoardQuery'
+import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { LinkButton } from '../../common-components/LinkButton'
 import { LoadingPage } from '../loading/loading.page'
 

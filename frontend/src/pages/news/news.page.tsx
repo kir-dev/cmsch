@@ -4,7 +4,7 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import News from './components/News'
 import { AbsolutePaths } from '../../util/paths'
-import { useNewsQuery } from '../../api/hooks/useNewsQuery'
+import { useNewsQuery } from '../../api/hooks/news/useNewsQuery'
 import { l } from '../../util/language'
 import { LoadingPage } from '../loading/loading.page'
 
