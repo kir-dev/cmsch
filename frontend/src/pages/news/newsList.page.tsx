@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { useNewsListQuery } from '../../api/hooks/useNewsListQuery'
+import { useNewsListQuery } from '../../api/hooks/news/useNewsListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import NewsList from './components/NewsList'
 import { sortNewsList } from './util/sortNewsList'
