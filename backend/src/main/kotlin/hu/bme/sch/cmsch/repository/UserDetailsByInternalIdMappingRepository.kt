@@ -1,6 +1,6 @@
-package hu.bme.sch.cmsch.repository;
+package hu.bme.sch.cmsch.repository
 
-import UserDetailsByInternalIdMappingEntity
+import hu.bme.sch.cmsch.model.UserDetailsByInternalIdMappingEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
