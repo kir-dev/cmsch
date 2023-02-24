@@ -1,3 +1,5 @@
+package hu.bme.sch.cmsch.model
+
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
@@ -5,6 +7,7 @@ import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.*
+import org.hibernate.Hibernate
 import javax.persistence.*
 
 @Entity
@@ -95,5 +98,20 @@ data class UserDetailsByInternalIdMappingEntity(
                 permissions != null &&
                 profilePicture != null &&
                 profileTopMessage != null
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as UserDetailsByInternalIdMappingEntity
+
+        return id != 0 && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id )"
     }
 }
