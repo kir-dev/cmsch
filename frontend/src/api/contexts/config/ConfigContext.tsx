@@ -1,7 +1,7 @@
 import React, { createContext, PropsWithChildren, useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { ConfigDto } from './types'
-import { useConfigQuery } from '../../hooks/useConfigQuery'
+import { useConfigQuery } from '../../hooks/config/useConfigQuery'
 import { Loading } from '../../../common-components/Loading'
 import { Button, ButtonGroup, Center, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
 import { l } from '../../../util/language'

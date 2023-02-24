@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { useEventListQuery } from '../../api/hooks/useEventListQuery'
+import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import EventList from './components/EventList'
 import { AbsolutePaths } from '../../util/paths'

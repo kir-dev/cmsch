@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, Divider, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Divider, Heading, Text, VStack } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
@@ -7,11 +7,10 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../util/paths'
 import Clock from '../countdown/components/clock'
 import { Schedule } from './components/Schedule'
-import { useEventListQuery } from '../../api/hooks/useEventListQuery'
+import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
-import { l } from '../../util/language'
 
 const HomePage = () => {
   const eventList = useEventListQuery(() => console.log('Event list query failed!'))

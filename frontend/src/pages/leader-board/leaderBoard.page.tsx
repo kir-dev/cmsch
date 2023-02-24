@@ -15,7 +15,7 @@ import {
 import { Helmet } from 'react-helmet-async'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { useLeaderBoardQuery } from '../../api/hooks/useLeaderBoardQuery'
+import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { BoardStat } from '../../common-components/BoardStat'
 import { CustomTab } from '../events/components/CustomTab'

@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertIcon, CloseButton, HStack, useDisclosure, VStack } from '@chakra-ui/react'
-import { useWarningQuery } from '../api/hooks/useWarning'
+import { useWarningQuery } from '../api/hooks/warning/useWarning'
 import { useEffect } from 'react'
 
 export const Warning = () => {
