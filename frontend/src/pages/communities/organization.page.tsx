@@ -1,7 +1,7 @@
 import { Image } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useParams } from 'react-router-dom'
-import { Community } from '../../util/views/organization'
+import { Organization } from '../../util/views/organization'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { DataSheet } from './components/DataSheet'
@@ -9,36 +9,30 @@ import { Frame } from './components/Frame'
 import { Paragraph } from '../../common-components/Paragraph'
 import { AbsolutePaths } from '../../util/paths'
 
-export default function CommunityPage() {
+export default function OrganizationPage() {
   const params = useParams()
-  const community = ([] as Community[]).find((c) => c.id === params.name)
-  if (!community) return <Navigate to={AbsolutePaths.COMMUNITY} />
-  const resort = ([] as Community[]).find((r) => r.id === community.resortId)
+  const organization = ([] as Organization[]).find((c) => c.id === params.name)
+  if (!organization) return <Navigate to={AbsolutePaths.ORGANIZATION} />
   const breadcrumbItems = [
     {
       title: 'Reszortok',
-      to: '/reszortok'
+      to: AbsolutePaths.ORGANIZATION
     },
     {
-      title: resort?.name,
-      to: `/reszortok/${resort?.id}`,
-      color: resort?.color
-    },
-    {
-      title: community.name
+      title: organization.name
     }
   ]
   return (
     <CmschPage>
-      <Helmet title={community.name} />
+      <Helmet title={organization.name} />
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
-      <DataSheet organization={community} />
-      {!community.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
+      <DataSheet organization={organization} />
+      {!organization.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
-      {community.videoIds?.map((id) => (
+      {organization.videoIds?.map((id) => (
         <Frame key={id} id={id} />
       ))}
-      {community.imageIds?.map((url) => (
+      {organization.imageIds?.map((url) => (
         <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
       ))}
     </CmschPage>
