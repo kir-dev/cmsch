@@ -9,29 +9,19 @@ import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { l } from '../../util/language'
 import { useTokensQuery } from '../../api/hooks/token/useTokensQuery'
-import { LoadingPage } from '../loading/loading.page'
-import { Navigate } from 'react-router-dom'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { PageStatus } from '../../common-components/PageStatus'
 
 const TokenList = () => {
-  const { data, isLoading, isError, error } = useTokensQuery()
+  const { data, isLoading, isError } = useTokensQuery()
   const config = useConfigContext()
   const component = config?.components.token
-  const { sendMessage } = useServiceContext()
 
   const calculate_progress = (acquired: number, total: number) => (total == 0 ? 100 : (100 * acquired) / total)
 
-  if (isLoading) return <LoadingPage />
+  if (!component) return <ComponentUnavailable />
 
-  if (isError) {
-    sendMessage('Betöltés sikertelen' + error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (typeof data === 'undefined' || !component) {
-    sendMessage(l('team-list-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
     <CmschPage loginRequired groupRequired>

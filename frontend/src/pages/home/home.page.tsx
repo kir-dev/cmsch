@@ -2,6 +2,7 @@ import { Box, Divider, Heading, Text, VStack } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../util/paths'
@@ -11,20 +12,22 @@ import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 const HomePage = () => {
-  const eventList = useEventListQuery(() => console.log('Event list query failed!'))
+  const eventList = useEventListQuery()
   const config = useConfigContext()
+  const countdownConfig = config?.components.countdown
+  const homeConfig = config?.components.home
 
   const countTo = useMemo(() => {
-    const component = config?.components.countdown
     try {
-      if (!component) return new Date()
-      return new Date(component?.timeToCountTo * 1000)
+      if (!countdownConfig) return new Date()
+      return new Date(countdownConfig?.timeToCountTo * 1000)
     } catch (e) {
       return new Date()
     }
-  }, [config?.components.countdown])
+  }, [countdownConfig])
 
   const events = useMemo(() => {
     const timestampCorrectedEventList = eventList.data?.map((li) => {
@@ -34,44 +37,44 @@ const HomePage = () => {
     return timestampCorrectedEventList?.filter((li) => li.timestampStart > Date.now()).sort((a, b) => a.timestampStart - b.timestampStart)
   }, [eventList.data])
 
+  if (!homeConfig) return <ComponentUnavailable />
+
   const eventsToday = events?.filter((ev) => isToday(ev.timestampStart)) || []
   const eventsLater = events?.filter((ev) => !isToday(ev.timestampStart)).slice(0, 3) || []
 
   return (
     <CmschPage>
       <Helmet />
-      {config?.components.home?.welcomeMessage && (
+      {homeConfig?.welcomeMessage && (
         <Heading size="3xl" textAlign="center" marginTop={10}>
-          {config?.components.home.welcomeMessage.split('{}')[0] + ' '}
-          {config?.components.home.welcomeMessage.split('{}').length > 1 && (
+          {homeConfig?.welcomeMessage.split('{}')[0] + ' '}
+          {homeConfig?.welcomeMessage.split('{}').length > 1 && (
             <>
               <Heading as="span" color={useColorModeValue('brand.500', 'brand.500')} size="3xl">
                 {config?.components.app.siteName || 'CMSch'}
               </Heading>{' '}
-              {config?.components.home.welcomeMessage.split('{}')[1]}
+              {homeConfig?.welcomeMessage.split('{}')[1]}
             </>
           )}
         </Heading>
       )}
 
-      {config?.components.countdown?.enabled && (
+      {countdownConfig?.enabled && (
         <>
-          <Heading textAlign="center">{config?.components.countdown?.topMessage}</Heading>
+          <Heading textAlign="center">{countdownConfig?.topMessage}</Heading>
           <Clock countTo={countTo} />
         </>
       )}
 
-      {config?.components.home?.youtubeVideoId && (
-        <EmbeddedVideo key={config?.components.home?.youtubeVideoId} id={config?.components.home?.youtubeVideoId} />
-      )}
+      {homeConfig?.youtubeVideoId && <EmbeddedVideo key={homeConfig?.youtubeVideoId} id={homeConfig?.youtubeVideoId} />}
 
-      {config?.components.home?.content && (
+      {homeConfig?.content && (
         <Box mt={10}>
-          <Markdown text={config?.components.home?.content} />
+          <Markdown text={homeConfig?.content} />
         </Box>
       )}
 
-      {eventList.data && config?.components.home?.showEvents && (
+      {eventList.data && homeConfig?.showEvents && (
         <VStack>
           <Heading as="h2" size="lg" textAlign="center" mb={5} mt={20}>
             {config?.components.event.title}

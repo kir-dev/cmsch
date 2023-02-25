@@ -4,7 +4,7 @@ import { EventListView } from '../../../util/views/event.view'
 import { QueryKeys } from '../queryKeys'
 import { ApiPaths } from '../../../util/paths'
 
-export const useEventListQuery = (onError: (err: any) => void) => {
+export const useEventListQuery = (onError?: (err: any) => void) => {
   return useQuery<EventListView[], Error>(
     QueryKeys.EVENTS,
     async () => {

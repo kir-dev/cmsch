@@ -4,7 +4,7 @@ import { NewsArticleView } from '../../../util/views/news.view'
 import { QueryKeys } from '../queryKeys'
 import { ApiPaths } from '../../../util/paths'
 
-export const useNewsListQuery = (onError: (err: any) => void) => {
+export const useNewsListQuery = (onError?: (err: any) => void) => {
   return useQuery<NewsArticleView[], Error>(
     QueryKeys.NEWS,
     async () => {

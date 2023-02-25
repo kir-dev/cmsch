@@ -5,10 +5,8 @@ import { Button, Divider, Flex, Heading, Text, useToast, VStack } from '@chakra-
 import { BoardStat } from '../../../common-components/BoardStat'
 import { MemberRow } from './MemberRow'
 import { AbsolutePaths } from '../../../util/paths'
-import { l } from '../../../util/language'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
-import { useServiceContext } from '../../../api/contexts/service/ServiceContext'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { useTeamJoin } from '../../../api/hooks/team/actions/useTeamJoin'
 import { useTeamLeave } from '../../../api/hooks/team/actions/useTeamLeave'
@@ -19,7 +17,8 @@ import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMember
 import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'
 import { RoleType } from '../../../util/views/profile.view'
 import { useTeamPromoteLeadership } from '../../../api/hooks/team/actions/useTeamPromoteLeadership'
-import { LoadingPage } from '../../loading/loading.page'
+import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
+import { PageStatus } from '../../../common-components/PageStatus'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -31,7 +30,6 @@ interface TeamDetailsCoreProps {
 }
 
 export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin = false, refetch = () => {} }: TeamDetailsCoreProps) {
-  const { sendMessage } = useServiceContext()
   const toast = useToast()
   const component = useConfigContext()?.components.team
   const navigate = useNavigate()
@@ -69,19 +67,10 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
     if (response === TeamResponses.OK) navigate(AbsolutePaths.TEAMS)
   })
 
-  if (isLoading) {
-    return <LoadingPage />
-  }
+  if (!component) return <ComponentUnavailable />
 
-  if (error) {
-    sendMessage(l('team-load-failed') + error)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={component.title} />
 
-  if (typeof team === 'undefined' || !component) {
-    sendMessage(l('team-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
   const breadcrumbItems = [
     {
       title: component.title,

@@ -9,7 +9,6 @@ import {
   Tabs,
   useBreakpoint,
   useBreakpointValue,
-  useToast,
   VStack
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
@@ -20,38 +19,22 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { BoardStat } from '../../common-components/BoardStat'
 import { CustomTab } from '../events/components/CustomTab'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
-import { Navigate } from 'react-router-dom'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { AbsolutePaths } from '../../util/paths'
-import { l } from '../../util/language'
 import { LinkButton } from '../../common-components/LinkButton'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 const LeaderboardPage = () => {
-  const toast = useToast()
-  const component = useConfigContext()?.components.leaderboard
-  const onQueryFail = () => toast({ title: l('result-query-failed'), status: 'error' })
-  const { data, isError, isLoading, error } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short', onQueryFail)
-
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
-  const { sendMessage } = useServiceContext()
+  const component = useConfigContext()?.components.leaderboard
+  const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
 
-  if (!component) {
-    sendMessage(l('component-unavailable'))
-    return <Navigate to={AbsolutePaths.ERROR} />
-  }
+  if (!component) return <ComponentUnavailable />
 
   const title = component.title || 'Toplista'
 
-  if (isError) {
-    sendMessage(l('result-query-failed') + error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (isLoading) {
-    return <LoadingPage />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={title} />
 
   const userBoard = component.showUserBoard && (
     <LeaderBoardTable

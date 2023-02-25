@@ -5,7 +5,7 @@ import { QueryKeys } from '../queryKeys'
 import { ApiPaths } from '../../../util/paths'
 import { joinPath } from '../../../util/core-functions.util'
 
-export const useTaskFullDetailsQuery = (taskId: string | undefined, onError: (err: any) => void) => {
+export const useTaskFullDetailsQuery = (taskId: string, onError?: (err: any) => void) => {
   return useQuery<TaskFullDetailsView, Error>(
     [QueryKeys.TASK_DETAILS, taskId],
     async () => {

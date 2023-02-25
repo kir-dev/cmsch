@@ -10,29 +10,17 @@ import { RoleType } from '../../util/views/profile.view'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { l } from '../../util/language'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
 
 interface ExtraPageProps {}
 
 const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   const params = useParams()
   const { profile } = useAuthContext()
-  const { data, isLoading, error } = useExtraPage(params.slug || '')
+  const { data, isLoading, isError } = useExtraPage(params.slug || '')
   const { sendMessage } = useServiceContext()
 
-  if (isLoading) {
-    return <LoadingPage />
-  }
-
-  if (error) {
-    sendMessage(l('article-load-failed'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (typeof data === 'undefined') {
-    sendMessage(l('article-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 
   if (RoleType[data.minRole] > RoleType.GUEST && profile && RoleType[profile.role] < RoleType[data.minRole]) {
     sendMessage(l('no-permission'))
