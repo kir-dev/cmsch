@@ -26,7 +26,7 @@ class CommunitiesApiController(
     @JsonView(Preview::class)
     @GetMapping("/organization")
     fun allOrganizations(auth: Authentication): List<OrganizationEntity> {
-        return organizationService.getOrganziations()
+        return organizationService.getOrganizations()
             .filter { it.visible }
     }
 
@@ -41,7 +41,7 @@ class CommunitiesApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/organization/{organizationId}")
     fun allOrganizations(auth: Authentication, @PathVariable organizationId: Int): OrganizationEntity? {
-        return organizationService.getOrganziationById(organizationId)
+        return organizationService.getOrganizationById(organizationId)
             .filter { it.visible }
             .orElse(null)
     }

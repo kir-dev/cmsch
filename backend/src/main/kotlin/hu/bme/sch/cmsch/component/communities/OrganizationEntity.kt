@@ -108,7 +108,7 @@ data class OrganizationEntity(
     var color: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(order = 12, label = "Érdeklődési körök", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
     @property:GenerateOverview(visible = false)
@@ -159,9 +159,9 @@ data class OrganizationEntity(
     var videoIds: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Látható")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 17, type = IMPORT_BOOLEAN)
     var visible: Boolean = false,
 

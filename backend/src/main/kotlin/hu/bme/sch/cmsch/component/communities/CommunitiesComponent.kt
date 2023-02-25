@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 class CommunitiesComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("communities", "/communities", componentSettingService, env) {
+) : ComponentBase("communities", "/community", componentSettingService, env) {
 
     final override val allSettings by lazy {
         listOf(
@@ -57,12 +57,11 @@ class CommunitiesComponent(
         if (minRole.isAvailableForRole(role) || role.isAdmin) {
             result.add(MenuSettingItem(
                 this.javaClass.simpleName + "@org",
-                    menuDisplayNameResort.getValue(), "/resort", 0,
+                    menuDisplayNameResort.getValue(), "/organization", 0,
                 visible = false, subMenu = false, external = false
             ))
         }
         return result
     }
-
 
 }
