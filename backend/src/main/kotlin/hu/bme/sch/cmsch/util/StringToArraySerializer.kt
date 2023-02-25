@@ -16,7 +16,7 @@ class StringToArraySerializer : JsonSerializer<String>() {
                     .replace("\r", "")
                     .replace("\n", "")
                     .split(",")) {
-                gen.writeNumber(part.trim())
+                gen.writeString(part.replace("\"", "\\\"").trim())
             }
         }
         gen.writeEndArray()

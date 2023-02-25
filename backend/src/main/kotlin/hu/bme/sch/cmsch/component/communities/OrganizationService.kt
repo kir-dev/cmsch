@@ -13,17 +13,22 @@ open class OrganizationService(
 ) {
 
     @Transactional(readOnly = true)
-    open fun getOrganziationById(id: Int): Optional<OrganizationEntity> {
+    open fun getOrganizationById(id: Int): Optional<OrganizationEntity> {
         return organizationRepo.findById(id)
     }
 
     @Transactional(readOnly = true)
     open fun getCommunityById(id: Int): Optional<CommunityEntity> {
-        return communityRepo.findById(id)
+        return communityRepo.findById(id).map {  community ->
+            community.resortName = organizationRepo.findById(community.resortId)
+                .map { it.name }
+                .orElse("")
+            community
+        }
     }
 
     @Transactional(readOnly = true)
-    open fun getOrganziations(): List<OrganizationEntity> {
+    open fun getOrganizations(): List<OrganizationEntity> {
         return organizationRepo.findAll()
     }
 

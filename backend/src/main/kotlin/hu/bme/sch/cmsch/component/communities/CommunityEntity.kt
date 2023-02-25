@@ -108,7 +108,7 @@ data class CommunityEntity(
     var color: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(order = 12, label = "Érdeklődési körök", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
     @property:GenerateOverview(visible = false)
@@ -159,14 +159,14 @@ data class CommunityEntity(
     var videoIds: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Látható")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(columnName = "Látható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 17, type = IMPORT_BOOLEAN)
     var visible: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 19, label = "Reszort ID-je")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 18, type = IMPORT_INT)
@@ -174,7 +174,7 @@ data class CommunityEntity(
 
     @Lob
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(order = 20, type = INPUT_TYPE_BLOCK_TEXT, label = "Kulcsszavak", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 19, type = IMPORT_LOB)
@@ -191,6 +191,9 @@ data class CommunityEntity(
     var svgMapId: String = "",
 
 ) : ManagedEntity {
+
+    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
+    var resortName: String = ""
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
