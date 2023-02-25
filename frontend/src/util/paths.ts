@@ -64,6 +64,7 @@ export enum ApiPaths {
   LOCATION = '/api/track-my-group',
   TOKENS = '/api/tokens',
   CHANGE_ALIAS = '/api/profile/change-alias',
+  CHANGE_GROUP = '/api/groups/select',
   COMMUNITY = '/api/community',
   ORGANIZATION = '/api/organization'
 }
