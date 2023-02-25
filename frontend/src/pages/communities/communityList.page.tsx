@@ -1,6 +1,6 @@
 import { SearchIcon } from '@chakra-ui/icons'
 import { Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-import { createRef, useState } from 'react'
+import { createRef, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Paragraph } from '../../common-components/Paragraph'
 import { CardListItem } from './components/CardListItem'
@@ -17,16 +17,30 @@ export default function CommunityListPage() {
   const { data, isLoading, isError } = useCommunityList()
   const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()
-  console.log(isError, isLoading)
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
 
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
     if (!data) {
       setFilteredCommunities([])
     } else if (!search) setFilteredCommunities(data)
-    else setFilteredCommunities(data?.filter((c) => c.name.toLocaleLowerCase().includes(search)) || [])
+    else
+      setFilteredCommunities(
+        data.filter((c) => {
+          if (c.searchKeywords?.find((s) => s.toLowerCase().includes(search))) return true
+          if (c.interests?.find((i) => i.toLowerCase().includes(search))) return true
+          return c.name.toLocaleLowerCase().includes(search)
+        })
+      )
   }
+
+  useEffect(() => {
+    if (data) {
+      setFilteredCommunities(data)
+      if (inputRef.current) inputRef.current.value = ''
+    }
+  }, [data])
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
 
   return (
     <CmschPage>
