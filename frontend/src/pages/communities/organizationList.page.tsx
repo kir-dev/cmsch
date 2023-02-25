@@ -8,25 +8,24 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Organization } from '../../util/views/organization'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
+import { useOrganizationList } from '../../api/hooks/community/useOrganizationList'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { PageStatus } from '../../common-components/PageStatus'
 
 export default function OrganizationListPage() {
-  const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>([])
+  const config = useConfigContext()?.components.communities
+  const { data, isLoading, isError } = useOrganizationList()
+  const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
-    if (!search) setFilteredOrganizations([])
-    else
-      setFilteredOrganizations(
-        ([] as Organization[]).filter((c) => {
-          if (c.name.toLocaleLowerCase().includes(search)) return true
-          if (c.id.toLocaleLowerCase().includes(search)) return true
-          for (const interest of c.interests || []) {
-            if (interest.toLocaleLowerCase().includes(search)) return true
-          }
-          return false
-        })
-      )
+    if (!search) setFilteredOrganizations(data)
+    else setFilteredOrganizations(data.filter((c) => c.name.toLocaleLowerCase().includes(search)))
   }
+
   return (
     <CmschPage>
       <Helmet title={l('organization-title')} />

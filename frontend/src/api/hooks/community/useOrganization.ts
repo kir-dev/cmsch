@@ -5,7 +5,7 @@ import { ApiPaths } from '../../../util/paths'
 import { Organization } from '../../../util/views/organization'
 import { joinPath } from '../../../util/core-functions.util'
 
-export const useOrganization = (id: string, onError: (err: any) => void) => {
+export const useOrganization = (id: string, onError?: (err: any) => void) => {
   return useQuery<Organization, Error>(
     joinPath(QueryKeys.ORGANIZATION, id),
     async () => {

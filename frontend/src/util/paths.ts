@@ -9,7 +9,7 @@ export enum Paths {
   TOKEN = 'token',
   TOKEN_SCANNED = 'token-scanned',
   COMMUNITY = 'community',
-  ORGANIZATION = 'orgaization',
+  ORGANIZATION = 'organization',
   ERROR = 'error',
   EXTRA_PAGE = 'page',
   FORM = 'form',
@@ -64,6 +64,6 @@ export enum ApiPaths {
   LOCATION = '/api/track-my-group',
   TOKENS = '/api/tokens',
   CHANGE_ALIAS = '/api/profile/change-alias',
-  COMMUNITY = '/api//community',
+  COMMUNITY = '/api/community',
   ORGANIZATION = '/api/organization'
 }

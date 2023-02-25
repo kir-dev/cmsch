@@ -8,28 +8,26 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Community } from '../../util/views/organization'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
+import { useCommunityList } from '../../api/hooks/community/useCommunityList'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { PageStatus } from '../../common-components/PageStatus'
 
 export default function CommunityListPage() {
-  const [filteredCommunities, setFilteredCommunities] = useState<Community[]>([])
+  const config = useConfigContext()?.components.communities
+  const { data, isLoading, isError } = useCommunityList()
+  const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()
+  console.log(isError, isLoading)
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
-    if (!search) setFilteredCommunities([])
-    else
-      setFilteredCommunities(
-        ([] as Community[]).filter((c) => {
-          if (c.name.toLocaleLowerCase().includes(search)) return true
-          if (c.id.toLocaleLowerCase().includes(search)) return true
-          for (const keyword of c.searchKeywords || []) {
-            if (keyword.toLocaleLowerCase().includes(search)) return true
-          }
-          for (const interest of c.interests || []) {
-            if (interest.toLocaleLowerCase().includes(search)) return true
-          }
-          return false
-        })
-      )
+    if (!data) {
+      setFilteredCommunities([])
+    } else if (!search) setFilteredCommunities(data)
+    else setFilteredCommunities(data?.filter((c) => c.name.toLocaleLowerCase().includes(search)) || [])
   }
+
   return (
     <CmschPage>
       <Helmet title={l('community-title')} />
@@ -41,7 +39,7 @@ export default function CommunityListPage() {
         <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
       </InputGroup>
       <Paragraph>{l('community-description')}</Paragraph>
-      {filteredCommunities.map((community) => (
+      {filteredCommunities?.map((community) => (
         <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITY}/${community.id}`} />
       ))}
     </CmschPage>
