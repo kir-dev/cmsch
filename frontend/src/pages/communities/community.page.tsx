@@ -1,44 +1,42 @@
 import { Image } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useParams } from 'react-router-dom'
-import { Community } from '../../util/views/organization'
+import { useParams } from 'react-router-dom'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 import { Paragraph } from '../../common-components/Paragraph'
-import { AbsolutePaths } from '../../util/paths'
+import { useCommunity } from '../../api/hooks/community/useCommunity'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { PageStatus } from '../../common-components/PageStatus'
 
 export default function CommunityPage() {
+  const config = useConfigContext()?.components.communities
   const params = useParams()
-  const community = ([] as Community[]).find((c) => c.id === params.name)
-  if (!community) return <Navigate to={AbsolutePaths.COMMUNITY} />
-  const resort = ([] as Community[]).find((r) => r.id === community.resortId)
+  const { data, isLoading, isError } = useCommunity(params.id || 'UNKNOWN')
   const breadcrumbItems = [
     {
-      title: 'Reszortok',
-      to: '/reszortok'
+      title: config?.title,
+      to: '/community'
     },
     {
-      title: resort?.name,
-      to: `/reszortok/${resort?.id}`,
-      color: resort?.color
-    },
-    {
-      title: community.name
+      title: data?.name
     }
   ]
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+
   return (
     <CmschPage>
-      <Helmet title={community.name} />
+      <Helmet title={data.name} />
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
-      <DataSheet organization={community} />
-      {!community.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
+      <DataSheet organization={data} />
+      {!data.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
-      {community.videoIds?.map((id) => (
+      {data.videoIds?.split(',').map((id) => (
         <Frame key={id} id={id} />
       ))}
-      {community.imageIds?.map((url) => (
+      {data.imageIds?.split(',').map((url) => (
         <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
       ))}
     </CmschPage>

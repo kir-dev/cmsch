@@ -1,10 +1,9 @@
 export interface Organization {
-  id: string
+  id: number
   name: string
-  /** Should hide name on their own page, logo is enough */
   hideName?: boolean
   shortDescription?: string
-  descriptionParagraphs?: string[]
+  descriptionParagraphs?: string
   website?: string
   logo?: string
   darkLogo?: string
@@ -12,15 +11,20 @@ export interface Organization {
   email?: string
   members?: number
   color?: string
-  interests?: string[]
+  interests?: string
   facebook?: string
   instagram?: string
   application?: string
-  imageIds?: string[]
-  videoIds?: string[]
+  imageIds?: string
+  videoIds?: string
+  visible?: boolean
 }
 
 export interface Community extends Organization {
-  resortId?: string
-  searchKeywords?: string[]
+  resortId?: number
+  searchKeywords?: string
+  svgMapId?: number
 }
+
+export type OrganizationListItem = Pick<Organization, 'id' | 'name' | 'shortDescription' | 'logo' | 'members'>
+export type CommunityListItem = Pick<Community, 'id' | 'name' | 'shortDescription' | 'logo' | 'members'>

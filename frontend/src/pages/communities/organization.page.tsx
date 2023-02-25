@@ -1,38 +1,44 @@
 import { Image } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useParams } from 'react-router-dom'
-import { Organization } from '../../util/views/organization'
+import { useParams } from 'react-router-dom'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 import { Paragraph } from '../../common-components/Paragraph'
 import { AbsolutePaths } from '../../util/paths'
+import { useOrganization } from '../../api/hooks/community/useOrganization'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { PageStatus } from '../../common-components/PageStatus'
 
 export default function OrganizationPage() {
+  const config = useConfigContext()?.components.communities
   const params = useParams()
-  const organization = ([] as Organization[]).find((c) => c.id === params.name)
-  if (!organization) return <Navigate to={AbsolutePaths.ORGANIZATION} />
+  const { data, isLoading, isError } = useOrganization(params.id || 'UNKNOWN')
+
   const breadcrumbItems = [
     {
       title: 'Reszortok',
       to: AbsolutePaths.ORGANIZATION
     },
     {
-      title: organization.name
+      title: data?.name
     }
   ]
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+
   return (
     <CmschPage>
-      <Helmet title={organization.name} />
+      <Helmet title={data.name} />
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
-      <DataSheet organization={organization} />
-      {!organization.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
+      <DataSheet organization={data} />
+      {!data.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
-      {organization.videoIds?.map((id) => (
+      {data.videoIds?.split(',').map((id) => (
         <Frame key={id} id={id} />
       ))}
-      {organization.imageIds?.map((url) => (
+      {data.imageIds?.split(',').map((url) => (
         <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
       ))}
     </CmschPage>
