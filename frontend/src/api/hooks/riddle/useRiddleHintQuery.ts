@@ -5,7 +5,7 @@ import { Hint } from '../../../util/views/riddle.view'
 import { QueryKeys } from '../queryKeys'
 import { joinPath } from '../../../util/core-functions.util'
 
-export const useRiddleHintQuery = (onError: (err: any) => void, id: string) => {
+export const useRiddleHintQuery = (id: string, onError?: (err: any) => void) => {
   return useQuery<Hint, Error>(
     [QueryKeys.RIDDLE_HINT, id],
     async () => {

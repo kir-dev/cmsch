@@ -1,5 +1,12 @@
-export const l = (key: keyof typeof languageData) => {
-  return languageData[key]
+export function l<T extends keyof typeof languageData>(key: T, fields?: (typeof parameters)[T]) {
+  let message = languageData[key]
+  if (parameters[key]) {
+    Object.entries(parameters[key] as Record<string, string>).forEach(([templateKey, value]) => {
+      const field = fields?.[templateKey]
+      message = message.replace(`{{${templateKey}}}`, field || value)
+    })
+  }
+  return message
 }
 
 const languageData = {
@@ -85,5 +92,12 @@ const languageData = {
   'community-title': 'Körök',
   'community-description':
     'A karon számtalan öntevékeny kör működik, mindenki megtalálhatja az' +
-    'érdeklődési körének megfelelő csoportot. A körök a Schönherz Kollégiumban működnek.'
+    'érdeklődési körének megfelelő csoportot. A körök a Schönherz Kollégiumban működnek.',
+  'page-load-failed': '{{title}} betöltése sikertelen!',
+  'page-load-failed-contact-developers': '{{title}} betöltése sikertelen!\n Keresd az oldal fejlesztőit.'
+}
+
+const parameters: Partial<Record<keyof typeof languageData, Record<string, string | undefined>>> = {
+  'page-load-failed': { title: 'Oldal' },
+  'page-load-failed-contact-developers': { title: 'Oldal' }
 }

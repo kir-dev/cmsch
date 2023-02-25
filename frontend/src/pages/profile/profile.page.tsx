@@ -16,8 +16,8 @@ import {
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
+
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
@@ -30,9 +30,9 @@ import templateStringReplace from '../../util/templateStringReplace'
 import React, { useEffect } from 'react'
 import { GroupComponent } from './components/Group'
 import { ProfileQR } from './components/ProfileQR'
-import { l } from '../../util/language'
 import Markdown from '../../common-components/Markdown'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 const MapContainer = React.lazy(() => import('./components/MapContainer'))
 
@@ -47,23 +47,12 @@ const ProfilePage = ({}: Props) => {
     refetch()
   }, [])
 
-  const { sendMessage } = useServiceContext()
   const config = useConfigContext()
   const component = config?.components.profile
 
-  if (profileLoading && !profile) {
-    return <LoadingPage />
-  }
+  if (!component) return <ComponentUnavailable />
 
-  if (profileError) {
-    sendMessage(l('profile-load-failed') + profileError.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (!profile) {
-    sendMessage(l('profile-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (profileError || profileLoading || !profile) return <PageStatus isLoading={profileLoading} isError={!!profileError} title="Profil" />
 
   if (!profile.loggedIn || profile.role === 'GUEST') {
     return <Navigate replace to="/" />
@@ -71,11 +60,11 @@ const ProfilePage = ({}: Props) => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title={component?.title} />
-      {component?.messageBoxContent && (
+      <Helmet title={component.title} />
+      {component.messageBoxContent && (
         <Alert status="info" variant="left-accent" mt={5}>
           <AlertIcon />
-          {component?.messageBoxContent}
+          {component.messageBoxContent}
         </Alert>
       )}
       <PresenceAlert acquired={profile.collectedTokenCount} needed={profile.minTokenToComplete} mt={5} />
@@ -86,8 +75,8 @@ const ProfilePage = ({}: Props) => {
           <Flex flexWrap="wrap" alignItems="center" w="full">
             <Box py={2}>
               {profile.profileIsComplete
-                ? component?.profileComplete
-                : templateStringReplace(component?.profileIncomplete, profile?.incompleteTasks?.join(', '))}
+                ? component.profileComplete
+                : templateStringReplace(component.profileIncomplete, profile.incompleteTasks?.join(', '))}
             </Box>
             {!profile.profileIsComplete && (
               <Flex flex={1} justifyContent="end">
@@ -101,14 +90,14 @@ const ProfilePage = ({}: Props) => {
       )}
       <Flex justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>
         <Box>
-          {component?.showFullName && <Heading>{profile.fullName}</Heading>}
-          {component?.showAlias && <Text fontSize="xl">Becenév: {profile.alias || 'nincs'}</Text>}
-          {component?.showNeptun && <Text fontSize="xl">Neptun: {profile.neptun || 'nincs'}</Text>}
-          {component?.showEmail && <Text fontSize="xl">E-mail: {profile.email || 'nincs'}</Text>}
+          {component.showFullName && <Heading>{profile.fullName}</Heading>}
+          {component.showAlias && <Text fontSize="xl">Becenév: {profile.alias || 'nincs'}</Text>}
+          {component.showNeptun && <Text fontSize="xl">Neptun: {profile.neptun || 'nincs'}</Text>}
+          {component.showEmail && <Text fontSize="xl">E-mail: {profile.email || 'nincs'}</Text>}
 
-          {component?.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
-          {component?.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
-          {component?.showGroup && <GroupComponent profile={profile} />}
+          {component.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
+          {component.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
+          {component.showGroup && <GroupComponent profile={profile} />}
         </Box>
         <VStack py={2} alignItems={{ base: 'flex-start', md: 'flex-end' }} mt={{ base: 5, md: 0 }}>
           {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
@@ -121,7 +110,7 @@ const ProfilePage = ({}: Props) => {
               {component?.groupTitle} módosítása
             </LinkButton>
           )}
-          {component?.aliasChangeEnabled && (
+          {component.aliasChangeEnabled && (
             <LinkButton colorScheme="brand" href={`${AbsolutePaths.PROFILE}/change-alias`}>
               Becenév módosítása
             </LinkButton>
@@ -146,10 +135,10 @@ const ProfilePage = ({}: Props) => {
         </>
       )}
 
-      {component?.showQr && <ProfileQR profile={profile} component={component} />}
-      {(component?.showTasks || component?.showRiddles || component?.showTokens) && <Divider my={10} borderWidth={2} />}
+      {component.showQr && <ProfileQR profile={profile} component={component} />}
+      {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={10} borderWidth={2} />}
       <Flex justify="center" alignItems="center" flexWrap="wrap">
-        {component?.showTasks && (
+        {component.showTasks && (
           <Center p={3}>
             <Flex direction="column" align="center">
               <Link
@@ -161,7 +150,7 @@ const ProfilePage = ({}: Props) => {
                   color: useColorModeValue('brand.500', 'brand.600')
                 }}
               >
-                {component?.taskCounterName}
+                {component.taskCounterName}
               </Link>
               <Box>
                 <CircularProgress
@@ -207,7 +196,7 @@ const ProfilePage = ({}: Props) => {
           </Center>
         )}
 
-        {component?.showRiddles && (
+        {component.showRiddles && (
           <Center p={3}>
             <Flex direction="column" align="center">
               <Link
@@ -219,7 +208,7 @@ const ProfilePage = ({}: Props) => {
                   color: useColorModeValue('brand.500', 'brand.600')
                 }}
               >
-                {component?.riddleCounterName}
+                {component.riddleCounterName}
               </Link>
               <CircularProgress
                 color={useColorModeValue('green.500', 'green.600')}
@@ -236,7 +225,7 @@ const ProfilePage = ({}: Props) => {
             </Flex>
           </Center>
         )}
-        {component?.showTokens && (
+        {component.showTokens && (
           <Center p={3}>
             <Flex direction="column" align="center">
               <Link
@@ -248,7 +237,7 @@ const ProfilePage = ({}: Props) => {
                   color: useColorModeValue('brand.500', 'brand.600')
                 }}
               >
-                {component?.tokenCounterName}
+                {component.tokenCounterName}
               </Link>
               <CircularProgress
                 color={useColorModeValue('green.500', 'green.600')}
@@ -264,7 +253,7 @@ const ProfilePage = ({}: Props) => {
           </Center>
         )}
       </Flex>
-      {config?.components.profile.showGroupLeadersLocations && <MapContainer />}
+      {component.showGroupLeadersLocations && <MapContainer />}
     </CmschPage>
   )
 }

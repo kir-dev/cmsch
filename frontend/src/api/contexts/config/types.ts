@@ -34,6 +34,7 @@ export interface Components {
   team: Team
   token: Token
   qrFight: QrFight
+  communities: Communities
 }
 
 export interface App {
@@ -277,4 +278,8 @@ export interface Signup {
   langAccepted: string
   langGroupInsufficient: string
   langNoSubmission?: string
+}
+
+export interface Communities {
+  title: string
 }

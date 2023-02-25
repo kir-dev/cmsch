@@ -5,7 +5,7 @@ import { QueryKeys } from '../queryKeys'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
 
-export const useTasksInCategoryQuery = (categoryId: string | undefined, onError: (err: any) => void) => {
+export const useTasksInCategoryQuery = (categoryId: string, onError?: (err: any) => void) => {
   return useQuery<TaskCategoryFullDetails, Error>(
     [QueryKeys.TASKS_IN_CATEGORY, categoryId],
     async () => {

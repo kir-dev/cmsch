@@ -1,37 +1,30 @@
-import { Heading, Text, useToast, VStack } from '@chakra-ui/react'
+import { Heading, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { useNavigate } from 'react-router-dom'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useTaskCategoriesQuery } from '../../api/hooks/task/useTaskCategoriesQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { taskCategoryType } from '../../util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
 import Markdown from '../../common-components/Markdown'
-import { l } from '../../util/language'
-import { LoadingPage } from '../loading/loading.page'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { PageStatus } from '../../common-components/PageStatus'
 
 const TaskCategoryList = () => {
-  const taskConfig = useConfigContext()?.components.task
+  const component = useConfigContext()?.components.task
 
-  const toast = useToast()
-  const navigate = useNavigate()
-  const categoriesQuery = useTaskCategoriesQuery(() => {
-    navigate('/')
-    toast({
-      title: l('task-list-failed'),
-      status: 'error',
-      isClosable: true
-    })
-  })
+  const { isLoading, isError, data } = useTaskCategoriesQuery()
 
-  if (!categoriesQuery.isSuccess) return <LoadingPage />
-  const normalCategories = categoriesQuery.data.filter((c) => c.type == taskCategoryType.REGULAR)
-  const prCategories = categoriesQuery.data.filter((c) => c.type == taskCategoryType.PROFILE_REQUIRED)
+  if (!component) return <ComponentUnavailable />
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
+
+  const normalCategories = data.filter((c) => c.type == taskCategoryType.REGULAR)
+  const prCategories = data.filter((c) => c.type == taskCategoryType.PROFILE_REQUIRED)
 
   const required = prCategories.length > 0 && (
     <>
-      <Heading>{taskConfig?.profileRequiredTitle}</Heading>
-      {taskConfig?.profileRequiredMessage && <Markdown text={taskConfig?.profileRequiredMessage} />}
+      <Heading>{component.profileRequiredTitle}</Heading>
+      {component.profileRequiredMessage && <Markdown text={component.profileRequiredMessage} />}
       <VStack spacing={4} mt={5} align="stretch">
         {prCategories.map((category) => (
           <TaskCategoryListItem key={category.categoryId} category={category} />
@@ -39,12 +32,13 @@ const TaskCategoryList = () => {
       </VStack>
     </>
   )
+
   return (
     <CmschPage loginRequired groupRequired>
-      <Helmet title={taskConfig?.title} />
+      <Helmet title={component.title} />
       {required}
-      <Heading>{taskConfig?.regularTitle}</Heading>
-      {taskConfig?.regularMessage && <Markdown text={taskConfig?.regularMessage} />}
+      <Heading>{component.regularTitle}</Heading>
+      {component.regularMessage && <Markdown text={component.regularMessage} />}
       {normalCategories.length > 0 ? (
         <VStack spacing={4} mt={5} align="stretch">
           {normalCategories.map((category) => (
@@ -52,7 +46,7 @@ const TaskCategoryList = () => {
           ))}
         </VStack>
       ) : (
-        <Text>Nincs egyetlen feladat se.</Text>
+        <Text>Nincs egyetlen feladat sem.</Text>
       )}
     </CmschPage>
   )

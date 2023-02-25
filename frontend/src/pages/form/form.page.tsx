@@ -1,33 +1,30 @@
 import { FunctionComponent, useEffect } from 'react'
-import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Box, Button, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
 import { Navigate, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { AbsolutePaths } from '../../util/paths'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import Cookies from 'js-cookie'
+import { useForm } from 'react-hook-form'
+
+import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useFormPage } from '../../api/hooks/form/useFormPage'
 import { AutoFormField } from './components/autoFormField'
-import { useForm } from 'react-hook-form'
 import Markdown from '../../common-components/Markdown'
 import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
 import { FormStatusBadge } from './components/formStatusBadge'
 import { FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
-import Cookies from 'js-cookie'
 import { CookieKeys } from '../../util/configs/cookies.config'
 import { useTokenRefresh } from '../../api/hooks/token/useTokenRefresh'
-import { l } from '../../util/language'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
 
 interface FormPageProps {}
 
 const FormPage: FunctionComponent<FormPageProps> = () => {
-  const params = useParams()
-  const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
-  const { data, isLoading, error, refetch } = useFormPage(params.slug || '')
-  const { refresh } = useTokenRefresh()
-  const { sendMessage } = useServiceContext()
   const toast = useToast()
+  const params = useParams()
   const { control, handleSubmit } = useForm()
+  const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
+  const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
+  const { refresh } = useTokenRefresh()
 
   useEffect(() => {
     if (result) {
@@ -40,29 +37,21 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
     refetch()
   }, [result])
 
-  if (isLoading) {
-    return <LoadingPage />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Űrlap" />
 
-  if (error) {
-    sendMessage(l('form-load-failed'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (typeof data === 'undefined') {
-    sendMessage(l('form-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
   const { form, submission, message, status, detailsValidated } = data
   const available = form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !detailsValidated
+
   const onSubmit = (values: Object) => {
     if (available) {
       submit(values, status !== FormStatus.NO_SUBMISSION)
       window.scrollTo(0, 0)
     }
   }
+
   if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED)
     return <Navigate to="/" replace />
+
   return (
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />

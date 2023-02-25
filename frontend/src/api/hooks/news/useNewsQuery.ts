@@ -5,7 +5,7 @@ import { QueryKeys } from '../queryKeys'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
 
-export const useNewsQuery = (id: string, onError: (err: any) => void) => {
+export const useNewsQuery = (id: string, onError?: (err: any) => void) => {
   return useQuery<NewsArticleView, Error>(
     [QueryKeys.NEWS, id],
     async () => {

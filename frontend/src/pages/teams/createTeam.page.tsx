@@ -9,6 +9,7 @@ import { AbsolutePaths } from '../../util/paths'
 import { useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import Markdown from '../../common-components/Markdown'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 export default function CreateTeamPage() {
   const navigate = useNavigate()
@@ -28,7 +29,8 @@ export default function CreateTeamPage() {
     }
   })
   const component = config?.components.team
-  if (!component || !component.creationEnabled) return <Navigate to="/" />
+  if (!component) return <ComponentUnavailable />
+  if (!component.creationEnabled) return <Navigate to="/" replace />
 
   return (
     <CmschPage>

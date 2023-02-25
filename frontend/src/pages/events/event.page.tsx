@@ -1,36 +1,21 @@
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useParams } from 'react-router-dom'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { useParams } from 'react-router-dom'
+
 import { useEventQuery } from '../../api/hooks/event/useEventQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import CurrentEvent from './components/CurrentEvent'
-import { AbsolutePaths } from '../../util/paths'
-import { l } from '../../util/language'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
 
 const EventPage = () => {
   const params = useParams()
-  const currentEvent = useEventQuery(params.path!!, () => console.log('Event query failed!'))
-  const { sendMessage } = useServiceContext()
+  const { isLoading, isError, data } = useEventQuery(params.path!!, () => console.log('Event query failed!'))
 
-  if (currentEvent.isLoading) {
-    return <LoadingPage />
-  }
-
-  if (currentEvent.isError) {
-    sendMessage(l('event-load-failed') + currentEvent.error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (typeof currentEvent.data === 'undefined') {
-    sendMessage(l('event-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 
   return (
     <CmschPage>
-      <Helmet title={currentEvent.data.title} />
-      <CurrentEvent event={currentEvent.data} />
+      <Helmet title={data.title} />
+      <CurrentEvent event={data} />
     </CmschPage>
   )
 }

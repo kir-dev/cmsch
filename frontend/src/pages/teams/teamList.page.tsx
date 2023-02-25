@@ -6,39 +6,25 @@ import { Heading, Input, InputGroup, InputLeftElement, InputRightElement } from 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { TeamListItem } from './components/TeamListItem'
 import { useTeamList } from '../../api/hooks/team/queries/useTeamList'
-import { l } from '../../util/language'
-import { Navigate } from 'react-router-dom'
-import { AbsolutePaths } from '../../util/paths'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { LoadingPage } from '../loading/loading.page'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { PageStatus } from '../../common-components/PageStatus'
 
 export default function TeamListPage() {
   const config = useConfigContext()
   const component = config?.components.team
-  const { data: teams, isLoading, isError, error } = useTeamList()
+  const { data, isLoading, isError } = useTeamList()
   const [search, setSearch] = useState('')
   const filteredTeams = useMemo(() => {
-    return teams?.filter((c) => {
+    return data?.filter((c) => {
       return c.name.toLocaleLowerCase().includes(search)
     })
-  }, [teams, search])
-  const { sendMessage } = useServiceContext()
+  }, [data, search])
   const inputRef = createRef<HTMLInputElement>()
 
-  if (isLoading) {
-    return <LoadingPage />
-  }
+  if (!component) return <ComponentUnavailable />
 
-  if (isError) {
-    sendMessage(l('team-list-load-failed') + error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (typeof teams === 'undefined' || !component) {
-    sendMessage(l('team-list-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   const handleInput = () => {
     const searchFieldValue = inputRef?.current?.value.toLowerCase()
