@@ -35,10 +35,10 @@ export default function OrganizationPage() {
       <DataSheet organization={data} />
       {!data.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
-      {data.videoIds?.split(',').map((id) => (
+      {data.videoIds?.map((id) => (
         <Frame key={id} id={id} />
       ))}
-      {data.imageIds?.split(',').map((url) => (
+      {data.imageIds?.map((url) => (
         <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
       ))}
     </CmschPage>
