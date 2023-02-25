@@ -5,7 +5,7 @@ import { Riddle } from '../../../util/views/riddle.view'
 import { QueryKeys } from '../queryKeys'
 import { joinPath } from '../../../util/core-functions.util'
 
-export const useRiddleDetailsQuery = (onError: (err: any) => void, id: string) => {
+export const useRiddleDetailsQuery = (id: string, onError?: (err: any) => void) => {
   return useQuery<Riddle, Error>(
     [QueryKeys.RIDDLE, id],
     async () => {

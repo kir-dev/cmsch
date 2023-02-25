@@ -1,28 +1,21 @@
 import { Heading, Wrap } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
+
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { useDevelopers } from '../../api/hooks/developers/useDevelopers'
 import { OrganizerSection } from './components/OrganizerSection'
 import { DeveloperWrapItem } from './components/DeveloperWrapItem'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { l } from '../../util/language'
-import { Navigate } from 'react-router-dom'
-import { AbsolutePaths } from '../../util/paths'
-import * as React from 'react'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 const ImpressumPage = () => {
   const config = useConfigContext()
   const developers = useDevelopers()
-  const { sendMessage } = useServiceContext()
 
   const component = config?.components?.impressum
 
-  if (!component) {
-    sendMessage(l('component-unavailable'))
-    return <Navigate to={AbsolutePaths.ERROR} />
-  }
+  if (!component) return <ComponentUnavailable />
 
   return (
     <CmschPage>

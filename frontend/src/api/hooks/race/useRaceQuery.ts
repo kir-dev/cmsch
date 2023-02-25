@@ -5,7 +5,7 @@ import { QueryKeys } from '../queryKeys'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
 
-export const useRaceQuery = (category: string, onError: (err: any) => void) => {
+export const useRaceQuery = (category: string, onError?: (err: any) => void) => {
   return useQuery<RaceView, Error>(
     [QueryKeys.RACE, category],
     async () => {

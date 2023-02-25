@@ -1,39 +1,27 @@
 import { Helmet } from 'react-helmet-async'
 import { Divider, Flex, Heading, TabList, TabPanel, TabPanels, Tabs, Text, useBreakpoint, VStack } from '@chakra-ui/react'
+import { Navigate } from 'react-router-dom'
+
 import { CustomTab } from '../events/components/CustomTab'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { l } from '../../util/language'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { Navigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { LinkButton } from '../../common-components/LinkButton'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 export default function LeaderboardCategoryPage() {
-  const { data, isLoading, isError, error } = useLeaderBoardQuery('categorized')
+  const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
   const component = useConfigContext()?.components.leaderboard
-
   const breakpoint = useBreakpoint()
-  const { sendMessage } = useServiceContext()
 
-  if (!component) {
-    sendMessage(l('component-unavailable'))
-    return <Navigate to={AbsolutePaths.ERROR} />
-  }
+  if (!component) return <ComponentUnavailable />
 
   const title = component.title || 'Toplista'
 
-  if (isError) {
-    sendMessage(l('result-query-failed') + error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (isLoading) {
-    return <LoadingPage />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={title} />
 
   if (!component.leaderboardDetailsByCategoryEnabled) return <Navigate to={AbsolutePaths.LEADER_BOARD} />
 

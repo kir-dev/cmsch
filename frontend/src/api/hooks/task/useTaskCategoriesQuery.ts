@@ -4,7 +4,7 @@ import { AllTaskCategories, TaskCategoryPreview } from '../../../util/views/task
 import { QueryKeys } from '../queryKeys'
 import { ApiPaths } from '../../../util/paths'
 
-export const useTaskCategoriesQuery = (onError: (err: any) => void) => {
+export const useTaskCategoriesQuery = (onError?: (err: any) => void) => {
   return useQuery<TaskCategoryPreview[], Error>(
     QueryKeys.TASK_CATEGORIES,
     async () => {

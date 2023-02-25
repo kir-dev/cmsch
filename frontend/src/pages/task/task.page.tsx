@@ -17,7 +17,7 @@ import {
 import { chakra } from '@chakra-ui/system'
 import { lazy, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { Controller, SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
 import { FilePicker } from './components/FilePicker'
@@ -36,7 +36,8 @@ import { API_BASE_URL } from '../../util/configs/environment.config'
 import { taskSubmissionResponseMap } from './util/taskSubmissionResponseMap'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
-import { LoadingPage } from '../loading/loading.page'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { PageStatus } from '../../common-components/PageStatus'
 
 const CodeEditor = lazy(() => import('./components/CodeEditor'))
 
@@ -53,10 +54,9 @@ const TaskPage = () => {
   const filePickerRef = useRef<FilePicker>(null)
   const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
 
-  const taskConfig = useConfigContext()?.components.task
+  const component = useConfigContext()?.components.task
   const toast = useToast()
   const { id } = useParams()
-  const navigate = useNavigate()
   const { setValue, handleSubmit, control } = useForm<FormInput>()
   const { fields, replace, update } = useFieldArray<FormInput>({
     name: 'customForm',
@@ -64,40 +64,32 @@ const TaskPage = () => {
   })
   const customFormData = useWatch({ control, name: 'customForm' })
 
-  if (!id) return <Navigate to="/" replace />
-
   const taskSubmissionMutation = useTaskSubmissionMutation()
-  const taskDetailsQuery = useTaskFullDetailsQuery(id, () => {
-    navigate(AbsolutePaths.TASKS)
-    toast({
-      title: l('task-not-found-title'),
-      description: l('task-not-found-description'),
-      status: 'error',
-      isClosable: true
-    })
-  })
+  const { isLoading, isError, data, isSuccess, refetch } = useTaskFullDetailsQuery(id || 'UNKNOWN')
   useEffect(() => {
-    if (taskDetailsQuery.isSuccess && taskDetailsQuery.data.submission && taskDetailsQuery.data.task?.format === taskFormat.CODE) {
-      setCodeAnswer(taskDetailsQuery.data.submission.textAnswer)
+    if (!isSuccess && data?.submission && data?.task?.format === taskFormat.CODE) {
+      setCodeAnswer(data.submission.textAnswer)
     }
-  }, [taskDetailsQuery.status])
+  }, [isSuccess, data])
 
-  if (!taskDetailsQuery.isSuccess) return <LoadingPage />
+  if (!id) return <Navigate to={AbsolutePaths.TASKS} />
 
-  const taskDetails = taskDetailsQuery.data
-  const expired = taskDetails.task?.availableTo ? taskDetails.task?.availableTo < new Date().valueOf() / 1000 : false
-  const textAllowed = taskDetails.task?.type === taskType.TEXT || taskDetails.task?.type === taskType.BOTH
-  const fileAllowed =
-    taskDetails.task?.type === taskType.IMAGE || taskDetails.task?.type === taskType.BOTH || taskDetails.task?.type === taskType.ONLY_PDF
+  if (!component) return <ComponentUnavailable />
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
+
+  const expired = data.task?.availableTo ? data.task?.availableTo < new Date().valueOf() / 1000 : false
+  const textAllowed = data.task?.type === taskType.TEXT || data.task?.type === taskType.BOTH
+  const fileAllowed = data.task?.type === taskType.IMAGE || data.task?.type === taskType.BOTH || data.task?.type === taskType.ONLY_PDF
   const submissionAllowed =
-    (taskDetails?.status === taskStatus.NOT_SUBMITTED ||
-      taskDetails?.status === taskStatus.REJECTED ||
-      (taskConfig?.resubmissionEnabled && taskDetails.status === taskStatus.SUBMITTED)) &&
+    (data?.status === taskStatus.NOT_SUBMITTED ||
+      data?.status === taskStatus.REJECTED ||
+      (component?.resubmissionEnabled && data.status === taskStatus.SUBMITTED)) &&
     !expired
-  const reviewed = taskDetails.status === taskStatus.ACCEPTED || taskDetails.status === taskStatus.REJECTED
-  const localSubmission = taskDetails?.task?.format === taskFormat.NONE
+  const reviewed = data.status === taskStatus.ACCEPTED || data.status === taskStatus.REJECTED
+  const localSubmission = data?.task?.format === taskFormat.NONE
 
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
+  const onSubmit: SubmitHandler<FormInput> = (values) => {
     if ((!fileAllowed || fileAnswer) && submissionAllowed) {
       const formData = new FormData()
       formData.append('taskId', id)
@@ -114,10 +106,10 @@ const TaskPage = () => {
         formData.append('file', fileAnswer)
       }
       if (textAllowed) {
-        switch (taskDetails.task?.format) {
+        switch (data.task?.format) {
           case taskFormat.TEXT:
-            if (data.textAnswer) {
-              formData.append('textAnswer', data.textAnswer)
+            if (values.textAnswer) {
+              formData.append('textAnswer', values.textAnswer)
             } else {
               toast({
                 title: l('task-empty-title'),
@@ -164,7 +156,7 @@ const TaskPage = () => {
               filePickerRef.current.reset()
             }
             fields.forEach((field, idx) => update(idx, { ...field, value: '' }))
-            taskDetailsQuery.refetch()
+            refetch()
             window.scrollTo(0, 0)
           } else {
             toast({
@@ -193,8 +185,8 @@ const TaskPage = () => {
   }
 
   let textInput = null
-  if (textAllowed && taskDetails.task) {
-    switch (taskDetails.task.format) {
+  if (textAllowed && data.task) {
+    switch (data.task.format) {
       case taskFormat.TEXT:
         textInput = (
           <Box mt={5}>
@@ -208,7 +200,7 @@ const TaskPage = () => {
         )
         break
       case taskFormat.FORM:
-        textInput = <CustomForm formatDescriptor={taskDetails.task.formatDescriptor} control={control} fields={fields} replace={replace} />
+        textInput = <CustomForm formatDescriptor={data.task.formatDescriptor} control={control} fields={fields} replace={replace} />
         break
       case taskFormat.CODE:
         textInput = <CodeEditor code={codeAnswer} setCode={setCodeAnswer} readonly={false} />
@@ -217,13 +209,13 @@ const TaskPage = () => {
   }
 
   let submittedText = null
-  if (textAllowed && taskDetails.submission) {
+  if (textAllowed && data.submission) {
     submittedText =
-      taskDetails.task?.format === taskFormat.CODE ? (
-        <CodeEditor code={taskDetails.submission?.textAnswer} setCode={() => {}} readonly={true} />
+      data.task?.format === taskFormat.CODE ? (
+        <CodeEditor code={data.submission?.textAnswer} setCode={() => {}} readonly={true} />
       ) : (
         <Paragraph mt={2} whiteSpace="pre-wrap">
-          {taskDetails.submission.textAnswer}
+          {data.submission.textAnswer}
         </Paragraph>
       )
   }
@@ -235,7 +227,7 @@ const TaskPage = () => {
         onFileChange={(fileArray) => setFileAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
         clearButtonLabel="Törlés"
-        accept={taskDetails.task?.type === taskType.ONLY_PDF ? '.pdf' : 'image/jpeg,image/png,image/jpg,image/gif'}
+        accept={data.task?.type === taskType.ONLY_PDF ? '.pdf' : 'image/jpeg,image/png,image/jpg,image/gif'}
         ref={filePickerRef}
       />
     </Box>
@@ -243,28 +235,28 @@ const TaskPage = () => {
 
   const breadcrumbItems = [
     {
-      title: taskConfig?.title || 'Feladatok',
+      title: component?.title || 'Feladatok',
       to: AbsolutePaths.TASKS
     },
     {
-      title: taskDetails.task?.categoryName,
-      to: `${AbsolutePaths.TASKS}/category/${taskDetails.task?.categoryId}`
+      title: data.task?.categoryName,
+      to: `${AbsolutePaths.TASKS}/category/${data.task?.categoryId}`
     },
     {
-      title: taskDetails.task?.title
+      title: data.task?.title
     }
   ]
 
   return (
     <CmschPage loginRequired groupRequired>
-      <Helmet title={taskDetails.task?.title} />
+      <Helmet title={data.task?.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Flex my={5} justify="space-between" flexWrap="wrap" alignItems="center">
         <Box>
-          <Heading my={0}>{taskDetails.task?.title}</Heading>
+          <Heading my={0}>{data.task?.title}</Heading>
         </Box>
         <VStack flex={1} alignItems="end" py={2}>
-          <TaskStatusBadge status={taskDetails.status} fontSize="lg" />
+          <TaskStatusBadge status={data.status} fontSize="lg" />
           {expired && (
             <Box>
               <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
@@ -275,27 +267,27 @@ const TaskPage = () => {
         </VStack>
       </Flex>
       <Box mt={5}>
-        <Markdown text={taskDetails.task?.description} />
+        <Markdown text={data.task?.description} />
       </Box>
-      {taskDetails.task?.expectedResultDescription && (
+      {data.task?.expectedResultDescription && (
         <Text size="sm" mt={5}>
           <chakra.span fontWeight="bold">Beadandó formátum:</chakra.span>
-          &nbsp;{taskDetails.task?.expectedResultDescription}
+          &nbsp;{data.task?.expectedResultDescription}
         </Text>
       )}
-      {taskDetails.status !== taskStatus.NOT_SUBMITTED && (
+      {data.status !== taskStatus.NOT_SUBMITTED && (
         <>
           <Heading size="md" mt={8}>
             Beküldött megoldás
           </Heading>
           {submittedText}
-          {fileAllowed && taskDetails.submission && (
+          {fileAllowed && data.submission && (
             <Box>
-              {taskDetails.submission.imageUrlAnswer && taskDetails.submission.imageUrlAnswer.length > 'task/'.length && (
-                <Image src={`${API_BASE_URL}/cdn/${taskDetails.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
+              {data.submission.imageUrlAnswer && data.submission.imageUrlAnswer.length > 'task/'.length && (
+                <Image src={`${API_BASE_URL}/cdn/${data.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
               )}
-              {taskDetails.submission.fileUrlAnswer && taskDetails.submission.fileUrlAnswer.length > 'task/'.length && (
-                <LinkButton href={`${API_BASE_URL}/cdn/${taskDetails.submission.fileUrlAnswer}`} external colorScheme="brand" mt={5}>
+              {data.submission.fileUrlAnswer && data.submission.fileUrlAnswer.length > 'task/'.length && (
+                <LinkButton href={`${API_BASE_URL}/cdn/${data.submission.fileUrlAnswer}`} external colorScheme="brand" mt={5}>
                   Letöltés
                 </LinkButton>
               )}
@@ -303,26 +295,26 @@ const TaskPage = () => {
           )}
         </>
       )}
-      {reviewed && taskDetails.submission && (
+      {reviewed && data.submission && (
         <>
           <Heading size="md" mt={8}>
             Értékelés
           </Heading>
-          <Text mt={2}>Javító üzenete: {taskDetails.submission.response}</Text>
-          {typeof taskDetails.submission.score !== 'undefined' && <Text>Pont: {taskDetails.submission.score} pont</Text>}
+          <Text mt={2}>Javító üzenete: {data.submission.response}</Text>
+          {typeof data.submission.score !== 'undefined' && <Text>Pont: {data.submission.score} pont</Text>}
         </>
       )}
 
-      {taskDetails.task?.availableTo && (
+      {data.task?.availableTo && (
         <Alert variant="left-accent" status="info" mt={5}>
-          <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(taskDetails.task?.availableTo || 0)}
+          <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(data.task?.availableTo || 0)}
         </Alert>
       )}
 
       {submissionAllowed && (
         <>
           <Heading size="md" mt={5}>
-            {taskDetails.status === taskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
+            {data.status === taskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
           </Heading>
           <Stack mt={5}>
             {localSubmission ? (

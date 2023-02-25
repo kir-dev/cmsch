@@ -23,36 +23,26 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
 import { useRiddleDetailsQuery } from '../../api/hooks/riddle/useRiddleDeatilsQuery'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useRiddleSubmitMutation } from '../../api/hooks/riddle/useRiddleSubmitMutation'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { useRiddleHintQuery } from '../../api/hooks/riddle/useRiddleHintQuery'
 import { ConfirmDialogButton } from '../../common-components/ConfirmDialogButton'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
 
 const RiddlePage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const toast = useToast()
   const toastIdRef = useRef<ToastId | null>(null)
-  const { sendMessage } = useServiceContext()
   const solutionInput = useRef<HTMLInputElement>(null)
-  const onRiddleQueryFailed = () => toast({ title: l('riddle-query-failed'), status: 'error' })
-  const queryResult = useRiddleDetailsQuery(onRiddleQueryFailed, id || '')
-  const hintQuery = useRiddleHintQuery(onRiddleQueryFailed, id || '')
+  const { isError, isLoading, data } = useRiddleDetailsQuery(id || '')
+  const hintQuery = useRiddleHintQuery(id || '')
   const submissionMutation = useRiddleSubmitMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
 
-  if (queryResult.isError) {
-    sendMessage(l('riddle-query-failed') + queryResult.error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
 
-  if (queryResult.isLoading) {
-    return <LoadingPage />
-  }
-
-  if (!id) return <Navigate to="/" replace />
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 
   const submitSolution = (event: FormEvent) => {
     if (!allowSubmission) return
@@ -114,23 +104,21 @@ const RiddlePage = () => {
       to: AbsolutePaths.RIDDLE
     },
     {
-      title: queryResult.data?.title
+      title: data.title
     }
   ]
 
   return (
     <CmschPage loginRequired groupRequired>
-      <Helmet title={queryResult.data?.title} />
+      <Helmet title={data.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
 
-      <Heading my={5}> {queryResult.data?.title} </Heading>
+      <Heading my={5}> {data.title} </Heading>
       <Box maxW="100%" w="30rem" mx="auto">
-        {queryResult.data?.imageUrl && (
-          <Image width="100%" src={`${API_BASE_URL}/cdn/${queryResult.data?.imageUrl}`} alt="Riddle Kép" borderRadius="md" />
-        )}
+        {data.imageUrl && <Image width="100%" src={`${API_BASE_URL}/cdn/${data.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
         <VStack mt={5} align="flex-start">
-          {queryResult.data?.creator && <Text>Létrehozó: {queryResult.data?.creator}</Text>}
-          {queryResult.data?.firstSolver && <Text>Első megoldó: {queryResult.data?.firstSolver}</Text>}
+          {data.creator && <Text>Létrehozó: {data.creator}</Text>}
+          {data.firstSolver && <Text>Első megoldó: {data.firstSolver}</Text>}
         </VStack>
         <Box
           as="form"
@@ -143,17 +131,17 @@ const RiddlePage = () => {
         >
           <FormControl>
             <FormLabel htmlFor="solution">Megoldásom:</FormLabel>
-            <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={queryResult.data?.solved} />
+            <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={data.solved} />
           </FormControl>
 
           <VStack spacing={5} mt={10}>
             <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme="brand" width="100%">
               Beadom
             </Button>
-            {hintQuery.isSuccess || queryResult.data?.hint ? (
+            {hintQuery.isSuccess || data.hint ? (
               <Alert status="info" borderRadius="md">
                 <AlertIcon />
-                {hintQuery.data?.hint || queryResult.data?.hint}
+                {hintQuery.data?.hint || data.hint}
               </Alert>
             ) : (
               <>

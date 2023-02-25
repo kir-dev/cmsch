@@ -4,7 +4,7 @@ import { ApiPaths } from '../../../util/paths'
 import { RiddleCategory } from '../../../util/views/riddle.view'
 import { QueryKeys } from '../queryKeys'
 
-export const useRiddleListQuery = (onError: (err: any) => void) => {
+export const useRiddleListQuery = (onError?: (err: any) => void) => {
   return useQuery<RiddleCategory[], Error>(
     QueryKeys.RIDDLE,
     async () => {

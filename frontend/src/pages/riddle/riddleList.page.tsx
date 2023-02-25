@@ -1,16 +1,17 @@
 import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { RiddleCategory } from '../../util/views/riddle.view'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { AbsolutePaths } from '../../util/paths'
 import { l } from '../../util/language'
 import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { LoadingPage } from '../loading/loading.page'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { PageStatus } from '../../common-components/PageStatus'
 
 function progress(riddleCategory: RiddleCategory) {
-  if (riddleCategory.completed === 0) {
+  if (riddleCategory.total === 0) {
     return 0
   }
   return riddleCategory.completed / riddleCategory.total
@@ -18,19 +19,13 @@ function progress(riddleCategory: RiddleCategory) {
 
 const RiddleCategoryList = () => {
   const navigate = useNavigate()
-  const { sendMessage } = useServiceContext()
   const toast = useToast()
+  const component = useConfigContext()?.components.riddle
+  const { isLoading, isError, data } = useRiddleListQuery()
 
-  const queryResult = useRiddleListQuery(() => toast({ title: l('riddle-query-failed'), status: 'error' }))
+  if (!component) return <ComponentUnavailable />
 
-  if (queryResult.isError) {
-    sendMessage(l('riddle-query-failed') + queryResult.error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (queryResult.isLoading) {
-    return <LoadingPage />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   const onRiddleCategoryClick = (nextRiddle?: number) => {
     if (nextRiddle) {
@@ -65,9 +60,9 @@ const RiddleCategoryList = () => {
       <Helmet title="Riddleök" />
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">
-        {(queryResult.data || []).length > 0 ? (
+        {(data || []).length > 0 ? (
           <>
-            {queryResult.data?.map((riddleCategory) => (
+            {data.map((riddleCategory) => (
               <Box
                 key={riddleCategory.categoryId}
                 bg={bg}
@@ -91,7 +86,7 @@ const RiddleCategoryList = () => {
             ))}
           </>
         ) : (
-          <Text>Nincs egyetlen riddle feladat se.</Text>
+          <Text>Nincs egyetlen riddle feladat sem.</Text>
         )}
       </VStack>
     </CmschPage>

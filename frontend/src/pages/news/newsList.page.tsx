@@ -1,36 +1,25 @@
 import { Helmet } from 'react-helmet-async'
-import { Navigate } from 'react-router-dom'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+
 import { useNewsListQuery } from '../../api/hooks/news/useNewsListQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import NewsList from './components/NewsList'
 import { sortNewsList } from './util/sortNewsList'
-import { AbsolutePaths } from '../../util/paths'
-import { l } from '../../util/language'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 const NewsListPage = () => {
-  const newsList = useNewsListQuery(() => console.log('News list query failed!'))
-  const { sendMessage } = useServiceContext()
+  const { data, isLoading, isError } = useNewsListQuery()
+  const component = useConfigContext()?.components.news
 
-  if (newsList.isLoading) {
-    return <LoadingPage />
-  }
+  if (!component) return <ComponentUnavailable />
 
-  if (newsList.isError) {
-    sendMessage(l('news-list-load-failed') + newsList.error.message)
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
-
-  if (typeof newsList.data === 'undefined') {
-    sendMessage(l('news-list-load-failed-contact-developers'))
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component?.title} />
 
   return (
     <CmschPage>
-      <Helmet title="Hírek" />
-      <NewsList newsList={sortNewsList(newsList.data)} />
+      <Helmet title={component.title} />
+      <NewsList newsList={sortNewsList(data)} />
     </CmschPage>
   )
 }

@@ -2,35 +2,32 @@ import { Box, Button, FormControl, FormLabel, Heading, HStack, Input, useColorMo
 import { FormEvent, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router-dom'
+
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useAliasChangeMutation } from '../../api/hooks/alias/useAliasChangeMutation'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { LoadingPage } from '../loading/loading.page'
+import { PageStatus } from '../../common-components/PageStatus'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 export const AliasChangePage = () => {
-  const { sendMessage } = useServiceContext()
-  const { profile, profileLoading, profileError } = useAuthContext()
-  const profileComponent = useConfigContext()?.components.profile
   const navigate = useNavigate()
   const toast = useToast()
   const submissionMutation = useAliasChangeMutation()
-  const bordetColor = useColorModeValue('gray.200', 'gray.600')
+  const borderColor = useColorModeValue('gray.200', 'gray.600')
+  const { profile, profileLoading, profileError } = useAuthContext()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
+  const component = useConfigContext()?.components.profile
 
-  if (profileLoading) return <LoadingPage />
+  if (!component) return <ComponentUnavailable />
 
-  if (profileError || !profileComponent) {
-    sendMessage(l('profile-load-failed') + profileError?.message || '')
-    return <Navigate replace to={AbsolutePaths.ERROR} />
-  }
+  if (profileError || profileLoading || !profile) return <PageStatus isLoading={profileLoading} isError={!!profileError} />
 
-  if (!profileComponent.aliasChangeEnabled) {
+  if (!component.aliasChangeEnabled) {
     toast({ title: l('alias-change-not-allowed'), status: 'error' })
-    navigate(AbsolutePaths.PROFILE)
+    return <Navigate to={AbsolutePaths.PROFILE} />
   }
 
   const onSubmitAlias = (e: FormEvent) => {
@@ -70,7 +67,7 @@ export const AliasChangePage = () => {
     <CmschPage>
       <Helmet title="Becenév módosítása" />
       <Heading my={5}>Becenév módosítása</Heading>
-      <Box as="form" borderWidth={2} borderColor={bordetColor} borderRadius="md" p={5} mt={5} onSubmit={onSubmitAlias}>
+      <Box as="form" borderWidth={2} borderColor={borderColor} borderRadius="md" p={5} mt={5} onSubmit={onSubmitAlias}>
         <FormControl>
           <FormLabel htmlFor="alias">Becenév:</FormLabel>
           <Input
