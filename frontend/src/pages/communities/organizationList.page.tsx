@@ -1,6 +1,6 @@
 import { SearchIcon } from '@chakra-ui/icons'
 import { Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-import { createRef, useState } from 'react'
+import { createRef, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Paragraph } from '../../common-components/Paragraph'
 import { CardListItem } from './components/CardListItem'
@@ -18,13 +18,27 @@ export default function OrganizationListPage() {
   const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
-
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
-    if (!search) setFilteredOrganizations(data)
-    else setFilteredOrganizations(data.filter((c) => c.name.toLocaleLowerCase().includes(search)))
+    if (!data) setFilteredOrganizations([])
+    else if (!search) setFilteredOrganizations(data)
+    else
+      setFilteredOrganizations(
+        data.filter((o) => {
+          if (o.interests?.find((i) => i.toLowerCase().includes(search))) return true
+          return o.name.toLocaleLowerCase().includes(search)
+        })
+      )
   }
+
+  useEffect(() => {
+    if (data) {
+      setFilteredOrganizations(data)
+      if (inputRef.current) inputRef.current.value = ''
+    }
+  }, [data])
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
 
   return (
     <CmschPage>

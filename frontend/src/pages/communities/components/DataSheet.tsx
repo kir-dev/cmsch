@@ -2,13 +2,16 @@ import { EditIcon, LinkIcon } from '@chakra-ui/icons'
 import { Box, Flex, Heading, HStack, Image, Link, Tag, VStack, Wrap } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { FC, ReactNode } from 'react'
-import { FaAt, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
+import ReactMarkdown from 'react-markdown'
+import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
+
 import { LinkButton } from '../../../common-components/LinkButton'
-import { Paragraph } from '../../../common-components/Paragraph'
-import { Organization } from '../../../util/views/organization'
+import { Community, Organization } from '../../../util/views/organization'
+import { joinPath } from '../../../util/core-functions.util'
+import { AbsolutePaths } from '../../../util/paths'
 
 type DataSheetProps = {
-  organization: Organization
+  organization: Organization | Community
 }
 
 /**
@@ -24,6 +27,11 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
       <Flex flexDir={{ base: 'column-reverse', sm: 'row' }} justify="space-between" align="center" mt={{ base: 2, sm: 5 }}>
         {isDataAvailable && (
           <VStack alignItems="flex-start" alignSelf={{ base: 'flex-start', sm: 'center' }}>
+            {'resortName' in organization && (
+              <DataField icon={<FaBuilding />} label="Reszort">
+                <Link href={joinPath(AbsolutePaths.ORGANIZATION, organization.resortId)}>{organization.resortName}</Link>
+              </DataField>
+            )}
             {organization.established && (
               <DataField icon={<FaBusinessTime />} label="Alapítva">
                 <Box>{organization.established}</Box>
@@ -41,7 +49,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
             )}
             {organization.interests && (
               <Flex flexWrap="wrap">
-                {organization.interests.split(',').map((interest) => (
+                {organization.interests.map((interest) => (
                   <Box p={0.5}>
                     <Tag colorScheme={organization.color} variant="solid" key={interest}>
                       {interest}
@@ -54,7 +62,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
         )}
         {generateLogo(organization)}
       </Flex>
-      {organization.descriptionParagraphs && generateParagraphs(organization.descriptionParagraphs)}
+      {organization.descriptionParagraphs && <ReactMarkdown>{organization.descriptionParagraphs}</ReactMarkdown>}
 
       <Wrap marginTop={10} justify={{ base: 'center', md: 'flex-start' }}>
         {organization.website && (
@@ -95,20 +103,6 @@ const DataField: FC<DataFieldProps> = ({ icon, label, children }) => (
     {children}
   </HStack>
 )
-
-const generateParagraphs = (paragraphs: string | string[]): JSX.Element => {
-  if (Array.isArray(paragraphs)) {
-    return (
-      <>
-        {paragraphs.map((paragraph, index) => (
-          <Paragraph key={`${index}@${paragraph.substring(0, 16)}`}>{paragraph}</Paragraph>
-        ))}
-      </>
-    )
-  }
-
-  return <Paragraph>{paragraphs}</Paragraph>
-}
 
 const generateLogo = (org: Organization): JSX.Element | null => {
   let logoSource: string | null | undefined

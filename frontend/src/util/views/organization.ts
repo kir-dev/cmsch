@@ -11,19 +11,20 @@ export interface Organization {
   email?: string
   members?: number
   color?: string
-  interests?: string
+  interests?: string[]
   facebook?: string
   instagram?: string
   application?: string
-  imageIds?: string
-  videoIds?: string
+  imageIds?: string[]
+  videoIds?: string[]
   visible?: boolean
 }
 
 export interface Community extends Organization {
   resortId?: number
-  searchKeywords?: string
-  svgMapId?: number
+  resortName?: string
+  searchKeywords?: string[]
+  svgMapId?: string[]
 }
 
 export type OrganizationListItem = Pick<Organization, 'id' | 'name' | 'shortDescription' | 'logo' | 'members'>
