@@ -5,7 +5,6 @@ import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
-import { Paragraph } from '../../common-components/Paragraph'
 import { useCommunity } from '../../api/hooks/community/useCommunity'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { PageStatus } from '../../common-components/PageStatus'
@@ -31,7 +30,6 @@ export default function CommunityPage() {
       <Helmet title={data.name} />
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={data} />
-      {!data.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
       {data.videoIds?.map((id) => (
         <Frame key={id} id={id} />
