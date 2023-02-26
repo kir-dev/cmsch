@@ -60,9 +60,7 @@ const languageData = {
   'organization-title': 'Reszortok',
   'organization-description': 'Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.',
   'community-title': 'Körök',
-  'community-description':
-    'A karon számtalan öntevékeny kör működik, mindenki megtalálhatja az' +
-    'érdeklődési körének megfelelő csoportot. A körök a Schönherz Kollégiumban működnek.',
+  'community-description': 'A körök fogják össze az azonos érdeklődésű körű hallgatókat. A körök a Schönherz Kollégiumban működnek.',
   'page-load-failed': '{{title}} betöltése sikertelen!',
   'page-load-failed-contact-developers': '{{title}} betöltése sikertelen!\n Keresd az oldal fejlesztőit.'
 }

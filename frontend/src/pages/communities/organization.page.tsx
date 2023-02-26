@@ -5,7 +5,6 @@ import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
-import { Paragraph } from '../../common-components/Paragraph'
 import { AbsolutePaths } from '../../util/paths'
 import { useOrganization } from '../../api/hooks/community/useOrganization'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -33,7 +32,6 @@ export default function OrganizationPage() {
       <Helmet title={data.name} />
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={data} />
-      {!data.application && <Paragraph>Jelentkezés személyesen.</Paragraph>}
 
       {data.videoIds?.map((id) => (
         <Frame key={id} id={id} />

@@ -2,13 +2,13 @@ import { EditIcon, LinkIcon } from '@chakra-ui/icons'
 import { Box, Flex, Heading, HStack, Image, Link, Tag, VStack, Wrap } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { FC, ReactNode } from 'react'
-import ReactMarkdown from 'react-markdown'
 import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
 
 import { LinkButton } from '../../../common-components/LinkButton'
 import { Community, Organization } from '../../../util/views/organization'
 import { joinPath } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
+import Markdown from '../../../common-components/Markdown'
 
 type DataSheetProps = {
   organization: Organization | Community
@@ -62,7 +62,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
         )}
         {generateLogo(organization)}
       </Flex>
-      {organization.descriptionParagraphs && <ReactMarkdown>{organization.descriptionParagraphs}</ReactMarkdown>}
+      {organization.descriptionParagraphs && <Markdown text={organization.descriptionParagraphs} />}
 
       <Wrap marginTop={10} justify={{ base: 'center', md: 'flex-start' }}>
         {organization.website && (
