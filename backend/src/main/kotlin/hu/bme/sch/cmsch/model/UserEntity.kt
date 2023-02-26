@@ -181,7 +181,7 @@ data class UserEntity(
     var profileTopMessage: String? = "",
 
     @JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "boolean not null default 'false'")
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Importált adatok", note = "Volt-e már máshonnan importálva adat")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
