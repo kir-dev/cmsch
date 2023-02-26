@@ -18,21 +18,21 @@ class CommunitiesApiController(
 
     @JsonView(Preview::class)
     @GetMapping("/community")
-    fun allCommunities(auth: Authentication): List<CommunityEntity> {
+    fun allCommunities(): List<CommunityEntity> {
         return organizationService.getCommunities()
             .filter { it.visible }
     }
 
     @JsonView(Preview::class)
     @GetMapping("/organization")
-    fun allOrganizations(auth: Authentication): List<OrganizationEntity> {
+    fun allOrganizations(): List<OrganizationEntity> {
         return organizationService.getOrganizations()
             .filter { it.visible }
     }
 
     @JsonView(FullDetails::class)
     @GetMapping("/community/{communityId}")
-    fun allCommunities(auth: Authentication, @PathVariable communityId: Int): CommunityEntity? {
+    fun allCommunities(@PathVariable communityId: Int): CommunityEntity? {
         return organizationService.getCommunityById(communityId)
             .filter { it.visible }
             .orElse(null)
@@ -40,7 +40,7 @@ class CommunitiesApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/organization/{organizationId}")
-    fun allOrganizations(auth: Authentication, @PathVariable organizationId: Int): OrganizationEntity? {
+    fun allOrganizations(@PathVariable organizationId: Int): OrganizationEntity? {
         return organizationService.getOrganizationById(organizationId)
             .filter { it.visible }
             .orElse(null)

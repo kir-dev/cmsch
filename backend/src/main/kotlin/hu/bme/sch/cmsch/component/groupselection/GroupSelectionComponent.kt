@@ -20,17 +20,11 @@ class GroupSelectionComponent(
 
     final override val allSettings by lazy {
         listOf(
-            selectionEnabled,
             minRole,
         )
     }
 
     final override val menuDisplayName = null
-
-    val selectionEnabled = SettingProxy(componentSettingService, component,
-        "selectionEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Választás engedélyezve", description = "Csak akkor jelenik meg a lehetőség ha ez be van kapcsolva"
-    )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", RoleType.BASIC.name, minRoleToEdit = RoleType.STAFF,

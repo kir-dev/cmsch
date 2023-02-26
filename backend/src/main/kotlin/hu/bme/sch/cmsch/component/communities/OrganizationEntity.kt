@@ -132,8 +132,8 @@ data class OrganizationEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(order = 15, label = "Képek URL-jei", enabled = true,
-        note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
+    @property:GenerateInput(order = 15, label = "Jelentkezés URL-je", enabled = true,
+        note = "Ha nincs, akkor az lesz kiírva, hogy személyesen lehet jelntkezni")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14)
     var application: String = "",

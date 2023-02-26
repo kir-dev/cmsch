@@ -29,22 +29,22 @@ class CommunitiesComponent(
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Körök",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+        fieldName = "Körök lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
     final override val menuDisplayName = SettingProxy(componentSettingService, component,
         "menuDisplayName", "Körök", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
+        fieldName = "Körök menü neve", description = "Ez lesz a neve a menünek"
     )
 
     final val titleResort = SettingProxy(componentSettingService, component,
-        "title", "Reszortok",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+        "titleResort", "Reszortok",
+        fieldName = "Reszortok lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
     final val menuDisplayNameResort = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Reszortok", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
+        "menuDisplayNameResort", "Reszortok", serverSideOnly = true,
+        fieldName = "Reszortok menü neve", description = "Ez lesz a neve a menünek"
     )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
