@@ -65,6 +65,9 @@ class ProfileComponent(
             showIncompleteProfile,
             profileIncomplete,
             profileComplete,
+
+            groupSelectionGroup,
+            selectionEnabled,
         )
     }
 
@@ -298,6 +301,19 @@ class ProfileComponent(
     val profileComplete = SettingProxy(componentSettingService, component,
         "profileComplete", "A profil sikeresen ki lett töltve!", type = SettingType.LONG_TEXT,
         fieldName = "'Profil kitöltve' üzenet", description = "Ha üres, nem látszik, ha ki van töltve a profil akkor sem."
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val groupSelectionGroup = SettingProxy(componentSettingService, component,
+        "groupSelectionGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Csoport választása", description = "Ez a kategória csak akkor lesz használható, hogyha a " +
+                "'groupselection' komponens be van kapcsolva."
+    )
+
+    val selectionEnabled = SettingProxy(componentSettingService, component,
+        "selectionEnabled", "true", type = SettingType.BOOLEAN,
+        fieldName = "Választás engedélyezve", description = "Csak akkor jelenik meg a lehetőség ha ez be van kapcsolva"
     )
 
 }

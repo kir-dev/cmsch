@@ -1,9 +1,11 @@
 package hu.bme.sch.cmsch.component.groupselection
 
+import hu.bme.sch.cmsch.component.profile.ProfileComponent
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api")
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 @ConditionalOnBean(GroupSelectionComponent::class)
 class GroupSelectionApiController(
     private val groupSelectionService: GroupSelectionService,
-    private val groupSelectionComponent: GroupSelectionComponent
+    private val profileComponent: Optional<ProfileComponent>
 ) {
 
     @PostMapping("/group/select/{groupId}")
@@ -19,8 +21,8 @@ class GroupSelectionApiController(
         val user = auth?.getUserFromDatabaseOrNull()
             ?: return GroupSelectionResponse(GroupSelectionResponseType.UNAUTHORIZED)
 
-        if (!groupSelectionComponent.selectionEnabled.isValueTrue()
-                || !groupSelectionComponent.minRole.isAvailableForRole(user.role)) {
+        if (!profileComponent.map { it.selectionEnabled.isValueTrue() }.orElse(false)
+                || !profileComponent.map { it.minRole.isAvailableForRole(user.role) }.orElse(false)) {
             return GroupSelectionResponse(GroupSelectionResponseType.PERMISSION_DENIED)
         }
 

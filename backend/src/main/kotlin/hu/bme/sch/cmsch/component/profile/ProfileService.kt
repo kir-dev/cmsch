@@ -75,7 +75,7 @@ open class ProfileService(
             // Group selection component
             groupSelectionAllowed = leavable,
             availableGroups = if (leavable) fetchSelectableGroups() else null,
-            fallbackGroup = fetchFallbackGroup().orElse(null),
+            fallbackGroup = fetchFallbackGroup(),
 
             // Token component
             tokens = tokenService.map { repo -> repo.getTokensForUser(user) }.orElse(null),
@@ -116,7 +116,7 @@ open class ProfileService(
     }
 
     private fun fetchWhetherGroupLeavable(group: GroupEntity?) =
-        groupSelectionComponent.map { it.selectionEnabled.mapIfTrue { group?.leaveable ?: true } ?: false }.orElse(false)
+        profileComponent.selectionEnabled.mapIfTrue { group?.leaveable ?: true } ?: false
 
     private fun fetchTotalTokenCount(tokenCategoryToDisplay: String) =
         tokenService.map { repo ->
@@ -146,14 +146,13 @@ open class ProfileService(
         }
 
     private fun fetchFallbackGroup() =
-        groupSelectionComponent.map { repo ->
-            repo.selectionEnabled.mapIfTrue {
-                groupRepository
-                    .findByName(loginComponent.map { it.fallbackGroupName.getValue() }.orElse("Vendég"))
-                    .map { it.id }
-                    .orElse(null)
-            }
+        profileComponent.selectionEnabled.mapIfTrue {
+            groupRepository
+                .findByName(loginComponent.map { it.fallbackGroupName.getValue() }.orElse("Vendég"))
+                .map { it.id }
+                .orElse(null)
         }
+
 
     private fun fetchGroupLeaders(group: GroupEntity?) =
         group?.let { g ->
