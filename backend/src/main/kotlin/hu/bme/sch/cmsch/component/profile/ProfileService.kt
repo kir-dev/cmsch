@@ -197,7 +197,9 @@ open class ProfileService(
         }
 
     private fun fetchSelectableGroups(): Map<Int, String> {
-        return groupRepository.findAllBySelectableTrue().associate { Pair(it.id, it.name) }
+        return groupRepository.findAllBySelectableTrue()
+            .sortedBy { it.name }
+            .associate { Pair(it.id, it.name) }
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
