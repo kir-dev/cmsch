@@ -13,6 +13,10 @@ data class GoogleUserInfoResponse(
     @set:JsonProperty("family_name")
     var familyName: String = "",
 
+    @set:JsonProperty(required = false)
+    @get:JsonProperty(required = false)
+    var profile: String = "",
+
     var picture: String = "",
 
     var email: String = "",

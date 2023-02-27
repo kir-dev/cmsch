@@ -85,12 +85,13 @@ class SignupResponsesAdminController(
 
     private fun fetchOverview(): List<FormVirtualEntity> {
         return signupResponseRepository.findAll()
-                .groupBy { it.formId }
-                .map { it.value }
-                .filter { it.isNotEmpty() }
-                .map { it ->
-                    val form = signupFormRepository.findById(it[0].formId).orElseThrow()
-                    FormVirtualEntity(
+            .groupBy { it.formId }
+            .map { it.value }
+            .filter { it.isNotEmpty() }
+            .mapNotNull { it ->
+                signupFormRepository.findById(it[0].formId)
+                    .map { form ->
+                        FormVirtualEntity(
                             form.id,
                             form.name,
                             form.submissionLimit,
@@ -98,8 +99,9 @@ class SignupResponsesAdminController(
                             it.count { it.accepted },
                             it.count { it.rejected },
                             it.count { it.detailsValidated },
-                    )
-                }
+                        )
+                    }.orElse(null)
+            }
     }
 
     @GetMapping("/view/{id}")
