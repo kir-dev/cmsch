@@ -80,6 +80,8 @@ open class SecurityConfig(
                         "/cdn/manifest/**", "/manifest/manifest.json",
                         "/cdn/public/**",
                         "/cdn/task/**",
+                        "/cdn/news/**",
+                        "/cdn/event/**",
                         "/control/refresh",
                         "/c/**")
                     .permitAll()
@@ -112,7 +114,7 @@ open class SecurityConfig(
                 .defaultSuccessUrl("/control/post-login")
 
         countdownConfigurer.ifPresent { http.apply(it) }
-        http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**", "/admin/admission/**")
+        http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**", "/admin/admission/**", "/cdn/**")
     }
 
     private fun resolveAuthschUser(request: OAuth2UserRequest): DefaultOAuth2User {
