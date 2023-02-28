@@ -106,12 +106,12 @@ const ProfilePage = ({}: Props) => {
             </LinkButton>
           )}
           {profile.groupSelectionAllowed && (
-            <LinkButton colorScheme="brand" href={`${AbsolutePaths.PROFILE}/tankor-modositas`}>
+            <LinkButton colorScheme="brand" href={AbsolutePaths.CHANGE_GROUP}>
               {component?.groupTitle} módosítása
             </LinkButton>
           )}
           {component.aliasChangeEnabled && (
-            <LinkButton colorScheme="brand" href={`${AbsolutePaths.PROFILE}/change-alias`}>
+            <LinkButton colorScheme="brand" href={AbsolutePaths.CHANGE_ALIAS}>
               Becenév módosítása
             </LinkButton>
           )}

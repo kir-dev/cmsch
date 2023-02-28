@@ -22,7 +22,7 @@ export function ProfileGroupChangePage() {
       case GroupChangeStatus.OK:
         refetch()
         sendMessage('Sikeres mentés!', { toast: true, toastStatus: 'success' })
-        navigate('/profil')
+        navigate(AbsolutePaths.PROFILE)
         break
       case GroupChangeStatus.INVALID_GROUP:
         setError('Érvénytelen tankör!')
@@ -48,7 +48,7 @@ export function ProfileGroupChangePage() {
     else setError('Válassz tankört!')
   }
 
-  if (!profile || !profile.groupSelectionAllowed) return <Navigate to="/profil" />
+  if (!profile || !profile.groupSelectionAllowed) return <Navigate to={AbsolutePaths.PROFILE} />
 
   return (
     <CmschPage>
@@ -66,13 +66,12 @@ export function ProfileGroupChangePage() {
             <FormLabel>Melyik tankörbe tartozol?</FormLabel>
             <Select
               id="group"
-              value={value}
               onChange={(evt) => {
                 setValue(evt.target.value)
               }}
             >
-              {Object.entries<string>(profile.availableGroups).map((entry) => (
-                <option key={entry[0]} value={entry[0]}>
+              {Object.entries<string>(profile.availableGroups)?.map((entry) => (
+                <option key={entry[0]} value={entry[0]} selected={entry[1] === profile?.groupName}>
                   {entry[1]}
                 </option>
               ))}
