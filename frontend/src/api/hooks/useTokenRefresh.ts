@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { ApiPaths } from '../../../util/paths'
+import { ApiPaths } from '../../util/paths'
 
 export const useTokenRefresh = (onError?: (err: any) => void) => {
   const [loading, setLoading] = useState<boolean>(false)
