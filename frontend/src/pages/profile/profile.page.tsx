@@ -15,7 +15,7 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -40,18 +40,20 @@ type Props = {}
 
 const ProfilePage = ({}: Props) => {
   const { onLogout, profile, profileLoading, profileError, refetch } = useAuthContext()
+  const navigate = useNavigate()
 
-  // The currentUser query is define in the Auth context, so it doesn't automatically run it when the profile page loads
-  //(since the context provider component is already mounted)
   useEffect(() => {
+    const savedPath = localStorage.getItem('path')
+    if (savedPath) {
+      localStorage.removeItem('path')
+      navigate(savedPath)
+    }
     refetch()
   }, [])
 
-  const config = useConfigContext()
-  const component = config?.components.profile
+  const component = useConfigContext()?.components.profile
 
   if (!component) return <ComponentUnavailable />
-
   if (profileError || profileLoading || !profile) return <PageStatus isLoading={profileLoading} isError={!!profileError} title="Profil" />
 
   if (!profile.loggedIn || profile.role === 'GUEST') {

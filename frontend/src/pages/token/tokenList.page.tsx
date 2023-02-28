@@ -24,7 +24,7 @@ const TokenList = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
-    <CmschPage loginRequired groupRequired>
+    <CmschPage loginRequired>
       <Helmet title={component.title || 'QR kódok'} />
       <Heading as="h1">{component.title || 'QR kódok'}</Heading>
       <PresenceAlert acquired={data.collectedTokenCount} needed={data.minTokenToComplete} />

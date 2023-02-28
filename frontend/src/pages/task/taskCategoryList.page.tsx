@@ -34,7 +34,7 @@ const TaskCategoryList = () => {
   )
 
   return (
-    <CmschPage loginRequired groupRequired>
+    <CmschPage loginRequired>
       <Helmet title={component.title} />
       {required}
       <Heading>{component.regularTitle}</Heading>
