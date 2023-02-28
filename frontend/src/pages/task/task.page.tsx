@@ -248,7 +248,7 @@ const TaskPage = () => {
   ]
 
   return (
-    <CmschPage loginRequired groupRequired>
+    <CmschPage loginRequired>
       <Helmet title={data.task?.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Flex my={5} justify="space-between" flexWrap="wrap" alignItems="center">

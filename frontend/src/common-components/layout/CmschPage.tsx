@@ -3,18 +3,15 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { RoleType } from '../../util/views/profile.view'
 import { Loading } from '../Loading'
-
-//import { AbsolutePaths } from '../../util/paths'
+import { LoginRequired } from '../LoginRequired'
 
 interface CmschPageProps extends CmschContainerProps {
   loginRequired?: boolean
-  groupRequired?: boolean
   minRole?: RoleType
 }
 
-export const CmschPage = ({ loginRequired, groupRequired, children, minRole, ...props }: CmschPageProps) => {
-  const { profile, profileLoading } = useAuthContext()
-
+export const CmschPage = ({ loginRequired, children, minRole, ...props }: CmschPageProps) => {
+  const { profile, profileLoading, isLoggedIn } = useAuthContext()
   if (minRole && minRole > 0) {
     if (profileLoading) {
       return <Loading />
@@ -22,9 +19,9 @@ export const CmschPage = ({ loginRequired, groupRequired, children, minRole, ...
       return <Navigate to="/" replace />
     }
   }
-  // if (loginRequired && !isLoggedIn) return <UnauthorizedPage />
-
-  // if (groupRequired && profile?.groupSelectionAllowed) return <Navigate to={`${AbsolutePaths.PROFILE}tankor-modositas`} />
+  if (loginRequired && !isLoggedIn) {
+    return <LoginRequired />
+  }
 
   return (
     <CmschContainer {...props} pb={10}>

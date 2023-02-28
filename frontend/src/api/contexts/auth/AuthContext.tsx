@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
     Cookies.remove(CookieKeys.SESSION_ID)
     queryClient.invalidateQueries(QueryKeys.USER, { refetchInactive: false })
-    console.log('[ERROR] at onLoginFailure', JSON.stringify(err, null, 2))
+    console.error('Login failure')
     navigate('/')
   }
 
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       await queryClient.invalidateQueries(QueryKeys.CONFIG, { refetchInactive: true }, { throwOnError: true })
       navigate(AbsolutePaths.PROFILE)
     } catch (err) {
-      console.log('[ERROR] at onLoginSuccess', JSON.stringify(err, null, 2))
+      console.error('Login failure')
     }
   }
 

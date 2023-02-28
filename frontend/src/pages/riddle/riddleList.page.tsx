@@ -56,7 +56,7 @@ const RiddleCategoryList = () => {
   const hoverBg = useColorModeValue('brand.200', 'brand.400')
 
   return (
-    <CmschPage loginRequired groupRequired>
+    <CmschPage>
       <Helmet title="Riddleök" />
       <Heading>Riddleök</Heading>
       <VStack spacing={4} mt={5} align="stretch">

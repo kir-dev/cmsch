@@ -109,7 +109,7 @@ const RiddlePage = () => {
   ]
 
   return (
-    <CmschPage loginRequired groupRequired>
+    <CmschPage loginRequired>
       <Helmet title={data.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
 

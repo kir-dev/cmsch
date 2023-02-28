@@ -15,16 +15,22 @@ import { FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/view
 import { CookieKeys } from '../../util/configs/cookies.config'
 import { useTokenRefresh } from '../../api/hooks/token/useTokenRefresh'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { AbsolutePaths } from '../../util/paths'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 
 interface FormPageProps {}
 
 const FormPage: FunctionComponent<FormPageProps> = () => {
   const toast = useToast()
   const params = useParams()
+  const { isLoggedIn } = useAuthContext()
   const { control, handleSubmit } = useForm()
   const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
   const { refresh } = useTokenRefresh()
+  const { sendMessage } = useServiceContext()
 
   useEffect(() => {
     if (result) {
@@ -48,10 +54,13 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
       window.scrollTo(0, 0)
     }
   }
+  if (!isLoggedIn) return <ComponentUnavailable />
+  if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED) {
+    if (status === FormStatus.NOT_FOUND) sendMessage('Űrlap nem található, vagy nincs jogod hozzá')
+    else sendMessage('Űrlap nincs engedélyezve')
 
-  if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED)
-    return <Navigate to="/" replace />
-
+    return <Navigate to={AbsolutePaths.ERROR} />
+  }
   return (
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />

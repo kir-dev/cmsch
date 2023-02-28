@@ -35,7 +35,7 @@ const TaskCategoryPage = () => {
   ]
 
   return (
-    <CmschPage loginRequired groupRequired>
+    <CmschPage loginRequired>
       <Helmet title={data.categoryName} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{data.categoryName}</Heading>
