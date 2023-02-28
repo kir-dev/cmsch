@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../../../util/configs/environment.config'
 import { AbsolutePaths } from '../../../util/paths'
 import { ProfileView } from '../../../util/views/profile.view'
 import { useProfileQuery } from '../../hooks/profile/useProfileQuery'
-import { useTokenRefresh } from '../../hooks/token/useTokenRefresh'
+import { useTokenRefresh } from '../../hooks/useTokenRefresh'
 import { QueryKeys } from '../../hooks/queryKeys'
 
 export type AuthContextType = {
