@@ -1,6 +1,8 @@
 export enum Paths {
   HOME = 'home',
   PROFILE = 'profile',
+  CHANGE_ALIAS = 'profile/change-alias',
+  CHANGE_GROUP = 'profile/change-group',
   RIDDLE = 'riddle',
   TASKS = 'tasks',
   NEWS = 'news',
@@ -25,6 +27,8 @@ export enum Paths {
 export enum AbsolutePaths {
   HOME = '/home',
   PROFILE = '/profile',
+  CHANGE_ALIAS = '/profile/change-alias',
+  CHANGE_GROUP = '/profile/change-group',
   RIDDLE = '/riddle',
   TASKS = '/tasks',
   NEWS = '/news',
@@ -64,7 +68,7 @@ export enum ApiPaths {
   LOCATION = '/api/track-my-group',
   TOKENS = '/api/tokens',
   CHANGE_ALIAS = '/api/profile/change-alias',
-  CHANGE_GROUP = '/api/groups/select',
+  CHANGE_GROUP = '/api/group/select',
   COMMUNITY = '/api/community',
   ORGANIZATION = '/api/organization'
 }

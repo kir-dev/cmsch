@@ -9,7 +9,7 @@ const ProfilePage = lazy(() => import('../pages/profile/profile.page'))
 export function ProfileModule() {
   return (
     <Route path={Paths.PROFILE}>
-      <Route path="tankor-modositas" element={<ProfileGroupChangePage />} />
+      <Route path="change-group" element={<ProfileGroupChangePage />} />
       <Route path="change-alias" element={<AliasChangePage />} />
       <Route index element={<ProfilePage />} />
     </Route>
