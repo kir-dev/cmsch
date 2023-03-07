@@ -138,7 +138,7 @@ class TokenAdminTokensByUsersOfGroupsController(
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
         val header = Paragraph()
             .add(ssslLogo)
-            .add(Paragraph("GÓLYAKÖRTE 2022\nJELENLÉTI - ${group.name}")
+            .add(Paragraph("GÓLYAKÖRTE 2023\nJELENLÉTI - ${group.name}")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE)
                 .setFont(font)
@@ -175,7 +175,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(12f))
 
-        val table: Table = Table(UnitValue.createPercentArray(floatArrayOf(40f, 15f, 15f, 15f, 15f)))
+        val table: Table = Table(UnitValue.createPercentArray(floatArrayOf(40f, 15f, 15f, 15f)))
             .useAllAvailableWidth()
         table.setMarginBottom(40f)
 
