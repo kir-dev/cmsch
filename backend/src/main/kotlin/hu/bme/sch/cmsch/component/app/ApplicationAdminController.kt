@@ -23,5 +23,11 @@ class ApplicationAdminController(
     "Oldal beállítások",
     componentMenuIcon = "functions",
     menuService = menuService
-)
+) {
+
+    override fun onUpdate() {
+        adminMenuService.invalidateSiteContext()
+    }
+
+}
 

@@ -3,22 +3,25 @@ package hu.bme.sch.cmsch.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
-enum class RoleType(val value: Int, val description: String) {
-    GUEST(0, "Nem bejelentkezett felhasználó"),
-    BASIC(1, "Bejelentkezett felhasználó"),
-    ATTENDEE(2, "Résztvevő, de sima felhasználó"),
-    PRIVILEGED(3, "Résztvevő, de megemelt jogkörökkel"),
-    STAFF(100, "Rendező, akinek az admin felületre be kellhet lépnie"),
-    ADMIN(200, "Adminisztrátor, aki mindenhez hozzáfér"),
-    SUPERUSER(500, "Adminisztrátor, de a fejlesztői menük is látszanak"),
-    NOBODY(Int.MAX_VALUE, "")
+enum class RoleType(val value: Int, val displayName: String, val description: String) {
+    GUEST(0, "Vendég", "Nem bejelentkezett felhasználó"),
+    BASIC(1, "Fekhasználó", "Bejelentkezett felhasználó"),
+    ATTENDEE(2, "Résztvevő", "Résztvevő, de sima felhasználó"),
+    PRIVILEGED(3, "Kiemelt", "Résztvevő, de megemelt jogkörökkel"),
+    STAFF(100, "Rendező", "Rendező, akinek az admin felületre be kellhet lépnie"),
+    ADMIN(200, "Adminisztrátor", "Adminisztrátor, aki mindenhez hozzáfér"),
+    SUPERUSER(500, "Fejlesztő", "Adminisztrátor, de a fejlesztői menük is látszanak"),
+    NOBODY(Int.MAX_VALUE, "", "")
     ;
 
     companion object {
@@ -173,23 +176,35 @@ data class UserEntity(
     var unitScopes: String? = "",
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 15, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_LOB)
-    var profileTopMessage: String? = "",
+    var profileTopMessage: String = "",
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "boolean not null default 'false'")
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Importált adatok", note = "Volt-e már máshonnan importálva adat")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
-    var detailsImported: Boolean = false
+    var detailsImported: Boolean = false,
+
+    @Lob
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(order = 16, label = "Konfigurációs beállítások", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_LOB)
+    var config: String = "",
 
 ): ManagedEntity, CmschUser {
 
-
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "User",
+        view = "control/users",
+        showPermission = StaffPermissions.PERMISSION_EDIT_USERS
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

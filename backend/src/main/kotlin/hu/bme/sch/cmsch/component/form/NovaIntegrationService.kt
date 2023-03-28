@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -28,8 +28,8 @@ const val CV_TAG = "cv"
     matchIfMissing = false
 )
 open class NovaIntegrationService(
-    private val signupResponseRepository: SignupResponseRepository,
-    private val signupFormRepository: SignupFormRepository,
+    private val responseRepository: ResponseRepository,
+    private val formRepository: FormRepository,
     private val userRepository: UserRepository,
     private val taskRepository: Optional<TaskEntityRepository>,
     private val submittedTaskRepository: Optional<SubmittedTaskRepository>,
@@ -41,7 +41,7 @@ open class NovaIntegrationService(
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun updateSubmissions(emails: List<String>): Int {
-        val form = signupFormRepository.findAll().firstOrNull { it.selected }
+        val form = formRepository.findAll().firstOrNull { it.selected }
 
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with non empty url")
@@ -50,7 +50,7 @@ open class NovaIntegrationService(
 
         var successful = 0
         val now = clock.getTimeInSeconds()
-        signupResponseRepository.findAllByFormId(form.id)
+        responseRepository.findAllByFormId(form.id)
             .filter { !it.rejected && !it.accepted }
             .filter { it.email.isNotBlank() && it.email in emails }
             .forEach {
@@ -58,7 +58,7 @@ open class NovaIntegrationService(
                 it.acceptedAt = now
                 it.lastUpdatedDate = now
 
-                signupResponseRepository.save(it)
+                responseRepository.save(it)
                 log.info("[NOVA/VALID-USERS] User response accepted for {}", it.email)
                 ++successful
             }
@@ -68,7 +68,7 @@ open class NovaIntegrationService(
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun fetchSubmissions(): List<FilledOutFormDto> {
-        val form = signupFormRepository.findAll().firstOrNull { it.selected }
+        val form = formRepository.findAll().firstOrNull { it.selected }
 
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with selected attribute")
@@ -77,7 +77,7 @@ open class NovaIntegrationService(
 
         val readerForSubmission = objectMapper.readerFor(object : TypeReference<Map<String, String>>() {})
 
-        return signupResponseRepository.findAllByFormId(form.id)
+        return responseRepository.findAllByFormId(form.id)
             .filter { !it.rejected }
             .map { response ->
                 val user = userRepository.findById(response.submitterUserId ?: 0)
@@ -132,7 +132,7 @@ open class NovaIntegrationService(
 
     private fun tryToParseSubmission(
         readerForSubmission: ObjectReader,
-        response: SignupResponseEntity
+        response: ResponseEntity
     ): Map<String, String> {
         return try {
             readerForSubmission.readValue(response.submission)
@@ -144,42 +144,42 @@ open class NovaIntegrationService(
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun setPaymentStatus(email: String, status: Boolean, rejectionMessage: String?) {
-        val form = signupFormRepository.findAll().firstOrNull { it.selected }
+        val form = formRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with non empty url")
             return
         }
 
         val now = clock.getTimeInSeconds()
-        signupResponseRepository.findAllByFormIdAndEmail(form.id, email)
+        responseRepository.findAllByFormIdAndEmail(form.id, email)
             .forEach {
                 it.accepted = status
                 it.acceptedAt = now
                 it.lastUpdatedDate = now
                 it.rejectionMessage = rejectionMessage ?: ""
 
-                signupResponseRepository.save(it)
+                responseRepository.save(it)
                 log.info("[NOVA/VALID-USERS] User response accepted={} for {} rej:{}", status, it.email, rejectionMessage)
             }
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun setDetailsStatus(email: String, status: Boolean, rejectionMessage: String?) {
-        val form = signupFormRepository.findAll().firstOrNull { it.selected }
+        val form = formRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with non empty url")
             return
         }
 
         val now = clock.getTimeInSeconds()
-        signupResponseRepository.findAllByFormIdAndEmail(form.id, email)
+        responseRepository.findAllByFormIdAndEmail(form.id, email)
             .forEach {
                 it.detailsValidated = status
                 it.detailsValidatedAt = now
                 it.lastUpdatedDate = now
                 it.rejectionMessage = rejectionMessage ?: ""
 
-                signupResponseRepository.save(it)
+                responseRepository.save(it)
                 log.info("[NOVA/VALID-USERS] User response validated={} for {} reason: {}", status, it.email, rejectionMessage)
             }
     }

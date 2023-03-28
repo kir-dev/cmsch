@@ -1,7 +1,8 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -9,14 +10,21 @@ import org.springframework.stereotype.Service
 @Service
 @ConditionalOnProperty(
     prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["signup"],
+    name = ["form"],
     havingValue = "true",
     matchIfMissing = false
 )
-class SignupComponent(
+class FormComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("signup", "/form", componentSettingService, env) {
+) : ComponentBase(
+    "form",
+    "/form",
+    "Űrlapok",
+    ControlPermissions.PERMISSION_CONTROL_FORM,
+    listOf(FormEntity::class, ResponseEntity::class),
+    componentSettingService, env
+) {
 
 
     final override val allSettings by lazy {

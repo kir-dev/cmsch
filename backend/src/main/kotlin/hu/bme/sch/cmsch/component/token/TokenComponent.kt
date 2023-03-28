@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class TokenComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("token", "/token", componentSettingService, env) {
+) : ComponentBase(
+    "token",
+    "/token",
+    "Tokenek",
+    ControlPermissions.PERMISSION_CONTROL_TOKEN,
+    listOf(TokenEntity::class, TokenPropertyEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

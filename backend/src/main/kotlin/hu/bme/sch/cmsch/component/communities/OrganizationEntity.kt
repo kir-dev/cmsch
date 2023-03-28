@@ -3,13 +3,16 @@ package hu.bme.sch.cmsch.component.communities
 import com.fasterxml.jackson.annotation.JsonView
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.StringToArraySerializer
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -166,6 +169,12 @@ data class OrganizationEntity(
     var visible: Boolean = false,
 
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "Organization",
+        view = "control/organization",
+        showPermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

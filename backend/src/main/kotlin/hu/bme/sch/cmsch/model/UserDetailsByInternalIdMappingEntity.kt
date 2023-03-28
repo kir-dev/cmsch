@@ -3,11 +3,14 @@ package hu.bme.sch.cmsch.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.*
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -88,6 +91,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_LOB)
     var profileTopMessage: String? = null,
 ) : ManagedEntity {
+
     fun allDetailsImported(): Boolean {
         return  neptun != null &&
                 internalId != null &&
@@ -99,6 +103,12 @@ data class UserDetailsByInternalIdMappingEntity(
                 profilePicture != null &&
                 profileTopMessage != null
     }
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "UserDetailsByInternalId",
+        view = "control/user-details-by-internal-id",
+        showPermission = StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

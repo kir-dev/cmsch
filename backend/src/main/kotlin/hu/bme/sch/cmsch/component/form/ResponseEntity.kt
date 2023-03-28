@@ -1,20 +1,23 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
-@Table(name="signupResponses")
-@ConditionalOnBean(SignupComponent::class)
-data class SignupResponseEntity(
+@Table(name="formResponses")
+@ConditionalOnBean(FormComponent::class)
+data class ResponseEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
@@ -123,10 +126,16 @@ data class SignupResponseEntity(
 
 ) : ManagedEntity {
 
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "Response",
+        view = "control/signup-responses",
+        showPermission = StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS
+    )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as SignupResponseEntity
+        other as ResponseEntity
 
         return id != 0 && id == other.id
     }

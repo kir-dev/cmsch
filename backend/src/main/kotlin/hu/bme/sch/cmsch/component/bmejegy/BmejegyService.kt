@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.bmejegy
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.signup.SignupService
+import hu.bme.sch.cmsch.component.form.FormService
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
@@ -36,7 +36,7 @@ open class BmejegyService(
     private val objectMapper: ObjectMapper,
     private val clock: TimeService,
     private val bmejegyRecordRepository: BmejegyRecordRepository,
-    private val signupService: SignupService,
+    private val formService: FormService,
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository
 ) {
@@ -94,7 +94,7 @@ open class BmejegyService(
             log.info("[BMEJEGY] Completing by photoId")
 
             val reader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
-            val forms = signupService.getSelectedForms()
+            val forms = formService.getSelectedForms()
 
             val group1 = if (bmejegy.grantGroupName1.getValue().isNotBlank())
                 groupRepository.findByName(bmejegy.grantGroupName1.getValue()).orElse(null) else null
@@ -104,7 +104,7 @@ open class BmejegyService(
                 groupRepository.findByName(bmejegy.grantGroupName3.getValue()).orElse(null) else null
 
             forms.forEach { form ->
-                signupService.getSubmissions(form).forEach { raw ->
+                formService.getSubmissions(form).forEach { raw ->
                     val submission = reader.readValue<MutableMap<String, String>>(raw.submission)
                     // TODO: This implementation is only for GÓLYABÁL 2022
                     val photoId = (submission["szig"] ?: "").uppercase()

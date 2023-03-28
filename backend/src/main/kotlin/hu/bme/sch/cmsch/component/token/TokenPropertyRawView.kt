@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.model.ManagedEntity
+import org.springframework.core.env.Environment
 
 data class TokenPropertyRawView(
 
@@ -36,4 +37,8 @@ data class TokenPropertyRawView(
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)
     var timestamp: Long = 0
 
-) : ManagedEntity
+) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = null
+
+}

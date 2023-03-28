@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -16,7 +17,14 @@ import org.springframework.stereotype.Service
 class LocationComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("location", "/", componentSettingService, env) {
+) : ComponentBase(
+    "location",
+    "/",
+    "Helymeghatározá",
+    ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

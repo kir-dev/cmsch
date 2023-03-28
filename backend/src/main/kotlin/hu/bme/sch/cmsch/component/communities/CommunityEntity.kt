@@ -3,13 +3,16 @@ package hu.bme.sch.cmsch.component.communities
 import com.fasterxml.jackson.annotation.JsonView
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.StringToArraySerializer
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -191,6 +194,12 @@ data class CommunityEntity(
     var svgMapId: String = "",
 
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "Community",
+        view = "control/community",
+        showPermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES
+    )
 
     @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     var resortName: String = ""

@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.news
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class NewsComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("news", "/news", componentSettingService, env) {
+) : ComponentBase(
+    "news",
+    "/news",
+    "Hírek",
+    ControlPermissions.PERMISSION_CONTROL_APP,
+    listOf(NewsEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

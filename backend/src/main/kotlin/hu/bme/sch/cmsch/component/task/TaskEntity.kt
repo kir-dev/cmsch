@@ -2,12 +2,15 @@ package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 enum class TaskType {
@@ -155,6 +158,12 @@ data class TaskEntity(
     var tag: String = "",
 
 ): ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "Task",
+        view = "control/task",
+        showPermission = StaffPermissions.PERMISSION_EDIT_TASKS
+    )
 
     override fun toString(): String {
         return "[$id]: $title"

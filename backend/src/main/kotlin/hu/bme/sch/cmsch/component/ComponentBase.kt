@@ -1,16 +1,28 @@
 package hu.bme.sch.cmsch.component
 
+import hu.bme.sch.cmsch.admin.GenerateInput
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
+import hu.bme.sch.cmsch.dto.SearchableResource
+import hu.bme.sch.cmsch.dto.SearchableResourceType
+import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.PermissionValidator
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import javax.annotation.PostConstruct
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberProperties
 
 abstract class ComponentBase(
     val component: String,
     val menuUrl: String,
+    private val componentName: String,
+    val showPermission: PermissionValidator,
+    private val entities: List<KClass<out ManagedEntity>>,
     private val componentSettingService: ComponentSettingService,
-    private val env: Environment
+    private val env: Environment,
 ) {
 
     internal val log = LoggerFactory.getLogger(javaClass)
@@ -106,4 +118,34 @@ abstract class ComponentBase(
         return listOf()
     }
 
+    fun getPropertyResources(): List<SearchableResource> {
+        return allSettings.map { setting ->
+            SearchableResource(
+                name = setting.fieldName,
+                description = ": $componentName",
+                type = SearchableResourceType.PROPERTY,
+                permission = showPermission,
+                target = "/admin/control/${component}#${setting.property}"
+            )
+        }
+    }
+
+    fun getEntityResources(): List<SearchableResource> {
+        return entities.flatMap { entityClass ->
+            val config = entityClass.createInstance().getEntityConfig(env)
+                ?: return@flatMap listOf()
+
+            entityClass.memberProperties
+                .mapNotNull { it.findAnnotation<GenerateInput>() }
+                .map {
+                    SearchableResource(
+                        name = it.label,
+                        description = ": ${config.name}",
+                        type = SearchableResourceType.ENTITY,
+                        permission = config.showPermission,
+                        target = "/admin/${config.name}#${it.order}"
+                    )
+                }
+        }
+    }
 }

@@ -2,14 +2,17 @@ package hu.bme.sch.cmsch.component.extrapage
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.component.opengraph.OpenGraphResource
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -115,6 +118,12 @@ data class ExtraPageEntity(
     override var ogDescription: String = ""
 
 ): ManagedEntity, OpenGraphResource {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "ExtraPage",
+        view = "control/extra-pages",
+        showPermission = StaffPermissions.PERMISSION_EDIT_EXTRA_PAGES
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

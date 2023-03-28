@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.race
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class RaceComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("race", "/race", componentSettingService, env) {
+) : ComponentBase(
+    "race",
+    "/race",
+    "Verseny",
+    ControlPermissions.PERMISSION_CONTROL_RACE,
+    listOf(RaceRecordEntity::class, RaceCategoryEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import hu.bme.sch.cmsch.component.task.TaskStatus
 

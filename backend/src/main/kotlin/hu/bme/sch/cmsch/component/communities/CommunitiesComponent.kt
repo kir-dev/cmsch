@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.communities
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -17,7 +18,14 @@ import org.springframework.stereotype.Service
 class CommunitiesComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("communities", "/community", componentSettingService, env) {
+) : ComponentBase(
+    "communities",
+    "/community",
+    "Körök",
+    ControlPermissions.PERMISSION_CONTROL_COMMUNITIES,
+    listOf(CommunityEntity::class, OrganizationEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(
