@@ -19,7 +19,7 @@ class LocationAdminController(
     adminMenuService,
     LocationComponent::class.java,
     component,
-    ControlPermissions.PERMISSION_CONTROL_PROFILE,
+    ControlPermissions.PERMISSION_CONTROL_LOCATION,
     componentCategoryName = "Helymegosztás",
     componentMenuName = "Helymegosztás",
     menuService = menuService

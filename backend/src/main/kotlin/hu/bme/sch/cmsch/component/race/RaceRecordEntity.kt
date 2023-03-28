@@ -2,12 +2,15 @@ package hu.bme.sch.cmsch.component.race
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -71,6 +74,12 @@ data class RaceRecordEntity(
     var timestamp: Long = 0,
 
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "RaceRecord",
+        view = "control/race",
+        showPermission = StaffPermissions.PERMISSION_EDIT_RACE
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -2,8 +2,8 @@ package hu.bme.sch.cmsch.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
-import hu.bme.sch.cmsch.component.login.LoginService
 import hu.bme.sch.cmsch.component.login.LoginComponent
+import hu.bme.sch.cmsch.component.login.LoginService
 import hu.bme.sch.cmsch.component.login.SessionFilterConfigurer
 import hu.bme.sch.cmsch.component.login.authsch.CmschAuthschUser
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse

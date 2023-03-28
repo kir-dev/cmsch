@@ -178,7 +178,7 @@ open class TasksService(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
-                    textAnswer = "", textAnswerLob = answer.textAnswer,
+                    textAnswerLob = answer.textAnswer,
                     imageUrlAnswer = "",
                     fileUrlAnswer = "",
                     approved = false, rejected = false, score = 0
@@ -196,7 +196,7 @@ open class TasksService(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
-                    textAnswer = "", textAnswerLob = "",
+                    textAnswerLob = "",
                     imageUrlAnswer = "$target/$fileName",
                     fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
@@ -211,7 +211,7 @@ open class TasksService(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
-                    textAnswer = "", textAnswerLob = answer.textAnswer,
+                    textAnswerLob = answer.textAnswer,
                     imageUrlAnswer = "$target/$fileName",
                     fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
@@ -229,7 +229,7 @@ open class TasksService(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
-                    textAnswer = "", textAnswerLob = "",
+                    textAnswerLob = "",
                     imageUrlAnswer = "",
                     fileUrlAnswer = "$target/$fileName",
                     response = "", approved = false, rejected = false, score = 0
@@ -254,7 +254,6 @@ open class TasksService(
                 if (answer.textAnswer.isBlank())
                     return TaskSubmissionStatus.EMPTY_ANSWER
 
-                submission.textAnswer = ""
                 submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false
@@ -279,7 +278,6 @@ open class TasksService(
                     val fileName = file.uploadFile(target)
                     submission.imageUrlAnswer = "$target/$fileName"
                 }
-                submission.textAnswer = ""
                 submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false

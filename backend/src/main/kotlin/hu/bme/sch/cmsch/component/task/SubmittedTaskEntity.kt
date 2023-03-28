@@ -2,12 +2,15 @@ package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -47,20 +50,12 @@ data class SubmittedTaskEntity(
     @Column(nullable = false)
     var categoryId: Int = 0,
 
-    // TODO: Remove textAnswer, remove nullablity from textAnswerLob
-    @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 3, label = "Szöveges válasz", enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT,
-        note = "DB migráció miatt ez most így marad, majd ki lesz javítva!")
-    @property:GenerateOverview(visible = false)
-    var textAnswer: String = "",
-
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 4, label = "Szöveges válasz (teljes)", enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
-    var textAnswerLob: String? = "",
+    var textAnswerLob: String = "",
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -98,6 +93,13 @@ data class SubmittedTaskEntity(
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     var score: Int = 0
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "SubmittedTask",
+        view = "control/rate-tasks",
+        showPermission = StaffPermissions.PERMISSION_RATE_TASKS
+    )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false

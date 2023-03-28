@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class LeaderBoardComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("leaderboard", "/leaderboard", componentSettingService, env) {
+) : ComponentBase(
+    "leaderboard",
+    "/leaderboard",
+    "Toplista",
+    ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

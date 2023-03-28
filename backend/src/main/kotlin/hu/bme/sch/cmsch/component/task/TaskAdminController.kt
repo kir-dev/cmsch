@@ -50,7 +50,7 @@ class TaskController(
     "Feladatok kezelése. A feladatok javítására használd a \"Feladatok értékelése\" menüt!",
     TaskEntity::class, ::TaskEntity, importService, adminMenuService, component,
     permissionControl = PERMISSION_EDIT_TASKS,
-    importable = true, adminMenuIcon = "emoji_events"
+    importable = true, adminMenuIcon = "task"
 )
 
 @Controller

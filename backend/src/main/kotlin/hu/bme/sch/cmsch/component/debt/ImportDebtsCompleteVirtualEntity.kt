@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.debt
 import hu.bme.sch.cmsch.admin.GenerateInput
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_BLOCK_TEXT
 import hu.bme.sch.cmsch.model.ManagedEntity
+import org.springframework.core.env.Environment
 
 data class ImportDebtsCompleteVirtualEntity(
 
@@ -14,6 +15,8 @@ data class ImportDebtsCompleteVirtualEntity(
     var transactionIds: String
 
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = null
 
     override fun toString(): String {
         return "$id|$transactionIds"

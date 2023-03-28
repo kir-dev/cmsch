@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.dto.UserConfig
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -16,8 +18,11 @@ import java.util.*
 open class UserService(
     private val users: UserRepository,
     private val groupMapping: GroupToUserMappingRepository,
-    private val guildMapping: GuildToUserMappingRepository
+    private val guildMapping: GuildToUserMappingRepository,
+    objectMapper: ObjectMapper
 ) {
+
+    private val userConfigReader = objectMapper.readerFor(UserConfig::class.java)
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun save(user: UserEntity) {
@@ -69,6 +74,12 @@ open class UserService(
         return guildMapping.findByNeptun(neptun)
             .map { it.guild.displayName }
             .orElse("-")
+    }
+
+    fun resolveConfig(config: String): UserConfig {
+        if (config.isBlank())
+            return UserConfig()
+        return userConfigReader.readValue(config)
     }
 
 }

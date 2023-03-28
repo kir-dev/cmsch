@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -17,7 +18,14 @@ private const val MOVE_DESCRIPTION =
 class UnitScopeComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("unit-scope", "/", componentSettingService, env) {
+) : ComponentBase(
+    "unit-scope",
+    "/",
+    "Jogviszonyok",
+    ControlPermissions.PERMISSION_CONTROL_APP,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

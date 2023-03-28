@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class DebtComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("debt", "/debt", componentSettingService, env) {
+) : ComponentBase(
+    "debt",
+    "/debt",
+    "Tartozások",
+    ControlPermissions.PERMISSION_CONTROL_DEBTS,
+    listOf(ProductEntity::class, SoldProductEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

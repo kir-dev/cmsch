@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.bmejegy
 
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -16,7 +17,14 @@ import org.springframework.stereotype.Service
 class BmejegyComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("bmejegy", "/", componentSettingService, env) {
+) : ComponentBase(
+    "bmejegy",
+    "/",
+    "BME jegy",
+    ControlPermissions.PERMISSION_CONTROL_BMEJEGY,
+    listOf(BmejegyRecordEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

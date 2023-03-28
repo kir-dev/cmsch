@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.event
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class EventComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("event", "/event", componentSettingService, env) {
+) : ComponentBase(
+    "event",
+    "/event",
+    "Események",
+    ControlPermissions.PERMISSION_CONTROL_EVENTS,
+    listOf(EventEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -26,10 +26,10 @@ import kotlin.reflect.KMutableProperty1
 
 @Controller
 @RequestMapping("/admin/control/signup-responses")
-@ConditionalOnBean(SignupComponent::class)
-class SignupResponsesAdminController(
-    private val signupResponseRepository: SignupResponseRepository,
-    private val signupFormRepository: SignupFormRepository,
+@ConditionalOnBean(FormComponent::class)
+class ResponsesAdminController(
+    private val responseRepository: ResponseRepository,
+    private val formRepository: FormRepository,
     private val clock: TimeService,
     private val adminMenuService: AdminMenuService,
     private val objectMapper: ObjectMapper
@@ -41,16 +41,16 @@ class SignupResponsesAdminController(
     private val description = "Kitöltések formonként csoportosítva"
     private val permissionControl = PERMISSION_EDIT_SIGNUP_RESULTS
 
-    private val entitySourceMapping: Map<String, (SignupResponseEntity) -> List<String>> =
+    private val entitySourceMapping: Map<String, (ResponseEntity) -> List<String>> =
             mapOf(Nothing::class.simpleName!! to { listOf() })
 
     private val overviewDescriptor = OverviewBuilder(FormVirtualEntity::class)
-    private val submittedDescriptor = OverviewBuilder(SignupResponseEntity::class)
+    private val submittedDescriptor = OverviewBuilder(ResponseEntity::class)
 
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            SignupComponent::class.simpleName!!, AdminMenuEntry(
+            FormComponent::class.simpleName!!, AdminMenuEntry(
                 titlePlural,
                 "inbox",
                 "/admin/control/${view}",
@@ -84,12 +84,12 @@ class SignupResponsesAdminController(
     }
 
     private fun fetchOverview(): List<FormVirtualEntity> {
-        return signupResponseRepository.findAll()
+        return responseRepository.findAll()
             .groupBy { it.formId }
             .map { it.value }
             .filter { it.isNotEmpty() }
             .mapNotNull { it ->
-                signupFormRepository.findById(it[0].formId)
+                formRepository.findById(it[0].formId)
                     .map { form ->
                         FormVirtualEntity(
                             form.id,
@@ -120,7 +120,7 @@ class SignupResponsesAdminController(
         model.addAttribute("view", view)
         model.addAttribute("columns", submittedDescriptor.getColumns())
         model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", signupResponseRepository.findAllByFormId(id))
+        model.addAttribute("rows", responseRepository.findAllByFormId(id))
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_EDIT)
 
@@ -136,12 +136,12 @@ class SignupResponsesAdminController(
         }
 
         val objReader = objectMapper.readerFor(object : TypeReference<Map<String, Any>>() {})
-        val entries = signupResponseRepository.findAllByFormId(id)
+        val entries = responseRepository.findAllByFormId(id)
             .map { objReader.readValue<Map<String, Any>>(it.submission) }
             .map { it.values }
             .toList()
 
-        val headers = objReader.readValue<Map<String, Any>>(signupResponseRepository.findAllByFormId(id).firstOrNull()?.submission ?: "{}")
+        val headers = objReader.readValue<Map<String, Any>>(responseRepository.findAllByFormId(id).firstOrNull()?.submission ?: "{}")
             .keys
             .joinToString(",")
         val result = CsvMapper().writeValueAsString(entries)
@@ -157,7 +157,7 @@ class SignupResponsesAdminController(
             return "403"
         }
 
-        val entries = signupResponseRepository.findAllByFormId(id).joinToString(",") { it.submission }
+        val entries = responseRepository.findAllByFormId(id).joinToString(",") { it.submission }
 
         return "[${entries}]"
     }
@@ -181,7 +181,7 @@ class SignupResponsesAdminController(
         model.addAttribute("user", user)
         model.addAttribute("controlMode", CONTROL_MODE_EDIT)
 
-        val entity = signupResponseRepository.findById(id)
+        val entity = responseRepository.findById(id)
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -192,7 +192,7 @@ class SignupResponsesAdminController(
 
     @PostMapping("/edit/{id}")
     fun edit(@PathVariable id: Int,
-             @ModelAttribute(binding = false) dto: SignupResponseEntity,
+             @ModelAttribute(binding = false) dto: ResponseEntity,
              model: Model,
              auth: Authentication
     ): String {
@@ -203,7 +203,7 @@ class SignupResponsesAdminController(
             return "admin403"
         }
 
-        val entity = signupResponseRepository.findById(id)
+        val entity = responseRepository.findById(id)
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"
         }
@@ -213,14 +213,14 @@ class SignupResponsesAdminController(
         updateEntity(submittedDescriptor, response, dto)
         response.lastUpdatedDate = date
         response.id = id
-        signupResponseRepository.save(response)
+        responseRepository.save(response)
         return "redirect:/admin/control/$view"
     }
 
     private fun updateEntity(
         descriptor: OverviewBuilder,
-        entity: SignupResponseEntity,
-        dto: SignupResponseEntity
+        entity: ResponseEntity,
+        dto: ResponseEntity
     ) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore) {

@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -70,7 +70,7 @@ enum class FormElementType(
     }
 }
 
-data class SignupFormElement(
+data class FormElement(
     @JsonView(FullDetails::class)
     var fieldName: String = "",
 

@@ -21,10 +21,10 @@ import hu.bme.sch.cmsch.component.token.TokenEntity
 import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.component.debt.ProductService
 import hu.bme.sch.cmsch.component.debt.ProductType
-import hu.bme.sch.cmsch.component.signup.SignupFormEntity
-import hu.bme.sch.cmsch.component.signup.SignupFormRepository
-import hu.bme.sch.cmsch.component.signup.SignupResponseEntity
-import hu.bme.sch.cmsch.component.signup.SignupResponseRepository
+import hu.bme.sch.cmsch.component.form.FormEntity
+import hu.bme.sch.cmsch.component.form.FormRepository
+import hu.bme.sch.cmsch.component.form.ResponseEntity
+import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.sha256
@@ -72,8 +72,8 @@ class TestConfig(
     private val riddleRepository: Optional<RiddleEntityRepository>,
     private val riddleCategoryRepository: Optional<RiddleCategoryRepository>,
     private val tokenRepository: Optional<TokenRepository>,
-    private val formRepository: Optional<SignupFormRepository>,
-    private val formResponseRepository: Optional<SignupResponseRepository>,
+    private val formRepository: Optional<FormRepository>,
+    private val formResponseRepository: Optional<ResponseRepository>,
     private val extraMenuRepository: ExtraMenuRepository
 ) {
 
@@ -115,8 +115,8 @@ class TestConfig(
         }
     }
 
-    private fun addForms(form: SignupFormRepository, response: SignupResponseRepository) {
-        val signupFormEntity = SignupFormEntity(
+    private fun addForms(form: FormRepository, response: ResponseRepository) {
+        val formEntity = FormEntity(
             0,
             "Teszt Form",
             "test-from",
@@ -133,15 +133,15 @@ class TestConfig(
             2,
             true
         )
-        form.save(signupFormEntity)
+        form.save(formEntity)
 
-        response.save(SignupResponseEntity(
+        response.save(ResponseEntity(
             0,
             user1?.id,
             user1?.fullName ?: "",
             null,
             "",
-            signupFormEntity.id,
+            formEntity.id,
             now,
             0,
             false,
