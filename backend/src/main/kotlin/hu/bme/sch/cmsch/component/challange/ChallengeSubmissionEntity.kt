@@ -2,12 +2,15 @@ package hu.bme.sch.cmsch.component.challange
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -61,6 +64,12 @@ data class ChallengeSubmissionEntity(
     var score: Int = 0,
 
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "ChallengeSubmission",
+        view = "control/challenge",
+        showPermission = StaffPermissions.PERMISSION_EDIT_CHALLENGES
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

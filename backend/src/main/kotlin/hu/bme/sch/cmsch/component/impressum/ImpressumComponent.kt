@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.impressum
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class ImpressumComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("impressum", "/impressum", componentSettingService, env) {
+) : ComponentBase(
+    "impressum",
+    "/impressum",
+    "Impresszum",
+    ControlPermissions.PERMISSION_CONTROL_IMPRESSUM,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

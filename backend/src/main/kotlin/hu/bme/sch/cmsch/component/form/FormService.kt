@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@ConditionalOnBean(SignupComponent::class)
-open class SignupService(
-    private val signupFormRepository: SignupFormRepository,
-    private val signupResponseRepository: SignupResponseRepository,
+@ConditionalOnBean(FormComponent::class)
+open class FormService(
+    private val formRepository: FormRepository,
+    private val responseRepository: ResponseRepository,
     private val userRepository: UserRepository,
     private val clock: TimeService,
     private val objectMapper: ObjectMapper,
@@ -27,42 +27,42 @@ open class SignupService(
     internal val log = LoggerFactory.getLogger(javaClass)
 
     @Transactional(readOnly = true)
-    open fun getAllForms(role: RoleType): List<SignupFormEntity> {
+    open fun getAllForms(role: RoleType): List<FormEntity> {
         val now = clock.getTimeInSeconds()
-        return signupFormRepository.findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
+        return formRepository.findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
-    open fun fetchForm(user: UserEntity, path: String): SignupFormView {
-        val form = signupFormRepository.findAllByUrl(path).getOrNull(0)
-            ?: return SignupFormView(status = FormStatus.NOT_FOUND)
+    open fun fetchForm(user: UserEntity, path: String): FormView {
+        val form = formRepository.findAllByUrl(path).getOrNull(0)
+            ?: return FormView(status = FormStatus.NOT_FOUND)
 
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
-            return SignupFormView(status = FormStatus.NOT_FOUND)
+            return FormView(status = FormStatus.NOT_FOUND)
 
         val now = clock.getTimeInSeconds() + (applicationComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (!form.open)
-            return SignupFormView(status = FormStatus.NOT_ENABLED)
+            return FormView(status = FormStatus.NOT_ENABLED)
         if (form.availableFrom > now)
-            return SignupFormView(status = FormStatus.TOO_EARLY)
+            return FormView(status = FormStatus.TOO_EARLY)
         if (form.availableUntil < now)
-            return SignupFormView(status = FormStatus.TOO_LATE)
+            return FormView(status = FormStatus.TOO_LATE)
 
         if (form.allowedGroups.isNotBlank() && userRepository.findById(user.id)
                 .map { it.groupName !in form.allowedGroups.split(Regex(",[ ]*")) }
                 .orElse(true)) {
-            return SignupFormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
+            return FormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
         }
 
         val groupId = user.group?.id
         if (form.ownerIsGroup == true && groupId == null)
-            return SignupFormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
+            return FormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
 
         val submission = if (form.ownerIsGroup == true) {
-            signupResponseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0)
+            responseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0)
         } else {
-            signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id)
+            responseRepository.findByFormIdAndSubmitterUserId(form.id, user.id)
         }
         if (submission.isPresent) {
             val entity = submission.orElseThrow()
@@ -70,22 +70,22 @@ open class SignupService(
                 .readValue<Map<String, String>>(entity.submission)
 
             return when {
-                entity.rejected -> SignupFormView(
-                    form = SignupFormEntityDto(form),
+                entity.rejected -> FormView(
+                    form = FormEntityDto(form),
                     submission = submittedFields,
                     detailsValidated = entity.detailsValidated,
                     status = FormStatus.REJECTED,
                     message = entity.rejectionMessage
                 )
-                entity.accepted -> SignupFormView(
-                    form = SignupFormEntityDto(form),
+                entity.accepted -> FormView(
+                    form = FormEntityDto(form),
                     submission = submittedFields,
                     detailsValidated = entity.detailsValidated,
                     status = FormStatus.ACCEPTED,
                     message = form.acceptedMessage
                 )
-                else -> SignupFormView(
-                    form = SignupFormEntityDto(form),
+                else -> FormView(
+                    form = FormEntityDto(form),
                     submission = submittedFields,
                     detailsValidated = entity.detailsValidated,
                     status = FormStatus.SUBMITTED,
@@ -98,18 +98,18 @@ open class SignupService(
         }
 
         if (isFull(form))
-            return SignupFormView(status = FormStatus.FULL)
+            return FormView(status = FormStatus.FULL)
 
-        return SignupFormView(form = SignupFormEntityDto(form), submission = null, status = FormStatus.NO_SUBMISSION, message = null)
+        return FormView(form = FormEntityDto(form), submission = null, status = FormStatus.NO_SUBMISSION, message = null)
     }
 
-    private fun isFull(form: SignupFormEntity): Boolean {
-        return form.submissionLimit >= 0 && (signupResponseRepository.countAllByFormIdAndRejectedFalse(form.id) >= form.submissionLimit)
+    private fun isFull(form: FormEntity): Boolean {
+        return form.submissionLimit >= 0 && (responseRepository.countAllByFormIdAndRejectedFalse(form.id) >= form.submissionLimit)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun submitForm(user: UserEntity, path: String, data: Map<String, String>, update: Boolean): FormSubmissionStatus {
-        val form = signupFormRepository.findAllByUrl(path).getOrNull(0)
+        val form = formRepository.findAllByUrl(path).getOrNull(0)
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
@@ -123,9 +123,9 @@ open class SignupService(
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         val submissionEntity = if (form.ownerIsGroup == true) {
-            signupResponseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0).orElse(null)
+            responseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0).orElse(null)
         } else {
-            signupResponseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
+            responseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
         }
 
         if (!update && submissionEntity != null)
@@ -141,8 +141,8 @@ open class SignupService(
         if (!update && isFull(form))
             return FormSubmissionStatus.FORM_IS_FULL
 
-        val formStruct = objectMapper.readerFor(object : TypeReference<List<SignupFormElement>>() {})
-            .readValue<List<SignupFormElement>>(form.formJson)
+        val formStruct = objectMapper.readerFor(object : TypeReference<List<FormElement>>() {})
+            .readValue<List<FormElement>>(form.formJson)
 
         val submission = mutableMapOf<String, String>()
         if (update) {
@@ -219,10 +219,10 @@ open class SignupService(
             log.info("User {} changed form {} successfully", user.id, form.id)
             submissionEntity.submission = objectMapper.writeValueAsString(submission)
             submissionEntity.lastUpdatedDate = now
-            signupResponseRepository.save(submissionEntity)
+            responseRepository.save(submissionEntity)
         } else {
             log.info("User {} filled out form {} successfully", user.id, form.id)
-            signupResponseRepository.save(SignupResponseEntity(
+            responseRepository.save(ResponseEntity(
                 submitterUserId = if (form.ownerIsGroup == true) null else user.id,
                 submitterUserName = if (form.ownerIsGroup == true) "" else user.fullName,
                 submitterGroupId = if (form.ownerIsGroup == true) groupId else null,
@@ -251,13 +251,13 @@ open class SignupService(
     }
 
     @Transactional(readOnly = true)
-    open fun getSelectedForms(): List<SignupFormEntity> {
-        return signupFormRepository.findAllBySelectedTrue()
+    open fun getSelectedForms(): List<FormEntity> {
+        return formRepository.findAllBySelectedTrue()
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissions(form: SignupFormEntity): List<SignupResponseEntity> {
-        return signupResponseRepository.findAllByFormId(form.id)
+    open fun getSubmissions(form: FormEntity): List<ResponseEntity> {
+        return responseRepository.findAllByFormId(form.id)
     }
 
 }

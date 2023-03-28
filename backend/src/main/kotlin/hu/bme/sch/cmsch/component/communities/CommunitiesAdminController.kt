@@ -43,7 +43,7 @@ class CommunitiesController(
     CommunityEntity::class, ::CommunityEntity, importService, adminMenuService, component,
     permissionControl = StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
     importable = true,
-    adminMenuIcon = "emoji_events"
+    adminMenuIcon = "supervised_user_circle"
 )
 
 

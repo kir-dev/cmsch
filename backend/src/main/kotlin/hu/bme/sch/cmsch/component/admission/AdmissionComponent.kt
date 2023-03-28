@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.admission
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -8,7 +9,14 @@ import org.springframework.stereotype.Service
 class AdmissionComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("admission", "/", componentSettingService, env) {
+) : ComponentBase(
+    "admission",
+    "/",
+    "Beengedés",
+    ControlPermissions.PERMISSION_CONTROL_ADMISSION,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

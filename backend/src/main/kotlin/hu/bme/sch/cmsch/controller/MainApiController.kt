@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.controller
 
+import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.web.bind.annotation.*
@@ -18,7 +19,7 @@ class MainApiController(
 
     @ResponseBody
     @GetMapping("/version")
-    fun version(): String = "3.720.0"
+    fun version(): String = CMSCH_VERSION
 
     @ResponseBody
     @GetMapping("/time")

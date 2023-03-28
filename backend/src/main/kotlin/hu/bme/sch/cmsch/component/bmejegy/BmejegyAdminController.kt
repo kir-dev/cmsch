@@ -55,7 +55,7 @@ class BmejegyTicketsController(
     "bmejegy-tickets", "Jegy", "Jegyek",
     "BMEJEGY jegyek kezelése",
     BmejegyRecordEntity::class, ::BmejegyRecordEntity, importService, adminMenuService, component,
-    permissionControl = StaffPermissions.PERMISSION_EDIT_EVENTS,
+    permissionControl = StaffPermissions.PERMISSION_EDIT_BME_TICKET,
     importable = true, adminMenuIcon = "local_activity",
     allowedToPurge = true
 )

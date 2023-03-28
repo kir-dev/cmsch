@@ -1,8 +1,11 @@
 package hu.bme.sch.cmsch.component.bmejegy
 
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -101,6 +104,12 @@ data class BmejegyRecordEntity(
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_INT)
     var matchedUserId: Int = 0,
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "BmejegyRecord",
+        view = "control/bmejegy-tickets",
+        showPermission = StaffPermissions.PERMISSION_EDIT_BME_TICKET
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
 import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
-import hu.bme.sch.cmsch.component.signup.SignupFormRepository
+import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -22,7 +22,7 @@ open class MenuService(
     private val extraMenuRepository: ExtraMenuRepository,
     private val components: List<ComponentBase>,
     private val extraPages: Optional<ExtraPageRepository>,
-    private val forms: Optional<SignupFormRepository>,
+    private val forms: Optional<FormRepository>,
     private val races: Optional<RaceCategoryRepository>,
 ) {
 

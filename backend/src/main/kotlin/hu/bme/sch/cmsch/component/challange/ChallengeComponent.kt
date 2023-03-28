@@ -1,7 +1,9 @@
 package hu.bme.sch.cmsch.component.challange
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.bmejegy.BmejegyRecordEntity
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -16,7 +18,14 @@ import org.springframework.stereotype.Service
 class ChallengeComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("challenge", "/", componentSettingService, env) {
+) : ComponentBase(
+    "challenge",
+    "/",
+    "Beadások",
+    ControlPermissions.PERMISSION_CONTROL_CHALLENGE,
+    listOf(ChallengeSubmissionEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

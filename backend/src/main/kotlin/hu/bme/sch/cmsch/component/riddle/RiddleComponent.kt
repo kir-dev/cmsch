@@ -1,6 +1,9 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.race.RaceCategoryEntity
+import hu.bme.sch.cmsch.component.race.RaceRecordEntity
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +18,14 @@ import org.springframework.stereotype.Service
 class RiddleComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("riddle", "/riddle", componentSettingService, env) {
+) : ComponentBase(
+    "riddle",
+    "/riddle",
+    "Riddleök",
+    ControlPermissions.PERMISSION_CONTROL_RIDDLE,
+    listOf(RiddleEntity::class, RaceCategoryEntity::class, RiddleMappingEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

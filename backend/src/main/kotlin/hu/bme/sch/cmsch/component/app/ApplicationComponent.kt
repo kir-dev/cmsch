@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -9,7 +10,14 @@ import org.springframework.stereotype.Service
 class ApplicationComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("app", "/app", componentSettingService, env) {
+) : ComponentBase(
+    "app",
+    "/app",
+    "Alkalmazás",
+    ControlPermissions.PERMISSION_CONTROL_APP,
+    listOf(ExtraMenuEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

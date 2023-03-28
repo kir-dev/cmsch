@@ -3,9 +3,11 @@ package hu.bme.sch.cmsch.component.race
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.ManagedEntity
+import org.springframework.core.env.Environment
 
 data class RaceEntryDto(
 
@@ -33,4 +35,8 @@ data class RaceEntryDto(
     @property:ImportFormat(ignore = false, columnId = 4)
     var email: String = "",
 
-) : ManagedEntity
+) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = null
+
+}

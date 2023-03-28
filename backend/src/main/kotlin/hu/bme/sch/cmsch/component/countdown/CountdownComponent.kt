@@ -1,7 +1,10 @@
 package hu.bme.sch.cmsch.component.countdown
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.communities.CommunityEntity
+import hu.bme.sch.cmsch.component.communities.OrganizationEntity
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -16,7 +19,14 @@ import org.springframework.stereotype.Service
 class CountdownComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("countdown", "/", componentSettingService, env) {
+) : ComponentBase(
+    "countdown",
+    "/",
+    "Visszaszámlálás",
+    ControlPermissions.PERMISSION_CONTROL_COUNTDOWN,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

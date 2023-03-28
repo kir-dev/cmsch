@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.profile
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.news.NewsEntity
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +17,14 @@ import org.springframework.stereotype.Service
 class ProfileComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("profile", "/profile", componentSettingService, env) {
+) : ComponentBase(
+    "profile",
+    "/profile",
+    "Profil",
+    ControlPermissions.PERMISSION_CONTROL_PROFILE,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

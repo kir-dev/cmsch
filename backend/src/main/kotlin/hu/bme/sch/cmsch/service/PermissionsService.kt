@@ -23,9 +23,13 @@ object ImplicitPermissions : PermissionGroup {
     val PERMISSION_IMPLICIT_ANYONE = PermissionValidator(description = "Everyone has this permission")
             { _ -> true }
 
+    val PERMISSION_NOBODY = PermissionValidator(description = "Nobody has this permission")
+        { _ -> false }
+
     override fun allPermissions() = listOf(
         PERMISSION_IMPLICIT_HAS_GROUP,
-        PERMISSION_IMPLICIT_ANYONE
+        PERMISSION_IMPLICIT_ANYONE,
+        PERMISSION_NOBODY
     )
 }
 
@@ -111,9 +115,9 @@ object ControlPermissions : PermissionGroup {
         "Visszaszámlálás komponens testreszabása"
     )
 
-    val PERMISSION_CONTROL_SIGNUP = PermissionValidator(
-        "SIGNUP_CONTROL",
-        "Jelentkezés komponens testreszabása"
+    val PERMISSION_CONTROL_FORM = PermissionValidator(
+        "FORM_CONTROL",
+        "Űrlapok komponens testreszabása"
     )
 
     val PERMISSION_CONTROL_CHALLENGE = PermissionValidator(
@@ -156,6 +160,11 @@ object ControlPermissions : PermissionGroup {
         "Bmejegy komponens testreszabása"
     )
 
+    val PERMISSION_CONTROL_LOCATION = PermissionValidator(
+        "LOCATION_CONTROL",
+        "Helymeghatározás komponens testreszabása"
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -173,7 +182,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_SHOW_DELETE_FILES,
         PERMISSION_CONTROL_IMPRESSUM,
         PERMISSION_CONTROL_COUNTDOWN,
-        PERMISSION_CONTROL_SIGNUP,
+        PERMISSION_CONTROL_FORM,
         PERMISSION_CONTROL_CHALLENGE,
         PERMISSION_CONTROL_HOME,
         PERMISSION_CONTROL_COMMUNITIES,
@@ -237,8 +246,6 @@ object StaffPermissions : PermissionGroup {
         "Eladott termékek statisztikájának megtekintése"
     )
 
-    /// Location Component
-
     val PERMISSION_TRACK_ONE_GROUP = PermissionValidator(
         "LOCATION_TRACK_ONE_GROUP",
         "Egy csoport követése"
@@ -253,8 +260,6 @@ object StaffPermissions : PermissionGroup {
         "LOCATION_SHOW",
         "Az összes nyers pozíció megtekintése"
     )
-
-    /// Riddle Component
 
     val PERMISSION_EDIT_RIDDLES = PermissionValidator(
         "RIDDLE_EDIT",
@@ -271,28 +276,20 @@ object StaffPermissions : PermissionGroup {
         "Riddle beadások listázása és törlése"
     )
 
-    /// News Component
-
     val PERMISSION_EDIT_NEWS = PermissionValidator(
         "NEWS_EDIT",
         "Hírek létrehozása, szerkesztése és törlése"
     )
-
-    /// Event Component
 
     val PERMISSION_EDIT_EVENTS = PermissionValidator(
         "EVENT_EDIT",
         "Események létrehozása, szerkesztése és törlése"
     )
 
-    /// Token Component
-
     val PERMISSION_EDIT_TOKENS = PermissionValidator(
         "TOKEN_EDIT",
         "Tokenek létrehozása, szerkesztése és törlése"
     )
-
-    /// User Component
 
     val PERMISSION_EDIT_GROUPS = PermissionValidator(
         "GROUP_EDIT",
@@ -314,8 +311,6 @@ object StaffPermissions : PermissionGroup {
         "Csoport hozzárendelések létrehozása, szerkesztése és törlése"
     )
 
-    /// ExtraPages Component
-
     val PERMISSION_EDIT_EXTRA_PAGES = PermissionValidator(
         "EXTRAPAGE_EDIT",
         "Extra oldalak létrehozása, szerkesztése és törlése"
@@ -326,35 +321,25 @@ object StaffPermissions : PermissionGroup {
         "Az összes extra oldal szerkesztése"
     )
 
-    // LeaderBoard Component
-
     val PERMISSION_SHOW_LEADERBOARD = PermissionValidator(
         "LEADERBOARD_SHOW",
         "Toplista megtekintése"
     )
-
-    // Signup Component
 
     val PERMISSION_EDIT_SIGNUP_RESULTS = PermissionValidator(
         "SIGNUP_EDIT",
         "Jelentkezések megtekintése és szerkesztése"
     )
 
-    // Challange Component
-
     val PERMISSION_EDIT_CHALLENGES = PermissionValidator(
         "CHALLENGE_EDIT",
         "Beadások megtekintése és szerkesztése"
     )
 
-    // Admission Component
-
     val PERMISSION_VALIDATE_ADMISSION = PermissionValidator(
         "ADMISSION_VALIDATE",
         "Beléptetés kezelése"
     )
-
-    // Race Comonent
 
     val PERMISSION_EDIT_RACE = PermissionValidator(
         "RACE_EDIT",
@@ -366,18 +351,24 @@ object StaffPermissions : PermissionGroup {
         "Verseny kategóriák kezelése"
     )
 
-    // QR Fight
-
     val PERMISSION_EDIT_QR_FIGHT = PermissionValidator(
         "QR_FIGHT_EDIT",
         "QR Fight eredmények kezelése"
     )
 
-    // Communities
-
     val PERMISSION_EDIT_COMMUNITIES = PermissionValidator(
         "COMMUNITIES_EDIT",
         "Körök és reszortok kezelése"
+    )
+
+    val PERMISSION_EDIT_BME_TICKET = PermissionValidator(
+        "BME_TICKET_EDIT",
+        "BME Jegy bejegyzések szerkesztése"
+    )
+
+    val PERMISSION_EDIT_TEAM_JOINS = PermissionValidator(
+        "TEAM_JOIN_EDIT",
+        "Csapat jelentkezése szerkesztése"
     )
 
     override fun allPermissions() = listOf(
@@ -412,7 +403,9 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_RACE,
         PERMISSION_EDIT_RACE_CATEGORY,
         PERMISSION_EDIT_QR_FIGHT,
-        PERMISSION_EDIT_COMMUNITIES
+        PERMISSION_EDIT_COMMUNITIES,
+        PERMISSION_EDIT_BME_TICKET,
+        PERMISSION_EDIT_TEAM_JOINS
     )
 
 }

@@ -1,13 +1,17 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.GroupEntity
+import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -19,7 +23,7 @@ data class RiddleMappingEntity(
     @GeneratedValue
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    var id: Int = 0,
+    override var id: Int = 0,
 
     @ManyToOne(fetch = FetchType.EAGER)
     var riddle: RiddleEntity? = null,
@@ -46,7 +50,17 @@ data class RiddleMappingEntity(
     @JsonView(value = [ Edit::class ])
     var attemptCount: Int = 0
 
-) {
+): ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "RiddleMapping",
+        view = if (env.getProperty("hu.bme.sch.cmsch.startup.riddle-ownership-mode") === "USER")
+            "control/riddles-by-users"
+        else
+            "control/riddles-by-groups",
+        showPermission = StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
+    )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false

@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -8,7 +9,14 @@ import org.springframework.stereotype.Service
 class ManifestComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("manifest", "/", componentSettingService, env) {
+) : ComponentBase(
+    "manifest",
+    "/",
+    "Manifest",
+    ControlPermissions.PERMISSION_CONTROL_APP,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

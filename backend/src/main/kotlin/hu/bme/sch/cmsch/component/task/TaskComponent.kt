@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service
 class TaskComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("task", "/tasks", componentSettingService, env) {
+) : ComponentBase(
+    "task",
+    "/tasks",
+    "Feladatok",
+    ControlPermissions.PERMISSION_CONTROL_TASKS,
+    listOf(TaskEntity::class, TaskCategoryEntity::class, SubmittedTaskEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

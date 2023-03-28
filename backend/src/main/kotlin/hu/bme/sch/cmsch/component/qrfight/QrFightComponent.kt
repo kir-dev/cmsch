@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.qrfight
 
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -16,7 +17,14 @@ import org.springframework.stereotype.Service
 class QrFightComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("qrFight", "/qr-fight", componentSettingService, env) {
+) : ComponentBase(
+    "qrFight",
+    "/qr-fight",
+    "QR Fight",
+    ControlPermissions.PERMISSION_CONTROL_QR_FIGHT,
+    listOf(QrLevelEntity::class, QrTowerEntity::class),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

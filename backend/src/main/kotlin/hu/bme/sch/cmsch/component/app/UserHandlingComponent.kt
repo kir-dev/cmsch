@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.MinRoleSettingProxy
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -15,7 +16,14 @@ class UserHandlingComponent(
     private val adminMenuService: AdminMenuService,
     componentSettingService: ComponentSettingService,
     env: Environment
-) : ComponentBase("userHandling", "/", componentSettingService, env) {
+) : ComponentBase(
+    "userHandling",
+    "/",
+    "Felhasználó kezelés",
+    ControlPermissions.PERMISSION_CONTROL_APP,
+    listOf(),
+    componentSettingService, env
+) {
 
     final override val allSettings by lazy {
         listOf(

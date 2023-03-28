@@ -1,8 +1,12 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
+import org.springframework.core.env.Environment
 import javax.persistence.*
 
 @Entity
@@ -32,6 +36,12 @@ data class ExtraMenuEntity(
     var external: Boolean = false,
 
 ) : ManagedEntity {
+
+    override fun getEntityConfig(env: Environment) = EntityConfig(
+        name = "ExtraMenu",
+        view = "control/extra-menus",
+        showPermission = ControlPermissions.PERMISSION_CONTROL_APP
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

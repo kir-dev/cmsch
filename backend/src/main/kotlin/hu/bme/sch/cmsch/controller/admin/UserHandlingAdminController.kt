@@ -82,10 +82,10 @@ class UserController(
     private val profileService: UserProfileGeneratorService,
     private val groups: GroupRepository,
     importService: ImportService,
-    adminMenuService: AdminMenuService,
+    private val adminMenuService: AdminMenuService,
     component: UserHandlingComponent,
     private val extraPageService: Optional<ExtraPageService>,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
 ) : AbstractAdminPanelController<UserEntity>(
         repo,
         "users", "Felhasználó", "Felhasználók",
@@ -132,6 +132,8 @@ class UserController(
                 entity.group = null
             })
         }
+
+        adminMenuService.invalidateUser(entity.internalId)
         return true
     }
 }

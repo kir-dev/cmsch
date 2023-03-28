@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -28,10 +28,10 @@ enum class FormSubmissionStatus {
     EDIT_CANNOT_BE_CHANGED
 }
 
-data class SignupFormView(
+data class FormView(
 
     @JsonView(FullDetails::class)
-    val form: SignupFormEntityDto? = null,
+    val form: FormEntityDto? = null,
 
     @JsonView(FullDetails::class)
     val submission: Map<String, String>? = null,

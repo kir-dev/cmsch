@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component.signup
+package hu.bme.sch.cmsch.component.form
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value

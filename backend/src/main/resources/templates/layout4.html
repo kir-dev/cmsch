@@ -1,0 +1,242 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <title th:text="${title}">CMSch Admin</title>
+
+    <meta name="theme-color" content="#444444">
+    <meta name="msapplication-navbutton-color" content="#444444"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#444444"/>
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="icon" type="image/x-icon" th:href="@{/cdn/manifest/favicon.ico}" />
+    <link rel="icon" type="image/png" sizes="192x192" th:href="@{/cdn/manifest/icon-192x192.png}" />
+    <link rel="icon" type="image/png" sizes="256x256" th:href="@{/cdn/manifest/icon-256x256.png}" />
+    <link rel="icon" type="image/png" sizes="384x384" th:href="@{/cdn/manifest/icon-384x384.png}" />
+    <link rel="icon" type="image/png" sizes="512x512" th:href="@{/cdn/manifest/icon-512x512.png}" />
+
+    <script src="../static/js/admin-script-3.js" th:src="@{/js/admin-script-3.js}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../static/style3.css" th:href="@{/style3.css}">
+    <link rel="stylesheet" href="../static/tabulator_simple.css" th:href="@{/tabulator_simple.css}">
+</head>
+<body>
+
+<section th:fragment="mobile(user)" th:remove="tag">
+    <!-- Make it  -->
+</section>
+
+<section th:fragment="siteBegin(userContext, context)" th:remove="tag">
+
+<div class="panel" onclick="closeSearch()" id="background-fader"></div>
+<div class="modal" id="search-modal">
+    <input type="text" id="search-input" class="search-input" placeholder="" disabled />
+
+    <div class="search-results" id="search-results">
+        <div class="search-result" th:each="resource : ${userContext.resources}" th:object="${resource}">
+            <a class="text" href="#" th:href="*{target}">
+                <span class="material-symbols-outlined tag-menu" th:class="|material-symbols-outlined *{type.cssClass}|" th:text="*{type.icon}">menu</span>
+                <span class="name" th:text="*{name}">Csoport tagásgok</span>
+                <span class="description" th:text="*{description}">: Menü</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="group">
+    <div class="nav">
+        <div class="left-panel">
+            <ins th:text="${context.siteName}">CMSCH 3 APP</ins>
+            <span class="badge" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> LIVE</span>
+            <span class="badge" th:if="${context.production == 'dev'}"><span class="material-symbols-outlined regular">code</span> DEV</span>
+        </div>
+        <div class="motd-panel">
+            <span th:if="${context.motd != null && context.motd != ''}" class="badge color-yellow" th:text="${context.motd}">Figyelem! Ez egy teszt üzenet!</span>
+        </div>
+        <div class="stats-panel" th:remove="all">
+            <span class="badge color-green">53</span> online
+            <span class="badge color-gray">12</span> staff
+            <span class="badge color-yellow">120</span> rpm
+        </div>
+        <div class="right-panel">
+            <div class="profile-button-container">
+                <span class="profile-button">
+                    Profil
+                    <span class="material-symbols-outlined">expand_more</span>
+                </span>
+
+                <div class="popover-container">
+                    <img th:if="${userContext.profilePicture != null && userContext.profilePicture != ''}"
+                         th:src="${userContext.profilePicture}"
+                         alt="Profil kép"
+                         class="profile-picture">
+                    <img th:unless="${userContext.profilePicture != null && userContext.profilePicture != ''}"
+                         th:src="|https://www.gravatar.com/avatar/${userContext.emailHash}?s=80&d=identicon|"
+                         alt="Profil kép"
+                         class="profile-picture">
+                    <h3 class="username" th:text="${userContext.userName}">John Doe</h3>
+                    <p class="role" th:text="${userContext.role.displayName}">Administrator</p>
+                    <div class="menu-items">
+                        <a href="/admin/dashboard">
+                            <div class="menu-item">
+                                <i class="material-symbols-outlined">home</i>
+                                <span>Dashboard</span>
+                            </div>
+                        </a>
+                        <a href="/admin/settings">
+                            <div class="menu-item">
+                                <i class="material-symbols-outlined">settings</i>
+                                <span>Beállítások</span>
+                            </div>
+                        </a>
+                        <a href="/admin/logout">
+                            <div class="menu-item">
+                                <i class="material-symbols-outlined">logout</i>
+                                <span>Kijelentkezés</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="text-container">
+                        <p class="extra-text">CMSCH <ins th:text="${context.version}"></ins><br>made with &hearts; by kir-dev</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</section>
+
+<div class="group">
+    <div class="app">
+        <section th:fragment="menus(userContext, context)" th:remove="tag">
+            <div class="shortcuts-menu">
+                <a href="#" class="tooltip" onclick="openSearch(); return false">
+                    <span class="material-symbols-outlined">search</span>
+                    <span class="tooltip-text">Keresés (dupla shift)</span>
+                </a>
+                <a href="#" class="tooltip">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="tooltip-text">Súgó</span>
+                </a>
+                <a href="#" class="tooltip" onclick="clearFilter(); return false">
+                    <span class="material-symbols-outlined">content_copy</span>
+                    <span class="tooltip-text">Minden menü</span>
+                </a>
+                <a href="#" class="tooltip" onclick="searchFavorite(); return false">
+                    <span class="material-symbols-outlined fav">star</span>
+                    <span class="tooltip-text">Kedvenc menüim</span>
+                </a>
+
+                <div class="placeholder"></div>
+
+                <a href="#" class="tooltip">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="tooltip-text">Beállítások (ctrl + F12)</span>
+                </a>
+                <a href="#" class="tooltip">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="tooltip-text">Kilépés</span>
+                </a>
+                <a href="#" class="tooltip">
+                    <span class="material-symbols-outlined color-cyan">bug_report</span>
+                    <span class="tooltip-text">Visszajelzés küldése</span>
+                </a>
+            </div>
+            <div class="menu">
+
+                <input type="text" id="search" placeholder="" />
+                <div class="search-note">Menü kereső (F2)</div>
+
+                <div id="menu-results">
+
+                    <object th:remove="tag" th:each="category : ${menu}" th:if="${menu} != null">
+                        <a class="category" data-search="Dashboard|Open site" th:text="${category.key.value.title}" th:data-search="${#strings.listJoin(category.value.![title], '|')}">Általános</a>
+                        <div class="menu-group">
+                            <a href="#" th:each="entry : ${category.value}" th:href="|${entry.target}|" th:class="${userContext.favoriteMenus.contains(entry.title) ? 'favorite' : ''}"><span class="material-symbols-outlined" th:text="${entry.icon}">dashboard</span><span th:text="${entry.title}">Dashboard</span></a>
+                        </div>
+                    </object>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+            <h1>Menu name <span class="material-symbols-outlined color-yellow">star</span></h1>
+            <div class="details">Description of the menu. It might be a long description. Lorem ipsum dolor sit amet long description comes here boi yeah.</div>
+
+            <div class="card">
+                <h4>Card Header</h4>
+                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>
+
+            </div>
+
+            <div class="card">
+                <h4>Card Header</h4>
+                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>
+
+                <div class="options">
+                    <div class="option">
+                        <div><span class="material-symbols-outlined">bolt</span></div>
+                        <div>
+                            <h5>Option thunder</h5>
+                            <span>Brief description of the option. Brief description of the option. Brief description of the option.</span>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <div><span class="material-symbols-outlined">key</span></div>
+                        <div>
+                            <h5>Key option</h5>
+                            <span>Brief description of the option. Brief description of the option. Brief description of the option.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Card with table</h4>
+                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>
+
+                <div id="example-table"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="tabulator.min.js"></script>
+<script>
+    //define data array
+    let tabledata = [
+        {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1},
+        {id:2, name:"Mary May", progress:1, gender:"female", rating:2, col:"blue", dob:"14/05/1982", car:true},
+        {id:3, name:"Christine Lobowski", progress:42, gender:"female", rating:0, col:"green", dob:"22/05/1982", car:"true"},
+        {id:4, name:"Brendon Philips", progress:100, gender:"male", rating:1, col:"orange", dob:"01/08/1980"},
+        {id:5, name:"Margret Marmajuke", progress:16, gender:"female", rating:5, col:"yellow", dob:"31/01/1999"},
+        {id:6, name:"Frank Harbours", progress:38, gender:"male", rating:4, col:"red", dob:"12/05/1966", car:1},
+    ];
+
+    //initialize table
+    let table = new Tabulator("#example-table", {
+        data: tabledata, //assign data to table
+        autoColumns: false, //create columns from data field names
+        layout: 'fitColumns',
+        responsiveLayout: 'hide',
+        columns:[
+            {title:"Id", field:"id"},
+            {title:"Name", field:"name"},
+            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
+            {title:"Gender", field:"gender"},
+            {title:"Rating", field:"rating", hozAlign:"center"},
+            {title:"Favourite Color", field:"col"},
+            {title:"Date", field:"dob"},
+            {title:"Car", field:"car"},
+        ],
+    });
+</script>
+</body>
