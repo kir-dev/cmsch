@@ -1,0 +1,176 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: template-live
+  namespace: org-kir-prod
+  labels:
+    app.kubernetes.io/name: template-live
+  annotations:
+    volume.beta.kubernetes.io/storage-provisioner: csi.vsphere.vmware.com
+  finalizers:
+    - kubernetes.io/pvc-protection
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: vsphere
+  volumeMode: Filesystem
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: template-live-secrets
+  namespace: org-kir-prod
+data:
+  AuthSCH_ID: BASE64
+  AuthSCH_KEY: BASE64
+  BmejegyUsername: BASE64
+  BmejegyPassword: BASE64
+  Google_ID: BASE64
+  Google_KEY: BASE64
+type: Opaque
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: template-live
+  namespace: org-kir-prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: template-live
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: template-live
+  namespace: org-kir-prod
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+spec:
+  tls:
+    - hosts:
+        - api.template.sch.bme.hu
+      secretName: template-live-cert
+  rules:
+    - host: api.template.sch.bme.hu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: template-live
+                port:
+                  number: 80
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: template-live
+  namespace: org-kir-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: template-live
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: template-live
+    spec:
+      volumes:
+        - name: template-live
+          persistentVolumeClaim:
+            claimName: template-live
+      containers:
+        - name: template-live
+          image: harbor.sch.bme.hu/org-golyakorte/cmsch:release
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: SPRING_PROFILES
+              value: prod,env
+            - name: PORT
+              value: '80'
+            - name: SYSADMINS
+              value: 6af3c8b0-592c-6864-8dd9-5f354edfc0be,0e81d7b8-7758-724c-8c50-744e4a2aefb9
+            - name: PROFILE_SALT
+              value: SAAAAAAAALT
+            - name: FRONTEND_URL
+              value: https://template.sch.bme.hu
+            - name: BACKEND_URL
+              value: https://api.template.sch.bme.hu/
+            - name: BMEJEGY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: template-live-secrets
+                  key: BmejegyUsername
+            - name: BMEJEGY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: template-live-secrets
+                  key: BmejegyPassword
+            - name: JWT_SECRET
+              value: SECREEEEEEET
+            - name: AUTHSCH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: template-live-secrets
+                  key: AuthSCH_ID
+            - name: AUTHSCH_CLIENT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: template-live-secrets
+                  key: AuthSCH_KEY
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: template-live-secrets
+                  key: Google_ID
+            - name: GOOGLE_CLIENT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: template-live-secrets
+                  key: Google_KEY
+          resources:
+            limits:
+              cpu: 2
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 200Mi
+          volumeMounts:
+            - name: template-live
+              mountPath: /pv
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
