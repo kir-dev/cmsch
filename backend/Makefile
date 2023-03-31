@@ -5,7 +5,7 @@ all:
 
 build:
 	./gradlew clean build
-	docker build -t cmsch .
+	docker build --platform=linux/amd64 -t cmsch .
 
 push-rc:
 	docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:rc
