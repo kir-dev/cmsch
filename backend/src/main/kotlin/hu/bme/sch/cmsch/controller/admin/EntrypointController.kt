@@ -1,14 +1,18 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import kotlin.random.Random
+
 
 val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
         "Szevasz Tavasz!", "Szia-mia!", "Hellóka", "Vattan-csummgecc!",
@@ -21,7 +25,8 @@ val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
 
 @Controller
 class EntrypointController(
-        private val applicationComponent: ApplicationComponent
+        private val applicationComponent: ApplicationComponent,
+        private val loginComponent: LoginComponent
 ) {
 
     @GetMapping("")
@@ -42,6 +47,14 @@ class EntrypointController(
         model.addAttribute("website", applicationComponent.siteUrl.getValue())
 
         return "entrypoint"
+    }
+
+    @RequestMapping("/oauth2/authorization")
+    fun authorize(model: Model, @RequestParam(defaultValue = "") error: String): String {
+        model.addAttribute("siteName", applicationComponent.siteName.getValue())
+        model.addAttribute("error", error)
+        model.addAttribute("googleEnabled", loginComponent.googleSsoEnabled.isValueTrue())
+        return "authSelection"
     }
 
     @GetMapping("/c/e")
