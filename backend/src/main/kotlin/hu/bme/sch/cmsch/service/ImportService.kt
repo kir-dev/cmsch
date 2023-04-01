@@ -1,13 +1,15 @@
 package hu.bme.sch.cmsch.service
 
 import hu.bme.sch.cmsch.admin.*
-import hu.bme.sch.cmsch.component.task.TaskType
 import hu.bme.sch.cmsch.component.debt.ProductType
 import hu.bme.sch.cmsch.component.task.TaskCategoryType
 import hu.bme.sch.cmsch.component.task.TaskFormat
-import hu.bme.sch.cmsch.model.*
+import hu.bme.sch.cmsch.component.task.TaskType
+import hu.bme.sch.cmsch.model.GuildType
+import hu.bme.sch.cmsch.model.MajorType
+import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -33,7 +35,7 @@ open class ImportService {
 
     @Transactional(rollbackFor = [Throwable::class])
     open fun <T> importEntities(
-            repo: CrudRepository<T, Int>,
+            repo: EntityPageDataSource<T, Int>,
             raw: List<List<String>>,
             supplier: Supplier<T>,
             importModifiers: List<Pair<KProperty1<out Any, *>, ImportFormat>>

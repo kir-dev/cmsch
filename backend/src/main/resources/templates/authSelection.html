@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout4 :: head(${siteName})">
+</head>
+<body class="entrypoint">
+    <div class="auth">
+        <h1 th:text="${siteName}">ADMIN PANEL</h1>
+        <h3 th:if="${error != null && error != ''}" th:text="${error ?: ''}" class="color-red">Don't forget to open the banana before eating it!</h3>
+
+        <a href="#" th:href="@{/oauth2/authorization/authsch}" class="big-btn">AuthSCH</a>
+        <a href="#" th:if="${googleEnabled}" th:href="@{/oauth2/authorization/google}" class="big-btn">Google</a>
+    </div>
+
+    <script th:if="${not googleEnabled && (error == null || error == '')}">
+        location.href = '/oauth2/authorization/authsch';
+    </script>
+</body>
+</html>
