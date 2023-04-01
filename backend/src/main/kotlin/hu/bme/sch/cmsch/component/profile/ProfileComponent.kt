@@ -239,7 +239,7 @@ class ProfileComponent(
 
     val groupLeadersGroup = SettingProxy(componentSettingService, component,
         "groupLeadersGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csport vezetők adatai", description = ""
+        fieldName = "Csoport vezetők adatai", description = ""
     )
 
     val showGroupLeaders = SettingProxy(componentSettingService, component,

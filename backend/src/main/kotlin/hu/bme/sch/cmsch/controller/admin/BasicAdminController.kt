@@ -87,7 +87,6 @@ class BasicAdminController(
             .filter { it.permissionString.isNotEmpty() }
             .filter { userPermissions.contains(it.permissionString) })
 
-        model.addAttribute("motd", applicationComponent.motd.getValue())
         model.addAttribute("staffMessage", markdownToHtml(applicationComponent.staffMessage.getValue()))
 
         return "admin"
