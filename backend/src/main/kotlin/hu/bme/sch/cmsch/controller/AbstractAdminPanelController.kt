@@ -285,7 +285,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
         return "redirect:/admin/control/$view"
     }
 
-    private fun updateEntity(descriptor: OverviewBuilder, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
+    private fun updateEntity(descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
                 when {
@@ -376,7 +376,7 @@ open class AbstractAdminPanelController<T : ManagedEntity>(
                 .toList()
             log.info("Importing {} bytes ({} lines) into {}", out.size(), rawEntities.size, view)
             val before = repo.count()
-            importService.importEntities(repo, rawEntities, supplier, descriptor.getImportModifiers())
+//            importService.importEntities(repo, rawEntities, supplier, descriptor.getImportModifiers())
             val after = repo.count()
             model.addAttribute("importedCount", after - before)
         } else {

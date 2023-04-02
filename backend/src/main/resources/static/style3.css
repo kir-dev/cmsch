@@ -4,11 +4,11 @@
     padding: 0;
     border: 0;
     scrollbar-width: none;
-    scrollbar-color: #4ab09e transparent;
+    scrollbar-color: #39C392 transparent;
 }
 
 :root {
-    --primary-color: #0bc181;
+    --primary-color: #39C392;
     --secondary-color: #F44336;
 
     --background-color: #1F2225;
@@ -24,10 +24,14 @@
     --dark-3: #191c20;
     --dark-4: #0F1113;
 
+    --accent-color: #39C392;
+
+    --success-color: #39C392;
     --warning-color: #eaa12f;
     --warning-hover-color: #f1b962;
+    --danger-color: #ad5454;
 
-    --property-color: #0bc181;
+    --property-color: #39C392;
     --menu-color: #0ba6c1;
     --entity-color: #eaa12f;
     --anchor-color: #d1d1d1;
@@ -301,8 +305,8 @@ scrollbar-corner,
 }
 
 .app > .shortcuts-menu > .placeholder {
-    background-color: #4ab09e;
-    border-right: 1px solid #186c68;
+    background-color: var(--accent-color);
+    border-right: 1px solid var(--accent-color);
     height: calc(100vh - 390px);
     display: block;
     margin: 10px auto;
@@ -733,4 +737,9 @@ input[type="text"]:focus {
 .auth .big-btn:last-of-type:hover {
     color: #F1B458;
     border-color: #F1B458;
+}
+
+.control-action {
+    display: inline-block;
+    margin: 0 10px;
 }

@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
 import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
+import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -174,7 +175,7 @@ class DebtAdminDebtsByGroupController(
     }
 
     private fun updateEntity(
-        descriptor: OverviewBuilder,
+        descriptor: OverviewBuilder<SoldProductEntity>,
         entity: SoldProductEntity,
         dto: SoldProductEntity
     ) {
