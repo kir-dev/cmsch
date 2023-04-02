@@ -6,7 +6,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 
-class OverviewBuilder(val type: KClass<*>) {
+class OverviewBuilder<T : Any>(val type: KClass<T>) {
 
     fun getColumns(): List<String> {
         return type.memberProperties.asSequence()
@@ -18,13 +18,39 @@ class OverviewBuilder(val type: KClass<*>) {
                 .toList()
     }
 
-    fun getColumnDefinitions(): List<Pair<KProperty1<out Any, *>, GenerateOverview>> {
+    fun getColumnDefinitions(): List<Pair<KProperty1<T, *>, GenerateOverview>> {
         return type.memberProperties.asSequence()
                 .filter { it.findAnnotation<GenerateOverview>() != null }
                 .map { Pair(it, it.findAnnotation<GenerateOverview>()!!) }
                 .filter { it.second.visible }
                 .sortedBy { it.second.order }
                 .toList()
+    }
+
+    fun getColumnsAsJson(): String {
+        return "[" + (getColumnDefinitions().joinToString(",") {
+            "{\"title\":\"${it.second.columnName}\", " +
+                    "\"field\":\"${it.first.name}\", " +
+                    "\"hozAlign\":\"${it.second.alignment()}\", " +
+                    "\"sorter\":\"${it.second.sorter()}\"" +
+                    it.second.extra() +
+                    "}"
+        }) + "]"
+    }
+
+    private fun formatValue(type: GenerateOverview, value: Any?): String {
+        return if (type.renderer == OVERVIEW_TYPE_TEXT) {
+            "\"${(value ?: "").toString().replace("\"", "")}\""
+        } else {
+            (value ?: "0").toString().replace("\"", "")
+        }
+    }
+
+    fun getTableDataAsJson(overview: Iterable<T>): String {
+        val fields = getColumnDefinitions()
+        return "[" + (overview.toList()
+            .map { row -> fields.map { "\"${it.first.name}\":${formatValue(it.second, it.first.get(row))}" } }
+            .joinToString(",") { row -> "{${row.joinToString(",")}}" }) + "]"
     }
 
     fun getImportModifiers(): List<Pair<KProperty1<out Any, *>, ImportFormat>> {

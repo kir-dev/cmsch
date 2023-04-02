@@ -1,8 +1,9 @@
 package hu.bme.sch.cmsch.component.news
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
-import hu.bme.sch.cmsch.controller.AbstractAdminPanelController
+import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_NEWS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_NEWS
@@ -34,12 +35,34 @@ class NewsController(
     repo: NewsRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
-    component: NewsComponent
-) : AbstractAdminPanelController<NewsEntity>(
-    repo,
-    "news", "Hír", "Hírek",
+    component: NewsComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : OneDeepEntityPage<NewsEntity>(
+    "news",
+    NewsEntity::class, ::NewsEntity,
+    "Hír", "Hírek",
     "A oldalon megjelenő hírek kezelése.",
-    NewsEntity::class, ::NewsEntity, importService, adminMenuService, component,
-    permissionControl = PERMISSION_EDIT_NEWS,
-    importable = true, adminMenuIcon = "newspaper"
+
+    repo,
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    showPermission = PERMISSION_EDIT_NEWS,
+    createPermission = PERMISSION_EDIT_NEWS,
+    editPermission = PERMISSION_EDIT_NEWS,
+    deletePermission = PERMISSION_EDIT_NEWS,
+
+    createEnabled = true,
+    editEnabled = true,
+    deleteEnabled = true,
+    importEnabled = true,
+    exportEnabled = true,
+
+    adminMenuIcon = "newspaper",
+    adminMenuPriority = 1,
 )
+

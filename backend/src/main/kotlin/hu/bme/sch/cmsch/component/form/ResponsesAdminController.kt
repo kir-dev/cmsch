@@ -218,7 +218,7 @@ class ResponsesAdminController(
     }
 
     private fun updateEntity(
-        descriptor: OverviewBuilder,
+        descriptor: OverviewBuilder<ResponseEntity>,
         entity: ResponseEntity,
         dto: ResponseEntity
     ) {

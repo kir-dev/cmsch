@@ -199,7 +199,7 @@ class TaskAdminRateController(
     }
 
     private fun updateEntity(
-        descriptor: OverviewBuilder,
+        descriptor: OverviewBuilder<SubmittedTaskEntity>,
         entity: SubmittedTaskEntity,
         dto: SubmittedTaskEntity
     ) {

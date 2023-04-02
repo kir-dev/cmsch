@@ -175,7 +175,7 @@ class DebtAdminDebtsByUsersController(
     }
 
     private fun updateEntity(
-        descriptor: OverviewBuilder,
+        descriptor: OverviewBuilder<SoldProductEntity>,
         entity: SoldProductEntity,
         dto: SoldProductEntity
     ) {
