@@ -1,0 +1,75 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout4 :: head(${context.siteName})">
+</head>
+<body>
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        </div>
+
+        <div class="content">
+            <h1 th:text="${title}">Rendezői Oldal <span class="material-symbols-outlined color-yellow">star</span></h1>
+            <div class="details" th:text="${description}">Üdv a rendezvény rendezői felületén!</div>
+
+            <div class="card">
+                <h4>Bejegyzések</h4>
+<!--                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>-->
+
+                <div id="cmsch-table"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/tabulator.min.js}"></script>
+<script th:inline="javascript">
+    const buttons = JSON.parse(/*[[${controlActions}]]*/ "[]");
+    let tableData = JSON.parse(/*[[${tableData}]]*/ "[]");
+    for (let rowId in tableData) {
+        const row = tableData[rowId];
+        let buttonColumn = "";
+        for (let buttonId in buttons) {
+            const button = buttons[buttonId];
+            console.log(button.endpoint);
+            console.log(row.id);
+            buttonColumn += `<a href="${button.endpoint.replace("{id}", row.id)}"><span class="material-symbols-outlined control-action">${button.icon}</span></a>`
+        }
+        row['buttons'] = buttonColumn;
+    }
+
+    let columData = JSON.parse(/*[[${columnData}]]*/ "[]");
+    for (let columnId in columData) {
+        if (columData[columnId].formatter === 'tickCross') {
+            columData[columnId]['formatterParams'] = {
+                allowEmpty: true,
+                allowTruthy: true,
+                tickElement: "<span class='material-symbols-outlined color-green'>done</span>",
+                crossElement: "<span class='material-symbols-outlined color-red'>close</span>",
+            }
+        }
+    }
+    columData.push({
+        title: " ",
+        field: "buttons",
+        formatter: "html",
+        headerSort: false,
+        hozAlign: "center",
+        width: 60 * buttons.length
+    });
+
+    let table = new Tabulator("#cmsch-table", {
+        data: tableData,
+        autoColumns: false,
+        layout: 'fitColumns',
+        responsiveLayout: 'hide',
+        columns: columData
+    });
+</script>
+
+</body>
+</html>

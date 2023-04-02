@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.INTERPRETER_SEARCH
@@ -30,16 +32,20 @@ data class ControlAction(
     val name: String,
     val endpoint: String,
     val icon: String,
-    val permission: PermissionValidator
+    val permission: PermissionValidator,
+    val order: Int
 )
 
 data class ButtonAction(
     val name: String,
     val target: String,
-    val permission: PermissionValidator
+    val permission: PermissionValidator,
+    val order: Int,
+    val icon: String,
+    val primary: Boolean = false
 )
 
-class OneDeepEntityPage<T : IdentifiableEntity>(
+open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val view: String,
     classType: KClass<T>,
     private val supplier: Supplier<T>,
@@ -52,6 +58,7 @@ class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val adminMenuService: AdminMenuService,
     internal val component: ComponentBase,
     private val auditLog: AuditLogService,
+    private val objectMapper: ObjectMapper,
     private val entitySourceMapping: Map<String, (T?) -> List<String>> =
         mapOf(Nothing::class.simpleName!! to { listOf() }),
 
@@ -89,14 +96,20 @@ class OneDeepEntityPage<T : IdentifiableEntity>(
         if (createEnabled) {
             buttonActions.add(ButtonAction(
                 "Új $titlePlural",
-                "/create",
-                createPermission
+                "/admin/control/news/create",
+                createPermission,
+                100,
+                "add_box",
+                true
             ))
             if (importEnabled || exportEnabled) {
                 buttonActions.add(ButtonAction(
                     "Import / Export",
-                    "/resource",
-                    createPermission
+                    "/admin/control/news/resource",
+                    createPermission,
+                    200,
+                    "upload_file",
+                    false
                 ))
             }
         }
@@ -104,32 +117,41 @@ class OneDeepEntityPage<T : IdentifiableEntity>(
         if (editEnabled) {
             controlActions.add(ControlAction(
                 "Szerkesztés",
-                "/edit/{id}",
+                "/admin/control/news/edit/{id}",
                 "edit",
-                editPermission
+                editPermission,
+                100
             ))
         } else {
             controlActions.add(ControlAction(
                 "Megtekintés",
-                "/show/{id}",
-                "show",
-                showPermission
+                "/admin/control/news/show/{id}",
+                "visibility",
+                showPermission,
+                100
             ))
         }
 
         if (deleteEnabled) {
             controlActions.add(ControlAction(
                 "Törlés",
-                "/delete/{id}",
+                "/admin/control/news/delete/{id}",
                 "delete",
-                deletePermission
+                deletePermission,
+                200
             ))
             buttonActions.add(ButtonAction(
                 "Összes törlése",
-                "/purge",
-                deletePermission
+                "/admin/control/news/purge",
+                deletePermission,
+                300,
+                "delete_forever",
+                false
             ))
         }
+
+        controlActions.sortBy { it.order }
+        buttonActions.sortBy { it.order }
     }
 
     @GetMapping("")
@@ -146,17 +168,24 @@ class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
         model.addAttribute("view", view)
-        model.addAttribute("columns", descriptor.getColumns())
-        model.addAttribute("fields", descriptor.getColumnDefinitions())
-        model.addAttribute("rows", filterOverview(user, fetchOverview()))
+
+        model.addAttribute("columnData", descriptor.getColumnsAsJson())
+        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, fetchOverview())))
+
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
+        model.addAttribute("controlActions", toJson(controlActions.filter { it.permission.validate(user) }))
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
-        return "overview"
+        return "overview4"
     }
 
-    @GetMapping(value = ["/edit/{id}", "/show/{id}"])
+    private fun <ControlAction> toJson(list: List<ControlAction>): String {
+        return objectMapper
+            .writerFor(object : TypeReference<List<ControlAction>>() {})
+            .writeValueAsString(list)
+    }
+
+    @GetMapping("/edit/{id}")
     fun edit(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -188,7 +217,36 @@ class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("user", user)
-        model.addAttribute("readOnly", !editPermission.validate(user))
+        model.addAttribute("readOnly", false)
+
+        onDetailsView(user, model)
+        return "details"
+    }
+
+    @GetMapping("/show/{id}")
+    fun show(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
+            model.addAttribute("user", user)
+            return "admin403"
+        }
+
+        val entity = dataSource.findById(id)
+        if (entity.isEmpty) {
+            model.addAttribute("error", INVALID_ID_ERROR)
+        }
+        model.addAttribute("data", entity.orElseThrow())
+
+        model.addAttribute("title", titleSingular)
+        model.addAttribute("editMode", true)
+        model.addAttribute("view", view)
+        model.addAttribute("id", id)
+        model.addAttribute("inputs", descriptor.getInputs())
+        model.addAttribute("mappings", entitySourceMapping)
+        model.addAttribute("user", user)
+        model.addAttribute("readOnly", true)
 
         onDetailsView(user, model)
         return "details"
@@ -217,7 +275,7 @@ class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("readOnly", false)
 
         onDetailsView(user, model)
-        return "details"
+        return "details4"
     }
 
     @GetMapping("/delete/{id}")
@@ -380,7 +438,7 @@ class OneDeepEntityPage<T : IdentifiableEntity>(
         return "redirect:/admin/control/$view"
     }
 
-    private fun updateEntity(descriptor: OverviewBuilder, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
+    private fun updateEntity(descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
                 when {

@@ -49,7 +49,7 @@ class EntrypointController(
         return "entrypoint"
     }
 
-    @RequestMapping("/oauth2/authorization")
+    @RequestMapping(value = [ "/oauth2/authorization", "/login" ])
     fun authorize(model: Model, @RequestParam(defaultValue = "") error: String): String {
         model.addAttribute("siteName", applicationComponent.siteName.getValue())
         model.addAttribute("error", error)

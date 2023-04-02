@@ -8,13 +8,13 @@ interface EntityPageDataSource<T, ID> {
 
     fun findById(id: ID): Optional<T>
 
-    fun save(entity: T)
-
     fun delete(entity: T)
 
     fun count(): Long
 
-    fun saveAll(entities: List<T>)
+    fun <S : T?> save(entity: S): S
+
+    fun <S : T?> saveAll(entities: Iterable<S>): Iterable<S>
 
     fun deleteAll()
 
