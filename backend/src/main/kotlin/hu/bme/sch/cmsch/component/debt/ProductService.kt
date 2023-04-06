@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.debt
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
@@ -88,7 +89,7 @@ open class ProductService(
     }
 
     @Transactional(readOnly = true)
-    open fun getAllDebtsByUser(user: UserEntity): List<SoldProductEntity> {
+    open fun getAllDebtsByUser(user: CmschUser): List<SoldProductEntity> {
         return soldProductRepository.findAllByOwnerId(user.id)
     }
 

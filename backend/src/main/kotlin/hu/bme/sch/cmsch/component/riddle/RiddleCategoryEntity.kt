@@ -24,7 +24,7 @@ data class RiddleCategoryEntity(
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])

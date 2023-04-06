@@ -83,6 +83,7 @@ open class SecurityConfig(
                         "/cdn/news/**",
                         "/cdn/event/**",
                         "/control/refresh",
+                        "/oauth2/authorization",
                         "/c/**")
                     .permitAll()
 
@@ -100,6 +101,7 @@ open class SecurityConfig(
                 .and().apply(JwtConfigurer(jwtTokenProvider))
                 .and().apply(SessionFilterConfigurer(startupPropertyConfig))
                 .and().oauth2Login()
+                .loginPage("/oauth2/authorization")
                 .authorizationEndpoint()
                 .authorizationRequestResolver(
                     CustomAuthorizationRequestResolver(

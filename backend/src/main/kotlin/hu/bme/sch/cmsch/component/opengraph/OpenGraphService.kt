@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.opengraph
 
 import hu.bme.sch.cmsch.component.event.EventRepository
-import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
+import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -9,14 +9,14 @@ import java.util.*
 
 @Service
 open class OpenGraphService(
-    private val extraPageRepository: Optional<ExtraPageRepository>,
+    private val staticPageRepository: Optional<StaticPageRepository>,
     private val eventRepository: Optional<EventRepository>,
     private val newsRepository: Optional<NewsRepository>,
 ) {
 
     @Transactional(readOnly = true)
     open fun findExtraPage(url: String): Optional<OpenGraphResource> {
-        return extraPageRepository.flatMap { it.findByUrl(url) }
+        return staticPageRepository.flatMap { it.findByUrl(url) }
     }
 
     @Transactional(readOnly = true)

@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.form
 
+import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -7,7 +8,8 @@ import java.util.*
 
 @Repository
 @ConditionalOnBean(FormComponent::class)
-interface ResponseRepository : JpaRepository<ResponseEntity, Int> {
+interface ResponseRepository : JpaRepository<ResponseEntity, Int>,
+    EntityPageDataSource<ResponseEntity, Int> {
 
     fun findAllByFormId(formId: Int): List<ResponseEntity>
 

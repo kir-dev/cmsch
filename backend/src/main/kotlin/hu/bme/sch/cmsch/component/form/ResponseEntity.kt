@@ -22,7 +22,7 @@ data class ResponseEntity(
     @GeneratedValue
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(visible = true, columnName = "ID", centered = true)
+    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     @property:ImportFormat(ignore = true)
     override var id: Int = 0,
 

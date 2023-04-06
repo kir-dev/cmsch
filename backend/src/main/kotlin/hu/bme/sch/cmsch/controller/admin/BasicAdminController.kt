@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.component.extrapage.ExtraPageService
+import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
@@ -27,7 +27,7 @@ const val EXPERIMENTAL_CATEGORY = "EXPERIMENTAL_CATEGORY"
 class BasicAdminController(
     private val applicationComponent: ApplicationComponent,
     private val adminMenuService: AdminMenuService,
-    private val extraPageService: Optional<ExtraPageService>
+    private val staticPageService: Optional<StaticPageService>
 ) {
 
     @PostConstruct
@@ -68,7 +68,7 @@ class BasicAdminController(
 
         val userPermissions = user.permissionsAsList
 
-        model.addAttribute("customPermissions", extraPageService.map { service ->
+        model.addAttribute("customPermissions", staticPageService.map { service ->
             service.getAll().groupBy { it.permissionToEdit }.map { group ->
                 PermissionValidator(
                     group.key,

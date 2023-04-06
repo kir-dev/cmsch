@@ -15,6 +15,15 @@
             <h1 th:text="${title}">Rendezői Oldal <span class="material-symbols-outlined color-yellow">star</span></h1>
             <div class="details" th:text="${description}">Üdv a rendezvény rendezői felületén!</div>
 
+            <div th:class="button-group">
+                <object th:each="button : ${buttonActions}" th:remove="tag">
+                    <a href="#" th:href="|@{/admin/control}/${view}/${button.target}|" class="btn"
+                       th:class="|btn ${button.primary ? 'btn-primary' : 'btn-secondary'}|"
+                       th:target="${button.newPage ? '_blank' : ''}"
+                    ><span class="material-symbols-outlined regular" th:text="${button.icon}">code</span> <ins th:text="${button.name}">Button name</ins></a>
+                </object>
+            </div>
+
             <div class="card">
                 <h4>Bejegyzések</h4>
 <!--                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>-->
@@ -37,7 +46,7 @@
             const button = buttons[buttonId];
             console.log(button.endpoint);
             console.log(row.id);
-            buttonColumn += `<a href="${button.endpoint.replace("{id}", row.id)}"><span class="material-symbols-outlined control-action">${button.icon}</span></a>`
+            buttonColumn += `<a href="${button.endpoint.replace("{id}", row.id)}" ${button.newPage ? 'target="_blank"' : ''} class="control-action"><span class="material-symbols-outlined">${button.icon}</span></a>`
         }
         row['buttons'] = buttonColumn;
     }
@@ -57,16 +66,18 @@
         title: " ",
         field: "buttons",
         formatter: "html",
-        headerSort: false,
         hozAlign: "center",
-        width: 60 * buttons.length
+        width: 60 * buttons.length,
+        minWidth: 60 * buttons.length,
+        resizable: false,
+        headerSort: false
     });
 
     let table = new Tabulator("#cmsch-table", {
         data: tableData,
         autoColumns: false,
         layout: 'fitColumns',
-        responsiveLayout: 'hide',
+        responsiveLayout: 'collapse',
         columns: columData
     });
 </script>

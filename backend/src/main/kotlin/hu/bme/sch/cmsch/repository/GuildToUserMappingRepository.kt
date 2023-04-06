@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface GuildToUserMappingRepository : CrudRepository<GuildToUserMappingEntity, Int> {
+interface GuildToUserMappingRepository : CrudRepository<GuildToUserMappingEntity, Int>,
+    EntityPageDataSource<GuildToUserMappingEntity, Int> {
+
     fun findByNeptun(neptun: String): Optional<GuildToUserMappingEntity>
 }

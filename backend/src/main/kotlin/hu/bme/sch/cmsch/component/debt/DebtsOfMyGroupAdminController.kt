@@ -1,10 +1,10 @@
 package hu.bme.sch.cmsch.component.debt
 
-import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
-import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_PAYED
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.controller.admin.ControlAction
+import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
+import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
@@ -16,65 +16,57 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import javax.annotation.PostConstruct
 
 @Controller
 @RequestMapping("/admin/control/debts-of-my-group")
 @ConditionalOnBean(DebtComponent::class)
 class DebtsOfMyGroupAdminController(
+    private val userService: UserService,
     private val productService: ProductService,
-    private val adminMenuService: AdminMenuService
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: DebtComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : SimpleEntityPage<SoldProductEntity>(
+    "debts-of-my-group",
+    SoldProductEntity::class, ::SoldProductEntity,
+    "Tartozás", "Csoportom tartozásai",
+    "Ha a tartozáshoz a pénzt odaadta neked a kolléga, akkor pipáld ki itt. " +
+            "Onnantól a te felelősséged lesz majd elszámolni a gazdaságisnak.",
+
+    { user -> productService.getAllDebtsByGroup(userService.getByUserId(user.id)) },
+
+    permission = PERMISSION_IMPLICIT_HAS_GROUP,
+
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    adminMenuIcon = "fact_check",
+    adminMenuPriority = 7,
+
+    controlActions = mutableListOf(
+        ControlAction(
+            "Fizetve",
+            "payed/{id}",
+            "check_circle_outline",
+            PERMISSION_IMPLICIT_HAS_GROUP,
+            100
+        )
+    )
 ) {
 
-    private val view = "debts-of-my-group"
-    private val titlePlural = "Csoportom tartozásai"
-    private val permissionControl = PERMISSION_IMPLICIT_HAS_GROUP
-
-    private val debtsDescriptor = OverviewBuilder(SoldProductEntity::class)
-
-    @PostConstruct
-    fun init() {
-        adminMenuService.registerEntry(
-            DebtComponent::class.simpleName!!, AdminMenuEntry(
-                titlePlural,
-                "fact_check",
-                "/admin/control/${view}",
-                7,
-                permissionControl
-            )
-        )
-    }
-
-    @GetMapping("")
-    fun debtsOfMyGroup(model: Model, auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titlePlural)
-        model.addAttribute("titleSingular", "Tartozás")
-        model.addAttribute("description", "Ha a tartozáshoz a pénzt odaadta neked a kolléga, akkor pipáld ki itt. " +
-                "Onnantól a te felelősséged lesz majd elszámolni a gazdaságisnak.")
-        model.addAttribute("view", view)
-        model.addAttribute("columns", debtsDescriptor.getColumns())
-        model.addAttribute("fields", debtsDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", productService.getAllDebtsByGroup(user))
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_PAYED)
-
-        return "overview"
-    }
+    private val payPermission = PERMISSION_IMPLICIT_HAS_GROUP
 
     @GetMapping("/payed/{id}")
     fun setDebtsStatus(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (payPermission.validate(user).not()) {
+            model.addAttribute("permission", payPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -96,15 +88,11 @@ class DebtsOfMyGroupAdminController(
     @PostMapping("/payed/{id}")
     fun payed(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUserFromDatabase()
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (payPermission.validate(user).not()) {
+            model.addAttribute("permission", payPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
-
-        // Check group here: we don't need to!
-        // The name of the resolver is stored, and
-        // they will be responsible to pay the given amount
 
         productService.setTransactionPayed(id, user)
         return "redirect:/admin/control/debts-of-my-group"

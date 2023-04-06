@@ -7,8 +7,8 @@ import hu.bme.sch.cmsch.component.debt.ProductEntity
 import hu.bme.sch.cmsch.component.debt.ProductRepository
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.event.EventRepository
-import hu.bme.sch.cmsch.component.extrapage.ExtraPageEntity
-import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
+import hu.bme.sch.cmsch.component.staticpage.StaticPageEntity
+import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.model.*
@@ -66,7 +66,7 @@ class TestConfig(
     private val tasks: Optional<TaskEntityRepository>,
     private val submittedTasks: Optional<SubmittedTaskRepository>,
     private val categories: Optional<TaskCategoryRepository>,
-    private val extraPages: Optional<ExtraPageRepository>,
+    private val extraPages: Optional<StaticPageRepository>,
     private val products: Optional<ProductRepository>,
     private val productsService: Optional<ProductService>,
     private val riddleRepository: Optional<RiddleEntityRepository>,
@@ -904,8 +904,8 @@ class TestConfig(
         productsService.sellProductByCmschId(product1.id, merchant, user2.cmschId)
     }
 
-    private fun addExtraPages(extraPages: ExtraPageRepository) {
-        extraPages.save(ExtraPageEntity(
+    private fun addExtraPages(extraPages: StaticPageRepository) {
+        extraPages.save(StaticPageEntity(
                 title = "Gyakran Ismételt Kérdések",
                 url = "gyik",
                 visible = true,
@@ -932,7 +932,7 @@ class TestConfig(
             ogTitle = "CMSCH - GYIK"
         ))
 
-        extraPages.save(ExtraPageEntity(
+        extraPages.save(StaticPageEntity(
                 title = "Egy másik nemzedék",
                 url = "egy-masik-nemzedek",
                 visible = false,
@@ -950,7 +950,7 @@ class TestConfig(
                         "> Nem kell többé a szent beszéd\n> Ez egy másik nemzedék\n"
         ))
 
-        extraPages.save(ExtraPageEntity(
+        extraPages.save(StaticPageEntity(
                 title = "Az idei G7 költségvetése",
                 url = "koltsegvetes",
                 visible = false,
@@ -964,7 +964,7 @@ class TestConfig(
                         "Ja persze, majd ideírjuk...\n"
         ))
 
-        extraPages.save(ExtraPageEntity(
+        extraPages.save(StaticPageEntity(
                 title = "Telejsen átlagos oldal",
                 url = "atlagos-oldal",
                 visible = true,

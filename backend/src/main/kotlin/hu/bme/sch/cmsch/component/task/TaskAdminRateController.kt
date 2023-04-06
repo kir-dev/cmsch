@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
+import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_RATE_TASKS
@@ -23,7 +24,7 @@ const val CONTROL_MODE_GRADE = "grade"
 @Controller
 @RequestMapping("/admin/control/rate-tasks")
 @ConditionalOnBean(TaskComponent::class)
-class TaskAdminRateController(
+t2 class TaskAdminRateController(
     private val submittedRepository: SubmittedTaskRepository,
     private val adminMenuService: AdminMenuService
 ) {

@@ -2,6 +2,9 @@ package hu.bme.sch.cmsch.component.qrfight
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.addon.indulasch.IndulaschIntegrationService
+import hu.bme.sch.cmsch.addon.indulasch.IndulaschMessageType
+import hu.bme.sch.cmsch.addon.indulasch.IndulaschNewMessageDto
 import hu.bme.sch.cmsch.component.token.TokenCollectorStatus
 import hu.bme.sch.cmsch.component.token.TokenEntity
 import hu.bme.sch.cmsch.component.token.TokenPropertyEntity
