@@ -33,13 +33,13 @@ class TrackingMapController(
     }
 
     @ResponseBody
-    @GetMapping("/api/track/{groupName}")
-    fun apiGroup(@PathVariable groupName: String, auth: Authentication?): List<LocationEntity> {
+    @GetMapping("/api/track/{groupId}")
+    fun apiGroup(@PathVariable groupId: Int, auth: Authentication?): List<LocationEntity> {
         val user = auth?.getUser() ?: return listOf()
         if (PERMISSION_TRACK_ONE_GROUP.validate(user).not()) {
             return listOf()
         }
-        return locationService.findLocationsOfGroup(groupName)
+        return locationService.findLocationsOfGroup(groupId)
     }
 
     @PostConstruct
@@ -69,8 +69,8 @@ class TrackingMapController(
         return "tracker"
     }
 
-    @GetMapping("/admin/control/tracking/{groupName}")
-    fun viewGroup(@PathVariable groupName: String, auth: Authentication, model: Model): String {
+    @GetMapping("/admin/control/tracking/{groupId}")
+    fun viewGroup(@PathVariable groupId: Int, auth: Authentication, model: Model): String {
         val user = auth.getUser()
         if (PERMISSION_TRACK_ONE_GROUP.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_TRACK_ONE_GROUP.permissionString)
@@ -78,7 +78,7 @@ class TrackingMapController(
             return "admin403"
         }
 
-        model.addAttribute("url", "/api/track/${groupName}")
+        model.addAttribute("url", "/api/track/${groupId}")
         attachComponentProperties(model)
         return "tracker"
     }

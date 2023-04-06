@@ -1,137 +1,161 @@
 package hu.bme.sch.cmsch.component.debt
 
-import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.controller.admin.ControlAction
+import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_ANY_PRODUCT
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_FOOD
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_MERCH
-import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import javax.annotation.PostConstruct
-
-const val CONTROL_MODE_SELL = "sell"
 
 private const val SELL_PRODUCT_TITLE = "Termék árusítás"
 private const val SELL_FOOD_TITLE = "Étel árusítás"
 private const val SELL_MERCH_TITLE = "Merch árusítás"
 
+private const val DESCRIPTION = "Válassz terméket az eladáshoz"
+
 @Controller
-@RequestMapping("/admin/control")
+@RequestMapping("/admin/control/sell-products")
 @ConditionalOnBean(DebtComponent::class)
 class SellProductsController(
     private val productService: ProductService,
-    private val adminMenuService: AdminMenuService
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: DebtComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : SimpleEntityPage<ProductEntity>(
+    "sell-products",
+    ProductEntity::class, ::ProductEntity,
+    SELL_PRODUCT_TITLE, SELL_PRODUCT_TITLE,
+    DESCRIPTION,
+
+    { _ -> productService.getAllProducts() },
+
+    permission = PERMISSION_SELL_ANY_PRODUCT,
+
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    adminMenuIcon = "point_of_sale",
+    adminMenuPriority = 2,
+
+    controlActions = mutableListOf(
+        ControlAction(
+            "Árusít",
+            "sell/{id}",
+            "sell",
+            PERMISSION_SELL_ANY_PRODUCT,
+            100
+        )
+    )
 ) {
 
-    private val descriptor = OverviewBuilder(ProductEntity::class)
-    private val description = "Válassz terméket az eladáshoz"
-
-    @PostConstruct
-    fun init() {
-        adminMenuService.registerEntry(
-            DebtComponent::class.simpleName!!, AdminMenuEntry(
-                SELL_PRODUCT_TITLE,
-                "point_of_sale",
-                "/admin/control/sell-products",
-                2,
-                PERMISSION_SELL_ANY_PRODUCT
-            )
-        )
-
-        adminMenuService.registerEntry(
-            DebtComponent::class.simpleName!!, AdminMenuEntry(
-                SELL_FOOD_TITLE,
-                "restaurant",
-                "/admin/control/sell-food",
-                3,
-                PERMISSION_SELL_FOOD
-            )
-        )
-
-        adminMenuService.registerEntry(
-            DebtComponent::class.simpleName!!, AdminMenuEntry(
-                SELL_MERCH_TITLE,
-                "sell",
-                "/admin/control/sell-products",
-                4,
-                PERMISSION_SELL_MERCH
-            )
-        )
+    @GetMapping("/sell/{id}")
+    fun redirectSelling(@PathVariable id: String): String {
+        return "redirect:/admin/sell/${id}"
     }
 
-    @GetMapping("/sell-products")
-    fun sellProduct(model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (PERMISSION_SELL_ANY_PRODUCT.validate(user).not()) {
-            model.addAttribute("permission", PERMISSION_SELL_ANY_PRODUCT.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
+}
 
-        model.addAttribute("title", SELL_PRODUCT_TITLE)
-        model.addAttribute("titleSingular", SELL_PRODUCT_TITLE)
-        model.addAttribute("description", description)
-        model.addAttribute("view", "sell-merch")
-        model.addAttribute("columns", descriptor.getColumns())
-        model.addAttribute("fields", descriptor.getColumnDefinitions())
-        model.addAttribute("rows", productService.getAllProducts())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_SELL)
+@Controller
+@RequestMapping("/admin/control/sell-food")
+@ConditionalOnBean(DebtComponent::class)
+class SellFoodController(
+    private val productService: ProductService,
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: DebtComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : SimpleEntityPage<ProductEntity>(
+    "sell-food",
+    ProductEntity::class, ::ProductEntity,
+    SELL_FOOD_TITLE, SELL_FOOD_TITLE,
+    DESCRIPTION,
 
-        return "overview"
+    { _ -> productService.getAllFoods() },
+
+    permission = PERMISSION_SELL_FOOD,
+
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    adminMenuIcon = "restaurant",
+    adminMenuPriority = 3,
+
+    controlActions = mutableListOf(
+        ControlAction(
+            "Árusít",
+            "sell/{id}",
+            "sell",
+            PERMISSION_SELL_FOOD,
+            100
+        )
+    )
+) {
+
+    @GetMapping("/sell/{id}")
+    fun redirectSelling(@PathVariable id: String): String {
+        return "redirect:/admin/sell/${id}"
     }
 
-    @GetMapping("/sell-food")
-    fun sellFood(model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (PERMISSION_SELL_FOOD.validate(user).not()) {
-            model.addAttribute("permission", PERMISSION_SELL_FOOD.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
+}
 
-        model.addAttribute("title", SELL_FOOD_TITLE)
-        model.addAttribute("titleSingular", SELL_FOOD_TITLE)
-        model.addAttribute("description", description)
-        model.addAttribute("view", "sell-food")
-        model.addAttribute("columns", descriptor.getColumns())
-        model.addAttribute("fields", descriptor.getColumnDefinitions())
-        model.addAttribute("rows", productService.getAllFoods())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_SELL)
+@Controller
+@RequestMapping("/admin/control/sell-merch")
+@ConditionalOnBean(DebtComponent::class)
+class SellMerchController(
+    private val productService: ProductService,
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: DebtComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : SimpleEntityPage<ProductEntity>(
+    "sell-merch",
+    ProductEntity::class, ::ProductEntity,
+    SELL_MERCH_TITLE, SELL_MERCH_TITLE,
+    DESCRIPTION,
 
-        return "overview"
-    }
+    { _ -> productService.getAllMerch() },
 
-    @GetMapping("/sell-merch")
-    fun sellMerch(model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (PERMISSION_SELL_MERCH.validate(user).not()) {
-            model.addAttribute("permission", PERMISSION_SELL_MERCH.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
+    permission = PERMISSION_SELL_MERCH,
 
-        model.addAttribute("title", SELL_MERCH_TITLE)
-        model.addAttribute("titleSingular", SELL_MERCH_TITLE)
-        model.addAttribute("description", description)
-        model.addAttribute("view", "sell-merch")
-        model.addAttribute("columns", descriptor.getColumns())
-        model.addAttribute("fields", descriptor.getColumnDefinitions())
-        model.addAttribute("rows", productService.getAllMerch())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_SELL)
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
 
-        return "overview"
+    adminMenuIcon = "sell",
+    adminMenuPriority = 4,
+
+    controlActions = mutableListOf(
+        ControlAction(
+            "Árusít",
+            "sell/{id}",
+            "sell",
+            PERMISSION_SELL_MERCH,
+            100
+        )
+    )
+) {
+
+    @GetMapping("/sell/{id}")
+    fun redirectSelling(@PathVariable id: String): String {
+        return "redirect:/admin/sell/${id}"
     }
 
 }

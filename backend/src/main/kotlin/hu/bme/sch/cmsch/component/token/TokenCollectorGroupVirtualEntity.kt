@@ -1,13 +1,14 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
+import hu.bme.sch.cmsch.model.IdentifiableEntity
 
 class TokenCollectorGroupVirtualEntity(
 
     @property:GenerateOverview(visible = false)
-    val id: Int,
+    override var id: Int = 0,
 
     @property:GenerateOverview(columnName = "Tankör", order = 1)
-    val name: String
+    var name: String = ""
 
-)
+) : IdentifiableEntity

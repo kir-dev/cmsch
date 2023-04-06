@@ -22,13 +22,13 @@ class ExportAdminController(
 ) {
 
     private val view = "export"
-    private val permissionControl = ControlPermissions.PERMISSION_CONTROL_APP
+    private val permissionControl = ControlPermissions.PERMISSION_CONTROL_APP_EXPORT
 
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            ApplicationComponent::class.simpleName!!, AdminMenuEntry(
-                "Export minden",
+            ApplicationComponent.DEVELOPER_CATEGORY, AdminMenuEntry(
+                "Exportálás",
                 "file_download",
                 "/admin/control/${view}",
                 30,
@@ -54,7 +54,9 @@ class ExportAdminController(
                     .filter { it.persist }
                     .map {
                     "hu.bme.sch.cmsch.${component.key.component}.${it.property}=" +
-                            it.getValue().replace("\r", "").replace("\n", "\\\n    ")
+                            escapeNonAscii(it.getValue())
+                                .replace("\r", "")
+                                .replace("\n", "\\\n    ")
                 }
             }
             .joinToString("\n")
@@ -63,6 +65,18 @@ class ExportAdminController(
         model.addAttribute("user", user)
 
         return "exportSettings"
+    }
+
+    fun escapeNonAscii(input: String): String {
+        val result = StringBuilder()
+        input.forEach { char ->
+            if (char.code in 0..127) {
+                result.append(char)
+            } else {
+                result.append("\\u%04x".format(char.code))
+            }
+        }
+        return result.toString()
     }
 
 }

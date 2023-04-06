@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.kernel.geom.PageSize
@@ -10,14 +11,13 @@ import com.itextpdf.layout.element.*
 import com.itextpdf.layout.properties.TextAlignment
 import com.itextpdf.layout.properties.UnitValue
 import com.itextpdf.layout.properties.VerticalAlignment
-import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.riddle.RiddleService
-import hu.bme.sch.cmsch.controller.admin.CONTROL_MODE_PDF
+import hu.bme.sch.cmsch.component.task.TasksService
+import hu.bme.sch.cmsch.controller.admin.ControlAction
+import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -27,7 +27,6 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 
 @Controller
@@ -46,73 +44,56 @@ class TokenAdminTokensByUsersOfGroupsController(
     private val userRepository: UserRepository,
     private val tokenPropertyRepository: TokenPropertyRepository,
     private val tokenComponent: TokenComponent,
-    private val adminMenuService: AdminMenuService,
     private val riddleService: Optional<RiddleService>,
-    private val tasksService: Optional<TasksService>
+    private val tasksService: Optional<TasksService>,
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: TokenComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : SimpleEntityPage<TokenCollectorGroupVirtualEntity>(
+    "token-properties-of-groups",
+    TokenCollectorGroupVirtualEntity::class, ::TokenCollectorGroupVirtualEntity,
+    "Jelenléti export", "Jelenléti export",
+    "Beolvasott tokenek csoportonként csoportosítva.",
+
+    { tokenPropertyRepository.findAll().groupBy { it.ownerUser?.groupName ?: "n/a" }
+        .filter { it.value.isNotEmpty() }
+        .map {
+            TokenCollectorGroupVirtualEntity(
+                it.value[0].ownerUser?.group?.id ?: 0,
+                it.key
+            )
+        } },
+
+    permission = PERMISSION_EDIT_TOKENS,
+
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    adminMenuIcon = "file_download",
+    adminMenuPriority = 4,
+
+    controlActions = mutableListOf(
+        ControlAction(
+            "Mentés",
+            "pdf/{id}",
+            "save",
+            ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP,
+            100
+        )
+    )
 ) {
 
-    private val view = "token-properties-of-groups"
-    private val titleSingular = "Jelenléti export"
-    private val titlePlural = "Jelenléti export"
-    private val description = "Beolvasott tokenek csoportonként csoportosítva. " +
-            "(Riddle modul: ${riddleService.map { _ -> "ON" }.orElse("OFF")} " +
-            "Task modul: ${tasksService.map { _ -> "ON" }.orElse("OFF")} " +
-            "Token modul: ON*)"
-    private val permissionControl = PERMISSION_EDIT_TOKENS
-
-    private val overviewDescriptor = OverviewBuilder(TokenCollectorGroupVirtualEntity::class)
-
-    @PostConstruct
-    fun init() {
-        adminMenuService.registerEntry(
-            TokenComponent::class.simpleName!!, AdminMenuEntry(
-                titlePlural,
-                "file_download",
-                "/admin/control/${view}",
-                4,
-                permissionControl
-            )
-        )
-    }
-
-    @GetMapping("")
-    fun view(model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titlePlural)
-        model.addAttribute("titleSingular", titleSingular)
-        model.addAttribute("description", description)
-        model.addAttribute("view", view)
-        model.addAttribute("columns", overviewDescriptor.getColumns())
-        model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", fetchOverview())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_PDF)
-
-        return "overview"
-    }
-
-    private fun fetchOverview(): List<TokenCollectorGroupVirtualEntity> {
-        return tokenPropertyRepository.findAll().groupBy { it.ownerUser?.groupName ?: "n/a" }
-                .filter { it.value.isNotEmpty() }
-                .map {
-                    TokenCollectorGroupVirtualEntity(
-                            it.value[0].ownerUser?.group?.id ?: 0,
-                            it.key
-                    )
-                }
-    }
+    private val payPermission = ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 
     @ResponseBody
     @GetMapping(value = ["/pdf/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun generatePdf(@PathVariable id: Int, auth: Authentication, response: HttpServletResponse): ResponseEntity<ByteArray> {
-        if (permissionControl.validate(auth.getUser()).not()) {
+        if (showPermission.validate(auth.getUser()).not()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
 
@@ -138,6 +119,7 @@ class TokenAdminTokensByUsersOfGroupsController(
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
         val header = Paragraph()
             .add(ssslLogo)
+            // FIXME: place it into a setting
             .add(Paragraph("GÓLYAKÖRTE 2023\nJELENLÉTI - ${group.name}")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE)
@@ -266,7 +248,6 @@ class TokenAdminTokensByUsersOfGroupsController(
         response.addHeader("Content-Disposition", "attachment; filename=jelenleti-export-${group.name}.pdf")
         return ResponseEntity.ok(output.toByteArray())
     }
-
 
 }
 

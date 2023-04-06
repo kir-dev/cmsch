@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.extrapage.ExtraPageRepository
+import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
 import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.model.RoleType
@@ -21,7 +21,7 @@ open class MenuService(
     private val menuRepository: MenuRepository,
     private val extraMenuRepository: ExtraMenuRepository,
     private val components: List<ComponentBase>,
-    private val extraPages: Optional<ExtraPageRepository>,
+    private val extraPages: Optional<StaticPageRepository>,
     private val forms: Optional<FormRepository>,
     private val races: Optional<RaceCategoryRepository>,
 ) {

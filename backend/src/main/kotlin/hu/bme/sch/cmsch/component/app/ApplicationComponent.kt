@@ -19,6 +19,13 @@ class ApplicationComponent(
     componentSettingService, env
 ) {
 
+    companion object {
+        const val STYLING_CATEGORY = "ApplicationComponent.style"
+        const val CONTENT_CATEGORY = "ApplicationComponent.content"
+        const val FUNCTIONALITIES_CATEGORY = "ApplicationComponent.function"
+        const val DEVELOPER_CATEGORY = "ApplicationComponent.dev"
+    }
+
     final override val allSettings by lazy {
         listOf(
             minRole,

@@ -29,7 +29,7 @@ class LocationApiController(
             return listOf()
         if (!profileComponent.map { it.showGroupLeadersLocations.isValueTrue() }.orElse(false))
             return listOf()
-        return locationService.findLocationsOfGroup(user.groupName)
+        return locationService.findLocationsOfGroup(user.group?.id ?: 0)
     }
 
 

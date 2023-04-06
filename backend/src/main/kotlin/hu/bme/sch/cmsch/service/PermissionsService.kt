@@ -65,7 +65,7 @@ object ControlPermissions : PermissionGroup {
         "Token komponens testreszabása"
     )
 
-    val PERMISSION_CONTROL_EXTRA_PAGES = PermissionValidator(
+    val PERMISSION_CONTROL_STATIC_PAGES = PermissionValidator(
         "EXTRAPAGES_CONTROL",
         "ExtraPage komponens testreszabása"
     )
@@ -80,6 +80,7 @@ object ControlPermissions : PermissionGroup {
         "Profil komponens testreszabása"
     )
 
+    @Deprecated(message = "Remove after the permission revamp")
     val PERMISSION_IMPORT_EXPORT = PermissionValidator(
         "ALL_IMPORT_EXPORT",
         "Az összes kezelt entitás exportálása és importálása (ezáltal indirekt megtekintése és készítése is)"
@@ -93,6 +94,11 @@ object ControlPermissions : PermissionGroup {
     val PERMISSION_CONTROL_APP = PermissionValidator(
         "APP_CONTROL",
         "Az alkalazás testreszabása"
+    )
+
+    val PERMISSION_CONTROL_APP_EXPORT = PermissionValidator(
+        "APP_EXPORT_CONTROL",
+        "Teljes alkalmazás állapotának kiexportálása"
     )
 
     val PERMISSION_INCREASED_SESSION_DURATION = PermissionValidator(
@@ -172,12 +178,13 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_DEBTS,
         PERMISSION_CONTROL_RIDDLE,
         PERMISSION_CONTROL_TOKEN,
-        PERMISSION_CONTROL_EXTRA_PAGES,
+        PERMISSION_CONTROL_STATIC_PAGES,
         PERMISSION_CONTROL_LEADERBOARD,
         PERMISSION_CONTROL_PROFILE,
         PERMISSION_IMPORT_EXPORT,
         PERMISSION_PURGE,
         PERMISSION_CONTROL_APP,
+        PERMISSION_CONTROL_APP_EXPORT,
         PERMISSION_INCREASED_SESSION_DURATION,
         PERMISSION_SHOW_DELETE_FILES,
         PERMISSION_CONTROL_IMPRESSUM,
@@ -311,14 +318,14 @@ object StaffPermissions : PermissionGroup {
         "Csoport hozzárendelések létrehozása, szerkesztése és törlése"
     )
 
-    val PERMISSION_EDIT_EXTRA_PAGES = PermissionValidator(
-        "EXTRAPAGE_EDIT",
-        "Extra oldalak létrehozása, szerkesztése és törlése"
+    val PERMISSION_EDIT_STATIC_PAGES = PermissionValidator(
+        "STATICPAGE_EDIT",
+        "Statikus oldalak létrehozása, szerkesztése és törlése"
     )
 
-    val PERMISSION_EDIT_ANY_EXTRA_PAGES = PermissionValidator(
-        "EXTRAPAGE_EDIT_ANY",
-        "Az összes extra oldal szerkesztése"
+    val PERMISSION_EDIT_ANY_STATIC_PAGES = PermissionValidator(
+        "STATICPAGE_EDIT_ANY",
+        "Az összes statikus oldal szerkesztése"
     )
 
     val PERMISSION_SHOW_LEADERBOARD = PermissionValidator(
@@ -329,6 +336,11 @@ object StaffPermissions : PermissionGroup {
     val PERMISSION_EDIT_SIGNUP_RESULTS = PermissionValidator(
         "SIGNUP_EDIT",
         "Jelentkezések megtekintése és szerkesztése"
+    )
+
+    val PERMISSION_EDIT_FORM = PermissionValidator(
+        "FORM_EDIT",
+        "Űrlapok készítése és szerkesztése"
     )
 
     val PERMISSION_EDIT_CHALLENGES = PermissionValidator(
@@ -394,10 +406,11 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_USERS,
         PERMISSION_EDIT_GUILD_MAPPINGS,
         PERMISSION_EDIT_GROUP_MAPPINGS,
-        PERMISSION_EDIT_EXTRA_PAGES,
-        PERMISSION_EDIT_ANY_EXTRA_PAGES,
+        PERMISSION_EDIT_STATIC_PAGES,
+        PERMISSION_EDIT_ANY_STATIC_PAGES,
         PERMISSION_SHOW_LEADERBOARD,
         PERMISSION_EDIT_SIGNUP_RESULTS,
+        PERMISSION_EDIT_FORM,
         PERMISSION_EDIT_CHALLENGES,
         PERMISSION_VALIDATE_ADMISSION,
         PERMISSION_EDIT_RACE,

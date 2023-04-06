@@ -2,16 +2,17 @@ package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_DATE
+import hu.bme.sch.cmsch.model.IdentifiableEntity
 
 data class TokenPropertyVirtualEntity(
 
     @property:GenerateOverview(visible = false)
-    val id: Int,
+    override var id: Int = 0,
 
     @property:GenerateOverview(columnName = "Tulajdonos", order = 1)
-    val owner: String,
+    var owner: String = "",
 
     @property:GenerateOverview(columnName = "Beolvasva", order = 2, centered = true, renderer = OVERVIEW_TYPE_DATE)
-    val timestamp: Long
+    var timestamp: Long = 0
 
-)
+) : IdentifiableEntity

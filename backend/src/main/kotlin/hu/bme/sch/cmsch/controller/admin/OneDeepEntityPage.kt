@@ -8,11 +8,12 @@ import hu.bme.sch.cmsch.admin.INTERPRETER_SEARCH
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.model.IdentifiableEntity
+import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
@@ -33,7 +34,8 @@ data class ControlAction(
     val endpoint: String,
     val icon: String,
     val permission: PermissionValidator,
-    val order: Int
+    val order: Int,
+    val newPage: Boolean = false
 )
 
 data class ButtonAction(
@@ -42,8 +44,11 @@ data class ButtonAction(
     val permission: PermissionValidator,
     val order: Int,
     val icon: String,
-    val primary: Boolean = false
+    val primary: Boolean = false,
+    val newPage: Boolean = false
 )
+
+const val INVALID_ID_ERROR = "Object with this id was not found in the database"
 
 open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val view: String,
@@ -53,7 +58,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val titlePlural: String,
     internal val description: String,
 
-    private val dataSource: EntityPageDataSource<T, Int>,
+    internal val dataSource: EntityPageDataSource<T, Int>,
     internal val importService: ImportService,
     internal val adminMenuService: AdminMenuService,
     internal val component: ComponentBase,
@@ -62,7 +67,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     private val entitySourceMapping: Map<String, (T?) -> List<String>> =
         mapOf(Nothing::class.simpleName!! to { listOf() }),
 
-    private val showPermission: PermissionValidator,
+    internal val showPermission: PermissionValidator,
     private val createPermission: PermissionValidator,
     private val editPermission: PermissionValidator,
     private val deletePermission: PermissionValidator,
@@ -73,19 +78,21 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     private val importEnabled: Boolean = true,
     private val exportEnabled: Boolean = true,
 
+    private val adminMenuCategory: String? = null,
     private val adminMenuIcon: String = "check_box_outline_blank",
     private val adminMenuPriority: Int = 1,
 
-    private val controlActions: MutableList<ControlAction> = mutableListOf(),
-    private val buttonActions: MutableList<ButtonAction> = mutableListOf()
+    internal val controlActions: MutableList<ControlAction> = mutableListOf(),
+    internal val buttonActions: MutableList<ButtonAction> = mutableListOf()
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-    private val descriptor = OverviewBuilder(classType)
+    internal val descriptor = OverviewBuilder(classType)
 
     @PostConstruct
     fun init() {
-        adminMenuService.registerEntry(component.javaClass.simpleName, AdminMenuEntry(
+        val category = adminMenuCategory ?: component.javaClass.simpleName
+        adminMenuService.registerEntry(category, AdminMenuEntry(
             titlePlural,
             adminMenuIcon,
             "/admin/control/${view}",
@@ -95,8 +102,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         if (createEnabled) {
             buttonActions.add(ButtonAction(
-                "Új $titlePlural",
-                "/admin/control/news/create",
+                "Új $titleSingular",
+                "create",
                 createPermission,
                 100,
                 "add_box",
@@ -105,7 +112,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             if (importEnabled || exportEnabled) {
                 buttonActions.add(ButtonAction(
                     "Import / Export",
-                    "/admin/control/news/resource",
+                    "resource",
                     createPermission,
                     200,
                     "upload_file",
@@ -117,7 +124,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (editEnabled) {
             controlActions.add(ControlAction(
                 "Szerkesztés",
-                "/admin/control/news/edit/{id}",
+                "edit/{id}",
                 "edit",
                 editPermission,
                 100
@@ -125,7 +132,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         } else {
             controlActions.add(ControlAction(
                 "Megtekintés",
-                "/admin/control/news/show/{id}",
+                "show/{id}",
                 "visibility",
                 showPermission,
                 100
@@ -135,14 +142,14 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (deleteEnabled) {
             controlActions.add(ControlAction(
                 "Törlés",
-                "/admin/control/news/delete/{id}",
+                "delete/{id}",
                 "delete",
                 deletePermission,
                 200
             ))
             buttonActions.add(ButtonAction(
                 "Összes törlése",
-                "/admin/control/news/purge",
+                "purge",
                 deletePermission,
                 300,
                 "delete_forever",
@@ -155,7 +162,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     @GetMapping("")
-    fun view(model: Model, auth: Authentication): String {
+    open fun view(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {
@@ -170,7 +177,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("view", view)
 
         model.addAttribute("columnData", descriptor.getColumnsAsJson())
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, fetchOverview())))
+        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, fetchOverview(user))))
 
         model.addAttribute("user", user)
         model.addAttribute("controlActions", toJson(controlActions.filter { it.permission.validate(user) }))
@@ -179,7 +186,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         return "overview4"
     }
 
-    private fun <ControlAction> toJson(list: List<ControlAction>): String {
+    internal fun toJson(list: List<ControlAction>): String {
         return objectMapper
             .writerFor(object : TypeReference<List<ControlAction>>() {})
             .writeValueAsString(list)
@@ -347,7 +354,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
         model.addAttribute("user", user)
-        return "purge"
+        return "purge4"
     }
 
     @PostMapping("/purge")
@@ -361,7 +368,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         log.info("Purging view '{}' by user '{}'#{}", view, user.userName, user.id)
         val before = dataSource.count()
         try {
-            dataSource.deleteAll()
+            purgeAllEntities(user)
         } catch (e : Exception) {
             log.error("Purging failed on view '{}'", view, e)
         }
@@ -496,12 +503,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     @ResponseBody
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(auth: Authentication, response: HttpServletResponse): ByteArray {
-        val user = auth.getUser()
+        val user = auth.getUserFromDatabase()
         if (!exportEnabled || !showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
-        return descriptor.exportToCsv(filterOverview(user, fetchOverview()).toList()).toByteArray()
+        return descriptor.exportToCsv(filterOverview(user, fetchOverview(user)).toList()).toByteArray()
     }
 
     @PostMapping("/import/csv")
@@ -560,7 +567,11 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         return true
     }
 
-    open fun fetchOverview(): Iterable<T> {
+    open fun purgeAllEntities(user: CmschUser) {
+        dataSource.deleteAll()
+    }
+
+    open fun fetchOverview(user: CmschUser): Iterable<T> {
         return dataSource.findAll()
     }
 

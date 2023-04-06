@@ -1,21 +1,17 @@
 package hu.bme.sch.cmsch.component.riddle
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
-import hu.bme.sch.cmsch.controller.CONTROL_MODE_DELETE
-import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
-import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_IMPORT_EXPORT
-import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
+import hu.bme.sch.cmsch.controller.admin.ButtonAction
+import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
+import hu.bme.sch.cmsch.repository.ManualRepository
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 
 @Controller
@@ -23,94 +19,85 @@ import javax.servlet.http.HttpServletResponse
 @ConditionalOnBean(RiddleComponent::class)
 class RiddlesByGroupsController(
     private val riddleMappingRepository: RiddleMappingRepository,
-    private val adminMenuService: AdminMenuService
-) {
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: RiddleComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : TwoDeepEntityPage<RiddleStatsVirtualEntity, RiddleMappingVirtualEntity>(
+    "riddles-by-groups",
+    RiddleStatsVirtualEntity::class,
+    RiddleMappingVirtualEntity::class, ::RiddleMappingVirtualEntity,
+    "Riddle beadás csoportonként", "Riddle csoportonként",
+    "Beadott riddleök csoportonként csoportosítva",
 
-    private val view = "riddles-by-groups"
-    private val titleSingular = "Riddle beadás csoportonként"
-    private val titlePlural = "Riddle csapatonként"
-    private val description = "Beadott riddleök csoportonként csoportosítva"
-    private val permissionControl = PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
-
-    private val overviewDescriptor = OverviewBuilder(RiddleStatsVirtualEntity::class)
-    private val propertyDescriptor = OverviewBuilder(RiddleMappingVirtualEntity::class)
-
-    @PostConstruct
-    fun init() {
-        adminMenuService.registerEntry(
-            RiddleComponent::class.simpleName!!, AdminMenuEntry(
-                titlePlural,
-                "checklist_rtl",
-                "/admin/control/${view}",
-                4,
-                permissionControl
-            )
-        )
-    }
-
-    @GetMapping("")
-    fun view(model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titlePlural)
-        model.addAttribute("titleSingular", titleSingular)
-        model.addAttribute("description", description)
-        model.addAttribute("view", view)
-        model.addAttribute("columns", overviewDescriptor.getColumns())
-        model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", fetchOverview())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_VIEW)
-        model.addAttribute("filteredExport", PERMISSION_IMPORT_EXPORT.validate(user))
-
-        return "overview"
-    }
-
-    private fun fetchOverview(): List<RiddleStatsVirtualEntity> {
-        return riddleMappingRepository.findAll().groupBy { it.ownerGroup?.id ?: 0 }
+    object : ManualRepository<RiddleStatsVirtualEntity, Int>() {
+        override fun findAll(): Iterable<RiddleStatsVirtualEntity> {
+            return riddleMappingRepository.findAll().groupBy { it.ownerGroup?.id ?: 0 }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { submissions ->
                     RiddleStatsVirtualEntity(
-                            submissions[0].ownerGroup?.id ?: 0,
-                            submissions[0].ownerGroup?.name ?: "n/a",
-                            submissions.count { it.completed },
-                            submissions.count { it.hintUsed }
+                        submissions[0].ownerGroup?.id ?: 0,
+                        submissions[0].ownerGroup?.name ?: "n/a",
+                        submissions.count { it.completed },
+                        submissions.count { it.hintUsed }
                     )
                 }
-    }
-
-    @GetMapping("/view/{id}")
-    fun viewAll(@PathVariable id: Int, model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
         }
 
-        model.addAttribute("title", titlePlural)
-        model.addAttribute("titleSingular", titleSingular)
-        model.addAttribute("description", description)
-        model.addAttribute("view", view)
-        model.addAttribute("columns", propertyDescriptor.getColumns())
-        model.addAttribute("fields", propertyDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", fetchProperties(id))
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_DELETE)
+        override fun delete(entity: RiddleStatsVirtualEntity) {
+            riddleMappingRepository.deleteById(entity.id)
+        }
 
-        return "overview"
-    }
+        override fun deleteAll() {
+            riddleMappingRepository.deleteAll()
+        }
+    },
+    object : ManualRepository<RiddleMappingVirtualEntity, Int>() {
+        override fun delete(entity: RiddleMappingVirtualEntity) {
+            riddleMappingRepository.deleteById(entity.id)
+        }
 
-    private fun fetchProperties(user: Int): List<RiddleMappingVirtualEntity> {
-        return riddleMappingRepository.findAllByOwnerGroup_Id(user)
+        override fun deleteAll() {
+            riddleMappingRepository.deleteAll()
+        }
+    },
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    showPermission =   StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS,
+    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
+    editPermission =   ImplicitPermissions.PERMISSION_NOBODY,
+    deletePermission = StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS,
+
+    createEnabled = false,
+    editEnabled   = false,
+    deleteEnabled = true,
+    importEnabled = false,
+    exportEnabled = false,
+
+    adminMenuIcon = "checklist_rtl",
+    adminMenuPriority = 4,
+
+    buttonActions = mutableListOf(
+        ButtonAction(
+            name = "Riddle statisztika export",
+            "filtered-export/csv",
+            StaffPermissions.PERMISSION_EDIT_GROUPS,
+            300,
+            icon = "export_notes",
+            primary = false,
+            newPage = true
+        )
+    )
+) {
+
+    override fun fetchSublist(id: Int): Iterable<RiddleMappingVirtualEntity> {
+        return riddleMappingRepository.findAllByOwnerGroup_Id(id)
             .map { submission ->
                 RiddleMappingVirtualEntity(
                     submission.id,
@@ -122,44 +109,6 @@ class RiddlesByGroupsController(
                     submission.completedAt
                 )
             }
-    }
-
-    @GetMapping("/delete/{id}")
-    fun deleteConfirm(@PathVariable id: Int, model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titleSingular)
-        model.addAttribute("view", view)
-        model.addAttribute("id", id)
-        model.addAttribute("user", user)
-
-        val entity = riddleMappingRepository.findById(id)
-        if (entity.isEmpty) {
-            model.addAttribute("error", INVALID_ID_ERROR)
-        } else {
-            model.addAttribute("item", entity.orElseThrow().toString())
-        }
-        return "delete"
-    }
-
-    @PostMapping("/delete/{id}")
-    fun delete(@PathVariable id: Int, model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        val entity = riddleMappingRepository.findById(id).orElseThrow()
-        riddleMappingRepository.delete(entity)
-        return "redirect:/admin/control/$view/"
     }
 
     data class RiddleByGroupFilteredView(
@@ -194,24 +143,24 @@ class RiddlesByGroupsController(
     @GetMapping("/filtered-export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun filteredExport(auth: Authentication, response: HttpServletResponse): ByteArray {
         val user = auth.getUser()
-        if (!permissionControl.validate(user) || !PERMISSION_IMPORT_EXPORT.validate(user)) {
+        if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-filtered-export.csv\"")
         return filterDescriptor.exportToCsv(riddleMappingRepository.findAll()
             .filter { it.completed }
             .map {
-            RiddleByGroupFilteredView(
-                it.riddle?.id ?: 0,
-                it.riddle?.title ?: "-",
-                it.ownerGroup?.id ?: 0,
-                it.ownerGroup?.name ?: "",
-                it.riddle?.score ?: 0,
-                it.hintUsed,
-                it.completed,
-                it.attemptCount
-            )
-        }).toByteArray()
+                RiddleByGroupFilteredView(
+                    it.riddle?.id ?: 0,
+                    it.riddle?.title ?: "-",
+                    it.ownerGroup?.id ?: 0,
+                    it.ownerGroup?.name ?: "",
+                    it.riddle?.score ?: 0,
+                    it.hintUsed,
+                    it.completed,
+                    it.attemptCount
+                )
+            }).toByteArray()
     }
 
 }

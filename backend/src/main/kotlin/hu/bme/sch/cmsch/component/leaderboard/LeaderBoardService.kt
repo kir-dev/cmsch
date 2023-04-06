@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
-import hu.bme.sch.cmsch.component.challange.ChallengeSubmissionRepository
+import hu.bme.sch.cmsch.component.challenge.ChallengeSubmissionRepository
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
@@ -55,8 +55,8 @@ open class LeaderBoardService(
     )
 
     private val log = LoggerFactory.getLogger(javaClass)
-    private var cachedTopListForGroups: List<TopListAsGroupEntryDto> = listOf()
-    private var cachedTopListForUsers: List<TopListAsUserEntryDto> = listOf()
+    private var cachedTopListForGroups: List<LeaderBoardAsGroupEntryDto> = listOf()
+    private var cachedTopListForUsers: List<LeaderBoardAsUserEntryDto> = listOf()
     private var cachedDetailsForGroups: List<TopListDetails> = listOf()
     private var cachedDetailsForUsers: List<TopListDetails> = listOf()
 
@@ -65,13 +65,13 @@ open class LeaderBoardService(
         recalculate()
     }
 
-    fun getBoardForGroups(): List<TopListAsGroupEntryDto> {
+    fun getBoardForGroups(): List<LeaderBoardAsGroupEntryDto> {
         if (leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return cachedTopListForGroups
         return listOf()
     }
 
-    fun getBoardForUsers(): List<TopListAsUserEntryDto> {
+    fun getBoardForUsers(): List<LeaderBoardAsUserEntryDto> {
         if (leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return cachedTopListForUsers
         return listOf()
@@ -109,11 +109,11 @@ open class LeaderBoardService(
         return listOf()
     }
 
-    fun getBoardAnywaysForGroups(): List<TopListAsGroupEntryDto> {
+    fun getBoardAnywaysForGroups(): List<LeaderBoardAsGroupEntryDto> {
         return cachedTopListForGroups
     }
 
-    fun getBoardAnywaysForUsers(): List<TopListAsUserEntryDto> {
+    fun getBoardAnywaysForUsers(): List<LeaderBoardAsUserEntryDto> {
         return cachedTopListForUsers
     }
 
@@ -153,7 +153,7 @@ open class LeaderBoardService(
                     .groupBy { CombinedKey(it.groupId ?: 0, it.groupName) }
                     .filter { groups.findByName(it.key.name).map { m -> m.races }.orElse(false) }
                     .map {
-                        TopListAsGroupEntryDto(
+                        LeaderBoardAsGroupEntryDto(
                             it.key.id,
                             it.key.name,
                             taskScore = (it.value.sumOf { s -> s.score } * tasksPercent).toInt())
@@ -173,7 +173,7 @@ open class LeaderBoardService(
                     .groupBy { it.ownerGroup }
                     .filter { it.key?.races ?: false }
                     .map {
-                        TopListAsGroupEntryDto(
+                        LeaderBoardAsGroupEntryDto(
                             it.key?.id ?: 0,
                             it.key?.name ?: "n/a",
                             riddleScore = (it.value.sumOf { s ->
@@ -203,7 +203,7 @@ open class LeaderBoardService(
                                 )
                             }.items[chalannge.category] = (chalannge.score * challengesPercent).toInt()
                         }
-                        TopListAsGroupEntryDto(
+                        LeaderBoardAsGroupEntryDto(
                             entity.key.id,
                             entity.key.name,
                             challengeScore = entity.value.sumOf { s -> (s.score * challengesPercent).toInt() })
@@ -218,7 +218,7 @@ open class LeaderBoardService(
                 tokenSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.ownerGroup }
                     .map { entity ->
-                        TopListAsGroupEntryDto(
+                        LeaderBoardAsGroupEntryDto(
                             entity.key?.id ?: 0,
                             entity.key?.name ?: "n/a",
                             tokenScore = (entity.value.sumOf { s -> s.token?.score ?: 0 } * tokenPercent).toInt()
@@ -241,7 +241,7 @@ open class LeaderBoardService(
                 val riddleScore = entries.value.maxOf { it.riddleScore }
                 val challengeScore = entries.value.maxOf { it.challengeScore }
                 val tokenScore = entries.value.maxOf { it.tokenScore }
-                TopListAsGroupEntryDto(entries.key.id,
+                LeaderBoardAsGroupEntryDto(entries.key.id,
                     entries.key.name,
                     taskScore = taskScore,
                     riddleScore = riddleScore,
@@ -270,7 +270,7 @@ open class LeaderBoardService(
                     .groupBy { it.userId }
                     .map { entity ->
                         val user = users.findById(entity.key ?: 0)
-                        TopListAsUserEntryDto(
+                        LeaderBoardAsUserEntryDto(
                             entity.key ?: 0,
                             user.map { it.fullName }.orElse("n/a"),
                             user.map { it.groupName }.orElse("-"),
@@ -291,7 +291,7 @@ open class LeaderBoardService(
                 riddleSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.ownerUser }
                     .map {
-                        TopListAsUserEntryDto(it.key?.id ?: 0,
+                        LeaderBoardAsUserEntryDto(it.key?.id ?: 0,
                             it.key?.fullName ?: "n/a",
                             it.key?.groupName ?: "-",
                             riddleScore = (it.value.sumOf { s ->
@@ -321,7 +321,7 @@ open class LeaderBoardService(
                                 )
                             }.items[chalannge.category] = (chalannge.score * challengesPercent).toInt()
                         }
-                        TopListAsUserEntryDto(
+                        LeaderBoardAsUserEntryDto(
                             entity.key ?: 0,
                             entity.value[0].userName,
                             entity.value[0].groupName,
@@ -338,7 +338,7 @@ open class LeaderBoardService(
                 tokenSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.ownerUser?.id ?: 0 }
                     .map { entity ->
-                        TopListAsUserEntryDto(
+                        LeaderBoardAsUserEntryDto(
                             entity.key ?: 0,
                             entity.value[0].ownerUser?.fullName ?: "n/a",
                             entity.value[0].ownerGroup?.name ?: "n/a",
@@ -360,7 +360,7 @@ open class LeaderBoardService(
                 val riddleScore = entries.value.maxOf { it.riddleScore }
                 val challengeScore = entries.value.maxOf { it.challengeScore }
                 val tokenScore = entries.value.maxOf { it.tokenScore }
-                TopListAsUserEntryDto(entries.key, entries.value.firstOrNull()?.name ?: "n/a",
+                LeaderBoardAsUserEntryDto(entries.key, entries.value.firstOrNull()?.name ?: "n/a",
                     entries.value.firstOrNull()?.groupName ?: "n/a",
                     taskScore = taskScore,
                     riddleScore = riddleScore,

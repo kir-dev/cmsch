@@ -1,11 +1,12 @@
 package hu.bme.sch.cmsch.component.form
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
+import hu.bme.sch.cmsch.model.IdentifiableEntity
 
 data class FormVirtualEntity(
 
     @property:GenerateOverview(visible = false)
-    val id: Int,
+    override var id: Int,
 
     @property:GenerateOverview(columnName = "Cím", order = 1)
     val name: String,
@@ -25,4 +26,4 @@ data class FormVirtualEntity(
     @property:GenerateOverview(columnName = "Elfogadva", order = 6)
     val validated: Int,
 
-)
+) : IdentifiableEntity

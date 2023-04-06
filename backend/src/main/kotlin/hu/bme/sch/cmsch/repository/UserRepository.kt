@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface UserRepository : CrudRepository<UserEntity, Int> {
+interface UserRepository : CrudRepository<UserEntity, Int>,
+    EntityPageDataSource<UserEntity, Int> {
+
     fun findByInternalId(internalId: String): Optional<UserEntity>
     fun existsByInternalId(internalId: String): Boolean
     fun findByCmschId(cmschId: String): Optional<UserEntity>
