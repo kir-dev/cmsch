@@ -1,0 +1,128 @@
+package hu.bme.sch.cmsch.component.challenge
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.ImportService
+import hu.bme.sch.cmsch.service.StaffPermissions
+import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.security.core.Authentication
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestMapping
+
+@Controller
+@RequestMapping("/admin/control/challenge")
+@ConditionalOnBean(ChallengeComponent::class)
+class ChallengeController(
+    repo: ChallengeSubmissionRepository,
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: ChallengeComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper,
+    private val groups: GroupRepository,
+    private val users: UserRepository,
+    private val startupPropertyConfig: StartupPropertyConfig
+) : OneDeepEntityPage<ChallengeSubmissionEntity>(
+    "challenge",
+    ChallengeSubmissionEntity::class, ::ChallengeSubmissionEntity,
+    "Beadás", "Beadások",
+    "Olyan feladatok aminek az adminisztrálása manuálisan megy. Például személyesen bemutatható feladatok " +
+            "vagy külső adatforrásból származó pontok. Pont korrekciónak is használható.",
+
+    repo,
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    entitySourceMapping = mapOf(
+        "GroupEntity" to {
+            val results = mutableListOf<String>()
+            results.add("-")
+            results.addAll(groups.findAll().map { it.name }.sorted().toList())
+            return@to results
+        },
+        "UserEntity" to {
+            val results = mutableListOf<String>()
+            results.add("-")
+            results.addAll(users.findAll().sortedBy { it.fullName }.map { mapUsername(it) }.toList())
+            return@to results
+        },
+    ),
+
+    showPermission =   StaffPermissions.PERMISSION_EDIT_CHALLENGES,
+    createPermission = StaffPermissions.PERMISSION_EDIT_CHALLENGES,
+    editPermission =   StaffPermissions.PERMISSION_EDIT_CHALLENGES,
+    deletePermission = StaffPermissions.PERMISSION_EDIT_CHALLENGES,
+
+    createEnabled = true,
+    editEnabled = true,
+    deleteEnabled = true,
+    importEnabled = true,
+    exportEnabled = true,
+
+    adminMenuIcon = "task_alt",
+    adminMenuPriority = 1,
+) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    override fun onEntityPreSave(entity: ChallengeSubmissionEntity, auth: Authentication): Boolean {
+        return when (startupPropertyConfig.challengeOwnershipMode) {
+            OwnershipType.USER -> processUserSubmission(entity)
+            OwnershipType.GROUP -> processGroupSubmission(entity)
+        }
+    }
+
+    private fun processGroupSubmission(entity: ChallengeSubmissionEntity): Boolean {
+        if (entity.groupName.isNotBlank()) {
+            val groupEntity = groups.findByName(entity.groupName)
+            if (groupEntity.isPresent) {
+                entity.groupId = groupEntity.orElseThrow().id
+                entity.groupName = groupEntity.orElseThrow().name
+                entity.userName = ""
+                entity.userId = 0
+            } else {
+                log.error("Group not found: {} so rejected", entity.userName)
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun processUserSubmission(entity: ChallengeSubmissionEntity): Boolean {
+        if (entity.userName.isNotBlank() && entity.userName != "-") {
+            val user = users.findById(entity.userName.split("|")[0].trim().toIntOrNull() ?: 0)
+
+            if (user.isPresent) {
+                entity.userName = user.orElseThrow().fullName
+                entity.userId = user.orElseThrow().id
+                entity.groupId = user.orElseThrow().group?.id
+                entity.groupName = user.orElseThrow().groupName
+            } else {
+                log.error("User not found: {} so rejected", entity.userName)
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun onPreEdit(actualEntity: ChallengeSubmissionEntity): ChallengeSubmissionEntity {
+        val userId = actualEntity.userId ?: return actualEntity
+        val copy = actualEntity.copy()
+        val user = users.findById(userId).orElse(null) ?: return actualEntity
+        copy.userName = mapUsername(user)
+        return copy
+    }
+}
+
+private fun mapUsername(it: UserEntity) =
+    "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"

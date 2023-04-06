@@ -2,10 +2,12 @@ package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
@@ -14,7 +16,7 @@ class LocationService(
     private val clock: TimeService,
     private val userRepository: UserRepository,
     private val startupPropertyConfig: StartupPropertyConfig
-) {
+) : EntityPageDataSource<LocationEntity, Int> {
 
     private val tokenToLocationMapping = ConcurrentHashMap<String, LocationEntity>()
 
@@ -72,13 +74,43 @@ class LocationService(
                 }
     }
 
-    fun findLocationsOfGroup(groupName: String): List<LocationEntity> {
-        return tokenToLocationMapping.values.filter { it.groupName == groupName }
+    fun findLocationsOfGroup(groupId: Int): List<LocationEntity> {
+        return tokenToLocationMapping.values.filter { it.id == groupId }
     }
 
     fun getRecentLocations(): List<LocationEntity> {
         val range = clock.getTimeInSeconds() + 600
         return tokenToLocationMapping.values.filter { it.timestamp < range }
+    }
+
+    override fun findAll() = findAllLocation()
+
+    override fun count() = findAllLocation().size.toLong()
+
+    override fun deleteAll() = clean()
+
+    override fun <S : LocationEntity?> saveAll(entities: Iterable<S>): Iterable<S> {
+        return entities.map { save(it) }
+    }
+
+    override fun <S : LocationEntity?> save(entity: S): S {
+        val keyToUpdate = tokenToLocationMapping.entries.find { it.value.id == entity?.id }?.key
+        if (keyToUpdate != null && entity != null)
+            tokenToLocationMapping[keyToUpdate] = entity
+        return entity
+    }
+
+    override fun delete(entity: LocationEntity) {
+        val keyToRemove = tokenToLocationMapping.entries.find { it.value.id == entity.id }?.key
+        if (keyToRemove != null)
+            tokenToLocationMapping.remove(keyToRemove)
+    }
+
+    override fun findById(id: Int): Optional<LocationEntity> {
+        return Optional.ofNullable(tokenToLocationMapping.entries
+            .filter { it.value.id == id }
+            .map { it.value }
+            .firstOrNull())
     }
 
 }

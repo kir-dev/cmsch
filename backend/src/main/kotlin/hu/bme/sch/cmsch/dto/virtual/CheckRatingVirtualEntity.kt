@@ -1,19 +1,20 @@
 package hu.bme.sch.cmsch.dto.virtual
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
+import hu.bme.sch.cmsch.model.IdentifiableEntity
 
 data class CheckRatingVirtualEntity(
 
     @property:GenerateOverview(visible = false)
-    val id: Int,
+    override var id: Int = 0,
 
     @property:GenerateOverview(columnName = "Csoport", order = 1)
-    val groupName: String,
+    var groupName: String = "",
 
     @property:GenerateOverview(columnName = "Pont", order = 2)
-    val score: Int,
+    var score: Int = 0,
 
     @property:GenerateOverview(columnName = "Kapható max", order = 3)
-    val maxScore: Int,
+    var maxScore: Int = 0,
 
-)
+) : IdentifiableEntity

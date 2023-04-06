@@ -1,11 +1,12 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.admin.GenerateOverview
+import hu.bme.sch.cmsch.model.IdentifiableEntity
 
 data class TokenListByUserVirtualEntity(
 
     @property:GenerateOverview(visible = false)
-    val id: Int,
+    override var id: Int,
 
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
     val username: String,
@@ -16,4 +17,4 @@ data class TokenListByUserVirtualEntity(
     @property:GenerateOverview(columnName = "Tokenek [db]", order = 3, centered = true)
     val tokens: Int,
 
-)
+) : IdentifiableEntity

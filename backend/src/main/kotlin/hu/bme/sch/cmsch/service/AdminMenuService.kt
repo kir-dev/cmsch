@@ -45,7 +45,7 @@ class AdminMenuService(
     private val userContexts: MutableMap<String, UserSiteContext> = ConcurrentHashMap()
 
     private var siteContext: SiteContext = SiteContext(
-        "CMSCH 3 APP",
+        "CMSCH 4 APP",
         "dev",
         "Context is still loading...",
         "",

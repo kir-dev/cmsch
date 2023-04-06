@@ -53,7 +53,7 @@
     <div class="nav">
         <div class="left-panel">
             <ins th:text="${context.siteName}">CMSCH 3 APP</ins>
-            <span class="badge" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> LIVE</span>
+            <span class="badge color-green" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> LIVE</span>
             <span class="badge" th:if="${context.production == 'dev'}"><span class="material-symbols-outlined regular">code</span> DEV</span>
         </div>
         <div class="motd-panel">

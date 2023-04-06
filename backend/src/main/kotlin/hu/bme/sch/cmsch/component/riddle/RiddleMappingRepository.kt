@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
@@ -10,7 +11,9 @@ import java.util.*
 @Repository
 @ConditionalOnBean(RiddleComponent::class)
 @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
-interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int> {
+interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int>,
+    EntityPageDataSource<RiddleMappingEntity, Int> {
+
     fun findAllByOwnerUser_IdAndCompletedTrue(userId: Int): List<RiddleMappingEntity>
 
     fun findAllByOwnerGroup_IdAndCompletedTrue(groupId: Int): List<RiddleMappingEntity>

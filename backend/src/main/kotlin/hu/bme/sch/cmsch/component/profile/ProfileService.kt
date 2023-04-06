@@ -166,7 +166,7 @@ open class ProfileService(
 
     private fun fetchLocations(group: GroupEntity?) =
         locationService.map { repo ->
-            repo.findLocationsOfGroup(group?.name ?: "")
+            repo.findLocationsOfGroup(group?.id ?: 0)
                 .filter { it.timestamp + profileComponent.locationTimeout.getIntValue(0) > clock.getTimeInSeconds() }
                 .map {
                     GroupMemberLocationDto(

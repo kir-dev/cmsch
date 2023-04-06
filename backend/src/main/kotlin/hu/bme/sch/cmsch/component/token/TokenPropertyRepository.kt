@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.token
 
 import hu.bme.sch.cmsch.model.GroupEntity
+import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
@@ -9,7 +10,8 @@ import java.util.*
 @Repository
 @ConditionalOnBean(TokenComponent::class)
 @Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
-interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int> {
+interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int>,
+    EntityPageDataSource<TokenPropertyEntity, Int> {
 
     override fun findAll(): List<TokenPropertyEntity>
 

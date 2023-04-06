@@ -12,7 +12,7 @@ class AdmissionComponent(
 ) : ComponentBase(
     "admission",
     "/",
-    "Beengedés",
+    "Beléptetés",
     ControlPermissions.PERMISSION_CONTROL_ADMISSION,
     listOf(),
     componentSettingService, env

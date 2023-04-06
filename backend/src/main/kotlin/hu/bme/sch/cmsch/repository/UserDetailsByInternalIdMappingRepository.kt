@@ -7,6 +7,8 @@ import java.util.*
 
 
 @Repository
-interface UserDetailsByInternalIdMappingRepository : CrudRepository<UserDetailsByInternalIdMappingEntity, Int> {
+interface UserDetailsByInternalIdMappingRepository : CrudRepository<UserDetailsByInternalIdMappingEntity, Int>,
+    EntityPageDataSource<UserDetailsByInternalIdMappingEntity, Int> {
+
     fun findByInternalId(id: String): Optional<UserDetailsByInternalIdMappingEntity>
 }

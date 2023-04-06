@@ -8,8 +8,13 @@
 }
 
 :root {
+    --primary-lighter-color: #3dce9b;
     --primary-color: #39C392;
-    --secondary-color: #F44336;
+    --primary-darker-color: #2b9972;
+
+    --secondary-lighter-color: #444b50;
+    --secondary-color: #33383c;
+    --secondary-darker-color: #212427;
 
     --background-color: #1F2225;
     --card-background-color: #23272B;
@@ -24,12 +29,10 @@
     --dark-3: #191c20;
     --dark-4: #0F1113;
 
-    --accent-color: #39C392;
-
     --success-color: #39C392;
     --warning-color: #eaa12f;
     --warning-hover-color: #f1b962;
-    --danger-color: #ad5454;
+    --danger-color: #ab4343;
 
     --property-color: #39C392;
     --menu-color: #0ba6c1;
@@ -305,8 +308,8 @@ scrollbar-corner,
 }
 
 .app > .shortcuts-menu > .placeholder {
-    background-color: var(--accent-color);
-    border-right: 1px solid var(--accent-color);
+    background-color: var(--primary-color);
+    border-right: 1px solid var(--primary-darker-color);
     height: calc(100vh - 390px);
     display: block;
     margin: 10px auto;
@@ -352,7 +355,7 @@ scrollbar-corner,
     background-color: var(--card-background-color);
     padding: 1.8em;
     box-shadow: 10px 10px 21px 5px rgba(0,0,0,0.20);
-    margin: 40px 0;
+    margin: 20px 0;
 }
 
 .card > h4 {
@@ -742,4 +745,45 @@ input[type="text"]:focus {
 .control-action {
     display: inline-block;
     margin: 0 10px;
+}
+
+a.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: var(--light-text-color);
+    text-decoration: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.1s ease-out, color 0.1s ease-out;
+    margin: 10px;
+}
+
+a.btn:hover {
+    background-color: var(--secondary-lighter-color);
+    color: var(--lighter-text-color);
+}
+
+a.btn .material-symbols-outlined {
+    font-size: 24px;
+    padding-right: 10px;
+}
+
+a.btn ins {
+    vertical-align: middle;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+a.btn-primary {
+    background-color: var(--primary-darker-color);
+    color: var(--lighter-text-color);
+}
+
+a.btn-primary:hover {
+    background-color: var(--primary-color);
+}
+
+.control-action:hover {
+    color: var(--primary-color);
 }

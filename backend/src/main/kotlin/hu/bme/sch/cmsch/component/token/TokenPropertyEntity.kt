@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.GenerateInput
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_HIDDEN
+import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -27,7 +28,7 @@ data class TokenPropertyEntity(
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])

@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.component.leaderboard.TopListAbstractEntry
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardEntry
 
 data class TasksView(
 
@@ -13,7 +13,7 @@ data class TasksView(
     val categories: List<TaskCategoryDto> = listOf(),
 
     @JsonView(Preview::class)
-    val leaderBoard: List<TopListAbstractEntry>,
+    val leaderBoard: List<LeaderBoardEntry>,
 
     @JsonView(Preview::class)
     val leaderBoardVisible: Boolean,

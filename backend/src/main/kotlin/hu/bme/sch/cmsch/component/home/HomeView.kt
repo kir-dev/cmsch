@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.component.task.TaskEntityWrapperDto
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.component.leaderboard.TopListAsGroupEntryDto
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardAsGroupEntryDto
 
 data class HomeView(
 
@@ -19,6 +19,6 @@ data class HomeView(
     val tasks: List<TaskEntityWrapperDto> = listOf(),
 
     @JsonView(Preview::class)
-    val leaderBoard: List<TopListAsGroupEntryDto>,
+    val leaderBoard: List<LeaderBoardAsGroupEntryDto>,
 
-)
+    )
