@@ -80,17 +80,6 @@ object ControlPermissions : PermissionGroup {
         "Profil komponens testreszabása"
     )
 
-    @Deprecated(message = "Remove after the permission revamp")
-    val PERMISSION_IMPORT_EXPORT = PermissionValidator(
-        "ALL_IMPORT_EXPORT",
-        "Az összes kezelt entitás exportálása és importálása (ezáltal indirekt megtekintése és készítése is)"
-    )
-
-    val PERMISSION_PURGE = PermissionValidator(
-        "PURGE_ENTITIES",
-        "Az összes kezelt entitás törlése egyszerre"
-    )
-
     val PERMISSION_CONTROL_APP = PermissionValidator(
         "APP_CONTROL",
         "Az alkalazás testreszabása"
@@ -181,8 +170,6 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_STATIC_PAGES,
         PERMISSION_CONTROL_LEADERBOARD,
         PERMISSION_CONTROL_PROFILE,
-        PERMISSION_IMPORT_EXPORT,
-        PERMISSION_PURGE,
         PERMISSION_CONTROL_APP,
         PERMISSION_CONTROL_APP_EXPORT,
         PERMISSION_INCREASED_SESSION_DURATION,

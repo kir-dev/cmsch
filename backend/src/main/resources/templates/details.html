@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
-<head th:replace="layout :: head">
+<head th:replace="layout4 :: head(${context.siteName})">
 </head>
 <body>
 <script th:inline="javascript" th:if="${staffPermissionList != null && customPermissionList != null && adminPermissionList != null}">
@@ -28,7 +28,7 @@
 <script th:inline="javascript">
     function changeFieldsText(property) {
         /*<![CDATA[*/
-        const elementTypes = [[${T(hu.bme.sch.cmsch.component.signup.FormElementType).values()}]];
+        const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
         /*]]>*/
         const fields = JSON.parse(document.getElementById(property).value);
         let resultHtml = "";
@@ -96,7 +96,7 @@
 
     function addField(property) {
         /*<![CDATA[*/
-        const elementTypes = [[${T(hu.bme.sch.cmsch.component.signup.FormElementType).values()}]];
+        const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
         /*]]>*/
         let id = 0;
         while (typeof document.getElementById(`${property}_${id}_fieldName`) !== 'undefined'
@@ -185,26 +185,31 @@
         document.getElementById(id).value = parseInt(document.getElementById(`${id}_ss`).value) + (parseInt(document.getElementById(`${id}_SSS`).value) / 1000.0)
     }
 </script>
-<div class="content">
-    <div class="split">
-        <div th:replace="layout :: mobile"></div>
-        <div th:replace="layout :: menu(${user})"></div>
 
-        <div class="payload">
-            <div class="page page-short">
-                <h2 th:text="|${title} szerkesztése|" th:if="${editMode}">View edit</h2>
-                <h2 th:text="|${title} létrehozása|" th:unless="${editMode}">View create</h2>
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
 
-                <div class="card" th:if="${taskTitle != null || taskDescription != null}">
-                    <object th:if="${taskTitle != null}" th:remove="tag">
-                        <label class="card-label">Feladat</label>
-                        <p th:text="${taskTitle}" class="highlight"></p>
-                    </object>
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        </div>
 
-                    <object th:if="${taskDescription != null}" th:remove="tag">
-                        <p th:utext="${taskDescription}"></p>
-                    </object>
-                </div>
+        <div class="content">
+            <h1 class="narrow" th:text="|${title} szerkesztése|" th:if="${editMode}">View edit</h1>
+            <h1 class="narrow" th:text="|${title} létrehozása|" th:unless="${editMode}">View create</h1>
+
+            <div class="card wide-false" th:if="${taskTitle != null || taskDescription != null}">
+                <object th:if="${taskTitle != null}" th:remove="tag">
+                    <label class="card-label">Feladat</label>
+                    <p th:text="${taskTitle}" class="highlight"></p>
+                </object>
+
+                <object th:if="${taskDescription != null}" th:remove="tag">
+                    <p th:utext="${taskDescription}"></p>
+                </object>
+            </div>
+
+            <div class="card wide-false">
 
                 <form th:action="|@{/admin/control}/${view}/${editMode ? ((controlMode == 'grade' ? 'grade/' : 'edit/') + id) : 'create'}|"
                       method="post"
@@ -225,7 +230,7 @@
                                        th:maxlength="${input.second.maxLength}"
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:placeholder="${input.second.placeholder}"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
@@ -247,7 +252,7 @@
                                        th:min="${input.second.min}"
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:placeholder="${input.second.placeholder}"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
                                        required
                                 />
@@ -264,7 +269,7 @@
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                        required
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
@@ -282,7 +287,7 @@
                                        th:min="0"
                                        th:value="${#numbers.formatInteger(T(java.lang.Math).floor((!editMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)), 0)}"
                                        th:placeholder="${input.second.placeholder}"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
                                        required
                                        th:data-field-name="|input${iter.index}|"
@@ -299,7 +304,7 @@
                                        th:min="0"
                                        th:value="${#numbers.formatInteger((((!editMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)) * 1000) % 1000, 0)}"
                                        th:placeholder="${input.second.placeholder}"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
                                        required
                                        th:data-field-name="|input${iter.index}|"
@@ -327,7 +332,7 @@
                                        th:maxlength="${input.second.maxLength}"
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:placeholder="${input.second.placeholder}"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
@@ -340,7 +345,7 @@
                                 <div style="clear: both"></div>
                                 <select th:id="|input${iter.index}|"
                                         th:name="${input.first.name}"
-                                        th:disabled="${!input.second.enabled}">
+                                        th:disabled="${!input.second.enabled || readOnly}">
                                     <option th:if="${editMode}"
                                             th:each="opt : ${input.second.source}"
                                             th:value="${opt}"
@@ -361,7 +366,7 @@
                                 <div style="clear: both"></div>
                                 <select th:id="|input${iter.index}|"
                                         th:name="${input.first.name}"
-                                        th:disabled="${!input.second.enabled}">
+                                        th:disabled="${!input.second.enabled || readOnly}">
                                     <option th:if="${editMode}"
                                             th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${opt}"
@@ -426,7 +431,7 @@
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
                                        th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}">
                                 </textarea>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
@@ -461,7 +466,7 @@
                                        class="file-input"
                                        th:name="|file${input.second.fileId}|"
                                        th:id="|input${iter.index}|"
-                                       th:disabled="${!input.second.enabled}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
                                 />
 
                                 <object th:if="${input.second.fileType == 'image' && editMode}" th:remove="tag">
@@ -503,7 +508,7 @@
                                            th:checked="${(!editMode) ? (input.second.defaultValue == 'true') : (input.first.get(data))}"
                                            th:name="${input.first.name}"
                                            th:id="|input${iter.index}|"
-                                           th:disabled="${!input.second.enabled}" />
+                                           th:disabled="${!input.second.enabled || readOnly}" />
                                     <span class="slider"></span>
                                 </label>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
@@ -585,14 +590,14 @@
 
                                 <h4 class="permission-header">Általános jogosultságok</h4>
 
-                                <div class="permission-box card" th:each="permission : ${staffPermissions}">
+                                <div class="permission-box" th:each="permission : ${staffPermissions}">
                                     <div class="permission-part">
-                                        <span class="material-icons fix-icons">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                                        <span class="material-symbols-outlined fix-icons">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
                                         <span class="note" th:text="${permission.description}">description</span>
                                     </div>
                                     <div class="permission-part">
                                         <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
-                                            <input type="checkbox" th:id="|input${iter.index}_${permission.permissionString}|" />
+                                            <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
                                             <span class="slider"></span>
                                         </label>
                                     </div>
@@ -600,32 +605,32 @@
 
                                 <h4 class="permission-header">Egyedi jogosultságok</h4>
 
-                                <div class="permission-box card" th:each="permission : ${customPermissions}">
+                                <div class="permission-box" th:each="permission : ${customPermissions}">
                                     <div class="permission-part">
-                                        <span class="material-icons fix-icons">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                                        <span class="material-symbols-outlined fix-icons">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
                                         <span class="note" th:text="${permission.description}">description</span>
                                     </div>
                                     <div class="permission-part">
                                         <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
-                                            <input type="checkbox" th:id="|input${iter.index}_${permission.permissionString}|" />
+                                            <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
                                             <span class="slider"></span>
                                         </label>
                                     </div>
                                 </div>
-                                <div class="permission-box card" th:if="${customPermissions.empty}">
+                                <div class="permission-box" th:if="${customPermissions.empty}">
                                     Nincs egyetlen egyedi jogoultság sem
                                 </div>
 
                                 <h4 class="permission-header">Admin jogosultságok</h4>
 
-                                <div class="permission-box card" th:each="permission : ${adminPermissions}">
+                                <div class="permission-box" th:each="permission : ${adminPermissions}">
                                     <div class="permission-part">
-                                        <span class="material-icons fix-icons">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                                        <span class="material-symbols-outlined fix-icons">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
                                         <span class="note" th:text="${permission.description}">description</span>
                                     </div>
                                     <div class="permission-part">
                                         <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
-                                            <input type="checkbox" th:id="|input${iter.index}_${permission.permissionString}|" />
+                                            <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
                                             <span class="slider"></span>
                                         </label>
                                     </div>
@@ -640,7 +645,7 @@
                                            th:maxlength="${input.second.maxLength}"
                                            th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                            th:placeholder="${input.second.placeholder}"
-                                           th:disabled="${!input.second.enabled}"
+                                           th:disabled="${!input.second.enabled || readOnly}"
                                            th:autocomplete="${input.second.autocomplete}"
                                            th:onchange="|changePermissionText(${iter.index})|"
                                     />
@@ -657,29 +662,32 @@
 
 <!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
 
-                    <object th:if="${comment != null}" th:remove="tag">
+                    <div class="field-group" th:if="${comment != null}">
                         <label>Csatolt információ</label>
-                        <p th:text="${comment}"></p>
-                    </object>
+                        <p style="clear: both" th:text="${comment}"></p>
+                    </div>
 
-                    <input type="submit" value="Mentés"/>
-                    <object th:if="${controlMode == 'edit,delete'}" th:remove="tag">
-                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
-                    </object>
-                    <object th:if="${controlMode == 'delete'}" th:remove="tag">
-                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">Vissza</a>
-                    </object>
-                    <object th:if="${controlMode == 'grade'}" th:remove="tag">
-                        <br />
-                        <label>Gyors értékelés</label>
-                        <input type="submit" value="max" th:value="|Max pont (${maxScore})|" class="btn btn-secondary"
-                               th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore}'; |" />
-                        <input type="submit" value="half" th:value="|Fele pont (${maxScore / 2})|" class="btn btn-secondary"
-                               th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore / 2}'; |" />
-                        <input type="submit" value="Elutasít" class="btn btn-secondary"
-                               th:onclick="|document.getElementsByName('approved')[0].checked = false; document.getElementsByName('rejected')[0].checked = true; document.getElementsByName('score')[0].value = '0'; |"/>
-                        <span class="note">Ezek a gombok a pontot és az elfogadva státuszt állítják, a kattintás után lezár, ezért a szöves értékelést írd meg előtte!</span>
-                    </object>
+                    <div class="placeholder"></div>
+
+                    <div class="button-group">
+                        <object th:if="${not readOnly}" th:remove="tag">
+                            <input type="submit" class="btn btn-primary" value="MENTÉS" id="save-button"/>
+                            <button class="floating-save btn btn-primary"><span class="material-symbols-outlined">save</span></button>
+                        </object>
+                        <a href="#" class="btn" th:href="|@{/admin/control}/${view}|">VISSZA</a>
+
+                        <object th:if="${gradeMode}" th:remove="tag">
+                            <br />
+                            <label>Gyors értékelés</label>
+                            <input type="submit" value="max" th:value="|MAX PONT (${maxScore})|" class="btn btn-primary"
+                                   th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore}'; |" />
+                            <input type="submit" value="half" th:value="|FELE PONT (${maxScore / 2})|" class="btn btn-primary"
+                                   th:onclick="|document.getElementsByName('approved')[0].checked = true; document.getElementsByName('rejected')[0].checked = false; document.getElementsByName('score')[0].value = '${maxScore / 2}'; |" />
+                            <input type="submit" value="ELUTASÍT" class="btn btn-danger"
+                                   th:onclick="|document.getElementsByName('approved')[0].checked = false; document.getElementsByName('rejected')[0].checked = true; document.getElementsByName('score')[0].value = '0'; |"/>
+                            <span class="note">Ezek a gombok a pontot és az elfogadva státuszt állítják, a kattintás után lezár, ezért a szöves értékelést írd meg előtte!</span>
+                        </object>
+                    </div>
                 </form>
             </div>
         </div>

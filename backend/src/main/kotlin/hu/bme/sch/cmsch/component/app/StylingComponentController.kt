@@ -22,7 +22,7 @@ class StylingComponentController(
     componentMenuName = "Stílus beállítások",
     componentMenuIcon = "style",
     insertComponentCategory = false,
-    componentCategory = ApplicationComponent::class.simpleName!!,
+    componentCategory = ApplicationComponent.STYLING_CATEGORY,
     componentMenuPriority = 5,
     menuService = menuService
 )

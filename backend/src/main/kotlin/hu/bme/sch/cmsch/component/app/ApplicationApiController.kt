@@ -16,7 +16,6 @@ import java.util.*
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
-@ConditionalOnBean(ApplicationComponent::class)
 class ApplicationApiController(
     private val menuService: MenuService,
     private val applicationComponent: ApplicationComponent,

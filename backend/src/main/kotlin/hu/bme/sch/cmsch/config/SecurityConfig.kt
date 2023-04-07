@@ -116,7 +116,7 @@ open class SecurityConfig(
                 .defaultSuccessUrl("/control/post-login")
 
         countdownConfigurer.ifPresent { http.apply(it) }
-        http.csrf().ignoringAntMatchers("/api/**", "/admin/sell/**", "/admin/admission/**", "/cdn/**")
+        http.csrf().ignoringAntMatchers("/api/**", "/admin/api/**", "/admin/sell/**", "/admin/admission/**", "/cdn/**")
     }
 
     private fun resolveAuthschUser(request: OAuth2UserRequest): DefaultOAuth2User {

@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.race
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.news.NewsComponent
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
@@ -15,12 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/admin/control/race-leaderboard")
-@ConditionalOnBean(NewsComponent::class)
+@ConditionalOnBean(RaceComponent::class)
 class RaceLeaderBoardController(
-    repo: NewsRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
-    component: NewsComponent,
+    component: RaceComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val raceService: RaceService,

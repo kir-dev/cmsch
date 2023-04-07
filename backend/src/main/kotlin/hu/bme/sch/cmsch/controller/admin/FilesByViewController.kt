@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.controller.CONTROL_MODE_VIEW
 import hu.bme.sch.cmsch.dto.virtual.FileVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.FilesByViewVirtualEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
@@ -26,13 +26,12 @@ import kotlin.io.path.fileSize
 import kotlin.io.path.isRegularFile
 import kotlin.streams.asSequence
 
-const val CONTROL_MODE_FILE = "file"
-
 @Controller
 @RequestMapping("/admin/control/files")
 class FilesByViewController(
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val adminMenuService: AdminMenuService
+    private val adminMenuService: AdminMenuService,
+    private val objectMapper: ObjectMapper
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -41,20 +40,33 @@ class FilesByViewController(
     private val titleSingular = "Fájl"
     private val titlePlural = "Fájlok"
     private val description = "Fájlok kategóriánként csoportosítva"
-    private val permissionControl = PERMISSION_SHOW_DELETE_FILES
+    private val showPermission = PERMISSION_SHOW_DELETE_FILES
+    private val deletePermission = PERMISSION_SHOW_DELETE_FILES
 
     private val overviewDescriptor = OverviewBuilder(FilesByViewVirtualEntity::class)
     private val submittedDescriptor = OverviewBuilder(FileVirtualEntity::class)
 
+    private val controlActions: MutableList<ControlAction> = mutableListOf()
+
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            ApplicationComponent::class.simpleName!!, AdminMenuEntry(
+            ApplicationComponent.CONTENT_CATEGORY, AdminMenuEntry(
                 titlePlural,
                 "folder",
                 "/admin/control/${view}",
                 1,
-                permissionControl
+                showPermission
+            )
+        )
+
+        controlActions.add(
+            ControlAction(
+                "Megnyitás",
+                "view/{id}",
+                "double_arrow",
+                showPermission,
+                100
             )
         )
     }
@@ -63,8 +75,8 @@ class FilesByViewController(
     fun view(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -73,13 +85,17 @@ class FilesByViewController(
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
         model.addAttribute("view", view)
-        model.addAttribute("columns", overviewDescriptor.getColumns())
-        model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", fetchOverview())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_VIEW)
 
-        return "overview"
+        model.addAttribute("columnData", overviewDescriptor.getColumnsAsJson())
+        model.addAttribute("tableData", overviewDescriptor.getTableDataAsJson(fetchOverview()))
+
+        model.addAttribute("user", user)
+        model.addAttribute("controlActions", overviewDescriptor.toJson(
+            controlActions.filter { it.permission.validate(user) },
+            objectMapper))
+        model.addAttribute("buttonActions", listOf<ButtonAction>())
+
+        return "overview4"
     }
 
     private fun fetchOverview(): List<FilesByViewVirtualEntity> {
@@ -94,8 +110,8 @@ class FilesByViewController(
     fun viewAll(@PathVariable id: String, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -104,14 +120,34 @@ class FilesByViewController(
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
         model.addAttribute("view", view)
-        model.addAttribute("id", id)
-        model.addAttribute("columns", submittedDescriptor.getColumns())
-        model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", listFilesInView(id))
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_FILE)
 
-        return "overview"
+        model.addAttribute("columnData", submittedDescriptor.getColumnsAsJson())
+        model.addAttribute("tableData", submittedDescriptor.getTableDataAsJson(listFilesInView(id)))
+
+        model.addAttribute("user", user)
+        model.addAttribute("controlActions", overviewDescriptor.toJson(
+            listOf(
+                ControlAction(
+                    "Megnyitás",
+                    "cdn/${id}/{id}",
+                    "visibility",
+                    showPermission,
+                    100,
+                    true
+                ),
+                ControlAction(
+                    "Törlés",
+                    "delete/${id}/{id}",
+                    "delete",
+                    deletePermission,
+                    200,
+                    false
+                )
+            ),
+            objectMapper))
+        model.addAttribute("buttonActions", listOf<ButtonAction>())
+
+        return "overview4"
     }
 
     private fun listFilesInView(view: String): List<FileVirtualEntity> {
@@ -128,12 +164,17 @@ class FilesByViewController(
         }
     }
 
+    @GetMapping("/cdn/{type}/{id}")
+    fun redirectCdn(@PathVariable type: String, @PathVariable id: String): String {
+        return "redirect:/cdn/${type}/${id}"
+    }
+
     @GetMapping("/delete/{type}/{id}")
     fun deleteConfirm(@PathVariable type: String, @PathVariable id: String, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -150,8 +191,8 @@ class FilesByViewController(
     @PostMapping("/delete/{type}/{id}")
     fun delete(@PathVariable type: String, @PathVariable id: String, model: Model, auth: Authentication): String {
         val user = auth.getUser()
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }

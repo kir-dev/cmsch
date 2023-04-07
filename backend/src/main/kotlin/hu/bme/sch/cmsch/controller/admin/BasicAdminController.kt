@@ -35,7 +35,7 @@ class BasicAdminController(
         adminMenuService.registerCategory(javaClass.simpleName, AdminMenuCategory("Általános", 0))
         adminMenuService.registerEntry(
             javaClass.simpleName, AdminMenuEntry(
-                "Kezdő menü",
+                "Rendezői oldal",
                 "home",
                 "/admin/control/basics",
                 1,
@@ -51,8 +51,6 @@ class BasicAdminController(
                 PERMISSION_IMPLICIT_ANYONE
             )
         )
-
-        adminMenuService.registerCategory(EXPERIMENTAL_CATEGORY, AdminMenuCategory("Experimental", 1000))
     }
 
     @GetMapping("")

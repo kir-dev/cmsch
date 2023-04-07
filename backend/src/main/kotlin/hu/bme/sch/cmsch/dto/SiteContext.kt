@@ -20,7 +20,7 @@ data class UserSiteContext(
     val profilePicture: String,
     val role: RoleType,
     val group: String,
-    val favoriteMenus: List<String>,
+    val favoriteMenus: MutableList<String>,
     val permissions: List<String>,
     val resources: List<SearchableResource>,
     val cacheCreated: Long

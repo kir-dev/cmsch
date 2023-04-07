@@ -25,6 +25,6 @@ class ImpressumComponentController(
     menuService = menuService,
     componentMenuIcon = "alternate_email",
     insertComponentCategory = false,
-    componentCategory = ApplicationComponent::class.simpleName!!,
+    componentCategory = ApplicationComponent.CONTENT_CATEGORY,
     componentMenuPriority = 21,
 )

@@ -24,7 +24,7 @@ class ResponsesAdminController(
     adminMenuService: AdminMenuService,
     component: FormComponent,
     auditLog: AuditLogService,
-    private val objectMapper: ObjectMapper
+    objectMapper: ObjectMapper
 ) : TwoDeepEntityPage<FormVirtualEntity, ResponseEntity>(
     "signup-responses",
     FormVirtualEntity::class,

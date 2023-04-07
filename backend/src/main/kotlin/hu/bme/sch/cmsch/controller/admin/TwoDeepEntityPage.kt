@@ -41,8 +41,9 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     createPermission: PermissionValidator,
     editPermission: PermissionValidator,
     deletePermission: PermissionValidator,
-    private val viewPermission: PermissionValidator = showPermission,
+    internal val viewPermission: PermissionValidator = showPermission,
 
+    showEnabled: Boolean = true,
     createEnabled: Boolean = false,
     editEnabled: Boolean = false,
     deleteEnabled: Boolean = false,
@@ -78,6 +79,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     editPermission,
     deletePermission,
 
+    showEnabled,
     createEnabled,
     editEnabled,
     deleteEnabled,
@@ -128,7 +130,9 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("tableData", outerDescriptor.getTableDataAsJson(fetchOuterOverview()))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", toJson(outerControlActions.filter { it.permission.validate(user) }))
+        model.addAttribute("controlActions", outerDescriptor.toJson(
+            outerControlActions.filter { it.permission.validate(user) },
+            objectMapper))
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
         return "overview4"
@@ -153,7 +157,9 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, fetchSublist(id))))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", toJson(controlActions.filter { it.permission.validate(user) }))
+        model.addAttribute("controlActions", descriptor.toJson(
+            controlActions.filter { it.permission.validate(user) },
+            objectMapper))
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
         return "overview4"

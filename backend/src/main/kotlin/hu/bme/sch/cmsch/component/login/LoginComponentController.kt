@@ -24,7 +24,7 @@ class LoginComponentController(
     componentMenuName = "Auth beállítások",
     componentMenuIcon = "login",
     insertComponentCategory = false,
-    componentCategory = ApplicationComponent::class.simpleName!!,
+    componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
     componentMenuPriority = 6,
     menuService = menuService
 )
@@ -44,7 +44,7 @@ class UnitScopeComponentController(
     componentMenuName = "Jogviszony beállítások",
     componentMenuIcon = "verified",
     insertComponentCategory = false,
-    componentCategory = ApplicationComponent::class.simpleName!!,
+    componentCategory = ApplicationComponent.DATA_SOURCE_CATEGORY,
     componentMenuPriority = 7,
     menuService = menuService
 )
