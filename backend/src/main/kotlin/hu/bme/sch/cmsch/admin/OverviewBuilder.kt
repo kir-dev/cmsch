@@ -1,5 +1,8 @@
 package hu.bme.sch.cmsch.admin
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.controller.admin.ControlAction
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -100,5 +103,12 @@ class OverviewBuilder<T : Any>(val type: KClass<T>) {
                 .joinToString("\n")
         return "${header}\n${result}"
     }
+
+    fun toJson(list: List<ControlAction>, objectMapper: ObjectMapper): String {
+        return objectMapper
+            .writerFor(object : TypeReference<List<ControlAction>>() {})
+            .writeValueAsString(list)
+    }
+
 
 }

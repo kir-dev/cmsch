@@ -1,20 +1,27 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
-<head th:replace="layout :: head">
+<head th:replace="layout4 :: head(${context.siteName})">
 </head>
 <body>
-<div class="content">
-    <div class="split">
-        <div th:replace="layout :: mobile"></div>
-        <div th:replace="layout :: menu(${user})">
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
         </div>
-        <div class="payload">
-            <div class="page">
-                <h2>HOZZÁFÉRÉS MEGTAGADVA</h2>
-                <p class="highlight">
+
+        <div class="content">
+            <h1 class="narrow">HOZZÁFÉRÉS MEGTAGADVA</h1>
+
+            <div class="card wide-false">
+                <h4>Jogosultság szükséges</h4>
+                <p>
                     Neked nincs jogod ezt az oldalt megnyitni!<br />
                     Ha szerinted ez egy hiba a rendszerben, akkor keresd meg az oldal adminisztrátorát.
                 </p>
+
+                <p>Szükséges jogosultság: <b th:text="${permission}"></b></p>
             </div>
         </div>
     </div>

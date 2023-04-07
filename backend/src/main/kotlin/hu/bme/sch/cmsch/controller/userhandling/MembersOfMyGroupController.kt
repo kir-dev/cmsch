@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/admin/control/members-of-my-group")
 @ConditionalOnBean(DebtComponent::class)
-class SoldProductStatsController(
+class MembersOfMyGroupController(
     private val userService: UserService,
     importService: ImportService,
     adminMenuService: AdminMenuService,

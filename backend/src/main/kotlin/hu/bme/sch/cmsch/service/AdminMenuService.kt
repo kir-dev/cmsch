@@ -3,10 +3,7 @@ package hu.bme.sch.cmsch.service
 import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.dto.SearchableResource
-import hu.bme.sch.cmsch.dto.SearchableResourceType
-import hu.bme.sch.cmsch.dto.SiteContext
-import hu.bme.sch.cmsch.dto.UserSiteContext
+import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
@@ -123,10 +120,6 @@ class AdminMenuService(
 
         model.addAttribute("context", siteContext)
         model.addAttribute("userContext", getContextForUser(user))
-
-        // FIXME: deprecated
-        model.addAttribute("adminPanelName", applicationComponent.adminPanelName.getValue())
-        model.addAttribute("isLive", applicationComponent.isLive.getValue())
     }
 
     private fun getContextForUser(user: CmschUser): UserSiteContext {
@@ -153,6 +146,20 @@ class AdminMenuService(
             userContexts[user.internalId] = result
 
         return result
+    }
+
+    fun toggleFavoriteMenu(user: CmschUser, menu: String) {
+        val context = getContextForUser(user)
+        if (context.favoriteMenus.contains(menu)) {
+            context.favoriteMenus.remove(menu)
+        } else {
+            context.favoriteMenus.add(menu)
+        }
+        saveContextConfig(user, context)
+    }
+
+    private fun saveContextConfig(user: CmschUser, context: UserSiteContext) {
+        userService.saveUserConfig(user, UserConfig(context.favoriteMenus))
     }
 
 }

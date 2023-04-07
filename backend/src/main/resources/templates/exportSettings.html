@@ -1,21 +1,26 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
-<head th:replace="layout :: head">
+<head th:replace="layout4 :: head(${context.siteName})">
 </head>
 <body>
-<div class="content">
-    <div class="split">
-        <div th:replace="layout :: mobile"></div>
-        <div th:replace="layout :: menu(${user})">
-        </div>
-        <div class="payload">
-            <div class="page">
-                <h2>Export minden</h2>
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
 
-                <p>Ezeket a beállításokat a properties fájlba kell beilleszteni első idítás előtt vagy üres adatbázissal.</p>
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        </div>
+
+        <div class="content">
+            <h1>Export minden</h1>
+
+            <div class="card">
+                <h4>Összes beállítás</h4>
+
+                <div class="desc">Ezeket a beállításokat a properties fájlba kell beilleszteni első idítás előtt vagy üres adatbázissal.</div>
 
                 <form onsubmit="return false">
-                    <textarea th:text="${settings}" readonly style="height: 600px">
+                    <textarea th:text="${settings}" readonly style="height: 600px; width: 100%">
                     </textarea>
                 </form>
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/admin/control/check-ratings")
 @ConditionalOnBean(TaskComponent::class)
-class SoldProductStatsController(
+class CheckRatingsController(
     private val submittedRepository: SubmittedTaskRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,

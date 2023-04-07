@@ -24,6 +24,7 @@ class ApplicationComponent(
         const val CONTENT_CATEGORY = "ApplicationComponent.content"
         const val FUNCTIONALITIES_CATEGORY = "ApplicationComponent.function"
         const val DEVELOPER_CATEGORY = "ApplicationComponent.dev"
+        const val DATA_SOURCE_CATEGORY = "ApplicationComponent.data"
     }
 
     final override val allSettings by lazy {

@@ -1,8 +1,10 @@
 package hu.bme.sch.cmsch.component.app
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.controller.CONTROL_MODE_EDIT
+import hu.bme.sch.cmsch.controller.admin.ButtonAction
+import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -21,26 +23,39 @@ import javax.annotation.PostConstruct
 class MenuAdminController(
     private val adminMenuService: AdminMenuService,
     private val menuRepository: MenuRepository,
-    private val menuService: MenuService
+    private val menuService: MenuService,
+    private val objectMapper: ObjectMapper
 ) {
 
     private val view = "menu"
     private val titleSingular = "Menü beállítások"
     private val titlePlural = "Menü beállítások"
     private val description = "Egyes roleokkal hogy nézzen ki a menü"
-    private val permissionControl = ControlPermissions.PERMISSION_CONTROL_APP
+    private val showPermission = ControlPermissions.PERMISSION_CONTROL_APP
+    private val editPermission = ControlPermissions.PERMISSION_CONTROL_APP
 
     private val overviewDescriptor = OverviewBuilder(MenuSetupByRoleVirtualEntity::class)
+
+    private val controlActions: MutableList<ControlAction> = mutableListOf()
 
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            ApplicationComponent::class.simpleName!!, AdminMenuEntry(
+            ApplicationComponent.CONTENT_CATEGORY, AdminMenuEntry(
                 titlePlural,
                 "menu_open",
                 "/admin/control/${view}",
                 3,
-                permissionControl
+                showPermission
+            )
+        )
+        controlActions.add(
+            ControlAction(
+                "Megnyitás",
+                "edit/{id}",
+                "edit",
+                editPermission,
+                100
             )
         )
     }
@@ -49,8 +64,8 @@ class MenuAdminController(
     fun view(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -59,13 +74,17 @@ class MenuAdminController(
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
         model.addAttribute("view", view)
-        model.addAttribute("columns", overviewDescriptor.getColumns())
-        model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", fetchOverview())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_EDIT)
 
-        return "overview"
+        model.addAttribute("columnData", overviewDescriptor.getColumnsAsJson())
+        model.addAttribute("tableData", overviewDescriptor.getTableDataAsJson(fetchOverview()))
+
+        model.addAttribute("user", user)
+        model.addAttribute("controlActions", overviewDescriptor.toJson(
+            controlActions.filter { it.permission.validate(user) },
+            objectMapper))
+        model.addAttribute("buttonActions", listOf<ButtonAction>())
+
+        return "overview4"
     }
 
     private fun fetchOverview(): List<MenuSetupByRoleVirtualEntity> {
@@ -78,8 +97,8 @@ class MenuAdminController(
     fun edit(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -94,8 +113,8 @@ class MenuAdminController(
     @PostMapping("/edit/{id}")
     fun editFormTarget(@PathVariable id: Int, auth: Authentication, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
         val user = auth.getUser()
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (showPermission.validate(user).not()) {
+            model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }

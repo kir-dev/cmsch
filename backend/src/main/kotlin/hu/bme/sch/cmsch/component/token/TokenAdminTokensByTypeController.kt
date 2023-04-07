@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.news.NewsComponent
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*

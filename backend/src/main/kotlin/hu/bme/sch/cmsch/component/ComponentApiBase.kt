@@ -49,6 +49,7 @@ abstract class ComponentApiBase(
                 permissionToShow
             )
         )
+        onInit()
     }
 
     @GetMapping("/settings")
@@ -115,6 +116,10 @@ abstract class ComponentApiBase(
 
     open fun onUpdate() {
         // Settings updated
+    }
+
+    open fun onInit() {
+        // The compoennt is loaded
     }
 
 }

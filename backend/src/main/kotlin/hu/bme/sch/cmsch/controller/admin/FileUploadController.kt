@@ -17,8 +17,9 @@ import kotlin.math.absoluteValue
 
 @Controller
 @RequestMapping("/admin/control/upload-file")
-class ImageUploadController(
-    private val adminMenuService: AdminMenuService
+class FileUploadController(
+    private val adminMenuService: AdminMenuService,
+    private val applicationComponent: ApplicationComponent
 ) {
 
     private val permissionControl = PERMISSION_SHOW_DELETE_FILES
@@ -26,7 +27,7 @@ class ImageUploadController(
     @PostConstruct
     fun init() {
         adminMenuService.registerEntry(
-            ApplicationComponent::class.simpleName!!, AdminMenuEntry(
+            ApplicationComponent.CONTENT_CATEGORY, AdminMenuEntry(
                 "Fájlfeltöltés",
                 "cloud_upload",
                 "/admin/control/upload-file",
@@ -47,7 +48,8 @@ class ImageUploadController(
         }
 
         model.addAttribute("user", user)
-        model.addAttribute("uploaded", uploaded == "ok")
+        model.addAttribute("uploaded", uploaded)
+        model.addAttribute("baseUrl", applicationComponent.siteUrl)
 
         return "uploadFile"
     }
@@ -63,12 +65,12 @@ class ImageUploadController(
         }
 
         val originalFilename = file?.originalFilename ?: ""
-        file?.uploadFile("public", name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
+        val newName = name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
                 "_${Random().nextLong().absoluteValue.toString(36).uppercase()}" +
                 originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0)
-        )
+        file?.uploadFile("public", newName)
 
-        return "redirect:/admin/control/upload-file?uploaded=ok"
+        return "redirect:/admin/control/upload-file?uploaded=${newName}"
     }
 
 }

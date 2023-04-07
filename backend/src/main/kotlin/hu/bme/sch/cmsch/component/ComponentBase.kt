@@ -125,7 +125,7 @@ abstract class ComponentBase(
                 description = ": $componentName",
                 type = SearchableResourceType.PROPERTY,
                 permission = showPermission,
-                target = "/admin/control/${component}#${setting.property}"
+                target = "/admin/control/component/${component}/settings#${setting.property}"
             )
         }
     }

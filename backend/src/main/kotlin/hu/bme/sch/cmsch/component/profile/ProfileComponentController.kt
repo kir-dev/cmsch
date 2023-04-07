@@ -24,7 +24,7 @@ class ProfileComponentController(
     componentMenuName = "Profil beállítások",
     componentMenuIcon = "account_circle",
     insertComponentCategory = false,
-    componentCategory = ApplicationComponent::class.simpleName!!,
+    componentCategory = ApplicationComponent.CONTENT_CATEGORY,
     componentMenuPriority = 6,
     menuService = menuService
 )

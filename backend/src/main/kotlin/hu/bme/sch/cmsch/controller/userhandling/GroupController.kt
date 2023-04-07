@@ -91,7 +91,7 @@ class GroupController(
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-filtered-export.csv\"")
-        return filterDescriptor.exportToCsv(fetchOverview().map { GroupFilteredExportView(it.id, it.name) }).toByteArray()
+        return filterDescriptor.exportToCsv(fetchOverview(user).map { GroupFilteredExportView(it.id, it.name) }).toByteArray()
     }
 
 }

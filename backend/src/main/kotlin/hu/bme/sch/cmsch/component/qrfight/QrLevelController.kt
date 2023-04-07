@@ -1,9 +1,6 @@
 package hu.bme.sch.cmsch.component.qrfight
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.news.NewsComponent
-import hu.bme.sch.cmsch.component.news.NewsEntity
-import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService

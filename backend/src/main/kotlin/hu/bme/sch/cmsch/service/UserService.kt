@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.UserConfig
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
@@ -19,7 +20,7 @@ open class UserService(
     private val users: UserRepository,
     private val groupMapping: GroupToUserMappingRepository,
     private val guildMapping: GuildToUserMappingRepository,
-    objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper
 ) {
 
     private val userConfigReader = objectMapper.readerFor(UserConfig::class.java)
@@ -80,6 +81,15 @@ open class UserService(
         if (config.isBlank())
             return UserConfig()
         return userConfigReader.readValue(config)
+    }
+
+    @Transactional(readOnly = false)
+    open fun saveUserConfig(user: CmschUser, config: UserConfig) {
+        val configValue = objectMapper.writerFor(UserConfig::class.java).writeValueAsString(config)
+        users.findById(user.id).ifPresent {
+            it.config = configValue
+            users.save(it)
+        }
     }
 
 }
