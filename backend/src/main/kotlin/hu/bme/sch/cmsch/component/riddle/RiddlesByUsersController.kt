@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/admin/control/riddles-by-users")
 @ConditionalOnBean(RiddleComponent::class)
-class TokenAdminTokensByGroupController(
+class RiddlesByUsersController(
     private val riddleMappingRepository: RiddleMappingRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,

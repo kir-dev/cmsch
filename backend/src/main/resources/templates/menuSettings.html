@@ -1,17 +1,21 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
-<head th:replace="layout :: head">
+<head th:replace="layout4 :: head(${context.siteName})">
 </head>
 <body>
-<div class="content">
-    <div class="split">
-        <div th:replace="layout :: mobile"></div>
-        <div th:replace="layout :: menu(${user})"></div>
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
 
-        <div class="payload">
-            <div class="page">
-                <h2>Menük szerkesztése</h2>
-                <h3 th:text="|Kiválasztott jogosultsági szint: ${role}|"></h3>
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        </div>
+
+        <div class="content">
+            <h1>Menük szerkesztése</h1>
+
+            <div class="card">
+                <h4 th:text="|Kiválasztott jogosultsági szint: ${role}|">Kiválasztott jogosultsági szint: ...</h4>
 
                 <form th:action="|@{/admin/control/menu/edit}/${id}|" method="post">
 
@@ -49,7 +53,7 @@
 
                     <div class="button-group">
                         <input type="submit" value="Mentés" class="btn"/>
-                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/menu|">Vissza</a>
+                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/menu|">VISSZA</a>
                     </div>
                 </form>
             </div>

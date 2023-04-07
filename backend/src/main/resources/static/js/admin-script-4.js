@@ -12,6 +12,8 @@ function isModalOpen() {
 }
 
 function init() {
+    loadMenuFromStorage();
+
     document.getElementById('search').addEventListener('keyup', searchListener());
     document.getElementById('search-input').addEventListener('keyup', siteSearchListener());
 
@@ -71,6 +73,7 @@ function selectResult(index) {
         result.classList.remove("selected");
     });
     results[index].classList.add("selected");
+    scrollToElement(results[index]);
 }
 
 function searchListener() {
@@ -78,13 +81,13 @@ function searchListener() {
 
     return function () {
         const searchString = this.value.toLowerCase();
+        if (searchString === '')
+            loadMenuFromStorage();
+        else
+            openAllMenuGroups();
 
         menuItems.forEach(function (menuItem) {
-            let menuItemText = menuItem.textContent.toLowerCase();
-            console.log(menuItem.getAttribute('data-search'));
-            if (menuItem.getAttribute('data-search')) {
-                menuItemText = menuItem.getAttribute('data-search').toLowerCase();
-            }
+            let menuItemText = menuItem.getAttribute('data-search').toLowerCase();
 
             if (menuItemText.includes(searchString)) {
                 menuItem.style.display = 'block';
@@ -96,6 +99,7 @@ function searchListener() {
 }
 
 function searchFavorite() {
+    openAllMenuGroups();
     document.getElementById('search').value = '';
     menuItems.forEach(function (menuItem) {
         const status = menuItem.className;
@@ -117,6 +121,7 @@ function searchEverything() {
 function clearFilter() {
     document.getElementById('search').value = '';
     searchEverything();
+    loadMenuFromStorage();
 }
 
 function closeSearch() {
@@ -161,6 +166,61 @@ function siteSearchListener() {
             });
         }
     };
+}
+
+function scrollToElement(element) {
+    console.log(element);
+
+    if (element) {
+        const offsetTop = element.offsetTop - 70;
+        const scrollableElement = element.parentElement.parentElement;
+
+        if (scrollableElement) {
+            scrollableElement.scrollTo({
+                top: offsetTop,
+                behavior: 'instant'
+            });
+        }
+    }
+}
+
+function closeAllMenuGroups() {
+    document.querySelectorAll('.menu-group').forEach(element => {
+        element.classList.add('closed');
+    });
+}
+
+function openAllMenuGroups() {
+    document.querySelectorAll('.menu-group').forEach(element => {
+        element.classList.remove('closed');
+    });
+}
+
+function saveMenuState() {
+    localStorage.setItem('closedMenus', JSON.stringify(getAllClosedMenu()));
+}
+
+function toggleMenuGroup(title) {
+    document.querySelector(`.menu-group[data-title="${title}"]`).classList.toggle('closed')
+    if (document.getElementById('search').value === '')
+        saveMenuState();
+}
+
+function loadMenuFromStorage() {
+    openAllMenuGroups();
+    JSON.parse(localStorage.getItem('closedMenus')).forEach(title => closeMenu(title));
+}
+
+function closeMenu(title) {
+    let element = document.querySelector(`.menu-group[data-title="${title}"]`);
+    if (element)
+        element.classList.add('closed')
+}
+
+function getAllClosedMenu() {
+    return Array.from(document.querySelectorAll('.menu-group[data-title]'))
+        .filter(element => element.classList.contains('closed'))
+        .map(element => element.getAttribute('data-title'));
 }
 
 window.onload = init;

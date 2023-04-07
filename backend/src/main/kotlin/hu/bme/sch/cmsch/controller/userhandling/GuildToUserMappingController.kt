@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.controller.userhandling
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.model.GuildToUserMappingEntity
@@ -48,4 +49,5 @@ class GuildToUserMappingController(
 
     adminMenuIcon = "badge",
     adminMenuPriority = 4,
+    adminMenuCategory = ApplicationComponent.DATA_SOURCE_CATEGORY
 )

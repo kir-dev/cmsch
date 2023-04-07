@@ -11,8 +11,37 @@
         <div th:replace="layout4 :: menus(${userContext}, ${context})">
         </div>
 
+        <script>
+            function toggleStarred(title) {
+                let element = document.querySelector(`.menu-group a[data-search='${title}']`);
+                if (element) {
+                    toggleStar(title, () => {
+                        element.classList.toggle('favorite');
+                        document.getElementById('star-page').classList.toggle('favorite');
+                    });
+                }
+            }
+
+            function toggleStar(menu, callback) {
+                fetch('/admin/api/settings/favorite', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: menu,
+                    credentials: 'include'
+                })
+                    .then(result => callback())
+                    .catch(error => console.error(error));
+            }
+        </script>
+
         <div class="content">
-            <h1 th:text="${title}">Rendezői Oldal <span class="material-symbols-outlined color-yellow">star</span></h1>
+            <h1><ins th:text="${title}">Rendezői Oldal</ins>
+                <span class="material-symbols-outlined color-yellow star-button"
+                      th:class="|material-symbols-outlined color-yellow star-button ${userContext.favoriteMenus.contains(title) ? 'favorite' : ''}|"
+                      id="star-page"
+                      th:data-star="${title}"
+                      onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>
+            </h1>
             <div class="details" th:text="${description}">Üdv a rendezvény rendezői felületén!</div>
 
             <div th:class="button-group">
@@ -39,14 +68,13 @@
 <script th:inline="javascript">
     const buttons = JSON.parse(/*[[${controlActions}]]*/ "[]");
     let tableData = JSON.parse(/*[[${tableData}]]*/ "[]");
+    let view = /*[[${view}]]*/ "";
     for (let rowId in tableData) {
         const row = tableData[rowId];
         let buttonColumn = "";
         for (let buttonId in buttons) {
             const button = buttons[buttonId];
-            console.log(button.endpoint);
-            console.log(row.id);
-            buttonColumn += `<a href="${button.endpoint.replace("{id}", row.id)}" ${button.newPage ? 'target="_blank"' : ''} class="control-action"><span class="material-symbols-outlined">${button.icon}</span></a>`
+            buttonColumn += `<a href="/admin/control/${view}/${button.endpoint.replace("{id}", row.id)}" ${button.newPage ? 'target="_blank"' : ''} class="control-action"><span class="material-symbols-outlined">${button.icon}</span></a>`
         }
         row['buttons'] = buttonColumn;
     }

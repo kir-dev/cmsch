@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
@@ -9,7 +8,6 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.IdentifiableEntity
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
@@ -62,16 +60,17 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val importService: ImportService,
     internal val adminMenuService: AdminMenuService,
     internal val component: ComponentBase,
-    private val auditLog: AuditLogService,
-    private val objectMapper: ObjectMapper,
-    private val entitySourceMapping: Map<String, (T?) -> List<String>> =
+    internal val auditLog: AuditLogService,
+    internal val objectMapper: ObjectMapper,
+    internal val entitySourceMapping: Map<String, (T?) -> List<String>> =
         mapOf(Nothing::class.simpleName!! to { listOf() }),
 
     internal val showPermission: PermissionValidator,
-    private val createPermission: PermissionValidator,
-    private val editPermission: PermissionValidator,
-    private val deletePermission: PermissionValidator,
+    internal val createPermission: PermissionValidator,
+    internal val editPermission: PermissionValidator,
+    internal val deletePermission: PermissionValidator,
 
+    private val showEnabled: Boolean = true,
     private val createEnabled: Boolean = false,
     private val editEnabled: Boolean = false,
     private val deleteEnabled: Boolean = false,
@@ -129,7 +128,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                 editPermission,
                 100
             ))
-        } else {
+        } else if (showEnabled) {
             controlActions.add(ControlAction(
                 "Megtekintés",
                 "show/{id}",
@@ -180,16 +179,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, fetchOverview(user))))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", toJson(controlActions.filter { it.permission.validate(user) }))
+        model.addAttribute("controlActions", descriptor.toJson(
+            controlActions.filter { it.permission.validate(user) },
+            objectMapper))
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
         return "overview4"
-    }
-
-    internal fun toJson(list: List<ControlAction>): String {
-        return objectMapper
-            .writerFor(object : TypeReference<List<ControlAction>>() {})
-            .writeValueAsString(list)
     }
 
     @GetMapping("/edit/{id}")
@@ -282,7 +277,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("readOnly", false)
 
         onDetailsView(user, model)
-        return "details4"
+        return "details"
     }
 
     @GetMapping("/delete/{id}")
@@ -354,7 +349,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
         model.addAttribute("user", user)
-        return "purge4"
+        return "purge"
     }
 
     @PostMapping("/purge")
@@ -445,7 +440,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         return "redirect:/admin/control/$view"
     }
 
-    private fun updateEntity(descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
+    internal fun updateEntity(descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
                 when {

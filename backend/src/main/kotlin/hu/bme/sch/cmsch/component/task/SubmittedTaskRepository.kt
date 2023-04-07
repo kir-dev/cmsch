@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.task
 
-import hu.bme.sch.cmsch.component.riddle.RiddleMappingEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.repository.CrudRepository

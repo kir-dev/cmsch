@@ -1,7 +1,8 @@
 package hu.bme.sch.cmsch.controller.userhandling
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.news.NewsComponent
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.model.GroupToUserMappingEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
@@ -19,7 +20,8 @@ class GroupToUserMappingController(
     repo: GroupToUserMappingRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
-    component: NewsComponent,
+    component: UserHandlingComponent
+    ,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val groups: GroupRepository,
@@ -52,4 +54,5 @@ class GroupToUserMappingController(
 
     adminMenuIcon = "people",
     adminMenuPriority = 3,
+    adminMenuCategory = ApplicationComponent.DATA_SOURCE_CATEGORY
 )

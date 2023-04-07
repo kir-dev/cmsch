@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/admin/control/track-group")
 @ConditionalOnBean(LocationComponent::class)
-class SoldProductStatsController(
+class TrackOneGroupController(
     private val locationService: LocationService,
     importService: ImportService,
     adminMenuService: AdminMenuService,

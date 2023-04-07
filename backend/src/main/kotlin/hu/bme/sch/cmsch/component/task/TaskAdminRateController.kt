@@ -1,13 +1,12 @@
 package hu.bme.sch.cmsch.component.task
 
-import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
-import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
-import hu.bme.sch.cmsch.admin.OverviewBuilder
-import hu.bme.sch.cmsch.controller.INVALID_ID_ERROR
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.form.*
+import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_RATE_TASKS
+import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
+import hu.bme.sch.cmsch.repository.ManualRepository
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.markdownToHtml
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -15,114 +14,97 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import javax.annotation.PostConstruct
-import kotlin.reflect.KMutableProperty1
-
-const val CONTROL_MODE_RATE = "rate"
-const val CONTROL_MODE_GRADE = "grade"
 
 @Controller
 @RequestMapping("/admin/control/rate-tasks")
 @ConditionalOnBean(TaskComponent::class)
-t2 class TaskAdminRateController(
+class TaskAdminRateController(
     private val submittedRepository: SubmittedTaskRepository,
-    private val adminMenuService: AdminMenuService
+    importService: ImportService,
+    adminMenuService: AdminMenuService,
+    component: TaskComponent,
+    auditLog: AuditLogService,
+    objectMapper: ObjectMapper
+) : TwoDeepEntityPage<GradedTaskGroupDto, SubmittedTaskEntity>(
+    "rate-tasks",
+    GradedTaskGroupDto::class,
+    SubmittedTaskEntity::class, ::SubmittedTaskEntity,
+    "Értékelés", "Értékelések",
+    "A beadott feladatok értékelése",
+
+    object : ManualRepository<GradedTaskGroupDto, Int>() {
+        override fun findAll(): Iterable<GradedTaskGroupDto> {
+            return submittedRepository.findAll()
+                .groupBy { it.task }
+                .map { it.value }
+                .filter { it.isNotEmpty() }
+                .map { submissions ->
+                    GradedTaskGroupDto(
+                        submissions[0].task?.id ?: 0,
+                        submissions[0].task?.title ?: "n/a",
+                        submissions.count { it.approved },
+                        submissions.count { it.rejected },
+                        submissions.count { !it.approved && !it.rejected }
+                    )
+                }
+                .sortedByDescending { it.notGraded }.toList()
+        }
+
+    },
+    submittedRepository,
+    importService,
+    adminMenuService,
+    component,
+    auditLog,
+    objectMapper,
+
+    showPermission =   StaffPermissions.PERMISSION_RATE_TASKS,
+    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
+    editPermission =   StaffPermissions.PERMISSION_RATE_TASKS,
+    deletePermission = StaffPermissions.PERMISSION_RATE_TASKS,
+
+    createEnabled = false,
+    editEnabled   = true,
+    deleteEnabled = true,
+    importEnabled = false,
+    exportEnabled = false,
+
+    adminMenuIcon = "thumbs_up_down",
+    adminMenuPriority = 3,
+
+    outerControlActions = mutableListOf(
+        ControlAction(
+            "Értékel",
+            "rate/{id}",
+            "thumbs_up_down",
+            StaffPermissions.PERMISSION_RATE_TASKS,
+            200,
+            false
+        )
+    )
 ) {
 
-    private val view = "rate-tasks"
-    private val titleSingular = "Értékelés"
-    private val titlePlural = "Értékelések"
-    private val description = "A beadott feladatok értékelése"
-    private val permissionControl = PERMISSION_RATE_TASKS
-
-    private val entitySourceMapping: Map<String, (SubmittedTaskEntity) -> List<String>> =
-            mapOf(Nothing::class.simpleName!! to { listOf() })
-
-    private val overviewDescriptor = OverviewBuilder(GradedTaskGroupDto::class)
-    private val submittedDescriptor = OverviewBuilder(SubmittedTaskEntity::class)
-
-    @PostConstruct
-    fun init() {
-        adminMenuService.registerEntry(
-            TaskComponent::class.simpleName!!, AdminMenuEntry(
-                titlePlural,
-                "thumbs_up_down",
-                "/admin/control/${view}",
-                3,
-                permissionControl
-            )
+    private val rateControlActions = mutableListOf(
+        ControlAction(
+            "Kijavít",
+            "grade/{id}",
+            "grade",
+            StaffPermissions.PERMISSION_RATE_TASKS,
+            100,
+            false
         )
-    }
+    )
 
-    @GetMapping("")
-    fun view(model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titlePlural)
-        model.addAttribute("titleSingular", titleSingular)
-        model.addAttribute("description", description)
-        model.addAttribute("view", view)
-        model.addAttribute("columns", overviewDescriptor.getColumns())
-        model.addAttribute("fields", overviewDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", fetchOverview())
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_RATE)
-
-        return "overview"
-    }
-
-    private fun fetchOverview(): List<GradedTaskGroupDto> {
-        return submittedRepository.findAll().asSequence()
-            .groupBy { it.task }
-            .map { it.value }
-            .filter { it.isNotEmpty() }
-            .map { submissions ->
-                GradedTaskGroupDto(
-                    submissions[0].task?.id ?: 0,
-                    submissions[0].task?.title ?: "n/a",
-                    submissions.count { it.approved },
-                    submissions.count { it.rejected },
-                    submissions.count { !it.approved && !it.rejected }
-                )
-            }
-            .sortedByDescending { it.notGraded }.toList()
-    }
-
-    @GetMapping("/view/{id}")
-    fun viewAll(@PathVariable id: Int, model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titlePlural)
-        model.addAttribute("titleSingular", titleSingular)
-        model.addAttribute("description", description)
-        model.addAttribute("view", view)
-        model.addAttribute("columns", submittedDescriptor.getColumns())
-        model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", submittedRepository.findByTask_Id(id))
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_GRADE)
-
-        return "overview"
+    override fun fetchSublist(id: Int): Iterable<SubmittedTaskEntity> {
+        return submittedRepository.findByTask_Id(id)
     }
 
     @GetMapping("/rate/{id}")
     fun rate(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (viewPermission.validate(user).not()) {
+            model.addAttribute("permission", viewPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -131,21 +113,26 @@ t2 class TaskAdminRateController(
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
         model.addAttribute("view", view)
-        model.addAttribute("columns", submittedDescriptor.getColumns())
-        model.addAttribute("fields", submittedDescriptor.getColumnDefinitions())
-        model.addAttribute("rows", submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalse(id))
-        model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_GRADE)
 
-        return "overview"
+        model.addAttribute("columnData", descriptor.getColumnsAsJson())
+        model.addAttribute("tableData", descriptor.getTableDataAsJson(
+            submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalse(id)))
+
+        model.addAttribute("user", user)
+        model.addAttribute("controlActions", descriptor.toJson(
+            rateControlActions.filter { it.permission.validate(user) },
+            objectMapper))
+        model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
+
+        return "overview4"
     }
 
     @GetMapping("/grade/{id}")
-    fun edit(@PathVariable id: Int, model: Model, auth: Authentication): String {
+    fun grade(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (editPermission.validate(user).not()) {
+            model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -154,10 +141,12 @@ t2 class TaskAdminRateController(
         model.addAttribute("editMode", true)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
-        model.addAttribute("inputs", submittedDescriptor.getInputs())
+        model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("user", user)
-        model.addAttribute("controlMode", CONTROL_MODE_GRADE)
+        model.addAttribute("gradeMode", true)
+        model.addAttribute("readOnly", false)
+        // FIXME: set edit path to grade
 
         val entity = submittedRepository.findById(id)
         if (entity.isEmpty) {
@@ -174,14 +163,14 @@ t2 class TaskAdminRateController(
     }
 
     @PostMapping("/grade/{id}")
-    fun edit(@PathVariable id: Int,
+    fun grade(@PathVariable id: Int,
              @ModelAttribute(binding = false) dto: SubmittedTaskEntity,
              model: Model,
              auth: Authentication
     ): String {
         val user = auth.getUser()
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
+        if (editPermission.validate(user).not()) {
+            model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"
         }
@@ -191,7 +180,7 @@ t2 class TaskAdminRateController(
             return "redirect:/admin/control/$view/grade/$id"
         }
 
-        updateEntity(submittedDescriptor, entity.get(), dto)
+        updateEntity(descriptor, user, entity.get(), dto, null, null)
         if (entity.get().approved && entity.get().rejected)
             entity.get().rejected = false
         entity.get().id = id
@@ -199,59 +188,10 @@ t2 class TaskAdminRateController(
         return "redirect:/admin/control/$view/rate/${entity.get().task?.id ?: ""}"
     }
 
-    private fun updateEntity(
-        descriptor: OverviewBuilder<SubmittedTaskEntity>,
-        entity: SubmittedTaskEntity,
-        dto: SubmittedTaskEntity
-    ) {
-        descriptor.getInputs().forEach {
-            if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore) {
-                when {
-                    it.second.interpreter == INTERPRETER_INHERIT && it.second.type != INPUT_TYPE_FILE -> {
-                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, it.first.getter.call(dto))
-                    }
-                }
-            }
-        }
+    override fun onEntityPreSave(entity: SubmittedTaskEntity, auth: Authentication): Boolean {
+        if (entity.approved && entity.rejected)
+            entity.rejected = false
+        return true
     }
-
-    @GetMapping("/delete/{id}")
-    fun deleteConfirm(@PathVariable id: Int, model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titleSingular)
-        model.addAttribute("view", view)
-        model.addAttribute("id", id)
-        model.addAttribute("user", user)
-
-        val entity = submittedRepository.findById(id)
-        if (entity.isEmpty) {
-            model.addAttribute("error", INVALID_ID_ERROR)
-        } else {
-            model.addAttribute("item", entity.orElseThrow().toString())
-        }
-        return "delete"
-    }
-
-    @PostMapping("/delete/{id}")
-    fun delete(@PathVariable id: Int, model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        if (permissionControl.validate(user).not()) {
-            model.addAttribute("permission", permissionControl.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        val entity = submittedRepository.findById(id).orElseThrow()
-        submittedRepository.delete(entity)
-        return "redirect:/admin/control/$view/"
-    }
-
 
 }

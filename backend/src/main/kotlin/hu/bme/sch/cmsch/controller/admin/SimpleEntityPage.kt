@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.IdentifiableEntity
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import java.util.function.Supplier
@@ -53,6 +52,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     editPermission = ImplicitPermissions.PERMISSION_NOBODY,
     deletePermission = ImplicitPermissions.PERMISSION_NOBODY,
 
+    showEnabled = false,
     createEnabled = false,
     editEnabled = false,
     deleteEnabled = false,

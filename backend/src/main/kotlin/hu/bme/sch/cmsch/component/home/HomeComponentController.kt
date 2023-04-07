@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.home
 
 import hu.bme.sch.cmsch.component.ComponentApiBase
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
@@ -20,7 +21,10 @@ class HomeComponentController(
     HomeComponent::class.java,
     component,
     ControlPermissions.PERMISSION_CONTROL_HOME,
-    componentCategoryName = "Kezdőlap",
-    componentMenuName = "Beállítások",
+    insertComponentCategory = false,
+    componentCategory = ApplicationComponent.CONTENT_CATEGORY,
+    componentMenuName = "Kezdőlap",
+    componentMenuPriority = 3,
+    componentMenuIcon = "home",
     menuService = menuService
 )
