@@ -66,7 +66,9 @@ class FilesByViewController(
                 "view/{id}",
                 "double_arrow",
                 showPermission,
-                100
+                100,
+                usageString = "Kategória megnyitása",
+                basic = true
             )
         )
     }
@@ -93,6 +95,7 @@ class FilesByViewController(
         model.addAttribute("controlActions", overviewDescriptor.toJson(
             controlActions.filter { it.permission.validate(user) },
             objectMapper))
+        model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", listOf<ButtonAction>())
 
         return "overview4"
@@ -125,26 +128,30 @@ class FilesByViewController(
         model.addAttribute("tableData", submittedDescriptor.getTableDataAsJson(listFilesInView(id)))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", overviewDescriptor.toJson(
-            listOf(
-                ControlAction(
-                    "Megnyitás",
-                    "cdn/${id}/{id}",
-                    "visibility",
-                    showPermission,
-                    100,
-                    true
-                ),
-                ControlAction(
-                    "Törlés",
-                    "delete/${id}/{id}",
-                    "delete",
-                    deletePermission,
-                    200,
-                    false
-                )
+        val controlActionForCategory = listOf(
+            ControlAction(
+                "Megnyitás",
+                "cdn/${id}/{id}",
+                "visibility",
+                showPermission,
+                100,
+                true,
+                usageString = "File megnyitása",
+                basic = true
             ),
-            objectMapper))
+            ControlAction(
+                "Törlés",
+                "delete/${id}/{id}",
+                "delete",
+                deletePermission,
+                200,
+                false,
+                usageString = "File törlése",
+                basic = true
+            )
+        )
+        model.addAttribute("controlActions", overviewDescriptor.toJson(controlActionForCategory, objectMapper))
+        model.addAttribute("allControlActions", controlActionForCategory)
         model.addAttribute("buttonActions", listOf<ButtonAction>())
 
         return "overview4"

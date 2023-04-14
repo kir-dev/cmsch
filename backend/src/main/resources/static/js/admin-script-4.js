@@ -223,4 +223,25 @@ function getAllClosedMenu() {
         .map(element => element.getAttribute('data-title'));
 }
 
+function toggleStarred(title) {
+    let element = document.querySelector(`.menu-group a[data-search='${title}']`);
+    if (element) {
+        toggleStar(title, () => {
+            element.classList.toggle('favorite');
+            document.getElementById('star-page').classList.toggle('favorite');
+        });
+    }
+}
+
+function toggleStar(menu, callback) {
+    fetch('/admin/api/settings/favorite', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: menu,
+        credentials: 'include'
+    })
+        .then(result => callback())
+        .catch(error => console.error(error));
+}
+
 window.onload = init;

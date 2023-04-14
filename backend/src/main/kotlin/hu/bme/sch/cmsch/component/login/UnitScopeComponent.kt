@@ -29,6 +29,7 @@ class UnitScopeComponent(
 
     final override val allSettings by lazy {
         listOf(
+            unitScopeGroup,
             minRole,
 
             unitScopeGrantsEnabled,
@@ -76,6 +77,12 @@ class UnitScopeComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    val unitScopeGroup = SettingProxy(componentSettingService, component,
+        "unitScopeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Jogviszonyok",
+        description = ""
     )
 
     val unitScopeGrantsEnabled = SettingProxy(componentSettingService, component,

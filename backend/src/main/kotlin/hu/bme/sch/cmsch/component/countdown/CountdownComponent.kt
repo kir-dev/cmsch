@@ -30,6 +30,7 @@ class CountdownComponent(
 
     final override val allSettings by lazy {
         listOf(
+            countdownGroup,
             title, minRole,
 
             enabled,
@@ -45,6 +46,12 @@ class CountdownComponent(
     fun isBlockedAt(timeInSec: Long): Boolean {
         return enabled.isValueTrue() && showOnly.isValueTrue() && (informativeOnly.isValueTrue() || ((timeToCountTo.getValue().toLongOrNull() ?: 0) > timeInSec))
     }
+
+    val countdownGroup = SettingProxy(componentSettingService, component,
+        "countdownGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Visszaszámlálás",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Hamarosan",

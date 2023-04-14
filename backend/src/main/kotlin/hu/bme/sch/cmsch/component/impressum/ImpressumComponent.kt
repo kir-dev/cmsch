@@ -27,6 +27,7 @@ class ImpressumComponent(
 
     final override val allSettings by lazy {
         listOf(
+            impressumGroup,
             title, minRole,
 
             topMessage,
@@ -49,6 +50,12 @@ class ImpressumComponent(
             otherOrganizersMessage
         )
     }
+
+    val impressumGroup = SettingProxy(componentSettingService, component,
+        "impressumGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Impresszum",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Impressum",

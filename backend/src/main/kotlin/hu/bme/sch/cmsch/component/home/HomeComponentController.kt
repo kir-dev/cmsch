@@ -24,7 +24,7 @@ class HomeComponentController(
     insertComponentCategory = false,
     componentCategory = ApplicationComponent.CONTENT_CATEGORY,
     componentMenuName = "Kezdőlap",
-    componentMenuPriority = 3,
+    componentMenuPriority = 5,
     componentMenuIcon = "home",
     menuService = menuService
 )

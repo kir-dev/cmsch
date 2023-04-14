@@ -33,7 +33,9 @@ data class ControlAction(
     val icon: String,
     val permission: PermissionValidator,
     val order: Int,
-    val newPage: Boolean = false
+    val newPage: Boolean = false,
+    var usageString: String = "",
+    var basic: Boolean = false
 )
 
 data class ButtonAction(
@@ -70,12 +72,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val editPermission: PermissionValidator,
     internal val deletePermission: PermissionValidator,
 
-    private val showEnabled: Boolean = true,
-    private val createEnabled: Boolean = false,
-    private val editEnabled: Boolean = false,
-    private val deleteEnabled: Boolean = false,
-    private val importEnabled: Boolean = true,
-    private val exportEnabled: Boolean = true,
+    internal val showEnabled: Boolean = true,
+    internal val createEnabled: Boolean = false,
+    internal val editEnabled: Boolean = false,
+    internal val deleteEnabled: Boolean = false,
+    internal val importEnabled: Boolean = true,
+    internal val exportEnabled: Boolean = true,
 
     private val adminMenuCategory: String? = null,
     private val adminMenuIcon: String = "check_box_outline_blank",
@@ -126,7 +128,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                 "edit/{id}",
                 "edit",
                 editPermission,
-                100
+                100,
+                usageString = "Bejegyzés szerkesztése",
+                basic = true
             ))
         } else if (showEnabled) {
             controlActions.add(ControlAction(
@@ -134,7 +138,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                 "show/{id}",
                 "visibility",
                 showPermission,
-                100
+                100,
+                usageString = "Bejegyzés megnyitása",
+                basic = true
             ))
         }
 
@@ -144,7 +150,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                 "delete/{id}",
                 "delete",
                 deletePermission,
-                200
+                200,
+                usageString = "Bejegyzés törlése",
+                basic = true
             ))
             buttonActions.add(ButtonAction(
                 "Összes törlése",
@@ -182,9 +190,29 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("controlActions", descriptor.toJson(
             controlActions.filter { it.permission.validate(user) },
             objectMapper))
+        model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
+        attachPermissionInfo(model)
+
         return "overview4"
+    }
+
+    internal fun attachPermissionInfo(model: Model) {
+        if (showEnabled && showPermission != ImplicitPermissions.PERMISSION_NOBODY)
+            model.addAttribute("permissionShow", showPermission.permissionString)
+
+        if (editEnabled && editPermission != ImplicitPermissions.PERMISSION_NOBODY)
+            model.addAttribute("permissionEdit", editPermission.permissionString)
+
+        if (createEnabled && createPermission != ImplicitPermissions.PERMISSION_NOBODY)
+            model.addAttribute("permissionCreate", createPermission.permissionString)
+
+        if (deleteEnabled && deletePermission != ImplicitPermissions.PERMISSION_NOBODY)
+            model.addAttribute("permissionDelete", deletePermission.permissionString)
+
+        model.addAttribute("importEnabled", importEnabled)
+        model.addAttribute("exportEnabled", exportEnabled)
     }
 
     @GetMapping("/edit/{id}")

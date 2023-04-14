@@ -5,10 +5,7 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.AuditLogService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
@@ -105,7 +102,9 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
                     "view/{id}",
                     "double_arrow",
                     showPermission,
-                    100
+                    100,
+                    usageString = "Kategória megnyitása",
+                    basic = true
                 )
             )
         }
@@ -133,7 +132,15 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("controlActions", outerDescriptor.toJson(
             outerControlActions.filter { it.permission.validate(user) },
             objectMapper))
+        model.addAttribute("allControlActions", outerControlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
+
+        attachPermissionInfo(model)
+        model.addAttribute("permissionShow",
+            if (viewEnabled && viewPermission != ImplicitPermissions.PERMISSION_NOBODY)
+                viewPermission.permissionString
+            else null)
+        model.addAttribute("permissionDelete", null)
 
         return "overview4"
     }
@@ -160,7 +167,10 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("controlActions", descriptor.toJson(
             controlActions.filter { it.permission.validate(user) },
             objectMapper))
+        model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
+
+        attachPermissionInfo(model)
 
         return "overview4"
     }

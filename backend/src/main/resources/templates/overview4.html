@@ -11,29 +11,6 @@
         <div th:replace="layout4 :: menus(${userContext}, ${context})">
         </div>
 
-        <script>
-            function toggleStarred(title) {
-                let element = document.querySelector(`.menu-group a[data-search='${title}']`);
-                if (element) {
-                    toggleStar(title, () => {
-                        element.classList.toggle('favorite');
-                        document.getElementById('star-page').classList.toggle('favorite');
-                    });
-                }
-            }
-
-            function toggleStar(menu, callback) {
-                fetch('/admin/api/settings/favorite', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: menu,
-                    credentials: 'include'
-                })
-                    .then(result => callback())
-                    .catch(error => console.error(error));
-            }
-        </script>
-
         <div class="content">
             <h1><ins th:text="${title}">Rendezői Oldal</ins>
                 <span class="material-symbols-outlined color-yellow star-button"
@@ -58,6 +35,63 @@
 <!--                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>-->
 
                 <div id="cmsch-table"></div>
+            </div>
+
+            <div class="card" th:if="${user.isAdmin() && (permissionShow != null || permissionEdit != null || permissionCreate != null || permissionDelete != null)}">
+                <h4>Jogosultságok</h4>
+
+                <div class="options flex-options">
+                    <div class="option" th:if="${permissionShow != null}">
+                        <div><span class="material-symbols-outlined">visibility</span></div>
+                        <div>
+                            <h5 th:text="${permissionShow}">PERMISSION_NAME</h5>
+                            <span th:if="${exportEnabled}">Ez a jog szükséges az adatok megtekintéséhez és exportáláshoz.</span>
+                            <span th:unless="${exportEnabled}">Ez a jog szükséges az adatok megtekintéséhez.</span>
+                        </div>
+                    </div>
+                    <div class="option" th:if="${permissionEdit != null}">
+                        <div><span class="material-symbols-outlined">edit</span></div>
+                        <div>
+                            <h5 th:text="${permissionEdit}">PERMISSION_NAME</h5>
+                            <span>Ez a jog szükséges az adatok módosításához.</span>
+                        </div>
+                    </div>
+                    <div class="option" th:if="${permissionCreate != null}">
+                        <div><span class="material-symbols-outlined">add_box</span></div>
+                        <div>
+                            <h5 th:text="${permissionCreate}">PERMISSION_NAME</h5>
+                            <span th:if="${importEnabled}">Ez a jog szükséges új elem létrehozásához és importálásához.</span>
+                            <span th:unless="${importEnabled}">Ez a jog szükséges új elem létrehozásához.</span>
+                        </div>
+                    </div>
+                    <div class="option" th:if="${permissionDelete != null}">
+                        <div><span class="material-symbols-outlined">delete</span></div>
+                        <div>
+                            <h5 th:text="${permissionDelete}">PERMISSION_NAME</h5>
+                            <span>Ez a jog szükséges egy vagy az összes elem törléséhez.</span>
+                        </div>
+                    </div>
+                    <div class="option" th:each="action : ${allControlActions}" th:if="${not action.basic}">
+                        <div><span class="material-symbols-outlined" th:text="${action.icon}">delete</span></div>
+                        <div>
+                            <h5 th:text="${action.permission.permissionString}">PERMISSION_NAME</h5>
+                            <span th:text="${action.usageString}">Ez a jog szükséges egy vagy az összes elem törléséhez.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" th:if="${not user.isAdmin() && not allControlActions.isEmpty()}">
+                <h4>Jelmagyarázat</h4>
+
+                <div class="options flex-options">
+                    <div class="option small-icon" th:each="action : ${allControlActions}">
+                        <div><span class="material-symbols-outlined" th:text="${action.icon}">delete</span></div>
+                        <div>
+                            <h5 th:text="${action.usageString}">Usage text</h5>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

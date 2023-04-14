@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -27,14 +28,21 @@ class DebtComponent(
 
     final override val allSettings by lazy {
         listOf(
+            debtGroup,
             minRole
         )
     }
 
+    val debtGroup = SettingProxy(componentSettingService, component,
+        "debtGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Tartozások",
+        description = "Jelenleg nincs mit beállítani it"
+    )
+
     final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "",
+        "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 }

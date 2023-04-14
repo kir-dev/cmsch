@@ -39,10 +39,16 @@
                           method="post"
                           enctype="multipart/form-data">
 
-                        <input type="submit" class="btn btn-danger" value="MINDEN ELEM VÉGLEGES TÖRLÉSE"/>
+                        <button type="submit" class="btn btn-danger">
+                            <span class="material-symbols-outlined regular">delete_forever</span>
+                            <ins>MINDEN ELEM VÉGLEGES TÖRLÉSE</ins>
+                        </button>
                     </form>
 
-                    <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">VISSZA</a>
+                    <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">
+                        <span class="material-symbols-outlined regular">cancel</span>
+                        <ins>MÉGSEM</ins>
+                    </a>
                 </div>
             </div>
         </div>

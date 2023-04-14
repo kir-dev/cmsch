@@ -27,6 +27,7 @@ class EventComponent(
 
     final override val allSettings by lazy {
         listOf(
+            eventsGroup,
             title, menuDisplayName, minRole,
 
             appearanceGroup,
@@ -41,6 +42,12 @@ class EventComponent(
             filterByDay
         )
     }
+
+    val eventsGroup = SettingProxy(componentSettingService, component,
+        "eventsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Események",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Programok",
