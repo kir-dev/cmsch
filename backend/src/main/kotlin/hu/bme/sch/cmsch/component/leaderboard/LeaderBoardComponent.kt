@@ -27,6 +27,7 @@ class LeaderBoardComponent(
 
     final override val allSettings by lazy {
         listOf(
+            leaderboardGroup,
             title, minRole, menuDisplayName,
 
             logicGroup,
@@ -51,6 +52,12 @@ class LeaderBoardComponent(
             showGroupOfUser
         )
     }
+
+    val leaderboardGroup = SettingProxy(componentSettingService, component,
+        "leaderboardGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Toplista",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Toplista",

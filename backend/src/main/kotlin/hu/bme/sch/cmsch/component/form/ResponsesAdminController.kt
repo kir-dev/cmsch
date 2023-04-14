@@ -83,7 +83,8 @@ class ResponsesAdminController(
             "data_object",
             StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS,
             10,
-            true
+            true,
+            "Exportálás JSON fájlba"
         ),
         ControlAction(
             "CSV Export",
@@ -91,7 +92,8 @@ class ResponsesAdminController(
             "save",
             StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS,
             20,
-            true
+            true,
+            "Exportálás CSV fájlba"
         )
     )
 ) {

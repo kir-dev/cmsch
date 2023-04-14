@@ -29,6 +29,7 @@ class RiddleComponent(
 
     final override val allSettings by lazy {
         listOf(
+            riddleGroup,
             title, menuDisplayName, minRole,
 
             scoringGroup,
@@ -41,6 +42,12 @@ class RiddleComponent(
             ignoreAccent
         )
     }
+
+    val riddleGroup = SettingProxy(componentSettingService, component,
+        "riddleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Riddleök",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Riddleök",

@@ -29,6 +29,7 @@ class LoginComponent(
 
     final override val allSettings by lazy {
         listOf(
+            loginGroup,
             title, menuDisplayName, minRole,
 
             authschGroup,
@@ -54,6 +55,12 @@ class LoginComponent(
         )
     }
 
+    val loginGroup = SettingProxy(componentSettingService, component,
+        "loginGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Belépés",
+        description = ""
+    )
+
     final val title = SettingProxy(componentSettingService, component,
         "title", "Belépés",
         fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -65,7 +72,7 @@ class LoginComponent(
     )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.SUPERUSER,
+        "minRole", RoleType.GUEST.name, minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 

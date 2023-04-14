@@ -27,6 +27,7 @@ class TaskComponent(
 
     final override val allSettings by lazy {
         listOf(
+            taskGroup,
             title, menuDisplayName, minRole,
 
             langGroup,
@@ -46,6 +47,12 @@ class TaskComponent(
             scoreVisibleAtAll
         )
     }
+
+    val taskGroup = SettingProxy(componentSettingService, component,
+        "taskGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Feladatok",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Feladatok",

@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.admission
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -53,7 +54,7 @@ class AdmissionComponent(
     final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES,
+        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
@@ -142,13 +143,13 @@ class AdmissionComponent(
     )
 
     val grantUserByDefault = SettingProxy(componentSettingService, component,
-        "minimalisticFooter", "false", type = SettingType.BOOLEAN,
+        "grantUserByDefault", "false", type = SettingType.BOOLEAN,
         fieldName = "USER hozzáférés alapértelmezetten",
         description = "Ha be van kapcsolva, akkor minden (REGULAR+) felhaszáló jogosult a belépésre alapból"
     )
 
     val grantUserByAttendee = SettingProxy(componentSettingService, component,
-        "minimalisticFooter", "false", type = SettingType.BOOLEAN,
+        "grantUserByAttendee", "false", type = SettingType.BOOLEAN,
         fieldName = "USER hozzáférés résztvevőknek",
         description = "Ha be van kapcsolva, akkor minden résztvevő (ATTENDEE+) felhaszáló jogosult a belépésre"
     )

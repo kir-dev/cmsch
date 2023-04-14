@@ -49,7 +49,7 @@ class FileUploadController(
 
         model.addAttribute("user", user)
         model.addAttribute("uploaded", uploaded)
-        model.addAttribute("baseUrl", applicationComponent.siteUrl)
+        model.addAttribute("baseUrl", applicationComponent.adminSiteUrl.getValue())
 
         return "uploadFile"
     }

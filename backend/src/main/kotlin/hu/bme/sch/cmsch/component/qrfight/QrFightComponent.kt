@@ -28,6 +28,7 @@ class QrFightComponent(
 
     final override val allSettings by lazy {
         listOf(
+            qrFightGroup,
             title, menuDisplayName, minRole,
 
             enabled,
@@ -42,6 +43,12 @@ class QrFightComponent(
             indulaschTowerSelector
         )
     }
+
+    val qrFightGroup = SettingProxy(componentSettingService, component,
+        "qrFightGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "QR Fight",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "QR Fight",

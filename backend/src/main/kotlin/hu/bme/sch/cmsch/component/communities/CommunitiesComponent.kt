@@ -29,11 +29,23 @@ class CommunitiesComponent(
 
     final override val allSettings by lazy {
         listOf(
-            title, menuDisplayName,
-            titleResort, menuDisplayNameResort,
-            minRole
+            communitiesGroup,
+            title,
+            menuDisplayName,
+            minRole,
+
+            resortGroup,
+            titleResort,
+            menuDisplayNameResort,
+            minRoleResort
         )
     }
+
+    val communitiesGroup = SettingProxy(componentSettingService, component,
+        "communitiesGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Körök",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Körök",
@@ -43,6 +55,19 @@ class CommunitiesComponent(
     final override val menuDisplayName = SettingProxy(componentSettingService, component,
         "menuDisplayName", "Körök", serverSideOnly = true,
         fieldName = "Körök menü neve", description = "Ez lesz a neve a menünek"
+    )
+
+    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+        "minRole", MinRoleSettingProxy.ALL_ROLES,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val resortGroup = SettingProxy(componentSettingService, component,
+        "resortGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Reszortok",
+        description = ""
     )
 
     final val titleResort = SettingProxy(componentSettingService, component,
@@ -55,14 +80,14 @@ class CommunitiesComponent(
         fieldName = "Reszortok menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES,
+    final val minRoleResort = MinRoleSettingProxy(componentSettingService, component,
+        "minRoleResort", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
         val result = mutableListOf<MenuSettingItem>()
-        if (minRole.isAvailableForRole(role) || role.isAdmin) {
+        if (minRoleResort.isAvailableForRole(role) || role.isAdmin) {
             result.add(MenuSettingItem(
                 this.javaClass.simpleName + "@org",
                     menuDisplayNameResort.getValue(), "/organization", 0,

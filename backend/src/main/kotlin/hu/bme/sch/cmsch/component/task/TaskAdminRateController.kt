@@ -79,7 +79,8 @@ class TaskAdminRateController(
             "thumbs_up_down",
             StaffPermissions.PERMISSION_RATE_TASKS,
             200,
-            false
+            false,
+            "Feladat kategória értékelése"
         )
     )
 ) {
@@ -91,7 +92,8 @@ class TaskAdminRateController(
             "grade",
             StaffPermissions.PERMISSION_RATE_TASKS,
             100,
-            false
+            false,
+            "Feladat beadás javítása"
         )
     )
 
@@ -122,6 +124,7 @@ class TaskAdminRateController(
         model.addAttribute("controlActions", descriptor.toJson(
             rateControlActions.filter { it.permission.validate(user) },
             objectMapper))
+        model.addAttribute("allControlActions", rateControlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
         return "overview4"

@@ -28,14 +28,21 @@ class ChallengeComponent(
 
     final override val allSettings by lazy {
         listOf(
+            challengeGroup,
             minRole,
         )
     }
 
+    val challengeGroup = SettingProxy(componentSettingService, component,
+        "challengeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Beadások",
+        description = "Jelenleg nincs mit beállítani it"
+    )
+
     final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.SUPERUSER,
+        "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 

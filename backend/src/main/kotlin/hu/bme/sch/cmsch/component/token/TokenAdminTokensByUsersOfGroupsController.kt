@@ -83,7 +83,9 @@ class TokenAdminTokensByUsersOfGroupsController(
             "pdf/{id}",
             "save",
             ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP,
-            100
+            100,
+            false,
+            "Mentés PDF fájlba"
         )
     )
 ) {
