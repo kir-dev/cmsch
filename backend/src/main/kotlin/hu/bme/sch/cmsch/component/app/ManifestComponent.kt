@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -44,7 +45,7 @@ class ManifestComponent(
     final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES,
+        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 

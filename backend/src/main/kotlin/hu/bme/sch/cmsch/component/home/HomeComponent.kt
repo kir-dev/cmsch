@@ -27,6 +27,7 @@ class HomeComponent(
 
     final override val allSettings by lazy {
         listOf(
+            homeGroup,
             title, menuDisplayName, minRole,
 
             displayGroup,
@@ -36,6 +37,12 @@ class HomeComponent(
             showEvents
         )
     }
+
+    val homeGroup = SettingProxy(componentSettingService, component,
+        "homeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Kezdőlap",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Kezdőlap",

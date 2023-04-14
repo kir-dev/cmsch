@@ -27,6 +27,7 @@ class RaceComponent(
 
     final override val allSettings by lazy {
         listOf(
+            raceGroup,
             title, menuDisplayName, minRole,
 
             displayGroup,
@@ -36,6 +37,12 @@ class RaceComponent(
             defaultCategoryDescription
         )
     }
+
+    val raceGroup = SettingProxy(componentSettingService, component,
+        "raceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Verseny",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Sörmérés",

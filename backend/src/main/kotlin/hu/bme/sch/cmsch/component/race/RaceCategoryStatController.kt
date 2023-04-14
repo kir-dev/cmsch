@@ -67,7 +67,8 @@ class RaceCategoryStatController(
             "save",
             StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY,
             10,
-            true
+            true,
+            "Exportálás JSON fájlba"
         )
     )
 ) {

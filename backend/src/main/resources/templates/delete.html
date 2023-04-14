@@ -23,8 +23,14 @@
 <!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
 
                     <div class="button-group">
-                        <input type="submit" class="btn btn-danger" value="TÖRLÉS"/>
-                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">MÉGSEM</a>
+                        <button type="submit" class="btn btn-danger">
+                            <span class="material-symbols-outlined regular">delete</span>
+                            <ins>TÖRLÉS</ins>
+                        </button>
+                        <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/${view}|">
+                            <span class="material-symbols-outlined regular">cancel</span>
+                            <ins>MÉGSEM</ins>
+                        </a>
                     </div>
                 </form>
             </div>

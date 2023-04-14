@@ -27,6 +27,7 @@ class TokenComponent(
 
     final override val allSettings by lazy {
         listOf(
+            tokenGroup,
             title, menuDisplayName, minRole,
 
             collectTokensGroup,
@@ -42,6 +43,12 @@ class TokenComponent(
             defaultTestTokenIcon
         )
     }
+
+    val tokenGroup = SettingProxy(componentSettingService, component,
+        "tokenGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Tokenek",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "QR kódok",

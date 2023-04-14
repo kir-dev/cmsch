@@ -28,6 +28,7 @@ class ProfileComponent(
 
     final override val allSettings by lazy {
         listOf(
+            profileGroup,
             title, menuDisplayName, minRole,
 
             countersGroup,
@@ -79,6 +80,12 @@ class ProfileComponent(
             selectionEnabled,
         )
     }
+
+    val profileGroup = SettingProxy(componentSettingService, component,
+        "profileGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Profil",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Profil",
@@ -267,7 +274,7 @@ class ProfileComponent(
 
     val tokenGoalGroup = SettingProxy(componentSettingService, component,
         "tokenGoalGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Token célok kiírja üzenetként", description = "Tipikusan tanköri jelenétre használt funkció; " +
+        fieldName = "A token célt kiírja üzenetként", description = "Tipikusan tanköri jelenétre használt funkció; " +
                 "a szám meghatározása a token komponens része (A token komponensnek is be kel " +
                 "kapcsolva legyen, hogy ez működjön)"
     )

@@ -54,7 +54,9 @@ class SellProductsController(
             "sell/{id}",
             "sell",
             PERMISSION_SELL_ANY_PRODUCT,
-            100
+            100,
+            false,
+            "Árusító oldal megnyitása"
         )
     )
 ) {
@@ -101,7 +103,9 @@ class SellFoodController(
             "sell/{id}",
             "sell",
             PERMISSION_SELL_FOOD,
-            100
+            100,
+            false,
+            "Árusító oldal megnyitása"
         )
     )
 ) {
@@ -148,7 +152,9 @@ class SellMerchController(
             "sell/{id}",
             "sell",
             PERMISSION_SELL_MERCH,
-            100
+            100,
+            false,
+            "Árusító oldal megnyitása"
         )
     )
 ) {

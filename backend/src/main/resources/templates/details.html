@@ -46,50 +46,77 @@
                 && field.fieldName !== ''
             ) {
                 resultHtml += `
-                    <div class="card mb-3">
-                        <label for="${property}_${id}_fieldName">Mező neve *</label>
-                        <input id="${property}_${id}_fieldName" type="text" value="${field.fieldName}" onchange="saveField('${property}')">
+                    <div class="sub-card mb-3" id="form_${property}_${id}">
+                        <div class="button-group">
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                        </div>
 
-                        <label for="${property}_${id}_type">Típus *</label>
-                        <div style="clear:both"></div>
-                        <select id="${property}_${id}_type" onchange="saveField('${property}')">
-                            ${elementTypes.map(opt => `<option value="${opt}" ${opt === field.type ? 'selected' : ''}>${opt}</option>`).join('')}
-                        </select><br/>
+                        <div class="field-group">
+                            <label for="${property}_${id}_fieldName">Mező neve *</label>
+                            <input id="${property}_${id}_fieldName" type="text" value="${field.fieldName}" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_label">Cimke *</label>
-                        <input id="${property}_${id}_label" type="text" value="${field.label}" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_type">Típus *</label>
+                            <div style="clear:both"></div>
+                            <select id="${property}_${id}_type" onchange="saveField('${property}')">
+                                ${elementTypes.map(opt => `<option value="${opt}" ${opt === field.type ? 'selected' : ''}>${opt}</option>`).join('')}
+                            </select><br/>
+                        </div>
 
-                        <label for="${property}_${id}_values">Értékek</label>
-                        <input id="${property}_${id}_values" type="text" value="${field.values}" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_label">Cimke *</label>
+                            <input id="${property}_${id}_label" type="text" value="${field.label}" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_note">Leírás</label>
-                        <input id="${property}_${id}_note" type="text" value="${field.note}" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_values">Értékek</label>
+                            <input id="${property}_${id}_values" type="text" value="${field.values}" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_required">Kötelező kitölteni</label>
-                        <div style="clear:both"></div>
-                        <label class="switch">
-                            <input type="checkbox" id="${property}_${id}_required" ${field.required ? 'checked' : ''} onchange="saveField('${property}')" />
-                            <span class="slider"></span>
-                        </label><br/>
+                        <div class="field-group">
+                            <label for="${property}_${id}_note">Leírás</label>
+                            <input id="${property}_${id}_note" type="text" value="${field.note}" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
-                        <div style="clear:both"></div>
-                        <label class="switch">
-                            <input type="checkbox" id="${property}_${id}_permanent" ${field.permanent ? 'checked' : ''} onchange="saveField('${property}')" />
-                            <span class="slider"></span>
-                        </label><br/>
+                        <div class="field-group">
+                            <label for="${property}_${id}_required">Kötelező kitölteni</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_required" ${field.required ? 'checked' : ''} onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
 
-                        <label for="${property}_${id}_formatRegex">RegEx minta</label>
-                        <input id="${property}_${id}_formatRegex" type="text" value="${field.formatRegex}" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_permanent" ${field.permanent ? 'checked' : ''} onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
 
-                        <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
-                        <input id="${property}_${id}_invalidFormatMessage" type="text" value="${field.invalidFormatMessage}" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_formatRegex">RegEx minta</label>
+                            <input id="${property}_${id}_formatRegex" type="text" value="${field.formatRegex}" onchange="saveField('${property}')">
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
+                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="${field.invalidFormatMessage}" onchange="saveField('${property}')">
+                        </div>
                     </div>`;
                 ++id;
             }
         });
 
-        resultHtml += `<div class="card centered" id="field_${property}_add"><button type="button" class="btn" onclick="addField('${property}')">+</button></div>`;
+        resultHtml += `
+        <div class="sub-card centered" id="field_${property}_add"><button type="button" class="btn btn-primary" onclick="addField('${property}')">
+            <span class="material-symbols-outlined regular">add</span>
+            <ins>Új mező</ins>
+        </button></div>`;
 
         document.getElementById(`field_${property}`).innerHTML = resultHtml;
     }
@@ -105,44 +132,68 @@
         }
         const element = document.createElement('div');
         element.innerHTML = `
-                    <div class="card mb-3">
-                        <label for="${property}_${id}_fieldName">Mező neve *</label>
-                        <input id="${property}_${id}_fieldName" type="text" value="" onchange="saveField('${property}')">
+                    <div class="sub-card mb-3" id="form_${property}_${id}">
 
-                        <label for="${property}_${id}_type">Típus *</label>
-                        <div style="clear:both"></div>
-                        <select id="${property}_${id}_type" onchange="saveField('${property}')">
-                            ${elementTypes.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-                        </select><br/>
+                         <div class="button-group">
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                        </div>
 
-                        <label for="${property}_${id}_label">Cimke *</label>
-                        <input id="${property}_${id}_label" type="text" value="" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_fieldName">Mező neve *</label>
+                            <input id="${property}_${id}_fieldName" type="text" value="" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_values">Értékek</label>
-                        <input id="${property}_${id}_values" type="text" value="" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_type">Típus *</label>
+                            <div style="clear:both"></div>
+                            <select id="${property}_${id}_type" onchange="saveField('${property}')">
+                                ${elementTypes.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                            </select><br/>
+                        </div>
 
-                        <label for="${property}_${id}_note">Leírás</label>
-                        <input id="${property}_${id}_note" type="text" value="" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_label">Cimke *</label>
+                            <input id="${property}_${id}_label" type="text" value="" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_required">Kötelező kitölteni</label>
-                        <div style="clear:both"></div>
-                        <label class="switch">
-                            <input type="checkbox" id="${property}_${id}_required" onchange="saveField('${property}')" />
-                            <span class="slider"></span>
-                        </label><br/>
+                        <div class="field-group">
+                            <label for="${property}_${id}_values">Értékek</label>
+                            <input id="${property}_${id}_values" type="text" value="" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
-                        <div style="clear:both"></div>
-                        <label class="switch">
-                            <input type="checkbox" id="${property}_${id}_permanent" onchange="saveField('${property}')" />
-                            <span class="slider"></span>
-                        </label><br/>
+                        <div class="field-group">
+                            <label for="${property}_${id}_note">Leírás</label>
+                            <input id="${property}_${id}_note" type="text" value="" onchange="saveField('${property}')">
+                        </div>
 
-                        <label for="${property}_${id}_formatRegex">RegEx minta</label>
-                        <input id="${property}_${id}_formatRegex" type="text" value=".*" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_required">Kötelező kitölteni</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_required" onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
 
-                        <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
-                        <input id="${property}_${id}_invalidFormatMessage" type="text" value="" onchange="saveField('${property}')">
+                        <div class="field-group">
+                            <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_permanent" onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_formatRegex">RegEx minta</label>
+                            <input id="${property}_${id}_formatRegex" type="text" value=".*" onchange="saveField('${property}')">
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
+                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="" onchange="saveField('${property}')">
+                        </div>
                     </div>`;
         let target = document.getElementById(`field_${property}_add`);
         target.parentNode.insertBefore(element, target);
@@ -181,8 +232,28 @@
         }
         document.getElementById(property).value = JSON.stringify(result);
     }
+
     function updateTime(id) {
         document.getElementById(id).value = parseInt(document.getElementById(`${id}_ss`).value) + (parseInt(document.getElementById(`${id}_SSS`).value) / 1000.0)
+    }
+
+    function swapValues(property, id1, id2) {
+        const form1 = document.getElementById(`form_${property}_${id1}`);
+        const form2 = document.getElementById(`form_${property}_${id2}`);
+        if (typeof form1 === 'undefined' || typeof form2 === 'undefined')
+            return
+
+        const inputs1 = form1.querySelectorAll('input, select, textarea');
+        const inputs2 = form2.querySelectorAll('input, select, textarea');
+
+        for (let i = 0; i < inputs1.length; i++) {
+            const tempValue = inputs1[i].value;
+            const tempChecked = inputs1[i].checked;
+            inputs1[i].value = inputs2[i].value;
+            inputs1[i].checked = inputs2[i].checked;
+            inputs2[i].value = tempValue;
+            inputs2[i].checked = tempChecked;
+        }
     }
 </script>
 
@@ -195,7 +266,8 @@
         </div>
 
         <div class="content">
-            <h1 class="narrow" th:text="|${title} szerkesztése|" th:if="${editMode}">View edit</h1>
+            <h1 class="narrow" th:text="|${title} szerkesztése|" th:if="${editMode && !readOnly}">View edit</h1>
+            <h1 class="narrow" th:text="|${title} megtekintése|" th:if="${editMode && readOnly}">View view</h1>
             <h1 class="narrow" th:text="|${title} létrehozása|" th:unless="${editMode}">View create</h1>
 
             <div class="card wide-false" th:if="${taskTitle != null || taskDescription != null}">
@@ -237,7 +309,12 @@
                             </div>
 
                             <div th:if="${input.second.type == 'text' && input.first.name == 'cmschId'}" class="field-group">
-                                <img src="#" th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|" height="180px" alt="QR code preview" class="qr-preview">
+                                <img src="#"
+                                     th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|"
+                                     height="180px"
+                                     alt="QR code preview"
+                                     onerror="this.onerror=null; this.parentNode.style.display = 'none';"
+                                     class="qr-preview">
                             </div>
 
                             <div th:if="${input.second.type == 'number'}" class="field-group">
@@ -254,6 +331,7 @@
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
+                                       inputmode="numeric"
                                        required
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
@@ -476,6 +554,7 @@
                                            th:href="|@{/cdn/}${input.first.get(data)}|">
                                             <img src="#"
                                                  alt="Image preview"
+                                                 onerror="this.onerror=null; this.parentNode.style.display = 'none'; "
                                                  width="528"
                                                  th:id="|input${iter.index}|"
                                                  th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
@@ -523,12 +602,13 @@
                                     <a href="#"
                                        target="_blank"
                                        th:href="|@{/cdn/}${input.first.get(data)}|">
-                                    <img src="#"
-                                         alt="Image preview"
-                                         height="400"
-                                         th:id="|input${iter.index}|"
-                                         th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
-                                         th:src="|@{/cdn/}${input.first.get(data)}|"/>
+                                        <img src="#"
+                                             alt="Image preview"
+                                             onerror="this.onerror=null; this.parentNode.innerHTML = '<p>A kép nem létezik</p>'; "
+                                             height="400"
+                                             th:id="|input${iter.index}|"
+                                             th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
+                                             th:src="|@{/cdn/}${input.first.get(data)}|"/>
                                     </a>
                                     <br>
                                     <a href="#"
@@ -583,56 +663,62 @@
                                 </script>
                             </div>
 
-                            <object th:if="${input.second.type == 'permissions'}" th:remove="tag">
+                            <div th:if="${input.second.type == 'permissions'}" class="field-group">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
 
-                                <h4 class="permission-header">Általános jogosultságok</h4>
+                                <h4 class="permission-header" onclick="this.nextElementSibling.classList.toggle('hidden')">Általános jogosultságok</h4>
 
-                                <div class="permission-box" th:each="permission : ${staffPermissions}">
-                                    <div class="permission-part">
-                                        <span class="material-symbols-outlined fix-icons">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
-                                        <span class="note" th:text="${permission.description}">description</span>
-                                    </div>
-                                    <div class="permission-part">
-                                        <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
-                                            <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
-                                            <span class="slider"></span>
-                                        </label>
+                                <div>
+                                    <div class="permission-box" th:each="permission : ${staffPermissions}">
+                                        <div class="permission-part">
+                                            <span class="material-symbols-outlined fix-icons staff-permissions">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                                            <span class="note" th:text="${permission.description}">description</span>
+                                        </div>
+                                        <div class="permission-part">
+                                            <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
+                                                <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <h4 class="permission-header">Egyedi jogosultságok</h4>
+                                <h4 class="permission-header" onclick="this.nextElementSibling.classList.toggle('hidden')">Egyedi jogosultságok</h4>
 
-                                <div class="permission-box" th:each="permission : ${customPermissions}">
-                                    <div class="permission-part">
-                                        <span class="material-symbols-outlined fix-icons">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
-                                        <span class="note" th:text="${permission.description}">description</span>
-                                    </div>
-                                    <div class="permission-part">
-                                        <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
-                                            <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
-                                            <span class="slider"></span>
-                                        </label>
+                                <div>
+                                    <div class="permission-box" th:each="permission : ${customPermissions}">
+                                        <div class="permission-part">
+                                            <span class="material-symbols-outlined fix-icons custom-permissions">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                                            <span class="note" th:text="${permission.description}">description</span>
+                                        </div>
+                                        <div class="permission-part">
+                                            <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
+                                                <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="permission-box" th:if="${customPermissions.empty}">
                                     Nincs egyetlen egyedi jogoultság sem
                                 </div>
 
-                                <h4 class="permission-header">Admin jogosultságok</h4>
+                                <h4 class="permission-header" onclick="this.nextElementSibling.classList.toggle('hidden')">Admin jogosultságok</h4>
 
-                                <div class="permission-box" th:each="permission : ${adminPermissions}">
-                                    <div class="permission-part">
-                                        <span class="material-symbols-outlined fix-icons">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
-                                        <span class="note" th:text="${permission.description}">description</span>
-                                    </div>
-                                    <div class="permission-part">
-                                        <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
-                                            <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
-                                            <span class="slider"></span>
-                                        </label>
+                                <div>
+                                    <div class="permission-box" th:each="permission : ${adminPermissions}">
+                                        <div class="permission-part">
+                                            <span class="material-symbols-outlined fix-icons admin-permissions">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                                            <span class="note" th:text="${permission.description}">description</span>
+                                        </div>
+                                        <div class="permission-part">
+                                            <label class="switch" th:data-param1="${iter.index}" th:data-param2="${permission.permissionString}" th:onclick="|changePermissionField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
+                                                <input type="checkbox" th:disabled="${readOnly}" th:id="|input${iter.index}_${permission.permissionString}|" />
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -654,7 +740,7 @@
                                 <script th:inline="javascript">
                                     changePermissionText(/*[[${iter.index}]]*/ 0)
                                 </script>
-                            </object>
+                            </div>
 
                         </object>
 
@@ -671,10 +757,16 @@
 
                     <div class="button-group">
                         <object th:if="${not readOnly}" th:remove="tag">
-                            <input type="submit" class="btn btn-primary" value="MENTÉS" id="save-button"/>
+                            <button type="submit" class="btn btn-primary" id="save-button">
+                                <span class="material-symbols-outlined">save</span>
+                                <ins>MENTÉS</ins>
+                            </button>
                             <button class="floating-save btn btn-primary"><span class="material-symbols-outlined">save</span></button>
                         </object>
-                        <a href="#" class="btn" th:href="|@{/admin/control}/${view}|">VISSZA</a>
+                        <a href="#" class="btn" th:href="|@{/admin/control}/${view}|">
+                            <span class="material-symbols-outlined">undo</span>
+                            <ins>VISSZA</ins>
+                        </a>
 
                         <object th:if="${gradeMode}" th:remove="tag">
                             <br />

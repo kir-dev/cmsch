@@ -55,7 +55,9 @@ class MenuAdminController(
                 "edit/{id}",
                 "edit",
                 editPermission,
-                100
+                100,
+                usageString = "Menü testreszabása",
+                basic = true
             )
         )
     }
@@ -82,6 +84,7 @@ class MenuAdminController(
         model.addAttribute("controlActions", overviewDescriptor.toJson(
             controlActions.filter { it.permission.validate(user) },
             objectMapper))
+        model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", listOf<ButtonAction>())
 
         return "overview4"

@@ -48,7 +48,8 @@ class TrackOneGroupController(
             "map",
             PERMISSION_TRACK_ONE_GROUP,
             10,
-            true
+            true,
+            "Térkép megnyitása"
         )
     )
 ) {

@@ -27,6 +27,7 @@ class NewsComponent(
 
     final override val allSettings by lazy {
         listOf(
+            newsGroup,
             title, menuDisplayName, minRole,
             showDetails,
 
@@ -34,6 +35,12 @@ class NewsComponent(
             maxVisibleCount
         )
     }
+
+    val newsGroup = SettingProxy(componentSettingService, component,
+        "newsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Hírek",
+        description = ""
+    )
 
     final val title = SettingProxy(componentSettingService, component,
         "title", "Hírek",

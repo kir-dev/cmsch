@@ -67,6 +67,7 @@ abstract class ComponentApiBase(
         model.addAttribute("settings", component.allSettings)
         model.addAttribute("componentNames", menuService.getComponentNames())
         model.addAttribute("user", user)
+        model.addAttribute("permission", permissionToShow.permissionString)
 
         return "componentSettings"
     }

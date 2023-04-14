@@ -54,7 +54,9 @@ class DebtsOfMyGroupAdminController(
             "payed/{id}",
             "check_circle_outline",
             PERMISSION_IMPLICIT_HAS_GROUP,
-            100
+            100,
+            false,
+            "A tétel fizetve"
         )
     )
 ) {

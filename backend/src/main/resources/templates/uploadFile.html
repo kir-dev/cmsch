@@ -42,7 +42,7 @@
                     <div class="field-group">
                         <label for="name">Név</label>
                         <div style="clear: both"></div>
-                        <input type="text" name="name" id="name" />
+                        <input type="text" name="name" id="name" autocomplete="off" />
                     </div>
 
                     <div class="field-group">
@@ -55,11 +55,16 @@
                         />
                     </div>
 
-                    <input type="submit" value="Feltöltés"/>
-                    <a th:href="@{/admin/control/files/view/public}" class="btn btn-secondary">
-                        <span class="material-symbols-outlined regular">folder_open</span>
-                        <ins>Fájlok megtekintése</ins>
-                    </a>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined regular">upload</span>
+                            <ins>Feltöltés</ins>
+                        </button>
+                        <a th:href="@{/admin/control/files/view/public}" class="btn btn-secondary">
+                            <span class="material-symbols-outlined regular">folder_open</span>
+                            <ins>Fájlok megtekintése</ins>
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>

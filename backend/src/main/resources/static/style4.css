@@ -26,6 +26,7 @@
 
     --dark-1: #272c30;
     --dark-2: #23272B;
+    --dark-2-5: #202428;
     --dark-3: #191c20;
     --dark-4: #0F1113;
 
@@ -34,6 +35,7 @@
     --warning-hover-color: #f1b962;
     --danger-color: #ab4343;
     --danger-lighter-color: #c84848;
+    --info-color: #0ba6c1;
 
     --property-color: #39C392;
     --menu-color: #0ba6c1;
@@ -431,6 +433,10 @@ scrollbar-corner,
     padding-bottom: 20px;
 }
 
+.card > .options > .option.small-icon div {
+    padding-bottom: 0;
+}
+
 .card > .options > .option:last-of-type div {
     padding-bottom: 0;
 }
@@ -443,19 +449,31 @@ scrollbar-corner,
     vertical-align: center;
 }
 
+.card > .options > .option.small-icon > div:first-of-type {
+    height: 50px;
+    width: 50px;
+}
+
 .card > .options > .option > div:first-of-type > span {
-    font-size: 6em;
+    font-size: 5.5em;
     font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 0, 'opsz' 48;
     background-color: #181b1d;
     border-radius: 12px;
     box-shadow: inset 3px 3px 28px 0 rgba(0,0,0,0.2);
     max-width: 120px;
     max-height: 120px;
+    padding: 6px;
+}
+
+.card > .options > .option.small-icon > div:first-of-type > span {
+    font-size: 2em;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }
 
 .card > .options > .option > div:last-of-type {
     display: table-cell;
     padding-left: 20px;
+    padding-right: 20px;
     vertical-align: top;
 }
 
@@ -466,16 +484,29 @@ scrollbar-corner,
     font-weight: 500;
 }
 
+.card > .options > .option.small-icon > div:last-of-type > h5 {
+    font-weight: 300;
+}
+
 .card > .options > .option > div:last-of-type > span {
     color: #585c5f;
     font-size: 1em;
     font-weight: 300;
 }
 
+.card > .options.flex-options .option {
+    width: 450px;
+}
+
+.card > .options.flex-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .color-yellow {
     color: #eaa12f;
 }
-
 
 .color-green {
     color: #0bc181;
@@ -860,20 +891,23 @@ a.btn-danger {
     color: var(--lighter-text-color);
 }
 
-button.btn-danger,
+button.btn-danger:hover,
 input[type="submit"].btn-danger:hover,
 a.btn-danger:hover {
     background-color: var(--danger-lighter-color);
+}
+
+.btn-small {
+    padding: 4px 10px !important;
 }
 
 form label,
 .flagged-label {
     display: block;
     font-weight: 600;
-    margin-top: 10px;
     margin-bottom: 2px;
     font-size: 0.8em;
-    padding: 0 4px;
+    padding: 0 0 0 4px;
     text-transform: uppercase;
     color: var(--lighter-text-color);
 }
@@ -883,8 +917,14 @@ form label,
 }
 
 .field-group {
-    padding: 10px 20px;
+    padding: 20px 20px;
     max-width: 490px;
+}
+
+.field-group.selected {
+    border: 4px dashed #eaa12f;
+    padding: 20px 16px 20px 16px;
+    background-color: #eaa12f0f;
 }
 
 .field-group label {
@@ -900,6 +940,16 @@ form label,
     clear: both;
 }
 
+.field-group table .disabled {
+    opacity: 0.6;
+}
+
+.field-group table {
+    width: 100%;
+    font-weight: normal;
+    padding-left: 4px;
+}
+
 .field-group table td {
     color: var(--lighter-text-color);
 }
@@ -909,15 +959,21 @@ h4.permission-header {
     text-transform: uppercase;
     font-size: 14px;
     text-align: center;
-    color: var(--text-color);
+    color: var(--light-text-color);
+}
+
+h4.permission-header:hover {
+    cursor: pointer;
+    color: var(--lighter-text-color);
 }
 
 .green-label {
-    color: #34c38f !important;
+    color: var(--success-color) !important;
 }
 
 .red-label {
-    /*color: #ef4b4b !important;*/
+    padding: 0 4px !important;
+    color: var(--light-text-color) !important;
 }
 
 .permission-box {
@@ -927,8 +983,8 @@ h4.permission-header {
     padding: 10px;
 }
 
-.permission-box:nth-of-type(2n) {
-    background-color: var(--dark-3);
+.permission-box:nth-of-type(2n+1) {
+    background-color: var(--dark-2-5);
 }
 
 .permission-box span {
@@ -951,6 +1007,22 @@ h4.permission-header {
 
 .permission-part .note {
     padding-left: 30px !important;
+}
+
+.staff-permissions {
+    color: var(--success-color);
+}
+
+.custom-permissions {
+    color: var(--warning-color);
+}
+
+.admin-permissions {
+    color: var(--info-color);
+}
+
+.field-group .hidden {
+    display: none;
 }
 
 form input[type="text"],
@@ -997,6 +1069,12 @@ textarea:disabled {
     cursor: not-allowed;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 button.floating-save {
     position: fixed;
     right: 40px;
@@ -1026,7 +1104,7 @@ form .switch {
     width: 60px;
     height: 34px;
     padding: 0;
-    margin: 4px 0;
+    margin: 4px 0 4px 10px;
 }
 
 form .switch input {
@@ -1042,7 +1120,7 @@ form .slider {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--dark-4);
+    background-color: var(--dark-3);
     -webkit-transition: .4s;
     transition: .4s;
     outline: none;
@@ -1051,10 +1129,10 @@ form .slider {
 form .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 20px;
+    width: 20px;
+    left: 7px;
+    bottom: 7px;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
@@ -1062,10 +1140,6 @@ form .slider:before {
 
 form input:checked + .slider {
     background-color: var(--success-color);
-}
-
-form input:focus + .slider {
-    box-shadow: 0 0 1px var(--success-color);
 }
 
 form input:checked + .slider:before {
@@ -1092,19 +1166,19 @@ form .file-input::before {
     background: transparent;
     border: 2px dashed var(--light-text-color);
     color: var(--light-text-color);
-    border-radius: 4px;
     padding: 10px 14px;
     outline: none;
     white-space: nowrap;
     -webkit-user-select: none;
     cursor: pointer;
-    font-weight: 300;
     font-size: 16px;
     transition: color ease 0.2s, border-color ease 0.2s;
     width: 100%;
     text-align: center;
     margin: 0 auto;
     box-sizing: border-box;
+    text-transform: uppercase;
+    font-weight: normal;
 }
 
 form .file-input:hover::before {
@@ -1117,7 +1191,7 @@ form .file-input:active {
 }
 
 form .file-input:active::before {
-    background-color: #1e212a;
+    background-color: var(--dark-3);
 }
 
 form p,
@@ -1127,6 +1201,19 @@ form li {
 
 form ul {
     margin-left: 40px;
+}
+
+.sub-card {
+    padding: 10px 0;
+    background-color: var(--dark-2-5);
+}
+
+.sub-card.centered {
+    text-align: center;
+}
+
+.sub-card .field-group {
+    padding: 10px;
 }
 
 .control-action:hover {
@@ -1140,7 +1227,7 @@ form ul {
     font-weight: normal;
 }
 
-.CodeMirror:focus {
+.CodeMirror-focused {
     background-color: var(--dark-4);
 }
 
@@ -1272,6 +1359,10 @@ form ul {
     padding: 2px 4px;
 }
 
+.editor-statusbar {
+    color: var(--text-color);
+}
+
 .editor-preview pre code,
 .editor-preview-side pre code {
     padding: 0;
@@ -1308,5 +1399,14 @@ form ul {
 
 .star-button {
     cursor: pointer;
-    vertical-align: middle;
+    vertical-align: baseline !important;
 }
+
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+.mt-3 {
+    margin-top: 20px;
+}
+
