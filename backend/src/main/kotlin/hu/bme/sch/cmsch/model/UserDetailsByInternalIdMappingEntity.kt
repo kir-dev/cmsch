@@ -107,7 +107,7 @@ data class UserDetailsByInternalIdMappingEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "UserDetailsByInternalId",
         view = "control/user-details-by-internal-id",
-        showPermission = StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS
+        showPermission = StaffPermissions.PERMISSION_SHOW_GUILD_MAPPINGS
     )
 
     override fun equals(other: Any?): Boolean {

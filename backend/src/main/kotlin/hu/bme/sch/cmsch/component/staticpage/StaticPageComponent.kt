@@ -36,7 +36,7 @@ class StaticPageComponent(
     val staticPageGroup = SettingProxy(componentSettingService, component,
         "staticPageGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Statikus Oldalak",
-        description = "Jelenleg nincs mit beállítani it"
+        description = "Jelenleg nincs mit beállítani itt"
     )
 
     final override val menuDisplayName = null

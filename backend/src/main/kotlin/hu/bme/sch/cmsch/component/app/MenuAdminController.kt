@@ -2,9 +2,11 @@ package hu.bme.sch.cmsch.component.app
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.GenerateOverview
+import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.ControlAction
+import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -139,12 +141,12 @@ class MenuAdminController(
 }
 
 class MenuSetupByRoleVirtualEntity(
-    @property:GenerateOverview(visible = false)
-    val id: Int,
+    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    override var id: Int = 0,
 
     @property:GenerateOverview(columnName = "Role", order = 1)
-    val role: String,
+    var role: String = "",
 
     @property:GenerateOverview(columnName = "Leírás", order = 2)
-    val description: String,
-)
+    var description: String = "",
+) : IdentifiableEntity

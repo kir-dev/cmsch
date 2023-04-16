@@ -34,10 +34,10 @@ class BmejegyController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_BME_TICKET,
-    createPermission = StaffPermissions.PERMISSION_EDIT_BME_TICKET,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_BME_TICKET,
+    createPermission = StaffPermissions.PERMISSION_CREATE_BME_TICKET,
     editPermission =   StaffPermissions.PERMISSION_EDIT_BME_TICKET,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_BME_TICKET,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_BME_TICKET,
 
     createEnabled = true,
     editEnabled = true,

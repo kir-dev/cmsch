@@ -36,8 +36,8 @@ class RawLocationController(
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_LOCATIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    editPermission =   StaffPermissions.PERMISSION_SHOW_LOCATIONS,
-    deletePermission = StaffPermissions.PERMISSION_SHOW_LOCATIONS,
+    editPermission =   StaffPermissions.PERMISSION_EDIT_LOCATIONS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_LOCATIONS,
 
     createEnabled = false,
     editEnabled   = true,

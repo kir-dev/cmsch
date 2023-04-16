@@ -33,10 +33,10 @@ class ProductController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_PRODUCTS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_PRODUCTS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_PRODUCTS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_PRODUCTS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_PRODUCTS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_PRODUCTS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_PRODUCTS,
 
     createEnabled = true,
     editEnabled   = true,

@@ -41,7 +41,7 @@ data class GuildToUserMappingEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "GuildToUser",
         view = "control/guild-to-user",
-        showPermission = StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS
+        showPermission = StaffPermissions.PERMISSION_SHOW_GUILD_MAPPINGS
     )
 
     override fun equals(other: Any?): Boolean {

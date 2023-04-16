@@ -33,10 +33,10 @@ class NewsController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_NEWS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_NEWS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_NEWS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_NEWS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_NEWS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_NEWS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_NEWS,
 
     createEnabled = true,
     editEnabled   = true,

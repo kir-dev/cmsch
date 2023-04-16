@@ -1,11 +1,37 @@
 package hu.bme.sch.cmsch.service
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import hu.bme.sch.cmsch.component.ComponentBase
+import hu.bme.sch.cmsch.component.admission.AdmissionComponent
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.app.UserHandlingComponent
+import hu.bme.sch.cmsch.component.bmejegy.BmejegyComponent
+import hu.bme.sch.cmsch.component.challenge.ChallengeComponent
+import hu.bme.sch.cmsch.component.communities.CommunitiesComponent
+import hu.bme.sch.cmsch.component.countdown.CountdownComponent
+import hu.bme.sch.cmsch.component.debt.DebtComponent
+import hu.bme.sch.cmsch.component.event.EventComponent
+import hu.bme.sch.cmsch.component.form.FormComponent
+import hu.bme.sch.cmsch.component.home.HomeComponent
+import hu.bme.sch.cmsch.component.impressum.ImpressumComponent
+import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
+import hu.bme.sch.cmsch.component.location.LocationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.news.NewsComponent
+import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
+import hu.bme.sch.cmsch.component.race.RaceComponent
+import hu.bme.sch.cmsch.component.riddle.RiddleComponent
+import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
+import hu.bme.sch.cmsch.component.task.TaskComponent
+import hu.bme.sch.cmsch.component.team.TeamComponent
+import hu.bme.sch.cmsch.component.token.TokenComponent
 import hu.bme.sch.cmsch.util.DI
+import kotlin.reflect.KClass
 
 class PermissionValidator internal constructor(
     val permissionString: String = "",
     val description: String = "",
+    val component: KClass<out ComponentBase>? = null,
     val validate: Function1<CmschUser, Boolean> = {
             user -> user.isAdmin() || (permissionString.isNotEmpty() && user.hasPermission(permissionString))
     }
@@ -37,42 +63,50 @@ object ControlPermissions : PermissionGroup {
 
     val PERMISSION_CONTROL_NEWS = PermissionValidator(
         "NEWS_CONTROL",
-        "Hírek komponens testreszabása"
+        "Hírek komponens testreszabása",
+        component = NewsComponent::class
     )
 
     val PERMISSION_CONTROL_TASKS = PermissionValidator(
         "TASK_CONTROL",
-        "Feladatok komponens testreszabása"
+        "Feladatok komponens testreszabása",
+        component = TaskComponent::class
     )
 
     val PERMISSION_CONTROL_EVENTS = PermissionValidator(
         "EVENT_CONTROL",
-        "Események komponens testreszabása"
+        "Események komponens testreszabása",
+        component = EventComponent::class
     )
 
     val PERMISSION_CONTROL_DEBTS = PermissionValidator(
         "DEBT_CONTROL",
-        "Debt komponens testreszabása"
+        "Debt komponens testreszabása",
+        component = DebtComponent::class
     )
 
     val PERMISSION_CONTROL_RIDDLE = PermissionValidator(
         "RIDDLE_CONTROL",
-        "Riddle komponens testreszabása"
+        "Riddle komponens testreszabása",
+        component = RiddleComponent::class
     )
 
     val PERMISSION_CONTROL_TOKEN = PermissionValidator(
         "TOKEN_CONTROL",
-        "Token komponens testreszabása"
+        "Token komponens testreszabása",
+        component = TokenComponent::class
     )
 
     val PERMISSION_CONTROL_STATIC_PAGES = PermissionValidator(
-        "EXTRAPAGES_CONTROL",
-        "ExtraPage komponens testreszabása"
+        "STATICPAGES_CONTROL",
+        "StaticPage komponens testreszabása",
+        component = StaticPageComponent::class
     )
 
     val PERMISSION_CONTROL_LEADERBOARD = PermissionValidator(
         "LEADERBOARD_CONTROL",
-        "LeaderBoard komponens testreszabása"
+        "LeaderBoard komponens testreszabása",
+        component = LeaderBoardComponent::class
     )
 
     val PERMISSION_CONTROL_PROFILE = PermissionValidator(
@@ -82,82 +116,98 @@ object ControlPermissions : PermissionGroup {
 
     val PERMISSION_CONTROL_APP = PermissionValidator(
         "APP_CONTROL",
-        "Az alkalazás testreszabása"
+        "Az alkalazás testreszabása",
+        component = ApplicationComponent::class
     )
 
     val PERMISSION_CONTROL_APP_EXPORT = PermissionValidator(
         "APP_EXPORT_CONTROL",
-        "Teljes alkalmazás állapotának kiexportálása"
+        "Teljes alkalmazás állapotának kiexportálása",
+        component = ApplicationComponent::class
     )
 
     val PERMISSION_INCREASED_SESSION_DURATION = PermissionValidator(
         "INCREASED_SESSION_DURATION",
-        "Megnövelt session idő"
+        "Megnövelt session idő",
+        component = ApplicationComponent::class
     )
 
     val PERMISSION_SHOW_DELETE_FILES = PermissionValidator(
         "SHOW_FILES",
-        "Feltöltött fájlok megtekintése és törlése"
+        "Feltöltött fájlok megtekintése és törlése",
+        component = ApplicationComponent::class
     )
 
     val PERMISSION_CONTROL_IMPRESSUM = PermissionValidator(
         "IMPRESSUM_CONTROL",
-        "Impresszum komponens testreszabása"
+        "Impresszum komponens testreszabása",
+        component = ImpressumComponent::class
     )
 
     val PERMISSION_CONTROL_COUNTDOWN = PermissionValidator(
         "COUNTDOWN_CONTROL",
-        "Visszaszámlálás komponens testreszabása"
+        "Visszaszámlálás komponens testreszabása",
+        component = CountdownComponent::class
     )
 
     val PERMISSION_CONTROL_FORM = PermissionValidator(
         "FORM_CONTROL",
-        "Űrlapok komponens testreszabása"
+        "Űrlapok komponens testreszabása",
+        component = FormComponent::class
     )
 
     val PERMISSION_CONTROL_CHALLENGE = PermissionValidator(
         "CHALLENGE_CONTROL",
-        "Beadások komponens testreszabása"
+        "Beadások komponens testreszabása",
+        component = ChallengeComponent::class
     )
 
     val PERMISSION_CONTROL_HOME = PermissionValidator(
         "HOME_CONTROL",
-        "Kezdőlap komponens testreszabása"
+        "Kezdőlap komponens testreszabása",
+        component = HomeComponent::class
     )
 
     val PERMISSION_CONTROL_COMMUNITIES = PermissionValidator(
         "COMMUNITIES_CONTROL",
-        "Kezdőlap komponens testreszabása"
+        "Kezdőlap komponens testreszabása",
+        component = CommunitiesComponent::class
     )
 
     val PERMISSION_CONTROL_ADMISSION = PermissionValidator(
         "ADMISSION_CONTROL",
-        "Beléptetés komponens testreszabása"
+        "Beléptetés komponens testreszabása",
+        component = AdmissionComponent::class
     )
 
     val PERMISSION_CONTROL_RACE = PermissionValidator(
         "RACE_CONTROL",
-        "Verseny (sörmérés) komponens testreszabása"
+        "Verseny (sörmérés) komponens testreszabása",
+        component = RaceComponent::class
     )
 
     val PERMISSION_CONTROL_TEAM = PermissionValidator(
         "TEAM_CONTROL",
-        "Csapat komponens testreszabása"
+        "Csapat komponens testreszabása",
+        component = TeamComponent::class
     )
 
     val PERMISSION_CONTROL_QR_FIGHT = PermissionValidator(
         "QR_FIGHT_CONTROL",
-        "QR Fight komponens testreszabása"
+        "QR Fight komponens testreszabása",
+        component = QrFightComponent::class
     )
 
     val PERMISSION_CONTROL_BMEJEGY = PermissionValidator(
         "BMEJEGY_CONTROL",
-        "Bmejegy komponens testreszabása"
+        "Bmejegy komponens testreszabása",
+        component = BmejegyComponent::class
     )
 
     val PERMISSION_CONTROL_LOCATION = PermissionValidator(
         "LOCATION_CONTROL",
-        "Helymeghatározás komponens testreszabása"
+        "Helymeghatározás komponens testreszabása",
+        component = LocationComponent::class
     )
 
     override fun allPermissions() = listOf(
@@ -191,221 +241,790 @@ object ControlPermissions : PermissionGroup {
 
 object StaffPermissions : PermissionGroup {
 
-    /// Tasks Component
+    /// TaskComponent
 
     val PERMISSION_RATE_TASKS = PermissionValidator(
         "TASK_RATE",
-        "A feladat beadások értékelése és megtekintése"
+        "A feladat beadások értékelése és megtekintése",
+        component = TaskComponent::class
+    )
+
+    val PERMISSION_SHOW_TASKS = PermissionValidator(
+        "TASK_SHOW",
+        "Feladatok megtekintése",
+        component = TaskComponent::class
     )
 
     val PERMISSION_EDIT_TASKS = PermissionValidator(
         "TASK_EDIT",
-        "Feladatok létrehozása, szerkesztése és törlése"
+        "Feladatok szerkesztése",
+        component = TaskComponent::class
+    )
+
+    val PERMISSION_CREATE_TASKS = PermissionValidator(
+        "TASK_CREATE",
+        "Feladatok létrehozása",
+        component = TaskComponent::class
+    )
+
+    val PERMISSION_DELETE_TASKS = PermissionValidator(
+        "TASK_DELETE",
+        "Feladatok törlése",
+        component = TaskComponent::class
+    )
+
+    val PERMISSION_SHOW_TASK_CATEGORIES = PermissionValidator(
+        "TASK_CATEGORY_SHOW",
+        "Feladat kategóriák megtekintése",
+        component = TaskComponent::class
     )
 
     val PERMISSION_EDIT_TASK_CATEGORIES = PermissionValidator(
         "TASK_CATEGORY_EDIT",
-        "Feladat kategóriák létrehozása, szerkesztése és törlése"
+        "Feladat kategóriák szerkesztése",
+        component = TaskComponent::class
     )
 
-    /// Debt Component
+    val PERMISSION_CREATE_TASK_CATEGORIES = PermissionValidator(
+        "TASK_CATEGORY_CREATE",
+        "Feladat kategóriák létrehozása",
+        component = TaskComponent::class
+    )
+
+    val PERMISSION_DELETE_TASK_CATEGORIES = PermissionValidator(
+        "TASK_CATEGORY_DELETE",
+        "Feladat kategóriák törlése",
+        component = TaskComponent::class
+    )
+
+    /// DebtComponent
+
+    val PERMISSION_SHOW_DEBTS = PermissionValidator(
+        "DEBT_SHOW",
+        "Összes tartozás megtekintése",
+        component = DebtComponent::class
+    )
 
     val PERMISSION_EDIT_DEBTS = PermissionValidator(
         "DEBT_EDIT",
-        "Összes tartozás szerkesztése és megtekintése"
+        "Összes tartozás szerkesztése",
+        component = DebtComponent::class
+    )
+
+    val PERMISSION_SHOW_PRODUCTS = PermissionValidator(
+        "DEBT_PRODUCT_SHOW",
+        "Termékek megtekintése",
+        component = DebtComponent::class
     )
 
     val PERMISSION_EDIT_PRODUCTS = PermissionValidator(
         "DEBT_PRODUCT_EDIT",
-        "Termékek létrehozása, szerkesztése és törlése"
+        "Termékek szerkesztése",
+        component = DebtComponent::class
+    )
+
+    val PERMISSION_CREATE_PRODUCTS = PermissionValidator(
+        "DEBT_PRODUCT_CREATE",
+        "Termékek létrehozása",
+        component = DebtComponent::class
+    )
+
+    val PERMISSION_DELETE_PRODUCTS = PermissionValidator(
+        "DEBT_PRODUCT_DELETE",
+        "Termékek törlése",
+        component = DebtComponent::class
     )
 
     val PERMISSION_SELL_FOOD = PermissionValidator(
         "DEBT_SELL_FOOD",
-        "Étel típusú termék eladása"
+        "Étel típusú termék eladása",
+        component = DebtComponent::class
     )
 
     val PERMISSION_SELL_MERCH = PermissionValidator(
         "DEBT_SELL_MERCH",
-        "Merch típusú termék eladása"
+        "Merch típusú termék eladása",
+        component = DebtComponent::class
     )
 
     val PERMISSION_SELL_ANY_PRODUCT = PermissionValidator(
         "DEBT_SELL_ANY_PRODUCT",
-        "Bármilyen típusú termék eladása"
+        "Bármilyen típusú termék eladása",
+        component = DebtComponent::class
     )
 
     val PERMISSION_SHOW_SOLD_STATS = PermissionValidator(
         "DEBT_SHOW_SOLD_STATS",
-        "Eladott termékek statisztikájának megtekintése"
+        "Eladott termékek statisztikájának megtekintése",
+        component = DebtComponent::class
     )
+
+    /// LocationComponent
 
     val PERMISSION_TRACK_ONE_GROUP = PermissionValidator(
         "LOCATION_TRACK_ONE_GROUP",
-        "Egy csoport követése"
+        "Egy csoport követése",
+        component = LocationComponent::class
     )
 
     val PERMISSION_TRACK_EVERYBODY = PermissionValidator(
         "LOCATION_TRACK_EVERYBODY",
-        "Az összes csoport követése"
+        "Az összes csoport követése",
+        component = LocationComponent::class
     )
 
     val PERMISSION_SHOW_LOCATIONS = PermissionValidator(
         "LOCATION_SHOW",
-        "Az összes nyers pozíció megtekintése"
+        "Az összes nyers pozíció megtekintése",
+        component = LocationComponent::class
+    )
+
+    val PERMISSION_EDIT_LOCATIONS = PermissionValidator(
+        "LOCATION_EDIT",
+        "Nyers pozíció szerkesztése",
+        component = LocationComponent::class
+    )
+
+    val PERMISSION_DELETE_LOCATIONS = PermissionValidator(
+        "LOCATION_DELETE",
+        "Nyers pozíció törlése",
+        component = LocationComponent::class
+    )
+
+    // RiddleComponent
+
+    val PERMISSION_SHOW_RIDDLES = PermissionValidator(
+        "RIDDLE_SHOW",
+        "Riddle megtekintése",
+        component = RiddleComponent::class
     )
 
     val PERMISSION_EDIT_RIDDLES = PermissionValidator(
         "RIDDLE_EDIT",
-        "Riddle létrehozása, szerkesztése és törlése"
+        "Riddle szerkesztése",
+        component = RiddleComponent::class
+    )
+
+    val PERMISSION_CREATE_RIDDLES = PermissionValidator(
+        "RIDDLE_CREATE",
+        "Riddle létrehozása",
+        component = RiddleComponent::class
+    )
+
+    val PERMISSION_DELETE_RIDDLES = PermissionValidator(
+        "RIDDLE_DELETE",
+        "Riddle törlése",
+        component = RiddleComponent::class
+    )
+
+    val PERMISSION_SHOW_RIDDLE_CATEGORIES = PermissionValidator(
+        "RIDDLE_CATEGORY_SHOW",
+        "Riddle kategória megtekintése",
+        component = RiddleComponent::class
     )
 
     val PERMISSION_EDIT_RIDDLE_CATEGORIES = PermissionValidator(
         "RIDDLE_CATEGORY_EDIT",
-        "Riddle kategória létrehozása, szerkesztése és törlése"
+        "Riddle kategória szerkesztése",
+        component = RiddleComponent::class
     )
 
-    val PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS = PermissionValidator(
-        "RIDDLE_SUBMISSIONS_SHOW_DELETE",
-        "Riddle beadások listázása és törlése"
+    val PERMISSION_CREATE_RIDDLE_CATEGORIES = PermissionValidator(
+        "RIDDLE_CATEGORY_CREATE",
+        "Riddle kategória létrehozása",
+        component = RiddleComponent::class
+    )
+
+    val PERMISSION_DELETE_RIDDLE_CATEGORIES = PermissionValidator(
+        "RIDDLE_CATEGORY_DELETE",
+        "Riddle kategória törlése",
+        component = RiddleComponent::class
+    )
+
+    val PERMISSION_SHOW_RIDDLE_SUBMISSIONS = PermissionValidator(
+        "RIDDLE_SUBMISSIONS_SHOW",
+        "Riddle beadások listázása",
+        component = RiddleComponent::class
+    )
+
+    val PERMISSION_DELETE_RIDDLE_SUBMISSIONS = PermissionValidator(
+        "RIDDLE_SUBMISSIONS_DELETE",
+        "Riddle beadások törlése",
+        component = RiddleComponent::class
+    )
+
+    /// NewsComponent
+
+    val PERMISSION_SHOW_NEWS = PermissionValidator(
+        "NEWS_SHOW",
+        "Hírek megtekintése",
+        component = NewsComponent::class
     )
 
     val PERMISSION_EDIT_NEWS = PermissionValidator(
         "NEWS_EDIT",
-        "Hírek létrehozása, szerkesztése és törlése"
+        "Hírek szerkesztése",
+        component = NewsComponent::class
+    )
+
+    val PERMISSION_CREATE_NEWS = PermissionValidator(
+        "NEWS_CREATE",
+        "Hírek létrehozása",
+        component = NewsComponent::class
+    )
+
+    val PERMISSION_DELETE_NEWS = PermissionValidator(
+        "NEWS_DELETE",
+        "Hírek törlése",
+        component = NewsComponent::class
+    )
+
+    /// EventComponent
+
+    val PERMISSION_SHOW_EVENTS = PermissionValidator(
+        "EVENT_SHOW",
+        "Események megtekintése",
+        component = EventComponent::class
     )
 
     val PERMISSION_EDIT_EVENTS = PermissionValidator(
         "EVENT_EDIT",
-        "Események létrehozása, szerkesztése és törlése"
+        "Események szerkesztése",
+        component = EventComponent::class
+    )
+
+    val PERMISSION_CREATE_EVENTS = PermissionValidator(
+        "EVENT_CREATE",
+        "Események létrehozása",
+        component = EventComponent::class
+    )
+
+    val PERMISSION_DELETE_EVENTS = PermissionValidator(
+        "EVENT_DELETE",
+        "Események törlése",
+        component = EventComponent::class
+    )
+
+    /// TokenComponent
+
+    val PERMISSION_SHOW_TOKENS = PermissionValidator(
+        "TOKEN_SHOW",
+        "Tokenek megtekintése",
+        component = TokenComponent::class
     )
 
     val PERMISSION_EDIT_TOKENS = PermissionValidator(
         "TOKEN_EDIT",
-        "Tokenek létrehozása, szerkesztése és törlése"
+        "Tokenek szerkesztése",
+        component = TokenComponent::class
+    )
+
+    val PERMISSION_CREATE_TOKENS = PermissionValidator(
+        "TOKEN_CREATE",
+        "Tokenek létrehozása",
+        component = TokenComponent::class
+    )
+
+    val PERMISSION_DELETE_TOKENS = PermissionValidator(
+        "TOKEN_DELETE",
+        "Tokenek törlése",
+        component = TokenComponent::class
+    )
+
+    val PERMISSION_SHOW_TOKEN_SUBMISSIONS = PermissionValidator(
+        "TOKEN_SUBMISSION_SHOW",
+        "Tokenek beolvasások megtekintése",
+        component = TokenComponent::class
+    )
+
+    val PERMISSION_EDIT_TOKEN_SUBMISSIONS = PermissionValidator(
+        "TOKEN_SUBMISSION_DELETE",
+        "Tokenek beolvasások törlése",
+        component = TokenComponent::class
+    )
+
+    /// UserHandlingComponent
+
+    val PERMISSION_SHOW_GROUPS = PermissionValidator(
+        "GROUP_SHOW",
+        "Csoportok megtekintése",
+        component = UserHandlingComponent::class
     )
 
     val PERMISSION_EDIT_GROUPS = PermissionValidator(
         "GROUP_EDIT",
-        "Csoportok létrehozása, szerkesztése és törlése"
+        "Csoportok szerkesztése",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_CREATE_GROUPS = PermissionValidator(
+        "GROUP_CREATE",
+        "Csoportok létrehozása",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_DELETE_GROUPS = PermissionValidator(
+        "GROUP_DELETE",
+        "Csoportok törlése",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_SHOW_USERS = PermissionValidator(
+        "USER_SHOW",
+        "Felhasználók megtekintése",
+        component = UserHandlingComponent::class
     )
 
     val PERMISSION_EDIT_USERS = PermissionValidator(
         "USER_EDIT",
-        "Felhasználók szerkesztése és törlése"
+        "Felhasználók szerkesztése",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_DELETE_USERS = PermissionValidator(
+        "USER_DELETE",
+        "Felhasználók  törlése",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_SHOW_GUILD_MAPPINGS = PermissionValidator(
+        "GUILD_MAPPING_SHOW",
+        "Gárda hozzárendelések megtekintése",
+        component = UserHandlingComponent::class
     )
 
     val PERMISSION_EDIT_GUILD_MAPPINGS = PermissionValidator(
         "GUILD_MAPPING_EDIT",
-        "Gárda hozzárendelések létrehozása, szerkesztése és törlése"
+        "Gárda hozzárendelések szerkesztése",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_CREATE_GUILD_MAPPINGS = PermissionValidator(
+        "GUILD_MAPPING_CREATE",
+        "Gárda hozzárendelések létrehozása",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_DELETE_GUILD_MAPPINGS = PermissionValidator(
+        "GUILD_MAPPING_DELETE",
+        "Gárda hozzárendelések törlése",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_SHOW_GROUP_MAPPINGS = PermissionValidator(
+        "GROUP_MAPPING_SHOW",
+        "Csoport hozzárendelések megtekintése",
+        component = UserHandlingComponent::class
     )
 
     val PERMISSION_EDIT_GROUP_MAPPINGS = PermissionValidator(
         "GROUP_MAPPING_EDIT",
-        "Csoport hozzárendelések létrehozása, szerkesztése és törlése"
+        "Csoport hozzárendelések szerkesztése",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_CREATE_GROUP_MAPPINGS = PermissionValidator(
+        "GROUP_MAPPING_CREATE",
+        "Csoport hozzárendelések létrehozása",
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_DELETE_GROUP_MAPPINGS = PermissionValidator(
+        "GROUP_MAPPING_DELETE",
+        "Csoport hozzárendelések törlése",
+        component = UserHandlingComponent::class
+    )
+
+    /// StaticPageComponent
+
+    val PERMISSION_SHOW_STATIC_PAGES = PermissionValidator(
+        "STATIC_PAGE_SHOW",
+        "Statikus oldalak megtekintése",
+        component = StaticPageComponent::class
     )
 
     val PERMISSION_EDIT_STATIC_PAGES = PermissionValidator(
-        "STATICPAGE_EDIT",
-        "Statikus oldalak létrehozása, szerkesztése és törlése"
+        "STATIC_PAGE_EDIT",
+        "Statikus oldalak szerkesztése",
+        component = StaticPageComponent::class
     )
 
-    val PERMISSION_EDIT_ANY_STATIC_PAGES = PermissionValidator(
-        "STATICPAGE_EDIT_ANY",
-        "Az összes statikus oldal szerkesztése"
+    val PERMISSION_CREATE_STATIC_PAGES = PermissionValidator(
+        "STATIC_PAGE_CREATE",
+        "Statikus oldalak létrehozása",
+        component = StaticPageComponent::class
     )
+
+    val PERMISSION_DELETE_STATIC_PAGES = PermissionValidator(
+        "STATIC_PAGE_DELETE",
+        "Statikus oldalak törlése",
+        component = StaticPageComponent::class
+    )
+
+    val PERMISSION_MODIFY_ANY_STATIC_PAGES = PermissionValidator(
+        "STATICPAGE_MODIFY_ANY",
+        "Az összes statikus oldal módosítása",
+        component = StaticPageComponent::class
+    )
+
+    /// LeaderBoardComponent
 
     val PERMISSION_SHOW_LEADERBOARD = PermissionValidator(
         "LEADERBOARD_SHOW",
-        "Toplista megtekintése"
+        "Toplista megtekintése",
+        component = LeaderBoardComponent::class
     )
 
-    val PERMISSION_EDIT_SIGNUP_RESULTS = PermissionValidator(
-        "SIGNUP_EDIT",
-        "Jelentkezések megtekintése és szerkesztése"
+    /// FormComponent
+
+    val PERMISSION_SHOW_FORM = PermissionValidator(
+        "FORM_SHOW",
+        "Űrlapok megtekintése",
+        component = FormComponent::class
     )
 
     val PERMISSION_EDIT_FORM = PermissionValidator(
         "FORM_EDIT",
-        "Űrlapok készítése és szerkesztése"
+        "Űrlapok szerkesztése",
+        component = FormComponent::class
+    )
+
+    val PERMISSION_CREATE_FORM = PermissionValidator(
+        "FORM_CREATE",
+        "Űrlapok létrehozása",
+        component = FormComponent::class
+    )
+
+    val PERMISSION_DELETE_FORM = PermissionValidator(
+        "FORM_DELETE",
+        "Űrlapok törlése",
+        component = FormComponent::class
+    )
+
+    val PERMISSION_SHOW_FORM_RESULTS = PermissionValidator(
+        "FORM_RESULT_SHOW",
+        "Űrlapok beadások megtekintése",
+        component = FormComponent::class
+    )
+
+    val PERMISSION_EDIT_FORM_RESULTS = PermissionValidator(
+        "FORM_RESULT_EDIT",
+        "Űrlapok beadások szerkesztése",
+        component = FormComponent::class
+    )
+
+    /// ChallengeComponent
+
+    val PERMISSION_SHOW_CHALLENGES = PermissionValidator(
+        "CHALLENGE_SHOW",
+        "Beadások megtekintése",
+        component = ChallengeComponent::class
     )
 
     val PERMISSION_EDIT_CHALLENGES = PermissionValidator(
         "CHALLENGE_EDIT",
-        "Beadások megtekintése és szerkesztése"
+        "Beadások szerkesztése",
+        component = ChallengeComponent::class
     )
+
+    val PERMISSION_CREATE_CHALLENGES = PermissionValidator(
+        "CHALLENGE_CREATE",
+        "Beadások létrehozása",
+        component = ChallengeComponent::class
+    )
+
+    val PERMISSION_DELETE_CHALLENGES = PermissionValidator(
+        "CHALLENGE_DELETE",
+        "Beadások törlése",
+        component = ChallengeComponent::class
+    )
+
+    /// AdmissionComponent
 
     val PERMISSION_VALIDATE_ADMISSION = PermissionValidator(
         "ADMISSION_VALIDATE",
-        "Beléptetés kezelése"
+        "Beléptetés kezelése",
+        component = AdmissionComponent::class
+    )
+
+    /// RaceComponent
+
+    val PERMISSION_SHOW_RACE = PermissionValidator(
+        "RACE_SHOW",
+        "Verseny eredmények megtekintése",
+        component = RaceComponent::class
     )
 
     val PERMISSION_EDIT_RACE = PermissionValidator(
         "RACE_EDIT",
-        "Verseny eredmények kezelése"
+        "Verseny eredmények szerkesztése",
+        component = RaceComponent::class
+    )
+
+    val PERMISSION_CREATE_RACE = PermissionValidator(
+        "RACE_CREATE",
+        "Verseny eredmények létrehozása",
+        component = RaceComponent::class
+    )
+
+    val PERMISSION_DELETE_RACE = PermissionValidator(
+        "RACE_DELETE",
+        "Verseny eredmények törlése",
+        component = RaceComponent::class
+    )
+
+    val PERMISSION_SHOW_RACE_CATEGORY = PermissionValidator(
+        "RACE_CATEGORY_SHOW",
+        "Verseny kategóriák megtekintése",
+        component = RaceComponent::class
     )
 
     val PERMISSION_EDIT_RACE_CATEGORY = PermissionValidator(
         "RACE_CATEGORY_EDIT",
-        "Verseny kategóriák kezelése"
+        "Verseny kategóriák szerkesztése",
+        component = RaceComponent::class
+    )
+
+    val PERMISSION_CREATE_RACE_CATEGORY = PermissionValidator(
+        "RACE_CATEGORY_CREATE",
+        "Verseny kategóriák létrehozása",
+        component = RaceComponent::class
+    )
+
+    val PERMISSION_DELETE_RACE_CATEGORY = PermissionValidator(
+        "RACE_CATEGORY_DELETE",
+        "Verseny kategóriák törlése",
+        component = RaceComponent::class
+    )
+
+    /// QrFightComponent
+
+    val PERMISSION_SHOW_QR_FIGHT = PermissionValidator(
+        "QR_FIGHT_SHOW",
+        "QR Fight megtekintése",
+        component = QrFightComponent::class
     )
 
     val PERMISSION_EDIT_QR_FIGHT = PermissionValidator(
         "QR_FIGHT_EDIT",
-        "QR Fight eredmények kezelése"
+        "QR Fight szerkesztése",
+        component = QrFightComponent::class
+    )
+
+    val PERMISSION_CREATE_QR_FIGHT = PermissionValidator(
+        "QR_FIGHT_CREATE",
+        "QR Fight létrehozása",
+        component = QrFightComponent::class
+    )
+
+    val PERMISSION_DELETE_QR_FIGHT = PermissionValidator(
+        "QR_FIGHT_DELETE",
+        "QR Fight törlése",
+        component = QrFightComponent::class
+    )
+
+    /// CommunitiesComponent
+
+    val PERMISSION_SHOW_COMMUNITIES = PermissionValidator(
+        "COMMUNITIES_SHOW",
+        "Körök és reszortok megtekintése",
+        component = CommunitiesComponent::class
     )
 
     val PERMISSION_EDIT_COMMUNITIES = PermissionValidator(
         "COMMUNITIES_EDIT",
-        "Körök és reszortok kezelése"
+        "Körök és reszortok szerkesztése",
+        component = CommunitiesComponent::class
+    )
+
+    val PERMISSION_CREATE_COMMUNITIES = PermissionValidator(
+        "COMMUNITIES_CREATE",
+        "Körök és reszortok létrehozása",
+        component = CommunitiesComponent::class
+    )
+
+    val PERMISSION_DELETE_COMMUNITIES = PermissionValidator(
+        "COMMUNITIES_DELETE",
+        "Körök és reszortok törlése",
+        component = CommunitiesComponent::class
+    )
+
+    /// BmejegyComponent
+
+    val PERMISSION_SHOW_BME_TICKET = PermissionValidator(
+        "BME_TICKET_SHOW",
+        "BME Jegy bejegyzések megtekintése",
+        component = BmejegyComponent::class
     )
 
     val PERMISSION_EDIT_BME_TICKET = PermissionValidator(
         "BME_TICKET_EDIT",
-        "BME Jegy bejegyzések szerkesztése"
+        "BME Jegy bejegyzések szerkesztése",
+        component = BmejegyComponent::class
+    )
+
+    val PERMISSION_CREATE_BME_TICKET = PermissionValidator(
+        "BME_TICKET_CREATE",
+        "BME Jegy bejegyzések létrehozása",
+        component = BmejegyComponent::class
+    )
+
+    val PERMISSION_DELETE_BME_TICKET = PermissionValidator(
+        "BME_TICKET_DELETE",
+        "BME Jegy bejegyzések törlése",
+        component = BmejegyComponent::class
+    )
+
+
+    /// TeamComponent
+
+    val PERMISSION_SHOW_TEAM_JOINS = PermissionValidator(
+        "TEAM_JOIN_SHOW",
+        "Csapat jelentkezési kérelmek megtekintése",
+        component = TeamComponent::class
     )
 
     val PERMISSION_EDIT_TEAM_JOINS = PermissionValidator(
         "TEAM_JOIN_EDIT",
-        "Csapat jelentkezése szerkesztése"
+        "Csapat jelentkezési kérelmek szerkesztése",
+        component = TeamComponent::class
     )
+
+    val PERMISSION_CREATE_TEAM_JOINS = PermissionValidator(
+        "TEAM_JOIN_CREATE",
+        "Csapat jelentkezési kérelmek szerkesztése",
+        component = TeamComponent::class
+    )
+
+    val PERMISSION_DELETE_TEAM_JOINS = PermissionValidator(
+        "TEAM_JOIN_DELETE",
+        "Csapat jelentkezési kérelmek törlése",
+        component = TeamComponent::class
+    )
+
 
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
+        PERMISSION_SHOW_TASKS,
         PERMISSION_EDIT_TASKS,
+        PERMISSION_CREATE_TASKS,
+        PERMISSION_DELETE_TASKS,
+        PERMISSION_SHOW_TASK_CATEGORIES,
         PERMISSION_EDIT_TASK_CATEGORIES,
+        PERMISSION_CREATE_TASK_CATEGORIES,
+        PERMISSION_DELETE_TASK_CATEGORIES,
+
+        PERMISSION_SHOW_DEBTS,
         PERMISSION_EDIT_DEBTS,
+        PERMISSION_SHOW_PRODUCTS,
         PERMISSION_EDIT_PRODUCTS,
+        PERMISSION_CREATE_PRODUCTS,
+        PERMISSION_DELETE_PRODUCTS,
         PERMISSION_SELL_FOOD,
         PERMISSION_SELL_MERCH,
         PERMISSION_SELL_ANY_PRODUCT,
         PERMISSION_SHOW_SOLD_STATS,
+
         PERMISSION_TRACK_ONE_GROUP,
         PERMISSION_TRACK_EVERYBODY,
         PERMISSION_SHOW_LOCATIONS,
+        PERMISSION_EDIT_LOCATIONS,
+        PERMISSION_DELETE_LOCATIONS,
+
+        PERMISSION_SHOW_RIDDLES,
         PERMISSION_EDIT_RIDDLES,
+        PERMISSION_CREATE_RIDDLES,
+        PERMISSION_DELETE_RIDDLES,
+        PERMISSION_SHOW_RIDDLE_CATEGORIES,
         PERMISSION_EDIT_RIDDLE_CATEGORIES,
-        PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS,
+        PERMISSION_CREATE_RIDDLE_CATEGORIES,
+        PERMISSION_DELETE_RIDDLE_CATEGORIES,
+        PERMISSION_SHOW_RIDDLE_SUBMISSIONS,
+        PERMISSION_DELETE_RIDDLE_SUBMISSIONS,
+
+        PERMISSION_SHOW_NEWS,
         PERMISSION_EDIT_NEWS,
+        PERMISSION_CREATE_NEWS,
+        PERMISSION_DELETE_NEWS,
+
+        PERMISSION_SHOW_EVENTS,
         PERMISSION_EDIT_EVENTS,
+        PERMISSION_CREATE_EVENTS,
+        PERMISSION_DELETE_EVENTS,
+
+        PERMISSION_SHOW_TOKENS,
         PERMISSION_EDIT_TOKENS,
+        PERMISSION_CREATE_TOKENS,
+        PERMISSION_DELETE_TOKENS,
+        PERMISSION_SHOW_TOKEN_SUBMISSIONS,
+        PERMISSION_EDIT_TOKEN_SUBMISSIONS,
+
+        PERMISSION_SHOW_GROUPS,
         PERMISSION_EDIT_GROUPS,
+        PERMISSION_CREATE_GROUPS,
+        PERMISSION_DELETE_GROUPS,
+        PERMISSION_SHOW_USERS,
         PERMISSION_EDIT_USERS,
+        PERMISSION_DELETE_USERS,
+        PERMISSION_SHOW_GUILD_MAPPINGS,
         PERMISSION_EDIT_GUILD_MAPPINGS,
+        PERMISSION_CREATE_GUILD_MAPPINGS,
+        PERMISSION_DELETE_GUILD_MAPPINGS,
+        PERMISSION_SHOW_GROUP_MAPPINGS,
         PERMISSION_EDIT_GROUP_MAPPINGS,
+        PERMISSION_CREATE_GROUP_MAPPINGS,
+        PERMISSION_DELETE_GROUP_MAPPINGS,
+
+        PERMISSION_SHOW_STATIC_PAGES,
         PERMISSION_EDIT_STATIC_PAGES,
-        PERMISSION_EDIT_ANY_STATIC_PAGES,
+        PERMISSION_CREATE_STATIC_PAGES,
+        PERMISSION_DELETE_STATIC_PAGES,
+        PERMISSION_MODIFY_ANY_STATIC_PAGES,
+
         PERMISSION_SHOW_LEADERBOARD,
-        PERMISSION_EDIT_SIGNUP_RESULTS,
+
+        PERMISSION_SHOW_FORM,
         PERMISSION_EDIT_FORM,
+        PERMISSION_CREATE_FORM,
+        PERMISSION_DELETE_FORM,
+        PERMISSION_SHOW_FORM_RESULTS,
+        PERMISSION_EDIT_FORM_RESULTS,
+
+        PERMISSION_SHOW_CHALLENGES,
         PERMISSION_EDIT_CHALLENGES,
+        PERMISSION_CREATE_CHALLENGES,
+        PERMISSION_DELETE_CHALLENGES,
+
         PERMISSION_VALIDATE_ADMISSION,
+
+        PERMISSION_SHOW_RACE,
         PERMISSION_EDIT_RACE,
+        PERMISSION_CREATE_RACE,
+        PERMISSION_DELETE_RACE,
+        PERMISSION_SHOW_RACE_CATEGORY,
         PERMISSION_EDIT_RACE_CATEGORY,
+        PERMISSION_CREATE_RACE_CATEGORY,
+        PERMISSION_DELETE_RACE_CATEGORY,
+
+        PERMISSION_SHOW_QR_FIGHT,
         PERMISSION_EDIT_QR_FIGHT,
+        PERMISSION_CREATE_QR_FIGHT,
+        PERMISSION_DELETE_QR_FIGHT,
+
+        PERMISSION_SHOW_COMMUNITIES,
         PERMISSION_EDIT_COMMUNITIES,
+        PERMISSION_CREATE_COMMUNITIES,
+        PERMISSION_DELETE_COMMUNITIES,
+
+        PERMISSION_SHOW_BME_TICKET,
         PERMISSION_EDIT_BME_TICKET,
-        PERMISSION_EDIT_TEAM_JOINS
+        PERMISSION_CREATE_BME_TICKET,
+        PERMISSION_DELETE_BME_TICKET,
+
+        PERMISSION_SHOW_TEAM_JOINS,
+        PERMISSION_EDIT_TEAM_JOINS,
+        PERMISSION_CREATE_TEAM_JOINS,
+        PERMISSION_DELETE_TEAM_JOINS
     )
 
 }

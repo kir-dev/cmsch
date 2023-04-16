@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @RequestMapping("/admin/control/signup-responses")
 @ConditionalOnBean(FormComponent::class)
-class ResponsesAdminController(
+class ResponsesController(
     private val responseRepository: ResponseRepository,
     private val formRepository: FormRepository,
     importService: ImportService,
@@ -62,9 +62,9 @@ class ResponsesAdminController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_FORM_RESULTS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    editPermission =   StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS,
+    editPermission =   StaffPermissions.PERMISSION_EDIT_FORM_RESULTS,
     deletePermission = ImplicitPermissions.PERMISSION_NOBODY,
 
     createEnabled = false,
@@ -81,7 +81,7 @@ class ResponsesAdminController(
             "Json Export",
             "export/json/{id}",
             "data_object",
-            StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS,
+            StaffPermissions.PERMISSION_SHOW_FORM_RESULTS,
             10,
             true,
             "Exportálás JSON fájlba"
@@ -90,7 +90,7 @@ class ResponsesAdminController(
             "CSV Export",
             "export/json/{id}",
             "save",
-            StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS,
+            StaffPermissions.PERMISSION_SHOW_FORM_RESULTS,
             20,
             true,
             "Exportálás CSV fájlba"
@@ -98,7 +98,7 @@ class ResponsesAdminController(
     )
 ) {
 
-    private val exportPermission = StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS
+    private val exportPermission = StaffPermissions.PERMISSION_EDIT_FORM_RESULTS
 
     override fun fetchSublist(id: Int): Iterable<ResponseEntity> {
         return responseRepository.findAllByFormId(id)

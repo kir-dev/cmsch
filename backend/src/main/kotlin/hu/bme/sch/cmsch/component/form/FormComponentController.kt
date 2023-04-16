@@ -20,8 +20,8 @@ class FormComponentController(
     FormComponent::class.java,
     component,
     PERMISSION_CONTROL_FORM,
-    "Jelentkezések",
-    "Jelentkezések",
+    "Űrlap",
+    "Űrlapok testreszabása",
     menuService = menuService
 )
 

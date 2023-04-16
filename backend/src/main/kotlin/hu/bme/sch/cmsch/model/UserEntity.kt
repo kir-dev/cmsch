@@ -203,7 +203,7 @@ data class UserEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "User",
         view = "control/users",
-        showPermission = StaffPermissions.PERMISSION_EDIT_USERS
+        showPermission = StaffPermissions.PERMISSION_SHOW_USERS
     )
 
     override fun equals(other: Any?): Boolean {

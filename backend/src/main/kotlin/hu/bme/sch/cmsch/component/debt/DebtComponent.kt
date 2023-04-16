@@ -36,7 +36,7 @@ class DebtComponent(
     val debtGroup = SettingProxy(componentSettingService, component,
         "debtGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Tartozások",
-        description = "Jelenleg nincs mit beállítani it"
+        description = "Jelenleg nincs mit beállítani itt"
     )
 
     final override val menuDisplayName = null

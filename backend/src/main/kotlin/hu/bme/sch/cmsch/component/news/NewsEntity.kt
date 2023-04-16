@@ -121,7 +121,7 @@ data class NewsEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "News",
         view = "control/news",
-        showPermission = StaffPermissions.PERMISSION_EDIT_NEWS
+        showPermission = StaffPermissions.PERMISSION_SHOW_NEWS
     )
 
     override fun equals(other: Any?): Boolean {

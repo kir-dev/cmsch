@@ -1,0 +1,25 @@
++ új permissionök felvétele
+  + filter by active
+  + add a ton of new
+  + getEntityConfig -> SHOW variant
++ Menu editor
++ shareLocation
++ egyedi komponens delete gomb
++ markdown editor disabled
++ switch disabled
+- settings menü
+
+- Dátum táblázatban
+- Dátum editor
+- timezone check
+
+- Táblázat utolsó oszlopnak stílusa
+- súgó
+- menük átrendezése
+- dashboardok (instance infó, komponens lista, )
+- komponensek leírásai
+- entity mezők leírásai
+- quick search
+  * akkor is menjen ha ugyan azon az oldalon van
+  * ABC sorrend
+  * üres cucc kiszűrése

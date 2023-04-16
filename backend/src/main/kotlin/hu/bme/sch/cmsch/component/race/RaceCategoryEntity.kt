@@ -61,7 +61,7 @@ data class RaceCategoryEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "RaceCategory",
         view = "control/race-categories",
-        showPermission = StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY
+        showPermission = StaffPermissions.PERMISSION_SHOW_RACE_CATEGORY
     )
 
     override fun equals(other: Any?): Boolean {

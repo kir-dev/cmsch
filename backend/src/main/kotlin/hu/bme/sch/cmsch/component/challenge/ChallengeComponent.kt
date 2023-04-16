@@ -36,7 +36,7 @@ class ChallengeComponent(
     val challengeGroup = SettingProxy(componentSettingService, component,
         "challengeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Beadások",
-        description = "Jelenleg nincs mit beállítani it"
+        description = "Jelenleg nincs mit beállítani itt"
     )
 
     final override val menuDisplayName = null
