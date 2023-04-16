@@ -128,7 +128,7 @@ data class QrLevelEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "QRFightLevel",
         view = "control/qr-levels",
-        showPermission = StaffPermissions.PERMISSION_EDIT_QR_FIGHT
+        showPermission = StaffPermissions.PERMISSION_SHOW_QR_FIGHT
     )
 
     override fun equals(other: Any?): Boolean {

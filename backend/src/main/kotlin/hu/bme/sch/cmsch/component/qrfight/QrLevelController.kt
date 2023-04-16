@@ -33,10 +33,10 @@ class QrLevelController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_QR_FIGHT,
-    createPermission = StaffPermissions.PERMISSION_EDIT_QR_FIGHT,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_QR_FIGHT,
+    createPermission = StaffPermissions.PERMISSION_CREATE_QR_FIGHT,
     editPermission =   StaffPermissions.PERMISSION_EDIT_QR_FIGHT,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_QR_FIGHT,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_QR_FIGHT,
 
     createEnabled = true,
     editEnabled   = true,

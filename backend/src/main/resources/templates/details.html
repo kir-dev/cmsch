@@ -46,15 +46,17 @@
                 && field.fieldName !== ''
             ) {
                 resultHtml += `
-                    <div class="sub-card mb-3" id="form_${property}_${id}">
+                    <div class="sub-card" id="form_${property}_${id}">
                         <div class="button-group">
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                            <button type="button" class="btn btn-danger btn-small" onclick="deleteValues('${property}', ${id})"><span class="material-symbols-outlined">delete</span><ins>TÖRÖL</ins></button>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_fieldName">Mező neve *</label>
                             <input id="${property}_${id}_fieldName" type="text" value="${field.fieldName}" onchange="saveField('${property}')">
+                            <span class="note">Ez lesz az adat neve, olyasmi mint egy változó név. Az exportban is ez fog látszódni.</span>
                         </div>
 
                         <div class="field-group">
@@ -68,16 +70,19 @@
                         <div class="field-group">
                             <label for="${property}_${id}_label">Cimke *</label>
                             <input id="${property}_${id}_label" type="text" value="${field.label}" onchange="saveField('${property}')">
+                            <span class="note">Mi jelenjen meg a felhasználóknak.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_values">Értékek</label>
                             <input id="${property}_${id}_values" type="text" value="${field.values}" onchange="saveField('${property}')">
+                            <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_note">Leírás</label>
                             <input id="${property}_${id}_note" type="text" value="${field.note}" onchange="saveField('${property}')">
+                            <span class="note">A mező alatt megjelenp szöveg.</span>
                         </div>
 
                         <div class="field-group">
@@ -101,11 +106,13 @@
                         <div class="field-group">
                             <label for="${property}_${id}_formatRegex">RegEx minta</label>
                             <input id="${property}_${id}_formatRegex" type="text" value="${field.formatRegex}" onchange="saveField('${property}')">
+                            <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
                             <input id="${property}_${id}_invalidFormatMessage" type="text" value="${field.invalidFormatMessage}" onchange="saveField('${property}')">
+                            <span class="note">Akkor ejelenik meg ha validációs hiba van.</span>
                         </div>
                     </div>`;
                 ++id;
@@ -132,16 +139,18 @@
         }
         const element = document.createElement('div');
         element.innerHTML = `
-                    <div class="sub-card mb-3" id="form_${property}_${id}">
+                    <div class="sub-card" id="form_${property}_${id}">
 
                          <div class="button-group">
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                            <button type="button" class="btn btn-danger btn-small" onclick="deleteValues('${property}', ${id})"><span class="material-symbols-outlined">delete</span><ins>TÖRÖL</ins></button>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_fieldName">Mező neve *</label>
                             <input id="${property}_${id}_fieldName" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Ez lesz az adat neve, olyasmi mint egy változó név. Az exportban is ez fog látszódni.</span>
                         </div>
 
                         <div class="field-group">
@@ -155,16 +164,19 @@
                         <div class="field-group">
                             <label for="${property}_${id}_label">Cimke *</label>
                             <input id="${property}_${id}_label" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Mi jelenjen meg a felhasználóknak.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_values">Értékek</label>
                             <input id="${property}_${id}_values" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_note">Leírás</label>
                             <input id="${property}_${id}_note" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">A mező alatt megjelenp szöveg.</span>
                         </div>
 
                         <div class="field-group">
@@ -188,11 +200,13 @@
                         <div class="field-group">
                             <label for="${property}_${id}_formatRegex">RegEx minta</label>
                             <input id="${property}_${id}_formatRegex" type="text" value=".*" onchange="saveField('${property}')">
+                            <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
                             <input id="${property}_${id}_invalidFormatMessage" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Akkor ejelenik meg ha validációs hiba van.</span>
                         </div>
                     </div>`;
         let target = document.getElementById(`field_${property}_add`);
@@ -240,7 +254,7 @@
     function swapValues(property, id1, id2) {
         const form1 = document.getElementById(`form_${property}_${id1}`);
         const form2 = document.getElementById(`form_${property}_${id2}`);
-        if (typeof form1 === 'undefined' || typeof form2 === 'undefined')
+        if (typeof form1 === 'undefined' || form1 == null || typeof form2 === 'undefined' || form2 == null)
             return
 
         const inputs1 = form1.querySelectorAll('input, select, textarea');
@@ -255,6 +269,17 @@
             inputs2[i].checked = tempChecked;
         }
     }
+
+    function deleteValues(property, id) {
+        const form = document.getElementById(`form_${property}_${id}`);
+        const inputs = form.querySelectorAll('input, select, textarea');
+
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].value = '';
+            inputs[i].checked = false;
+        }
+    }
+
 </script>
 
 <div th:replace="layout4 :: mobile(null)"></div>
@@ -515,7 +540,7 @@
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
                             </div>
 
-                            <div th:if="${input.second.type == 'markdown'}" class="field-group">
+                            <div th:if="${input.second.type == 'markdown'}" class="field-group" th:class="|field-group ${!input.second.enabled || readOnly ? 'disabled' : ''}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -523,15 +548,25 @@
                                 <textarea
                                         th:name="${input.first.name}"
                                         th:id="|input${iter.index}|"
+                                        th:disabled="${!input.second.enabled || readOnly}"
                                         th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}">
                                 </textarea>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
                                 <script th:inline="javascript">
                                     var index = /*[[${iter.index}]]*/ 0;
-                                    new SimpleMDE({
-                                        element: document.getElementById(`input${index}`),
-                                        spellChecker: false
-                                    });
+                                    if (/*[[${!input.second.enabled || readOnly}]]*/ true) {
+                                        let simpleMde = new SimpleMDE({
+                                            element: document.getElementById(`input${index}`),
+                                            spellChecker: false,
+                                            toolbar: false
+                                        });
+                                        simpleMde.codemirror.options.readOnly = true;
+                                    } else {
+                                        new SimpleMDE({
+                                            element: document.getElementById(`input${index}`),
+                                            spellChecker: false
+                                        });
+                                    }
                                 </script>
                             </div>
 

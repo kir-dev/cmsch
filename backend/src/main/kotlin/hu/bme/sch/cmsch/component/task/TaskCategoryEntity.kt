@@ -73,7 +73,7 @@ data class TaskCategoryEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TaskCategory",
         view = "control/categories",
-        showPermission = StaffPermissions.PERMISSION_EDIT_TASK_CATEGORIES
+        showPermission = StaffPermissions.PERMISSION_SHOW_TASK_CATEGORIES
     )
 
     override fun equals(other: Any?): Boolean {

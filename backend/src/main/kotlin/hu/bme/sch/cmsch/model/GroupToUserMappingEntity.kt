@@ -55,7 +55,7 @@ data class GroupToUserMappingEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "GroupToUser",
         view = "control/group-to-user",
-        showPermission = StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS
+        showPermission = StaffPermissions.PERMISSION_SHOW_GROUP_MAPPINGS
     )
 
     override fun equals(other: Any?): Boolean {

@@ -67,6 +67,10 @@
     padding: 4px;
 }
 
+.tabulator .tabulator-header .tabulator-col:last-of-type {
+    border-right: none;
+}
+
 .tabulator .tabulator-header .tabulator-col.tabulator-moving {
     position: absolute;
     border: 1px solid #999;

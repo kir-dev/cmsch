@@ -69,10 +69,10 @@ class RiddlesByGroupsController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_RIDDLE_SUBMISSIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission =   ImplicitPermissions.PERMISSION_NOBODY,
-    deletePermission = StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_RIDDLE_SUBMISSIONS,
 
     createEnabled = false,
     editEnabled   = false,

@@ -30,10 +30,10 @@ class TeamController(
     auditLog,
     objectMapper,
 
-    showPermission =   ControlPermissions.PERMISSION_CONTROL_TEAM,
-    createPermission = ControlPermissions.PERMISSION_CONTROL_TEAM,
-    editPermission =   ControlPermissions.PERMISSION_CONTROL_TEAM,
-    deletePermission = ControlPermissions.PERMISSION_CONTROL_TEAM,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_TEAM_JOINS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_TEAM_JOINS,
+    editPermission =   StaffPermissions.PERMISSION_EDIT_TEAM_JOINS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_TEAM_JOINS,
 
     createEnabled = true,
     editEnabled   = true,

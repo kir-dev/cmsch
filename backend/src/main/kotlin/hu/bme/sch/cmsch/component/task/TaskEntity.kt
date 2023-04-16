@@ -162,7 +162,7 @@ data class TaskEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Task",
         view = "control/task",
-        showPermission = StaffPermissions.PERMISSION_EDIT_TASKS
+        showPermission = StaffPermissions.PERMISSION_SHOW_TASKS
     )
 
     override fun toString(): String {

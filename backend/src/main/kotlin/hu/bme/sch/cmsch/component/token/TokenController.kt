@@ -33,10 +33,10 @@ class TokenController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_TOKENS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_TOKENS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_TOKENS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_TOKENS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_TOKENS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_TOKENS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_TOKENS,
 
     createEnabled = true,
     editEnabled   = true,

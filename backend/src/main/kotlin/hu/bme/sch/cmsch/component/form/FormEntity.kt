@@ -169,7 +169,7 @@ data class FormEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Form",
         view = "control/forms",
-        showPermission = StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS
+        showPermission = StaffPermissions.PERMISSION_SHOW_FORM_RESULTS
     )
 
     override fun equals(other: Any?): Boolean {

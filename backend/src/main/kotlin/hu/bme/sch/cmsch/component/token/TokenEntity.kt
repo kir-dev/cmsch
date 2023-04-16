@@ -90,7 +90,7 @@ data class TokenEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Token",
         view = "control/tokens",
-        showPermission = StaffPermissions.PERMISSION_EDIT_TOKENS
+        showPermission = StaffPermissions.PERMISSION_SHOW_TOKENS
     )
 
     override fun equals(other: Any?): Boolean {

@@ -198,7 +198,7 @@ data class CommunityEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Community",
         view = "control/community",
-        showPermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES
+        showPermission = StaffPermissions.PERMISSION_SHOW_COMMUNITIES
     )
 
     @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])

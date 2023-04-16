@@ -33,10 +33,10 @@ class RiddleController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_RIDDLES,
-    createPermission = StaffPermissions.PERMISSION_EDIT_RIDDLES,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_RIDDLES,
+    createPermission = StaffPermissions.PERMISSION_CREATE_RIDDLES,
     editPermission =   StaffPermissions.PERMISSION_EDIT_RIDDLES,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_RIDDLES,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_RIDDLES,
 
     createEnabled = true,
     editEnabled   = true,

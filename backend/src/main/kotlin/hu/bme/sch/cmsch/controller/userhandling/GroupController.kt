@@ -45,10 +45,10 @@ class GroupController(
             member -> "${member.fullName} (${member.role.name})"
     }?.toList() ?: listOf("Üres") }),
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_GROUPS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_GROUPS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_GROUPS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_GROUPS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_GROUPS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_GROUPS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_GROUPS,
 
     createEnabled = true,
     editEnabled   = true,
@@ -63,7 +63,7 @@ class GroupController(
         ButtonAction(
             name = "Id-Név export",
             "filtered-export/csv",
-            StaffPermissions.PERMISSION_EDIT_GROUPS,
+            StaffPermissions.PERMISSION_SHOW_GROUPS,
             300,
             icon = "export_notes",
             primary = false,

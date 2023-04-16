@@ -48,7 +48,7 @@ data class TeamJoinRequestEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Csapat ID-je")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 4, label = "Csapat ID-je")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     var groupId: Int = 0,
@@ -58,7 +58,7 @@ data class TeamJoinRequestEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TeamJoinRequest",
         view = "control/join-requests",
-        showPermission = StaffPermissions.PERMISSION_EDIT_TEAM_JOINS
+        showPermission = StaffPermissions.PERMISSION_SHOW_TEAM_JOINS
     )
 
     override fun equals(other: Any?): Boolean {

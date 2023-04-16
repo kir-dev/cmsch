@@ -63,10 +63,10 @@ class TokenAdminTokensByTypeController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_TOKENS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission =   ImplicitPermissions.PERMISSION_NOBODY,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_TOKENS,
+    deletePermission = StaffPermissions.PERMISSION_EDIT_TOKEN_SUBMISSIONS,
 
     createEnabled = false,
     editEnabled   = false,

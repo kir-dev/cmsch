@@ -63,10 +63,10 @@ class RaceRecordController(
         },
     ),
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_RACE,
-    createPermission = StaffPermissions.PERMISSION_EDIT_RACE,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_RACE,
+    createPermission = StaffPermissions.PERMISSION_CREATE_RACE,
     editPermission =   StaffPermissions.PERMISSION_EDIT_RACE,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_RACE,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_RACE,
 
     createEnabled = true,
     editEnabled   = true,

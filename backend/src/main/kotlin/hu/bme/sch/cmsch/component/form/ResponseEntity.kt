@@ -129,7 +129,7 @@ data class ResponseEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Response",
         view = "control/signup-responses",
-        showPermission = StaffPermissions.PERMISSION_EDIT_SIGNUP_RESULTS
+        showPermission = StaffPermissions.PERMISSION_SHOW_FORM_RESULTS
     )
 
     override fun equals(other: Any?): Boolean {

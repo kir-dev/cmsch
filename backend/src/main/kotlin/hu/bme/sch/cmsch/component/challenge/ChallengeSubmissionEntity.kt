@@ -75,7 +75,7 @@ data class ChallengeSubmissionEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "ChallengeSubmission",
         view = "control/challenge",
-        showPermission = StaffPermissions.PERMISSION_EDIT_CHALLENGES
+        showPermission = StaffPermissions.PERMISSION_SHOW_CHALLENGES
     )
 
     override fun equals(other: Any?): Boolean {

@@ -37,10 +37,10 @@ class StaticPageController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_STATIC_PAGES,
-    createPermission = StaffPermissions.PERMISSION_EDIT_STATIC_PAGES,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_STATIC_PAGES,
+    createPermission = StaffPermissions.PERMISSION_CREATE_STATIC_PAGES,
     editPermission =   StaffPermissions.PERMISSION_EDIT_STATIC_PAGES,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_STATIC_PAGES,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_STATIC_PAGES,
 
     createEnabled = true,
     editEnabled = true,
@@ -58,6 +58,7 @@ class StaticPageController(
 
     override fun editPermissionCheck(user: CmschUser, entity: StaticPageEntity): Boolean {
         return user.isAdmin() || entity.permissionToEdit.isBlank() || user.hasPermission(entity.permissionToEdit)
+                || StaffPermissions.PERMISSION_MODIFY_ANY_STATIC_PAGES.validate(user)
     }
 
     override fun purgeAllEntities(user: CmschUser) {

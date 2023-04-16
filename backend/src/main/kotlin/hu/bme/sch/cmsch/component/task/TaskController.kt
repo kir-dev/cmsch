@@ -33,10 +33,10 @@ class TaskController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_TASKS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_TASKS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_TASKS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_TASKS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_TASKS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_TASKS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_TASKS,
 
     createEnabled = true,
     editEnabled = true,

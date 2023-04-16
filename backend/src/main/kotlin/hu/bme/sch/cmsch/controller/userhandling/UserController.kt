@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.controller.userhandling
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
@@ -29,6 +30,7 @@ class UserController(
     private val groups: GroupRepository,
     private val staticPageService: Optional<StaticPageService>,
     private val startupPropertyConfig: StartupPropertyConfig,
+    components: List<ComponentBase>,
 ) : OneDeepEntityPage<UserEntity>(
     "users",
     UserEntity::class, ::UserEntity,
@@ -44,10 +46,10 @@ class UserController(
 
     entitySourceMapping = mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_USERS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_USERS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission =   StaffPermissions.PERMISSION_EDIT_USERS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_USERS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_USERS,
 
     createEnabled = false,
     editEnabled   = true,
@@ -58,6 +60,8 @@ class UserController(
     adminMenuIcon = "person",
     adminMenuPriority = 2,
 ) {
+
+    private val componentClasses = components.map { it::class }.toSet()
 
     override fun onDetailsView(entity: CmschUser, model: Model) {
         val customPermissions = staticPageService.map { service ->
@@ -70,8 +74,14 @@ class UserController(
             }
         }.orElse(listOf())
 
-        val staffPermissions = StaffPermissions.allPermissions().filter { it.permissionString.isNotEmpty() }
-        val adminPermissions = ControlPermissions.allPermissions().filter { it.permissionString.isNotEmpty() }
+        val staffPermissions = StaffPermissions.allPermissions()
+            .filter { it.component != null }
+            .filter { it.component in componentClasses }
+            .filter { it.permissionString.isNotEmpty() }
+        val adminPermissions = ControlPermissions.allPermissions()
+            .filter { it.component != null }
+            .filter { it.component in componentClasses }
+            .filter { it.permissionString.isNotEmpty() }
         model.addAttribute("customPermissions", customPermissions)
         model.addAttribute("staffPermissions", staffPermissions)
         model.addAttribute("adminPermissions", adminPermissions)

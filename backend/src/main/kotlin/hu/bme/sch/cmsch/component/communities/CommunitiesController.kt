@@ -33,10 +33,10 @@ class CommunitiesController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
-    createPermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_COMMUNITIES,
+    createPermission = StaffPermissions.PERMISSION_CREATE_COMMUNITIES,
     editPermission =   StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_COMMUNITIES,
 
     createEnabled = true,
     editEnabled = true,

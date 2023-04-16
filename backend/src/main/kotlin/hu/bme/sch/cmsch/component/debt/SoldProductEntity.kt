@@ -121,7 +121,7 @@ data class SoldProductEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "SoldProduct",
         view = "control/debts",
-        showPermission = StaffPermissions.PERMISSION_EDIT_DEBTS
+        showPermission = StaffPermissions.PERMISSION_SHOW_DEBTS
     )
 
     override fun equals(other: Any?): Boolean {

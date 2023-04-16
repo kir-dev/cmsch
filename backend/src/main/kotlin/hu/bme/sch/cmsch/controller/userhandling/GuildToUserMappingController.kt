@@ -36,10 +36,10 @@ class GuildToUserMappingController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_GUILD_MAPPINGS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_GUILD_MAPPINGS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_GUILD_MAPPINGS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_GUILD_MAPPINGS,
 
     createEnabled = true,
     editEnabled   = true,
