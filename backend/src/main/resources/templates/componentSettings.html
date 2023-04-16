@@ -14,6 +14,7 @@
                 document.getElementById(`${property}_${role}`).checked = roles.includes(role);
         });
     }
+
     function changeRoleField(property, role) {
         let roles = document.getElementById(property).value.split(',');
         roles = roles.filter(item => item !== role && item !== '')
@@ -21,6 +22,7 @@
             roles.push(role)
         document.getElementById(property).value = roles.join(",")
     }
+
     function changePeopleText(property) {
         const people = JSON.parse(document.getElementById(property).value);
         let resultHtml = "";
@@ -28,11 +30,12 @@
         people.forEach(person => {
             if (typeof person.name !== 'undefined' && typeof person.roles !== 'undefined' && typeof person.avatar !== 'undefined' && person.name !== '') {
                 resultHtml += `
-                    <div class="sub-card mb-3">
+                    <div class="sub-card">
 
                          <div class="button-group">
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                            <button type="button" class="btn btn-danger btn-small" onclick="deleteValues('${property}', ${id})"><span class="material-symbols-outlined">delete</span><ins>TÖRÖL</ins></button>
                         </div>
 
                         <div class="field-group">
@@ -43,11 +46,13 @@
                         <div class="field-group">
                             <label for="${property}_${id}_roles">Cimkék</label>
                             <input id="${property}_${id}_roles" type="text" value="${person.roles}" onchange="savePeople('${property}')">
+                            <span class="note">Név mellett megjelenő cimkék. Vesszővel elválasztva kell megadni ha több van.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_avatar">Avatar url</label>
                             <input id="${property}_${id}_avatar" type="text" value="${person.avatar}" onchange="savePeople('${property}')">
+                            <span class="note">Opcionális. Ha van akkor ez jelenik meg a név mellett.</span>
                         </div>
                     </div>`;
                 ++id;
@@ -69,26 +74,29 @@
         }
         const element = document.createElement('div');
         element.innerHTML = `
-                    <div class="sub-card mb-3">
+                    <div class="sub-card">
 
                          <div class="button-group">
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                            <button type="button" class="btn btn-danger btn-small" onclick="deleteValues('${property}', ${id})"><span class="material-symbols-outlined">delete</span><ins>TÖRÖL</ins></button>
                         </div>
 
                         <div class="field-group">
-                            <label for="${property}_${id}_name">Név</label>
+                            <label for="${property}_${id}_name">Név *</label>
                             <input id="${property}_${id}_name" type="text" value="" onchange="savePeople('${property}')">
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_roles">Cimkék</label>
                             <input id="${property}_${id}_roles" type="text" value="" onchange="savePeople('${property}')">
+                            <span class="note">Név mellett megjelenő cimkék. Vesszővel elválasztva kell megadni ha több van.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_avatar">Avatar url</label>
                             <input id="${property}_${id}_avatar" type="text" value="" onchange="savePeople('${property}')">
+                            <span class="note">Opcionális. Ha van akkor ez jelenik meg a név mellett.</span>
                         </div>
                     </div>`;
         let target = document.getElementById(`people_${property}_add`);
@@ -114,7 +122,7 @@
     function swapValues(property, id1, id2) {
         const form1 = document.getElementById(`form_${property}_${id1}`);
         const form2 = document.getElementById(`form_${property}_${id2}`);
-        if (typeof form1 === 'undefined' || typeof form2 === 'undefined')
+        if (typeof form1 === 'undefined' || form1 == null || typeof form2 === 'undefined' || form2 == null)
             return
 
         const inputs1 = form1.querySelectorAll('input, select, textarea');
@@ -127,6 +135,16 @@
             inputs1[i].checked = inputs2[i].checked;
             inputs2[i].value = tempValue;
             inputs2[i].checked = tempChecked;
+        }
+    }
+
+    function deleteValues(property, id) {
+        const form = document.getElementById(`form_${property}_${id}`);
+        const inputs = form.querySelectorAll('input, select, textarea');
+
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].value = '';
+            inputs[i].checked = false;
         }
     }
 
@@ -176,11 +194,11 @@
 
                             <div th:if="${input.type.name() == 'COMPONENT_GROUP'}" th:remove="tag">
                                 <object th:remove="tag" th:utext="|</div><div class='card wide-false'>|"></object>
-                                <h4 th:text="${input.fieldName}">Group Name</h4>
+                                <h4 th:text="${input.fieldName}" th:id="|_${input.property}|">Group Name</h4>
                                 <div class="desc" th:text="${input.description}" th:if="${input.description != ''}"></div>
                             </div>
 
-                            <div th:if="${input.type.name() == 'TEXT'}" class="field-group">
+                            <div th:if="${input.type.name() == 'TEXT'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -197,7 +215,7 @@
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
 
-                            <div th:if="${input.type.name() == 'URL'}" class="field-group">
+                            <div th:if="${input.type.name() == 'URL'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -214,7 +232,7 @@
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
 
-                            <div th:if="${input.type.name() == 'COLOR'}" class="field-group">
+                            <div th:if="${input.type.name() == 'COLOR'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -237,7 +255,7 @@
                                 </script>
                             </div>
 
-                            <div th:if="${input.type.name() == 'NUMBER'}" class="field-group">
+                            <div th:if="${input.type.name() == 'NUMBER'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -256,7 +274,7 @@
                             </div>
 
 
-                            <div th:if="${input.type.name() == 'IMAGE'}" class="field-group">
+                            <div th:if="${input.type.name() == 'IMAGE'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -273,7 +291,7 @@
                                 <img th:src="|${input.rawValue}|" />
                             </div>
 
-                            <div th:if="${input.type.name() == 'DATE_TIME'}" class="field-group">
+                            <div th:if="${input.type.name() == 'DATE_TIME'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -292,7 +310,7 @@
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
 
-                            <div th:if="${input.type.name() == 'LONG_TEXT'}" class="field-group">
+                            <div th:if="${input.type.name() == 'LONG_TEXT'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -309,7 +327,7 @@
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
 
-                            <div th:if="${input.type.name() == 'LONG_TEXT_MARKDOWN'}" class="field-group">
+                            <div th:if="${input.type.name() == 'LONG_TEXT_MARKDOWN'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -332,7 +350,7 @@
                                 </script>
                             </div>
 
-                            <div th:if="${input.type.name() == 'BOOLEAN'}" class="field-group">
+                            <div th:if="${input.type.name() == 'BOOLEAN'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -351,7 +369,7 @@
                                 <div style="clear:both"></div>
                             </div>
 
-                            <div th:if="${input.type.name() == 'COMPONENT_NAME'}" class="field-group">
+                            <div th:if="${input.type.name() == 'COMPONENT_NAME'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -366,7 +384,7 @@
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
 
-                            <div th:if="${input.type.name() == 'MULTIPLE_PEOPLE'}" class="field-group">
+                            <div th:if="${input.type.name() == 'MULTIPLE_PEOPLE'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -392,7 +410,7 @@
                                 </script>
                             </div>
 
-                            <div th:if="${input.type.name() == 'MIN_ROLE'}" class="field-group">
+                            <div th:if="${input.type.name() == 'MIN_ROLE'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">
                                 </label>
@@ -467,6 +485,13 @@
     </div>
 </div>
 
+<script>
+    if (window.location.hash !== '') {
+        const hashValue = window.location.hash.substring(1);
+        const element = document.getElementById(hashValue);
+        element.classList.add('selected');
+    }
+</script>
 <script>
     flatpickr(".datetime-picker", {
         enableTime: true,

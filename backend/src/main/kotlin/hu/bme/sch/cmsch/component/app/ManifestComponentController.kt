@@ -22,7 +22,7 @@ class ManifestComponentController(
     componentMenuName = "Manifest beállítások",
     componentMenuIcon = "image",
     insertComponentCategory = false,
-    componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
+    componentCategory = ApplicationComponent.STYLING_CATEGORY,
     componentMenuPriority = 28,
     menuService = menuService
 )

@@ -41,10 +41,10 @@ class GroupToUserMappingController(
 
     entitySourceMapping = mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_GROUP_MAPPINGS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_GROUP_MAPPINGS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_GROUP_MAPPINGS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_GROUP_MAPPINGS,
 
     createEnabled = true,
     editEnabled   = true,

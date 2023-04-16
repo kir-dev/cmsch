@@ -131,7 +131,7 @@ data class GroupEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Group",
         view = "control/groups",
-        showPermission = StaffPermissions.PERMISSION_EDIT_GROUPS
+        showPermission = StaffPermissions.PERMISSION_SHOW_GROUPS
     )
 
     override fun equals(other: Any?): Boolean {

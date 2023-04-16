@@ -165,7 +165,7 @@ data class QrTowerEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "QRFightTower",
         view = "control/qr-towers",
-        showPermission = StaffPermissions.PERMISSION_EDIT_QR_FIGHT
+        showPermission = StaffPermissions.PERMISSION_SHOW_QR_FIGHT
     )
 
     override fun equals(other: Any?): Boolean {

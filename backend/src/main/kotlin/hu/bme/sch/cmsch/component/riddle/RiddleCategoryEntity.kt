@@ -62,7 +62,7 @@ data class RiddleCategoryEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "RiddleCategory",
         view = "control/riddle-categories",
-        showPermission = StaffPermissions.PERMISSION_EDIT_RIDDLE_CATEGORIES
+        showPermission = StaffPermissions.PERMISSION_SHOW_RIDDLE_CATEGORIES
     )
 
     override fun equals(other: Any?): Boolean {

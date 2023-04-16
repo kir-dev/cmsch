@@ -33,10 +33,10 @@ class TaskCategoryController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_TASK_CATEGORIES,
-    createPermission = StaffPermissions.PERMISSION_EDIT_TASK_CATEGORIES,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_TASK_CATEGORIES,
+    createPermission = StaffPermissions.PERMISSION_CREATE_TASK_CATEGORIES,
     editPermission =   StaffPermissions.PERMISSION_EDIT_TASK_CATEGORIES,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_TASK_CATEGORIES,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_TASK_CATEGORIES,
 
     createEnabled = true,
     editEnabled   = true,

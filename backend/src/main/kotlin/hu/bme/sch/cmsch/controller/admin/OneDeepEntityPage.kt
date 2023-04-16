@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
 import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
@@ -31,7 +32,10 @@ data class ControlAction(
     val name: String,
     val endpoint: String,
     val icon: String,
+
+    @get:JsonIgnore
     val permission: PermissionValidator,
+
     val order: Int,
     val newPage: Boolean = false,
     var usageString: String = "",
@@ -41,6 +45,8 @@ data class ControlAction(
 data class ButtonAction(
     val name: String,
     val target: String,
+
+    @get:JsonIgnore
     val permission: PermissionValidator,
     val order: Int,
     val icon: String,

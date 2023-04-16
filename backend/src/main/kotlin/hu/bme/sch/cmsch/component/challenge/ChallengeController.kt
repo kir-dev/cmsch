@@ -59,10 +59,10 @@ class ChallengeController(
         },
     ),
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_CHALLENGES,
-    createPermission = StaffPermissions.PERMISSION_EDIT_CHALLENGES,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_CHALLENGES,
+    createPermission = StaffPermissions.PERMISSION_CREATE_CHALLENGES,
     editPermission =   StaffPermissions.PERMISSION_EDIT_CHALLENGES,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_CHALLENGES,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_CHALLENGES,
 
     createEnabled = true,
     editEnabled = true,

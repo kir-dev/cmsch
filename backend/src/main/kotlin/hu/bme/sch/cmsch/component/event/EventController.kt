@@ -33,10 +33,10 @@ class EventController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_EVENTS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_EVENTS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_EVENTS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_EVENTS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_EVENTS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_EVENTS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_EVENTS,
 
     createEnabled = true,
     editEnabled = true,

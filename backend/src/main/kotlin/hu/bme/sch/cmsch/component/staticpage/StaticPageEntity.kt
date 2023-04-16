@@ -123,7 +123,7 @@ data class StaticPageEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "StaticPage",
         view = "control/static-pages",
-        showPermission = StaffPermissions.PERMISSION_EDIT_STATIC_PAGES
+        showPermission = StaffPermissions.PERMISSION_SHOW_STATIC_PAGES
     )
 
     override fun equals(other: Any?): Boolean {

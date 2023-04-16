@@ -51,7 +51,7 @@ data class TokenPropertyEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TokenProperty",
         view = "control/raw-token-properties",
-        showPermission = StaffPermissions.PERMISSION_EDIT_TOKENS
+        showPermission = StaffPermissions.PERMISSION_SHOW_TOKENS
     )
 
     override fun equals(other: Any?): Boolean {

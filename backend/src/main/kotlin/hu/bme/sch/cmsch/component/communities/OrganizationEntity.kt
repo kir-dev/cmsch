@@ -173,7 +173,7 @@ data class OrganizationEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Organization",
         view = "control/organization",
-        showPermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES
+        showPermission = StaffPermissions.PERMISSION_SHOW_COMMUNITIES
     )
 
     override fun equals(other: Any?): Boolean {

@@ -150,7 +150,7 @@ data class EventEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Event",
         view = "control/events",
-        showPermission = StaffPermissions.PERMISSION_EDIT_EVENTS
+        showPermission = StaffPermissions.PERMISSION_SHOW_EVENTS
     )
 
     override fun equals(other: Any?): Boolean {

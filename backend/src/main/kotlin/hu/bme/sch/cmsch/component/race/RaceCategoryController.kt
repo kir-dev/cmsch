@@ -33,10 +33,10 @@ class RaceCategoryController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY,
-    createPermission = StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_RACE_CATEGORY,
+    createPermission = StaffPermissions.PERMISSION_CREATE_RACE_CATEGORY,
     editPermission =   StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_RACE_CATEGORY,
 
     createEnabled = true,
     editEnabled   = true,

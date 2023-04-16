@@ -5,7 +5,9 @@ import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_NOBODY
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_DEBTS
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -57,10 +59,10 @@ class DebtAdminDebtsByUsersController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_DEBTS,
-    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
+    showPermission =   PERMISSION_SHOW_DEBTS,
+    createPermission = PERMISSION_NOBODY,
     editPermission =   PERMISSION_EDIT_DEBTS,
-    deletePermission = ImplicitPermissions.PERMISSION_NOBODY,
+    deletePermission = PERMISSION_NOBODY,
 
     createEnabled = false,
     editEnabled   = true,

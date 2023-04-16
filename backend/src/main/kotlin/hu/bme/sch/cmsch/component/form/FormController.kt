@@ -33,10 +33,10 @@ class FormController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_FORM,
-    createPermission = StaffPermissions.PERMISSION_EDIT_FORM,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_FORM,
+    createPermission = StaffPermissions.PERMISSION_CREATE_FORM,
     editPermission =   StaffPermissions.PERMISSION_EDIT_FORM,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_FORM,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_FORM,
 
     createEnabled = true,
     editEnabled = true,

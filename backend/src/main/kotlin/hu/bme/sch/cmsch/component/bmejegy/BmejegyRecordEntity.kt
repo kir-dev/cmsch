@@ -108,7 +108,7 @@ data class BmejegyRecordEntity(
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "BmejegyRecord",
         view = "control/bmejegy-tickets",
-        showPermission = StaffPermissions.PERMISSION_EDIT_BME_TICKET
+        showPermission = StaffPermissions.PERMISSION_SHOW_BME_TICKET
     )
 
     override fun equals(other: Any?): Boolean {

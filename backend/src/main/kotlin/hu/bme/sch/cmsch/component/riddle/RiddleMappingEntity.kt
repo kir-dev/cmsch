@@ -58,7 +58,7 @@ data class RiddleMappingEntity(
             "control/riddles-by-users"
         else
             "control/riddles-by-groups",
-        showPermission = StaffPermissions.PERMISSION_SHOW_DELETE_RIDDLE_SUBMISSIONS
+        showPermission = StaffPermissions.PERMISSION_SHOW_RIDDLE_SUBMISSIONS
     )
 
     override fun equals(other: Any?): Boolean {
