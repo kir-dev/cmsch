@@ -7,15 +7,21 @@
 + egyedi komponens delete gomb
 + markdown editor disabled
 + switch disabled
-- settings menü
++ Táblázat utolsó oszlopnak stílusa
 
+- settings menü
 - Dátum táblázatban
 - Dátum editor
 - timezone check
 
-- Táblázat utolsó oszlopnak stílusa
 - súgó
 - menük átrendezése
+    FooterComponent : style
+    WarningComponent : content
+      - dismiss moth
+      - show admin page name
+    AppComponent : content
+    DebugComponent : dev
 - dashboardok (instance infó, komponens lista, )
 - komponensek leírásai
 - entity mezők leírásai
@@ -23,3 +29,7 @@
   * akkor is menjen ha ugyan azon az oldalon van
   * ABC sorrend
   * üres cucc kiszűrése
+- add anchors
+- mobil barát
+- audit log
+
