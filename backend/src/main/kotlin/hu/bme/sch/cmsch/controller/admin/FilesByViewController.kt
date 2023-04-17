@@ -8,7 +8,7 @@ import hu.bme.sch.cmsch.dto.virtual.FileVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.FilesByViewVirtualEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_SHOW_DELETE_FILES
+import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
@@ -40,8 +40,8 @@ class FilesByViewController(
     private val titleSingular = "Fájl"
     private val titlePlural = "Fájlok"
     private val description = "Fájlok kategóriánként csoportosítva"
-    private val showPermission = PERMISSION_SHOW_DELETE_FILES
-    private val deletePermission = PERMISSION_SHOW_DELETE_FILES
+    private val showPermission = ControlPermissions.PERMISSION_SHOW_FILES
+    private val deletePermission = ControlPermissions.PERMISSION_DELETE_FILES
 
     private val overviewDescriptor = OverviewBuilder(FilesByViewVirtualEntity::class)
     private val submittedDescriptor = OverviewBuilder(FileVirtualEntity::class)
@@ -150,7 +150,9 @@ class FilesByViewController(
                 basic = true
             )
         )
-        model.addAttribute("controlActions", overviewDescriptor.toJson(controlActionForCategory, objectMapper))
+        model.addAttribute("controlActions", overviewDescriptor.toJson(
+            controlActionForCategory.filter { it.permission.validate(user) },
+            objectMapper))
         model.addAttribute("allControlActions", controlActionForCategory)
         model.addAttribute("buttonActions", listOf<ButtonAction>())
 

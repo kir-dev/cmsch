@@ -74,11 +74,11 @@
     const purpleGroupName = /*[[${purpleGroupName}]]*/ "";
     const grayGroupName = /*[[${grayGroupName}]]*/ "";
 
-    var attribution = new ol.control.Attribution({
+    let attribution = new ol.control.Attribution({
         collapsible: false
     });
 
-    var map = new ol.Map({
+    let map = new ol.Map({
         controls: ol.control.defaults({attribution: false}).extend([attribution]),
         layers: [
             new ol.layer.Tile({
@@ -95,7 +95,7 @@
     });
 
 
-    var iconStyleDefault = new ol.style.Style({
+    let iconStyleDefault = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -103,7 +103,7 @@
         })
     });
 
-    var iconStyleBlack = new ol.style.Style({
+    let iconStyleBlack = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -111,7 +111,7 @@
         })
     });
 
-    var iconStyleBlue = new ol.style.Style({
+    let iconStyleBlue = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -119,7 +119,7 @@
         })
     });
 
-    var iconStyleCyan = new ol.style.Style({
+    let iconStyleCyan = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -127,7 +127,7 @@
         })
     });
 
-    var iconStylePink = new ol.style.Style({
+    let iconStylePink = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -135,7 +135,7 @@
         })
     });
 
-    var iconStyleOrange = new ol.style.Style({
+    let iconStyleOrange = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -143,7 +143,7 @@
         })
     });
 
-    var iconStyleGreen = new ol.style.Style({
+    let iconStyleGreen = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -151,7 +151,7 @@
         })
     });
 
-    var iconStyleRed = new ol.style.Style({
+    let iconStyleRed = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -159,7 +159,7 @@
         })
     });
 
-    var iconStyleWhite = new ol.style.Style({
+    let iconStyleWhite = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#000' }),
@@ -167,7 +167,7 @@
         })
     });
 
-    var iconStyleYellow = new ol.style.Style({
+    let iconStyleYellow = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#000' }),
@@ -175,7 +175,7 @@
         })
     });
 
-    var iconStylePurple = new ol.style.Style({
+    let iconStylePurple = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -183,7 +183,7 @@
         })
     });
 
-    var iconStyleGray = new ol.style.Style({
+    let iconStyleGray = new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
@@ -191,7 +191,7 @@
         })
     });
 
-    var labelStyle = new ol.style.Style({
+    let labelStyle = new ol.style.Style({
         text: new ol.style.Text({
             font: '16px Calibri,sans-serif',
             overflow: true,
@@ -207,20 +207,20 @@
         })
     });
 
-    var style = [iconStyleDefault, labelStyle];
-    var styleBlack = [iconStyleBlack, labelStyle];
-    var styleBlue = [iconStyleBlue, labelStyle];
-    var styleCyan = [iconStyleCyan, labelStyle];
-    var stylePink = [iconStylePink, labelStyle];
-    var styleOrange = [iconStyleOrange, labelStyle];
-    var styleGreen = [iconStyleGreen, labelStyle];
-    var styleRed = [iconStyleRed, labelStyle];
-    var styleWhite = [iconStyleWhite, labelStyle];
-    var styleYellow = [iconStyleYellow, labelStyle];
-    var stylePurple = [iconStylePurple, labelStyle];
-    var styleGray = [iconStyleGray, labelStyle];
+    let style = [iconStyleDefault, labelStyle];
+    let styleBlack = [iconStyleBlack, labelStyle];
+    let styleBlue = [iconStyleBlue, labelStyle];
+    let styleCyan = [iconStyleCyan, labelStyle];
+    let stylePink = [iconStylePink, labelStyle];
+    let styleOrange = [iconStyleOrange, labelStyle];
+    let styleGreen = [iconStyleGreen, labelStyle];
+    let styleRed = [iconStyleRed, labelStyle];
+    let styleWhite = [iconStyleWhite, labelStyle];
+    let styleYellow = [iconStyleYellow, labelStyle];
+    let stylePurple = [iconStylePurple, labelStyle];
+    let styleGray = [iconStyleGray, labelStyle];
 
-    var layer = new ol.layer.Vector({
+    let layer = new ol.layer.Vector({
         source: new ol.source.Vector({
             features: [
 

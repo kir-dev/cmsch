@@ -124,16 +124,18 @@
             }
         }
     }
-    columData.push({
-        title: " ",
-        field: "buttons",
-        formatter: "html",
-        hozAlign: "center",
-        width: 60 * buttons.length,
-        minWidth: 60 * buttons.length,
-        resizable: false,
-        headerSort: false
-    });
+    if (buttons.length !== 0) {
+        columData.push({
+            title: " ",
+            field: "buttons",
+            formatter: "html",
+            hozAlign: "center",
+            width: 60 * buttons.length,
+            minWidth: 60 * buttons.length,
+            resizable: false,
+            headerSort: false
+        });
+    }
 
     let table = new Tabulator("#cmsch-table", {
         data: tableData,
