@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_SHOW_DELETE_FILES
+import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
 import org.springframework.security.core.Authentication
@@ -22,7 +22,7 @@ class FileUploadController(
     private val applicationComponent: ApplicationComponent
 ) {
 
-    private val permissionControl = PERMISSION_SHOW_DELETE_FILES
+    private val permissionControl = ControlPermissions.PERMISSION_UPLOAD_FILES
 
     @PostConstruct
     fun init() {
@@ -50,6 +50,7 @@ class FileUploadController(
         model.addAttribute("user", user)
         model.addAttribute("uploaded", uploaded)
         model.addAttribute("baseUrl", applicationComponent.adminSiteUrl.getValue())
+        model.addAttribute("permission", permissionControl.permissionString)
 
         return "uploadFile"
     }

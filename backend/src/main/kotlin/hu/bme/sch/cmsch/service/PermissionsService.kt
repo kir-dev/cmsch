@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.service
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.admission.AdmissionComponent
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
@@ -43,14 +42,22 @@ sealed interface PermissionGroup {
 
 object ImplicitPermissions : PermissionGroup {
 
-    val PERMISSION_IMPLICIT_HAS_GROUP = PermissionValidator(description = "The user has a group")
+    val PERMISSION_IMPLICIT_HAS_GROUP = PermissionValidator(
+        description = "The user has a group",
+        permissionString = "HAS_GROUP")
             { user -> DI.instance.userService.getById(user.internalId).group != null }
 
-    val PERMISSION_IMPLICIT_ANYONE = PermissionValidator(description = "Everyone has this permission")
+    val PERMISSION_IMPLICIT_ANYONE = PermissionValidator(
+        description = "Everyone has this permission",
+        permissionString = "ANYONE")
             { _ -> true }
 
-    val PERMISSION_NOBODY = PermissionValidator(description = "Nobody has this permission")
-        { _ -> false }
+    val PERMISSION_NOBODY = PermissionValidator(
+        description = "Nobody has this permission",
+        permissionString = "NOBODY")
+            { _ -> false }
+
+    val PERMISSION_SUPERUSER_ONLY = PermissionValidator { user -> user.isSuperuser() }
 
     override fun allPermissions() = listOf(
         PERMISSION_IMPLICIT_HAS_GROUP,
@@ -132,9 +139,21 @@ object ControlPermissions : PermissionGroup {
         component = ApplicationComponent::class
     )
 
-    val PERMISSION_SHOW_DELETE_FILES = PermissionValidator(
-        "SHOW_FILES",
-        "Feltöltött fájlok megtekintése és törlése",
+    val PERMISSION_SHOW_FILES = PermissionValidator(
+        "FILE_SHOW",
+        "Feltöltött fájlok megtekintése",
+        component = ApplicationComponent::class
+    )
+
+    val PERMISSION_DELETE_FILES = PermissionValidator(
+        "FILE_DELETE",
+        "Feltöltött fájlok törlése",
+        component = ApplicationComponent::class
+    )
+
+    val PERMISSION_UPLOAD_FILES = PermissionValidator(
+        "FILE_UPLOAD",
+        "Új fájl feltötltése",
         component = ApplicationComponent::class
     )
 
@@ -223,7 +242,9 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_APP,
         PERMISSION_CONTROL_APP_EXPORT,
         PERMISSION_INCREASED_SESSION_DURATION,
-        PERMISSION_SHOW_DELETE_FILES,
+        PERMISSION_SHOW_FILES,
+        PERMISSION_DELETE_FILES,
+        PERMISSION_UPLOAD_FILES,
         PERMISSION_CONTROL_IMPRESSUM,
         PERMISSION_CONTROL_COUNTDOWN,
         PERMISSION_CONTROL_FORM,
@@ -307,7 +328,13 @@ object StaffPermissions : PermissionGroup {
 
     val PERMISSION_EDIT_DEBTS = PermissionValidator(
         "DEBT_EDIT",
-        "Összes tartozás szerkesztése",
+        "Tartozások szerkesztése",
+        component = DebtComponent::class
+    )
+
+    val PERMISSION_DELETE_DEBTS = PermissionValidator(
+        "DEBT_DELETE",
+        "Tartozások törlése",
         component = DebtComponent::class
     )
 
@@ -1028,11 +1055,3 @@ object StaffPermissions : PermissionGroup {
     )
 
 }
-
-object ExperimentalPermissions {
-
-    val PERMISSION_EXP_TRANSACTION_IMPORT = PermissionValidator { user -> user.isSuperuser() }
-
-}
-
-

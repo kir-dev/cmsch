@@ -33,12 +33,12 @@ class SoldProductController(
     auditLog,
     objectMapper,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_DEBTS,
-    createPermission = StaffPermissions.PERMISSION_EDIT_DEBTS,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_DEBTS,
+    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission =   StaffPermissions.PERMISSION_EDIT_DEBTS,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_DEBTS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_DEBTS,
 
-    createEnabled = true,
+    createEnabled = false,
     editEnabled   = true,
     deleteEnabled = true,
     importEnabled = true,
