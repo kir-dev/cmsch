@@ -21,6 +21,7 @@ data class UserSiteContext(
     val role: RoleType,
     val group: String,
     val favoriteMenus: MutableList<String>,
+    var dismissedMotd: String,
     val permissions: List<String>,
     val resources: List<SearchableResource>,
     val cacheCreated: Long
@@ -46,5 +47,8 @@ data class SearchableResource(
 
 data class UserConfig(
     @JsonProperty(required = false)
-    var favoriteMenus: MutableList<String> = mutableListOf()
+    var favoriteMenus: MutableList<String> = mutableListOf(),
+
+    @JsonProperty(required = false)
+    var dismissedMotd: String = ""
 )

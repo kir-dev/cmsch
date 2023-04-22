@@ -7,8 +7,8 @@ import java.security.Principal
 data class CmschUserPrincipal(
     override val id: Int,
     override val internalId: String,
-    override val role: RoleType,
-    override val permissionsAsList: List<String>,
+    override var role: RoleType,
+    override var permissionsAsList: List<String>,
     override val userName: String
 ) : Serializable, Principal, CmschUser {
 

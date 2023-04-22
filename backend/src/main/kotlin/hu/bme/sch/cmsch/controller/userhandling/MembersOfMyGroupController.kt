@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.controller.userhandling
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.debt.DebtComponent
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
@@ -12,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/admin/control/members-of-my-group")
-@ConditionalOnBean(DebtComponent::class)
+@ConditionalOnBean(UserHandlingComponent::class)
 class MembersOfMyGroupController(
     private val userService: UserService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
-    component: DebtComponent,
+    component: UserHandlingComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper
 ) : SimpleEntityPage<GroupMemberVirtualEntity>(

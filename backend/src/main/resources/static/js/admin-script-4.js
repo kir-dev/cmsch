@@ -228,7 +228,7 @@ function toggleStarred(title) {
     if (element) {
         toggleStar(title, () => {
             element.classList.toggle('favorite');
-            document.getElementById('star-page').classList.toggle('favorite');
+            document.querySelector(`span[data-star='${title}']`).classList.toggle('favorite');
         });
     }
 }
@@ -243,5 +243,19 @@ function toggleStar(menu, callback) {
         .then(result => callback())
         .catch(error => console.error(error));
 }
+
+function dismissMotd(motd) {
+    fetch('/admin/api/settings/dismiss-motd', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: motd,
+        credentials: 'include'
+    })
+        .then(result => {
+            document.getElementById('motd').style.display = (motd === '' || motd === '-') ? 'inline' : 'none';
+        })
+        .catch(error => console.error(error));
+}
+
 
 window.onload = init;

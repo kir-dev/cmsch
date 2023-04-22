@@ -1,0 +1,113 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout4 :: head(${context.siteName})">
+</head>
+<body>
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        </div>
+
+        <div class="content">
+            <h1 class="narrow"><ins>Beállítások</ins></h1>
+
+            <div class="card wide-false">
+                <h4>Kedvenc oldalak</h4>
+                <div class="desc">Az oldal menüjében kiemelt színnel megjelölt menük.</div>
+
+                <div class="table-container">
+                    <table cellspacing="0">
+                        <tr th:each="favorite : ${userContext.favoriteMenus}">
+                            <td th:text="${favorite}" class="basic-padding"></td>
+                            <td class="basic-padding">
+                                <span class="material-symbols-outlined color-yellow star-button"
+                                      th:class="|material-symbols-outlined color-yellow star-button ${userContext.favoriteMenus.contains(favorite) ? 'favorite' : ''}|"
+                                      id="star-page"
+                                      th:data-star="${favorite}"
+                                      onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <p th:if="${userContext.favoriteMenus.isEmpty()}" class="light-color">Még nem adtál hozzá egyetlen menüt sem a kedvenceidhez! Kattings egy menüben a sárga színű csillag gombra.</p>
+            </div>
+
+            <div class="card wide-false">
+                <h4>Legutolsó üzenet</h4>
+                <div class="desc">Az oldal adminisztrátorai által kiadott közérdekű üzenet.</div>
+
+                <p class="light-color badge" th:text="${context.motd}"></p>
+
+                <div class="button-group" style="margin-bottom: 20px">
+                    <button type="button" class="btn" th:data-motd="${context.motd}" onclick="dismissMotd(this.getAttribute('data-motd'))">
+                        <span class="material-symbols-outlined">visibility_off</span>
+                        <ins>Elrejtés</ins>
+                    </button>
+                    <button type="button" class="btn" onclick="dismissMotd('-')">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <ins>Megjelenítés</ins>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card wide-false">
+                <h4>Jogosultságok</h4>
+                <div class="desc">A little description fits there. Lorem ipsum dolor sit amet.</div>
+
+                <p th:if="${user.role.isAdmin()}" class="light-color">Mivel admin vagy, mindenhez van jogosultságod, nem csak az itt felsoroltakhoz!</p>
+
+                <div>
+                    <div class="permission-box">
+                        <div class="permission-part">
+                            <span class="material-symbols-outlined fix-icons">person</span>&nbsp;<b th:text="${user.role.displayName}">ROLE_NAME</b><br>
+                            <span class="note" th:text="${user.role.description}">description</span>
+                        </div>
+                        <div class="permission-part"></div>
+                    </div>
+                </div>
+
+                <div class="button-group" style="margin-bottom: 20px">
+                    <a href="#" th:href="@{/admin/control/settings/relog}" class="btn btn-primary">
+                        <span class="material-symbols-outlined">refresh</span>
+                        <ins>Frissítés</ins>
+                    </a>
+                </div>
+
+                <div>
+
+                    <div class="permission-box" th:each="permission : ${staffPermissions}">
+                        <div class="permission-part">
+                            <span class="material-symbols-outlined fix-icons staff-permissions">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                            <span class="note" th:text="${permission.description}">description</span>
+                        </div>
+                        <div class="permission-part"></div>
+                    </div>
+
+                    <div class="permission-box" th:each="permission : ${customPermissions}">
+                        <div class="permission-part">
+                            <span class="material-symbols-outlined fix-icons custom-permissions">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                            <span class="note" th:text="${permission.description}">description</span>
+                        </div>
+                        <div class="permission-part"></div>
+                    </div>
+
+                    <div class="permission-box" th:each="permission : ${adminPermissions}">
+                        <div class="permission-part">
+                            <span class="material-symbols-outlined fix-icons admin-permissions">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
+                            <span class="note" th:text="${permission.description}">description</span>
+                        </div>
+                        <div class="permission-part"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -11,8 +11,8 @@ import java.security.Principal
 class CmschGoogleUser(
     override val id: Int,
     override val internalId: String,
-    override val role: RoleType,
-    override val permissionsAsList: List<String>,
+    override var role: RoleType,
+    override var permissionsAsList: List<String>,
     override val userName: String,
     authorities: List<GrantedAuthority>,
     idToken: OidcIdToken,
