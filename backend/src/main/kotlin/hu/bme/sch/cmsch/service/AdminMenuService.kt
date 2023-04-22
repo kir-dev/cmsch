@@ -137,6 +137,7 @@ class AdminMenuService(
             role = user.role,
             group = userEntity.groupName,
             favoriteMenus = config.favoriteMenus,
+            dismissedMotd = config.dismissedMotd,
             permissions = user.permissionsAsList,
             resources = searchableResources.filter { it.permission.validate(user) },
             cacheCreated = clock.getTime()
@@ -158,8 +159,14 @@ class AdminMenuService(
         saveContextConfig(user, context)
     }
 
+    fun dismissModt(user: CmschUser, motd: String) {
+        val context = getContextForUser(user)
+        context.dismissedMotd = motd
+        saveContextConfig(user, context)
+    }
+
     private fun saveContextConfig(user: CmschUser, context: UserSiteContext) {
-        userService.saveUserConfig(user, UserConfig(context.favoriteMenus))
+        userService.saveUserConfig(user, UserConfig(context.favoriteMenus, context.dismissedMotd))
     }
 
 }

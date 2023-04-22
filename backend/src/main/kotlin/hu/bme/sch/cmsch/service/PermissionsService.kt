@@ -153,7 +153,7 @@ object ControlPermissions : PermissionGroup {
 
     val PERMISSION_UPLOAD_FILES = PermissionValidator(
         "FILE_UPLOAD",
-        "Új fájl feltötltése",
+        "Új fájl feltöltése",
         component = ApplicationComponent::class
     )
 

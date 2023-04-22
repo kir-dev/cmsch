@@ -100,6 +100,12 @@
 
 <script th:src="@{/js/tabulator.min.js}"></script>
 <script th:inline="javascript">
+    function timestampFormatter(cell, formatterParams, onRendered) {
+        const value = cell.getValue();
+        const dt = luxon.DateTime.fromSeconds(value);
+        return dt.toFormat("yyyy-MM-dd HH:mm");
+    }
+
     const buttons = JSON.parse(/*[[${controlActions}]]*/ "[]");
     let tableData = JSON.parse(/*[[${tableData}]]*/ "[]");
     let view = /*[[${view}]]*/ "";
@@ -122,6 +128,8 @@
                 tickElement: "<span class='material-symbols-outlined color-green'>done</span>",
                 crossElement: "<span class='material-symbols-outlined color-red'>close</span>",
             }
+        } else if (columData[columnId].formatter === 'datetime') {
+            columData[columnId]['formatter'] = timestampFormatter
         }
     }
     if (buttons.length !== 0) {

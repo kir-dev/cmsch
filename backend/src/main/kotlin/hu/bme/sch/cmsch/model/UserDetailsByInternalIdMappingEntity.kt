@@ -41,7 +41,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Jogkör",
-        source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
+        source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ],
         note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2, enumSource = RoleType::class)

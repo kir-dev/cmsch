@@ -24,13 +24,13 @@ class TrackOneGroupController(
 ) : SimpleEntityPage<TrackGroupVirtualEntity>(
     "track-group",
     TrackGroupVirtualEntity::class, ::TrackGroupVirtualEntity,
-    "Csoportom tagjai", "Csoportom tagjai",
-    "A csoportodban lévő emberek. Ameddig valaki nem jelentkezik be, addig itt nem látszik, hogy rendező-e.",
+    "Csoport követése", "Csoport követése",
+    "Csoport követése a térképen",
 
     { locationService.getRecentLocations()
         .map { TrackGroupVirtualEntity(it.id, it.groupName) }.distinct() },
 
-    permission = ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP,
+    permission = StaffPermissions.PERMISSION_TRACK_ONE_GROUP,
 
     importService,
     adminMenuService,

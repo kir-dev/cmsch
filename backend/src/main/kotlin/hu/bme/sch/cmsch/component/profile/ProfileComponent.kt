@@ -132,7 +132,7 @@ class ProfileComponent(
 
     val showTokens = SettingProxy(componentSettingService, component,
         "showTokens", "false", type = SettingType.BOOLEAN,
-        fieldName = "Token számláló aktív", description = "Legyen-e látató a token szmláló?"
+        fieldName = "Token számláló aktív", description = "Legyen-e látató a token számláló?"
     )
 
     val tokenCounterName = SettingProxy(componentSettingService, component,

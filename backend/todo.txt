@@ -8,10 +8,11 @@
 + markdown editor disabled
 + switch disabled
 + Táblázat utolsó oszlopnak stílusa
++ Dátum táblázatban
++ Dátum editor
++ dismiss motd
++ settings menü
 
-- settings menü
-- Dátum táblázatban
-- Dátum editor
 - timezone check
 
 - súgó
@@ -32,4 +33,5 @@
 - add anchors
 - mobil barát
 - audit log
-
+- fully functional import
+- komponensek gombjai

@@ -10,8 +10,8 @@ import java.security.Principal
 class CmschAuthschUser(
     override val id: Int,
     override val internalId: String,
-    override val role: RoleType,
-    override val permissionsAsList: List<String>,
+    override var role: RoleType,
+    override var permissionsAsList: List<String>,
     override val userName: String,
     authorities: List<GrantedAuthority>
 ) : DefaultOAuth2User(authorities, mapOf("internal_id" to internalId), "internal_id"), CmschUser, Principal, Serializable {

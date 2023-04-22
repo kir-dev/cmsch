@@ -21,7 +21,14 @@
                     Ha szerinted ez egy hiba a rendszerben, akkor keresd meg az oldal adminisztrátorát.
                 </p>
 
-                <p>Szükséges jogosultság: <b th:text="${permission}"></b></p>
+                <p class="light-color">Szükséges jogosultság: <b class="badge" th:text="${permission}"></b></p>
+
+                <div class="button-group">
+                    <button type="button" class="btn" onclick="window.history.back()">
+                        <span class="material-symbols-outlined">undo</span>
+                        <ins>VISSZA</ins>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
