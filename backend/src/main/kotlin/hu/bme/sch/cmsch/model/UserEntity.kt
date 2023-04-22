@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
+import java.lang.RuntimeException
 import javax.persistence.*
 
 enum class RoleType(val value: Int, val displayName: String, val description: String) {
@@ -224,8 +225,9 @@ data class UserEntity(
     val fullNameWithAlias: String
         get() = if (alias != "") "${fullName} ($alias)" else fullName
 
-    override val permissionsAsList
+    override var permissionsAsList
         get() = permissions.split(",")
+        set(value) = throw RuntimeException("Value cannot be changed")
 
     override val userName
         get() = fullName

@@ -14,8 +14,10 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.repository.UserDetailsByInternalIdMappingRepository
+import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -32,6 +34,7 @@ open class LoginService(
     private val loginComponent: LoginComponent,
     private val unitScopeComponent: UnitScopeComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
+    private val adminMenuService: AdminMenuService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -60,6 +63,7 @@ open class LoginService(
         }
         updateFieldsForAuthsch(user, profile)
         users.save(user)
+        adminMenuService.invalidateUser(user.internalId)
         return user
     }
 
@@ -88,6 +92,7 @@ open class LoginService(
         }
         updateFieldsForGoogle(user)
         users.save(user)
+        adminMenuService.invalidateUser(user.internalId)
         return user
     }
 

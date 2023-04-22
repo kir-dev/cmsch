@@ -69,7 +69,7 @@ data class ResponseEntity(
     var lastUpdatedDate: Long = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve", minimumRole = RoleType.ADMIN)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve")
     @property:GenerateOverview(columnName = "Fizetve", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
     var accepted: Boolean = false,
@@ -81,7 +81,7 @@ data class ResponseEntity(
     var acceptedAt: Long = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Elutasítva", minimumRole = RoleType.ADMIN)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Elutasítva")
     @property:GenerateOverview(columnName = "Elutasítva", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
     var rejected: Boolean = false,
@@ -112,7 +112,7 @@ data class ResponseEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "Adatok elfogadva", minimumRole = RoleType.ADMIN)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "Adatok elfogadva")
     @property:GenerateOverview(columnName = "Adatok", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
     var detailsValidated: Boolean = false,

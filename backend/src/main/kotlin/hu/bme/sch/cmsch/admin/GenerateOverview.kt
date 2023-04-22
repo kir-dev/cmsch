@@ -40,7 +40,7 @@ fun GenerateOverview.extra(): String {
     return when (this.renderer) {
         OVERVIEW_TYPE_ID -> ", \"width\":100, \"vertAlign\":\"middle\", \"visible\":false"
         OVERVIEW_TYPE_TEXT -> ", \"vertAlign\":\"middle\""
-        OVERVIEW_TYPE_DATE -> ", \"vertAlign\":\"middle\""
+        OVERVIEW_TYPE_DATE -> ", \"vertAlign\":\"middle\",\"formatter\":\"datetime\""
         OVERVIEW_TYPE_BOOLEAN -> ", \"formatter\":\"tickCross\", \"width\":120"
         OVERVIEW_TYPE_TIME -> ", \"vertAlign\":\"middle\""
         OVERVIEW_TYPE_NUMBER -> ", \"vertAlign\":\"middle\""

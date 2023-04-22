@@ -18,13 +18,16 @@
     <link rel="icon" type="image/png" sizes="384x384" th:href="@{/cdn/manifest/icon-384x384.png}" />
     <link rel="icon" type="image/png" sizes="512x512" th:href="@{/cdn/manifest/icon-512x512.png}" />
 
-    <script src="../static/js/admin-script-4.js" th:src="@{/js/admin-script-4.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="../static/style4.css" th:href="@{/style4.css}">
+    <link rel="stylesheet" href="../static/flatpickr_custom.css" th:href="@{/flatpickr_custom.css}">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../static/js/admin-script-4.js" th:src="@{/js/admin-script-4.js}"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="../static/style4.css" th:href="@{/style4.css}">
     <link rel="stylesheet" href="../static/tabulator_simple.css" th:href="@{/tabulator_simple.css}">
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
 </head>
 <body>
 
@@ -53,11 +56,15 @@
     <div class="nav">
         <div class="left-panel">
             <ins th:text="${context.siteName}">CMSCH 4 APP</ins>
-            <span class="badge color-green" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> LIVE</span>
-            <span class="badge" th:if="${context.production == 'dev'}"><span class="material-symbols-outlined regular">code</span> DEV</span>
+            <span class="badge color-green" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> <ins>LIVE</ins></span>
+            <span class="badge" th:if="${context.production == 'dev'}"><span class="material-symbols-outlined regular">code</span> <ins>DEV</ins></span>
         </div>
-        <div class="motd-panel">
-            <span th:if="${context.motd != null && context.motd != ''}" class="badge color-yellow" th:text="${context.motd}">Figyelem! Ez egy teszt üzenet!</span>
+        <div class="motd-panel" style="text-align: center">
+            <span id="motd" th:style="|display: ${context.motd != null && context.motd != '' && context.motd != userContext.dismissedMotd ? 'inline' : 'none'}|">
+                <span th:text="${context.motd}" class="color-yellow badge">Figyelem! Ez egy teszt üzenet! </span>
+                <span class="material-symbols-outlined span-button" th:data-motd="${context.motd}"
+                   onclick="dismissMotd(this.getAttribute('data-motd')); return false">visibility_off</span>
+            </span>
         </div>
         <div class="stats-panel" th:remove="all">
             <span class="badge color-green">53</span> online
@@ -83,7 +90,7 @@
                     <h3 class="username" th:text="${userContext.userName}">John Doe</h3>
                     <p class="role" th:text="${userContext.role.displayName}">Administrator</p>
                     <div class="menu-items">
-                        <a href="/admin/settings">
+                        <a href="/admin/control/settings">
                             <div class="menu-item">
                                 <i class="material-symbols-outlined">settings</i>
                                 <span>Beállítások</span>
@@ -134,15 +141,15 @@
 
                 <div class="placeholder"></div>
 
-                <a href="#" class="tooltip">
+                <a href="#" class="tooltip" onclick="window.location.href = '/admin/control/settings'">
                     <span class="material-symbols-outlined">settings</span>
                     <span class="tooltip-text">Beállítások (ctrl + F12)</span>
                 </a>
-                <a href="#" class="tooltip">
+                <a href="#" class="tooltip" onclick="alert('A súgó funkció még nincs kész')">
                     <span class="material-symbols-outlined">help</span>
                     <span class="tooltip-text">Súgó</span>
                 </a>
-                <a href="#" class="tooltip">
+                <a href="#" class="tooltip" onclick="window.open('https://github.com/kir-dev/cmsch/issues', '_blank')">
                     <span class="material-symbols-outlined primary">bug_report</span>
                     <span class="tooltip-text">Visszajelzés küldése</span>
                 </a>

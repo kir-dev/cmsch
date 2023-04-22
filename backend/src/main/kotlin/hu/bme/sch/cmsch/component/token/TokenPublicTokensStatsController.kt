@@ -62,8 +62,10 @@ class TokenPublicTokensStatsController(
     @GetMapping("")
     override fun view(model: Model, auth: Authentication): String {
         val user = auth.getUserFromDatabase()
-        if (user.isAdmin() || user.groupName == loginComponent.organizerGroupName.getValue()) {
+        adminMenuService.addPartsForMenu(user, model)
+        if (!user.isAdmin() && user.groupName != loginComponent.organizerGroupName.getValue()) {
             model.addAttribute("user", user)
+            model.addAttribute("permission", "IN_ORGANIZER_GROUP")
             return "admin403"
         }
 

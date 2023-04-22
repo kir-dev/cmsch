@@ -103,6 +103,10 @@ scrollbar-corner,
     background-color: transparent;
 }
 
+.light-color {
+    color: var(--lighter-text-color) !important;
+}
+
 .group {
     display: table;
     width: 100%;
@@ -114,6 +118,8 @@ scrollbar-corner,
     background-color: #191c20;
     width: 100%;
     box-sizing: content-box;
+    max-height: 47px;
+    overflow-y: hidden;
 }
 
 .nav > div {
@@ -333,7 +339,8 @@ scrollbar-corner,
     font-weight: 300;
 }
 
-.app > .content > h1 > span.favorite {
+.app > .content > h1 > span.favorite,
+table span.favorite {
     font-variation-settings:
             'FILL' 1,
             'wght' 400,
@@ -508,6 +515,7 @@ scrollbar-corner,
 .badge > span {
     vertical-align: top;
     max-width: 16px;
+    font-size: 19px;
 }
 
 .smaller {
@@ -883,6 +891,14 @@ a.btn-danger:hover {
     padding: 0 !important;
 }
 
+.span-button {
+    cursor: pointer;
+}
+
+.span-button:hover {
+    color: var(--primary-color);
+}
+
 form label,
 .flagged-label {
     display: block;
@@ -1074,7 +1090,8 @@ form textarea {
     min-height: 100px;
 }
 
-form span.note {
+form span.note,
+.permission-box span.note {
     display: block;
     font-size: 12px;
     color: var(--light-text-color);
@@ -1436,9 +1453,12 @@ form ul {
     text-align: center;
 }
 
-
 .table-container table tr:nth-of-type(2n+1) td {
     background-color: var(--dark-3);
+}
+
+.table-container table .basic-padding {
+    padding: 4px 16px;
 }
 
 .hidden {

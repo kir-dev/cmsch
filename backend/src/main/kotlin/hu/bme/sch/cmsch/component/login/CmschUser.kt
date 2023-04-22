@@ -5,8 +5,8 @@ import hu.bme.sch.cmsch.model.RoleType
 interface CmschUser {
     val id: Int
     val internalId: String
-    val role: RoleType
-    val permissionsAsList: List<String>
+    var role: RoleType
+    var permissionsAsList: List<String>
     val userName: String
 
     fun hasPermission(permission: String): Boolean
@@ -21,5 +21,10 @@ interface CmschUser {
 
     fun isSuperuser(): Boolean {
         return role == RoleType.SUPERUSER
+    }
+
+    fun refresh(cmschUser: CmschUser) {
+        role = cmschUser.role
+        permissionsAsList = cmschUser.permissionsAsList
     }
 }

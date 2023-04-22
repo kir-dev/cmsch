@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.login
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.token.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.apache.catalina.util.URLEncoder
@@ -68,7 +69,7 @@ class AuthschLoginController(
             request.changeSessionId()
 
         } catch (e: Exception) {
-            // It should be logged out anyways
+            // It should be logged out anyway
         }
         return "redirect:${applicationComponent.siteUrl.getValue()}?logged-out=true"
     }

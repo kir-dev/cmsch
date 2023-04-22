@@ -6,7 +6,6 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.ManagedEntity
-import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -79,7 +78,7 @@ data class SoldProductEntity(
 
     @Column(nullable = false)
     @JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Átadva", minimumRole = RoleType.ADMIN)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Átadva")
     @property:ImportFormat(ignore = false, columnId = 10)
     var shipped: Boolean = false,
 
@@ -89,7 +88,7 @@ data class SoldProductEntity(
     var shippedAt: Long = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve", minimumRole = RoleType.ADMIN)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve")
     @property:GenerateOverview(columnName = "Fizetve", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 12)
     var payed: Boolean = false,
@@ -100,7 +99,7 @@ data class SoldProductEntity(
     var payedAt: Long = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Lezárva", minimumRole = RoleType.ADMIN)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Lezárva")
     @property:GenerateOverview(columnName = "Lezárva", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 14)
     var finsihed: Boolean = false,
