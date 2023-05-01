@@ -53,7 +53,9 @@ class AdminMenuService(
     @PostConstruct
     fun invalidateSiteContext() {
         siteContext = SiteContext(
-            applicationComponent.siteName.getValue(),
+            applicationComponent.siteName.getValue()
+                    + (if (applicationComponent.adminPanelName.getValue().isNotBlank())
+                        " - ${applicationComponent.adminPanelName.getValue()}" else ""),
             if (environment.activeProfiles.contains("internal")
                     || environment.activeProfiles.contains("test")
                     || environment.activeProfiles.contains("dev"))
@@ -159,7 +161,7 @@ class AdminMenuService(
         saveContextConfig(user, context)
     }
 
-    fun dismissModt(user: CmschUser, motd: String) {
+    fun dismissMotd(user: CmschUser, motd: String) {
         val context = getContextForUser(user)
         context.dismissedMotd = motd
         saveContextConfig(user, context)
