@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class RiddleComponentController(
     adminMenuService: AdminMenuService,
     component: RiddleComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     RiddleComponent::class.java,
@@ -22,5 +23,6 @@ class RiddleComponentController(
     PERMISSION_CONTROL_RIDDLE,
     "Riddleök",
     "Riddleök testreszabása",
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 )

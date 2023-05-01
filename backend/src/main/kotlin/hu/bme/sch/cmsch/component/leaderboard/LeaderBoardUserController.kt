@@ -25,7 +25,7 @@ class LeaderBoardUserController(
     adminMenuService: AdminMenuService,
     component: LeaderBoardComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
 ) : SimpleEntityPage<LeaderBoardAsUserEntryDto>(
     "user-toplist",
     LeaderBoardAsUserEntryDto::class, ::LeaderBoardAsUserEntryDto,
@@ -75,6 +75,8 @@ class LeaderBoardUserController(
         if (refreshPermission.validate(user).not()) {
             model.addAttribute("permission", refreshPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/refresh",
+                refreshPermission.permissionString)
             return "admin403"
         }
 

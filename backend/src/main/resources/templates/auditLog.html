@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout4 :: head(${context.siteName})">
+</head>
+<body>
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        </div>
+
+        <div class="content">
+            <h1>Audit log</h1>
+
+            <div class="card">
+                <h4 th:text="${id}">id</h4>
+
+                <div class="desc">Minden változtatás ami a szerveren vágbemegy itt kerül logolásra</div>
+
+                <form onsubmit="return false">
+                    <textarea id="content" th:text="${log}" readonly style="height: 600px; width: 100%; font-family: monospace">
+                    </textarea>
+                </form>
+
+                <div class="button-group">
+                    <a href="#" th:href="|@{/admin/control/auditlog/download/}${id}|" class="btn btn-primary" target="_blank">
+                        <span class="material-symbols-outlined">save</span>
+                        <ins>Letöltés</ins>
+                    </a>
+
+                    <a href="#" th:href="@{/admin/control/auditlog}" class="btn">
+                        <span class="material-symbols-outlined">undo</span>
+                        <ins>Vissza</ins>
+                    </a>
+
+                    <button type="button" class="btn"
+                            onclick="document.getElementById('content').scrollTop = 0;">
+                        <span class="material-symbols-outlined">arrow_upward</span>
+                        <ins>Tetejére teker</ins>
+                    </button>
+
+                    <button type="button" class="btn"
+                            onclick="document.getElementById('content').scrollTop = document.getElementById('content').scrollHeight;">
+                        <span class="material-symbols-outlined">arrow_downward</span>
+                        <ins>Aljára teker</ins>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('content').scrollTop = document.getElementById('content').scrollHeight;
+</script>
+</body>
+</html>

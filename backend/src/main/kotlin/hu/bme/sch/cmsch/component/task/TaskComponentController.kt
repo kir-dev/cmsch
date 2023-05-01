@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class TaskComponentController(
     adminMenuService: AdminMenuService,
     component: TaskComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     TaskComponent::class.java,
@@ -23,6 +24,7 @@ class TaskComponentController(
     PERMISSION_CONTROL_TASKS,
     "Feladatok",
     "Feladat beállítások",
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 )
 

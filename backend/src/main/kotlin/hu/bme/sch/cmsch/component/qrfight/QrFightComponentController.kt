@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -19,7 +20,8 @@ class QrFightComponentController(
     adminMenuService: AdminMenuService,
     component: QrFightComponent,
     menuService: MenuService,
-    private val qrFightService: QrFightService
+    private val qrFightService: QrFightService,
+    private val auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     QrFightComponent::class.java,
@@ -27,6 +29,7 @@ class QrFightComponentController(
     ControlPermissions.PERMISSION_CONTROL_QR_FIGHT,
     "QR Fight",
     "QR Fight beállítások",
+    auditLogService = auditLogService,
     menuService = menuService
 ) {
 

@@ -27,7 +27,7 @@ class DebtsOfMyGroupAdminController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
 ) : SimpleEntityPage<SoldProductEntity>(
     "debts-of-my-group",
     SoldProductEntity::class, ::SoldProductEntity,
@@ -70,6 +70,8 @@ class DebtsOfMyGroupAdminController(
         if (payPermission.validate(user).not()) {
             model.addAttribute("permission", payPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/payed/$id",
+                payPermission.permissionString)
             return "admin403"
         }
 
@@ -93,6 +95,8 @@ class DebtsOfMyGroupAdminController(
         if (payPermission.validate(user).not()) {
             model.addAttribute("permission", payPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/payed/$id",
+                payPermission.permissionString)
             return "admin403"
         }
 

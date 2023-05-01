@@ -108,6 +108,7 @@ class TaskAdminRateController(
         if (viewPermission.validate(user).not()) {
             model.addAttribute("permission", viewPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/rate/$id", viewPermission.permissionString)
             return "admin403"
         }
 
@@ -137,6 +138,7 @@ class TaskAdminRateController(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/grade/$id", editPermission.permissionString)
             return "admin403"
         }
 
@@ -149,7 +151,6 @@ class TaskAdminRateController(
         model.addAttribute("user", user)
         model.addAttribute("gradeMode", true)
         model.addAttribute("readOnly", false)
-        // FIXME: set edit path to grade
 
         val entity = submittedRepository.findById(id)
         if (entity.isEmpty) {
@@ -175,6 +176,7 @@ class TaskAdminRateController(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /${view}/grade", editPermission.permissionString)
             return "admin403"
         }
 
@@ -183,10 +185,12 @@ class TaskAdminRateController(
             return "redirect:/admin/control/$view/grade/$id"
         }
 
-        updateEntity(descriptor, user, entity.get(), dto, null, null)
+        val newValues = StringBuilder("grade new value: ")
+        updateEntity(descriptor, user, entity.get(), dto, newValues, null, null)
         if (entity.get().approved && entity.get().rejected)
             entity.get().rejected = false
         entity.get().id = id
+        auditLog.edit(user, component.component, newValues.toString())
         submittedRepository.save(entity.get())
         return "redirect:/admin/control/$view/rate/${entity.get().task?.id ?: ""}"
     }

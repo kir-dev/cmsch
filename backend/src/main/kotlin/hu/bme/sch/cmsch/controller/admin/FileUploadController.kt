@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
@@ -19,7 +20,8 @@ import kotlin.math.absoluteValue
 @RequestMapping("/admin/control/upload-file")
 class FileUploadController(
     private val adminMenuService: AdminMenuService,
-    private val applicationComponent: ApplicationComponent
+    private val applicationComponent: ApplicationComponent,
+    private val auditLog: AuditLogService
 ) {
 
     private val permissionControl = ControlPermissions.PERMISSION_UPLOAD_FILES
@@ -44,6 +46,7 @@ class FileUploadController(
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, "file-upload", "GET /upload-file", permissionControl.permissionString)
             return "admin403"
         }
 
@@ -62,6 +65,7 @@ class FileUploadController(
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, "file-upload", "POST /upload-file", permissionControl.permissionString)
             return "admin403"
         }
 

@@ -1,9 +1,6 @@
 package hu.bme.sch.cmsch.component.leaderboard
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.debt.DebtComponent
-import hu.bme.sch.cmsch.component.debt.ProductGroupVirtualEntity
-import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
@@ -28,7 +25,7 @@ class LeaderBoardGroupController(
     adminMenuService: AdminMenuService,
     component: LeaderBoardComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
 ) : SimpleEntityPage<LeaderBoardAsGroupEntryDto>(
     "group-toplist",
     LeaderBoardAsGroupEntryDto::class, ::LeaderBoardAsGroupEntryDto,
@@ -78,6 +75,8 @@ class LeaderBoardGroupController(
         if (refreshPermission.validate(user).not()) {
             model.addAttribute("permission", refreshPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/refresh",
+                refreshPermission.permissionString)
             return "admin403"
         }
 

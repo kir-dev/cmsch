@@ -308,7 +308,7 @@
 
             <div class="card wide-false">
 
-                <form th:action="|@{/admin/control}/${view}/${editMode ? ((controlMode == 'grade' ? 'grade/' : 'edit/') + id) : 'create'}|"
+                <form th:action="|@{/admin/control}/${view}/${editMode ? ((gradeMode == true ? 'grade/' : 'edit/') + id) : 'create'}|"
                       method="post"
                       enctype="multipart/form-data">
 
