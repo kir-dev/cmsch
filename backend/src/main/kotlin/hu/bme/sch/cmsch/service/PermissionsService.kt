@@ -133,6 +133,12 @@ object ControlPermissions : PermissionGroup {
         component = ApplicationComponent::class
     )
 
+    val PERMISSION_CONTROL_FOOTER = PermissionValidator(
+        "FOOTER_CONTROL",
+        "Lábléc beállításai",
+        component = ApplicationComponent::class
+    )
+
     val PERMISSION_INCREASED_SESSION_DURATION = PermissionValidator(
         "INCREASED_SESSION_DURATION",
         "Megnövelt session idő",
@@ -229,6 +235,12 @@ object ControlPermissions : PermissionGroup {
         component = LocationComponent::class
     )
 
+    val PERMISSION_DEV_DEBUG = PermissionValidator(
+        "DEVELOPER_DEBUG",
+        "Fejlesztői beállítások",
+        component = ApplicationComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -241,6 +253,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_PROFILE,
         PERMISSION_CONTROL_APP,
         PERMISSION_CONTROL_APP_EXPORT,
+        PERMISSION_CONTROL_FOOTER,
         PERMISSION_INCREASED_SESSION_DURATION,
         PERMISSION_SHOW_FILES,
         PERMISSION_DELETE_FILES,
@@ -255,7 +268,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_RACE,
         PERMISSION_CONTROL_TEAM,
         PERMISSION_CONTROL_QR_FIGHT,
-        PERMISSION_CONTROL_BMEJEGY
+        PERMISSION_CONTROL_BMEJEGY,
+        PERMISSION_DEV_DEBUG
     )
 
 }

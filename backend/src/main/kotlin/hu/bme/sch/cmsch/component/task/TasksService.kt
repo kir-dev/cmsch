@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.task
 
-import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
@@ -22,7 +22,7 @@ open class TasksService(
     private val categories: TaskCategoryRepository,
     private val clock: TimeService,
     private val taskComponent: TaskComponent,
-    private val applicationComponent: ApplicationComponent
+    private val debugComponent: DebugComponent
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -114,7 +114,7 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
                 ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        val now = clock.getTimeInSeconds() + (applicationComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
@@ -138,7 +138,7 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        val now = clock.getTimeInSeconds() + (applicationComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }

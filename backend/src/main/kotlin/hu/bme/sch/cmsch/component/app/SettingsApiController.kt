@@ -20,7 +20,7 @@ class SettingsApiController(
 
     @PostMapping("/dismiss-motd")
     fun dismissMotd(@RequestBody motd: String, auth: Authentication): String {
-        adminMenuService.dismissModt(auth.getUser(), motd)
+        adminMenuService.dismissMotd(auth.getUser(), motd)
         return "ok"
     }
 

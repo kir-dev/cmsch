@@ -16,7 +16,7 @@
 - timezone check
 
 - súgó
-- menük átrendezése
++ menük átrendezése
     FooterComponent : style
     WarningComponent : content
       - dismiss moth
