@@ -3,7 +3,9 @@ package hu.bme.sch.cmsch.component.location
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
+import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.markdownToHtml
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -20,7 +22,8 @@ import javax.annotation.PostConstruct
 class LocationSharingController(
     private val adminMenuService: AdminMenuService,
     private val locationComponent: LocationComponent,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val auditLogService: AuditLogService
 ) {
 
     private val view = "share-location"
@@ -47,6 +50,8 @@ class LocationSharingController(
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, locationComponent.component, "GET /share-location",
+                permissionControl.permissionString)
             return "admin403"
         }
 

@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_TRACK_EVERYBODY
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_TRACK_ONE_GROUP
 import hu.bme.sch.cmsch.util.getUser
@@ -19,7 +20,8 @@ import javax.annotation.PostConstruct
 class TrackingMapController(
     private val locationService: LocationService,
     private val adminMenuService: AdminMenuService,
-    private val locationComponent: LocationComponent
+    private val locationComponent: LocationComponent,
+    private val auditLogService: AuditLogService
 ) {
 
     @ResponseBody
@@ -61,6 +63,8 @@ class TrackingMapController(
         if (PERMISSION_TRACK_EVERYBODY.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_TRACK_EVERYBODY.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, locationComponent.component, "GET /tracking",
+                PERMISSION_TRACK_ONE_GROUP.permissionString)
             return "admin403"
         }
 
@@ -75,6 +79,8 @@ class TrackingMapController(
         if (PERMISSION_TRACK_ONE_GROUP.validate(user).not()) {
             model.addAttribute("permission", PERMISSION_TRACK_ONE_GROUP.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, locationComponent.component, "GET /tracking/$groupId",
+                PERMISSION_TRACK_ONE_GROUP.permissionString)
             return "admin403"
         }
 

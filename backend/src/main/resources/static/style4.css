@@ -139,6 +139,10 @@ scrollbar-corner,
     padding-right: 20px;
 }
 
+.nav #motd {
+    margin-left: 40px;
+}
+
 .right-panel .popover-container {
     width: 300px;
     background-color: var(--dark-2);

@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUser
@@ -25,7 +26,8 @@ class AdmissionApiController(
     private val userService: UserService,
     private val admissionComponent: AdmissionComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val bmejegyService: Optional<BmejegyService>
+    private val bmejegyService: Optional<BmejegyService>,
+    private val auditLogService: AuditLogService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -36,6 +38,9 @@ class AdmissionApiController(
         if (StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user).not()) {
             model.addAttribute("permission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
             model.addAttribute("user", user)
+
+            auditLogService.admin403(user, admissionComponent.component,
+                "GET /admission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
             return "admin403"
         }
 

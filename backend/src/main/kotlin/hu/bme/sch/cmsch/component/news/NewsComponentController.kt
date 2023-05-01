@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class NewsComponentController(
     adminMenuService: AdminMenuService,
     component: NewsComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     NewsComponent::class.java,
@@ -22,5 +23,6 @@ class NewsComponentController(
     PERMISSION_CONTROL_NEWS,
     "Hírek",
     "Hírek testreszabása",
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 )

@@ -10,4 +10,10 @@ class MenuSettingItem(
     var external: Boolean = false,
 ) {
     fun toMenuItem() = MenuItem(name, url, external, mutableListOf())
+
+    override fun toString(): String {
+        return "MenuSettingItem(id='$id', name='$name', url='$url', order=$order, " +
+                "visible=$visible, subMenu=$subMenu, external=$external)"
+    }
+
 }

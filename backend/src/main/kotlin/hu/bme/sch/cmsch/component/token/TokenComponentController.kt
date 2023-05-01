@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class TokenComponentController(
     adminMenuService: AdminMenuService,
     component: TokenComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     TokenComponent::class.java,
@@ -22,5 +23,6 @@ class TokenComponentController(
     PERMISSION_CONTROL_TOKEN,
     "Tokenek",
     "Tokenek testreszabása",
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 )

@@ -2,10 +2,7 @@ package hu.bme.sch.cmsch.component
 
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.AdminMenuCategory
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
@@ -28,7 +25,8 @@ abstract class ComponentApiBase(
     private val componentMenuPriority: Int = 100,
     private val insertComponentCategory: Boolean = true,
     private val componentCategory: String = componentClass.simpleName,
-    private val menuService: MenuService
+    private val menuService: MenuService,
+    private val auditLogService: AuditLogService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -59,6 +57,8 @@ abstract class ComponentApiBase(
         if (!permissionToShow.validate(user)) {
             model.addAttribute("permission", permissionToShow.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, component.component,
+                "GET ${component.component}/settings", permissionToShow.permissionString)
             return "admin403"
         }
 
@@ -83,19 +83,24 @@ abstract class ComponentApiBase(
         if (!permissionToShow.validate(user)) {
             model.addAttribute("permission", permissionToShow.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, component.component,
+                "POST ${component.component}/settings", permissionToShow.permissionString)
             return "admin403"
         }
+        val newValues = StringBuilder("component-edit new value: ")
         component.allSettings.forEach { setting ->
             when (setting.type) {
                 SettingType.BOOLEAN -> {
                     val parsedValue = allRequestParams[setting.property] != null && allRequestParams[setting.property] != "off"
                     log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, parsedValue)
+                    newValues.append(setting.property).append("=").append(parsedValue).append(", ")
                     setting.setValue(if (parsedValue) "true" else "false")
                 }
                 SettingType.IMAGE -> {
                     multipartRequest.fileMap[setting.property]?.let {
                         if (it.size > 0) {
                             log.info("Uploading image {}.{} size: {}", setting.component, setting.property, it.size)
+                            newValues.append(setting.property).append("=size@").append(it.size).append(", ")
                             it.uploadFile("manifest", setting.rawValue.split("/").last())
                         }
                     }
@@ -103,6 +108,7 @@ abstract class ComponentApiBase(
                 else -> {
                     allRequestParams[setting.property]?.let {
                         log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, it)
+                        newValues.append(setting.property).append("=").append(it).append(", ")
                         setting.setValue(it)
                     }
                 }
@@ -110,6 +116,7 @@ abstract class ComponentApiBase(
         }
         component.persistChanges()
         component.onPersis()
+        auditLogService.edit(user, component.component, newValues.toString())
         RoleType.values().forEach { role -> menuService.regenerateMenuCache(role) }
         onUpdate()
         return "redirect:/admin/control/component/${component.component}/settings"

@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.dto.virtual.FileVirtualEntity
 import hu.bme.sch.cmsch.dto.virtual.FilesByViewVirtualEntity
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
 import org.slf4j.LoggerFactory
@@ -31,7 +32,8 @@ import kotlin.streams.asSequence
 class FilesByViewController(
     private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val auditLog: AuditLogService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -206,6 +208,7 @@ class FilesByViewController(
             return "admin403"
         }
 
+        auditLog.delete(user, "files", Path.of(startupPropertyConfig.external, type, id).toString())
         Files.deleteIfExists(Path.of(startupPropertyConfig.external, type, id))
 
         return "redirect:/admin/control/$view/view/$type"

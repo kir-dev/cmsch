@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.form
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_FORM
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class FormComponentController(
     adminMenuService: AdminMenuService,
     component: FormComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     FormComponent::class.java,
@@ -22,6 +24,7 @@ class FormComponentController(
     PERMISSION_CONTROL_FORM,
     "Űrlap",
     "Űrlapok testreszabása",
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 )
 
