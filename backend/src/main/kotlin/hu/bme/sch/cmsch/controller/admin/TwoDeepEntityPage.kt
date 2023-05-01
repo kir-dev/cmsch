@@ -117,6 +117,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}", showPermission.permissionString)
             return "admin403"
         }
 
@@ -152,6 +153,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         if (viewPermission.validate(user).not()) {
             model.addAttribute("permission", viewPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/view/$id", viewPermission.permissionString)
             return "admin403"
         }
 

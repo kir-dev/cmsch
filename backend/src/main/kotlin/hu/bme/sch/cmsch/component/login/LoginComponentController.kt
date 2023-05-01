@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class LoginComponentController(
     adminMenuService: AdminMenuService,
     component: LoginComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     LoginComponent::class.java,
@@ -26,7 +28,8 @@ class LoginComponentController(
     insertComponentCategory = false,
     componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
     componentMenuPriority = 6,
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 )
 
 @Controller
@@ -35,7 +38,8 @@ class LoginComponentController(
 class UnitScopeComponentController(
     adminMenuService: AdminMenuService,
     component: UnitScopeComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     UnitScopeComponent::class.java,
@@ -46,6 +50,7 @@ class UnitScopeComponentController(
     insertComponentCategory = false,
     componentCategory = ApplicationComponent.DATA_SOURCE_CATEGORY,
     componentMenuPriority = 7,
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 )
 

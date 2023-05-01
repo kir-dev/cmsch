@@ -1,9 +1,7 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentHandlerService
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -18,7 +16,8 @@ import javax.annotation.PostConstruct
 @ConditionalOnBean(ApplicationComponent::class)
 class ExportAdminController(
     private val adminMenuService: AdminMenuService,
-    private val componentHandlerService: ComponentHandlerService
+    private val componentHandlerService: ComponentHandlerService,
+    private val auditLogService: AuditLogService
 ) {
 
     private val view = "export"
@@ -44,6 +43,7 @@ class ExportAdminController(
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, "export", "GET /export", permissionControl.permissionString)
             return "admin403"
         }
 

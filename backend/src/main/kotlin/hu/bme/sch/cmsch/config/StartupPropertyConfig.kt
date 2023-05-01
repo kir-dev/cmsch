@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct
 data class StartupPropertyConfig(
     val sysadmins: String = "",
     val external: String = "/etc/cmsch/external",
+    val auditLog: String = "/etc/cmsch/audit",
     val zoneId: String = "CET",
 
     // JWT

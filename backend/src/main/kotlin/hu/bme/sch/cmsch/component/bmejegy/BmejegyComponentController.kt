@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.bmejegy
 import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -18,7 +19,8 @@ class BmejegyComponentController(
     adminMenuService: AdminMenuService,
     component: BmejegyComponent,
     menuService: MenuService,
-    private val bmejegyTimer: BmejegyTimer
+    private val bmejegyTimer: BmejegyTimer,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     BmejegyComponent::class.java,
@@ -26,6 +28,7 @@ class BmejegyComponentController(
     ControlPermissions.PERMISSION_CONTROL_BMEJEGY,
     "BME JEGY",
     "Jegyek testreszabása",
+    auditLogService = auditLogService,
     menuService = menuService
 ) {
 

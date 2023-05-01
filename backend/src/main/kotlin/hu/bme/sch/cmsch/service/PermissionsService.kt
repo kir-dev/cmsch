@@ -235,6 +235,12 @@ object ControlPermissions : PermissionGroup {
         component = LocationComponent::class
     )
 
+    val PERMISSION_SHOW_AUDIT_LOG = PermissionValidator(
+        "SHOW_AUDIT_LOG",
+        "Audit log olvasása",
+        component = ApplicationComponent::class
+    )
+
     val PERMISSION_DEV_DEBUG = PermissionValidator(
         "DEVELOPER_DEBUG",
         "Fejlesztői beállítások",
@@ -269,6 +275,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_TEAM,
         PERMISSION_CONTROL_QR_FIGHT,
         PERMISSION_CONTROL_BMEJEGY,
+        PERMISSION_SHOW_AUDIT_LOG,
         PERMISSION_DEV_DEBUG
     )
 

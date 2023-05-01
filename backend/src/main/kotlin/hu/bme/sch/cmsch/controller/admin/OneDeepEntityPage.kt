@@ -181,6 +181,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}", showPermission.permissionString)
             return "admin403"
         }
 
@@ -228,6 +229,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/edit/$id", showPermission.permissionString)
             return "admin403"
         }
 
@@ -242,6 +244,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             model.addAttribute("data", actualEntity)
             if (!editPermissionCheck(user, actualEntity)) {
                 model.addAttribute("user", user)
+                auditLog.admin403(user, component.component, "GET /${view}/edit/$id",
+                    "editPermissionCheck() validation")
                 return "admin403"
             }
         }
@@ -266,6 +270,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/show/$id", showPermission.permissionString)
             return "admin403"
         }
 
@@ -295,6 +300,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (createPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/create", createPermission.permissionString)
             return "admin403"
         }
 
@@ -321,6 +327,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/delete/$id",
+                deletePermission.permissionString)
             return "admin403"
         }
 
@@ -340,6 +348,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             model.addAttribute("item", actualEntity.toString())
             if (!editPermissionCheck(user, actualEntity)) {
                 model.addAttribute("user", user)
+                auditLog.admin403(user, component.component, "GET /${view}/delete/$id",
+                    "editPermissionCheck() validation")
                 return "admin403"
             }
         }
@@ -352,19 +362,21 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /${view}/delete/$id", deletePermission.permissionString)
             return "admin403"
         }
 
         val entity = dataSource.findById(id).orElseThrow()
         if (!editPermissionCheck(user, entity)) {
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /${view}/delete/$id", "editPermissionCheck() validation")
             return "admin403"
         }
 
         if (!deleteEnabled)
             return "redirect:/admin/control/$view/"
 
-        auditLog.delete(user, component.component, "delete: $entity")
+        auditLog.delete(user, component.component, "delete ${entity.id} $entity")
         dataSource.delete(entity)
         onEntityDeleted(entity)
         return "redirect:/admin/control/$view/"
@@ -377,6 +389,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (!deleteEnabled || deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/purge", deletePermission.permissionString)
             return "admin403"
         }
 
@@ -399,11 +412,13 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         try {
             purgeAllEntities(user)
         } catch (e : Exception) {
+            auditLog.delete(user, component.component, "purge all in $view failed: ${e.message}")
             log.error("Purging failed on view '{}'", view, e)
         }
         val after = dataSource.count()
         model.addAttribute("purgedCount", before - after)
         log.info("Purged {} on view '{}'", before - after, view)
+        auditLog.delete(user, component.component, "purge all in $view (affected: ${before - after})")
 
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
@@ -423,6 +438,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (createPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /${view}/create", createPermission.permissionString)
             return "admin403"
         }
 
@@ -430,10 +446,13 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "redirect:/admin/control/$view/"
 
         val entity = supplier.get()
-        updateEntity(descriptor, user, entity, dto, file0, file1)
+        val newValues = StringBuilder("entity new value: ")
+        updateEntity(descriptor, user, entity, dto, newValues, file0, file1)
         entity.id = 0
-        if (onEntityPreSave(entity, auth))
+        if (onEntityPreSave(entity, auth)) {
+            auditLog.create(user, component.component, newValues.toString())
             dataSource.save(entity)
+        }
         onEntityChanged(entity)
         return "redirect:/admin/control/$view/"
     }
@@ -450,6 +469,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /${view}/edit/${id}", editPermission.permissionString)
             return "admin403"
         }
 
@@ -460,21 +480,28 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val actualEntity = entity.orElseThrow()
         if (!editPermissionCheck(user, actualEntity)) {
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /${view}/edit/${id}", "editPermissionCheck() validation")
             return "admin403"
         }
 
         if (!editEnabled)
             return "redirect:/admin/control/$view/"
 
-        updateEntity(descriptor, user, actualEntity, dto, file0, file1)
+        val newValues = StringBuilder("entity new value: ")
+        updateEntity(descriptor, user, actualEntity, dto, newValues, file0, file1)
         actualEntity.id = id
-        if (onEntityPreSave(actualEntity, auth))
+        if (onEntityPreSave(actualEntity, auth)) {
+            auditLog.edit(user, component.component, newValues.toString())
             dataSource.save(actualEntity)
+        }
         onEntityChanged(actualEntity)
         return "redirect:/admin/control/$view"
     }
 
-    internal fun updateEntity(descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, file0: MultipartFile?, file1: MultipartFile?) {
+    internal fun updateEntity(
+        descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T,
+        newValues: StringBuilder, file0: MultipartFile?, file1: MultipartFile?
+    ) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
                 when {
@@ -483,10 +510,14 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                             "0" -> {
                                 file0?.uploadFile(view)?.let { file ->
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
+                                    newValues.append(it.first.name).append("=name@").append(view)
+                                        .append("/").append(file).append(", ")
                                 }
                             }
                             "1" -> {
                                 file1?.uploadFile(view)?.let { file ->
+                                    newValues.append(it.first.name).append("=name@").append(view)
+                                        .append("/").append(file).append(", ")
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
                                 }
                             }
@@ -497,15 +528,18 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     }
                     (it.second.interpreter == INTERPRETER_INHERIT || it.second.interpreter == INTERPRETER_SEARCH) && it.second.type != INPUT_TYPE_FILE -> {
                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, it.first.getter.call(dto))
+                        newValues.append(it.first.name).append("=").append(it.first.getter.call(dto)?.toString()
+                            ?.replace("\r", "")?.replace("\n", "") ?: "<null>").append(", ")
                     }
                     it.second.interpreter == "path" -> {
-                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, it.first.getter.call(dto)
-                            .toString()
-                            .lowercase()
-                            .replace(" ", "-")
-                            .replace(Regex("[^a-z0-9-.]"), ""))
+                        val value = it.first.getter.call(dto)
+                            ?.toString()
+                            ?.lowercase()
+                            ?.replace(" ", "-")
+                            ?.replace(Regex("[^a-z0-9-.]"), "") ?: "<null>"
+                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, value)
+                        newValues.append(it.first.name).append("=").append(value).append(", ")
                     }
-
                 }
             }
         }
@@ -518,6 +552,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (createPermission.validate(user).not() || showPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/resource", createPermission.permissionString)
             return "admin403"
         }
 
@@ -558,6 +593,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         importService.importEntities(dataSource, rawEntities, supplier, descriptor.getImportModifiers())
         val after = dataSource.count()
         model.addAttribute("importedCount", after - before)
+        auditLog.create(user, component.component, "imported $view (new entities: ${after - before})")
 
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)

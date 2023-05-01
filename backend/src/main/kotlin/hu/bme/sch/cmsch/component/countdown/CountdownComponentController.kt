@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentApiBase
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_COUNTDOWN
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class CountdownComponentController(
     adminMenuService: AdminMenuService,
     component: CountdownComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     CountdownComponent::class.java,
@@ -25,6 +27,7 @@ class CountdownComponentController(
     menuService = menuService,
     componentMenuIcon = "alarm",
     insertComponentCategory = false,
-    componentCategory = ApplicationComponent.CONTENT_CATEGORY,
+    componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
     componentMenuPriority = 20,
+    auditLogService = auditLogService
 )

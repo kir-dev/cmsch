@@ -58,8 +58,7 @@
             <ins th:text="${context.siteName}">CMSCH 4 APP</ins>
             <span class="badge color-green" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> <ins>LIVE</ins></span>
             <span class="badge" th:if="${context.production == 'dev'}"><span class="material-symbols-outlined regular">code</span> <ins>DEV</ins></span>
-        </div>
-        <div class="motd-panel" style="text-align: center">
+
             <span id="motd" th:style="|display: ${context.motd != null && context.motd != '' && context.motd != userContext.dismissedMotd ? 'inline' : 'none'}|">
                 <span th:text="${context.motd}" class="color-yellow badge">Figyelem! Ez egy teszt üzenet! </span>
                 <span class="material-symbols-outlined span-button" th:data-motd="${context.motd}"

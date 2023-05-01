@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -24,9 +25,9 @@ import javax.annotation.PostConstruct
 @ConditionalOnBean(ApplicationComponent::class)
 class MenuAdminController(
     private val adminMenuService: AdminMenuService,
-    private val menuRepository: MenuRepository,
     private val menuService: MenuService,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val auditLogService: AuditLogService
 ) {
 
     private val view = "menu"
@@ -71,6 +72,7 @@ class MenuAdminController(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, "menu", "GET /menu", showPermission.permissionString)
             return "admin403"
         }
 
@@ -105,6 +107,7 @@ class MenuAdminController(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, "menu", "GET /$view/edit/$id", showPermission.permissionString)
             return "admin403"
         }
         val role = RoleType.values()[id]
@@ -118,9 +121,10 @@ class MenuAdminController(
     @PostMapping("/edit/{id}")
     fun editFormTarget(@PathVariable id: Int, auth: Authentication, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
         val user = auth.getUser()
-        if (showPermission.validate(user).not()) {
-            model.addAttribute("permission", showPermission.permissionString)
+        if (editPermission.validate(user).not()) {
+            model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
+            auditLogService.admin403(user, "menu", "POST /$view/edit/$id", editPermission.permissionString)
             return "admin403"
         }
 
@@ -135,6 +139,7 @@ class MenuAdminController(
             ))
             i++
         }
+        auditLogService.edit(user, "menu", menus.toString())
         menuService.persistSettings(menus, RoleType.values()[id])
         return "redirect:/admin/control/menu/edit/$id"
     }

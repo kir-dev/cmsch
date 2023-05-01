@@ -12,10 +12,6 @@
 + Dátum editor
 + dismiss motd
 + settings menü
-
-- timezone check
-
-- súgó
 + menük átrendezése
     FooterComponent : style
     WarningComponent : content
@@ -23,15 +19,20 @@
       - show admin page name
     AppComponent : content
     DebugComponent : dev
-- dashboardok (instance infó, komponens lista, )
-- komponensek leírásai
-- entity mezők leírásai
++ audit log
+
 - quick search
   * akkor is menjen ha ugyan azon az oldalon van
   * ABC sorrend
   * üres cucc kiszűrése
+
+- timezone check
+
+- súgó
+- dashboardok (instance infó, komponens lista, )
+- komponensek leírásai
+- entity mezők leírásai
 - add anchors
 - mobil barát
-- audit log
 - fully functional import
 - komponensek gombjai

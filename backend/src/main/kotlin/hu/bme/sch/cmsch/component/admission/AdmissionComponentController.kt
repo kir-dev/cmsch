@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class AdmissionComponentController(
     adminMenuService: AdminMenuService,
     component: AdmissionComponent,
-    menuService: MenuService
+    menuService: MenuService,
+    auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
     AdmissionComponent::class.java,
@@ -21,7 +22,8 @@ class AdmissionComponentController(
     ControlPermissions.PERMISSION_CONTROL_ADMISSION,
     componentCategoryName = "Beléptetés",
     componentMenuName = "Jogosultságok",
-    menuService = menuService
+    menuService = menuService,
+    auditLogService = auditLogService
 ) {
     init {
         adminMenuService.registerEntry(AdmissionComponent::class.java.simpleName, AdminMenuEntry(
