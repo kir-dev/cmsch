@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.form
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -21,7 +22,8 @@ open class FormService(
     private val userRepository: UserRepository,
     private val clock: TimeService,
     private val objectMapper: ObjectMapper,
-    private val applicationComponent: ApplicationComponent
+    private val applicationComponent: ApplicationComponent,
+    private val debugComponent: DebugComponent,
 ) {
 
     internal val log = LoggerFactory.getLogger(javaClass)
@@ -41,7 +43,7 @@ open class FormService(
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
             return FormView(status = FormStatus.NOT_FOUND)
 
-        val now = clock.getTimeInSeconds() + (applicationComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (!form.open)
             return FormView(status = FormStatus.NOT_ENABLED)
         if (form.availableFrom > now)
@@ -56,10 +58,10 @@ open class FormService(
         }
 
         val groupId = user.group?.id
-        if (form.ownerIsGroup == true && groupId == null)
+        if (form.ownerIsGroup && groupId == null)
             return FormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
 
-        val submission = if (form.ownerIsGroup == true) {
+        val submission = if (form.ownerIsGroup) {
             responseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0)
         } else {
             responseRepository.findByFormIdAndSubmitterUserId(form.id, user.id)
@@ -119,10 +121,10 @@ open class FormService(
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         val groupId = user.group?.id
-        if (form.ownerIsGroup == true && groupId == null)
+        if (form.ownerIsGroup && groupId == null)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
-        val submissionEntity = if (form.ownerIsGroup == true) {
+        val submissionEntity = if (form.ownerIsGroup) {
             responseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0).orElse(null)
         } else {
             responseRepository.findByFormIdAndSubmitterUserId(form.id, user.id).orElse(null)
@@ -223,10 +225,10 @@ open class FormService(
         } else {
             log.info("User {} filled out form {} successfully", user.id, form.id)
             responseRepository.save(ResponseEntity(
-                submitterUserId = if (form.ownerIsGroup == true) null else user.id,
-                submitterUserName = if (form.ownerIsGroup == true) "" else user.fullName,
-                submitterGroupId = if (form.ownerIsGroup == true) groupId else null,
-                submitterGroupName = if (form.ownerIsGroup == true) (user.group?.name ?: "") else "",
+                submitterUserId = if (form.ownerIsGroup) null else user.id,
+                submitterUserName = if (form.ownerIsGroup) "" else user.fullName,
+                submitterGroupId = if (form.ownerIsGroup) groupId else null,
+                submitterGroupName = if (form.ownerIsGroup) (user.group?.name ?: "") else "",
                 formId = form.id,
                 creationDate = now,
                 accepted = false,
