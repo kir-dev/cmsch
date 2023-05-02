@@ -89,8 +89,12 @@ class AuditLogService(
     }
 
     fun readLog(fileName: String): String {
-        synchronized(targetFile) {
-            return targetFile.readText(StandardCharsets.UTF_8)
+        if (targetFile.fileName.toString() == fileName) {
+            synchronized(targetFile) {
+                return targetFile.readText(StandardCharsets.UTF_8)
+            }
+        } else {
+            return Path.of(startupPropertyConfig.auditLog, fileName).readText(StandardCharsets.UTF_8)
         }
     }
 
