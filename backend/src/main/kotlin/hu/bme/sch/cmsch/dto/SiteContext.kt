@@ -10,7 +10,9 @@ data class SiteContext(
     val motd: String,
     val siteUrl: String,
     val frontendUrl: String,
-    val version: String
+    val version: String,
+    var rpm: Int,
+    var activeUsers: Int
 )
 
 data class UserSiteContext(
