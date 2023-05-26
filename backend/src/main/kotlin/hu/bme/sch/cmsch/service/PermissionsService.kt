@@ -247,6 +247,12 @@ object ControlPermissions : PermissionGroup {
         component = ApplicationComponent::class
     )
 
+    val PERMISSION_SHOW_INSTANCE = PermissionValidator(
+        "SHOW_INSTANCE_INFO",
+        "Szerver adatok megtekintése",
+        component = ApplicationComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -276,7 +282,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_QR_FIGHT,
         PERMISSION_CONTROL_BMEJEGY,
         PERMISSION_SHOW_AUDIT_LOG,
-        PERMISSION_DEV_DEBUG
+        PERMISSION_DEV_DEBUG,
+        PERMISSION_SHOW_INSTANCE
     )
 
 }

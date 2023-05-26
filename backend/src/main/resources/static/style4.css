@@ -352,7 +352,8 @@ table span.favorite {
             'opsz' 48;
 }
 
-.app > .content > h1.narrow {
+.app > .content > h1.narrow,
+.app > .content > div.narrow {
     text-align: center;
 }
 
@@ -1463,6 +1464,21 @@ form ul {
 
 .table-container table .basic-padding {
     padding: 4px 16px;
+}
+
+.dashboard-table tr:nth-of-type(2n) {
+    background-color: var(--dark-5);
+}
+.dashboard-table td,
+.dashboard-table th {
+    padding: 4px 10px;
+    text-align: left;
+    margin: 0;
+}
+.dashboard-table {
+    background-color: var(--dark-4);
+    width: 100%;
+    font-weight: 300;
 }
 
 .hidden {

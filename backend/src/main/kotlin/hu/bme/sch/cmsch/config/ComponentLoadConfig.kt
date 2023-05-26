@@ -11,11 +11,12 @@ data class ComponentLoadConfig(
 
     var admission: Boolean = false,
     var app: Boolean = false,
+    var bmejegy: Boolean = false,
     var challenge: Boolean = false,
     var countdown: Boolean = false,
     var debt: Boolean = false,
     var event: Boolean = false,
-    var extraPage: Boolean = false,
+    var staticPage: Boolean = false,
     var groupselection: Boolean = false,
     var home: Boolean = false,
     var impressum: Boolean = false,
@@ -27,10 +28,11 @@ data class ComponentLoadConfig(
     var qrFight: Boolean = false,
     var race: Boolean = false,
     var riddle: Boolean = false,
-    var signup: Boolean = false,
+    var form: Boolean = false,
     var task: Boolean = false,
     var team: Boolean = false,
     var token: Boolean = false,
+    var communities: Boolean = false,
 
 ) {
 
