@@ -55,17 +55,7 @@ open class QrFightService(
         val isOpen = group != null && isLevelOpenForGroup(level, group)
         val isCompleted = group != null && isLevelCompletedForGroup(level, group)
 
-        val status = if (group == null) {
-            LevelStatus.NOT_LOGGED_IN
-        } else if (!level.enabled || outOfDate) {
-            LevelStatus.NOT_ENABLED
-        } else if (!isOpen) {
-            LevelStatus.NOT_UNLOCKED
-        } else if (isCompleted) {
-            LevelStatus.COMPLETED
-        } else {
-            LevelStatus.OPEN
-        }
+        val status = decideStatus(group, level, outOfDate, isOpen, isCompleted)
 
         val teams = tokenPropertyRepository.orElseThrow().findAllByToken_Type(level.category)
             .groupBy { it.ownerGroup?.name ?: "..." }
@@ -114,17 +104,7 @@ open class QrFightService(
         val isOpen = user != null && isLevelOpenForUser(level, user)
         val isCompleted = user != null && isLevelCompletedForUser(level, user)
 
-        val status = if (user == null) {
-            LevelStatus.NOT_LOGGED_IN
-        } else if (!level.enabled || outOfDate) {
-            LevelStatus.NOT_ENABLED
-        } else if (!isOpen) {
-            LevelStatus.NOT_UNLOCKED
-        } else if (isCompleted) {
-            LevelStatus.COMPLETED
-        } else {
-            LevelStatus.OPEN
-        }
+        val status = decideStatus(user, level, outOfDate, isOpen, isCompleted)
 
         val teams = tokenPropertyRepository.orElseThrow().findAllByToken_Type(level.category)
             .groupBy { it.ownerUser?.id ?: -1 }
@@ -156,6 +136,24 @@ open class QrFightService(
             teams = teams,
             towers = towers
         )
+    }
+
+    private fun decideStatus(
+        entity: Any?,
+        level: QrLevelEntity,
+        outOfDate: Boolean,
+        isOpen: Boolean,
+        isCompleted: Boolean
+    ) = if (entity == null) {
+        LevelStatus.NOT_LOGGED_IN
+    } else if (!level.enabled || outOfDate) {
+        LevelStatus.NOT_ENABLED
+    } else if (!isOpen) {
+        LevelStatus.NOT_UNLOCKED
+    } else if (isCompleted) {
+        LevelStatus.COMPLETED
+    } else {
+        LevelStatus.OPEN
     }
 
     fun onTokenScanForGroup(user: UserEntity, group: GroupEntity, token: TokenEntity): Pair<String?, TokenCollectorStatus> {

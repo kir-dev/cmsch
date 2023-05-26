@@ -64,11 +64,9 @@
                 <span class="material-symbols-outlined span-button" th:data-motd="${context.motd}"
                    onclick="dismissMotd(this.getAttribute('data-motd')); return false">visibility_off</span>
             </span>
-        </div>
-        <div class="stats-panel" th:remove="all">
-            <span class="badge color-green">53</span> online
-            <span class="badge color-gray">12</span> staff
-            <span class="badge color-yellow">120</span> rpm
+
+            <span class="badge color-green" style="margin-left: 40px" th:text="${context.activeUsers}">53</span> online
+            <span class="badge color-yellow" th:text="${context.rpm}">120</span> rpm
         </div>
         <div class="right-panel">
             <div class="profile-button-container">
