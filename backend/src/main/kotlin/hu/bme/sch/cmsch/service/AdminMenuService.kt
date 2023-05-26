@@ -5,12 +5,14 @@ import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.statistics.UserActivityFilter
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.ui.Model
 import java.security.MessageDigest
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.annotation.PostConstruct
 
@@ -31,7 +33,8 @@ class AdminMenuService(
     private val applicationComponent: ApplicationComponent,
     private val environment: Environment,
     private val userService: UserService,
-    private val clock: TimeService
+    private val clock: TimeService,
+    private val stats: Optional<UserActivityFilter>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -47,7 +50,9 @@ class AdminMenuService(
         "Context is still loading...",
         "",
         "",
-        Runtime.version().toString()
+        Runtime.version().toString(),
+        0,
+        0
     )
 
     @PostConstruct
@@ -67,7 +72,9 @@ class AdminMenuService(
             applicationComponent.motd.getValue(),
             applicationComponent.adminSiteUrl.getValue(),
             applicationComponent.siteUrl.getValue(),
-            CMSCH_VERSION
+            CMSCH_VERSION,
+            stats.map { it.rpm }.orElse(0),
+            stats.map { it.usersIn5Minutes }.orElse(0),
         )
     }
 
@@ -169,6 +176,12 @@ class AdminMenuService(
 
     private fun saveContextConfig(user: CmschUser, context: UserSiteContext) {
         userService.saveUserConfig(user, UserConfig(context.favoriteMenus, context.dismissedMotd))
+    }
+
+    @Scheduled(cron = "5 * * * * *")
+    fun onEveryMinute() {
+        siteContext.rpm = stats.map { it.rpm }.orElse(0)
+        siteContext.activeUsers = stats.map { it.usersIn5Minutes }.orElse(0)
     }
 
 }
