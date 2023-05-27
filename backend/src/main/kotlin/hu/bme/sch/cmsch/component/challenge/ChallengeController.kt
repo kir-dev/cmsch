@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,7 +30,8 @@ class ChallengeController(
     objectMapper: ObjectMapper,
     private val groups: GroupRepository,
     private val users: UserRepository,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    env: Environment
 ) : OneDeepEntityPage<ChallengeSubmissionEntity>(
     "challenge",
     ChallengeSubmissionEntity::class, ::ChallengeSubmissionEntity,
@@ -43,6 +45,7 @@ class ChallengeController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     entitySourceMapping = mapOf(
         "GroupEntity" to {

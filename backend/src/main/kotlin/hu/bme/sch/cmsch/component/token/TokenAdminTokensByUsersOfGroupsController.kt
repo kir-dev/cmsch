@@ -21,6 +21,7 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -50,7 +51,8 @@ class TokenAdminTokensByUsersOfGroupsController(
     adminMenuService: AdminMenuService,
     component: TokenComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<TokenCollectorGroupVirtualEntity>(
     "token-properties-of-groups",
     TokenCollectorGroupVirtualEntity::class, ::TokenCollectorGroupVirtualEntity,
@@ -73,6 +75,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "file_download",
     adminMenuPriority = 4,

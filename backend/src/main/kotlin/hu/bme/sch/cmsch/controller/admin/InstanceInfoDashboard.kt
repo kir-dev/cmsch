@@ -1,9 +1,10 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.CMSCH_VERSION
-import hu.bme.sch.cmsch.admin.DashboardComponent
-import hu.bme.sch.cmsch.admin.DashboardPage
-import hu.bme.sch.cmsch.admin.DashboardTableCard
+import hu.bme.sch.cmsch.admin.dashboard.DashboardComponent
+import hu.bme.sch.cmsch.admin.dashboard.DashboardPage
+import hu.bme.sch.cmsch.admin.dashboard.DashboardPermissionCard
+import hu.bme.sch.cmsch.admin.dashboard.DashboardTableCard
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.ComponentLoadConfig
@@ -133,8 +134,15 @@ class InstanceInfoDashboard(
         false
     )
 
+    private val permissionCard = DashboardPermissionCard(
+        permission = showPermission.permissionString,
+        description = "Ez a jog szükséges ennek az oldalnak az olvasásához.",
+        wide = false
+    )
+
     override fun getComponents(user: CmschUser): List<DashboardComponent> {
         return listOf(
+            permissionCard,
             getStatistics(),
             systemInfo,
             deploymentInfo,

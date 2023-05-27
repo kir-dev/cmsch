@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.*
@@ -19,7 +20,8 @@ class TokenSubmissionsController(
     adminMenuService: AdminMenuService,
     component: TokenComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<TokenPropertyRawView>(
     "raw-token-properties",
     TokenPropertyRawView::class, ::TokenPropertyRawView,
@@ -61,11 +63,13 @@ class TokenSubmissionsController(
         )
 
     },
+
     importService,
     adminMenuService,
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission = ControlPermissions.PERMISSION_CONTROL_TOKEN,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -19,7 +20,8 @@ class TaskCategoryController(
     adminMenuService: AdminMenuService,
     component: TaskComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<TaskCategoryEntity>(
     "task-categories",
     TaskCategoryEntity::class, ::TaskCategoryEntity,
@@ -32,6 +34,7 @@ class TaskCategoryController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_TASK_CATEGORIES,
     createPermission = StaffPermissions.PERMISSION_CREATE_TASK_CATEGORIES,

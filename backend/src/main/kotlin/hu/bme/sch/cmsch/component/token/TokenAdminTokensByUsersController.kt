@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -19,7 +20,8 @@ class TokenAdminTokensByUsersController(
     component: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    env: Environment
 ) : TwoDeepEntityPage<TokenListByUserVirtualEntity, TokenVirtualEntity>(
     "token-properties-user",
     TokenListByUserVirtualEntity::class,
@@ -65,6 +67,7 @@ class TokenAdminTokensByUsersController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

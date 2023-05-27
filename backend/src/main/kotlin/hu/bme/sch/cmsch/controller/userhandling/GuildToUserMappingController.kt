@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -21,7 +22,8 @@ class GuildToUserMappingController(
     adminMenuService: AdminMenuService,
     component: UserHandlingComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<GuildToUserMappingEntity>(
     "guild-to-user",
     GuildToUserMappingEntity::class, ::GuildToUserMappingEntity,
@@ -35,6 +37,7 @@ class GuildToUserMappingController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_GUILD_MAPPINGS,
     createPermission = StaffPermissions.PERMISSION_CREATE_GUILD_MAPPINGS,

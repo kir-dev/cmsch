@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_TRACK_ONE_GROUP
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,7 +21,8 @@ class TrackOneGroupController(
     adminMenuService: AdminMenuService,
     component: LocationComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<TrackGroupVirtualEntity>(
     "track-group",
     TrackGroupVirtualEntity::class, ::TrackGroupVirtualEntity,
@@ -37,6 +39,7 @@ class TrackOneGroupController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "my_location",
     adminMenuPriority = 4,

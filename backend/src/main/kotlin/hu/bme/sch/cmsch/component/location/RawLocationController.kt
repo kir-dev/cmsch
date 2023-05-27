@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +21,8 @@ class RawLocationController(
     adminMenuService: AdminMenuService,
     component: LocationComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<LocationEntity>(
     "locations",
     LocationEntity::class, ::LocationEntity,
@@ -33,6 +35,7 @@ class RawLocationController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_LOCATIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

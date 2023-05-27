@@ -24,6 +24,27 @@
                     </textarea>
                 </form>
 
+                <div class="button-group">
+                    <a href="#" th:href="@{/admin/control/export/properties}" target="_blank" class="btn">
+                        <span class="material-symbols-outlined">download</span>
+                        <ins>LETÖLTÉS</ins>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="card" th:if="${user.isAdmin()}">
+                <h4>Jogosultságok</h4>
+
+                <div class="options">
+                    <div class="option">
+                        <div><span class="material-symbols-outlined">local_police</span></div>
+                        <div>
+                            <h5 th:text="${permission}">PERMISSION_NAME</h5>
+                            <span>Ez a jog szükséges az exportálás használatához.</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

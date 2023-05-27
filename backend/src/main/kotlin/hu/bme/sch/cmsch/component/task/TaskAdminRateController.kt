@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.markdownToHtml
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -24,7 +25,8 @@ class TaskAdminRateController(
     adminMenuService: AdminMenuService,
     component: TaskComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : TwoDeepEntityPage<GradedTaskGroupDto, SubmittedTaskEntity>(
     "rate-tasks",
     GradedTaskGroupDto::class,
@@ -57,6 +59,7 @@ class TaskAdminRateController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_RATE_TASKS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
@@ -151,6 +154,7 @@ class TaskAdminRateController(
         model.addAttribute("user", user)
         model.addAttribute("gradeMode", true)
         model.addAttribute("readOnly", false)
+        model.addAttribute("entityMode", false)
 
         val entity = submittedRepository.findById(id)
         if (entity.isEmpty) {

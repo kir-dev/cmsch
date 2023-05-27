@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.admin
+package hu.bme.sch.cmsch.admin.dashboard
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -16,10 +16,10 @@ abstract class DashboardPage(
     private var wide: Boolean,
 
     private var adminMenuService: AdminMenuService,
-    private var component: ComponentBase,
-    private var auditLog: AuditLogService,
+    internal var component: ComponentBase,
+    internal var auditLog: AuditLogService,
 
-    private var showPermission: PermissionValidator,
+    internal var showPermission: PermissionValidator,
 
     private var adminMenuCategory: String? = null,
     private var adminMenuIcon: String = "check_box_outline_blank",

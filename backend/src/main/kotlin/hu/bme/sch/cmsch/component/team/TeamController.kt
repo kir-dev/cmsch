@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -16,7 +17,8 @@ class TeamController(
     adminMenuService: AdminMenuService,
     component: TeamComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<TeamJoinRequestEntity>(
     "join-requests",
     TeamJoinRequestEntity::class, ::TeamJoinRequestEntity,
@@ -29,6 +31,7 @@ class TeamController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_TEAM_JOINS,
     createPermission = StaffPermissions.PERMISSION_CREATE_TEAM_JOINS,

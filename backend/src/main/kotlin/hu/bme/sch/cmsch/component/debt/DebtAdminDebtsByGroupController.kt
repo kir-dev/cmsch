@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -23,7 +24,8 @@ class DebtAdminDebtsByGroupController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : TwoDeepEntityPage<DebtsByGroupVirtualEntity, SoldProductEntity>(
     "debts-by-group",
     DebtsByGroupVirtualEntity::class,
@@ -55,6 +57,7 @@ class DebtAdminDebtsByGroupController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_EDIT_DEBTS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

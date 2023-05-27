@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROU
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -28,6 +29,7 @@ class DebtsOfMyGroupAdminController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<SoldProductEntity>(
     "debts-of-my-group",
     SoldProductEntity::class, ::SoldProductEntity,
@@ -44,6 +46,7 @@ class DebtsOfMyGroupAdminController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "fact_check",
     adminMenuPriority = 7,

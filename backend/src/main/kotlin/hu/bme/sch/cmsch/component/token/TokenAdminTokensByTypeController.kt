@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -17,7 +18,8 @@ class TokenAdminTokensByTypeController(
     adminMenuService: AdminMenuService,
     component: TokenComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : TwoDeepEntityPage<TokenStatVirtualEntity, TokenPropertyVirtualEntity>(
     "token-properties-type",
     TokenStatVirtualEntity::class,
@@ -62,6 +64,7 @@ class TokenAdminTokensByTypeController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
