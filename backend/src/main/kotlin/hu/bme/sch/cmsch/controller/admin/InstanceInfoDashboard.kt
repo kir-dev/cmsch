@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.admin.DashboardComponent
 import hu.bme.sch.cmsch.admin.DashboardPage
 import hu.bme.sch.cmsch.admin.DashboardTableCard
@@ -10,11 +11,13 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.statistics.UserActivityFilter
 import org.apache.catalina.util.ServerInfo
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Controller
@@ -27,6 +30,7 @@ class InstanceInfoDashboard(
     startupPropertyConfig: StartupPropertyConfig,
     componentLoadConfig: ComponentLoadConfig,
     private val userActivityFilter: Optional<UserActivityFilter>,
+    private val clock: TimeService
 ) : DashboardPage(
     "instance-info",
     "Szerver adatok",
@@ -57,6 +61,7 @@ class InstanceInfoDashboard(
             listOf("Server built",          ServerInfo.getServerBuilt()),
             listOf("Server number",         ServerInfo.getServerNumber()),
             listOf("Profiles",              env.activeProfiles.joinToString(", ")),
+            listOf("CMSCH version",         CMSCH_VERSION),
         ),
         false
     )
@@ -137,16 +142,19 @@ class InstanceInfoDashboard(
         )
     }
 
-    private fun getStatistics()= DashboardTableCard(
+    private val formatter = SimpleDateFormat("yyyy.MM.dd. HH:mm:ss")
+
+    private fun getStatistics() = DashboardTableCard(
         "Élő Adatok",
         "",
         listOf("Property", "Value"),
         listOf(
-            listOf("Used memory",  "${(Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) 
+            listOf("Time",          formatter.format(clock.getTimeInSeconds() * 1000)),
+            listOf("Used memory",   "${(Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) 
                                         / (1000 * 1000)} MB"),
-            listOf("RPM",          userActivityFilter.map { it.rpm.toString() }.orElse("")),
-            listOf("Users in 5m",  userActivityFilter.map { it.usersIn5Minutes.toString() }.orElse("")),
-            listOf("Users in 30m", userActivityFilter.map { it.usersIn30Minutes.toString() }.orElse("")),
+            listOf("RPM",           userActivityFilter.map { it.rpm.toString() }.orElse("")),
+            listOf("Users in 5m",   userActivityFilter.map { it.usersIn5Minutes.toString() }.orElse("")),
+            listOf("Users in 30m",  userActivityFilter.map { it.usersIn30Minutes.toString() }.orElse("")),
         ),
         false
     )

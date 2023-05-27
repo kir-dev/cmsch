@@ -64,27 +64,6 @@ class BasicAdminController(
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("user", user)
 
-        val userPermissions = user.permissionsAsList
-
-        model.addAttribute("customPermissions", staticPageService.map { service ->
-            service.getAll().groupBy { it.permissionToEdit }.map { group ->
-                PermissionValidator(
-                    group.key,
-                    "Szükséges a(z) '${group.value.joinToString("', '") { it.title }}' " +
-                            "nevű oldal(ak) szerkesztéséhez"
-                )
-            }
-        }.orElse(listOf())
-            .filter { userPermissions.contains(it.permissionString) })
-
-        model.addAttribute("staffPermissions", StaffPermissions.allPermissions()
-            .filter { it.permissionString.isNotEmpty() }
-            .filter { userPermissions.contains(it.permissionString) })
-
-        model.addAttribute("adminPermissions", ControlPermissions.allPermissions()
-            .filter { it.permissionString.isNotEmpty() }
-            .filter { userPermissions.contains(it.permissionString) })
-
         model.addAttribute("staffMessage", markdownToHtml(applicationComponent.staffMessage.getValue()))
 
         return "admin"

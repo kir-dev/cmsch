@@ -129,7 +129,10 @@
                 crossElement: "<span class='material-symbols-outlined color-red'>close</span>",
             }
         } else if (columData[columnId].formatter === 'datetime') {
-            columData[columnId]['formatter'] = timestampFormatter
+            columData[columnId]['formatter'] = timestampFormatter;
+            columData[columnId]['minWidth'] = 180;
+        } else {
+            columData[columnId]['minWidth'] = 200;
         }
     }
     if (buttons.length !== 0) {
