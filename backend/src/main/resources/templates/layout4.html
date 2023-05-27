@@ -158,8 +158,8 @@
             </div>
 
             <div class="menu">
-                <div class="search-note only-widescreen">Menü kereső (F2)</div>
                 <input type="text" id="search" class="only-widescreen" placeholder="" />
+                <div class="search-note only-widescreen">Menü kereső (F2)</div>
 
                 <span class="only-mobile mobile-menu-close" onclick="closeMobileMenu()">
                     <span class="material-symbols-outlined">close</span>
@@ -253,7 +253,6 @@
 
 <script th:src="@{/js/tabulator.min.js}"></script>
 <script>
-    //define data array
     let tabledata = [
         {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1},
         {id:2, name:"Mary May", progress:1, gender:"female", rating:2, col:"blue", dob:"14/05/1982", car:true},
@@ -263,10 +262,9 @@
         {id:6, name:"Frank Harbours", progress:38, gender:"male", rating:4, col:"red", dob:"12/05/1966", car:1},
     ];
 
-    //initialize table
     let table = new Tabulator("#example-table", {
-        data: tabledata, //assign data to table
-        autoColumns: false, //create columns from data field names
+        data: tabledata,
+        autoColumns: false,
         layout: 'fitColumns',
         responsiveLayout: 'hide',
         columns:[

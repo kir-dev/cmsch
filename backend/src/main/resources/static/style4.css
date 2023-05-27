@@ -317,8 +317,11 @@ scrollbar-corner,
 }
 
 .mobile-shortcuts {
-    margin: 10px 20px;
+    background-color: var(--dark-4);
+    padding: 10px 20px;
     text-align: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .mobile-shortcuts a {
@@ -331,6 +334,7 @@ scrollbar-corner,
     padding: 20px 10px 10px 10px;
     text-align: center;
     display: block;
+    background-color: var(--dark-4);
 }
 
 .mobile-menu-close {
@@ -1540,13 +1544,26 @@ form ul {
     }
     .card {
         border-radius: 0;
-        width: unset !important;
+        width: 100% !important;
+        box-sizing: border-box;
     }
     h1,
     .details {
         text-align: center;
         padding-left: 20px;
         padding-right: 20px;
+    }
+    .menu > div > .menu-group a {
+        max-width: unset;
+    }
+    .tabulator-row-odd {
+        background-color: var(--dark-4) !important;
+    }
+    .tabulator-responsive-collapse strong {
+        line-height: 1.7;
+    }
+    .button-group {
+        text-align: center;
     }
 }
 
