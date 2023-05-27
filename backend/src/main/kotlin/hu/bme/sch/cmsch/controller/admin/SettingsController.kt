@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions

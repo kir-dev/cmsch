@@ -2,8 +2,6 @@ package hu.bme.sch.cmsch.config
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.service.AdminMenuService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.TypeDescriptor
@@ -17,7 +15,6 @@ import org.springframework.security.oauth2.jwt.*
 import java.net.URI
 import java.net.URL
 import java.util.*
-import javax.annotation.PostConstruct
 
 @Configuration
 @EnableScheduling

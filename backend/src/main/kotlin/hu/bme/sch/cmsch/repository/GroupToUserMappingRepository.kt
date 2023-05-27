@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.repository
 
-import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.GroupToUserMappingEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository

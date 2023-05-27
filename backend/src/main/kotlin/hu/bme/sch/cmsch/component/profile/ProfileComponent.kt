@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.profile
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
