@@ -23,7 +23,8 @@
 
             <div class="card">
                 <h4>Rendezői üzenet</h4>
-                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>
+                <div th:utext="${staffMessage}">
+                </div>
 
             </div>
 
@@ -31,65 +32,5 @@
     </div>
 </div>
 
-<!-- TODO: Ennek legyen külön menüje -->
-<!--        <div class="payload">-->
-<!--            <div class="page page-short">-->
-<!--                <h2>Rendezői Oldal</h2>-->
-<!--                <p class="highlight">-->
-<!--                    Üdv a rendezvény rendezői felületén!-->
-<!--                </p>-->
-
-<!--                <a th:href="@{/control/open-site}" class="btn" target="_blank">Vissza az oldalra</a>-->
-<!--                <a href="https://github.com/kir-dev/cmsch/issues/new" class="btn btn-secondary" target="_blank">Visszajelzés küldése</a><br />-->
-
-<!--                <span class="warning">a nap üzenete:</span>-->
-<!--                <p th:text="${motd}"></p>-->
-
-<!--                <div th:if="${staffMessage != ''}"  class="card">-->
-<!--                    <h3 class="centered-text">SZOLGÁLATI KÖZLEMÉNY</h3>-->
-<!--                    <p th:utext="${staffMessage}" class="centered-text"></p>-->
-<!--                </div>-->
-
-<!--                <div class="mt-3">-->
-<!--                    <h3 class="centered-text">JOGOSULTSÁGOK</h3>-->
-
-<!--                    <p th:if="${user.role.isAdmin()}">Mivel admin vagy, mindenhez van jogosultságod, nem csak az itt felsoroltakhoz!</p>-->
-
-<!--                    <div class="permission-box card">-->
-<!--                        <div class="permission-part">-->
-<!--                            <span class="material-icons fix-icons">person</span>&nbsp;<b th:text="${user.role.name}">ROLE_NAME</b><br>-->
-<!--                            <span class="note" th:text="${user.role.description}">description</span>-->
-<!--                        </div>-->
-<!--                        <div class="permission-part"></div>-->
-<!--                    </div>-->
-
-<!--                    <div class="permission-box card" th:each="permission : ${staffPermissions}">-->
-<!--                        <div class="permission-part">-->
-<!--                            <span class="material-icons fix-icons">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>-->
-<!--                            <span class="note" th:text="${permission.description}">description</span>-->
-<!--                        </div>-->
-<!--                        <div class="permission-part"></div>-->
-<!--                    </div>-->
-
-<!--                    <div class="permission-box card" th:each="permission : ${customPermissions}">-->
-<!--                        <div class="permission-part">-->
-<!--                            <span class="material-icons fix-icons">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>-->
-<!--                            <span class="note" th:text="${permission.description}">description</span>-->
-<!--                        </div>-->
-<!--                        <div class="permission-part"></div>-->
-<!--                    </div>-->
-
-<!--                    <div class="permission-box card" th:each="permission : ${adminPermissions}">-->
-<!--                        <div class="permission-part">-->
-<!--                            <span class="material-icons fix-icons">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>-->
-<!--                            <span class="note" th:text="${permission.description}">description</span>-->
-<!--                        </div>-->
-<!--                        <div class="permission-part"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 </body>
 </html>

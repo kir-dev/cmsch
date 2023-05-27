@@ -557,8 +557,8 @@
 .tabulator-row .tabulator-responsive-collapse {
     box-sizing: border-box;
     padding: 5px;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd
+    border-top: 0 solid var(--text-color);
+    border-bottom: 1px solid var(--text-color)
 }
 
 .tabulator-row .tabulator-responsive-collapse:empty {
