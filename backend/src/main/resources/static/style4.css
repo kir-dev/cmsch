@@ -316,6 +316,29 @@ scrollbar-corner,
     max-width: 2px;
 }
 
+.mobile-shortcuts {
+    margin: 10px 20px;
+    text-align: center;
+}
+
+.mobile-shortcuts a {
+    display: inline-block;
+    padding: 10px;
+    color: var(--light-text-color);
+}
+
+.mobile-title {
+    padding: 20px 10px 10px 10px;
+    text-align: center;
+    display: block;
+}
+
+.mobile-menu-close {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+
 .app > .menu {
     width: 260px;
     max-width: 260px;
@@ -617,7 +640,10 @@ table span.favorite {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     text-transform: uppercase;
-    display: block;
+}
+
+.menu #menu-results {
+    padding-bottom: 40px;
 }
 
 .tooltip {
@@ -1084,6 +1110,7 @@ button.floating-save {
     position: fixed;
     right: 40px;
     bottom: 20px;
+    z-index: 10;
 }
 
 button.floating-save .material-symbols-outlined {
@@ -1485,3 +1512,46 @@ form ul {
     display: none;
 }
 
+@media (max-width: 1023px) {
+    .shortcuts-menu,
+    .menu,
+    .only-widescreen {
+        display: none;
+    }
+    #motd {
+        margin: 0 !important;
+    }
+    .menu {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh;
+        max-height: 100vh !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+        padding: 0 !important;
+    }
+    #menu-results {
+        margin: 0 20px;
+    }
+    .app > .content {
+        padding: 40px 0;
+    }
+    .card {
+        border-radius: 0;
+        width: unset !important;
+    }
+    h1,
+    .details {
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .only-mobile {
+        display: none;
+    }
+}

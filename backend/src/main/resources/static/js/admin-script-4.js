@@ -257,5 +257,12 @@ function dismissMotd(motd) {
         .catch(error => console.error(error));
 }
 
+function openMobileMenu() {
+    document.querySelector('.menu').style.display = 'block';
+}
+
+function closeMobileMenu() {
+    document.querySelector('.menu').style.display = 'none';
+}
 
 window.onload = init;
