@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -20,7 +21,8 @@ class MembersOfMyGroupController(
     adminMenuService: AdminMenuService,
     component: UserHandlingComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<GroupMemberVirtualEntity>(
     "members-of-my-group",
     GroupMemberVirtualEntity::class, ::GroupMemberVirtualEntity,
@@ -38,6 +40,7 @@ class MembersOfMyGroupController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "group",
     adminMenuPriority = 6,

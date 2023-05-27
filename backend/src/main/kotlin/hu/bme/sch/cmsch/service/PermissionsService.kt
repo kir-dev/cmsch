@@ -62,7 +62,8 @@ object ImplicitPermissions : PermissionGroup {
     override fun allPermissions() = listOf(
         PERMISSION_IMPLICIT_HAS_GROUP,
         PERMISSION_IMPLICIT_ANYONE,
-        PERMISSION_NOBODY
+        PERMISSION_NOBODY,
+        PERMISSION_SUPERUSER_ONLY
     )
 }
 
@@ -130,6 +131,12 @@ object ControlPermissions : PermissionGroup {
     val PERMISSION_CONTROL_APP_EXPORT = PermissionValidator(
         "APP_EXPORT_CONTROL",
         "Teljes alkalmazás állapotának kiexportálása",
+        component = ApplicationComponent::class
+    )
+
+    val PERMISSION_CONTROL_APP_IMPORT = PermissionValidator(
+        "APP_IMPORT_CONTROL",
+        "Teljes alkalmazás állapotának beimportálása",
         component = ApplicationComponent::class
     )
 

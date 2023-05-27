@@ -64,6 +64,7 @@ function init() {
         } else if (event.keyCode === 13 && selectedIndex > -1 && isModalOpen()) {
             event.preventDefault();
             window.location.href = results[selectedIndex].href;
+            closeSearch();
         }
     });
 }

@@ -20,7 +20,7 @@ abstract class ComponentBase(
     val menuUrl: String,
     private val componentName: String,
     val showPermission: PermissionValidator,
-    private val entities: List<KClass<out ManagedEntity>>,
+    val entities: List<KClass<out ManagedEntity>>,
     private val componentSettingService: ComponentSettingService,
     private val env: Environment,
 ) {
@@ -137,13 +137,14 @@ abstract class ComponentBase(
 
             entityClass.memberProperties
                 .mapNotNull { it.findAnnotation<GenerateInput>() }
+                .filter { it.label.isNotEmpty() }
                 .map {
                     SearchableResource(
                         name = it.label,
                         description = ": ${config.name}",
                         type = SearchableResourceType.ENTITY,
                         permission = config.showPermission,
-                        target = "/admin/${config.name}#${it.order}"
+                        target = "/admin/control/entity/${config.name}#_${it.order}"
                     )
                 }
         }

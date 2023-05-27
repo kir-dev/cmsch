@@ -9,12 +9,14 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.IdentifiableEntity
+import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
+import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
@@ -70,6 +72,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val component: ComponentBase,
     internal val auditLog: AuditLogService,
     internal val objectMapper: ObjectMapper,
+    private val env: Environment,
     internal val entitySourceMapping: Map<String, (T?) -> List<String>> =
         mapOf(Nothing::class.simpleName!! to { listOf() }),
 
@@ -170,6 +173,21 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             ))
         }
 
+        val instance = supplier.get()
+        if (instance is ManagedEntity) {
+            val config = instance.getEntityConfig(env)
+            if (config != null) {
+                buttonActions.add(ButtonAction(
+                    "Típus adatok",
+                    "entity/${config.name}",
+                    showPermission,
+                    400,
+                    "database",
+                    false
+                ))
+            }
+        }
+
         controlActions.sortBy { it.order }
         buttonActions.sortBy { it.order }
     }
@@ -258,6 +276,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("user", user)
         model.addAttribute("readOnly", false)
+        model.addAttribute("entityMode", false)
 
         onDetailsView(user, model)
         return "details"
@@ -288,6 +307,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("user", user)
         model.addAttribute("readOnly", true)
+        model.addAttribute("entityMode", false)
 
         onDetailsView(user, model)
         return "details"
@@ -315,6 +335,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("data", null)
         model.addAttribute("user", user)
         model.addAttribute("readOnly", false)
+        model.addAttribute("entityMode", false)
 
         onDetailsView(user, model)
         return "details"
@@ -600,6 +621,11 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("user", user)
         adminMenuService.addPartsForMenu(user, model)
         return "resource"
+    }
+
+    @GetMapping("/entity/{entity}")
+    fun redirectEntity(@PathVariable entity: String): String {
+        return "redirect:/admin/control/entity/${entity}"
     }
 
     open fun onEntityChanged(entity: T) {

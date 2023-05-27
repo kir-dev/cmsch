@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,7 +20,8 @@ class SoldProductController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
-    private val clock: TimeService
+    private val clock: TimeService,
+    env: Environment
 ) : OneDeepEntityPage<SoldProductEntity>(
     "debts",
     SoldProductEntity::class, ::SoldProductEntity,
@@ -32,6 +34,7 @@ class SoldProductController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_DEBTS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

@@ -291,9 +291,10 @@
         </div>
 
         <div class="content">
-            <h1 class="narrow" th:text="|${title} szerkesztése|" th:if="${editMode && !readOnly}">View edit</h1>
-            <h1 class="narrow" th:text="|${title} megtekintése|" th:if="${editMode && readOnly}">View view</h1>
-            <h1 class="narrow" th:text="|${title} létrehozása|" th:unless="${editMode}">View create</h1>
+            <h1 class="narrow" th:text="|${title} szerkesztése|" th:if="${!entityMode && editMode && !readOnly}">View edit</h1>
+            <h1 class="narrow" th:text="|${title} megtekintése|" th:if="${!entityMode && editMode && readOnly}">View view</h1>
+            <h1 class="narrow" th:text="|${title} létrehozása|" th:if="${!entityMode && !editMode}">View create</h1>
+            <h1 class="narrow" th:text="|${title} típus|" th:if="${entityMode}">View type</h1>
 
             <div class="card wide-false" th:if="${taskTitle != null || taskDescription != null}">
                 <object th:if="${taskTitle != null}" th:remove="tag">
@@ -316,7 +317,7 @@
 
                         <object th:if="${user.role.value >= input.second.minimumRole.value}" th:remove="tag">
 
-                            <div th:if="${input.second.type == 'text'}" class="field-group">
+                            <div th:if="${input.second.type == 'text'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -329,11 +330,15 @@
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
+                                       th:unless="${entityMode}"
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Szöveg</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'text' && input.first.name == 'cmschId'}" class="field-group">
+                            <div th:if="${input.second.type == 'text' && input.first.name == 'cmschId'}"
+                                 class="field-group"
+                                 th:unless="${entityMode}">
                                 <img src="#"
                                      th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|"
                                      height="180px"
@@ -342,7 +347,7 @@
                                      class="qr-preview">
                             </div>
 
-                            <div th:if="${input.second.type == 'number'}" class="field-group">
+                            <div th:if="${input.second.type == 'number'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -357,12 +362,14 @@
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
                                        inputmode="numeric"
+                                       th:unless="${entityMode}"
                                        required
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Egész szám</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'date'}" class="field-group">
+                            <div th:if="${input.second.type == 'date'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -373,12 +380,14 @@
                                        th:id="|input${iter.index}|"
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:disabled="${!input.second.enabled || readOnly}"
+                                       th:unless="${entityMode}"
                                        required
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Dátum</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'time'}" class="field-group">
+                            <div th:if="${input.second.type == 'time'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="|${input.second.label} (s)|">
                                 </label>
@@ -395,6 +404,7 @@
                                        required
                                        th:data-field-name="|input${iter.index}|"
                                        onchange="updateTime(this.getAttribute('data-field-name'))"
+                                       th:unless="${entityMode}"
                                 />
                                 <label th:for="|input${iter.index}|"
                                        th:text="|${input.second.label} (ms)|">
@@ -412,18 +422,21 @@
                                        required
                                        th:data-field-name="|input${iter.index}|"
                                        onchange="updateTime(this.getAttribute('data-field-name'))"
+                                       th:unless="${entityMode}"
                                 />
                                 <input th:type="text"
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
                                        th:value="${#numbers.formatInteger((!editMode) ? input.second.defaultValue : input.first.get(data), 0)}"
                                        readonly
+                                       th:unless="${entityMode}"
                                        style="display: none"
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Idő</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'float'}" class="field-group">
+                            <div th:if="${input.second.type == 'float'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -437,18 +450,22 @@
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
+                                       th:unless="${entityMode}"
                                 />
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Tört szám</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'select'}" class="field-group">
+                            <div th:if="${input.second.type == 'select'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
                                 <select th:id="|input${iter.index}|"
                                         th:name="${input.first.name}"
-                                        th:disabled="${!input.second.enabled || readOnly}">
+                                        th:disabled="${!input.second.enabled || readOnly}"
+                                        th:unless="${entityMode}"
+                                >
                                     <option th:if="${editMode}"
                                             th:each="opt : ${input.second.source}"
                                             th:value="${opt}"
@@ -460,16 +477,19 @@
                                             th:text="${opt}"></option>
                                 </select>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Fix elemek</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'entity-select'}" class="field-group">
+                            <div th:if="${input.second.type == 'entity-select'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
                                 <select th:id="|input${iter.index}|"
                                         th:name="${input.first.name}"
-                                        th:disabled="${!input.second.enabled || readOnly}">
+                                        th:disabled="${!input.second.enabled || readOnly}"
+                                        th:unless="${entityMode}"
+                                >
                                     <option th:if="${editMode}"
                                             th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${opt}"
@@ -482,8 +502,13 @@
                                 </select>
 
                                 <object th:remove="tag" th:if="${input.second.interpreter == 'search'}">
-                                    <input type="text" th:id="|search${iter.index}|" th:name="|search${iter.index}|" placeholder="Kereső" />
-                                    <script th:inline="javascript">
+                                    <input type="text"
+                                           th:id="|search${iter.index}|"
+                                           th:name="|search${iter.index}|"
+                                           placeholder="Kereső"
+                                           th:unless="${entityMode}"
+                                    />
+                                    <script th:inline="javascript" th:unless="${entityMode}">
                                         (function() {
                                             const id = /*[[${iter.index}]]*/ '';
                                             const select = document.querySelectorAll(`select#input${id}`);
@@ -510,13 +535,14 @@
                                 </object>
 
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Kapcsolat</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'list-entities'}" class="field-group">
+                            <div th:if="${input.second.type == 'list-entities'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
-                                <ul>
+                                <ul th:unless="${entityMode}">
                                     <li th:each="ent : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${ent}"
                                             th:text="${ent}">
@@ -525,7 +551,7 @@
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
                             </div>
 
-                            <div th:if="${input.second.type == 'textarea'}" class="field-group">
+                            <div th:if="${input.second.type == 'textarea'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -535,12 +561,17 @@
                                        th:id="|input${iter.index}|"
                                        th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:disabled="${!input.second.enabled || readOnly}"
-                                       th:autocomplete="${input.second.autocomplete}">
+                                       th:autocomplete="${input.second.autocomplete}"
+                                       th:unless="${entityMode}">
                                 </textarea>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Több soros szöveg</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'markdown'}" class="field-group" th:class="|field-group ${!input.second.enabled || readOnly ? 'disabled' : ''}|">
+                            <div th:if="${input.second.type == 'markdown'}"
+                                 class="field-group"
+                                 th:class="|field-group ${!input.second.enabled || readOnly ? 'disabled' : ''}|"
+                                 th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -549,10 +580,13 @@
                                         th:name="${input.first.name}"
                                         th:id="|input${iter.index}|"
                                         th:disabled="${!input.second.enabled || readOnly}"
-                                        th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}">
+                                        th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                        th:unless="${entityMode}">
                                 </textarea>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
-                                <script th:inline="javascript">
+                                <span class="note type-note" th:if="${entityMode}">Típus: Formázható szöveg</span>
+                                <script th:inline="javascript"
+                                        th:unless="${entityMode}">
                                     var index = /*[[${iter.index}]]*/ 0;
                                     if (/*[[${!input.second.enabled || readOnly}]]*/ true) {
                                         let simpleMde = new SimpleMDE({
@@ -570,7 +604,7 @@
                                 </script>
                             </div>
 
-                            <div th:if="${input.second.type == 'file'}" class="field-group">
+                            <div th:if="${input.second.type == 'file'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
@@ -580,6 +614,7 @@
                                        th:name="|file${input.second.fileId}|"
                                        th:id="|input${iter.index}|"
                                        th:disabled="${!input.second.enabled || readOnly}"
+                                       th:unless="${entityMode}"
                                 />
 
                                 <object th:if="${input.second.fileType == 'image' && editMode}" th:remove="tag">
@@ -592,44 +627,49 @@
                                                  onerror="this.onerror=null; this.parentNode.style.display = 'none'; "
                                                  width="528"
                                                  th:id="|input${iter.index}|"
-                                                 th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
-                                                 th:src="|@{/cdn/}${input.first.get(data)}|"/>
+                                                 th:unless="${(input.first.get(data) == null || input.first.get(data) == '') && entityMode}"
+                                                 th:src="|@{/cdn/}${input.first.get(data)}|"
+                                            />
                                         </a>
                                         <br>
                                         <a href="#"
                                            target="_blank"
                                            th:href="|@{/cdn/}${input.first.get(data)}|"
-                                           class="btn btn-secondary">
+                                           class="btn btn-secondary"
+                                           th:unless="${entityMode}"
+                                        >
                                             Megnyitás nagyban (új lapon)
                                         </a>
                                     </object>
-                                    <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
+                                    <p th:if="${(input.first.get(data) == null || input.first.get(data) == '') && !entityMode}">
                                         Nincs kép feltöltve
                                     </p>
                                 </object>
 
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
-
+                                <span class="note type-note" th:if="${entityMode}">Típus: Fájl</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'checkbox'}" class="field-group">
+                            <div th:if="${input.second.type == 'checkbox'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:for="|input${iter.index}|"
                                        th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
-                                <label class="switch">
+                                <label class="switch" th:unless="${entityMode}">
                                     <input type="checkbox"
                                            th:checked="${(!editMode) ? (input.second.defaultValue == 'true') : (input.first.get(data))}"
                                            th:name="${input.first.name}"
                                            th:id="|input${iter.index}|"
-                                           th:disabled="${!input.second.enabled || readOnly}" />
+                                           th:disabled="${!input.second.enabled || readOnly}"
+                                    />
                                     <span class="slider"></span>
                                 </label>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Igaz/hamis</span>
                                 <div style="clear: both"></div>
                             </div>
 
-                            <div th:if="${input.second.type == 'image-preview' && editMode}" class="field-group">
+                            <div th:if="${input.second.type == 'image-preview' && editMode}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
@@ -642,24 +682,28 @@
                                              onerror="this.onerror=null; this.parentNode.innerHTML = '<p>A kép nem létezik</p>'; "
                                              height="400"
                                              th:id="|input${iter.index}|"
-                                             th:unless="${input.first.get(data) == null || input.first.get(data) == ''}"
-                                             th:src="|@{/cdn/}${input.first.get(data)}|"/>
+                                             th:unless="${(input.first.get(data) == null || input.first.get(data) == '') && entityMode}"
+                                             th:src="|@{/cdn/}${input.first.get(data)}|"
+                                        />
                                     </a>
                                     <br>
                                     <a href="#"
                                        target="_blank"
                                        th:href="|@{/cdn/}${input.first.get(data)}|"
-                                       class="btn btn-secondary">
+                                       class="btn btn-secondary"
+                                       th:unless="${entityMode}"
+                                    >
                                         Megnyitás nagyban (új lapon)
                                     </a>
                                 </object>
-                                <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
+                                <p th:if="${(input.first.get(data) == null || input.first.get(data) == '') && !entityMode}">
                                     Nincs kép feltöltve
                                 </p>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Kép</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'file-preview' && editMode}" class="field-group">
+                            <div th:if="${input.second.type == 'file-preview' && editMode}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
@@ -667,16 +711,19 @@
                                     <a href="#"
                                        target="_blank"
                                        th:href="|@{/cdn/}${input.first.get(data)}|"
-                                       th:text="|${input.first.get(data)}|">
+                                       th:text="|${input.first.get(data)}|"
+                                       th:unless="${entityMode}"
+                                    >
                                     </a>
                                 </object>
-                                <p th:if="${input.first.get(data) == null || input.first.get(data) == ''}">
+                                <p th:if="${(input.first.get(data) == null || input.first.get(data) == '') && !entityMode}">
                                     Nincs fájl feltöltve
                                 </p>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Fájl előnézet</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'form-editor'}" class="field-group">
+                            <div th:if="${input.second.type == 'form-editor'}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:text="${input.second.label}">
                                 </label>
                                 <div style="clear:both"></div>
@@ -692,10 +739,13 @@
                                        th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
                                        autocomplete="off"
                                        style="display: none"
+                                       th:unless="${entityMode}"
                                 />
-                                <script th:inline="javascript">
+                                <script th:inline="javascript"
+                                        th:unless="${entityMode}">
                                     changeFieldsText(/*[[${input.first.name}]]*/ '');
                                 </script>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Összetett</span>
                             </div>
 
                             <div th:if="${input.second.type == 'permissions'}" class="field-group">
@@ -703,9 +753,11 @@
                                        th:text="${input.second.label}">
                                 </label>
 
-                                <h4 class="permission-header" onclick="this.nextElementSibling.classList.toggle('hidden')">Általános jogosultságok</h4>
+                                <h4 th:unless="${entityMode}"
+                                    class="permission-header"
+                                    onclick="this.nextElementSibling.classList.toggle('hidden')">Általános jogosultságok</h4>
 
-                                <div>
+                                <div th:unless="${entityMode}">
                                     <div class="permission-box" th:each="permission : ${staffPermissions}">
                                         <div class="permission-part">
                                             <span class="material-symbols-outlined fix-icons staff-permissions">shield</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
@@ -720,9 +772,11 @@
                                     </div>
                                 </div>
 
-                                <h4 class="permission-header" onclick="this.nextElementSibling.classList.toggle('hidden')">Egyedi jogosultságok</h4>
+                                <h4 th:unless="${entityMode}"
+                                    class="permission-header"
+                                    onclick="this.nextElementSibling.classList.toggle('hidden')">Egyedi jogosultságok</h4>
 
-                                <div>
+                                <div th:unless="${entityMode}">
                                     <div class="permission-box" th:each="permission : ${customPermissions}">
                                         <div class="permission-part">
                                             <span class="material-symbols-outlined fix-icons custom-permissions">local_police</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
@@ -736,13 +790,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="permission-box" th:if="${customPermissions.empty}">
+                                <div class="permission-box" th:if="${customPermissions != null && customPermissions.empty && !entityMode}">
                                     Nincs egyetlen egyedi jogoultság sem
                                 </div>
 
-                                <h4 class="permission-header" onclick="this.nextElementSibling.classList.toggle('hidden')">Admin jogosultságok</h4>
+                                <h4 th:unless="${entityMode}"
+                                    class="permission-header"
+                                    onclick="this.nextElementSibling.classList.toggle('hidden')">Admin jogosultságok</h4>
 
-                                <div>
+                                <div th:unless="${entityMode}">
                                     <div class="permission-box" th:each="permission : ${adminPermissions}">
                                         <div class="permission-part">
                                             <span class="material-symbols-outlined fix-icons admin-permissions">gpp_maybe</span>&nbsp;<b th:text="${permission.permissionString}">PERMISSION_NAME</b><br>
@@ -757,9 +813,9 @@
                                     </div>
                                 </div>
 
-                                <h4 class="permission-header">Nyers jogosultságok</h4>
+                                <h4 class="permission-header" th:unless="${entityMode}">Nyers jogosultságok</h4>
 
-                                <div class="field-group">
+                                <div class="field-group" th:id="|_${iter.index}|">
                                     <input th:type="text"
                                            th:name="${input.first.name}"
                                            th:id="|input${iter.index}|"
@@ -769,10 +825,12 @@
                                            th:disabled="${!input.second.enabled || readOnly}"
                                            th:autocomplete="${input.second.autocomplete}"
                                            th:onchange="|changePermissionText(${iter.index})|"
+                                           th:unless="${entityMode}"
                                     />
                                     <span class="note" th:text="${input.second.note}"></span>
+                                    <span class="note type-note" th:if="${entityMode}">Típus: Jogosultságok</span>
                                 </div>
-                                <script th:inline="javascript">
+                                <script th:inline="javascript" th:unless="${entityMode}">
                                     changePermissionText(/*[[${iter.index}]]*/ 0)
                                 </script>
                             </div>
@@ -791,7 +849,7 @@
                     <div class="placeholder"></div>
 
                     <div class="button-group">
-                        <object th:if="${not readOnly}" th:remove="tag">
+                        <object th:if="${not readOnly && not entityMode}" th:remove="tag">
                             <button type="submit" class="btn btn-primary" id="save-button">
                                 <span class="material-symbols-outlined">save</span>
                                 <ins>MENTÉS</ins>
@@ -803,7 +861,7 @@
                             <ins>VISSZA</ins>
                         </a>
 
-                        <object th:if="${gradeMode}" th:remove="tag">
+                        <object th:if="${gradeMode == true && !entityMode}" th:remove="tag">
                             <br />
                             <label>Gyors értékelés</label>
                             <input type="submit" value="max" th:value="|MAX PONT (${maxScore})|" class="btn btn-primary"
@@ -821,6 +879,28 @@
     </div>
 </div>
 
+<script>
+    let hashValue = '';
+    if (window.location.hash !== '') {
+        hashValue = window.location.hash.substring(1);
+        const element = document.getElementById(hashValue);
+        element.classList.add('selected');
+    }
+    window.addEventListener('hashchange', function() {
+        if (hashValue !== '') {
+            const oldElement = document.getElementById(hashValue);
+            oldElement.classList.remove('selected');
+        }
+
+        if (window.location.hash !== '') {
+            hashValue = window.location.hash.substring(1);
+            const element = document.getElementById(hashValue);
+            element.classList.add('selected');
+        } else {
+            hashValue = '';
+        }
+    });
+</script>
 <script>
     flatpickr(".datetime-picker", {
         enableTime: true,

@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -24,7 +25,8 @@ class SubmittedTaskController(
     adminMenuService: AdminMenuService,
     component: TaskComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<SubmittedTaskEntity>(
     "submitted-tasks",
     SubmittedTaskEntity::class, ::SubmittedTaskEntity,
@@ -37,6 +39,7 @@ class SubmittedTaskController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   ControlPermissions.PERMISSION_CONTROL_TASKS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

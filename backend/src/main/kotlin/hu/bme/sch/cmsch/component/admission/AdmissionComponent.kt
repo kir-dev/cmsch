@@ -187,7 +187,7 @@ class AdmissionComponent(
     )
 
     val bannedUsers = SettingProxy(componentSettingService, component,
-        "userUsers", "", type = SettingType.TEXT,
+        "bannedUsers", "", type = SettingType.TEXT,
         fieldName = "Kitiltott felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )

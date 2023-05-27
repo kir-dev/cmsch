@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,7 +29,8 @@ class RaceRecordController(
     private val users: UserRepository,
     private val raceCategories: RaceCategoryRepository,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val clock: TimeService
+    private val clock: TimeService,
+    env: Environment
 ) : OneDeepEntityPage<RaceRecordEntity>(
     "race",
     RaceRecordEntity::class, ::RaceRecordEntity,
@@ -41,6 +43,7 @@ class RaceRecordController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     entitySourceMapping = mapOf(
         "RaceCategoryEntity" to {

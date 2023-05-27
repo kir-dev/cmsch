@@ -74,7 +74,7 @@ class RaceComponent(
     )
 
     val extraCategoriesVisible = SettingProxy(componentSettingService, component,
-        "visible", "false", type = SettingType.BOOLEAN,
+        "extraCategoriesVisible", "false", type = SettingType.BOOLEAN,
         fieldName = "Extra kategóriák láthatóak",
         description = "Leküldésre kerüljön-e az extra kategóriás toplista"
     )

@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_RACE
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -21,7 +22,8 @@ class RaceLeaderBoardController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val raceService: RaceService,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    env: Environment
 ) : OneDeepEntityPage<RaceEntryDto>(
     "race-leaderboard",
     RaceEntryDto::class, ::RaceEntryDto,
@@ -40,11 +42,13 @@ class RaceLeaderBoardController(
         override fun count() = findAll().count().toLong()
 
     },
+
     importService,
     adminMenuService,
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission = PERMISSION_EDIT_RACE,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

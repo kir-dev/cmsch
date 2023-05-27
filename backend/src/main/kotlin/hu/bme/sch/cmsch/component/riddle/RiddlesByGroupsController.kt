@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -23,7 +24,8 @@ class RiddlesByGroupsController(
     adminMenuService: AdminMenuService,
     component: RiddleComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : TwoDeepEntityPage<RiddleStatsVirtualEntity, RiddleMappingVirtualEntity>(
     "riddles-by-groups",
     RiddleStatsVirtualEntity::class,
@@ -68,6 +70,7 @@ class RiddlesByGroupsController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_RIDDLE_SUBMISSIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

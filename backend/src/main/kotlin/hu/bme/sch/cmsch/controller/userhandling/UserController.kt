@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -31,6 +32,7 @@ class UserController(
     private val staticPageService: Optional<StaticPageService>,
     private val startupPropertyConfig: StartupPropertyConfig,
     components: List<ComponentBase>,
+    env: Environment
 ) : OneDeepEntityPage<UserEntity>(
     "users",
     UserEntity::class, ::UserEntity,
@@ -43,6 +45,7 @@ class UserController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     entitySourceMapping = mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
 

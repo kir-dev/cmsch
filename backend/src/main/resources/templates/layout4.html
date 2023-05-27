@@ -38,11 +38,11 @@
 
 <div class="panel" onclick="closeSearch()" id="background-fader"></div>
 <div class="modal" id="search-modal">
-    <input type="text" id="search-input" class="search-input" placeholder="" disabled />
+    <input type="text" id="search-input" class="search-input" placeholder="" disabled autocomplete="off" spellcheck="false" />
 
     <div class="search-results" id="search-results">
         <div class="search-result" th:each="resource : ${userContext.resources}" th:object="${resource}">
-            <a class="text" href="#" th:href="*{target}">
+            <a class="text" href="#" th:href="*{target}" onclick="closeSearch()">
                 <span class="material-symbols-outlined tag-menu" th:class="|material-symbols-outlined *{type.cssClass}|" th:text="*{type.icon}">menu</span>
                 <span class="name" th:text="*{name}">Csoport tagásgok</span>
                 <span class="description" th:text="*{description}">: Menü</span>

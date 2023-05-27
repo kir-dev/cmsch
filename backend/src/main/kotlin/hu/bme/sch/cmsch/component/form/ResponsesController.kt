@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -24,7 +25,8 @@ class ResponsesController(
     adminMenuService: AdminMenuService,
     component: FormComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : TwoDeepEntityPage<FormVirtualEntity, ResponseEntity>(
     "signup-responses",
     FormVirtualEntity::class,
@@ -61,6 +63,7 @@ class ResponsesController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_FORM_RESULTS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

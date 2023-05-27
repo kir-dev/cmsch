@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_LEADERBOARD
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -26,6 +27,7 @@ class LeaderBoardGroupController(
     component: LeaderBoardComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<LeaderBoardAsGroupEntryDto>(
     "group-toplist",
     LeaderBoardAsGroupEntryDto::class, ::LeaderBoardAsGroupEntryDto,
@@ -43,6 +45,7 @@ class LeaderBoardGroupController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "leaderboard",
     adminMenuPriority = 2,

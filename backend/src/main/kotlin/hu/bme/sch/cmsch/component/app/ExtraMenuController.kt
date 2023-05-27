@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -16,7 +17,8 @@ class ExtraMenuController(
     adminMenuService: AdminMenuService,
     component: ApplicationComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<ExtraMenuEntity>(
     "extra-menus",
     ExtraMenuEntity::class, ::ExtraMenuEntity,
@@ -29,6 +31,7 @@ class ExtraMenuController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   ControlPermissions.PERMISSION_CONTROL_APP,
     createPermission = ControlPermissions.PERMISSION_CONTROL_APP,

@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -20,7 +21,8 @@ class StaticPageController(
     adminMenuService: AdminMenuService,
     component: StaticPageComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<StaticPageEntity>(
     "static-pages",
     StaticPageEntity::class, ::StaticPageEntity,
@@ -36,6 +38,7 @@ class StaticPageController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_STATIC_PAGES,
     createPermission = StaffPermissions.PERMISSION_CREATE_STATIC_PAGES,

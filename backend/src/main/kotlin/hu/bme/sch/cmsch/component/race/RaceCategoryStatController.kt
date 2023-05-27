@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -31,6 +32,7 @@ class RaceCategoryStatController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val startupPropertyConfig: StartupPropertyConfig,
+    env: Environment
 ) : TwoDeepEntityPage<RaceCategoryEntity, RaceEntryDto>(
     "race-category-stat",
     RaceCategoryEntity::class,
@@ -45,6 +47,7 @@ class RaceCategoryStatController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   StaffPermissions.PERMISSION_EDIT_RACE_CATEGORY,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -27,7 +28,8 @@ class GroupController(
     adminMenuService: AdminMenuService,
     component: UserHandlingComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : OneDeepEntityPage<GroupEntity>(
     "groups",
     GroupEntity::class, ::GroupEntity,
@@ -40,6 +42,7 @@ class GroupController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     entitySourceMapping = mapOf("UserEntity" to { it?.members?.map {
             member -> "${member.fullName} (${member.role.name})"
