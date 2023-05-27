@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_DEBTS
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -25,7 +26,8 @@ class DebtAdminDebtsByUsersController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : TwoDeepEntityPage<DebtsByUserVirtualEntity, SoldProductEntity>(
     "debts-by-users",
     DebtsByUserVirtualEntity::class,
@@ -58,6 +60,7 @@ class DebtAdminDebtsByUsersController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission =   PERMISSION_SHOW_DEBTS,
     createPermission = PERMISSION_NOBODY,

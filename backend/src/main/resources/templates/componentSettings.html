@@ -193,7 +193,7 @@
                         <object th:if="${user.role.value >= input.minRoleToEdit.value}" th:remove="tag">
 
                             <div th:if="${input.type.name() == 'COMPONENT_GROUP'}" th:remove="tag">
-                                <object th:remove="tag" th:utext="|</div><div class='card wide-false'>|"></object>
+                                <object th:remove="tag" th:utext="|</div><div class='card wide-false' id='_${input.property}'>|"></object>
                                 <h4 th:text="${input.fieldName}" th:id="|_${input.property}|">Group Name</h4>
                                 <div class="desc" th:text="${input.description}" th:if="${input.description != ''}"></div>
                             </div>
@@ -486,11 +486,26 @@
 </div>
 
 <script>
+    let hashValue = '';
     if (window.location.hash !== '') {
-        const hashValue = window.location.hash.substring(1);
+        hashValue = window.location.hash.substring(1);
         const element = document.getElementById(hashValue);
         element.classList.add('selected');
     }
+    window.addEventListener('hashchange', function() {
+        if (hashValue !== '') {
+            const oldElement = document.getElementById(hashValue);
+            oldElement.classList.remove('selected');
+        }
+
+        if (window.location.hash !== '') {
+            hashValue = window.location.hash.substring(1);
+            const element = document.getElementById(hashValue);
+            element.classList.add('selected');
+        } else {
+            hashValue = '';
+        }
+    });
 </script>
 <script>
     flatpickr(".datetime-picker", {

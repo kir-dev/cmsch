@@ -516,6 +516,12 @@ table span.favorite {
     justify-content: center;
 }
 
+.card.selected {
+    border: 4px dashed #eaa12f;
+    padding: 20px 24px 20px 24px;
+    background-color: #eaa12f0f;
+}
+
 .color-yellow {
     color: #eaa12f;
 }

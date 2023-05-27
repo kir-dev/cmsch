@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
+import org.springframework.core.env.Environment
 import java.util.function.Supplier
 import kotlin.reflect.KClass
 
@@ -25,6 +26,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     component: ComponentBase,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    env: Environment,
 
     adminMenuCategory: String? = null,
     adminMenuIcon: String = "check_box_outline_blank",
@@ -46,6 +48,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     component,
     auditLog,
     objectMapper,
+    env,
 
     showPermission = permission,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,

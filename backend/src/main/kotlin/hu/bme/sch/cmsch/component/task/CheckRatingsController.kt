@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -17,7 +18,8 @@ class CheckRatingsController(
     adminMenuService: AdminMenuService,
     component: TaskComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<CheckRatingVirtualEntity>(
     "check-ratings",
     CheckRatingVirtualEntity::class, ::CheckRatingVirtualEntity,
@@ -35,6 +37,7 @@ class CheckRatingsController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "fact_check",
     adminMenuPriority = 4,

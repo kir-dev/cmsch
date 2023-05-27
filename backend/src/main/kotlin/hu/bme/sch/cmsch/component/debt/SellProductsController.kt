@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_ANY_PRODUCT
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_FOOD
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_MERCH
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -28,7 +29,8 @@ class SellProductsController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<ProductEntity>(
     "sell-products",
     ProductEntity::class, ::ProductEntity,
@@ -44,6 +46,7 @@ class SellProductsController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "point_of_sale",
     adminMenuPriority = 2,
@@ -77,7 +80,8 @@ class SellFoodController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<ProductEntity>(
     "sell-food",
     ProductEntity::class, ::ProductEntity,
@@ -93,6 +97,7 @@ class SellFoodController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "restaurant",
     adminMenuPriority = 3,
@@ -126,7 +131,8 @@ class SellMerchController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<ProductEntity>(
     "sell-merch",
     ProductEntity::class, ::ProductEntity,
@@ -142,6 +148,7 @@ class SellMerchController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "sell",
     adminMenuPriority = 4,

@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -22,7 +23,8 @@ class TokenPublicTokensStatsController(
     adminMenuService: AdminMenuService,
     component: TokenComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<TokenStatVirtualEntity>(
     "stamps",
     TokenStatVirtualEntity::class, ::TokenStatVirtualEntity,
@@ -55,6 +57,7 @@ class TokenPublicTokensStatsController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "approval",
     adminMenuPriority = 10,

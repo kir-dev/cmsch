@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -20,11 +21,11 @@ class GroupToUserMappingController(
     repo: GroupToUserMappingRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
-    component: UserHandlingComponent
-    ,
+    component: UserHandlingComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val groups: GroupRepository,
+    env: Environment
 ) : OneDeepEntityPage<GroupToUserMappingEntity>(
     "group-to-user",
     GroupToUserMappingEntity::class, ::GroupToUserMappingEntity,
@@ -38,6 +39,7 @@ class GroupToUserMappingController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     entitySourceMapping = mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
 

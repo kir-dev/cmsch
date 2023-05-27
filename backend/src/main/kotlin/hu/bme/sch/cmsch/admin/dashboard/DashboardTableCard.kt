@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.admin
+package hu.bme.sch.cmsch.admin.dashboard
 
 class DashboardTableCard(
     val title: String,

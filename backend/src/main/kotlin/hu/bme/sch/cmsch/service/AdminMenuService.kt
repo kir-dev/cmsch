@@ -95,6 +95,11 @@ class AdminMenuService(
         log.info("Cleaned: {} still cached {}", toBeRemoved.size, userContexts.size)
     }
 
+    @Scheduled(fixedDelay = 5000)
+    fun postInit() {
+        Collections.sort(searchableResources, Comparator.comparing { it.name.replace("'", "") })
+    }
+
     fun registerEntry(component: String, entry: AdminMenuEntry) {
         entries.computeIfAbsent(component) { mutableListOf() }.add(entry)
         searchableResources.add(SearchableResource(

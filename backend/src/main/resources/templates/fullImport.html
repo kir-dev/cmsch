@@ -12,30 +12,75 @@
         </div>
 
         <div class="content">
-            <h1 class="narrow" th:text="|${title} importálása/exportálása|">Teljes Importálás</h1>
+            <h1 class="narrow">Teljes Importálás</h1>
+
+            <div class="card wide-false" th:if="${importedCount != null}">
+                <h4>Importálás befejeződött</h4>
+
+                <p>
+                    Beimportált beállítások száma: <b th:text="${importedCount}"></b>
+                    <ins th:if="${importedOutOf != null}" th:remove="tag">
+                        ennyi beállításból: <b th:text="${importedOutOf}"></b>
+                    </ins>
+                </p>
+            </div>
+
+            <div class="card wide-false" th:if="${user.isAdmin()}">
+                <h4>Jogosultságok</h4>
+
+                <div class="options">
+                    <div class="option">
+                        <div><span class="material-symbols-outlined">local_police</span></div>
+                        <div>
+                            <h5 th:text="${permission}">PERMISSION_NAME</h5>
+                            <span>Ez a jog szükséges az importálás használatához.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="card wide-false">
-                <h4>Teljes Importálás</h4>
+                <h4>Importálás fájlból</h4>
 
                 <div class="desc">
                     Adj meg egy properties fájlt. Minden komponenst érintő beállítás szerkeszthető ezzel.
+                    Használd azt a mintát amit az exportálásnál lehet látni.
                 </div>
 
-                <p th:if="${importedCount != null}">
-                    Beimportált beállítások száma: <b th:text="${importedCount}"></b>
-                </p>
-
-                <form th:action="|@{/admin/control}/${view}/import/csv|"
+                <form th:action="|@{/admin/control/import/file}|"
                       method="post"
                       enctype="multipart/form-data">
 
-                    <label for="file">Importálás</label>
+                    <label for="file">Importálás fájlból</label>
                     <input type="file" class="file-input" name="file" id="file" /><br />
 
                     <div class="button-group">
                         <button type="submit" class="btn btn-primary">
                             <span class="material-symbols-outlined">upload</span>
-                            <ins>IMPORTÁLÁS (.properties)</ins>
+                            <ins>IMPORTÁLÁS</ins>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card wide-false">
+                <h4>Importálás szövegből</h4>
+
+                <div class="desc">
+                    Add meg egy properties fájl tartalmát. Minden komponenst érintő beállítás szerkeszthető ezzel.
+                    Használd azt a mintát amit az exportálásnál lehet látni.
+                </div>
+
+                <form th:action="|@{/admin/control/import/string}|"
+                      method="post">
+
+                    <label for="file">Importálás</label>
+                    <textarea name="string" id="string"></textarea><br />
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined">upload</span>
+                            <ins>IMPORTÁLÁS</ins>
                         </button>
                     </div>
                 </form>

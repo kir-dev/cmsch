@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_SOLD_STATS
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -17,7 +18,8 @@ class SoldProductStatsController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<ProductGroupVirtualEntity>(
     "track-sold",
     ProductGroupVirtualEntity::class, ::ProductGroupVirtualEntity,
@@ -35,6 +37,7 @@ class SoldProductStatsController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "receipt_long",
     adminMenuPriority = 5,

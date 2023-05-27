@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -17,7 +18,8 @@ class DebtsOfUserController(
     adminMenuService: AdminMenuService,
     component: DebtComponent,
     auditLog: AuditLogService,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    env: Environment
 ) : SimpleEntityPage<SoldProductEntity>(
     "my-debts",
     SoldProductEntity::class, ::SoldProductEntity,
@@ -33,6 +35,7 @@ class DebtsOfUserController(
     component,
     auditLog,
     objectMapper,
+    env,
 
     adminMenuIcon = "account_balance_wallet",
     adminMenuPriority = 6,

@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="layout4 :: head(${context.siteName})">
+</head>
+<body>
+<div th:replace="layout4 :: mobile(null)"></div>
+<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        </div>
+
+        <div class="content">
+            <h1 class="narrow">OLDAL NEM TALÁLHATÓ</h1>
+
+            <div class="card wide-false">
+                <h4>Az oldal nem található</h4>
+                <p>
+                    Ha szerinted ez egy hiba, vedd fel akapcsolatot a fejlesztőkkel!
+                </p>
+
+                <div class="button-group">
+                    <button type="button" class="btn" onclick="window.history.back()">
+                        <span class="material-symbols-outlined">undo</span>
+                        <ins>VISSZA</ins>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

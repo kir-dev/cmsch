@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,6 +32,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     component: ComponentBase,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    env: Environment,
     entitySourceMapping: Map<String, (INNER?) -> List<String>> =
         mapOf(Nothing::class.simpleName!! to { listOf() }),
 
@@ -69,6 +71,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     component,
     auditLog,
     objectMapper,
+    env,
     entitySourceMapping,
 
     showPermission,

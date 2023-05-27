@@ -24,7 +24,6 @@
             <object th:each="component,iter : ${components}" th:remove="tag">
 
                 <object th:if="${component.type == 'DashboardTableCard'}" th:remove="tag">
-
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|">
                         <h4 th:text="${component.title}">Title</h4>
                         <span th:text="${component.description}" class="desc">A little description fits there.</span>
@@ -40,6 +39,21 @@
                     </div>
                 </object>
 
+                <object th:if="${component.type == 'DashboardPermissionCard'}" th:remove="tag">
+                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:if="${user.isAdmin()}">
+                        <h4 th:text="${component.title}">Jogosultságok</h4>
+
+                        <div class="options">
+                            <div class="option">
+                                <div><span class="material-symbols-outlined">local_police</span></div>
+                                <div>
+                                    <h5 th:text="${component.permission}">PERMISSION_NAME</h5>
+                                    <span th:text="${component.description}">Ez a jog szükséges ennek az oldalnak az módosításához és olvasásához.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </object>
             </object>
 
 
