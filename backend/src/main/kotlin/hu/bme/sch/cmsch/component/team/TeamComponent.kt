@@ -2,8 +2,6 @@ package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
-import hu.bme.sch.cmsch.component.race.RaceCategoryEntity
-import hu.bme.sch.cmsch.component.race.RaceRecordEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.form
 
-import hu.bme.sch.cmsch.component.debt.SoldProductEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.jpa.repository.JpaRepository
