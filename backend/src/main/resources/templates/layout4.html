@@ -32,7 +32,6 @@
 <body>
 
 <section th:fragment="mobile(user)" th:remove="tag">
-    <!-- Make it  -->
 </section>
 
 <section th:fragment="siteBegin(userContext, context)" th:remove="tag">
@@ -55,9 +54,9 @@
 <div class="group">
     <div class="nav">
         <div class="left-panel">
-            <ins th:text="${context.siteName}">CMSCH 4 APP</ins>
-            <span class="badge color-green" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> <ins>LIVE</ins></span>
-            <span class="badge" th:if="${context.production == 'dev'}"><span class="material-symbols-outlined regular">code</span> <ins>DEV</ins></span>
+            <ins th:text="${context.siteName}" class="only-widescreen">CMSCH 4 APP</ins>
+            <span class="badge color-green only-widescreen" th:if="${context.production == 'live'}"><span class="material-symbols-outlined regular">adjust</span> <ins>LIVE</ins></span>
+            <span class="badge only-widescreen" th:if="${context.production == 'dev'}"><span class="material-symbols-outlined regular">code</span> <ins>DEV</ins></span>
 
             <span id="motd" th:style="|display: ${context.motd != null && context.motd != '' && context.motd != userContext.dismissedMotd ? 'inline' : 'none'}|">
                 <span th:text="${context.motd}" class="color-yellow badge">Figyelem! Ez egy teszt üzenet! </span>
@@ -65,14 +64,20 @@
                    onclick="dismissMotd(this.getAttribute('data-motd')); return false">visibility_off</span>
             </span>
 
-            <span class="badge color-green" style="margin-left: 40px" th:text="${context.activeUsers}">53</span> online
-            <span class="badge color-yellow" th:text="${context.rpm}">120</span> rpm
+            <span th:if="${showStats}" class="only-widescreen">
+                <span class="badge color-green" style="margin-left: 40px" th:text="${context.activeUsers}">53</span> online
+                <span class="badge color-yellow" th:text="${context.rpm}">120</span> rpm
+            </span>
         </div>
         <div class="right-panel">
             <div class="profile-button-container">
-                <span class="profile-button">
+                <span class="profile-button only-widescreen">
                     Profil
                     <span class="material-symbols-outlined">expand_more</span>
+                </span>
+
+                <span class="only-mobile" onclick="openMobileMenu()">
+                    <span class="material-symbols-outlined">menu</span>
                 </span>
 
                 <div class="popover-container">
@@ -151,13 +156,41 @@
                     <span class="tooltip-text">Visszajelzés küldése</span>
                 </a>
             </div>
-            <div class="menu">
 
-                <input type="text" id="search" placeholder="" />
-                <div class="search-note">Menü kereső (F2)</div>
+            <div class="menu">
+                <div class="search-note only-widescreen">Menü kereső (F2)</div>
+                <input type="text" id="search" class="only-widescreen" placeholder="" />
+
+                <span class="only-mobile mobile-menu-close" onclick="closeMobileMenu()">
+                    <span class="material-symbols-outlined">close</span>
+                </span>
+                <ins th:text="${context.siteName}" class="only-mobile mobile-title">CMSCH 4 APP</ins>
+                <div class="mobile-shortcuts only-mobile">
+                    <a href="#" onclick="closeMobileMenu(); openSearch(); return false">
+                        <span class="material-symbols-outlined">search</span>
+                    </a>
+                    <a href="#" onclick="clearFilter(); return false">
+                        <span class="material-symbols-outlined">content_copy</span>
+                    </a>
+                    <a href="#" onclick="searchFavorite(); return false">
+                        <span class="material-symbols-outlined fav">star</span>
+                    </a>
+                    <a href="#" onclick="closeAllMenuGroups(); saveMenuState(); return false">
+                        <span class="material-symbols-outlined">unfold_less_double</span>
+                    </a>
+                    <a href="#" onclick="openAllMenuGroups(); saveMenuState(); return false">
+                        <span class="material-symbols-outlined">unfold_more_double</span>
+                    </a>
+
+                    <a href="#" onclick="window.location.href = '/admin/control/settings'">
+                        <span class="material-symbols-outlined">settings</span>
+                    </a>
+                    <a href="#" onclick="alert('A súgó funkció még nincs kész')">
+                        <span class="material-symbols-outlined">help</span>
+                    </a>
+                </div>
 
                 <div id="menu-results">
-
                     <object th:remove="tag" th:each="category : ${menu}" th:if="${menu} != null">
                         <a class="category" data-search="Dashboard|Open site"
                            th:text="${category.key.value.title}"
@@ -172,7 +205,6 @@
                                th:class="${userContext.favoriteMenus.contains(entry.title) ? 'favorite' : ''}"><span class="material-symbols-outlined" th:text="${entry.icon}">dashboard</span><span th:text="${entry.title}">Dashboard</span></a>
                         </div>
                     </object>
-
                 </div>
             </div>
         </section>

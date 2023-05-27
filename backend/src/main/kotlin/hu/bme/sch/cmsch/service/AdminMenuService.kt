@@ -129,6 +129,7 @@ class AdminMenuService(
 
         model.addAttribute("context", siteContext)
         model.addAttribute("userContext", getContextForUser(user))
+        model.addAttribute("showStats", ControlPermissions.PERMISSION_SHOW_LIVE_STATS.validate(user))
     }
 
     private fun getContextForUser(user: CmschUser): UserSiteContext {
