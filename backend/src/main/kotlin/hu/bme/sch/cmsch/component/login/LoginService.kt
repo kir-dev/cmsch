@@ -17,7 +17,6 @@ import hu.bme.sch.cmsch.repository.UserDetailsByInternalIdMappingRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
-import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation

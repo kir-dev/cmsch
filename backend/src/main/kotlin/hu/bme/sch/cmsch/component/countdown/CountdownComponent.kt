@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.countdown
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.component.communities.CommunityEntity
-import hu.bme.sch.cmsch.component.communities.OrganizationEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
