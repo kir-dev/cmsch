@@ -69,6 +69,7 @@ open class SecurityConfig(
                 antMatcher("/style4.css"),
                 antMatcher("/flatpickr_custom.css"),
                 antMatcher("/tabulator_simple.css"),
+                antMatcher("/tabulator_simple.min.css.map"),
                 antMatcher("/control/test-user"),
                 antMatcher("/images/**"),
                 antMatcher("/js/**"),

@@ -1,10 +1,12 @@
 package hu.bme.sch.cmsch.component.app
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
 import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.AuditLogService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.event.ContextRefreshedEvent
@@ -24,6 +26,7 @@ open class MenuService(
     private val extraPages: Optional<StaticPageRepository>,
     private val forms: Optional<FormRepository>,
     private val races: Optional<RaceCategoryRepository>,
+    private val auditLogService: AuditLogService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -168,5 +171,52 @@ open class MenuService(
     }
 
     fun getComponentNames() = components.map { it.component }
+
+    @JsonPropertyOrder("role", "name", "order", "visible", "subMenu", "external")
+    data class MenuImportEntry(
+        var role: RoleType = RoleType.GUEST,
+        var name: String = "",
+        var order: Int = 0,
+        var visible: Boolean = false,
+        var subMenu: Boolean = false,
+        var external: Boolean = false,
+    )
+
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    fun importMenu(entries: List<MenuImportEntry>, rolesToInclude: List<RoleType>): Pair<Int, Int> {
+        var improted = 0
+        var notAffected = 0
+
+        entries.groupBy { it.role }
+            .filter { it.key in rolesToInclude }
+            .forEach { (role, menus) ->
+                val initialMenus = getMenusForRole(role)
+                initialMenus.forEach { initialMenu ->
+                    menus.firstOrNull { it.name == initialMenu.name }
+                        ?.also {
+                            initialMenu.order = it.order
+                            initialMenu.visible = it.visible
+                            initialMenu.subMenu = it.subMenu
+                            initialMenu.external = it.external
+                            ++improted
+                        } ?: {
+                            initialMenu.order = -1
+                            initialMenu.visible = false
+                            initialMenu.subMenu = false
+                            ++notAffected
+                        }
+                }
+                persistSettings(initialMenus, role)
+            }
+        return Pair(improted, notAffected)
+    }
+
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+    fun exportMenu(): List<MenuImportEntry> {
+        return RoleType.values().flatMap { role ->
+            getMenusForRole(role)
+                .map { MenuImportEntry(role, it.name, it.order, it.visible, it.subMenu, it.external) }
+        }
+    }
 
 }
