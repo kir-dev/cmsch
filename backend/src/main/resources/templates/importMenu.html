@@ -1,0 +1,80 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="~{layout4 :: head(${context.siteName})}">
+</head>
+<body>
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}">
+        </div>
+
+        <div class="content">
+            <h1 class="narrow">Menü importálása</h1>
+
+            <div class="card wide-false">
+                <h4>Importálás</h4>
+
+                <p th:if="${importedCount != null && notAffectedCount != null}">
+                    Beimportált menük száma: <b th:text="${importedCount}"></b>, elrejtve: <b th:text="${notAffectedCount}"></b>
+                </p>
+
+                <p th:if="${error != null}">
+                    Hiba betöltés közben: <b th:text="${error}"></b>
+                </p>
+
+                <div class="desc">
+                    Adj meg egy menü csv fájl. Elválasztó karakter a pontosvessző ';'.
+                    Használd az exportálás gombot példa generáláshoz.
+                </div>
+
+                <form th:action="|@{/admin/control}/${view}/import-csv|"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    <label>
+                        Válassz az alábbi jogosultságok közül, hogy melyikekét írja felül az importálás:
+                    </label>
+
+                    <div class="field-group">
+                        <table>
+                            <tr th:each="role : ${T(hu.bme.sch.cmsch.model.RoleType).values()}"
+                                th:if="${role.value < T(hu.bme.sch.cmsch.model.RoleType).NOBODY.value}">
+
+                                <td th:text="${role.name()}">BASIC</td>
+                                <td>
+                                    <label class="switch" th:for="${role.name()}">
+                                        <input type="checkbox"
+                                               th:name="${role.name()}"
+                                               th:id="${role.name()}"
+                                               checked
+                                        />
+                                        <span class="slider"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <label for="file">Menü csv fájl</label>
+                    <input type="file" class="file-input" name="file" id="file" /><br />
+
+                    <div class="button-group">
+                        <a href="#" th:href="@{/admin/control/menu}" class="btn">
+                            <span class="material-symbols-outlined">undo</span>
+                            <ins>Vissza</ins>
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined">upload</span>
+                            <ins>IMPORTÁLÁS</ins>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
