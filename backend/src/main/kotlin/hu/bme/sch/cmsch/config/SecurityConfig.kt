@@ -62,6 +62,9 @@ open class SecurityConfig(
         http.authorizeHttpRequests {
             it.requestMatchers(
                 antMatcher("/"),
+                antMatcher("/error"),
+                antMatcher("/403"),
+                antMatcher("/404"),
                 antMatcher("/control/loggedin"),
                 antMatcher("/control/login"),
                 antMatcher("/control/logged-out"),
@@ -91,6 +94,7 @@ open class SecurityConfig(
                 antMatcher("/cdn/task/**"),
                 antMatcher("/cdn/news/**"),
                 antMatcher("/cdn/event/**"),
+                antMatcher("/cdn/manifest/**"),
                 antMatcher("/control/refresh"),
                 antMatcher("/oauth2/authorization"),
                 antMatcher("/c/**"),

@@ -7,6 +7,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import jakarta.servlet.RequestDispatcher
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
 class ServerSideErrorController : ErrorController {
@@ -27,6 +28,16 @@ class ServerSideErrorController : ErrorController {
                 return "error-403"
             }
         }
+        return "error"
+    }
+
+    @RequestMapping("/403")
+    fun error403(): String {
+        return "error-403"
+    }
+
+    @RequestMapping("/404")
+    fun error404(): String {
         return "error"
     }
 
