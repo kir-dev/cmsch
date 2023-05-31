@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.3"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "3.1.0"
+    id("io.spring.dependency-management") version "1.1.0"
+    id("org.owasp.dependencycheck") version "6.1.6"
     kotlin("jvm") version "1.6.10"
-    kotlin("plugin.spring") version "1.6.10"
+    kotlin("plugin.spring") version "1.9.0-Beta"
+
 }
 
 group = "hu.bme.sch"
@@ -35,18 +37,21 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
-    implementation("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
-    implementation("org.springdoc:springdoc-openapi-security:1.6.11")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.11")
-    implementation("com.google.zxing:core:3.5.0")
-    implementation("com.google.zxing:javase:3.5.0")
+    implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
+    implementation("org.springdoc:springdoc-openapi-security:1.7.0")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.7.0")
+    implementation("com.google.zxing:core:3.5.1")
+    implementation("com.google.zxing:javase:3.5.1")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
-    implementation("com.fasterxml.uuid:java-uuid-generator:3.2.0")
-    implementation("org.commonmark:commonmark:0.19.0")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.4")
+    implementation("com.fasterxml.uuid:java-uuid-generator:4.2.0")
+    implementation("org.commonmark:commonmark:0.21.0")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.15.1")
+}
+
+dependencyCheck {
+    failBuildOnCVSS = 7f
 }
 
 tasks.withType<KotlinCompile> {
@@ -59,3 +64,4 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+

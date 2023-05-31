@@ -13,7 +13,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import java.util.function.Supplier
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 import kotlin.reflect.KClass
 
 abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: IdentifiableEntity>(

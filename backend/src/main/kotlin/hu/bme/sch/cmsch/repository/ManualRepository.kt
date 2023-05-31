@@ -17,7 +17,7 @@ abstract class ManualRepository<T, ID> : EntityPageDataSource<T, ID> {
     override fun <S : T?> saveAll(entities: Iterable<S>): Iterable<S> =
         throw UnsupportedOperationException("This data source does not support: saveAll(entities)")
 
-    override fun <S : T?> save(entity: S): S =
+    override fun <S : T & Any> save(entity: S): S =
         throw UnsupportedOperationException("This data source does not support: save(entity)")
 
     override fun delete(entity: T): Unit =

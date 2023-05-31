@@ -9,7 +9,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.PermissionValidator
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.findAnnotation

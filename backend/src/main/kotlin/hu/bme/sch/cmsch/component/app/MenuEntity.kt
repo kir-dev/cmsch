@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import org.hibernate.Hibernate
 import java.io.Serializable
 import java.util.*
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name="menus")

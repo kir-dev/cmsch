@@ -1,40 +1,39 @@
 package hu.bme.sch.cmsch.config
 
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
-import javax.annotation.PostConstruct
+import org.springframework.boot.context.properties.bind.ConstructorBinding
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "hu.bme.sch.cmsch.startup")
-data class StartupPropertyConfig(
-    val sysadmins: String = "",
-    val external: String = "/etc/cmsch/external",
-    val auditLog: String = "/etc/cmsch/audit",
-    val zoneId: String = "CET",
+data class StartupPropertyConfig @ConstructorBinding constructor(
+    val sysadmins: String,
+    val external: String,
+    val auditLog: String,
+    val zoneId: String,
 
     // JWT
-    val jwtEnabled: Boolean = true,
-    val secretKey: String = "secret",
-    val sessionValidityInMilliseconds: Long = 172800000,
+    val jwtEnabled: Boolean,
+    val secretKey: String,
+    val sessionValidityInMilliseconds: Long,
 
     // Profile Qr
-    val profileQrEnabled: Boolean = false,
-    val profileQrPrefix: String = "X_",
-    val profileSalt: String = "RANDOM_STRING",
-    val profileGenerationTarget: String = "/etc/cmsch/external/profiles",
-    val profileQrCodeSize: Int = 360,
+    val profileQrEnabled: Boolean,
+    val profileQrPrefix: String,
+    val profileSalt: String,
+    val profileGenerationTarget: String,
+    val profileQrCodeSize: Int,
 
     // Strategies
-    val taskOwnershipMode: OwnershipType = OwnershipType.USER,
-    val riddleOwnershipMode: OwnershipType = OwnershipType.USER,
-    val tokenOwnershipMode: OwnershipType = OwnershipType.USER,
-    val formOwnershipMode: OwnershipType = OwnershipType.USER,
-    val challengeOwnershipMode: OwnershipType = OwnershipType.USER,
-    val raceOwnershipMode: OwnershipType = OwnershipType.USER,
+    val taskOwnershipMode: OwnershipType,
+    val riddleOwnershipMode: OwnershipType,
+    val tokenOwnershipMode: OwnershipType,
+    val formOwnershipMode: OwnershipType,
+    val challengeOwnershipMode: OwnershipType,
+    val raceOwnershipMode: OwnershipType,
 
     // Increased session
-    val increasedSessionTime: Int = 60 * 60 * 24 * 2
+    val increasedSessionTime: Int
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

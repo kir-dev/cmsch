@@ -90,12 +90,12 @@ class LocationService(
     override fun deleteAll() = clean()
 
     override fun <S : LocationEntity?> saveAll(entities: Iterable<S>): Iterable<S> {
-        return entities.map { save(it) }
+        return entities.filterNotNull().map { save(it) }
     }
 
-    override fun <S : LocationEntity?> save(entity: S): S {
-        val keyToUpdate = tokenToLocationMapping.entries.find { it.value.id == entity?.id }?.key
-        if (keyToUpdate != null && entity != null)
+    override fun <S : LocationEntity> save(entity: S): S {
+        val keyToUpdate = tokenToLocationMapping.entries.find { it.value.id == entity.id }?.key
+        if (keyToUpdate != null)
             tokenToLocationMapping[keyToUpdate] = entity
         return entity
     }

@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 @Controller
 @RequestMapping("/admin/control/token-properties-of-groups")

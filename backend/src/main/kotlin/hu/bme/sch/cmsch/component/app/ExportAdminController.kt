@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.StringWriter
 import java.util.Properties
-import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletResponse
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
 
 @Controller
 @RequestMapping("/admin/control/export")
@@ -55,7 +55,6 @@ class ExportAdminController(
         }
 
         model.addAttribute("settings", generateProperties())
-
         model.addAttribute("user", user)
         model.addAttribute("permission", permissionControl.permissionString)
 

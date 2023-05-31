@@ -12,7 +12,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
 import java.lang.RuntimeException
-import javax.persistence.*
+import jakarta.persistence.*
 
 enum class RoleType(val value: Int, val displayName: String, val description: String) {
     GUEST(0, "Vendég", "Nem bejelentkezett felhasználó"),

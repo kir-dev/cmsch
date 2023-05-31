@@ -14,7 +14,7 @@ import org.springframework.ui.Model
 import java.security.MessageDigest
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 private fun String.md5(): String {
     val md = MessageDigest.getInstance("MD5")

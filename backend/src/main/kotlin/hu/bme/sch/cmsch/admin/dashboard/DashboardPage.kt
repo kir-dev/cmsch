@@ -4,10 +4,10 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import jakarta.annotation.PostConstruct
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import javax.annotation.PostConstruct
 
 abstract class DashboardPage(
     private var view: String,
