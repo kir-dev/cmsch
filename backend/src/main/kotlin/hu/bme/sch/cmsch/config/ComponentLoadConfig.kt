@@ -2,37 +2,36 @@ package hu.bme.sch.cmsch.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
+import org.springframework.boot.context.properties.bind.ConstructorBinding
 
-@ConstructorBinding
 @ConfigurationProperties("hu.bme.sch.cmsch.component.load")
-data class ComponentLoadConfig(
+data class ComponentLoadConfig @ConstructorBinding constructor(
 
-    var admission: Boolean = false,
-    var app: Boolean = false,
-    var bmejegy: Boolean = false,
-    var challenge: Boolean = false,
-    var countdown: Boolean = false,
-    var debt: Boolean = false,
-    var event: Boolean = false,
-    var staticPage: Boolean = false,
-    var groupselection: Boolean = false,
-    var home: Boolean = false,
-    var impressum: Boolean = false,
-    var leaderboard: Boolean = false,
-    var location: Boolean = false,
-    var login: Boolean = false,
-    var news: Boolean = false,
-    var profile: Boolean = false,
-    var qrFight: Boolean = false,
-    var race: Boolean = false,
-    var riddle: Boolean = false,
-    var form: Boolean = false,
-    var task: Boolean = false,
-    var team: Boolean = false,
-    var token: Boolean = false,
-    var communities: Boolean = false,
+    var admission: Boolean,
+    var app: Boolean,
+    var bmejegy: Boolean,
+    var challenge: Boolean,
+    var countdown: Boolean,
+    var debt: Boolean,
+    var event: Boolean,
+    var staticPage: Boolean,
+    var groupselection: Boolean,
+    var home: Boolean,
+    var impressum: Boolean,
+    var leaderboard: Boolean,
+    var location: Boolean,
+    var login: Boolean,
+    var news: Boolean,
+    var profile: Boolean,
+    var qrFight: Boolean,
+    var race: Boolean,
+    var riddle: Boolean,
+    var form: Boolean,
+    var task: Boolean,
+    var team: Boolean,
+    var token: Boolean,
+    var communities: Boolean,
 
 ) {
 

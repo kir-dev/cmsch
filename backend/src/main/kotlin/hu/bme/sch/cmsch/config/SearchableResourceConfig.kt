@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.config
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.AdminMenuService
 import org.springframework.context.annotation.Configuration
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Configuration
 class SearchableResourceConfig(

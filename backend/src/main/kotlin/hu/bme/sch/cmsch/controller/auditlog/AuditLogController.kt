@@ -23,8 +23,8 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletResponse
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
 import kotlin.io.path.fileSize
 import kotlin.io.path.isRegularFile
 import kotlin.streams.asSequence

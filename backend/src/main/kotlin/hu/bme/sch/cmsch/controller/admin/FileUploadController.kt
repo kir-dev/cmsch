@@ -13,7 +13,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 import kotlin.math.absoluteValue
 
 @Controller

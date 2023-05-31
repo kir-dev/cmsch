@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name="bmejegyRecords")

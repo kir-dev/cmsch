@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component
 
 import java.io.Serializable
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "componentSettings", indexes = [

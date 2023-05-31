@@ -25,8 +25,8 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.function.Supplier
-import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletResponse
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 
