@@ -31,7 +31,7 @@ import hu.bme.sch.cmsch.util.sha256
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import java.util.*
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 const val LOREM_IPSUM_SHORT_1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in justo ac arcu placerat posuere eget at purus. Donec porta lorem in semper semper. Phasellus volutpat sapien et ultricies tristique. In ornare libero vel dignissim ultrices."
 const val LOREM_IPSUM_SHORT_2 = "Pellentesque non interdum leo. Mauris egestas augue vel lorem dignissim ullamcorper. Suspendisse tempus ex dolor, in sagittis lorem fermentum ut. Morbi dignissim sollicitudin ornare."

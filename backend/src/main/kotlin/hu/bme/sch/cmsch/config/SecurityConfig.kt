@@ -13,19 +13,22 @@ import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.JwtTokenProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher
 import org.springframework.web.reactive.function.client.WebClient
 import java.util.*
 
@@ -40,7 +43,7 @@ open class SecurityConfig(
     private val authschLoginService: LoginService,
     private val loginComponent: LoginComponent,
     private val startupPropertyConfig: StartupPropertyConfig
-) : WebSecurityConfigurerAdapter() {
+) {
 
     var authschUserServiceClient = WebClient.builder()
         .baseUrl("https://auth.sch.bme.hu/api")
@@ -54,69 +57,95 @@ open class SecurityConfig(
         .defaultHeader(HttpHeaders.USER_AGENT, "AuthSchKotlinAPI")
         .build()
 
-    @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
-        http.authorizeRequests()
-                .antMatchers("/",
-                        "/control/loggedin",
-                        "/control/login",
-                        "/control/logged-out",
-                        "/control/post-login",
-                        "/style.css",
-                        "/control/test-user",
-                        "/images/**",
-                        "/js/**",
-                        "/files/**",
-                        "/admin/logout",
-                        "/cdn/events/**",
-                        "/cdn/riddles/**",
-                        "/countdown",
-                        "/control/logout",
-                        "/control/test",
-                        "/control/open-site",
-                        "/api/**",
-                        "/share/**",
-                        "swagger-ui.html", "/v3/api-docs/**",
-                        "/cdn/manifest/**", "/manifest/manifest.json",
-                        "/cdn/public/**",
-                        "/cdn/task/**",
-                        "/cdn/news/**",
-                        "/cdn/event/**",
-                        "/control/refresh",
-                        "/oauth2/authorization",
-                        "/c/**")
-                    .permitAll()
+    @Bean
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http.authorizeHttpRequests {
+            it.requestMatchers(
+                antMatcher("/"),
+                antMatcher("/control/loggedin"),
+                antMatcher("/control/login"),
+                antMatcher("/control/logged-out"),
+                antMatcher("/control/post-login"),
+                antMatcher("/style4.css"),
+                antMatcher("/flatpickr_custom.css"),
+                antMatcher("/tabulator_simple.css"),
+                antMatcher("/control/test-user"),
+                antMatcher("/images/**"),
+                antMatcher("/js/**"),
+                antMatcher("/files/**"),
+                antMatcher("/admin/logout"),
+                antMatcher("/cdn/events/**"),
+                antMatcher("/cdn/riddles/**"),
+                antMatcher("/countdown"),
+                antMatcher("/control/logout"),
+                antMatcher("/control/test"),
+                antMatcher("/control/open-site"),
+                antMatcher("/api/**"),
+                antMatcher("/share/**"),
+                antMatcher("swagger-ui.html"),
+                antMatcher("/v3/api-docs/**"),
+                antMatcher("/cdn/manifest/**"),
+                antMatcher("/manifest/manifest.json"),
+                antMatcher("/cdn/public/**"),
+                antMatcher("/cdn/task/**"),
+                antMatcher("/cdn/news/**"),
+                antMatcher("/cdn/event/**"),
+                antMatcher("/control/refresh"),
+                antMatcher("/oauth2/authorization"),
+                antMatcher("/c/**"),
+            ).permitAll()
 
-                .antMatchers(
-                        "/control/entrypoint",
-                        "/control/stamps",
-                        "/export-tasks")
-                    .hasAnyRole(RoleType.BASIC.name, RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
+            it.requestMatchers(
+                antMatcher("/control/entrypoint"),
+                antMatcher("/control/stamps"),
+                antMatcher("/export-tasks")
+            ).hasAnyRole(
+                RoleType.BASIC.name,
+                RoleType.STAFF.name,
+                RoleType.ATTENDEE.name,
+                RoleType.PRIVILEGED.name,
+                RoleType.ADMIN.name,
+                RoleType.SUPERUSER.name
+            )
 
-                .antMatchers("/admin/**", "/cdn/**")
-                    .hasAnyRole(RoleType.STAFF.name, RoleType.ADMIN.name, RoleType.SUPERUSER.name)
-
-                .and().formLogin().disable()
-                .exceptionHandling().accessDeniedPage("/403")
-                .and().apply(JwtConfigurer(jwtTokenProvider))
-                .and().apply(SessionFilterConfigurer(startupPropertyConfig))
-                .and().oauth2Login()
-                .loginPage("/oauth2/authorization")
-                .authorizationEndpoint()
-                .authorizationRequestResolver(
-                    CustomAuthorizationRequestResolver(
-                        clientRegistrationRepository, "/oauth2/authorization", loginComponent
+            it.requestMatchers(
+                antMatcher("/admin/**"),
+                antMatcher("/cdn/**")
+            ).hasAnyRole(
+                RoleType.STAFF.name,
+                RoleType.ADMIN.name,
+                RoleType.SUPERUSER.name
+            )
+        }
+        http.formLogin { it.disable() }
+        http.exceptionHandling { it.accessDeniedPage("/403") }
+        http.apply(JwtConfigurer(jwtTokenProvider))
+        http.apply(SessionFilterConfigurer(startupPropertyConfig))
+        http.oauth2Login { oauth2 ->
+            oauth2.loginPage("/oauth2/authorization")
+                .authorizationEndpoint {
+                    it.authorizationRequestResolver(
+                        CustomAuthorizationRequestResolver(
+                            clientRegistrationRepository, "/oauth2/authorization", loginComponent
+                        )
                     )
-                )
-                .and()
-                .userInfoEndpoint()
-                .oidcUserService { resolveGoogleUser(it) }
-                .userService { resolveAuthschUser(it) }
-                .and()
-                .defaultSuccessUrl("/control/post-login")
-
+                }.userInfoEndpoint { userInfo ->
+                    userInfo
+                        .oidcUserService { resolveGoogleUser(it) }
+                        .userService { resolveAuthschUser(it) }
+                }.defaultSuccessUrl("/control/post-login")
+        }
         countdownConfigurer.ifPresent { http.apply(it) }
-        http.csrf().ignoringAntMatchers("/api/**", "/admin/api/**", "/admin/sell/**", "/admin/admission/**", "/cdn/**")
+        http.csrf {
+            it.ignoringRequestMatchers(
+                antMatcher("/api/**"),
+                antMatcher("/admin/api/**"),
+                antMatcher("/admin/sell/**"),
+                antMatcher("/admin/admission/**"),
+                antMatcher("/cdn/**")
+            )
+        }
+        return http.build()
     }
 
     private fun resolveAuthschUser(request: OAuth2UserRequest): DefaultOAuth2User {
@@ -171,8 +200,10 @@ open class SecurityConfig(
         )
     }
 
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.eraseCredentials(true)
-    }
+//    @Bean
+//    fun authentication(auth: AuthenticationManagerBuilder): AuthenticationManager {
+//        auth.eraseCredentials(true)
+//        return auth.build()
+//    }
 
 }

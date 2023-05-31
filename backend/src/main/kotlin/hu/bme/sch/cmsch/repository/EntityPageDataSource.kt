@@ -12,7 +12,7 @@ interface EntityPageDataSource<T, ID> {
 
     fun count(): Long
 
-    fun <S : T?> save(entity: S): S
+    fun <S : T & Any> save(entity: S): S
 
     fun <S : T?> saveAll(entities: Iterable<S>): Iterable<S>
 

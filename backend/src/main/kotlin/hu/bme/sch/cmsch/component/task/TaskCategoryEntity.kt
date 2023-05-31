@@ -11,7 +11,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import javax.persistence.*
+import jakarta.persistence.*
 
 enum class TaskCategoryType {
     REGULAR,

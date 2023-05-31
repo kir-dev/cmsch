@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 import kotlin.io.path.fileSize
 import kotlin.io.path.isRegularFile
 import kotlin.streams.asSequence

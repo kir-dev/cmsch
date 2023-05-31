@@ -18,7 +18,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Controller
 @RequestMapping("/admin/control/menu")

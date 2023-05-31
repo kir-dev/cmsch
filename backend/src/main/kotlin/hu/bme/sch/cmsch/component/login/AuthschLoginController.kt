@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.component.login
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.token.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.apache.catalina.util.URLEncoder
@@ -19,8 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.nio.charset.StandardCharsets
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 @Controller
 @ConditionalOnBean(LoginComponent::class)
