@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
-<head th:replace="layout4 :: head(${context.siteName})">
+<head th:replace="~{layout4 :: head(${context.siteName})}">
 </head>
 <body>
 <script th:inline="javascript" th:if="${staffPermissionList != null && customPermissionList != null && adminPermissionList != null}">
@@ -282,12 +282,12 @@
 
 </script>
 
-<div th:replace="layout4 :: mobile(null)"></div>
-<div th:replace="layout4 :: siteBegin(${userContext}, ${context})"></div>
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
 
 <div class="group">
     <div class="app">
-        <div th:replace="layout4 :: menus(${userContext}, ${context})">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}">
         </div>
 
         <div class="content">
