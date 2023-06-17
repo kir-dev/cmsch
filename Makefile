@@ -44,3 +44,17 @@ hack-l:
 	git reset --hard origin/staging
 	git push -f origin deploy/hackathon-live
 	git checkout staging
+
+gtb-s:
+	git checkout staging
+	git checkout deploy/gtb-staging
+	git reset --hard origin/staging
+	git push -f origin deploy/gtb-staging
+	git checkout staging
+
+gtb-l:
+	git checkout staging
+	git checkout deploy/gtb-live
+	git reset --hard origin/staging
+	git push -f origin deploy/gtb-live
+	git checkout staging
