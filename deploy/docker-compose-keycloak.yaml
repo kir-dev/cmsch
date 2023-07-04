@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  keycloak:
+    image: jboss/keycloak
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: your_postgres_user # TODO: set
+      DB_PASSWORD: your_postgres_password # TODO: set
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: your_admin_password # TODO: set
+    ports:
+      - 8081:8080
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: your_postgres_user # TODO: set
+      POSTGRES_PASSWORD: your_postgres_password # TODO: set
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres_data:

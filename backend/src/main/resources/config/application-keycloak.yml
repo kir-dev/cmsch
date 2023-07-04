@@ -1,0 +1,27 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_CLIENT_ID}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid, profile, email
+        provider:
+          keycloak:
+            issuer-uri: "${KEYCLOAK_BASEURL:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}"
+            token-uri: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/token"
+            authorization-uri: "${KEYCLOAK_BASEURL:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/auth"
+            jwk-set-uri: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/certs"
+            user-name-attribute: preferred_username
+custom:
+  keycloak:
+    issuer: ${KEYCLOAK_ISSUER}
+    base-url: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}"
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: TRACE
+#        web: TRACE
