@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest
 
 const val GOOGLE = "google"
 const val AUTHSCH = "authsch"
+const val KEYCLOAK = "keycloak"
 
 class CustomAuthorizationRequestResolver(
     repo: ClientRegistrationRepository,
@@ -23,16 +24,25 @@ class CustomAuthorizationRequestResolver(
     }
 
     override fun resolve(request: HttpServletRequest): OAuth2AuthorizationRequest? {
-        return if (request.servletPath.equals("/oauth2/authorization/google")) {
-            var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request)
-            if (req != null)
-                req = customizeAuthorizationRequest(req, GOOGLE)
-            req
-        } else {
-            var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request)
-            if (req != null)
-                req = customizeAuthorizationRequest(req, AUTHSCH)
-            req
+        return when (request.servletPath) {
+            "/oauth2/authorization/google" -> {
+                var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request)
+                if (req != null)
+                    req = customizeAuthorizationRequest(req, GOOGLE)
+                req
+            }
+            "/oauth2/authorization/authsch" -> {
+                var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request)
+                if (req != null)
+                    req = customizeAuthorizationRequest(req, AUTHSCH)
+                req
+            }
+            else -> {
+                var req: OAuth2AuthorizationRequest? = defaultResolver?.resolve(request)
+                if (req != null)
+                    req = customizeAuthorizationRequest(req, KEYCLOAK)
+                req
+            }
         }
     }
 
@@ -56,6 +66,7 @@ class CustomAuthorizationRequestResolver(
                         .parameters {
                             it["target"] = target.authorizationRequestUri
                         }
+                        .scopes(loginComponent.authschScopes.map { it.scope }.toSet())
                         .build()
                 } else {
                     OAuth2AuthorizationRequest
@@ -67,6 +78,9 @@ class CustomAuthorizationRequestResolver(
             GOOGLE -> OAuth2AuthorizationRequest
                 .from(request)
                 .scopes(setOf("profile", "email", "openid"))
+                .build()
+            KEYCLOAK -> OAuth2AuthorizationRequest
+                .from(request)
                 .build()
             else -> OAuth2AuthorizationRequest
                 .from(request)

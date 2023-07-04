@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    environment:
+      REACT_APP_API_BASE_URL: http://localhost:8080
+    ports:
+      - 80:80
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile-build
+    environment:
+      PORT: 8080
+      FRONTEND_URL: http://localhost # TODO: set
+      BACKEND_URL: http://localhost:8080 # TODO: set
+      SPRING_PROFILES: prod,keycloak
+      JWT_SECRET: todo_jwt_secret # TODO: set
+      PROFILE_SALT: todo_profile_salt # TODO: set
+      KEYCLOAK_BASEURL: http://localhost:8081/ # TODO: set
+      KEYCLOAK_BASEURL_FROM_BACKEND: http://keycloak:8080/ # TODO: set
+      AUTHSCH_CLIENT_ID: 0
+      AUTHSCH_CLIENT_KEY: 0
+      KEYCLOAK_CLIENT_ID: cmsch  # TODO: create client names cmsch
+      KEYCLOAK_CLIENT_SECRET: eHo9t184EwHDSX5xOqErFGWG1jr8PaAs # TODO: set access type to confidential, use credentials menu
+      KEYCLOAK_ISSUER: https://http://localhost:8081/auth/realms/snyt # TODO: set
+      KEYCLOAK_REALM: snyt # TODO: set
+    ports:
+      - 8080:8080
