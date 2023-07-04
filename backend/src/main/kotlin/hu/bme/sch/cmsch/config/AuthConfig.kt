@@ -25,6 +25,16 @@ class AuthConfig(
     @Value("\${spring.security.oauth2.client.provider.google.authorization-uri:https://accounts.google.com/o/oauth2/auth}") private val googleAuthorizationUrl: String,
     @Value("\${spring.security.oauth2.client.provider.google.token-uri:https://accounts.google.com/o/oauth2/token}") private val googleTokenUri: String,
 
+    @Value("\${spring.security.oauth2.client.registration.keycloak.client-id:}") private val keycloakId: String,
+    @Value("\${spring.security.oauth2.client.registration.keycloak.client-secret:}") private val keycloakSecret: String,
+    @Value("\${spring.security.oauth2.client.registration.keycloak.redirect-uri:}") private val keycloakRedirectUrl: String,
+    @Value("\${spring.security.oauth2.client.registration.keycloak.scope:openid, profile, email}") private val keycloakScope: List<String>,
+    @Value("\${spring.security.oauth2.client.provider.keycloak.token-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/token}") private val keycloakTokenUri: String,
+    @Value("\${spring.security.oauth2.client.provider.keycloak.authorization-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/auth}") private val keycloakAuthorizationUrl: String,
+    @Value("\${spring.security.oauth2.client.provider.keycloak.jwk-set-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/certs}") private val keycloakJwkSet: String,
+    @Value("\${spring.security.oauth2.client.provider.keycloak.user-name-attribute:}") private val keycloakUserAttributeName: String,
+    @Value("\${custom.keycloak.issuer:http://localhost:8081/auth/realms/master}") private val keycloakIssuer: String,
+
     @Value("\${authsch.config.user-info-uri:https://auth.sch.bme.hu/api/profile}") private val userInfoUri: String,
 ) {
 
@@ -32,12 +42,21 @@ class AuthConfig(
 
     @Bean
     fun clientRegistrationRepository(): ClientRegistrationRepository {
-        if (googleId.isNotBlank() && googleId != "no") {
-            log.info("Using oauth2 sso: authsch, google")
-            return InMemoryClientRegistrationRepository(authschClientRegistration(), googleClientRegistration())
-        }
+        val authProviders = mutableListOf<ClientRegistration>()
         log.info("Using oauth2 sso: authsch")
-        return InMemoryClientRegistrationRepository(authschClientRegistration())
+        authProviders.add(authschClientRegistration())
+
+        if (googleId.isNotBlank() && googleId != "no") {
+            log.info("Using oauth2 sso: google")
+            authProviders.add(googleClientRegistration())
+        }
+
+        if (keycloakId.isNotBlank() && keycloakId != "no") {
+            log.info("Using oauth2 sso: keycloak")
+            authProviders.add(keycloakClientRegistration())
+        }
+
+        return InMemoryClientRegistrationRepository(authProviders)
     }
 
     private fun authschClientRegistration(): ClientRegistration {
@@ -72,6 +91,23 @@ class AuthConfig(
             .tokenUri(googleTokenUri)
             .clientName("Google")
             .build()
+    }
+
+    private fun keycloakClientRegistration(): ClientRegistration {
+        return ClientRegistration.withRegistrationId("keycloak")
+                .clientId(keycloakId)
+                .clientSecret(keycloakSecret)
+                .redirectUri(keycloakRedirectUrl)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .scope(keycloakScope)
+                .authorizationUri(keycloakAuthorizationUrl)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .jwkSetUri(keycloakJwkSet)
+                .issuerUri(keycloakIssuer)
+                .tokenUri(keycloakTokenUri)
+                .clientName("Keycloak")
+                .userNameAttributeName(keycloakUserAttributeName)
+                .build()
     }
 
 }

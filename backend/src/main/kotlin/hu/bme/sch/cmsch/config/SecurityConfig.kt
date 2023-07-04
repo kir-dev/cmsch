@@ -9,16 +9,16 @@ import hu.bme.sch.cmsch.component.login.authsch.CmschAuthschUser
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.CmschGoogleUser
 import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
+import hu.bme.sch.cmsch.component.login.keycloak.KeycloakUserInfoResponse
 import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.JwtTokenProvider
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -36,13 +36,14 @@ import java.util.*
 @Configuration
 @ConditionalOnBean(LoginComponent::class)
 open class SecurityConfig(
-    private val clientRegistrationRepository: ClientRegistrationRepository,
-    private val objectMapper: ObjectMapper,
-    private val jwtTokenProvider: JwtTokenProvider,
-    private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
-    private val authschLoginService: LoginService,
-    private val loginComponent: LoginComponent,
-    private val startupPropertyConfig: StartupPropertyConfig
+        private val clientRegistrationRepository: ClientRegistrationRepository,
+        private val objectMapper: ObjectMapper,
+        private val jwtTokenProvider: JwtTokenProvider,
+        private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
+        private val authschLoginService: LoginService,
+        private val loginComponent: LoginComponent,
+        private val startupPropertyConfig: StartupPropertyConfig,
+        @Value("\${custom.keycloak.base-url:http://localhost:8081/auth/realms/master}") private val keycloakBaseUrl: String,
 ) {
 
     var authschUserServiceClient = WebClient.builder()
@@ -136,7 +137,13 @@ open class SecurityConfig(
                     )
                 }.userInfoEndpoint { userInfo ->
                     userInfo
-                        .oidcUserService { resolveGoogleUser(it) }
+                        .oidcUserService {
+                            if (it.clientRegistration.clientId == "google") {
+                                resolveGoogleUser(it)
+                            } else {
+                                resolveKeycloakUser(it)
+                            }
+                        }
                         .userService { resolveAuthschUser(it) }
                 }.defaultSuccessUrl("/control/post-login")
         }
@@ -179,6 +186,23 @@ open class SecurityConfig(
         )
     }
 
+    private fun resolveKeycloakUser(request: OidcUserRequest): DefaultOidcUser {
+        val decodedPayload = String(Base64.getDecoder().decode(request.accessToken.tokenValue.split(".")[1]))
+        val profile: KeycloakUserInfoResponse = objectMapper.readerFor(KeycloakUserInfoResponse::class.java)
+                .readValue(decodedPayload)
+        val userEntity = authschLoginService.fetchKeycloakUserEntity(profile)
+
+        return CmschGoogleUser(
+                userEntity.id,
+                userEntity.internalId,
+                userEntity.role,
+                userEntity.permissionsAsList,
+                userEntity.fullName,
+                mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
+                request.idToken
+        )
+    }
+
     private fun resolveGoogleUser(request: OidcUserRequest): DefaultOidcUser {
         val googleProfileJson: String? = googleUserServiceClient.get()
             .uri { uriBuilder ->
@@ -204,11 +228,5 @@ open class SecurityConfig(
             request.idToken
         )
     }
-
-//    @Bean
-//    fun authentication(auth: AuthenticationManagerBuilder): AuthenticationManager {
-//        auth.eraseCredentials(true)
-//        return auth.build()
-//    }
 
 }

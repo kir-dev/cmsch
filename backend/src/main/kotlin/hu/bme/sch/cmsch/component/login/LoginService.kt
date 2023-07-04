@@ -3,8 +3,10 @@ package hu.bme.sch.cmsch.component.login
 import hu.bme.sch.cmsch.component.SettingProxy
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
+import hu.bme.sch.cmsch.component.login.keycloak.KeycloakUserInfoResponse
 import hu.bme.sch.cmsch.config.AUTHSCH
 import hu.bme.sch.cmsch.config.GOOGLE
+import hu.bme.sch.cmsch.config.KEYCLOAK
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GuildType
 import hu.bme.sch.cmsch.model.MajorType
@@ -347,6 +349,38 @@ open class LoginService(
                 user.group = it
             }
         }
+    }
+
+    fun fetchKeycloakUserEntity(profile: KeycloakUserInfoResponse): UserEntity {
+        val user: UserEntity
+        if (users.exists(profile.sid)) {
+            user = users.getById(profile.sid)
+            log.info("Logging in with existing user ${user.fullName} as google user")
+        } else {
+            user = UserEntity(
+                    0,
+                    profile.sid,
+                    "N/A",
+                    "",
+                    "${profile.familyName} ${profile.givenName}",
+                    profile.preferredUsername,
+                    profile.email,
+                    RoleType.BASIC,
+                    groupName = "", group = null,
+                    guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
+                    provider = KEYCLOAK,
+                    profilePicture = ""
+            )
+            log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as keycloak user")
+        }
+        if (profile.groups.contains("superuser")) {
+            log.info("Granting SUPERUSER for ${user.fullName}")
+            user.role = RoleType.SUPERUSER
+            user.detailsImported = true
+        }
+        updateFieldsForGoogle(user)
+        users.save(user)
+        return user
     }
 
 }
