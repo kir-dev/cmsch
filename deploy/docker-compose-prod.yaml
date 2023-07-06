@@ -18,7 +18,7 @@ services:
       PORT: 8080
       FRONTEND_URL: http://localhost # TODO: set
       BACKEND_URL: http://localhost:8080 # TODO: set
-      SPRING_PROFILES: prod,keycloak
+      CMSCH_SPRING_PROFILES: prod,keycloak
       JWT_SECRET: todo_jwt_secret # TODO: set
       PROFILE_SALT: todo_profile_salt # TODO: set
       KEYCLOAK_BASEURL: http://localhost:8081/ # TODO: set
