@@ -1,7 +1,7 @@
 FROM gradle:jdk17 as build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle assemble
+RUN gradle clean assemble bootJar
 
 FROM eclipse-temurin:17.0.1_12-jre-alpine
 MAINTAINER kir-dev@sch.bme.hu

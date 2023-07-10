@@ -209,6 +209,8 @@ function toggleMenuGroup(title) {
 
 function loadMenuFromStorage() {
     openAllMenuGroups();
+    if (!localStorage.getItem('closedMenus'))
+        saveMenuState();
     JSON.parse(localStorage.getItem('closedMenus')).forEach(title => closeMenu(title));
 }
 

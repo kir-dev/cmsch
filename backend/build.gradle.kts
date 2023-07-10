@@ -45,6 +45,7 @@ dependencies {
     api("org.commonmark:commonmark:0.21.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.15.1")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
     testApi("org.springframework.boot:spring-boot-starter-test")
     testApi("org.springframework.security:spring-security-test")
