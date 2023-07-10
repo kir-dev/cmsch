@@ -10,15 +10,22 @@ spring:
             scope: openid, profile, email
         provider:
           keycloak:
-            issuer-uri: "${KEYCLOAK_BASEURL:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}"
-            token-uri: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/token"
-            authorization-uri: "${KEYCLOAK_BASEURL:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/auth"
-            jwk-set-uri: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/certs"
+            issuer-uri: "${KEYCLOAK_BASEURL:http://localhost:8081/}realms/${KEYCLOAK_REALM:master}"
+            token-uri: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/token"
+            authorization-uri: "${KEYCLOAK_BASEURL:http://localhost:8081/}realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/auth"
+            jwk-set-uri: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}realms/${KEYCLOAK_REALM:master}/protocol/openid-connect/certs"
             user-name-attribute: preferred_username
 custom:
   keycloak:
     issuer: ${KEYCLOAK_ISSUER}
-    base-url: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}auth/realms/${KEYCLOAK_REALM:master}"
+    base-url: "${KEYCLOAK_BASEURL_FROM_BACKEND:http://localhost:8081/}realms/${KEYCLOAK_REALM:master}"
+hu:
+  bme:
+    sch:
+      cmsch:
+        login:
+          keycloakAdminAddresses:
+            balint.berente@gmail.com
 #logging:
 #  level:
 #    org:

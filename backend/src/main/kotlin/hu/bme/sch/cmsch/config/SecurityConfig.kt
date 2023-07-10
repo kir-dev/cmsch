@@ -103,6 +103,7 @@ open class SecurityConfig(
 
             it.requestMatchers(
                 antMatcher("/control/entrypoint"),
+                antMatcher("/control/open-site"),
                 antMatcher("/control/stamps"),
                 antMatcher("/export-tasks")
             ).hasAnyRole(
