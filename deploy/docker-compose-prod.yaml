@@ -5,10 +5,10 @@ services:
     build:
       context: ../frontend
       dockerfile: Dockerfile
-    environment:
-      REACT_APP_API_BASE_URL: http://localhost:8080
+    env_file:
+      - .env
     ports:
-      - 80:80
+      - 3000:80
 
   backend:
     build:
@@ -16,18 +16,18 @@ services:
       dockerfile: Dockerfile-build
     environment:
       PORT: 8080
-      FRONTEND_URL: http://localhost # TODO: set
-      BACKEND_URL: http://localhost:8080 # TODO: set
+      FRONTEND_URL: http://localhost:3000
+      BACKEND_URL: http://localhost:8080/
       CMSCH_SPRING_PROFILES: prod,keycloak
-      JWT_SECRET: todo_jwt_secret # TODO: set
-      PROFILE_SALT: todo_profile_salt # TODO: set
-      KEYCLOAK_BASEURL: http://localhost:8081/ # TODO: set
-      KEYCLOAK_BASEURL_FROM_BACKEND: http://keycloak:8080/ # TODO: set
+      JWT_SECRET: todo_jwt_secret
+      PROFILE_SALT: todo_profile_salt
+      KEYCLOAK_BASEURL: http://localhost:8081/
+      KEYCLOAK_BASEURL_FROM_BACKEND: http://keycloak:8080/
       AUTHSCH_CLIENT_ID: 0
       AUTHSCH_CLIENT_KEY: 0
-      KEYCLOAK_CLIENT_ID: cmsch  # TODO: create client names cmsch
-      KEYCLOAK_CLIENT_SECRET: eHo9t184EwHDSX5xOqErFGWG1jr8PaAs # TODO: set access type to confidential, use credentials menu
-      KEYCLOAK_ISSUER: https://http://localhost:8081/auth/realms/snyt # TODO: set
-      KEYCLOAK_REALM: snyt # TODO: set
+      KEYCLOAK_CLIENT_ID: cmsch
+      KEYCLOAK_CLIENT_SECRET: 1iPL7aTT20lSfza7DK8en7aZDiF01A0i
+      KEYCLOAK_ISSUER: http://localhost:8081/realms/snyt
+      KEYCLOAK_REALM: snyt
     ports:
       - 8080:8080

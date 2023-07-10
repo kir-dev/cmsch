@@ -23,5 +23,5 @@ custom:
 #  level:
 #    org:
 #      springframework:
-#        security: DEBUG
-#        web: DEBUG
+#        security: TRACE
+#        web: TRACE
