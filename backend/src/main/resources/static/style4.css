@@ -1526,7 +1526,7 @@ form ul {
     .shortcuts-menu,
     .menu,
     .only-widescreen {
-        display: none;
+        display: none !important;;
     }
     #motd {
         margin: 0 !important;
@@ -1575,6 +1575,6 @@ form ul {
 
 @media (min-width: 1024px) {
     .only-mobile {
-        display: none;
+        display: none !important;
     }
 }

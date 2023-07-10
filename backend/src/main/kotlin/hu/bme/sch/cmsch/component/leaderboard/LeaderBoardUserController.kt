@@ -53,7 +53,7 @@ class LeaderBoardUserController(
     buttonActions = mutableListOf(
         ButtonAction(
             "Újraszámol",
-            "/refresh",
+            "refresh",
             ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
             500,
             "refresh",
@@ -61,7 +61,7 @@ class LeaderBoardUserController(
         ),
         ButtonAction(
             "Mentés",
-            "/save/csv",
+            "save/csv",
             StaffPermissions.PERMISSION_SHOW_LEADERBOARD,
             600,
             "save",
