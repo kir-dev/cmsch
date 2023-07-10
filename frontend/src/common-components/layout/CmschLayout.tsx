@@ -21,6 +21,7 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
   const config = useConfigContext()
   const { sendMessage } = useServiceContext()
   const component = config?.components.app
+  const footer = config?.components.footer
 
   if (!component) {
     sendMessage(l('component-unavailable'))
@@ -37,7 +38,7 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
           <Warning />
           {children}
         </Box>
-        {component.minimalisticFooter ? <MinimalisticFooter /> : <Footer />}
+        {footer?.minimalisticFooter ? <MinimalisticFooter /> : <Footer />}
       </Flex>
     </>
   )
