@@ -5,7 +5,7 @@ import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 export const MinimalisticFooter = () => {
   const config = useConfigContext()
-  const component = config?.components.app
+  const component = config?.components.footer
   return (
     <CmschContainer mb={5}>
       {component?.footerMessage && (
