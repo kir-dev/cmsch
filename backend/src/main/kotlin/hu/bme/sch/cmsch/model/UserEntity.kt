@@ -158,7 +158,7 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 11, label = "Forrás", note = "Honnan jön az adat (authsch, google)")
+    @property:GenerateInput(order = 11, label = "Forrás", note = "Honnan jön az adat (authsch, google, keycloak)")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10)
     var provider: String = "",
@@ -171,7 +171,7 @@ data class UserEntity(
 
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "varchar(255) default ''")
-    @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Honnan jön az adat (authsch, google)")
+    @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Meliyk kar, milyen szak, aktív-e és gólya-e?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12)
     var unitScopes: String? = "",

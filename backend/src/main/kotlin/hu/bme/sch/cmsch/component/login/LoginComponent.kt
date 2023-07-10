@@ -41,6 +41,14 @@ class LoginComponent(
             googleSsoEnabled,
             googleAdminAddresses,
 
+            keycloakGroup,
+            keycloakEnabled,
+            keycloakAuthName,
+            keycloakAdminAddresses,
+            keycloakSuperuserRole,
+            keycloakAdminRole,
+            keycloakStaffRole,
+
             grantRoleGroup,
             staffGroups,
             adminGroups,
@@ -135,8 +143,50 @@ class LoginComponent(
 
     val googleAdminAddresses = SettingProxy(componentSettingService, component,
         "googleAdminAddresses", "", serverSideOnly = true,
-        fieldName = "ADMIN jogú emailcímek", description = "Google auth esetén csak! Ezeknek a felhasználóknak ADMIN " +
+        fieldName = "ADMIN jogú emailcímek", description = "Csak Google auth esetén! Ezeknek a felhasználóknak ADMIN " +
                 "joga lesz belépésnél. Az emailcímek vesszővel felsorolva."
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val keycloakGroup = SettingProxy(componentSettingService, component,
+        "keycloakGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
+        fieldName = "Keycloak",
+        description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan"
+    )
+
+    val keycloakEnabled = SettingProxy(componentSettingService, component,
+        "keycloakEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Keycloak opció látszik", description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Keycloak"
+    )
+
+    val keycloakAuthName = SettingProxy(componentSettingService, component,
+        "keycloakAuthName", "Belső",
+        fieldName = "Keycloak gomb felirata", description = "Ezen a néven jelenik meg a bejelentkezési mód."
+    )
+
+    val keycloakAdminAddresses = SettingProxy(componentSettingService, component,
+        "keycloakAdminAddresses", "", serverSideOnly = true,
+        fieldName = "ADMIN jogú emailcímek", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN " +
+                "joga lesz belépésnél. Az emailcímek vesszővel felsorolva."
+    )
+
+    val keycloakSuperuserRole = SettingProxy(componentSettingService, component,
+        "keycloakSuperuserRole", "superuser", serverSideOnly = true,
+        fieldName = "SUPERUSER keycloak rule neve", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak SYSADMIN " +
+                "joga lesz belépésnél."
+    )
+
+    val keycloakAdminRole = SettingProxy(componentSettingService, component,
+        "keycloakAdminRole", "admin", serverSideOnly = true,
+        fieldName = "ADMIN keycloak rule neve", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN " +
+                "joga lesz belépésnél."
+    )
+
+    val keycloakStaffRole = SettingProxy(componentSettingService, component,
+        "keycloakStaffRole", "staff", serverSideOnly = true,
+        fieldName = "STAFF keycloak rule neve", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak STAFF " +
+                "joga lesz belépésnél."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

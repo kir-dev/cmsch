@@ -354,7 +354,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         }
 
         if (!deleteEnabled)
-            return "redirect:/admin/control/$view/"
+            return "redirect:/admin/control/$view"
 
         model.addAttribute("title", titleSingular)
         model.addAttribute("view", view)
@@ -395,12 +395,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         }
 
         if (!deleteEnabled)
-            return "redirect:/admin/control/$view/"
+            return "redirect:/admin/control/$view"
 
         auditLog.delete(user, component.component, "delete ${entity.id} $entity")
         dataSource.delete(entity)
         onEntityDeleted(entity)
-        return "redirect:/admin/control/$view/"
+        return "redirect:/admin/control/$view"
     }
 
     @GetMapping("/purge")
@@ -464,7 +464,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         }
 
         if (!createEnabled)
-            return "redirect:/admin/control/$view/"
+            return "redirect:/admin/control/$view"
 
         val entity = supplier.get()
         val newValues = StringBuilder("entity new value: ")
@@ -475,7 +475,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             dataSource.save(entity)
         }
         onEntityChanged(entity)
-        return "redirect:/admin/control/$view/"
+        return "redirect:/admin/control/$view"
     }
 
     @PostMapping("/edit/{id}")

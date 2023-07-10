@@ -30,7 +30,7 @@
         people.forEach(person => {
             if (typeof person.name !== 'undefined' && typeof person.roles !== 'undefined' && typeof person.avatar !== 'undefined' && person.name !== '') {
                 resultHtml += `
-                    <div class="sub-card">
+                    <div class="sub-card" id="form_${property}_${id}">
 
                          <div class="button-group">
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
@@ -74,7 +74,7 @@
         }
         const element = document.createElement('div');
         element.innerHTML = `
-                    <div class="sub-card">
+                    <div class="sub-card" id="form_${property}_${id}">
 
                          <div class="button-group">
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>

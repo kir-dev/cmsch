@@ -355,7 +355,7 @@ open class LoginService(
         val user: UserEntity
         if (users.exists(profile.sid)) {
             user = users.getById(profile.sid)
-            log.info("Logging in with existing user ${user.fullName} as google user")
+            log.info("Logging in with existing user ${user.fullName} as keycloak user")
         } else {
             user = UserEntity(
                     0,
@@ -373,14 +373,59 @@ open class LoginService(
             )
             log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as keycloak user")
         }
-        if (profile.groups.contains("superuser")) {
+        updateFieldsForKeycloak(profile, user)
+        users.save(user)
+        return user
+    }
+
+    private fun updateFieldsForKeycloak(profile: KeycloakUserInfoResponse, user: UserEntity) {
+        // Generate CMSch id if not present
+        if (user.cmschId.isBlank()) {
+            if (startupPropertyConfig.profileQrEnabled) {
+                profileService.generateFullProfileForUser(user)
+            } else {
+                profileService.generateProfileIdForUser(user)
+            }
+        }
+
+        // Grant admin by email
+        if (loginComponent.keycloakAdminAddresses.getValue().split(Regex(", *")).contains(user.email)) {
+            log.info("Granting ADMIN for ${user.fullName}")
+            user.role = RoleType.ADMIN
+            user.detailsImported = true
+        }
+
+        // Grant roles by keycloak role names
+        if (profile.groups.contains(loginComponent.keycloakStaffRole.getValue())) {
+            log.info("Granting STAFF for ${user.fullName}")
+            user.role = RoleType.STAFF
+            user.detailsImported = true
+        }
+
+        if (profile.groups.contains(loginComponent.keycloakAdminRole.getValue())) {
+            log.info("Granting ADMIN for ${user.fullName}")
+            user.role = RoleType.ADMIN
+            user.detailsImported = true
+        }
+
+        if (profile.groups.contains(loginComponent.keycloakSuperuserRole.getValue())) {
             log.info("Granting SUPERUSER for ${user.fullName}")
             user.role = RoleType.SUPERUSER
             user.detailsImported = true
         }
-        updateFieldsForGoogle(user)
-        users.save(user)
-        return user
+
+        // Assign fallback group if user still don't have one
+        if (user.groupName.isBlank()) {
+            groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
+                user.groupName = it.name
+                user.group = it
+                user.detailsImported = true
+            }
+        }
+
+        // If fallback is still not found, set the group name to empty string
+        if (user.groupName != user.group?.name)
+            user.groupName = user.group?.name ?: ""
     }
 
 }
