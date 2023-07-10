@@ -35,29 +35,40 @@ export interface Components {
   token: Token
   qrFight: QrFight
   communities: Communities
+  footer: Footer
 }
 
 export interface App {
-  warningMessage: string
-  warningLevel: 'success' | 'info' | 'warning' | 'error'
-  minimalisticFooter: boolean
-  siteName: string
   defaultComponent: string
-  siteLogoUrl: string
-  faviconUrl: string
-  hostLogo: string
-  hostAlt: string
-  hostWebsiteUrl: string
-  facebookUrl: string
-  instagramUrl: string
-  footerMessage: string
-  devLogo: string
+  siteName: string
+  warningLevel: string
+  warningMessage: string
+}
+
+export interface Footer {
+  bmeEnabled: boolean
   devAlt: string
+  devLogo: string
   devWebsiteUrl: string
-  sponsorsEnabled: boolean
-  sponsorLogoUrls: string
+  facebookUrl: string
+  footerMessage: string
+  hostAlt: string
+  hostLogo: string
+  hostWebsiteUrl: string
+  instagramUrl: string
+  minimalisticFooter: boolean
+  partnerAlts: string
+  partnerLogoUrls: string
+  partnerTitle: string
+  partnerWebsiteUrls: string
+  schdesignEnabled: boolean
+  schonherzEnabled: boolean
   sponsorAlts: string
+  sponsorLogoUrls: string
+  sponsorTitle: string
   sponsorWebsiteUrls: string
+  sponsorsEnabled: boolean
+  vikEnabled: boolean
 }
 
 export interface Countdown {
@@ -235,11 +246,13 @@ export interface ExtraPage {}
 export interface Location {}
 
 export interface Login {
-  onlyBmeProvider: boolean
-  langLoginMenu: string
   authschPromoted: boolean
-  googleSsoEnabled: boolean
   bottomMessage: string
+  googleSsoEnabled: boolean
+  keycloakAuthName: string
+  keycloakEnabled: boolean
+  onlyBmeProvider: boolean
+  title: string
 }
 
 export interface Team {

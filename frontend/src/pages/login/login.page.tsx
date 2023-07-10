@@ -1,15 +1,15 @@
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { FaGoogle, FaSignInAlt } from 'react-icons/fa'
+import { FaGoogle, FaKey, FaSignInAlt } from 'react-icons/fa'
 import { Navigate } from 'react-router-dom'
 
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { l } from '../../util/language'
-import Markdown from '../../common-components/Markdown'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
@@ -28,23 +28,37 @@ const LoginPage = () => {
           {l('login-consent')}
         </Heading>
         {component.authschPromoted && (
-          <Button
-            colorScheme="brand"
-            onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}
-            leftIcon={<FaSignInAlt />}
-          >
-            {component.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'}
-          </Button>
+          <>
+            <Button
+              colorScheme="brand"
+              onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}
+              leftIcon={<FaSignInAlt />}
+            >
+              {component.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'}
+            </Button>
+            {(component.googleSsoEnabled || component.keycloakEnabled) && <Text>vagy</Text>}
+          </>
         )}
         {component.googleSsoEnabled && (
           <>
-            <Text>vagy</Text>
             <Button
               colorScheme="brand"
               onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/google`)}
               leftIcon={<FaGoogle />}
             >
               Google SSO
+            </Button>
+            {component.keycloakEnabled && <Text>vagy</Text>}
+          </>
+        )}
+        {component.keycloakEnabled && (
+          <>
+            <Button
+              colorScheme="brand"
+              onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/keycloak`)}
+              leftIcon={<FaKey />}
+            >
+              {component.keycloakAuthName}
             </Button>
           </>
         )}
