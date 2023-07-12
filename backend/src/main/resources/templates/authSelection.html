@@ -9,9 +9,10 @@
 
         <a href="#" th:href="@{/oauth2/authorization/authsch}" class="big-btn">AuthSCH</a>
         <a href="#" th:if="${googleEnabled}" th:href="@{/oauth2/authorization/google}" class="big-btn">Google</a>
+        <a href="#" th:if="${keycloakEnabled}" th:href="@{/oauth2/authorization/keycloak}" class="big-btn">Keycloak</a>
     </div>
 
-    <script th:if="${not googleEnabled && (error == null || error == '')}">
+    <script th:if="${not googleEnabled && not keycloakEnabled && (error == null || error == '')}">
         location.href = '/oauth2/authorization/authsch';
     </script>
 </body>
