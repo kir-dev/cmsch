@@ -54,6 +54,7 @@ class EntrypointController(
         model.addAttribute("siteName", applicationComponent.siteName.getValue())
         model.addAttribute("error", error)
         model.addAttribute("googleEnabled", loginComponent.googleSsoEnabled.isValueTrue())
+        model.addAttribute("keycloakEnabled", loginComponent.keycloakEnabled.isValueTrue())
         return "authSelection"
     }
 
@@ -65,5 +66,8 @@ class EntrypointController(
 
     @GetMapping("/c/g")
     fun controlAuthGoogle() = "redirect:/oauth2/authorization/google"
+
+    @GetMapping("/c/k")
+    fun controlAuthKeycloak() = "redirect:/oauth2/authorization/keycloak"
 
 }
