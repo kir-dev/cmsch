@@ -122,7 +122,7 @@ class SubmittedTaskController(
                 it.score,
                 it.approved,
                 it.rejected,
-                it.textAnswerLob ?: "",
+                it.textAnswerLob,
                 it.imageUrlAnswer,
                 it.fileUrlAnswer,
                 it.response

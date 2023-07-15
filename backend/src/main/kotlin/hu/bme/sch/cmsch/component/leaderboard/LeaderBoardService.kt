@@ -339,7 +339,7 @@ open class LeaderBoardService(
                     .groupBy { it.ownerUser?.id ?: 0 }
                     .map { entity ->
                         LeaderBoardAsUserEntryDto(
-                            entity.key ?: 0,
+                            entity.key,
                             entity.value[0].ownerUser?.fullName ?: "n/a",
                             entity.value[0].ownerGroup?.name ?: "n/a",
                             tokenScore = (entity.value.sumOf { s -> s.token?.score ?: 0 } * tokenPercent).toInt()

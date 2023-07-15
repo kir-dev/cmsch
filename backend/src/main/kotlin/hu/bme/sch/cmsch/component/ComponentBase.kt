@@ -68,7 +68,9 @@ abstract class ComponentBase(
     }
 
     private fun validateAllSettingsAdded() {
-        val settingsFieldsCount = javaClass.declaredFields.count { it.type is SettingProxy && it.get(this) != null }
+        val settingsFieldsCount = javaClass.declaredFields.count {
+            it.type.name == SettingProxy::class.java.name && it.get(this) != null
+        }
         val settingListSize = allSettings.distinct().count()
 
         if (settingsFieldsCount != settingListSize) {

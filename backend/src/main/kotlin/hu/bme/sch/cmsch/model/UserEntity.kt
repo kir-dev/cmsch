@@ -227,7 +227,7 @@ data class UserEntity(
 
     override var permissionsAsList
         get() = permissions.split(",")
-        set(value) = throw RuntimeException("Value cannot be changed")
+        set(_) = throw RuntimeException("Value cannot be changed")
 
     override val userName
         get() = fullName
