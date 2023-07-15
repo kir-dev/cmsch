@@ -12,10 +12,11 @@ data class ComponentLoadConfig @ConstructorBinding constructor(
     var app: Boolean,
     var bmejegy: Boolean,
     var challenge: Boolean,
+    var communities: Boolean,
     var countdown: Boolean,
     var debt: Boolean,
     var event: Boolean,
-    var staticPage: Boolean,
+    var form: Boolean,
     var groupselection: Boolean,
     var home: Boolean,
     var impressum: Boolean,
@@ -27,11 +28,10 @@ data class ComponentLoadConfig @ConstructorBinding constructor(
     var qrFight: Boolean,
     var race: Boolean,
     var riddle: Boolean,
-    var form: Boolean,
+    var staticPage: Boolean,
     var task: Boolean,
     var team: Boolean,
     var token: Boolean,
-    var communities: Boolean,
 
 ) {
 
