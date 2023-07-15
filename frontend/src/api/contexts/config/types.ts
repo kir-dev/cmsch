@@ -29,7 +29,7 @@ export interface Components {
   profile: Profile
   race: Race
   riddle: Riddle
-  form: Form
+  form: Signup
   task: Task
   team: Team
   token: Token
@@ -280,7 +280,7 @@ export interface QrFight {
   topMessage: string
 }
 
-export interface Form {
+export interface Signup {
   langTooEarly: string
   langTooLate: string
   langNotEnabled: string
