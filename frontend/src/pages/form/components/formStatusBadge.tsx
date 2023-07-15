@@ -9,7 +9,7 @@ interface FormStatusBadgeProps {
 
 export const FormStatusBadge = ({ status }: FormStatusBadgeProps) => {
   const config = useConfigContext()
-  const component = config?.components.signup
+  const component = config?.components.form
   let color = 'gray'
   switch (status) {
     case FormStatus.ACCEPTED:
