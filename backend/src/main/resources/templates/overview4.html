@@ -21,7 +21,7 @@
             </h1>
             <div class="details" th:text="${description}">Üdv a rendezvény rendezői felületén!</div>
 
-            <div th:class="button-group">
+            <div class="button-group">
                 <object th:each="button : ${buttonActions}" th:remove="tag">
                     <a href="#" th:href="|@{/admin/control}/${view}/${button.target}|" class="btn"
                        th:class="|btn ${button.primary ? 'btn-primary' : 'btn-secondary'}|"
@@ -32,7 +32,6 @@
 
             <div class="card">
                 <h4>Bejegyzések</h4>
-<!--                <span class="desc">A little description fits there. Lorem ipsum dolor sit amet.</span>-->
 
                 <div id="cmsch-table"></div>
             </div>

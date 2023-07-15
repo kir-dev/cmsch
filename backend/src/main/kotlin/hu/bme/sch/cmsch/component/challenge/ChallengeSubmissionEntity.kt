@@ -32,6 +32,7 @@ data class ChallengeSubmissionEntity(
     @property:ImportFormat(ignore = false, columnId = 0)
     var category: String = "",
 
+    @JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var userId: Int? = null,
@@ -44,6 +45,7 @@ data class ChallengeSubmissionEntity(
     @property:ImportFormat(ignore = false, columnId = 2)
     var userName: String = "",
 
+    @JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     var groupId: Int? = null,

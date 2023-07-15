@@ -11,9 +11,14 @@ const val IMPORT_LOB = "lob"
 const val IMPORT_FLOAT = "float"
 
 annotation class ImportFormat(
+        @Deprecated("Use without the parameters")
         val ignore: Boolean = true,
+        @Deprecated("Use without the parameters")
         val columnId: Int = 0,
+        @Deprecated("Use without the parameters")
         val type: String = IMPORT_RAW_TEXT,
+        @Deprecated("Use without the parameters")
         val defaultValue: String = "",
+        @Deprecated("Use without the parameters")
         val enumSource: KClass<*> = Nothing::class
 )

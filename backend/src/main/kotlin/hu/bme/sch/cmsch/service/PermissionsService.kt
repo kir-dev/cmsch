@@ -24,8 +24,19 @@ import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
 import hu.bme.sch.cmsch.component.team.TeamComponent
 import hu.bme.sch.cmsch.component.token.TokenComponent
+import hu.bme.sch.cmsch.extending.CmschPermissionSource
 import hu.bme.sch.cmsch.util.DI
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import kotlin.reflect.KClass
+
+@Service
+class PermissionsService(
+    private val permissionSources: List<CmschPermissionSource>
+) {
+    val allControlPermissions = permissionSources.flatMap { it.getControlPermissions() }
+    val allStaffPermissions = permissionSources.flatMap { it.getStaffPermissions() }
+}
 
 class PermissionValidator internal constructor(
     val permissionString: String = "",
@@ -36,7 +47,20 @@ class PermissionValidator internal constructor(
     }
 )
 
-sealed interface PermissionGroup {
+@Component
+class CorePermissionSource : CmschPermissionSource {
+
+    override fun getControlPermissions(): List<PermissionValidator> {
+        return ControlPermissions.allPermissions()
+    }
+
+    override fun getStaffPermissions(): List<PermissionValidator> {
+        return StaffPermissions.allPermissions()
+    }
+
+}
+
+fun interface PermissionGroup {
     fun allPermissions(): List<PermissionValidator>
 }
 

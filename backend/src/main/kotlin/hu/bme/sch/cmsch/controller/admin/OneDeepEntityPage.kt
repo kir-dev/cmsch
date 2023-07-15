@@ -60,7 +60,7 @@ const val INVALID_ID_ERROR = "Object with this id was not found in the database"
 
 open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val view: String,
-    classType: KClass<T>,
+    internal val classType: KClass<T>,
     private val supplier: Supplier<T>,
     internal val titleSingular: String,
     internal val titlePlural: String,
@@ -603,18 +603,16 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             throw IllegalStateException("Insufficient permissions")
         }
 
-        val out = ByteArrayOutputStream()
-        file?.inputStream?.transferTo(out)
-        val rawEntities = out.toString().split("\n").stream()
-            .map { entity -> entity.split(";").map { it.trim() } }
-            .skip(1)
-            .toList()
-        log.info("Importing {} bytes ({} lines) into {}", out.size(), rawEntities.size, view)
+        log.info("Importing into {}", view)
         val before = dataSource.count()
-        importService.importEntities(dataSource, rawEntities, supplier, descriptor.getImportModifiers())
+        file?.inputStream?.let { stream ->
+            importService.importEntities(dataSource, stream, classType)
+        }
         val after = dataSource.count()
         model.addAttribute("importedCount", after - before)
-        auditLog.create(user, component.component, "imported $view (new entities: ${after - before})")
+        val action = "imported $view (new entities: ${after - before})"
+        auditLog.create(user, component.component, action)
+        log.info(action)
 
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)

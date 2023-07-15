@@ -104,27 +104,27 @@ data class GroupEntity(
     var leaveable: Boolean = false,
 
     @JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "BOOLEAN default FALSE")
+    @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Felhasználó készítette", note = "A csoportot egy felhasználó hozta létre és nem egy admin")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
-    var manuallyCreated: Boolean? = false,
+    var manuallyCreated: Boolean = false,
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 17, label = "Leírás", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
-    var description: String? = "",
+    var description: String = "",
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_LOB)
-    var profileTopMessage: String? = "",
+    var profileTopMessage: String = "",
 
 ): ManagedEntity {
 

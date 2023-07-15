@@ -32,7 +32,8 @@ class UserController(
     private val staticPageService: Optional<StaticPageService>,
     private val startupPropertyConfig: StartupPropertyConfig,
     components: List<ComponentBase>,
-    env: Environment
+    env: Environment,
+    private val permissionsService: PermissionsService
 ) : OneDeepEntityPage<UserEntity>(
     "users",
     UserEntity::class, ::UserEntity,
@@ -77,11 +78,11 @@ class UserController(
             }
         }.orElse(listOf())
 
-        val staffPermissions = StaffPermissions.allPermissions()
+        val staffPermissions = permissionsService.allStaffPermissions
             .filter { it.component != null }
             .filter { it.component in componentClasses }
             .filter { it.permissionString.isNotEmpty() }
-        val adminPermissions = ControlPermissions.allPermissions()
+        val adminPermissions = permissionsService.allControlPermissions
             .filter { it.component != null }
             .filter { it.component in componentClasses }
             .filter { it.permissionString.isNotEmpty() }

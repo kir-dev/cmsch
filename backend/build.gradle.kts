@@ -44,7 +44,7 @@ dependencies {
     api("io.jsonwebtoken:jjwt:0.9.1")
     api("com.fasterxml.uuid:java-uuid-generator:4.2.0")
     api("org.commonmark:commonmark:0.21.0")
-    api("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.15.1")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.15.2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")

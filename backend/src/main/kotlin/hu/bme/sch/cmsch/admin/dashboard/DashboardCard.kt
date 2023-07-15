@@ -1,8 +1,9 @@
 package hu.bme.sch.cmsch.admin.dashboard
 
 class DashboardCard(
-    val wide: Boolean,
-    val title: String,
+    override val id: Int,
+    override val wide: Boolean,
+    override val title: String,
     val description: String = "",
     val content: List<String>
 ) : DashboardComponent {

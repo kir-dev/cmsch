@@ -1,13 +1,22 @@
 package hu.bme.sch.cmsch.admin.dashboard
 
+import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.component.ComponentBase
+import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.getUserFromDatabase
 import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.ResponseBody
+import java.io.ByteArrayOutputStream
 
 abstract class DashboardPage(
     private var view: String,
@@ -61,6 +70,42 @@ abstract class DashboardPage(
         model.addAttribute("user", user)
 
         return "dashboard"
+    }
+
+    @ResponseBody
+    @GetMapping("/export/{id}", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
+    fun export(auth: Authentication, response: HttpServletResponse, @PathVariable id: Int): ByteArray {
+        val user = auth.getUserFromDatabase()
+        if (!showPermission.validate(user)) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+
+        val outputStream = ByteArrayOutputStream()
+        val components = getComponents(user)
+        val exportable = components.firstOrNull() { it.id == id }
+        if (exportable == null || exportable !is DashboardTableCard || !exportable.exportable)
+            return outputStream.toByteArray()
+
+        val csvMapper = CsvMapper()
+        val csvSchemaBuilder = CsvSchema.builder()
+            .setUseHeader(true)
+            .setReorderColumns(true)
+
+        exportable.header.forEach {
+            csvSchemaBuilder.addColumn(it)
+        }
+
+        val csvSchema = csvSchemaBuilder.build()
+            .withQuoteChar('"')
+            .withEscapeChar('\\')
+            .withColumnSeparator(',')
+
+        csvMapper.writerFor(List::class.java)
+            .with(csvSchema)
+            .writeValue(outputStream, exportable.content)
+
+        response.setHeader("Content-Disposition", "attachment; filename=\"${exportable.fileName()}.csv\"")
+        return outputStream.toByteArray()
     }
 
 }

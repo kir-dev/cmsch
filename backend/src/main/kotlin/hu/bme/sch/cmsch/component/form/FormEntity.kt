@@ -182,9 +182,8 @@ data class FormEntity(
 
     override fun hashCode(): Int = javaClass.hashCode()
 
-    @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id )"
+        return "FormEntity(id=$id, name='$name', url='$url')"
     }
 
 }

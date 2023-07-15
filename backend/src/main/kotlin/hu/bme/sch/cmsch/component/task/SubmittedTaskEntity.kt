@@ -91,7 +91,14 @@ data class SubmittedTaskEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 10, label = "Adott pont")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
-    var score: Int = 0
+    var score: Int = 0,
+
+    @Lob
+    @Column(nullable = false)
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(order = 11, label = "Beadás történet", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateOverview(visible = false)
+    var submissionHistory: String = "",
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(

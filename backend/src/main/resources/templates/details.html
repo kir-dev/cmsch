@@ -120,12 +120,32 @@
         });
 
         resultHtml += `
-        <div class="sub-card centered" id="field_${property}_add"><button type="button" class="btn btn-primary" onclick="addField('${property}')">
-            <span class="material-symbols-outlined regular">add</span>
-            <ins>Új mező</ins>
-        </button></div>`;
+        <div class="sub-card centered" id="field_${property}_add">
+            <button type="button" class="btn btn-primary" onclick="addField('${property}')">
+                <span class="material-symbols-outlined regular">add</span>
+                <ins>Új mező</ins>
+            </button>
+            <button type="button" class="btn" onclick="showAndUpdateJson('${property}')">
+                <span class="material-symbols-outlined regular">save</span>
+                <ins>Export</ins>
+            </button>
+            <button type="button" class="btn" onclick="showImport('${property}')">
+                <span class="material-symbols-outlined regular">publish</span>
+                <ins>Import</ins>
+            </button>
+        </div>`;
 
         document.getElementById(`field_${property}`).innerHTML = resultHtml;
+    }
+
+    function showAndUpdateJson(property) {
+        document.getElementById(property).style.display = 'block';
+    }
+
+    function showImport(property) {
+        const json = prompt("Add meg a JSON-t az importhoz:", "[]");
+        document.getElementById(property).value = json;
+        changeFieldsText(property);
     }
 
     function addField(property) {
@@ -740,6 +760,7 @@
                                        autocomplete="off"
                                        style="display: none"
                                        th:unless="${entityMode}"
+                                       readonly
                                 />
                                 <script th:inline="javascript"
                                         th:unless="${entityMode}">
