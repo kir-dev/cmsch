@@ -1,7 +1,7 @@
 import { FormStatus, FormStatusLangKeys } from '../../../util/views/form.view'
 import { Badge } from '@chakra-ui/react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { Form } from '../../../api/contexts/config/types'
+import { Signup } from '../../../api/contexts/config/types'
 
 interface FormStatusBadgeProps {
   status: FormStatus
@@ -27,7 +27,7 @@ export const FormStatusBadge = ({ status }: FormStatusBadgeProps) => {
   }
   return (
     <Badge my={5} colorScheme={color}>
-      {component?.[FormStatusLangKeys[status] as keyof Form] || 'Ismeretlen'}
+      {component?.[FormStatusLangKeys[status] as keyof Signup] || 'Ismeretlen'}
     </Badge>
   )
 }
