@@ -44,7 +44,7 @@ data class NewsEntity(
     var title: String = "",
 
     @Lob
-    @JsonView(value = [ Edit::class, Preview::class, ])
+    @JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Rövid tartalom",
         note = "Ez a hír összesítésben megjelenő tartalma")

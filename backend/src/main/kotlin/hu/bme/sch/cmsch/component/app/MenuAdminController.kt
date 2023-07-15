@@ -189,7 +189,7 @@ class MenuAdminController(
         val csvMapper = CsvMapper()
         val csvSchema = csvMapper.schemaFor(MenuService.MenuImportEntry::class.java)
             .withHeader()
-            .withColumnSeparator(';')
+            .withColumnSeparator(',')
         val outputStream = ByteArrayOutputStream()
 
         csvMapper.writer(csvSchema).writeValue(outputStream, menuService.exportMenu())
@@ -240,7 +240,7 @@ class MenuAdminController(
             val csvMapper = CsvMapper()
             val csvSchema = CsvSchema.emptySchema()
                 .withHeader()
-                .withColumnSeparator(';')
+                .withColumnSeparator(',')
             val reader = csvMapper.readerFor(MenuService.MenuImportEntry::class.java).with(csvSchema)
 
             val iterator = reader.readValues<MenuService.MenuImportEntry>(file.inputStream)

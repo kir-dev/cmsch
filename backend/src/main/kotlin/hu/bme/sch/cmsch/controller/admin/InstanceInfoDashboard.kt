@@ -47,6 +47,7 @@ class InstanceInfoDashboard(
 ) {
 
     private val systemInfo = DashboardTableCard(
+        0,
         "Rendszer Adatok",
         "",
         listOf("Property", "Value"),
@@ -68,6 +69,7 @@ class InstanceInfoDashboard(
     )
 
     private val deploymentInfo = DashboardTableCard(
+        1,
         "Példány Adatok",
         "",
         listOf("Property", "Value"),
@@ -102,6 +104,7 @@ class InstanceInfoDashboard(
     )
 
     private val componentInfo = DashboardTableCard(
+        2,
         "Komponens Adatok",
         "",
         listOf("Property", "Value"),
@@ -135,6 +138,7 @@ class InstanceInfoDashboard(
     )
 
     private val permissionCard = DashboardPermissionCard(
+        3,
         permission = showPermission.permissionString,
         description = "Ez a jog szükséges ennek az oldalnak az olvasásához.",
         wide = false
@@ -153,6 +157,7 @@ class InstanceInfoDashboard(
     private val formatter = SimpleDateFormat("yyyy.MM.dd. HH:mm:ss")
 
     private fun getStatistics() = DashboardTableCard(
+        4,
         "Élő Adatok",
         "",
         listOf("Property", "Value"),
@@ -164,6 +169,7 @@ class InstanceInfoDashboard(
             listOf("Users in 5m",   userActivityFilter.map { it.usersIn5Minutes.toString() }.orElse("")),
             listOf("Users in 30m",  userActivityFilter.map { it.usersIn30Minutes.toString() }.orElse("")),
         ),
-        false
+        false,
+        exportable = true
     )
 }

@@ -82,7 +82,8 @@ data class ProductEntity(
 
     @Column(nullable = false, columnDefinition = "varchar(255) default 'payments'")
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 8, label = "Material Ikon", note = "Innen kell kimásolni a nevét az ikonnak: https://fonts.google.com/icons")
+    @property:GenerateInput(order = 8, label = "Material Ikon",
+        note = "Innen kell kimásolni a nevét az ikonnak: https://fonts.google.com/icons")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var materialIcon: String = "payments"

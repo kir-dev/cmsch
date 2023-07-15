@@ -1,10 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.service.PermissionValidator
-import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.slf4j.LoggerFactory
@@ -23,7 +20,8 @@ import java.util.*
 @RequestMapping("/admin/control")
 class SettingsController(
     private val adminMenuService: AdminMenuService,
-    private val staticPageService: Optional<StaticPageService>
+    private val staticPageService: Optional<StaticPageService>,
+    private val permissionsService: PermissionsService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -47,11 +45,11 @@ class SettingsController(
         }.orElse(listOf())
             .filter { userPermissions.contains(it.permissionString) })
 
-        model.addAttribute("staffPermissions", StaffPermissions.allPermissions()
+        model.addAttribute("staffPermissions", permissionsService.allStaffPermissions
             .filter { it.permissionString.isNotEmpty() }
             .filter { userPermissions.contains(it.permissionString) })
 
-        model.addAttribute("adminPermissions", ControlPermissions.allPermissions()
+        model.addAttribute("adminPermissions", permissionsService.allControlPermissions
             .filter { it.permissionString.isNotEmpty() }
             .filter { userPermissions.contains(it.permissionString) })
 

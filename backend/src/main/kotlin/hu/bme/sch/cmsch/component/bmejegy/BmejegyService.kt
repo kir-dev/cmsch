@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.bmejegy
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.form.FormService
+import hu.bme.sch.cmsch.extending.BmeJegyListener
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
@@ -38,7 +39,8 @@ open class BmejegyService(
     private val bmejegyRecordRepository: BmejegyRecordRepository,
     private val formService: FormService,
     private val userRepository: UserRepository,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val listeners: List<BmeJegyListener>,
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -82,6 +84,9 @@ open class BmejegyService(
         }
         log.info("[BMEJEGY] Found new tickets: {}", newTickets.size)
         bmejegyRecordRepository.saveAll(newTickets)
+        newTickets.forEach { ticket ->
+            listeners.forEach { listener -> listener.onTicketAdded(ticket) }
+        }
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
@@ -89,6 +94,7 @@ open class BmejegyService(
         val unmatched = bmejegyRecordRepository.findAllByMatchedUserId(0)
         val changedTickets = mutableListOf<BmejegyRecordEntity>()
         val changedUsers = mutableListOf<UserEntity>()
+        val userToTicketMapping = mutableListOf<Pair<UserEntity, BmejegyRecordEntity>>()
 
         if (bmejegy.completeByPhotoId.isValueTrue()) {
             log.info("[BMEJEGY] Completing by photoId")
@@ -112,8 +118,10 @@ open class BmejegyService(
                     if (ticket != null) {
                         ticket.matchedUserId = raw.submitterUserId ?: 0
                         val user = updateUser(ticket.matchedUserId, ticket.item, group1, group2, group3)
-                        if (user != null)
+                        if (user != null) {
                             changedUsers.add(user)
+                            userToTicketMapping.add(Pair(user, ticket))
+                        }
                         changedTickets.add(ticket)
                     }
                 }
@@ -126,6 +134,12 @@ open class BmejegyService(
 
         log.info("[BMEJEGY] Updated users: {}", changedUsers.size)
         userRepository.saveAll(changedUsers)
+
+        if (listeners.isNotEmpty()) {
+            userToTicketMapping.forEach { mapping ->
+                listeners.forEach { listener -> listener.onTicketAssigned(mapping.first, mapping.second) }
+            }
+        }
     }
 
     private fun updateUser(

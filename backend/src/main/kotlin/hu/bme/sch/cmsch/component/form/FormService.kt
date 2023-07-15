@@ -2,8 +2,8 @@ package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.DebugComponent
+import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -22,8 +22,8 @@ open class FormService(
     private val userRepository: UserRepository,
     private val clock: TimeService,
     private val objectMapper: ObjectMapper,
-    private val applicationComponent: ApplicationComponent,
     private val debugComponent: DebugComponent,
+    private val listeners: List<FormSubmissionListener>,
 ) {
 
     internal val log = LoggerFactory.getLogger(javaClass)
@@ -52,7 +52,7 @@ open class FormService(
             return FormView(status = FormStatus.TOO_LATE)
 
         if (form.allowedGroups.isNotBlank() && userRepository.findById(user.id)
-                .map { it.groupName !in form.allowedGroups.split(Regex(",[ ]*")) }
+                .map { it.groupName !in form.allowedGroups.split(Regex(", *")) }
                 .orElse(true)) {
             return FormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
         }
@@ -192,7 +192,7 @@ open class FormService(
                         }
                     }
                     FormElementType.SELECT -> {
-                        if (value !in field.values.split(Regex(",[ ]*")).map { it.trim() }) {
+                        if (value !in field.values.split(Regex(", *")).map { it.trim() }) {
                             log.info("User {} invalid SELECT value {} = {}", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
@@ -222,9 +222,10 @@ open class FormService(
             submissionEntity.submission = objectMapper.writeValueAsString(submission)
             submissionEntity.lastUpdatedDate = now
             responseRepository.save(submissionEntity)
+            listeners.forEach { it.onFormUpdated(user, form, submissionEntity) }
         } else {
             log.info("User {} filled out form {} successfully", user.id, form.id)
-            responseRepository.save(ResponseEntity(
+            val responseEntity = ResponseEntity(
                 submitterUserId = if (form.ownerIsGroup) null else user.id,
                 submitterUserName = if (form.ownerIsGroup) "" else user.fullName,
                 submitterGroupId = if (form.ownerIsGroup) groupId else null,
@@ -235,7 +236,9 @@ open class FormService(
                 rejected = false,
                 email = user.email,
                 submission = objectMapper.writeValueAsString(submission)
-            ))
+            )
+            responseRepository.save(responseEntity)
+            listeners.forEach { it.onFormSubmitted(user, form, responseEntity) }
         }
 
         if (form.grantAttendeeRole) {

@@ -23,8 +23,34 @@
 
             <object th:each="component,iter : ${components}" th:remove="tag">
 
+                <object th:if="${component.type == 'DashboardCard'}" th:remove="tag">
+                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+                        <h4 th:text="${component.title}">Title</h4>
+                        <span th:text="${component.description}" class="desc">A little description fits there.</span>
+
+                        <p th:each="p : ${content}" th:text="${p}"></p>
+                    </div>
+                </object>
+
+                <object th:if="${component.type == 'DashboardButtonCard'}" th:remove="tag">
+                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+                        <h4 th:text="${component.title}">Title</h4>
+
+                        <p th:each="p : ${content}" th:text="${p}"></p>
+
+                        <div class="button-group">
+                            <object th:each="button : ${buttons}" th:remove="tag">
+                                <a href="#" th:href="|@{/admin/control}/${view}/${button.target}|" class="btn"
+                                   th:class="|btn ${button.primary ? 'btn-primary' : 'btn-secondary'}|"
+                                   th:target="${button.newPage ? '_blank' : ''}"
+                                ><span class="material-symbols-outlined regular" th:text="${button.icon}">code</span> <ins th:text="${button.name}">Button name</ins></a>
+                            </object>
+                        </div>
+                    </div>
+                </object>
+
                 <object th:if="${component.type == 'DashboardTableCard'}" th:remove="tag">
-                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|">
+                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
                         <h4 th:text="${component.title}">Title</h4>
                         <span th:text="${component.description}" class="desc">A little description fits there.</span>
 
@@ -36,11 +62,16 @@
                                 <td th:each="col : ${tr}" th:text="${col}"></td>
                             </tr>
                         </table>
+
+                        <div class="button-group" th:if="${component.exportable}">
+                            <a href="#" th:href="|@{/admin/control}/${view}/export/${component.id}|" class="btn btn-primary" target="_blank"
+                            ><span class="material-symbols-outlined regular">download</span> <ins>LETÖLTÉS (.csv)</ins></a>
+                        </div>
                     </div>
                 </object>
 
                 <object th:if="${component.type == 'DashboardPermissionCard'}" th:remove="tag">
-                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:if="${user.isAdmin()}">
+                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:if="${user.isAdmin()}" th:id="${component.id}">
                         <h4 th:text="${component.title}">Jogosultságok</h4>
 
                         <div class="options">
