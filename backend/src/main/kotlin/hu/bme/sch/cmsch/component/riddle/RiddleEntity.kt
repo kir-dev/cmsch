@@ -75,19 +75,19 @@ data class RiddleEntity(
     var categoryId: Int = 0,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Column(nullable = false, columnDefinition = "varchar(64) default ''")
+    @Column(nullable = false, length = 64)
     @property:GenerateInput(maxLength = 64, order = 8, label = "Riddle készítője", note = "Akkor jelenik meg ha nem üres")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
-    var creator: String? = "",
+    var creator: String = "",
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Column(nullable = false, columnDefinition = "varchar(64) default ''")
+    @Column(nullable = false, length = 64)
     @property:GenerateInput(maxLength = 64, order = 9, label = "Első megoldó",
         note = "Ezt automatikusan tölti ki a rendszer")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7)
-    var firstSolver: String? = "",
+    var firstSolver: String = "",
 
 ) : ManagedEntity {
 

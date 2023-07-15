@@ -170,11 +170,11 @@ data class UserEntity(
     var profilePicture: String = "",
 
     @JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "varchar(255) default ''")
+    @Column(nullable = false)
     @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Meliyk kar, milyen szak, aktív-e és gólya-e?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12)
-    var unitScopes: String? = "",
+    var unitScopes: String = "",
 
     @Lob
     @Column(nullable = false)
@@ -185,7 +185,7 @@ data class UserEntity(
     var profileTopMessage: String = "",
 
     @JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "boolean not null default 'false'")
+    @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Importált adatok", note = "Volt-e már máshonnan importálva adat")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)

@@ -143,22 +143,22 @@ data class QrTowerEntity(
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
     var state: String = "",
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(64) DEFAULT ''")
+    @Column(nullable = false, length = 64)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 16, label = "Helytartó",
         note = "Ha a birtokos felhasználó az ID-je, ha csoport akkor a neve. " +
                 "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 15)
-    var holder: String? = null,
+    var holder: String = "",
 
-    @Column(nullable = false, columnDefinition = "integer DEFAULT 0")
+    @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 17, label = "Helytartás ennyi időegysége (perc)",
         note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_INT)
-    var holderFor: Int? = null,
+    var holderFor: Int = 0,
 
 ) : ManagedEntity {
 

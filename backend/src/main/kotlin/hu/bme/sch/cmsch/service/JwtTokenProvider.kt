@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.jwt.InvalidJwtAuthenticationException
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import io.jsonwebtoken.*
+import io.jsonwebtoken.security.Keys
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -25,7 +26,8 @@ class JwtTokenProvider(
     private val startupPropertyConfig: StartupPropertyConfig
 ){
 
-    private val secretKey = Base64.getEncoder().encodeToString(startupPropertyConfig.secretKey.toByteArray())
+    private val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+    private val parser = Jwts.parserBuilder().setSigningKey(secretKey).build()
 
     fun createToken(cmschUser: CmschUser): String {
         return createToken(
@@ -50,7 +52,7 @@ class JwtTokenProvider(
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(validity)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact()
     }
 
@@ -73,10 +75,10 @@ class JwtTokenProvider(
     }
 
     fun getInternalId(token: String): String {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
+        return parser.parseClaimsJws(token).body.subject
     }
 
-    private fun parseToken(token: String) = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body
+    private fun parseToken(token: String) = parser.parseClaimsJws(token).body
 
     fun resolveToken(req: HttpServletRequest): String? {
         val bearerToken = req.getHeader("Authorization")
@@ -89,9 +91,7 @@ class JwtTokenProvider(
 
     fun validateToken(token: String): Boolean {
         return try {
-            val claims: Jws<Claims> = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
+            val claims: Jws<Claims> = parser.parseClaimsJws(token)
             !claims.body.expiration.before(Date())
         } catch (e: JwtException) {
             throw InvalidJwtAuthenticationException("Expired or invalid JWT token")
