@@ -175,31 +175,31 @@ open class FormService(
                 when (field.type) {
                     FormElementType.NUMBER -> {
                         if (!value.matches(Regex("[0-9]+"))) {
-                            log.info("User {} invalid NUMBER value {} = {}", user.id, field.fieldName, value)
+                            log.info("User {} invalid NUMBER value {} = '{}'", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
                     FormElementType.EMAIL -> {
                         if (!value.matches(Regex(".+@.+\\..+"))) {
-                            log.info("User {} invalid EMAIL value {} = {}", user.id, field.fieldName, value)
+                            log.info("User {} invalid EMAIL value {} = '{}'", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
                     FormElementType.CHECKBOX -> {
-                        if (!value.equals("true", ignoreCase = true) && !value.equals("false", ignoreCase = true)) {
-                            log.info("User {} invalid CHECKBOX value {} = {}", user.id, field.fieldName, value)
+                        if (!value.equals("true", ignoreCase = true) && !value.equals("false", ignoreCase = true) && value != "") {
+                            log.info("User {} invalid CHECKBOX value {} = '{}'", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
                     FormElementType.SELECT -> {
                         if (value !in field.values.split(Regex(", *")).map { it.trim() }) {
-                            log.info("User {} invalid SELECT value {} = {}", user.id, field.fieldName, value)
+                            log.info("User {} invalid SELECT value {} = '{}'", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
                     FormElementType.MUST_AGREE -> {
                         if (value != "true") {
-                            log.info("User {} invalid MUST_AGREE value {} = {}", user.id, field.fieldName, value)
+                            log.info("User {} invalid MUST_AGREE value {} = '{}'", user.id, field.fieldName, value)
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
@@ -214,6 +214,9 @@ open class FormService(
                 }
 
                 submission[field.fieldName] = data[field.fieldName]!!
+                if (field.type == FormElementType.CHECKBOX && value == "") {
+                    submission[field.fieldName] = "false"
+                }
             }
         }
 

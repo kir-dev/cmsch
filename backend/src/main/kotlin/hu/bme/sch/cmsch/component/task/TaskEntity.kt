@@ -77,7 +77,7 @@ data class TaskEntity(
         note = "A leadási határidő után jelenik meg")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
-    var solution: String? = "",
+    var solution: String = "",
 
     @Enumerated(EnumType.STRING)
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])

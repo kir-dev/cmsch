@@ -1,4 +1,4 @@
-import { Signup } from '../../api/contexts/config/types'
+import { Form } from '../../api/contexts/config/types'
 
 export type FormData = {
   form?: Form
@@ -41,7 +41,7 @@ export enum FormStatus {
   GROUP_NOT_PERMITTED = 'GROUP_NOT_PERMITTED'
 }
 
-export const FormStatusLangKeys: Record<FormStatus, keyof Signup> = {
+export const FormStatusLangKeys: Record<FormStatus, keyof Form> = {
   [FormStatus.NO_SUBMISSION]: 'langNoSubmission',
   [FormStatus.SUBMITTED]: 'langSubmitted',
   [FormStatus.REJECTED]: 'langRejected',

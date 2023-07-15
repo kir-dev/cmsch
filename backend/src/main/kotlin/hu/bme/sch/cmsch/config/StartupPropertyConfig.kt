@@ -14,6 +14,7 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
 
     // JWT
     val jwtEnabled: Boolean,
+    @Deprecated(message = "JWT generated automatically")
     val secretKey: String,
     val sessionValidityInMilliseconds: Long,
 
