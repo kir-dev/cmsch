@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.config
 
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.ConfigurationProperties
-import jakarta.annotation.PostConstruct
 import org.springframework.boot.context.properties.bind.ConstructorBinding
 
 @ConfigurationProperties("hu.bme.sch.cmsch.component.load")

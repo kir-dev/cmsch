@@ -1,37 +1,36 @@
 package hu.bme.sch.cmsch.config
 
-import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.component.app.ExtraMenuEntity
 import hu.bme.sch.cmsch.component.app.ExtraMenuRepository
 import hu.bme.sch.cmsch.component.debt.ProductEntity
 import hu.bme.sch.cmsch.component.debt.ProductRepository
-import hu.bme.sch.cmsch.component.event.EventEntity
-import hu.bme.sch.cmsch.component.event.EventRepository
-import hu.bme.sch.cmsch.component.staticpage.StaticPageEntity
-import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
-import hu.bme.sch.cmsch.component.news.NewsEntity
-import hu.bme.sch.cmsch.component.news.NewsRepository
-import hu.bme.sch.cmsch.model.*
-import hu.bme.sch.cmsch.repository.*
-import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
-import hu.bme.sch.cmsch.component.riddle.RiddleEntity
-import hu.bme.sch.cmsch.component.riddle.RiddleCategoryRepository
-import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
-import hu.bme.sch.cmsch.component.token.TokenEntity
-import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.component.debt.ProductService
 import hu.bme.sch.cmsch.component.debt.ProductType
+import hu.bme.sch.cmsch.component.event.EventEntity
+import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.form.FormEntity
 import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.component.form.ResponseEntity
 import hu.bme.sch.cmsch.component.form.ResponseRepository
+import hu.bme.sch.cmsch.component.news.NewsEntity
+import hu.bme.sch.cmsch.component.news.NewsRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
+import hu.bme.sch.cmsch.component.staticpage.StaticPageEntity
+import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
+import hu.bme.sch.cmsch.component.task.*
+import hu.bme.sch.cmsch.component.token.TokenEntity
+import hu.bme.sch.cmsch.component.token.TokenRepository
+import hu.bme.sch.cmsch.model.*
+import hu.bme.sch.cmsch.repository.*
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
-import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.sha256
+import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import java.util.*
-import jakarta.annotation.PostConstruct
 
 const val LOREM_IPSUM_SHORT_1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in justo ac arcu placerat posuere eget at purus. Donec porta lorem in semper semper. Phasellus volutpat sapien et ultricies tristique. In ornare libero vel dignissim ultrices."
 const val LOREM_IPSUM_SHORT_2 = "Pellentesque non interdum leo. Mauris egestas augue vel lorem dignissim ullamcorper. Suspendisse tempus ex dolor, in sagittis lorem fermentum ut. Morbi dignissim sollicitudin ornare."
