@@ -1,11 +1,11 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.component.login.LoginComponent
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
-import jakarta.servlet.http.HttpServletRequest
 
 const val GOOGLE = "google"
 const val AUTHSCH = "authsch"
