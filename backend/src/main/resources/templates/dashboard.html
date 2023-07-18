@@ -32,7 +32,7 @@
                     </div>
                 </object>
 
-                <object th:if="${component.type == 'DashboardButtonCard'}" th:remove="tag">
+                <object th:if="${component.type == 'DashboardButtonGroup'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
                         <h4 th:text="${component.title}">Title</h4>
 
@@ -83,6 +83,107 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </object>
+
+                <object th:if="${component.type == 'DashboardFormCard'}" th:remove="tag">
+                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+                        <h4 th:text="${component.title}">Title</h4>
+                        <span th:text="${component.description}" class="desc">A little description fits there.</span>
+
+                        <form th:action="|@{/admin/control}/${view}/${component.action}|" th:method="${component.method}">
+
+                            <object th:remove="tag" th:each="input,iter : ${component.content}">
+
+                                <div th:if="${input.type.name() == 'TEXT'}" class="field-group">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <input type="text"
+                                           th:name="${input.fieldName}"
+                                           th:id="|input${iter.index}|"
+                                           th:value="${input.defaultValue}"
+                                           autocomplete="off"
+                                           th:required="${input.required}"
+                                    />
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'NUMBER'}" class="field-group">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <input type="text"
+                                           th:name="${input.fieldName}"
+                                           th:id="|input${iter.index}|"
+                                           th:value="${input.defaultValue}"
+                                           autocomplete="off"
+                                           inputmode="numeric"
+                                           th:required="${input.required}"
+                                    />
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'SELECT'}" class="field-group" th:id="|_${iter.index}|">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <select th:id="|input${iter.index}|"
+                                            th:name="${input.fieldName}">
+                                        <option th:each="opt : ${input.values.split(', *')}"
+                                                th:value="${opt}"
+                                                th:text="${opt}"
+                                                th:selected="${#strings.equals(input.defaultValue, opt)}"></option>
+                                    </select>
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'LONG_TEXT'}" class="field-group">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <textarea
+                                            th:name="${input.fieldName}"
+                                            th:id="|input${iter.index}|"
+                                            th:text="${input.defaultValue}"
+                                            autocomplete="off"
+                                            >
+                                    </textarea>
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'CHECKBOX'}" class="field-group">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <label class="switch">
+                                        <input type="checkbox"
+                                               th:checked="${input.defaultValue == 'true'}"
+                                               th:name="${input.fieldName}"
+                                               th:id="|input${iter.index}|"
+                                        />
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                    <div style="clear: both"></div>
+                                </div>
+
+                            </object>
+
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="material-symbols-outlined" th:text="${component.buttonIcon}">check_circle</span>
+                                    <ins th:text="${component.buttonCaption}">SUBMIT</ins>
+                                </button>
+                            </div>
+
+                        </form>
+
                     </div>
                 </object>
             </object>

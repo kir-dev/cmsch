@@ -16,6 +16,7 @@ import hu.bme.sch.cmsch.component.impressum.ImpressumComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.location.LocationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.messaging.MessagingComponent
 import hu.bme.sch.cmsch.component.news.NewsComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
@@ -290,6 +291,18 @@ object ControlPermissions : PermissionGroup {
         component = ApplicationComponent::class
     )
 
+    val PERMISSION_CONTROL_MESSAGING = PermissionValidator(
+        "MESSAGING_CONTROL",
+        "Értesítések komponens kezelése",
+        component = MessagingComponent::class
+    )
+
+    val PERMISSION_SEND_MESSAGE = PermissionValidator(
+        "MESSAGING_SEND",
+        "Debug üzenet küldése",
+        component = MessagingComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -321,7 +334,9 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_SHOW_AUDIT_LOG,
         PERMISSION_DEV_DEBUG,
         PERMISSION_SHOW_INSTANCE,
-        PERMISSION_SHOW_LIVE_STATS
+        PERMISSION_SHOW_LIVE_STATS,
+        PERMISSION_CONTROL_MESSAGING,
+        PERMISSION_SEND_MESSAGE,
     )
 
 }
