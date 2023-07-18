@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.liquibase:liquibase-core")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.springframework.boot:spring-boot-starter-data-jpa")
