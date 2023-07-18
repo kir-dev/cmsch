@@ -74,6 +74,12 @@
                         </div>
 
                         <div class="field-group">
+                            <label for="${property}_${id}_defaultValue">Alapértelmezett érték</label>
+                            <input id="${property}_${id}_defaultValue" type="text" value="${field.defaultValue || ''}" onchange="saveField('${property}')">
+                            <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené.</span>
+                        </div>
+
+                        <div class="field-group">
                             <label for="${property}_${id}_values">Értékek</label>
                             <input id="${property}_${id}_values" type="text" value="${field.values}" onchange="saveField('${property}')">
                             <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
@@ -82,7 +88,7 @@
                         <div class="field-group">
                             <label for="${property}_${id}_note">Leírás</label>
                             <input id="${property}_${id}_note" type="text" value="${field.note}" onchange="saveField('${property}')">
-                            <span class="note">A mező alatt megjelenp szöveg.</span>
+                            <span class="note">A mező alatt megjelenő szöveg.</span>
                         </div>
 
                         <div class="field-group">
@@ -188,6 +194,12 @@
                         </div>
 
                         <div class="field-group">
+                            <label for="${property}_${id}_defaultValue">Alapértelmezett érték</label>
+                            <input id="${property}_${id}_defaultValue" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené.</span>
+                        </div>
+
+                        <div class="field-group">
                             <label for="${property}_${id}_values">Értékek</label>
                             <input id="${property}_${id}_values" type="text" value="" onchange="saveField('${property}')">
                             <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
@@ -196,7 +208,7 @@
                         <div class="field-group">
                             <label for="${property}_${id}_note">Leírás</label>
                             <input id="${property}_${id}_note" type="text" value="" onchange="saveField('${property}')">
-                            <span class="note">A mező alatt megjelenp szöveg.</span>
+                            <span class="note">A mező alatt megjelenő szöveg.</span>
                         </div>
 
                         <div class="field-group">
@@ -244,6 +256,7 @@
             const type = document.getElementById(`${property}_${id}_type`).value;
             const formatRegex = document.getElementById(`${property}_${id}_formatRegex`).value;
             const invalidFormatMessage = document.getElementById(`${property}_${id}_invalidFormatMessage`).value;
+            const defaultValue = document.getElementById(`${property}_${id}_defaultValue`).value;
             const values = document.getElementById(`${property}_${id}_values`).value;
             const note = document.getElementById(`${property}_${id}_note`).value;
             const required = document.getElementById(`${property}_${id}_required`).checked;
@@ -259,7 +272,8 @@
                     values : values,
                     note : note,
                     required : required,
-                    permanent : permanent
+                    permanent : permanent,
+                    defaultValue : defaultValue
                 });
             }
             ++id;
@@ -292,7 +306,7 @@
 
     function deleteValues(property, id) {
         const form = document.getElementById(`form_${property}_${id}`);
-        const inputs = form.querySelectorAll('input, select, textarea');
+        const inputs = form.querySelectorAll('input, textarea');
 
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].value = '';
