@@ -1523,10 +1523,12 @@ form ul {
 }
 
 @media (max-width: 1023px) {
+    .menu {
+        display: none;
+    }
     .shortcuts-menu,
-    .menu,
     .only-widescreen {
-        display: none !important;;
+        display: none !important;
     }
     #motd {
         margin: 0 !important;
