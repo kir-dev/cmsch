@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.form
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.UserEntity
@@ -72,6 +73,7 @@ enum class FormElementType(
     }
 }
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class FormElement(
     @JsonView(FullDetails::class)
     var fieldName: String = "",
