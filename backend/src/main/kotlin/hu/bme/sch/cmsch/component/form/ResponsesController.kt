@@ -91,7 +91,7 @@ class ResponsesController(
         ),
         ControlAction(
             "CSV Export",
-            "export/json/{id}",
+            "export/csv/{id}",
             "save",
             StaffPermissions.PERMISSION_SHOW_FORM_RESULTS,
             20,
