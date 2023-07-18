@@ -99,6 +99,9 @@ open class SecurityConfig(
                 antMatcher("/control/refresh"),
                 antMatcher("/oauth2/authorization"),
                 antMatcher("/c/**"),
+                antMatcher("/ol.js"),
+                antMatcher("/ol.css"),
+                antMatcher("/tracker.css"),
             ).permitAll()
 
             it.requestMatchers(

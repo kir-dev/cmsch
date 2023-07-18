@@ -29,7 +29,7 @@ class EntrypointController(
         private val loginComponent: LoginComponent
 ) {
 
-    @GetMapping("")
+    @GetMapping("/")
     @ResponseBody
     fun index(auth: Authentication?): String {
         return if (auth == null) "hey!" else "hoo!"

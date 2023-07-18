@@ -18,6 +18,8 @@ enum class FormElementType(
     SELECT,
     MUST_AGREE,
     VOTE, // value = [{"title":"","value":"","img":"","text":""}, {...}]
+    SELECTION_GRID, // value = { "prefix": "day", "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
+    CHOICE_GRID, // value = { "prefix": "day", "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
 
     INFO_BOX(persist = false),
     WARNING_BOX(persist = false),
@@ -97,4 +99,7 @@ data class FormElement(
 
     @JsonView(FullDetails::class)
     var permanent: Boolean = false, // Cannot be edited after submission
+
+    @JsonView(FullDetails::class)
+    var defaultValue: String = "",
 )

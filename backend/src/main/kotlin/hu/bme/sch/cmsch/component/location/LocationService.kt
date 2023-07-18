@@ -26,7 +26,13 @@ class LocationService(
             if (user.isPresent) {
                 if (user.get().role.value >= RoleType.STAFF.value) {
                     tokenToLocationMapping[locationDto.token] =
-                        LocationEntity(0, user.get().id, user.get().fullName, user.get().alias, user.get().groupName)
+                        LocationEntity(
+                            id = 0,
+                            userId = user.get().id,
+                            userName = user.get().fullName,
+                            alias = user.get().alias,
+                            groupName = user.get().groupName
+                        )
                 } else {
                     return LocationResponse("jogosulatlan", "n/a")
                 }
