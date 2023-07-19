@@ -1,36 +1,33 @@
-name: Build CI with Gradle
+name: Build and Publish Docker Image
 
 on:
   push:
-    branches: 
+    branches:
       - master
-    paths:
-      - 'backend/**'
-  pull_request:
-    branches: 
-      - master
-    paths:
-      - 'backend/**'
+      - staging
 
 jobs:
-  build:
+  build-and-publish:
+    name: Build and Publish
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
 
     steps:
-    - name: Check out Git repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: temurin
+      - name: Set up Docker environment
+        uses: docker/setup-buildx-action@v1
 
-    - name: Gradle CI
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: build
-        build-root-directory: backend
+      - name: Build and Publish Release Docker image to Harbor
+        if: github.ref == 'refs/heads/master'
+        working-directory: backend
+        run: |
+          make build
+          make push-r
+
+      - name: Build and Publish Staging Docker image to Harbor
+        if: github.ref == 'refs/heads/staging'
+        working-directory: backend
+        run: |
+          make build
+          make push-rc
