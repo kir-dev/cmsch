@@ -108,7 +108,7 @@ open class NovaIntegrationService(
             }
     }
 
-    private fun fetchAvatar(user: UserEntity): Pair<String, TaskStatus> {
+    fun fetchAvatar(user: UserEntity): Pair<String, TaskStatus> {
         return taskRepository.map { tasks ->
             tasks.findAllByTag(AVATAR_TAG).firstOrNull()?.let { task ->
                 submittedTaskRepository.map { submissions ->
@@ -120,7 +120,7 @@ open class NovaIntegrationService(
         }.orElse(taskNotSubmitted())
     }
 
-    private fun fetchCv(user: UserEntity): Pair<String, TaskStatus> {
+    fun fetchCv(user: UserEntity): Pair<String, TaskStatus> {
         return taskRepository.map { tasks ->
             tasks.findAllByTag(CV_TAG).firstOrNull()?.let { task ->
                 submittedTaskRepository.map { submissions ->
