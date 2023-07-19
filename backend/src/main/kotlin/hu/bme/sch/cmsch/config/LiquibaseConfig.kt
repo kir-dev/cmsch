@@ -8,11 +8,11 @@ import javax.sql.DataSource
 
 @Configuration
 class LiquibaseConfig {
-    @Bean
-    fun liquibase(dataSource: DataSource): SpringLiquibase {
-        val liquibase = SpringLiquibase()
-        liquibase.dataSource = dataSource
-        liquibase.changeLog = "classpath:db/changelog/changelog-core-master.yaml"
-        return liquibase
-    }
+//    @Bean
+//    fun liquibase(dataSource: DataSource): SpringLiquibase {
+//        val liquibase = SpringLiquibase()
+//        liquibase.dataSource = dataSource
+//        liquibase.changeLog = "classpath:db/changelog/changelog-core-master.yaml"
+//        return liquibase
+//    }
 }
