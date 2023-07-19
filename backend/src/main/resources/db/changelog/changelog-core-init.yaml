@@ -2721,6 +2721,8 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        indexExists:
+          indexName: uc_9c0e38803077d3feff5ff792a
       changes:
         - addUniqueConstraint:
             columnNames: user_id
@@ -2732,6 +2734,8 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        indexExists:
+          indexName: idx_componentsettingentity
       changes:
         - createIndex:
             columns:
@@ -2748,6 +2752,8 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        indexExists:
+          indexName: idx_ddb44135242315dacdb9a7419
       changes:
         - createIndex:
             columns:
@@ -2775,6 +2781,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_RIDDLEMAPPINGS_ON_OWNERGROUP
+            foreignKeyTableName: riddle_mappings
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_group_id
@@ -2788,6 +2798,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_RIDDLEMAPPINGS_ON_OWNERUSER
+            foreignKeyTableName: riddle_mappings
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_user_id
@@ -2801,6 +2815,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_RIDDLEMAPPINGS_ON_RIDDLE
+            foreignKeyTableName: riddle_mappings
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: riddle_id
@@ -2814,6 +2832,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_SUBMITTEDTASKS_ON_TASK
+            foreignKeyTableName: submitted_tasks
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: task_id
@@ -2827,6 +2849,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_TOKENPROPERTIES_ON_OWNERGROUP
+            foreignKeyTableName: token_properties
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_group_id
@@ -2840,6 +2866,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_TOKENPROPERTIES_ON_OWNERUSER
+            foreignKeyTableName: token_properties
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_user_id
@@ -2853,6 +2883,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_TOKENPROPERTIES_ON_TOKEN
+            foreignKeyTableName: token_properties
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: token_id
@@ -2866,6 +2900,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_USERDETAILSBYINTERNALID_ON_GROUP
+            foreignKeyTableName: user_details_by_internal_id
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
@@ -2879,6 +2917,10 @@ databaseChangeLog:
       objectQuotingStrategy: LEGACY
       preConditions:
         onFail: MARK_RAN
+        not:
+          foreignKeyConstraintExists:
+            foreignKeyName: FK_USERS_ON_GROUP
+            foreignKeyTableName: users
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
