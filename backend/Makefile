@@ -1,16 +1,16 @@
-.PHONY: all build push-rc push-r
+.PHONY: all build push-staging push-release
 
 all:
-	echo "build|push-rc|push-r"
+	echo "build|push-staging|push-release"
 
 build:
 	./gradlew clean build
 	docker build --platform=linux/amd64 -t cmsch .
 
-push-rc:
-	docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:rc
-	docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:rc
+push-staging:
+	docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:staging
+	docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:staging
 
-push-r:
+push-release:
 	docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:release
 	docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:release
