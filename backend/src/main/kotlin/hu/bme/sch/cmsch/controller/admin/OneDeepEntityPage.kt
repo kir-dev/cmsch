@@ -87,6 +87,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val deleteEnabled: Boolean = false,
     internal val importEnabled: Boolean = true,
     internal val exportEnabled: Boolean = true,
+    internal val duplicateEnabled: Boolean = createEnabled,
 
     private val adminMenuCategory: String? = null,
     private val adminMenuIcon: String = "check_box_outline_blank",
@@ -129,6 +130,15 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     false
                 ))
             }
+            controlActions.add(ControlAction(
+                "Duplikálás",
+                "duplicate/{id}",
+                "content_copy",
+                createPermission,
+                150,
+                usageString = "Másolat készítése az adott bejegyzésről",
+                basic = true
+            ))
         }
 
         if (editEnabled) {
@@ -333,6 +343,41 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("data", null)
+        model.addAttribute("user", user)
+        model.addAttribute("readOnly", false)
+        model.addAttribute("entityMode", false)
+
+        onDetailsView(user, model)
+        return "details"
+    }
+
+    @GetMapping("/duplicate/{id}")
+    fun duplicate(model: Model, auth: Authentication, @PathVariable id: Int): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (createPermission.validate(user).not() || showPermission.validate(user).not()) {
+            model.addAttribute("permission", createPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/duplicate/${id}", createPermission.permissionString)
+            return "admin403"
+        }
+
+        if (duplicateEnabled.not())
+            return "redirect:/admin/control/$view/"
+
+        val entity = dataSource.findById(id)
+        if (entity.isEmpty) {
+            model.addAttribute("error", INVALID_ID_ERROR)
+        } else {
+            val actualEntity = onPreEdit(entity.orElseThrow())
+            model.addAttribute("data", actualEntity)
+        }
+
+        model.addAttribute("title", titleSingular)
+        model.addAttribute("editMode", false)
+        model.addAttribute("view", view)
+        model.addAttribute("inputs", descriptor.getInputs())
+        model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("user", user)
         model.addAttribute("readOnly", false)
         model.addAttribute("entityMode", false)

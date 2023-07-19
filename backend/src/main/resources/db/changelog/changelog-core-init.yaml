@@ -3,294 +3,459 @@ databaseChangeLog:
       id: 1689634157785-1
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: bmejegy_records_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: bmejegy_records_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-2
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: challenge_submissions_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: challenge_submissions_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-3
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: community_entities_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: community_entities_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-4
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: component_settings_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: component_settings_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-5
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: events_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: events_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-6
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: extra_menus_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: extra_menus_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-7
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: extra_pages_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: extra_pages_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-8
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: form_responses_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: form_responses_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-9
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: forms_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: forms_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-10
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: group_to_user_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: group_to_user_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-11
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: groups_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: groups_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-12
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: guild_to_user_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: guild_to_user_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-13
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: locations_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: locations_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-14
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: news_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: news_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-15
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: organization_entities_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: organization_entities_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-16
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: products_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: products_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-17
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: qr_levels_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: qr_levels_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-18
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: qr_towers_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: qr_towers_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-19
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: race_categories_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: race_categories_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-20
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: race_records_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: race_records_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-21
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: riddle_categories_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: riddle_categories_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-22
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: riddle_mappings_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: riddle_mappings_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-23
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: riddles_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: riddles_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-24
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: sold_products_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: sold_products_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-25
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: submitted_tasks_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: submitted_tasks_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-26
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: task_categories_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: task_categories_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-27
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: tasks_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: tasks_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-28
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: team_join_requests_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: team_join_requests_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-29
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: token_properties_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: token_properties_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-30
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: tokens_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: tokens_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-31
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: user_details_by_internal_id_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: user_details_by_internal_id_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-32
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: users_seq
       changes:
         - createSequence:
-            incrementBy: 50
+            incrementBy: 1
             sequenceName: users_seq
             startValue: 1
   - changeSet:
       id: 1689634157785-33
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: bmejegy_records
       changes:
         - createTable:
             columns:
@@ -376,6 +541,11 @@ databaseChangeLog:
       id: 1689634157785-34
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: challenge_submissions
       changes:
         - createTable:
             columns:
@@ -422,6 +592,11 @@ databaseChangeLog:
       id: 1689634157785-35
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: community_entities
       changes:
         - createTable:
             columns:
@@ -545,6 +720,11 @@ databaseChangeLog:
       id: 1689634157785-36
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: component_settings
       changes:
         - createTable:
             columns:
@@ -575,6 +755,11 @@ databaseChangeLog:
       id: 1689634157785-37
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: events
       changes:
         - createTable:
             columns:
@@ -675,6 +860,11 @@ databaseChangeLog:
       id: 1689634157785-38
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: extra_menus
       changes:
         - createTable:
             columns:
@@ -705,6 +895,11 @@ databaseChangeLog:
       id: 1689634157785-39
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: extra_pages
       changes:
         - createTable:
             columns:
@@ -778,6 +973,11 @@ databaseChangeLog:
       id: 1689634157785-40
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: form_responses
       changes:
         - createTable:
             columns:
@@ -862,6 +1062,11 @@ databaseChangeLog:
       id: 1689634157785-41
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: forms
       changes:
         - createTable:
             columns:
@@ -962,6 +1167,11 @@ databaseChangeLog:
       id: 1689634157785-42
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: group_to_user
       changes:
         - createTable:
             columns:
@@ -995,6 +1205,11 @@ databaseChangeLog:
       id: 1689634157785-43
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: groups
       changes:
         - createTable:
             columns:
@@ -1075,6 +1290,11 @@ databaseChangeLog:
       id: 1689634157785-44
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: guild_to_user
       changes:
         - createTable:
             columns:
@@ -1098,6 +1318,11 @@ databaseChangeLog:
       id: 1689634157785-45
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: locations
       changes:
         - createTable:
             columns:
@@ -1158,6 +1383,11 @@ databaseChangeLog:
       id: 1689634157785-46
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: menus
       changes:
         - createTable:
             columns:
@@ -1194,6 +1424,11 @@ databaseChangeLog:
       id: 1689634157785-47
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: news
       changes:
         - createTable:
             columns:
@@ -1269,6 +1504,11 @@ databaseChangeLog:
       id: 1689634157785-48
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: organization_entities
       changes:
         - createTable:
             columns:
@@ -1374,6 +1614,11 @@ databaseChangeLog:
       id: 1689634157785-49
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: products
       changes:
         - createTable:
             columns:
@@ -1428,6 +1673,11 @@ databaseChangeLog:
       id: 1689634157785-50
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: qr_levels
       changes:
         - createTable:
             columns:
@@ -1508,6 +1758,11 @@ databaseChangeLog:
       id: 1689634157785-51
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: qr_towers
       changes:
         - createTable:
             columns:
@@ -1608,6 +1863,11 @@ databaseChangeLog:
       id: 1689634157785-52
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: race_categories
       changes:
         - createTable:
             columns:
@@ -1643,6 +1903,11 @@ databaseChangeLog:
       id: 1689634157785-53
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: race_records
       changes:
         - createTable:
             columns:
@@ -1689,6 +1954,11 @@ databaseChangeLog:
       id: 1689634157785-54
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: riddle_categories
       changes:
         - createTable:
             columns:
@@ -1724,6 +1994,11 @@ databaseChangeLog:
       id: 1689634157785-55
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: riddle_mappings
       changes:
         - createTable:
             columns:
@@ -1768,6 +2043,11 @@ databaseChangeLog:
       id: 1689634157785-56
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: riddles
       changes:
         - createTable:
             columns:
@@ -1828,6 +2108,11 @@ databaseChangeLog:
       id: 1689634157785-57
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: sold_products
       changes:
         - createTable:
             columns:
@@ -1920,6 +2205,11 @@ databaseChangeLog:
       id: 1689634157785-58
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: submitted_tasks
       changes:
         - createTable:
             columns:
@@ -1999,6 +2289,11 @@ databaseChangeLog:
       id: 1689634157785-59
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: task_categories
       changes:
         - createTable:
             columns:
@@ -2037,6 +2332,11 @@ databaseChangeLog:
       id: 1689634157785-60
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: tasks
       changes:
         - createTable:
             columns:
@@ -2124,6 +2424,11 @@ databaseChangeLog:
       id: 1689634157785-61
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: team_join_requests
       changes:
         - createTable:
             columns:
@@ -2159,6 +2464,11 @@ databaseChangeLog:
       id: 1689634157785-62
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: token_properties
       changes:
         - createTable:
             columns:
@@ -2188,6 +2498,11 @@ databaseChangeLog:
       id: 1689634157785-63
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: tokens
       changes:
         - createTable:
             columns:
@@ -2244,6 +2559,11 @@ databaseChangeLog:
       id: 1689634157785-64
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: user_details_by_internal_id
       changes:
         - createTable:
             columns:
@@ -2297,6 +2617,11 @@ databaseChangeLog:
       id: 1689634157785-65
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: users
       changes:
         - createTable:
             columns:
@@ -2394,6 +2719,8 @@ databaseChangeLog:
       id: 1689634157785-66
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addUniqueConstraint:
             columnNames: user_id
@@ -2403,6 +2730,8 @@ databaseChangeLog:
       id: 1689634157785-67
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - createIndex:
             columns:
@@ -2417,6 +2746,8 @@ databaseChangeLog:
       id: 1689634157785-68
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - createIndex:
             columns:
@@ -2428,6 +2759,8 @@ databaseChangeLog:
       id: 1689634157785-69
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - createIndex:
             columns:
@@ -2440,6 +2773,8 @@ databaseChangeLog:
       id: 1689634157785-70
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_group_id
@@ -2451,6 +2786,8 @@ databaseChangeLog:
       id: 1689634157785-71
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_user_id
@@ -2462,6 +2799,8 @@ databaseChangeLog:
       id: 1689634157785-72
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: riddle_id
@@ -2473,6 +2812,8 @@ databaseChangeLog:
       id: 1689634157785-73
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: task_id
@@ -2484,6 +2825,8 @@ databaseChangeLog:
       id: 1689634157785-74
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_group_id
@@ -2495,6 +2838,8 @@ databaseChangeLog:
       id: 1689634157785-75
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: owner_user_id
@@ -2506,6 +2851,8 @@ databaseChangeLog:
       id: 1689634157785-76
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: token_id
@@ -2517,6 +2864,8 @@ databaseChangeLog:
       id: 1689634157785-77
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
@@ -2528,6 +2877,8 @@ databaseChangeLog:
       id: 1689634157785-78
       author: nemet (generated)
       objectQuotingStrategy: LEGACY
+      preConditions:
+        onFail: MARK_RAN
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
