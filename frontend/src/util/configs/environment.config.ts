@@ -5,3 +5,4 @@ export const APP_NAME = process.env.REACT_APP_NAME || 'CMSch'
 export const GITHUB_ORG_URL = process.env.REACT_APP_GITHUB_ORG_URL || 'https://github.com/kir-dev/cmsch'
 export const CLIENT_BASE_URL = process.env.REACT_APP_CLIENT_BASE_URL || 'http://127.0.0.1:3000'
 export const PASS_SERVER_URL = process.env.REACT_APP_PASS_SERVER_URL
+export const OFFICIAL_LANGUAGE = process.env.REACT_APP_OFFICIAL_LANGUAGE === 'true'
