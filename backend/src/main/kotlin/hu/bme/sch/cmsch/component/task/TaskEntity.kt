@@ -71,7 +71,7 @@ data class TaskEntity(
     var expectedResultDescription: String = "",
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false, columnDefinition = "CLOB")
     @JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",
         note = "A leadási határidő után jelenik meg")
