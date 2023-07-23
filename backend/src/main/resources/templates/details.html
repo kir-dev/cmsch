@@ -360,7 +360,7 @@
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
                                        th:maxlength="${input.second.maxLength}"
-                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:value="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
@@ -374,7 +374,7 @@
                                  class="field-group"
                                  th:unless="${entityMode}">
                                 <img src="#"
-                                     th:src="|@{/cdn/profiles/}${(!editMode) ? input.second.defaultValue : input.first.get(data)}.png|"
+                                     th:src="|@{/cdn/profiles/}${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}.png|"
                                      height="180px"
                                      alt="QR code preview"
                                      onerror="this.onerror=null; this.parentNode.style.display = 'none';"
@@ -391,7 +391,7 @@
                                        th:id="|input${iter.index}|"
                                        th:max="${input.second.max}"
                                        th:min="${input.second.min}"
-                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:value="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
@@ -431,7 +431,7 @@
                                        th:id="|input${iter.index}_ss|"
                                        th:max="86400"
                                        th:min="0"
-                                       th:value="${#numbers.formatInteger(T(java.lang.Math).floor((!editMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)), 0)}"
+                                       th:value="${#numbers.formatInteger(T(java.lang.Math).floor((!editMode && !duplicateMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)), 0)}"
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
@@ -449,7 +449,7 @@
                                        th:id="|input${iter.index}_SSS|"
                                        th:max="999"
                                        th:min="0"
-                                       th:value="${#numbers.formatInteger((((!editMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)) * 1000) % 1000, 0)}"
+                                       th:value="${#numbers.formatInteger((((!editMode && !duplicateMode) ? T(java.lang.Float).parseFloat(input.second.defaultValue) : input.first.get(data)) * 1000) % 1000, 0)}"
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
@@ -461,7 +461,7 @@
                                 <input th:type="text"
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
-                                       th:value="${#numbers.formatInteger((!editMode) ? input.second.defaultValue : input.first.get(data), 0)}"
+                                       th:value="${#numbers.formatInteger((!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data), 0)}"
                                        readonly
                                        th:unless="${entityMode}"
                                        style="display: none"
@@ -480,7 +480,7 @@
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
                                        th:maxlength="${input.second.maxLength}"
-                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:value="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:placeholder="${input.second.placeholder}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
@@ -500,12 +500,12 @@
                                         th:disabled="${!input.second.enabled || readOnly}"
                                         th:unless="${entityMode}"
                                 >
-                                    <option th:if="${editMode}"
+                                    <option th:if="${editMode || duplicateMode}"
                                             th:each="opt : ${input.second.source}"
                                             th:value="${opt}"
                                             th:text="${opt}"
                                             th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
-                                    <option th:unless="${editMode}"
+                                    <option th:unless="${editMode || duplicateMode}"
                                             th:each="opt : ${input.second.source}"
                                             th:value="${opt}"
                                             th:text="${opt}"></option>
@@ -524,12 +524,12 @@
                                         th:disabled="${!input.second.enabled || readOnly}"
                                         th:unless="${entityMode}"
                                 >
-                                    <option th:if="${editMode}"
+                                    <option th:if="${editMode || duplicateMode}"
                                             th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${opt}"
                                             th:text="${opt}"
                                             th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
-                                    <option th:unless="${editMode}"
+                                    <option th:unless="${editMode || duplicateMode}"
                                             th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${opt}"
                                             th:text="${opt}"></option>
@@ -593,7 +593,7 @@
                                 <textarea
                                        th:name="${input.first.name}"
                                        th:id="|input${iter.index}|"
-                                       th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:text="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:autocomplete="${input.second.autocomplete}"
                                        th:unless="${entityMode}">
@@ -614,7 +614,7 @@
                                         th:name="${input.first.name}"
                                         th:id="|input${iter.index}|"
                                         th:disabled="${!input.second.enabled || readOnly}"
-                                        th:text="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                        th:text="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
                                         th:unless="${entityMode}">
                                 </textarea>
                                 <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
@@ -651,7 +651,7 @@
                                        th:unless="${entityMode}"
                                 />
 
-                                <object th:if="${input.second.fileType == 'image' && editMode}" th:remove="tag">
+                                <object th:if="${input.second.fileType == 'image' && (editMode || duplicateMode)}" th:remove="tag">
                                     <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">
                                         <a href="#"
                                            target="_blank"
@@ -691,7 +691,7 @@
                                 <div style="clear: both"></div>
                                 <label class="switch" th:unless="${entityMode}">
                                     <input type="checkbox"
-                                           th:checked="${(!editMode) ? (input.second.defaultValue == 'true') : (input.first.get(data))}"
+                                           th:checked="${(!editMode && !duplicateMode) ? (input.second.defaultValue == 'true') : (input.first.get(data))}"
                                            th:name="${input.first.name}"
                                            th:id="|input${iter.index}|"
                                            th:disabled="${!input.second.enabled || readOnly}"
@@ -703,7 +703,7 @@
                                 <div style="clear: both"></div>
                             </div>
 
-                            <div th:if="${input.second.type == 'image-preview' && editMode}" class="field-group" th:id="|_${iter.index}|">
+                            <div th:if="${input.second.type == 'image-preview' && (editMode || duplicateMode)}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
@@ -737,7 +737,7 @@
                                 <span class="note type-note" th:if="${entityMode}">Típus: Kép</span>
                             </div>
 
-                            <div th:if="${input.second.type == 'file-preview' && editMode}" class="field-group" th:id="|_${iter.index}|">
+                            <div th:if="${input.second.type == 'file-preview' && (editMode || duplicateMode)}" class="field-group" th:id="|_${iter.index}|">
                                 <label th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
@@ -770,7 +770,7 @@
                                 <input type="text"
                                        th:name="${input.first.name}"
                                        th:id="${input.first.name}"
-                                       th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:value="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
                                        autocomplete="off"
                                        style="display: none"
                                        th:unless="${entityMode}"
@@ -855,7 +855,7 @@
                                            th:name="${input.first.name}"
                                            th:id="|input${iter.index}|"
                                            th:maxlength="${input.second.maxLength}"
-                                           th:value="${(!editMode) ? input.second.defaultValue : input.first.get(data)}"
+                                           th:value="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
                                            th:placeholder="${input.second.placeholder}"
                                            th:disabled="${!input.second.enabled || readOnly}"
                                            th:autocomplete="${input.second.autocomplete}"
