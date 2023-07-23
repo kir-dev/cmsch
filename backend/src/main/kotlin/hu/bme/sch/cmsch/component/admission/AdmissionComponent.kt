@@ -3,10 +3,17 @@ package hu.bme.sch.cmsch.component.admission
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
+@ConditionalOnProperty(
+    prefix = "hu.bme.sch.cmsch.component.load",
+    name = ["admission"],
+    havingValue = "true",
+    matchIfMissing = false
+)
 class AdmissionComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
