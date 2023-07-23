@@ -62,7 +62,7 @@ class UserController(
     exportEnabled = true,
 
     adminMenuIcon = "person",
-    adminMenuPriority = 2,
+    adminMenuPriority = 1,
 ) {
 
     private val componentClasses = components.map { it::class }.toSet()

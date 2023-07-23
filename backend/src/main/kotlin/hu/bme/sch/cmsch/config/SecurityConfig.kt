@@ -12,6 +12,7 @@ import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
 import hu.bme.sch.cmsch.component.login.keycloak.KeycloakUserInfoResponse
 import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -36,14 +37,15 @@ import java.util.*
 @Configuration
 @ConditionalOnBean(LoginComponent::class)
 open class SecurityConfig(
-        private val clientRegistrationRepository: ClientRegistrationRepository,
-        private val objectMapper: ObjectMapper,
-        private val jwtTokenProvider: JwtTokenProvider,
-        private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
-        private val authschLoginService: LoginService,
-        private val loginComponent: LoginComponent,
-        private val startupPropertyConfig: StartupPropertyConfig,
-        @Value("\${custom.keycloak.base-url:http://localhost:8081/auth/realms/master}") private val keycloakBaseUrl: String,
+    private val clientRegistrationRepository: ClientRegistrationRepository,
+    private val objectMapper: ObjectMapper,
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
+    private val authschLoginService: LoginService,
+    private val loginComponent: LoginComponent,
+    private val startupPropertyConfig: StartupPropertyConfig,
+    @Value("\${custom.keycloak.base-url:http://localhost:8081/auth/realms/master}") private val keycloakBaseUrl: String,
+    private val auditLogService: AuditLogService
 ) {
 
     var authschUserServiceClient = WebClient.builder()
@@ -180,6 +182,8 @@ open class SecurityConfig(
             .readValue<ProfileResponse>(authschProfileJson)!!
         val userEntity = authschLoginService.fetchUserEntity(profile)
 
+        auditLogService.login(userEntity, "authsch user login g:${userEntity.group} r:${userEntity.role}")
+
         return CmschAuthschUser(
             userEntity.id,
             userEntity.internalId,
@@ -195,6 +199,8 @@ open class SecurityConfig(
         val profile: KeycloakUserInfoResponse = objectMapper.readerFor(KeycloakUserInfoResponse::class.java)
                 .readValue(decodedPayload)
         val userEntity = authschLoginService.fetchKeycloakUserEntity(profile)
+
+        auditLogService.login(userEntity, "keycloak user login g:${userEntity.group} r:${userEntity.role}")
 
         return CmschGoogleUser(
                 userEntity.id,
@@ -221,6 +227,8 @@ open class SecurityConfig(
         val profile = objectMapper.readerFor(GoogleUserInfoResponse::class.java)
             .readValue<GoogleUserInfoResponse>(googleProfileJson)!!
         val userEntity = authschLoginService.fetchGoogleUserEntity(profile)
+
+        auditLogService.login(userEntity, "google user login g:${userEntity.group} r:${userEntity.role}")
 
         return CmschGoogleUser(
             userEntity.id,

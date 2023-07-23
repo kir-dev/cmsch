@@ -48,6 +48,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     deleteEnabled: Boolean = false,
     importEnabled: Boolean = true,
     exportEnabled: Boolean = true,
+    duplicateEnabled: Boolean = createEnabled,
     private val viewEnabled: Boolean = true,
 
     adminMenuCategory: String? = null,
@@ -85,6 +86,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     deleteEnabled,
     importEnabled,
     exportEnabled,
+    duplicateEnabled,
 
     adminMenuCategory,
     adminMenuIcon,

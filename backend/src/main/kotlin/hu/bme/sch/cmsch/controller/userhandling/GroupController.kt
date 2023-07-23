@@ -60,7 +60,7 @@ class GroupController(
     exportEnabled = true,
 
     adminMenuIcon = "groups",
-    adminMenuPriority = 1,
+    adminMenuPriority = 2,
 
     buttonActions = mutableListOf(
         ButtonAction(

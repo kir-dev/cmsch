@@ -62,6 +62,7 @@ class EntityViewerController(
         model.addAttribute("data", actualEntity)
         model.addAttribute("title", config.name)
         model.addAttribute("editMode", true)
+        model.addAttribute("duplicateMode", false)
         model.addAttribute("view", config.view.split("/").last())
         model.addAttribute("id", 0)
         model.addAttribute("inputs", descriptors[config.name]?.getInputs())
