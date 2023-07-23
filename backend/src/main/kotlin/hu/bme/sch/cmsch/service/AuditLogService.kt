@@ -48,6 +48,10 @@ class AuditLogService(
         return file
     }
 
+    fun login(user: CmschUser, action: String) {
+        write("LOGIN ", "login", "${user.internalId}@${user.userName} : $action")
+    }
+
     fun edit(user: CmschUser, component: String, action: String) {
         write("EDIT  ", component, "${user.internalId}@${user.userName} : $action")
     }

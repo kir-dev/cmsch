@@ -15,6 +15,8 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.uploadFile
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
@@ -22,11 +24,8 @@ import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.function.Supplier
-import jakarta.annotation.PostConstruct
-import jakarta.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 
@@ -87,6 +86,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val deleteEnabled: Boolean = false,
     internal val importEnabled: Boolean = true,
     internal val exportEnabled: Boolean = true,
+    internal val duplicateEnabled: Boolean = createEnabled,
 
     private val adminMenuCategory: String? = null,
     private val adminMenuIcon: String = "check_box_outline_blank",
@@ -127,6 +127,17 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     200,
                     "upload_file",
                     false
+                ))
+            }
+            if (duplicateEnabled) {
+                controlActions.add(ControlAction(
+                    "Másolat készítése",
+                    "duplicate/{id}",
+                    "content_copy",
+                    createPermission,
+                    150,
+                    usageString = "Új bejegyzés létrehozása meglévő alapján",
+                    basic = true
                 ))
             }
         }
@@ -270,6 +281,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
+        model.addAttribute("duplicateMode", false)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
         model.addAttribute("inputs", descriptor.getInputs())
@@ -296,11 +308,13 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = dataSource.findById(id)
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+        } else {
+            model.addAttribute("data", entity.orElseThrow())
         }
-        model.addAttribute("data", entity.orElseThrow())
 
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
+        model.addAttribute("duplicateMode", false)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
         model.addAttribute("inputs", descriptor.getInputs())
@@ -329,10 +343,46 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", false)
+        model.addAttribute("duplicateMode", false)
         model.addAttribute("view", view)
         model.addAttribute("inputs", descriptor.getInputs())
         model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("data", null)
+        model.addAttribute("user", user)
+        model.addAttribute("readOnly", false)
+        model.addAttribute("entityMode", false)
+
+        onDetailsView(user, model)
+        return "details"
+    }
+
+    @GetMapping("/duplicate/{id}")
+    fun duplicate(model: Model, auth: Authentication, @PathVariable id: Int): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (createPermission.validate(user).not() && showPermission.validate(user).not()) {
+            model.addAttribute("permission", createPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /${view}/duplicate/${id}", createPermission.permissionString)
+            return "admin403"
+        }
+
+        if (duplicateEnabled.not())
+            return "redirect:/admin/control/$view/"
+
+        val entity = dataSource.findById(id)
+        if (entity.isEmpty) {
+            model.addAttribute("error", INVALID_ID_ERROR)
+        } else {
+            model.addAttribute("data", entity.orElseThrow())
+        }
+
+        model.addAttribute("title", titleSingular)
+        model.addAttribute("editMode", false)
+        model.addAttribute("duplicateMode", true)
+        model.addAttribute("view", view)
+        model.addAttribute("inputs", descriptor.getInputs())
+        model.addAttribute("mappings", entitySourceMapping)
         model.addAttribute("user", user)
         model.addAttribute("readOnly", false)
         model.addAttribute("entityMode", false)

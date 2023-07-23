@@ -61,6 +61,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     deleteEnabled = false,
     importEnabled = false,
     exportEnabled = false,
+    duplicateEnabled = false,
 
     adminMenuCategory = adminMenuCategory,
     adminMenuIcon = adminMenuIcon,

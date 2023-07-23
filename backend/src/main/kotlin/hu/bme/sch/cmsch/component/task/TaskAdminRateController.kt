@@ -147,6 +147,7 @@ class TaskAdminRateController(
 
         model.addAttribute("title", titleSingular)
         model.addAttribute("editMode", true)
+        model.addAttribute("duplicateMode", false)
         model.addAttribute("view", view)
         model.addAttribute("id", id)
         model.addAttribute("inputs", descriptor.getInputs())
