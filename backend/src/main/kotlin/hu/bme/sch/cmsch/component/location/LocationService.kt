@@ -84,6 +84,11 @@ class LocationService(
         return tokenToLocationMapping.values.filter { it.id == groupId }
     }
 
+
+    fun findLocationsOfGroupName(group: String): List<LocationEntity> {
+        return tokenToLocationMapping.values.filter { it.groupName == group }
+    }
+
     fun getRecentLocations(): List<LocationEntity> {
         val range = clock.getTimeInSeconds() + 600
         return tokenToLocationMapping.values.filter { it.timestamp < range }
