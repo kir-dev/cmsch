@@ -153,7 +153,7 @@ data class UserEntity(
     @Lob
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 16, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
+    @property:GenerateInput(order = 16, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS, maxLength = 20000)
     @property:ImportFormat(ignore = false, columnId = 9)
     var permissions: String = "",
 
