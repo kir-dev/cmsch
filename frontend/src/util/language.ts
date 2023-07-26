@@ -120,7 +120,11 @@ const friendlyLanguageData = {
   'community-title': 'Körök',
   'community-description': 'A körök fogják össze az azonos érdeklődésű körű hallgatókat. A körök a Schönherz Kollégiumban működnek.',
   'page-load-failed': '{{title}} betöltése sikertelen!',
-  'page-load-failed-contact-developers': '{{title}} betöltése sikertelen!\n Keresd az oldal fejlesztőit.'
+  'page-load-failed-contact-developers': '{{title}} betöltése sikertelen!\n Keresd az oldal fejlesztőit.',
+  'access-token-failed': 'Nem sikerült az azonosítás!',
+  'access-token-success': 'Sikeres azonosítás!',
+  'access-token-missing': 'Add meg a kódot!',
+  'access-token-not-available': 'Jelenleg nem lehet kódot beváltani.'
 }
 
 const parameters: Partial<Record<keyof typeof friendlyLanguageData, Record<string, string | undefined>>> = {

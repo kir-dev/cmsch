@@ -1,19 +1,29 @@
-import { useState } from 'react'
-import { Button, ButtonGroup, FormControl, FormLabel, HStack, Heading, Input, Select, Text, VStack, useToast } from '@chakra-ui/react'
+import { FormEvent, useState } from 'react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Heading,
+  Input,
+  Text,
+  VStack,
+  useToast
+} from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useNavigate } from 'react-router-dom'
-import { AbsolutePaths, Paths } from '../../util/paths'
+import { useNavigate } from 'react-router-dom'
+import { AbsolutePaths } from '../../util/paths'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import { useGroupChangeMutation } from '../../api/hooks/group-change/useGroupChangeMutation'
 import { useAccessKeyMutation } from '../../api/hooks/access-key/useAccessKeyMutation'
 import { useAccessKey } from '../../api/hooks/access-key/useAccessKeyQuery'
 import { PageStatus } from '../../common-components/PageStatus'
 import Markdown from '../../common-components/Markdown'
 import { AccessKeyResponse } from '../../util/views/accessKey'
+import { l } from '../../util/language'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()
@@ -27,7 +37,7 @@ function AccessKeyPage() {
       if (response.refreshSession) {
         refetch()
       }
-      toast({ title: 'Sikeres azonosítás!', status: 'success' })
+      toast({ title: l('access-token-success'), status: 'success' })
       navigate(AbsolutePaths.PROFILE)
     } else {
       toast({ title: response.reason, status: 'error' })
@@ -35,16 +45,17 @@ function AccessKeyPage() {
     }
   }
 
-  const onError = () => setError('Nem sikerült az azonosítás!')
+  const onError = () => setError(l('access-token-failed'))
 
   const mutation = useAccessKeyMutation(onData, onError)
   const query = useAccessKey()
 
-  const onSubmit = () => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if (value) {
       mutation.mutate({ key: value })
     } else {
-      setError('Add meg a kódot!')
+      setError(l('access-token-missing'))
     }
   }
 
@@ -56,16 +67,24 @@ function AccessKeyPage() {
     <CmschPage>
       <Helmet title={query.data.title} />
       <Heading>{query.data.title}</Heading>
-      <Markdown text={query.data.topMessage} />
-      <form>
+
+      {query.data.enabled ? (
+        <Markdown text={query.data.topMessage} />
+      ) : (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertDescription>{l('access-token-not-available')}</AlertDescription>
+        </Alert>
+      )}
+      <form onSubmit={onSubmit}>
         <VStack spacing={5} mt={10} alignItems="flex-start">
           <FormControl>
             <FormLabel>{query.data.fieldName}</FormLabel>
-            <Input value={value} onChange={(e) => setValue(e.target.value)} />
+            <Input value={value} onChange={(e) => setValue(e.target.value)} isDisabled={!query.data.enabled} />
           </FormControl>
           <HStack>
-            <Button onClick={onSubmit} colorScheme="brand" isLoading={query.isLoading} isDisabled={!query.data.enabled}>
-              Mentés
+            <Button type="submit" colorScheme="brand" isLoading={query.isLoading} isDisabled={!query.data.enabled}>
+              Beküldés
             </Button>
             {error && (
               <Text color="red.500" textAlign="center">
