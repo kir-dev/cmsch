@@ -15,6 +15,7 @@ import { FormModule } from '../../route-modules/Form.module'
 import { TeamModule } from '../../route-modules/Team.module'
 import { RaceModule } from '../../route-modules/Race.module'
 import { QRFightModule } from '../../route-modules/QRFight.module'
+import { AccessKeyModule } from '../../route-modules/AccessKey.module'
 
 export enum AvailableModules {
   HOME = 'HOME',
@@ -31,7 +32,8 @@ export enum AvailableModules {
   LEADER_BOARD = 'LEADER_BOARD',
   TEAM = 'TEAM',
   RACE = 'RACE',
-  QR_FIGHT = 'QR_FIGHT'
+  QR_FIGHT = 'QR_FIGHT',
+  ACCESS_KEY = 'ACCESS_KEY'
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
@@ -49,7 +51,8 @@ export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
   [AvailableModules.LEADER_BOARD]: LeaderBoardModule,
   [AvailableModules.RACE]: RaceModule,
   [AvailableModules.QR_FIGHT]: QRFightModule,
-  [AvailableModules.TEAM]: TeamModule
+  [AvailableModules.TEAM]: TeamModule,
+  [AvailableModules.ACCESS_KEY]: AccessKeyModule
 }
 
 export function GetRoutesForModules(modules: AvailableModules[]) {
@@ -71,5 +74,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.LEADER_BOARD,
   AvailableModules.RACE,
   AvailableModules.QR_FIGHT,
-  AvailableModules.TEAM
+  AvailableModules.TEAM,
+  AvailableModules.ACCESS_KEY
 ]
