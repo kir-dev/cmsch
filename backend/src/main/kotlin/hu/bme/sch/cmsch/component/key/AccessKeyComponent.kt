@@ -113,7 +113,7 @@ class AccessKeyComponent(
     )
 
     val fieldName = SettingProxy(componentSettingService, component,
-        "invalidCodeErrorMessage", "Nem megfelelő kód",
+        "fieldName", "Nem megfelelő kód",
         fieldName = "Hibás kód hibaüzenet", description = "Ez jelenik meg ha hibás kódot írnak be",
         serverSideOnly = true,
     )
@@ -121,8 +121,8 @@ class AccessKeyComponent(
     /// -------------------------------------------------------------------------------------------------------------------
 
     val logicGroup = SettingProxy(componentSettingService, component,
-        "appearanceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Megjelenés",
+        "logicGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Működés",
         description = ""
     )
 

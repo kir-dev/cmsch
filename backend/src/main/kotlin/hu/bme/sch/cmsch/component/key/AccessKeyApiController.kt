@@ -34,7 +34,7 @@ class AccessKeyApiController(
     }
 
     @PostMapping("/access-key")
-    fun submitKey(auth: Authentication?, payload: AccessKeyRequest): AccessKeyResponse {
+    fun submitKey(auth: Authentication?, @RequestBody payload: AccessKeyRequest): AccessKeyResponse {
         if (!accessKeyComponent.enabled.isValueTrue()) {
             return AccessKeyResponse(
                 success = false,
