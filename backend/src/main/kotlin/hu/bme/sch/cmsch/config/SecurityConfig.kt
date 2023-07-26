@@ -144,7 +144,7 @@ open class SecurityConfig(
                 }.userInfoEndpoint { userInfo ->
                     userInfo
                         .oidcUserService {
-                            if (it.clientRegistration.clientId == "google") {
+                            if (it.clientRegistration.clientId.contains("google")) {
                                 resolveGoogleUser(it)
                             } else {
                                 resolveKeycloakUser(it)
