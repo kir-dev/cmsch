@@ -167,4 +167,5 @@ data class EventEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
 }
