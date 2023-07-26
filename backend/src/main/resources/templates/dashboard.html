@@ -54,7 +54,7 @@
                         <h4 th:text="${component.title}">Title</h4>
                         <span th:text="${component.description}" class="desc">A little description fits there.</span>
 
-                        <table class="dashboard-table" cellspacing="0">
+                        <table class="dashboard-table" cellspacing="0" style="margin-top: 20px">
                             <tr>
                                 <th th:each="th : ${component.header}" th:text="${th}"></th>
                             </tr>

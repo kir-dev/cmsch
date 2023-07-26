@@ -303,6 +303,12 @@ object ControlPermissions : PermissionGroup {
         component = MessagingComponent::class
     )
 
+    val PERMISSION_CONTROL_ACCESS_KEYS = PermissionValidator(
+        "ACCESS_KEY_CONTROL",
+        "Hozzáférési kulcs komponens testreszabása",
+        component = EventComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -337,6 +343,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_SHOW_LIVE_STATS,
         PERMISSION_CONTROL_MESSAGING,
         PERMISSION_SEND_MESSAGE,
+        PERMISSION_CONTROL_ACCESS_KEYS,
     )
 
 }
@@ -1000,7 +1007,7 @@ object StaffPermissions : PermissionGroup {
 
     val PERMISSION_CREATE_TEAM_JOINS = PermissionValidator(
         "TEAM_JOIN_CREATE",
-        "Csapat jelentkezési kérelmek szerkesztése",
+        "Csapat jelentkezési kérelmek készítése",
         component = TeamComponent::class
     )
 
@@ -1010,6 +1017,31 @@ object StaffPermissions : PermissionGroup {
         component = TeamComponent::class
     )
 
+    /// AccessKeyComponent
+
+    val PERMISSION_SHOW_ACCESS_KEYS = PermissionValidator(
+        "ACCESS_KEYS_SHOW",
+        "Hozzáférési kulcsok megtekintése",
+        component = TeamComponent::class
+    )
+
+    val PERMISSION_EDIT_ACCESS_KEYS = PermissionValidator(
+        "ACCESS_KEYS_EDIT",
+        "Hozzáférési kulcsok szerkesztése",
+        component = TeamComponent::class
+    )
+
+    val PERMISSION_CREATE_ACCESS_KEYS = PermissionValidator(
+        "ACCESS_KEYS_CREATE",
+        "Hozzáférési kulcsok létrehozása",
+        component = TeamComponent::class
+    )
+
+    val PERMISSION_DELETE_ACCESS_KEYS = PermissionValidator(
+        "ACCESS_KEYS_DELETE",
+        "Hozzáférési kulcsok törlése",
+        component = TeamComponent::class
+    )
 
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
@@ -1132,7 +1164,12 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_SHOW_TEAM_JOINS,
         PERMISSION_EDIT_TEAM_JOINS,
         PERMISSION_CREATE_TEAM_JOINS,
-        PERMISSION_DELETE_TEAM_JOINS
+        PERMISSION_DELETE_TEAM_JOINS,
+
+        PERMISSION_SHOW_ACCESS_KEYS,
+        PERMISSION_EDIT_ACCESS_KEYS,
+        PERMISSION_CREATE_ACCESS_KEYS,
+        PERMISSION_DELETE_ACCESS_KEYS,
     )
 
 }
