@@ -5,11 +5,13 @@ import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.news.NewsComponent
+import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -28,13 +30,25 @@ class HomeApiController(
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val newsRepository: Optional<NewsRepository>,
     private val newsComponent: Optional<NewsComponent>,
+    private val homeComponent: HomeComponent,
     private val eventsRepository: Optional<EventRepository>,
     private val tasks: Optional<TasksService>
 ) {
 
     @JsonView(Preview::class)
-    @GetMapping("/home")
-    fun home(auth: Authentication): HomeView {
+    @GetMapping("/home/news")
+    fun home(auth: Authentication?): List<NewsEntity> {
+        val user = auth.getUserOrNull()
+        if (!homeComponent.showNews.isValueTrue())
+            return listOf()
+        return newsRepository.map { it.findAllByVisibleTrueOrderByTimestampDesc() }
+            .orElse(listOf())
+            .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
+            .take(homeComponent.maxVisibleCount.getValue().toIntOrNull() ?: 0)
+    }
+
+    @JsonView(Preview::class)
+    fun legacyHome(auth: Authentication): LegacyHomeView {
         val user = auth.getUserFromDatabaseOrNull()
         val events = eventsRepository.map { it.findAllByVisibleTrueOrderByTimestampStart() }
             .orElse(listOf())
@@ -46,11 +60,11 @@ class HomeApiController(
         if (upcomingEvents.isEmpty())
             upcomingEvents = events.filter { it.timestampStart >= dayStart }.take(6)
 
-        return HomeView(
+        return LegacyHomeView(
             news = newsRepository.map { it.findAllByVisibleTrueOrderByTimestampDesc() }
                 .orElse(listOf())
                 .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
-                .take(newsComponent.map { it.maxVisibleCount.getValue().toIntOrNull() ?: 0 }.orElse(0)),
+                .take(homeComponent.maxVisibleCount.getValue().toIntOrNull() ?: 0),
             upcomingEvents = upcomingEvents,
             tasks = tasks.map { tasksService ->
                 user?.group?.let { tasksService.getAllTasksForGroup(it) }

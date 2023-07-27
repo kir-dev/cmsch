@@ -114,7 +114,7 @@ class AccessKeyComponent(
 
     val fieldName = SettingProxy(componentSettingService, component,
         "fieldName", "Nem megfelelő kód",
-        fieldName = "Hibás kód hibaüzenet", description = "Ez jelenik meg ha hibás kódot írnak be",
+        fieldName = "Mező neve", description = "Ez jelenik meg a beviteli mező felett",
         serverSideOnly = true,
     )
 
