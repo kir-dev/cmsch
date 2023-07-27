@@ -39,7 +39,7 @@ data class EventEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
-    @property:GenerateOverview(columnName = "Cím", order = 1)
+    @property:GenerateOverview(columnName = "Cím", order = 1, useForSearch = true)
     @property:ImportFormat(ignore = false, columnId = 1)
     var title: String = "",
 

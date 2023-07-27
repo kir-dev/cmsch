@@ -1068,7 +1068,8 @@ form input[type="text"],
 form input[type="number"],
 form input[type="datetime-local"],
 form select,
-form textarea {
+form textarea,
+#table-search-input {
     background-color: var(--dark-4);
     padding: 10px 14px;
     font-family: 'Roboto', sans-serif;
@@ -1082,13 +1083,15 @@ form textarea {
     box-sizing: border-box;
     margin-top: 4px;
     animation: none !important;
+    outline: 0;
 }
 
 form input[type="text"]:focus,
 form input[type="number"]:focus,
 form input[type="datetime-local"]:focus,
 form select:focus,
-form textarea:focus {
+form textarea:focus,
+#table-search-input:focus {
     background-color: var(--dark-5);
     color: var(--lighter-text-color);
     outline: none !important;
@@ -1133,7 +1136,8 @@ form textarea {
 }
 
 form span.note,
-.permission-box span.note {
+.permission-box span.note,
+.card .note {
     display: block;
     font-size: 12px;
     color: var(--light-text-color);
