@@ -15,7 +15,7 @@ export const Warning = () => {
   if (!data || error || !isOpen || !data.message) return null
 
   return (
-    <Alert status={data.type || 'warning'} variant="left-accent" mx="auto" w="100%" maxWidth={['100%', '48rem']} mb={5}>
+    <Alert status={data.type || 'warning'} variant="left-accent" mx="auto" w="100%" maxWidth={['100%', '64rem']} mb={5}>
       <HStack justify="space-between" flex={1}>
         <AlertIcon />
         <VStack align="flex-start" flex={1}>
