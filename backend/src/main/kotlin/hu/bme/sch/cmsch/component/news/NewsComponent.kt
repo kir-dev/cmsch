@@ -30,9 +30,6 @@ class NewsComponent(
             newsGroup,
             title, menuDisplayName, minRole,
             showDetails,
-
-            newsEmbeddedComponentGroup,
-            maxVisibleCount
         )
     }
 
@@ -61,19 +58,6 @@ class NewsComponent(
         "showDetails", "false", type = SettingType.BOOLEAN,
         fieldName = "Részletes nézet",
         description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is"
-    )
-
-    /// -------------------------------------------------------------------------------------------------------------------
-
-    val newsEmbeddedComponentGroup = SettingProxy(componentSettingService, component,
-        "embeddedGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Beágyazott hírek komponensben megjelenő hírek száma",
-        description = ""
-    )
-
-    val maxVisibleCount = SettingProxy(componentSettingService, component,
-        "embeddedMaxVisibleCount", "3", serverSideOnly = true, type = SettingType.NUMBER,
-        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hírdetés komponensben"
     )
 
 }
