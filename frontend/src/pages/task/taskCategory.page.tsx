@@ -12,8 +12,8 @@ import { PageStatus } from '../../common-components/PageStatus'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
-  const bg = useColorModeValue('brand.100', 'brand.500')
-  const hoverBg = useColorModeValue('brand.200', 'brand.400')
+  const bg = useColorModeValue('#00000020', '#FFFFFF20')
+  const hoverBg = useColorModeValue('#00000030', '#FFFFFF30')
   const { isLoading, isError, data } = useTasksInCategoryQuery(id || 'UNKNOWN')
 
   const component = useConfigContext()?.components.task
