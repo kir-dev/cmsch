@@ -1,11 +1,11 @@
-import { Divider, Grid, Heading, Input, InputGroup, InputLeftElement, InputRightElement, useBreakpointValue } from '@chakra-ui/react'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
+import { Divider, Grid, Heading, Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react'
+import { debounce } from 'lodash'
 import { createRef, useMemo, useState } from 'react'
 
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { NewsArticleView } from '../../../util/views/news.view'
 import NewsListItem from './NewsListItem'
-import { debounce } from 'lodash'
 
 interface NewsListProps {
   newsList: NewsArticleView[]
@@ -55,7 +55,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
         ))}
       </Grid>
       {highlighted.length > 0 && common.length > 0 && <Divider my={10} />}
-      <Grid templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 1 })}, 1fr)`} gap={4}>
+      <Grid templateColumns="1fr" gap={4}>
         {common.map((n: NewsArticleView) => (
           <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
         ))}
