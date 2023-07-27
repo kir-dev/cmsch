@@ -33,6 +33,10 @@
             <div class="card">
                 <h4>Bejegyzések</h4>
 
+                <object th:if="${searchSettings != null}" th:remove="tag">
+                    <input type="text" id="table-search-input" placeholder="Keresés" autocomplete="off" spellcheck="false" autofocus>
+                    <span class="note" th:text="|Keresés a következő oszlopokon: ${#strings.listJoin(', ', searchSettings.displayNames)} (fuzzy: ${searchSettings.fuzzy ? 'igen' : 'nem'})|"></span>
+                </object>
                 <div id="cmsch-table"></div>
             </div>
 
@@ -153,6 +157,68 @@
         layout: 'fitColumns',
         responsiveLayout: 'collapse',
         columns: columData
+    });
+
+</script>
+<script th:if="${searchSettings != null && not searchSettings.fuzzy}" th:inline="javascript">
+    function normalSearch(data, searchTerm) {
+        let result = false;
+        const fields = /*[[${searchSettings.rows}]]*/ [];
+        for (let field in fields) {
+            result = result || (data[fields[field]] && data[fields[field]].toLowerCase().includes(searchTerm.toLowerCase()));
+        }
+        return result;
+    }
+
+    document.getElementById("table-search-input").addEventListener("input", function(e) {
+        const searchTerm = e.target.value;
+
+        if (searchTerm) {
+            table.setFilter(normalSearch, searchTerm);
+        } else {
+            table.clearFilter();
+        }
+    });
+</script>
+<script th:if="${searchSettings != null && searchSettings.fuzzy}" th:inline="javascript">
+    function levenshtein(a, b) {
+        let t = [], u, i, j, m = a.length, n = b.length;
+        if (!m) { return n; }
+        if (!n) { return m; }
+        for (j = 0; j <= n; j++) { t[j] = j; }
+        for (i = 1; i <= m; i++) {
+            for (u = [i], j = 1; j <= n; j++) {
+                u[j] = a[i - 1] === b[j - 1] ? t[j - 1] : Math.min(t[j - 1], t[j], u[j - 1]) + 1;
+            }
+            t = u;
+        }
+        return u[n];
+    }
+
+    function isFuzzyMatch(str, pattern) {
+        return str.split(' ').filter(word => {
+            const distance = levenshtein(word.toLowerCase(), pattern.toLowerCase());
+            return distance < 3
+        }).length > 0
+    }
+
+    function fuzzyFilter(data, searchTerm) {
+        let result = false;
+        const fields = /*[[${searchSettings.rows}]]*/ [];
+        for (let field in fields) {
+            result = result || isFuzzyMatch(data[fields[field]], searchTerm);
+        }
+        return result;
+    }
+
+    document.getElementById("table-search-input").addEventListener("input", function(e) {
+        const searchTerm = e.target.value;
+
+        if (searchTerm) {
+            table.setFilter(fuzzyFilter, searchTerm);
+        } else {
+            table.clearFilter();
+        }
     });
 </script>
 

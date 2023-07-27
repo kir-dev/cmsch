@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.SearchSettings
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -63,6 +64,8 @@ class UserController(
 
     adminMenuIcon = "person",
     adminMenuPriority = 1,
+
+//    searchSettings = SearchSettings(rows = listOf("name", "neptun"), fuzzy = false)
 ) {
 
     private val componentClasses = components.map { it::class }.toSet()

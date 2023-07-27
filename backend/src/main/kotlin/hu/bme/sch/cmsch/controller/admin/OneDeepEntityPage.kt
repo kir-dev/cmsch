@@ -2,11 +2,9 @@ package hu.bme.sch.cmsch.controller.admin
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.admin.INPUT_TYPE_FILE
-import hu.bme.sch.cmsch.admin.INTERPRETER_INHERIT
-import hu.bme.sch.cmsch.admin.INTERPRETER_SEARCH
-import hu.bme.sch.cmsch.admin.OverviewBuilder
+import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.ComponentBase
+import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
@@ -28,6 +26,7 @@ import java.util.*
 import java.util.function.Supplier
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KProperty
 
 data class ControlAction(
     val name: String,
@@ -54,6 +53,27 @@ data class ButtonAction(
     val primary: Boolean = false,
     val newPage: Boolean = false
 )
+
+data class SearchSettings(
+    val rows: List<String>,
+    val displayNames: List<String>,
+    val fuzzy: Boolean,
+)
+
+inline fun <reified T> calculateSearchSettings(fuzzy: Boolean): SearchSettings {
+    return SearchSettings(
+        rows = T::class.java.declaredMethods
+            .filter { field -> field.getAnnotationsByType(GenerateOverview::class.java).firstOrNull()?.useForSearch ?: false }
+            .map { field -> field.name
+                .removePrefix("get")
+                .removeSuffix("\$annotations")
+                .replaceFirstChar { it.lowercase(Locale.getDefault()) }
+            },
+        displayNames = T::class.java.declaredMethods
+            .filter { field -> field.getAnnotationsByType(GenerateOverview::class.java).firstOrNull()?.useForSearch ?: false }
+            .map { field -> field.getAnnotationsByType(GenerateOverview::class.java).firstOrNull()?.columnName ?: "" },
+        fuzzy = fuzzy)
+}
 
 const val INVALID_ID_ERROR = "Object with this id was not found in the database"
 
@@ -93,7 +113,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     private val adminMenuPriority: Int = 1,
 
     internal val controlActions: MutableList<ControlAction> = mutableListOf(),
-    internal val buttonActions: MutableList<ButtonAction> = mutableListOf()
+    internal val buttonActions: MutableList<ButtonAction> = mutableListOf(),
+    internal val searchSettings: SearchSettings? = null
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -228,6 +249,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             objectMapper))
         model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
+        model.addAttribute("searchSettings", searchSettings)
 
         attachPermissionInfo(model)
 
