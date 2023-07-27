@@ -83,7 +83,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
                   </FormLabel>
                 )}
                 <AutoFormField
-                  defaultValue={submission?.[formField.fieldName]}
+                  submittedValue={submission?.[formField.fieldName]}
                   disabled={(status !== FormStatus.NO_SUBMISSION && formField.permanent) || !available}
                   control={control}
                   fieldProps={formField}
