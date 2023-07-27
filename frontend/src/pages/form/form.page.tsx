@@ -1,24 +1,24 @@
-import { FunctionComponent, useEffect } from 'react'
-import { Box, Button, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
-import { Navigate, useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
+import { Box, Button, Divider, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
 import Cookies from 'js-cookie'
+import { FunctionComponent, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
+import { Navigate, useParams } from 'react-router-dom'
+import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { useFormPage } from '../../api/hooks/form/useFormPage'
+import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
+import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { useFormPage } from '../../api/hooks/form/useFormPage'
-import { AutoFormField } from './components/autoFormField'
 import Markdown from '../../common-components/Markdown'
-import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
-import { FormStatusBadge } from './components/formStatusBadge'
-import { FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
-import { CookieKeys } from '../../util/configs/cookies.config'
-import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
 import { PageStatus } from '../../common-components/PageStatus'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CookieKeys } from '../../util/configs/cookies.config'
 import { AbsolutePaths } from '../../util/paths'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
+import { AutoFormField } from './components/autoFormField'
+import { FormStatusBadge } from './components/formStatusBadge'
 
 interface FormPageProps {}
 
@@ -77,8 +77,9 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             {form.formFields.map((formField) => (
               <FormControl key={formField.fieldName} mt={5}>
+                {formField.type === FormFieldVariants.SECTION_START && <Divider mt={10} />}
                 {formField.label && (
-                  <FormLabel mb={2} fontSize={20} htmlFor={formField.fieldName}>
+                  <FormLabel mb={2} fontSize={formField.type === FormFieldVariants.SECTION_START ? 30 : 20} htmlFor={formField.fieldName}>
                     {formField.label}
                   </FormLabel>
                 )}
