@@ -222,7 +222,7 @@ const TaskPage = () => {
 
   const fileInput = fileAllowed && (
     <Box>
-      <FormLabel>Csatolt fájl (max. méret: 30 MB)</FormLabel>
+      <FormLabel>Csatolt fájl</FormLabel>
       <FilePicker
         onFileChange={(fileArray) => setFileAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
