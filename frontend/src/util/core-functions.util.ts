@@ -1,5 +1,6 @@
 import { format, formatDistance } from 'date-fns'
 import Values from 'values.js'
+import { FormFieldVariants } from './views/form.view'
 
 export const toReadableNumber = (num: number): string =>
   Intl.NumberFormat('en-US', {
@@ -81,4 +82,8 @@ export function getColorShadesForColor(color: string) {
 
 export function joinPath(...parts: (string | number | undefined)[]) {
   return parts.join('/')
+}
+
+export function isCheckbox(type: FormFieldVariants) {
+  return type === FormFieldVariants.CHECKBOX || type === FormFieldVariants.MUST_AGREE
 }
