@@ -1,7 +1,8 @@
 import { Button, Heading, Image, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import Markdown from '../../../common-components/Markdown'
-import { stringifyTimeStamp } from '../../../util/core-functions.util'
+import { API_BASE_URL } from '../../../util/configs/environment.config'
+import { joinPath, stringifyTimeStamp } from '../../../util/core-functions.util'
 import { NewsArticleView } from '../../../util/views/news.view'
 import { AbsolutePaths } from '../../../util/paths'
 import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
@@ -27,7 +28,18 @@ const News = ({ news }: NewsProps) => {
         {stringifyTimeStamp(news.timestamp)}
       </Text>
       <Heading mb={2}>{news.title}</Heading>
-      {news.imageUrl && <Image mb={4} display="block" ml="auto" mr="auto" src={news.imageUrl} alt={news.title} maxH="20rem" />}
+      {news.imageUrl && (
+        <Image
+          mb={4}
+          display="block"
+          ml="auto"
+          mr="auto"
+          src={joinPath(API_BASE_URL, 'cdn', news.imageUrl)}
+          alt={news.title}
+          maxH="20rem"
+          maxW="full"
+        />
+      )}
       <Markdown text={news.content} />
       <Link to={AbsolutePaths.NEWS}>
         <Button mt={4}>Vissza a hírekhez</Button>
