@@ -46,7 +46,6 @@ export interface App {
 }
 
 export interface Footer {
-  bmeEnabled: boolean
   devAlt: string
   devLogo: string
   devWebsiteUrl: string
@@ -63,12 +62,13 @@ export interface Footer {
   partnerWebsiteUrls: string
   schdesignEnabled: boolean
   schonherzEnabled: boolean
+  vikEnabled: boolean
+  bmeEnabled: true
   sponsorAlts: string
   sponsorLogoUrls: string
   sponsorTitle: string
   sponsorWebsiteUrls: string
   sponsorsEnabled: boolean
-  vikEnabled: boolean
 }
 
 export interface Countdown {
