@@ -11,7 +11,7 @@ export const Navbar = () => {
   const config = useConfigContext()
   const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
   return (
-    <Box mx="auto" maxW="6xl" w="full" fontFamily="heading">
+    <Box mx="auto" maxWidth={['100%', '64rem']} w="full" fontFamily="heading">
       <Flex
         color={useColorModeValue('gray.800', 'white')}
         minH={{ base: '3rem', md: '4.5rem' }}

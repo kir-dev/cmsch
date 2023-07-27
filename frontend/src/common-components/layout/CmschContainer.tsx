@@ -10,7 +10,8 @@ export const CmschContainer = ({ children, title, ...props }: CmschContainerProp
     p={5}
     mx="auto"
     w="100%"
-    maxWidth={['100%', '48rem']}
+    borderRadius={[0, null, 'xl']}
+    maxWidth={['100%', '64rem']}
     bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
     {...props}
   >
