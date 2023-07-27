@@ -4,8 +4,8 @@ import { AbsolutePaths } from '../../../util/paths'
 import { TaskCategoryPreview } from '../../../util/views/task.view'
 
 export const TaskCategoryListItem = ({ category }: { category: TaskCategoryPreview }) => {
-  const bg = useColorModeValue('brand.100', 'brand.500')
-  const hoverBg = useColorModeValue('brand.200', 'brand.400')
+  const bg = useColorModeValue('#00000020', '#FFFFFF20')
+  const hoverBg = useColorModeValue('#00000030', '#FFFFFF30')
   return (
     <Box bg={bg} px={6} py={2} borderRadius="md" _hover={{ bgColor: hoverBg }}>
       <Link to={`${AbsolutePaths.TASKS}/category/${category.categoryId}`}>
