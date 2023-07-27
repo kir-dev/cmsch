@@ -1,8 +1,9 @@
-import { Alert, AlertIcon, Checkbox, Input, Select, Text, Textarea } from '@chakra-ui/react'
+import { Alert, AlertIcon, Checkbox, Flex, FormLabel, Input, Select, Text, Textarea } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { Control, useController } from 'react-hook-form'
 import Markdown from '../../../common-components/Markdown'
 import { VotingField } from '../../../common-components/VotingField'
+import { isCheckbox } from '../../../util/core-functions.util'
 import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
 
 interface AutoFormFieldProps {
@@ -41,7 +42,14 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
   let component: ReactNode = null
   switch (fieldProps.type) {
     case FormFieldVariants.CHECKBOX:
-      component = <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={!!defaultValue} />
+      component = (
+        <Flex alignItems="center" mt={10}>
+          <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={!!defaultValue} />
+          <FormLabel ml={3} mb={0} fontSize={20} htmlFor={fieldProps.fieldName}>
+            {fieldProps.label}
+          </FormLabel>
+        </Flex>
+      )
       break
     case FormFieldVariants.EMAIL:
       component = <Input type="email" {...field} isInvalid={!!error} disabled={disabled} />
@@ -50,7 +58,14 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       component = <Textarea {...field} isInvalid={!!error} disabled={disabled} />
       break
     case FormFieldVariants.MUST_AGREE:
-      component = <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={!!defaultValue} />
+      component = (
+        <Flex alignItems="center" my={10}>
+          <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={!!defaultValue} />
+          <FormLabel ml={3} mb={0} fontSize={20} htmlFor={fieldProps.fieldName}>
+            {fieldProps.label}
+          </FormLabel>
+        </Flex>
+      )
       break
     case FormFieldVariants.NUMBER:
       component = <Input type="number" {...field} isInvalid={!!error} disabled={disabled} />
@@ -112,8 +127,4 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       {error && <Text color="red">{error.message}</Text>}
     </>
   )
-}
-
-function isCheckbox(type: FormFieldVariants) {
-  return type === FormFieldVariants.CHECKBOX || type === FormFieldVariants.MUST_AGREE
 }
