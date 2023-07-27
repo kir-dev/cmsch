@@ -9,12 +9,15 @@ interface AutoFormFieldProps {
   fieldProps: FormField
   control: Control
   disabled: boolean
-  defaultValue: unknown
+  submittedValue?: string
 }
 
-export const AutoFormField = ({ fieldProps, control, disabled, defaultValue }: AutoFormFieldProps) => {
+export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }: AutoFormFieldProps) => {
   const selectValues = fieldProps.values.split(',').map((opt) => opt.trim())
-  if (!defaultValue) {
+  let defaultValue = fieldProps.defaultValue
+  if (submittedValue) {
+    defaultValue = submittedValue
+  } else if (!defaultValue) {
     if (fieldProps.type === FormFieldVariants.SELECT) defaultValue = selectValues[0]
     else defaultValue = ''
   }

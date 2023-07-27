@@ -26,6 +26,7 @@ export type FormField = {
   note: string
   required: boolean
   permanent: boolean
+  defaultValue: string
 }
 
 export enum FormStatus {
