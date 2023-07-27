@@ -1,18 +1,20 @@
-import { Box, Divider, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Divider, Grid, Heading, Text, VStack } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { AbsolutePaths } from '../../util/paths'
-import Clock from '../countdown/components/clock'
-import { Schedule } from './components/Schedule'
-import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
+import { AbsolutePaths } from '../../util/paths'
+import { NewsArticleView } from '../../util/views/news.view'
+import Clock from '../countdown/components/clock'
+import NewsListItem from '../news/components/NewsListItem'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { Schedule } from './components/Schedule'
 
 const HomePage = () => {
   const eventList = useEventListQuery()
@@ -58,7 +60,18 @@ const HomePage = () => {
           )}
         </Heading>
       )}
-
+      {homeConfig?.news && homeConfig.news.length > 0 && (
+        <>
+          <Grid mt={10} templateColumns="1fr" gap={4}>
+            {homeConfig.news.map((n: NewsArticleView) => (
+              <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
+            ))}
+          </Grid>
+          <LinkButton mt={5} href={AbsolutePaths.NEWS}>
+            Összes hír
+          </LinkButton>
+        </>
+      )}
       {countdownConfig?.enabled && (
         <>
           <Heading textAlign="center">{countdownConfig?.topMessage}</Heading>
