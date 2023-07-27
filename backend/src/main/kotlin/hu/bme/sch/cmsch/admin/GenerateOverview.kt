@@ -14,7 +14,8 @@ annotation class GenerateOverview(
     val columnName: String = "",
     val centered: Boolean = false,
     val order: Int = 0,
-    val renderer: String = OVERVIEW_TYPE_TEXT
+    val renderer: String = OVERVIEW_TYPE_TEXT,
+    val useForSearch: Boolean = false
 )
 
 fun GenerateOverview.alignment(): String {

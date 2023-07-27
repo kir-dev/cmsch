@@ -33,7 +33,8 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     adminMenuPriority: Int = 1,
 
     controlActions: MutableList<ControlAction> = mutableListOf(),
-    buttonActions: MutableList<ButtonAction> = mutableListOf()
+    buttonActions: MutableList<ButtonAction> = mutableListOf(),
+    searchSettings: SearchSettings? = null
 ) : OneDeepEntityPage<T>(
     view,
     classType,
@@ -68,7 +69,8 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     adminMenuPriority = adminMenuPriority,
 
     controlActions = controlActions,
-    buttonActions = buttonActions
+    buttonActions = buttonActions,
+    searchSettings = searchSettings,
 ) {
 
     override fun fetchOverview(user: CmschUser): Iterable<T> {

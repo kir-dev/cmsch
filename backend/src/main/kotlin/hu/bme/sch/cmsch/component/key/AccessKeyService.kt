@@ -76,7 +76,7 @@ open class AccessKeyService(
         if (selectedKey.setGroup) {
             val group = groupRepository.findByName(selectedKey.groupName)
             if (group.isEmpty) {
-                log.warn("User {}: Group {} does not exists for access key {}",
+                log.warn("User {} group {} does not exists for access key {}",
                     user.fullName, selectedKey.groupName, key)
             } else {
                 user.group = group.orElseThrow()
