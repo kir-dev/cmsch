@@ -7,7 +7,7 @@ import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardAsGroupEntryDto
 
-data class HomeView(
+data class LegacyHomeView(
 
     @JsonView(Preview::class)
     val news: List<NewsEntity> = listOf(),
@@ -21,4 +21,4 @@ data class HomeView(
     @JsonView(Preview::class)
     val leaderBoard: List<LeaderBoardAsGroupEntryDto>,
 
-    )
+)

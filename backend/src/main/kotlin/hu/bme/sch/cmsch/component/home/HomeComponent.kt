@@ -34,7 +34,11 @@ class HomeComponent(
             welcomeMessage,
             youtubeVideoId,
             content,
-            showEvents
+            showEvents,
+
+            newsEmbeddedComponentGroup,
+            maxVisibleCount,
+            showNews,
         )
     }
 
@@ -86,7 +90,27 @@ class HomeComponent(
 
     val showEvents = SettingProxy(componentSettingService, component,
         "showEvents", "false", type = SettingType.BOOLEAN,
-        fieldName = "Események láthatóak", description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon"
+        fieldName = "Események láthatóak",
+        description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val newsEmbeddedComponentGroup = SettingProxy(componentSettingService, component,
+        "embeddedGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Hírek rész",
+        description = "Csak akkor van hatása ha a news komponens be van kapcsolva"
+    )
+
+    val maxVisibleCount = SettingProxy(componentSettingService, component,
+        "embeddedMaxVisibleCount", "3", serverSideOnly = true, type = SettingType.NUMBER,
+        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hírdetés komponensben"
+    )
+
+    val showNews = SettingProxy(componentSettingService, component,
+        "showNews", "false", type = SettingType.BOOLEAN,
+        fieldName = "Hírek láthatóak",
+        description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon"
     )
 
 }
