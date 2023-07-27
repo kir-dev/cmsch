@@ -15,6 +15,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { CookieKeys } from '../../util/configs/cookies.config'
+import { isCheckbox } from '../../util/core-functions.util'
 import { AbsolutePaths } from '../../util/paths'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
@@ -78,7 +79,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
             {form.formFields.map((formField) => (
               <FormControl key={formField.fieldName} mt={5}>
                 {formField.type === FormFieldVariants.SECTION_START && <Divider mt={10} />}
-                {formField.label && (
+                {formField.label && !isCheckbox(formField.type) && (
                   <FormLabel mb={2} fontSize={formField.type === FormFieldVariants.SECTION_START ? 30 : 20} htmlFor={formField.fieldName}>
                     {formField.label}
                   </FormLabel>
