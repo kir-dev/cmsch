@@ -64,7 +64,13 @@ const officialLanguageData: Partial<Record<keyof typeof friendlyLanguageData, st
   'community-title': 'Körök',
   'community-description': 'A körök fogják össze az azonos érdeklődésű körű hallgatókat. A körök a Schönherz Kollégiumban működnek.',
   'page-load-failed': '{{title}} betöltése sikertelen!',
-  'page-load-failed-contact-developers': '{{title}} betöltése sikertelen!\n Keresse az oldal fejlesztőit.'
+  'page-load-failed-contact-developers': '{{title}} betöltése sikertelen!\n Keresse az oldal fejlesztőit.',
+  'access-token-failed': 'Nem sikerült az azonosítás!',
+  'access-token-success': 'Sikeres azonosítás!',
+  'access-token-missing': 'Adja meg a kódot!',
+  'access-token-not-available': 'Jelenleg nem lehet kódot beváltani.',
+  'form-not-available': 'Űrlap nem található, vagy nincs joga hozzá.',
+  'form-disabled': 'Űrlap nincs engedélyezve.'
 }
 
 const friendlyLanguageData = {
@@ -124,7 +130,9 @@ const friendlyLanguageData = {
   'access-token-failed': 'Nem sikerült az azonosítás!',
   'access-token-success': 'Sikeres azonosítás!',
   'access-token-missing': 'Add meg a kódot!',
-  'access-token-not-available': 'Jelenleg nem lehet kódot beváltani.'
+  'access-token-not-available': 'Jelenleg nem lehet kódot beváltani.',
+  'form-not-available': 'Űrlap nem található, vagy nincs jogod hozzá.',
+  'form-disabled': 'Űrlap nincs engedélyezve.'
 }
 
 const parameters: Partial<Record<keyof typeof friendlyLanguageData, Record<string, string | undefined>>> = {
