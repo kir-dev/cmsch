@@ -5,6 +5,7 @@ import Markdown from '../../../common-components/Markdown'
 import { VotingField } from '../../../common-components/VotingField'
 import { isCheckbox } from '../../../util/core-functions.util'
 import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
+import { GridField } from './GridField'
 
 interface AutoFormFieldProps {
   fieldProps: FormField
@@ -119,6 +120,12 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       break
     case FormFieldVariants.SECTION_START:
       component = <Text fontSize={30}>{fieldProps.values}</Text>
+      break
+    case FormFieldVariants.SELECTION_GRID:
+    case FormFieldVariants.CHOICE_GRID:
+      component = (
+        <GridField disabled={disabled} field={fieldProps} onChange={field.onChange} value={field.value} variant={fieldProps.type} />
+      )
       break
   }
   return (

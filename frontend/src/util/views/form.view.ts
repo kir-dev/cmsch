@@ -29,6 +29,18 @@ export type FormField = {
   defaultValue: string
 }
 
+export type GridFieldValues = {
+  prefix: string
+  options: {
+    key: string
+    label: string
+  }[]
+  questions: {
+    key: string
+    label: string
+  }[]
+}
+
 export enum FormStatus {
   NO_SUBMISSION = 'NO_SUBMISSION',
   SUBMITTED = 'SUBMITTED',
@@ -68,7 +80,9 @@ export enum FormFieldVariants {
   INFO_BOX = 'INFO_BOX',
   WARNING_BOX = 'WARNING_BOX',
   TEXT_BOX = 'TEXT_BOX',
-  SECTION_START = 'SECTION_START'
+  SECTION_START = 'SECTION_START',
+  CHOICE_GRID = 'CHOICE_GRID',
+  SELECTION_GRID = 'SELECTION_GRID'
 }
 
 export enum FormSubmitResult {
