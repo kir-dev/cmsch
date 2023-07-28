@@ -13,7 +13,7 @@ import org.springframework.core.env.Environment
 import jakarta.persistence.*
 
 @Entity
-@Table(name="`groups`")
+@Table(name="groups")
 data class GroupEntity(
     @Id
     @GeneratedValue
