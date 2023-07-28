@@ -296,7 +296,8 @@ open class TasksService(
                     adminResponse = false,
                     content = answer.textAnswer,
                     status = "${submission.score} pont | beadva",
-                    type = "TEXT"
+                    type = "TEXT",
+                    contentUrl = ""
                 ))
                 return TaskSubmissionStatus.OK
 

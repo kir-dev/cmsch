@@ -828,6 +828,12 @@ object StaffPermissions : PermissionGroup {
         component = FormComponent::class
     )
 
+    val PERMISSION_DELETE_FORM_RESULTS = PermissionValidator(
+        "FORM_RESULT_DELETE",
+        "Űrlapok beadások törlése",
+        component = FormComponent::class
+    )
+
     /// ChallengeComponent
 
     val PERMISSION_SHOW_CHALLENGES = PermissionValidator(
@@ -1129,6 +1135,7 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_DELETE_FORM,
         PERMISSION_SHOW_FORM_RESULTS,
         PERMISSION_EDIT_FORM_RESULTS,
+        PERMISSION_DELETE_FORM_RESULTS,
 
         PERMISSION_SHOW_CHALLENGES,
         PERMISSION_EDIT_CHALLENGES,
