@@ -68,11 +68,11 @@ class ResponsesController(
     showPermission =   StaffPermissions.PERMISSION_SHOW_FORM_RESULTS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission =   StaffPermissions.PERMISSION_EDIT_FORM_RESULTS,
-    deletePermission = ImplicitPermissions.PERMISSION_NOBODY,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_FORM_RESULTS,
 
     createEnabled = false,
     editEnabled   = true,
-    deleteEnabled = false,
+    deleteEnabled = true,
     importEnabled = false,
     exportEnabled = false,
 
