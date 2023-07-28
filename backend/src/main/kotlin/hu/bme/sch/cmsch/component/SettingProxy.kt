@@ -34,7 +34,8 @@ enum class SettingType {
     DATE_TIME {
         override fun process(value: String) = value.toLongOrNull() ?: 0
     },
-    COMPONENT_NAME;
+    COMPONENT_NAME,
+    BOOLEAN_JSON_LIST;
 
     open fun process(value: String): Any = value
 

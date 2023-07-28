@@ -26,6 +26,47 @@
 </script>
 
 <script th:inline="javascript">
+
+    function changeBoolList(property) {
+        const dataArray = [];
+
+        for (let i = 0; i < 10; i++) {
+            const checkbox = document.getElementById(`${property}_${i}`);
+            dataArray.push(checkbox.checked);
+        }
+
+        document.getElementById(property).value = JSON.stringify(dataArray).replaceAll(",", ", ");
+    }
+
+    function loadBoolList(property) {
+        if (document.getElementById(`input${property}`).value === '')
+            return;
+        const dataArray = JSON.parse(document.getElementById(`input${property}`).value);
+        for (let i = 0; i < 10; i++) {
+            const checkbox = document.getElementById(`input${property}_${i}`);
+            checkbox.checked = dataArray[i];
+        }
+    }
+
+    function loadTaskHistory(property) {
+        if (document.getElementById(`input${property}`).value === '')
+            return;
+
+        let result = "";
+        const dataArray = JSON.parse(document.getElementById(`input${property}`).value);
+        for (id in dataArray) {
+            result += ` <div class="sub-card ${dataArray[id].adminResponse ? 'admin-response' : ''}">
+                            <div class="field-group">
+                                <b>Beküldő:</b> <ins>${dataArray[id].submitterName}</ins> ${dataArray[id].adminResponse ? '[RENDEZŐ]' : '[RÉSZTVEVŐ]'}<br>
+                                <b>Státusz:</b> <ins>${dataArray[id].status}</ins><br>
+                                <b>Beadás:</b> <ins>${dataArray[id].content}</ins><br>
+                                ${dataArray[id].type !== 'TEXT' ? `<a href="/cdn/${dataArray[id].contentUrl}" target="_blank">${dataArray[id].contentUrl}</a>` : ''}
+                            </div>
+                        </div>`;
+        }
+        document.getElementById(`input${property}_cards`).innerHTML = result;
+    }
+
     function changeFieldsText(property) {
         /*<![CDATA[*/
         const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
@@ -867,6 +908,92 @@
                                 </div>
                                 <script th:inline="javascript" th:unless="${entityMode}">
                                     changePermissionText(/*[[${iter.index}]]*/ 0)
+                                </script>
+                            </div>
+
+                            <div th:if="${input.second.type == 'boolean-list'}" class="field-group" th:id="|_${iter.index}|">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <div style="clear: both"></div>
+                                <table style="width: auto; margin: 20px auto 10px auto">
+                                    <tr>
+                                        <td th:each="i : ${#numbers.sequence(-5, -1)}"
+                                            th:text="|T${i}|"
+                                            style="text-align: center; padding-left: 5px">T-5</td>
+                                    </tr>
+                                    <tr>
+                                        <td th:each="i : ${#numbers.sequence(0, 4)}" width="60">
+                                            <label class="switch">
+                                                <input type="checkbox"
+                                                       th:name="|input${iter.index}_${i}|"
+                                                       th:id="|input${iter.index}_${i}|"
+                                                       th:data-prop="|input${iter.index}|"
+                                                       onchange="changeBoolList(this.getAttribute('data-prop'))" />
+                                                <span class="slider"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td th:each="i : ${#numbers.sequence(1, 5)}"
+                                            th:text="|T+${i}|"
+                                            style="text-align: center; padding-left: 5px">T+1</td>
+                                    </tr>
+                                    <tr>
+                                        <td th:each="i : ${#numbers.sequence(5, 9)}" width="60">
+                                            <label class="switch">
+                                                <input type="checkbox"
+                                                       th:name="|input${iter.index}_${i}|"
+                                                       th:id="|input${iter.index}_${i}|"
+                                                       th:data-prop="|input${iter.index}|"
+                                                       onchange="changeBoolList(this.getAttribute('data-prop'))" />
+                                                <span class="slider"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <input type="text"
+                                       th:name="${input.first.name}"
+                                       th:id="|input${iter.index}|"
+                                       th:value="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:unless="${entityMode}"
+                                       autocomplete="off"
+                                       th:data-prop="${iter.index}"
+                                       onchange="loadBoolList(this.getAttribute('data-prop'))"
+                                />
+
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <script th:inline="javascript">
+                                    loadBoolList(/*[[${iter.index}]]*/ '');
+                                </script>
+                                <span class="note type-note" th:if="${entityMode}">Típus: 10db igaz/hamis érték</span>
+                            </div>
+
+                            <div th:if="${input.second.type == 'task-submission-history'}" class="field-group" th:id="|_${iter.index}|">
+                                <label th:for="|input${iter.index}|"
+                                       th:text="${input.second.label}">
+                                </label>
+                                <div style="clear: both"></div>
+
+                                <div th:id="|input${iter.index}_cards|" style="margin-top: 20px">
+                                </div>
+
+                                <input th:type="text"
+                                       th:name="${input.first.name}"
+                                       th:id="|input${iter.index}|"
+                                       th:value="${(!editMode && !duplicateMode) ? input.second.defaultValue : input.first.get(data)}"
+                                       th:disabled="${!input.second.enabled || readOnly}"
+                                       autocomplete="off"
+                                       th:unless="${entityMode}"
+                                       th:data-prop="${iter.index}"
+                                       onchange="loadTaskHistory(this.getAttribute('data-prop'))"
+                                       style="display: none"
+                                />
+                                <span class="note" th:text="${input.second.note}" th:if="${input.second.note != ''}"></span>
+                                <span class="note type-note" th:if="${entityMode}">Típus: Beadás történet</span>
+                                <script th:inline="javascript">
+                                    loadTaskHistory(/*[[${iter.index}]]*/ '')
                                 </script>
                             </div>
 

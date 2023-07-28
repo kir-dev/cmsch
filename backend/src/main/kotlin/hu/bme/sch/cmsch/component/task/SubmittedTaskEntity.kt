@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
@@ -96,7 +98,7 @@ data class SubmittedTaskEntity(
     @Lob
     @Column(nullable = false)
     @JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 11, label = "Beadás történet", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateInput(order = 11, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)
     var submissionHistory: String = "",
 ) : ManagedEntity {
@@ -121,4 +123,40 @@ data class SubmittedTaskEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
+    fun addSubmissionHistory(
+        date: Long,
+        submitterName: String,
+        adminResponse: Boolean,
+        content: String,
+        contentUrl: String,
+        status: String,
+        type: String
+    ) : SubmittedTaskEntity {
+        val history = if (submissionHistory.isBlank()) {
+            mutableListOf<SubmissionHistory>()
+        } else {
+            historyReader.readValue(submissionHistory)
+        }
+
+        history.add(SubmissionHistory(date, submitterName, adminResponse, content, contentUrl, status, type))
+
+        submissionHistory = historyWriter.writeValueAsString(history)
+        return this
+    }
 }
+
+private val mapper = ObjectMapper()
+private val historyReader = mapper.readerFor(object : TypeReference<MutableList<SubmissionHistory>>() {})
+private val historyWriter = mapper.writerFor(object : TypeReference<MutableList<SubmissionHistory>>() {})
+
+data class SubmissionHistory(
+    var date: Long = 0,
+    var submitterName: String = "",
+    var adminResponse: Boolean = false,
+    var content: String = "",
+    var contentUrl: String = "",
+    var status: String = "",
+    var type: String = "TEXT"
+)
+
