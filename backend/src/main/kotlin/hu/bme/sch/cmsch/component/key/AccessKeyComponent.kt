@@ -37,6 +37,7 @@ class AccessKeyComponent(
             mustLogInErrorMessage,
             youUsedErrorMessage,
             topMessage,
+            fieldName,
 
             logicGroup,
             enabled,
@@ -113,7 +114,7 @@ class AccessKeyComponent(
     )
 
     val fieldName = SettingProxy(componentSettingService, component,
-        "fieldName", "Nem megfelelő kód",
+        "fieldName", "Kód",
         fieldName = "Mező neve", description = "Ez jelenik meg a beviteli mező felett",
         serverSideOnly = true,
     )
