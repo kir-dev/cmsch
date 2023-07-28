@@ -16,6 +16,7 @@ import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { CookieKeys } from '../../util/configs/cookies.config'
 import { isCheckbox } from '../../util/core-functions.util'
+import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
@@ -57,8 +58,8 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   }
   if (!isLoggedIn) return <ComponentUnavailable />
   if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED) {
-    if (status === FormStatus.NOT_FOUND) sendMessage('Űrlap nem található, vagy nincs jogod hozzá')
-    else sendMessage('Űrlap nincs engedélyezve')
+    if (status === FormStatus.NOT_FOUND) sendMessage(message ?? l('form-not-available'))
+    else sendMessage(message ?? l('form-disabled'))
 
     return <Navigate to={AbsolutePaths.ERROR} />
   }
