@@ -1,5 +1,3 @@
-import { NewsArticleView } from '../../../util/views/news.view'
-
 export interface ConfigDto {
   role: string
   menu: Menu[]
@@ -105,7 +103,7 @@ export interface Home {
   content: string
   youtubeVideoId: string
   showEvents: boolean
-  news?: NewsArticleView[]
+  showNews: boolean
 }
 
 export interface News {

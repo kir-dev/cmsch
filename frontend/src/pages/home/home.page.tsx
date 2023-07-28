@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
+import { useHomeNews } from '../../api/hooks/home/useHomeNews'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -17,6 +18,7 @@ import { EmbeddedVideo } from './components/EmbeddedVideo'
 import { Schedule } from './components/Schedule'
 
 const HomePage = () => {
+  const homeNews = useHomeNews()
   const eventList = useEventListQuery()
   const config = useConfigContext()
   const countdownConfig = config?.components.countdown
@@ -60,10 +62,10 @@ const HomePage = () => {
           )}
         </Heading>
       )}
-      {homeConfig?.news && homeConfig.news.length > 0 && (
+      {homeConfig.showNews && homeNews.data && homeNews.data.length > 0 && (
         <>
           <Grid mt={10} templateColumns="1fr" gap={4}>
-            {homeConfig.news.map((n: NewsArticleView) => (
+            {sortByHighlighted(homeNews.data).map((n: NewsArticleView) => (
               <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
             ))}
           </Grid>
@@ -125,3 +127,15 @@ const HomePage = () => {
 export default HomePage
 
 const isToday = (timeStamp: number) => new Date(timeStamp).toDateString() === new Date().toDateString()
+
+const sortByHighlighted = (news: NewsArticleView[]) => {
+  return news.sort((a, b) => {
+    if (a.highlighted && !b.highlighted) {
+      return -1
+    }
+    if (b.highlighted && !a.highlighted) {
+      return 1
+    }
+    return 0
+  })
+}

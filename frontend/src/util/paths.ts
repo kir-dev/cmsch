@@ -73,5 +73,6 @@ export enum ApiPaths {
   CHANGE_GROUP = '/api/group/select',
   COMMUNITY = '/api/community',
   ORGANIZATION = '/api/organization',
-  ACCESS_KEY = '/api/access-key'
+  ACCESS_KEY = '/api/access-key',
+  HOME_NEWS = '/api/home/news'
 }
