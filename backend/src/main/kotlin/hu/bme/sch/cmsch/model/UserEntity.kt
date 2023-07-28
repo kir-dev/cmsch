@@ -133,7 +133,6 @@ data class UserEntity(
 
     @JsonIgnore
     @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id")
     var group: GroupEntity? = null,
 
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
