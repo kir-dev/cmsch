@@ -1292,6 +1292,10 @@ form ul {
     margin: 0;
 }
 
+.sub-card a {
+    color: var(--success-color);
+}
+
 .control-action:hover {
     color: var(--primary-color);
 }

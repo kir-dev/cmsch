@@ -173,9 +173,70 @@
                                     <div style="clear: both"></div>
                                 </div>
 
+                                <div th:if="${input.type.name() == 'INFO_BOX'}" class="field-group">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <p th:id="|input${iter.index}|"
+                                       th:text="${input.values}"
+                                    />
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'HISTORY_VIEW'}" class="field-group">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+
+                                    <div th:id="|input${iter.index}_cards|" style="margin-top: 20px">
+                                        <div th:each="historyPoint : ${T(hu.bme.sch.cmsch.admin.dashboard.SubmissionHistory).convertStringToHistory(input.values)}" th:class="|sub-card ${historyPoint.adminResponse ? 'admin-response' : ''}|">
+                                            <div class="field-group">
+                                                <ins th:text="${historyPoint.submitterName}"></ins> <ins th:text="${historyPoint.adminResponse ? '[RENDEZŐ]' : '[RÉSZTVEVŐ]'}"></ins><br>
+                                                <b>Státusz:</b> <ins th:text="${historyPoint.status}"></ins><br>
+                                                <b th:text="${historyPoint.adminResponse ? 'Válasz' : 'Beadás'}"></b>: <ins th:text="${historyPoint.content}"></ins><br>
+                                                <a th:href="|/cdn/${historyPoint.contentUrl}|" target="_blank" th:if="${historyPoint.type != 'TEXT'}" th:text="${historyPoint.contentUrl}"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'LINK_VIEW'}" class="field-group">
+                                    <label th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <div class="button-group" style="margin: 0">
+                                        <a th:href="${input.values}" class="btn btn-primary" th:target="${input.defaultValue == '_blank' ? '_blank' : ''}">
+                                            <span class="material-symbols-outlined">link</span>
+                                            <ins th:text="${input.label}">OPEN</ins>
+                                        </a>
+                                    </div>
+
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'IMAGE_VIEW'}" class="field-group">
+                                    <label th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <a th:href="${input.values}" target="_blank">
+                                        <img th:src="${input.values}" style="max-width: 100%; max-height: 500px" />
+                                    </a>
+
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'SECTION_START'}" class="field-group">
+                                    <h5 style="text-align: center" th:text="${input.label}"></h5>
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
                             </object>
 
-                            <div class="button-group">
+                            <div class="button-group" th:if="${component.buttonCaption != ''}">
                                 <button type="submit" class="btn btn-primary">
                                     <span class="material-symbols-outlined" th:text="${component.buttonIcon}">check_circle</span>
                                     <ins th:text="${component.buttonCaption}">SUBMIT</ins>

@@ -26,7 +26,8 @@ class SubmittedTaskController(
     component: TaskComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
-    env: Environment
+    env: Environment,
+    private val clock: TimeService
 ) : OneDeepEntityPage<SubmittedTaskEntity>(
     "submitted-tasks",
     SubmittedTaskEntity::class, ::SubmittedTaskEntity,
@@ -128,6 +129,29 @@ class SubmittedTaskController(
                 it.response
             )
         }).toByteArray()
+    }
+
+
+    fun saveChangeHistory(entity: SubmittedTaskEntity, userName: String) {
+        entity.addSubmissionHistory(
+            date = clock.getTimeInSeconds(),
+            submitterName = userName,
+            adminResponse = true,
+            content = entity.response,
+            contentUrl = "",
+            status = "${entity.score} pont | ${
+                if (entity.approved) "elfogadva"
+                else if (entity.rejected) "elutasítva"
+                else "nem értékelt"}",
+            type = "TEXT"
+        )
+    }
+
+    override fun onEntityPreSave(entity: SubmittedTaskEntity, auth: Authentication): Boolean {
+        if (entity.approved && entity.rejected)
+            entity.rejected = false
+        saveChangeHistory(entity, auth.getUser().userName)
+        return true
     }
 
 }

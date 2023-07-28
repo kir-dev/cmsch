@@ -65,6 +65,15 @@ fun interface PermissionGroup {
     fun allPermissions(): List<PermissionValidator>
 }
 
+object CompositePermission {
+    fun of(vararg permissions: PermissionValidator) = PermissionValidator(
+        permissionString = "<<composite-permission>>",
+        description = permissions.joinToString(", ") { it.description },
+        component = null,
+        validate = { user -> permissions.any { it.validate(user) } }
+    )
+}
+
 object ImplicitPermissions : PermissionGroup {
 
     val PERMISSION_IMPLICIT_HAS_GROUP = PermissionValidator(

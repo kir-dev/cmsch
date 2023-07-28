@@ -35,7 +35,7 @@
 
                 <object th:if="${searchSettings != null}" th:remove="tag">
                     <input type="text" id="table-search-input" placeholder="Keresés" autocomplete="off" spellcheck="false" autofocus>
-                    <span class="note" th:text="|Keresés a következő oszlopokon: ${#strings.listJoin(', ', searchSettings.displayNames)} (fuzzy: ${searchSettings.fuzzy ? 'igen' : 'nem'})|"></span>
+                    <span class="note" th:text="|Keresés a következő oszlopokon: ${#strings.listJoin(searchSettings.displayNames, ', ')} (fuzzy: ${searchSettings.fuzzy ? 'igen' : 'nem'})|"></span>
                 </object>
                 <div id="cmsch-table"></div>
             </div>
@@ -122,6 +122,23 @@
         row['buttons'] = buttonColumn;
     }
 
+    function enumIconsFormatter(cell, formatterParams, onRendered) {
+        let value = cell.getValue();
+
+        const names = /*[[${T(hu.bme.sch.cmsch.admin.IconStatus).names()}]]*/ [];
+        const icons = /*[[${T(hu.bme.sch.cmsch.admin.IconStatus).icons()}]]*/ [];
+        const colors = /*[[${T(hu.bme.sch.cmsch.admin.IconStatus).colors()}]]*/ [];
+
+        let enumElementMap = {};
+
+        for (let id in names) {
+            if (names[id] !== 'EMPTY')
+                enumElementMap[names[id]] = `<span class='material-symbols-outlined' style='color: ${colors[id]}'>${icons[id]}</span>`
+        }
+
+        return enumElementMap[value] || "";
+    }
+
     let columData = JSON.parse(/*[[${columnData}]]*/ "[]");
     for (let columnId in columData) {
         if (columData[columnId].formatter === 'tickCross') {
@@ -131,6 +148,8 @@
                 tickElement: "<span class='material-symbols-outlined color-green'>done</span>",
                 crossElement: "<span class='material-symbols-outlined color-red'>close</span>",
             }
+        } else if (columData[columnId].formatter === 'enumIconsFormatter') {
+            columData[columnId]['formatter'] = enumIconsFormatter;
         } else if (columData[columnId].formatter === 'datetime') {
             columData[columnId]['formatter'] = timestampFormatter;
             columData[columnId]['minWidth'] = 180;
@@ -196,17 +215,22 @@
     }
 
     function isFuzzyMatch(str, pattern) {
-        return str.split(' ').filter(word => {
-            const distance = levenshtein(word.toLowerCase(), pattern.toLowerCase());
+        if (pattern.includes(" ")) {
+            const distance = levenshtein(str.toLowerCase(), pattern.toLowerCase());
             return distance < 3
-        }).length > 0
+        } else {
+            return str.split(' ').filter(word => {
+                const distance = levenshtein(word.toLowerCase(), pattern.toLowerCase());
+                return distance < 3
+            }).length > 0
+        }
     }
 
     function fuzzyFilter(data, searchTerm) {
         let result = false;
         const fields = /*[[${searchSettings.rows}]]*/ [];
         for (let field in fields) {
-            result = result || isFuzzyMatch(data[fields[field]], searchTerm);
+            result = result || isFuzzyMatch(data[fields[field]].trim(), searchTerm.trim());
         }
         return result;
     }

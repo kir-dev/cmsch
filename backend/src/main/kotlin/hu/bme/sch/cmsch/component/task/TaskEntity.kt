@@ -72,7 +72,7 @@ data class TaskEntity(
 
     @Lob
     @Column(nullable = false, columnDefinition = "CLOB")
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",
         note = "A leadási határidő után jelenik meg")
     @property:GenerateOverview(visible = false)

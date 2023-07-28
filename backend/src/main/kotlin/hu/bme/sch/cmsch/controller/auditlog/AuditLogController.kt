@@ -126,7 +126,7 @@ class AuditLogController(
             Files.walk(Path.of(startupPropertyConfig.auditLog))
                 .asSequence()
                 .filter { it.isRegularFile() }
-                .sortedByDescending { it.fileSize() }
+                .sortedBy { it.fileName.toString() }
                 .map { AuditLogVirtualEntity(it.fileName.toString(), "${it.fileSize() / 1024} KB") }
                 .toList()
         } catch (e: IOException) {

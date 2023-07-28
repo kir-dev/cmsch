@@ -80,6 +80,7 @@ open class BmejegyService(
                     faculty = cell.ic_0?.uppercase() ?: "",
                     matchedUserId = 0
                 ))
+                listeners.forEach { listener -> listener.onTicketRaw(it.cell) }
             }
         }
         log.info("[BMEJEGY] Found new tickets: {}", newTickets.size)
@@ -112,8 +113,7 @@ open class BmejegyService(
             forms.forEach { form ->
                 formService.getSubmissions(form).forEach { raw ->
                     val submission = reader.readValue<MutableMap<String, String>>(raw.submission)
-                    // TODO: This implementation is only for GÓLYABÁL 2022
-                    val photoId = (submission["szig"] ?: "").uppercase()
+                    val photoId = (submission[bmejegy.szigFieldName.getValue()] ?: "").uppercase()
                     val ticket = unmatched.firstOrNull { it.photoId == photoId }
                     if (ticket != null) {
                         ticket.matchedUserId = raw.submitterUserId ?: 0

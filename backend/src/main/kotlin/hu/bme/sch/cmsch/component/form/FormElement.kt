@@ -66,7 +66,13 @@ enum class FormElementType(
         override fun fetchValue(user: UserEntity): String {
             return user.profilePicture
         }
-    };
+    },
+
+    // BACKEND ONLY
+    HISTORY_VIEW,
+    LINK_VIEW,
+    IMAGE_VIEW,
+    ;
 
     open fun fetchValue(user: UserEntity): String {
         return "not-server-side-value"

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.admin.dashboard.SubmissionHistory
+import hu.bme.sch.cmsch.admin.dashboard.historyReader
+import hu.bme.sch.cmsch.admin.dashboard.historyWriter
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -96,7 +99,7 @@ data class SubmittedTaskEntity(
     var score: Int = 0,
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "CLOB default ''")
     @JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 11, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)
@@ -145,18 +148,3 @@ data class SubmittedTaskEntity(
         return this
     }
 }
-
-private val mapper = ObjectMapper()
-private val historyReader = mapper.readerFor(object : TypeReference<MutableList<SubmissionHistory>>() {})
-private val historyWriter = mapper.writerFor(object : TypeReference<MutableList<SubmissionHistory>>() {})
-
-data class SubmissionHistory(
-    var date: Long = 0,
-    var submitterName: String = "",
-    var adminResponse: Boolean = false,
-    var content: String = "",
-    var contentUrl: String = "",
-    var status: String = "",
-    var type: String = "TEXT"
-)
-

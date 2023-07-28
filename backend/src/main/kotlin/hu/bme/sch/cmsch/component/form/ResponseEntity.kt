@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonView
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.admin.dashboard.SubmissionHistory
+import hu.bme.sch.cmsch.admin.dashboard.historyReader
+import hu.bme.sch.cmsch.admin.dashboard.historyWriter
 import hu.bme.sch.cmsch.component.EntityConfig
+import hu.bme.sch.cmsch.component.task.SubmittedTaskEntity
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -139,6 +143,14 @@ data class ResponseEntity(
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LONG)
     var detailsValidatedAt: Long = 0,
 
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @JsonView(value = [ Edit::class ])
+    @property:GenerateInput(order = 13, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var rejectionHistory: String = "",
+
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
@@ -162,5 +174,26 @@ data class ResponseEntity(
     }
 
     fun readSubmission(): Map<String, String> = mapper.readValue(submission, mapType)
+
+    fun addHistory(
+        date: Long,
+        submitterName: String,
+        adminResponse: Boolean,
+        content: String,
+        contentUrl: String,
+        status: String,
+        type: String
+    ) : ResponseEntity {
+        val history = if (rejectionHistory.isBlank()) {
+            mutableListOf<SubmissionHistory>()
+        } else {
+            historyReader.readValue(rejectionHistory)
+        }
+
+        history.add(SubmissionHistory(date, submitterName, adminResponse, content, contentUrl, status, type))
+
+        rejectionHistory = historyWriter.writeValueAsString(history)
+        return this
+    }
 
 }

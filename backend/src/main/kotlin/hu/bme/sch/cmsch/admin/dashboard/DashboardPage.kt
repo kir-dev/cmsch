@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.admin.dashboard
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
@@ -19,10 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.io.ByteArrayOutputStream
 
 abstract class DashboardPage(
-    private var view: String,
-    private var title: String,
-    private var description: String,
-    private var wide: Boolean,
+    internal var view: String,
+    internal var title: String,
+    internal var description: String,
+    internal var wide: Boolean,
 
     private var adminMenuService: AdminMenuService,
     internal var component: ComponentBase,
@@ -33,6 +32,7 @@ abstract class DashboardPage(
     private var adminMenuCategory: String? = null,
     private var adminMenuIcon: String = "check_box_outline_blank",
     private var adminMenuPriority: Int = 1,
+    private var ignoreFromMenu: Boolean = false
 ) {
 
     abstract fun getComponents(user: CmschUser): List<DashboardComponent>
@@ -40,15 +40,17 @@ abstract class DashboardPage(
     @PostConstruct
     fun init() {
         val category = adminMenuCategory ?: component.javaClass.simpleName
-        adminMenuService.registerEntry(
-            category, AdminMenuEntry(
-                title,
-                adminMenuIcon,
-                "/admin/control/${view}",
-                adminMenuPriority,
-                showPermission
+        if (!ignoreFromMenu) {
+            adminMenuService.registerEntry(
+                category, AdminMenuEntry(
+                    title,
+                    adminMenuIcon,
+                    "/admin/control/${view}",
+                    adminMenuPriority,
+                    showPermission
+                )
             )
-        )
+        }
     }
 
     @GetMapping("")

@@ -14,4 +14,5 @@ interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
     fun findAllByVisibleTrue(): List<TaskEntity>
     fun findAllByCategoryIdAndVisibleTrue(categoryId: Int): List<TaskEntity>
     fun findAllByTag(tag: String): List<TaskEntity>
+    fun findTop1ByTag(tag: String): List<TaskEntity>
 }

@@ -221,6 +221,7 @@ class TaskAdminRateController(
     override fun onEntityPreSave(entity: SubmittedTaskEntity, auth: Authentication): Boolean {
         if (entity.approved && entity.rejected)
             entity.rejected = false
+        saveChangeHistory(entity, auth.getUser().userName)
         return true
     }
 

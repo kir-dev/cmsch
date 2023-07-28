@@ -84,7 +84,7 @@ data class UserEntity(
     @Column(nullable = false)
     @property:GenerateInput(order = 2, label = "Neptun kód", enabled = true,
         note = "Ez módosítható eseti hiba kezelésre", maxLength = 6)
-    @property:GenerateOverview(columnName = "Neptun", order = 2)
+    @property:GenerateOverview(columnName = "Neptun", order = 2, useForSearch = true)
     @property:ImportFormat(ignore = false, columnId = 1)
     var neptun: String = "",
 
@@ -99,7 +99,7 @@ data class UserEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 4, label = "Teljes név", enabled = true)
-    @property:GenerateOverview(columnName = "Név", order = 1)
+    @property:GenerateOverview(columnName = "Név", order = 1, useForSearch = true)
     @property:ImportFormat(ignore = false, columnId = 3)
     var fullName: String = "",
 
@@ -112,7 +112,7 @@ data class UserEntity(
     @JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 6, label = "Email cím")
-    @property:GenerateOverview(columnName = "Email", order = 4)
+    @property:GenerateOverview(columnName = "Email", order = 4, useForSearch = true)
     @property:ImportFormat(ignore = false, columnId = 5)
     var email: String = "",
 
@@ -128,7 +128,7 @@ data class UserEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 8, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
-    @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3)
+    @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3, useForSearch = true)
     var groupName: String = "",
 
     @JsonIgnore
@@ -138,7 +138,7 @@ data class UserEntity(
     @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
-    @property:GenerateOverview(columnName = "Gárda", centered = true, order = 5)
+    @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
     var guild: GuildType = GuildType.UNKNOWN,
 

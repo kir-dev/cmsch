@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.extending.TaskSubmissionListener
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
@@ -22,7 +23,8 @@ open class TasksService(
     private val categories: TaskCategoryRepository,
     private val clock: TimeService,
     private val taskComponent: TaskComponent,
-    private val debugComponent: DebugComponent
+    private val debugComponent: DebugComponent,
+    private val listeners: List<TaskSubmissionListener>,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -174,7 +176,7 @@ open class TasksService(
                 if (answer.textAnswer.isBlank())
                     return TaskSubmissionStatus.EMPTY_ANSWER
 
-                submitted.save(SubmittedTaskEntity(
+                val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
@@ -190,7 +192,9 @@ open class TasksService(
                     contentUrl = "",
                     status = "0 pont | beadva",
                     type = "TEXT"
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskSubmit(user, task, submission) }
                 return TaskSubmissionStatus.OK
 
             }
@@ -200,7 +204,7 @@ open class TasksService(
 
                 val fileName = file.uploadFile(target)
 
-                submitted.save(SubmittedTaskEntity(
+                val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
@@ -216,14 +220,16 @@ open class TasksService(
                     contentUrl = "$target/$fileName",
                     status = "0 pont | beadva",
                     type = "IMAGE"
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskSubmit(user, task, submission) }
                 return TaskSubmissionStatus.OK
 
             }
             TaskType.BOTH -> {
                 val fileName = file?.uploadFile(target) ?: ""
 
-                submitted.save(SubmittedTaskEntity(
+                val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
@@ -239,7 +245,9 @@ open class TasksService(
                     contentUrl = "$target/$fileName",
                     status = "0 pont | beadva",
                     type = "BOTH"
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskSubmit(user, task, submission) }
                 return TaskSubmissionStatus.OK
 
             }
@@ -249,7 +257,7 @@ open class TasksService(
 
                 val fileName = file.uploadFile(target)
 
-                submitted.save(SubmittedTaskEntity(
+                val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
@@ -265,7 +273,9 @@ open class TasksService(
                     contentUrl = "$target/$fileName",
                     status = "0 pont | beadva",
                     type = "PDF"
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskSubmit(user, task, submission) }
                 return TaskSubmissionStatus.OK
             }
             else -> {
@@ -290,7 +300,7 @@ open class TasksService(
                 submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission.addSubmissionHistory(
+                submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
                     submitterName = user.fullName,
                     adminResponse = false,
@@ -298,7 +308,9 @@ open class TasksService(
                     status = "${submission.score} pont | beadva",
                     type = "TEXT",
                     contentUrl = ""
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskUpdate(user, task, submission) }
                 return TaskSubmissionStatus.OK
 
             }
@@ -310,7 +322,7 @@ open class TasksService(
                 submission.imageUrlAnswer = "$target/$fileName"
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission.addSubmissionHistory(
+                submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
                     submitterName = user.fullName,
                     adminResponse = false,
@@ -318,7 +330,9 @@ open class TasksService(
                     contentUrl = "$target/$fileName",
                     status = "${submission.score} pont | beadva",
                     type = "IMAGE"
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskUpdate(user, task, submission) }
                 return TaskSubmissionStatus.OK
 
             }
@@ -330,7 +344,7 @@ open class TasksService(
                 submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission.addSubmissionHistory(
+                submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
                     submitterName = user.fullName,
                     adminResponse = false,
@@ -338,7 +352,9 @@ open class TasksService(
                     contentUrl = submission.imageUrlAnswer,
                     status = "${submission.score} pont | beadva",
                     type = "IMAGE"
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskUpdate(user, task, submission) }
                 return TaskSubmissionStatus.OK
 
             }
@@ -350,7 +366,7 @@ open class TasksService(
                 submission.fileUrlAnswer = "$target/$fileName"
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission.addSubmissionHistory(
+                submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
                     submitterName = user.fullName,
                     adminResponse = false,
@@ -358,7 +374,9 @@ open class TasksService(
                     contentUrl = "$target/$fileName",
                     status = "${submission.score} pont | beadva",
                     type = "PDF"
-                ))
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskUpdate(user, task, submission) }
                 return TaskSubmissionStatus.OK
 
             }

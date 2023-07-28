@@ -35,7 +35,7 @@ class OverviewBuilder<T : Any>(val type: KClass<T>) {
     }
 
     private fun formatValue(type: GenerateOverview, value: Any?): String {
-        return if (type.renderer == OVERVIEW_TYPE_TEXT) {
+        return if (type.renderer == OVERVIEW_TYPE_TEXT || type.renderer == OVERVIEW_TYPE_ICON) {
             "\"${(value ?: "").toString().replace("\"", "")}\""
         } else {
             (value ?: "0").toString().replace("\"", "")

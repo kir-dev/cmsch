@@ -38,6 +38,7 @@ class BmejegyComponent(
             completeByPhotoId,
             minTimestamp,
             countToFetch,
+            szigFieldName,
 
             grantGroup1,
             forOrder1,
@@ -105,13 +106,18 @@ class BmejegyComponent(
     )
 
     val minTimestamp = SettingProxy(componentSettingService, component,
-        "minTimestamp", "1666721741000", type = SettingType.NUMBER, serverSideOnly = true,
+        "minTimestamp", "1689858001000", type = SettingType.NUMBER, serverSideOnly = true,
         fieldName = "Ekkortól nézve", description = "Unix timestamp (ms pontossággal)"
     )
 
     val countToFetch = SettingProxy(componentSettingService, component,
         "countToFetch", "10000", type = SettingType.NUMBER, serverSideOnly = true,
         fieldName = "Ennyit töltsön le", description = "Az első ennyi darabot syncelje fel"
+    )
+
+    val szigFieldName = SettingProxy(componentSettingService, component,
+        "szigFieldName", "szig", serverSideOnly = true,
+        fieldName = "Szig. szám mező neve", description = "Hozzárendeléshez használatos"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

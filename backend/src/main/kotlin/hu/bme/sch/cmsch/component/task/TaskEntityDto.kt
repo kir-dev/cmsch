@@ -48,8 +48,8 @@ data class TaskEntityDto(
         other.title,
         other.categoryId,
 
-        if (time + TWO_HOURS > other.availableTo)
-            (other.description + "\n\n" + (other.solution ?: ""))
+        if (time - TWO_HOURS > other.availableTo)
+            (other.description + "\n\n" + other.solution)
         else
             other.description,
 
