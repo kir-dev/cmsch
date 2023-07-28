@@ -1,12 +1,13 @@
-import { ButtonGroup, Heading, Text } from '@chakra-ui/react'
+import { Box, ButtonGroup, Heading } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { MessageTypes, useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { LinkButton } from '../../common-components/LinkButton'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { UnauthorizedPage } from './unauthorized.page'
+import { LinkButton } from '../../common-components/LinkButton'
+import Markdown from '../../common-components/Markdown'
 import { l } from '../../util/language'
+import { UnauthorizedPage } from './unauthorized.page'
 
 type Props = {
   message?: string
@@ -33,9 +34,9 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
     <CmschPage>
       <Helmet title={l('error-page-helmet')} />
       <Heading textAlign="center">{l('error-page-title')}</Heading>
-      <Text textAlign="center" color="gray.500" marginTop={10}>
-        {clonedMessage}
-      </Text>
+      <Box textAlign="center" color="gray.500" marginTop={10}>
+        <Markdown text={clonedMessage} />
+      </Box>
       <ButtonGroup justifyContent="center" marginTop={10}>
         <LinkButton href="/" colorScheme="brand">
           Főoldal
