@@ -4,6 +4,28 @@
 </head>
 <body>
 <script th:inline="javascript">
+
+    function changeBoolList(property) {
+        const dataArray = [];
+
+        for (let i = 0; i < 10; i++) {
+            const checkbox = document.getElementById(`${property}_${i}`);
+            dataArray.push(checkbox.checked);
+        }
+
+        document.getElementById(property).value = JSON.stringify(dataArray).replaceAll(",", ", ");
+    }
+
+    function loadBoolList(property) {
+        if (document.getElementById(property).value === '')
+            return;
+        const dataArray = JSON.parse(document.getElementById(property).value);
+        for (let i = 0; i < 10; i++) {
+            const checkbox = document.getElementById(`${property}_${i}`);
+            checkbox.checked = dataArray[i];
+        }
+    }
+
     function changeRoleText(property) {
         const roles = document.getElementById(property).value.split(',');
         /*<![CDATA[*/
@@ -469,6 +491,68 @@
                             </div>
 
                         </object>
+
+
+                        <div th:if="${input.type.name() == 'BOOLEAN_JSON_LIST'}" class="field-group" th:id="|_${input.property}|">
+                            <label th:for="${input.property}"
+                                   th:text="${input.fieldName}">
+                            </label>
+                            <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                  th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                            <div style="clear: both"></div>
+
+                            <table style="width: auto; margin: 20px auto 10px auto">
+                                <tr>
+                                    <td th:each="i : ${#numbers.sequence(-5, -1)}"
+                                        th:text="|T${i}|"
+                                        style="text-align: center">T-5</td>
+                                </tr>
+                                <tr>
+                                    <td th:each="i : ${#numbers.sequence(0, 4)}" width="60">
+                                        <label class="switch">
+                                            <input type="checkbox"
+                                                   th:name="|${input.property}_${i}|"
+                                                   th:id="|${input.property}_${i}|"
+                                                   th:data-prop="${input.property}"
+                                                   onchange="changeBoolList(this.getAttribute('data-prop'))" />
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td th:each="i : ${#numbers.sequence(1, 5)}"
+                                        th:text="|T+${i}|"
+                                        style="text-align: center">T+1</td>
+                                </tr>
+                                <tr>
+                                    <td th:each="i : ${#numbers.sequence(5, 9)}" width="60">
+                                        <label class="switch">
+                                            <input type="checkbox"
+                                                   th:name="|${input.property}_${i}|"
+                                                   th:id="|${input.property}_${i}|"
+                                                   th:data-prop="${input.property}"
+                                                   onchange="changeBoolList(this.getAttribute('data-prop'))" />
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <input type="text"
+                                   th:name="${input.property}"
+                                   th:id="${input.property}"
+                                   th:value="${input.getValue()}"
+                                   autocomplete="off"
+                                   th:data-prop="${input.property}"
+                                   onchange="loadBoolList(this.getAttribute('data-prop'))"
+                            />
+
+                            <span class="note" th:text="${input.description}"></span>
+                            <script th:inline="javascript">
+                                loadBoolList(/*[[${input.property}]]*/ '');
+                            </script>
+                        </div>
 
                     </object>
 

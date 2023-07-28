@@ -126,7 +126,7 @@ open class TasksService(
                 return TaskSubmissionStatus.ALREADY_APPROVED
             if (!submission.approved && !submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
-            return updateSubmission(task, answer, file, submission)
+            return updateSubmission(user, task, answer, file, submission)
 
         } else {
             return newSubmission(task, answer, groupId, null, user, file)
@@ -150,7 +150,7 @@ open class TasksService(
                 return TaskSubmissionStatus.ALREADY_APPROVED
             if (!submission.approved && !submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
-            return updateSubmission(task, answer, file, submission)
+            return updateSubmission(user, task, answer, file, submission)
 
         } else {
             return newSubmission(task, answer, null, user.id, user, file)
@@ -182,6 +182,14 @@ open class TasksService(
                     imageUrlAnswer = "",
                     fileUrlAnswer = "",
                     approved = false, rejected = false, score = 0
+                ).addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = answer.textAnswer,
+                    contentUrl = "",
+                    status = "0 pont | beadva",
+                    type = "TEXT"
                 ))
                 return TaskSubmissionStatus.OK
 
@@ -200,6 +208,14 @@ open class TasksService(
                     imageUrlAnswer = "$target/$fileName",
                     fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
+                ).addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = "$target/$fileName",
+                    status = "0 pont | beadva",
+                    type = "IMAGE"
                 ))
                 return TaskSubmissionStatus.OK
 
@@ -215,6 +231,14 @@ open class TasksService(
                     imageUrlAnswer = "$target/$fileName",
                     fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
+                ).addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = answer.textAnswer,
+                    contentUrl = "$target/$fileName",
+                    status = "0 pont | beadva",
+                    type = "BOTH"
                 ))
                 return TaskSubmissionStatus.OK
 
@@ -233,6 +257,14 @@ open class TasksService(
                     imageUrlAnswer = "",
                     fileUrlAnswer = "$target/$fileName",
                     response = "", approved = false, rejected = false, score = 0
+                ).addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = "$target/$fileName",
+                    status = "0 pont | beadva",
+                    type = "PDF"
                 ))
                 return TaskSubmissionStatus.OK
             }
@@ -243,6 +275,7 @@ open class TasksService(
     }
 
     private fun updateSubmission(
+        user: UserEntity,
         task: TaskEntity,
         answer: TaskSubmissionDto,
         file: MultipartFile?,
@@ -257,7 +290,14 @@ open class TasksService(
                 submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission)
+                submitted.save(submission.addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = answer.textAnswer,
+                    status = "${submission.score} pont | beadva",
+                    type = "TEXT"
+                ))
                 return TaskSubmissionStatus.OK
 
             }
@@ -269,7 +309,15 @@ open class TasksService(
                 submission.imageUrlAnswer = "$target/$fileName"
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission)
+                submitted.save(submission.addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = "$target/$fileName",
+                    status = "${submission.score} pont | beadva",
+                    type = "IMAGE"
+                ))
                 return TaskSubmissionStatus.OK
 
             }
@@ -281,7 +329,15 @@ open class TasksService(
                 submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission)
+                submitted.save(submission.addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = answer.textAnswer,
+                    contentUrl = submission.imageUrlAnswer,
+                    status = "${submission.score} pont | beadva",
+                    type = "IMAGE"
+                ))
                 return TaskSubmissionStatus.OK
 
             }
@@ -293,7 +349,15 @@ open class TasksService(
                 submission.fileUrlAnswer = "$target/$fileName"
                 submission.rejected = false
                 submission.approved = false
-                submitted.save(submission)
+                submitted.save(submission.addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.fullName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = "$target/$fileName",
+                    status = "${submission.score} pont | beadva",
+                    type = "PDF"
+                ))
                 return TaskSubmissionStatus.OK
 
             }

@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.form.*
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
@@ -26,7 +27,8 @@ class TaskAdminRateController(
     component: TaskComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
-    env: Environment
+    env: Environment,
+    private val clock: TimeService
 ) : TwoDeepEntityPage<GradedTaskGroupDto, SubmittedTaskEntity>(
     "rate-tasks",
     GradedTaskGroupDto::class,
@@ -194,10 +196,26 @@ class TaskAdminRateController(
         updateEntity(descriptor, user, entity.get(), dto, newValues, null, null)
         if (entity.get().approved && entity.get().rejected)
             entity.get().rejected = false
+        saveChangeHistory(entity.get(), user.userName)
         entity.get().id = id
         auditLog.edit(user, component.component, newValues.toString())
         submittedRepository.save(entity.get())
         return "redirect:/admin/control/$view/rate/${entity.get().task?.id ?: ""}"
+    }
+
+    fun saveChangeHistory(entity: SubmittedTaskEntity, userName: String) {
+        entity.addSubmissionHistory(
+            date = clock.getTimeInSeconds(),
+            submitterName = userName,
+            adminResponse = true,
+            content = entity.response,
+            contentUrl = "",
+            status = "${entity.score} pont | ${
+                if (entity.approved) "elfogadva"
+                else if (entity.rejected) "elutasítva"
+                else "nem értékelt"}",
+            type = "TEXT"
+        )
     }
 
     override fun onEntityPreSave(entity: SubmittedTaskEntity, auth: Authentication): Boolean {
