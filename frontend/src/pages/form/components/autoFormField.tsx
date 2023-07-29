@@ -123,9 +123,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       break
     case FormFieldVariants.SELECTION_GRID:
     case FormFieldVariants.CHOICE_GRID:
-      component = (
-        <GridField disabled={disabled} field={fieldProps} onChange={field.onChange} value={field.value} variant={fieldProps.type} />
-      )
+      component = <GridField disabled={disabled} field={fieldProps} choice={fieldProps.type === FormFieldVariants.CHOICE_GRID} />
       break
   }
   return (
