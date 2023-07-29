@@ -1,40 +1,26 @@
-import { Checkbox, Grid, GridItem, Radio } from '@chakra-ui/react'
-import { FormField, FormFieldVariants, GridFieldValues } from '../../../util/views/form.view'
-import { Fragment, useEffect, useState } from 'react'
+import { Grid, GridItem } from '@chakra-ui/react'
+import { FormField, GridFieldValues } from '../../../util/views/form.view'
+import { Fragment, useEffect } from 'react'
+import { GridFieldItem } from './GridFieldItem'
+import { useFormContext } from 'react-hook-form'
 
 type Props = {
   field: FormField
-  onChange: (value?: string) => void
-  value: string
-  variant: FormFieldVariants.CHOICE_GRID | FormFieldVariants.SELECTION_GRID
+  choice: boolean
   disabled: boolean
 }
 
-export function GridField({ field, onChange, value, variant, disabled }: Props) {
+export function GridField({ field, choice, disabled }: Props) {
   const format = JSON.parse(field.values) as GridFieldValues
-  const [values, setValues] = useState<Record<string, string>>(JSON.parse(value || '{}'))
-  const radio = variant === FormFieldVariants.CHOICE_GRID
-  const getKey = (qKey: string, oKey: string) => `${format.prefix}${qKey}${radio ? '' : oKey}`
+  const { setValue } = useFormContext()
 
   useEffect(() => {
-    if (Object.keys(values).length === 0) {
-      const defaultValues: Record<string, string> = {}
+    if (choice) {
       format.questions.forEach((q) => {
-        format.options.forEach((o) => {
-          defaultValues[getKey(q.key, o.key)] = radio ? format.options[0].key : 'false'
-        })
+        setValue(`${field.fieldName}${q.key}`, format.options[0].key)
       })
-      setValues(defaultValues)
     }
   }, [])
-
-  const onCheck = (qKey: string, oKey: string, checked?: boolean) => {
-    const newValues = { ...values }
-    newValues[getKey(qKey, oKey)] = radio ? oKey : checked?.toString() || 'false'
-    setValues(newValues)
-    onChange(JSON.stringify(newValues))
-  }
-
   return (
     <Grid
       justifyItems="center"
@@ -53,21 +39,7 @@ export function GridField({ field, onChange, value, variant, disabled }: Props) 
           <GridItem>{q.label}</GridItem>
           {format.options.map((o) => (
             <GridItem key={o.key}>
-              {radio ? (
-                <Radio
-                  isDisabled={disabled}
-                  onChange={(e) => onCheck(q.key, o.key)}
-                  isChecked={values[getKey(q.key, o.key)] === o.key}
-                  colorScheme="brand"
-                />
-              ) : (
-                <Checkbox
-                  onChange={(e) => onCheck(q.key, o.key, e.target.checked)}
-                  isChecked={values[getKey(q.key, o.key)] === 'true'}
-                  colorScheme="brand"
-                  isDisabled={disabled}
-                />
-              )}
+              <GridFieldItem radio={choice} disabled={disabled} questionKey={q.key} optionKey={o.key} fieldName={field.fieldName} />
             </GridItem>
           ))}
         </Fragment>
