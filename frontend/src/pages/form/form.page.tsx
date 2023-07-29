@@ -2,7 +2,7 @@ import { Box, Button, Divider, FormControl, FormLabel, Heading, useToast } from 
 import Cookies from 'js-cookie'
 import { FunctionComponent, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { Navigate, useParams } from 'react-router-dom'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
@@ -28,7 +28,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const toast = useToast()
   const params = useParams()
   const { isLoggedIn } = useAuthContext()
-  const { control, handleSubmit } = useForm()
+  const formMethods = useForm()
   const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
   const { refresh } = useTokenRefresh()
@@ -50,9 +50,18 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const { form, submission, message, status, detailsValidated } = data
   const available = form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !detailsValidated
 
-  const onSubmit = (values: Object) => {
+  const onSubmit = (values: Record<string, string>) => {
+    form?.formFields
+      .filter(({ type }) => type === FormFieldVariants.CHOICE_GRID || type === FormFieldVariants.SELECTION_GRID)
+      .forEach(({ fieldName }) => {
+        delete values[fieldName]
+      })
+    const newValues: Record<string, string> = {}
+    Object.keys(values).forEach((v) => {
+      newValues[v] = values[v].toString()
+    })
     if (available) {
-      submit(values, status !== FormStatus.NO_SUBMISSION)
+      submit(newValues, status !== FormStatus.NO_SUBMISSION)
       window.scrollTo(0, 0)
     }
   }
@@ -77,29 +86,32 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
             <Markdown text={submission?.rejectionMessage || message} />
           </>
         )}
+
         {form && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {form.formFields.map((formField) => (
-              <FormControl key={formField.fieldName} mt={5}>
-                {formField.type === FormFieldVariants.SECTION_START && <Divider mt={10} />}
-                {formField.label && !isCheckbox(formField.type) && (
-                  <FormLabel mb={2} fontSize={formField.type === FormFieldVariants.SECTION_START ? 30 : 20} htmlFor={formField.fieldName}>
-                    {formField.label}
-                  </FormLabel>
-                )}
-                <AutoFormField
-                  submittedValue={submission?.[formField.fieldName]}
-                  disabled={(status !== FormStatus.NO_SUBMISSION && formField.permanent) || !available}
-                  control={control}
-                  fieldProps={formField}
-                />
-                {formField.note && <Markdown text={formField.note} />}
-              </FormControl>
-            ))}
-            <Button mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
-              {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
-            </Button>
-          </form>
+          <FormProvider {...formMethods}>
+            <form onSubmit={formMethods.handleSubmit(onSubmit)}>
+              {form.formFields.map((formField) => (
+                <FormControl key={formField.fieldName} mt={5}>
+                  {formField.type === FormFieldVariants.SECTION_START && <Divider mt={10} />}
+                  {formField.label && !isCheckbox(formField.type) && (
+                    <FormLabel mb={2} fontSize={formField.type === FormFieldVariants.SECTION_START ? 30 : 20} htmlFor={formField.fieldName}>
+                      {formField.label}
+                    </FormLabel>
+                  )}
+                  <AutoFormField
+                    submittedValue={submission?.[formField.fieldName]}
+                    disabled={(status !== FormStatus.NO_SUBMISSION && formField.permanent) || !available}
+                    control={formMethods.control}
+                    fieldProps={formField}
+                  />
+                  {formField.note && <Markdown text={formField.note} />}
+                </FormControl>
+              ))}
+              <Button mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
+                {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
+              </Button>
+            </form>
+          </FormProvider>
         )}
       </Box>
     </CmschPage>
