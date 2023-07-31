@@ -72,6 +72,7 @@ enum class FormElementType(
     HISTORY_VIEW,
     LINK_VIEW,
     IMAGE_VIEW,
+    HTML_INFO_BOX,
     ;
 
     open fun fetchValue(user: UserEntity): String {

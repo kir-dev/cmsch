@@ -70,6 +70,30 @@
                     </div>
                 </object>
 
+                <object th:if="${component.type == 'DashboardStatusTableCard'}" th:remove="tag">
+                    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+                        <h4 th:text="${component.title}">Title</h4>
+                        <span th:text="${component.description}" class="desc">A little description fits there.</span>
+
+                        <table class="dashboard-table" cellspacing="0" style="margin-top: 20px">
+                            <tr>
+                                <th th:each="th : ${component.header}" th:text="${th}"></th>
+                                <th> </th>
+                            </tr>
+                            <tr th:each="tr : ${component.content}">
+                                <td th:each="col : ${tr.row}" th:text="${col}"></td>
+                                <td><span class='material-symbols-outlined' th:style="|color: ${tr.status.color}|" th:text="${tr.status.icon}">close</span></td>
+                            </tr>
+                        </table>
+
+                        <div class="button-group" th:if="${component.exportable}">
+                            <a href="#" th:href="|@{/admin/control}/${view}/export/${component.id}|" class="btn btn-primary" target="_blank"
+                            ><span class="material-symbols-outlined regular">download</span> <ins>LETÖLTÉS (.csv)</ins></a>
+                        </div>
+                    </div>
+                </object>
+
+
                 <object th:if="${component.type == 'DashboardPermissionCard'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:if="${user.isAdmin()}" th:id="${component.id}">
                         <h4 th:text="${component.title}">Jogosultságok</h4>
@@ -180,6 +204,19 @@
                                     <div style="clear: both"></div>
                                     <p th:id="|input${iter.index}|"
                                        th:text="${input.values}"
+                                       style="color: #FFFFFF"
+                                    />
+                                    <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+                                </div>
+
+                                <div th:if="${input.type.name() == 'HTML_INFO_BOX'}" class="field-group">
+                                    <label th:for="|input${iter.index}|"
+                                           th:text="${input.label}">
+                                    </label>
+                                    <div style="clear: both"></div>
+                                    <p th:id="|input${iter.index}|"
+                                       th:utext="${input.values}"
+                                       style="color: #FFFFFF"
                                     />
                                     <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
                                 </div>

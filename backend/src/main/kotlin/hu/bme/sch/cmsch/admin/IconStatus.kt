@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.admin
 
 enum class IconStatus(
-    private val icon: String,
-    private val color: String,
+    val icon: String,
+    val color: String,
 ) {
     CROSS("close", "#c84848"),
     TICK("done", "#39C392"),
@@ -13,6 +13,8 @@ enum class IconStatus(
     STAR("star", "#eaa12f"),
     FLAG("flag", "#a439c3"),
     QUESTION("question_mark", "#eeeeee"),
+    NEW("fiber_new", "#39C392"),
+    RED_FLAG("flag", "#c84848"),
     EMPTY("", "")
     ;
 
