@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class ProductsView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val products: List<ProductEntity>
 
 )

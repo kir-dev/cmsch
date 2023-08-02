@@ -29,76 +29,76 @@ data class ResponseEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     @property:ImportFormat(ignore = true)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:GenerateInput(visible = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
     var submitterUserId: Int? = null,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 3, label = "Beküldő neve", enabled = false, ignore = true)
     @property:GenerateOverview(columnName = "Beküldő", order = 1)
     @property:ImportFormat(ignore = false, columnId = 1)
     var submitterUserName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:GenerateInput(visible = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
     var submitterGroupId: Int? = null,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 3, label = "Beküldő csoport", enabled = false, ignore = true)
     @property:GenerateOverview(columnName = "", order = 2)
     @property:ImportFormat(ignore = false, columnId = 3)
     var submitterGroupName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:GenerateInput(visible = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
     var formId: Int = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Beküldve ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_LONG)
     var creationDate: Long = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Utoljára módosítva", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)
     var lastUpdatedDate: Long = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve")
     @property:GenerateOverview(columnName = "Fizetve", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
     var accepted: Boolean = false,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Fizetve ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_LONG)
     var acceptedAt: Long = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Elutasítva")
     @property:GenerateOverview(columnName = "Elutasítva", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
@@ -106,14 +106,14 @@ data class ResponseEntity(
     var rejected: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 255, order = 8, label = "Elutasítás indoka", note = "Csak akkor kell ha elutasított")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10)
     var rejectionMessage: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(maxLength = 255, order = 9, label = "Email",
         note = "A felhasználó email címe, ez a BME Jegy integrációhoz kell")
     @property:GenerateOverview(columnName = "Beküldő emailje", order = 2)
@@ -122,7 +122,7 @@ data class ResponseEntity(
 
     @Lob
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 255, order = 10, label = "Kitöltés",
         note = "A kitöltés JSON formátumban", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
@@ -130,14 +130,14 @@ data class ResponseEntity(
     var submission: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "Adatok elfogadva")
     @property:GenerateOverview(columnName = "Adatok", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_BOOLEAN)
     var detailsValidated: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Adatok elfogadva ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LONG)
@@ -145,7 +145,7 @@ data class ResponseEntity(
 
     @Lob
     @Column(nullable = false, columnDefinition = "CLOB default ''")
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 13, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat

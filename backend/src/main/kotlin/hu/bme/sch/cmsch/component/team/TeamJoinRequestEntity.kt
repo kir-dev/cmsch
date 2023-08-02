@@ -20,34 +20,34 @@ data class TeamJoinRequestEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Felhasználó")
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var userName: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Felhasználó ID-je")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var userId: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 3, label = "Csapat")
     @property:GenerateOverview(columnName = "Csapat", order = 2)
     @property:ImportFormat(ignore = false, columnId = 2)
     var groupName: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 4, label = "Csapat ID-je")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)

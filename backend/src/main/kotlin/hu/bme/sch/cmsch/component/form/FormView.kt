@@ -30,16 +30,16 @@ enum class FormSubmissionStatus {
 
 data class FormView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val form: FormEntityDto? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val submission: Map<String, String>? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val detailsValidated: Boolean? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val status: FormStatus = FormStatus.NO_SUBMISSION,
 
     /**
@@ -49,7 +49,7 @@ data class FormView(
      * - status = ACCEPTED -> what to do
      * - else -> just print to the top of the page
      */
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val message: String? = null
 
 )

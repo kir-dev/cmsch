@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class RiddleHintView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var hint: String = ""
 
 )

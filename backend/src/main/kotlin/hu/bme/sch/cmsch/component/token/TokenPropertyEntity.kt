@@ -25,21 +25,21 @@ data class TokenPropertyEntity(
 
     @Id
     @GeneratedValue
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @ManyToOne(fetch = FetchType.EAGER)
     var ownerUser: UserEntity? = null,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @ManyToOne(fetch = FetchType.EAGER)
     var ownerGroup: GroupEntity? = null,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @ManyToOne(fetch = FetchType.EAGER)
     var token: TokenEntity? = null,
 

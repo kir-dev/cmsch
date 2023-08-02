@@ -19,12 +19,12 @@ fun resolveTaskStatus(submission: SubmittedTaskEntity?) =
     else TaskStatus.NOT_SUBMITTED
 
 data class TaskEntityWrapperDto(
-    @JsonView(value = [ Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Preview::class, FullDetails::class ])
     val task: TaskEntity,
 
-    @JsonView(value = [ Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Preview::class, FullDetails::class ])
     val status: TaskStatus,
 
-    @JsonView(value = [ Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Preview::class, FullDetails::class ])
     val response: String
 )

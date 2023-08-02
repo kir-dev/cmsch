@@ -82,33 +82,33 @@ enum class FormElementType(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class FormElement(
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var fieldName: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var label: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var type: FormElementType = FormElementType.TEXT,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var formatRegex: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var invalidFormatMessage: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var values: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var note: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var required: Boolean = false,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var permanent: Boolean = false, // Cannot be edited after submission
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var defaultValue: String = "",
 )

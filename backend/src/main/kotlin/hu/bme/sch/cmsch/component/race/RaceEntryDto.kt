@@ -13,23 +13,23 @@ data class RaceEntryDto(
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     @property:GenerateOverview(columnName = "Név", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var name: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     @property:GenerateOverview(columnName = "Csoport", order = 2)
     @property:ImportFormat(ignore = false, columnId = 1)
     var groupName: String? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     @get:JsonProperty("score")
     @property:GenerateOverview(columnName = "Idő", order = 3, renderer = OVERVIEW_TYPE_TIME)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_FLOAT)
     var time: Float = 0.0f,
 
-    @JsonView(Edit::class)
+    @field:JsonView(Edit::class)
     @property:GenerateOverview(columnName = "Email", order = 4)
     @property:ImportFormat(ignore = false, columnId = 4)
     var email: String = "",

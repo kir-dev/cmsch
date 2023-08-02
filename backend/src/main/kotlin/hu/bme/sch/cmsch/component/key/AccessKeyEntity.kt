@@ -19,20 +19,20 @@ import org.springframework.core.env.Environment
 data class AccessKeyEntity(
     @Id
     @GeneratedValue
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Kulcs")
     @property:GenerateOverview(columnName = "Kulcs", order = 1)
     @property:ImportFormat
     var accessKey: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Felhasználó ID-je",
         type = INPUT_TYPE_NUMBER, defaultValue = "0")
@@ -40,7 +40,7 @@ data class AccessKeyEntity(
     @property:ImportFormat
     var usedByUserId: Int = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 3, label = "Felhasználó neve",
         note = "Ez csak logolás miatt van ideírva")
@@ -48,7 +48,7 @@ data class AccessKeyEntity(
     @property:ImportFormat
     var usedByUserName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 4, label = "Csoport átállítása",
         note = "Ha be van kapcsolva, akkor az alább látható csoportot fogja beállítani a kitöltőnek")
@@ -56,14 +56,14 @@ data class AccessKeyEntity(
     @property:ImportFormat
     var setGroup: Boolean = false,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 5, label = "Csoport neve")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var groupName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Szerep átállítása",
         note = "Ha be van kapcsolva, akkor az alább látható szerepet fogja beállítani a kitöltőnek")
@@ -72,7 +72,7 @@ data class AccessKeyEntity(
     var setRole: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7,
         label = "Szerepkör",
         source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ],
@@ -81,7 +81,7 @@ data class AccessKeyEntity(
     @property:ImportFormat
     var roleType: RoleType = RoleType.ATTENDEE,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 8, label = "Mikor használta fel", defaultValue = "0")
     @property:GenerateOverview(visible = false)

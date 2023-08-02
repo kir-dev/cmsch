@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.dto.Preview
 
 data class NewsView(
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     val news: List<NewsEntity> = listOf()
 
 )

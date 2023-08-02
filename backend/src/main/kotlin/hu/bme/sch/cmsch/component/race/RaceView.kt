@@ -5,19 +5,19 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class RaceView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val categoryName: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val description: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val place: Int? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val bestTime: Float? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val board: List<RaceEntryDto> = listOf(),
 
 )

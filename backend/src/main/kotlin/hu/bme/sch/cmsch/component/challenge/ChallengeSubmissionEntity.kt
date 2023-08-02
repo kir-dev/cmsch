@@ -20,24 +20,24 @@ data class ChallengeSubmissionEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 1, label = "Kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 2)
     @property:ImportFormat(ignore = false, columnId = 0)
     var category: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var userId: Int? = null,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
         note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot")
@@ -45,12 +45,12 @@ data class ChallengeSubmissionEntity(
     @property:ImportFormat(ignore = false, columnId = 2)
     var userName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     var groupId: Int? = null,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 3, label = "Csoport", entitySource = "GroupEntity",
         note = "Csak akkor kell kijelölni ha csoportok kapnak pontot")
@@ -59,13 +59,13 @@ data class ChallengeSubmissionEntity(
     var groupName: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 4, label = "Adott pont")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
     var score: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 5, label = "Cimke")
     @property:GenerateOverview(visible = false)

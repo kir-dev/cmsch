@@ -5,16 +5,16 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class LeaderBoardView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val userScore: Int? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val userBoard: List<LeaderBoardEntryDto>? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val groupScore: Int? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val groupBoard: List<LeaderBoardEntryDto>? = null
 
 )

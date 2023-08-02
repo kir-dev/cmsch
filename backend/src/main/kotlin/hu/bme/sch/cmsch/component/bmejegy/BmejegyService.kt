@@ -71,7 +71,7 @@ open class BmejegyService(
                     orderKey = cell.order_key ?: "",
                     email = cell.email ?: "",
                     qrCode = cell.voucher_code ?: "INVALID",
-                    photoId = cell.ic_4?.uppercase() ?: "",
+                    photoId = cell.ic_19?.uppercase() ?: "",
                     date = cell.post_date ?: "",
                     registered = clock.getTimeInSeconds(),
                     idId = cell.id ?: "",

@@ -24,7 +24,7 @@ import jakarta.persistence.*
 data class SubmittedTaskEntity(
     @Id
     @GeneratedValue
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
@@ -38,7 +38,7 @@ data class SubmittedTaskEntity(
     var groupId: Int? = null,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 1, label = "Beadó csoport", enabled = false, ignore = true)
     @property:GenerateOverview(columnName = "Csoport", order = 1)
     var groupName: String = "",
@@ -47,7 +47,7 @@ data class SubmittedTaskEntity(
     var userId: Int? = null,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 2, label = "Beadó felhasználó", enabled = false, ignore = true)
     @property:GenerateOverview(columnName = "Felhasználó", order = 2)
     var userName: String = "",
@@ -57,50 +57,50 @@ data class SubmittedTaskEntity(
 
     @Lob
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 4, label = "Szöveges válasz (teljes)", enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     var textAnswerLob: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_IMAGE_PREVIEW, order = 5, label = "Beküldött kép", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     var imageUrlAnswer: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_FILE_PREVIEW, order = 6, label = "Beküldött fájl", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     var fileUrlAnswer: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 7, label = "Értékelés", note = "Ez a szöveg fog megjelenni a csoportoknak/beadóknak")
     @property:GenerateOverview(visible = false)
     var response: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Elfogadva", note = "Ha ez igaz az felülírja az elutasított státuszt")
     @property:GenerateOverview(columnName = "Elfogadva", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var approved: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Elutasítva")
     @property:GenerateOverview(columnName = "Elutasítva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var rejected: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 10, label = "Adott pont")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     var score: Int = 0,
 
     @Lob
     @Column(nullable = false, columnDefinition = "CLOB default ''")
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 11, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)
     var submissionHistory: String = "",

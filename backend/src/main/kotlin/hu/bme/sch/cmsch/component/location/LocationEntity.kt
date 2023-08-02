@@ -22,77 +22,77 @@ data class LocationEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     var userId: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Felhasználó")
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
     var userName: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 11, label = "Becenév")
     var alias: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Csoport neve")
     @property:GenerateOverview(columnName = "Csoport", order = 2, centered = true)
     var groupName: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 8, label = "Longitude", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(columnName = "Longitude", order = 4)
     var longitude: Double = 0.0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 9, label = "Latitude", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(columnName = "Latitude", order = 3)
     var latitude: Double = 0.0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 10, label = "Magasság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(columnName = "Magasság", order = 5)
     var altitude: Double = 0.0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 11, label = "Pontosság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(visible = false)
     var accuracy: Float = 0.0f,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 12, label = "Magasság pontossága", defaultValue = "0", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(visible = false)
     var altitudeAccuracy: Float = 0.0f,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 13, label = "Haladási irány", defaultValue = "0", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(visible = false)
     var heading: Double = 0.0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 14, label = "Sebesség", defaultValue = "0", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(visible = false)
     var speed: Double = 0.0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 15, label = "Helyzet frissült ekkor")
     @property:GenerateOverview(columnName = "Frissült", order = 6, renderer = OVERVIEW_TYPE_DATE, centered = true)
     var timestamp: Long = 0

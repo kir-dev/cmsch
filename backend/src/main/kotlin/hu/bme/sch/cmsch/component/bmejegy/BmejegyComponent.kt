@@ -36,6 +36,7 @@ class BmejegyComponent(
             completeByNeptun,
             completeByEmail,
             completeByPhotoId,
+            bufferSize,
             minTimestamp,
             countToFetch,
             szigFieldName,

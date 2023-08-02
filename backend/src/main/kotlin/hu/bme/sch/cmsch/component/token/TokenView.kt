@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 
 data class TokenView(
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val tokens: List<TokenDto>,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val collectedTokenCount: Int,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val totalTokenCount: Int,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val minTokenToComplete: Int,
 )

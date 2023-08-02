@@ -20,48 +20,48 @@ data class TokenEntity(
 
     @Id
     @GeneratedValue
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Token neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var title: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Token")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 1)
     var token: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Beolvasható-e a token")
     @property:GenerateOverview(columnName = "Olvasható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
     var visible: Boolean = false,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 4, label = "Típus")
     @property:GenerateOverview(columnName = "Típus", order = 3)
     @property:ImportFormat(ignore = false, columnId = 3)
     var type: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 5, label = "Ikon")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 4)
     var icon: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 6, label = "Pont", type = INPUT_TYPE_NUMBER, defaultValue = "0",
         note = "Egész szám, hány pontot ér a megszerzése")
@@ -69,7 +69,7 @@ data class TokenEntity(
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
     var score: Int? = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 7, label = "Kiváltott esemény",
         note = "QR fighthoz az akció amit kivált. capture:<tower> vagy history:<tower>")
@@ -77,7 +77,7 @@ data class TokenEntity(
     @property:ImportFormat(ignore = false, columnId = 6)
     var action: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "BOOLEAN default FALSE")
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Aktív cél",
         note = "Csak akkor ha a QR Fight komponens is be van töltve")

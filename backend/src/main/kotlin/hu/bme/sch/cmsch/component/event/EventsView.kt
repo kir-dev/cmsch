@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.dto.Preview
 
 data class EventsView(
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     val allEvents: List<EventEntity> = listOf(),
 
 )

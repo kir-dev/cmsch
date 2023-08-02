@@ -17,19 +17,19 @@ data class GuildToUserMappingEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 6, order = 1, label = "Neptun kód")
     @property:GenerateOverview(columnName = "Neptun kód", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var neptun: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 2, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 2)

@@ -10,10 +10,10 @@ enum class RiddleSubmissionStatus {
 
 data class RiddleSubmissionView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var status: RiddleSubmissionStatus = RiddleSubmissionStatus.WRONG,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var nextId: Int? = null
 
 )

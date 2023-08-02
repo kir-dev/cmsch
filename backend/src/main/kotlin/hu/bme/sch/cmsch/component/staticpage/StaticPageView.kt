@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class StaticPageView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val page: StaticPageEntity?
 
 )

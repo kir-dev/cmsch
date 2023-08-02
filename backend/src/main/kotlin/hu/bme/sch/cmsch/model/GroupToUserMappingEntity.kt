@@ -17,33 +17,33 @@ data class GroupToUserMappingEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 6, order = 1, label = "Neptun kód")
     @property:GenerateOverview(columnName = "Neptun kód", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var neptun: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 1, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 2)
     @property:ImportFormat(ignore = false, columnId = 3)
     var fullName: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Csoport", entitySource = "GroupEntity")
     @property:GenerateOverview(columnName = "Csoport", order = 3, centered = true)
     @property:ImportFormat(ignore = false, columnId = 1)
     var groupName: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(columnName = "Szak", order = 4, centered = true)

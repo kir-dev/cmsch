@@ -5,10 +5,10 @@ import hu.bme.sch.cmsch.dto.Preview
 
 data class WarningView(
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     var message: String = "",
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     var type: String = "warning"
 
 )

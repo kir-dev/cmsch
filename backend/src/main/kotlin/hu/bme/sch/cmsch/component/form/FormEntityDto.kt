@@ -9,19 +9,19 @@ import org.slf4j.LoggerFactory
 val readerForFields: ObjectReader = ObjectMapper().readerForListOf(FormElement::class.java)
 
 data class FormEntityDto(
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var name: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var url: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var formFields: List<FormElement> = listOf(),
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var availableFrom: Long = 0,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var availableUntil: Long = 0
 ) {
 

@@ -22,12 +22,12 @@ data class RiddleCategoryEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
@@ -35,13 +35,13 @@ data class RiddleCategoryEntity(
     var title: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je")
     @property:GenerateOverview(columnName = "Kategória", order = 2)
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var categoryId: Int = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Látható-e a riddle kategória")
     @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
@@ -49,7 +49,7 @@ data class RiddleCategoryEntity(
     var visible: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Minimum rang",
         note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező ",
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])

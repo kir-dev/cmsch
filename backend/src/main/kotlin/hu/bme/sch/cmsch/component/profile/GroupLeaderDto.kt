@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 
 data class GroupLeaderDto(
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val name: String,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val facebookUrl: String,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val mobilePhone: String
 ) {
     constructor(args: List<String>) : this(

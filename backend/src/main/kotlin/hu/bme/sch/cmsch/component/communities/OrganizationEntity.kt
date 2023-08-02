@@ -23,20 +23,20 @@ data class OrganizationEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(order = 1, label = "Reszort neve", enabled = true)
     @property:GenerateOverview(columnName = "Név", order = 2)
     @property:ImportFormat(ignore = false, columnId = 0)
     var name: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 2, label = "Név rejtett",
         note = "El legyen rejtve a név az oldalon vagy ne (csak a logó elég)")
     @property:GenerateOverview(visible = false)
@@ -45,7 +45,7 @@ data class OrganizationEntity(
 
     @Lob
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Rövid leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2)
@@ -53,42 +53,42 @@ data class OrganizationEntity(
 
     @Lob
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 4, label = "Teljes leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3)
     var descriptionParagraphs: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 5, label = "Website url", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 4)
     var website: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(order = 6, label = "Logó url", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5)
     var logo: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 7, label = "Sötét logó url", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var darkLogo: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 8, label = "Alapítva", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7)
     var established: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 9, label = "E-mail cím", enabled = true,
         note = "Amin elérhető a kör")
     @property:GenerateOverview(visible = false)
@@ -96,14 +96,14 @@ data class OrganizationEntity(
     var email: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 10, label = "Tagok száma")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_INT)
     var members: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 11, label = "Szín", enabled = true,
         note = "Ezzel a színnel jelenik meg az oldalon")
     @property:GenerateOverview(visible = false)
@@ -111,7 +111,7 @@ data class OrganizationEntity(
     var color: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(order = 12, label = "Érdeklődési körök", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
     @property:GenerateOverview(visible = false)
@@ -120,21 +120,21 @@ data class OrganizationEntity(
     var interests: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 13, label = "Facebook URL", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12)
     var facebook: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 14, label = "Instagram URL", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 13)
     var instagram: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 15, label = "Jelentkezés URL-je", enabled = true,
         note = "Ha nincs, akkor az lesz kiírva, hogy személyesen lehet jelntkezni")
     @property:GenerateOverview(visible = false)
@@ -143,7 +143,7 @@ data class OrganizationEntity(
 
     @Lob
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 16, type = INPUT_TYPE_BLOCK_TEXT, label = "Képek URL-jei", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
     @property:GenerateOverview(visible = false)
@@ -153,7 +153,7 @@ data class OrganizationEntity(
 
     @Lob
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 17, type = INPUT_TYPE_BLOCK_TEXT, label = "Videók URL-jei", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
     @property:GenerateOverview(visible = false)
@@ -162,7 +162,7 @@ data class OrganizationEntity(
     var videoIds: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Látható")
     @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 17, type = IMPORT_BOOLEAN)

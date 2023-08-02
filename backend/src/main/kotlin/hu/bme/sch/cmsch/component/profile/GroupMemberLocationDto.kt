@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 
 data class GroupMemberLocationDto(
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val name: String,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val logitude: Double,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val latitude: Double,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val accuracy: Float,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val timestamp: Long
 )

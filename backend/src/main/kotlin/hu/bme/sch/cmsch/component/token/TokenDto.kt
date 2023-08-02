@@ -5,13 +5,13 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class TokenDto(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val title: String,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val type: String,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val icon: String,
 
 )

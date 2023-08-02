@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 
 data class LeaderBoardEntryDto(
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val name: String,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val groupName: String? = null,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val score: Int?,
 )

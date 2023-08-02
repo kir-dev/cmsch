@@ -6,34 +6,34 @@ import java.io.Serializable
 
 data class SubmittedTaskEntityDto(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val id: Int = 0,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val groupName: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val userName: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val textAnswer: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val imageUrlAnswer: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val fileUrlAnswer: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val response: String = "",
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val approved: Boolean = false,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val rejected: Boolean = false,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     val score: Int? = null
 
 ) : Serializable {

@@ -20,25 +20,25 @@ data class RaceRecordEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 2, label = "Kategória", type = INPUT_TYPE_ENTITY_SELECT,
         entitySource = "RaceCategoryEntity", note = "Az üres az alapértelmezett kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var category: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var userId: Int? = null,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
         note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `id| Teljes Név [a/g] email` ahol az: a = authsch, g = google",
@@ -47,12 +47,12 @@ data class RaceRecordEntity(
     @property:ImportFormat(ignore = false, columnId = 2)
     var userName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     var groupId: Int? = null,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 3, label = "Csoport", entitySource = "GroupEntity",
         note = "Csak akkor kell kijelölni ha csoportok kapnak pontot")
@@ -61,7 +61,7 @@ data class RaceRecordEntity(
     var groupName: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_FLOAT, order = 4, label = "Mért idő", defaultValue = "0.0",
         note = "Másodpercben kell megadni, és ponttal (.) van elválasztva, nem vesszővel! 3 tizedes pontig lehet megadni pontosságot.")
     @property:GenerateOverview(columnName = "Idő", order = 4, centered = true)
@@ -69,7 +69,7 @@ data class RaceRecordEntity(
     var time: Float = 0.0f,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Időbélyeg", enabled = false, visible = false)
     @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)

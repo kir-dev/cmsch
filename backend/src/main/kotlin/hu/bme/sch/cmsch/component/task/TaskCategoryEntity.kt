@@ -25,20 +25,20 @@ data class TaskCategoryEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Kategória neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var name: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je. " +
             "Egyedinek kell lennie, különben összeakad a rendszer!")
     @property:GenerateOverview(columnName = "ID", order = 2)
@@ -46,21 +46,21 @@ data class TaskCategoryEntity(
     var categoryId: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 3, label = "Beadhatóak ekkortól")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_LONG)
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Beadhatóak eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LONG)
     var availableTo: Long = 0,
 
     @Enumerated(EnumType.STRING)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus", source = [ "REGULAR", "PROFILE_REQUIRED" ],
         note = "A PROFILE_REQUIRED olyan task ami a többi feladattól külön jelenik meg, és külön van mutatva a profil oldalon. " +
                 "Ideális profilkép vagy motivációs levél feltöltéshez.")

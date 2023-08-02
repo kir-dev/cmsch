@@ -5,10 +5,10 @@ import hu.bme.sch.cmsch.dto.FullDetails
 
 data class TokenSubmittedView(
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var status: TokenCollectorStatus,
 
-    @JsonView(FullDetails::class)
+    @field:JsonView(FullDetails::class)
     var title: String?
 
 )

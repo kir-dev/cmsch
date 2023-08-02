@@ -21,13 +21,13 @@ import jakarta.persistence.*
 data class NewsEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
         note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett. " +
@@ -36,7 +36,7 @@ data class NewsEntity(
     @property:ImportFormat(ignore = false, columnId = 0)
     var url: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
@@ -44,7 +44,7 @@ data class NewsEntity(
     var title: String = "",
 
     @Lob
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Rövid tartalom",
         note = "Ez a hír összesítésben megjelenő tartalma")
@@ -53,7 +53,7 @@ data class NewsEntity(
     var briefContent: String = "",
 
     @Lob
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Tartalom",
             note = "Ez a hír teljes tartalma")
@@ -61,27 +61,27 @@ data class NewsEntity(
     @property:ImportFormat(ignore = false, columnId = 2)
     var content: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_FILE, order = 4, label = "Kép a hír mellé", fileType = "image")
     @property:GenerateOverview(visible = false)
     var imageUrl: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Látható a hír")
     @property:GenerateOverview(columnName = "Látható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_BOOLEAN)
     var visible: Boolean = false,
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Kiemelt hír")
     @property:GenerateOverview(columnName = "Kiemelt", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_BOOLEAN)
     var highlighted: Boolean = false,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja (ez csak tájékoztató " +
             "jellegű, a hír hamarabb is megjelenik)", defaultValue = "0")
@@ -90,7 +90,7 @@ data class NewsEntity(
     var timestamp: Long = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Minimum rang a megtekintéshez",
             note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező ",
             source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
@@ -98,19 +98,19 @@ data class NewsEntity(
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_ENUM, enumSource = RoleType::class)
     var minRole: RoleType = RoleType.GUEST,
 
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 9, label = "OG:Title")
     @property:GenerateOverview(visible = false)
     override var ogTitle: String = "",
 
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 10, label = "OG:Image")
     @property:GenerateOverview(visible = false)
     override var ogImage: String = "",
 
-    @JsonView(value = [ Edit::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 11, label = "OG:Description")
     @property:GenerateOverview(visible = false)

@@ -20,33 +20,33 @@ data class RiddleEntity(
 
     @Id
     @GeneratedValue
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var title: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_FILE, order = 2, label = "A képrejtvény", fileType = "image")
     @property:GenerateOverview(visible = false)
     var imageUrl: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 3, label = "Megoldás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 1)
     var solution: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 4, label = "Hint")
     @property:GenerateOverview(visible = false)
@@ -54,13 +54,13 @@ data class RiddleEntity(
     var hint: String = "",
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 5, label = "Pont")
     @property:GenerateOverview(columnName = "Pont", order = 2, centered = true)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
     var score: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false, name = "`order`")
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 6, label = "Sorrend")
     @property:GenerateOverview(columnName = "Sorrend", order = 3, centered = true)
@@ -68,20 +68,20 @@ data class RiddleEntity(
     var order: Int = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 7, label = "Kategória id-je")
     @property:GenerateOverview(columnName = "Kategória", order = 4, centered = true)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
     var categoryId: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false, length = 64)
     @property:GenerateInput(maxLength = 64, order = 8, label = "Riddle készítője", note = "Akkor jelenik meg ha nem üres")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var creator: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false, length = 64)
     @property:GenerateInput(maxLength = 64, order = 9, label = "Első megoldó",
         note = "Ezt automatikusan tölti ki a rendszer")

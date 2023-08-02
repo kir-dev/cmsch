@@ -19,20 +19,20 @@ import jakarta.persistence.*
 data class RaceCategoryEntity(
     @Id
     @GeneratedValue
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var name: String = "",
 
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Slug (url)",
         note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett.", interpreter = INTERPRETER_PATH)
@@ -41,7 +41,7 @@ data class RaceCategoryEntity(
     var slug: String = "",
 
     @Lob
-    @JsonView(value = [ Edit::class, Preview::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás",
         note = "Meg fog jelenni a kategória menüjének tetején")
@@ -49,7 +49,7 @@ data class RaceCategoryEntity(
     @property:ImportFormat(ignore = false, columnId = 2)
     var description: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 4, label = "Látható-e a kategória")
     @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)

@@ -6,19 +6,19 @@ import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardEntry
 
 data class TasksView(
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     val score: Int?,
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     val categories: List<TaskCategoryDto> = listOf(),
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     val leaderBoard: List<LeaderBoardEntry>,
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     val leaderBoardVisible: Boolean,
 
-    @JsonView(Preview::class)
+    @field:JsonView(Preview::class)
     val leaderBoardFrozen: Boolean
 
 )

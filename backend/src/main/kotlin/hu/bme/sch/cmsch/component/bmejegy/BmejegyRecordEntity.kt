@@ -18,103 +18,103 @@ data class BmejegyRecordEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id : Int = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 1, label = "Termék")
     @property:GenerateOverview(columnName = "Termék", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var item: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Vásárló")
     @property:GenerateOverview(columnName = "Vásárló", order = 2)
     @property:ImportFormat(ignore = false, columnId = 1)
     var fullName: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 3, label = "Státusz")
     @property:GenerateOverview(columnName = "Státusz", order = 4)
     @property:ImportFormat(ignore = false, columnId = 2)
     var status: String = "N/A",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 4, label = "Rendelés kulcs", note = "order_key mező")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3)
     var orderKey: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 256, order = 5, label = "Email")
     @property:GenerateOverview(columnName = "Email", order = 3)
     @property:ImportFormat(ignore = false, columnId = 4)
     var email: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 6, label = "QR")
     @property:GenerateOverview(columnName = "QR", order = 5)
     @property:ImportFormat(ignore = false, columnId = 5)
     var qrCode: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 7, label = "Szig. szám")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var photoId: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 8, label = "Teljesítve ekkorra")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7)
     var date: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Beérkezett ekkor")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_LONG)
     var registered: Long = 0,
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 10, label = "Rendelés azonosító", note = "ID mező")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9)
     var idId: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 11, label = "Rendelés termék azonosító", note = "order_item_id mező")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10)
     var itemId: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 12, label = "Rendelés összege")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 11)
     var total: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 13, label = "Szak", note = "Nem mindig van kitöltve")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12)
     var faculty: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 14, label = "Beazonosított user ID-ja",
         note = "Csak akkor írd át ha tudod mit csinálsz")

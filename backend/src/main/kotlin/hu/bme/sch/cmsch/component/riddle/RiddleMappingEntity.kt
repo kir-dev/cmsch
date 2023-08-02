@@ -22,7 +22,7 @@ data class RiddleMappingEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     override var id: Int = 0,
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -35,19 +35,19 @@ data class RiddleMappingEntity(
     var ownerGroup: GroupEntity? = null,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     var hintUsed: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     var completed: Boolean = false,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     var completedAt: Long = 0,
 
     @Column(nullable = false)
-    @JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class ])
     var attemptCount: Int = 0
 
 ): ManagedEntity {
