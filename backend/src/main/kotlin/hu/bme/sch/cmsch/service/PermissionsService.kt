@@ -9,10 +9,12 @@ import hu.bme.sch.cmsch.component.challenge.ChallengeComponent
 import hu.bme.sch.cmsch.component.communities.CommunitiesComponent
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.component.debt.DebtComponent
+import hu.bme.sch.cmsch.component.email.EmailComponent
 import hu.bme.sch.cmsch.component.event.EventComponent
 import hu.bme.sch.cmsch.component.form.FormComponent
 import hu.bme.sch.cmsch.component.home.HomeComponent
 import hu.bme.sch.cmsch.component.impressum.ImpressumComponent
+import hu.bme.sch.cmsch.component.key.AccessKeyComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.location.LocationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -312,10 +314,22 @@ object ControlPermissions : PermissionGroup {
         component = MessagingComponent::class
     )
 
+    val PERMISSION_CONTROL_EMAILS = PermissionValidator(
+        "EMAILS_CONTROL",
+        "Email komponens testreszabása",
+        component = EmailComponent::class
+    )
+
+    val PERMISSION_SEND_EMAIL = PermissionValidator(
+        "MESSAGING_SEND",
+        "Teszt email küldése",
+        component = EmailComponent::class
+    )
+
     val PERMISSION_CONTROL_ACCESS_KEYS = PermissionValidator(
         "ACCESS_KEY_CONTROL",
         "Hozzáférési kulcs komponens testreszabása",
-        component = EventComponent::class
+        component = AccessKeyComponent::class
     )
 
     override fun allPermissions() = listOf(
@@ -352,6 +366,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_SHOW_LIVE_STATS,
         PERMISSION_CONTROL_MESSAGING,
         PERMISSION_SEND_MESSAGE,
+        PERMISSION_CONTROL_EMAILS,
+        PERMISSION_SEND_EMAIL,
         PERMISSION_CONTROL_ACCESS_KEYS,
     )
 
@@ -1058,6 +1074,32 @@ object StaffPermissions : PermissionGroup {
         component = TeamComponent::class
     )
 
+    /// EventComponent
+
+    val PERMISSION_SHOW_EMAILS = PermissionValidator(
+        "EMAIL_SHOW",
+        "Email sablonok megtekintése",
+        component = EmailComponent::class
+    )
+
+    val PERMISSION_EDIT_EMAILS = PermissionValidator(
+        "EMAIL_EDIT",
+        "Email sablonok szerkesztése",
+        component = EmailComponent::class
+    )
+
+    val PERMISSION_CREATE_EMAILS = PermissionValidator(
+        "EMAIL_CREATE",
+        "Email sablonok létrehozása",
+        component = EmailComponent::class
+    )
+
+    val PERMISSION_DELETE_EMAILS = PermissionValidator(
+        "EMAIL_DELETE",
+        "Email sablonok törlése",
+        component = EmailComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_SHOW_TASKS,
@@ -1186,6 +1228,11 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_ACCESS_KEYS,
         PERMISSION_CREATE_ACCESS_KEYS,
         PERMISSION_DELETE_ACCESS_KEYS,
+
+        PERMISSION_SHOW_EMAILS,
+        PERMISSION_EDIT_EMAILS,
+        PERMISSION_CREATE_EMAILS,
+        PERMISSION_DELETE_EMAILS,
     )
 
 }

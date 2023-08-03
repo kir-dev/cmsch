@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
@@ -18,12 +19,14 @@ class MessagingService(
     private val log = LoggerFactory.getLogger(javaClass)
     private val writer = ObjectMapper().writerFor(SimpleMessageDto::class.java)
 
-    fun sendSimpleMessage(
+    @Async
+    open fun sendSimpleMessage(
         target: List<String>,
         message: String,
         proxyBaseUrl: String?,
-        proxyToken: String?
-    ): MessageResponse {
+        proxyToken: String?,
+        callback: (MessageResponse) -> Unit = {},
+    ) {
         val client = WebClient.builder()
             .baseUrl(proxyBaseUrl ?: messagingComponent.proxyBaseUrl.getValue())
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -48,7 +51,7 @@ class MessagingService(
             .bodyToMono(MessageResponse::class.java)
             .block() ?: MessageResponse(false, "Response is null", listOf())
         log.info("Response was: {} and delivered to: {}", messageResponse.message ?: "<null>", messageResponse.delivered.joinToString(", "))
-        return messageResponse
+        callback.invoke(messageResponse)
     }
 
 }

@@ -18,6 +18,9 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val secretKey: String,
     val sessionValidityInMilliseconds: Long,
 
+    // Tokens
+    val mailgunToken: String,
+
     // Profile Qr
     val profileQrEnabled: Boolean,
     val profileQrPrefix: String,

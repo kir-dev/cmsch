@@ -80,6 +80,10 @@ class AuditLogService(
         write("ERROR ", component, action)
     }
 
+    fun error(user: CmschUser, component: String, action: String) {
+        write("ERROR ", component, "${user.internalId}@${user.userName} : $action")
+    }
+
     fun admin403(user: CmschUser, component: String, module: String, permissionString: String) {
         write("UNAUTH", component, "Unauthorized request to $module, required permission: $permissionString")
     }

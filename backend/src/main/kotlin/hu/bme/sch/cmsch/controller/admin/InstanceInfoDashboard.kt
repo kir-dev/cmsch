@@ -78,6 +78,7 @@ class InstanceInfoDashboard(
             listOf("External resources",            startupPropertyConfig.external),
             listOf("Audit log location",            startupPropertyConfig.auditLog),
             listOf("Time zone id",                  startupPropertyConfig.zoneId),
+            listOf("Mailgun token length",          startupPropertyConfig.mailgunToken.length.toString()),
             listOf("JWT enabled",                   startupPropertyConfig.jwtEnabled.toString()),
             listOf("Session validity (ms)",         startupPropertyConfig.sessionValidityInMilliseconds.toString()),
             listOf("Increased session time (ms)",   startupPropertyConfig.increasedSessionTime.toString()),

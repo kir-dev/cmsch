@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
@@ -26,7 +25,6 @@ import java.util.*
 import java.util.function.Supplier
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
-import kotlin.reflect.KProperty
 
 data class ControlAction(
     val name: String,
@@ -173,13 +171,14 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                 usageString = "Bejegyzés szerkesztése",
                 basic = true
             ))
-        } else if (showEnabled) {
+        }
+        if (showEnabled) {
             controlActions.add(ControlAction(
                 "Megtekintés",
                 "show/{id}",
                 "visibility",
                 showPermission,
-                100,
+                50,
                 usageString = "Bejegyzés megnyitása",
                 basic = true
             ))
