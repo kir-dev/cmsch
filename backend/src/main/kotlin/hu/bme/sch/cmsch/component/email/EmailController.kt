@@ -26,7 +26,7 @@ class EmailController(
 ) : OneDeepEntityPage<EmailTemplateEntity>(
     "email-templates",
     EmailTemplateEntity::class, ::EmailTemplateEntity,
-    "Email Sablon", "Email Sablonok",
+    "Email sablon", "Email sablonok",
     "Email sablonok amiket az oldal különböző komponensei tudnak használni.",
 
     repo,
