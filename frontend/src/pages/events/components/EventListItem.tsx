@@ -1,10 +1,10 @@
 import { Box, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { stringifyTimeRange } from '../../../util/core-functions.util'
+import { getCdnUrl, stringifyTimeRange } from '../../../util/core-functions.util'
+import { AbsolutePaths } from '../../../util/paths'
 import { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
-import { AbsolutePaths } from '../../../util/paths'
 
 interface EventListItemProps {
   event: EventListView
@@ -31,7 +31,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
       </Heading>
       <Text mb={2}>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</Text>
       {event.previewImageUrl && event.previewImageUrl !== '' && (
-        <Image display="block" ml="auto" mr="auto" src={event.previewImageUrl} maxH="8rem" />
+        <Image display="block" ml="auto" mr="auto" src={getCdnUrl(event.previewImageUrl)} maxH="8rem" />
       )}
       <Text my={2}>{event.previewDescription}</Text>
       <EventTags tags={[event.category, event.place]} />
