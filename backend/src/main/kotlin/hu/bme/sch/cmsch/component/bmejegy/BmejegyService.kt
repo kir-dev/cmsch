@@ -71,13 +71,13 @@ open class BmejegyService(
                     orderKey = cell.order_key ?: "",
                     email = cell.email ?: "",
                     qrCode = cell.voucher_code ?: "INVALID",
-                    photoId = cell.ic_19?.uppercase() ?: "",
+                    photoId = cell.ic_21?.uppercase() ?: "",
                     date = cell.post_date ?: "",
                     registered = clock.getTimeInSeconds(),
                     idId = cell.id ?: "",
                     itemId = cell.order_item_id ?: "",
                     total = cell.line_total ?: "",
-                    faculty = cell.ic_0?.uppercase() ?: "",
+                    faculty = "",
                     matchedUserId = 0
                 ))
                 listeners.forEach { listener -> listener.onTicketRaw(it.cell) }

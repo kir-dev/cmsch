@@ -25,7 +25,7 @@ class MailgunEmailProvider(
         .defaultHeaders { header -> header.setBasicAuth("api", startupPropertyConfig.mailgunToken) }
         .build()
 
-    override fun sendTextEmail(responsible: UserEntity, subject: String, content: String, to: List<String>) {
+    override fun sendTextEmail(responsible: UserEntity?, subject: String, content: String, to: List<String>) {
         val formData = LinkedMultiValueMap<String, String>()
         formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
         formData.put("to", to)
@@ -40,7 +40,7 @@ class MailgunEmailProvider(
         retrtieve(request, to, subject, content, responsible)
     }
 
-    override fun sendHtmlEmail(responsible: UserEntity, subject: String, content: String, to: List<String>) {
+    override fun sendHtmlEmail(responsible: UserEntity?, subject: String, content: String, to: List<String>) {
         val formData = LinkedMultiValueMap<String, String>()
         formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
         formData.put("to", to)
@@ -60,7 +60,7 @@ class MailgunEmailProvider(
         to: List<String>,
         subject: String,
         content: String,
-        responsible: UserEntity
+        responsible: UserEntity?
     ) {
         try {
             val response = request.retrieve().toEntity(String::class.java).block()
@@ -71,7 +71,11 @@ class MailgunEmailProvider(
                     .replace("\r", "")
             }' response:'${response}'"
             log.info(action)
-            auditLogService.fine(responsible, "email", action)
+            if (responsible != null) {
+                auditLogService.fine(responsible, "email", action)
+            } else {
+                auditLogService.system("email", action)
+            }
         } catch (e: WebClientException) {
             val action = "Failed to send email exception:${e.message} to:$to subject:'$subject' text:'${
                 content
@@ -79,7 +83,11 @@ class MailgunEmailProvider(
                     .replace("\r", "")
             }'"
             log.error(action)
-            auditLogService.error(responsible, "email", action)
+            if (responsible != null) {
+                auditLogService.error(responsible, "email", action)
+            } else {
+                auditLogService.system("email", action)
+            }
         }
     }
 
