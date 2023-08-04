@@ -1,7 +1,7 @@
 import { ButtonGroup, Heading, Image, Text } from '@chakra-ui/react'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
-import { DETAILED_TIMESTAMP_OPTIONS, stringifyTimeStamp } from '../../../util/core-functions.util'
+import { DETAILED_TIMESTAMP_OPTIONS, getCdnUrl, stringifyTimeStamp } from '../../../util/core-functions.util'
 import { EventView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 import { AbsolutePaths } from '../../../util/paths'
@@ -31,7 +31,7 @@ const CurrentEvent = ({ event }: EventProps) => {
       </Text>
       <EventTags my={1} tags={[event.category, event.place]} />
       {event.fullImageUrl && event.fullImageUrl !== '' && (
-        <Image mb="1rem" display="block" ml="auto" mr="auto" src={event.fullImageUrl} h="20rem" />
+        <Image mb="1rem" display="block" ml="auto" mr="auto" src={getCdnUrl(event.fullImageUrl)} maxH="20rem" />
       )}
       <Markdown text={event.description} />
       <ButtonGroup justifyContent="space-between" mt={10}>

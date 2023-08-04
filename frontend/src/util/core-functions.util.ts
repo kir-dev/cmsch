@@ -1,5 +1,6 @@
 import { format, formatDistance } from 'date-fns'
 import Values from 'values.js'
+import { API_BASE_URL } from './configs/environment.config'
 import { FormFieldVariants } from './views/form.view'
 
 export const toReadableNumber = (num: number): string =>
@@ -86,4 +87,8 @@ export function joinPath(...parts: (string | number | undefined)[]) {
 
 export function isCheckbox(type: FormFieldVariants) {
   return type === FormFieldVariants.CHECKBOX || type === FormFieldVariants.MUST_AGREE
+}
+
+export function getCdnUrl(path: string) {
+  return joinPath(API_BASE_URL, 'cdn', path)
 }

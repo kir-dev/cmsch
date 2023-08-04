@@ -1,11 +1,10 @@
 import { Button, Heading, Image, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import Markdown from '../../../common-components/Markdown'
-import { API_BASE_URL } from '../../../util/configs/environment.config'
-import { joinPath, stringifyTimeStamp } from '../../../util/core-functions.util'
-import { NewsArticleView } from '../../../util/views/news.view'
-import { AbsolutePaths } from '../../../util/paths'
 import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
+import Markdown from '../../../common-components/Markdown'
+import { getCdnUrl, stringifyTimeStamp } from '../../../util/core-functions.util'
+import { AbsolutePaths } from '../../../util/paths'
+import { NewsArticleView } from '../../../util/views/news.view'
 
 interface NewsProps {
   news: NewsArticleView
@@ -29,16 +28,7 @@ const News = ({ news }: NewsProps) => {
       </Text>
       <Heading mb={2}>{news.title}</Heading>
       {news.imageUrl && (
-        <Image
-          mb={4}
-          display="block"
-          ml="auto"
-          mr="auto"
-          src={joinPath(API_BASE_URL, 'cdn', news.imageUrl)}
-          alt={news.title}
-          maxH="20rem"
-          maxW="full"
-        />
+        <Image mb={4} display="block" ml="auto" mr="auto" src={getCdnUrl(news.imageUrl)} alt={news.title} maxH="20rem" maxW="full" />
       )}
       <Markdown text={news.content} />
       <Link to={AbsolutePaths.NEWS}>
