@@ -1,7 +1,14 @@
 import { ButtonGroup, Heading, Image, Text } from '@chakra-ui/react'
+import { EventIndicator } from '../../../common-components/EventIndicator'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
-import { DETAILED_TIMESTAMP_OPTIONS, getCdnUrl, stringifyTimeStamp } from '../../../util/core-functions.util'
+import {
+  DETAILED_TIMESTAMP_OPTIONS,
+  getCdnUrl,
+  isCurrentEvent,
+  isUpcomingEvent,
+  stringifyTimeStamp
+} from '../../../util/core-functions.util'
 import { EventView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 import { AbsolutePaths } from '../../../util/paths'
@@ -23,6 +30,14 @@ const CurrentEvent = ({ event }: EventProps) => {
   ]
   return (
     <>
+      <EventIndicator
+        showLabel
+        position="absolute"
+        top={5}
+        right={5}
+        isCurrent={isCurrentEvent(event)}
+        isUpcoming={isUpcomingEvent(event)}
+      />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{event.title}</Heading>
       <Text>

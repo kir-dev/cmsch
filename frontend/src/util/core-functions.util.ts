@@ -92,3 +92,14 @@ export function isCheckbox(type: FormFieldVariants) {
 export function getCdnUrl(path: string) {
   return joinPath(API_BASE_URL, 'cdn', path)
 }
+
+export function isCurrentEvent(event: { timestampStart: number; timestampEnd: number }) {
+  const now = new Date().getTime() / 1000
+  return event.timestampStart <= now && event.timestampEnd >= now
+}
+
+export function isUpcomingEvent(event: { timestampStart: number; timestampEnd: number }) {
+  const now = new Date().getTime() / 1000
+  const diff = event.timestampStart - now
+  return diff > 0 && diff < 3600
+}

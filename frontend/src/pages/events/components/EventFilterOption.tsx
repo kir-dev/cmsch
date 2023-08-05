@@ -1,5 +1,6 @@
 import { Box, Collapse, Stack, useDisclosure } from '@chakra-ui/react'
 import { useEffect } from 'react'
+import { isCurrentEvent, isUpcomingEvent } from '../../../util/core-functions.util'
 import { EventListView } from '../../../util/views/event.view'
 import { CardListItem } from './CardListItem'
 import EventList from './EventList'
@@ -19,9 +20,17 @@ export const EventFilterOption = ({ name, events, forceOpen }: EventFilterOption
       onClose()
     }
   }, [forceOpen])
+  const hasCurrentEvent = events.some(isCurrentEvent)
+  const hasUpcomingEvent = events.some(isUpcomingEvent)
   return (
     <Stack spacing={0} my={0}>
-      <CardListItem title={name} open={isOpen} toggle={onToggle} />
+      <CardListItem
+        showPulsingDot={hasCurrentEvent || hasUpcomingEvent}
+        pulsingDotColor={hasUpcomingEvent ? 'yellow.400' : undefined}
+        title={name}
+        open={isOpen}
+        toggle={onToggle}
+      />
       <Collapse in={isOpen}>
         <Box borderWidth="0px 2px 2px 2px" borderRadius="0 0 5px 5px" borderColor="whiteAlpha.200" padding={2}>
           <EventList eventList={events} />

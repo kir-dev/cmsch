@@ -13,7 +13,7 @@ const EventPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 
   return (
-    <CmschPage>
+    <CmschPage position="relative">
       <Helmet title={data.title} />
       <CurrentEvent event={data} />
     </CmschPage>
