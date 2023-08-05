@@ -1,7 +1,8 @@
 import { Box, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { getCdnUrl, stringifyTimeRange } from '../../../util/core-functions.util'
+import { EventIndicator } from '../../../common-components/EventIndicator'
+import { getCdnUrl, isCurrentEvent, isUpcomingEvent, stringifyTimeRange } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
@@ -19,7 +20,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
   }
 
   const innerComponent = (
-    <Box as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
+    <Box position="relative" as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
       <Heading fontSize={25} my={0}>
         {useLink ? (
           <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
@@ -35,6 +36,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
       )}
       <Text my={2}>{event.previewDescription}</Text>
       <EventTags tags={[event.category, event.place]} />
+      <EventIndicator position="absolute" top={4} right={4} isCurrent={isCurrentEvent(event)} isUpcoming={isUpcomingEvent(event)} />
     </Box>
   )
 
