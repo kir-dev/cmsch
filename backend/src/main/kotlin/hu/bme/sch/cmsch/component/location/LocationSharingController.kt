@@ -53,11 +53,14 @@ class LocationSharingController(
                 permissionControl.permissionString)
             return "admin403"
         }
-
+        val accessToken = user.cmschId.substring(startupPropertyConfig.profileQrPrefix.length)
         model.addAttribute("user", user)
-        model.addAttribute("accessToken", user.cmschId.substring(startupPropertyConfig.profileQrPrefix.length))
+        model.addAttribute("accessToken", accessToken)
         model.addAttribute("installGuide", markdownToHtml(locationComponent.installGuide.getValue()))
-        model.addAttribute("apkUrl", locationComponent.apkUrl.getValue())
+        model.addAttribute("androidAppUrl", locationComponent.androidAppUrl.getValue())
+        model.addAttribute("iosAppUrl", locationComponent.iosAppUrl.getValue())
+        //TODO: add endpoint to app url
+        model.addAttribute("appOpenUrl", "cmsch-tracker://?key=$accessToken")
 
         return "shareLocation"
     }
