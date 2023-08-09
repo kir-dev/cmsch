@@ -46,7 +46,8 @@ class LocationComponent(
 
             appGroup,
             installGuide,
-            apkUrl
+            androidAppUrl,
+            iosAppUrl
         )
     }
 
@@ -137,14 +138,19 @@ class LocationComponent(
         "installGuide",
         "Annak érdekében, hogy a tanköröd elveszett tagjai és a gárdatankörisek is mindig megtaláljanak\n" +
                 " egyszerűen, létre hoztunk egy helymegosztási lehetőséget. A használatához le kell töltened egy\n" +
-                " Android appot.",
+                " Android vagy iOS appot.",
         type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Telepítési útmtató", description = "A Helymeghatározás menüben látszik"
     )
 
-    val apkUrl = SettingProxy(componentSettingService, component,
-        "apkUrl", "/files/cmsch-tracker-1.0.0.apk", type = SettingType.TEXT,
-        serverSideOnly = true, fieldName = "APK URL-je"
+    val androidAppUrl = SettingProxy(componentSettingService, component,
+        "androidAppUrl", "https://kir-dev.hu/ly/androidbacon", type = SettingType.TEXT,
+        serverSideOnly = true, fieldName = "Android App URL-je"
+    )
+
+    val iosAppUrl = SettingProxy(componentSettingService, component,
+        "iosAppUrl", "https://kir-dev.hu/ly/iosbacon", type = SettingType.TEXT,
+        serverSideOnly = true, fieldName = "iOS App URL-je"
     )
 
 }

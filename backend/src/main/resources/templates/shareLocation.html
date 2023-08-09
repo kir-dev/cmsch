@@ -30,9 +30,20 @@
                 <p>Tokened: <b th:text="${accessToken}"></b><br> (A tokenedet ne oszd meg mással!)</p>
 
                 <div class="button-group">
-                    <a th:href="${apkUrl}" class="btn btn-primary" target="_blank">
+                    <a th:href="${androidAppUrl}" class="btn btn-primary" target="_blank">
                         <span class="material-symbols-outlined regular">download</span>
-                        <ins>Rendezvény Android app letöltése</ins>
+                        <ins>Android App letöltése</ins>
+                    </a>
+                    <a th:href="${iosAppUrl}" class="btn btn-primary" target="_blank">
+                        <span class="material-symbols-outlined regular">download</span>
+                        <ins>iOS App letöltése</ins>
+                    </a>
+                </div>
+                <p>Már megvan az app? Állítsd be egy kattintással az alábbi gombbal!</p>
+                <div class="button-group">
+                    <a th:href="${appOpenUrl}" class="btn btn-primary" target="_blank">
+                        <span class="material-symbols-outlined regular">open_in_new</span>
+                        <ins>Megnyitás a CMSch Bacon-ben</ins>
                     </a>
                 </div>
             </div>
