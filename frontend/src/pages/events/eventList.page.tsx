@@ -61,7 +61,7 @@ const EventListPage = () => {
         )}
         <TabPanels>
           <TabPanel>
-            <EventList eventList={upcomingEvents} />
+            <EventList eventList={upcomingEvents} groupByDay />
           </TabPanel>
           {availableFilters.map((filter) => (
             <TabPanel key={filter}>
