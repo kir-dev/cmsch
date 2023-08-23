@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
 enum class EmailMode {
@@ -19,6 +20,7 @@ enum class EmailMode {
 
 @Entity
 @Table(name="emailTemplates")
+@ConditionalOnBean(EmailComponent::class)
 class EmailTemplateEntity(
     @Id
     @GeneratedValue

@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.AuditLogService
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -12,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientException
 
 @Service
+@ConditionalOnBean(EmailComponent::class)
 class MailgunEmailProvider(
     private val emailComponent: EmailComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
