@@ -46,15 +46,18 @@ class LocationService(
             it.latitude = locationDto.latitude
             it.altitude = locationDto.altitude
             it.accuracy = locationDto.accuracy
+            it.speed = locationDto.speed
+            it.altitudeAccuracy = locationDto.altitudeAccuracy
+            it.heading = locationDto.heading
             it.timestamp = clock.getTimeInSeconds()
             return@let it.groupName
         }
 
-        return if (groupName != null)
+        return if (groupName != null) {
             LocationResponse("OK", groupName)
-        else
+        } else {
             LocationResponse("nem található", "n/a")
-
+        }
     }
 
     fun findAllLocation(): List<LocationEntity> {
