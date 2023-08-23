@@ -53,14 +53,16 @@ export const Footer = () => {
       <Flex mt={10} justify="center" align="center" flexDirection={['column', null, 'row']}>
         <Flex align="center" flexDirection="column" justifyContent="center" mb={10} mx={10}>
           <Image src={component?.hostLogo} maxW={40} maxH={40} my={3} alt={component?.hostAlt} />
-          <Link
-            isExternal
-            fontSize="xl"
-            _hover={{ color: customTheme.colors.brand, textDecorationLine: 'underline' }}
-            href={component?.hostWebsiteUrl}
-          >
-            Weboldal
-          </Link>
+          {component?.hostWebsiteUrl && (
+            <Link
+              isExternal
+              fontSize="xl"
+              _hover={{ color: customTheme.colors.brand, textDecorationLine: 'underline' }}
+              href={component?.hostWebsiteUrl}
+            >
+              Weboldal
+            </Link>
+          )}
           <HStack>
             {component?.facebookUrl && (
               <Link href={component?.facebookUrl}>
@@ -82,14 +84,16 @@ export const Footer = () => {
           </Flex>
           <Image src={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')} maxW={40} maxH={40} my={3} />
           <HStack align="center">
-            <Link
-              isExternal
-              fontSize="xl"
-              _hover={{ color: customTheme.colors.brand, textDecorationLine: 'underline' }}
-              href={component?.devWebsiteUrl}
-            >
-              Weboldal
-            </Link>
+            {component?.devWebsiteUrl && (
+              <Link
+                isExternal
+                fontSize="xl"
+                _hover={{ color: customTheme.colors.brand, textDecorationLine: 'underline' }}
+                href={component?.devWebsiteUrl}
+              >
+                Weboldal
+              </Link>
+            )}
             <Text>|</Text>
             <Link
               isExternal
