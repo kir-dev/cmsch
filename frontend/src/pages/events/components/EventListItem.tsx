@@ -1,4 +1,4 @@
-import { Box, Heading, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
+import { Box, Heading, LinkBox, LinkOverlay, Text, useColorModeValue } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { EventIndicator } from '../../../common-components/EventIndicator'
@@ -18,24 +18,30 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
   if (typeof config === 'undefined') {
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
-
   const innerComponent = (
-    <Box position="relative" as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px" p={4}>
-      <Heading fontSize={25} my={0}>
-        {useLink ? (
-          <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
-            {event.title}
-          </LinkOverlay>
-        ) : (
-          event.title
-        )}
-      </Heading>
-      <Text mb={2}>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</Text>
-      {event.previewImageUrl && event.previewImageUrl !== '' && (
-        <Image display="block" ml="auto" mr="auto" src={getCdnUrl(event.previewImageUrl)} maxH="8rem" />
-      )}
-      <Text my={2}>{event.previewDescription}</Text>
-      <EventTags tags={[event.category, event.place]} />
+    <Box overflow="hidden" position="relative" as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px">
+      <Box
+        backgroundImage={event.previewImageUrl ? getCdnUrl(event.previewImageUrl) : undefined}
+        backgroundPosition="center"
+        backgroundSize="cover"
+      >
+        <Box p={4} bg={event.previewImageUrl ? useColorModeValue('#FFFFFFAA', '#00000080') : undefined}>
+          <Heading fontSize={25} my={0}>
+            {useLink ? (
+              <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
+                {event.title}
+              </LinkOverlay>
+            ) : (
+              event.title
+            )}
+          </Heading>
+          <Text>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</Text>
+        </Box>
+      </Box>
+      <Box p={4}>
+        <Text mb={4}>{event.previewDescription}</Text>
+        <EventTags tags={[event.category, event.place]} />
+      </Box>
       <EventIndicator position="absolute" top={4} right={4} isCurrent={isCurrentEvent(event)} isUpcoming={isUpcomingEvent(event)} />
     </Box>
   )
