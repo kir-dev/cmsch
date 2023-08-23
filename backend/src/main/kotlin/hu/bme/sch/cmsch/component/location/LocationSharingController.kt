@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.location
 
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -14,6 +15,9 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import jakarta.annotation.PostConstruct
+import org.apache.catalina.util.URLEncoder
+import org.springframework.util.StringUtils
+import java.nio.charset.StandardCharsets
 
 @Controller
 @RequestMapping("/admin/control/share-location")
@@ -22,7 +26,8 @@ class LocationSharingController(
     private val adminMenuService: AdminMenuService,
     private val locationComponent: LocationComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val auditLogService: AuditLogService
+    private val auditLogService: AuditLogService,
+    private val appComponent: ApplicationComponent
 ) {
 
     private val view = "share-location"
@@ -59,8 +64,9 @@ class LocationSharingController(
         model.addAttribute("installGuide", markdownToHtml(locationComponent.installGuide.getValue()))
         model.addAttribute("androidAppUrl", locationComponent.androidAppUrl.getValue())
         model.addAttribute("iosAppUrl", locationComponent.iosAppUrl.getValue())
-        //TODO: add endpoint to app url
-        model.addAttribute("appOpenUrl", "cmsch-tracker://?key=$accessToken")
+        val apiEndpoint = "${appComponent.adminSiteUrl.getValue()}api/location"
+        val apiEndpointUrlEncoded = URLEncoder.QUERY.encode(apiEndpoint, StandardCharsets.UTF_8)
+        model.addAttribute("appOpenUrl", "cmsch-tracker://?key=${accessToken}&endpoint=${apiEndpointUrlEncoded}")
 
         return "shareLocation"
     }
