@@ -14,12 +14,8 @@ export const Footer = () => {
   const component = config?.components.footer
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   if (!component) return null
-  const sponsorLabelVisible =
-    (component?.sponsorsEnabled && sponsors.length > 0) ||
-    component.bmeEnabled ||
-    component.schdesignEnabled ||
-    component.schonherzEnabled ||
-    component.vikEnabled
+  const sponsorLabelVisible = component?.sponsorsEnabled && sponsors.length > 0
+  const contributorsVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
   return (
     <CmschContainer>
       {component?.footerMessage && (
@@ -33,22 +29,27 @@ export const Footer = () => {
         </Text>
       )}
       {component?.sponsorsEnabled && sponsors.length > 0 && (
+        <Flex justifyContent="center" alignItems="center" flexWrap="wrap">
+          {sponsors.map((sp) => (
+            <Link href={sp.url} m={5} key={sp.image}>
+              <Image src={sp.image} alt={sp.alt} maxHeight={40} maxWidth={40} />
+            </Link>
+          ))}
+        </Flex>
+      )}
+      {contributorsVisible && (
         <>
-          <Flex justifyContent="center" alignItems="center" flexWrap="wrap">
-            {sponsors.map((sp) => (
-              <Link href={sp.url} m={5} key={sp.image}>
-                <Image src={sp.image} alt={sp.alt} maxHeight={40} maxWidth={40} />
-              </Link>
-            ))}
-          </Flex>
+          <Text textAlign="center" mb={3} mt={10}>
+            Közreműködők
+          </Text>
+          <HStack gap={3} mt={3} justifyContent={'center'} alignItems="center" flexWrap="wrap">
+            {component.bmeEnabled && <SupporterLogo name="bme" />}
+            {component.vikEnabled && <SupporterLogo name="vik" />}
+            {component.schonherzEnabled && <SupporterLogo name="schonherz" />}
+            {component.schdesignEnabled && <SupporterLogo name="schdesign" />}
+          </HStack>
         </>
       )}
-      <HStack gap={3} mt={3} justifyContent={'center'} alignItems="center" flexWrap="wrap">
-        {component.bmeEnabled && <SupporterLogo name="bme" />}
-        {component.vikEnabled && <SupporterLogo name="vik" />}
-        {component.schonherzEnabled && <SupporterLogo name="schonherz" />}
-        {component.schdesignEnabled && <SupporterLogo name="schdesign" />}
-      </HStack>
       <Flex mt={10} justify="center" align="center" flexDirection={['column', null, 'row']}>
         <Flex align="center" flexDirection="column" justifyContent="center" mb={10} mx={10}>
           <Image src={component?.hostLogo} maxW={40} maxH={40} my={3} alt={component?.hostAlt} />
