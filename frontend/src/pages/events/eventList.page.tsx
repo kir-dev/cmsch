@@ -6,6 +6,7 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  TabProps,
   Tabs,
   useBreakpoint,
   useBreakpointValue,
@@ -53,10 +54,10 @@ const EventListPage = () => {
       <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
         {availableFilters.length > 0 && (
           <TabList>
-            <Tab>Mind</Tab>
-            {component.filterByCategory && <Tab>Kategória szerint</Tab>}
-            {component.filterByLocation && <Tab>Helyszín szerint</Tab>}
-            {component.filterByDay && <Tab>Időpont szerint</Tab>}
+            <CustomTabButton>Mind</CustomTabButton>
+            {component.filterByCategory && <CustomTabButton>Kategória szerint</CustomTabButton>}
+            {component.filterByLocation && <CustomTabButton>Helyszín szerint</CustomTabButton>}
+            {component.filterByDay && <CustomTabButton>Időpont szerint</CustomTabButton>}
           </TabList>
         )}
         <TabPanels>
@@ -83,6 +84,10 @@ const EventListPage = () => {
       </Tabs>
     </CmschPage>
   )
+}
+
+function CustomTabButton({ color, ...props }: TabProps) {
+  return <Tab color={color ?? 'chakra-body-text'} {...props} />
 }
 
 export default EventListPage
