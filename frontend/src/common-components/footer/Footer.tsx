@@ -86,7 +86,8 @@ export const Footer = () => {
         </Flex>
       </Flex>
       <Text w="full" textAlign="center" p={3} bg={bgShadowColor}>
-        Made with <FaHeart style={{ display: 'inline' }} color="red" size="1rem" /> by Kir-Dev
+        Made with <FaHeart style={{ display: 'inline' }} color="red" size="1rem" /> by Kir-Dev <br /> Minden jog fenntartva. &copy;{' '}
+        {new Date().getFullYear()}
       </Text>
     </Flex>
   )
