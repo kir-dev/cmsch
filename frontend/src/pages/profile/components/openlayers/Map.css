@@ -1,14 +1,23 @@
 .ol-map {
   margin: 5px;
   height: 500px;
-  width: '100%';
+  width: 100%;
 }
 
-.ol-control {
+.ol-control{
   position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.ol-control > button {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 0.25rem;
   padding: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  font-size: 2rem;
+  line-height: 2rem;
 }
 
 .ol-full-screen {
