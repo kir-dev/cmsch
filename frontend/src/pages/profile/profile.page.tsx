@@ -28,7 +28,7 @@ import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import templateStringReplace from '../../util/templateStringReplace'
 import React, { useEffect } from 'react'
-import { GroupComponent } from './components/Group'
+import { GroupLeaderContactList } from './components/GroupLeaderContactList'
 import { ProfileQR } from './components/ProfileQR'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
@@ -99,7 +99,11 @@ const ProfilePage = ({}: Props) => {
 
           {component.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
           {component.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
-          {component.showGroup && <GroupComponent profile={profile} />}
+          {component.showGroup && (
+            <Text fontSize="xl">
+              {component?.groupTitle}: {profile.groupName || 'nincs'}
+            </Text>
+          )}
         </Box>
         <VStack py={2} alignItems={{ base: 'flex-start', md: 'flex-end' }} mt={{ base: 5, md: 0 }}>
           {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
@@ -122,6 +126,7 @@ const ProfilePage = ({}: Props) => {
           </Button>
         </VStack>
       </Flex>
+      {component.showGroup && <GroupLeaderContactList profile={profile} />}
 
       {profile.userMessage && (
         <>
