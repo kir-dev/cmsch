@@ -2,16 +2,15 @@ import { Box, Flex } from '@chakra-ui/react'
 import * as React from 'react'
 import { PropsWithChildren } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { Navigate } from 'react-router-dom'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { l } from '../../util/language'
+import { AbsolutePaths } from '../../util/paths'
 import { Footer } from '../footer/Footer'
 import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
 import { ScrollToTop } from './ScrollToTop'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { MinimalisticFooter } from '../footer/MinimalisticFooter'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { Navigate } from 'react-router-dom'
-import { AbsolutePaths } from '../../util/paths'
-import { l } from '../../util/language'
 
 interface CmschLayoutProps extends PropsWithChildren {
   background?: string
@@ -21,7 +20,6 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
   const config = useConfigContext()
   const { sendMessage } = useServiceContext()
   const component = config?.components.app
-  const footer = config?.components.footer
 
   if (!component) {
     sendMessage(l('component-unavailable'))
@@ -38,7 +36,7 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
           <Warning />
           {children}
         </Box>
-        {footer?.minimalisticFooter ? <MinimalisticFooter /> : <Footer />}
+        <Footer />
       </Flex>
     </>
   )

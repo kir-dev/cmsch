@@ -1,12 +1,12 @@
 import { Image } from '@chakra-ui/react'
 import { useColorModeValue } from '@chakra-ui/system'
 
-interface SupporterLogoProps {
+interface PartnerLogoProps {
   name: 'bme' | 'schonherz' | 'schdesign' | 'vik'
 }
 
-export function SupporterLogo({ name }: SupporterLogoProps) {
+export function PartnerLogo({ name }: PartnerLogoProps) {
   const fileVariant = useColorModeValue('light', 'dark')
   const fileName = `${name}_${fileVariant}`
-  return <Image src={`/img/supporters/${fileName}.svg`} maxH={20} maxW={32} />
+  return <Image m={5} src={`/img/supporters/${fileName}.svg`} maxH={20} maxW={32} />
 }
