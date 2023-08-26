@@ -1,111 +1,93 @@
-import { Center, Flex, HStack, Image, Link, Text, useColorModeValue } from '@chakra-ui/react'
-import { FaFacebook, FaHeart, FaInstagram } from 'react-icons/fa'
-import { CmschContainer } from '../layout/CmschContainer'
-import { BUGREPORT_URL } from '../../util/configs/environment.config'
-import { customTheme } from '../../util/configs/theme.config'
-import Markdown from '../Markdown'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { Box, Flex, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { SupporterLogo } from '../SupporterLogo'
+import { FaHeart } from 'react-icons/fa'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { BUGREPORT_URL } from '../../util/configs/environment.config'
+import Markdown from '../Markdown'
+import { OrganizerLogo } from './OrganizerLogo'
+import { PartnerLogo } from './PartnerLogo'
 import parseSponsors from './utils/parseSponsors'
+
+const bgShadowColor = '#00000025'
 
 export const Footer = () => {
   const config = useConfigContext()
   const component = config?.components.footer
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   if (!component) return null
-  const sponsorLabelVisible = component?.sponsorsEnabled && sponsors.length > 0
-  const contributorsVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
+  const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
+  const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
   return (
-    <CmschContainer>
-      {component?.footerMessage && (
-        <Center flexDirection="column" mx="auto" maxWidth="100%">
-          <Markdown text={component?.footerMessage} />
-        </Center>
-      )}
-      {sponsorLabelVisible && (
-        <Text textAlign="center" mb={3} mt={10}>
-          Támogatóink
-        </Text>
-      )}
-      {component?.sponsorsEnabled && sponsors.length > 0 && (
-        <Flex justifyContent="center" alignItems="center" flexWrap="wrap">
-          {sponsors.map((sp) => (
-            <Link href={sp.url} m={5} key={sp.image}>
-              <Image src={sp.image} alt={sp.alt} maxHeight={40} maxWidth={40} />
-            </Link>
-          ))}
-        </Flex>
-      )}
-      {contributorsVisible && (
-        <>
-          <Text textAlign="center" mb={3} mt={10}>
-            Közreműködők
-          </Text>
-          <HStack gap={3} mt={3} justifyContent={'center'} alignItems="center" flexWrap="wrap">
-            {component.bmeEnabled && <SupporterLogo name="bme" />}
-            {component.vikEnabled && <SupporterLogo name="vik" />}
-            {component.schonherzEnabled && <SupporterLogo name="schonherz" />}
-            {component.schdesignEnabled && <SupporterLogo name="schdesign" />}
-          </HStack>
-        </>
-      )}
-      <Flex mt={10} justify="center" align="center" flexDirection={['column', null, 'row']}>
-        <Flex align="center" flexDirection="column" justifyContent="center" mb={10} mx={10}>
-          <Image src={component?.hostLogo} maxW={40} maxH={40} my={3} alt={component?.hostAlt} />
-          {component?.hostWebsiteUrl && (
-            <Link
-              isExternal
-              fontSize="xl"
-              _hover={{ color: customTheme.colors.brand, textDecorationLine: 'underline' }}
-              href={component?.hostWebsiteUrl}
-            >
-              Weboldal
-            </Link>
-          )}
-          <HStack>
-            {component?.facebookUrl && (
-              <Link href={component?.facebookUrl}>
-                <FaFacebook size={25} />
-              </Link>
+    <Flex flexDirection="column" align="center" w="full" bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}>
+      {topBarVisible && (
+        <Flex justify="center" w="full" bg={bgShadowColor} p={5}>
+          <Flex
+            maxWidth={['100%', '64rem']}
+            w="full"
+            justify={['flex-start', null, 'space-evenly']}
+            flexDirection={['column', null, 'row']}
+          >
+            {component?.sponsorsEnabled && sponsors.length > 0 && (
+              <Box w={['full', null, '50%']} opacity={0.5}>
+                <Heading textAlign="center" mb={3} mt={0}>
+                  Támogatóink
+                </Heading>
+                <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
+                  {sponsors.map((sp, index) => (
+                    <a href={sp.url} key={index} target="_blank" referrerPolicy="origin">
+                      <Image m={5} src={sp.image} alt={sp.alt} maxH={20} maxW={32} />
+                    </a>
+                  ))}
+                </Flex>
+              </Box>
             )}
-            {component?.instagramUrl && (
-              <Link href={component?.instagramUrl}>
-                <FaInstagram size={25} />
-              </Link>
+            {partnersVisible && (
+              <Box w={['full', null, '50%']} opacity={0.5}>
+                <Heading textAlign="center" mb={3} mt={[10, null, 0]}>
+                  Partnereink
+                </Heading>
+                <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
+                  {component.bmeEnabled && <PartnerLogo name="bme" />}
+                  {component.vikEnabled && <PartnerLogo name="vik" />}
+                  {component.schonherzEnabled && <PartnerLogo name="schonherz" />}
+                  {component.schdesignEnabled && <PartnerLogo name="schdesign" />}
+                </Flex>
+              </Box>
             )}
-          </HStack>
-        </Flex>
-        <Flex align="center" flexDirection="column" justifyContent="center" mb={10} mx={10}>
-          <Flex align="center">
-            <Text mr={2}>Made with</Text>
-            <FaHeart color="red" size="1.5rem" />
-            <Text ml={2}>by</Text>
           </Flex>
-          <Image src={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')} maxW={40} maxH={40} my={3} />
-          <HStack align="center">
-            {component?.devWebsiteUrl && (
-              <Link
-                isExternal
-                fontSize="xl"
-                _hover={{ color: customTheme.colors.brand, textDecorationLine: 'underline' }}
-                href={component?.devWebsiteUrl}
-              >
-                Weboldal
-              </Link>
-            )}
-            <Text>|</Text>
-            <Link
-              isExternal
-              fontSize="xl"
-              _hover={{ color: customTheme.colors.kirDev, textDecorationLine: 'underline' }}
-              href={BUGREPORT_URL}
-            >
-              Kapcsolat
-            </Link>
-          </HStack>
+        </Flex>
+      )}
+      <Flex
+        px={10}
+        py={5}
+        gap={5}
+        align="center"
+        maxWidth={['100%', '64rem']}
+        w="full"
+        justify="space-between"
+        flexDirection={['column', null, 'row']}
+      >
+        {component?.footerMessage && <Markdown text={component?.footerMessage} />}
+
+        <Flex justify="center" gap={5} align="center" flexDirection={['column', null, 'row']}>
+          <OrganizerLogo
+            imageSrc={component?.hostLogo}
+            websiteUrl={component?.hostWebsiteUrl}
+            facebookUrl={component?.facebookUrl}
+            instagramUrl={component?.instagramUrl}
+            minimalistic={component?.minimalisticFooter}
+          />
+          <OrganizerLogo
+            imageSrc={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')}
+            websiteUrl={component.devWebsiteUrl}
+            contactUrl={BUGREPORT_URL}
+            minimalistic={component.minimalisticFooter}
+          />
         </Flex>
       </Flex>
-    </CmschContainer>
+      <Text w="full" textAlign="center" p={3} bg={bgShadowColor}>
+        Made with <FaHeart style={{ display: 'inline' }} color="red" size="1rem" /> by Kir-Dev
+      </Text>
+    </Flex>
   )
 }
