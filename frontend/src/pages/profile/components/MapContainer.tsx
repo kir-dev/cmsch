@@ -5,12 +5,14 @@ import FullScreenControl from './openlayers/FullScreenControl'
 import Stamen from 'ol/source/Stamen'
 import { VectorLayer } from './openlayers/Layers'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useGeolocated } from 'react-geolocated'
 import { useLocationQuery } from '../../../api/hooks/location/useLocationQuery'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { l } from '../../../util/language'
 import { addMarkers } from '../util/addMarkers'
+
+const layer = new Stamen({ layer: 'terrain' })
 
 const MapContainer = () => {
   const [showUserLocation, setShowUserLocation] = useState<boolean>(false)
@@ -39,6 +41,28 @@ const MapContainer = () => {
     }
   )
 
+  const leadersLocation = useMemo(() => {
+    if (!locationQuery.data) return undefined
+    return new VectorSource({ features: addMarkers(locationQuery.data) })
+  }, [locationQuery.data])
+
+  const userLocation = useMemo(() => {
+    if (!coords) return undefined
+    return new VectorSource({
+      features: addMarkers([
+        {
+          id: -1,
+          groupName: l('users-location-title'),
+          alias: '(GPS szenzor alapján)',
+          longitude: coords.longitude,
+          latitude: coords.latitude,
+          accuracy: coords.accuracy,
+          timestamp: ((timestamp || 0) - new Date().getTimezoneOffset() * 60000) / 1000
+        }
+      ])
+    })
+  }, [coords, timestamp])
+
   useEffect(() => {
     if (showUserLocation && !watchStarted) {
       getPosition()
@@ -61,28 +85,9 @@ const MapContainer = () => {
       </Checkbox>
       <Map>
         <Layers>
-          <TileLayer source={new Stamen({ layer: 'terrain' })} />
-          {locationQuery.isSuccess && <VectorLayer source={new VectorSource({ features: addMarkers(locationQuery.data) })} zIndex={3} />}
-          {showUserLocation && coords && (
-            <VectorLayer
-              source={
-                new VectorSource({
-                  features: addMarkers([
-                    {
-                      id: -1,
-                      groupName: l('users-location-title'),
-                      alias: '(GPS szenzor alapján)',
-                      longitude: coords.longitude,
-                      latitude: coords.latitude,
-                      accuracy: coords.accuracy,
-                      timestamp: ((timestamp || 0) - new Date().getTimezoneOffset() * 60000) / 1000
-                    }
-                  ])
-                })
-              }
-              zIndex={2}
-            />
-          )}
+          <TileLayer source={layer} />
+          {leadersLocation && <VectorLayer source={leadersLocation} zIndex={3} />}
+          {showUserLocation && userLocation && <VectorLayer source={userLocation} zIndex={2} />}
         </Layers>
 
         <FullScreenControl />
