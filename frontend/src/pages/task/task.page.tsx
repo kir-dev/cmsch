@@ -17,27 +17,26 @@ import {
 import { chakra } from '@chakra-ui/system'
 import { lazy, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useParams } from 'react-router-dom'
 import { Controller, SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'
-import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
-import { FilePicker } from './components/FilePicker'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
-import { Paragraph } from '../../common-components/Paragraph'
-import { TaskStatusBadge } from './components/TaskStatusBadge'
-import { stringifyTimeStamp } from '../../util/core-functions.util'
+import { Navigate, useParams } from 'react-router-dom'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTaskFullDetailsQuery } from '../../api/hooks/task/useTaskFullDetailsQuery'
+import { useTaskSubmissionMutation } from '../../api/hooks/task/useTaskSubmissionMutation'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
+import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
-import { CustomForm } from './components/CustomForm'
-import { useTaskSubmissionMutation } from '../../api/hooks/task/useTaskSubmissionMutation'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { API_BASE_URL } from '../../util/configs/environment.config'
-import { taskSubmissionResponseMap } from './util/taskSubmissionResponseMap'
-import { AbsolutePaths } from '../../util/paths'
-import { l } from '../../util/language'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { PageStatus } from '../../common-components/PageStatus'
+import { API_BASE_URL } from '../../util/configs/environment.config'
+import { stringifyTimeStamp } from '../../util/core-functions.util'
+import { l } from '../../util/language'
+import { AbsolutePaths } from '../../util/paths'
+import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
+import { CustomForm } from './components/CustomForm'
+import { FilePicker } from './components/FilePicker'
+import { TaskStatusBadge } from './components/TaskStatusBadge'
+import { taskSubmissionResponseMap } from './util/taskSubmissionResponseMap'
 
 const CodeEditor = lazy(() => import('./components/CodeEditor'))
 
@@ -214,9 +213,9 @@ const TaskPage = () => {
       data.task?.format === taskFormat.CODE ? (
         <CodeEditor code={data.submission?.textAnswer} setCode={() => {}} readonly={true} />
       ) : (
-        <Paragraph mt={2} whiteSpace="pre-wrap">
+        <Text mt={2} whiteSpace="pre-wrap">
           {data.submission.textAnswer}
-        </Paragraph>
+        </Text>
       )
   }
 
