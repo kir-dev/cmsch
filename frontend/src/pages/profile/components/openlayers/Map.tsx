@@ -48,8 +48,8 @@ const Map = ({ children }: PropsWithChildren) => {
       featureCount++
       const person = feature.get('person')
       const coords = fromLonLat([person.longitude, person.latitude])
+      overlay.setPosition(coords)
       if (map?.getOverlays().getLength() === 0) {
-        overlay.setPosition(coords)
         overlay.setElement(popupRef.current || undefined)
         map?.addOverlay(overlay)
       } else {
