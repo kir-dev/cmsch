@@ -1,16 +1,15 @@
 import { SearchIcon } from '@chakra-ui/icons'
-import { Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { Heading, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react'
 import { createRef, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Paragraph } from '../../common-components/Paragraph'
-import { CardListItem } from './components/CardListItem'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Community } from '../../util/views/organization'
-import { AbsolutePaths } from '../../util/paths'
-import { l } from '../../util/language'
-import { useCommunityList } from '../../api/hooks/community/useCommunityList'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useCommunityList } from '../../api/hooks/community/useCommunityList'
+import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
+import { l } from '../../util/language'
+import { AbsolutePaths } from '../../util/paths'
+import { Community } from '../../util/views/organization'
+import { CardListItem } from './components/CardListItem'
 
 export default function CommunityListPage() {
   const config = useConfigContext()?.components.communities
@@ -52,7 +51,7 @@ export default function CommunityListPage() {
         </InputLeftElement>
         <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
       </InputGroup>
-      <Paragraph>{l('community-description')}</Paragraph>
+      <Text mt={5}>{l('community-description')}</Text>
       {filteredCommunities?.map((community) => (
         <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITY}/${community.id}`} />
       ))}

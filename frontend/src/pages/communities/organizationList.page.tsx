@@ -1,16 +1,15 @@
 import { SearchIcon } from '@chakra-ui/icons'
-import { Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { Heading, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react'
 import { createRef, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Paragraph } from '../../common-components/Paragraph'
-import { CardListItem } from './components/CardListItem'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { Organization } from '../../util/views/organization'
-import { AbsolutePaths } from '../../util/paths'
-import { l } from '../../util/language'
-import { useOrganizationList } from '../../api/hooks/community/useOrganizationList'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useOrganizationList } from '../../api/hooks/community/useOrganizationList'
+import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
+import { l } from '../../util/language'
+import { AbsolutePaths } from '../../util/paths'
+import { Organization } from '../../util/views/organization'
+import { CardListItem } from './components/CardListItem'
 
 export default function OrganizationListPage() {
   const config = useConfigContext()?.components.communities
@@ -50,7 +49,7 @@ export default function OrganizationListPage() {
         </InputLeftElement>
         <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
       </InputGroup>
-      <Paragraph>{l('organization-description')}</Paragraph>
+      <Text mt={5}>{l('organization-description')}</Text>
       {filteredOrganizations.map((organization) => (
         <CardListItem key={organization.id} data={organization} link={`${AbsolutePaths.ORGANIZATION}/${organization.id}`} />
       ))}
