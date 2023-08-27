@@ -1,11 +1,14 @@
 import { Box, Heading, HStack, IconButton, useColorModeValue } from '@chakra-ui/react'
-import { addDays, startOfDay } from 'date-fns'
+import { addDays, endOfDay, startOfDay } from 'date-fns'
 import { useMemo, useState } from 'react'
-import { FaChevronLeft, FaChevronRight, FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { formatHu } from '../../../../util/core-functions.util'
 import { EventListView } from '../../../../util/views/event.view'
+import { CurrentDateBar } from './CurrentDateBar'
 import { EventBox } from './EventBox'
+import { HourColumn } from './HourColumn'
 import { mapEventsForDay } from './utils'
+import { ZoomBar } from './ZoomBar'
 
 interface DayCalendarProps {
   events: EventListView[]
@@ -44,17 +47,16 @@ export function DayCalendar({ events }: DayCalendarProps) {
         </Heading>
         <IconButton aria-label="Következő nap" icon={<FaChevronRight />} onClick={incrementDay} />
       </HStack>
-      <HStack justify="center">
-        <IconButton aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
-        <IconButton aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
-      </HStack>
-      <Box maxH={800}>
-        <Box borderRadius="md" position="relative" w="full" h={scale * 800} bg={bg} p={2} mt={5}>
+      <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
+      <HStack maxH={800} mt={5} overflowY="auto" overflowX="hidden" pt={5} align="flex-start">
+        <HourColumn h={scale * 800} />
+        <Box borderRadius="md" position="relative" w="full" h={scale * 800} bg={bg} p={2}>
+          <CurrentDateBar minTimestamp={startDate.getTime()} maxTimestamp={endOfDay(startDate).getTime()} />
           {eventsForThisDay.map((event) => (
             <EventBox event={event} key={event.url} />
           ))}
         </Box>
-      </Box>
+      </HStack>
     </Box>
   )
 }

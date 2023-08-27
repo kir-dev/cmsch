@@ -1,12 +1,14 @@
-import { Box, Heading, HStack, IconButton, Text, useColorModeValue } from '@chakra-ui/react'
-import { addDays, addWeeks, startOfWeek } from 'date-fns'
+import { Box, Heading, HStack, IconButton, useColorModeValue } from '@chakra-ui/react'
+import { addDays, addWeeks, endOfDay, startOfWeek } from 'date-fns'
 import { useMemo, useRef, useState } from 'react'
-import { FaChevronLeft, FaChevronRight, FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { formatHu } from '../../../../util/core-functions.util'
 import { EventListView } from '../../../../util/views/event.view'
-import { HourColumn } from '../HourColumn'
+import { CurrentDateBar } from './CurrentDateBar'
 import { EventBox, EventBoxItem } from './EventBox'
+import { HourColumn } from './HourColumn'
 import { mapEventsForDay } from './utils'
+import { ZoomBar } from './ZoomBar'
 
 interface WeekCalendarProps {
   events: EventListView[]
@@ -55,35 +57,24 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
         </Heading>
         <IconButton aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
       </HStack>
-      <HStack justify="center">
-        <IconButton aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
-        <Text>{Math.round(scale * 100)}%</Text>
-        <IconButton aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
-      </HStack>
-      <HStack
-        maxH={800}
-        flex={1}
-        overflowY="auto"
-        overflowX="hidden"
-        w="full"
-        spacing={1}
-        mt={5}
-        justifyContent="space-evenly"
-        align="flex-start"
-      >
-        <HourColumn h={scale * 800} />
-        {days.map((day) => (
-          <Box key={day.date.toISOString()} w="full">
-            <Heading h={30} textAlign="center" as="h3" size="sm" m={0}>
-              {formatHu(day.date, 'EEEE')}
-            </Heading>
-            <Box borderRadius="md" position="relative" h={scale * 800} bg={bg} p={2}>
-              {day.events.map((event) => (
-                <EventBox boxRef={ref} event={event} key={event.url} />
-              ))}
+      <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
+      <HStack maxH={800} flex={1} overflowY="auto" overflowX="hidden" w="full" mt={5} align="flex-start">
+        <HourColumn mt={30} h={scale * 800} />
+        <HStack flex={1} spacing={1} mt={5} justifyContent="space-evenly" align="flex-start">
+          {days.map((day) => (
+            <Box key={day.date.toISOString()} w="full">
+              <Heading h={30} textAlign="center" as="h3" size="sm" m={0}>
+                {formatHu(day.date, 'EEEE')}
+              </Heading>
+              <Box borderRadius="md" position="relative" h={scale * 800} bg={bg} p={2}>
+                <CurrentDateBar minTimestamp={day.date.getTime()} maxTimestamp={endOfDay(day.date).getTime()} />
+                {day.events.map((event) => (
+                  <EventBox boxRef={ref} event={event} key={event.url} />
+                ))}
+              </Box>
             </Box>
-          </Box>
-        ))}
+          ))}
+        </HStack>
       </HStack>
     </Box>
   )
