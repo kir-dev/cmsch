@@ -58,7 +58,7 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
         <IconButton aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
       </HStack>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
-      <HStack maxH={800} flex={1} overflowY="auto" overflowX="hidden" w="full" mt={5} align="flex-start">
+      <HStack flex={1} maxH={830} overflowY="auto" overflowX="hidden" w="full" mt={5} align="flex-start">
         <HourColumn mt={30} h={scale * 800} />
         <HStack flex={1} spacing={1} mt={5} justifyContent="space-evenly" align="flex-start">
           {days.map((day) => (

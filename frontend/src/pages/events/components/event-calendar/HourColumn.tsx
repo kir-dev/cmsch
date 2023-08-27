@@ -1,20 +1,21 @@
 import { Box, StackProps, Text } from '@chakra-ui/react'
-import { addHours, format } from 'date-fns'
+import { addHours, endOfDay, format, startOfDay } from 'date-fns'
 import { useMemo } from 'react'
 import { calculatePosition } from './utils'
 
 export function HourColumn({ position, ...props }: StackProps) {
+  const originDate = startOfDay(new Date())
   const dates = useMemo(() => {
     const datesTemp: Date[] = []
-    for (let i = 0; i < 25; i++) {
-      const date = addHours(new Date().setHours(0, 0, 0), i)
+    for (let i = 0; i < 24; i++) {
+      const date = addHours(originDate, i)
       datesTemp.push(date)
     }
     return datesTemp
   }, [])
 
-  const minDate = dates[0]
-  const maxDate = dates[dates.length - 1]
+  const minDate = originDate
+  const maxDate = endOfDay(originDate)
 
   return (
     <Box w={12} position={position ?? 'relative'} {...props}>
