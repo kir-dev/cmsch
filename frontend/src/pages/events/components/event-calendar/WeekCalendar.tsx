@@ -39,11 +39,11 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
   }
 
   const incrementScale = () => {
-    setScale((prev) => prev + 0.2)
+    setScale((prev) => Math.min(prev + 0.2, 2))
   }
 
   const decrementScale = () => {
-    setScale((prev) => prev - 0.2)
+    setScale((prev) => Math.max(prev - 0.2, 0.6))
   }
 
   return (
@@ -57,7 +57,7 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
       </HStack>
       <HStack justify="center">
         <IconButton aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
-        <Text>Nagyítás</Text>
+        <Text>{Math.round(scale * 100)}%</Text>
         <IconButton aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
       </HStack>
       <HStack
