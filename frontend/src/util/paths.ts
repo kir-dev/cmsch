@@ -7,6 +7,7 @@ export enum Paths {
   TASKS = 'tasks',
   NEWS = 'news',
   EVENTS = 'event',
+  CALENDAR = 'calendar',
   IMPRESSUM = 'impressum',
   TOKEN = 'token',
   TOKEN_SCANNED = 'token-scanned',

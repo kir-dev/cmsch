@@ -14,16 +14,17 @@ import {
 } from '@chakra-ui/react'
 import _ from 'lodash'
 import { Helmet } from 'react-helmet-async'
+import { FaCalendar } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
+import { Paths } from '../../util/paths'
 import { CardListItem } from './components/CardListItem'
-import { DayCalendar } from './components/event-calendar/DayCalendar'
-import { WeekCalendar } from './components/event-calendar/WeekCalendar'
 import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
 import { FILTER, mapper } from './util/filter'
@@ -53,8 +54,9 @@ const EventListPage = () => {
         <Heading mb={5}>{component.title}</Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
       </Box>
-      <WeekCalendar events={data} />
-      <DayCalendar events={data} />
+      <LinkButton leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
+        Megtekintés a naptárban
+      </LinkButton>
       <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
         {availableFilters.length > 0 && (
           <TabList>
