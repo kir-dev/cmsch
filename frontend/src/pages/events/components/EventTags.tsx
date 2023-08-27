@@ -8,15 +8,11 @@ interface EventTagsProps {
 const EventTags = ({ tags, my }: EventTagsProps) => {
   return (
     <HStack spacing={2} my={my} justifyContent="end">
-      {tags.map((tag) => {
+      {tags.filter(Boolean).map((tag) => {
         return (
-          <>
-            {tag && (
-              <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
-                {tag}
-              </Tag>
-            )}
-          </>
+          <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
+            {tag}
+          </Tag>
         )
       })}
     </HStack>
