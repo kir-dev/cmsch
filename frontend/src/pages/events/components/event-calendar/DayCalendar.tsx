@@ -48,7 +48,7 @@ export function DayCalendar({ events }: DayCalendarProps) {
         <IconButton aria-label="Következő nap" icon={<FaChevronRight />} onClick={incrementDay} />
       </HStack>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
-      <HStack maxH={800} mt={5} overflowY="auto" overflowX="hidden" pt={5} align="flex-start">
+      <HStack maxH={820} mt={5} overflowY="auto" overflowX="hidden" pt={5} align="flex-start">
         <HourColumn h={scale * 800} />
         <Box borderRadius="md" position="relative" w="full" h={scale * 800} bg={bg} p={2}>
           <CurrentDateBar minTimestamp={startDate.getTime()} maxTimestamp={endOfDay(startDate).getTime()} />
