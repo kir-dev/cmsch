@@ -43,4 +43,10 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   return <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>
 }
 
-export const useConfigContext = () => useContext<ConfigDto | undefined>(ConfigContext)
+export const useConfigContext = () => {
+  const ctx = useContext(ConfigContext)
+  if (typeof ctx === 'undefined') {
+    throw new Error('useConfigContext must be used within a ConfigProvider')
+  }
+  return ctx
+}

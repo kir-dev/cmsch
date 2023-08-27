@@ -35,7 +35,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
               event.title
             )}
           </Heading>
-          <Text>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</Text>
+          <Text>{stringifyTimeRange(event.timestampStart * 1000, event.timestampEnd * 1000)}</Text>
         </Box>
       </Box>
       <Box p={4}>
