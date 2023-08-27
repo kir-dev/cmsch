@@ -3,7 +3,7 @@ import { EventListView } from '../../../../util/views/event.view'
 import { EventBoxItem } from './EventBox'
 
 export function calculatePosition(minTimestamp: number, maxTimestamp: number, timestamp: number) {
-  return Math.round(((timestamp - minTimestamp) / (maxTimestamp - minTimestamp)) * 100)
+  return ((timestamp - minTimestamp) / (maxTimestamp - minTimestamp)) * 100
 }
 
 export function mapEventsForDay(events: EventListView[], day: Date): EventBoxItem[] {

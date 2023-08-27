@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react'
 import { FaChevronLeft, FaChevronRight, FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
 import { formatHu } from '../../../../util/core-functions.util'
 import { EventListView } from '../../../../util/views/event.view'
+import { HourColumn } from '../HourColumn'
 import { EventBox, EventBoxItem } from './EventBox'
 import { mapEventsForDay } from './utils'
 
@@ -70,9 +71,10 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
         justifyContent="space-evenly"
         align="flex-start"
       >
+        <HourColumn h={scale * 800} />
         {days.map((day) => (
           <Box key={day.date.toISOString()} w="full">
-            <Heading textAlign="center" as="h3" size="sm" m={0}>
+            <Heading h={30} textAlign="center" as="h3" size="sm" m={0}>
               {formatHu(day.date, 'EEEE')}
             </Heading>
             <Box borderRadius="md" position="relative" h={scale * 800} bg={bg} p={2}>
