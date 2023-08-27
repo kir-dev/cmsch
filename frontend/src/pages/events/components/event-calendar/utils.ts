@@ -8,13 +8,28 @@ export function calculatePosition(minTimestamp: number, maxTimestamp: number, ti
 
 export function mapEventsForDay(events: EventListView[], day: Date): EventBoxItem[] {
   const endDate = endOfDay(day)
-  return events
+  const formattedEventListForDay = events
+    .sort((a, b) => (a.timestampStart === b.timestampStart ? a.timestampEnd - b.timestampEnd : a.timestampStart - b.timestampStart))
     .map<EventListView>((e) => ({ ...e, timestampStart: e.timestampStart * 1000, timestampEnd: e.timestampEnd * 1000 }))
     .filter((e) => isSameDay(e.timestampStart, day) || isSameDay(e.timestampEnd + 1000, day))
-    .sort((a, b) => (a.timestampStart === b.timestampStart ? a.timestampEnd - b.timestampEnd : a.timestampStart - b.timestampStart))
-    .map<EventBoxItem>((e) => ({
-      ...e,
-      top: Math.max(0, Math.min(calculatePosition(day.getTime(), endDate.getTime(), e.timestampStart), 100)),
-      bottom: 100 - Math.max(0, Math.min(calculatePosition(day.getTime(), endDate.getTime(), e.timestampEnd), 100))
-    }))
+
+  return formattedEventListForDay.map<EventBoxItem>((e, index) => ({
+    ...e,
+    conflictingEventsBefore: countConflictingEventsBefore(formattedEventListForDay, index),
+    top: Math.max(0, Math.min(calculatePosition(day.getTime(), endDate.getTime(), e.timestampStart), 100)),
+    bottom: 100 - Math.max(0, Math.min(calculatePosition(day.getTime(), endDate.getTime(), e.timestampEnd), 100))
+  }))
+}
+
+function countConflictingEventsBefore(events: EventListView[], index: number) {
+  const event = events[index]
+  let count = 0
+  for (let i = index - 1; i >= 0; i--) {
+    if (events[i].timestampEnd > event.timestampStart && events[i].timestampStart <= event.timestampStart) {
+      count++
+    } else {
+      break
+    }
+  }
+  return count
 }
