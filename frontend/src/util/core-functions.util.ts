@@ -1,27 +1,8 @@
-import { format, formatDistance } from 'date-fns'
+import { format } from 'date-fns'
+import { hu } from 'date-fns/locale'
 import Values from 'values.js'
 import { API_BASE_URL } from './configs/environment.config'
 import { FormFieldVariants } from './views/form.view'
-
-export const toReadableNumber = (num: number): string =>
-  Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1
-  }).format(num)
-
-export const toRelativeDateString = (timestamp: number): string =>
-  formatDistance(new Date(timestamp), new Date(), { includeSeconds: true, addSuffix: true })
-
-export const DEFAULT_DATE_OPTIONS = { year: 'numeric', month: 'long', day: 'numeric' }
-export const LONGER_DATE_OPTIONS = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-
-export const toDateString = (timestamp: number, options: object = DEFAULT_DATE_OPTIONS): string =>
-  new Date(timestamp).toLocaleDateString('en-US', options)
-
-export const toDateTimeString = (timestamp: number): string => format(new Date(timestamp), 'MMMM dd, yyyy - HH:mm:ss')
-
-export const ellipsifyLongText = (text: string, maxLength: number = 100): string =>
-  text.substring(0, maxLength - 1) + (text.length > maxLength - 1 ? '...' : '')
 
 export const TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
   month: 'short',
@@ -54,8 +35,8 @@ export const stringifyTimeStamp = (timeStamp: number, options: Intl.DateTimeForm
 }
 
 export const stringifyTimeRange = (fromTimeStamp: number, toTimeStamp: number) => {
-  const from = new Date(fromTimeStamp * 1000)
-  const to = new Date(toTimeStamp * 1000)
+  const from = new Date(fromTimeStamp)
+  const to = new Date(toTimeStamp)
   if (from.getDate() === to.getDate() && from.getMonth() === from.getMonth()) {
     return `${from.toLocaleString('hu-HU', GROUP_BY_DAY_OPTIONS)} ${from.toLocaleString(
       'hu-HU',
@@ -102,4 +83,8 @@ export function isUpcomingEvent(event: { timestampStart: number; timestampEnd: n
   const now = new Date().getTime() / 1000
   const diff = event.timestampStart - now
   return diff > 0 && diff < 3600
+}
+
+export function formatHu(date: Date | number, formatString: string) {
+  return format(date, formatString, { locale: hu })
 }
