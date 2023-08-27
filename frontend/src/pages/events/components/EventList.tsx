@@ -18,7 +18,7 @@ const EventList = ({ eventList, groupByDay }: EventListProps) => {
   return (
     <VStack>
       {eventGroups.map((group) => (
-        <Box key={group.date.getTime()}>
+        <Box key={group.date.getTime()} w="full">
           <Heading mb={2}>{group.date.toLocaleDateString('hu-HU', { month: '2-digit', day: '2-digit' })}</Heading>
           <EventListGroup eventList={group.events} useLink={config?.components.event?.enableDetailedView} />
         </Box>

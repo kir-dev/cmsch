@@ -50,11 +50,11 @@ const EventListPage = () => {
   return (
     <CmschPage>
       <Helmet title={component.title ?? 'Események'} />
-      <Box mb={10}>
+      <Box mb={5}>
         <Heading mb={5}>{component.title}</Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
       </Box>
-      <LinkButton leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
+      <LinkButton mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
         Megtekintés a naptárban
       </LinkButton>
       <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
@@ -67,11 +67,11 @@ const EventListPage = () => {
           </TabList>
         )}
         <TabPanels>
-          <TabPanel>
+          <TabPanel p={0}>
             <EventList eventList={upcomingEvents} groupByDay />
           </TabPanel>
           {availableFilters.map((filter) => (
-            <TabPanel key={filter}>
+            <TabPanel key={filter} p={0}>
               <Stack>
                 <CardListItem title="Mind" open={isOpen} toggle={onToggle} />
                 {filter === FILTER.DAY && <EventFilterOption name="Korábbi" events={pastEvents} forceOpen={isOpen} />}
