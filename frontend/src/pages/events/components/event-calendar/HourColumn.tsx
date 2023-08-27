@@ -1,9 +1,9 @@
 import { Box, StackProps, Text } from '@chakra-ui/react'
 import { addHours, format } from 'date-fns'
 import { useMemo } from 'react'
-import { calculatePosition } from './event-calendar/utils'
+import { calculatePosition } from './utils'
 
-export function HourColumn({ mt, h, ...props }: StackProps) {
+export function HourColumn({ position, ...props }: StackProps) {
   const dates = useMemo(() => {
     const datesTemp: Date[] = []
     for (let i = 0; i < 25; i++) {
@@ -17,7 +17,7 @@ export function HourColumn({ mt, h, ...props }: StackProps) {
   const maxDate = dates[dates.length - 1]
 
   return (
-    <Box w={72} mt={mt ?? 30} h={h ?? 'full'} position="relative" {...props}>
+    <Box w={12} position={position ?? 'relative'} {...props}>
       {dates.map((d) => (
         <Text
           position="absolute"
