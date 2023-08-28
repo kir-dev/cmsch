@@ -148,7 +148,7 @@ open class LoginService(
 
 
         // Check neptun; grant group and guild if mapping present
-        if (user.neptun.isNotBlank() && user.groupName.isBlank()) {
+        if (user.neptun.isNotBlank()) {
             groupToUserMapping.findByNeptun(user.neptun).ifPresent {
                 user.major = it.major
                 user.groupName = it.groupName
@@ -174,7 +174,7 @@ open class LoginService(
             }
         }
 
-        if (user.neptun.isNotBlank() && user.guild == GuildType.UNKNOWN) {
+        if (user.neptun.isNotBlank()) {
             guildToUserMapping.findByNeptun(user.neptun).ifPresent {
                 user.guild = it.guild
                 user.detailsImported = true
