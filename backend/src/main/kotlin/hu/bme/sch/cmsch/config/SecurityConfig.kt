@@ -104,6 +104,7 @@ open class SecurityConfig(
                 antMatcher("/ol.js"),
                 antMatcher("/ol.css"),
                 antMatcher("/tracker.css"),
+                antMatcher("/scanner.css"),
                 antMatcher("/redirect/beacon"),
             ).permitAll()
 
