@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_NOBODY
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.uploadFile
@@ -129,16 +130,28 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             showPermission
         ))
 
-        if (createEnabled) {
-            buttonActions.add(ButtonAction(
-                "Új $titleSingular",
-                "create",
-                createPermission,
-                100,
-                "add_box",
-                true
-            ))
-            if (importEnabled || exportEnabled) {
+        when {
+            importEnabled && !exportEnabled -> {
+                buttonActions.add(ButtonAction(
+                    "Import",
+                    "resource",
+                    createPermission,
+                    200,
+                    "upload_file",
+                    false
+                ))
+            }
+            !importEnabled && exportEnabled -> {
+                buttonActions.add(ButtonAction(
+                    "Export",
+                    "resource",
+                    showPermission,
+                    200,
+                    "upload_file",
+                    false
+                ))
+            }
+            importEnabled -> {
                 buttonActions.add(ButtonAction(
                     "Import / Export",
                     "resource",
@@ -148,6 +161,16 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     false
                 ))
             }
+        }
+        if (createEnabled) {
+            buttonActions.add(ButtonAction(
+                "Új $titleSingular",
+                "create",
+                createPermission,
+                100,
+                "add_box",
+                true
+            ))
             if (duplicateEnabled) {
                 controlActions.add(ControlAction(
                     "Másolat készítése",
@@ -256,16 +279,16 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     internal fun attachPermissionInfo(model: Model) {
-        if (showEnabled && showPermission != ImplicitPermissions.PERMISSION_NOBODY)
+        if (showEnabled && showPermission != PERMISSION_NOBODY)
             model.addAttribute("permissionShow", showPermission.permissionString)
 
-        if (editEnabled && editPermission != ImplicitPermissions.PERMISSION_NOBODY)
+        if (editEnabled && editPermission != PERMISSION_NOBODY)
             model.addAttribute("permissionEdit", editPermission.permissionString)
 
-        if (createEnabled && createPermission != ImplicitPermissions.PERMISSION_NOBODY)
+        if (createEnabled && createPermission != PERMISSION_NOBODY)
             model.addAttribute("permissionCreate", createPermission.permissionString)
 
-        if (deleteEnabled && deletePermission != ImplicitPermissions.PERMISSION_NOBODY)
+        if (deleteEnabled && deletePermission != PERMISSION_NOBODY)
             model.addAttribute("permissionDelete", deletePermission.permissionString)
 
         model.addAttribute("importEnabled", importEnabled)
@@ -641,10 +664,24 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     fun resource(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (createPermission.validate(user).not() || showPermission.validate(user).not()) {
-            model.addAttribute("permission", createPermission.permissionString)
+        if (importEnabled) {
+            if (createPermission.validate(user).not() || showPermission.validate(user).not()) {
+                model.addAttribute("permission", createPermission.permissionString)
+                model.addAttribute("user", user)
+                auditLog.admin403(user, component.component, "GET /${view}/resource", createPermission.permissionString)
+                return "admin403"
+            }
+        } else if (exportEnabled) {
+            if (showPermission.validate(user).not()) {
+                model.addAttribute("permission", showPermission.permissionString)
+                model.addAttribute("user", user)
+                auditLog.admin403(user, component.component, "GET /${view}/resource", showPermission.permissionString)
+                return "admin403"
+            }
+        } else {
+            model.addAttribute("permission", PERMISSION_NOBODY.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/resource", createPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /${view}/resource", PERMISSION_NOBODY.permissionString)
             return "admin403"
         }
 
