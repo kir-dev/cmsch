@@ -238,7 +238,7 @@
     document.getElementById("table-search-input").addEventListener("input", function(e) {
         const searchTerm = e.target.value;
 
-        if (searchTerm) {
+        if (searchTerm && searchTerm.length >= 3) {
             table.setFilter(fuzzyFilter, searchTerm);
         } else {
             table.clearFilter();
