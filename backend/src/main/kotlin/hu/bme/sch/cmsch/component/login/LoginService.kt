@@ -146,7 +146,6 @@ open class LoginService(
             user.email = profile.email ?: user.email
         }
 
-
         // Check neptun; grant group and guild if mapping present
         if (user.neptun.isNotBlank()) {
             groupToUserMapping.findByNeptun(user.neptun).ifPresent {
