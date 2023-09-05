@@ -1,4 +1,4 @@
-import { TeamDetailsCore } from './components/teamDetailsCore'
+import { TeamDetailsCore } from './components/TeamDetailsCore'
 import { useMyTeam } from '../../api/hooks/team/queries/useMyTeam'
 
 export default function MyTeamPage() {

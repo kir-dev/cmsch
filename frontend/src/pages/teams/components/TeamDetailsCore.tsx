@@ -1,24 +1,27 @@
-import { CmschPage } from '../../../common-components/layout/CmschPage'
+import { Button, Divider, Flex, Grid, Heading, Text, useToast, VStack } from '@chakra-ui/react'
+import React from 'react'
 import { Helmet } from 'react-helmet-async'
-import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
-import { Button, Divider, Flex, Heading, Text, useToast, VStack } from '@chakra-ui/react'
-import { BoardStat } from '../../../common-components/BoardStat'
-import { MemberRow } from './MemberRow'
-import { AbsolutePaths } from '../../../util/paths'
+import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
+import { MdDashboard } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
-import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
+import { useTeamAcceptJoin } from '../../../api/hooks/team/actions/useTeamAcceptJoin'
+import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'
 import { useTeamJoin } from '../../../api/hooks/team/actions/useTeamJoin'
 import { useTeamLeave } from '../../../api/hooks/team/actions/useTeamLeave'
-import { useTeamAcceptJoin } from '../../../api/hooks/team/actions/useTeamAcceptJoin'
+import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMemberKick'
+import { useTeamPromoteLeadership } from '../../../api/hooks/team/actions/useTeamPromoteLeadership'
 import { useTeamRejectJoin } from '../../../api/hooks/team/actions/useTeamRejectJoin'
 import { useTeamTogglePermissions } from '../../../api/hooks/team/actions/useTeamTogglePermissions'
-import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMemberKick'
-import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'
-import { RoleType } from '../../../util/views/profile.view'
-import { useTeamPromoteLeadership } from '../../../api/hooks/team/actions/useTeamPromoteLeadership'
+import { BoardStat } from '../../../common-components/BoardStat'
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
+import { CmschPage } from '../../../common-components/layout/CmschPage'
+import { LinkButton } from '../../../common-components/LinkButton'
 import { PageStatus } from '../../../common-components/PageStatus'
+import { AbsolutePaths } from '../../../util/paths'
+import { RoleType } from '../../../util/views/profile.view'
+import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
+import { MemberRow } from './MemberRow'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -71,33 +74,29 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
 
   if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={component.title} />
 
-  const breadcrumbItems = [
-    {
-      title: component.title,
-      to: AbsolutePaths.TEAMS
-    },
-    {
-      title: team.name
-    }
-  ]
   const title = admin ? component.myTitle + ' kezelése' : myTeam ? component.myTitle : team.name
   return (
     <CmschPage minRole={admin ? RoleType.PRIVILEGED : myTeam ? RoleType.ATTENDEE : undefined}>
       <Helmet title={title} />
-      <CustomBreadcrumb items={breadcrumbItems} mt={5} />
-      <Flex justify="space-between" wrap="wrap">
-        <VStack align="flex-start">
+      <Flex flex={1} gap={5} justify="space-between" flexDirection={['column', null, 'row']} align="flex-start">
+        <VStack align="flex-start" w="full">
           <Heading>{title}</Heading>
           {(myTeam || admin) && <Text>{team.name}</Text>}
-          <Flex wrap="wrap" gap={3}>
+          <Grid mt={5} gridAutoRows="auto" w="full" gridTemplateColumns={['full', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={5}>
             {team.stats.map((stat) => (
               <BoardStat label={stat.name} value={stat.value1} subValue={stat.value2} navigateTo={stat.navigate} />
             ))}
-          </Flex>
+          </Grid>
         </VStack>
-        <VStack mt={10}>
+        <VStack mt={5}>
+          {myTeam && (
+            <LinkButton colorScheme="brand" leftIcon={<MdDashboard />} href={AbsolutePaths.TEAM_DASHBOARD}>
+              Csapat Dashboard
+            </LinkButton>
+          )}
           {team.joinEnabled && (
             <Button
+              leftIcon={<FaSignInAlt />}
               isLoading={joinTeamLoading}
               colorScheme="brand"
               onClick={() => {
@@ -110,6 +109,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
           )}
           {team.joinCancellable && (
             <Button
+              leftIcon={<FaUndoAlt />}
               isLoading={cancelLoading}
               variant="outline"
               colorScheme="brand"
@@ -122,7 +122,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
             </Button>
           )}
           {team.leaveEnabled && (
-            <Button isLoading={leaveTeamLoading} colorScheme="brand" onClick={leaveTeam}>
+            <Button leftIcon={<FaSignOutAlt />} isLoading={leaveTeamLoading} colorScheme="brand" onClick={leaveTeam}>
               Csoport elhagyása
             </Button>
           )}

@@ -1,32 +1,31 @@
-import { Stat, StatHelpText, StatLabel, StatNumber } from '@chakra-ui/react'
+import { Stat, StatHelpText, StatLabel, StatNumber, StatProps } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { useOpaqueBackground } from '../util/core-functions.util'
 
-interface BoardStatProps {
+interface BoardStatProps extends StatProps {
   label: string
   value: string | number
   subValue?: string | number
   navigateTo?: string
 }
 
-export const BoardStat = ({ label, value, subValue, navigateTo }: BoardStatProps) => {
+export const BoardStat = ({ label, value, subValue, navigateTo, bg, ...props }: BoardStatProps) => {
+  const background = useOpaqueBackground(1)
   const navigate = useNavigate()
   return (
     <Stat
-      px={10}
-      py={5}
-      width="fit-content"
-      borderRadius={10}
-      borderColor="brand.500"
-      borderWidth="1px"
+      borderRadius="lg"
+      px={5}
+      py={2}
+      bg={bg ?? background}
       cursor={navigateTo ? 'pointer' : undefined}
       onClick={() => {
         if (navigateTo) navigate(navigateTo)
       }}
+      {...props}
     >
-      <StatLabel fontSize={15}>{label}</StatLabel>
-      <StatNumber whiteSpace="nowrap" fontSize={30}>
-        {value}
-      </StatNumber>
+      <StatLabel>{label}</StatLabel>
+      <StatNumber>{value}</StatNumber>
       {subValue && <StatHelpText>{subValue}</StatHelpText>}
     </Stat>
   )
