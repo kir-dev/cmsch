@@ -1,4 +1,4 @@
-import { Box, CircularProgress, CircularProgressLabel, Flex, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, CircularProgress, Flex, HStack, Text, useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { AbsolutePaths } from '../../../util/paths'
 import { TaskCategoryPreview } from '../../../util/views/task.view'
@@ -13,14 +13,17 @@ export const TaskCategoryListItem = ({ category }: { category: TaskCategoryPrevi
           <Text fontWeight="bold" fontSize="xl">
             {category.name}
           </Text>
-          <CircularProgress
-            value={((category.approved + category.notGraded) / category.sum) * 100}
-            color={category.notGraded > 0 ? 'yellow.400' : 'green.400'}
-          >
-            <CircularProgressLabel>
+          <HStack>
+            <Text fontWeight="bold">
               {category.approved + category.notGraded}/{category.sum}
-            </CircularProgressLabel>
-          </CircularProgress>
+            </Text>
+            <CircularProgress
+              size={10}
+              value={category.approved + category.notGraded}
+              max={category.sum}
+              color={category.notGraded > 0 ? 'yellow.400' : 'green.400'}
+            />
+          </HStack>
         </Flex>
       </Link>
     </Box>

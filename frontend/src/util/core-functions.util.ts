@@ -1,3 +1,4 @@
+import { useColorModeValue } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import { hu } from 'date-fns/locale'
 import Values from 'values.js'
@@ -87,4 +88,13 @@ export function isUpcomingEvent(event: { timestampStart: number; timestampEnd: n
 
 export function formatHu(date: Date | number, formatString: string) {
   return format(date, formatString, { locale: hu })
+}
+
+export function useOpaqueBackground(intensity: number = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10) {
+  const portion = 10
+  let intensityHex = Math.round(intensity * portion).toString(16)
+  if (intensityHex.length === 1) {
+    intensityHex = '0' + intensityHex
+  }
+  return useColorModeValue('#000000' + intensityHex, '#FFFFFF' + intensityHex)
 }

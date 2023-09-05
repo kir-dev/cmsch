@@ -1,19 +1,20 @@
-import { Badge, Box, Flex, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Badge, Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useTasksInCategoryQuery } from '../../api/hooks/task/useTasksInCategoryQuery'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { TaskStatusBadge } from './components/TaskStatusBadge'
-import { useTasksInCategoryQuery } from '../../api/hooks/task/useTasksInCategoryQuery'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { AbsolutePaths } from '../../util/paths'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useOpaqueBackground } from '../../util/core-functions.util'
+import { AbsolutePaths } from '../../util/paths'
+import { TaskStatusBadge } from './components/TaskStatusBadge'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
-  const bg = useColorModeValue('#00000020', '#FFFFFF20')
-  const hoverBg = useColorModeValue('#00000030', '#FFFFFF30')
+  const bg = useOpaqueBackground(2)
+  const hoverBg = useOpaqueBackground(3)
   const { isLoading, isError, data } = useTasksInCategoryQuery(id || 'UNKNOWN')
 
   const component = useConfigContext()?.components.task

@@ -1,3 +1,22 @@
+import { TaskCategoryPreview } from './task.view'
+
+export type TeamDashboardView = {
+  memberCount: number
+  points: number
+  leaderboardPlace: number
+  teamName: string
+  bannerUrl: string
+  creatorName: string
+  teamId: string
+  riddles: {
+    maxCount: number
+    solvedCount: number
+  }
+  task: {
+    categories: TaskCategoryPreview[]
+  }
+}
+
 export type TeamView = {
   points: number
   members: TeamMemberView[]
