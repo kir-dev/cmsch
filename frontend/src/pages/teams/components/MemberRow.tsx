@@ -1,4 +1,3 @@
-import { useColorModeValue } from '@chakra-ui/system'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -16,12 +15,13 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
+import { useOpaqueBackground } from '../../../util/core-functions.util'
 
 import { TeamMemberView } from '../../../util/views/team.view'
-import { DeleteButton } from './DeleteButton'
-import { RoleButton } from './RoleButton'
 import { AcceptButton } from './AcceptButton'
+import { DeleteButton } from './DeleteButton'
 import { LeaderButton } from './LeaderButton'
+import { RoleButton } from './RoleButton'
 
 interface MemberRowProps {
   member: TeamMemberView
@@ -32,6 +32,7 @@ interface MemberRowProps {
 }
 
 export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteLeadership }: MemberRowProps) {
+  const bg = useOpaqueBackground(1)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const onContinue = useRef(() => {})
   const [title, setTitle] = useState('')
@@ -47,7 +48,7 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteL
   }
   return (
     <>
-      <Box borderRadius="lg" padding={4} backgroundColor={useColorModeValue('brand.200', 'brand.600')} marginTop={5}>
+      <Box borderRadius="lg" padding={4} backgroundColor={bg} marginTop={5}>
         <HStack spacing={4}>
           <VStack align="flex-start" overflow="hidden">
             <Heading as="h3" size="md" marginY={0} maxWidth="100%">

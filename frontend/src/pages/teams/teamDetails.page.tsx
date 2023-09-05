@@ -1,7 +1,7 @@
 import { Navigate, useParams } from 'react-router-dom'
 
 import { useTeamDetails } from '../../api/hooks/team/queries/useTeamDetails'
-import { TeamDetailsCore } from './components/teamDetailsCore'
+import { TeamDetailsCore } from './components/TeamDetailsCore'
 import { AbsolutePaths } from '../../util/paths'
 
 export default function TeamDetailsPage() {

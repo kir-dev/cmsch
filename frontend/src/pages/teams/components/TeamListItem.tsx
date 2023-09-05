@@ -1,10 +1,10 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Box, Heading, HStack, Spacer, VStack } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
 import { Link } from 'react-router-dom'
+import { useOpaqueBackground } from '../../../util/core-functions.util'
+import { AbsolutePaths } from '../../../util/paths'
 
 import { TeamListItemView } from '../../../util/views/team.view'
-import { AbsolutePaths } from '../../../util/paths'
 
 type TeamListItemProps = {
   team: TeamListItemView
@@ -12,12 +12,13 @@ type TeamListItemProps = {
 }
 
 export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps) => {
+  const bg = useOpaqueBackground(1)
   return (
     <Link to={AbsolutePaths.TEAMS + '/details/' + team.id}>
       <Box
         borderRadius="lg"
         padding={4}
-        backgroundColor={useColorModeValue('brand.200', 'brand.600')}
+        backgroundColor={bg}
         marginTop={5}
         transition={detailEnabled ? 'transform .2s ease-in-out' : undefined}
         _hover={{ transform: detailEnabled ? 'translateX(0.5em)' : undefined }}
