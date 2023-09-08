@@ -34,7 +34,7 @@ import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
-const MapContainer = React.lazy(() => import('./components/MapContainer'))
+const Map = React.lazy(() => import('./components/map/MapContainer'))
 
 type Props = {}
 
@@ -260,7 +260,7 @@ const ProfilePage = ({}: Props) => {
           </Center>
         )}
       </Flex>
-      {component.showGroupLeadersLocations && <MapContainer />}
+      {component.showGroupLeadersLocations && <Map />}
     </CmschPage>
   )
 }

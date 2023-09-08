@@ -4,7 +4,7 @@ import { GroupMemberLocationView } from '../../../util/views/groupMemberLocation
 import { QueryKeys } from '../queryKeys'
 import { ApiPaths } from '../../../util/paths'
 
-export const useLocationQuery = (onError: (err: any) => void, onSuccess: () => void) => {
+export const useLocationQuery = (onError?: (err: any) => void, onSuccess?: () => void) => {
   return useQuery<GroupMemberLocationView[], Error>(
     QueryKeys.LOCATIONS,
     async () => {
