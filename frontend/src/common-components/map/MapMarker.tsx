@@ -8,7 +8,7 @@ interface MapMarkerProps {
 export function MapMarker({ color, text }: MapMarkerProps) {
   const bg = useColorModeValue('white', 'gray.800')
   return (
-    <VStack w="fit-content" spacing={1} marginLeft="-50%" marginTop="-10px">
+    <VStack w="fit-content" spacing={1} marginLeft="calc(-50% + 10px)" marginTop="10px">
       <Center h="20px" w="20px" borderRadius="full" bg="white" dropShadow="lg">
         <Box h="15px" w="15px" borderRadius="full" bg={color ?? 'brand.500'} />
       </Center>

@@ -2,15 +2,16 @@ import { useToast } from '@chakra-ui/react'
 import { Map, Marker } from 'pigeon-maps'
 import { useEffect, useState } from 'react'
 import { useGeolocated } from 'react-geolocated'
-import { useLocationQuery } from '../../../../api/hooks/location/useLocationQuery'
-import { l } from '../../../../util/language'
+import { l } from '../../util/language'
+import { MapDataItemView } from '../../util/views/map.view'
 import { MapMarker } from './MapMarker'
 
 interface MapContentProps {
   showUserLocation: boolean
+  mapData: MapDataItemView[]
 }
 
-export function MapContent({ showUserLocation }: MapContentProps) {
+export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   const toast = useToast()
   const [center, setCenter] = useState<[number, number]>([47.47303, 19.0531])
 
@@ -22,13 +23,6 @@ export function MapContent({ showUserLocation }: MapContentProps) {
     suppressLocationOnMount: true,
     watchPosition: showUserLocation
   })
-
-  const locationQuery = useLocationQuery(() =>
-    toast({
-      title: l('location-query-failed'),
-      status: 'error'
-    })
-  )
 
   useEffect(() => {
     if (showUserLocation) userLocation.getPosition()
@@ -47,18 +41,19 @@ export function MapContent({ showUserLocation }: MapContentProps) {
   return (
     <Map center={center} provider={StadiaMapProvider} height={300}>
       {userLocation.coords && (
-        <Marker
-          onClick={(e) => console.log(e)}
-          width={20}
-          height={20}
-          anchor={[userLocation.coords.latitude, userLocation.coords.longitude]}
-        >
+        <Marker hover width={20} height={20} anchor={[userLocation.coords.latitude, userLocation.coords.longitude]}>
           <MapMarker color="blue.500" text="Te" />
         </Marker>
       )}
-      {locationQuery.data?.map((location) => (
-        <Marker key={location.userId} width={20} height={20} anchor={[location.latitude, location.longitude]}>
-          <MapMarker color="brand.600" text={location.userName} />
+      {mapData.map((mapDataItem) => (
+        <Marker
+          hover
+          key={mapDataItem.displayName}
+          width={20}
+          height={20}
+          anchor={[mapDataItem.location.latitude, mapDataItem.location.longitude]}
+        >
+          <MapMarker color="brand.600" text={mapDataItem.displayName} />
         </Marker>
       ))}
     </Map>
