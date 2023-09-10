@@ -14,6 +14,5 @@ export type MapDataItemView = {
 
 export enum MapMarkerShape {
   CIRCLE = 'circle',
-  SQUARE = 'square',
-  TRIANGLE = 'triangle'
+  SQUARE = 'square'
 }
