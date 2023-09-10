@@ -34,7 +34,7 @@ import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
-const Map = React.lazy(() => import('./components/map/MapContainer'))
+const Map = React.lazy(() => import('../../common-components/map/GroupMapContainer'))
 
 type Props = {}
 
