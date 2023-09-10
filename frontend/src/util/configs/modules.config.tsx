@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react'
+import { MapModule } from '../../route-modules/Map.module'
 import { RiddleModule } from '../../route-modules/Riddle.module'
 import { TaskModule } from '../../route-modules/Task.module'
 import { NewsModule } from '../../route-modules/News.module'
@@ -33,7 +34,8 @@ export enum AvailableModules {
   TEAM = 'TEAM',
   RACE = 'RACE',
   QR_FIGHT = 'QR_FIGHT',
-  ACCESS_KEY = 'ACCESS_KEY'
+  ACCESS_KEY = 'ACCESS_KEY',
+  MAP = 'MAP'
 }
 
 export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
@@ -52,7 +54,8 @@ export const RoutesForModules: Record<AvailableModules, FunctionComponent> = {
   [AvailableModules.RACE]: RaceModule,
   [AvailableModules.QR_FIGHT]: QRFightModule,
   [AvailableModules.TEAM]: TeamModule,
-  [AvailableModules.ACCESS_KEY]: AccessKeyModule
+  [AvailableModules.ACCESS_KEY]: AccessKeyModule,
+  [AvailableModules.MAP]: MapModule
 }
 
 export function GetRoutesForModules(modules: AvailableModules[]) {
@@ -75,5 +78,6 @@ export const EnabledModules: AvailableModules[] = [
   AvailableModules.RACE,
   AvailableModules.QR_FIGHT,
   AvailableModules.TEAM,
-  AvailableModules.ACCESS_KEY
+  AvailableModules.ACCESS_KEY,
+  AvailableModules.MAP
 ]

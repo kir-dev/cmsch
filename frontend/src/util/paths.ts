@@ -23,7 +23,8 @@ export enum Paths {
   CREATE_TEAM = 'create-team',
   MY_TEAM = 'my-team',
   TEAM_ADMIN = 'team-admin',
-  ACCESS_KEY = 'access-key'
+  ACCESS_KEY = 'access-key',
+  MAP = 'map'
 }
 
 export enum AbsolutePaths {
@@ -50,7 +51,8 @@ export enum AbsolutePaths {
   TEAM_ADMIN = '/team-admin',
   QR_FIGHT = '/qr-fight',
   LEADER_BOARD = '/leaderboard',
-  ACCESS_KEY = '/access-key'
+  ACCESS_KEY = '/access-key',
+  MAP = '/map'
 }
 
 export enum ApiPaths {
