@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react'
-import { Map, Marker } from 'pigeon-maps'
+import { Map, Marker, ZoomControl } from 'pigeon-maps'
 import { useEffect, useState } from 'react'
 import { useGeolocated } from 'react-geolocated'
 import { l } from '../../util/language'
@@ -39,7 +39,8 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   }, [showUserLocation, userLocation.isGeolocationAvailable, userLocation.isGeolocationEnabled])
 
   return (
-    <Map center={center} provider={StadiaMapProvider} height={300}>
+    <Map center={center} provider={StadiaMapProvider} height={400}>
+      <ZoomControl />
       {userLocation.coords && (
         <Marker hover width={20} height={20} anchor={[userLocation.coords.latitude, userLocation.coords.longitude]}>
           <MapMarker color="blue.500" text="Te" />
