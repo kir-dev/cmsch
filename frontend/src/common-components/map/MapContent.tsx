@@ -53,7 +53,7 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
           height={20}
           anchor={[mapDataItem.location.latitude, mapDataItem.location.longitude]}
         >
-          <MapMarker color="brand.600" text={mapDataItem.displayName} />
+          <MapMarker color={mapDataItem.marker.color} text={mapDataItem.displayName} />
         </Marker>
       ))}
     </Map>
