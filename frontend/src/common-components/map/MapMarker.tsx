@@ -7,7 +7,7 @@ interface MapMarkerProps {
   mapShape?: MapMarkerShape
 }
 
-export function MapMarker({ color, text, mapShape }: MapMarkerProps) {
+export function MapMarker({ color = 'brand.600', text, mapShape = MapMarkerShape.CIRCLE }: MapMarkerProps) {
   let borderRadius: BoxProps['borderRadius'] = 'full'
   if (mapShape === MapMarkerShape.SQUARE) borderRadius = 'md'
   const bg = useColorModeValue('white', 'gray.800')
