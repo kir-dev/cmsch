@@ -16,30 +16,43 @@ const val DEFAULT_CATEGORY = ""
 open class RaceService(
     private val raceRecordRepository: RaceRecordRepository,
     private val raceCategoryRepository: RaceCategoryRepository,
+    private val freestyleRaceRecordRepository: FreestyleRaceRecordRepository,
     private val raceComponent: RaceComponent,
     private val userRepository: UserRepository,
 ) {
 
     @Transactional(readOnly = true)
-    open fun getViewForGroups(user: UserEntity?): RaceView {
+    open fun getViewForGroups(user: UserEntity?, filter: (RaceEntryDto) -> Boolean = { true }): RaceView {
         val board = getBoardForGroups(DEFAULT_CATEGORY)
+            .filter(filter)
 
         return if (user == null) {
             RaceView(
-                raceComponent.title.getValue(),
-                raceComponent.defaultCategoryDescription.getValue(),
-                null, null, board)
+                categoryName = raceComponent.title.getValue(),
+                description = raceComponent.defaultCategoryDescription.getValue(),
+                place = null, bestTime = null, board = board
+            )
         } else {
             val groupId = user.group?.id ?: -1
             val place = board.indexOfFirst { it.id == groupId }
             RaceView(
-                raceComponent.title.getValue(),
-                raceComponent.defaultCategoryDescription.getValue(),
-                if (place < 0) null else (place + 1),
-                board.find { it.id == groupId }?.time,
-                board
+                categoryName = raceComponent.title.getValue(),
+                description = raceComponent.defaultCategoryDescription.getValue(),
+                place = if (place < 0) null else (place + 1),
+                bestTime = board.find { it.id == groupId }?.time,
+                board = board
             )
         }
+    }
+
+    @Transactional(readOnly = true)
+    open fun getFreestyleViewForGroups(): FreestyleRaceView {
+        val board = getFreestyleBoardForGroups()
+        return FreestyleRaceView(
+            raceComponent.title.getValue(),
+            raceComponent.defaultCategoryDescription.getValue(),
+            board
+        )
     }
 
     @Throws(NoSuchElementException::class)
@@ -94,6 +107,31 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
+    open fun getFreestyleBoardForGroups() = if (raceComponent.ascendingOrder.isValueTrue()) {
+        freestyleRaceRecordRepository.findAll()
+            .map { submission ->
+                FreestyleRaceEntryDto(
+                    submission.groupId ?: 0,
+                    submission.groupName,
+                    submission.groupName,
+                    submission.time
+                )
+            }
+            .sortedBy { it.time }
+    } else {
+        freestyleRaceRecordRepository.findAll()
+            .map { submission ->
+                FreestyleRaceEntryDto(
+                    submission.groupId ?: 0,
+                    submission.groupName,
+                    submission.groupName,
+                    submission.time
+                )
+            }
+            .sortedByDescending { it.time }
+    }
+
+    @Transactional(readOnly = true)
     open fun getViewForUsers(user: CmschUser?): RaceView {
         val board = getBoardForUsers(DEFAULT_CATEGORY, false)
 
@@ -136,6 +174,16 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
+    open fun getFreestyleViewForUsers(): FreestyleRaceView {
+        val board = getFreestyleBoardForUsers()
+        return FreestyleRaceView(
+            categoryName = raceComponent.freestyleCategoryName.getValue(),
+            description = raceComponent.freestyleCategoryDescription.getValue(),
+            board = board
+        )
+    }
+
+    @Transactional(readOnly = true)
     open fun getBoardForUsers(category: String, fetchEmail: Boolean) = if (raceComponent.ascendingOrder.isValueTrue()) {
         raceRecordRepository.findAllByCategory(category)
             .groupBy { it.userId }
@@ -165,6 +213,31 @@ open class RaceService(
                     submission.value.first().groupName,
                     submission.value.maxOf { it.time },
                     email
+                )
+            }
+            .sortedByDescending { it.time }
+    }
+
+    @Transactional(readOnly = true)
+    open fun getFreestyleBoardForUsers() = if (raceComponent.ascendingOrder.isValueTrue()) {
+        freestyleRaceRecordRepository.findAll()
+            .map { submission ->
+                FreestyleRaceEntryDto(
+                    submission.userId ?: 0,
+                    submission.userName,
+                    submission.groupName,
+                    submission.time
+                )
+            }
+            .sortedBy { it.time }
+    } else {
+        raceRecordRepository.findAll()
+            .map { submission ->
+                FreestyleRaceEntryDto(
+                    submission.userId ?: 0,
+                    submission.userName,
+                    submission.groupName,
+                    submission.time
                 )
             }
             .sortedByDescending { it.time }
