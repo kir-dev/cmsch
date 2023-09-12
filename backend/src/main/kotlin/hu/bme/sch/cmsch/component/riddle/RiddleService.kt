@@ -93,12 +93,13 @@ open class RiddleService(
         val submission = submissions.find { it.riddle?.id == riddleId }
         if (submission != null)
             return RiddleView(
-                riddle.imageUrl,
-                riddle.title,
-                if (submission.hintUsed) riddle.hint else null,
-                submission.completed,
-                riddle.creator,
-                riddle.firstSolver
+                imageUrl = riddle.imageUrl,
+                title = riddle.title,
+                hint = if (submission.hintUsed) riddle.hint else null,
+                solved = submission.completed,
+                creator = riddle.creator,
+                firstSolver = riddle.firstSolver,
+                description = riddle.description
             )
 
         val riddles = riddleRepository.findAllByCategoryId(riddle.categoryId)
@@ -109,7 +110,15 @@ open class RiddleService(
 
         if (nextId != riddle.id)
             return null
-        return RiddleView(riddle.imageUrl, riddle.title, null, false, riddle.creator, riddle.firstSolver)
+        return RiddleView(
+            imageUrl = riddle.imageUrl,
+            title = riddle.title,
+            hint = null,
+            solved = false,
+            creator = riddle.creator,
+            firstSolver = riddle.firstSolver,
+            description = riddle.description
+        )
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
@@ -409,13 +418,14 @@ open class RiddleService(
 
     private fun mapRiddle(mapping: RiddleMappingEntity, riddle: RiddleEntity): RiddleViewWithSolution {
         return RiddleViewWithSolution(
-            riddle.imageUrl,
-            riddle.title,
-            if (mapping.hintUsed) riddle.hint else "",
-            mapping.completed,
-            riddle.creator,
-            riddle.firstSolver,
-            if (mapping.completed) riddle.solution else ""
+            imageUrl = riddle.imageUrl,
+            title = riddle.title,
+            hint = if (mapping.hintUsed) riddle.hint else "",
+            solved = mapping.completed,
+            creator = riddle.creator,
+            firstSolver = riddle.firstSolver,
+            solution = if (mapping.completed) riddle.solution else "",
+            description = riddle.description
         )
     }
 
