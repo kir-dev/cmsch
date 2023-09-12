@@ -23,6 +23,9 @@ data class RiddleView(
     @field:JsonView(FullDetails::class)
     var firstSolver: String? = null,
 
+    @field:JsonView(FullDetails::class)
+    var description: String = "",
+
 )
 
 data class RiddleViewWithSolution(
@@ -48,4 +51,6 @@ data class RiddleViewWithSolution(
     @field:JsonView(FullDetails::class)
     var solution: String = "",
 
+    @field:JsonView(FullDetails::class)
+    var description: String = "",
 )
