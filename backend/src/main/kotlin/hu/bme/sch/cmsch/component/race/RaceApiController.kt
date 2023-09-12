@@ -60,4 +60,38 @@ class RaceApiController(
         }
     }
 
+    @JsonView(FullDetails::class)
+    @GetMapping("/freestyle-race")
+    fun freestyleRace(auth: Authentication?): ResponseEntity<FreestyleRaceView> {
+        val user = auth?.getUserFromDatabaseOrNull()
+
+        if (!raceComponent.visible.isValueTrue())
+            return ResponseEntity.ok(FreestyleRaceView())
+
+        if (!raceComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return when (startupPropertyConfig.raceOwnershipMode) {
+            OwnershipType.USER -> ResponseEntity.ok(raceService.getFreestyleViewForUsers())
+            OwnershipType.GROUP -> ResponseEntity.ok(raceService.getFreestyleViewForGroups())
+        }
+    }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/race-by-team/{teamId}")
+    fun raceByTeam(auth: Authentication?, @PathVariable teamId: Int): ResponseEntity<RaceView> {
+        val user = auth?.getUserFromDatabaseOrNull()
+
+        if (!raceComponent.visible.isValueTrue())
+            return ResponseEntity.ok(RaceView())
+
+        if (!raceComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return when (startupPropertyConfig.raceOwnershipMode) {
+            OwnershipType.USER -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            OwnershipType.GROUP -> ResponseEntity.ok(raceService.getViewForGroups(user) { it.id == teamId })
+        }
+    }
+
 }
