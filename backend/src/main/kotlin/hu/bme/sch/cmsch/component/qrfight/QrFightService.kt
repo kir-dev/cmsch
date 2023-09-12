@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschIntegrationService
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschMessageType
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschNewMessageDto
-import hu.bme.sch.cmsch.component.token.TokenCollectorStatus
-import hu.bme.sch.cmsch.component.token.TokenEntity
-import hu.bme.sch.cmsch.component.token.TokenPropertyEntity
-import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
+import hu.bme.sch.cmsch.component.token.*
+import hu.bme.sch.cmsch.component.token.TokenCollectorStatus.*
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
@@ -23,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 const val TIMER_OCCURRENCE = 10
+
+private const val NOBODY = "senki"
 
 @Service
 @ConditionalOnBean(QrFightComponent::class)
@@ -117,7 +117,7 @@ open class QrFightService(
                     t.displayName,
                     if (user?.id == t.ownerUserId) t.ownerMessage else t.publicMessage,
                     t.ownerUserName,
-                    userRepository.findById(t.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
+                    userRepository.findById(t.holder.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
                     t.holderFor
                 )
             }
@@ -156,9 +156,9 @@ open class QrFightService(
         LevelStatus.OPEN
     }
 
-    fun onTokenScanForGroup(user: UserEntity, group: GroupEntity, token: TokenEntity): Pair<String?, TokenCollectorStatus> {
+    fun onTokenScanForGroup(user: UserEntity, group: GroupEntity, token: TokenEntity): TokenSubmittedView {
         if (tokenPropertyRepository.isEmpty)
-            return Pair(null, TokenCollectorStatus.QR_FIGHT_INTERNAL_ERROR)
+            return TokenSubmittedView(QR_FIGHT_INTERNAL_ERROR, null, null, null)
         val repo = tokenPropertyRepository.orElseThrow()
 
         // Check Level INFO
@@ -167,62 +167,116 @@ open class QrFightService(
             val level = levels.first()
             val outOfDate = !clock.inRange(level.availableFrom, level.availableTo, clock.getTimeInSeconds())
             if (!level.enabled || outOfDate) {
-                log.info("Level '{}' out disabled:{} or out-of-date:{} for user '{}'",
-                    level.displayName, !level.enabled, outOfDate, user.fullName)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_LEVEL_LOCKED)
+                log.info("Level '{}' out disabled:{} or out-of-date:{} for user '{}' group '{}'",
+                    level.displayName, !level.enabled, outOfDate, user.fullName, user.groupName)
+                return TokenSubmittedView(QR_FIGHT_LEVEL_LOCKED, token.title, null, null)
             }
             if (!isLevelOpenForGroup(level, group)) {
-                log.info("Level '{}' is not unlocked for user '{}'", level.displayName, user.fullName)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_LEVEL_LOCKED)
+                log.info("Level '{}' is not unlocked for user '{}' group '{}'",
+                    level.displayName, user.fullName, user.groupName)
+                return TokenSubmittedView(QR_FIGHT_LEVEL_NOT_OPEN, token.title, null, null)
             }
         }
 
         // Check for TOWERS
-        val action = token.action ?: ""
+        val action = token.action
         if (action.startsWith("capture:")) {
-            val tower = action.split(":")[1]
-            val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
-                ?: return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-
-            val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
-            if (towerEntity.locked || outOfDate) {
-                log.info("Tower '{}' out locked:{} or out-of-date:{}", towerEntity.selector, towerEntity.locked, outOfDate)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-            }
-
-            towerEntity.ownerGroupId = group.id
-            towerEntity.ownerGroupName = group.name
-            towerEntity.history += "${user.fullNameWithAlias};${user.id};${group.name};${group.id};${clock.getTimeInSeconds()};\n"
-            qrTowerRepository.save(towerEntity)
-            log.info("Tower '{}' captured by by group:{} (user:{})", token.title, group.name, user.fullName)
-            return Pair(token.title, TokenCollectorStatus.QR_TOWER_CAPTURED)
-
+            return handleTowerCaptureForGroup(action, token, group, user)
         } else if (action.startsWith("history:")) {
-            val tower = action.split(":")[1]
-            val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
-                ?: return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-
-            val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
-            if (towerEntity.locked || outOfDate) {
-                log.info("Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
-                    towerEntity.selector, towerEntity.locked, outOfDate, user.fullName)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-            }
-
-            towerEntity.history += "${user.fullNameWithAlias};${user.id};${group.name};${group.id};${clock.getTimeInSeconds()};\n"
-            qrTowerRepository.save(towerEntity)
-            log.info("Tower '{}' logged by by group:{} (user:{})", token.title, group.name, user.fullName)
-            return Pair(token.title, TokenCollectorStatus.QR_TOWER_LOGGED)
+            return handleTowerHistoryForGroup(action, token, user, group)
+        } else if (action.startsWith("enslave:")) {
+            return handleTowerEnslaveForGroup(action, token, user, group)
         }
 
         if (repo.findByToken_TokenAndOwnerGroup(token.token, group).isPresent) {
             log.info("Token '{}' already collected by group:{} (user:{})", token.title, group.name, user.fullName)
-            return Pair(token.title, TokenCollectorStatus.ALREADY_SCANNED)
+            return TokenSubmittedView(ALREADY_SCANNED, token.title, token.displayDescription, token.displayIconUrl)
         }
 
         log.info("Token '{}' collected for user:{} group:{}", token.title, user.fullName, group.name)
         repo.save(TokenPropertyEntity(0, null, group, token, clock.getTimeInSeconds()))
-        return Pair(token.title, TokenCollectorStatus.SCANNED)
+        return TokenSubmittedView(SCANNED, token.title, token.displayDescription, token.displayIconUrl)
+    }
+
+    private fun handleTowerCaptureForGroup(
+        action: String,
+        token: TokenEntity,
+        group: GroupEntity,
+        user: UserEntity
+    ): TokenSubmittedView {
+        val tower = action.split(":")[1]
+        val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
+            ?: return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+
+        val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
+        if (towerEntity.locked || outOfDate) {
+            log.info("Tower '{}' out locked:{} or out-of-date:{}", towerEntity.selector, towerEntity.locked, outOfDate)
+            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+        }
+
+        towerEntity.ownerGroupId = group.id
+        towerEntity.ownerGroupName = group.name
+        towerEntity.history += "${user.fullNameWithAlias};${user.id};${group.name};${group.id};${clock.getTimeInSeconds()};\n"
+        qrTowerRepository.save(towerEntity)
+        log.info("Tower '{}' captured by group:{} (user:{})", token.title, group.name, user.fullName)
+        return TokenSubmittedView(QR_TOWER_CAPTURED, token.title, token.displayDescription, token.displayIconUrl)
+    }
+
+    private fun handleTowerHistoryForGroup(
+        action: String,
+        token: TokenEntity,
+        user: UserEntity,
+        group: GroupEntity
+    ): TokenSubmittedView {
+        val tower = action.split(":")[1]
+        val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
+            ?: return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+
+        val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
+        if (towerEntity.locked || outOfDate) {
+            log.info(
+                "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
+                towerEntity.selector, towerEntity.locked, outOfDate, user.fullName
+            )
+            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+        }
+
+        towerEntity.history += "${user.fullNameWithAlias};${user.id};${group.name};${group.id};${clock.getTimeInSeconds()};\n"
+        qrTowerRepository.save(towerEntity)
+        log.info("Tower '{}' logged by group:{} (user:{})", token.title, group.name, user.fullName)
+        return TokenSubmittedView(QR_TOWER_LOGGED, token.title, token.displayDescription, token.displayIconUrl)
+    }
+
+    private fun handleTowerEnslaveForGroup(
+        action: String,
+        token: TokenEntity,
+        user: UserEntity,
+        group: GroupEntity
+    ): TokenSubmittedView {
+        val tower = action.split(":")[1]
+        val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
+            ?: return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+
+        val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
+        if (towerEntity.locked || outOfDate) {
+            log.info(
+                "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
+                towerEntity.selector, towerEntity.locked, outOfDate, user.fullName
+            )
+            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+        }
+
+        if (towerEntity.ownerGroupId != 0) {
+            log.info("Tower '{}' already enslaved so group:{} (user:{}) cannot capture it", token.title, group.name, user.fullName)
+            return TokenSubmittedView(QR_TOWER_ALREADY_ENSLAVED, token.title, null, token.displayIconUrl)
+        }
+
+        towerEntity.ownerGroupId = group.id
+        towerEntity.ownerGroupName = group.name
+        towerEntity.history += "${user.fullNameWithAlias};${user.id};${group.name};${group.id};${clock.getTimeInSeconds()};\n"
+        qrTowerRepository.save(towerEntity)
+        log.info("Tower '{}' enslaved by group:{} (user:{})", token.title, group.name, user.fullName)
+        return TokenSubmittedView(QR_TOWER_ENSLAVED, token.title, token.displayDescription, token.displayIconUrl)
     }
 
     private fun isLevelOpenForGroup(level: QrLevelEntity, group: GroupEntity): Boolean {
@@ -244,9 +298,9 @@ open class QrFightService(
         return completedTokens >= level.minAmountToComplete
     }
 
-    fun onTokenScanForUser(user: UserEntity, token: TokenEntity): Pair<String?, TokenCollectorStatus> {
+    fun onTokenScanForUser(user: UserEntity, token: TokenEntity): TokenSubmittedView {
         if (tokenPropertyRepository.isEmpty)
-            return Pair(null, TokenCollectorStatus.QR_FIGHT_INTERNAL_ERROR)
+            return TokenSubmittedView(QR_FIGHT_INTERNAL_ERROR, null, null, null)
         val repo = tokenPropertyRepository.orElseThrow()
 
         // Check Level INFO
@@ -257,61 +311,111 @@ open class QrFightService(
             if (!level.enabled || outOfDate) {
                 log.info("Level '{}' out disabled:{} or out-of-date:{} for user '{}'",
                     level.displayName, !level.enabled, outOfDate, user.fullName)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_LEVEL_LOCKED)
+                return TokenSubmittedView(QR_FIGHT_LEVEL_LOCKED, token.title, null, null)
             }
             if (!isLevelOpenForUser(level, user)) {
                 log.info("Level '{}' is not unlocked for user '{}'", level.displayName, user.fullName)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_LEVEL_LOCKED)
+                return TokenSubmittedView(QR_FIGHT_LEVEL_LOCKED, token.title, null, null)
             }
         }
 
         // Check for TOWERS
-        val action = token.action ?: ""
+        val action = token.action
         if (action.startsWith("capture:")) {
-            val tower = action.split(":")[1]
-            val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
-                ?: return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-
-            val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
-            if (towerEntity.locked || outOfDate) {
-                log.info("Tower '{}' out locked:{} or out-of-date:{}", towerEntity.selector, towerEntity.locked, outOfDate)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-            }
-
-            towerEntity.ownerUserId = user.id
-            towerEntity.ownerUserName = user.fullNameWithAlias
-            towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
-
-            qrTowerRepository.save(towerEntity)
-            log.info("Tower '{}' captured by by user:{}", token.title, user.fullName)
-            return Pair(token.title, TokenCollectorStatus.QR_TOWER_CAPTURED)
-
+            return handleTowerCaptureForUser(action, token, user)
         } else if (action.startsWith("history:")) {
-            val tower = action.split(":")[1]
-            val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
-                ?: return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-
-            val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
-            if (towerEntity.locked || outOfDate) {
-                log.info("Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
-                    towerEntity.selector, towerEntity.locked, outOfDate, user.fullName)
-                return Pair(token.title, TokenCollectorStatus.QR_FIGHT_TOWER_LOCKED)
-            }
-
-            towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
-            qrTowerRepository.save(towerEntity)
-            log.info("Tower '{}' logged by by user:{}", token.title, user.fullName)
-            return Pair(token.title, TokenCollectorStatus.QR_TOWER_LOGGED)
+            return handleTowerHistoryForUser(action, token, user)
+        } else if (action.startsWith("enslave:")) {
+            return handleTowerEnslaveForUser(action, token, user)
         }
 
         if (repo.findByToken_TokenAndOwnerUser_Id(token.token, user.id).isPresent) {
             log.info("Token '{}' already collected by user:{}", token.title, user.fullName)
-            return Pair(token.title, TokenCollectorStatus.ALREADY_SCANNED)
+            return TokenSubmittedView(ALREADY_SCANNED, token.title, token.displayDescription, token.displayIconUrl)
         }
 
         log.info("Token '{}' collected for user:{}", token.title, user.fullName)
         repo.save(TokenPropertyEntity(0, user, null, token, clock.getTimeInSeconds()))
-        return Pair(token.title, TokenCollectorStatus.SCANNED)
+        return TokenSubmittedView(SCANNED, token.title, token.displayDescription, token.displayIconUrl)
+    }
+
+    private fun handleTowerCaptureForUser(
+        action: String,
+        token: TokenEntity,
+        user: UserEntity
+    ): TokenSubmittedView {
+        val tower = action.split(":")[1]
+        val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
+            ?: return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, token.displayDescription, token.displayIconUrl)
+
+        val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
+        if (towerEntity.locked || outOfDate) {
+            log.info("Tower '{}' out locked:{} or out-of-date:{}", towerEntity.selector, towerEntity.locked, outOfDate)
+            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, token.displayDescription, token.displayIconUrl)
+        }
+
+        towerEntity.ownerUserId = user.id
+        towerEntity.ownerUserName = user.fullNameWithAlias
+        towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
+
+        qrTowerRepository.save(towerEntity)
+        log.info("Tower '{}' captured by user:{}", token.title, user.fullName)
+        return TokenSubmittedView(QR_TOWER_CAPTURED, token.title, token.displayDescription, token.displayIconUrl)
+    }
+
+    private fun handleTowerHistoryForUser(
+        action: String,
+        token: TokenEntity,
+        user: UserEntity
+    ): TokenSubmittedView {
+        val tower = action.split(":")[1]
+        val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
+            ?: return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+
+        val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
+        if (towerEntity.locked || outOfDate) {
+            log.info(
+                "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
+                towerEntity.selector, towerEntity.locked, outOfDate, user.fullName
+            )
+            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+        }
+
+        towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
+        qrTowerRepository.save(towerEntity)
+        log.info("Tower '{}' logged by user:{}", token.title, user.fullName)
+        return TokenSubmittedView(QR_TOWER_LOGGED, token.title, token.displayDescription, token.displayIconUrl)
+    }
+
+    private fun handleTowerEnslaveForUser(
+        action: String,
+        token: TokenEntity,
+        user: UserEntity
+    ): TokenSubmittedView {
+        val tower = action.split(":")[1]
+        val towerEntity = qrTowerRepository.findAllBySelector(tower).firstOrNull()
+            ?: return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+
+        val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
+        if (towerEntity.locked || outOfDate) {
+            log.info(
+                "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
+                towerEntity.selector, towerEntity.locked, outOfDate, user.fullName
+            )
+            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+        }
+
+        if (towerEntity.ownerUserId != 0) {
+            log.info("Tower '{}' already enslaved so (user:{}) cannot capture it", token.title, user.fullName)
+            return TokenSubmittedView(QR_TOWER_ALREADY_ENSLAVED, token.title, null, token.displayIconUrl)
+        }
+
+        towerEntity.ownerUserId = user.id
+        towerEntity.ownerUserName = user.fullNameWithAlias
+        towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
+        qrTowerRepository.save(towerEntity)
+        log.info("Tower '{}' enslaved by user:{}", token.title, user.fullName)
+        return TokenSubmittedView(QR_TOWER_LOGGED, token.title, token.displayDescription, token.displayIconUrl)
     }
 
     private fun isLevelOpenForUser(level: QrLevelEntity, user: UserEntity): Boolean {
@@ -389,14 +493,14 @@ open class QrFightService(
             OwnershipType.GROUP -> QrFightTowerDto(
                 tower.displayName,
                 tower.ownerGroupName,
-                tower.holder ?: "",
-                tower.holderFor ?: 0
+                tower.holder,
+                tower.holderFor
             )
             OwnershipType.USER -> QrFightTowerDto(
                 tower.displayName,
                 tower.ownerUserName,
-                userRepository.findById(tower.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
-                tower.holderFor ?: 0
+                userRepository.findById(tower.holder.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
+                tower.holderFor
             )
         }
     }
@@ -422,11 +526,11 @@ open class QrFightService(
                         ?: IndulaschMessageType.INFO,
                     qrFightComponent.indulaschMessageFormat.getValue()
                         .replace("{HOLDER}",
-                            userRepository.findById(tower.holder?.toIntOrNull() ?: 0).map { it.fullNameWithAlias }
-                                .orElse("senki")
+                            userRepository.findById(tower.holder.toIntOrNull() ?: 0).map { it.fullNameWithAlias }
+                                .orElse(NOBODY)
                         )
-                        .replace("{TIME}", (tower.holderFor ?: 0).toString())
-                        .replace("{OWNER}", tower.ownerUserName.ifBlank { "senki" })
+                        .replace("{TIME}", tower.holderFor.toString())
+                        .replace("{OWNER}", tower.ownerUserName.ifBlank { NOBODY })
                 )
             )
             OwnershipType.GROUP -> indulaschIntegrationService.insertMessage(
@@ -434,9 +538,9 @@ open class QrFightService(
                     IndulaschMessageType.getByNameOrNull(qrFightComponent.indulaschMessageLevel.getValue())
                         ?: IndulaschMessageType.INFO,
                     qrFightComponent.indulaschMessageFormat.getValue()
-                        .replace("{HOLDER}", tower.holder ?: "senki")
-                        .replace("{TIME}", (tower.holderFor ?: 0).toString())
-                        .replace("{OWNER}", tower.ownerGroupName.ifBlank { "senki" })
+                        .replace("{HOLDER}", tower.holder)
+                        .replace("{TIME}", tower.holderFor.toString())
+                        .replace("{OWNER}", tower.ownerGroupName.ifBlank { NOBODY })
                 )
             )
         }

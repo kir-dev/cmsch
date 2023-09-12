@@ -34,6 +34,7 @@ class EventComponent(
             seekToCurrentCurrent,
             separateDays,
             topMessage,
+            searchEnabled,
 
             logicGroup,
             enableDetailedView,
@@ -85,6 +86,12 @@ class EventComponent(
     val topMessage = SettingProxy(componentSettingService, component,
         "topMessage", "Rövid szöveg a programokról általánosságban", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
+    )
+
+    val searchEnabled = SettingProxy(componentSettingService, component,
+        "searchEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Keresés elérhető",
+        description = "Legyen-e kereső az oldal tetején"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

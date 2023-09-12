@@ -9,6 +9,12 @@ data class TokenSubmittedView(
     var status: TokenCollectorStatus,
 
     @field:JsonView(FullDetails::class)
-    var title: String?
+    var title: String?,
+
+    @field:JsonView(FullDetails::class)
+    var description: String?,
+
+    @field:JsonView(FullDetails::class)
+    var iconUrl: String?,
 
 )
