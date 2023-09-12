@@ -89,6 +89,16 @@ data class RiddleEntity(
     @property:ImportFormat(ignore = false, columnId = 7)
     var firstSolver: String = "",
 
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @property:GenerateInput(order = 10, label = "Leírás",
+        note = "Akkor jelenik meg ha nem üres",
+        type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var description: String = "",
+
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
