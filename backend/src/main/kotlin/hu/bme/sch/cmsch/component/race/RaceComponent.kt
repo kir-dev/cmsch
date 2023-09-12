@@ -35,7 +35,11 @@ class RaceComponent(
             extraCategoriesVisible,
             ascendingOrder,
             defaultCategoryDescription,
-            searchEnabled
+            searchEnabled,
+
+            freestyleGroup,
+            freestyleCategoryName,
+
         )
     }
 
@@ -96,6 +100,24 @@ class RaceComponent(
         "searchEnabled", "false", type = SettingType.BOOLEAN,
         fieldName = "Keresés elérhető",
         description = "Legyen-e kereső az oldal tetején"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val freestyleGroup = SettingProxy(componentSettingService, component,
+        "freestyleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Szabad kategória",
+        description = ""
+    )
+
+    val freestyleCategoryName = SettingProxy(componentSettingService, component,
+        "freestyleCategoryName", "Funky mérés",
+        fieldName = "Szabad kategória neve", description = "Ez lesz a szabad kategória neve"
+    )
+
+    val freestyleCategoryDescription = SettingProxy(componentSettingService, component,
+        "freestyleCategoryDescription", "", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Szabad kategória leírása", description = "Ez lesz a szabad kategória leírása"
     )
 
 }
