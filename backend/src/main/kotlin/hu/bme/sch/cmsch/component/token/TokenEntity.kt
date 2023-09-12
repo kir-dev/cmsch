@@ -30,35 +30,35 @@ data class TokenEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Token neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat(ignore = false)
     var title: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Token")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat(ignore = false)
     var token: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Beolvasható-e a token")
     @property:GenerateOverview(columnName = "Olvasható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
+    @property:ImportFormat(ignore = false)
     var visible: Boolean = false,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 4, label = "Típus")
     @property:GenerateOverview(columnName = "Típus", order = 3)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat(ignore = false)
     var type: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 5, label = "Ikon")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4)
+    @property:ImportFormat(ignore = false)
     var icon: String = "",
 
     @field:JsonView(value = [ Edit::class ])
@@ -66,15 +66,15 @@ data class TokenEntity(
     @property:GenerateInput(order = 6, label = "Pont", type = INPUT_TYPE_NUMBER, defaultValue = "0",
         note = "Egész szám, hány pontot ér a megszerzése")
     @property:GenerateOverview(columnName = "Pont", order = 4, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_INT)
+    @property:ImportFormat(ignore = false)
     var score: Int? = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 7, label = "Kiváltott esemény",
-        note = "QR fighthoz az akció amit kivált. capture:<tower> vagy history:<tower>")
+        note = "QR fighthoz az akció amit kivált. capture:<tower>, history:<tower> vagy enslave:<tower>")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6)
+    @property:ImportFormat(ignore = false)
     var action: String = "",
 
     @field:JsonView(value = [ Edit::class ])
@@ -82,8 +82,25 @@ data class TokenEntity(
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Aktív cél",
         note = "Csak akkor ha a QR Fight komponens is be van töltve")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
+    @property:ImportFormat(ignore = false)
     var activeTarget: Boolean = false,
+
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) default ''")
+    @property:GenerateInput(maxLength = 255, order = 9, label = "Kijelzett kép URL-je",
+        note = "Ha nem üres, megjelenik beolvasás után")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var displayIconUrl: String = "",
+
+    @field:JsonView(value = [ Edit::class ])
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @property:GenerateInput(order = 10, label = "Kijelzett szöveg",
+        note = "Ha nem üres, megjelenik beolvasás után", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var displayDescription: String = "",
 
 ): ManagedEntity {
 

@@ -43,20 +43,18 @@ class TokenApiController(
     @JsonView(FullDetails::class)
     @PostMapping("/token/{token}")
     fun submitToken(@PathVariable token: String, auth: Authentication): TokenSubmittedView {
-        try {
-            return when (startupPropertyConfig.tokenOwnershipMode) {
+        return try {
+            when (startupPropertyConfig.tokenOwnershipMode) {
                 OwnershipType.USER -> {
-                    val (title, status) = tokens.collectToken(auth.getUser(), token)
-                    TokenSubmittedView(status, title)
+                    tokens.collectToken(auth.getUser(), token)
                 }
                 OwnershipType.GROUP -> {
-                    val (title, status) = tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
-                    TokenSubmittedView(status, title)
+                    tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
                 }
             }
         } catch (e: Throwable) {
             log.error("Failed to redeem token: '{}'", token, e)
-            return TokenSubmittedView(TokenCollectorStatus.CANNOT_COLLECT, null)
+            TokenSubmittedView(TokenCollectorStatus.CANNOT_COLLECT, null, null, null)
         }
     }
 
@@ -73,9 +71,9 @@ class TokenApiController(
 
     @GetMapping("/qr/{token}")
     fun readQrManually(@PathVariable token: String, request: HttpServletRequest, auth: Authentication?): String {
-        try {
+        return try {
             val user = auth?.getUserOrNull()
-            return if (user == null) {
+            if (user == null) {
                 request.getSession(true).setAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE, token)
                 "redirect:${applicationComponent.siteUrl.getValue()}login"
             } else {
@@ -83,23 +81,27 @@ class TokenApiController(
             }
         } catch (e: Throwable) {
             log.error("Failed to redeem token: '{}'", token, e)
-            return "redirect:${applicationComponent.siteUrl.getValue()}login?error=failed-to-redeem"
+            "redirect:${applicationComponent.siteUrl.getValue()}login?error=failed-to-redeem"
         }
     }
 
     private fun collectToken(auth: Authentication, token: String): String {
         return when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> {
-                val (title, status) = tokens.collectToken(auth.getUser(), token)
+                val response = tokens.collectToken(auth.getUser(), token)
                 log.info("Token collected for USER '{}' token '{}'", auth.getUser().userName, token)
-                "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${status.name}" +
-                        "&title=${URLEncoder.encode(title ?: "", StandardCharsets.UTF_8.toString())}"
+                "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${response.status.name}" +
+                        "&title=${URLEncoder.encode(response.title ?: "", StandardCharsets.UTF_8.toString())}" +
+                        "&description=${URLEncoder.encode(response.description ?: "", StandardCharsets.UTF_8.toString())}" +
+                        "&icon=${URLEncoder.encode(response.iconUrl ?: "", StandardCharsets.UTF_8.toString())}"
             }
             OwnershipType.GROUP -> {
-                val (title, status) = tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
+                val response = tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
                 log.info("Token collected for GROUP by user '{}' token '{}'", auth.getUser().userName, token)
-                "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${status.name}" +
-                        "&title=${URLEncoder.encode(title ?: "", StandardCharsets.UTF_8.toString())}"
+                "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${response.status.name}" +
+                        "&title=${URLEncoder.encode(response.title ?: "", StandardCharsets.UTF_8.toString())}" +
+                        "&description=${URLEncoder.encode(response.description ?: "", StandardCharsets.UTF_8.toString())}" +
+                        "&icon=${URLEncoder.encode(response.iconUrl ?: "", StandardCharsets.UTF_8.toString())}"
             }
         }
     }

@@ -12,9 +12,11 @@
         </div>
 
         <div class="content">
-            <h1 class="narrow" th:text="|${title} importálása/exportálása|">Import/Export</h1>
+            <h1 class="narrow" th:if="${importEnabled && exportEnabled}" th:text="|${title} importálása/exportálása|">Import/Export</h1>
+            <h1 class="narrow" th:if="${!importEnabled && exportEnabled}" th:text="|${title} exportálása|">Import/Export</h1>
+            <h1 class="narrow" th:if="${importEnabled && !exportEnabled}" th:text="|${title} importálása|">Import/Export</h1>
 
-            <div class="card wide-false">
+            <div class="card wide-false" th:if="${importEnabled}">
                 <h4>Importálás</h4>
 
                 <div class="desc">
@@ -41,7 +43,7 @@
                     </div>
                 </form>
             </div>
-            <div class="card wide-false">
+            <div class="card wide-false" th:if="${exportEnabled}">
                 <h4>Exportálás</h4>
 
                 <div class="desc">

@@ -34,7 +34,8 @@ class RaceComponent(
             visible,
             extraCategoriesVisible,
             ascendingOrder,
-            defaultCategoryDescription
+            defaultCategoryDescription,
+            searchEnabled
         )
     }
 
@@ -91,5 +92,10 @@ class RaceComponent(
         description = ""
     )
 
+    val searchEnabled = SettingProxy(componentSettingService, component,
+        "searchEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Keresés elérhető",
+        description = "Legyen-e kereső az oldal tetején"
+    )
 
 }
