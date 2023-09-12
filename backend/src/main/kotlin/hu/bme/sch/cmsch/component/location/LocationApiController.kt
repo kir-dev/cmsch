@@ -23,7 +23,7 @@ class LocationApiController(
 
     @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
     @GetMapping("/track-my-group")
-    fun trackMyGroup(auth: Authentication?): List<LocationEntity> {
+    fun trackMyGroup(auth: Authentication?): List<MapMarker> {
         val user = auth?.getUserFromDatabaseOrNull() ?: return listOf()
         if (user.groupName.isEmpty())
             return listOf()
