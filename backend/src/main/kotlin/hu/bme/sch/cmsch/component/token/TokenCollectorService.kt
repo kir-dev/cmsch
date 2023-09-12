@@ -3,6 +3,8 @@ package hu.bme.sch.cmsch.component.token
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightService
+import hu.bme.sch.cmsch.component.token.TokenCollectorStatus.ALREADY_SCANNED
+import hu.bme.sch.cmsch.component.token.TokenCollectorStatus.SCANNED
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.model.UserEntity
@@ -30,12 +32,9 @@ open class TokenCollectorService(
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun collectToken(user: CmschUser, token: String): Pair<String?, TokenCollectorStatus> {
+    open fun collectToken(user: CmschUser, token: String): TokenSubmittedView {
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
-            if (tokenPropertyRepository.findByToken_TokenAndOwnerUser_Id(token, user.id).isPresent)
-                return Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
-
             val userEntity = userService.getById(user.internalId)
             return qrFightService
                 .filter { qrFightComponent.map { it.enabled.isValueTrue() }.orElse(false) }
@@ -43,20 +42,20 @@ open class TokenCollectorService(
                     return@map it.onTokenScanForUser(userEntity, tokenEntity)
                 }.orElseGet {
                     if (tokenPropertyRepository.findByToken_TokenAndOwnerUser_Id(token, user.id).isPresent)
-                        return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
+                        return@orElseGet TokenSubmittedView(ALREADY_SCANNED, tokenEntity.title, tokenEntity.displayDescription, tokenEntity.displayIconUrl)
 
                     tokenPropertyRepository.save(TokenPropertyEntity(0, userEntity, null, tokenEntity, clock.getTimeInSeconds()))
-                    return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
+                    return@orElseGet TokenSubmittedView(SCANNED, tokenEntity.title, tokenEntity.displayDescription, tokenEntity.displayIconUrl)
                 }
         }
-        return Pair(null, TokenCollectorStatus.WRONG)
+        return TokenSubmittedView(TokenCollectorStatus.WRONG, null, null, null)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun collectTokenForGroup(userEntity: UserEntity, token: String): Pair<String?, TokenCollectorStatus> {
+    open fun collectTokenForGroup(userEntity: UserEntity, token: String): TokenSubmittedView {
         val groupEntity = groupRepository.findByName(userEntity.groupName)
         if (groupEntity.isEmpty)
-            return Pair(null, TokenCollectorStatus.CANNOT_COLLECT)
+            return TokenSubmittedView(TokenCollectorStatus.CANNOT_COLLECT, null, null, null)
 
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
@@ -66,13 +65,13 @@ open class TokenCollectorService(
                     return@map it.onTokenScanForGroup(userEntity, groupEntity.get(), tokenEntity)
                 }.orElseGet {
                     if (tokenPropertyRepository.findByToken_TokenAndOwnerGroup(token, groupEntity.get()).isPresent)
-                        return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.ALREADY_SCANNED)
+                        return@orElseGet TokenSubmittedView(ALREADY_SCANNED, tokenEntity.title, tokenEntity.displayDescription, tokenEntity.displayIconUrl)
 
                     tokenPropertyRepository.save(TokenPropertyEntity(0, null, groupEntity.get(), tokenEntity, clock.getTimeInSeconds()))
-                    return@orElseGet Pair(tokenEntity.title, TokenCollectorStatus.SCANNED)
+                    return@orElseGet TokenSubmittedView(SCANNED, tokenEntity.title, tokenEntity.displayDescription, tokenEntity.displayIconUrl)
                 }
         }
-        return Pair(null, TokenCollectorStatus.WRONG)
+        return TokenSubmittedView(TokenCollectorStatus.WRONG, null, null, null)
     }
 
     @Transactional(readOnly = true)

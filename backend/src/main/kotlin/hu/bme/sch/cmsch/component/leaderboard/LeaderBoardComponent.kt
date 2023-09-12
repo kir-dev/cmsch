@@ -49,7 +49,8 @@ class LeaderBoardComponent(
             maxUserEntryToShow,
             showGroupBoard,
             maxGroupEntryToShow,
-            showGroupOfUser
+            showGroupOfUser,
+            searchEnabled
         )
     }
 
@@ -178,6 +179,12 @@ class LeaderBoardComponent(
         "showGroupOfUser", "false", type = SettingType.BOOLEAN,
         fieldName = "Felhaszáló csoportjának kijelzése",
         description = "A felhasználói listán a felhasználó csoportja látható legyen-e"
+    )
+
+    val searchEnabled = SettingProxy(componentSettingService, component,
+        "searchEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Keresés elérhető",
+        description = "Legyen-e kereső az oldal tetején"
     )
 
 }
