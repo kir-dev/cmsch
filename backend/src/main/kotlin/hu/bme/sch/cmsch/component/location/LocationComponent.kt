@@ -47,7 +47,12 @@ class LocationComponent(
             appGroup,
             installGuide,
             androidAppUrl,
-            iosAppUrl
+            iosAppUrl,
+
+            displayGroup,
+            showUserName,
+            showAlias,
+            showGroupName,
         )
     }
 
@@ -151,6 +156,32 @@ class LocationComponent(
     val iosAppUrl = SettingProxy(componentSettingService, component,
         "iosAppUrl", "https://kir-dev.hu/ly/iosbacon", type = SettingType.TEXT,
         serverSideOnly = true, fieldName = "iOS App URL-je"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val displayGroup = SettingProxy(componentSettingService, component,
+        "displayGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Megjelenítés",
+        description = "", serverSideOnly = true
+    )
+
+    val showUserName = SettingProxy(componentSettingService, component,
+        "showUserName", "false", type = SettingType.BOOLEAN,
+        fieldName = "Felhasználó nevének kiírása", serverSideOnly = true,
+        description = "Ha be van kapcsolva, akkor a felhasználó neve is szerepel a marker alatt"
+    )
+
+    val showAlias = SettingProxy(componentSettingService, component,
+        "showAlias", "false", type = SettingType.BOOLEAN,
+        fieldName = "Becenév nevének kiírása", serverSideOnly = true,
+        description = "Ha be van kapcsolva, akkor a felhasználó beceneve is szerepel a marker alatt"
+    )
+
+    val showGroupName = SettingProxy(componentSettingService, component,
+        "showGroupName", "true", type = SettingType.BOOLEAN,
+        fieldName = "Csoport nevének kiírása", serverSideOnly = true,
+        description = "Ha be van kapcsolva, akkor a csoport neve is szerepel a marker alatt"
     )
 
 }

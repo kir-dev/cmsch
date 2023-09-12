@@ -515,19 +515,25 @@ object StaffPermissions : PermissionGroup {
 
     val PERMISSION_SHOW_LOCATIONS = PermissionValidator(
         "LOCATION_SHOW",
-        "Az összes nyers pozíció megtekintése",
+        "Az összes nyers pozíció és jelző megtekintése",
+        component = LocationComponent::class
+    )
+
+    val PERMISSION_CREATE_LOCATIONS = PermissionValidator(
+        "LOCATION_CREATE",
+        "Jelző készítése",
         component = LocationComponent::class
     )
 
     val PERMISSION_EDIT_LOCATIONS = PermissionValidator(
         "LOCATION_EDIT",
-        "Nyers pozíció szerkesztése",
+        "Nyers pozíció és jelző szerkesztése",
         component = LocationComponent::class
     )
 
     val PERMISSION_DELETE_LOCATIONS = PermissionValidator(
         "LOCATION_DELETE",
-        "Nyers pozíció törlése",
+        "Nyers pozíció és jelző törlése",
         component = LocationComponent::class
     )
 
@@ -1125,6 +1131,7 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_TRACK_ONE_GROUP,
         PERMISSION_TRACK_EVERYBODY,
         PERMISSION_SHOW_LOCATIONS,
+        PERMISSION_CREATE_LOCATIONS,
         PERMISSION_EDIT_LOCATIONS,
         PERMISSION_DELETE_LOCATIONS,
 
