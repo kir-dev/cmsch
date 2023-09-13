@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.admission
 
 import hu.bme.sch.cmsch.component.bmejegy.BmejegyRecordEntity
 import hu.bme.sch.cmsch.component.bmejegy.BmejegyService
+import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.model.RoleType
@@ -27,13 +28,15 @@ class AdmissionApiController(
     private val admissionComponent: AdmissionComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val bmejegyService: Optional<BmejegyService>,
-    private val auditLogService: AuditLogService
+    private val auditLogService: AuditLogService,
+    private val responseRepository: Optional<ResponseRepository>,
+    private val admissionService: AdmissionService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/")
-    fun admision(model: Model, auth: Authentication): String {
+    fun admission(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         if (StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user).not()) {
             model.addAttribute("permission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
@@ -45,26 +48,43 @@ class AdmissionApiController(
         }
 
         model.addAttribute("prefix", startupPropertyConfig.profileQrPrefix)
+        model.addAttribute("resolveUrl", "/resolve")
+        return "admission"
+    }
+
+    @GetMapping("/form/{formId}")
+    fun admissionForm(model: Model, auth: Authentication, @PathVariable formId: Int): String {
+        val user = auth.getUser()
+        if (StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user).not()) {
+            model.addAttribute("permission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
+            model.addAttribute("user", user)
+
+            auditLogService.admin403(user, admissionComponent.component,
+                "GET /admission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
+            return "admin403"
+        }
+
+        model.addAttribute("prefix", startupPropertyConfig.profileQrPrefix)
+        model.addAttribute("resolveUrl", "/resolve/${formId}")
         return "admission"
     }
 
     @ResponseBody
     @PostMapping("/resolve")
-    fun resolve(@RequestBody resolve: ResolveRequest): AdmissionResponse {
+    fun resolve(@RequestBody resolve: ResolveRequest, auth: Authentication): AdmissionResponse {
         log.info("Resolving admission for: ${resolve.cmschId}")
-        if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
-            return userService.searchByCmschId(resolve.cmschId)
-                .map { mapUser(it) }
+        val admissionResponse = if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
+            userService.searchByCmschId(resolve.cmschId)
+                .map { mapUserByDetails(it) }
                 .orElse(
                     AdmissionResponse(
                         "NOT FOUND BY CMSCHID", "NOT FOUND BY CMSCH",
                         RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
                     )
                 )
-
         } else if (bmejegyService.isPresent) {
             val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
-            return if (ticket.isEmpty) {
+            if (ticket.isEmpty) {
                 AdmissionResponse(
                     "NOT FOUND BY BMEJEGY", "NOT FOUND BY BMEJEGY",
                     RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
@@ -76,13 +96,43 @@ class AdmissionApiController(
             } else {
                 mapTicket(ticket.orElseThrow())
             }
-
         } else {
-            return AdmissionResponse(
+            AdmissionResponse(
                 "NOT FOUND AT ALL", "NOT FOUND AT ALL",
                 RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
             )
         }
+        admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
+        return admissionResponse
+    }
+
+    @ResponseBody
+    @PostMapping("/resolve/{formId}")
+    fun resolveForm(
+        @RequestBody resolve: ResolveRequest,
+        @PathVariable formId: Int,
+        auth: Authentication
+    ): AdmissionResponse {
+        log.info("Resolving admission for: ${resolve.cmschId} by form: ${formId}")
+        val admissionResponse = if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
+            userService.searchByCmschId(resolve.cmschId)
+                .map { mapUserByForm(it, formId) }
+                .orElse(
+                    AdmissionResponse(
+                        groupName = "NOT FOUND BY CMSCHID", userName = "NOT FOUND BY CMSCH",
+                        role = RoleType.GUEST, entryRole = EntryRole.CANNOT_ATTEND,
+                        accessGranted = false, formId = formId
+                    )
+                )
+        } else {
+            AdmissionResponse(
+                groupName = "NOT FOUND AT ALL", userName = "NOT FOUND AT ALL",
+                role = RoleType.GUEST, entryRole = EntryRole.CANNOT_ATTEND,
+                accessGranted = false, formId = formId
+            )
+        }
+        admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
+        return admissionResponse
     }
 
     // TODO: This implementation is created for GÓLYABÁL 2022. Generalize it in the future if needed.
@@ -112,9 +162,16 @@ class AdmissionApiController(
             user.role, grant, grant.canAttend)
     }
 
-    private fun mapUser(user: UserEntity): AdmissionResponse {
+    private fun mapUserByDetails(user: UserEntity): AdmissionResponse {
         if (isBanned(user.cmschId, user.groupName))
-            return AdmissionResponse(user.groupName, user.fullName, user.role, EntryRole.BANNED, false)
+            return AdmissionResponse(
+                groupName = user.groupName,
+                userName = user.fullName,
+                role = user.role,
+                entryRole = EntryRole.BANNED,
+                accessGranted = false,
+                userEntity = user
+            )
 
         val grants = mutableSetOf<EntryRole>()
 
@@ -124,7 +181,85 @@ class AdmissionApiController(
 
         val grant = grants.maxByOrNull { it.value } ?: EntryRole.CANNOT_ATTEND
         log.info("Admission is ${if (grant.canAttend) "OK" else "DENIED"} for user '${user.fullName}' with group '${user.groupName}' as $grant")
-        return AdmissionResponse(user.groupName, user.fullName, user.role, grant, grant.canAttend)
+        return AdmissionResponse(
+            groupName = user.groupName,
+            userName = user.fullName,
+            role = user.role,
+            entryRole = grant,
+            accessGranted = grant.canAttend,
+            userEntity = user
+        )
+    }
+
+    private fun mapUserByForm(user: UserEntity, formId: Int): AdmissionResponse {
+        if (isBanned(user.cmschId, user.groupName))
+            return AdmissionResponse(
+                groupName = user.groupName,
+                userName = user.fullName,
+                role = user.role,
+                entryRole = EntryRole.BANNED,
+                accessGranted = false,
+                userEntity = user,
+                formId = formId,
+            )
+
+        if (responseRepository.isEmpty) {
+            return AdmissionResponse(
+                groupName = "FORMS NOT ENABLED",
+                userName = "FORMS NOT ENABLED",
+                role = RoleType.GUEST,
+                entryRole = EntryRole.CANNOT_ATTEND,
+                accessGranted = false,
+                userEntity = user,
+                formId = formId,
+            )
+        }
+
+        val response = responseRepository.orElseThrow().findByFormIdAndSubmitterUserId(formId, user.id)
+        if (response.isEmpty) {
+            return AdmissionResponse(
+                groupName = "NOT FILLED",
+                userName = "NOT FILLED",
+                role = RoleType.GUEST,
+                entryRole = EntryRole.CANNOT_ATTEND,
+                accessGranted = false,
+                userEntity = user,
+                formId = formId
+            )
+        }
+        val responseEntity = response.orElseThrow()
+        if (admissionComponent.onlyAcceptApprovedForms.isValueTrue() && (!responseEntity.accepted || responseEntity.rejected)) {
+            return AdmissionResponse(
+                groupName = "FILLED, NOT ACCEPTED",
+                userName = "NOT ACCEPTED",
+                role = RoleType.GUEST,
+                entryRole = EntryRole.CANNOT_ATTEND,
+                accessGranted = false,
+                userEntity = user,
+                formId = formId,
+                responseId = responseEntity.id
+            )
+        }
+
+        val grants = mutableSetOf<EntryRole>()
+        grants.add(EntryRole.USER)
+
+        addGrantsByRole(user, grants)
+        addGrantsByCmschId(user.cmschId.lowercase(), grants)
+        addGrantsByGroup(user.groupName.lowercase(), grants)
+
+        val grant = grants.maxByOrNull { it.value } ?: EntryRole.CANNOT_ATTEND
+        log.info("Admission is ${if (grant.canAttend) "OK" else "DENIED"} for user '${user.fullName}' with group '${user.groupName}' as $grant")
+        return AdmissionResponse(
+            groupName = user.groupName,
+            userName = user.fullName,
+            role = user.role,
+            entryRole = grant,
+            accessGranted = grant.canAttend,
+            userEntity = user,
+            formId = formId,
+            responseId = responseEntity.id
+        )
     }
 
     private fun isBanned(cmschId: String, groupName: String): Boolean {
