@@ -21,7 +21,11 @@ class RaceComponent(
     "/race",
     "Verseny",
     ControlPermissions.PERMISSION_CONTROL_RACE,
-    listOf(RaceRecordEntity::class, RaceCategoryEntity::class),
+    listOf(
+        RaceRecordEntity::class,
+        RaceCategoryEntity::class,
+        FreestyleRaceRecordEntity::class
+    ),
     componentSettingService, env
 ) {
 
