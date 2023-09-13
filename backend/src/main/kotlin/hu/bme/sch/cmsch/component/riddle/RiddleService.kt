@@ -23,7 +23,7 @@ open class RiddleService(
     private val riddleComponent: RiddleComponent
 ) {
 
-    @Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     open fun listRiddlesForUser(user: CmschUser): List<RiddleCategoryDto> {
         val categories = riddleCategoryRepository.findAllByVisibleTrueAndMinRoleIn(RoleType.atMost(user.role))
         val submissions = riddleMappingRepository.findAllByOwnerUser_IdAndCompletedTrue(user.id)
@@ -33,7 +33,7 @@ open class RiddleService(
         return mapRiddles(categories, submissions)
     }
 
-    @Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     open fun listRiddlesForGroup(user: CmschUser, group: GroupEntity?): List<RiddleCategoryDto> {
         if (group == null)
             return listOf()
@@ -195,7 +195,7 @@ open class RiddleService(
             submissionEntity.attemptCount += 1
             submissionEntity.completedAt = clock.getTimeInSeconds()
             riddleMappingRepository.save(submissionEntity)
-            if (riddle.firstSolver?.isBlank() != false) {
+            if (riddle.firstSolver.isBlank()) {
                 riddle.firstSolver = user.userName
                 riddleRepository.save(riddle)
             }
@@ -218,7 +218,7 @@ open class RiddleService(
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
-            if (riddle.firstSolver?.isBlank() != false) {
+            if (riddle.firstSolver.isBlank()) {
                 riddle.firstSolver = user.userName
                 riddleRepository.save(riddle)
             }
@@ -255,7 +255,7 @@ open class RiddleService(
             submissionEntity.attemptCount += 1
             submissionEntity.completedAt = clock.getTimeInSeconds()
             riddleMappingRepository.save(submissionEntity)
-            if (riddle.firstSolver?.isBlank() != false) {
+            if (riddle.firstSolver.isBlank()) {
                 riddle.firstSolver = group.name
                 riddleRepository.save(riddle)
             }
@@ -281,7 +281,7 @@ open class RiddleService(
                 RiddleMappingEntity(0, riddle, null, group,
                     hintUsed = false, completed = true, completedAt = clock.getTimeInSeconds(), attemptCount = 1)
             )
-            if (riddle.firstSolver?.isBlank() != false) {
+            if (riddle.firstSolver.isBlank()) {
                 riddle.firstSolver = group.name
                 riddleRepository.save(riddle)
             }

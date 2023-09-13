@@ -61,6 +61,7 @@
     const codePrefix = /*[[${prefix}]]*/ "G7_";
     const parentUrl = "/admin/control";
     const baseUrl = /*[[@{/admin/admission}]]*/ "https://192.168.0.60:8080/scan";
+    const resolveUrl = /*[[${resolveUrl}]]*/ "/resolve";
 
     let lastReading = "n/a";
     let lastSuccessful = 0;
@@ -86,7 +87,7 @@
 
     function validatePromt(cmschId) {
         setTimeout(async () => {
-            const raw = await httpFetchData('POST', baseUrl + '/resolve', {
+            const raw = await httpFetchData('POST', baseUrl + resolveUrl, {
                 "cmschId": cmschId
             });
             try {

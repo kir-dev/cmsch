@@ -22,13 +22,17 @@ class AdmissionComponent(
     "/",
     "Beléptetés",
     ControlPermissions.PERMISSION_CONTROL_ADMISSION,
-    listOf(),
+    listOf(AdmissionEntryEntity::class),
     componentSettingService, env
 ) {
 
     final override val allSettings by lazy {
         listOf(
             minRole,
+
+            controlGroup,
+            onlyAcceptApprovedForms,
+            saveEntryLog,
 
             groupAccessGroup,
             userGroups,
@@ -63,6 +67,27 @@ class AdmissionComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val controlGroup = SettingProxy(componentSettingService, component,
+        "controlGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Beléptetés működése",
+        description = ""
+    )
+
+    val onlyAcceptApprovedForms = SettingProxy(componentSettingService, component,
+        "onlyAcceptApprovedForms", "false", type = SettingType.BOOLEAN,
+        fieldName = "Csak az elfogadott formok számítanak",
+        description = "Ha be van kapcsolva, akkor csak az elfogadott és nem elutasított formok számítanak. Csak akkor működik, ha a forms komponens be van kapcsolva."
+    )
+
+    val saveEntryLog = SettingProxy(componentSettingService, component,
+        "saveEntryLog", "true", type = SettingType.BOOLEAN,
+        fieldName = "Beléptetések mentése",
+        description = "Ha be van kapcsolva, akkor minden beengedés logolva van"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -198,5 +223,6 @@ class AdmissionComponent(
         fieldName = "Kitiltott felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
+
 
 }
