@@ -8,6 +8,15 @@ export interface Riddle {
   creator?: string
 }
 
+export interface RiddleWithSolution extends Riddle {
+  solution: string
+}
+
+export interface RiddleCategoryHistory {
+  categoryName: string
+  submissions: RiddleWithSolution[]
+}
+
 export interface RiddleCategory {
   categoryId: number
   title: string
