@@ -39,6 +39,7 @@ const RiddlePage = () => {
   const hintQuery = useRiddleHintQuery(id || '')
   const submissionMutation = useRiddleSubmitMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
+  const grayBorder = useColorModeValue('gray.200', 'gray.600')
 
   if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
 
@@ -120,15 +121,7 @@ const RiddlePage = () => {
           {data.creator && <Text>Létrehozó: {data.creator}</Text>}
           {data.firstSolver && <Text>Első megoldó: {data.firstSolver}</Text>}
         </VStack>
-        <Box
-          as="form"
-          onSubmit={submitSolution}
-          borderWidth={2}
-          borderColor={useColorModeValue('gray.200', 'gray.600')}
-          borderRadius="md"
-          p={5}
-          mt={5}
-        >
+        <Box as="form" onSubmit={submitSolution} borderWidth={2} borderColor={grayBorder} borderRadius="md" p={5} mt={5}>
           <FormControl>
             <FormLabel htmlFor="solution">Megoldásom:</FormLabel>
             <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={data.solved} />

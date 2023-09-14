@@ -1,9 +1,9 @@
-import { Box, Flex, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Stack, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { RiddleCategory } from '../../util/views/riddle.view'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { AbsolutePaths } from '../../util/paths'
+import { AbsolutePaths, Paths } from '../../util/paths'
 import { l } from '../../util/language'
 import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -22,6 +22,9 @@ const RiddleCategoryList = () => {
   const toast = useToast()
   const component = useConfigContext()?.components.riddle
   const { isLoading, isError, data } = useRiddleListQuery()
+
+  const bg = useColorModeValue('brand.100', 'brand.500')
+  const hoverBg = useColorModeValue('brand.200', 'brand.400')
 
   if (!component) return <ComponentUnavailable />
 
@@ -52,13 +55,15 @@ const RiddleCategoryList = () => {
     return `conic-gradient(white 0deg,${color} 10deg, ${color} ${endDeg}deg, white ${endDeg + 10}deg)`
   }
 
-  const bg = useColorModeValue('brand.100', 'brand.500')
-  const hoverBg = useColorModeValue('brand.200', 'brand.400')
-
   return (
     <CmschPage>
       <Helmet title="Riddleök" />
-      <Heading>Riddleök</Heading>
+      <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
+        <Heading>Riddleök</Heading>
+        <Button colorScheme="brand" as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
+          Megoldott riddleök
+        </Button>
+      </Stack>
       <VStack spacing={4} mt={5} align="stretch">
         {(data || []).length > 0 ? (
           <>
