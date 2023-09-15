@@ -119,6 +119,8 @@ export interface Race {
 
 export interface Riddle {
   title: string
+  skipEnabled: boolean
+  skipAfterGroupsSolved: number
 }
 
 export interface Impressum {
