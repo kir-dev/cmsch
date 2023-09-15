@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.race.DEFAULT_CATEGORY
 import hu.bme.sch.cmsch.component.race.RaceService
+import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.GroupEntity
@@ -28,7 +29,8 @@ open class TeamService(
     private val teamJoinRequestRepository: TeamJoinRequestRepository,
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val raceService: Optional<RaceService>,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val tasksService: Optional<TasksService>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -180,15 +182,23 @@ open class TeamService(
         val ownTeam = user?.group?.id == team.id
 
         return TeamView(
-            team.id, team.name, score,
+            team.id, team.name,
+            team.coverImageUrl,
+            team.description,
+            score,
             members,
             requests,
             joinEnabled,
             leaveEnabled,
             joinCancellable,
             ownTeam,
-            mapStats(team)
+            mapStats(team),
+            if (ownTeam) mapTasks(team) else listOf()
         )
+    }
+
+    private fun mapTasks(team: GroupEntity): List<TaskCategoryPreview> {
+        TODO("Not yet implemented")
     }
 
     private fun mapStats(group: GroupEntity): List<TeamStatView> {
