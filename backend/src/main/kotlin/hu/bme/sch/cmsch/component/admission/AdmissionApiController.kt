@@ -231,7 +231,7 @@ class AdmissionApiController(
         if (admissionComponent.onlyAcceptApprovedForms.isValueTrue() && (!responseEntity.accepted || responseEntity.rejected)) {
             return AdmissionResponse(
                 groupName = "FILLED, NOT ACCEPTED",
-                userName = "NOT ACCEPTED",
+                userName = "FILLED, NOT ACCEPTED",
                 role = RoleType.GUEST,
                 entryRole = EntryRole.CANNOT_ATTEND,
                 accessGranted = false,

@@ -22,9 +22,8 @@ open class RaceService(
 ) {
 
     @Transactional(readOnly = true)
-    open fun getViewForGroups(user: UserEntity?, filter: (RaceEntryDto) -> Boolean = { true }): RaceView {
+    open fun getViewForGroups(user: UserEntity?): RaceView {
         val board = getBoardForGroups(DEFAULT_CATEGORY)
-            .filter(filter)
 
         return if (user == null) {
             RaceView(
@@ -132,8 +131,9 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getViewForUsers(user: CmschUser?): RaceView {
+    open fun getViewForUsers(user: CmschUser?, filter: (RaceEntryDto) -> Boolean = { true }): RaceView {
         val board = getBoardForUsers(DEFAULT_CATEGORY, false)
+            .filter(filter)
 
         return if (user == null) {
             RaceView(
