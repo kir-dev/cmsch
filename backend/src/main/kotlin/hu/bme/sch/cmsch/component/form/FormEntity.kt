@@ -164,6 +164,14 @@ data class FormEntity(
     @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_BOOLEAN)
     var ownerIsGroup: Boolean = false,
 
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false, columnDefinition = "BOOLEAN default false")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Hírdetett",
+        note = "Ha be van kapcsolva, akkor bizonyos oldalakon megjelenik mint kitöltendő form")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var advertized: Boolean = false,
+
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
