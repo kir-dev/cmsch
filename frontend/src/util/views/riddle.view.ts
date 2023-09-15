@@ -3,9 +3,11 @@ export interface Riddle {
   title: string
   imageUrl: string
   solved: boolean
+  description?: string
   hint?: string
   firstSolver?: string
   creator?: string
+  skipPermitted: boolean
 }
 
 export interface RiddleWithSolution extends Riddle {

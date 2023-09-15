@@ -28,6 +28,9 @@ import { API_BASE_URL } from '../../util/configs/environment.config'
 import { useRiddleHintQuery } from '../../api/hooks/riddle/useRiddleHintQuery'
 import { ConfirmDialogButton } from '../../common-components/ConfirmDialogButton'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useRiddleSkipMutation } from '../../api/hooks/riddle/useRiddleSkipMutation'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import Markdown from '../../common-components/Markdown'
 
 const RiddlePage = () => {
   const { id } = useParams()
@@ -38,8 +41,12 @@ const RiddlePage = () => {
   const { isError, isLoading, data } = useRiddleDetailsQuery(id || '')
   const hintQuery = useRiddleHintQuery(id || '')
   const submissionMutation = useRiddleSubmitMutation()
+  const skipMutation = useRiddleSkipMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
   const grayBorder = useColorModeValue('gray.200', 'gray.600')
+  const {
+    components: { riddle: riddleConfig }
+  } = useConfigContext()
 
   if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
 
@@ -99,6 +106,40 @@ const RiddlePage = () => {
     )
   }
 
+  const skipSolution = () => {
+    if (riddleConfig.skipEnabled && data.skipPermitted) {
+      skipMutation.mutate(id, {
+        onSuccess: (result) => {
+          if (result.nextId) {
+            navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
+            const input = document.getElementById('solution') as HTMLInputElement
+            input.value = ''
+            toast({
+              title: l('riddle-skipped-title'),
+              description: l('riddle-skipped-description'),
+              status: 'info',
+              duration: 5000,
+              isClosable: true
+            })
+          }
+          if (result.status === RiddleSubmissonStatus.CORRECT && !result.nextId) {
+            navigate(AbsolutePaths.RIDDLE)
+            toast({
+              title: l('riddle-completed-title'),
+              description: l('riddle-completed-description'),
+              status: 'success',
+              duration: 5000,
+              isClosable: true
+            })
+          }
+        },
+        onError: () => {
+          toast({ title: l('riddle-skipping-failed'), status: 'error' })
+        }
+      })
+    }
+  }
+
   const breadcrumbItems = [
     {
       title: 'Riddle',
@@ -120,6 +161,7 @@ const RiddlePage = () => {
         <VStack mt={5} align="flex-start">
           {data.creator && <Text>Létrehozó: {data.creator}</Text>}
           {data.firstSolver && <Text>Első megoldó: {data.firstSolver}</Text>}
+          {data.description && <Markdown text={data.description} />}
         </VStack>
         <Box as="form" onSubmit={submitSolution} borderWidth={2} borderColor={grayBorder} borderRadius="md" p={5} mt={5}>
           <FormControl>
@@ -137,17 +179,39 @@ const RiddlePage = () => {
                 {hintQuery.data?.hint || data.hint}
               </Alert>
             ) : (
+              <ConfirmDialogButton
+                buttonColorSchene="brand"
+                buttonVariant="outline"
+                buttonWidth="100%"
+                buttonText="Hintet kérek"
+                headerText="Hint kérés"
+                bodyText="Biztos hintet szeretnél kérni?"
+                confirmButtonText="Hint kérése"
+                confirmAction={() => hintQuery.refetch()}
+              />
+            )}
+            {riddleConfig.skipEnabled && (
               <>
-                <ConfirmDialogButton
-                  buttonColorSchene="blue"
-                  buttonVariant="outline"
-                  buttonWidth="100%"
-                  buttonText="Hintet kérek"
-                  headerText="Hint kérés"
-                  bodyText="Biztos hintet szeretnél kérni?"
-                  confirmButtonText="Hint kérése"
-                  confirmAction={() => hintQuery.refetch()}
-                />
+                <Alert status="info" borderRadius="md">
+                  <AlertIcon />
+                  Átugorhatjátok a riddlet, ha már {riddleConfig.skipAfterGroupsSolved} csapat megoldotta. Ilyenkor 0 pontot kaptok érte.
+                </Alert>
+                {data.skipPermitted ? (
+                  <ConfirmDialogButton
+                    buttonColorSchene="gray"
+                    buttonVariant="outline"
+                    buttonWidth="100%"
+                    buttonText="Riddle átugrása"
+                    headerText="Riddle átugrása"
+                    bodyText="Biztosan átugrod ezt a riddlet? Így nem kaptok pontot érte."
+                    confirmButtonText="Riddle átugrása"
+                    confirmAction={skipSolution}
+                  />
+                ) : (
+                  <Button width="100%" colorScheme="gray" isDisabled>
+                    Riddle átugrása
+                  </Button>
+                )}
               </>
             )}
           </VStack>
