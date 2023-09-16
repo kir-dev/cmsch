@@ -87,7 +87,7 @@ abstract class ComponentBase(
         }
     }
 
-    private fun updateFromDatabase() {
+    fun updateFromDatabase() {
         log.info("Loading {} component settings from database", component)
         componentSettingService.loadDefaultSettings(allSettings)
         allSettings.forEach {

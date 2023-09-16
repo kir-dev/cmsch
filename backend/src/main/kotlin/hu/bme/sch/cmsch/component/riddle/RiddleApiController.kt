@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(RiddleComponent::class)
 class RiddleApiController(
-    private val riddleService: RiddleService,
+    private val riddleService: ConcurrentRiddleService,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val riddleComponent: RiddleComponent
 ) {
@@ -64,6 +64,29 @@ class RiddleApiController(
                 ?: ResponseEntity.notFound().build()
             OwnershipType.GROUP -> riddleService.unlockHintForGroup(user, user.group, riddleId)
                 ?.let { ResponseEntity.ok(RiddleHintView(it)) }
+                ?: ResponseEntity.notFound().build()
+        }
+    }
+
+    @JsonView(FullDetails::class)
+    @PostMapping("/api/riddle/{riddleId}/skip")
+    fun skipRiddle(
+        @PathVariable riddleId: Int,
+        @RequestBody body: RiddleSubmissionDto,
+        auth: Authentication?
+    ): ResponseEntity<RiddleSubmissionView> {
+        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.badRequest().build()
+        if (!riddleComponent.minRole.isAvailableForRole(user.role))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
+        log.info("User '{}' is skipping '{}' riddle id:{}", user.fullNameWithAlias, body.solution, riddleId)
+
+        return when (startupPropertyConfig.riddleOwnershipMode) {
+            OwnershipType.USER -> riddleService.submitRiddleForUser(user, riddleId, body.solution, skip = true)
+                ?.let { ResponseEntity.ok(it) }
+                ?: ResponseEntity.notFound().build()
+            OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.group, riddleId, body.solution, skip = true)
+                ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
         }
     }

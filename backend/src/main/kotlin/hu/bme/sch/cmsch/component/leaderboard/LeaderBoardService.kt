@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.leaderboard
 import hu.bme.sch.cmsch.component.challenge.ChallengeSubmissionRepository
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
+import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
 import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.component.task.SubmittedTaskRepository
 import hu.bme.sch.cmsch.component.task.TaskComponent
@@ -33,6 +34,7 @@ open class LeaderBoardService(
     private val startupPropertyConfig: StartupPropertyConfig,
     private val taskSubmissions: Optional<SubmittedTaskRepository>,
     private val riddleSubmissions: Optional<RiddleMappingRepository>,
+    private val riddleRepository: Optional<RiddleEntityRepository>,
     private val riddleComponent: Optional<RiddleComponent>,
     private val challengeSubmissions: Optional<ChallengeSubmissionRepository>,
     private val tokenSubmissions: Optional<TokenPropertyRepository>,
@@ -167,18 +169,21 @@ open class LeaderBoardService(
         }
 
         val riddlesPercent = leaderBoardComponent.riddlesPercent.getIntValue(100) / 100.0f
+        val riddleCache = riddleRepository.map { repo -> repo.findAll().associateBy { it.id } }.orElse(mapOf())
         val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> {
                 riddleSubmissions.map { it.findAll() }.orElse(listOf())
-                    .groupBy { it.ownerGroup }
+                    .groupBy { groups.findById(it.ownerGroupId).orElseThrow() }
                     .filter { it.key?.races ?: false }
-                    .map {
+                    .map { riddleGroup ->
                         LeaderBoardAsGroupEntryDto(
-                            it.key?.id ?: 0,
-                            it.key?.name ?: "n/a",
-                            riddleScore = (it.value.sumOf { s ->
-                                ((s.riddle?.score?.toFloat() ?: 0f) * (if (s.hintUsed) hintPercentage else 1f)).toInt()
-                            } * riddlesPercent).toInt())
+                            riddleGroup.key?.id ?: 0,
+                            riddleGroup.key?.name ?: "n/a",
+                            riddleScore = (riddleGroup.value
+                                .filter { it.completed && !it.skipped }
+                                .sumOf { s ->
+                                    ((riddleCache[s.riddleId]?.score?.toFloat() ?: 0f) * (if (s.hintUsed) hintPercentage else 1f)).toInt()
+                                } * riddlesPercent).toInt())
                     }
             }
             OwnershipType.USER -> listOf()
@@ -285,18 +290,21 @@ open class LeaderBoardService(
         }
 
         val riddlesPercent = leaderBoardComponent.riddlesPercent.getIntValue(100) / 100.0f
+        val riddleCache = riddleRepository.map { repo -> repo.findAll().associateBy { it.id } }.orElse(mapOf())
         val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
                 riddleSubmissions.map { it.findAll() }.orElse(listOf())
-                    .groupBy { it.ownerUser }
-                    .map {
-                        LeaderBoardAsUserEntryDto(it.key?.id ?: 0,
-                            it.key?.fullName ?: "n/a",
-                            it.key?.groupName ?: "-",
-                            riddleScore = (it.value.sumOf { s ->
-                                ((s.riddle?.score?.toFloat() ?: 0f) * (if (s.hintUsed) hintPercentage else 1f)).toInt()
-                            } * riddlesPercent).toInt()
+                    .groupBy { users.findById(it.ownerUserId).orElseThrow() }
+                    .map { riddleGroup ->
+                        LeaderBoardAsUserEntryDto(riddleGroup.key?.id ?: 0,
+                            riddleGroup.key?.fullName ?: "n/a",
+                            riddleGroup.key?.groupName ?: "-",
+                            riddleScore = (riddleGroup.value
+                                .filter { it.completed && !it.skipped }
+                                .sumOf { s ->
+                                    ((riddleCache[s.riddleId]?.score?.toFloat() ?: 0f) * (if (s.hintUsed) hintPercentage else 1f)).toInt()
+                                } * riddlesPercent).toInt()
                         )
                     }
             }

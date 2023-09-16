@@ -7,7 +7,7 @@ import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.LoginComponent
-import hu.bme.sch.cmsch.component.riddle.RiddleService
+import hu.bme.sch.cmsch.component.riddle.RiddleBusinessLogicService
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.token.ALL_TOKEN_TYPE
 import hu.bme.sch.cmsch.component.token.TokenCollectorService
@@ -37,7 +37,7 @@ open class ProfileService(
     private val tokenService: Optional<TokenCollectorService>,
     private val tokenComponent: Optional<TokenComponent>,
     private val tasksService: Optional<TasksService>,
-    private val riddleService: Optional<RiddleService>,
+    private val riddleService: Optional<RiddleBusinessLogicService>,
     private val loginComponent: Optional<LoginComponent>,
     private val bmejegyService: Optional<BmejegyService>,
     private val clock: TimeService,

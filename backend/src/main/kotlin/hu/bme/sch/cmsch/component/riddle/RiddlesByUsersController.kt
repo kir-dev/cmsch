@@ -3,17 +3,21 @@ package hu.bme.sch.cmsch.component.riddle
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
+import kotlin.jvm.optionals.getOrNull
 
 @Controller
 @RequestMapping("/admin/control/riddles-by-users")
 @ConditionalOnBean(RiddleComponent::class)
 class RiddlesByUsersController(
     private val riddleMappingRepository: RiddleMappingRepository,
+    private val riddleRepository: RiddleEntityRepository,
+    private val userRepository: UserRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: RiddleComponent,
@@ -29,13 +33,14 @@ class RiddlesByUsersController(
 
     object : ManualRepository<RiddleStatsVirtualEntity, Int>() {
         override fun findAll(): Iterable<RiddleStatsVirtualEntity> {
-            return riddleMappingRepository.findAll().groupBy { it.ownerUser?.id ?: 0 }
+            return riddleMappingRepository.findAll().groupBy { it.ownerUserId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { submissions ->
+                    val user = userRepository.findById(submissions[0].ownerUserId).getOrNull()
                     RiddleStatsVirtualEntity(
-                        submissions[0].ownerUser?.id ?: 0,
-                        submissions[0].ownerUser?.fullName ?: "n/a",
+                        submissions[0].ownerUserId,
+                        user?.fullName ?: "n/a",
                         submissions.count { it.completed },
                         submissions.count { it.hintUsed }
                     )
@@ -82,14 +87,16 @@ class RiddlesByUsersController(
 ) {
 
     override fun fetchSublist(id: Int): Iterable<RiddleMappingVirtualEntity> {
-        return riddleMappingRepository.findAllByOwnerUser_Id(id)
+        return riddleMappingRepository.findAllByOwnerUserId(id)
             .map { submission ->
+                val riddle = riddleRepository.findById(submission.riddleId).getOrNull()
                 RiddleMappingVirtualEntity(
                     submission.id,
-                    submission.riddle?.categoryId ?: 0,
-                    submission.riddle?.title ?: "n/a",
+                    riddle?.categoryId ?: 0,
+                    riddle?.title ?: "n/a",
                     submission.hintUsed,
                     submission.completed,
+                    submission.skipped,
                     submission.attemptCount,
                     submission.completedAt
                 )

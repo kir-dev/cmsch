@@ -11,6 +11,4 @@ interface RiddleEntityRepository : CrudRepository<RiddleEntity, Int>,
     EntityPageDataSource<RiddleEntity, Int> {
     
     override fun findAll(): List<RiddleEntity>
-    fun findAllByCategoryId(categoryId: Int): List<RiddleEntity>
-    fun findAllByCategoryIdIn(categories: List<Int>): List<RiddleEntity>
 }

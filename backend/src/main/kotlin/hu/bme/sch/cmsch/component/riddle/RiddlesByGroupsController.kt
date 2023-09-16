@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
+import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
@@ -14,12 +15,15 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import jakarta.servlet.http.HttpServletResponse
+import kotlin.jvm.optionals.getOrNull
 
 @Controller
 @RequestMapping("/admin/control/riddles-by-groups")
 @ConditionalOnBean(RiddleComponent::class)
 class RiddlesByGroupsController(
     private val riddleMappingRepository: RiddleMappingRepository,
+    private val riddleRepository: RiddleEntityRepository,
+    private val groupRepository: GroupRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: RiddleComponent,
@@ -35,13 +39,14 @@ class RiddlesByGroupsController(
 
     object : ManualRepository<RiddleStatsVirtualEntity, Int>() {
         override fun findAll(): Iterable<RiddleStatsVirtualEntity> {
-            return riddleMappingRepository.findAll().groupBy { it.ownerGroup?.id ?: 0 }
+            return riddleMappingRepository.findAll().groupBy { it.ownerGroupId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { submissions ->
+                    val group = groupRepository.findById(submissions[0].ownerGroupId).getOrNull()
                     RiddleStatsVirtualEntity(
-                        submissions[0].ownerGroup?.id ?: 0,
-                        submissions[0].ownerGroup?.name ?: "n/a",
+                        submissions[0].ownerGroupId,
+                        group?.name ?: "n/a",
                         submissions.count { it.completed },
                         submissions.count { it.hintUsed }
                     )
@@ -100,14 +105,16 @@ class RiddlesByGroupsController(
 ) {
 
     override fun fetchSublist(id: Int): Iterable<RiddleMappingVirtualEntity> {
-        return riddleMappingRepository.findAllByOwnerGroup_Id(id)
+        return riddleMappingRepository.findAllByOwnerGroupId(id)
             .map { submission ->
+                val riddle = riddleRepository.findById(submission.riddleId).getOrNull()
                 RiddleMappingVirtualEntity(
                     submission.id,
-                    submission.riddle?.categoryId ?: 0,
-                    submission.riddle?.title ?: "n/a",
+                    riddle?.categoryId ?: 0,
+                    riddle?.title ?: "n/a",
                     submission.hintUsed,
                     submission.completed,
+                    submission.skipped,
                     submission.attemptCount,
                     submission.completedAt
                 )
@@ -136,7 +143,10 @@ class RiddlesByGroupsController(
         @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_BOOLEAN)
         var completed: Boolean = false,
 
-        @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_INT)
+        @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
+        var skipped: Boolean = false,
+
+        @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_INT)
         var attemptCount: Int = 0,
     )
 
@@ -153,14 +163,17 @@ class RiddlesByGroupsController(
         return filterDescriptor.exportToCsv(riddleMappingRepository.findAll()
             .filter { it.completed }
             .map {
+                val riddle = riddleRepository.findById(it.riddleId).getOrNull()
+                val group = groupRepository.findById(it.ownerGroupId).getOrNull()
                 RiddleByGroupFilteredView(
-                    it.riddle?.id ?: 0,
-                    it.riddle?.title ?: "-",
-                    it.ownerGroup?.id ?: 0,
-                    it.ownerGroup?.name ?: "",
-                    it.riddle?.score ?: 0,
+                    it.riddleId,
+                    riddle?.title ?: "-",
+                    it.ownerGroupId,
+                    group?.name ?: "",
+                    riddle?.score ?: 0,
                     it.hintUsed,
                     it.completed,
+                    it.skipped,
                     it.attemptCount
                 )
             }).toByteArray()
