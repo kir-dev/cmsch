@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,6 +30,7 @@ class DebtsOfMyGroupAdminController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<SoldProductEntity>(
     "debts-of-my-group",
@@ -37,6 +39,7 @@ class DebtsOfMyGroupAdminController(
     "Ha a tartozáshoz a pénzt odaadta neked a kolléga, akkor pipáld ki itt. " +
             "Onnantól a te felelősséged lesz majd elszámolni a gazdaságisnak.",
 
+    transactionManager,
     { user -> productService.getAllDebtsByGroup(userService.getByUserId(user.id)) },
 
     permission = PERMISSION_IMPLICIT_HAS_GROUP,

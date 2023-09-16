@@ -36,6 +36,7 @@ import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/token-properties-of-groups")
@@ -52,6 +53,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     component: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<TokenCollectorGroupVirtualEntity>(
     "token-properties-of-groups",
@@ -59,6 +61,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     "Jelenléti export", "Jelenléti export",
     "Beolvasott tokenek csoportonként csoportosítva.",
 
+    transactionManager,
     { tokenPropertyRepository.findAll().groupBy { it.ownerUser?.groupName ?: "n/a" }
         .filter { it.value.isNotEmpty() }
         .map {
@@ -175,9 +178,9 @@ class TokenAdminTokensByUsersOfGroupsController(
         table.addHeaderCell(Cell().add(Paragraph("JELENLÉT")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font).setFontSize(12f)))
-//        table.addHeaderCell(Cell().add(Paragraph("RIDDLE")
-//            .setTextAlignment(TextAlignment.CENTER)
-//            .setFont(font).setFontSize(12f)))
+        table.addHeaderCell(Cell().add(Paragraph("RIDDLE")
+            .setTextAlignment(TextAlignment.CENTER)
+            .setFont(font).setFontSize(12f)))
         table.addHeaderCell(Cell().add(Paragraph("REJTVÉNYEK")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font).setFontSize(12f)))
@@ -196,9 +199,9 @@ class TokenAdminTokensByUsersOfGroupsController(
                 .setFont(font).setFontSize(12f)))
 
             val riddles = riddleService.map { it.getCompletedRiddleCountUser(user.key) }.orElse(0)
-//            table.addCell(Cell().add(Paragraph("$riddles db")
-//                .setTextAlignment(TextAlignment.CENTER)
-//                .setFont(font).setFontSize(12f)))
+            table.addCell(Cell().add(Paragraph("$riddles db")
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFont(font).setFontSize(12f)))
             val achievemnts = tasksService.map{ it.getSubmittedTasksForUser(user.key) }.orElse(0)
             table.addCell(Cell().add(Paragraph("$achievemnts db")
                 .setTextAlignment(TextAlignment.CENTER)

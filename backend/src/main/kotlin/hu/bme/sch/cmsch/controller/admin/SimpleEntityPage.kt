@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import org.springframework.core.env.Environment
+import org.springframework.transaction.PlatformTransactionManager
 import java.util.function.Supplier
 import kotlin.reflect.KClass
 
@@ -18,6 +19,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     titlePlural: String,
     description: String,
 
+    transactionManager: PlatformTransactionManager,
     private val contentProvider: ((user: CmschUser) -> Iterable<T>),
     permission: PermissionValidator,
 
@@ -34,7 +36,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
 
     controlActions: MutableList<ControlAction> = mutableListOf(),
     buttonActions: MutableList<ButtonAction> = mutableListOf(),
-    searchSettings: SearchSettings? = null
+    searchSettings: SearchSettings? = null,
 ) : OneDeepEntityPage<T>(
     view,
     classType,
@@ -43,6 +45,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     titlePlural,
     description,
 
+    transactionManager,
     object : ManualRepository<T, Int>() {},
     importService,
     adminMenuService,

@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,6 +25,7 @@ class TokenPublicTokensStatsController(
     component: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<TokenStatVirtualEntity>(
     "stamps",
@@ -32,6 +34,7 @@ class TokenPublicTokensStatsController(
     "Melyik kör pecsétje hány nem kiállító által került leolvasásra. Csak azok a körök " +
             "látszódnak akiknek már legalább egy beolvasása volt.",
 
+    transactionManager,
     { tokenPropertyRepository.findAll()
         .asSequence()
         .filter { it.token?.type == "default" }

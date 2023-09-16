@@ -22,6 +22,7 @@ import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -47,13 +48,13 @@ data class AdmissionFormEntry(
 @ConditionalOnBean(AdmissionComponent::class)
 class AdmissionByFormController(
     private val formRepository: Optional<FormRepository>,
-    private val admissionEntryRepository: AdmissionEntryRepository,
-    private val responseRepository: Optional<ResponseRepository>,
+    private val admissionService: AdmissionService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: AdmissionComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<AdmissionFormEntry>(
     "admission-by-form",
@@ -61,6 +62,7 @@ class AdmissionByFormController(
     "Űrlapos beléptetés", "Űrlapos beléptetés",
     "${if (formRepository.isEmpty) "FORM KOMPONENS NINCS BETÖLTVE! " else ""}Felhasználó tulajdonú űrlapok alapján beengedés",
 
+    transactionManager,
     {
         formRepository.map { repository ->
             repository.findAll()
@@ -121,6 +123,7 @@ class AdmissionByFormController(
         var joined: Boolean = false,
         var response: String = "",
         var timestamp: Long = 0,
+        var grant: String = ""
     )
 
     @ResponseBody
@@ -131,38 +134,7 @@ class AdmissionByFormController(
             throw IllegalStateException("Insufficient permissions")
         }
 
-        val outputStream = ByteArrayOutputStream()
-        val responses = responseRepository.orElseThrow().findAllByFormId(id)
-        val admissions = admissionEntryRepository.findAllByFormIdAndAllowedTrue(id)
-            .associateBy { it.formId }
-
-        val content = responses.map {
-            val admission = admissions[it.formId]
-            AdmissionExportDto(
-                formId = it.formId,
-                responseId = admission?.responseId ?: 0,
-                userId = admission?.userId ?: 0,
-                userName = admission?.userName ?: "-",
-                joined = admission != null,
-                response = admission?.response ?: "{}",
-                timestamp = admission?.timestamp ?: 0,
-            )
-        }
-
-        val csvMapper = CsvMapper()
-        val csvSchemaBuilder = CsvSchema.builder()
-            .setUseHeader(true)
-            .setReorderColumns(true)
-
-        val csvSchema = csvSchemaBuilder.build()
-            .withHeader()
-            .withQuoteChar('"')
-            .withEscapeChar('\\')
-            .withColumnSeparator(',')
-
-        csvMapper.writerFor(List::class.java)
-            .with(csvSchema)
-            .writeValue(outputStream, content)
+        val outputStream = admissionService.generateAdmissionExportForForm(id)
 
         response.setHeader("Content-Disposition", "attachment; filename=\"form-export-${id}.csv\"")
         return outputStream.toByteArray()

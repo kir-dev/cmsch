@@ -8,9 +8,9 @@ build:
 	docker build --platform=linux/amd64 -t cmsch .
 
 push-rc:
-	docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:rc
-	docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:rc
+	docker image tag cmsch:latest harbor.sch.bme.hu/org-kir-dev/cmsch:rc
+	docker image push harbor.sch.bme.hu/org-kir-dev/cmsch:rc
 
 push-r:
-	docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:release
-	docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:release
+	docker image tag cmsch:latest harbor.sch.bme.hu/org-kir-dev/cmsch:release
+	docker image push harbor.sch.bme.hu/org-kir-dev/cmsch:release

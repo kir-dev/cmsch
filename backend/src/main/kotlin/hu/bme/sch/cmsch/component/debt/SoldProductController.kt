@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -21,6 +22,7 @@ class SoldProductController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val clock: TimeService,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<SoldProductEntity>(
     "debts",
@@ -28,6 +30,7 @@ class SoldProductController(
     "Tranzakció", "Tranzakciók",
     "Az összes eladásból származó tranzakciók.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

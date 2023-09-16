@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/submitted-tasks")
@@ -26,6 +27,7 @@ class SubmittedTaskController(
     component: TaskComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment,
     private val clock: TimeService
 ) : OneDeepEntityPage<SubmittedTaskEntity>(
@@ -34,6 +36,7 @@ class SubmittedTaskController(
     "Nyers beadás", "Nyers beadások",
     "Nyers feladat beadások",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,
@@ -123,7 +126,7 @@ class SubmittedTaskController(
                 it.score,
                 it.approved,
                 it.rejected,
-                it.textAnswerLob ?: "",
+                it.textAnswerLob,
                 it.imageUrlAnswer,
                 it.fileUrlAnswer,
                 it.response

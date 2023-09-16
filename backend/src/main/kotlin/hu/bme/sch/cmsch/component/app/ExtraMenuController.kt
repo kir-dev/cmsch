@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -18,6 +19,7 @@ class ExtraMenuController(
     component: ApplicationComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<ExtraMenuEntity>(
     "extra-menus",
@@ -25,6 +27,7 @@ class ExtraMenuController(
     "Extra menü", "Extra menük",
     "Nem komponenshez vagy laphoz tartozó menü. Meg lehet adni külső és belső hivatkozásokat is.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

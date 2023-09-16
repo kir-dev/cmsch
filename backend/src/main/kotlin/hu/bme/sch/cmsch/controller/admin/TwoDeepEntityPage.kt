@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.model.IdentifiableEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import java.util.function.Supplier
 import jakarta.annotation.PostConstruct
+import org.springframework.transaction.PlatformTransactionManager
 import kotlin.reflect.KClass
 
 abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: IdentifiableEntity>(
@@ -25,6 +27,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     titlePlural: String,
     description: String,
 
+    transactionManager: PlatformTransactionManager,
     private val outerDataSource: EntityPageDataSource<OUTER, Int>,
     innerDataSource: EntityPageDataSource<INNER, Int>,
     importService: ImportService,
@@ -66,6 +69,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     titlePlural,
     description,
 
+    transactionManager,
     innerDataSource,
     importService,
     adminMenuService,
@@ -132,7 +136,8 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("view", view)
 
         model.addAttribute("columnData", outerDescriptor.getColumnsAsJson())
-        model.addAttribute("tableData", outerDescriptor.getTableDataAsJson(fetchOuterOverview()))
+        val overview = transactionManager.transaction(readOnly = true) { fetchOuterOverview() }
+        model.addAttribute("tableData", outerDescriptor.getTableDataAsJson(overview))
 
         model.addAttribute("user", user)
         model.addAttribute("controlActions", outerDescriptor.toJson(
@@ -168,7 +173,8 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("view", view)
 
         model.addAttribute("columnData", descriptor.getColumnsAsJson())
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, fetchSublist(id))))
+        val overview = transactionManager.transaction(readOnly = true) { filterOverview(user, fetchSublist(id)) }
+        model.addAttribute("tableData", descriptor.getTableDataAsJson(overview))
 
         model.addAttribute("user", user)
         model.addAttribute("controlActions", descriptor.toJson(

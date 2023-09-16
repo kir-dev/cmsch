@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -21,6 +22,7 @@ class RiddleCategoryController(
     component: RiddleComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<RiddleCategoryEntity>(
     "riddle-categories",
@@ -28,6 +30,7 @@ class RiddleCategoryController(
     "Riddle Kategória", "Riddle Kategóriák",
     "Képrejtvény kategóriák kezelése.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

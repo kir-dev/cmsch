@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -22,6 +23,7 @@ class RawLocationController(
     component: LocationComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<LocationEntity>(
     "locations",
@@ -29,6 +31,7 @@ class RawLocationController(
     "Pozíció", "Pozíciók",
     "A helymeghatározás adatai nyersen",
 
+    transactionManager,
     locationService,
     importService,
     adminMenuService,

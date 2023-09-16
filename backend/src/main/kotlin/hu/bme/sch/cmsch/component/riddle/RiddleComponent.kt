@@ -147,10 +147,10 @@ class RiddleComponent(
     )
 
     val microserviceNodeBaseUrl = SettingProxy(componentSettingService, component,
-        "microserviceNodeBaseUrl", " http://my-app-service.<namespace>.svc.cluster.local/",
+        "microserviceNodeBaseUrl", "http://<pod>.<namespace>.svc.cluster.local",
         serverSideOnly = true, type = SettingType.TEXT,
         fieldName = "Riddle node base URL-je",
-        description = "Ezen a címen érhető el clusteren belül a riddle node"
+        description = "Ezen a címen érhető el clusteren belül a riddle node. Ez a formátum: http://<pod>.<namespace>.svc.cluster.local"
     )
 
     val microserviceSyncEnabled = SettingProxy(componentSettingService, component,

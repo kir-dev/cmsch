@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.ByteArrayOutputStream
 
@@ -54,7 +55,7 @@ abstract class DashboardPage(
     }
 
     @GetMapping("")
-    fun view(model: Model, auth: Authentication): String {
+    fun view(model: Model, auth: Authentication, @RequestParam(defaultValue = "-1", name = "component") componentId: Int, @RequestParam(defaultValue = "") message: String): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {
@@ -70,6 +71,8 @@ abstract class DashboardPage(
         model.addAttribute("wide", wide)
         model.addAttribute("components", getComponents(user))
         model.addAttribute("user", user)
+        model.addAttribute("component", componentId)
+        model.addAttribute("message", message)
 
         return "dashboard"
     }

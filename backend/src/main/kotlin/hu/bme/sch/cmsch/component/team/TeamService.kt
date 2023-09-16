@@ -198,7 +198,7 @@ open class TeamService(
     }
 
     private fun mapTasks(team: GroupEntity): List<TaskCategoryPreview> {
-        TODO("Not yet implemented")
+        return listOf() // FIXME: implement
     }
 
     private fun mapStats(group: GroupEntity): List<TeamStatView> {

@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -21,6 +22,7 @@ class BmejegyController(
     component: BmejegyComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<BmejegyRecordEntity>(
     "bmejegy-tickets",
@@ -29,6 +31,7 @@ class BmejegyController(
     "Ebben a menüben a szinkrizált Bmejegy példányok láthatóak. Az értékek módosíthatóak, mert " +
             "csak az új példányokat húzza be a szinkronizáló mindig.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

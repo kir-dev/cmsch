@@ -42,6 +42,7 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val masterRole: Boolean,
     val riddleMicroserviceEnabled: Boolean,
     val managementToken: String,
+    val nodeName: String,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

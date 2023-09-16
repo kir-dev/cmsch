@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -22,6 +23,7 @@ class EventController(
     component: EventComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<EventEntity>(
     "events",
@@ -29,6 +31,7 @@ class EventController(
     "Esemény", "Események",
     "A rendezvény összes (publikus) programjainak kezelse.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

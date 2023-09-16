@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_RACE
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -23,6 +24,7 @@ class RaceLeaderBoardController(
     objectMapper: ObjectMapper,
     private val raceService: RaceService,
     private val startupPropertyConfig: StartupPropertyConfig,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<RaceEntryDto>(
     "race-leaderboard",
@@ -30,6 +32,7 @@ class RaceLeaderBoardController(
     "Mérés toplista", "Mérés toplista",
     "Toplista a mérési eredmények alapján",
 
+    transactionManager,
     object : ManualRepository<RaceEntryDto, Int>() {
 
         override fun findAll(): Iterable<RaceEntryDto> {

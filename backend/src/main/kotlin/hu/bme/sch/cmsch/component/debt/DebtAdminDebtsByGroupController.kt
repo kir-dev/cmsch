@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.*
 
 @Controller
@@ -25,6 +26,7 @@ class DebtAdminDebtsByGroupController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : TwoDeepEntityPage<DebtsByGroupVirtualEntity, SoldProductEntity>(
     "debts-by-group",
@@ -33,6 +35,7 @@ class DebtAdminDebtsByGroupController(
     "Csoport Tartozása", "Csoportok tartozásai",
     "Tartozások csoportonként csoportosítva",
 
+    transactionManager,
     object : ManualRepository<DebtsByGroupVirtualEntity, Int>() {
         override fun findAll(): Iterable<DebtsByGroupVirtualEntity> {
             return soldProductRepository.findAll().groupBy { it.responsibleGroupId }

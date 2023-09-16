@@ -5,9 +5,11 @@ import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 import kotlin.jvm.optionals.getOrNull
 
@@ -23,6 +25,7 @@ class RiddlesByUsersController(
     component: RiddleComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : TwoDeepEntityPage<RiddleStatsVirtualEntity, RiddleMappingVirtualEntity>(
     "riddles-by-users",
@@ -31,9 +34,11 @@ class RiddlesByUsersController(
     "Riddle beadás felhasználónként", "Riddle felasználónként",
     "Beadott riddleök felhasználónként csoportosítva",
 
+    transactionManager,
     object : ManualRepository<RiddleStatsVirtualEntity, Int>() {
         override fun findAll(): Iterable<RiddleStatsVirtualEntity> {
-            return riddleMappingRepository.findAll().groupBy { it.ownerUserId }
+            return transactionManager.transaction(readOnly = true) { riddleMappingRepository.findAll() }
+                .groupBy { it.ownerUserId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { submissions ->

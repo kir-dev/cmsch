@@ -26,8 +26,8 @@ data class WaypointEntity(
 
     @Column(nullable = false, columnDefinition = "VARCHAR(64) default ''")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 64, order = 1, label = "Kihelzett szöveg")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateInput(maxLength = 64, order = 1, label = "Kijelzett szöveg")
+    @property:GenerateOverview(columnName = "Longitude", order = 1)
     var displayName: String = "",
 
     @Column(nullable = false)
@@ -45,13 +45,13 @@ data class WaypointEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 4, label = "Magasság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
-    @property:GenerateOverview(columnName = "Magasság", order = 5)
+    @property:GenerateOverview(visible = false)
     var altitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 5, label = "Pontosság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(columnName = "Pontosság", order = 5)
     var accuracy: Float = 0.0f,
 
     @Column(nullable = false)

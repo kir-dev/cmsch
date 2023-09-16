@@ -95,7 +95,7 @@ data class TokenEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false, columnDefinition = "TEXT default ''")
     @property:GenerateInput(order = 10, label = "Kijelzett szöveg",
         note = "Ha nem üres, megjelenik beolvasás után", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)

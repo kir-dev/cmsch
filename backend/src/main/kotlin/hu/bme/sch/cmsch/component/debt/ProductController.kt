@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -21,6 +22,7 @@ class ProductController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<ProductEntity>(
     "products",
@@ -28,6 +30,7 @@ class ProductController(
     "Termék", "Termékek",
     "Az összes vásárolható termék kezelése. Az eladáshoz külön felület tartozik!",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

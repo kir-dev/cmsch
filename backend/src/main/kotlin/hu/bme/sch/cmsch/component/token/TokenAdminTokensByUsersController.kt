@@ -5,9 +5,11 @@ import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -20,6 +22,7 @@ class TokenAdminTokensByUsersController(
     component: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     private val groupRepository: GroupRepository,
     env: Environment
 ) : TwoDeepEntityPage<TokenListByUserVirtualEntity, TokenVirtualEntity>(
@@ -29,18 +32,20 @@ class TokenAdminTokensByUsersController(
     "Fehasználói tokenek", "Fehasználói tokenek",
     "Beolvasott tokenek felhasználónként csoportosítva",
 
+    transactionManager,
     object : ManualRepository<TokenListByUserVirtualEntity, Int>() {
         override fun findAll(): Iterable<TokenListByUserVirtualEntity> {
-            return repo.findAll().groupBy { it.ownerUser?.id ?: 0 }
+            return repo.findAll()
+                .groupBy { it.ownerUser?.id ?: 0 }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
-                .map { it ->
-                    val groupName = groupRepository.findById(it[0].ownerUser?.id ?: 0).map { it.name }.orElse("n/a")
+                .map { tokenProperty ->
+                    val groupName = groupRepository.findById(tokenProperty[0].ownerUser?.id ?: 0).map { it.name }.orElse("n/a")
                     TokenListByUserVirtualEntity(
-                        it[0].ownerUser?.id ?: 0,
-                        it[0].ownerUser?.fullName ?: "n/a",
+                        tokenProperty[0].ownerUser?.id ?: 0,
+                        tokenProperty[0].ownerUser?.fullName ?: "n/a",
                         groupName,
-                        it.count()
+                        tokenProperty.count()
                     )
                 }
         }

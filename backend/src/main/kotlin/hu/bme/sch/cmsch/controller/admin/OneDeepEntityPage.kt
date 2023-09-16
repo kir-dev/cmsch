@@ -12,6 +12,7 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_NOBODY
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.transaction
 import hu.bme.sch.cmsch.util.uploadFile
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletResponse
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
+import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -84,6 +87,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val titlePlural: String,
     internal val description: String,
 
+    internal var transactionManager: PlatformTransactionManager,
     internal val dataSource: EntityPageDataSource<T, Int>,
     internal val importService: ImportService,
     internal val adminMenuService: AdminMenuService,
@@ -263,7 +267,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("view", view)
 
         model.addAttribute("columnData", descriptor.getColumnsAsJson())
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, fetchOverview(user))))
+        val overview = transactionManager.transaction(readOnly = true) { fetchOverview(user) }
+        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, overview)))
 
         model.addAttribute("user", user)
         model.addAttribute("controlActions", descriptor.toJson(
@@ -309,7 +314,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (!editEnabled)
             return "redirect:/admin/control/$view/"
 
-        val entity = dataSource.findById(id)
+        val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -349,7 +354,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "admin403"
         }
 
-        val entity = dataSource.findById(id)
+        val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -414,7 +419,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (duplicateEnabled.not())
             return "redirect:/admin/control/$view/"
 
-        val entity = dataSource.findById(id)
+        val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -455,7 +460,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("id", id)
         model.addAttribute("user", user)
 
-        val entity = dataSource.findById(id)
+        val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -481,19 +486,26 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "admin403"
         }
 
-        val entity = dataSource.findById(id).orElseThrow()
-        if (!editPermissionCheck(user, entity)) {
-            model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "POST /${view}/delete/$id", "editPermissionCheck() validation")
-            return "admin403"
+        transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
+            val entity = dataSource.findById(id).orElseThrow()
+            if (!editPermissionCheck(user, entity)) {
+                model.addAttribute("user", user)
+                auditLog.admin403(
+                    user,
+                    component.component,
+                    "POST /${view}/delete/$id",
+                    "editPermissionCheck() validation"
+                )
+                return "admin403"
+            }
+
+            if (!deleteEnabled)
+                return "redirect:/admin/control/$view"
+
+            auditLog.delete(user, component.component, "delete ${entity.id} $entity")
+            dataSource.delete(entity)
+            onEntityDeleted(entity)
         }
-
-        if (!deleteEnabled)
-            return "redirect:/admin/control/$view"
-
-        auditLog.delete(user, component.component, "delete ${entity.id} $entity")
-        dataSource.delete(entity)
-        onEntityDeleted(entity)
         return "redirect:/admin/control/$view"
     }
 
@@ -523,14 +535,18 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         }
 
         log.info("Purging view '{}' by user '{}'#{}", view, user.userName, user.id)
-        val before = dataSource.count()
-        try {
-            purgeAllEntities(user)
-        } catch (e : Exception) {
-            auditLog.delete(user, component.component, "purge all in $view failed: ${e.message}")
-            log.error("Purging failed on view '{}'", view, e)
+        var before = 0L
+        var after = 0L
+        transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_SERIALIZABLE) {
+            before = dataSource.count()
+            try {
+                purgeAllEntities(user)
+            } catch (e: Exception) {
+                auditLog.delete(user, component.component, "purge all in $view failed: ${e.message}")
+                log.error("Purging failed on view '{}'", view, e)
+            }
+            after = dataSource.count()
         }
-        val after = dataSource.count()
         model.addAttribute("purgedCount", before - after)
         log.info("Purged {} on view '{}'", before - after, view)
         auditLog.delete(user, component.component, "purge all in $view (affected: ${before - after})")
@@ -566,7 +582,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         entity.id = 0
         if (onEntityPreSave(entity, auth)) {
             auditLog.create(user, component.component, newValues.toString())
-            dataSource.save(entity)
+            transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
+                dataSource.save(entity)
+            }
         }
         onEntityChanged(entity)
         return "redirect:/admin/control/$view"
@@ -588,7 +606,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "admin403"
         }
 
-        val entity = dataSource.findById(id)
+        val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/edit/$id"
         }
@@ -607,7 +625,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         actualEntity.id = id
         if (onEntityPreSave(actualEntity, auth)) {
             auditLog.edit(user, component.component, newValues.toString())
-            dataSource.save(actualEntity)
+            transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_SERIALIZABLE) {
+                dataSource.save(actualEntity)
+            }
         }
         onEntityChanged(actualEntity)
         return "redirect:/admin/control/$view"
@@ -701,7 +721,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
-        return descriptor.exportToCsv(filterOverview(user, fetchOverview(user)).toList()).toByteArray()
+        val overview = transactionManager.transaction(readOnly = true) { fetchOverview(user) }
+        return descriptor.exportToCsv(filterOverview(user, overview).toList()).toByteArray()
     }
 
     @PostMapping("/import/csv")
@@ -712,11 +733,15 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         }
 
         log.info("Importing into {}", view)
-        val before = dataSource.count()
-        file?.inputStream?.let { stream ->
-            importService.importEntities(dataSource, stream, classType)
+        var before = 0L
+        var after = 0L
+        transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_SERIALIZABLE) {
+            before = dataSource.count()
+            file?.inputStream?.let { stream ->
+                importService.importEntities(dataSource, stream, classType)
+            }
+            after = dataSource.count()
         }
-        val after = dataSource.count()
         model.addAttribute("importedCount", after - before)
         val action = "imported $view (new entities: ${after - before})"
         auditLog.create(user, component.component, action)

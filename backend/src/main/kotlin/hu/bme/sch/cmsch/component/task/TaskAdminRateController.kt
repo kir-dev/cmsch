@@ -10,10 +10,12 @@ import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.markdownToHtml
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 
@@ -27,6 +29,7 @@ class TaskAdminRateController(
     component: TaskComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment,
     private val clock: TimeService
 ) : TwoDeepEntityPage<GradedTaskGroupDto, SubmittedTaskEntity>(
@@ -36,6 +39,7 @@ class TaskAdminRateController(
     "Értékelés", "Értékelések",
     "A beadott feladatok értékelése",
 
+    transactionManager,
     object : ManualRepository<GradedTaskGroupDto, Int>() {
         override fun findAll(): Iterable<GradedTaskGroupDto> {
             return submittedRepository.findAll()

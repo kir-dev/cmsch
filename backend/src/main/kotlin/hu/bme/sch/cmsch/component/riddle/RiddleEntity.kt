@@ -91,7 +91,7 @@ data class RiddleEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false, columnDefinition = "TEXT default ''")
     @property:GenerateInput(order = 10, label = "Leírás",
         note = "Akkor jelenik meg ha nem üres",
         type = INPUT_TYPE_BLOCK_TEXT)
