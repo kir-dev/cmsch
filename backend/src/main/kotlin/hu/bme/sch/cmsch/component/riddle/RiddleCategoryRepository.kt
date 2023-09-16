@@ -12,6 +12,4 @@ import java.util.*
 interface RiddleCategoryRepository : CrudRepository<RiddleCategoryEntity, Int>,
     EntityPageDataSource<RiddleCategoryEntity, Int> {
 
-    fun findAllByVisibleTrueAndMinRoleIn(roles: List<RoleType>): List<RiddleCategoryEntity>
-    fun findByCategoryIdAndVisibleTrueAndMinRoleIn(categoryId: Int, roles: List<RoleType>): Optional<RiddleCategoryEntity>
 }

@@ -11,7 +11,7 @@ import com.itextpdf.layout.element.*
 import com.itextpdf.layout.properties.TextAlignment
 import com.itextpdf.layout.properties.UnitValue
 import com.itextpdf.layout.properties.VerticalAlignment
-import hu.bme.sch.cmsch.component.riddle.RiddleService
+import hu.bme.sch.cmsch.component.riddle.RiddleBusinessLogicService
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
@@ -45,7 +45,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     private val userRepository: UserRepository,
     private val tokenPropertyRepository: TokenPropertyRepository,
     private val tokenComponent: TokenComponent,
-    private val riddleService: Optional<RiddleService>,
+    private val riddleService: Optional<RiddleBusinessLogicService>,
     private val tasksService: Optional<TasksService>,
     importService: ImportService,
     adminMenuService: AdminMenuService,

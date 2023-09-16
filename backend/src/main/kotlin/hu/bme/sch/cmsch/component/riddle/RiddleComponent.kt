@@ -38,7 +38,11 @@ class RiddleComponent(
             answerGroup,
             ignoreCase,
             ignoreWhitespace,
-            ignoreAccent
+            ignoreAccent,
+
+            skipGroup,
+            skipEnabled,
+            skipAfterGroupsSolved,
         )
     }
 
@@ -88,7 +92,8 @@ class RiddleComponent(
     val answerGroup = SettingProxy(componentSettingService, component,
         "answerGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Válaszok ellenőrzése",
-        description = "A transzformációt a beküldött és a riddleben található megoldásra is futtatjuk"
+        description = "A transzformációt a beküldött és a riddleben található megoldásra is futtatjuk," +
+                " tehát nem kell pl. ékezetek nélkülire átírni a megoldásokat."
     )
 
     val ignoreCase = SettingProxy(componentSettingService, component,
@@ -107,6 +112,26 @@ class RiddleComponent(
         "ignoreAccent", "false", type = SettingType.BOOLEAN,
         fieldName = "Ékezetek ignorálása",
         description = "A válaszoknál nem számítanak az ékezetek (áéíóöőúüű)"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val skipGroup = SettingProxy(componentSettingService, component,
+        "skipGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Átugrás funkció",
+        description = "Bizonyos megoldó létszám fölött "
+    )
+
+    val skipEnabled = SettingProxy(componentSettingService, component,
+        "skipEnabled", "true", type = SettingType.BOOLEAN,
+        fieldName = "Átugrás bekapcsolva",
+        description = "A riddle átigrás gomb elérhető"
+    )
+
+    val skipAfterGroupsSolved = SettingProxy(componentSettingService, component,
+        "skipAfterGroupsSolved", "false", type = SettingType.BOOLEAN,
+        fieldName = "Átugrás ennyi megoldó után",
+        description = "Ennyi csapat vagy felhasználó megoldása után elérhető a gomb"
     )
 
 }
