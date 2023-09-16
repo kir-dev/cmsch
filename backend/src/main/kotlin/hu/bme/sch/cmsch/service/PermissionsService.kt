@@ -899,6 +899,12 @@ object StaffPermissions : PermissionGroup {
         component = AdmissionComponent::class
     )
 
+    val PERMISSION_EXPORT_ADMISSION = PermissionValidator(
+        "ADMISSION_EXPORT",
+        "Beléptetés kimentése",
+        component = AdmissionComponent::class
+    )
+
     val PERMISSION_SHOW_ADMISSIONS = PermissionValidator(
         "ADMISSION_SHOW",
         "Beléptetés logok megtekintése",
