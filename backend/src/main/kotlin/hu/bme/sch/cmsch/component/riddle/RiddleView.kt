@@ -18,6 +18,9 @@ data class RiddleView(
     var solved: Boolean = false,
 
     @field:JsonView(FullDetails::class)
+    var skipped: Boolean = false,
+
+    @field:JsonView(FullDetails::class)
     var creator: String? = null,
 
     @field:JsonView(FullDetails::class)
@@ -41,6 +44,9 @@ data class RiddleViewWithSolution(
 
     @field:JsonView(FullDetails::class)
     var solved: Boolean = false,
+
+    @field:JsonView(FullDetails::class)
+    var skipped: Boolean = false,
 
     @field:JsonView(FullDetails::class)
     var creator: String? = null,

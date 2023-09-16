@@ -23,6 +23,9 @@ data class RiddleMappingVirtualEntity(
     @property:GenerateOverview(columnName = "Megoldva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
     var solved: Boolean = false,
 
+    @property:GenerateOverview(columnName = "Átugorva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    var skipped: Boolean = false,
+
     @property:GenerateOverview(columnName = "Próbálkozás", order = 5, centered = true)
     var attempt: Int = 0,
 
