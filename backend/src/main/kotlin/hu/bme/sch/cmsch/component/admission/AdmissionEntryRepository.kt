@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository
 interface AdmissionEntryRepository : JpaRepository<AdmissionEntryEntity, Int>,
     EntityPageDataSource<AdmissionEntryEntity, Int> {
 
+    fun findAllByFormIdAndAllowedTrue(formId: Int): List<AdmissionEntryEntity>
+
 }
