@@ -14,7 +14,6 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
 
     // JWT
     val jwtEnabled: Boolean,
-    @Deprecated(message = "JWT generated automatically")
     val secretKey: String,
     val sessionValidityInMilliseconds: Long,
 
@@ -37,7 +36,12 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val raceOwnershipMode: OwnershipType,
 
     // Increased session
-    val increasedSessionTime: Int
+    val increasedSessionTime: Int,
+
+    // Microservice
+    val masterRole: Boolean,
+    val riddleMicroserviceEnabled: Boolean,
+    val managementToken: String,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
