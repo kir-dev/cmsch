@@ -72,7 +72,7 @@ data class TaskEntity(
     var expectedResultDescription: String = "",
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @JsonIgnore
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",

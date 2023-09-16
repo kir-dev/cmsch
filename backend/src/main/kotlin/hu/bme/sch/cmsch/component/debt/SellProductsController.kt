@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_MERCH
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -30,6 +31,7 @@ class SellProductsController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<ProductEntity>(
     "sell-products",
@@ -37,6 +39,7 @@ class SellProductsController(
     SELL_PRODUCT_TITLE, SELL_PRODUCT_TITLE,
     DESCRIPTION,
 
+    transactionManager,
     { _ -> productService.getAllProducts() },
 
     permission = PERMISSION_SELL_ANY_PRODUCT,
@@ -81,6 +84,7 @@ class SellFoodController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<ProductEntity>(
     "sell-food",
@@ -88,6 +92,7 @@ class SellFoodController(
     SELL_FOOD_TITLE, SELL_FOOD_TITLE,
     DESCRIPTION,
 
+    transactionManager,
     { _ -> productService.getAllFoods() },
 
     permission = PERMISSION_SELL_FOOD,
@@ -132,6 +137,7 @@ class SellMerchController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<ProductEntity>(
     "sell-merch",
@@ -139,6 +145,7 @@ class SellMerchController(
     SELL_MERCH_TITLE, SELL_MERCH_TITLE,
     DESCRIPTION,
 
+    transactionManager,
     { _ -> productService.getAllMerch() },
 
     permission = PERMISSION_SELL_MERCH,

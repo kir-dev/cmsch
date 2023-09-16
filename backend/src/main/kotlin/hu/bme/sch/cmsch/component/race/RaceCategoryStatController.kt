@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/race-category-stat")
@@ -32,6 +33,7 @@ class RaceCategoryStatController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val startupPropertyConfig: StartupPropertyConfig,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : TwoDeepEntityPage<RaceCategoryEntity, RaceEntryDto>(
     "race-category-stat",
@@ -40,6 +42,7 @@ class RaceCategoryStatController(
     "Eredmény", "Extra mérések",
     "Időmérő eredmények nyers időeredményei",
 
+    transactionManager,
     raceCategoryRepository,
     object : ManualRepository<RaceEntryDto, Int>() {},
     importService,

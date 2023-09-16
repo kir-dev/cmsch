@@ -99,7 +99,7 @@ data class SubmittedTaskEntity(
     var score: Int = 0,
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false, columnDefinition = "TEXT default ''")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 11, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)

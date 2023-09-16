@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.*
 
 @Controller
@@ -27,6 +28,7 @@ class DebtAdminDebtsByUsersController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : TwoDeepEntityPage<DebtsByUserVirtualEntity, SoldProductEntity>(
     "debts-by-users",
@@ -35,6 +37,7 @@ class DebtAdminDebtsByUsersController(
     "Tartozás", "Felhasználó tartozásai",
     "Tartozások felhasználónként csoportosítva",
 
+    transactionManager,
     object : ManualRepository<DebtsByUserVirtualEntity, Int>() {
         override fun findAll(): Iterable<DebtsByUserVirtualEntity> {
             return soldProductRepository.findAll().groupBy { it.ownerId }

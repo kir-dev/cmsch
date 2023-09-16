@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -19,6 +21,7 @@ class TokenAdminTokensByTypeController(
     component: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : TwoDeepEntityPage<TokenStatVirtualEntity, TokenPropertyVirtualEntity>(
     "token-properties-type",
@@ -27,17 +30,19 @@ class TokenAdminTokensByTypeController(
     "Token statisztika", "Token statisztika",
     "Ki szerezte be melyik tokent",
 
+    transactionManager,
     object : ManualRepository<TokenStatVirtualEntity, Int>() {
         override fun findAll(): Iterable<TokenStatVirtualEntity> {
-            return repo.findAll().groupBy { it.token?.id }
+            return repo.findAll()
+                .groupBy { it.token?.id }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
-                .map { it ->
+                .map { tokenProperty ->
                     TokenStatVirtualEntity(
-                        it[0].token?.id ?: 0,
-                        it[0].token?.title ?: "n/a",
-                        it[0].token?.type ?: "n/a",
-                        it.count()
+                        tokenProperty[0].token?.id ?: 0,
+                        tokenProperty[0].token?.title ?: "n/a",
+                        tokenProperty[0].token?.type ?: "n/a",
+                        tokenProperty.count()
                     )
                 }
         }

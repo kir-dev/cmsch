@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -21,6 +22,7 @@ class QrLevelController(
     component: QrFightComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<QrLevelEntity>(
     "qr-levels",
@@ -28,6 +30,7 @@ class QrLevelController(
     "Szint", "Szintek",
     "QR Fight szintek hozzáadása és szerkesztése",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

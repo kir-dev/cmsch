@@ -13,9 +13,11 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.*
@@ -35,6 +37,7 @@ class UserController(
     private val startupPropertyConfig: StartupPropertyConfig,
     components: List<ComponentBase>,
     env: Environment,
+    transactionManager: PlatformTransactionManager,
     private val permissionsService: PermissionsService
 ) : OneDeepEntityPage<UserEntity>(
     "users",
@@ -42,6 +45,7 @@ class UserController(
     "Felhasználó", "Felhasználók",
     "Az összes felhasználó (résztvevők és rendezők egyaránt) kezelése.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,
@@ -106,7 +110,7 @@ class UserController(
         }
 
         if (entity.groupName.isNotBlank()) {
-            groups.findByName(entity.groupName).ifPresentOrElse({
+            transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({
                 entity.group = it
             }, {
                 entity.fullName = ""

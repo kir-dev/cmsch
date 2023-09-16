@@ -12,6 +12,7 @@ import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -23,6 +24,7 @@ class GuildToUserMappingController(
     component: UserHandlingComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<GuildToUserMappingEntity>(
     "guild-to-user",
@@ -31,6 +33,7 @@ class GuildToUserMappingController(
     "Felhasználók neptun kód alapján gárdába rendelése. A hozzárendelés minden bejelentkezésnél " +
             "megtörténik ha van egyezés és még nincs beállítva.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

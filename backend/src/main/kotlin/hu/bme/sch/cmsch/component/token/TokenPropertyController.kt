@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.*
 
@@ -20,6 +21,7 @@ class TokenSubmissionsController(
     component: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<TokenPropertyRawView>(
     "raw-token-properties",
@@ -27,6 +29,7 @@ class TokenSubmissionsController(
     "Nyers beolvasás", "Nyers beolvasások",
     "Nyers token beolvasások",
 
+    transactionManager,
     object : ManualRepository<TokenPropertyRawView, Int>() {
         override fun findAll(): Iterable<TokenPropertyRawView> {
             return repo.findAll().map { mapTokenProperty(it) }

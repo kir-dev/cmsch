@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -22,6 +23,7 @@ class EmailController(
     component: EmailComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<EmailTemplateEntity>(
     "email-templates",
@@ -29,6 +31,7 @@ class EmailController(
     "Email sablon", "Email sablonok",
     "Email sablonok amiket az oldal különböző komponensei tudnak használni.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

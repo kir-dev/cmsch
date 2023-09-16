@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -21,6 +22,7 @@ class AccessKeyController(
     component: AccessKeyComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<AccessKeyEntity>(
     "access-key",
@@ -28,6 +30,7 @@ class AccessKeyController(
     "Hozzáférési kulcs", "Hozzáférési kulcsok",
     "Ezekkel a kulcsokkal lehet hozzáférést adni csoportokhoz (group) és szerepekhez (role).",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

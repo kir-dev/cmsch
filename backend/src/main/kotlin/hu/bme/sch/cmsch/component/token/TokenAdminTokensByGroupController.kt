@@ -5,9 +5,11 @@ import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -20,6 +22,7 @@ class TokenAdminTokensByGroupController(
     component: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     private val groupRepository: GroupRepository,
     env: Environment
 ) : TwoDeepEntityPage<TokenListByGroupVirtualEntity, TokenVirtualEntity>(
@@ -29,17 +32,19 @@ class TokenAdminTokensByGroupController(
     "Csoportos tokenek", "Csoportos tokenek",
     "Tokenek csoportonként csoportosítva",
 
+    transactionManager,
     object : ManualRepository<TokenListByGroupVirtualEntity, Int>() {
         override fun findAll(): Iterable<TokenListByGroupVirtualEntity> {
-            return repo.findAll().groupBy { it.ownerGroup?.id ?: 0 }
+            return repo.findAll()
+                .groupBy { it.ownerGroup?.id ?: 0 }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
-                .map { it ->
-                    val groupName = groupRepository.findById(it[0].ownerGroup?.id ?: 0).map { it.name }.orElse("n/a")
+                .map { token ->
+                    val groupName = groupRepository.findById(token[0].ownerGroup?.id ?: 0).map { it.name }.orElse("n/a")
                     TokenListByGroupVirtualEntity(
-                        it[0].ownerGroup?.id ?: 0,
+                        token[0].ownerGroup?.id ?: 0,
                         groupName,
-                        it.count()
+                        token.count()
                     )
                 }
         }

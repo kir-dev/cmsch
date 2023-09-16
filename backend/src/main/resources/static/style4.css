@@ -1543,6 +1543,13 @@ form ul {
     display: none;
 }
 
+.info-message {
+    display: block;
+    border-left: 4px solid #eaa12f;
+    background-color: #eaa12f0f;
+    padding: 8px 12px;
+}
+
 @media (max-width: 1023px) {
     .menu {
         display: none;

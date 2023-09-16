@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/groups")
@@ -29,6 +30,7 @@ class GroupController(
     component: UserHandlingComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<GroupEntity>(
     "groups",
@@ -36,6 +38,7 @@ class GroupController(
     "Csoport", "Csoportok",
     "Az összes csoport kezelése. A csoportba való hozzárendelés a felhasználók menüből érhető el!",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

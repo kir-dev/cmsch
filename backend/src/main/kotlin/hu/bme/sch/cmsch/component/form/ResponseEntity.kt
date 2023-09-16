@@ -144,7 +144,7 @@ data class ResponseEntity(
     var detailsValidatedAt: Long = 0,
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @Column(nullable = false, columnDefinition = "TEXT default ''")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 13, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)

@@ -268,4 +268,10 @@ open class FormService(
         return responseRepository.findAllByFormId(form.id)
     }
 
+    @Transactional(readOnly = true)
+    open fun getResponsesById(id: Int) = responseRepository.findAllByFormId(id)
+
+    @Transactional(readOnly = true)
+    open fun getAllResponses() = responseRepository.findAll()
+
 }
