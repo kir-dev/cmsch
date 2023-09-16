@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -29,6 +30,7 @@ class FreestyleRaceRecordController(
     private val users: UserRepository,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val clock: TimeService,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<RaceRecordEntity>(
     "freestyle-race",
@@ -36,6 +38,7 @@ class FreestyleRaceRecordController(
     "Eredmény", "Szabad mérések",
     "Időmérő eredmények nyers időeredményei. Ennél a kategóriánál minden beadás látszik.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

@@ -29,6 +29,8 @@ data class RiddleView(
     @field:JsonView(FullDetails::class)
     var description: String = "",
 
+    @field:JsonView(FullDetails::class)
+    var skipPermitted: Boolean,
 )
 
 data class RiddleViewWithSolution(

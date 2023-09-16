@@ -30,6 +30,8 @@ import hu.bme.sch.cmsch.util.sha256
 import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 const val LOREM_IPSUM_SHORT_1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in justo ac arcu placerat posuere eget at purus. Donec porta lorem in semper semper. Phasellus volutpat sapien et ultricies tristique. In ornare libero vel dignissim ultrices."
@@ -54,7 +56,7 @@ const val A_DAY = 60 * 60 * 24
 
 @Profile("test")
 @Configuration
-class TestConfig(
+open class TestConfig(
     private val users: UserRepository,
     private val groups: GroupRepository,
     private val groupToUserMapping: GroupToUserMappingRepository,
@@ -79,8 +81,11 @@ class TestConfig(
     private var now = System.currentTimeMillis() / 1000
     private var user1: UserEntity? = null
 
-    @PostConstruct
-    fun init() {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    open fun init() {
+        if (users.findAll().toList().isNotEmpty())
+            return
+
         news.ifPresent { addNews(it) }
         events.ifPresent { addEvents(it) }
         addGroups()

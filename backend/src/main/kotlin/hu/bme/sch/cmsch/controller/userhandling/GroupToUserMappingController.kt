@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -25,6 +26,7 @@ class GroupToUserMappingController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     private val groups: GroupRepository,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<GroupToUserMappingEntity>(
     "group-to-user",
@@ -33,6 +35,7 @@ class GroupToUserMappingController(
     "Felhasználók neptun kód alapján csoportba és szakra rendelése. A hozzárendelés minden bejelentkezésnél " +
             "megtörténik ha van egyezés és még nincs beállítva.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

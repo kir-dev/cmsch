@@ -13,20 +13,23 @@ import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("/admin/control/signup-responses")
 @ConditionalOnBean(FormComponent::class)
 class ResponsesController(
-    private val responseRepository: ResponseRepository,
+    responseRepository: ResponseRepository,
     private val formRepository: FormRepository,
+    private val formService: FormService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: FormComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
-    env: Environment
+    env: Environment,
+    transactionManager: PlatformTransactionManager,
 ) : TwoDeepEntityPage<FormVirtualEntity, ResponseEntity>(
     "signup-responses",
     FormVirtualEntity::class,
@@ -34,23 +37,24 @@ class ResponsesController(
     "Kitöltés", "Kitöltések",
     "Kitöltések formonként csoportosítva",
 
+    transactionManager,
     object : ManualRepository<FormVirtualEntity, Int>() {
         override fun findAll(): Iterable<FormVirtualEntity> {
-            return responseRepository.findAll()
+            return formService.getAllResponses()
                 .groupBy { it.formId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
-                .mapNotNull { it ->
-                    formRepository.findById(it[0].formId)
+                .mapNotNull { responses ->
+                    formRepository.findById(responses[0].formId)
                         .map { form ->
                             FormVirtualEntity(
                                 form.id,
                                 form.name,
                                 form.submissionLimit,
-                                it.size,
-                                it.count { it.accepted },
-                                it.count { it.rejected },
-                                it.count { it.detailsValidated },
+                                responses.size,
+                                responses.count { it.accepted },
+                                responses.count { it.rejected },
+                                responses.count { it.detailsValidated },
                             )
                         }.orElse(null)
                 }
@@ -104,7 +108,7 @@ class ResponsesController(
     private val exportPermission = StaffPermissions.PERMISSION_EDIT_FORM_RESULTS
 
     override fun fetchSublist(id: Int): Iterable<ResponseEntity> {
-        return responseRepository.findAllByFormId(id)
+        return formService.getResponsesById(id)
     }
 
     @ResponseBody
@@ -116,12 +120,12 @@ class ResponsesController(
         }
 
         val objReader = objectMapper.readerFor(object : TypeReference<Map<String, Any>>() {})
-        val entries = responseRepository.findAllByFormId(id)
+        val entries = formService.getResponsesById(id)
             .map { objReader.readValue<Map<String, Any>>(it.submission) }
             .map { it.values }
             .toList()
 
-        val headers = objReader.readValue<Map<String, Any>>(responseRepository.findAllByFormId(id).firstOrNull()?.submission ?: "{}")
+        val headers = objReader.readValue<Map<String, Any>>(formService.getResponsesById(id).firstOrNull()?.submission ?: "{}")
             .keys
             .joinToString(",")
         val result = CsvMapper().writeValueAsString(entries)
@@ -137,7 +141,7 @@ class ResponsesController(
             return "403"
         }
 
-        val entries = responseRepository.findAllByFormId(id).joinToString(",") { it.submission }
+        val entries = formService.getResponsesById(id).joinToString(",") { it.submission }
 
         return "[${entries}]"
     }

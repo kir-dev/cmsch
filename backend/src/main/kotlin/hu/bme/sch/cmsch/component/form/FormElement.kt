@@ -59,7 +59,7 @@ enum class FormElementType(
     },
     INJECT_UNIT_SCOPE(serverSide = true) {
         override fun fetchValue(user: UserEntity): String {
-            return user.unitScopes ?: ""
+            return user.unitScopes
         }
     },
     INJECT_PROFILE_PICTURE(serverSide = true) {

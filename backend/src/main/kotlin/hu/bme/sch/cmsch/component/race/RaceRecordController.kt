@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -30,6 +31,7 @@ class RaceRecordController(
     private val raceCategories: RaceCategoryRepository,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val clock: TimeService,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<RaceRecordEntity>(
     "race",
@@ -37,6 +39,7 @@ class RaceRecordController(
     "Eredmény", "Mérések",
     "Időmérő eredmények nyers időeredményei",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

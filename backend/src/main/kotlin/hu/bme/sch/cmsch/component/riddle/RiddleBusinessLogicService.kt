@@ -14,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @ConditionalOnBean(RiddleComponent::class)
 open class RiddleBusinessLogicService(
-//    private val riddleRepository: RiddleEntityRepository,
-//    private val riddleCategoryRepository: RiddleCategoryRepository,
-//    private val riddleMappingRepository: RiddleMappingRepository,
     private val riddleCacheManager: RiddleCacheManager,
     private val userService: UserService,
     private val clock: TimeService,
@@ -106,7 +103,8 @@ open class RiddleBusinessLogicService(
                 skipped = submission.skipped,
                 creator = riddle.creator,
                 firstSolver = riddle.firstSolver,
-                description = riddle.description
+                description = riddle.description,
+                skipPermitted = !submission.completed && !cannotSkip(riddle)
             )
 
         val riddles = riddleCacheManager.findAllRiddleByCategoryId(riddle.categoryId)
@@ -125,7 +123,8 @@ open class RiddleBusinessLogicService(
             skipped = false,
             creator = riddle.creator,
             firstSolver = riddle.firstSolver,
-            description = riddle.description
+            description = riddle.description,
+            skipPermitted = !cannotSkip(riddle)
         )
     }
 
@@ -204,14 +203,16 @@ open class RiddleBusinessLogicService(
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
-            submission.completed = true
-            submission.skipped = skip
-            submission.attemptCount += 1
-            submission.completedAt = clock.getTimeInSeconds()
-            riddleCacheManager.updateMapping(submission)
-            if (!skip && riddle.firstSolver.isBlank()) {
-                riddle.firstSolver = user.userName
-                riddleCacheManager.updateRiddle(riddle)
+            if (!submission.completed) {
+                submission.completed = true
+                submission.skipped = skip
+                submission.attemptCount += 1
+                submission.completedAt = clock.getTimeInSeconds()
+                riddleCacheManager.updateMapping(submission)
+                if (!skip && riddle.firstSolver.isBlank()) {
+                    riddle.firstSolver = user.userName
+                    riddleCacheManager.updateRiddle(riddle)
+                }
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextIdUser(user, riddle))
 
@@ -275,14 +276,16 @@ open class RiddleBusinessLogicService(
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
             }
 
-            submission.completed = true
-            submission.skipped = skip
-            submission.attemptCount += 1
-            submission.completedAt = clock.getTimeInSeconds()
-            riddleCacheManager.updateMapping(submission)
-            if (!skip && riddle.firstSolver.isBlank()) {
-                riddle.firstSolver = group.name
-                riddleCacheManager.updateRiddle(riddle)
+            if (!submission.completed) {
+                submission.completed = true
+                submission.skipped = skip
+                submission.attemptCount += 1
+                submission.completedAt = clock.getTimeInSeconds()
+                riddleCacheManager.updateMapping(submission)
+                if (!skip && riddle.firstSolver.isBlank()) {
+                    riddle.firstSolver = group.name
+                    riddleCacheManager.updateRiddle(riddle)
+                }
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextIdGroup(group, riddle))
 

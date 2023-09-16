@@ -263,11 +263,11 @@ class AdmissionApiController(
     }
 
     private fun isBanned(cmschId: String, groupName: String): Boolean {
-        if (admissionComponent.bannedUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId.lowercase())) {
+        if (cmschId.isNotEmpty() && admissionComponent.bannedUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId.lowercase())) {
             log.info("User $cmschId BANNED by user-ban-list")
             return true
         }
-        if (admissionComponent.bannedGroups.getValue().lowercase().split(Regex(", *")).contains(groupName.lowercase())) {
+        if (groupName.isNotEmpty() && admissionComponent.bannedGroups.getValue().lowercase().split(Regex(", *")).contains(groupName.lowercase())) {
             log.info("User $cmschId BANNED by group-ban-list for they group: $groupName")
             return true
         }
@@ -278,6 +278,9 @@ class AdmissionApiController(
         cmschId: String,
         grants: MutableSet<EntryRole>
     ) {
+        if (cmschId.isEmpty())
+            return
+
         if (admissionComponent.userUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId))
             grants.add(EntryRole.USER)
 
@@ -298,6 +301,9 @@ class AdmissionApiController(
         groupName: String,
         grants: MutableSet<EntryRole>
     ) {
+        if (groupName.isEmpty())
+            return
+
         if (admissionComponent.userGroups.getValue().lowercase().split(Regex(", *")).contains(groupName))
             grants.add(EntryRole.USER)
 

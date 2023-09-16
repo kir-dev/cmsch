@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROU
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -21,6 +22,7 @@ class MembersOfMyGroupController(
     component: UserHandlingComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<GroupMemberVirtualEntity>(
     "members-of-my-group",
@@ -28,6 +30,7 @@ class MembersOfMyGroupController(
     "Csoportom tagjai", "Csoportom tagjai",
     "A csoportodban lévő emberek. Ameddig valaki nem jelentkezik be, addig itt nem látszik, hogy rendező-e.",
 
+    transactionManager,
     { user ->
         userService.allMembersOfGroup(userService.getByUserId(user.id).groupName)
     },

@@ -8,15 +8,14 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.markdownToHtml
+import jakarta.annotation.PostConstruct
+import org.apache.catalina.util.URLEncoder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import jakarta.annotation.PostConstruct
-import org.apache.catalina.util.URLEncoder
-import org.springframework.util.StringUtils
 import java.nio.charset.StandardCharsets
 
 @Controller

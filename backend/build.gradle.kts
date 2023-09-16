@@ -50,6 +50,7 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
+    runtimeOnly("org.postgresql:postgresql")
     testApi("org.springframework.boot:spring-boot-starter-test")
     testApi("org.springframework.security:spring-security-test")
 }

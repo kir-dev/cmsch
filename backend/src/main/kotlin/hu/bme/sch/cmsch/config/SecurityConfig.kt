@@ -88,6 +88,7 @@ open class SecurityConfig(
                 antMatcher("/control/test"),
                 antMatcher("/control/open-site"),
                 antMatcher("/api/**"),
+                antMatcher("/remote-api/**"),
                 antMatcher("/share/**"),
                 antMatcher("swagger-ui.html"),
                 antMatcher("/v3/api-docs/**"),
@@ -159,6 +160,7 @@ open class SecurityConfig(
         http.csrf {
             it.ignoringRequestMatchers(
                 antMatcher("/api/**"),
+                antMatcher("/remote-api/**"),
                 antMatcher("/admin/api/**"),
                 antMatcher("/admin/sell/**"),
                 antMatcher("/admin/admission/**"),

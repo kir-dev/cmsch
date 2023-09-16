@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -22,13 +23,15 @@ class AdmissionController(
     component: AdmissionComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
-    env: Environment
+    env: Environment,
+    transactionManager: PlatformTransactionManager,
 ) : OneDeepEntityPage<AdmissionEntryEntity>(
     "admission-entries",
     AdmissionEntryEntity::class, ::AdmissionEntryEntity,
     "Belépés log", "Belépés logok",
     "Az összes rögzített beléptetés",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

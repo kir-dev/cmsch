@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_TRACK_ONE_GROUP
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,6 +23,7 @@ class TrackOneGroupController(
     component: LocationComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<TrackGroupVirtualEntity>(
     "track-group",
@@ -29,6 +31,7 @@ class TrackOneGroupController(
     "Csoport követése", "Csoport követése",
     "Csoport követése a térképen",
 
+    transactionManager,
     { locationService.getRecentLocations()
         .map { TrackGroupVirtualEntity(it.id, it.groupName) }.distinct() },
 

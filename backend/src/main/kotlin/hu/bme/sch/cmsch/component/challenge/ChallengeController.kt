@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -31,6 +32,7 @@ class ChallengeController(
     private val groups: GroupRepository,
     private val users: UserRepository,
     private val startupPropertyConfig: StartupPropertyConfig,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<ChallengeSubmissionEntity>(
     "challenge",
@@ -39,6 +41,7 @@ class ChallengeController(
     "Olyan feladatok aminek az adminisztrálása manuálisan megy. Például személyesen bemutatható feladatok " +
             "vagy külső adatforrásból származó pontok. Pont korrekciónak is használható.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

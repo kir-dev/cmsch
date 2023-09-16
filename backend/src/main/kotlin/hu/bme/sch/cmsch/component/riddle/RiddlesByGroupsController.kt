@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.transaction.PlatformTransactionManager
 import kotlin.jvm.optionals.getOrNull
 
 @Controller
@@ -29,6 +31,7 @@ class RiddlesByGroupsController(
     component: RiddleComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : TwoDeepEntityPage<RiddleStatsVirtualEntity, RiddleMappingVirtualEntity>(
     "riddles-by-groups",
@@ -37,9 +40,11 @@ class RiddlesByGroupsController(
     "Riddle beadás csoportonként", "Riddle csoportonként",
     "Beadott riddleök csoportonként csoportosítva",
 
+    transactionManager,
     object : ManualRepository<RiddleStatsVirtualEntity, Int>() {
         override fun findAll(): Iterable<RiddleStatsVirtualEntity> {
-            return riddleMappingRepository.findAll().groupBy { it.ownerGroupId }
+            return transactionManager.transaction(readOnly = true) { riddleMappingRepository.findAll() }
+                .groupBy { it.ownerGroupId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
                 .map { submissions ->

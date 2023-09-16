@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -22,6 +23,7 @@ class StaticPageController(
     component: StaticPageComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : OneDeepEntityPage<StaticPageEntity>(
     "static-pages",
@@ -32,6 +34,7 @@ class StaticPageController(
             "táblázatokat is, ezáltal kivállóan alkalmas gyakori kérdések, kapcsolat menü vagy péládul program " +
             "összefoglaló lap megvalósítására.",
 
+    transactionManager,
     repo,
     importService,
     adminMenuService,

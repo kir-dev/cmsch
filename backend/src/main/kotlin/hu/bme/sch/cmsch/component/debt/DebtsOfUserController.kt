@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -19,6 +20,7 @@ class DebtsOfUserController(
     component: DebtComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<SoldProductEntity>(
     "my-debts",
@@ -26,6 +28,7 @@ class DebtsOfUserController(
     "Saját tartozásaim", "Saját tartozásaim",
     "Ezekkel a tételekkel a reszortgdaságisnak kell elszámolnod! A pontos módról emailben értesülhetsz.",
 
+    transactionManager,
     { user -> productService.getAllDebtsByUser(user) },
 
     permission = PERMISSION_IMPLICIT_ANYONE,

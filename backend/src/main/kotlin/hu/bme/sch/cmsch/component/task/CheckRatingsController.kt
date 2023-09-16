@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -19,6 +21,7 @@ class CheckRatingsController(
     component: TaskComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
+    transactionManager: PlatformTransactionManager,
     env: Environment
 ) : SimpleEntityPage<CheckRatingVirtualEntity>(
     "check-ratings",
@@ -26,6 +29,7 @@ class CheckRatingsController(
     "Pontok ellenőrzése", "Pontok ellenőrzése",
     "Itt azok a beadások láthatóak amik eltérnek a beadásra adható max ponttól vagy a 0 ponttól.",
 
+    transactionManager,
     { submittedRepository.findAllByScoreGreaterThanAndApprovedIsTrue(0)
         .filter { it.score != (it.task?.maxScore ?: 0) }
         .map { CheckRatingVirtualEntity(it.id, it.groupName, it.score, it.task?.maxScore ?: 0) } },
