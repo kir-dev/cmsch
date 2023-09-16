@@ -43,6 +43,10 @@ class RiddleComponent(
             skipGroup,
             skipEnabled,
             skipAfterGroupsSolved,
+
+            microserviceGroup,
+            microserviceNodeBaseUrl,
+            microserviceSyncEnabled,
         )
     }
 
@@ -119,7 +123,7 @@ class RiddleComponent(
     val skipGroup = SettingProxy(componentSettingService, component,
         "skipGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Átugrás funkció",
-        description = "Bizonyos megoldó létszám fölött "
+        description = "Bizonyos megoldó létszám fölött átugorható a riddle"
     )
 
     val skipEnabled = SettingProxy(componentSettingService, component,
@@ -132,6 +136,27 @@ class RiddleComponent(
         "skipAfterGroupsSolved", "false", type = SettingType.BOOLEAN,
         fieldName = "Átugrás ennyi megoldó után",
         description = "Ennyi csapat vagy felhasználó megoldása után elérhető a gomb"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val microserviceGroup = SettingProxy(componentSettingService, component,
+        "microserviceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Riddle microservice",
+        description = "A riddle megoldások kiszervezhetőek egy külön microservicebe"
+    )
+
+    val microserviceNodeBaseUrl = SettingProxy(componentSettingService, component,
+        "microserviceNodeBaseUrl", " http://my-app-service.<namespace>.svc.cluster.local/",
+        serverSideOnly = true, type = SettingType.TEXT,
+        fieldName = "Riddle node base URL-je",
+        description = "Ezen a címen érhető el clusteren belül a riddle node"
+    )
+
+    val microserviceSyncEnabled = SettingProxy(componentSettingService, component,
+        "microserviceSyncEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Beállítások szinkronizációja",
+        description = "Ha egy riddle módosul akkor küld például értesítést a nodenak, hogy invalidálja a cachet"
     )
 
 }

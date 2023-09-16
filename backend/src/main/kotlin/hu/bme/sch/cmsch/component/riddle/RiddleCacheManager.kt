@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.riddle
 
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.scheduling.annotation.Scheduled
@@ -23,7 +25,9 @@ open class RiddleCacheManager(
     private val riddleEntityRepository: RiddleEntityRepository,
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
-    private val riddlePersistenceService: RiddlePersistenceService
+    private val riddlePersistenceService: RiddlePersistenceService,
+    private val riddleComponent: RiddleComponent,
+    private val config: StartupPropertyConfig
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -42,6 +46,15 @@ open class RiddleCacheManager(
 
     fun getLockForUser(userId: Int): ReentrantLock {
         return userLocks.computeIfAbsent(userId) { ReentrantLock() }
+    }
+
+    @PostConstruct
+    fun init() {
+        if (config.masterRole && config.riddleMicroserviceEnabled) {
+            log.info("Riddle periodic save is disabled")
+            return
+        }
+        resetCache(persistMapping = false, overrideMappings = true)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
@@ -83,6 +96,11 @@ open class RiddleCacheManager(
 
     @Scheduled(fixedRate = 5 * 60 * 1000)
     open fun periodicSave() {
+        if (config.masterRole && config.riddleMicroserviceEnabled) {
+            log.info("Riddle periodic save is disabled")
+            return
+        }
+
         log.info("Getting all locks for 'periodicSave'")
         groupLocks.forEach { (_, lock) -> lock.lock() }
         userLocks.forEach { (_, lock) -> lock.lock() }

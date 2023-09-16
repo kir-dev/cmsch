@@ -8,34 +8,36 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserFromDatabase
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.JwtException
 import org.springframework.stereotype.Service
 import java.util.*
-import jakarta.servlet.http.HttpServletRequest
 
 const val JWT_CLAIM_PERMISSIONS = "permissions"
 const val JWT_CLAIM_ROLE = "role"
 const val JWT_CLAIM_USERID = "userId"
 const val JWT_CLAIM_USERNAME = "userName"
 
+private const val EXPIRED_OR_INVALID_TOKEN = "Expired or invalid JWT token"
+
 @Service
 class JwtTokenProvider(
     private val startupPropertyConfig: StartupPropertyConfig
 ){
 
-    private val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+    private val secretKey = Keys.hmacShaKeyFor(startupPropertyConfig.secretKey.toByteArray())
     private val parser = Jwts.parserBuilder().setSigningKey(secretKey).build()
 
     fun createToken(cmschUser: CmschUser): String {
         return createToken(
-            cmschUser.id,
-            cmschUser.internalId,
-            cmschUser.role,
-            cmschUser.permissionsAsList,
-            cmschUser.userName
+            userId = cmschUser.id,
+            internalId = cmschUser.internalId,
+            role = cmschUser.role,
+            permissions = cmschUser.permissionsAsList,
+            fullName = cmschUser.userName
         )
     }
 
@@ -94,11 +96,11 @@ class JwtTokenProvider(
             val claims: Jws<Claims> = parser.parseClaimsJws(token)
             !claims.body.expiration.before(Date())
         } catch (e: JwtException) {
-            throw InvalidJwtAuthenticationException("Expired or invalid JWT token")
+            throw InvalidJwtAuthenticationException(EXPIRED_OR_INVALID_TOKEN)
         } catch (e: IllegalArgumentException) {
-            throw InvalidJwtAuthenticationException("Expired or invalid JWT token", )
+            throw InvalidJwtAuthenticationException(EXPIRED_OR_INVALID_TOKEN)
         } catch (e: SignatureException) {
-            throw InvalidJwtAuthenticationException("Expired or invalid JWT token")
+            throw InvalidJwtAuthenticationException(EXPIRED_OR_INVALID_TOKEN)
         }
     }
 
