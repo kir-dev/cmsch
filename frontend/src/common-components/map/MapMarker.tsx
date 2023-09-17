@@ -30,8 +30,10 @@ export function MapMarker({ color = 'brand.600', text, markerShape = MapMarkerSh
         {icon}
       </Center>
       {text && (
-        <Box bg={bg} py={0.5} px={2} borderRadius="full">
-          <Text fontSize="xs">{text}</Text>
+        <Box bg={bg} py={0.5} px={2} borderRadius="full" maxW="full">
+          <Text fontSize="xs" isTruncated>
+            {text}
+          </Text>
         </Box>
       )}
     </VStack>
