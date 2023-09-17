@@ -6,7 +6,6 @@ import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
@@ -32,7 +31,14 @@ open class FormService(
     @Transactional(readOnly = true)
     open fun getAllForms(role: RoleType): List<FormEntity> {
         val now = clock.getTimeInSeconds()
-        return formRepository.findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
+        return formRepository.findAllByAdvertisedTrueOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
+            .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
+    }
+
+    @Transactional(readOnly = true)
+    open fun getAllAdvertised(role: RoleType): List<FormEntity> {
+        val now = clock.getTimeInSeconds()
+        return formRepository.findAllByAdvertisedTrueOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
 
@@ -275,5 +281,15 @@ open class FormService(
 
     @Transactional(readOnly = true)
     open fun getAllResponses() = responseRepository.findAll()
+
+    @Transactional(readOnly = true)
+    open fun doesGroupFilled(groupId: Int, formId: Int): Boolean {
+        return responseRepository.countTop1ByFormIdAndSubmitterGroupId(formId, groupId) > 0
+    }
+
+    @Transactional(readOnly = true)
+    open fun doesUserFilled(userId: Int, formId: Int): Boolean {
+        return responseRepository.countTop1ByFormIdAndSubmitterUserId(formId, userId) > 0
+    }
 
 }

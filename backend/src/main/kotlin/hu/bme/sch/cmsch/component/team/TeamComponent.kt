@@ -58,6 +58,9 @@ class TeamComponent(
             togglePermissionEnabled,
             kickEnabled,
             promoteLeadershipEnabled,
+            leaderNotes,
+            showTasks,
+            showAdvertisedForms,
 
             teamDetailsGroup,
             showTeamDetails,
@@ -278,6 +281,22 @@ class TeamComponent(
     val promoteLeadershipEnabled = SettingProxy(componentSettingService, component,
         "promoteLeadershipEnabled", "true", type = SettingType.BOOLEAN,
         fieldName = "Jogosultság átadása", description = "Ha be val kapcsolva, akkor át lehet adni a vezetőséget másnak"
+    )
+
+    val leaderNotes = SettingProxy(componentSettingService, component,
+        "leaderNotes", "true", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Üzenet a CSK-knak", description = "A csapat dashboardnál megjelenő üzenet a CSK-k nak. Ha üres nem látszik."
+    )
+
+    val showTasks = SettingProxy(componentSettingService, component,
+        "showTasks", "true", type = SettingType.BOOLEAN,
+        fieldName = "Feladatok mutatása", description = "Ha be val kapcsolva, akkor az elvégzendő feladatok látszódnak"
+    )
+
+    val showAdvertisedForms = SettingProxy(componentSettingService, component,
+        "showAdvertisedForms", "true", type = SettingType.BOOLEAN,
+        fieldName = "Formok mutatása", description = "Ha be val kapcsolva, akkor a hírdetett flaggel " +
+                "ellátott formokat megjelenítjük a csapatnál"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

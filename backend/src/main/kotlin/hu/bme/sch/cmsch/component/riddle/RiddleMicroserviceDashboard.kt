@@ -89,7 +89,7 @@ class RiddleMicroserviceDashboard(
 
         val status = sendRequest("reload-component-config", user)
 
-        return "redirect:/admin/control/riddle-ms?component=2&message=$status"
+        return "redirect:/admin/control/riddle-ms?card=2&message=$status"
     }
 
     private fun reloadRiddleAndCategoryCache(): DashboardFormCard {
@@ -115,7 +115,7 @@ class RiddleMicroserviceDashboard(
 
         val status = sendRequest("reload-riddle-and-category-cache", user)
 
-        return "redirect:/admin/control/riddle-ms?component=3&message=$status"
+        return "redirect:/admin/control/riddle-ms?card=3&message=$status"
     }
 
     private fun reloadAllForm(): DashboardFormCard {
@@ -141,7 +141,7 @@ class RiddleMicroserviceDashboard(
 
         val status = sendRequest("reload-all", user)
 
-        return "redirect:/admin/control/riddle-ms?component=4&message=$status"
+        return "redirect:/admin/control/riddle-ms?card=4&message=$status"
     }
 
     private fun saveAllForm(): DashboardFormCard {
@@ -167,7 +167,7 @@ class RiddleMicroserviceDashboard(
 
         val status = sendRequest("save-all", user)
 
-        return "redirect:/admin/control/riddle-ms?component=5&message=$status"
+        return "redirect:/admin/control/riddle-ms?card=5&message=$status"
     }
 
     private fun forceUnlockEverythingForm(): DashboardFormCard {
@@ -193,7 +193,7 @@ class RiddleMicroserviceDashboard(
 
         val status = sendRequest("force-unlock-everything", user)
 
-        return "redirect:/admin/control/riddle-ms?component=6&message=$status"
+        return "redirect:/admin/control/riddle-ms?card=6&message=$status"
     }
 
     private fun pingForm(): DashboardFormCard {
@@ -219,7 +219,7 @@ class RiddleMicroserviceDashboard(
 
         val status = sendRequest("ping", user)
 
-        return "redirect:/admin/control/riddle-ms?component=7&message=$status"
+        return "redirect:/admin/control/riddle-ms?card=7&message=$status"
     }
 
     private fun sendRequest(path: String, user: CmschUser?): String {
