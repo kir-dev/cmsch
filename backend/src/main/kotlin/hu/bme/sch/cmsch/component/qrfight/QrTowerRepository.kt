@@ -14,4 +14,5 @@ interface QrTowerRepository : CrudRepository<QrTowerEntity, Int>,
     fun findAllBySelector(selector: String): List<QrTowerEntity>
     fun findAllByCategory(category: String): List<QrTowerEntity>
     fun findAllByRecordTimeTrue(): List<QrTowerEntity>
+    fun countAllByOwnerGroupId(groupId: Int): Int
 }

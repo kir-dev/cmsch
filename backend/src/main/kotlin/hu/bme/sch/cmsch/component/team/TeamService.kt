@@ -3,8 +3,10 @@ package hu.bme.sch.cmsch.component.team
 import hu.bme.sch.cmsch.component.form.FormService
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.qrfight.QrFightService
 import hu.bme.sch.cmsch.component.race.DEFAULT_CATEGORY
 import hu.bme.sch.cmsch.component.race.RaceService
+import hu.bme.sch.cmsch.component.riddle.RiddleReadonlyService
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
@@ -33,7 +35,9 @@ open class TeamService(
     private val raceService: Optional<RaceService>,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val tasksService: Optional<TasksService>,
-    private val formsService: Optional<FormService>
+    private val formsService: Optional<FormService>,
+    private val qrFightService: Optional<QrFightService>,
+    private val riddleReadonlyService: Optional<RiddleReadonlyService>,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -295,6 +299,36 @@ open class TeamService(
                         "/race"
                     )
                 )
+        }
+
+        if (teamComponent.qrFightStatEnabled.isValueTrue()) {
+            qrFightService.ifPresent { qrs ->
+                stats.add(TeamStatView(
+                    name = teamComponent.qrTokenStatHeader.getValue(),
+                    value1 = "${qrs.getQrCountForGroup(group.id)} db",
+                    value2 = null,
+                    navigate = "/qrfight"
+                ))
+                stats.add(TeamStatView(
+                    name = teamComponent.qrTowerStatHeader.getValue(),
+                    value1 = "${qrs.getTowerCountForGroup(group.id)} db",
+                    value2 = null,
+                    navigate = "/qrfight"
+                ))
+            }
+        }
+
+        if (teamComponent.riddleStatEnabled.isValueTrue()) {
+            riddleReadonlyService.ifPresent { riddles ->
+                val details = riddles.getRiddleDetails(group.id)
+                stats.add(TeamStatView(
+                    name = teamComponent.riddleStatHeader.getValue(),
+                    value1 = "${details.solved} db",
+                    value2 = "Ebből átugrott ${details.skipped} db",
+                    percentage = if (details.all == 0) 1f else (details.solved / details.all).toFloat(),
+                    navigate = "/riddle"
+                ))
+            }
         }
 
         return stats
