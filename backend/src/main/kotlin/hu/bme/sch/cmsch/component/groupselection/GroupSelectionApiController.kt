@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.groupselection
 
 import hu.bme.sch.cmsch.component.profile.ProfileComponent
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -18,7 +18,7 @@ class GroupSelectionApiController(
 
     @PostMapping("/group/select/{groupId}")
     fun selectGroup(@PathVariable groupId: Int, auth: Authentication?): GroupSelectionResponse {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull()
             ?: return GroupSelectionResponse(GroupSelectionResponseType.UNAUTHORIZED)
 
         if (!profileComponent.map { it.selectionEnabled.isValueTrue() }.orElse(false)

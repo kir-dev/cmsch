@@ -96,7 +96,7 @@ open class ProfileService(
             completedRiddleCount = riddleService.map {
                 when (startupPropertyConfig.riddleOwnershipMode) {
                     OwnershipType.USER -> it.getCompletedRiddleCountUser(user)
-                    OwnershipType.GROUP -> it.getCompletedRiddleCountGroup(user, user.group)
+                    OwnershipType.GROUP -> it.getCompletedRiddleCountGroup(user, user.groupId)
                 }
             }.orElse(null),
 
@@ -131,14 +131,14 @@ open class ProfileService(
         when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> tokenService.map { repo ->
                 if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
-                    repo.getTokensForUser(user).size
+                    repo.countTokensForUser(user)
                 } else {
                     repo.getTokensForUserWithCategory(user, tokenCategoryToDisplay)
                 }
             }
             OwnershipType.GROUP -> if (group == null) Optional.of(0) else tokenService.map { repo ->
                 if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
-                    repo.getTokensForGroup(group).size
+                    repo.countTokensForGroup(group)
                 } else {
                     repo.getTokensForGroupWithCategory(group, tokenCategoryToDisplay)
                 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
@@ -67,7 +67,7 @@ class TokenPublicTokensStatsController(
 ) {
     @GetMapping("")
     override fun view(model: Model, auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (!user.isAdmin() && user.groupName != loginComponent.organizerGroupName.getValue()) {
             model.addAttribute("user", user)

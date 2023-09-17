@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.controller
 
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.security.core.Authentication
@@ -30,7 +30,7 @@ class TestController {
     @GetMapping("/control/test-user")
     fun testUser(auth: Authentication): String {
         log.info("test user endpoint was fired")
-        return auth.getUserFromDatabaseOrNull()?.fullName ?: "not logged in"
+        return auth.getUserEntityFromDatabaseOrNull()?.fullName ?: "not logged in"
     }
 
 }

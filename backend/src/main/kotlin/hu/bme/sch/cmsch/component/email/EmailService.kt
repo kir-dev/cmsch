@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.email
 
-import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.component.login.CmschUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -15,14 +15,14 @@ open class EmailService(
 ) {
 
     @Async
-    open fun sendTextEmail(responsible: UserEntity?, subject: String, content: String, to: List<String>) {
+    open fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         if (emailComponent.enableMailgun.isValueTrue()) {
             mailgunEmailService.sendTextEmail(responsible, subject, content, to)
         }
     }
 
     @Async
-    open fun sendHtmlEmail(responsible: UserEntity?, subject: String, content: String, to: List<String>) {
+    open fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         if (emailComponent.enableMailgun.isValueTrue()) {
             mailgunEmailService.sendHtmlEmail(responsible, subject, content, to)
         }

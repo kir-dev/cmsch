@@ -6,8 +6,8 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.getUserOrNull
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import jakarta.servlet.http.HttpServletRequest
 
 const val SESSION_TOKEN_COLLECTOR_ATTRIBUTE = "TOKEN_COLLECTOR_ATTRIBUTE"
 
@@ -49,7 +48,7 @@ class TokenApiController(
                     tokens.collectToken(auth.getUser(), token)
                 }
                 OwnershipType.GROUP -> {
-                    tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
+                    tokens.collectTokenForGroup(auth.getUser(), token)
                 }
             }
         } catch (e: Throwable) {
@@ -96,7 +95,7 @@ class TokenApiController(
                         "&icon=${URLEncoder.encode(response.iconUrl ?: "", StandardCharsets.UTF_8.toString())}"
             }
             OwnershipType.GROUP -> {
-                val response = tokens.collectTokenForGroup(auth.getUserFromDatabase(), token)
+                val response = tokens.collectTokenForGroup(auth.getUser(), token)
                 log.info("Token collected for GROUP by user '{}' token '{}'", auth.getUser().userName, token)
                 "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${response.status.name}" +
                         "&title=${URLEncoder.encode(response.title ?: "", StandardCharsets.UTF_8.toString())}" +

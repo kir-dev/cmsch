@@ -1,13 +1,10 @@
 package hu.bme.sch.cmsch.component.admission
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import com.itextpdf.layout.element.*
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
 import hu.bme.sch.cmsch.component.form.FormRepository
-import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.model.IdentifiableEntity
@@ -15,7 +12,6 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EXPORT_ADMISSION
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_VALIDATE_ADMISSION
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
@@ -27,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import java.io.ByteArrayOutputStream
 import java.util.*
 
 data class AdmissionFormEntry(
@@ -129,7 +124,7 @@ class AdmissionByFormController(
     @ResponseBody
     @GetMapping("/export/csv/{id}", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(auth: Authentication, response: HttpServletResponse, @PathVariable id: Int): ByteArray {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!exportPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }

@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -32,7 +32,7 @@ class ProfileApiController(
                 "for the role that the user have")
     ])
     fun profile(auth: Authentication?): ResponseEntity<ProfileView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull()
             ?: return ResponseEntity.ok(ProfileView(loggedIn = false))
 
         if (!profileComponent.minRole.isAvailableForRole(user.role))
@@ -45,7 +45,7 @@ class ProfileApiController(
 
     @PutMapping("/profile/change-alias")
     fun changeAlias(@RequestBody body: ProfileChangeRequest, auth: Authentication?): ResponseEntity<Boolean> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull()
             ?: return ResponseEntity.ok(false)
 
         if (!profileComponent.minRole.isAvailableForRole(user.role))

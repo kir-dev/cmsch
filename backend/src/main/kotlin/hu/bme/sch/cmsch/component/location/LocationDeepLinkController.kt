@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import org.apache.catalina.util.URLEncoder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -24,7 +24,7 @@ class LocationDeepLinkController(
         if (auth == null)
             return "redirect:/control/login"
 
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUserEntityFromDatabase()
         val accessToken = user.cmschId.substring(startupPropertyConfig.profileQrPrefix.length)
         val apiEndpoint = "${appComponent.adminSiteUrl.getValue()}api/location"
         val apiEndpointUrlEncoded = URLEncoder.QUERY.encode(apiEndpoint, StandardCharsets.UTF_8)

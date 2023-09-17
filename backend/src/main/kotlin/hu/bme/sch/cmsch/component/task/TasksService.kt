@@ -39,7 +39,7 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForUserOrNull(user: UserEntity, task: Optional<TaskEntity>): SubmittedTaskEntity? {
+    open fun getSubmissionForUserOrNull(user: CmschUser, task: Optional<TaskEntity>): SubmittedTaskEntity? {
         if (task.isEmpty)
             return null
 
@@ -48,24 +48,24 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForGroupOrNull(group: GroupEntity, task: Optional<TaskEntity>): SubmittedTaskEntity? {
+    open fun getSubmissionForGroupOrNull(groupId: Int, task: Optional<TaskEntity>): SubmittedTaskEntity? {
         if (task.isEmpty)
             return null
 
-        return submitted.findByTask_IdAndGroupId(task.get().id, group.id)
+        return submitted.findByTask_IdAndGroupId(task.get().id, groupId)
                 .orElse(null)
     }
 
     @Transactional(readOnly = true)
-    open fun getHighlightedOnes(group: GroupEntity): List<TaskEntityWrapperDto> {
+    open fun getHighlightedOnes(groupId: Int): List<TaskEntityWrapperDto> {
         return taskRepository.findAllByHighlightedTrueAndVisibleTrue()
-                .map { findSubmissionStatusForGroup(it, group) }
+                .map { findSubmissionStatusForGroup(it, groupId) }
     }
 
     @Transactional(readOnly = true)
-    open fun getAllTasksForGroup(group: GroupEntity): List<TaskEntityWrapperDto> {
+    open fun getAllTasksForGroup(groupId: Int): List<TaskEntityWrapperDto> {
         return taskRepository.findAllByVisibleTrue()
-                .map { findSubmissionStatusForGroup(it, group) }
+                .map { findSubmissionStatusForGroup(it, groupId) }
     }
 
     @Transactional(readOnly = true)
@@ -80,12 +80,12 @@ open class TasksService(
                 .map { TaskEntityWrapperDto(it, TaskStatus.NOT_LOGGED_IN, "") }
     }
 
-    private fun findSubmissionStatusForGroup(taskEntity: TaskEntity, group: GroupEntity): TaskEntityWrapperDto {
+    private fun findSubmissionStatusForGroup(taskEntity: TaskEntity, groupId: Int): TaskEntityWrapperDto {
         try {
-            val submission = submitted.findByTask_IdAndGroupId(taskEntity.id, group.id)
+            val submission = submitted.findByTask_IdAndGroupId(taskEntity.id, groupId)
             return findSubmission(submission, taskEntity)
         } catch (e: Exception) {
-            log.error("Failed to fetch TASK_SUBMISSION: {} for group {}", taskEntity.title, group.id, e)
+            log.error("Failed to fetch TASK_SUBMISSION: {} for group {}", taskEntity.title, groupId, e)
             throw e
         }
     }
@@ -111,10 +111,11 @@ open class TasksService(
 
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitTaskForGroup(answer: TaskSubmissionDto, file: MultipartFile?, user: UserEntity): TaskSubmissionStatus {
-        val groupId = user.group?.id ?: return TaskSubmissionStatus.NO_ASSOCIATE_GROUP
+    open fun submitTaskForGroup(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
+        val groupId = user.groupId
+            ?: return TaskSubmissionStatus.NO_ASSOCIATE_GROUP
         val task = taskRepository.findById(answer.taskId).orElse(null)
-                ?: return TaskSubmissionStatus.INVALID_TASK_ID
+            ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
         val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (task.availableFrom > now || task.availableTo < now) {
@@ -126,7 +127,7 @@ open class TasksService(
             val submission = previous.get()
             if (submission.approved)
                 return TaskSubmissionStatus.ALREADY_APPROVED
-            if (!submission.approved && !submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
+            if (!submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
             return updateSubmission(user, task, answer, file, submission)
 
@@ -136,7 +137,7 @@ open class TasksService(
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitTaskForUser(answer: TaskSubmissionDto, file: MultipartFile?, user: UserEntity): TaskSubmissionStatus {
+    open fun submitTaskForUser(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
@@ -150,7 +151,7 @@ open class TasksService(
             val submission = previous.get()
             if (submission.approved)
                 return TaskSubmissionStatus.ALREADY_APPROVED
-            if (!submission.approved && !submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
+            if (!submission.rejected && !taskComponent.resubmissionEnabled.isValueTrue())
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
             return updateSubmission(user, task, answer, file, submission)
 
@@ -164,12 +165,12 @@ open class TasksService(
         answer: TaskSubmissionDto,
         groupId: Int?,
         userId: Int?,
-        user: UserEntity,
+        user: CmschUser,
         file: MultipartFile?
     ): TaskSubmissionStatus {
 
-        val groupName = if (groupId != null) user.group?.name else null
-        val userName = if (userId != null) user.fullName else null
+        val groupName = if (groupId != null) user.groupName else null
+        val userName = if (userId != null) user.userName else null
 
         when (task.type) {
             TaskType.TEXT -> {
@@ -186,7 +187,7 @@ open class TasksService(
                     approved = false, rejected = false, score = 0
                 ).addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = answer.textAnswer,
                     contentUrl = "",
@@ -214,7 +215,7 @@ open class TasksService(
                     response = "", approved = false, rejected = false, score = 0
                 ).addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = "",
                     contentUrl = "$target/$fileName",
@@ -239,7 +240,7 @@ open class TasksService(
                     response = "", approved = false, rejected = false, score = 0
                 ).addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = answer.textAnswer,
                     contentUrl = "$target/$fileName",
@@ -267,7 +268,7 @@ open class TasksService(
                     response = "", approved = false, rejected = false, score = 0
                 ).addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = "",
                     contentUrl = "$target/$fileName",
@@ -285,7 +286,7 @@ open class TasksService(
     }
 
     private fun updateSubmission(
-        user: UserEntity,
+        user: CmschUser,
         task: TaskEntity,
         answer: TaskSubmissionDto,
         file: MultipartFile?,
@@ -302,7 +303,7 @@ open class TasksService(
                 submission.approved = false
                 submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = answer.textAnswer,
                     status = "${submission.score} pont | beadva",
@@ -324,7 +325,7 @@ open class TasksService(
                 submission.approved = false
                 submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = "",
                     contentUrl = "$target/$fileName",
@@ -346,7 +347,7 @@ open class TasksService(
                 submission.approved = false
                 submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = answer.textAnswer,
                     contentUrl = submission.imageUrlAnswer,
@@ -368,7 +369,7 @@ open class TasksService(
                 submission.approved = false
                 submission.addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
-                    submitterName = user.fullName,
+                    submitterName = user.userName,
                     adminResponse = false,
                     content = "",
                     contentUrl = "$target/$fileName",
@@ -465,8 +466,8 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getAllSubmissions(it: GroupEntity): List<SubmittedTaskEntity> {
-        return submitted.findAllByGroupId(it.id)
+    open fun getAllSubmissions(groupId: Int): List<SubmittedTaskEntity> {
+        return submitted.findAllByGroupId(groupId)
     }
 
     @Transactional(readOnly = true)
@@ -477,17 +478,17 @@ open class TasksService(
 
     @Transactional(readOnly = true)
     open fun getTotalTasksForUser(user: UserEntity): Int {
-        return taskRepository.findAllByVisibleTrue().size
+        return taskRepository.countAllByVisibleTrue()
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmittedTasksForUser(user: UserEntity): Int {
-        return submitted.findAllByUserIdAndRejectedFalseAndApprovedFalse(user.id).size
+    open fun getSubmittedTasksForUser(user: CmschUser): Int {
+        return submitted.countAllByUserIdAndRejectedFalseAndApprovedFalse(user.id)
     }
 
     @Transactional(readOnly = true)
-    open fun getCompletedTasksForUser(user: UserEntity): Int {
-        return submitted.findAllByUserIdAndRejectedFalseAndApprovedTrue(user.id).size
+    open fun getCompletedTasksForUser(user: CmschUser): Int {
+        return submitted.countAllByUserIdAndRejectedFalseAndApprovedTrue(user.id)
     }
 
     @Transactional(readOnly = true)

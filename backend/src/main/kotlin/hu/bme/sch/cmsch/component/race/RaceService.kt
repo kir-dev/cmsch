@@ -1,12 +1,10 @@
 package hu.bme.sch.cmsch.component.race
 
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.UserRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.jvm.Throws
 
 const val DEFAULT_CATEGORY = ""
 
@@ -22,7 +20,7 @@ open class RaceService(
 ) {
 
     @Transactional(readOnly = true)
-    open fun getViewForGroups(user: UserEntity?): RaceView {
+    open fun getViewForGroups(user: CmschUser?): RaceView {
         val board = getBoardForGroups(DEFAULT_CATEGORY)
 
         return if (user == null) {
@@ -32,7 +30,7 @@ open class RaceService(
                 place = null, bestTime = null, board = board
             )
         } else {
-            val groupId = user.group?.id ?: -1
+            val groupId = user.groupId ?: -1
             val place = board.indexOfFirst { it.id == groupId }
             RaceView(
                 categoryName = raceComponent.title.getValue(),
@@ -56,7 +54,7 @@ open class RaceService(
 
     @Throws(NoSuchElementException::class)
     @Transactional(readOnly = true)
-    open fun getViewForGroups(user: UserEntity?, slug: String): RaceView {
+    open fun getViewForGroups(user: CmschUser?, slug: String): RaceView {
         val category = raceCategoryRepository.findByVisibleTrueAndSlug(slug).orElse(null)
             ?: throw NoSuchElementException()
         val board = getBoardForGroups(category.slug)
@@ -64,7 +62,7 @@ open class RaceService(
         return if (user == null) {
             RaceView(category.name, category.description, null, null, board)
         } else {
-            val groupId = user.group?.id ?: -1
+            val groupId = user.groupId ?: -1
             val place = board.indexOfFirst { it.id == groupId }
             RaceView(
                 category.name,

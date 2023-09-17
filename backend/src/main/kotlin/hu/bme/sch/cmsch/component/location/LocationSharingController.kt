@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import hu.bme.sch.cmsch.util.markdownToHtml
 import jakarta.annotation.PostConstruct
 import org.apache.catalina.util.URLEncoder
@@ -48,7 +48,7 @@ class LocationSharingController(
 
     @GetMapping("")
     fun shareLocation(model: Model, auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUserEntityFromDatabase()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)

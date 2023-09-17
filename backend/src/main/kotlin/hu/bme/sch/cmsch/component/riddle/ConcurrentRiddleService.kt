@@ -17,16 +17,16 @@ class ConcurrentRiddleService(
         return riddleService.listRiddlesForUser(user)
     }
 
-    override fun listRiddlesForGroup(user: CmschUser, group: GroupEntity?): List<RiddleCategoryDto> {
-        return riddleService.listRiddlesForGroup(user, group)
+    override fun listRiddlesForGroup(user: CmschUser, groupId: Int?): List<RiddleCategoryDto> {
+        return riddleService.listRiddlesForGroup(user, groupId)
     }
 
     override fun getRiddleForUser(user: CmschUser, riddleId: Int): RiddleView? {
         return riddleService.getRiddleForUser(user, riddleId)
     }
 
-    override fun getRiddleForGroup(user: CmschUser, group: GroupEntity?, riddleId: Int): RiddleView? {
-        return riddleService.getRiddleForGroup(user, group, riddleId)
+    override fun getRiddleForGroup(user: CmschUser, groupId: Int?, riddleId: Int): RiddleView? {
+        return riddleService.getRiddleForGroup(user, groupId, riddleId)
     }
 
     override fun unlockHintForUser(user: CmschUser, riddleId: Int): String? {
@@ -39,14 +39,14 @@ class ConcurrentRiddleService(
         }
     }
 
-    override fun unlockHintForGroup(user: CmschUser, group: GroupEntity?, riddleId: Int): String? {
-        if (group == null)
+    override fun unlockHintForGroup(user: CmschUser, groupId: Int?, groupName: String, riddleId: Int): String? {
+        if (groupId == null)
             return null
 
-        val lock = cacheManager.getLockForGroup(group.id)
+        val lock = cacheManager.getLockForGroup(groupId)
         lock.lock()
         try {
-            return riddleService.unlockHintForGroup(user, group, riddleId)
+            return riddleService.unlockHintForGroup(user, groupId, groupName, riddleId)
         } finally {
             lock.unlock()
         }
@@ -69,44 +69,45 @@ class ConcurrentRiddleService(
 
     override fun submitRiddleForGroup(
         user: CmschUser,
-        group: GroupEntity?,
+        groupId: Int?,
+        groupName: String,
         riddleId: Int,
         solution: String,
         skip: Boolean
     ): RiddleSubmissionView? {
-        if (group == null)
+        if (groupId == null)
             return null
 
-        val lock = cacheManager.getLockForGroup(group.id)
+        val lock = cacheManager.getLockForGroup(groupId)
         lock.lock()
         try {
-            return riddleService.submitRiddleForGroup(user, group, riddleId, solution, skip)
+            return riddleService.submitRiddleForGroup(user, groupId, groupName, riddleId, solution, skip)
         } finally {
             lock.unlock()
         }
     }
 
-    override fun getCompletedRiddleCountUser(user: UserEntity): Int {
+    override fun getCompletedRiddleCountUser(user: CmschUser): Int {
         return riddleService.getCompletedRiddleCountUser(user)
     }
 
-    override fun getCompletedRiddleCountGroup(user: UserEntity, group: GroupEntity?): Int {
-        return riddleService.getCompletedRiddleCountGroup(user, group)
+    override fun getCompletedRiddleCountGroup(user: CmschUser, groupId: Int?): Int {
+        return riddleService.getCompletedRiddleCountGroup(user, groupId)
     }
 
-    override fun getTotalRiddleCount(user: UserEntity): Int {
+    override fun getTotalRiddleCount(user: CmschUser): Int {
         return riddleService.getTotalRiddleCount(user)
     }
 
-    override fun listRiddleHistoryForUser(user: UserEntity): Map<String, List<RiddleViewWithSolution>> {
+    override fun listRiddleHistoryForUser(user: CmschUser): Map<String, List<RiddleViewWithSolution>> {
         return riddleService.listRiddleHistoryForUser(user)
     }
 
     override fun listRiddleHistoryForGroup(
-        user: UserEntity,
-        group: GroupEntity?
+        user: CmschUser,
+        groupId: Int?
     ): Map<String, List<RiddleViewWithSolution>> {
-        return riddleService.listRiddleHistoryForGroup(user, group)
+        return riddleService.listRiddleHistoryForGroup(user, groupId)
     }
 
 

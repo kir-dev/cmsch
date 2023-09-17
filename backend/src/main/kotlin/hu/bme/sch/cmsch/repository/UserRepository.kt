@@ -16,6 +16,5 @@ interface UserRepository : CrudRepository<UserEntity, Int>,
     fun findByNeptun(neptun: String): Optional<UserEntity>
     fun findAllByGroupName(groupName: String): List<UserEntity>
     fun findByEmail(email: String): Optional<UserEntity>
-    fun findAllByFullName(fullName: String): List<UserEntity>
     fun countAllByGroup(group: GroupEntity): Long
 }

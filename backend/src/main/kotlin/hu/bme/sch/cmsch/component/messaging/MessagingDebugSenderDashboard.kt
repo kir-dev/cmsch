@@ -7,7 +7,7 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -98,7 +98,7 @@ class MessagingDebugSenderDashboard(
 
     @PostMapping("/send")
     fun send(auth: Authentication, @RequestParam allRequestParams: Map<String, String>): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }

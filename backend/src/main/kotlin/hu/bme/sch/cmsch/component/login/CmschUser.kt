@@ -8,6 +8,8 @@ interface CmschUser {
     var role: RoleType
     var permissionsAsList: List<String>
     val userName: String
+    val groupId: Int?
+    val groupName: String
 
     fun hasPermission(permission: String): Boolean
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
@@ -26,26 +26,28 @@ class RiddleApiController(
 
     @GetMapping("/riddle/categories")
     fun riddleCategories2(auth: Authentication?): ResponseEntity<List<RiddleCategoryDto>> {
-        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.ok(listOf())
+        val user = auth?.getUserOrNull()
+            ?: return ResponseEntity.ok(listOf())
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         return ResponseEntity.ok(when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.listRiddlesForUser(user)
-            OwnershipType.GROUP -> riddleService.listRiddlesForGroup(user, user.group)
+            OwnershipType.GROUP -> riddleService.listRiddlesForGroup(user, user.groupId)
         })
     }
 
     @JsonView(FullDetails::class)
     @GetMapping("/riddle/solve/{riddleId}")
     fun riddle(@PathVariable riddleId: Int, auth: Authentication?): ResponseEntity<RiddleView> {
-        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.badRequest().build()
+        val user = auth?.getUserOrNull()
+            ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.getRiddleForUser(user, riddleId)?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
-            OwnershipType.GROUP -> riddleService.getRiddleForGroup(user, user.group, riddleId)?.let { ResponseEntity.ok(it) }
+            OwnershipType.GROUP -> riddleService.getRiddleForGroup(user, user.groupId, riddleId)?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
         }
     }
@@ -53,7 +55,7 @@ class RiddleApiController(
     @JsonView(FullDetails::class)
     @PutMapping("/riddle/solve/{riddleId}/hint")
     fun hintForRiddle(@PathVariable riddleId: Int, auth: Authentication?): ResponseEntity<RiddleHintView> {
-        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.badRequest().build()
+        val user = auth?.getUserOrNull() ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
@@ -61,7 +63,7 @@ class RiddleApiController(
             OwnershipType.USER -> riddleService.unlockHintForUser(user, riddleId)
                 ?.let { ResponseEntity.ok(RiddleHintView(it)) }
                 ?: ResponseEntity.notFound().build()
-            OwnershipType.GROUP -> riddleService.unlockHintForGroup(user, user.group, riddleId)
+            OwnershipType.GROUP -> riddleService.unlockHintForGroup(user, user.groupId, user.groupName, riddleId)
                 ?.let { ResponseEntity.ok(RiddleHintView(it)) }
                 ?: ResponseEntity.notFound().build()
         }
@@ -74,17 +76,17 @@ class RiddleApiController(
         @RequestBody body: RiddleSubmissionDto,
         auth: Authentication?
     ): ResponseEntity<RiddleSubmissionView> {
-        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.badRequest().build()
+        val user = auth?.getUserOrNull() ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
-        log.info("User '{}' is skipping '{}' riddle id:{}", user.fullNameWithAlias, body.solution, riddleId)
+        log.info("User '{}' is skipping '{}' riddle id:{}", user.userName, body.solution, riddleId)
 
         return when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.submitRiddleForUser(user, riddleId, body.solution, skip = true)
                 ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
-            OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.group, riddleId, body.solution, skip = true)
+            OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.groupId, user.groupName, riddleId, body.solution, skip = true)
                 ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
         }
@@ -97,17 +99,18 @@ class RiddleApiController(
         @RequestBody body: RiddleSubmissionDto,
         auth: Authentication?
     ): ResponseEntity<RiddleSubmissionView> {
-        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.badRequest().build()
+        val user = auth?.getUserOrNull()
+            ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
-        log.info("User '{}' is submitting '{}' for riddle id:{}", user.fullNameWithAlias, body.solution, riddleId)
+        log.info("User '{}' is submitting '{}' for riddle id:{}", user.userName, body.solution, riddleId)
 
         return when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.submitRiddleForUser(user, riddleId, body.solution)
                 ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
-            OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.group, riddleId, body.solution)
+            OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.groupId, user.groupName, riddleId, body.solution)
                 ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
         }
@@ -116,13 +119,14 @@ class RiddleApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/riddle/history")
     fun riddleHistory(auth: Authentication?): ResponseEntity<Map<String, List<RiddleViewWithSolution>>> {
-        val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.ok(mapOf())
+        val user = auth?.getUserOrNull()
+            ?: return ResponseEntity.ok(mapOf())
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return ResponseEntity.ok(when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.listRiddleHistoryForUser(user)
-            OwnershipType.GROUP -> riddleService.listRiddleHistoryForGroup(user, user.group)
+            OwnershipType.GROUP -> riddleService.listRiddleHistoryForGroup(user, user.groupId)
         })
     }
 

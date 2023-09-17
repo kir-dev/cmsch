@@ -3,7 +3,8 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentHandlerService
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
@@ -13,9 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.StringWriter
-import java.util.Properties
-import jakarta.annotation.PostConstruct
-import jakarta.servlet.http.HttpServletResponse
+import java.util.*
 
 @Controller
 @RequestMapping("/admin/control/export")
@@ -64,7 +63,7 @@ class ExportAdminController(
     @ResponseBody
     @GetMapping("/properties", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(auth: Authentication, response: HttpServletResponse): ByteArray {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!permissionControl.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }

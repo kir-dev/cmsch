@@ -11,7 +11,6 @@ import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_NOBODY
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
 import hu.bme.sch.cmsch.util.transaction
 import hu.bme.sch.cmsch.util.uploadFile
 import jakarta.annotation.PostConstruct
@@ -716,7 +715,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     @ResponseBody
     @GetMapping("/export/csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(auth: Authentication, response: HttpServletResponse): ByteArray {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!exportEnabled || !showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }

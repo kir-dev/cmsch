@@ -7,7 +7,6 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
@@ -97,7 +96,7 @@ class DebtsOfMyGroupAdminController(
 
     @PostMapping("/payed/{id}")
     fun payed(@PathVariable id: Int, model: Model, auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (payPermission.validate(user).not()) {
             model.addAttribute("permission", payPermission.permissionString)
             model.addAttribute("user", user)
