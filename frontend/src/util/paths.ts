@@ -65,6 +65,7 @@ export enum ApiPaths {
   NEWS = '/api/news',
   RACE = '/api/race',
   RIDDLE = '/api/riddle',
+  RIDDLE_HISTORY = '/api/riddle-history',
   TASK = '/api/task',
   TASK_SUBMIT = '/api/task/submit',
   REFRESH = '/api/control/refresh',
