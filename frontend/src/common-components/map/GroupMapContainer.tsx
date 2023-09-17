@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, Heading, Text, useToast } from '@chakra-ui/react'
+import { Box, Checkbox, Divider, Heading, Text } from '@chakra-ui/react'
 
 import { useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -7,27 +7,20 @@ import { l } from '../../util/language'
 import { MapContent } from './MapContent'
 
 function GroupMapContainer() {
-  const toast = useToast()
-
   const profileConfig = useConfigContext()?.components.profile
   const [showUserLocation, setShowUserLocation] = useState(false)
-  const locationQuery = useLocationQuery(() =>
-    toast({
-      title: l('location-query-failed'),
-      status: 'error'
-    })
-  )
+  const locationQuery = useLocationQuery()
 
   return (
     <Box>
       <Divider my={10} borderWidth={2} />
       {profileConfig && <Heading my={5}>{profileConfig.groupLeadersHeader} pozicíója</Heading>}
-      <Checkbox ml={1} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
-        Saját pozícióm mutatása
+      <Checkbox my={3} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
+        {l('location-show-own')}
       </Checkbox>
       <MapContent mapData={locationQuery.data ?? []} showUserLocation={showUserLocation} />
-      <Text>Csak annak a helyzete látható, akinél a helymegosztás engedélyezve (használatban) van.</Text>
-      <Text>A saját pozíciódat csak te látod, nem kerül megosztásra mással.</Text>
+      <Text>{l('location-description')}</Text>
+      <Text>{l('location-privacy')}</Text>
     </Box>
   )
 }
