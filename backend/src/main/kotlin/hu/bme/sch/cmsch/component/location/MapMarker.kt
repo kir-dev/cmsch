@@ -14,8 +14,8 @@ enum class MapMarkerShape {
 
 data class MapMarker(
     var displayName: String,
-    var longitude: Double,
     var latitude: Double,
+    var longitude: Double,
     var altitude: Double,
     var accuracy: Float,
     var altitudeAccuracy: Float,

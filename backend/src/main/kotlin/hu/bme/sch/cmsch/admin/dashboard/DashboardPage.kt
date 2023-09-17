@@ -55,7 +55,7 @@ abstract class DashboardPage(
     }
 
     @GetMapping("")
-    fun view(model: Model, auth: Authentication, @RequestParam(defaultValue = "-1", name = "component") componentId: Int, @RequestParam(defaultValue = "") message: String): String {
+    fun view(model: Model, auth: Authentication, @RequestParam(defaultValue = "-1") card: Int, @RequestParam(defaultValue = "") message: String): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {
@@ -71,7 +71,7 @@ abstract class DashboardPage(
         model.addAttribute("wide", wide)
         model.addAttribute("components", getComponents(user))
         model.addAttribute("user", user)
-        model.addAttribute("component", componentId)
+        model.addAttribute("card", card)
         model.addAttribute("message", message)
 
         return "dashboard"

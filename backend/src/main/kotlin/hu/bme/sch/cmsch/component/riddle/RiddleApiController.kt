@@ -24,12 +24,11 @@ class RiddleApiController(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @GetMapping("/riddle")
-    fun riddleCategories(auth: Authentication?): ResponseEntity<List<RiddleCategoryDto>> {
+    @GetMapping("/riddle/categories")
+    fun riddleCategories2(auth: Authentication?): ResponseEntity<List<RiddleCategoryDto>> {
         val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.ok(listOf())
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
-
         return ResponseEntity.ok(when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.listRiddlesForUser(user)
             OwnershipType.GROUP -> riddleService.listRiddlesForGroup(user, user.group)
@@ -37,7 +36,7 @@ class RiddleApiController(
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/riddle/{riddleId}")
+    @GetMapping("/riddle/solve/{riddleId}")
     fun riddle(@PathVariable riddleId: Int, auth: Authentication?): ResponseEntity<RiddleView> {
         val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
@@ -52,7 +51,7 @@ class RiddleApiController(
     }
 
     @JsonView(FullDetails::class)
-    @PutMapping("/riddle/{riddleId}/hint")
+    @PutMapping("/riddle/solve/{riddleId}/hint")
     fun hintForRiddle(@PathVariable riddleId: Int, auth: Authentication?): ResponseEntity<RiddleHintView> {
         val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
@@ -69,7 +68,7 @@ class RiddleApiController(
     }
 
     @JsonView(FullDetails::class)
-    @PostMapping("/api/riddle/{riddleId}/skip")
+    @PostMapping("/riddle/solve/{riddleId}/skip")
     fun skipRiddle(
         @PathVariable riddleId: Int,
         @RequestBody body: RiddleSubmissionDto,
@@ -92,7 +91,7 @@ class RiddleApiController(
     }
 
     @JsonView(FullDetails::class)
-    @PostMapping("/riddle/{riddleId}")
+    @PostMapping("/riddle/solve/{riddleId}")
     fun submitRiddle(
         @PathVariable riddleId: Int,
         @RequestBody body: RiddleSubmissionDto,
@@ -115,7 +114,7 @@ class RiddleApiController(
     }
 
     @JsonView(FullDetails::class)
-    @GetMapping("/riddle-history")
+    @GetMapping("/riddle/history")
     fun riddleHistory(auth: Authentication?): ResponseEntity<Map<String, List<RiddleViewWithSolution>>> {
         val user = auth?.getUserFromDatabaseOrNull() ?: return ResponseEntity.ok(mapOf())
         if (!riddleComponent.minRole.isAvailableForRole(user.role))

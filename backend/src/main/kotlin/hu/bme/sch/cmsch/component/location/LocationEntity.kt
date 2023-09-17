@@ -3,16 +3,14 @@ package hu.bme.sch.cmsch.component.location
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
-import hu.bme.sch.cmsch.component.debt.ProductType
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 @Entity
 @Table(name="locations",
@@ -53,26 +51,26 @@ data class LocationEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 8, label = "Longitude", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 9, label = "Longitude", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(columnName = "Longitude", order = 4)
     var longitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 9, label = "Latitude", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 8, label = "Latitude", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(columnName = "Latitude", order = 3)
     var latitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 10, label = "Magasság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
-    @property:GenerateOverview(columnName = "Magasság", order = 5)
+    @property:GenerateOverview(visible = false)
     var altitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 11, label = "Pontosság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(columnName = "Pontosság", order = 5)
     var accuracy: Float = 0.0f,
 
     @Column(nullable = false)
@@ -99,16 +97,22 @@ data class LocationEntity(
     @property:GenerateOverview(columnName = "Frissült", order = 6, renderer = OVERVIEW_TYPE_DATE, centered = true)
     var timestamp: Long = 0,
 
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Publikus helyzet",
+        note = "Minden felhasználó látja a térképén")
+    @property:GenerateOverview(columnName = "Publikus", order = 6)
+    var broadcast: Boolean = false,
+
     @Enumerated(EnumType.STRING)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 16, label = "Forma",
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 17, label = "Forma",
         source = [ "CIRCLE", "SQUARE", "INFO", "CAR", "CROSSHAIRS", "CAMP", "TOWER", "MARKER", "HOME" ])
     @property:GenerateOverview(visible = false)
     var markerShape: MapMarkerShape = MapMarkerShape.CIRCLE,
 
     @Column(nullable = false, columnDefinition = "VARCHAR(16) default ''")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 16, order = 17, label = "Szín")
+    @property:GenerateInput(maxLength = 16, order = 18, label = "Szín")
     @property:GenerateOverview(visible = false)
     var markerColor: String = "#000000",
 

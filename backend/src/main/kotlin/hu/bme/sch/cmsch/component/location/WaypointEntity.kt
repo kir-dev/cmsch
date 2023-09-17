@@ -32,13 +32,13 @@ data class WaypointEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 2, label = "Longitude", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 3, label = "Longitude", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(columnName = "Longitude", order = 4)
     var longitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 3, label = "Latitude", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 2, label = "Latitude", type = INPUT_TYPE_FLOAT)
     @property:GenerateOverview(columnName = "Latitude", order = 3)
     var latitude: Double = 0.0,
 

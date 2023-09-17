@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.riddle
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 import org.springframework.web.bind.annotation.*
 
 private const val INVALID_TOKEN = "invalid-token"
@@ -16,7 +17,8 @@ private const val DISABLED = "ok"
 class RiddleMicroserviceController(
     private val riddleComponent: RiddleComponent,
     private val riddleCacheManager: RiddleCacheManager,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val env: Environment
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -98,6 +100,7 @@ class RiddleMicroserviceController(
         riddleComponent.allSettings.forEach {
             log.info("${it.component}.${it.property} = ${it.getValue()}")
         }
+        log.info("cmsch.frontend.production-url = ${env.getProperty("cmsch.frontend.production-url")}")
         return "PONG ${startupPropertyConfig.nodeName}"
     }
 

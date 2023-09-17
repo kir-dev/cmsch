@@ -2,8 +2,8 @@ package hu.bme.sch.cmsch.component.location
 
 data class LocationDto(
     var token: String = "",
-    var longitude: Double = 0.0,
     var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
     var altitude: Double = 0.0,
     var accuracy: Float = 0f,
     var altitudeAccuracy: Float = 0f,
