@@ -1,18 +1,26 @@
 export type MapDataItemView = {
-  location: {
-    latitude: number
-    longitude: number
-    accuracy: number
-  }
-  marker: {
-    shape: MapMarkerShape
-    color: string
-  }
+  accuracy: number
+  altitude: number
+  altitudeAccuracy: number
+  description: string
   displayName: string
-  description: string | undefined
+  heading: number
+  latitude: number
+  longitude: number
+  markerColor: string
+  markerShape: MapMarkerShape
+  speed: number
+  timestamp: number
 }
 
 export enum MapMarkerShape {
-  CIRCLE = 'circle',
-  SQUARE = 'square'
+  CIRCLE = 'CIRCLE',
+  SQUARE = 'SQUARE',
+  INFO = 'INFO',
+  CAR = 'CAR',
+  CROSSHAIRS = 'CROSSHAIRS',
+  CAMP = 'CAMP',
+  TOWER = 'TOWER',
+  MARKER = 'MARKER',
+  HOME = 'HOME'
 }
