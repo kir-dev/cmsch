@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
-const val CMSCH_VERSION = "4.2.0"
+const val CMSCH_VERSION = "4.3.0"
 
 @SpringBootApplication
 @EnableConfigurationProperties(value = [ComponentLoadConfig::class, StartupPropertyConfig::class])
