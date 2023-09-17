@@ -209,7 +209,7 @@ open class TeamService(
             stats = mapStats(team),
             taskCategories = if (ownTeam && teamComponent.showTasks.isValueTrue()) mapTasks(team) else listOf(),
             forms = if (user != null && ownTeam && teamComponent.showAdvertisedForms.isValueTrue()) mapForms(user) else listOf(),
-            leaderNotes = teamComponent.leaderNotes.getValue()
+            leaderNotes = if (ownTeam) teamComponent.leaderNotes.getValue() else ""
         )
     }
 
@@ -226,7 +226,7 @@ open class TeamService(
                     name = it.name,
                     completed = it.approved,
                     outOf = it.sum,
-                    navigate = "/tasks/${it.categoryId}"
+                    navigate = "/task/category/${it.categoryId}"
                 ) }
         }.orElse(listOf())
     }

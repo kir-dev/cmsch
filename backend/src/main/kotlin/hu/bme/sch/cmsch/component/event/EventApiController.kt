@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(EventComponent::class)
 class EventApiController(
-    private val eventsRepository: EventRepository,
-    private val eventComponent: EventComponent
+    private val eventComponent: EventComponent,
+    private val eventService: EventService
 ) {
 
     @JsonView(Preview::class)
@@ -39,8 +39,7 @@ class EventApiController(
         if (!eventComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        val events = eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
-            .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
+        val events = eventService.fetchEvents(user)
 
         return ResponseEntity.ok(EventsView(allEvents = events))
     }
@@ -62,7 +61,7 @@ class EventApiController(
         if (!eventComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        val event = eventsRepository.findByUrl(path).orElse(null)
+        val event = eventService.getSpecificEvent(path).orElse(null)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         return if ((user?.role ?: RoleType.GUEST).value >= event.minRole.value) {
