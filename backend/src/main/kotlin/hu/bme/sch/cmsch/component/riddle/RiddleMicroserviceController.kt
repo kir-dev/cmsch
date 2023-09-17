@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.riddle
 
+import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -101,7 +102,7 @@ class RiddleMicroserviceController(
             log.info("${it.component}.${it.property} = ${it.getValue()}")
         }
         log.info("cmsch.frontend.production-url = ${env.getProperty("cmsch.frontend.production-url")}")
-        return "PONG ${startupPropertyConfig.nodeName}"
+        return "PONG ${startupPropertyConfig.nodeName} ${CMSCH_VERSION}"
     }
 
 }
