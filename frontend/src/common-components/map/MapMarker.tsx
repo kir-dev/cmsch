@@ -13,16 +13,8 @@ export function MapMarker({ color = 'brand.600', text, mapShape = MapMarkerShape
   const bg = useColorModeValue('white', 'gray.800')
 
   return (
-    <VStack w="fit-content" spacing={1} marginLeft="calc(-50% + 10px)" marginTop="10px">
-      <Box
-        h="20px"
-        w="20px"
-        borderRadius={borderRadius}
-        borderColor="white"
-        borderWidth="2px"
-        boxSizing="border-box"
-        bg={color ?? 'brand.500'}
-      />
+    <VStack w={200} spacing={1}>
+      <Box h={5} w={5} borderRadius={borderRadius} borderColor="white" borderWidth="2px" boxSizing="border-box" bg={color ?? 'brand.500'} />
       {text && (
         <Box bg={bg} py={0.5} px={2} borderRadius="full">
           <Text fontSize="xs">{text}</Text>
