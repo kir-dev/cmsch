@@ -44,7 +44,7 @@ class LocationService(
             }
         }
 
-        val groupName = tokenToLocationMapping[locationDto.token]?.let {
+        val entity = tokenToLocationMapping[locationDto.token]?.let {
             it.longitude = locationDto.longitude
             it.latitude = locationDto.latitude
             it.altitude = locationDto.altitude
@@ -53,11 +53,11 @@ class LocationService(
             it.altitudeAccuracy = locationDto.altitudeAccuracy
             it.heading = locationDto.heading
             it.timestamp = clock.getTimeInSeconds()
-            return@let it.groupName
+            return@let it
         }
 
-        return if (groupName != null) {
-            LocationResponse("OK", groupName)
+        return if (entity != null) {
+            LocationResponse(if (entity.broadcast) "OK" else "BROADCAST", entity.groupName)
         } else {
             LocationResponse("nem található", "n/a")
         }
@@ -109,8 +109,12 @@ class LocationService(
 
     fun findLocationsOfGroupName(group: String): List<MapMarker> {
         val locations = mutableListOf<MapMarker>()
+        val visibilityDuration = locationComponent.visibleDuration.getIntValue(default = 0)
+        val currentTime = clock.getTimeInSeconds()
+
         locations.addAll(tokenToLocationMapping.values
-            .filter { it.groupName == group }
+            .filter { it.groupName == group || it.broadcast }
+            .filter { it.timestamp + visibilityDuration > currentTime }
             .map { MapMarker(
                 displayName = mapDisplayName(it),
                 longitude = it.longitude,

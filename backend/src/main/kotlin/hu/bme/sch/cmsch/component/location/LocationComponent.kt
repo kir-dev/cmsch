@@ -53,6 +53,7 @@ class LocationComponent(
             showUserName,
             showAlias,
             showGroupName,
+            visibleDuration,
         )
     }
 
@@ -182,6 +183,12 @@ class LocationComponent(
         "showGroupName", "true", type = SettingType.BOOLEAN,
         fieldName = "Csoport nevének kiírása", serverSideOnly = true,
         description = "Ha be van kapcsolva, akkor a csoport neve is szerepel a marker alatt"
+    )
+
+    val visibleDuration = SettingProxy(componentSettingService, component,
+        "visibleDuration", "600", type = SettingType.NUMBER,
+        fieldName = "Láthatóság ideje", serverSideOnly = true,
+        description = "Ennyi idejig látszódik frissítés nélkül egy marker (másodpercben)"
     )
 
 }

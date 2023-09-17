@@ -21,15 +21,14 @@
             </h1>
             <div th:class="|details ${wide ? '' : 'narrow'}|" th:text="${description}">Description</div>
 
-            <span class="info-message" th:if="${component == -1 && message != ''}" th:text="${message}">Üzenet</span>
+            <span class="info-message wide-false" th:if="${card == -1 && message != ''}" th:text="${message}">Üzenet</span>
 
             <object th:each="component,iter : ${components}" th:remove="tag">
-
-                <span class="info-message" th:if="${component == iter && message != ''}" th:text="${message}">Üzenet</span>
 
                 <object th:if="${component.type == 'DashboardCard'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
                         <h4 th:text="${component.title}">Title</h4>
+                        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
                         <span th:text="${component.description}" class="desc">A little description fits there.</span>
 
                         <p th:each="p : ${content}" th:text="${p}"></p>
@@ -39,6 +38,7 @@
                 <object th:if="${component.type == 'DashboardButtonGroup'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
                         <h4 th:text="${component.title}">Title</h4>
+                        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
 
                         <p th:each="p : ${content}" th:text="${p}"></p>
 
@@ -56,6 +56,7 @@
                 <object th:if="${component.type == 'DashboardTableCard'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
                         <h4 th:text="${component.title}">Title</h4>
+                        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
                         <span th:text="${component.description}" class="desc">A little description fits there.</span>
 
                         <table class="dashboard-table" cellspacing="0" style="margin-top: 20px">
@@ -77,6 +78,7 @@
                 <object th:if="${component.type == 'DashboardStatusTableCard'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
                         <h4 th:text="${component.title}">Title</h4>
+                        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
                         <span th:text="${component.description}" class="desc">A little description fits there.</span>
 
                         <table class="dashboard-table" cellspacing="0" style="margin-top: 20px">
@@ -101,6 +103,7 @@
                 <object th:if="${component.type == 'DashboardPermissionCard'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:if="${user.isAdmin()}" th:id="${component.id}">
                         <h4 th:text="${component.title}">Jogosultságok</h4>
+                        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
 
                         <div class="options">
                             <div class="option">
@@ -117,6 +120,7 @@
                 <object th:if="${component.type == 'DashboardFormCard'}" th:remove="tag">
                     <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
                         <h4 th:text="${component.title}">Title</h4>
+                        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
                         <span th:text="${component.description}" class="desc">A little description fits there.</span>
 
                         <form th:action="|@{/admin/control}/${view}/${component.action}|" th:method="${component.method}">
