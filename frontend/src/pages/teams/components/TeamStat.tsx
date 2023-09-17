@@ -1,6 +1,7 @@
 import { Box, CircularProgress, HStack, Stat, StatHelpText, StatLabel, StatNumber, StatProps } from '@chakra-ui/react'
 import React from 'react'
 import { IconType } from 'react-icons/lib'
+import { Link } from 'react-router-dom'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
 
 interface TeamStatProps extends StatProps {
@@ -9,12 +10,14 @@ interface TeamStatProps extends StatProps {
   percentage?: number
   helpText?: number | string
   icon?: IconType
+  url?: string
 }
 
-export function TeamStat({ label, value, percentage, helpText, bg, icon, ...props }: TeamStatProps) {
+export function TeamStat({ label, value, percentage, helpText, bg, icon, url, ...props }: TeamStatProps) {
   const background = useOpaqueBackground(1)
-  return (
-    <Stat borderRadius="lg" px={5} py={2} bg={bg ?? background} {...props}>
+  const backgroundHover = useOpaqueBackground(2)
+  const content = (
+    <Stat borderRadius="lg" px={5} py={2} bg={bg ?? background} _hover={{ bg: url ? backgroundHover : undefined }} {...props}>
       <HStack justify="space-between">
         <Box>
           <StatLabel>{label}</StatLabel>
@@ -28,4 +31,7 @@ export function TeamStat({ label, value, percentage, helpText, bg, icon, ...prop
       </HStack>
     </Stat>
   )
+
+  if (url) return <Link to={url}>{content}</Link>
+  return content
 }
