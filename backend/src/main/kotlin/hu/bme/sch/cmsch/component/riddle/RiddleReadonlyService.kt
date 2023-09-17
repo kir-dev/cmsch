@@ -16,7 +16,7 @@ open class RiddleReadonlyService(
     @Transactional(readOnly = true)
     open fun getRiddleDetails(groupId: Int): RiddleDetails {
         return RiddleDetails(
-            riddleEntityRepository.countAll(),
+            riddleEntityRepository.count().toInt(),
             riddleMappingRepository.countAllByOwnerGroupIdAndCompletedTrue(groupId),
             riddleMappingRepository.countAllByOwnerGroupIdAndCompletedTrueAndSkippedTrue(groupId),
         )
