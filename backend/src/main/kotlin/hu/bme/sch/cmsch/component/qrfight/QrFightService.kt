@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.component.token.*
 import hu.bme.sch.cmsch.component.token.TokenCollectorStatus.*
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -551,6 +552,16 @@ open class QrFightService(
                 )
             )
         }
+    }
+
+    @Transactional(readOnly = true)
+    open fun getQrCountForGroup(groupId: Int): Int {
+        return tokenPropertyRepository.map { it.countAllByOwnerGroup_Id(groupId) }.orElse(0)
+    }
+
+    @Transactional(readOnly = true)
+    open fun getTowerCountForGroup(groupId: Int): Int {
+        return qrTowerRepository.countAllByOwnerGroupId(groupId)
     }
 
 }
