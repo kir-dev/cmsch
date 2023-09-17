@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.team
 
+import hu.bme.sch.cmsch.component.form.FormService
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.race.DEFAULT_CATEGORY
@@ -31,7 +32,8 @@ open class TeamService(
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val raceService: Optional<RaceService>,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val tasksService: Optional<TasksService>
+    private val tasksService: Optional<TasksService>,
+    private val formsService: Optional<FormService>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -66,7 +68,7 @@ open class TeamService(
             teamComponent.selectableByDefault.isValueTrue(),
             leaveable = false,
             manuallyCreated = true,
-            description = "",
+            description = "Csapatkapitány: ${user.fullNameWithAlias}",
             profileTopMessage = ""
         )
 
@@ -159,7 +161,7 @@ open class TeamService(
         return true
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     open fun showTeam(teamId: Int, user: CmschUser?): TeamView? {
         val team = groupRepository.findById(teamId)
         if (team.isEmpty)
@@ -189,18 +191,21 @@ open class TeamService(
         val ownTeam = user?.groupId == team.id
 
         return TeamView(
-            team.id, team.name,
-            team.coverImageUrl,
-            team.description,
-            score,
-            members,
-            requests,
-            joinEnabled,
-            leaveEnabled,
-            joinCancellable,
-            ownTeam,
-            mapStats(team),
-            if (ownTeam) mapTasks(team) else listOf()
+            id = team.id,
+            name = team.name,
+            coverUrl = team.coverImageUrl,
+            description = team.description,
+            points = score,
+            members = members,
+            applicants = requests,
+            joinEnabled = joinEnabled,
+            leaveEnabled = leaveEnabled,
+            joinCancellable = joinCancellable,
+            ownTeam = ownTeam,
+            stats = mapStats(team),
+            taskCategories = if (ownTeam && teamComponent.showTasks.isValueTrue()) mapTasks(team) else listOf(),
+            forms = if (user != null && ownTeam && teamComponent.showAdvertisedForms.isValueTrue()) mapForms(user) else listOf(),
+            leaderNotes = teamComponent.leaderNotes.getValue()
         )
     }
 
@@ -211,7 +216,38 @@ open class TeamService(
     }
 
     private fun mapTasks(team: GroupEntity): List<TaskCategoryPreview> {
-        return listOf() // FIXME: implement
+        return tasksService.map { tasks ->
+            tasks.getCategoriesForGroup(team.id)
+                .map { TaskCategoryPreview(
+                    name = it.name,
+                    completed = it.approved,
+                    outOf = it.sum,
+                    navigate = "/tasks/${it.categoryId}"
+                ) }
+        }.orElse(listOf())
+    }
+
+    private fun mapForms(user: CmschUser): List<AdvertisedFormPreview> {
+        return formsService.map { forms ->
+            forms.getAllAdvertised(user.role)
+                .map { form ->
+                    AdvertisedFormPreview(
+                    name = form.name,
+                    filled = if (form.ownerIsGroup) {
+                        doesGroupFilled(forms, form.id, user.groupId)
+                    } else {
+                        forms.doesUserFilled(userId = user.id, formId = form.id)
+                    },
+                    availableUntil = form.availableUntil,
+                    url = form.url
+                ) }
+        } .orElse(listOf())
+    }
+
+    private fun doesGroupFilled(forms: FormService, formId: Int, groupId: Int?): Boolean {
+        if (groupId == null)
+            return false
+        return forms.doesGroupFilled(groupId, formId)
     }
 
     private fun mapStats(group: GroupEntity): List<TeamStatView> {
@@ -429,6 +465,5 @@ open class TeamService(
         log.info("User '{}' kicked from '{}', reason: by admin '{}'", user.fullName, groupName, adminUser.userName)
         return true
     }
-
 
 }
