@@ -749,6 +749,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
         model.addAttribute("user", user)
+        model.addAttribute("importEnabled", importEnabled && createEnabled && createPermission.validate(user))
+        model.addAttribute("exportEnabled", exportEnabled && showPermission.validate(user))
         adminMenuService.addPartsForMenu(user, model)
         return "resource"
     }
