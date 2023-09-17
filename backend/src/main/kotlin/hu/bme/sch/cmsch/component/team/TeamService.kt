@@ -307,7 +307,7 @@ open class TeamService(
                     name = teamComponent.qrTokenStatHeader.getValue(),
                     value1 = "${qrs.getQrCountForGroup(group.id)} db",
                     value2 = null,
-                    navigate = "/qrfight"
+                    navigate = "/qr-fight"
                 ))
                 stats.add(TeamStatView(
                     name = teamComponent.qrTowerStatHeader.getValue(),
