@@ -18,6 +18,9 @@ export type TeamDashboardView = {
 }
 
 export type TeamView = {
+  coverUrl: string
+  description: string
+  leaderNotes: string
   points: number
   members: TeamMemberView[]
   applicants: TeamMemberView[]
@@ -26,6 +29,8 @@ export type TeamView = {
   joinCancellable: boolean
   ownTeam: boolean
   stats: { name: string; value1: string; value2?: string; navigate?: string }[]
+  taskCategories?: TeamTaskCategoriesView[]
+  forms?: TeamFormView[]
 } & TeamListItemView
 
 export type TeamListItemView = {
@@ -38,6 +43,20 @@ export type TeamMemberView = {
   id: number
   admin: boolean
   you: boolean
+}
+
+export type TeamTaskCategoriesView = {
+  name: string
+  completed: number
+  outOf: number
+  navigate: string
+}
+
+export type TeamFormView = {
+  name: string
+  filled: boolean
+  availableUntil: number
+  url: string
 }
 
 export enum TeamResponses {

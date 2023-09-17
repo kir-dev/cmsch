@@ -1,8 +1,7 @@
-import { Button, Divider, Flex, Grid, Heading, Text, useToast, VStack } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Grid, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
-import { MdDashboard } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { useTeamAcceptJoin } from '../../../api/hooks/team/actions/useTeamAcceptJoin'
@@ -13,15 +12,17 @@ import { useTeamMemberKick } from '../../../api/hooks/team/actions/useTeamMember
 import { useTeamPromoteLeadership } from '../../../api/hooks/team/actions/useTeamPromoteLeadership'
 import { useTeamRejectJoin } from '../../../api/hooks/team/actions/useTeamRejectJoin'
 import { useTeamTogglePermissions } from '../../../api/hooks/team/actions/useTeamTogglePermissions'
-import { BoardStat } from '../../../common-components/BoardStat'
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
-import { LinkButton } from '../../../common-components/LinkButton'
+import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
 import { AbsolutePaths } from '../../../util/paths'
 import { RoleType } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
 import { MemberRow } from './MemberRow'
+import { TeamFormItem } from './TeamFormItem'
+import { TeamStat } from './TeamStat'
+import { TeamTaskCategoryListItem } from './TeamTaskCategoryListItem'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -36,6 +37,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
   const toast = useToast()
   const component = useConfigContext()?.components.team
   const navigate = useNavigate()
+  const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
 
   const actionResponseCallback = (response: TeamResponses) => {
     if (response == TeamResponses.OK) {
@@ -74,26 +76,28 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
 
   if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={component.title} />
 
-  const title = admin ? component.myTitle + ' kezelése' : myTeam ? component.myTitle : team.name
+  const title = myTeam ? component.myTitle + (admin ? ' (kezelése)' : '') : undefined
   return (
     <CmschPage minRole={admin ? RoleType.PRIVILEGED : myTeam ? RoleType.ATTENDEE : undefined}>
-      <Helmet title={title} />
+      <Helmet title={title ?? team.name} />
+      {title && <Heading mb={5}>{title}</Heading>}
+      <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
+        <Box p={4} bg={bannerBlanket}>
+          <Heading fontSize={25} my={0}>
+            {team.name}
+          </Heading>
+          <Text>{team.description}</Text>
+        </Box>
+      </Box>
       <Flex flex={1} gap={5} justify="space-between" flexDirection={['column', null, 'row']} align="flex-start">
         <VStack align="flex-start" w="full">
-          <Heading>{title}</Heading>
-          {(myTeam || admin) && <Text>{team.name}</Text>}
           <Grid mt={5} gridAutoRows="auto" w="full" gridTemplateColumns={['full', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={5}>
             {team.stats.map((stat) => (
-              <BoardStat label={stat.name} value={stat.value1} subValue={stat.value2} navigateTo={stat.navigate} />
+              <TeamStat key={stat.name} label={stat.name} value={stat.value1} helpText={stat.value2} />
             ))}
           </Grid>
         </VStack>
         <VStack mt={5}>
-          {myTeam && (
-            <LinkButton colorScheme="brand" leftIcon={<MdDashboard />} href={AbsolutePaths.TEAM_DASHBOARD}>
-              Csapat Dashboard
-            </LinkButton>
-          )}
           {team.joinEnabled && (
             <Button
               leftIcon={<FaSignInAlt />}
@@ -128,6 +132,29 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
           )}
         </VStack>
       </Flex>
+      {team.leaderNotes && (
+        <Box mt={5}>
+          <Markdown text={team.leaderNotes} />
+        </Box>
+      )}
+      {team.forms && team.forms.length > 0 && (
+        <>
+          <Divider mt={5} borderWidth={2} />
+          <Heading fontSize="lg">Űrlapok</Heading>
+          {team.forms.map((category) => (
+            <TeamFormItem key={category.name} form={category} />
+          ))}
+        </>
+      )}
+      {team.taskCategories && team.taskCategories.length > 0 && (
+        <>
+          <Divider mt={5} borderWidth={2} />
+          <Heading fontSize="lg">Feladatok</Heading>
+          {team.taskCategories.map((category) => (
+            <TeamTaskCategoryListItem key={category.name} category={category} />
+          ))}
+        </>
+      )}
       {admin && team.applicants?.length > 0 && (
         <>
           <Divider mt={10} borderWidth={2} />
@@ -148,7 +175,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
       )}
       {team.members?.length > 0 && (
         <>
-          <Divider mt={10} borderWidth={2} />
+          <Divider mt={5} borderWidth={2} />
           <Heading fontSize="lg">Csapattagok</Heading>
           {team.members?.map((m) => (
             <MemberRow
