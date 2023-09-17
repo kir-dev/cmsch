@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import { createContext, PropsWithChildren, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { queryClient } from '../../../util/configs/api.config'
+import { initAxios, queryClient } from '../../../util/configs/api.config'
 import { CookieKeys } from '../../../util/configs/cookies.config'
 import { API_BASE_URL } from '../../../util/configs/environment.config'
 import { AbsolutePaths } from '../../../util/paths'
@@ -71,6 +71,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }, [])
 
+  const refreshToken = (onSuccess: (token: string) => void) => {
+    refresh((token) => {
+      Cookies.set(CookieKeys.JWT_TOKEN, token)
+      initAxios()
+      onSuccess(token)
+    })
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -82,7 +90,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         onLoginFailure,
         onLogout,
         refetch,
-        refreshToken: refresh
+        refreshToken
       }}
     >
       {children}
