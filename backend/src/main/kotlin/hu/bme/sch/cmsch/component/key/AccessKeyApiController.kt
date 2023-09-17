@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.key
 
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
@@ -43,7 +42,7 @@ class AccessKeyApiController(
             )
         }
 
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
         if (!accessKeyComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return AccessKeyResponse(success = false, reason = "", refreshSession = false)
 

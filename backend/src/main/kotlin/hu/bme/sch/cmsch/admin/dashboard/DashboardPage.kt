@@ -6,7 +6,6 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
@@ -80,7 +79,7 @@ abstract class DashboardPage(
     @ResponseBody
     @GetMapping("/export/{id}", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun export(auth: Authentication, response: HttpServletResponse, @PathVariable id: Int): ByteArray {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }

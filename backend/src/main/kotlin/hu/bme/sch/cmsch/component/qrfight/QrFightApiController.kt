@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.qrfight
 
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
@@ -24,9 +24,10 @@ class QrFightApiController(
 
     @GetMapping("/levels")
     fun getLevels(auth: Authentication?): QrFightOverviewView {
+        val user = auth.getUserOrNull()
         return when (startupPropertyConfig.tokenOwnershipMode) {
-            OwnershipType.USER -> qrFightService.getLevelsForUsers(auth.getUserFromDatabaseOrNull())
-            OwnershipType.GROUP -> qrFightService.getLevelsForGroups(auth.getUserFromDatabaseOrNull()?.group)
+            OwnershipType.USER -> qrFightService.getLevelsForUsers(user)
+            OwnershipType.GROUP -> qrFightService.getLevelsForGroups(user?.groupId, user?.groupName ?: "")
         }
     }
 

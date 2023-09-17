@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -36,7 +36,7 @@ class QrFightComponentController(
     // FIXME: Add button
     @GetMapping("/execute-towers")
     fun forceExecuteTowers(auth: Authentication): String {
-        if (auth.getUserFromDatabaseOrNull()?.isSuperuser() != true) {
+        if (auth.getUserOrNull()?.isSuperuser() != true) {
             return "redirect:/admin/control/component/qrFight/settings?error=filed-to-execute"
         }
         qrFightService.executeTowerTimer()

@@ -15,17 +15,16 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.security.core.Authentication
-import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.MediaType
+import org.springframework.security.core.Authentication
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.util.MultiValueMap
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
 import java.net.URLEncoder
@@ -181,7 +180,7 @@ class MenuAdminController(
     @ResponseBody
     @GetMapping("/export-csv", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
     fun exportCsv(auth: Authentication, response: HttpServletResponse): ByteArray {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -228,7 +227,7 @@ class MenuAdminController(
         @RequestParam params: MultiValueMap<String, String>,
         @RequestPart("file") file: MultipartFile
     ): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!editPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -253,12 +252,12 @@ class MenuAdminController(
             val action = "Imported $imported menus ($notAffected not affected) " +
                     "for roles: ${roles.joinToString(", ")}"
             auditLogService.edit(user, view, action)
-            log.info("{}: {}", user.fullName, action)
+            log.info("{}: {}", user.userName, action)
             return "redirect:/admin/control/${view}/import-csv?imported=$imported&notAffected=$notAffected"
 
         } catch (e: Exception) {
             auditLogService.error(view, "Failed to import menus: ${e.message}")
-            log.error("{}: {}", user.fullName, e.message, e)
+            log.error("{}: {}", user.userName, e.message, e)
             return "redirect:/admin/control/${view}/import-csv?error=${URLEncoder.encode(e.message, "UTF-8")}"
         }
     }

@@ -129,7 +129,7 @@ data class UserEntity(
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 8, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
     @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3, useForSearch = true)
-    var groupName: String = "",
+    override var groupName: String = "",
 
     @JsonIgnore
     @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.EAGER)
@@ -200,6 +200,9 @@ data class UserEntity(
     var config: String = "",
 
 ): ManagedEntity, CmschUser {
+
+    @Transient
+    override val groupId = group?.id
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "User",

@@ -19,8 +19,8 @@ class LocationComponent(
     env: Environment
 ) : ComponentBase(
     "location",
-    "/",
-    "Helymeghatározá",
+    "/map",
+    "Helymeghatározás",
     ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
     listOf(),
     componentSettingService, env

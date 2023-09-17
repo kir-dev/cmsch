@@ -189,12 +189,14 @@ open class SecurityConfig(
         auditLogService.login(userEntity, "authsch user login g:${userEntity.group} r:${userEntity.role}")
 
         return CmschAuthschUser(
-            userEntity.id,
-            userEntity.internalId,
-            userEntity.role,
-            userEntity.permissionsAsList,
-            userEntity.fullName,
-            mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
+            id = userEntity.id,
+            internalId = userEntity.internalId,
+            role = userEntity.role,
+            permissionsAsList = userEntity.permissionsAsList,
+            userName = userEntity.fullName,
+            authorities = mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
+            groupId = userEntity.groupId,
+            groupName = userEntity.groupName
         )
     }
 
@@ -207,13 +209,15 @@ open class SecurityConfig(
         auditLogService.login(userEntity, "keycloak user login g:${userEntity.group} r:${userEntity.role}")
 
         return CmschGoogleUser(
-                userEntity.id,
-                userEntity.internalId,
-                userEntity.role,
-                userEntity.permissionsAsList,
-                userEntity.fullName,
-                mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
-                request.idToken
+            id = userEntity.id,
+            internalId = userEntity.internalId,
+            role = userEntity.role,
+            permissionsAsList = userEntity.permissionsAsList,
+            userName = userEntity.fullName,
+            authorities = mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
+            idToken = request.idToken,
+            groupId = userEntity.groupId,
+            groupName = userEntity.groupName
         )
     }
 
@@ -235,13 +239,15 @@ open class SecurityConfig(
         auditLogService.login(userEntity, "google user login g:${userEntity.group} r:${userEntity.role}")
 
         return CmschGoogleUser(
-            userEntity.id,
-            userEntity.internalId,
-            userEntity.role,
-            userEntity.permissionsAsList,
-            userEntity.fullName,
-            mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
-            request.idToken
+            id = userEntity.id,
+            internalId = userEntity.internalId,
+            role = userEntity.role,
+            permissionsAsList = userEntity.permissionsAsList,
+            userName = userEntity.fullName,
+            authorities = mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
+            idToken = request.idToken,
+            groupId = userEntity.groupId,
+            groupName = userEntity.groupName
         )
     }
 

@@ -3,9 +3,8 @@ package hu.bme.sch.cmsch.component.leaderboard
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -27,7 +26,7 @@ class LeaderBoardApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/leaderboard")
     fun leaderboard(auth: Authentication?): ResponseEntity<LeaderBoardView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
 
         if (!leaderBoardComponent.leaderboardEnabled.isValueTrue())
             return ResponseEntity.ok(LeaderBoardView())
@@ -36,7 +35,7 @@ class LeaderBoardApiController(
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         val userScore = user?.let { fetchUserScore(it) }
-        val groupScore = user?.group?.let { fetchGroupScore(it) }
+        val groupScore = user?.groupId?.let { fetchGroupScore(user.groupName) }
 
         return ResponseEntity.ok(LeaderBoardView(
             userScore = userScore,
@@ -48,7 +47,7 @@ class LeaderBoardApiController(
 
     @GetMapping("/detailed-leaderboard")
     fun detailedLeaderboard(auth: Authentication?): ResponseEntity<DetailedLeaderBoardView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
 
         if (!leaderBoardComponent.leaderboardDetailsEnabled.isValueTrue())
             return ResponseEntity.ok(DetailedLeaderBoardView())
@@ -59,14 +58,14 @@ class LeaderBoardApiController(
         return ResponseEntity.ok(DetailedLeaderBoardView(
             user?.id,
             leaderBoardService.getBoardDetailsForUsers(),
-            user?.group?.id,
+            user?.groupId,
             leaderBoardService.getBoardDetailsForGroups()
         ))
     }
 
     @GetMapping("/detailed-leaderboard-by-category")
     fun detailedLeaderboardByCategory(auth: Authentication?): ResponseEntity<DetailedCategoryLeaderBoardView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
 
         if (!leaderBoardComponent.leaderboardDetailsByCategoryEnabled.isValueTrue())
             return ResponseEntity.ok(DetailedCategoryLeaderBoardView())
@@ -77,7 +76,7 @@ class LeaderBoardApiController(
         return ResponseEntity.ok(DetailedCategoryLeaderBoardView(
             user?.id,
             leaderBoardService.getBoardDetailsByCategoryForUsers(),
-            user?.group?.id,
+            user?.groupId,
             leaderBoardService.getBoardDetailsByCategoryForGroups()
         ))
     }
@@ -120,10 +119,10 @@ class LeaderBoardApiController(
             }
     }
 
-    private fun fetchGroupScore(group: GroupEntity): Int? {
+    private fun fetchGroupScore(groupName: String): Int? {
         if (!leaderBoardComponent.showGroupBoard.isValueTrue())
             return null
-        return leaderBoardService.getScoreOfGroup(group)
+        return leaderBoardService.getScoreOfGroup(groupName)
     }
 
     private fun fetchGroupBoard(): List<LeaderBoardEntryDto> {

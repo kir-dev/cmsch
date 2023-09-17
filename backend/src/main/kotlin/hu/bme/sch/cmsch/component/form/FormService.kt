@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.form
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.app.DebugComponent
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
@@ -36,7 +37,7 @@ open class FormService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
-    open fun fetchForm(user: UserEntity, path: String): FormView {
+    open fun fetchForm(user: CmschUser, path: String): FormView {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
             ?: return FormView(status = FormStatus.NOT_FOUND)
 
@@ -57,7 +58,7 @@ open class FormService(
             return FormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
         }
 
-        val groupId = user.group?.id
+        val groupId = user.groupId
         if (form.ownerIsGroup && groupId == null)
             return FormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
 
@@ -110,7 +111,7 @@ open class FormService(
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitForm(user: UserEntity, path: String, data: Map<String, String>, update: Boolean): FormSubmissionStatus {
+    open fun submitForm(user: CmschUser, path: String, data: Map<String, String>, update: Boolean): FormSubmissionStatus {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
@@ -120,7 +121,7 @@ open class FormService(
         if (!form.open || !clock.inRange(form.availableFrom, form.availableUntil, now))
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
-        val groupId = user.group?.id
+        val groupId = user.groupId
         if (form.ownerIsGroup && groupId == null)
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
@@ -136,7 +137,7 @@ open class FormService(
             return FormSubmissionStatus.EDIT_SUBMISSION_NOT_FOUND
         if (update && submissionEntity.detailsValidated)
             return FormSubmissionStatus.EDIT_CANNOT_BE_CHANGED
-        if (form.allowedGroups.isNotBlank() && user.groupName !in form.allowedGroups.split(Regex(",[ ]*"))) {
+        if (form.allowedGroups.isNotBlank() && user.groupName !in form.allowedGroups.split(Regex(", *"))) {
             return FormSubmissionStatus.FORM_NOT_AVAILABLE
         }
 
@@ -156,6 +157,7 @@ open class FormService(
                 }
         }
 
+        val userEntity by lazy { userRepository.findById(user.id).orElseThrow() }
         for (field in formStruct) {
             if (!field.type.persist)
                 continue
@@ -164,7 +166,7 @@ open class FormService(
                 continue
 
             if (field.type.serverSide) {
-                submission[field.fieldName] = field.type.fetchValue(user)
+                submission[field.fieldName] = field.type.fetchValue(userEntity)
             } else {
                 val value = data[field.fieldName]
                 if (value == null) {
@@ -230,14 +232,14 @@ open class FormService(
             log.info("User {} filled out form {} successfully", user.id, form.id)
             val responseEntity = ResponseEntity(
                 submitterUserId = if (form.ownerIsGroup) null else user.id,
-                submitterUserName = if (form.ownerIsGroup) "" else user.fullName,
+                submitterUserName = if (form.ownerIsGroup) "" else user.userName,
                 submitterGroupId = if (form.ownerIsGroup) groupId else null,
-                submitterGroupName = if (form.ownerIsGroup) (user.group?.name ?: "") else "",
+                submitterGroupName = if (form.ownerIsGroup) user.groupName else "",
                 formId = form.id,
                 creationDate = now,
                 accepted = false,
                 rejected = false,
-                email = user.email,
+                email = userEntity.email,
                 submission = objectMapper.writeValueAsString(submission)
             )
             responseRepository.save(responseEntity)
@@ -245,9 +247,9 @@ open class FormService(
         }
 
         if (form.grantAttendeeRole) {
-            if (user.role.value <= RoleType.ATTENDEE.value) {
-                user.role = RoleType.ATTENDEE
-                userRepository.save(user)
+            if (userEntity.role.value <= RoleType.ATTENDEE.value) {
+                userEntity.role = RoleType.ATTENDEE
+                userRepository.save(userEntity)
                 log.info("Granting ATTENDEE for user {} by filling form {} successfully", user.id, form.id)
             } else {
                 log.info("NOT granting ATTENDEE for user {} for filling form {} successfully because higher role", user.id, form.id)

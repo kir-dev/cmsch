@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.email
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.AuditLogService
@@ -27,7 +28,7 @@ class MailgunEmailProvider(
         .defaultHeaders { header -> header.setBasicAuth("api", startupPropertyConfig.mailgunToken) }
         .build()
 
-    override fun sendTextEmail(responsible: UserEntity?, subject: String, content: String, to: List<String>) {
+    override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         val formData = LinkedMultiValueMap<String, String>()
         formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
         formData.put("to", to)
@@ -42,7 +43,7 @@ class MailgunEmailProvider(
         retrtieve(request, to, subject, content, responsible)
     }
 
-    override fun sendHtmlEmail(responsible: UserEntity?, subject: String, content: String, to: List<String>) {
+    override fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         val formData = LinkedMultiValueMap<String, String>()
         formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
         formData.put("to", to)
@@ -62,7 +63,7 @@ class MailgunEmailProvider(
         to: List<String>,
         subject: String,
         content: String,
-        responsible: UserEntity?
+        responsible: CmschUser?
     ) {
         try {
             val response = request.retrieve().toEntity(String::class.java).block()

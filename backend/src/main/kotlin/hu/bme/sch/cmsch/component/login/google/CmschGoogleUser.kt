@@ -16,6 +16,8 @@ class CmschGoogleUser(
     override val userName: String,
     authorities: List<GrantedAuthority>,
     idToken: OidcIdToken,
+    override val groupId: Int?,
+    override val groupName: String,
 ) : DefaultOidcUser(authorities, idToken), CmschUser, Principal, Serializable {
 
     override fun getName() = internalId
