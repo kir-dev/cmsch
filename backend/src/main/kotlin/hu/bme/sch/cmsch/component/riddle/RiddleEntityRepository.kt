@@ -12,6 +12,4 @@ interface RiddleEntityRepository : CrudRepository<RiddleEntity, Int>,
     
     override fun findAll(): List<RiddleEntity>
 
-    fun countAll(): Int
-
 }
