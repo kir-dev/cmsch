@@ -21,4 +21,8 @@ interface ResponseRepository : JpaRepository<ResponseEntity, Int>,
 
     fun countAllByFormIdAndRejectedFalse(formId: Int): Long
 
+    fun countTop1ByFormIdAndSubmitterGroupId(formId: Int, userId: Int): Int
+
+    fun countTop1ByFormIdAndSubmitterUserId(formId: Int, userId: Int): Int
+
 }

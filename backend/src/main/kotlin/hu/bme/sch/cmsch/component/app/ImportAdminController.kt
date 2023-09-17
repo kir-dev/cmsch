@@ -143,6 +143,7 @@ class ImportAdminController(
                 }
             }
         }
+        adminMenuService.invalidateSiteContext()
         return imported
     }
 
