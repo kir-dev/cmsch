@@ -31,14 +31,14 @@ open class FormService(
     @Transactional(readOnly = true)
     open fun getAllForms(role: RoleType): List<FormEntity> {
         val now = clock.getTimeInSeconds()
-        return formRepository.findAllByAdvertisedTrueOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
+        return formRepository.findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
 
     @Transactional(readOnly = true)
     open fun getAllAdvertised(role: RoleType): List<FormEntity> {
         val now = clock.getTimeInSeconds()
-        return formRepository.findAllByAdvertisedTrueOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
+        return formRepository.findAllByAdvertizedTrueAndOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
 

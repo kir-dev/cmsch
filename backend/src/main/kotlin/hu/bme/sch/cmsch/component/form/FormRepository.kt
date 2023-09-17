@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository
 interface FormRepository : JpaRepository<FormEntity, Int>,
     EntityPageDataSource<FormEntity, Int> {
 
-    fun findAllByAdvertisedTrueOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now1: Long, now2: Long): List<FormEntity>
-
+    fun findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now1: Long, now2: Long): List<FormEntity>
+    fun findAllByAdvertizedTrueAndOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now1: Long, now2: Long): List<FormEntity>
     fun findAllByUrl(url: String): List<FormEntity>
     fun findAllBySelectedTrue(): List<FormEntity>
 

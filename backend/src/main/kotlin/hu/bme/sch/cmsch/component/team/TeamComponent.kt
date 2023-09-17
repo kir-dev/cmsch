@@ -75,8 +75,13 @@ class TeamComponent(
             placeStatHeader,
             scoreStatEnabled,
             scoreStatHeader,
+            qrFightStatEnabled,
+            qrTokenStatHeader,
+            qrTowerStatHeader,
             raceStatEnabled,
             raceStatHeader,
+            riddleStatEnabled,
+            riddleStatHeader,
         )
     }
 
@@ -370,16 +375,45 @@ class TeamComponent(
         fieldName = "Pontszám fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
+    val qrFightStatEnabled = SettingProxy(componentSettingService, component,
+        "qrFightStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Pontszám kijelzése",
+        description = "Ha be val kapcsolva, akkor a csapat által megszerzett pontok és tornyok látszódnak " +
+                "(QRFight komponens kell hozzá)"
+    )
+
+    val qrTokenStatHeader = SettingProxy(componentSettingService, component,
+        "qrTokenStatHeader", "Megtalált QR kód", serverSideOnly = true,
+        fieldName = "QR kódok fejléce", description = "Ez lesz a neve a statisztikának"
+    )
+
+    val qrTowerStatHeader = SettingProxy(componentSettingService, component,
+        "qrTowerStatHeader", "Megszerzett tornyok", serverSideOnly = true,
+        fieldName = "Tornyok fejléce", description = "Ez lesz a neve a statisztikának"
+    )
+
     val raceStatEnabled = SettingProxy(componentSettingService, component,
         "raceStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "Verseny eredmény kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy ki és milyen eredménnyel a legjobb " +
-                "(Leaderboard komponens kell hozzá)"
+                "(Verseny komponens kell hozzá)"
     )
 
     val raceStatHeader = SettingProxy(componentSettingService, component,
         "raceStatHeader", "Sörmérés", serverSideOnly = true,
         fieldName = "Verseny fejléce", description = "Ez lesz a neve a statisztikának"
+    )
+
+    val riddleStatEnabled = SettingProxy(componentSettingService, component,
+        "riddleStatEnable", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Riddle eredmény kijelzése",
+        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hogy állnak a ridleökkel " +
+                "(Riddle komponens kell hozzá)"
+    )
+
+    val riddleStatHeader = SettingProxy(componentSettingService, component,
+        "riddleStatHeader", "Riddleök", serverSideOnly = true,
+        fieldName = "Riddle fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
 }

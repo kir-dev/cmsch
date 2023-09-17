@@ -16,4 +16,9 @@ interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int>,
 
     fun findAllByOwnerGroupId(groupId: Int): List<RiddleMappingEntity>
 
+    fun countAllByOwnerGroupIdAndCompletedTrue(groupId: Int): Int
+
+    fun countAllByOwnerGroupIdAndCompletedTrueAndSkippedTrue(groupId: Int): Int
+
+
 }
