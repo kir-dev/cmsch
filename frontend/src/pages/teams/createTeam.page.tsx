@@ -1,3 +1,4 @@
+import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
@@ -14,6 +15,7 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 export default function CreateTeamPage() {
   const navigate = useNavigate()
   const [requestError, setRequestError] = useState<string>()
+  const { refreshToken } = useAuthContext()
   const config = useConfigContext()
   const {
     register,
@@ -23,7 +25,7 @@ export default function CreateTeamPage() {
 
   const { createTeamLoading, createTeamError, createTeam } = useTeamCreate((response) => {
     if (response === TeamResponses.OK) {
-      navigate(AbsolutePaths.MY_TEAM)
+      refreshToken(() => navigate(AbsolutePaths.MY_TEAM))
     } else {
       setRequestError(TeamResponseMessages[response as TeamResponses])
     }

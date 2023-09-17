@@ -19,6 +19,7 @@ export type AuthContextType = {
   onLoginFailure: (response: any) => void
   onLogout: () => void
   refetch: () => void
+  refreshToken: (onSuccess: (token: string) => void) => void
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -29,7 +30,8 @@ export const AuthContext = createContext<AuthContextType>({
   onLoginSuccess: () => {},
   onLoginFailure: () => {},
   onLogout: () => {},
-  refetch: () => {}
+  refetch: () => {},
+  refreshToken: (_) => {}
 })
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -79,7 +81,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         onLoginSuccess,
         onLoginFailure,
         onLogout,
-        refetch
+        refetch,
+        refreshToken: refresh
       }}
     >
       {children}
