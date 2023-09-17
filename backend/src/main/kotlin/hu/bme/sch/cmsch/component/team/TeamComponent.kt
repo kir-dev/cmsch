@@ -289,7 +289,7 @@ class TeamComponent(
     )
 
     val leaderNotes = SettingProxy(componentSettingService, component,
-        "leaderNotes", "true", type = SettingType.LONG_TEXT_MARKDOWN,
+        "leaderNotes", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Üzenet a CSK-knak", description = "A csapat dashboardnál megjelenő üzenet a CSK-k nak. Ha üres nem látszik."
     )
 

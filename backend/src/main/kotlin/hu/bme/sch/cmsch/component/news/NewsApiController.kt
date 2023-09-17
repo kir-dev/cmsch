@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(NewsComponent::class)
 class NewsApiController(
-    private val newsRepository: NewsRepository,
-    private val newsComponent: NewsComponent
+    private val newsService: NewsService,
+    private val newsComponent: NewsComponent,
 ) {
 
     @JsonView(Preview::class)
@@ -36,8 +36,7 @@ class NewsApiController(
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return ResponseEntity.ok(NewsView(
-            news = newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
-                .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
+            news = newsService.fetchNews(user)
         ))
     }
 
@@ -57,9 +56,7 @@ class NewsApiController(
         if (!newsComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        return newsRepository.findByUrlAndVisibleTrue(path)
-                .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
-                .map { ResponseEntity.ok(it) }
+        return newsService.fetchSpecificNews(user, path)
                 .orElseGet { ResponseEntity.status(HttpStatus.FORBIDDEN).build() }
     }
 

@@ -83,8 +83,8 @@ data class NewsEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja (ez csak tájékoztató " +
-            "jellegű, a hír hamarabb is megjelenik)", defaultValue = "0")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja",
+        note = "Az időpont előtt nem látszódik. Alkalmas időuítésre.", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_LONG)
     var timestamp: Long = 0,
