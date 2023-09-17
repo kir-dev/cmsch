@@ -1,5 +1,5 @@
 import { Box, BoxProps, Center, Text, useColorModeValue, VStack } from '@chakra-ui/react'
-import { isContrastEnough } from '../../util/color.utils'
+import { getTextColorFromLuminance } from '../../util/color.utils'
 import { MapMarkerIcons, MapMarkerShape } from '../../util/views/map.view'
 
 interface MapMarkerProps {
@@ -13,7 +13,7 @@ export function MapMarker({ color = 'brand.600', text, markerShape = MapMarkerSh
   if (markerShape === MapMarkerShape.SQUARE) borderRadius = 'md'
   let icon = null
   if (Object.keys(MapMarkerIcons).includes(markerShape))
-    icon = MapMarkerIcons[markerShape]({ color: isContrastEnough(color) ? 'white' : 'black', size: 12 })
+    icon = MapMarkerIcons[markerShape]({ color: getTextColorFromLuminance(color), size: 12 })
   const bg = useColorModeValue('white', 'gray.800')
 
   return (
