@@ -201,8 +201,8 @@ data class UserEntity(
 
 ): ManagedEntity, CmschUser {
 
-    @Transient
-    override val groupId = group?.id
+    override val groupId
+        get() = group?.id
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "User",
