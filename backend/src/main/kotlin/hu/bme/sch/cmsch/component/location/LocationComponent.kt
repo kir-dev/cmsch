@@ -57,10 +57,13 @@ class LocationComponent(
         )
     }
 
-    final override val menuDisplayName = null
+    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+        "menuDisplayName", "Térkép", serverSideOnly = true,
+        fieldName = "Térkép menü neve", description = "Ez lesz a neve a menünek"
+    )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+        "minRole", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
