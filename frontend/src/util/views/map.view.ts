@@ -1,3 +1,6 @@
+import { FunctionComponent } from 'react'
+import { FaBroadcastTower, FaCampground, FaCar, FaCrosshairs, FaHome, FaInfo, FaMarker } from 'react-icons/fa'
+
 export type MapDataItemView = {
   accuracy: number
   altitude: number
@@ -23,4 +26,16 @@ export enum MapMarkerShape {
   TOWER = 'TOWER',
   MARKER = 'MARKER',
   HOME = 'HOME'
+}
+
+export const MapMarkerIcons: Record<MapMarkerShape, FunctionComponent> = {
+  [MapMarkerShape.CIRCLE]: () => null,
+  [MapMarkerShape.SQUARE]: () => null,
+  [MapMarkerShape.INFO]: FaInfo,
+  [MapMarkerShape.CAR]: FaCar,
+  [MapMarkerShape.CROSSHAIRS]: FaCrosshairs,
+  [MapMarkerShape.CAMP]: FaCampground,
+  [MapMarkerShape.TOWER]: FaBroadcastTower,
+  [MapMarkerShape.MARKER]: FaMarker,
+  [MapMarkerShape.HOME]: FaHome
 }
