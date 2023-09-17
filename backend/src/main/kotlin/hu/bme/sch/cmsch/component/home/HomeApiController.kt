@@ -1,16 +1,15 @@
 package hu.bme.sch.cmsch.component.home
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.event.EventRepository
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardService
 import hu.bme.sch.cmsch.component.news.NewsComponent
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
+import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -49,7 +48,7 @@ class HomeApiController(
 
     @JsonView(Preview::class)
     fun legacyHome(auth: Authentication): LegacyHomeView {
-        val user = auth.getUserFromDatabaseOrNull()
+        val user = auth.getUserOrNull()
         val events = eventsRepository.map { it.findAllByVisibleTrueOrderByTimestampStart() }
             .orElse(listOf())
             .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
@@ -67,7 +66,7 @@ class HomeApiController(
                 .take(homeComponent.maxVisibleCount.getValue().toIntOrNull() ?: 0),
             upcomingEvents = upcomingEvents,
             tasks = tasks.map { tasksService ->
-                user?.group?.let { tasksService.getAllTasksForGroup(it) }
+                user?.groupId?.let { tasksService.getAllTasksForGroup(it) }
                     ?: tasksService.getAllTasksForGuests()
             }.orElse(listOf()),
             leaderBoard = leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()),

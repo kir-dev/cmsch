@@ -4,14 +4,12 @@ import hu.bme.sch.cmsch.admin.dashboard.DashboardComponent
 import hu.bme.sch.cmsch.admin.dashboard.DashboardFormCard
 import hu.bme.sch.cmsch.admin.dashboard.DashboardPage
 import hu.bme.sch.cmsch.admin.dashboard.DashboardPermissionCard
-import hu.bme.sch.cmsch.component.email.EmailComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUser
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpMethod
@@ -84,7 +82,7 @@ class RiddleMicroserviceDashboard(
 
     @PostMapping("/reload-component-config")
     fun reloadComponentConfigPost(auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -110,7 +108,7 @@ class RiddleMicroserviceDashboard(
 
     @PostMapping("/reload-riddle-and-category-cache")
     fun reloadRiddleAndCategoryCachePost(auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -136,7 +134,7 @@ class RiddleMicroserviceDashboard(
 
     @PostMapping("/reload-all")
     fun reloadAllPost(auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -162,7 +160,7 @@ class RiddleMicroserviceDashboard(
 
     @PostMapping("/save-all")
     fun saveAllPost(auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -188,7 +186,7 @@ class RiddleMicroserviceDashboard(
 
     @PostMapping("/force-unlock-everything")
     fun forceUnlockEverythingPost(auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -214,7 +212,7 @@ class RiddleMicroserviceDashboard(
 
     @PostMapping("/ping")
     fun pingPost(auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
@@ -224,7 +222,7 @@ class RiddleMicroserviceDashboard(
         return "redirect:/admin/control/riddle-ms?component=7&message=$status"
     }
 
-    private fun sendRequest(path: String, user: UserEntity?): String {
+    private fun sendRequest(path: String, user: CmschUser?): String {
         val client = WebClient.builder()
             .baseUrl(riddleComponent.microserviceNodeBaseUrl.getValue())
             .defaultHeaders { header -> header.add("token", startupPropertyConfig.managementToken) }
@@ -240,7 +238,7 @@ class RiddleMicroserviceDashboard(
     private fun retrtieve(
         request: WebClient.RequestHeadersSpec<*>,
         to: String,
-        responsible: UserEntity?
+        responsible: CmschUser?
     ): String {
         try {
             val response = request.retrieve().toEntity(String::class.java).block()?.body ?: "NO_ANSWER"

@@ -26,9 +26,9 @@ interface SubmittedTaskRepository : CrudRepository<SubmittedTaskEntity, Int>,
 
     fun findAllByUserId(userId: Int): List<SubmittedTaskEntity>
 
-    fun findAllByUserIdAndRejectedFalseAndApprovedFalse(userId: Int): List<SubmittedTaskEntity>
+    fun countAllByUserIdAndRejectedFalseAndApprovedFalse(userId: Int): Int
 
-    fun findAllByUserIdAndRejectedFalseAndApprovedTrue(userId: Int): List<SubmittedTaskEntity>
+    fun countAllByUserIdAndRejectedFalseAndApprovedTrue(userId: Int): Int
 
     fun findAllByUserIdAndTask_Id(userId: Int, taskId: Int): List<SubmittedTaskEntity>
 

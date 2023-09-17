@@ -62,11 +62,11 @@ fun Authentication?.getUserOrNull(): CmschUser? {
     return if (this == null) null else (this.principal as CmschUser?)
 }
 
-fun Authentication.getUserFromDatabase(): UserEntity {
+fun Authentication.getUserEntityFromDatabase(): UserEntity {
     return DI.instance.userService.getById(this.name)
 }
 
-fun Authentication?.getUserFromDatabaseOrNull(): UserEntity? {
+fun Authentication?.getUserEntityFromDatabaseOrNull(): UserEntity? {
     return if (this == null) null else DI.instance.userService.findById(this.name).orElse(null)
 }
 

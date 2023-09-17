@@ -8,7 +8,6 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.TimeService
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -37,9 +36,10 @@ class TaskApiController(
         val leaderBoardAvailable = leaderBoardComponent.map { it.leaderboardEnabled.isValueTrue() }.orElse(false)
         val leaderBoardFrozen = leaderBoardComponent.map { it.leaderboardFrozen.isValueTrue() }.orElse(true)
 
+        val user = auth?.getUserOrNull()
         when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth?.getUserOrNull() ?: return TasksView(
+                user ?: return TasksView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
@@ -58,14 +58,14 @@ class TaskApiController(
                 )
             }
             OwnershipType.GROUP -> {
-                val group = auth?.getUserFromDatabaseOrNull()?.group ?: return TasksView(
+                val groupId = user?.groupId ?: return TasksView(
                     score = null,
                     leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
                     leaderBoardVisible = leaderBoardAvailable,
                     leaderBoardFrozen = leaderBoardFrozen
                 )
-                categories = tasks.getCategoriesForGroup(group.id)
-                score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfGroup(group) }.orElse(null) else null
+                categories = tasks.getCategoriesForGroup(groupId)
+                score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfGroup(user.groupName) }.orElse(null) else null
 
                 return TasksView(
                     score = score,
@@ -96,11 +96,11 @@ class TaskApiController(
                 tasks.getAllTasksForUser(user)
             }
             OwnershipType.GROUP -> {
-                val group = auth?.getUserFromDatabaseOrNull()?.group ?: return TaskCategoryView(
+                val groupId = auth?.getUserOrNull()?.groupId ?: return TaskCategoryView(
                     categoryName = "Nem található",
                     tasks = listOf()
                 )
-                tasks.getAllTasksForGroup(group)
+                tasks.getAllTasksForGroup(groupId)
             }
         }
 
@@ -123,7 +123,7 @@ class TaskApiController(
 
         val submission = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth?.getUserFromDatabaseOrNull() ?: return SingleTaskView(
+                val user = auth?.getUserOrNull() ?: return SingleTaskView(
                     task = task.map { TaskEntityDto(it, now) }.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
@@ -131,7 +131,7 @@ class TaskApiController(
                 tasks.getSubmissionForUserOrNull(user, task)
             }
             OwnershipType.GROUP -> {
-                val group = auth?.getUserFromDatabaseOrNull()?.group ?: return SingleTaskView(
+                val group = auth?.getUserOrNull()?.groupId ?: return SingleTaskView(
                     task = task.map { TaskEntityDto(it, now) }.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
@@ -167,7 +167,7 @@ class TaskApiController(
         @RequestParam(required = false) file: MultipartFile?,
         auth: Authentication?
     ): TaskSubmissionResponseDto {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
             ?: return TaskSubmissionResponseDto(TaskSubmissionStatus.NO_PERMISSION)
 
         return when (startupPropertyConfig.taskOwnershipMode) {

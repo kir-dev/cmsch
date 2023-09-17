@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,7 +25,7 @@ class RaceApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/race")
     fun race(auth: Authentication?): ResponseEntity<RaceView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
 
         if (!raceComponent.visible.isValueTrue())
             return ResponseEntity.ok(RaceView())
@@ -42,7 +42,7 @@ class RaceApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/race/{category}")
     fun raceByCategory(@PathVariable category: String, auth: Authentication?): ResponseEntity<RaceView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
 
         if (!raceComponent.extraCategoriesVisible.isValueTrue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
@@ -63,7 +63,7 @@ class RaceApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/freestyle-race")
     fun freestyleRace(auth: Authentication?): ResponseEntity<FreestyleRaceView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
 
         if (!raceComponent.visible.isValueTrue())
             return ResponseEntity.ok(FreestyleRaceView())
@@ -80,7 +80,7 @@ class RaceApiController(
     @JsonView(FullDetails::class)
     @GetMapping("/race-by-team/{teamId}")
     fun raceByTeam(auth: Authentication?, @PathVariable teamId: Int): ResponseEntity<RaceView> {
-        val user = auth?.getUserFromDatabaseOrNull()
+        val user = auth?.getUserOrNull()
 
         if (!raceComponent.visible.isValueTrue())
             return ResponseEntity.ok(RaceView())

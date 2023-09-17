@@ -1,11 +1,11 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.jwt.InvalidJwtAuthenticationException
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
@@ -20,6 +20,8 @@ const val JWT_CLAIM_PERMISSIONS = "permissions"
 const val JWT_CLAIM_ROLE = "role"
 const val JWT_CLAIM_USERID = "userId"
 const val JWT_CLAIM_USERNAME = "userName"
+const val JWT_CLAIM_GROUP_ID = "groupId"
+const val JWT_CLAIM_GROUP_NAME = "groupName"
 
 private const val EXPIRED_OR_INVALID_TOKEN = "Expired or invalid JWT token"
 
@@ -37,16 +39,28 @@ class JwtTokenProvider(
             internalId = cmschUser.internalId,
             role = cmschUser.role,
             permissions = cmschUser.permissionsAsList,
-            fullName = cmschUser.userName
+            fullName = cmschUser.userName,
+            groupId = cmschUser.groupId,
+            groupName = cmschUser.groupName
         )
     }
 
-    fun createToken(userId: Int, internalId: String, role: RoleType, permissions: List<String>, fullName: String): String {
+    fun createToken(
+        userId: Int,
+        internalId: String,
+        role: RoleType,
+        permissions: List<String>,
+        fullName: String,
+        groupId: Int?,
+        groupName: String
+    ): String {
         val claims: Claims = Jwts.claims().setSubject(internalId)
         claims[JWT_CLAIM_ROLE] = role.name
         claims[JWT_CLAIM_PERMISSIONS] = permissions
         claims[JWT_CLAIM_USERID] = userId.toString()
         claims[JWT_CLAIM_USERNAME] = fullName
+        claims[JWT_CLAIM_GROUP_ID] = groupId
+        claims[JWT_CLAIM_GROUP_NAME] = groupName
 
         val now = Date()
         val validity = Date(now.time + startupPropertyConfig.sessionValidityInMilliseconds)
@@ -69,7 +83,9 @@ class JwtTokenProvider(
                 internalId = parsed.subject,
                 role = role,
                 permissionsAsList = if (permissions is List<*>) (permissions as List<String>) else listOf(),
-                userName = parsed[JWT_CLAIM_USERNAME]?.toString() ?: "unnamed"
+                userName = parsed[JWT_CLAIM_USERNAME]?.toString() ?: "unnamed",
+                groupId = parsed[JWT_CLAIM_GROUP_ID]?.toString()?.toIntOrNull(),
+                groupName = parsed[JWT_CLAIM_GROUP_NAME]?.toString() ?: ""
             ),
             "",
             listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
@@ -105,7 +121,15 @@ class JwtTokenProvider(
     }
 
     fun refreshToken(auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
-        return createToken(user.id, user.internalId, user.role, user.permissionsAsList, user.fullName)
+        val user = auth.getUserEntityFromDatabase()
+        return createToken(
+            userId = user.id,
+            internalId = user.internalId,
+            role = user.role,
+            permissions = user.permissionsAsList,
+            fullName = user.fullName,
+            groupId = user.groupId,
+            groupName = user.groupName
+        )
     }
 }

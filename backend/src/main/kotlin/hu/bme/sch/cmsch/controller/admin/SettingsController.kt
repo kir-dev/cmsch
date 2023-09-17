@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -58,7 +58,7 @@ class SettingsController(
 
     @GetMapping("/settings/relog")
     fun refreshUserData(model: Model, auth: Authentication): String {
-        val user = auth.getUserFromDatabase()
+        val user = auth.getUserEntityFromDatabase()
 
         auth.getUser().refresh(user)
         adminMenuService.invalidateUser(user.internalId)

@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.profile.ProfileComponent
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -24,13 +24,12 @@ class LocationApiController(
     @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
     @GetMapping("/track-my-group")
     fun trackMyGroup(auth: Authentication?): List<MapMarker> {
-        val user = auth?.getUserFromDatabaseOrNull() ?: return listOf()
+        val user = auth?.getUserOrNull() ?: return listOf()
         if (user.groupName.isEmpty())
             return listOf()
         if (!profileComponent.map { it.showGroupLeadersLocations.isValueTrue() }.orElse(false))
             return listOf()
         return locationService.findLocationsOfGroupName(user.groupName)
     }
-
 
 }

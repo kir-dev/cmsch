@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.key
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -27,10 +28,10 @@ open class AccessKeyService(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun validateKey(user: UserEntity, key: String): AccessKeyResponse {
+    open fun validateKey(user: CmschUser, key: String): AccessKeyResponse {
         if (key.isEmpty()) {
             auditLogService.fine(user, ACCESS_KEY, "user tried an empty key")
-            log.info("User {} tried an empty key", user.fullName)
+            log.info("User {} tried an empty key", user.userName)
             return AccessKeyResponse(success = false,
                 reason = accessKeyComponent.invalidCodeErrorMessage.getValue(),
                 refreshSession = false
@@ -41,7 +42,7 @@ open class AccessKeyService(
                 && accessKeyRepository.findTop1ByUsedByUserId(user.id).isNotEmpty()) {
 
             auditLogService.fine(user, ACCESS_KEY, "user already used a key")
-            log.info("User {} already used a key", user.fullName)
+            log.info("User {} already used a key", user.userName)
             return AccessKeyResponse(success = false,
                 reason = accessKeyComponent.youUsedErrorMessage.getValue(),
                 refreshSession = false
@@ -51,7 +52,7 @@ open class AccessKeyService(
         val keys = accessKeyRepository.findTop1ByAccessKey(key)
         if (keys.isEmpty()) {
             auditLogService.fine(user, ACCESS_KEY, "invalid key: $key")
-            log.info("User {} invalid key: {}", user.fullName, key)
+            log.info("User {} invalid key: {}", user.userName, key)
             return AccessKeyResponse(success = false,
                 reason = accessKeyComponent.invalidCodeErrorMessage.getValue(),
                 refreshSession = false
@@ -60,7 +61,7 @@ open class AccessKeyService(
         val selectedKey = keys.first()
         if (selectedKey.usedByUserId != 0) {
             auditLogService.fine(user, ACCESS_KEY, "already used key: $key by ${selectedKey.usedByUserName}")
-            log.info("User {} already used key: {} by user {}", user.fullName, key, selectedKey.usedByUserName)
+            log.info("User {} already used key: {} by user {}", user.userName, key, selectedKey.usedByUserName)
             return AccessKeyResponse(success = false,
                 reason = accessKeyComponent.alreadyUsedErrorMessage.getValue(),
                 refreshSession = false
@@ -68,32 +69,33 @@ open class AccessKeyService(
         }
 
         selectedKey.usedByUserId = user.id
-        selectedKey.usedByUserName = user.fullName
+        selectedKey.usedByUserName = user.userName
         selectedKey.usedAt = clock.getTimeInSeconds()
 
         var changed = false
         var logMessage = ""
+        val userEntity = userRepository.findById(user.id).orElseThrow()
         if (selectedKey.setGroup) {
             val group = groupRepository.findByName(selectedKey.groupName)
             if (group.isEmpty) {
                 log.warn("User {} group {} does not exists for access key {}",
-                    user.fullName, selectedKey.groupName, key)
+                    userEntity.userName, selectedKey.groupName, key)
             } else {
-                user.group = group.orElseThrow()
-                user.groupName = group.orElseThrow().name
+                userEntity.group = group.orElseThrow()
+                userEntity.groupName = group.orElseThrow().name
                 changed = true
-                logMessage += "group:${user.groupName} "
+                logMessage += "group:${userEntity.groupName} "
             }
         }
         if (selectedKey.setRole) {
-            user.role = selectedKey.roleType
+            userEntity.role = selectedKey.roleType
             changed = true
-            logMessage += "role:${user.role}"
+            logMessage += "role:${userEntity.role}"
         }
 
-        log.info("User {} used key {} and changed {}", user.fullName, key, logMessage)
+        log.info("User {} used key {} and changed {}", userEntity.userName, key, logMessage)
         accessKeyRepository.save(selectedKey)
-        userRepository.save(user)
+        userRepository.save(userEntity)
         return AccessKeyResponse(success = true, reason = "", refreshSession = changed)
     }
 

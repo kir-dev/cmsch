@@ -8,7 +8,7 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_NOBODY
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_DEBTS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_DEBTS
-import hu.bme.sch.cmsch.util.getUserFromDatabase
+import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
@@ -43,15 +43,15 @@ class DebtAdminDebtsByUsersController(
             return soldProductRepository.findAll().groupBy { it.ownerId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
-                .map { it ->
-                    val groupName = groupRepository.findById(it[0].responsibleGroupId).map { it.name }.orElse("n/a")
+                .map { debts ->
+                    val groupName = groupRepository.findById(debts[0].responsibleGroupId).map { it.name }.orElse("n/a")
                     DebtsByUserVirtualEntity(
-                        it[0].ownerId,
-                        it[0].ownerName,
+                        debts[0].ownerId,
+                        debts[0].ownerName,
                         groupName,
-                        it.sumOf { it.price },
-                        it.filter { !it.payed }.sumOf { it.price },
-                        it.filter { !it.finsihed }.sumOf { it.price }
+                        debts.sumOf { it.price },
+                        debts.filter { !it.payed }.sumOf { it.price },
+                        debts.filter { !it.finsihed }.sumOf { it.price }
                     )
                 }
         }
@@ -86,8 +86,8 @@ class DebtAdminDebtsByUsersController(
 
     override fun onEntityPreSave(entity: SoldProductEntity, auth: Authentication): Boolean {
         val date = clock.getTimeInSeconds()
-        val user = auth.getUserFromDatabase()
-        entity.log = "${entity.log} '${user.fullName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finished: ${entity.finsihed}] at $date;"
+        val user = auth.getUser()
+        entity.log = "${entity.log} '${user.userName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finished: ${entity.finsihed}] at $date;"
         return true
     }
 

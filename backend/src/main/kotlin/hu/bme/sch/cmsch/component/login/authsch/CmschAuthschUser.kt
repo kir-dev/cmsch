@@ -13,7 +13,9 @@ class CmschAuthschUser(
     override var role: RoleType,
     override var permissionsAsList: List<String>,
     override val userName: String,
-    authorities: List<GrantedAuthority>
+    authorities: List<GrantedAuthority>,
+    override val groupId: Int?,
+    override val groupName: String
 ) : DefaultOAuth2User(authorities, mapOf("internal_id" to internalId), "internal_id"), CmschUser, Principal, Serializable {
 
     override fun getName() = internalId

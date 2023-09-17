@@ -9,7 +9,9 @@ data class CmschUserPrincipal(
     override val internalId: String,
     override var role: RoleType,
     override var permissionsAsList: List<String>,
-    override val userName: String
+    override val userName: String,
+    override val groupId: Int?,
+    override val groupName: String
 ) : Serializable, Principal, CmschUser {
 
     override fun getName() = internalId

@@ -5,7 +5,7 @@ import hu.bme.sch.cmsch.dto.CmschIdBuyRequest
 import hu.bme.sch.cmsch.dto.NeptunBuyRequest
 import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.service.UserService
-import hu.bme.sch.cmsch.util.getUserFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
@@ -50,8 +50,8 @@ class ScannerController(
         @RequestBody buyRequest: NeptunBuyRequest,
         auth: Authentication
     ): SellStatus {
-        val user = auth.getUserFromDatabaseOrNull() ?: return SellStatus.INVALID_PERMISSIONS
-        log.info("Selling ${buyRequest.productId} to ${buyRequest.neptun} by ${user.fullName}")
+        val user = auth.getUserOrNull() ?: return SellStatus.INVALID_PERMISSIONS
+        log.info("Selling ${buyRequest.productId} to ${buyRequest.neptun} by ${user.userName}")
         return productService.sellProductByNeptun(buyRequest.productId, user, buyRequest.neptun.uppercase())
     }
 
@@ -61,8 +61,8 @@ class ScannerController(
         @RequestBody buyRequest: CmschIdBuyRequest,
         auth: Authentication
     ): SellStatus {
-        val user = auth.getUserFromDatabaseOrNull() ?: return SellStatus.INVALID_PERMISSIONS
-        log.info("Selling ${buyRequest.productId} to ${buyRequest.cmschId} by ${user.fullName}")
+        val user = auth.getUserOrNull() ?: return SellStatus.INVALID_PERMISSIONS
+        log.info("Selling ${buyRequest.productId} to ${buyRequest.cmschId} by ${user.userName}")
         return productService.sellProductByCmschId(buyRequest.productId, user, buyRequest.cmschId)
     }
 }
