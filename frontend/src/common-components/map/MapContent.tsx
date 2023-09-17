@@ -47,14 +47,8 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
         </Marker>
       )}
       {mapData.map((mapDataItem) => (
-        <Marker
-          hover
-          key={mapDataItem.displayName}
-          width={20}
-          height={20}
-          anchor={[mapDataItem.location.latitude, mapDataItem.location.longitude]}
-        >
-          <MapMarker color={mapDataItem.marker.color} text={mapDataItem.displayName} />
+        <Marker hover key={mapDataItem.displayName} width={20} height={20} anchor={[mapDataItem.latitude, mapDataItem.longitude]}>
+          <MapMarker color={mapDataItem.markerColor} text={mapDataItem.displayName} />
         </Marker>
       ))}
     </Map>
