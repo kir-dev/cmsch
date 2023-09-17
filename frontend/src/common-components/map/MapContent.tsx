@@ -42,13 +42,13 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
     <Map center={center} provider={StadiaMapProvider} height={400}>
       <ZoomControl />
       {userLocation.coords && (
-        <Marker hover width={200} height={2.5} anchor={[userLocation.coords.latitude, userLocation.coords.longitude]}>
+        <Marker hover width={200} height={3} anchor={[userLocation.coords.latitude, userLocation.coords.longitude]}>
           <MapMarker color="blue.500" text="Te" />
         </Marker>
       )}
       {mapData.map((mapDataItem) => (
         <Marker hover key={mapDataItem.displayName} width={200} height={3} anchor={[mapDataItem.latitude, mapDataItem.longitude]}>
-          <MapMarker color={mapDataItem.markerColor} text={mapDataItem.displayName} />
+          <MapMarker color={mapDataItem.markerColor} text={mapDataItem.displayName} markerShape={mapDataItem.markerShape} />
         </Marker>
       ))}
     </Map>
