@@ -1548,6 +1548,7 @@ form ul {
     border-left: 4px solid #eaa12f;
     background-color: #eaa12f0f;
     padding: 8px 12px;
+    margin-bottom: 20px;
 }
 
 @media (max-width: 1023px) {
