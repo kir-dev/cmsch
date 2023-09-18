@@ -12,8 +12,10 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.StringWriter
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 @Controller
@@ -61,14 +63,21 @@ class ExportAdminController(
     }
 
     @ResponseBody
-    @GetMapping("/properties", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
-    fun export(auth: Authentication, response: HttpServletResponse): ByteArray {
+    @GetMapping("/properties")
+    fun export(
+        auth: Authentication,
+        response: HttpServletResponse,
+        @RequestParam(required = false, defaultValue = "false") useIsoEncoding: Boolean
+    ): ByteArray {
         val user = auth.getUser()
         if (!permissionControl.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"application-live-${clock.getTime()}.properties\"")
-        return generateProperties().toByteArray()
+
+        val charset = if (useIsoEncoding) StandardCharsets.ISO_8859_1 else StandardCharsets.UTF_8
+        response.contentType = MediaType(MediaType.APPLICATION_OCTET_STREAM, charset).toString()
+        return generateProperties().toByteArray(charset)
     }
 
     private fun generateProperties(): String {
