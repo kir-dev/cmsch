@@ -21,8 +21,6 @@ import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 open class LoginService(
@@ -39,62 +37,71 @@ open class LoginService(
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+    private val userLocks = InternalIdLocks()
 
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun fetchUserEntity(profile: ProfileResponse): UserEntity {
-        val user: UserEntity
-        if (users.exists(profile.internalId)) {
-            user = users.getById(profile.internalId)
-            log.info("Logging in with existing user ${user.fullName} as authsch user")
-        } else {
-            user = UserEntity(
-                0,
-                profile.internalId,
-                profile.neptun ?: "N/A",
-                "",
-                (profile.surname ?: "") + " " + (profile.givenName ?: ""),
-                "",
-                profile.email ?: "",
-                RoleType.BASIC,
-                groupName = "", group = null,
-                guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
-                provider = AUTHSCH
-            )
-            log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as authsch user")
+    fun fetchUserEntity(profile: ProfileResponse): UserEntity {
+        val lock = userLocks.lockForKey(profile.internalId)
+        try {
+            val user: UserEntity
+            if (users.exists(profile.internalId)) {
+                user = users.getById(profile.internalId)
+                log.info("Logging in with existing user ${user.fullName} as authsch user")
+            } else {
+                user = UserEntity(
+                    0,
+                    profile.internalId,
+                    profile.neptun ?: "N/A",
+                    "",
+                    (profile.surname ?: "") + " " + (profile.givenName ?: ""),
+                    "",
+                    profile.email ?: "",
+                    RoleType.BASIC,
+                    groupName = "", group = null,
+                    guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
+                    provider = AUTHSCH
+                )
+                log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as authsch user")
+            }
+            updateFieldsForAuthsch(user, profile)
+            users.save(user)
+            adminMenuService.invalidateUser(user.internalId)
+            return user
+        } finally {
+            lock.unlock()
         }
-        updateFieldsForAuthsch(user, profile)
-        users.save(user)
-        adminMenuService.invalidateUser(user.internalId)
-        return user
     }
 
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun fetchGoogleUserEntity(profile: GoogleUserInfoResponse): UserEntity {
-        val user: UserEntity
-        if (users.exists(profile.internalId)) {
-            user = users.getById(profile.internalId)
-            log.info("Logging in with existing user ${user.fullName} as google user")
-        } else {
-            user = UserEntity(
-                0,
-                profile.internalId,
-                "N/A",
-                "",
-                "${profile.familyName} ${profile.givenName}",
-                "",
-                profile.email,
-                RoleType.BASIC,
-                groupName = "", group = null,
-                guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
-                provider = GOOGLE,
-                profilePicture = profile.picture
-            )
-            log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as google user")
+    fun fetchGoogleUserEntity(profile: GoogleUserInfoResponse): UserEntity {
+        val lock = userLocks.lockForKey(profile.internalId)
+        try {
+            val user: UserEntity
+            if (users.exists(profile.internalId)) {
+                user = users.getById(profile.internalId)
+                log.info("Logging in with existing user ${user.fullName} as google user")
+            } else {
+                user = UserEntity(
+                    0,
+                    profile.internalId.take(254),
+                    "N/A",
+                    "",
+                    "${profile.familyName} ${profile.givenName}".take(254),
+                    "",
+                    profile.email.take(254),
+                    RoleType.BASIC,
+                    groupName = "", group = null,
+                    guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
+                    provider = GOOGLE,
+                    profilePicture = profile.picture.take(254)
+                )
+                log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as google user profile picture: ${profile.picture}")
+            }
+            updateFieldsForGoogle(user)
+            users.save(user)
+            adminMenuService.invalidateUser(user.internalId)
+            return user
+        } finally {
+            lock.unlock()
         }
-        updateFieldsForGoogle(user)
-        users.save(user)
-        adminMenuService.invalidateUser(user.internalId)
-        return user
     }
 
     private fun updateFieldsForGoogle(user: UserEntity) {

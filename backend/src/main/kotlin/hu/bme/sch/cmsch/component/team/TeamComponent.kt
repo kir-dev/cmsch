@@ -377,7 +377,7 @@ class TeamComponent(
 
     val qrFightStatEnabled = SettingProxy(componentSettingService, component,
         "qrFightStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Pontszám kijelzése",
+        fieldName = "QR Fight kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat által megszerzett pontok és tornyok látszódnak " +
                 "(QRFight komponens kell hozzá)"
     )

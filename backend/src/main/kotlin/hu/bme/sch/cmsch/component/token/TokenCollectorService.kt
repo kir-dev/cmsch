@@ -9,7 +9,10 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.UserService
+import org.postgresql.util.PSQLException
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -31,6 +34,7 @@ open class TokenCollectorService(
     private val qrFightComponent: Optional<QrFightComponent>
 ) {
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun collectToken(user: CmschUser, token: String): TokenSubmittedView {
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
@@ -51,6 +55,7 @@ open class TokenCollectorService(
         return TokenSubmittedView(TokenCollectorStatus.WRONG, null, null, null)
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun collectTokenForGroup(user: CmschUser, token: String): TokenSubmittedView {
         val groupEntity = user.groupId?.let { groupId -> groupRepository.findById(groupId).getOrNull() }

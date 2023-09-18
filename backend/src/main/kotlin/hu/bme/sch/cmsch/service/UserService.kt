@@ -9,6 +9,9 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import org.postgresql.util.PSQLException
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -25,6 +28,7 @@ open class UserService(
 
     private val userConfigReader = objectMapper.readerFor(UserConfig::class.java)
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun save(user: UserEntity) {
         users.save(user)

@@ -11,15 +11,16 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.transaction
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/groups")
@@ -47,9 +48,13 @@ class GroupController(
     objectMapper,
     env,
 
-    entitySourceMapping = mapOf("UserEntity" to { it?.members?.map {
-            member -> "${member.fullName} (${member.role.name})"
-    }?.toList() ?: listOf("Üres") }),
+    entitySourceMapping = mapOf("UserEntity" to { group ->
+        transactionManager.transaction(readOnly = true) {
+            group?.members?.map { member ->
+                "${member.fullName} (${member.role.name})"
+            }?.toList() ?: listOf("Üres")
+        }
+    }),
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_GROUPS,
     createPermission = StaffPermissions.PERMISSION_CREATE_GROUPS,

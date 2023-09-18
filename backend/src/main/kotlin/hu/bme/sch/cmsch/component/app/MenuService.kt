@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import jakarta.annotation.PostConstruct
+import org.postgresql.util.PSQLException
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 
 @Service
 @ConditionalOnBean(ApplicationComponent::class)
@@ -125,6 +128,7 @@ open class MenuService(
         }
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun persistSettings(menus: List<MenuSettingItem>, role: RoleType) {
         menuRepository.deleteAllByRole(role)
@@ -182,6 +186,7 @@ open class MenuService(
         var external: Boolean = false,
     )
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun importMenu(entries: List<MenuImportEntry>, rolesToInclude: List<RoleType>): Pair<Int, Int> {
         var improted = 0
