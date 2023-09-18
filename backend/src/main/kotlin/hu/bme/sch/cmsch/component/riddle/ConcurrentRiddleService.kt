@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.model.GroupEntity
-import hu.bme.sch.cmsch.model.UserEntity
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 

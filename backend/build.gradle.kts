@@ -32,6 +32,8 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("org.springframework.boot:spring-boot-starter-thymeleaf")
+    api("org.springframework.retry:spring-retry")
+    api("org.springframework.boot:spring-boot-starter-aop")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
     api("com.itextpdf:itext7-core:7.2.3")
     api("org.jetbrains.kotlin:kotlin-reflect")
@@ -50,7 +52,7 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql")
     testApi("org.springframework.boot:spring-boot-starter-test")
     testApi("org.springframework.security:spring-security-test")
 }
