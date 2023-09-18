@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -29,6 +28,8 @@ class LocationComponent(
     final override val allSettings by lazy {
         listOf(
             minRole,
+            topMessage,
+            bottomMessage,
 
             colorGroup,
             defaultGroupColor,
@@ -65,6 +66,16 @@ class LocationComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    val topMessage = SettingProxy(componentSettingService, component,
+        "topMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
+    )
+
+    val bottomMessage = SettingProxy(componentSettingService, component,
+        "bottomMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Oldal alján megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
