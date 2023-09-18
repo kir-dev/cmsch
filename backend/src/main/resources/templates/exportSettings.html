@@ -17,17 +17,23 @@
             <div class="card">
                 <h4>Összes beállítás</h4>
 
-                <div class="desc">Ezeket a beállításokat a properties fájlba kell beilleszteni első idítás előtt vagy üres adatbázissal.</div>
+                <div class="desc">Ezeket a beállításokat a properties fájlba kell beilleszteni első indítás előtt vagy üres adatbázissal.</div>
 
                 <form onsubmit="return false">
                     <textarea th:text="${settings}" readonly style="height: 600px; width: 100%; font-family: monospace">
                     </textarea>
                 </form>
 
+                <div class="desc">Megjegyzés: Az IntelliJ-be exportált properties fájlokat nem lehet vissza importálni CMSch-be</div>
+
                 <div class="button-group">
                     <a href="#" th:href="@{/admin/control/export/properties}" target="_blank" class="btn">
                         <span class="material-symbols-outlined">download</span>
-                        <ins>LETÖLTÉS</ins>
+                        <ins>LETÖLTÉS (CMSCH)</ins>
+                    </a>
+                    <a href="#" th:href="@{/admin/control/export/properties?useIsoEncoding=true}" target="_blank" class="btn">
+                        <span class="material-symbols-outlined">download</span>
+                        <ins>LETÖlTÉS (INTELLIJ IDEA)</ins>
                     </a>
                 </div>
 
