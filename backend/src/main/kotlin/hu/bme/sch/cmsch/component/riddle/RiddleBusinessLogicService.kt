@@ -3,7 +3,10 @@ package hu.bme.sch.cmsch.component.riddle
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.UserService
+import org.postgresql.util.PSQLException
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Propagation
@@ -126,6 +129,7 @@ open class RiddleBusinessLogicService(
         )
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForUser(user: CmschUser, riddleId: Int): String? {
         val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
@@ -150,6 +154,7 @@ open class RiddleBusinessLogicService(
         return riddle.hint
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForGroup(user: CmschUser, groupId: Int?, groupName: String, riddleId: Int): String? {
         if (groupId == null)
@@ -176,6 +181,7 @@ open class RiddleBusinessLogicService(
         return riddle.hint
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     override fun submitRiddleForUser(
         user: CmschUser,
@@ -245,6 +251,7 @@ open class RiddleBusinessLogicService(
         }
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     override fun submitRiddleForGroup(
         user: CmschUser,

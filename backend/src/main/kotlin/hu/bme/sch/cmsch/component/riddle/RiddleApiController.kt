@@ -25,7 +25,7 @@ class RiddleApiController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/riddle/categories")
-    fun riddleCategories2(auth: Authentication?): ResponseEntity<List<RiddleCategoryDto>> {
+    fun riddleCategories(auth: Authentication?): ResponseEntity<List<RiddleCategoryDto>> {
         val user = auth?.getUserOrNull()
             ?: return ResponseEntity.ok(listOf())
         if (!riddleComponent.minRole.isAvailableForRole(user.role))

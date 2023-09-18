@@ -61,7 +61,12 @@ enum class MajorType {
 
 @Entity
 @Table(name = "users", indexes = [
-    Index(name = "idx_userentity_internalid_unq", columnList = "internalId", unique = true)
+    Index(name = "idx_userentity_internalid_unq", columnList = "internalId", unique = true),
+    Index(name = "idx_userentity_cmschid", columnList = "cmschId"),
+    Index(name = "idx_userentity_neptun", columnList = "neptun"),
+    Index(name = "idx_userentity_groupname", columnList = "groupName"),
+    Index(name = "idx_userentity_email", columnList = "email"),
+    Index(name = "idx_userentity_group", columnList = "group_id")
 ])
 data class UserEntity(
     @Id

@@ -16,13 +16,18 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
+import org.postgresql.util.PSQLException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
+
+val TEAM_LEADER = "Csapatkapitány"
 
 @Service
 @ConditionalOnBean(TeamComponent::class)
@@ -42,6 +47,7 @@ open class TeamService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun createTeam(user: UserEntity, name: String): TeamCreationStatus {
         if (user.group?.leaveable == false)
@@ -72,7 +78,7 @@ open class TeamService(
             teamComponent.selectableByDefault.isValueTrue(),
             leaveable = false,
             manuallyCreated = true,
-            description = "Csapatkapitány: ${user.fullNameWithAlias}",
+            description = "$TEAM_LEADER: ${user.fullNameWithAlias}",
             profileTopMessage = ""
         )
 
@@ -94,6 +100,7 @@ open class TeamService(
         }
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun joinTeam(user: UserEntity, groupId: Int): TeamJoinStatus {
         if (user.group?.leaveable == false)
@@ -117,6 +124,7 @@ open class TeamService(
         return TeamJoinStatus.OK
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun cancelJoin(user: CmschUser): TeamJoinStatus {
         if (!teamComponent.joinEnabled.isValueTrue())
@@ -127,6 +135,7 @@ open class TeamService(
         return TeamJoinStatus.OK
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun leaveTeam(user: CmschUser): TeamLeaveStatus {
         if (!teamComponent.leaveEnabled.isValueTrue())
@@ -344,6 +353,7 @@ open class TeamService(
             .map { TeamMemberView(it.userName, it.userId, isAdmin = false, isYou = false) }
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun acceptJoin(userId: Int, group: GroupEntity?): Boolean {
         if (group == null)
@@ -366,6 +376,7 @@ open class TeamService(
         return false
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun rejectJoin(userId: Int, groupId: Int?, groupName: String): Boolean {
         if (groupId == null)
@@ -380,6 +391,7 @@ open class TeamService(
         return false
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun toggleUserPermissions(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
@@ -422,6 +434,7 @@ open class TeamService(
         }
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun promoteLeader(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
@@ -456,10 +469,15 @@ open class TeamService(
         if (adminUserEntity.role.value < RoleType.STAFF.value)
             adminUserEntity.role = if (teamComponent.grantPrivilegedRole.isValueTrue()) RoleType.ATTENDEE else RoleType.BASIC
         userRepository.save(adminUserEntity)
+
+        val group = groupRepository.findById(groupId).orElseThrow()
+        group.description = "$TEAM_LEADER: ${adminUserEntity.fullNameWithAlias}"
+        groupRepository.save(group)
         log.info("User '{}' is now group leader at '{}' switched with '{}'", user.fullName, groupName, adminUser.userName)
         return true
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun kickUser(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)

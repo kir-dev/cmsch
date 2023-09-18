@@ -14,12 +14,15 @@ import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.JwtTokenProvider
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.retry.annotation.EnableRetry
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -35,6 +38,7 @@ import java.util.*
 
 @EnableWebSecurity
 @Configuration
+@EnableRetry(order = Ordered.HIGHEST_PRECEDENCE)
 @ConditionalOnBean(LoginComponent::class)
 open class SecurityConfig(
     private val clientRegistrationRepository: ClientRegistrationRepository,
@@ -47,6 +51,8 @@ open class SecurityConfig(
     @Value("\${custom.keycloak.base-url:http://localhost:8081/auth/realms/master}") private val keycloakBaseUrl: String,
     private val auditLogService: AuditLogService
 ) {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     var authschUserServiceClient = WebClient.builder()
         .baseUrl("https://auth.sch.bme.hu/api")
@@ -234,6 +240,7 @@ open class SecurityConfig(
 
         val profile = objectMapper.readerFor(GoogleUserInfoResponse::class.java)
             .readValue<GoogleUserInfoResponse>(googleProfileJson)!!
+        log.info("google profile response = $profile")
         val userEntity = authschLoginService.fetchGoogleUserEntity(profile)
 
         auditLogService.login(userEntity, "google user login g:${userEntity.group} r:${userEntity.role}")

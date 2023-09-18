@@ -13,7 +13,10 @@ import org.springframework.core.env.Environment
 import jakarta.persistence.*
 
 @Entity
-@Table(name="groups")
+@Table(
+    name="groups",
+    indexes = [Index(name = "idx_group_name", columnList = "name")]
+)
 data class GroupEntity(
     @Id
     @GeneratedValue

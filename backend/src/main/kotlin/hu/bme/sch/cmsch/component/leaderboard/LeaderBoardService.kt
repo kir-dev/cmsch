@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import jakarta.annotation.PostConstruct
+import org.postgresql.util.PSQLException
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
@@ -131,6 +134,7 @@ open class LeaderBoardService(
         return null
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
     open fun recalculate() {
@@ -142,6 +146,7 @@ open class LeaderBoardService(
         forceRecalculateForUsers()
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForGroups() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f
@@ -261,6 +266,7 @@ open class LeaderBoardService(
         log.info("Recalculating finished")
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForUsers() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue().toIntOrNull() ?: 0 }.orElse(0) / 100f

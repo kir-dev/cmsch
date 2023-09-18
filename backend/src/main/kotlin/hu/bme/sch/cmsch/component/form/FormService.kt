@@ -8,8 +8,11 @@ import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
+import org.postgresql.util.PSQLException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -42,7 +45,8 @@ open class FormService(
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
+
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     open fun fetchForm(user: CmschUser, path: String): FormView {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
             ?: return FormView(status = FormStatus.NOT_FOUND)
@@ -116,6 +120,7 @@ open class FormService(
         return form.submissionLimit >= 0 && (responseRepository.countAllByFormIdAndRejectedFalse(form.id) >= form.submissionLimit)
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun submitForm(user: CmschUser, path: String, data: Map<String, String>, update: Boolean): FormSubmissionStatus {
         val form = formRepository.findAllByUrl(path).getOrNull(0)

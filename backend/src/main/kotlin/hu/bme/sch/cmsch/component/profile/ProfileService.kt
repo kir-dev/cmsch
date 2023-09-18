@@ -19,7 +19,10 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
+import org.postgresql.util.PSQLException
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -202,6 +205,7 @@ open class ProfileService(
             .associate { Pair(it.id, it.name) }
     }
 
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun changeAlias(user: UserEntity, newAlias: String): Boolean {
         return if (newAlias.matches(Regex(profileComponent.aliasRegex.getValue()))) {
