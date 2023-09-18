@@ -15,4 +15,7 @@ open class StaticPageService(
         return staticPageRepository.findAll()
     }
 
+    @Transactional(readOnly = true)
+    open fun fetchSpecificPage(path: String) = staticPageRepository.findByUrlAndVisibleTrue(path)
+
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(StaticPageComponent::class)
 class StaticPageApiController(
-    private val extraPagesRepository: StaticPageRepository,
+    private val staticPageService: StaticPageService,
     private val staticPageComponent: StaticPageComponent
 ) {
 
@@ -35,7 +35,7 @@ class StaticPageApiController(
         if (!staticPageComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        val page = extraPagesRepository.findByUrlAndVisibleTrue(path).orElse(null)
+        val page = staticPageService.fetchSpecificPage(path).orElse(null)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         return if ((user?.role ?: RoleType.GUEST).value >= page.minRole.value) {
