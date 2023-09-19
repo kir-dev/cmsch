@@ -1,17 +1,4 @@
-import {
-  Box,
-  Heading,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  TabProps,
-  Tabs,
-  useBreakpoint,
-  useBreakpointValue,
-  useDisclosure
-} from '@chakra-ui/react'
+import { Box, Heading, Stack, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue, useDisclosure } from '@chakra-ui/react'
 import _ from 'lodash'
 import { Helmet } from 'react-helmet-async'
 import { FaCalendar } from 'react-icons/fa'
@@ -28,6 +15,7 @@ import { CardListItem } from './components/CardListItem'
 import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
 import { FILTER, mapper } from './util/filter'
+import { CustomTabButton } from '../../common-components/CustomTabButton'
 
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
@@ -90,10 +78,6 @@ const EventListPage = () => {
       </Tabs>
     </CmschPage>
   )
-}
-
-function CustomTabButton({ color, ...props }: TabProps) {
-  return <Tab color={color ?? 'chakra-body-text'} {...props} />
 }
 
 export default EventListPage
