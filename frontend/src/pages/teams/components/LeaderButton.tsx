@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react'
+import { Button, Tooltip } from '@chakra-ui/react'
 import { FaChessKing } from 'react-icons/fa'
 
 interface LeaderButtonProps {
@@ -7,8 +7,10 @@ interface LeaderButtonProps {
 
 export function LeaderButton({ onPromoteLeadership }: LeaderButtonProps) {
   return (
-    <Button colorScheme="blue" variant="outline" onClick={onPromoteLeadership}>
-      <FaChessKing />
-    </Button>
+    <Tooltip label="Csapatkapitánnyá tevés">
+      <Button colorScheme="blue" variant="outline" onClick={onPromoteLeadership}>
+        <FaChessKing />
+      </Button>
+    </Tooltip>
   )
 }

@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react'
+import { Button, Tooltip } from '@chakra-ui/react'
 import { DeleteIcon } from '@chakra-ui/icons'
 
 interface DeleteButtonProps {
@@ -7,8 +7,10 @@ interface DeleteButtonProps {
 
 export function DeleteButton({ onDelete }: DeleteButtonProps) {
   return (
-    <Button colorScheme="red" variant="outline" onClick={onDelete}>
-      <DeleteIcon />
-    </Button>
+    <Tooltip label="Törlés">
+      <Button colorScheme="red" variant="outline" onClick={onDelete}>
+        <DeleteIcon />
+      </Button>
+    </Tooltip>
   )
 }
