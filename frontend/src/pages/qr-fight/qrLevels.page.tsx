@@ -38,12 +38,12 @@ export default function QrLevelsPage() {
           <CustomTabButton>Extra szintek</CustomTabButton>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel px={0}>
             {data.mainLevels.map((a) => (
               <DataDisplayWrapper level={a} key={a.name} />
             ))}
           </TabPanel>
-          <TabPanel>
+          <TabPanel px={0}>
             {data.extraLevels.map((a) => (
               <DataDisplayWrapper level={a} key={a.name} />
             ))}

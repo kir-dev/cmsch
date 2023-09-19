@@ -4,26 +4,28 @@ import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
 import { LevelStatusBadge } from './LevelStatusBadge'
 import { LevelDataDisplay } from './LevelDataDisplay'
 import { TowerDataDisplay } from './TowerDataDisplay'
-import { useColorModeValue } from '@chakra-ui/system'
 import Markdown from '../../../common-components/Markdown'
+import { useOpaqueBackground } from '../../../util/core-functions.util'
+import _ from 'lodash'
 
 interface DataDisplayWrapperProps {
   level: QrLevelDto
 }
 export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
+  const backgroundColor = useOpaqueBackground(3)
+
   return (
     <VStack
       spacing={5}
       p={5}
       mt={5}
       borderRadius={10}
-      borderColor={useColorModeValue('gray.400', 'gray.600')}
-      borderWidth="1px"
+      bg={backgroundColor}
       opacity={level.status === LevelStatus.COMPLETED || level.status === LevelStatus.OPEN ? 1 : 0.2}
     >
       <HStack justifyContent="flex-start" w="100%">
         <VStack align="flex-start">
-          <Heading m={0} fontSize="xl">
+          <Heading m={0} fontSize="2xl">
             {level.name}
           </Heading>
           <LevelStatusBadge level={level} />
@@ -32,7 +34,7 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
           <Markdown text={level.description} />
         </VStack>
       </HStack>
-      <LevelDataDisplay level={level} />
+      {!_.isEmpty(level.teams) && <LevelDataDisplay teams={level.teams} />}
       {level.towers?.length > 0 && <TowerDataDisplay level={level} />}
     </VStack>
   )
