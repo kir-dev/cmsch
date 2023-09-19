@@ -162,6 +162,7 @@ export interface Leaderboard {
   showGroupOfUser: boolean
   showUserBoard: boolean
   title: string
+  searchEnabled: boolean
 }
 
 export interface Profile {
