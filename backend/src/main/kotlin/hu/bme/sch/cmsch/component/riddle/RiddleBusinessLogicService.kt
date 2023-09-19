@@ -18,7 +18,8 @@ open class RiddleBusinessLogicService(
     private val riddleCacheManager: RiddleCacheManager,
     private val userService: UserService,
     private val clock: TimeService,
-    private val riddleComponent: RiddleComponent
+    private val riddleComponent: RiddleComponent,
+    private val riddleModerationService: RiddleModerationService
 ) : RiddleService {
 
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
@@ -189,6 +190,10 @@ open class RiddleBusinessLogicService(
         solution: String,
         skip: Boolean
     ): RiddleSubmissionView? {
+        val banStatus = riddleModerationService.getUserAndGroupBanStatus(user.internalId, user.groupId?.toString())
+        if (banStatus == SubmissionModerationStatus.HARD_BAN) {
+            return RiddleSubmissionView(status = RiddleSubmissionStatus.SUBMITTER_BANNED, null)
+        }
         val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
             ?: return null
@@ -196,6 +201,9 @@ open class RiddleBusinessLogicService(
         if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled.isValueTrue()))
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CANNOT_SKIP, null)
 
+        if (banStatus == SubmissionModerationStatus.SHADOW_BAN) {
+            return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
+        }
         val submission = riddleCacheManager.findMappingByOwnerUserIdAndRiddleId(user.id, riddleId)
         if (submission != null) {
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
@@ -264,12 +272,21 @@ open class RiddleBusinessLogicService(
         if (groupId == null)
             return null
 
+        val banStatus = riddleModerationService.getUserAndGroupBanStatus(user.internalId, groupId.toString())
+        if (banStatus == SubmissionModerationStatus.HARD_BAN) {
+            return RiddleSubmissionView(status = RiddleSubmissionStatus.SUBMITTER_BANNED, null)
+        }
+
         val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
             ?: return null
 
         if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled.isValueTrue()))
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CANNOT_SKIP, null)
+
+        if (banStatus == SubmissionModerationStatus.SHADOW_BAN) {
+            return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG, null)
+        }
 
         val submission = riddleCacheManager.findMappingByOwnerGroupIdAndRiddleId(groupId, riddleId)
         if (submission != null) {
