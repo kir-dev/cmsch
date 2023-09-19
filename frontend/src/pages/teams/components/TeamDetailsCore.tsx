@@ -1,5 +1,5 @@
-import { Box, Button, Divider, Flex, Grid, Heading, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
-import React from 'react'
+import { Box, Button, Divider, Flex, Grid, Heading, HStack, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import React, { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
@@ -33,11 +33,14 @@ interface TeamDetailsCoreProps {
   refetch?: () => void
 }
 
-export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin = false, refetch = () => {} }: TeamDetailsCoreProps) {
+export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetch = () => {} }: TeamDetailsCoreProps) {
   const toast = useToast()
-  const component = useConfigContext()?.components.team
+  const component = useConfigContext().components.team
+  const userRole = useConfigContext().role
   const navigate = useNavigate()
   const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
+  const [isEditingMembers, setIsEditingMembers] = useState(false)
+  const isUserGroupAdmin = RoleType[userRole] >= RoleType.PRIVILEGED
 
   const actionResponseCallback = (response: TeamResponses) => {
     if (response == TeamResponses.OK) {
@@ -76,9 +79,9 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
 
   if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={component.title} />
 
-  const title = myTeam ? component.myTitle + (admin ? ' (kezelése)' : '') : undefined
+  const title = myTeam ? component.myTitle : undefined
   return (
-    <CmschPage minRole={admin ? RoleType.PRIVILEGED : myTeam ? RoleType.ATTENDEE : undefined}>
+    <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined}>
       <Helmet title={title ?? team.name} />
       {title && <Heading mb={5}>{title}</Heading>}
       <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
@@ -116,7 +119,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
               leftIcon={<FaUndoAlt />}
               isLoading={cancelLoading}
               variant="outline"
-              colorScheme="brand"
+              colorScheme="red"
               onClick={() => {
                 cancelJoin()
                 refetch()
@@ -126,7 +129,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
             </Button>
           )}
           {team.leaveEnabled && (
-            <Button leftIcon={<FaSignOutAlt />} isLoading={leaveTeamLoading} colorScheme="brand" onClick={leaveTeam}>
+            <Button leftIcon={<FaSignOutAlt />} isLoading={leaveTeamLoading} colorScheme="red" onClick={leaveTeam}>
               Csoport elhagyása
             </Button>
           )}
@@ -155,7 +158,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
           ))}
         </>
       )}
-      {admin && team.applicants?.length > 0 && (
+      {team.applicants?.length > 0 && (
         <>
           <Divider mt={10} borderWidth={2} />
           <Heading fontSize="lg">Jelentkezők</Heading>
@@ -175,28 +178,37 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, admin 
       )}
       {team.members?.length > 0 && (
         <>
-          <Divider mt={5} borderWidth={2} />
-          <Heading fontSize="lg">Csapattagok</Heading>
+          <Divider my={5} borderWidth={2} />
+          <HStack alignItems="center" justify="space-between">
+            <Heading m={0} fontSize="lg">
+              Csapattagok
+            </Heading>
+            {isUserGroupAdmin && (
+              <Button variant={isEditingMembers ? 'outline' : 'solid'} onClick={() => setIsEditingMembers((prev) => !prev)}>
+                {isEditingMembers ? 'Szerkesztés befejezése' : 'Tagok szerkesztése'}
+              </Button>
+            )}
+          </HStack>
           {team.members?.map((m) => (
             <MemberRow
               key={m.id}
               member={m}
               onPromoteLeadership={
-                admin && component?.promoteLeadershipEnabled && !m.admin && !m.you
+                isEditingMembers && component?.promoteLeadershipEnabled && !m.admin && !m.you
                   ? () => {
                       promoteLeadership(m.id)
                     }
                   : undefined
               }
               onRoleChange={
-                admin && component?.togglePermissionEnabled && !m.you
+                isEditingMembers && component?.togglePermissionEnabled && !m.you
                   ? () => {
                       togglePermissions(m.id)
                     }
                   : undefined
               }
               onDelete={
-                admin && component?.kickEnabled && !m.admin && !m.you
+                isEditingMembers && component?.kickEnabled && !m.admin && !m.you
                   ? () => {
                       kickMember(m.id)
                     }

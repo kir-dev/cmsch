@@ -56,6 +56,16 @@ export enum RoleType {
   SUPERUSER = 500 // advanced user management (able to grant admin access)
 }
 
+export enum RoleTypeString {
+  GUEST = 'GUEST',
+  BASIC = 'BASIC',
+  ATTENDEE = 'ATTENDEE',
+  PRIVILEGED = 'PRIVILEGED',
+  STAFF = 'STAFF',
+  ADMIN = 'ADMIN',
+  SUPERUSER = 'SUPERUSER'
+}
+
 export enum GuildType {
   UNKNOWN = 'Nincs',
   RED = 'Piros',
