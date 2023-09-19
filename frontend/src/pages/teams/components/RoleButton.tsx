@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react'
+import { Button, Tooltip } from '@chakra-ui/react'
 import { TbShield, TbShieldOff } from 'react-icons/tb'
 
 interface RoleButtonProps {
@@ -8,8 +8,10 @@ interface RoleButtonProps {
 
 export function RoleButton({ onRoleChange, isAdmin }: RoleButtonProps) {
   return (
-    <Button colorScheme="yellow" variant="outline" onClick={onRoleChange}>
-      {isAdmin ? <TbShieldOff /> : <TbShield />}
-    </Button>
+    <Tooltip label="Jogosultság adása">
+      <Button colorScheme="yellow" variant="outline" onClick={onRoleChange}>
+        {isAdmin ? <TbShieldOff /> : <TbShield />}
+      </Button>
+    </Tooltip>
   )
 }
