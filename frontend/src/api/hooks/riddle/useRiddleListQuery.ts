@@ -11,8 +11,9 @@ export const useRiddleListQuery = (onError?: (err: any) => void) => {
     QueryKeys.RIDDLE,
     async () => {
       const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'categories') : joinPath(ApiPaths.RIDDLE)
-      const response = await axios.get<RiddleCategory[]>(url)
-      return response.data
+      // const response = await axios.get<RiddleCategory[]>(url)
+      return [{ categoryId: 1, title: 'Lorem ipsum', score: 0, completed: 10, total: 20 }]
+      // return response.data
     },
     { onError }
   )
