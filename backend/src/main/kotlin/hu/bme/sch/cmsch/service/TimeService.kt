@@ -24,4 +24,9 @@ class TimeService(
         return now in availableFrom..availableTo
     }
 
+    fun isTimePassed(timeInSeconds: Long): Boolean {
+        val now = timeInSeconds + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        return now > timeInSeconds
+    }
+
 }

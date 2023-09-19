@@ -133,7 +133,7 @@ class RiddleComponent(
     )
 
     val skipAfterGroupsSolved = SettingProxy(componentSettingService, component,
-        "skipAfterGroupsSolved", "false", type = SettingType.BOOLEAN,
+        "skipAfterGroupsSolved", "20", type = SettingType.NUMBER,
         fieldName = "Átugrás ennyi megoldó után",
         description = "Ennyi csapat vagy felhasználó megoldása után elérhető a gomb"
     )
@@ -156,7 +156,7 @@ class RiddleComponent(
     val microserviceSyncEnabled = SettingProxy(componentSettingService, component,
         "microserviceSyncEnabled", "false", type = SettingType.BOOLEAN,
         fieldName = "Beállítások szinkronizációja",
-        description = "Ha egy riddle módosul akkor küld például értesítést a nodenak, hogy invalidálja a cachet"
+        description = "Ha egy riddle módosul akkor küld például értesítést a nodenak, hogy invalidálja a cachet (nincs implementálva)"
     )
 
 }

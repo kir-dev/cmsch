@@ -104,10 +104,10 @@ class LoginComponent(
     val authschScopes = mutableListOf<Scope>()
 
     override fun onInit() {
-        onPersis()
+        onPersist()
     }
 
-    override fun onPersis() {
+    override fun onPersist() {
         authschScopes.clear()
         val scopes = authschScopesRaw.getValue().replace(" ", "").split(",")
             .filter { it.isNotBlank() }
