@@ -6,7 +6,8 @@ import hu.bme.sch.cmsch.dto.FullDetails
 enum class RiddleSubmissionStatus {
     CORRECT,
     WRONG,
-    CANNOT_SKIP
+    CANNOT_SKIP,
+    SUBMITTER_BANNED
 }
 
 data class RiddleSubmissionView(

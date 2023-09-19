@@ -31,6 +31,14 @@ class RiddleComponent(
             riddleGroup,
             title, menuDisplayName, minRole,
 
+            shadowBanModerationGroup,
+            userShadowBanList,
+            groupShadowBanList,
+
+            banModerationGroup,
+            userBanList,
+            groupBanList,
+
             scoringGroup,
             hintScorePercent,
             saveFailedAttempts,
@@ -69,6 +77,44 @@ class RiddleComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val shadowBanModerationGroup = SettingProxy(componentSettingService, component,
+        "shadowBanModerationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Riddle beadások moderálása - Shadow Ban",
+        description = "Küldjük el pihenni a \"túl aktív\" játékosokat, de csak titokban"
+    )
+
+    val userShadowBanList = SettingProxy(componentSettingService, component,
+        "userShadowBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+        fieldName = "Tiltott játékosok listája",
+        description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani"
+    )
+
+    val groupShadowBanList = SettingProxy(componentSettingService, component,
+        "groupShadowBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+        fieldName = "Tiltott csoportok listája", description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val banModerationGroup = SettingProxy(componentSettingService, component,
+        "banModerationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Riddle beadások moderálása - Ban",
+        description = "Küldjük el pihenni a \"túl aktív\" játékosokat"
+    )
+
+    val userBanList = SettingProxy(componentSettingService, component,
+        "userBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+        fieldName = "Tiltott játékosok listája",
+        description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani"
+    )
+
+    val groupBanList = SettingProxy(componentSettingService, component,
+        "groupBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+        fieldName = "Tiltott csoportok listája", description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
