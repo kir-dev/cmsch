@@ -128,7 +128,7 @@ abstract class ComponentApiBase(
     }
 
     open fun onInit() {
-        // The compoennt is loaded
+        // The component is loaded
     }
 
 }
