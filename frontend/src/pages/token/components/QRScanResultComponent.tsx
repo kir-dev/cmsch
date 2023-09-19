@@ -1,6 +1,7 @@
 import { CheckCircleIcon, CloseIcon, InfoIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons'
-import { Box, Center, Heading, Text } from '@chakra-ui/react'
+import { Box, Center, Heading, Image, Text } from '@chakra-ui/react'
 import { ScanMessages, ScanResponseView, ScanStatus } from '../../../util/views/token.view'
+import Markdown from '../../../common-components/Markdown'
 
 interface QrScanResultProps {
   isError?: boolean
@@ -37,13 +38,18 @@ export const QRScanResultComponent = ({ response, isError }: QrScanResultProps) 
   }
 
   return (
-    <Box>
+    <Box textAlign="center" maxW="sm" mx="auto">
       <Center flexDirection="column" p="40px" mt="4">
-        {renderIcon()}
+        {response?.iconUrl ? <Image src={response.iconUrl} /> : renderIcon()}
         {response?.title && <Heading size="lg">{response.title}</Heading>}
         {!response?.title && isError && <Heading>Hiba</Heading>}
         {response && <Text fontSize="lg">{ScanMessages[response.status] || 'Ismeretlen eredmény'}</Text>}
         {!response && isError && <Text fontSize="lg">Hiba a validálás során!</Text>}
+        {response?.description && (
+          <Box py="4">
+            <Markdown text={response.description} />
+          </Box>
+        )}
       </Center>
     </Box>
   )
