@@ -10,13 +10,6 @@ export const useRiddleDetailsQuery = (id: string, onError?: (err: any) => void) 
   return useQuery<Riddle, Error>(
     [QueryKeys.RIDDLE, id],
     async () => {
-      return {
-        id: 0,
-        title: 'Lorem',
-        imageUrl: 'string',
-        solved: false,
-        skipPermitted: false
-      }
       const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'solve', id) : joinPath(ApiPaths.RIDDLE, id)
       const response = await axios.get<Riddle>(url)
       return response.data
