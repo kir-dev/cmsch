@@ -27,7 +27,10 @@ class LocationComponent(
 
     final override val allSettings by lazy {
         listOf(
+            locationGroup,
             minRole,
+
+            appearanceGroup,
             topMessage,
             bottomMessage,
 
@@ -63,9 +66,23 @@ class LocationComponent(
         fieldName = "Térkép menü neve", description = "Ez lesz a neve a menünek"
     )
 
+    val locationGroup = SettingProxy(componentSettingService, component,
+        "locationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Helymegosztás",
+        description = ""
+    )
+
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val appearanceGroup = SettingProxy(componentSettingService, component,
+        "appearanceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Megjelenés",
+        description = ""
     )
 
     val topMessage = SettingProxy(componentSettingService, component,
