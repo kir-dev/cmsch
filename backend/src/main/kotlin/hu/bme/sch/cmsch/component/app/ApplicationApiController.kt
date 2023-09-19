@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.component.app
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.ComponentHandlerService
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.model.RoleType
@@ -24,27 +26,30 @@ class ApplicationApiController(
     private val stylingComponent: StylingComponent
 ) {
 
+    private val componentWriter = ObjectMapper().writerFor(object : TypeReference<Map<String, Map<String, Any>>>() {})
+
     @GetMapping("/app")
     fun app(auth: Authentication?): ApplicationConfigDto {
         val role = auth?.getUserOrNull()?.role ?: RoleType.GUEST
         if (countdownComponent.isPresent) {
             val countdown = countdownComponent.orElseThrow()
             if (countdown.isBlockedAt(clock.getTimeInSeconds())) {
+                val components = mapOf(
+                    applicationComponent.component to appComponentFields(),
+                    countdown.component to countdown.attachConstants(),
+                    stylingComponent.component to stylingComponent.attachConstants()
+                )
                 return ApplicationConfigDto(
                     role = role,
                     menu = listOf(),
-                    components = mapOf(
-                        applicationComponent.component to appComponentFields(),
-                        countdown.component to countdown.attachConstants(),
-                        stylingComponent.component to stylingComponent.attachConstants()
-                    )
+                    components = componentWriter.writeValueAsString(components)
                 )
             }
         }
         return ApplicationConfigDto(
             role = role,
             menu = menuService.getCachedMenuForRole(role),
-            components = componentHandlerService.getComponentConstantsForRole(role)
+            components = componentHandlerService.getComponentConstantsForRoleFast(role)
         )
     }
 

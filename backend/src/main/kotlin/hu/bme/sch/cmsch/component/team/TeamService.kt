@@ -154,9 +154,22 @@ open class TeamService(
 
     @Transactional(readOnly = true)
     open fun listAllTeams(): List<TeamListView>? {
-        var teams = groupRepository.findAll()
-            .filter { showThisTeam(it) }
-            .map { TeamListView(it.id, it.name) }
+        if (!teamComponent.showTeamsAtAll.isValueTrue())
+            return listOf()
+
+        var teams = if (teamComponent.showNotRacingTeams.isValueTrue()) {
+            if (teamComponent.showNotManualTeams.isValueTrue()) {
+                groupRepository.findAllThatExists()
+            } else {
+                groupRepository.findAllThatManuallyCreated()
+            }
+        } else {
+            if (teamComponent.showNotManualTeams.isValueTrue()) {
+                groupRepository.findAllThatRaces()
+            } else {
+                groupRepository.findAllThatRacesAndManuallyCreated()
+            }
+        }
 
         if (teamComponent.sortByName.isValueTrue())
             teams = teams.sortedBy { it.name }
@@ -218,7 +231,7 @@ open class TeamService(
             stats = mapStats(team),
             taskCategories = if (ownTeam && teamComponent.showTasks.isValueTrue()) mapTasks(team) else listOf(),
             forms = if (user != null && ownTeam && teamComponent.showAdvertisedForms.isValueTrue()) mapForms(user) else listOf(),
-            leaderNotes = if (ownTeam) teamComponent.leaderNotes.getValue() else ""
+            leaderNotes = if (ownTeam && ((user?.role?.value ?: RoleType.GUEST.value) >= RoleType.PRIVILEGED.value)) teamComponent.leaderNotes.getValue() else ""
         )
     }
 
@@ -235,7 +248,7 @@ open class TeamService(
                     name = it.name,
                     completed = it.approved,
                     outOf = it.sum,
-                    navigate = "/task/category/${it.categoryId}"
+                    navigate = it.categoryId
                 ) }
         }.orElse(listOf())
     }

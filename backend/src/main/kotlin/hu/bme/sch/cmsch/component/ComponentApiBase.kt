@@ -115,7 +115,8 @@ abstract class ComponentApiBase(
             }
         }
         component.persistChanges()
-        component.onPersis()
+        component.onPersist()
+        component.onFirePersistEvent()
         auditLogService.edit(user, component.component, newValues.toString())
         RoleType.values().forEach { role -> menuService.regenerateMenuCache(role) }
         onUpdate()

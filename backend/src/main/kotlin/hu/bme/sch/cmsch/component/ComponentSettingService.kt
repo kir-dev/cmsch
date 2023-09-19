@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component
 
 import org.postgresql.util.PSQLException
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
@@ -9,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 open class ComponentSettingService(
-    private val componentSettingRepository: ComponentSettingRepository
+    private val componentSettingRepository: ComponentSettingRepository,
+    private val publisher: ApplicationEventPublisher
 ) {
 
     @Transactional(readOnly = true)
@@ -73,6 +75,10 @@ open class ComponentSettingService(
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun loadDefaultSettings(settings: List<SettingProxy>) {
         settings.forEach(this::loadDefaultSetting)
+    }
+
+    fun onPersisted() {
+        publisher.publishEvent(ComponentSettingsPersistedEvent(this))
     }
 
 }

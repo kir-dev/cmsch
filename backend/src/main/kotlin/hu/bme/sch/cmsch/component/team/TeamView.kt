@@ -12,7 +12,7 @@ data class TaskCategoryPreview(
     var name: String = "",
     var completed: Int = 0,
     var outOf: Int = 0,
-    var navigate: String? = null,
+    var navigate: Int? = null,
 )
 
 data class AdvertisedFormPreview(
