@@ -1,6 +1,7 @@
 import { Box, CircularProgress, Flex, HStack, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { useOpaqueBackground } from '../../../util/core-functions.util'
+import { joinPath, useOpaqueBackground } from '../../../util/core-functions.util'
+import { AbsolutePaths } from '../../../util/paths'
 import { TeamTaskCategoriesView } from '../../../util/views/team.view'
 
 export const TeamTaskCategoryListItem = ({ category }: { category: TeamTaskCategoriesView }) => {
@@ -8,7 +9,7 @@ export const TeamTaskCategoryListItem = ({ category }: { category: TeamTaskCateg
   const hoverBg = useOpaqueBackground(2)
   return (
     <Box bg={bg} px={6} py={2} marginTop={5} borderRadius="md" _hover={{ bgColor: hoverBg }}>
-      <Link to={category.navigate}>
+      <Link to={joinPath(AbsolutePaths.TASKS, 'category', category.id)}>
         <Flex align="center" justifyContent="space-between">
           <Text fontWeight="bold" fontSize="xl">
             {category.name}
