@@ -49,7 +49,7 @@ export type TeamTaskCategoriesView = {
   name: string
   completed: number
   outOf: number
-  id: number
+  id: number | null | undefined
 }
 
 export type TeamFormView = {
