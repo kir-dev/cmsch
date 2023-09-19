@@ -3,7 +3,6 @@ import { lazy } from 'react'
 
 import { Paths } from '../util/paths'
 
-const TeamAdminPage = lazy(() => import('../pages/teams/teamAdmin.page'))
 const CreateTeamPage = lazy(() => import('../pages/teams/createTeam.page'))
 const TeamListPage = lazy(() => import('../pages/teams/teamList.page'))
 const TeamDetailsPage = lazy(() => import('../pages/teams/teamDetails.page'))
@@ -14,7 +13,6 @@ export function TeamModule() {
     <>
       <Route path={Paths.CREATE_TEAM} element={<CreateTeamPage />} />
       <Route path={Paths.MY_TEAM} element={<MyTeamPage />} />
-      <Route path={Paths.TEAM_ADMIN} element={<TeamAdminPage />} />
       <Route path={Paths.TEAMS}>
         <Route index element={<TeamListPage />} />
         <Route path="details/:id" element={<TeamDetailsPage />} />

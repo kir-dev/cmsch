@@ -1,5 +1,7 @@
+import { RoleType, RoleTypeString } from '../../../util/views/profile.view'
+
 export interface ConfigDto {
-  role: string
+  role: RoleTypeString
   menu: Menu[]
   components: Components
 }
