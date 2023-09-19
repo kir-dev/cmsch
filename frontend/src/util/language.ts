@@ -101,6 +101,8 @@ const friendlyLanguageData = {
   'toast-title-info': 'Információ',
   'riddle-incorrect-title': 'Helytelen válasz!',
   'riddle-incorrect-description': 'Próbáld meg újra, sikerülni fog!',
+  'riddle-submitter-banned-title': 'Ki vagy tiltva a riddleökből!',
+  'riddle-submitter-banned-description': 'Jár a virgács!',
   'riddle-correct-title': 'Helyes válasz!',
   'riddle-correct-description': 'Csak így tovább!',
   'riddle-skipped-title': 'Riddle átugorva',
