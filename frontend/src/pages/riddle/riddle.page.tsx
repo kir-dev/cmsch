@@ -76,6 +76,19 @@ const RiddlePage = () => {
                 isClosable: true
               }) || null
           }
+          if (result.status === RiddleSubmissonStatus.SUBMITTER_BANNED) {
+            if (toastIdRef.current) {
+              toast.close(toastIdRef.current)
+            }
+            toastIdRef.current =
+              toast({
+                title: l('riddle-submitter-banned-title'),
+                description: l('riddle-submitter-banned-description'),
+                status: 'error',
+                duration: 5000,
+                isClosable: true
+              }) || null
+          }
           if (result.status === RiddleSubmissonStatus.CORRECT && result.nextId) {
             navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
             const input = document.getElementById('solution') as HTMLInputElement
