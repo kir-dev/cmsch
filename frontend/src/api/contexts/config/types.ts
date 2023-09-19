@@ -1,4 +1,4 @@
-import { RoleType, RoleTypeString } from '../../../util/views/profile.view'
+import { RoleTypeString } from '../../../util/views/profile.view'
 
 export interface ConfigDto {
   role: RoleTypeString
