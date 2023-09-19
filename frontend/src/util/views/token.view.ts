@@ -39,5 +39,7 @@ export const ScanMessages: Record<ScanStatus, string> = {
 
 export interface ScanResponseView {
   title?: string
+  description?: string
+  iconUrl?: string
   status: ScanStatus
 }
