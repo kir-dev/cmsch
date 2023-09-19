@@ -18,15 +18,17 @@ open class NewsService(
 
     @Transactional(readOnly = true)
     open fun fetchNews(user: CmschUser?): List<NewsEntity> {
+        val now = clock.getTimeInSeconds()
         return newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
-            .filter { clock.isTimePassed(it.timestamp) }
+            .filter { clock.isTimePassed(it.timestamp, now) }
             .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
     }
 
     @Transactional(readOnly = true)
     open fun fetchSpecificNews(user: CmschUser?, path: String): Optional<ResponseEntity<NewsEntity>> {
+        val now = clock.getTimeInSeconds()
         return newsRepository.findByUrlAndVisibleTrue(path)
-            .filter { clock.isTimePassed(it.timestamp) }
+            .filter { clock.isTimePassed(it.timestamp, now) }
             .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
             .map { ResponseEntity.ok(it) }
     }
