@@ -246,7 +246,10 @@ export interface UserHandling {}
 
 export interface ExtraPage {}
 
-export interface Location {}
+export interface Location {
+  topMessage: string
+  bottomMessage: string
+}
 
 export interface Login {
   authschPromoted: boolean
