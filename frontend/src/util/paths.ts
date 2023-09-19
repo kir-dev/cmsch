@@ -64,6 +64,7 @@ export enum ApiPaths {
   PAGE = '/api/page',
   NEWS = '/api/news',
   RACE = '/api/race',
+  RACE_BY_TEAM = '/api/race-by-team',
   RIDDLE = '/api/riddle',
   RIDDLE_HISTORY = '/api/riddle-history',
   TASK = '/api/task',
