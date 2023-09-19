@@ -7,9 +7,9 @@ import hu.bme.sch.cmsch.dto.SearchableResourceType
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.PermissionValidator
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
-import jakarta.annotation.PostConstruct
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.findAnnotation
@@ -106,8 +106,12 @@ abstract class ComponentBase(
         componentSettingService.persistSettings(allSettings)
     }
 
-    open fun onPersis() {
+    open fun onPersist() {
         // Empty implementation, override it when its needed
+    }
+
+    fun onFirePersistEvent() {
+        componentSettingService.onPersisted()
     }
 
     open fun onInit() {
