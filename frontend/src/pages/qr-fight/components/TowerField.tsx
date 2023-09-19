@@ -1,14 +1,16 @@
 import { Tower } from '../../../util/views/qrFight.view'
 import { Divider, Stat, StatHelpText, StatLabel, StatNumber, VStack } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
+import { useOpaqueBackground } from '../../../util/core-functions.util'
 
 interface TowerFieldProps {
   tower: Tower
 }
 
 export function TowerField({ tower }: TowerFieldProps) {
+  const background = useOpaqueBackground(3)
+
   return (
-    <Stat width={'fit-content'} borderWidth="1px" borderColor={useColorModeValue('gray.400', 'gray.600')} padding={5} borderRadius={5}>
+    <Stat flexBasis={'10em'} padding={5} borderRadius={5} background={background}>
       <StatNumber>{tower.name}</StatNumber>
       <VStack align="flex-start" mt={3}>
         <VStack align="flex-start" spacing={0}>
