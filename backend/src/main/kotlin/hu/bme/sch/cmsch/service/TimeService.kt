@@ -26,7 +26,7 @@ class TimeService(
 
     fun isTimePassed(timeToBeAfter: Long, timeInSeconds: Long): Boolean {
         val now = timeInSeconds + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
-        return now > timeInSeconds
+        return now > timeToBeAfter
     }
 
 }
