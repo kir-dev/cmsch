@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service
     matchIfMissing = false
 )
 class RiddleComponent(
+    private val riddleModerationService: RiddleModerationService,
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
@@ -84,7 +85,7 @@ class RiddleComponent(
     val shadowBanModerationGroup = SettingProxy(componentSettingService, component,
         "shadowBanModerationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Riddle beadások moderálása - Shadow Ban",
-        description = "Küldjük el pihenni a \"túl aktív\" játékosokat, de csak titokban"
+        description = "Küldjük el pihenni a \"túl aktív\" játékosokat, de csak titokban. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
 
     val userShadowBanList = SettingProxy(componentSettingService, component,
@@ -103,7 +104,7 @@ class RiddleComponent(
     val banModerationGroup = SettingProxy(componentSettingService, component,
         "banModerationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Riddle beadások moderálása - Ban",
-        description = "Küldjük el pihenni a \"túl aktív\" játékosokat"
+        description = "Küldjük el pihenni a \"túl aktív\" játékosokat. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
 
     val userBanList = SettingProxy(componentSettingService, component,
@@ -205,4 +206,20 @@ class RiddleComponent(
         description = "Ha egy riddle módosul akkor küld például értesítést a nodenak, hogy invalidálja a cachet (nincs implementálva)"
     )
 
+    override fun onPersist() {
+        super.onPersist()
+        updateBanLists()
+    }
+
+    override fun onInit() {
+        super.onInit()
+        updateBanLists()
+    }
+
+    private fun updateBanLists() {
+        riddleModerationService.setGroupBans(groupBanList.getValue())
+        riddleModerationService.setGroupShadowBans(groupShadowBanList.getValue())
+        riddleModerationService.setUserBans(userBanList.getValue())
+        riddleModerationService.setUserShadowBans(userShadowBanList.getValue())
+    }
 }

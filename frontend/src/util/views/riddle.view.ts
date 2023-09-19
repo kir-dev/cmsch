@@ -30,7 +30,9 @@ export interface RiddleCategory {
 
 export enum RiddleSubmissonStatus {
   CORRECT = 'CORRECT',
-  WRONG = 'WRONG'
+  WRONG = 'WRONG',
+  CANNOT_SKIP = 'CANNOT_SKIP',
+  SUBMITTER_BANNED = 'SUBMITTER_BANNED'
 }
 
 export interface RiddleSubmissonResult {
