@@ -14,9 +14,10 @@ import { useTeamRejectJoin } from '../../../api/hooks/team/actions/useTeamReject
 import { useTeamTogglePermissions } from '../../../api/hooks/team/actions/useTeamTogglePermissions'
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
+import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
-import { AbsolutePaths } from '../../../util/paths'
+import { AbsolutePaths, Paths } from '../../../util/paths'
 import { RoleType } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
 import { MemberRow } from './MemberRow'
@@ -131,6 +132,11 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Button leftIcon={<FaSignOutAlt />} isLoading={leaveTeamLoading} colorScheme="red" onClick={leaveTeam}>
               Csoport elhagyása
             </Button>
+          )}
+          {true && (
+            <LinkButton href={Paths.RACE} ml={5} colorScheme="brand">
+              Sörmérés eredmény
+            </LinkButton>
           )}
         </VStack>
       </Flex>
