@@ -39,7 +39,7 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   }, [showUserLocation, userLocation.isGeolocationAvailable, userLocation.isGeolocationEnabled])
 
   return (
-    <Map center={center} provider={StadiaMapProvider} height={400}>
+    <Map center={center} provider={OSMHotProvider} height={400}>
       <ZoomControl />
       {mapData.map((mapDataItem) => (
         <Marker hover key={mapDataItem.displayName} width={200} height={3} anchor={[mapDataItem.latitude, mapDataItem.longitude]}>
@@ -55,6 +55,6 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   )
 }
 
-function StadiaMapProvider(x: number, y: number, z: number) {
-  return `https://tiles.stadiamaps.com/tiles/alidade_smooth/${z}/${x}/${y}.png`
+function OSMHotProvider(x: number, y: number, z: number) {
+  return `https://tile.openstreetmap.fr/hot/${z}/${x}/${y}.png`
 }
