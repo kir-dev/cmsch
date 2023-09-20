@@ -7,15 +7,22 @@ const CreateTeamPage = lazy(() => import('../pages/teams/createTeam.page'))
 const TeamListPage = lazy(() => import('../pages/teams/teamList.page'))
 const TeamDetailsPage = lazy(() => import('../pages/teams/teamDetails.page'))
 const MyTeamPage = lazy(() => import('../pages/teams/myTeam.page'))
+const RaceByTeamPage = lazy(() => import('../pages/race/raceByTeam.page'))
 
 export function TeamModule() {
   return (
     <>
       <Route path={Paths.CREATE_TEAM} element={<CreateTeamPage />} />
-      <Route path={Paths.MY_TEAM} element={<MyTeamPage />} />
+      <Route path={Paths.MY_TEAM}>
+        <Route index element={<MyTeamPage />} />
+        <Route path={Paths.RACE} element={<RaceByTeamPage />} />
+      </Route>
       <Route path={Paths.TEAMS}>
         <Route index element={<TeamListPage />} />
-        <Route path="details/:id" element={<TeamDetailsPage />} />
+        <Route path="details/:id">
+          <Route index element={<TeamDetailsPage />} />
+          <Route path={Paths.RACE} element={<RaceByTeamPage />} />
+        </Route>
       </Route>
     </>
   )
