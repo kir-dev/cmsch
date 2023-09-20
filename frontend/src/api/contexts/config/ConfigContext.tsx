@@ -1,10 +1,11 @@
+import { Button, ButtonGroup, Center, Heading, Image, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import React, { createContext, PropsWithChildren, useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { ConfigDto } from './types'
-import { useConfigQuery } from '../../hooks/config/useConfigQuery'
 import { Loading } from '../../../common-components/Loading'
-import { Button, ButtonGroup, Center, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
+import { INITIAL_BG_IMAGE } from '../../../util/configs/environment.config'
 import { l } from '../../../util/language'
+import { useConfigQuery } from '../../hooks/config/useConfigQuery'
+import { ConfigDto } from './types'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
@@ -12,32 +13,37 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   const { data, isLoading, error, refetch } = useConfigQuery((err) =>
     console.error('[ERROR] at ConfigProvider', JSON.stringify(err, null, 2))
   )
+  const bg = useColorModeValue('white', 'gray.900')
   const kirDevLogo = useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')
   if (isLoading)
     return (
-      <Center flexDirection="column" h="100vh">
-        <Loading />
-        <Image src={kirDevLogo} maxW={40} maxH={40} my={3} />
+      <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
+        <VStack p={5} borderRadius={5} bg={bg}>
+          <Loading />
+          <Image src={kirDevLogo} w={40} maxH={40} my={3} />
+        </VStack>
       </Center>
     )
   if (error)
     return (
-      <Center flexDirection="column" h="100vh">
+      <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
         <Helmet title={l('error-page-helmet')} />
-        <Heading textAlign="center">{l('error-page-title')}</Heading>
-        <Text textAlign="center" color="gray.500" marginTop={10}>
-          {l('error-connection-unsuccessful')}
-        </Text>
-        <ButtonGroup justifyContent="center" marginTop={10}>
-          <Button
-            colorScheme="brand"
-            onClick={() => {
-              refetch()
-            }}
-          >
-            Újra
-          </Button>
-        </ButtonGroup>
+        <VStack spacing={5} p={5} borderRadius={5} bg={bg}>
+          <Heading textAlign="center">{l('error-page-title')}</Heading>
+          <Text textAlign="center" color="gray.500" marginTop={10}>
+            {l('error-connection-unsuccessful')}
+          </Text>
+          <ButtonGroup justifyContent="center" marginTop={10}>
+            <Button
+              colorScheme="brand"
+              onClick={() => {
+                refetch()
+              }}
+            >
+              Újra
+            </Button>
+          </ButtonGroup>
+        </VStack>
       </Center>
     )
   return <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>
