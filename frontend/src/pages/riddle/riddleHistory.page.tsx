@@ -1,17 +1,18 @@
-import { Heading, useToast, Box, Image, VStack, Text, Flex, Select, HStack, Button, Stack, Center } from '@chakra-ui/react'
+import { Box, Button, Center, Heading, HStack, Image, Select, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import { useRiddleHistoryQuery } from '../../api/hooks/riddle/useRiddleHistoryQuery'
+import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { Loading } from '../../common-components/Loading'
+import Markdown from '../../common-components/Markdown'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { useRiddleHistoryQuery } from '../../api/hooks/riddle/useRiddleHistoryQuery'
 import { SpoilerText } from './components/SpoilerText'
-import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 
 const RiddleHistoryPage = () => {
   const toast = useToast()
@@ -89,6 +90,7 @@ const RiddleHistoryPage = () => {
               <Text>Sorszám: {index + 1}</Text>
               <Text>Létrehozó: {riddle.creator || 'Nincs megadva'}</Text>
               <Text>Első megoldó: {riddle.firstSolver || 'Nincs megadva'}</Text>
+              {riddle.description && <Markdown text={riddle.description} />}
               <Text>
                 Megoldás (kattintásra jelenik meg): <SpoilerText text={riddle.solution} />
               </Text>
