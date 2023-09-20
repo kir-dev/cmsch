@@ -5,3 +5,4 @@ export const OFFICIAL_LANGUAGE = process.env.REACT_APP_OFFICIAL_LANGUAGE === 'tr
 export const PASS_SERVER_URL = process.env.REACT_APP_PASS_SERVER_URL
 export const PASS_TEMPLATE = process.env.REACT_APP_PASS_TEMPLATE
 export const NEW_RIDDLE_ENDPOINTS = process.env.REACT_APP_NEW_RIDDLE_ENDPOINTS === 'true'
+export const INITIAL_BG_IMAGE = process.env.REACT_APP_INITIAL_BG_IMAGE
