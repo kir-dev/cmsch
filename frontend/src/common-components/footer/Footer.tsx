@@ -28,7 +28,7 @@ export const Footer = () => {
             flexDirection={['column', null, 'row']}
           >
             {component?.sponsorsEnabled && sponsors.length > 0 && (
-              <Box w={['full', null, '50%']} opacity={0.5}>
+              <Box w={['full', null, '50%']}>
                 <Heading textAlign="center" mb={3} mt={0}>
                   Támogatóink
                 </Heading>
@@ -42,7 +42,7 @@ export const Footer = () => {
               </Box>
             )}
             {partnersVisible && (
-              <Box w={['full', null, '50%']} opacity={0.5}>
+              <Box w={['full', null, '50%']}>
                 <Heading textAlign="center" mb={3} mt={[10, null, 0]}>
                   Partnereink
                 </Heading>
