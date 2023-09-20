@@ -11,6 +11,6 @@ export const useWarningQuery = (onError?: (err: any) => void) => {
       const response = await axios.get<WarningView>(ApiPaths.WARNING)
       return response.data
     },
-    { onError: onError }
+    { onError, refetchOnWindowFocus: true }
   )
 }
