@@ -13,6 +13,7 @@ function isModalOpen() {
 
 function init() {
     loadMenuFromStorage();
+    rememberMenuPosition();
 
     document.getElementById('search').addEventListener('keyup', searchListener());
     document.getElementById('search-input').addEventListener('keyup', siteSearchListener());
@@ -266,6 +267,13 @@ function openMobileMenu() {
 
 function closeMobileMenu() {
     document.querySelector('.menu').style.display = 'none';
+}
+
+function rememberMenuPosition() {
+    const menu = document.querySelector(".menu");
+    const offset = Number(localStorage.getItem('menuScrollPosition')) || 0;
+    menu?.scrollTo(0, isNaN(offset) ? 0 : offset);
+    menu?.addEventListener("scroll", event => localStorage.setItem('menuScrollPosition', event.target.scrollTop.toString()));
 }
 
 window.onload = init;
