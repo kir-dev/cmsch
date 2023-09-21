@@ -483,7 +483,7 @@ open class TeamService(
         userRepository.save(adminUserEntity)
 
         val group = groupRepository.findById(groupId).orElseThrow()
-        group.description = "$TEAM_LEADER: ${adminUserEntity.fullNameWithAlias}"
+        group.description = "$TEAM_LEADER: ${user.fullNameWithAlias}"
         groupRepository.save(group)
         log.info("User '{}' is now group leader at '{}' switched with '{}'", user.fullName, groupName, adminUser.userName)
         return true

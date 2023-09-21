@@ -68,6 +68,15 @@ data class TaskCategoryEntity(
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskCategoryType::class)
     var type: TaskCategoryType = TaskCategoryType.REGULAR,
 
+
+//    @Column(nullable = false)
+//    @field:JsonView(value = [ Edit::class ])
+//    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "Kiemelt",
+//        note = "Olyan szöveggel jelenik meg, hogy hamarosan lejár")
+//    @property:GenerateOverview(columnName = "Kiemelt", order = 7, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+//    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_BOOLEAN)
+//    var advertised: Boolean = false,
+
 ): ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(

@@ -67,6 +67,7 @@ class TeamComponent(
             showTeamMembersPublicly,
             showTeamScore,
             showTeamScoreDetailsButton,
+            showRaceButton,
 
             statGroup,
             membersStatEnabled,
@@ -330,6 +331,11 @@ class TeamComponent(
     val showTeamScoreDetailsButton = SettingProxy(componentSettingService, component,
         "showTeamScoreDetailsButton", "false", type = SettingType.BOOLEAN,
         fieldName = "Csoport részletes pontjaihoz gomb", description = "Ha be val kapcsolva, akkor megjelenik egy gomb a csapat részletes pont listájához"
+    )
+
+    val showRaceButton = SettingProxy(componentSettingService, component,
+        "showRaceButton", "false", type = SettingType.BOOLEAN,
+        fieldName = "Mérés gomb látszódik", description = "Ha igaz, látszik a gomb"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

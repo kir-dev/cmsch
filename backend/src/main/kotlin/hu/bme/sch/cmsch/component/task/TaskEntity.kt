@@ -94,7 +94,7 @@ data class TaskEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Formátum",
         source = [ "NONE", "TEXT", "CODE", "FORM" ],
-        note = "Mi legyen a beadás módja. NONE: szeméyles beadás, TEXT: egy soros form vagy fájl tallózó, CODE: kód editor, FORM: láasd lejjebb a formtéumot")
+        note = "Mi legyen a beadás módja. NONE: szeméyles beadás, TEXT: egy soros form vagy fájl tallózó, CODE: kód editor, FORM: lásd lejjebb a formtéumot")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = TaskFormat::class)
     var format: TaskFormat = TaskFormat.NONE,

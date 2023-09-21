@@ -46,6 +46,7 @@ open class QrFightService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
+    @Transactional(readOnly = true)
     open fun getLevelsForGroups(groupId: Int?, groupName: String): QrFightOverviewView {
         val levels = qrLevelRepository.findAllByVisibleTrueAndEnabledTrue()
             .sortedBy { it.order }

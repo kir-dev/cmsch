@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
@@ -54,13 +55,19 @@ class ChallengeController(
         "GroupEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(groups.findAll().map { it.name }.sorted().toList())
+            results.addAll(transactionManager.transaction(readOnly = true) { groups.findAll() }
+                .map { it.name }
+                .sorted()
+                .toList())
             return@to results
         },
         "UserEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(users.findAll().sortedBy { it.fullName }.map { mapUsername(it) }.toList())
+            results.addAll(transactionManager.transaction(readOnly = true) { users.findAll() }
+                .sortedBy { it.fullName }
+                .map { mapUsername(it) }
+                .toList())
             return@to results
         },
     ),
