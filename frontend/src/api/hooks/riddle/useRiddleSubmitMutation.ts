@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useMutation } from 'react-query'
 import { NEW_RIDDLE_ENDPOINTS } from '../../../util/configs/environment.config'
 import { ApiPaths } from '../../../util/paths'
@@ -11,21 +11,29 @@ interface RiddleSubmissionParams {
   id: string
 }
 
-export const useRiddleSubmitMutation = () => {
+export const useRiddleSubmitMutation = (onTooManyRequests: () => void) => {
   return useMutation<RiddleSubmissonResult, Error, RiddleSubmissionParams>(
     QueryKeys.RIDDLE_SUBMIT,
     async ({ id, solution }: RiddleSubmissionParams) => {
       const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'solve', id) : joinPath(ApiPaths.RIDDLE, id)
-      const res = await axios.post(
-        url,
-        { solution },
-        {
-          headers: {
-            'Content-Type': 'application/json'
+      try {
+        const res = await axios.post(
+          url,
+          { solution },
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
+        )
+        return res.data
+      } catch (error) {
+        if (error instanceof AxiosError && error.response && error.response.status === 429) {
+          onTooManyRequests()
+        } else {
+          throw error
         }
-      )
-      return res.data
+      }
     }
   )
 }
