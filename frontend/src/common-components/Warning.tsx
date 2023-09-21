@@ -9,7 +9,16 @@ export const Warning = () => {
 
   return (
     <Box>
-      <Alert opacity={1} status={data.type || 'warning'} variant="solid" mx="auto" w="100%" maxWidth={['100%', '64rem']} mb={5}>
+      <Alert
+        borderRadius={[0, null, 'xl']}
+        opacity={1}
+        status={data.type || 'warning'}
+        variant="solid"
+        mx="auto"
+        w="100%"
+        maxWidth={['100%', '64rem']}
+        mb={5}
+      >
         <HStack justify="space-between" flex={1}>
           <AlertIcon />
           <VStack align="flex-start" flex={1}>

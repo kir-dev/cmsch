@@ -11,7 +11,15 @@ export const Navbar = () => {
   const config = useConfigContext()
   const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
   return (
-    <Box mx="auto" maxWidth={['100%', '64rem']} w="full" fontFamily="heading">
+    <Box
+      mx="auto"
+      maxWidth={['100%', '64rem']}
+      w="full"
+      fontFamily="heading"
+      bg={config.components.style.darkContainerColor}
+      borderBottomRadius={[0, null, 'xl']}
+      mb={4}
+    >
       <Flex
         color={useColorModeValue('gray.800', 'white')}
         minH={{ base: '3rem', md: '4.5rem' }}
