@@ -6,10 +6,13 @@ import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
+import org.springframework.transaction.PlatformTransactionManager
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(LocationComponent::class)
@@ -18,14 +21,17 @@ class LocationService(
     private val userRepository: UserRepository,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val waypointRepository: WaypointRepository,
-    private val locationComponent: LocationComponent
+    private val locationComponent: LocationComponent,
+    private val transactionManager: PlatformTransactionManager
 ) : EntityPageDataSource<LocationEntity, Int> {
 
     private val tokenToLocationMapping = ConcurrentHashMap<String, LocationEntity>()
 
     fun pushLocation(locationDto: LocationDto): LocationResponse {
         if (!tokenToLocationMapping.containsKey(locationDto.token)) {
-            val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + locationDto.token)
+            val user = transactionManager.transaction(readOnly = true) {
+                userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + locationDto.token)
+            }
             if (user.isPresent) {
                 val userEntity = user.get()
                 if (userEntity.role.value >= RoleType.STAFF.value) {
@@ -57,6 +63,7 @@ class LocationService(
             it.altitudeAccuracy = locationDto.altitudeAccuracy
             it.heading = locationDto.heading
             it.timestamp = clock.getTimeInSeconds()
+            it.broadcast = locationDto.broadcastEnabled && shareLocationAllowed(locationDto.token)
             return@let it
         }
 
@@ -65,6 +72,13 @@ class LocationService(
         } else {
             LocationResponse("nem található", "n/a")
         }
+    }
+
+    private fun shareLocationAllowed(token: String): Boolean {
+        val user = transactionManager.transaction(readOnly = true) {
+            userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
+        }
+        return user.getOrNull()?.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString) ?: false
     }
 
     private fun resolveColor(groupName: String): String {
