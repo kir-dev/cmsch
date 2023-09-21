@@ -102,13 +102,13 @@ class QrFightComponent(
     val indulaschKioskId = SettingProxy(componentSettingService, component,
         "indulaschKioskId", "",
         type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Kioszk azonosító", description = "Ezt a kioszkot fogja szerkeszteni a szerver"
+        fieldName = "Kioszk azonosító", description = "Ezt a kioszkot fogja szerkeszteni a szerver", minRoleToEdit = RoleType.SUPERUSER
     )
 
     val indulaschApiKey = SettingProxy(componentSettingService, component,
         "indulaschApiKey", "",
         type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "API Kulcs", description = "API kulcs az InduláSch-hoz."
+        fieldName = "API Kulcs", description = "API kulcs az InduláSch-hoz.", minRoleToEdit = RoleType.SUPERUSER
     )
 
 
