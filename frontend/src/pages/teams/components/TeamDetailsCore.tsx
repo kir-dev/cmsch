@@ -95,7 +95,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
         <VStack align="flex-start" w="full">
           <Grid mt={5} gridAutoRows="auto" w="full" gridTemplateColumns={['full', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={5}>
             {team.stats.map((stat) => (
-              <TeamStat key={stat.name} label={stat.name} value={stat.value1} helpText={stat.value2} url={stat.navigate} />
+              <TeamStat key={stat.name} label={stat.name} value={stat.value1} helpText={stat.value2} categoryId={stat.navigate} />
             ))}
           </Grid>
         </VStack>
