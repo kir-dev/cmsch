@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
@@ -37,7 +38,7 @@ data class IndulaschTextWidgetDto(
 
 @Service
 @ConditionalOnBean(QrFightComponent::class)
-class IndulaschIntegrationService(
+open class IndulaschIntegrationService(
     private val qrFightComponent: QrFightComponent,
     private val objectMapper: ObjectMapper
 ) {
@@ -50,7 +51,8 @@ class IndulaschIntegrationService(
         .defaultHeader(HttpHeaders.USER_AGENT, "AuthSchKotlinAPI")
         .build()
 
-    fun setTextOnWidget(widgetData: IndulaschTextWidgetDto){
+    @Async
+    open fun setTextOnWidget(widgetData: IndulaschTextWidgetDto){
         if(qrFightComponent.indulaschApiKey.getValue().isEmpty() || qrFightComponent.indulaschKioskId.getValue().isEmpty()) return
         val response: String? = indulaschApi.patch()
             .uri { uriBuilder ->
