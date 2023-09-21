@@ -18,7 +18,7 @@ export function TeamStat({ label, value, percentage, helpText, bg, icon, categor
   const background = useOpaqueBackground(1)
   const backgroundHover = useOpaqueBackground(2)
   const content = (
-    <Stat borderRadius="lg" px={5} py={2} bg={bg ?? background} _hover={{ bg: url ? backgroundHover : undefined }} {...props}>
+    <Stat borderRadius="lg" px={5} py={2} bg={bg ?? background} _hover={{ bg: categoryId ? backgroundHover : undefined }} {...props}>
       <HStack justify="space-between">
         <Box>
           <StatLabel>{label}</StatLabel>
