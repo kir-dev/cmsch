@@ -99,7 +99,8 @@ class RiddleApiController(
         @RequestBody body: RiddleSubmissionDto,
         auth: Authentication?
     ): ResponseEntity<RiddleSubmissionView> {
-        val user = auth?.getUserOrNull()
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build()
+        /*val user = auth?.getUserOrNull()
             ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
@@ -113,7 +114,7 @@ class RiddleApiController(
             OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.groupId, user.groupName, riddleId, body.solution)
                 ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
-        }
+        }*/
     }
 
     @JsonView(FullDetails::class)
