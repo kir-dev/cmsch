@@ -9,4 +9,5 @@ data class LocationDto(
     var altitudeAccuracy: Float = 0f,
     var heading: Double = 0.0,
     var speed: Double = 0.0,
+    var broadcastEnabled: Boolean = false
 )

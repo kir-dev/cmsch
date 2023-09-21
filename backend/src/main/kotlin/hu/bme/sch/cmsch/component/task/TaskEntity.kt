@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.task
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
@@ -9,10 +8,10 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 enum class TaskType {
     TEXT,
@@ -74,7 +73,6 @@ data class TaskEntity(
     @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @JsonIgnore
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",
         note = "A leadási határidő után jelenik meg")
     @property:GenerateOverview(visible = false)
@@ -125,7 +123,6 @@ data class TaskEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @JsonIgnore
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 10, label = "Max pont")
     @property:GenerateOverview(columnName = "Max pont", order = 5, centered = true)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_INT)
@@ -155,7 +152,6 @@ data class TaskEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @JsonIgnore
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 14, label = "Cimke", note = "Ha nem tudod mi ez, hagyd üresen!")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 13)
