@@ -3,8 +3,9 @@ package hu.bme.sch.cmsch.component.task
 import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.TaskSubmissionListener
-import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.uploadFile
 import org.postgresql.util.PSQLException
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(TaskComponent::class)
@@ -28,6 +30,8 @@ open class TasksService(
     private val taskComponent: TaskComponent,
     private val debugComponent: DebugComponent,
     private val listeners: List<TaskSubmissionListener>,
+    private val userRepository: UserRepository,
+    private val groupRepository: GroupRepository
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -64,6 +68,9 @@ open class TasksService(
         return taskRepository.findAllByHighlightedTrueAndVisibleTrue()
                 .map { findSubmissionStatusForGroup(it, groupId) }
     }
+
+    @Transactional(readOnly = true)
+    open fun getAllTasks() = taskRepository.findAllByVisibleTrue();
 
     @Transactional(readOnly = true)
     open fun getAllTasksForGroup(groupId: Int): List<TaskEntityWrapperDto> {
@@ -110,6 +117,62 @@ open class TasksService(
             submission.get().approved -> TaskEntityWrapperDto(taskEntity, TaskStatus.ACCEPTED, submission.get().response)
             else -> TaskEntityWrapperDto(taskEntity, TaskStatus.SUBMITTED, submission.get().response)
         }
+    }
+
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    open fun submitTaskReview(
+        taskId: Int,
+        userId: Int?,
+        groupId: Int?,
+        reviewMessage: String,
+        isApproved: Boolean,
+        score: Int,
+        adminUserName: String
+    ): Boolean {
+        if (userId == null && groupId == null) {
+            return false
+        }
+
+        val task: Optional<TaskEntity> = taskRepository.findById(taskId)
+        if (!task.isPresent) {
+            return false
+        }
+
+        val existingSubmission =
+            if (userId == null)
+                submitted.findByTask_IdAndGroupId(taskId, groupId!!)
+            else
+                submitted.findByTask_IdAndUserId(taskId, userId)
+
+
+        val group = if (groupId != null) groupRepository.findById(groupId).getOrNull() else null
+        val user = if (userId != null) userRepository.findById(userId).getOrNull() else null
+
+        val submission: SubmittedTaskEntity = existingSubmission.getOrNull() ?: SubmittedTaskEntity(
+            0, task.get(), groupId, group?.name ?: "",
+            userId, user?.fullNameWithAlias ?: "",
+            task.get().categoryId,
+        )
+        submission.apply {
+            approved = isApproved
+            rejected = !isApproved
+            this.score = score
+            response = reviewMessage
+        }
+
+        submission.addSubmissionHistory(
+            date = clock.getTimeInSeconds(),
+            submitterName = adminUserName,
+            adminResponse = true,
+            content = reviewMessage,
+            status = "$score pont | értékelve",
+            type = "OTHER",
+            contentUrl = ""
+        )
+        submitted.save(submission)
+
+        return true
     }
 
     @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
