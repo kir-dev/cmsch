@@ -10,6 +10,7 @@ import {
   Input,
   Text,
   ToastId,
+  useDisclosure,
   useToast,
   VStack
 } from '@chakra-ui/react'
@@ -31,16 +32,18 @@ import { useOpaqueBackground } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { RiddleSubmissonStatus } from '../../util/views/riddle.view'
+import { StopItModal } from '../../common-components/StopItModal'
 
 const RiddlePage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { isOpen, onClose, onOpen } = useDisclosure()
   const toast = useToast()
   const toastIdRef = useRef<ToastId | null>(null)
   const solutionInput = useRef<HTMLInputElement>(null)
   const { isError, isLoading, data } = useRiddleDetailsQuery(id || '')
   const hintQuery = useRiddleHintQuery(id || '')
-  const submissionMutation = useRiddleSubmitMutation()
+  const submissionMutation = useRiddleSubmitMutation(onOpen)
   const skipMutation = useRiddleSkipMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
   const boxBorder = useOpaqueBackground(1)
@@ -167,7 +170,7 @@ const RiddlePage = () => {
     <CmschPage loginRequired>
       <Helmet title={data.title} />
       <CustomBreadcrumb items={breadcrumbItems} />
-
+      <StopItModal isOpen={isOpen} onClose={onClose} />
       <Heading my={5}> {data.title} </Heading>
       <Box maxW="100%" w="30rem" mx="auto">
         {data.imageUrl && <Image width="100%" src={`${API_BASE_URL}/cdn/${data.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
