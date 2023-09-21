@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
@@ -26,15 +27,18 @@ class LocationService(
         if (!tokenToLocationMapping.containsKey(locationDto.token)) {
             val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + locationDto.token)
             if (user.isPresent) {
-                if (user.get().role.value >= RoleType.STAFF.value) {
+                val userEntity = user.get()
+                if (userEntity.role.value >= RoleType.STAFF.value) {
                     tokenToLocationMapping[locationDto.token] =
                         LocationEntity(
                             id = 0,
-                            userId = user.get().id,
-                            userName = user.get().fullName,
-                            alias = user.get().alias,
-                            groupName = user.get().groupName,
-                            markerColor = resolveColor(user.get().groupName)
+                            userId = userEntity.id,
+                            userName = userEntity.fullName,
+                            alias = userEntity.alias,
+                            groupName = userEntity.groupName,
+                            markerColor = resolveColor(userEntity.groupName),
+                            broadcast = locationDto.broadcastEnabled
+                                    && userEntity.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString)
                         )
                 } else {
                     return LocationResponse("jogosulatlan", "n/a")

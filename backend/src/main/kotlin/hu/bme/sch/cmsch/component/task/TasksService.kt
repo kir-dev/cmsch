@@ -404,13 +404,14 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoriesForGroup(groupId: Int): List<TaskCategoryDto> {
+    open fun getCategoriesForGroup(groupId: Int, advertisedOnly: Boolean = false): List<TaskCategoryDto> {
         val submissionByCategory = submitted.findAllByGroupId(groupId)
                 .groupBy { it.categoryId }
 
         val taskByCategory = taskRepository.findAllByVisibleTrue()
 
-        return categories.findAll()
+        val allCategories = if (advertisedOnly) categories.findAllByAdvertisedTrue() else categories.findAll()
+        return allCategories
             .map { category ->
                 return@map TaskCategoryDto(
                     name = category.name,

@@ -242,7 +242,7 @@ open class TeamService(
 
     private fun mapTasks(team: GroupEntity): List<TaskCategoryPreview> {
         return tasksService.map { tasks ->
-            tasks.getCategoriesForGroup(team.id)
+            tasks.getCategoriesForGroup(team.id, advertisedOnly = true)
                 .map { TaskCategoryPreview(
                     name = it.name,
                     completed = it.approved,
