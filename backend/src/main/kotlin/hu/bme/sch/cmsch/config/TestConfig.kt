@@ -21,10 +21,12 @@ import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.component.token.TokenEntity
 import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.model.*
-import hu.bme.sch.cmsch.repository.*
+import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
+import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.util.sha256
-import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.transaction.annotation.Isolation

@@ -537,6 +537,12 @@ object StaffPermissions : PermissionGroup {
         component = LocationComponent::class
     )
 
+    val PERMISSION_BROADCAST_LOCATION = PermissionValidator(
+        "LOCATION_BROADCAST",
+        "Közvetítés funkció (mindenki láthassa)",
+        component = LocationComponent::class
+    )
+
     // RiddleComponent
 
     val PERMISSION_SHOW_RIDDLES = PermissionValidator(
@@ -1164,6 +1170,7 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_CREATE_LOCATIONS,
         PERMISSION_EDIT_LOCATIONS,
         PERMISSION_DELETE_LOCATIONS,
+        PERMISSION_BROADCAST_LOCATION,
 
         PERMISSION_SHOW_RIDDLES,
         PERMISSION_EDIT_RIDDLES,
