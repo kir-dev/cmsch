@@ -59,7 +59,7 @@ class EmailDebugSenderDashboard(
             2,
             false,
             "Üzenet küldése",
-            "Ezzel az ezsközzel tudsz teszt emailt küldeni. " +
+            "Ezzel az eszközzel tudsz teszt emailt küldeni. " +
                     "A szerver majd a beállítások alapján elküldi a címzettnek.",
             listOf(
                 FormElement(
