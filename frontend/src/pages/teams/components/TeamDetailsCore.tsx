@@ -133,8 +133,8 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               Csoport elhagyása
             </Button>
           )}
-          {true && (
-            <LinkButton href={Paths.RACE} ml={5} colorScheme="brand">
+          {team.showRaceButton && (
+            <LinkButton href={AbsolutePaths.TEAMS + `/details/${team.id}/` + Paths.RACE} ml={5} colorScheme="brand">
               Sörmérés eredmény
             </LinkButton>
           )}
