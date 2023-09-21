@@ -59,7 +59,7 @@ class MessagingDebugSenderDashboard(
             2,
             false,
             "Üzenet küldése",
-            "Ezzel az ezsközzel tudsz teszt üzenetet küldeni. " +
+            "Ezzel az eszközzel tudsz teszt üzenetet küldeni. " +
                     "A proxy majd továbbítja a megfelelő embereknek. " +
                     "Fontos, hogy először a címzetteknek össze kell szinkronizálni az authschjukat a " +
                     "Discord fiókkal a Discoordinator app segítségével.",
