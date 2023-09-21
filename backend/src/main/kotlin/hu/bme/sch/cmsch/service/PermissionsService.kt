@@ -117,6 +117,12 @@ object ControlPermissions : PermissionGroup {
         component = TaskComponent::class
     )
 
+    val PERMISSION_TASK_MANUAL_SUBMIT = PermissionValidator(
+        "TASK_MANUAL_SUBMIT",
+        "Feladatok komponens testreszabása",
+        component = TaskComponent::class
+    )
+
     val PERMISSION_CONTROL_EVENTS = PermissionValidator(
         "EVENT_CONTROL",
         "Események komponens testreszabása",
@@ -335,6 +341,7 @@ object ControlPermissions : PermissionGroup {
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
+        PERMISSION_TASK_MANUAL_SUBMIT,
         PERMISSION_CONTROL_EVENTS,
         PERMISSION_CONTROL_DEBTS,
         PERMISSION_CONTROL_RIDDLE,
