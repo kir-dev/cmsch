@@ -3,14 +3,12 @@ package hu.bme.sch.cmsch.component.qrfight
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschIntegrationService
-import hu.bme.sch.cmsch.addon.indulasch.IndulaschMessageType
-import hu.bme.sch.cmsch.addon.indulasch.IndulaschNewMessageDto
+import hu.bme.sch.cmsch.addon.indulasch.IndulaschTextWidgetDto
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.token.*
 import hu.bme.sch.cmsch.component.token.TokenCollectorStatus.*
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -486,7 +484,7 @@ open class QrFightService(
                 log.info("Tower for GROUP timer executed, and updated {}/{} towers", updated.size, towers.size)
             }
         }
-        replaceIndulaschMessage()
+        setIndulaschText()
     }
 
     private fun serializeState(state: MutableMap<String, Int>): String {
@@ -517,45 +515,20 @@ open class QrFightService(
         }
     }
 
-    fun replaceIndulaschMessage() {
+    fun setIndulaschText() {
         if (!qrFightComponent.indulaschTowerEnabled.isValueTrue())
             return
-
-        indulaschIntegrationService.fetchIndulasch().forEach {
-            if (it.text.startsWith(qrFightComponent.indulaschMessagePrefix.getValue())) {
-                indulaschIntegrationService.deleteMessage(it.id)
-            }
-        }
 
         val tower = qrTowerRepository.findAllBySelector(qrFightComponent.indulaschTowerSelector.getValue())
             .firstOrNull()
             ?: return
 
-        when (startupPropertyConfig.tokenOwnershipMode) {
-            OwnershipType.USER -> indulaschIntegrationService.insertMessage(
-                IndulaschNewMessageDto(
-                    IndulaschMessageType.getByNameOrNull(qrFightComponent.indulaschMessageLevel.getValue())
-                        ?: IndulaschMessageType.INFO,
-                    qrFightComponent.indulaschMessageFormat.getValue()
-                        .replace("{HOLDER}",
-                            userRepository.findById(tower.holder.toIntOrNull() ?: 0).map { it.fullNameWithAlias }
-                                .orElse(NOBODY)
-                        )
-                        .replace("{TIME}", tower.holderFor.toString())
-                        .replace("{OWNER}", tower.ownerUserName.ifBlank { NOBODY })
-                )
+        indulaschIntegrationService.setTextOnWidget(
+            IndulaschTextWidgetDto(
+                tower.holder,
+                if (tower.holder == tower.ownerGroupName) "Birtokló is" else "Birtokos: "+tower.ownerGroupName
             )
-            OwnershipType.GROUP -> indulaschIntegrationService.insertMessage(
-                IndulaschNewMessageDto(
-                    IndulaschMessageType.getByNameOrNull(qrFightComponent.indulaschMessageLevel.getValue())
-                        ?: IndulaschMessageType.INFO,
-                    qrFightComponent.indulaschMessageFormat.getValue()
-                        .replace("{HOLDER}", tower.holder)
-                        .replace("{TIME}", tower.holderFor.toString())
-                        .replace("{OWNER}", tower.ownerGroupName.ifBlank { NOBODY })
-                )
-            )
-        }
+        )
     }
 
     @Transactional(readOnly = true)
