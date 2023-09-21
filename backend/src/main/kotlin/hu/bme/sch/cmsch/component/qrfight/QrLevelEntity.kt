@@ -36,7 +36,7 @@ data class QrLevelEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Kategória",
-        note = "Azonosnak kell legyen a token kategóriájával. Az egymásra épülésnél is ezt kell használni. Szintekközött legyen egyedi.")
+        note = "Azonosnak kell legyen a token kategóriájával. Az egymásra épülésnél is ezt kell használni. Szintek között legyen egyedi.")
     @property:GenerateOverview(columnName = "Kategória", order = 4, centered = true, )
     @property:ImportFormat(ignore = false, columnId = 1)
     var category: String = "",

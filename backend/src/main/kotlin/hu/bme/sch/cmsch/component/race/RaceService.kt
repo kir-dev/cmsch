@@ -74,6 +74,27 @@ open class RaceService(
         }
     }
 
+    @Throws(NoSuchElementException::class)
+    @Transactional(readOnly = true)
+    open fun getRaceByTeam(user: CmschUser?): RaceView {
+        val board = getBoardForGroups(DEFAULT_CATEGORY)
+            .filter { it.groupName == user?.groupName }
+
+        return if (user == null) {
+            RaceView("nem található", "", null, null, board)
+        } else {
+            val groupId = user.groupId ?: -1
+            val place = board.indexOfFirst { it.id == groupId }
+            RaceView(
+                user.groupName,
+                "",
+                if (place < 0) null else (place + 1),
+                board.find { it.id == groupId }?.time,
+                board
+            )
+        }
+    }
+
     @Transactional(readOnly = true)
     open fun getBoardForGroups(category: String) = if (raceComponent.ascendingOrder.isValueTrue()) {
         raceRecordRepository.findAllByCategory(category)
@@ -129,9 +150,8 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getViewForUsers(user: CmschUser?, filter: (RaceEntryDto) -> Boolean = { true }): RaceView {
+    open fun getViewForUsers(user: CmschUser?): RaceView {
         val board = getBoardForUsers(DEFAULT_CATEGORY, false)
-            .filter(filter)
 
         return if (user == null) {
             RaceView(
