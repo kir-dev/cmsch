@@ -27,6 +27,7 @@ import hu.bme.sch.cmsch.util.sha256
 import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -115,6 +116,10 @@ open class TestConfig(
                 addForms(form, response)
             }
         }
+    }
+
+    @Scheduled(fixedDelay = 3000L)
+    open fun delayedInit() {
         riddleCacheManager.resetCache(false, false)
     }
 
