@@ -46,6 +46,9 @@ open class UserService(
     }
 
     @Transactional(readOnly = true)
+    open fun findAll(): Iterable<UserEntity> = users.findAll()
+
+    @Transactional(readOnly = true)
     open fun exists(id: String) = users.existsByInternalId(id)
 
     @Transactional(readOnly = true)

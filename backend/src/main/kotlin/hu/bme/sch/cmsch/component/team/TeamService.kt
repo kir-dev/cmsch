@@ -153,7 +153,7 @@ open class TeamService(
     }
 
     @Transactional(readOnly = true)
-    open fun listAllTeams(): List<TeamListView>? {
+    open fun listAllTeams(): List<TeamListView> {
         if (!teamComponent.showTeamsAtAll.isValueTrue())
             return listOf()
 
