@@ -27,6 +27,7 @@ export type TeamView = {
   joinEnabled: boolean
   leaveEnabled: boolean
   joinCancellable: boolean
+  showRaceButton: boolean
   ownTeam: boolean
   stats: { name: string; value1: string; value2?: string; navigate?: string }[]
   taskCategories?: TeamTaskCategoriesView[]
