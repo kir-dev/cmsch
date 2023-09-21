@@ -27,74 +27,42 @@ enum class IndulaschMessageType {
     }
 }
 
-data class IndulaschMessageDto(
-    var id: Int = 0,
-    var type: IndulaschMessageType,
-    var text: String = ""
-)
 
-data class IndulaschNewMessageDto(
-    var type: IndulaschMessageType,
-    var text: String = ""
-)
+data class IndulaschTextWidgetDto(
+    var title: String?,
+    var subtitle: String?
+){
+    val name = "text"
+}
 
 @Service
 @ConditionalOnBean(QrFightComponent::class)
 class IndulaschIntegrationService(
     private val qrFightComponent: QrFightComponent,
-    @Value("\${hu.bme.sch.cmsch.indulasch.token:none}") private val indulaschApiToken: String,
     private val objectMapper: ObjectMapper
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     var indulaschApi = WebClient.builder()
-        .baseUrl("https://indula.sch.bme.hu/api")
+        .baseUrl("https://api.indulasch.kir-dev.hu")
         .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
         .defaultHeader(HttpHeaders.USER_AGENT, "AuthSchKotlinAPI")
         .build()
 
-    fun fetchIndulasch(): List<IndulaschMessageDto> {
-        val response = indulaschApi.get()
+    fun setTextOnWidget(widgetData: IndulaschTextWidgetDto){
+        if(qrFightComponent.indulaschApiKey.getValue().isEmpty() || qrFightComponent.indulaschKioskId.getValue().isEmpty()) return
+        val response: String? = indulaschApi.patch()
             .uri { uriBuilder ->
-                uriBuilder.path("/messages")
+                uriBuilder.path("/admin/kiosk/${qrFightComponent.indulaschKioskId.getValue()}/widget")
                     .build()
             }
-            .header("Authorization", "Bearer $indulaschApiToken")
-            .retrieve()
-            .bodyToFlux(IndulaschMessageDto::class.java)
-            .collectList()
-            .block()
-        log.info("Indulasch api fetched: $response")
-        return response ?: listOf()
-    }
-
-    fun insertMessage(message: IndulaschNewMessageDto) {
-        val response: String? = indulaschApi.put()
-            .uri { uriBuilder ->
-                uriBuilder.path("/messages")
-                    .build()
-            }
-            .header("Authorization", "Bearer $indulaschApiToken")
+            .header("Authorization", "Api-Key ${qrFightComponent.indulaschApiKey.getValue()}")
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(message))
+            .body(BodyInserters.fromValue(widgetData))
             .retrieve()
             .bodyToMono(String::class.java)
             .block()
-        log.info("Indulasch message {} inserted, response: {}", message, response)
+        log.info("IndulaSch text widget set to {}, response: {}", widgetData, response)
     }
-
-    fun deleteMessage(id: Int) {
-        val response: String? = indulaschApi.delete()
-            .uri { uriBuilder ->
-                uriBuilder.path("/messages/${id}")
-                    .build()
-            }
-            .header("Authorization", "Bearer $indulaschApiToken")
-            .retrieve()
-            .bodyToMono(String::class.java)
-            .block()
-        log.info("Indulasch message {} deleted, response: {}", id, response)
-    }
-
 }

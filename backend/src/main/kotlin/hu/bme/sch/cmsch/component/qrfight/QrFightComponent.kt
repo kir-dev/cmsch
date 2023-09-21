@@ -37,10 +37,9 @@ class QrFightComponent(
 
             indulaschGroup,
             indulaschTowerEnabled,
-            indulaschMessageFormat,
-            indulaschMessagePrefix,
-            indulaschMessageLevel,
-            indulaschTowerSelector
+            indulaschTowerSelector,
+            indulaschKioskId,
+            indulaschApiKey,
         )
     }
 
@@ -93,28 +92,24 @@ class QrFightComponent(
         fieldName = "Indulásch torony", description = "Ha be van kapcsolva, akkor az indulásch apin állítja a tábla szövegét"
     )
 
-    val indulaschMessageFormat = SettingProxy(componentSettingService, component,
-        "indulaschMessageFormat", "[QR FIGHT] AZ INDULÁSCH TORNYOT JELELEG A(Z) >> {OWNER} << FOGLALJA, ÉS {TIME} PERCCEL A(Z) >> {HOLDER} << BIRTOKOLJA!",
-        type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Üzenet formátum", description = "Változók: {OWNER} {TIME} {HOLDER}"
-    )
-
-    val indulaschMessagePrefix = SettingProxy(componentSettingService, component,
-        "indulaschMessagePrefix", "[QR FIGHT] ",
-        type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Üzenet prefix", description = "Ez alapján törli ki az api a többi üzenetet"
-    )
-
-    val indulaschMessageLevel = SettingProxy(componentSettingService, component,
-        "indulaschMessageLevel", "FUN",
-        type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Üzenet szintje", description = "INFO | WARNING | SUCCESS | FUN"
-    )
 
     val indulaschTowerSelector = SettingProxy(componentSettingService, component,
         "indulaschTowerSelector", "indulasch",
         type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Torony selector", description = ""
+        fieldName = "Torony selector", description = "Melyik torony legyen az InduláSch torony?"
     )
+
+    val indulaschKioskId = SettingProxy(componentSettingService, component,
+        "indulaschKioskId", "",
+        type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Kioszk azonosító", description = "Ezt a kioszkot fogja szerkeszteni a szerver"
+    )
+
+    val indulaschApiKey = SettingProxy(componentSettingService, component,
+        "indulaschApiKey", "",
+        type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "API Kulcs", description = "API kulcs az InduláSch-hoz."
+    )
+
 
 }
