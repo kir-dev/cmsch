@@ -232,10 +232,10 @@ class RiddleMicroserviceDashboard(
             .uri("${riddleComponent.microserviceNodeBaseUrl.getValue()}/remote-api/riddle/${path}")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 
-        return retrtieve(request, path, user)
+        return retrieve(request, path, user)
     }
 
-    private fun retrtieve(
+    private fun retrieve(
         request: WebClient.RequestHeadersSpec<*>,
         to: String,
         responsible: CmschUser?
