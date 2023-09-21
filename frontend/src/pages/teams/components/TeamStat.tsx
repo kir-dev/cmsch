@@ -3,6 +3,7 @@ import React from 'react'
 import { IconType } from 'react-icons/lib'
 import { Link } from 'react-router-dom'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
+import { AbsolutePaths } from '../../../util/paths'
 
 interface TeamStatProps extends StatProps {
   label: string
@@ -10,10 +11,10 @@ interface TeamStatProps extends StatProps {
   percentage?: number
   helpText?: number | string
   icon?: IconType
-  url?: string
+  categoryId?: string
 }
 
-export function TeamStat({ label, value, percentage, helpText, bg, icon, url, ...props }: TeamStatProps) {
+export function TeamStat({ label, value, percentage, helpText, bg, icon, categoryId, ...props }: TeamStatProps) {
   const background = useOpaqueBackground(1)
   const backgroundHover = useOpaqueBackground(2)
   const content = (
@@ -32,6 +33,6 @@ export function TeamStat({ label, value, percentage, helpText, bg, icon, url, ..
     </Stat>
   )
 
-  if (url) return <Link to={url}>{content}</Link>
+  if (categoryId) return <Link to={`${AbsolutePaths.TASKS}/category/${categoryId}`}>{content}</Link>
   return content
 }
