@@ -10,7 +10,7 @@ export function TowerDataDisplay({ level }: TowerDataDisplay) {
   return (
     <VStack align="flex-start" w="100%">
       <Heading fontSize="lg">Tornyok</Heading>
-      <Flex wrap="wrap" gap={5}>
+      <Flex wrap="wrap" w="100%" gap={5}>
         {level.towers.map((t) => (
           <TowerField tower={t} key={t.name} />
         ))}
