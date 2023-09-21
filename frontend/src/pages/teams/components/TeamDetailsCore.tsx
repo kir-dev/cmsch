@@ -29,7 +29,6 @@ interface TeamDetailsCoreProps {
   isLoading: boolean
   error?: string
   myTeam?: boolean
-  admin?: boolean
   refetch?: () => void
 }
 
@@ -183,7 +182,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Heading m={0} fontSize="lg">
               Csapattagok
             </Heading>
-            {isUserGroupAdmin && (
+            {isUserGroupAdmin && myTeam && (
               <Button variant={isEditingMembers ? 'outline' : 'solid'} onClick={() => setIsEditingMembers((prev) => !prev)}>
                 {isEditingMembers ? 'Szerkesztés befejezése' : 'Tagok szerkesztése'}
               </Button>
