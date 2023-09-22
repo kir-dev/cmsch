@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Center, Heading, Image, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Center, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import React, { createContext, PropsWithChildren, useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Loading } from '../../../common-components/Loading'
@@ -6,6 +6,7 @@ import { INITIAL_BG_IMAGE } from '../../../util/configs/environment.config'
 import { l } from '../../../util/language'
 import { useConfigQuery } from '../../hooks/config/useConfigQuery'
 import { ConfigDto } from './types'
+import { KirDevLogo } from '../../../assets/kir-dev-logo'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
@@ -14,13 +15,14 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
     console.error('[ERROR] at ConfigProvider', JSON.stringify(err, null, 2))
   )
   const bg = useColorModeValue('white', 'gray.900')
-  const kirDevLogo = useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')
   if (isLoading)
     return (
       <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
         <VStack p={5} borderRadius={5} bg={bg}>
           <Loading />
-          <Image src={kirDevLogo} w={40} maxH={40} my={3} />
+          <Box w={40} maxH={40} my={3}>
+            <KirDevLogo />
+          </Box>
         </VStack>
       </Center>
     )
