@@ -218,7 +218,7 @@ class TeamComponent(
 
     val leaveEnabled = SettingProxy(componentSettingService, component,
         "leaveEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csatlakozás engedélyezve", description = "Ha igaz, lehet ki lehet lépni csapataból"
+        fieldName = "Csatlakozás engedélyezve", description = "Ha igaz, lehet ki lehet lépni csapatból"
     )
 
     val grantPrivilegedRole = SettingProxy(componentSettingService, component,

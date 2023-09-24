@@ -199,19 +199,19 @@ open class LeaderBoardService(
         }
 
         val challengesPercent = leaderBoardComponent.challengesPercent.getIntValue(100) / 100.0f
-        val challenge = when (startupPropertyConfig.challengeOwnershipMode) {
+        val challenges = when (startupPropertyConfig.challengeOwnershipMode) {
             OwnershipType.GROUP -> {
                 challengeSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { CombinedKey(it.groupId ?: 0, it.groupName) }
                     .filter { groups.findByName(it.key.name).map { m -> m.races }.orElse(false) }
                     .map { entity ->
-                        entity.value.forEach { chalannge ->
+                        entity.value.forEach { challenge ->
                             details.computeIfAbsent(entity.key.id) { key ->
                                 TopListDetails(
                                     key,
                                     entity.value[0].groupName
                                 )
-                            }.items[chalannge.category] = (chalannge.score * challengesPercent).toInt()
+                            }.items[challenge.category] = (challenge.score * challengesPercent).toInt()
                         }
                         LeaderBoardAsGroupEntryDto(
                             entity.key.id,
@@ -243,7 +243,7 @@ open class LeaderBoardService(
             details.computeIfAbsent(it.id) { key -> TopListDetails(key, it.name) }.items[tokenTitle] = it.tokenScore
         }
 
-        cachedTopListForGroups = sequenceOf(tasks, riddles, challenge, tokens)
+        cachedTopListForGroups = sequenceOf(tasks, riddles, challenges, tokens)
             .flatMap { it }
             .groupBy { CombinedKey(it.id, it.name) }
             .map { entries ->
@@ -327,13 +327,13 @@ open class LeaderBoardService(
                 challengeSubmissions.map { it.findAll() }.orElse(listOf())
                     .groupBy { it.userId }
                     .map { entity ->
-                        entity.value.forEach { chalannge ->
+                        entity.value.forEach { challenge ->
                             details.computeIfAbsent(entity.key ?: 0) { key ->
                                 TopListDetails(
                                     key,
                                     entity.value[0].userName
                                 )
-                            }.items[chalannge.category] = (chalannge.score * challengesPercent).toInt()
+                            }.items[challenge.category] = (challenge.score * challengesPercent).toInt()
                         }
                         LeaderBoardAsUserEntryDto(
                             entity.key ?: 0,

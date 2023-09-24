@@ -28,15 +28,15 @@ export interface RiddleCategory {
   nextRiddle?: number
 }
 
-export enum RiddleSubmissonStatus {
+export enum RiddleSubmissionStatus {
   CORRECT = 'CORRECT',
   WRONG = 'WRONG',
   CANNOT_SKIP = 'CANNOT_SKIP',
   SUBMITTER_BANNED = 'SUBMITTER_BANNED'
 }
 
-export interface RiddleSubmissonResult {
-  status: RiddleSubmissonStatus
+export interface RiddleSubmissionResult {
+  status: RiddleSubmissionStatus
   nextId?: number
 }
 

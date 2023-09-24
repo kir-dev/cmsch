@@ -18,7 +18,7 @@ open class BmejegyTimer(
 
     private var ticks = 65535
 
-    fun syncronize() {
+    fun synchronize() {
         executor.submit {
             log.info("[BMEJEGY] Synchronizing started")
             try {
@@ -52,7 +52,7 @@ open class BmejegyTimer(
                 return
             }
             log.info("[BMEJEGY] Pushing event to executor pool")
-            syncronize()
+            synchronize()
         }
     }
 

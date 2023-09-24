@@ -40,7 +40,7 @@ class MailgunEmailProvider(
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .bodyValue(formData)
 
-        retrtieve(request, to, subject, content, responsible)
+        retrieve(request, to, subject, content, responsible)
     }
 
     override fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
@@ -55,10 +55,10 @@ class MailgunEmailProvider(
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .bodyValue(formData)
 
-        retrtieve(request, to, subject, content, responsible)
+        retrieve(request, to, subject, content, responsible)
     }
 
-    private fun retrtieve(
+    private fun retrieve(
         request: WebClient.RequestHeadersSpec<*>,
         to: List<String>,
         subject: String,
