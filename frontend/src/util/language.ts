@@ -65,7 +65,6 @@ const officialLanguageData: Partial<Record<keyof typeof friendlyLanguageData, st
   'alias-change-successful': 'Becenév sikeresen módosítva',
   'alias-change-failure': 'Nem sikerült megváltoztatni a becenevet',
   'alias-change-not-allowed': 'A becenév szerkesztése nem engedélyezett!',
-  'component-unavaliable': 'Komponens nem elérhető!',
   'organization-title': 'Reszortok',
   'organization-description': 'Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.',
   'community-title': 'Körök',
@@ -82,7 +81,7 @@ const officialLanguageData: Partial<Record<keyof typeof friendlyLanguageData, st
 
 const friendlyLanguageData = {
   'error-boundary-title': 'Hiba történt!',
-  'error-boundary-message': 'Sajnos ilyennel még nem találkoztunk. Légyszíves ezt jelezd a fejlesztőknek!',
+  'error-boundary-message': 'Sajnos ilyennel még nem találkoztunk. Légy szíves ezt jelezd a fejlesztőknek!',
   'not-found-message': 'Hoppá, úgy tűnik egy olyan oldalra kerültél, amely nem létezik többé!',
   'no-permission': 'Nincs jogosultságod megtekinteni!',
   'login-consent': 'Válassz bejelentkezési módot!',
@@ -136,7 +135,6 @@ const friendlyLanguageData = {
   'alias-change-successful': 'Becenév sikeresen módosítva',
   'alias-change-failure': 'Nem sikerült megváltoztatni a becenevet',
   'alias-change-not-allowed': 'A becenév szerkesztése nem engedélyezett!',
-  'component-unavaliable': 'Komponens nem elérhető!',
   'organization-title': 'Reszortok',
   'organization-description': 'Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.',
   'community-title': 'Körök',

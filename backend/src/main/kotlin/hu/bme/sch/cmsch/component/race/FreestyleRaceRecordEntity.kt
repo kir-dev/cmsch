@@ -27,7 +27,7 @@ data class FreestyleRaceRecordEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 2, label = "Beadás módja", note = "Ez került beadásra, pl: Jager mérés")
+    @property:GenerateInput(order = 2, label = "Beadás módja", note = "Ez került beadásra, pl: Jäger mérés")
     @property:GenerateOverview(columnName = "Beadás", order = 1)
     @property:ImportFormat(ignore = false, columnId = 0)
     var description: String = "",

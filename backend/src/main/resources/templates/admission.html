@@ -85,7 +85,7 @@
     const camQrResult = document.getElementById('cam-qr-result');
     const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
 
-    function validatePromt(cmschId) {
+    function validatePrompt(cmschId) {
         setTimeout(async () => {
             const raw = await httpFetchData('POST', baseUrl + resolveUrl, {
                 "cmschId": cmschId
@@ -120,7 +120,7 @@
         lastReading = result;
         lastSuccessful = Date.now();
 
-        validatePromt(result);
+        validatePrompt(result);
 
         label.textContent = result;
         camQrResultTimestamp.textContent = new Date().toString();

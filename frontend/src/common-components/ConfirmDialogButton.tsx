@@ -15,7 +15,7 @@ interface ConfirmDialogButtonProps {
   headerText?: string
   bodyText?: string
   buttonText?: string
-  buttonColorSchene?: string
+  buttonColorScheme?: string
   buttonVariant?: string
   confirmButtonText?: string
   refuseButtonText?: string
@@ -27,7 +27,7 @@ export const ConfirmDialogButton = ({
   headerText,
   bodyText,
   buttonText = '',
-  buttonColorSchene,
+  buttonColorScheme,
   buttonVariant,
   buttonWidth,
   confirmButtonText = 'Igen',
@@ -39,7 +39,7 @@ export const ConfirmDialogButton = ({
 
   return (
     <>
-      <Button onClick={onOpen} width={buttonWidth} colorScheme={buttonColorSchene} variant={buttonVariant}>
+      <Button onClick={onOpen} width={buttonWidth} colorScheme={buttonColorScheme} variant={buttonVariant}>
         {buttonText}
       </Button>
       <AlertDialog

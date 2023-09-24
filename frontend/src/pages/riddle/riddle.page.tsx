@@ -31,7 +31,7 @@ import { API_BASE_URL } from '../../util/configs/environment.config'
 import { useOpaqueBackground } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { RiddleSubmissonStatus } from '../../util/views/riddle.view'
+import { RiddleSubmissionStatus } from '../../util/views/riddle.view'
 import { StopItModal } from '../../common-components/StopItModal'
 
 const RiddlePage = () => {
@@ -66,7 +66,7 @@ const RiddlePage = () => {
       { solution: solution || '', id: id || '' },
       {
         onSuccess: (result) => {
-          if (result.status === RiddleSubmissonStatus.WRONG) {
+          if (result.status === RiddleSubmissionStatus.WRONG) {
             if (toastIdRef.current) {
               toast.close(toastIdRef.current)
             }
@@ -79,7 +79,7 @@ const RiddlePage = () => {
                 isClosable: true
               }) || null
           }
-          if (result.status === RiddleSubmissonStatus.SUBMITTER_BANNED) {
+          if (result.status === RiddleSubmissionStatus.SUBMITTER_BANNED) {
             if (toastIdRef.current) {
               toast.close(toastIdRef.current)
             }
@@ -92,7 +92,7 @@ const RiddlePage = () => {
                 isClosable: true
               }) || null
           }
-          if (result.status === RiddleSubmissonStatus.CORRECT && result.nextId) {
+          if (result.status === RiddleSubmissionStatus.CORRECT && result.nextId) {
             navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
             const input = document.getElementById('solution') as HTMLInputElement
             input.value = ''
@@ -104,7 +104,7 @@ const RiddlePage = () => {
               isClosable: true
             })
           }
-          if (result.status === RiddleSubmissonStatus.CORRECT && !result.nextId) {
+          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextId) {
             navigate(AbsolutePaths.RIDDLE)
             toast({
               title: l('riddle-completed-title'),
@@ -138,7 +138,7 @@ const RiddlePage = () => {
               isClosable: true
             })
           }
-          if (result.status === RiddleSubmissonStatus.CORRECT && !result.nextId) {
+          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextId) {
             navigate(AbsolutePaths.RIDDLE)
             toast({
               title: l('riddle-completed-title'),
@@ -196,7 +196,7 @@ const RiddlePage = () => {
               </Alert>
             ) : (
               <ConfirmDialogButton
-                buttonColorSchene="brand"
+                buttonColorScheme="brand"
                 buttonVariant="outline"
                 buttonWidth="100%"
                 buttonText="Hintet kérek"
@@ -214,7 +214,7 @@ const RiddlePage = () => {
                 </Alert>
                 {data.skipPermitted ? (
                   <ConfirmDialogButton
-                    buttonColorSchene="gray"
+                    buttonColorScheme="gray"
                     buttonVariant="outline"
                     buttonWidth="100%"
                     buttonText="Riddle átugrása"

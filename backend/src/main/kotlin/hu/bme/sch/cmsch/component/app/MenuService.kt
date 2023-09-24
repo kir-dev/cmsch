@@ -189,7 +189,7 @@ open class MenuService(
     @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun importMenu(entries: List<MenuImportEntry>, rolesToInclude: List<RoleType>): Pair<Int, Int> {
-        var improted = 0
+        var imported = 0
         var notAffected = 0
 
         entries.groupBy { it.role }
@@ -203,7 +203,7 @@ open class MenuService(
                             initialMenu.visible = it.visible
                             initialMenu.subMenu = it.subMenu
                             initialMenu.external = it.external
-                            ++improted
+                            ++imported
                         } ?: {
                             initialMenu.order = -1
                             initialMenu.visible = false
@@ -213,7 +213,7 @@ open class MenuService(
                 }
                 persistSettings(initialMenus, role)
             }
-        return Pair(improted, notAffected)
+        return Pair(imported, notAffected)
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)

@@ -8,7 +8,7 @@ data class GroupMemberLocationDto(
     val name: String,
 
     @field:JsonView(FullDetails::class)
-    val logitude: Double,
+    val longitude: Double,
 
     @field:JsonView(FullDetails::class)
     val latitude: Double,
