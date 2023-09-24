@@ -97,6 +97,7 @@ export interface Event {
   filterByCategory: boolean
   filterByLocation: boolean
   filterByDay: boolean
+  searchEnabled: boolean
 }
 
 export interface Home {
@@ -117,6 +118,7 @@ export interface Race {
   title: string
   visible: boolean
   defaultCategoryDescription: string
+  searchEnabled: boolean
 }
 
 export interface Riddle {
