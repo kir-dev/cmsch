@@ -1,4 +1,18 @@
-import { Box, Heading, Stack, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue, useDisclosure } from '@chakra-ui/react'
+import {
+  Box,
+  Heading,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Stack,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useBreakpoint,
+  useBreakpointValue,
+  useDisclosure
+} from '@chakra-ui/react'
 import _ from 'lodash'
 import { Helmet } from 'react-helmet-async'
 import { FaCalendar } from 'react-icons/fa'
@@ -16,6 +30,9 @@ import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
 import { FILTER, mapper } from './util/filter'
 import { CustomTabButton } from '../../common-components/CustomTabButton'
+import { SearchIcon } from '@chakra-ui/icons'
+import { createRef, useEffect, useState } from 'react'
+import { EventListView } from '../../util/views/event.view'
 
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
@@ -23,18 +40,35 @@ const EventListPage = () => {
   const { isOpen, onToggle } = useDisclosure()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
+  const inputRef = createRef<HTMLInputElement>()
+  const [filteredEvents, setFilteredEvents] = useState<EventListView[] | undefined>()
 
   if (!component) return <ComponentUnavailable />
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   const availableFilters = []
   if (component.filterByCategory) availableFilters.push(FILTER.CATEGORY)
   if (component.filterByLocation) availableFilters.push(FILTER.PLACE)
   if (component.filterByDay) availableFilters.push(FILTER.DAY)
 
-  const pastEvents = data.filter((event) => event.timestampEnd * 1000 < Date.now())
-  const upcomingEvents = data.filter((event) => event.timestampEnd * 1000 >= Date.now())
+  const pastEvents = data?.filter((event) => event.timestampEnd * 1000 < Date.now())
+  const upcomingEvents = data?.filter((event) => event.timestampEnd * 1000 >= Date.now())
 
+  const handleInput = () => {
+    const search = inputRef?.current?.value.toLowerCase()
+    if (!data) {
+      setFilteredEvents(undefined)
+    } else if (!search) {
+      setFilteredEvents(upcomingEvents)
+    } else {
+      setFilteredEvents(upcomingEvents?.filter((event) => event.title.toLowerCase().includes(search)))
+    }
+  }
+
+  useEffect(() => {
+    setFilteredEvents(upcomingEvents)
+  }, [data])
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
   return (
     <CmschPage>
       <Helmet title={component.title ?? 'Események'} />
@@ -54,20 +88,29 @@ const EventListPage = () => {
             {component.filterByDay && <CustomTabButton>Időpont szerint</CustomTabButton>}
           </TabList>
         )}
+
         <TabPanels>
           <TabPanel p={0}>
-            <EventList eventList={upcomingEvents} groupByDay />
+            {component.searchEnabled && (
+              <InputGroup mt={5}>
+                <InputLeftElement h="100%">
+                  <SearchIcon />
+                </InputLeftElement>
+                <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
+              </InputGroup>
+            )}
+            <EventList eventList={filteredEvents || data || []} groupByDay />
           </TabPanel>
           {availableFilters.map((filter) => (
             <TabPanel key={filter} p={0}>
               <Stack>
                 <CardListItem title="Mind" open={isOpen} toggle={onToggle} />
-                {filter === FILTER.DAY && <EventFilterOption name="Korábbi" events={pastEvents} forceOpen={isOpen} />}
-                {_.uniq(upcomingEvents.map((event) => mapper(filter, event))).map((option) => (
+                {filter === FILTER.DAY && <EventFilterOption name="Korábbi" events={pastEvents || []} forceOpen={isOpen} />}
+                {_.uniq(upcomingEvents?.map((event) => mapper(filter, event))).map((option) => (
                   <EventFilterOption
                     key={option}
                     name={option}
-                    events={upcomingEvents.filter((e) => mapper(filter, e) === option)}
+                    events={upcomingEvents?.filter((e) => mapper(filter, e) === option) || []}
                     forceOpen={isOpen}
                   />
                 ))}
