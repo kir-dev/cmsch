@@ -30,7 +30,7 @@ data class QrFightLevelView(
     val owners: String = "",
     val teams: Map<String, Int> = mapOf(),
     val towers: List<TowerView> = listOf(),
-    val totems: List<TotemView>
+    val totems: List<TotemView> = listOf(),
 )
 
 data class QrFightOverviewView(
