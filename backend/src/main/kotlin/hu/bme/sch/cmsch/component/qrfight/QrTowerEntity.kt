@@ -160,6 +160,13 @@ data class QrTowerEntity(
     @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_INT)
     var holderFor: Int = 0,
 
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Totem", note = "A totemek véglegesen kerülnek foglalásra, nem váltanak gazdát")
+    @property:GenerateOverview(columnName = "Totem", centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:ImportFormat(ignore = false, columnId = 17, type = IMPORT_BOOLEAN)
+    var totem: Boolean = false,
+
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(

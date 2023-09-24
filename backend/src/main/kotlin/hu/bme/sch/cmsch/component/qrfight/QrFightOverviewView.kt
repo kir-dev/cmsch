@@ -16,6 +16,13 @@ data class TowerView(
     val holdingFor: Int? = null
 )
 
+data class TotemView(
+    val name: String = "",
+    val description: String,
+    val holder: String?,
+    val holdingFor: Int?
+)
+
 data class QrFightLevelView(
     val name: String = "",
     val description: String = "",
@@ -23,7 +30,8 @@ data class QrFightLevelView(
     val status: LevelStatus = LevelStatus.NOT_LOGGED_IN,
     val owners: String = "",
     val teams: Map<String, Int> = mapOf(),
-    val towers: List<TowerView> = listOf()
+    val towers: List<TowerView> = listOf(),
+    val totems: List<TotemView>
 )
 
 data class QrFightOverviewView(
