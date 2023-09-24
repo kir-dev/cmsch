@@ -11,13 +11,21 @@ export type QrLevelDto = {
   owners: string
   teams: Record<string, number>
   towers: Tower[]
+  totems: Totem[]
 }
 
 export type Tower = {
   name: string
   ownerNow?: string
+  description?: string
   holder?: string
   holdingFor?: number
+}
+
+export type Totem = {
+  name: string
+  description?: string
+  owner?: string
 }
 
 export enum LevelStatus {

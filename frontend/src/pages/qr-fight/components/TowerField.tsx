@@ -12,6 +12,7 @@ export function TowerField({ tower }: TowerFieldProps) {
   return (
     <Stat flexBasis={'10em'} padding={5} borderRadius={5} background={background}>
       <StatNumber>{tower.name}</StatNumber>
+      {tower.description && <StatLabel mt={1}>{tower.description}</StatLabel>}
       <VStack align="flex-start" mt={3}>
         <VStack align="flex-start" spacing={0}>
           <StatHelpText>Aktuális foglaló</StatHelpText>
