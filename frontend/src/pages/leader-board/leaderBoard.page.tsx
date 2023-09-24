@@ -1,4 +1,3 @@
-import { SearchIcon } from '@chakra-ui/icons'
 import {
   Flex,
   Heading,
@@ -14,41 +13,26 @@ import {
   useBreakpointValue,
   VStack
 } from '@chakra-ui/react'
-import { createRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { BoardStat } from '../../common-components/BoardStat'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CustomTabButton } from '../../common-components/CustomTabButton'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { BoardStat } from '../../common-components/BoardStat'
+import { CustomTabButton } from '../../common-components/CustomTabButton'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
+import { AbsolutePaths } from '../../util/paths'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
-import { AbsolutePaths } from '../../util/paths'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { SearchIcon } from '@chakra-ui/icons'
+import { createRef, useState } from 'react'
 import { LeaderBoardView } from '../../util/views/leaderBoardView'
-
-const mockData: LeaderBoardView = {
-  userScore: 11,
-  userBoard: [
-    { id: 0, name: 'Anyabaszo', items: [{ name: 'Feladatok', value: 84 }], total: 84, groupName: 'anyad' },
-    { id: 2, name: 'Test', items: [{ name: 'rip', value: 11 }], total: 11, groupName: 'nop' }
-  ],
-  groupScore: 35,
-  groupBoard: [
-    { id: 0, name: 'group1', items: [{ name: 'asdasd', value: 84 }], total: 84, groupName: 'anyad' },
-    { id: 2, name: 'group2', items: [{ name: 'test23', value: 11 }], total: 11, groupName: 'nop' }
-  ]
-}
-
 const LeaderboardPage = () => {
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
   const component = useConfigContext()?.components.leaderboard
-  //const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
-  const isError = false
-  const isLoading = false
-  const data = mockData
+  const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
 
   const [filteredData, setFilteredData] = useState<LeaderBoardView | undefined>(data)
   const inputRef = createRef<HTMLInputElement>()

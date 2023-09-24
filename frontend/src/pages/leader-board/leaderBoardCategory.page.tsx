@@ -13,39 +13,23 @@ import {
   useBreakpoint,
   VStack
 } from '@chakra-ui/react'
-import { createRef, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { AbsolutePaths } from '../../util/paths'
+import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
+import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { CustomTabButton } from '../../common-components/CustomTabButton'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
-import { AbsolutePaths } from '../../util/paths'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { LeaderBoardView } from '../../util/views/leaderBoardView'
-
-const mockData: LeaderBoardView = {
-  userScore: 11,
-  userBoard: [
-    { id: 0, name: 'Anyabaszo', items: [{ name: 'Feladatok', value: 84 }], total: 84, groupName: 'anyad' },
-    { id: 2, name: 'Test', items: [{ name: 'rip', value: 11 }], total: 11, groupName: 'nop' }
-  ],
-  groupScore: 35,
-  groupBoard: [
-    { id: 0, name: 'group1', items: [{ name: 'asdasd', value: 84 }], total: 84, groupName: 'anyad' },
-    { id: 2, name: 'group2', items: [{ name: 'test23', value: 11 }], total: 11, groupName: 'nop' }
-  ]
-}
+import { createRef, useState } from 'react'
 export default function LeaderboardCategoryPage() {
-  //const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
+  const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
   const component = useConfigContext()?.components.leaderboard
   const breakpoint = useBreakpoint()
   const inputRef = createRef<HTMLInputElement>()
-  const isError = false
-  const isLoading = false
-  const data = mockData
   const [filteredData, setFilteredData] = useState<LeaderBoardView | undefined>(data)
 
   if (!component) return <ComponentUnavailable />
