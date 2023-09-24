@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
@@ -52,19 +53,27 @@ class RaceRecordController(
         "RaceCategoryEntity" to {
             val results = mutableListOf<String>()
             results.add("")
-            results.addAll(raceCategories.findAll().map { it.slug }.sorted().toList())
+            results.addAll(transactionManager.transaction(readOnly = true) { raceCategories.findAll() }
+                .map { it.slug }
+                .sorted()
+                .toList())
             return@to results
         },
         "GroupEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(groups.findAll().map { it.name }.sorted().toList())
+            results.addAll(transactionManager.transaction(readOnly = true) { groups.findAll() }
+                .map { it.name }
+                .sorted().toList())
             return@to results
         },
         "UserEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(users.findAll().sortedBy { it.fullName }.map { mapUsername(it) }.toList())
+            results.addAll(transactionManager.transaction(readOnly = true) { users.findAll() }
+                .sortedBy { it.fullName }
+                .map { mapUsername(it) }
+                .toList())
             return@to results
         },
     ),
@@ -95,7 +104,7 @@ class RaceRecordController(
 
     private fun processGroupSubmission(entity: RaceRecordEntity): Boolean {
         if (entity.groupName.isNotBlank()) {
-            val groupEntity = groups.findByName(entity.groupName)
+            val groupEntity = transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }
             if (groupEntity.isPresent) {
                 entity.groupId = groupEntity.orElseThrow().id
                 entity.groupName = groupEntity.orElseThrow().name
@@ -112,7 +121,8 @@ class RaceRecordController(
 
     private fun processUserSubmission(entity: RaceRecordEntity): Boolean {
         if (entity.userName.isNotBlank() && entity.userName != "-") {
-            val user = users.findById(entity.userName.split("|")[0].trim().toIntOrNull() ?: 0)
+            val id = entity.userName.split("|")[0].trim().toIntOrNull() ?: 0
+            val user = transactionManager.transaction(readOnly = true) { users.findById(id) }
 
             if (user.isPresent) {
                 entity.userName = user.orElseThrow().fullName

@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
@@ -35,7 +36,7 @@ class FreestyleRaceRecordController(
 ) : OneDeepEntityPage<RaceRecordEntity>(
     "freestyle-race",
     RaceRecordEntity::class, ::RaceRecordEntity,
-    "Eredmény", "Szabad mérések",
+    "Eredmény", "Funky mérések",
     "Időmérő eredmények nyers időeredményei. Ennél a kategóriánál minden beadás látszik.",
 
     transactionManager,
@@ -51,13 +52,19 @@ class FreestyleRaceRecordController(
         "GroupEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(groups.findAll().map { it.name }.sorted().toList())
+            results.addAll(transactionManager.transaction(readOnly = true) { groups.findAll() }
+                .map { it.name }
+                .sorted()
+                .toList())
             return@to results
         },
         "UserEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(users.findAll().sortedBy { it.fullName }.map { mapUsername(it) }.toList())
+            results.addAll(transactionManager.transaction(readOnly = true) { users.findAll() }
+                .sortedBy { it.fullName }
+                .map { mapUsername(it) }
+                .toList())
             return@to results
         },
     ),
@@ -74,7 +81,7 @@ class FreestyleRaceRecordController(
     exportEnabled = true,
 
     adminMenuIcon = "time_auto",
-    adminMenuPriority = 2,
+    adminMenuPriority = 4,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

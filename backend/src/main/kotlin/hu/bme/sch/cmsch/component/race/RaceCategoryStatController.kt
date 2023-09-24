@@ -64,7 +64,7 @@ class RaceCategoryStatController(
     exportEnabled = false,
 
     adminMenuIcon = "leaderboard",
-    adminMenuPriority = 5,
+    adminMenuPriority = 3,
 
     outerControlActions = mutableListOf(
         ControlAction(

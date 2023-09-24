@@ -65,6 +65,6 @@ class RaceLeaderBoardController(
     exportEnabled = true,
 
     adminMenuIcon = "leaderboard",
-    adminMenuPriority = 2,
+    adminMenuPriority = 5,
 )
 
