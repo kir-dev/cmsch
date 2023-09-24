@@ -92,7 +92,6 @@ class QrFightComponent(
         fieldName = "Indulásch torony", description = "Ha be van kapcsolva, akkor az indulásch apin állítja a tábla szövegét"
     )
 
-
     val indulaschTowerSelector = SettingProxy(componentSettingService, component,
         "indulaschTowerSelector", "indulasch",
         type = SettingType.TEXT, serverSideOnly = true,
