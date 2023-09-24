@@ -1,14 +1,21 @@
 import { useDisclosure } from '@chakra-ui/hooks'
 import { chakra, useColorModeValue } from '@chakra-ui/react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
+import { useEffect } from 'react'
 
 type Props = {
   text: string
 }
 
 export const SpoilerText = ({ text }: Props) => {
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen, onToggle, onClose } = useDisclosure()
   const config = useConfigContext()
+
+  useEffect(() => {
+    onClose()
+
+    console.log('first')
+  }, [text])
 
   const hiddenColor = useColorModeValue(config.components.style.lightTextColor, config.components.style.darkTextColor)
   return (
