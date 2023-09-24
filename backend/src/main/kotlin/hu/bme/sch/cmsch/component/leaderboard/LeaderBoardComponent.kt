@@ -85,17 +85,17 @@ class LeaderBoardComponent(
 
     val leaderboardEnabled = SettingProxy(componentSettingService, component,
         "leaderboardEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Toplista akítv", description = "A toplista leküldésre kerül"
+        fieldName = "Toplista aktív", description = "A toplista leküldésre kerül"
     )
 
     val leaderboardDetailsEnabled = SettingProxy(componentSettingService, component,
         "leaderboardDetailsEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Toplista részletek akítv", description = "A részletes toplista leküldésre kerül (Csapatonként)"
+        fieldName = "Toplista részletek aktív", description = "A részletes toplista leküldésre kerül (Csapatonként)"
     )
 
     val leaderboardDetailsByCategoryEnabled = SettingProxy(componentSettingService, component,
         "leaderboardDetailsByCategoryEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Toplista categória szerint akítv", description = "A részletes toplista leküldésre kerül (Kategóriánként)"
+        fieldName = "Toplista kategória szerint aktív", description = "A részletes toplista leküldésre kerül (Kategóriánként)"
     )
 
     val leaderboardFrozen = SettingProxy(componentSettingService, component,
@@ -177,7 +177,7 @@ class LeaderBoardComponent(
 
     val showGroupOfUser = SettingProxy(componentSettingService, component,
         "showGroupOfUser", "false", type = SettingType.BOOLEAN,
-        fieldName = "Felhaszáló csoportjának kijelzése",
+        fieldName = "Felhasználó csoportjának kijelzése",
         description = "A felhasználói listán a felhasználó csoportja látható legyen-e"
     )
 

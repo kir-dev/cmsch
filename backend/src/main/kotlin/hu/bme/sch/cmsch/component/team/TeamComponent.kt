@@ -160,7 +160,7 @@ class TeamComponent(
 
     val showTeamsAtAll = SettingProxy(componentSettingService, component,
         "showTeamsAtAll", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Csapat lista kijelzése", description = "Ha ki van kapcsolva a kkor a csapat lista nincs leküldve"
+        fieldName = "Csapat lista kijelzése", description = "Ha ki van kapcsolva a akkor a csapat lista nincs leküldve"
     )
 
     val showNotRacingTeams = SettingProxy(componentSettingService, component,
@@ -218,7 +218,7 @@ class TeamComponent(
 
     val leaveEnabled = SettingProxy(componentSettingService, component,
         "leaveEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csatlakozás engedélyezve", description = "Ha igaz, lehet ki lehet lépni csataból"
+        fieldName = "Csatlakozás engedélyezve", description = "Ha igaz, lehet ki lehet lépni csapataból"
     )
 
     val grantPrivilegedRole = SettingProxy(componentSettingService, component,
@@ -228,12 +228,12 @@ class TeamComponent(
 
     val grantAttendeeRole = SettingProxy(componentSettingService, component,
         "grantAttendeeRole", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "ATTENDEE jog a cspattagoknak", description = "Ha be val kapcsolva, akkor a csapat tagjai ATTENDEE jogot kapnak (onnantól él, hogy be lett kapcsolva)"
+        fieldName = "ATTENDEE jog a csapattagoknak", description = "Ha be val kapcsolva, akkor a csapat tagjai ATTENDEE jogot kapnak (onnantól él, hogy be lett kapcsolva)"
     )
 
     val nameRegex = SettingProxy(componentSettingService, component,
         "nameRegex", "^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]{1,32}\$", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Csapatnév regex", description = "Ez alapján megy majd a vaidálás"
+        fieldName = "Csapatnév regex", description = "Ez alapján megy majd a validálás"
     )
 
     val nameBlocklist = SettingProxy(componentSettingService, component,
@@ -276,7 +276,7 @@ class TeamComponent(
 
     val togglePermissionEnabled = SettingProxy(componentSettingService, component,
         "togglePermissionEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Jogosultság adás álltása", description = "Ha be val kapcsolva, akkor lehet jogosultásokat állítani"
+        fieldName = "Jogosultság adás állítása", description = "Ha be van kapcsolva, akkor lehet jogosultságokat állítani"
     )
 
     val kickEnabled = SettingProxy(componentSettingService, component,

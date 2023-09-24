@@ -104,7 +104,7 @@ class HomeComponent(
 
     val maxVisibleCount = SettingProxy(componentSettingService, component,
         "embeddedMaxVisibleCount", "3", serverSideOnly = true, type = SettingType.NUMBER,
-        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hírdetés komponensben"
+        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hirdetés komponensben"
     )
 
     val showNews = SettingProxy(componentSettingService, component,

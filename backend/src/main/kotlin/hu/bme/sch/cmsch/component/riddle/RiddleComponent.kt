@@ -129,7 +129,7 @@ class RiddleComponent(
     val hintScorePercent = SettingProxy(componentSettingService, component,
         "hintScorePercent", "100", serverSideOnly = true, type = SettingType.NUMBER,
         fieldName = "Hint pont érték", description = "Ennyi százaléka lesz a hinttel megoldott riddle pont " +
-                "értéke a hint élkül megoldottnak"
+                "értéke a hint nélkül megoldottnak"
     )
 
     val saveFailedAttempts = SettingProxy(componentSettingService, component,
@@ -176,7 +176,7 @@ class RiddleComponent(
     val skipEnabled = SettingProxy(componentSettingService, component,
         "skipEnabled", "true", type = SettingType.BOOLEAN,
         fieldName = "Átugrás bekapcsolva",
-        description = "A riddle átigrás gomb elérhető"
+        description = "A riddle átugrás gomb elérhető"
     )
 
     val skipAfterGroupsSolved = SettingProxy(componentSettingService, component,

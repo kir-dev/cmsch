@@ -52,7 +52,7 @@ class EmailComponent(
     val enableMailgun = SettingProxy(componentSettingService, component,
         "enableMailgun", "false", type = SettingType.BOOLEAN,
         fieldName = "Küldés Mailgunnal", serverSideOnly = true,
-        description = "Csak akkor müködik ha API key meg van adva környezeti változónak"
+        description = "Csak akkor működik ha API key meg van adva környezeti változónak"
     )
 
     val mailgunEmailAccount = SettingProxy(componentSettingService, component,

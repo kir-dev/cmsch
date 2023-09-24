@@ -26,7 +26,7 @@ class DebtsOfUserController(
     "my-debts",
     SoldProductEntity::class, ::SoldProductEntity,
     "Saját tartozásaim", "Saját tartozásaim",
-    "Ezekkel a tételekkel a reszortgdaságisnak kell elszámolnod! A pontos módról emailben értesülhetsz.",
+    "Ezekkel a tételekkel a reszortgazdaságisnak kell elszámolnod! A pontos módról emailben értesülhetsz.",
 
     transactionManager,
     { user -> productService.getAllDebtsByUser(user) },

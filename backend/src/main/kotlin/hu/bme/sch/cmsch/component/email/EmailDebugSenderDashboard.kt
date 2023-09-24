@@ -63,7 +63,7 @@ class EmailDebugSenderDashboard(
                     "A szerver majd a beállítások alapján elküldi a címzettnek.",
             listOf(
                 FormElement(
-                    "target", "Címzet", FormElementType.TEXT,
+                    "target", "Címzett", FormElementType.TEXT,
                     ".*", "", "",
                     "Email cím",
                     required = true, permanent = false, defaultValue = ""
@@ -71,7 +71,7 @@ class EmailDebugSenderDashboard(
                 FormElement(
                     "subject", "Tárgy", FormElementType.TEXT,
                     ".*", "", "",
-                    "Az üzenet tárggya",
+                    "Az üzenet tárgya",
                     required = true, permanent = false, defaultValue = ""
                 ),
                 FormElement(

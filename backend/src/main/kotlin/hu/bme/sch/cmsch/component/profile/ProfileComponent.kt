@@ -111,7 +111,7 @@ class ProfileComponent(
 
     val showTasks = SettingProxy(componentSettingService, component,
         "showTasks", "false", type = SettingType.BOOLEAN,
-        fieldName = "Feladat számláló aktív", description = "Legyen-e látató a feladat számláló?"
+        fieldName = "Feladat számláló aktív", description = "Legyen-e látható a feladat számláló?"
     )
 
     val taskCounterName = SettingProxy(componentSettingService, component,
@@ -121,7 +121,7 @@ class ProfileComponent(
 
     val showRiddles = SettingProxy(componentSettingService, component,
         "showRiddles", "false", type = SettingType.BOOLEAN,
-        fieldName = "Riddle számláló aktív", description = "Legyen-e látató a riddle szmláló?"
+        fieldName = "Riddle számláló aktív", description = "Legyen-e látható a riddle számláló?"
     )
 
     val riddleCounterName = SettingProxy(componentSettingService, component,
@@ -131,7 +131,7 @@ class ProfileComponent(
 
     val showTokens = SettingProxy(componentSettingService, component,
         "showTokens", "false", type = SettingType.BOOLEAN,
-        fieldName = "Token számláló aktív", description = "Legyen-e látató a token számláló?"
+        fieldName = "Token számláló aktív", description = "Legyen-e látható a token számláló?"
     )
 
     val tokenCounterName = SettingProxy(componentSettingService, component,
@@ -148,7 +148,7 @@ class ProfileComponent(
 
     val profileFieldsGroup = SettingProxy(componentSettingService, component,
         "profileFieldsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Profil adatok", description = "Milyen adatok jelenlenek meg a felhasználóról a profilban"
+        fieldName = "Profil adatok", description = "Milyen adatok jelenjenek meg a felhasználóról a profilban"
     )
 
     val showFullName = SettingProxy(componentSettingService, component,
@@ -238,7 +238,7 @@ class ProfileComponent(
 
     val showUserMessage = SettingProxy(componentSettingService, component,
         "showUserMessage", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Felhasználi üzenet mutatása", description = "A felhasználóhoz tartozó üzenet kijelzése a profilban"
+        fieldName = "Felhasználói üzenet mutatása", description = "A felhasználóhoz tartozó üzenet kijelzése a profilban"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -280,7 +280,7 @@ class ProfileComponent(
 
     val showMinimumTokenMessage = SettingProxy(componentSettingService, component,
         "showMinimumToken", "false", type = SettingType.BOOLEAN,
-        fieldName = "Minimum token üzenet akítv", description = "A szükséges összegűjthető tokenekról legyen-e üzenet?"
+        fieldName = "Minimum token üzenet aktív", description = "A szükséges összegyűjthető tokenekről legyen-e üzenet?"
     )
 
     val minTokenNotEnoughMessage = SettingProxy(componentSettingService, component,
@@ -298,12 +298,12 @@ class ProfileComponent(
     val fillProfileGroup = SettingProxy(componentSettingService, component,
         "fillProfileGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Profil kitöltöttsége", description = "Ha egy Feladat Kategória PROFILE_REQUIRED-re van állítva, " +
-                "akkor a bennelévő feladatok szükségesek ahhoz, hogy a profil teljes legyen."
+                "akkor a benne lévő feladatok szükségesek ahhoz, hogy a profil teljes legyen."
     )
 
     val showIncompleteProfile = SettingProxy(componentSettingService, component,
         "showIncompleteProfile", "false", type = SettingType.BOOLEAN,
-        fieldName = "Profil kitöltöttsége üzenet akítv", description = "Megjelenlen-e a profil kitöltöttségére vonatkozó üzenet a profilban?"
+        fieldName = "Profil kitöltöttsége üzenet aktív", description = "Megjelenjen-e a profil kitöltöttségére vonatkozó üzenet a profilban?"
     )
 
     val profileIncomplete = SettingProxy(componentSettingService, component,

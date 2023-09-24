@@ -29,7 +29,7 @@ class TokenAdminTokensByUsersController(
     "token-properties-user",
     TokenListByUserVirtualEntity::class,
     TokenVirtualEntity::class, ::TokenVirtualEntity,
-    "Fehasználói tokenek", "Fehasználói tokenek",
+    "Felhasználói tokenek", "Felhasználói tokenek",
     "Beolvasott tokenek felhasználónként csoportosítva",
 
     transactionManager,

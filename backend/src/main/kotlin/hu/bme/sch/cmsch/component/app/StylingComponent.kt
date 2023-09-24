@@ -182,7 +182,7 @@ class StylingComponent(
 
     val displayFontName = SettingProxy(componentSettingService, component,
         "displayFontName", "'Bebas Neue', cursive", type = SettingType.TEXT,
-        fieldName = "Kiemelt betűtípus", description = "A kiemelt (pl. fejlécként megjelenő) betűtípus neve. Ha üres akkor az álltalános lesz használva."
+        fieldName = "Kiemelt betűtípus", description = "A kiemelt (pl. fejlécként megjelenő) betűtípus neve. Ha üres akkor az általános lesz használva."
     )
 
     val displayFontCdn = SettingProxy(componentSettingService, component,

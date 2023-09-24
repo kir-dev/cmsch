@@ -35,7 +35,7 @@ data class RaceCategoryEntity(
     @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Slug (url)",
-        note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett.", interpreter = INTERPRETER_PATH)
+        note = "Csupa nem ékezetes kisbetű és kötőjel megengedett.", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(columnName = "Slug", order = 1)
     @property:ImportFormat(ignore = false, columnId = 1)
     var slug: String = "",

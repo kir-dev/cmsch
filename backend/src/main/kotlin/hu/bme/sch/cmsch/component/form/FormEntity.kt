@@ -37,7 +37,7 @@ data class FormEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
-        note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett", interpreter = INTERPRETER_PATH)
+        note = "Csupa nem ékezetes kisbetű és kötőjel megengedett", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 1)
     var url: String = "",

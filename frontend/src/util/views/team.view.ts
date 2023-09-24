@@ -84,7 +84,7 @@ export const TeamResponseMessages: Record<TeamResponses, string> = {
   [TeamResponses.USED_NAME]: 'Név már használatban.',
   [TeamResponses.CREATION_DISABLED]: 'Létrehozás letiltva.',
   [TeamResponses.INSUFFICIENT_PERMISSIONS]: 'Nincs jogosultságod.',
-  [TeamResponses.OK_RELOG_REQUIRED]: 'Sikeres, újboli bejelentkezés szükséges.',
+  [TeamResponses.OK_RELOG_REQUIRED]: 'Sikeres, újbóli bejelentkezés szükséges.',
   [TeamResponses.LEAVE_DISABLED]: 'Távozás letiltva.',
   [TeamResponses.ERROR]: 'Sikertelen művelet!'
 }

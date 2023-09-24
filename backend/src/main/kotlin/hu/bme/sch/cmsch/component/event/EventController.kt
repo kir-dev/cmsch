@@ -29,7 +29,7 @@ class EventController(
     "events",
     EventEntity::class, ::EventEntity,
     "Esemény", "Események",
-    "A rendezvény összes (publikus) programjainak kezelse.",
+    "A rendezvény összes (publikus) programjainak kezelése.",
 
     transactionManager,
     repo,

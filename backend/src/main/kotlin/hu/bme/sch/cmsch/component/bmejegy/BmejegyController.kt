@@ -28,7 +28,7 @@ class BmejegyController(
     "bmejegy-tickets",
     BmejegyRecordEntity::class, ::BmejegyRecordEntity,
     "Jegy", "Jegyek",
-    "Ebben a menüben a szinkrizált Bmejegy példányok láthatóak. Az értékek módosíthatóak, mert " +
+    "Ebben a menüben a szinkronizált Bmejegy példányok láthatóak. Az értékek módosíthatóak, mert " +
             "csak az új példányokat húzza be a szinkronizáló mindig.",
 
     transactionManager,

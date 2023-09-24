@@ -56,7 +56,7 @@ class FormComponent(
 
     val langGroup = SettingProxy(componentSettingService, component,
         "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Nyelvi bellítások",
+        fieldName = "Nyelvi beállítások",
         description = ""
     )
 
@@ -88,7 +88,7 @@ class FormComponent(
 
     val langSubmitted = SettingProxy(componentSettingService, component,
         "langSubmitted", "Jelentkezés beadva", type = SettingType.TEXT,
-        fieldName = "'Beadva' szöveg", description = "Akkor jelenik meg amikor jelentkezés be lett adva, de még se elfogadva, se elutsítva nem lett."
+        fieldName = "'Beadva' szöveg", description = "Akkor jelenik meg amikor jelentkezés be lett adva, de még se elfogadva, se elutasítva nem lett."
     )
 
     val langRejected = SettingProxy(componentSettingService, component,

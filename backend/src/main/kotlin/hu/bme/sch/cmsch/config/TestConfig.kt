@@ -211,7 +211,7 @@ open class TestConfig(
     private fun addRiddles(riddleRepository: RiddleEntityRepository, riddleCategoryRepository: RiddleCategoryRepository) {
         riddleCategoryRepository.save(RiddleCategoryEntity(
             0,
-            "Álalános",
+            "Általános",
             1,
             true,
             RoleType.BASIC

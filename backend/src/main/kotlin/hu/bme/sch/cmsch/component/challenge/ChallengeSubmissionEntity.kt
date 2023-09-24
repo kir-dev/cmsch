@@ -67,7 +67,7 @@ data class ChallengeSubmissionEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 5, label = "Cimke")
+    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 5, label = "Címke")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var tag: String = "",

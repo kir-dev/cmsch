@@ -94,7 +94,7 @@ data class QrLevelEntity(
     @Lob
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 10, label = "Leírás amég nemelérhető")
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 10, label = "Leírás amég nem elérhető")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_LOB)
     var hintBeforeEnabled: String = "",
@@ -118,7 +118,7 @@ data class QrLevelEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Extra szint",
-        note = "Külön lászanak a sima szintektől")
+        note = "Külön látszanak a sima szintektől")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_BOOLEAN)
     var extraLevel: Boolean = false,

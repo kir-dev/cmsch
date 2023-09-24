@@ -31,7 +31,7 @@ class RiddlesByUsersController(
     "riddles-by-users",
     RiddleStatsVirtualEntity::class,
     RiddleMappingVirtualEntity::class, ::RiddleMappingVirtualEntity,
-    "Riddle beadás felhasználónként", "Riddle felasználónként",
+    "Riddle beadás felhasználónként", "Riddle felhasználónként",
     "Beadott riddleök felhasználónként csoportosítva",
 
     transactionManager,

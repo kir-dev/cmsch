@@ -29,7 +29,7 @@ const TokenList = () => {
       <Heading as="h1">{component.title || 'QR kódok'}</Heading>
       <PresenceAlert acquired={data.collectedTokenCount} needed={data.minTokenToComplete} />
       {/* <Paragraph>
-        A standoknál végzett aktív tevékenyégért QR kódokat lehet beolvasni. Ha eleget összegyűjt, beválthatja egy tanköri jelenlétre.
+        A standoknál végzett aktív tevékenységért QR kódokat lehet beolvasni. Ha eleget összegyűjt, beválthatja egy tanköri jelenlétre.
       </Paragraph> */}
 
       <ButtonGroup mt="5">

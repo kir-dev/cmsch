@@ -31,7 +31,7 @@ class StaticPageController(
     "Statikus Oldal", "Statikus oldalak",
     "A statikus oldalak segítségével bármilyen tartalom megjeleníthető az oldalon, ami nem igényel szerver " +
             "semmilyen logikát vagy automatizmust a szerver felől. Az oldalak tartalmazhatnak képeket, szövegeket és " +
-            "táblázatokat is, ezáltal kivállóan alkalmas gyakori kérdések, kapcsolat menü vagy péládul program " +
+            "táblázatokat is, ezáltal kiválóan alkalmas gyakori kérdések, kapcsolat menü vagy például program " +
             "összefoglaló lap megvalósítására.",
 
     transactionManager,

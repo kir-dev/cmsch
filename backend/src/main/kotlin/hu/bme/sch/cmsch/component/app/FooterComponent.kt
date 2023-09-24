@@ -98,7 +98,7 @@ class FooterComponent(
 
     val footerMessage = SettingProxy(componentSettingService, component,
         "footerMessage", "email [at] sch.bme.hu\n2022", type = SettingType.LONG_TEXT,
-        fieldName = "Footer szöveg", description = "Ez jelenik meg középpen a footer alján"
+        fieldName = "Footer szöveg", description = "Ez jelenik meg középen a footer alján"
     )
 
     val devLogo = SettingProxy(componentSettingService, component,
@@ -128,7 +128,7 @@ class FooterComponent(
 
     val sponsorTitle = SettingProxy(componentSettingService, component,
         "sponsorTitle", "Támogatóink", type = SettingType.TEXT,
-        fieldName = "Sponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
+        fieldName = "Szponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
     )
 
     val sponsorsEnabled = SettingProxy(componentSettingService, component,
@@ -160,7 +160,7 @@ class FooterComponent(
 
     val partnerTitle = SettingProxy(componentSettingService, component,
         "partnerTitle", "Partnereink", type = SettingType.TEXT,
-        fieldName = "Sponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
+        fieldName = "Szponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
     )
 
     val vikEnabled = SettingProxy(componentSettingService, component,

@@ -44,7 +44,7 @@
         <div class="search-result" th:each="resource : ${userContext.resources}" th:object="${resource}">
             <a class="text" href="#" th:href="*{target}" onclick="closeSearch()">
                 <span class="material-symbols-outlined tag-menu" th:class="|material-symbols-outlined *{type.cssClass}|" th:text="*{type.icon}">menu</span>
-                <span class="name" th:text="*{name}">Csoport tagásgok</span>
+                <span class="name" th:text="*{name}">Csoport tagságok</span>
                 <span class="description" th:text="*{description}">: Menü</span>
             </a>
         </div>
