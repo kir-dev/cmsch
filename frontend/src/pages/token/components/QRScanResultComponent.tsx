@@ -32,6 +32,18 @@ export const QRScanResultComponent = ({ response, isError }: QrScanResultProps) 
           return <CheckCircleIcon color="green.500" boxSize="120px" />
         case ScanStatus.QR_TOWER_LOGGED:
           return <CheckCircleIcon color="green.500" boxSize="120px" />
+        case ScanStatus.QR_TOWER_ENSLAVED:
+          return <CheckCircleIcon color="green.500" boxSize="120px" />
+        case ScanStatus.QR_TOWER_ALREADY_ENSLAVED:
+          return <InfoIcon color="orange.500" boxSize="120px" />
+        case ScanStatus.QR_TOTEM_LOGGED:
+          return <CheckCircleIcon color="green.500" boxSize="120px" />
+        case ScanStatus.QR_TOTEM_ENSLAVED:
+          return <CheckCircleIcon color="green.500" boxSize="120px" />
+        case ScanStatus.QR_TOTEM_ALREADY_ENSLAVED:
+          return <InfoIcon color="orange.500" boxSize="120px" />
+        case ScanStatus.QR_FIGHT_TOTEM_LOCKED:
+          return <InfoIcon color="orange.500" boxSize="120px" />
         default:
           return <WarningIcon color="red.500" boxSize="120px" />
       }
