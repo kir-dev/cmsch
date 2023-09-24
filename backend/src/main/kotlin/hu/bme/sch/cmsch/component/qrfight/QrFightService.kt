@@ -81,8 +81,7 @@ open class QrFightService(
             TotemView(
                 it.displayName,
                 if (groupName == it.ownerGroupName) it.ownerMessage else it.publicMessage,
-                it.holder,
-                it.holderFor
+                it.ownerGroupName,
             )
         }
 
@@ -140,8 +139,7 @@ open class QrFightService(
             TotemView(
                 t.displayName,
                 if (user?.id == t.ownerUserId) t.ownerMessage else t.publicMessage,
-                userRepository.findById(t.holder.toIntOrNull() ?: 0).map { it.fullName }.orElse(null),
-                t.holderFor
+                t.ownerUserName
             )
         }
 
@@ -240,9 +238,9 @@ open class QrFightService(
             return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
-        if (isAlreadyOwnedTotem(towerEntity)) {
+        if (towerEntity.totem && towerEntity.ownerGroupId != 0) {
             log.info("Totem '{}' already enslaved so group:{} (user:{}) cannot capture it", token.title, groupName, user.userName)
-            return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
+            return TokenSubmittedView(getCapturedStatus(towerEntity), token.title, null, null)
         }
 
         towerEntity.ownerGroupId = groupId
@@ -342,8 +340,6 @@ open class QrFightService(
     private fun getCapturedStatus(towerEntity: QrTowerEntity): TokenCollectorStatus =
         if (towerEntity.totem) QR_TOTEM_ENSLAVED else QR_TOWER_CAPTURED
 
-    private fun isAlreadyOwnedTotem(tower: QrTowerEntity) = tower.totem && tower.holder.isNotBlank()
-
     private fun isLevelOpenForGroup(level: QrLevelEntity, groupId: Int): Boolean {
         if (level.dependsOn.isBlank())
             return true
@@ -422,6 +418,11 @@ open class QrFightService(
                 token.displayDescription,
                 token.displayIconUrl
             )
+        }
+
+        if (towerEntity.totem && towerEntity.ownerGroupId != 0) {
+            log.info("Totem '{}' already enslaved so user:{} cannot capture it", token.title, user.userName)
+            return TokenSubmittedView(getCapturedStatus(towerEntity), token.title, null, null)
         }
 
         towerEntity.ownerUserId = user.id
