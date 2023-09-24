@@ -71,22 +71,18 @@ class RiddleApiController(
 
     @JsonView(FullDetails::class)
     @PostMapping("/riddle/solve/{riddleId}/skip")
-    fun skipRiddle(
-        @PathVariable riddleId: Int,
-        @RequestBody body: RiddleSubmissionDto,
-        auth: Authentication?
-    ): ResponseEntity<RiddleSubmissionView> {
+    fun skipRiddle(@PathVariable riddleId: Int, auth: Authentication?): ResponseEntity<RiddleSubmissionView> {
         val user = auth?.getUserOrNull() ?: return ResponseEntity.badRequest().build()
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
-        log.info("User '{}' is skipping '{}' riddle id:{}", user.userName, body.solution, riddleId)
+        log.info("User '{}' is skipping '{}' riddle id:{}", user.userName, "", riddleId)
 
         return when (startupPropertyConfig.riddleOwnershipMode) {
-            OwnershipType.USER -> riddleService.submitRiddleForUser(user, riddleId, body.solution, skip = true)
+            OwnershipType.USER -> riddleService.submitRiddleForUser(user, riddleId, "", skip = true)
                 ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
-            OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.groupId, user.groupName, riddleId, body.solution, skip = true)
+            OwnershipType.GROUP -> riddleService.submitRiddleForGroup(user, user.groupId, user.groupName, riddleId, "", skip = true)
                 ?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
         }

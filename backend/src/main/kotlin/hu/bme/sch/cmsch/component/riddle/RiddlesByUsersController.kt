@@ -81,6 +81,7 @@ class RiddlesByUsersController(
     editPermission =   ImplicitPermissions.PERMISSION_NOBODY,
     deletePermission = StaffPermissions.PERMISSION_DELETE_RIDDLE_SUBMISSIONS,
 
+    showEnabled   = true,
     createEnabled = false,
     editEnabled   = false,
     deleteEnabled = true,

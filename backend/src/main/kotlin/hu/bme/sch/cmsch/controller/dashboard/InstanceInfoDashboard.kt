@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.controller.admin
+package hu.bme.sch.cmsch.controller.dashboard
 
 import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.admin.dashboard.DashboardComponent

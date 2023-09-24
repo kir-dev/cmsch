@@ -97,7 +97,7 @@ class ChallengeController(
 
     private fun processGroupSubmission(entity: ChallengeSubmissionEntity): Boolean {
         if (entity.groupName.isNotBlank()) {
-            val groupEntity = groups.findByName(entity.groupName)
+            val groupEntity = transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }
             if (groupEntity.isPresent) {
                 entity.groupId = groupEntity.orElseThrow().id
                 entity.groupName = groupEntity.orElseThrow().name
@@ -113,7 +113,8 @@ class ChallengeController(
 
     private fun processUserSubmission(entity: ChallengeSubmissionEntity): Boolean {
         if (entity.userName.isNotBlank() && entity.userName != "-") {
-            val user = users.findById(entity.userName.split("|")[0].trim().toIntOrNull() ?: 0)
+            val id = entity.userName.split("|")[0].trim().toIntOrNull() ?: 0
+            val user = transactionManager.transaction(readOnly = true) { users.findById(id) }
 
             if (user.isPresent) {
                 entity.userName = user.orElseThrow().fullName
@@ -131,7 +132,7 @@ class ChallengeController(
     override fun onPreEdit(actualEntity: ChallengeSubmissionEntity): ChallengeSubmissionEntity {
         val userId = actualEntity.userId ?: return actualEntity
         val copy = actualEntity.copy()
-        val user = users.findById(userId).orElse(null) ?: return actualEntity
+        val user = transactionManager.transaction(readOnly = true) { users.findById(userId) }.orElse(null) ?: return actualEntity
         copy.userName = mapUsername(user)
         return copy
     }
