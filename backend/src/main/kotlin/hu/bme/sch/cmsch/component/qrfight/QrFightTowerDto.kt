@@ -5,4 +5,5 @@ data class QrFightTowerDto(
     var ownerName: String = "",
     var holderName: String = "",
     var holdingFor: Int = 0,
+    var totem: Boolean = false
 )

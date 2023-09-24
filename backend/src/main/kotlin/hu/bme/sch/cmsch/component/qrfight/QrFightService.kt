@@ -10,7 +10,6 @@ import hu.bme.sch.cmsch.component.token.*
 import hu.bme.sch.cmsch.component.token.TokenCollectorStatus.*
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -69,16 +68,24 @@ open class QrFightService(
             .map { it.key to it.value.count() }
             .toMap()
 
-        val towers = qrTowerRepository.findAllByCategory(level.category)
-            .map {
-                TowerView(
-                    it.displayName,
-                    if (groupName == it.ownerGroupName) it.ownerMessage else it.publicMessage,
-                    it.ownerGroupName,
-                    it.holder,
-                    it.holderFor
-                )
-            }
+        val allTowers = qrTowerRepository.findAllByCategory(level.category)
+        val towers = allTowers.filter { !it.totem }.map {
+            TowerView(
+                it.displayName,
+                if (groupName == it.ownerGroupName) it.ownerMessage else it.publicMessage,
+                it.ownerGroupName,
+                it.holder,
+                it.holderFor
+            )
+        }
+        val totems = allTowers.filter { it.totem }.map {
+            TotemView(
+                it.displayName,
+                if (groupName == it.ownerGroupName) it.ownerMessage else it.publicMessage,
+                it.holder,
+                it.holderFor
+            )
+        }
 
         val maxCollected = teams.maxOfOrNull { it.value } ?: 0
         return QrFightLevelView(
@@ -92,7 +99,8 @@ open class QrFightService(
             status = status,
             owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
             teams = teams,
-            towers = towers
+            towers = towers,
+            totems = totems
         )
     }
 
@@ -119,16 +127,24 @@ open class QrFightService(
             .map { (it.value.firstOrNull()?.ownerUser?.fullName ?: "...") to it.value.count() }
             .toMap()
 
-        val towers = qrTowerRepository.findAllByCategory(level.category)
-            .map { t ->
-                TowerView(
-                    t.displayName,
-                    if (user?.id == t.ownerUserId) t.ownerMessage else t.publicMessage,
-                    t.ownerUserName,
-                    userRepository.findById(t.holder.toIntOrNull() ?: 0).map { it.fullName }.orElse(null),
-                    t.holderFor
-                )
-            }
+        val allTowers = qrTowerRepository.findAllByCategory(level.category)
+        val towers = allTowers.filter { !it.totem }.map { t ->
+            TowerView(
+                t.displayName,
+                if (user?.id == t.ownerUserId) t.ownerMessage else t.publicMessage,
+                t.ownerUserName,
+                userRepository.findById(t.holder.toIntOrNull() ?: 0).map { it.fullName }.orElse(null),
+                t.holderFor
+            )
+        }
+        val totems = allTowers.filter { it.totem }.map { t ->
+            TotemView(
+                t.displayName,
+                if (user?.id == t.ownerUserId) t.ownerMessage else t.publicMessage,
+                userRepository.findById(t.holder.toIntOrNull() ?: 0).map { it.fullName }.orElse(null),
+                t.holderFor
+            )
+        }
 
         val maxCollected = teams.maxOfOrNull { it.value } ?: 0
         return QrFightLevelView(
@@ -142,7 +158,8 @@ open class QrFightService(
             status = status,
             owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
             teams = teams,
-            towers = towers
+            towers = towers,
+            totems = totems
         )
     }
 
@@ -221,7 +238,12 @@ open class QrFightService(
         val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
         if (towerEntity.locked || outOfDate) {
             log.info("Tower '{}' out locked:{} or out-of-date:{}", towerEntity.selector, towerEntity.locked, outOfDate)
-            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+            return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
+        }
+
+        if (isAlreadyOwnedTotem(towerEntity)) {
+            log.info("Totem '{}' already enslaved so group:{} (user:{}) cannot capture it", token.title, groupName, user.userName)
+            return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
         towerEntity.ownerGroupId = groupId
@@ -229,7 +251,12 @@ open class QrFightService(
         towerEntity.history += "${user.userName};${user.id};${groupName};${groupId};${clock.getTimeInSeconds()};\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' captured by group:{} (user:{})", token.title, groupName, user.userName)
-        return TokenSubmittedView(QR_TOWER_CAPTURED, token.title, token.displayDescription, token.displayIconUrl)
+        return TokenSubmittedView(
+            getCapturedStatus(towerEntity),
+            token.title,
+            token.displayDescription,
+            token.displayIconUrl
+        )
     }
 
     private fun handleTowerHistoryForGroup(
@@ -249,13 +276,18 @@ open class QrFightService(
                 "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
                 towerEntity.selector, towerEntity.locked, outOfDate, user.userName
             )
-            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+            return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
         towerEntity.history += "${user.userName};${user.id};${groupName};${groupId};${clock.getTimeInSeconds()};\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' logged by group:{} (user:{})", token.title, groupName, user.userName)
-        return TokenSubmittedView(QR_TOWER_LOGGED, token.title, token.displayDescription, token.displayIconUrl)
+        return TokenSubmittedView(
+            getLoggedStatus(towerEntity),
+            token.title,
+            token.displayDescription,
+            token.displayIconUrl
+        )
     }
 
     private fun handleTowerEnslaveForGroup(
@@ -275,7 +307,7 @@ open class QrFightService(
                 "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
                 towerEntity.selector, towerEntity.locked, outOfDate, user.userName
             )
-            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+            return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
         if (towerEntity.ownerGroupId != 0) {
@@ -288,8 +320,30 @@ open class QrFightService(
         towerEntity.history += "${user.userName};${user.id};${groupName};${groupId};${clock.getTimeInSeconds()};\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' enslaved by group:{} (user:{})", token.title, groupName, user.userName)
-        return TokenSubmittedView(QR_TOWER_ENSLAVED, token.title, token.displayDescription, token.displayIconUrl)
+        return TokenSubmittedView(
+            getEnslavedStatus(towerEntity),
+            token.title,
+            token.displayDescription,
+            token.displayIconUrl
+        )
     }
+
+    private fun getLockedStatus(towerEntity: QrTowerEntity): TokenCollectorStatus =
+        if (towerEntity.totem) QR_FIGHT_TOTEM_LOCKED else QR_FIGHT_TOWER_LOCKED
+
+    private fun getEnslavedStatus(towerEntity: QrTowerEntity): TokenCollectorStatus =
+        if (towerEntity.totem) QR_TOTEM_ENSLAVED else QR_TOWER_ENSLAVED
+
+    private fun getAlreadyEnslavedStatus(towerEntity: QrTowerEntity): TokenCollectorStatus =
+        if (towerEntity.totem) QR_TOTEM_ALREADY_ENSLAVED else QR_TOWER_ALREADY_ENSLAVED
+
+    private fun getLoggedStatus(towerEntity: QrTowerEntity): TokenCollectorStatus =
+        if (towerEntity.totem) QR_TOTEM_LOGGED else QR_TOWER_LOGGED
+
+    private fun getCapturedStatus(towerEntity: QrTowerEntity): TokenCollectorStatus =
+        if (towerEntity.totem) QR_TOTEM_ENSLAVED else QR_TOWER_CAPTURED
+
+    private fun isAlreadyOwnedTotem(tower: QrTowerEntity) = tower.totem && tower.holder.isNotBlank()
 
     private fun isLevelOpenForGroup(level: QrLevelEntity, groupId: Int): Boolean {
         if (level.dependsOn.isBlank())
@@ -363,7 +417,12 @@ open class QrFightService(
         val outOfDate = !clock.inRange(towerEntity.availableFrom, towerEntity.availableTo, clock.getTimeInSeconds())
         if (towerEntity.locked || outOfDate) {
             log.info("Tower '{}' out locked:{} or out-of-date:{}", towerEntity.selector, towerEntity.locked, outOfDate)
-            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, token.displayDescription, token.displayIconUrl)
+            return TokenSubmittedView(
+                getLockedStatus(towerEntity),
+                token.title,
+                token.displayDescription,
+                token.displayIconUrl
+            )
         }
 
         towerEntity.ownerUserId = user.id
@@ -372,7 +431,12 @@ open class QrFightService(
 
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' captured by user:{}", token.title, user.fullName)
-        return TokenSubmittedView(QR_TOWER_CAPTURED, token.title, token.displayDescription, token.displayIconUrl)
+        return TokenSubmittedView(
+            getCapturedStatus(towerEntity),
+            token.title,
+            token.displayDescription,
+            token.displayIconUrl
+        )
     }
 
     private fun handleTowerHistoryForUser(
@@ -390,13 +454,18 @@ open class QrFightService(
                 "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
                 towerEntity.selector, towerEntity.locked, outOfDate, user.fullName
             )
-            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+            return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
         towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' logged by user:{}", token.title, user.fullName)
-        return TokenSubmittedView(QR_TOWER_LOGGED, token.title, token.displayDescription, token.displayIconUrl)
+        return TokenSubmittedView(
+            getLoggedStatus(towerEntity),
+            token.title,
+            token.displayDescription,
+            token.displayIconUrl
+        )
     }
 
     private fun handleTowerEnslaveForUser(
@@ -414,12 +483,12 @@ open class QrFightService(
                 "Tower '{}' out locked:{} or out-of-date:{} for user '{}'",
                 towerEntity.selector, towerEntity.locked, outOfDate, user.fullName
             )
-            return TokenSubmittedView(QR_FIGHT_TOWER_LOCKED, token.title, null, null)
+            return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
         if (towerEntity.ownerUserId != 0) {
             log.info("Tower '{}' already enslaved so (user:{}) cannot capture it", token.title, user.fullName)
-            return TokenSubmittedView(QR_TOWER_ALREADY_ENSLAVED, token.title, null, token.displayIconUrl)
+            return TokenSubmittedView(getAlreadyEnslavedStatus(towerEntity), token.title, null, token.displayIconUrl)
         }
 
         towerEntity.ownerUserId = user.id
@@ -427,7 +496,12 @@ open class QrFightService(
         towerEntity.history += "${user.fullNameWithAlias};${user.id};n/a;0;${clock.getTimeInSeconds()};\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' enslaved by user:{}", token.title, user.fullName)
-        return TokenSubmittedView(QR_TOWER_LOGGED, token.title, token.displayDescription, token.displayIconUrl)
+        return TokenSubmittedView(
+            getEnslavedStatus(towerEntity),
+            token.title,
+            token.displayDescription,
+            token.displayIconUrl
+        )
     }
 
     private fun isLevelOpenForUser(level: QrLevelEntity, user: CmschUser): Boolean {
@@ -455,7 +529,7 @@ open class QrFightService(
         log.info("Tower time!")
         val now = clock.getTimeInSeconds()
         val towers = qrTowerRepository.findAllByRecordTimeTrue()
-            .filter { !it.locked && clock.inRange(it.availableFrom, it.availableTo, now) }
+            .filter { !it.totem && !it.locked && clock.inRange(it.availableFrom, it.availableTo, now) }
 
         when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> {
@@ -507,13 +581,15 @@ open class QrFightService(
                 tower.displayName,
                 tower.ownerGroupName,
                 tower.holder,
-                tower.holderFor
+                tower.holderFor,
+                tower.totem
             )
             OwnershipType.USER -> QrFightTowerDto(
                 tower.displayName,
                 tower.ownerUserName,
                 userRepository.findById(tower.holder.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
-                tower.holderFor
+                tower.holderFor,
+                totem = tower.totem
             )
         }
     }
