@@ -9,11 +9,15 @@ import { QueryKeys } from '../queryKeys'
 export const useRiddleSkipMutation = () => {
   return useMutation<RiddleSubmissonResult, Error, string>(QueryKeys.RIDDLE_SUBMIT, async (id: string) => {
     const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'solve', id, 'skip') : joinPath(ApiPaths.RIDDLE, id, 'skip')
-    const res = await axios.post(url, {
-      headers: {
-        'Content-Type': 'application/json'
+    const res = await axios.post(
+      url,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-    })
+    )
     return res.data
   })
 }
