@@ -581,15 +581,13 @@ open class QrFightService(
                 tower.displayName,
                 tower.ownerGroupName,
                 tower.holder,
-                tower.holderFor,
-                tower.totem
+                tower.holderFor
             )
             OwnershipType.USER -> QrFightTowerDto(
                 tower.displayName,
                 tower.ownerUserName,
                 userRepository.findById(tower.holder.toIntOrNull() ?: 0).map { it.fullNameWithAlias }.orElse(null),
-                tower.holderFor,
-                totem = tower.totem
+                tower.holderFor
             )
         }
     }
