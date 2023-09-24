@@ -13,8 +13,6 @@ export const SpoilerText = ({ text }: Props) => {
 
   useEffect(() => {
     onClose()
-
-    console.log('first')
   }, [text])
 
   const hiddenColor = useColorModeValue(config.components.style.lightTextColor, config.components.style.darkTextColor)
