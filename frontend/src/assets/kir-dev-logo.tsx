@@ -1,12 +1,12 @@
 /*eslint-disable max-len*/
-import type { CSSProperties } from 'react'
+import type { CSSProperties, SVGProps } from 'react'
 
 // this file is not .svg because babel had issues parsing the style attributes with custom properties.
 // (.svg files that are imported as modules get transformed into jsx under the hood)
 // another thing: if you want to display the animated version of this, you have to place the svg in the dom as a <svg> instead of an <img> tag
 // that's why we need this file
-export const KirDevLogo = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" id="kir-dev-svg" data-name="Layer 1" viewBox="0 0 2834.65 2004.09">
+export const KirDevLogo = ({ ...props }: SVGProps<SVGSVGElement>) => (
+  <svg xmlns="http://www.w3.org/2000/svg" id="kir-dev-svg" data-name="Layer 1" viewBox="0 0 2834.65 2004.09" {...props}>
     <defs>
       <style>{`
       #kir-dev-svg path, #kir-dev-svg rect, #kir-dev-svg polygon {
