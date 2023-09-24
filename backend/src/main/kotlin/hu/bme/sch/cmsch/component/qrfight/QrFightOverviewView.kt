@@ -19,8 +19,7 @@ data class TowerView(
 data class TotemView(
     val name: String = "",
     val description: String,
-    val holder: String?,
-    val holdingFor: Int?
+    val owner: String? = null
 )
 
 data class QrFightLevelView(
