@@ -177,7 +177,7 @@ class LocationComponent(
                 " egyszerűen, létre hoztunk egy helymegosztási lehetőséget. A használatához le kell töltened egy\n" +
                 " Android vagy iOS appot.",
         type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Telepítési útmtató", description = "A Helymeghatározás menüben látszik"
+        fieldName = "Telepítési útmutató", description = "A Helymeghatározás menüben látszik"
     )
 
     val androidAppUrl = SettingProxy(componentSettingService, component,
@@ -219,7 +219,7 @@ class LocationComponent(
     val visibleDuration = SettingProxy(componentSettingService, component,
         "visibleDuration", "600", type = SettingType.NUMBER,
         fieldName = "Láthatóság ideje", serverSideOnly = true,
-        description = "Ennyi idejig látszódik frissítés nélkül egy marker (másodpercben)"
+        description = "Ennyi ideig látszódik frissítés nélkül egy marker (másodpercben)"
     )
 
 }

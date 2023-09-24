@@ -24,7 +24,7 @@ data class ExtraMenuEntity(
     var name: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 255, order = 2, label = "Url", note = "Az url ahova írányítson. " +
+    @property:GenerateInput(maxLength = 255, order = 2, label = "Url", note = "Az url ahova irányítson. " +
             "Ha külső akkor kell protokoll megjelölés is, ha csak kategória, akkor hagyd üresen.")
     @property:GenerateOverview(columnName = "Url", order = 2)
     var url: String = "",

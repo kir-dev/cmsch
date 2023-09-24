@@ -104,13 +104,13 @@ class TokenComponent(
     val styleGroup = SettingProxy(componentSettingService, component,
         "styleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
         fieldName = "Stílus",
-        description = "Hogy jelenlegenek meg a tokenek"
+        description = "Hogy jelenjenek meg a tokenek"
     )
 
     val showCollector = SettingProxy(componentSettingService, component,
         "showCollector", "false", serverSideOnly = true, type = SettingType.BOOLEAN,
         fieldName = "Megszerző neve látszik", description = "Ha a csoportos gyűjtés be van kapcsolva akkor kiírja-e, " +
-                "Látszódjön-e hogy ki szerezte meg a tokent?"
+                "Látszódjon-e hogy ki szerezte meg a tokent?"
     )
 
     val defaultTokenIcon = SettingProxy(componentSettingService, component,

@@ -30,7 +30,7 @@ data class StaticPageEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
-            note = "Csupa nem ékezetes kisbetű és kötőjel megegengedett. " +
+            note = "Csupa nem ékezetes kisbetű és kötőjel megengedett. " +
                     "Oldal megosztása: https://BASE_URL/share/page/{URL}", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 0)

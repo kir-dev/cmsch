@@ -199,7 +199,7 @@ class LoginComponent(
 
     val staffGroups = SettingProxy(componentSettingService, component,
         "staffGroups", "", serverSideOnly = true,
-        fieldName = "STAFF jogú Pék coportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
+        fieldName = "STAFF jogú Pék csoportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
     val staffGroupName = SettingProxy(componentSettingService, component,
@@ -209,7 +209,7 @@ class LoginComponent(
 
     val adminGroups = SettingProxy(componentSettingService, component,
         "adminGroups", "", serverSideOnly = true,
-        fieldName = "ADMIN jogú Pék coportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
+        fieldName = "ADMIN jogú Pék csoportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ class LoginComponent(
     val grantGroupGroup = SettingProxy(componentSettingService, component,
         "grantGroupGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Automatikus GROUP",
-        description = "GROUP = Csoport az oldalon belül; először a dirket hozzárendelés, aztán a csoport tagság alapján nézi"
+        description = "GROUP = Csoport az oldalon belül; először a direkt hozzárendelés, aztán a csoport tagság alapján nézi"
     )
 
     val organizerGroups = SettingProxy(componentSettingService, component,
@@ -239,7 +239,7 @@ class LoginComponent(
 
     val langGroup = SettingProxy(componentSettingService, component,
         "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Nyelvi bellítások",
+        fieldName = "Nyelvi beállítások",
         description = ""
     )
 

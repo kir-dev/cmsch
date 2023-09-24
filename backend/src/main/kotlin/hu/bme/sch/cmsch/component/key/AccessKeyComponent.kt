@@ -96,14 +96,14 @@ class AccessKeyComponent(
     val mustLogInErrorMessage = SettingProxy(componentSettingService, component,
         "mustLogInErrorMessage", "Nem vagy bejelentkezve",
         fieldName = "Nem lett bejelentkezve hibaüzenet",
-        description = "Ez jelenik meg ha ez a nincs behelentkezve",
+        description = "Ez jelenik meg ha ez a nincs bejelentkezve",
         serverSideOnly = true,
     )
 
     val youUsedErrorMessage = SettingProxy(componentSettingService, component,
         "youUsedErrorMessage", "Te már használtál fel kódot",
         fieldName = "Te már használtál fel hibaüzenet",
-        description = "Ez jelenik meg ha a beváltó már használtált fel kódot",
+        description = "Ez jelenik meg ha a beváltó már használt fel kódot",
         serverSideOnly = true,
     )
 

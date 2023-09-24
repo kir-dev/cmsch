@@ -66,7 +66,7 @@ class CountdownComponent(
 
     val enabled = SettingProxy(componentSettingService, component,
         "enabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Bekapcsolva", description = "Legyen aktív a visszaszélálás komponens"
+        fieldName = "Bekapcsolva", description = "Legyen aktív a visszaszámlálás komponens"
     )
 
     val showOnly = SettingProxy(componentSettingService, component,
@@ -83,7 +83,7 @@ class CountdownComponent(
 
     val timeToCountTo = SettingProxy(componentSettingService, component,
         "timeToCountTo", "0", type = SettingType.DATE_TIME,
-        fieldName = "Visszaszálálás eddig"
+        fieldName = "Visszaszámlálás eddig"
     )
 
     val informativeOnly = SettingProxy(componentSettingService, component,

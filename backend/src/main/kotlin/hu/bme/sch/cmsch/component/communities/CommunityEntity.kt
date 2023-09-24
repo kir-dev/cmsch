@@ -136,7 +136,7 @@ data class CommunityEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 15, label = "Jelentkezés URL-je", enabled = true,
-        note = "Ha nincs, akkor az lesz kiírva, hogy személyesen lehet jelntkezni")
+        note = "Ha nincs, akkor az lesz kiírva, hogy személyesen lehet jelentkezni")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14)
     var application: String = "",

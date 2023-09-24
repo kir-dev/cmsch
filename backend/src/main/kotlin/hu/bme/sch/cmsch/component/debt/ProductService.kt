@@ -76,7 +76,7 @@ open class ProductService(
             it.payedAt = date
             it.responsibleId = responsibleUser.id
             it.responsibleName = responsibleUser.userName
-            it.log += " '${responsibleUser.userName}'(${responsibleUser.id}) recieved the money at $date;"
+            it.log += " '${responsibleUser.userName}'(${responsibleUser.id}) received the money at $date;"
             soldProductRepository.save(it)
         }
     }

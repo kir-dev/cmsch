@@ -28,7 +28,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   }, [])
   // If there is no error ATM, redirect to home page
   if (clonedMessage === undefined) return <Navigate to="/" />
-  // Dispaly authentication page for the corresponding error type
+  // Display authentication page for the corresponding error type
   if (clonedMessageType === MessageTypes.AUTHENTICATION) return <UnauthorizedPage />
   return (
     <CmschPage>

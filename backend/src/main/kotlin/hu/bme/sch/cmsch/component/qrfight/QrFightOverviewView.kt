@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.qrfight
 enum class LevelStatus {
     NOT_LOGGED_IN, // user is logged out
     NOT_ENABLED, // disabled by config, manual or time interval
-    NOT_UNLOCKED, // dependencies not comleted
+    NOT_UNLOCKED, // dependencies not completed
     OPEN,
     COMPLETED,
 }

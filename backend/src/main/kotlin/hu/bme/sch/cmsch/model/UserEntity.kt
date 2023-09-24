@@ -16,7 +16,7 @@ import jakarta.persistence.*
 
 enum class RoleType(val value: Int, val displayName: String, val description: String) {
     GUEST(0, "Vendég", "Nem bejelentkezett felhasználó"),
-    BASIC(1, "Fekhasználó", "Bejelentkezett felhasználó"),
+    BASIC(1, "Felhasználó", "Bejelentkezett felhasználó"),
     ATTENDEE(2, "Résztvevő", "Résztvevő, de sima felhasználó"),
     PRIVILEGED(3, "Kiemelt", "Résztvevő, de megemelt jogkörökkel"),
     STAFF(100, "Rendező", "Rendező, akinek az admin felületre be kellhet lépnie"),
@@ -176,7 +176,7 @@ data class UserEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Meliyk kar, milyen szak, aktív-e és gólya-e?")
+    @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Melyik kar, milyen szak, aktív-e és gólya-e?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12)
     var unitScopes: String = "",

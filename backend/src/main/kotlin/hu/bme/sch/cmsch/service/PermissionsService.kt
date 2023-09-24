@@ -166,7 +166,7 @@ object ControlPermissions : PermissionGroup {
 
     val PERMISSION_CONTROL_APP = PermissionValidator(
         "APP_CONTROL",
-        "Az alkalazás testreszabása",
+        "Az alkalmazás testreszabása",
         component = ApplicationComponent::class
     )
 

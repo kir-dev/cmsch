@@ -14,7 +14,7 @@ function GroupMapContainer() {
   return (
     <Box>
       <Divider my={10} borderWidth={2} />
-      {profileConfig && <Heading my={5}>{profileConfig.groupLeadersHeader} pozicíója</Heading>}
+      {profileConfig && <Heading my={5}>{profileConfig.groupLeadersHeader} pozíciója</Heading>}
       <Checkbox my={3} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
         {l('location-show-own')}
       </Checkbox>

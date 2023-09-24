@@ -67,7 +67,7 @@ class ApplicationComponent(
 
     val warningMessage = SettingProxy(componentSettingService, component,
         "warningMessage", "", type = SettingType.TEXT,
-        fieldName = "Megjenelő üzenet"
+        fieldName = "Megjelenő üzenet"
     )
 
     val warningLevel = SettingProxy(componentSettingService, component,

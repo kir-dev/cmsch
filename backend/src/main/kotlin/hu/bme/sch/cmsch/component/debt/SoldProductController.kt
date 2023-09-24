@@ -57,7 +57,7 @@ class SoldProductController(
     override fun onEntityPreSave(entity: SoldProductEntity, auth: Authentication): Boolean {
         val date = clock.getTimeInSeconds()
         val user = auth.getUser()
-        entity.log = "${entity.log} '${user.userName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finsihed: ${entity.finsihed}] at $date;"
+        entity.log = "${entity.log} '${user.userName}'(${user.id}) changed [shipped: ${entity.shipped}, payed: ${entity.payed}, finished: ${entity.finsihed}] at $date;"
         return true
     }
 

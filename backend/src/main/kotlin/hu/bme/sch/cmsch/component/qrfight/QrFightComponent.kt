@@ -94,7 +94,7 @@ class QrFightComponent(
     )
 
     val indulaschMessageFormat = SettingProxy(componentSettingService, component,
-        "indulaschMessageFormat", "[QR FIGHT] AZ INDULÁSCH TORNYOT JELELEG A(Z) >> {OWNER} << FOGLALJA, ÉS {TIME} PERCCEL A(Z) >> {HOLDER} << BIRTOKOLJA!",
+        "indulaschMessageFormat", "[QR FIGHT] AZ INDULÁSCH TORNYOT JELENLEG A(Z) >> {OWNER} << FOGLALJA, ÉS {TIME} PERCCEL A(Z) >> {HOLDER} << BIRTOKOLJA!",
         type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Üzenet formátum", description = "Változók: {OWNER} {TIME} {HOLDER}"
     )

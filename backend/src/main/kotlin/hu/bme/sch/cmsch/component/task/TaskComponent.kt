@@ -73,7 +73,7 @@ class TaskComponent(
 
     val langGroup = SettingProxy(componentSettingService, component,
         "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Nyelvi bellítások",
+        fieldName = "Nyelvi beállítások",
         description = ""
     )
 

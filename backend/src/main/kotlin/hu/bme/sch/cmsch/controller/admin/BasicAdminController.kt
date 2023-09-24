@@ -44,7 +44,7 @@ class BasicAdminController(
         )
         adminMenuService.registerEntry(
             javaClass.simpleName, AdminMenuEntry(
-                "Oldal megyitása",
+                "Oldal megnyitása",
                 "launch",
                 "/control/open-site",
                 2,

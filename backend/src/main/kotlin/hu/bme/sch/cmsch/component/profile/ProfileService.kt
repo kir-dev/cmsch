@@ -94,7 +94,7 @@ open class ProfileService(
             profileIsComplete = incompleteTasks?.isEmpty() ?: false,
             incompleteTasks = incompleteTasks,
 
-            // Riddle cmponent
+            // Riddle component
             totalRiddleCount = riddleService.map { it.getTotalRiddleCount(user) }.orElse(null),
             completedRiddleCount = riddleService.map {
                 when (startupPropertyConfig.riddleOwnershipMode) {

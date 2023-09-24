@@ -89,12 +89,12 @@ class ManifestComponent(
 
     val themeColor = SettingProxy(componentSettingService, component,
         "themeColor", "#888888", type = SettingType.COLOR, serverSideOnly = true,
-        fieldName = "Téma színe", description = "Lehet különböző mint a stylis beállításokban"
+        fieldName = "Téma színe", description = "Lehet különböző mint a stílus beállításokban"
     )
 
     val backgroundColor = SettingProxy(componentSettingService, component,
         "backgroundColor", "#000000", type = SettingType.COLOR, serverSideOnly = true,
-        fieldName = "Háttér színe", description = "Lehet különböző mint a stylis beállításokban"
+        fieldName = "Háttér színe", description = "Lehet különböző mint a stílus beállításokban"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

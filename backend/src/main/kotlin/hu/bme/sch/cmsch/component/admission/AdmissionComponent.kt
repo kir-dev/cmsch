@@ -94,7 +94,7 @@ class AdmissionComponent(
 
     val groupAccessGroup = SettingProxy(componentSettingService, component,
         "groupAccessGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csoportok hozzéférése",
+        fieldName = "Csoportok hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
@@ -132,7 +132,7 @@ class AdmissionComponent(
 
     val userAccessGroup = SettingProxy(componentSettingService, component,
         "userAccessGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Felhasználók hozzéférése",
+        fieldName = "Felhasználók hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
@@ -170,38 +170,38 @@ class AdmissionComponent(
 
     val roleGroup = SettingProxy(componentSettingService, component,
         "roleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Szerepek hozzéférése",
+        fieldName = "Szerepek hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
     val grantUserByDefault = SettingProxy(componentSettingService, component,
         "grantUserByDefault", "false", type = SettingType.BOOLEAN,
         fieldName = "USER hozzáférés alapértelmezetten",
-        description = "Ha be van kapcsolva, akkor minden (REGULAR+) felhaszáló jogosult a belépésre alapból"
+        description = "Ha be van kapcsolva, akkor minden (REGULAR+) felhasználó jogosult a belépésre alapból"
     )
 
     val grantUserByAttendee = SettingProxy(componentSettingService, component,
         "grantUserByAttendee", "false", type = SettingType.BOOLEAN,
         fieldName = "USER hozzáférés résztvevőknek",
-        description = "Ha be van kapcsolva, akkor minden résztvevő (ATTENDEE+) felhaszáló jogosult a belépésre"
+        description = "Ha be van kapcsolva, akkor minden résztvevő (ATTENDEE+) felhasználó jogosult a belépésre"
     )
 
     val grantUserByStaff = SettingProxy(componentSettingService, component,
         "grantUserByStaff", "false", type = SettingType.BOOLEAN,
         fieldName = "USER hozzáférés szervezőknek",
-        description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhaszáló jogosult a belépésre"
+        description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhasználó jogosult a belépésre"
     )
 
     val grantOrganizerByStaff = SettingProxy(componentSettingService, component,
         "grantOrganizerByStaff", "false", type = SettingType.BOOLEAN,
         fieldName = "ORGANIZER hozzáférés szervezőknek",
-        description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhaszáló jogosult a szervező rangra"
+        description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhasználó jogosult a szervező rangra"
     )
 
     val grantOrganizerByAdmin = SettingProxy(componentSettingService, component,
         "grantOrganizerByAdmin", "false", type = SettingType.BOOLEAN,
         fieldName = "ORGANIZER hozzáférés adminoknak",
-        description = "Ha be van kapcsolva, akkor minden szervező (ADMIN+) felhaszáló jogosult a szervező rangra"
+        description = "Ha be van kapcsolva, akkor minden szervező (ADMIN+) felhasználó jogosult a szervező rangra"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
