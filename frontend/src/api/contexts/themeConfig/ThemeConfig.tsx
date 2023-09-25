@@ -13,7 +13,9 @@ export const ThemeConfig = ({ children }: PropsWithChildren) => {
   const chakraConfig = useMemo(() => {
     if (config?.components.style) {
       customTheme.colors.brand = getColorShadesForColor(config.components.style.lightBrandingColor)
+      customTheme.colors.lightContainerColor = getColorShadesForColor(config.components.style.lightContainerColor)
       customTheme.colors.lightContainerBg = config.components.style.lightContainerColor
+      customTheme.colors.darkContainerColor = getColorShadesForColor(config.components.style.darkContainerColor)
       customTheme.colors.darkContainerBg = config.components.style.darkContainerColor
       setColorMode((config.components.style.deviceTheme && 'system') || (config.components.style.forceDarkMode && 'dark') || 'light')
       const defaultGlobal = customTheme.styles.global
