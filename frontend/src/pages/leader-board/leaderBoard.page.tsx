@@ -1,28 +1,16 @@
-import {
-  Divider,
-  Flex,
-  Heading,
-  HStack,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useBreakpoint,
-  useBreakpointValue,
-  VStack
-} from '@chakra-ui/react'
+import { Flex, Heading, HStack, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
+import { BoardStat } from '../../common-components/BoardStat'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CustomTabButton } from '../../common-components/CustomTabButton'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { BoardStat } from '../../common-components/BoardStat'
-import { CustomTab } from '../events/components/CustomTab'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
-import { AbsolutePaths } from '../../util/paths'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { AbsolutePaths } from '../../util/paths'
 
 const LeaderboardPage = () => {
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
@@ -67,18 +55,16 @@ const LeaderboardPage = () => {
         {data?.userScore !== undefined && <BoardStat label="Saját pont" value={data.userScore} />}
         {data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={data.groupScore} />}
       </HStack>
-      <Divider mb={10} />
 
       {component.showUserBoard && component.showGroupBoard ? (
-        <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="unstyled">
+        <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
           <TabList>
-            {data?.userBoard && <CustomTab>Egyéni</CustomTab>}
-            {data?.groupBoard && <CustomTab>Csoportos</CustomTab>}
+            {data?.userBoard && <CustomTabButton>Egyéni</CustomTabButton>}
+            {data?.groupBoard && <CustomTabButton>Csoportos</CustomTabButton>}
           </TabList>
           <TabPanels>
-            {data?.userBoard && <TabPanel>{userBoard}</TabPanel>}
-
-            {data?.groupBoard && <TabPanel>{groupBoard}</TabPanel>}
+            {data?.userBoard && <TabPanel px={0}>{userBoard}</TabPanel>}
+            {data?.groupBoard && <TabPanel px={0}>{groupBoard}</TabPanel>}
           </TabPanels>
         </Tabs>
       ) : (

@@ -1,5 +1,6 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { Td, Tr, useDisclosure } from '@chakra-ui/react'
+import { useOpaqueBackground } from '../util/core-functions.util'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 
 type CollapsableTableRowProps = {
@@ -13,6 +14,7 @@ type CollapsableTableRowProps = {
 
 export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup, categorized = false }: CollapsableTableRowProps) => {
   const { isOpen, onToggle } = useDisclosure()
+  const bg = useOpaqueBackground(1)
   return (
     <>
       <Tr
@@ -22,6 +24,7 @@ export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup,
         _hover={{ cursor: collapsable ? 'pointer' : 'default' }}
         alignItems="start"
         fontWeight="bold"
+        bg={idx % 2 === 0 ? bg : undefined}
       >
         <>
           <Td w="1rem">{collapsable && (isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />)}</Td>

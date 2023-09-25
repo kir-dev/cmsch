@@ -14,7 +14,7 @@ export const LeaderBoardTable = ({ data, showGroup = false, suffix, detailed = f
   return (
     <>
       <TableContainer>
-        <Table variant="striped" colorScheme="brand">
+        <Table variant="unstyled">
           <Tbody>
             {data.map((item, idx) => (
               <CollapsableTableRow
