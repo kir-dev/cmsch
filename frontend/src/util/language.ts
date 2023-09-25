@@ -65,10 +65,6 @@ const officialLanguageData: Partial<Record<keyof typeof friendlyLanguageData, st
   'alias-change-successful': 'Becenév sikeresen módosítva',
   'alias-change-failure': 'Nem sikerült megváltoztatni a becenevet',
   'alias-change-not-allowed': 'A becenév szerkesztése nem engedélyezett!',
-<<<<<<< HEAD
-=======
-  'component-unavaliable': 'Komponens nem elérhető!',
->>>>>>> f9a13ea6 (fix: some typos in strings)
   'organization-title': 'Reszortok',
   'organization-description': 'Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.',
   'community-title': 'Körök',
@@ -139,10 +135,6 @@ const friendlyLanguageData = {
   'alias-change-successful': 'Becenév sikeresen módosítva',
   'alias-change-failure': 'Nem sikerült megváltoztatni a becenevet',
   'alias-change-not-allowed': 'A becenév szerkesztése nem engedélyezett!',
-<<<<<<< HEAD
-=======
-  'component-unavaliable': 'Komponens nem elérhető!',
->>>>>>> f9a13ea6 (fix: some typos in strings)
   'organization-title': 'Reszortok',
   'organization-description': 'Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.',
   'community-title': 'Körök',
