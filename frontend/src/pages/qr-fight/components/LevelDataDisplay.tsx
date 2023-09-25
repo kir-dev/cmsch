@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, chakra } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { useColorModeValue } from '@chakra-ui/system'
@@ -37,6 +37,21 @@ export function LevelDataDisplay({ teams }: LevelDataDisplayProps) {
         axisRight={null}
         enableGridX={false}
         enableGridY={false}
+        axisBottom={{
+          tickSize: 0,
+          tickPadding: 25,
+          tickRotation: 0,
+          renderTick: ({ opacity, textAnchor, textX, textY, value, x, y }) => {
+            return (
+              <g transform={`translate(${x},${y})`} style={{ opacity }}>
+                <text style={{ fill: color, fontSize: 14 }} textAnchor={textAnchor} transform={`translate(${textX},${textY})`}>
+                  <chakra.tspan>{value.substring(0, 3)}</chakra.tspan>
+                  <chakra.tspan display={{ base: 'none', md: 'block' }}>{value.substring(3)}</chakra.tspan>
+                </text>
+              </g>
+            )
+          }
+        }}
       />
     </Box>
   )
