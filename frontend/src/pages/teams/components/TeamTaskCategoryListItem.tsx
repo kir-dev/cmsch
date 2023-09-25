@@ -20,7 +20,7 @@ export const TeamTaskCategoryListItem = ({ category }: { category: TeamTaskCateg
       </HStack>
     </Flex>
   )
-  if (typeof category.id === 'undefined' || category.id === null)
+  if (typeof category.navigate === 'undefined' || category.navigate === null)
     return (
       <Box bg={bg} px={6} py={2} marginTop={5} borderRadius="md">
         {innerComponent}
@@ -28,7 +28,7 @@ export const TeamTaskCategoryListItem = ({ category }: { category: TeamTaskCateg
     )
   return (
     <Box bg={bg} px={6} py={2} marginTop={5} borderRadius="md" _hover={{ bgColor: hoverBg }}>
-      <Link to={joinPath(AbsolutePaths.TASKS, 'category', category.id)}>{innerComponent}</Link>
+      <Link to={joinPath(AbsolutePaths.TASKS, 'category', category.navigate)}>{innerComponent}</Link>
     </Box>
   )
 }
