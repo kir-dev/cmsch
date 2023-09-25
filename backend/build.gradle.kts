@@ -32,6 +32,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("org.springframework.boot:spring-boot-starter-thymeleaf")
+    api("org.springframework.boot:spring-boot-starter-actuator")
     api("org.springframework.retry:spring-retry")
     api("org.springframework.boot:spring-boot-starter-aop")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -53,6 +54,10 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
     implementation("org.postgresql:postgresql")
+    implementation(platform("io.micrometer:micrometer-bom:1.11.4"))
+    implementation("io.micrometer:micrometer-core")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("io.micrometer:micrometer-observation")
     testApi("org.springframework.boot:spring-boot-starter-test")
     testApi("org.springframework.security:spring-security-test")
 }
