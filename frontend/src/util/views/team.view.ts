@@ -29,10 +29,12 @@ export type TeamView = {
   joinCancellable: boolean
   showRaceButton: boolean
   ownTeam: boolean
-  stats: { name: string; value1: string; value2?: string; navigate?: string }[]
+  stats: TeamStatView[]
   taskCategories?: TeamTaskCategoriesView[]
   forms?: TeamFormView[]
 } & TeamListItemView
+
+export type TeamStatView = { name: string; value1: string; value2?: string; navigate?: string; percentage?: number }
 
 export type TeamListItemView = {
   id: number
