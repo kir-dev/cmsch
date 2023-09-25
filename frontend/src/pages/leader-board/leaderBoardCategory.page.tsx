@@ -1,16 +1,15 @@
+import { Flex, Heading, TabList, TabPanel, TabPanels, Tabs, Text, useBreakpoint, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Divider, Flex, Heading, TabList, TabPanel, TabPanels, Tabs, Text, useBreakpoint, VStack } from '@chakra-ui/react'
 import { Navigate } from 'react-router-dom'
-
-import { CustomTab } from '../events/components/CustomTab'
-import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { AbsolutePaths } from '../../util/paths'
-import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CustomTabButton } from '../../common-components/CustomTabButton'
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { AbsolutePaths } from '../../util/paths'
 
 export default function LeaderboardCategoryPage() {
   const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
@@ -51,18 +50,16 @@ export default function LeaderboardCategoryPage() {
           </LinkButton>
         </VStack>
       </Flex>
-      <Divider mb={10} />
-
       {component.showUserBoard && component.showGroupBoard ? (
-        <Tabs size={{ base: 'sm', md: 'md' }} isFitted={breakpoint !== 'base'} variant="unstyled">
+        <Tabs size={{ base: 'sm', md: 'md' }} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
           <TabList>
-            {data?.userBoard && <CustomTab>Egyéni</CustomTab>}
-            {data?.groupBoard && <CustomTab>Csoportos</CustomTab>}
+            {data?.userBoard && <CustomTabButton>Egyéni</CustomTabButton>}
+            {data?.groupBoard && <CustomTabButton>Csoportos</CustomTabButton>}
           </TabList>
           <TabPanels>
-            {data?.userBoard && <TabPanel>{userBoard}</TabPanel>}
+            {data?.userBoard && <TabPanel px={0}>{userBoard}</TabPanel>}
 
-            {data?.groupBoard && <TabPanel>{groupBoard}</TabPanel>}
+            {data?.groupBoard && <TabPanel px={0}>{groupBoard}</TabPanel>}
           </TabPanels>
         </Tabs>
       ) : (
