@@ -22,7 +22,6 @@ export interface RiddleCategoryHistory {
 export interface RiddleCategory {
   categoryId: number
   title: string
-  score: number
   completed: number
   total: number
   nextRiddle?: number
