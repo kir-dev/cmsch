@@ -497,9 +497,9 @@ open class TasksService(
                 type = category.type,
 
                 sum = taskCount,
-                approved = submissionSummary?.approved ?: 0,
-                rejected = submissionSummary?.rejected ?: 0,
-                notGraded = submissionSummary?.notGraded ?: 0
+                approved = submissionSummary?.approved?.toInt() ?: 0,
+                rejected = submissionSummary?.rejected?.toInt() ?: 0,
+                notGraded = submissionSummary?.notGraded?.toInt() ?: 0
             )
         }.sortedBy { it.categoryId }
     }
@@ -526,9 +526,9 @@ open class TasksService(
                 type = category.type,
 
                 sum = taskCount,
-                approved = submissionSummary?.approved ?: 0,
-                rejected = submissionSummary?.rejected ?: 0,
-                notGraded = submissionSummary?.notGraded ?: 0
+                approved = submissionSummary?.approved?.toInt() ?: 0,
+                rejected = submissionSummary?.rejected?.toInt() ?: 0,
+                notGraded = submissionSummary?.notGraded?.toInt() ?: 0
             )
         }.sortedBy { it.categoryId }
     }

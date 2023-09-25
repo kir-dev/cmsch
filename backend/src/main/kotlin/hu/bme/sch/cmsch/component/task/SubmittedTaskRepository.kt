@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 data class SubmissionSummary(
-    val categoryId: Int,
-    val approved: Int,
-    val rejected: Int,
-    val notGraded: Int
+    var categoryId: Int = 0,
+    var approved: Long = 0,
+    var rejected: Long = 0,
+    var notGraded: Long = 0
 )
 
 @Repository
@@ -30,10 +30,30 @@ interface SubmittedTaskRepository : CrudRepository<SubmittedTaskEntity, Int>,
 
     fun findAllByScoreGreaterThanAndApprovedIsTrue(zero: Int): List<SubmittedTaskEntity>
 
-    @Query("SELECT s.categoryId, SUM(CASE WHEN s.approved THEN 1 ELSE 0 END) as approved, SUM(CASE WHEN s.rejected THEN 1 ELSE 0 END) as rejected, SUM(CASE WHEN s.approved = false AND s.rejected = false THEN 1 ELSE 0 END) as notGraded FROM SubmittedTaskEntity s WHERE s.groupId = :groupId GROUP BY s.categoryId")
+    @Query("""
+        SELECT NEW hu.bme.sch.cmsch.component.task.SubmissionSummary(
+            s.categoryId,
+            SUM(CASE WHEN s.approved THEN 1 ELSE 0 END),
+            SUM(CASE WHEN s.rejected THEN 1 ELSE 0 END),
+            SUM(CASE WHEN s.approved = false AND s.rejected = false THEN 1 ELSE 0 END)
+        ) 
+        FROM SubmittedTaskEntity s 
+        WHERE s.groupId = :groupId 
+        GROUP BY s.categoryId
+    """)
     fun findSubmissionSummaryByGroupId(groupId: Int): List<SubmissionSummary>
 
-    @Query("SELECT NEW hu.bme.sch.cmsch.component.task.SubmissionSummary(s.categoryId, SUM(CASE WHEN s.approved THEN 1 ELSE 0 END) as approved, SUM(CASE WHEN s.rejected THEN 1 ELSE 0 END) as rejected, SUM(CASE WHEN s.approved = false AND s.rejected = false THEN 1 ELSE 0 END) as notGraded) FROM SubmittedTaskEntity s WHERE s.userId = :userId GROUP BY s.categoryId")
+    @Query("""
+        SELECT NEW hu.bme.sch.cmsch.component.task.SubmissionSummary(
+            s.categoryId,
+            SUM(CASE WHEN s.approved THEN 1 ELSE 0 END), 
+            SUM(CASE WHEN s.rejected THEN 1 ELSE 0 END), 
+            SUM(CASE WHEN s.approved = false AND s.rejected = false THEN 1 ELSE 0 END)
+        ) 
+        FROM SubmittedTaskEntity s 
+        WHERE s.userId = :userId 
+        GROUP BY s.categoryId
+    """)
     fun findSubmissionSummaryByUserId(userId: Int): List<SubmissionSummary>
 
     fun findAllByGroupId(groupId: Int): List<SubmittedTaskEntity>
