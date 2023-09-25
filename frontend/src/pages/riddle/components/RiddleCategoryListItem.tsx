@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Divider, Flex, HStack, Text } from '@chakra-ui/react'
+import { Box, CircularProgress, Flex, HStack, Text } from '@chakra-ui/react'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
 import { RiddleCategory } from '../../../util/views/riddle.view'
 
@@ -18,8 +18,6 @@ export function RiddleCategoryListItem({ category, onClick }: RiddleCategoryList
           {category.title}
         </Text>
         <HStack>
-          <Text fontWeight="bold">{category.score}p</Text>
-          <Divider orientation="vertical" h={5} />
           <Text fontWeight="bold">
             {category.completed}/{category.total}
           </Text>
