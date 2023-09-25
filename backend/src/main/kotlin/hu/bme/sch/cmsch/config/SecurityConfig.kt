@@ -113,6 +113,7 @@ open class SecurityConfig(
                 antMatcher("/tracker.css"),
                 antMatcher("/scanner.css"),
                 antMatcher("/redirect/beacon"),
+                antMatcher("/actuator/prometheus"),
             ).permitAll()
 
             it.requestMatchers(
