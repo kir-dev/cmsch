@@ -469,7 +469,7 @@ open class RiddleBusinessLogicService(
 
         return categories.associate { category ->
             category.title to
-                    submissions.getOrDefault(category.id, listOf())
+                    submissions.getOrDefault(category.categoryId, listOf())
                         .mapNotNull { riddle -> riddleCacheManager.getRiddleById(riddle.riddleId)?.let { mapRiddle(riddle, it) } }
                         .toList()
         }

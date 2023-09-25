@@ -65,20 +65,13 @@ data class FreestyleRaceRecordEntity(
         note = "Másodpercben kell megadni, és ponttal (.) van elválasztva, nem vesszővel! 3 tizedes pontig lehet megadni pontosságot.")
     @property:GenerateOverview(columnName = "Idő", order = 4, centered = true)
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_FLOAT)
-    var time: Float = 0.0f,
-
-    @Column(nullable = false)
-    @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Időbélyeg", enabled = false, visible = false)
-    @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)
-    var timestamp: Long = 0,
+    var time: Float = 0.0f
 
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
-        name = "RaceRecord",
-        view = "control/race",
+        name = "FreestyleRaceRecord",
+        view = "control/freestyle-race",
         showPermission = StaffPermissions.PERMISSION_SHOW_RACE
     )
 
@@ -93,7 +86,7 @@ data class FreestyleRaceRecordEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 
     override fun toString(): String {
-        return "RaceRecordEntity(id=$id, description='$description', userId=$userId, userName='$userName', groupId=$groupId, groupName='$groupName', time=$time)"
+        return "FreestyleRaceRecordEntity(id=$id, description='$description', userId=$userId, userName='$userName', groupId=$groupId, groupName='$groupName', time=$time)"
     }
 
 }
