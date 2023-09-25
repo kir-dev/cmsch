@@ -51,6 +51,7 @@ export type TeamTaskCategoriesView = {
   completed: number
   outOf: number
   id: number | null | undefined
+  navigate: number | null | undefined
 }
 
 export type TeamFormView = {
