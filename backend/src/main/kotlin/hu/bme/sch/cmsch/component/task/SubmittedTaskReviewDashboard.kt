@@ -10,10 +10,7 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.AuditLogService
-import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.service.UserService
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.apache.catalina.util.URLEncoder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -46,7 +43,7 @@ class SubmittedTaskReviewDashboard(
     adminMenuService,
     applicationComponent,
     auditLogService,
-    ControlPermissions.PERMISSION_TASK_MANUAL_SUBMIT,
+    StaffPermissions.PERMISSION_TASK_MANUAL_SUBMIT,
     adminMenuIcon = "task_alt",
 ) {
     val ownershipType get() = startupPropertyConfig.taskOwnershipMode
