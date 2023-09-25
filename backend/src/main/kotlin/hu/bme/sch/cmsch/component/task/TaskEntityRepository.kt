@@ -2,8 +2,11 @@ package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
+
+data class TaskCountByCategory(val categoryId: Int, val count: Long)
 
 @Repository
 @ConditionalOnBean(TaskComponent::class)
@@ -12,8 +15,15 @@ interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
 
     fun findAllByHighlightedTrueAndVisibleTrue(): List<TaskEntity>
     fun findAllByVisibleTrue(): List<TaskEntity>
+    fun findAllByVisibleTrueAndAvailableFromLessThanAndAvailableToGreaterThan(availableFrom: Long, availableTo: Long): List<TaskEntity>
     fun countAllByVisibleTrue(): Int
     fun findAllByCategoryIdAndVisibleTrue(categoryId: Int): List<TaskEntity>
     fun findAllByTag(tag: String): List<TaskEntity>
     fun findTop1ByTag(tag: String): List<TaskEntity>
+
+    @Query("SELECT NEW hu.bme.sch.cmsch.component.task.TaskCountByCategory(t.categoryId, COUNT(t)) FROM TaskEntity t WHERE t.visible = true AND t.availableFrom < :now AND t.availableTo > :now GROUP BY t.categoryId")
+    fun findTaskCountByCategory(now: Long): List<TaskCountByCategory>
+
+    fun findAllByVisibleTrueAndCategoryId(categoryId: Int): List<TaskEntity>
+
 }

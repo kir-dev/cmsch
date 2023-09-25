@@ -19,7 +19,16 @@ import org.springframework.core.env.Environment
 import jakarta.persistence.*
 
 @Entity
-@Table(name="submittedTasks")
+@Table(name="submittedTasks",
+    indexes = [
+        Index(name = "index_task", columnList = "task_id"),
+        Index(name = "index_groupId", columnList = "groupId"),
+        Index(name = "index_userId", columnList = "userId"),
+        Index(name = "index_categoryId", columnList = "categoryId"),
+        Index(name = "index_task_group", columnList = "task_id,groupId"),
+        Index(name = "index_task_user", columnList = "task_id,userId")
+    ]
+)
 @ConditionalOnBean(TaskComponent::class)
 data class SubmittedTaskEntity(
     @Id

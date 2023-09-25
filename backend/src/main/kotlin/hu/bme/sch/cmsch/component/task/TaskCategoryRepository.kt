@@ -11,8 +11,10 @@ interface TaskCategoryRepository : CrudRepository<TaskCategoryEntity, Int>,
     EntityPageDataSource<TaskCategoryEntity, Int> {
 
     override fun findAll(): List<TaskCategoryEntity>
+    fun findAllByAvailableFromLessThanAndAvailableToGreaterThan(availableFrom: Long, availableTo: Long): List<TaskCategoryEntity>
     fun findAllByCategoryId(categoryId: Int): List<TaskCategoryEntity>
     fun findAllByType(type: TaskCategoryType): List<TaskCategoryEntity>
     fun findAllByAdvertisedTrue(): List<TaskCategoryEntity>
+    fun findAllByAdvertisedTrueAndAvailableFromLessThanAndAvailableToGreaterThan(availableFrom: Long, availableTo: Long): List<TaskCategoryEntity>
 
 }

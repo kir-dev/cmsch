@@ -9,9 +9,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.concurrent.read
-import kotlin.concurrent.write
+import java.util.concurrent.atomic.AtomicReference
 
 @Service
 class ComponentHandlerService(
@@ -21,8 +19,7 @@ class ComponentHandlerService(
     private val log = LoggerFactory.getLogger(javaClass)
 
     private val writer = ObjectMapper().writerFor(object : TypeReference<Map<String, Map<String, Any>>>() {})
-    private val cache = EnumMap<RoleType, String>(RoleType::class.java)
-    private val lock = ReentrantReadWriteLock()
+    private val cache = AtomicReference(EnumMap<RoleType, String>(RoleType::class.java))
 
     fun getComponentConstantsForRole(role: RoleType): Map<String, Map<String, Any>> {
         return components
@@ -31,9 +28,7 @@ class ComponentHandlerService(
     }
 
     fun getComponentConstantsForRoleFast(role: RoleType): String {
-        return lock.read {
-            cache[role] ?: "{}"
-        }
+        return cache.get()[role] ?: "{}"
     }
 
     @Async
@@ -45,11 +40,11 @@ class ComponentHandlerService(
     @PostConstruct
     fun invalidateCaches() {
         log.info("Invalidating ComponentHandlerService cache")
-        lock.write {
-            for (role in RoleType.values()) {
-                cache[role] = writer.writeValueAsString(getComponentConstantsForRole(role))
-            }
+        val newCache = EnumMap<RoleType, String>(RoleType::class.java)
+        for (role in RoleType.values()) {
+            newCache[role] = writer.writeValueAsString(getComponentConstantsForRole(role))
         }
+        cache.set(newCache)
         log.info("ComponentHandlerService cache regenerated")
     }
 

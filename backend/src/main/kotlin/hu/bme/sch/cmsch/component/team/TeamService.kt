@@ -16,6 +16,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.service.TimeService
 import org.postgresql.util.PSQLException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -43,6 +44,7 @@ open class TeamService(
     private val formsService: Optional<FormService>,
     private val qrFightService: Optional<QrFightService>,
     private val riddleReadonlyService: Optional<RiddleReadonlyService>,
+    private val clock: TimeService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -242,7 +244,7 @@ open class TeamService(
 
     private fun mapTasks(team: GroupEntity): List<TaskCategoryPreview> {
         return tasksService.map { tasks ->
-            tasks.getCategoriesForGroup(team.id, advertisedOnly = true)
+            tasks.getCategoriesForGroupInRange(team.id, clock.getNowInSeconds(), advertisedOnly = true)
                 .map { TaskCategoryPreview(
                     name = it.name,
                     completed = it.approved,

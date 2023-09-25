@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.service.*
-import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller

@@ -73,26 +73,30 @@ open class TasksService(
     open fun getAllTasks() = taskRepository.findAllByVisibleTrue();
 
     @Transactional(readOnly = true)
-    open fun getAllTasksForGroup(groupId: Int): List<TaskEntityWrapperDto> {
-        return taskRepository.findAllByVisibleTrue()
-                .map { findSubmissionStatusForGroup(it, groupId) }
-    }
-
-    @Transactional(readOnly = true)
-    open fun getAllTasksForUser(user: CmschUser): List<TaskEntityWrapperDto> {
-        return taskRepository.findAllByVisibleTrue()
-            .map { findSubmissionStatusForUser(it, user) }
-    }
-
-    @Transactional(readOnly = true)
     open fun getAllTasksForGuests(): List<TaskEntityWrapperDto> {
         return taskRepository.findAllByVisibleTrue()
                 .map { TaskEntityWrapperDto(it, TaskStatus.NOT_LOGGED_IN, "") }
     }
 
+    @Transactional(readOnly = true)
+    open fun getAllTasksForGroup(groupId: Int, categoryId: Int): List<TaskEntityWrapperDto> {
+        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryId(categoryId)
+        val taskIds = allTasks.map { it.id }
+        val submissions = submitted.findAllByTask_IdInAndGroupId(taskIds, groupId).associateBy { it.task?.id ?: 0 }
+        return allTasks.map { findSubmission(submissions[it.id], it) }
+    }
+
+    @Transactional(readOnly = true)
+    open fun getAllTasksForUser(user: CmschUser, categoryId: Int): List<TaskEntityWrapperDto> {
+        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryId(categoryId)
+        val taskIds = allTasks.map { it.id }
+        val submissions = submitted.findAllByTask_IdInAndUserId(taskIds, user.id).associateBy { it.task?.id ?: 0 }
+        return allTasks.map { findSubmission(submissions[it.id], it) }
+    }
+
     private fun findSubmissionStatusForGroup(taskEntity: TaskEntity, groupId: Int): TaskEntityWrapperDto {
         try {
-            val submission = submitted.findByTask_IdAndGroupId(taskEntity.id, groupId)
+            val submission = submitted.findByTask_IdAndGroupId(taskEntity.id, groupId).getOrNull()
             return findSubmission(submission, taskEntity)
         } catch (e: Exception) {
             log.error("Failed to fetch TASK_SUBMISSION: {} for group {}", taskEntity.title, groupId, e)
@@ -102,7 +106,7 @@ open class TasksService(
 
     private fun findSubmissionStatusForUser(taskEntity: TaskEntity, user: CmschUser): TaskEntityWrapperDto {
         try {
-            val submission = submitted.findByTask_IdAndUserId(taskEntity.id, user.id)
+            val submission = submitted.findByTask_IdAndUserId(taskEntity.id, user.id).getOrNull()
             return findSubmission(submission, taskEntity)
         } catch (e: Exception) {
             log.error("Failed to fetch TASK_SUBMISSION: {} for user {}", taskEntity.title, user.id, e)
@@ -110,12 +114,12 @@ open class TasksService(
         }
     }
 
-    private fun findSubmission(submission: Optional<SubmittedTaskEntity>, taskEntity: TaskEntity): TaskEntityWrapperDto {
+    private fun findSubmission(submission: SubmittedTaskEntity?, taskEntity: TaskEntity): TaskEntityWrapperDto {
         return when {
-            submission.isEmpty -> TaskEntityWrapperDto(taskEntity, TaskStatus.NOT_SUBMITTED, "")
-            submission.get().rejected -> TaskEntityWrapperDto(taskEntity, TaskStatus.REJECTED, submission.get().response)
-            submission.get().approved -> TaskEntityWrapperDto(taskEntity, TaskStatus.ACCEPTED, submission.get().response)
-            else -> TaskEntityWrapperDto(taskEntity, TaskStatus.SUBMITTED, submission.get().response)
+            submission == null -> TaskEntityWrapperDto(taskEntity, TaskStatus.NOT_SUBMITTED, "")
+            submission.rejected -> TaskEntityWrapperDto(taskEntity, TaskStatus.REJECTED, submission.response)
+            submission.approved -> TaskEntityWrapperDto(taskEntity, TaskStatus.ACCEPTED, submission.response)
+            else -> TaskEntityWrapperDto(taskEntity, TaskStatus.SUBMITTED, submission.response)
         }
     }
 
@@ -467,54 +471,66 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoriesForGroup(groupId: Int, advertisedOnly: Boolean = false): List<TaskCategoryDto> {
-        val submissionByCategory = submitted.findAllByGroupId(groupId)
-                .groupBy { it.categoryId }
+    open fun getCategoriesForGroupInRange(groupId: Int, now: Long, advertisedOnly: Boolean = false): List<TaskCategoryDto> {
 
-        val taskByCategory = taskRepository.findAllByVisibleTrue()
+        val submissionSummaries = submitted.findSubmissionSummaryByGroupId(groupId)
+        val submissionByCategory = submissionSummaries.associateBy({ it.categoryId }, { it })
 
-        val allCategories = if (advertisedOnly) categories.findAllByAdvertisedTrue() else categories.findAll()
-        return allCategories
-            .map { category ->
-                return@map TaskCategoryDto(
-                    name = category.name,
-                    categoryId = category.categoryId,
-                    availableFrom = category.availableFrom,
-                    availableTo = category.availableTo,
-                    type = category.type,
+        val taskCountList = taskRepository.findTaskCountByCategory(now)
+        val taskCountByCategory = taskCountList.associate { it.categoryId to it.count.toInt() }
 
-                    sum = taskByCategory.count { it.categoryId == category.categoryId },
-                    approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,
-                    rejected = submissionByCategory[category.categoryId]?.count { it.rejected } ?: 0,
-                    notGraded = submissionByCategory[category.categoryId]?.count { !it.approved && !it.rejected } ?: 0
-                )
-            }
-            .sortedBy { it.categoryId }
+        val allCategories = if (advertisedOnly) {
+            categories.findAllByAdvertisedTrueAndAvailableFromLessThanAndAvailableToGreaterThan(now, now)
+        } else {
+            categories.findAllByAvailableFromLessThanAndAvailableToGreaterThan(now, now)
+        }
+
+        return allCategories.map { category ->
+            val submissionSummary = submissionByCategory[category.categoryId]
+            val taskCount = taskCountByCategory[category.categoryId] ?: 0
+
+            TaskCategoryDto(
+                name = category.name,
+                categoryId = category.categoryId,
+                availableFrom = category.availableFrom,
+                availableTo = category.availableTo,
+                type = category.type,
+
+                sum = taskCount,
+                approved = submissionSummary?.approved ?: 0,
+                rejected = submissionSummary?.rejected ?: 0,
+                notGraded = submissionSummary?.notGraded ?: 0
+            )
+        }.sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoriesForUser(userId: Int): List<TaskCategoryDto> {
-        val submissionByCategory = submitted.findAllByUserId(userId)
-            .groupBy { it.categoryId }
+    open fun getCategoriesForUserInTimeRange(userId: Int, now: Long): List<TaskCategoryDto> {
+        val submissionSummaries = submitted.findSubmissionSummaryByUserId(userId)
+        val submissionByCategory = submissionSummaries.associateBy({ it.categoryId }, { it })
 
-        val taskByCategory = taskRepository.findAllByVisibleTrue()
+        val taskCountList = taskRepository.findTaskCountByCategory(now)
+        val taskCountByCategory = taskCountList.associate { it.categoryId to it.count.toInt() }
 
-        return categories.findAll()
-            .map { category ->
-                return@map TaskCategoryDto(
-                    name = category.name,
-                    categoryId = category.categoryId,
-                    availableFrom = category.availableFrom,
-                    availableTo = category.availableTo,
-                    type = category.type,
+        val allCategories = categories.findAllByAvailableFromLessThanAndAvailableToGreaterThan(now, now)
 
-                    sum = taskByCategory.count { it.categoryId == category.categoryId },
-                    approved = submissionByCategory[category.categoryId]?.count { it.approved } ?: 0,
-                    rejected = submissionByCategory[category.categoryId]?.count { it.rejected } ?: 0,
-                    notGraded = submissionByCategory[category.categoryId]?.count { !it.approved && !it.rejected } ?: 0
-                )
-            }
-            .sortedBy { it.categoryId }
+        return allCategories.map { category ->
+            val submissionSummary = submissionByCategory[category.categoryId]
+            val taskCount = taskCountByCategory[category.categoryId] ?: 0
+
+            TaskCategoryDto(
+                name = category.name,
+                categoryId = category.categoryId,
+                availableFrom = category.availableFrom,
+                availableTo = category.availableTo,
+                type = category.type,
+
+                sum = taskCount,
+                approved = submissionSummary?.approved ?: 0,
+                rejected = submissionSummary?.rejected ?: 0,
+                notGraded = submissionSummary?.notGraded ?: 0
+            )
+        }.sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)

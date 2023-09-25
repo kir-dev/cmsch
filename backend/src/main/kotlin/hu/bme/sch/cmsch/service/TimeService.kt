@@ -29,4 +29,8 @@ class TimeService(
         return now > timeToBeAfter
     }
 
+    fun getNowInSeconds(): Long {
+        return getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+    }
+
 }

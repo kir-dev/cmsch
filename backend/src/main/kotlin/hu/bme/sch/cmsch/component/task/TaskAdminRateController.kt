@@ -128,7 +128,10 @@ class TaskAdminRateController(
 
         model.addAttribute("columnData", descriptor.getColumnsAsJson())
         model.addAttribute("tableData", descriptor.getTableDataAsJson(
-            submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalse(id)))
+            transactionManager.transaction(readOnly = true) {
+                submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalse(id)
+            }
+        ))
 
         model.addAttribute("user", user)
         model.addAttribute("controlActions", descriptor.toJson(
@@ -163,7 +166,7 @@ class TaskAdminRateController(
         model.addAttribute("readOnly", false)
         model.addAttribute("entityMode", false)
 
-        val entity = submittedRepository.findById(id)
+        val entity = transactionManager.transaction(readOnly = true) { submittedRepository.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
         } else {
@@ -191,7 +194,7 @@ class TaskAdminRateController(
             return "admin403"
         }
 
-        val entity = submittedRepository.findById(id)
+        val entity = transactionManager.transaction(readOnly = true) { submittedRepository.findById(id) }
         if (entity.isEmpty) {
             return "redirect:/admin/control/$view/grade/$id"
         }
@@ -203,7 +206,9 @@ class TaskAdminRateController(
         saveChangeHistory(entity.get(), user.userName)
         entity.get().id = id
         auditLog.edit(user, component.component, newValues.toString())
-        submittedRepository.save(entity.get())
+        transactionManager.transaction(readOnly = false) {
+            submittedRepository.save(entity.get())
+        }
         return "redirect:/admin/control/$view/rate/${entity.get().task?.id ?: ""}"
     }
 

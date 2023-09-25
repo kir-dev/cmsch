@@ -32,48 +32,25 @@ class TaskApiController(
     @GetMapping("/task")
     fun tasks(auth: Authentication?): TasksView {
         val categories: List<TaskCategoryDto>
-        val score: Int?
-        val leaderBoardAvailable = leaderBoardComponent.map { it.leaderboardEnabled.isValueTrue() }.orElse(false)
-        val leaderBoardFrozen = leaderBoardComponent.map { it.leaderboardFrozen.isValueTrue() }.orElse(true)
 
         val user = auth?.getUserOrNull()
         when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                user ?: return TasksView(
-                    score = null,
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable,
-                    leaderBoardFrozen = leaderBoardFrozen
-                )
-                categories = tasks.getCategoriesForUser(user.id)
-                score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfUser(user) }.orElse(null) else null
+                user ?: return TasksView()
+                categories = tasks.getCategoriesForUserInTimeRange(user.id, clock.getNowInSeconds())
 
                 return TasksView(
-                    score = score,
                     categories = categories
-                        .filter { clock.inRange(it.availableFrom, it.availableTo, clock.getTimeInSeconds()) },
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForUsers() }.orElse(listOf()) else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable,
-                    leaderBoardFrozen = leaderBoardFrozen
+                        .filter { clock.inRange(it.availableFrom, it.availableTo, clock.getNowInSeconds()) },
                 )
             }
             OwnershipType.GROUP -> {
-                val groupId = user?.groupId ?: return TasksView(
-                    score = null,
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable,
-                    leaderBoardFrozen = leaderBoardFrozen
-                )
-                categories = tasks.getCategoriesForGroup(groupId)
-                score = if (leaderBoardAvailable) leaderBoardService.map { it.getScoreOfGroup(user.groupName) }.orElse(null) else null
+                val groupId = user?.groupId ?: return TasksView( )
+                categories = tasks.getCategoriesForGroupInRange(groupId, clock.getNowInSeconds())
 
                 return TasksView(
-                    score = score,
                     categories = categories
                         .filter { clock.inRange(it.availableFrom, it.availableTo, clock.getTimeInSeconds()) },
-                    leaderBoard = if (leaderBoardAvailable) leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()) else listOf(),
-                    leaderBoardVisible = leaderBoardAvailable,
-                    leaderBoardFrozen = leaderBoardFrozen
                 )
             }
         }
@@ -87,26 +64,26 @@ class TaskApiController(
             tasks = listOf()
         )
 
-        val tasks =  when (startupPropertyConfig.taskOwnershipMode) {
+        val taskList = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
                 val user = auth?.getUserOrNull() ?: return TaskCategoryView(
                     categoryName = "Nem található",
                     tasks = listOf()
                 )
-                tasks.getAllTasksForUser(user)
+                tasks.getAllTasksForUser(user, categoryId)
             }
             OwnershipType.GROUP -> {
                 val groupId = auth?.getUserOrNull()?.groupId ?: return TaskCategoryView(
                     categoryName = "Nem található",
                     tasks = listOf()
                 )
-                tasks.getAllTasksForGroup(groupId)
+                tasks.getAllTasksForGroup(groupId, categoryId)
             }
         }
 
         return TaskCategoryView(
             categoryName = category.name,
-            tasks = tasks.filter { it.task.categoryId == categoryId },
+            tasks = taskList,
             availableFrom = category.availableFrom,
             availableTo = category.availableTo,
             type = category.type

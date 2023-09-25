@@ -81,6 +81,7 @@ open class TestConfig(
 
     private var now = System.currentTimeMillis() / 1000
     private var user1: UserEntity? = null
+    private var inited: Boolean = false
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     open fun init() {
@@ -122,7 +123,10 @@ open class TestConfig(
 
     @Scheduled(fixedDelay = 3000L)
     open fun delayedInit() {
-        riddleCacheManager.resetCache(false, false)
+        if (inited)
+            return
+        inited = true
+        riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
     }
 
     private fun addForms(form: FormRepository, response: ResponseRepository) {
