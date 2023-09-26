@@ -1,10 +1,12 @@
 package hu.bme.sch.cmsch.component.race
 
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrNull
 
 const val DEFAULT_CATEGORY = ""
 
@@ -17,6 +19,7 @@ open class RaceService(
     private val freestyleRaceRecordRepository: FreestyleRaceRecordRepository,
     private val raceComponent: RaceComponent,
     private val userRepository: UserRepository,
+    private val groupRepository: GroupRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -76,23 +79,20 @@ open class RaceService(
 
     @Throws(NoSuchElementException::class)
     @Transactional(readOnly = true)
-    open fun getRaceByTeam(user: CmschUser?): RaceView {
-        val board = getBoardForGroups(DEFAULT_CATEGORY)
-            .filter { it.groupName == user?.groupName }
+    open fun getRaceByTeam(teamId: Int, userId: Int): RaceView {
+        val team = groupRepository.findById(teamId).getOrNull()
+            ?: return RaceView("Nem található", "", null, null, listOf())
+        val board = getBoardForUsers(DEFAULT_CATEGORY, false)
+            .filter { it.groupName == team.name }
 
-        return if (user == null) {
-            RaceView("nem található", "", null, null, board)
-        } else {
-            val groupId = user.groupId ?: -1
-            val place = board.indexOfFirst { it.id == groupId }
-            RaceView(
-                user.groupName,
-                "",
-                if (place < 0) null else (place + 1),
-                board.find { it.id == groupId }?.time,
-                board
-            )
-        }
+        val place = board.indexOfFirst { it.id == teamId }
+        return RaceView(
+            team.name,
+            team.description,
+            if (place < 0) null else (place + 1),
+            board.find { it.id == userId }?.time,
+            board
+        )
     }
 
     @Transactional(readOnly = true)

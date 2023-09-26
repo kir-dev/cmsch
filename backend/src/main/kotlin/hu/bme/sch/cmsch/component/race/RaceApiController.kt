@@ -89,8 +89,8 @@ class RaceApiController(
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return when (startupPropertyConfig.raceOwnershipMode) {
-            OwnershipType.GROUP -> ResponseEntity.ok(raceService.getRaceByTeam(user))
-            OwnershipType.USER -> ResponseEntity.ok(raceService.getRaceByTeam(user))
+            OwnershipType.GROUP -> ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            OwnershipType.USER -> ResponseEntity.ok(raceService.getRaceByTeam(teamId, user?.id ?: 0))
         }
     }
 
