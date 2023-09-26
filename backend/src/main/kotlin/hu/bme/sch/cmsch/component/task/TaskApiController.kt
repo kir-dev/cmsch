@@ -98,10 +98,11 @@ class TaskApiController(
         if (task.orElse(null)?.visible?.not() == true)
             return SingleTaskView(task = null, submission = null)
 
+        val categoryName = task.map { tasks.getCategoryName(it.categoryId) }.orElse(null)
         val submission = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
                 val user = auth?.getUserOrNull() ?: return SingleTaskView(
-                    task = task.map { TaskEntityDto(it, now) }.orElse(null),
+                    task = task.map { TaskEntityDto(it, now, categoryName) }.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
                 )
@@ -109,7 +110,7 @@ class TaskApiController(
             }
             OwnershipType.GROUP -> {
                 val group = auth?.getUserOrNull()?.groupId ?: return SingleTaskView(
-                    task = task.map { TaskEntityDto(it, now) }.orElse(null),
+                    task = task.map { TaskEntityDto(it, now, categoryName) }.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
                 )
@@ -117,7 +118,7 @@ class TaskApiController(
             }
         }
 
-        val taskOptional = task.map { TaskEntityDto(it, now) }.orElse(null)
+        val taskOptional = task.map { TaskEntityDto(it, now, categoryName) }.orElse(null)
         return SingleTaskView(
             task = taskOptional,
             submission = submission?.let { sub -> mapSubmittedTaskEntityDto(sub, task, now) },
