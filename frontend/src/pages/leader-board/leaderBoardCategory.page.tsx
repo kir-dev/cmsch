@@ -13,6 +13,7 @@ import {
   useBreakpoint,
   VStack
 } from '@chakra-ui/react'
+import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../util/paths'
