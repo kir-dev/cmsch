@@ -39,11 +39,14 @@ data class TaskEntityDto(
     val availableTo: Long = 0,
 
     @field:JsonView(FullDetails::class)
-    val visible: Boolean = false
+    val visible: Boolean = false,
+
+    @field:JsonView(FullDetails::class)
+    val categoryName: String = "",
 
 ) : Serializable {
 
-    constructor(other: TaskEntity, time: Long) : this(
+    constructor(other: TaskEntity, time: Long, categoryName: String?) : this(
         other.id,
         other.title,
         other.categoryId,
@@ -59,7 +62,8 @@ data class TaskEntityDto(
         other.formatDescriptor,
         other.availableFrom,
         other.availableTo,
-        other.visible
+        other.visible,
+        categoryName ?: ""
     )
 
 }
