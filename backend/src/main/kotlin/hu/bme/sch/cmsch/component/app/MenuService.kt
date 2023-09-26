@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
 import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.event.ContextRefreshedEvent
@@ -19,6 +20,7 @@ import jakarta.annotation.PostConstruct
 import org.postgresql.util.PSQLException
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
+import org.springframework.transaction.PlatformTransactionManager
 
 @Service
 @ConditionalOnBean(ApplicationComponent::class)
@@ -29,7 +31,8 @@ open class MenuService(
     private val extraPages: Optional<StaticPageRepository>,
     private val forms: Optional<FormRepository>,
     private val races: Optional<RaceCategoryRepository>,
-    private val auditLogService: AuditLogService
+    private val auditLogService: AuditLogService,
+    private val transactionManager: PlatformTransactionManager
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -68,7 +71,7 @@ open class MenuService(
         possibleMenus.addAll(components.flatMap { it.getAdditionalMenus(role) })
 
         extraPages.ifPresent { pages ->
-            possibleMenus.addAll(pages.findAll()
+            possibleMenus.addAll(transactionManager.transaction(readOnly = true) { pages.findAll() }
                 .filter { it.showAsMenu }
                 .filter { it.minRole.value <= role.value }
                 .map {
@@ -81,7 +84,7 @@ open class MenuService(
         }
 
         forms.ifPresent { pages ->
-            possibleMenus.addAll(pages.findAll()
+            possibleMenus.addAll(transactionManager.transaction(readOnly = true) { pages.findAll() }
                 .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
                 .map {
                     MenuSettingItem(
@@ -93,7 +96,7 @@ open class MenuService(
         }
 
         races.ifPresent { pages ->
-            possibleMenus.addAll(pages.findAllByVisibleTrue()
+            possibleMenus.addAll(transactionManager.transaction(readOnly = true) { pages.findAllByVisibleTrue() }
                 .map {
                     MenuSettingItem(
                         it.javaClass.simpleName + "@" + it.id,
@@ -103,7 +106,7 @@ open class MenuService(
                 })
         }
 
-        possibleMenus.addAll(extraMenuRepository.findAll()
+        possibleMenus.addAll(transactionManager.transaction(readOnly = true) { extraMenuRepository.findAll() }
             .map {
                 MenuSettingItem(
                     it.javaClass.simpleName + "@" + it.id,
@@ -118,7 +121,7 @@ open class MenuService(
     }
 
     private fun fillMenuDetails(possibleMenus: MutableList<MenuSettingItem>, role: RoleType) {
-        val storedMenus = menuRepository.findAllByRole(role)
+        val storedMenus = transactionManager.transaction(readOnly = true) { menuRepository.findAllByRole(role) }
         possibleMenus.forEach { menu ->
             storedMenus.firstOrNull { it.menuId == menu.id }?.let {
                 menu.order = it.order
