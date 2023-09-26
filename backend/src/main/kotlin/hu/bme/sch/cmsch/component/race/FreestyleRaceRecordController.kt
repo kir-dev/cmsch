@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/admin/control/freestyle-race")
 @ConditionalOnBean(RaceComponent::class)
 class FreestyleRaceRecordController(
-    repo: RaceRecordRepository,
+    repo: FreestyleRaceRecordRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: RaceComponent,
@@ -33,9 +33,9 @@ class FreestyleRaceRecordController(
     private val clock: TimeService,
     transactionManager: PlatformTransactionManager,
     env: Environment
-) : OneDeepEntityPage<RaceRecordEntity>(
+) : OneDeepEntityPage<FreestyleRaceRecordEntity>(
     "freestyle-race",
-    RaceRecordEntity::class, ::RaceRecordEntity,
+    FreestyleRaceRecordEntity::class, ::FreestyleRaceRecordEntity,
     "Eredmény", "Funky mérések",
     "Időmérő eredmények nyers időeredményei. Ennél a kategóriánál minden beadás látszik.",
 
@@ -86,14 +86,14 @@ class FreestyleRaceRecordController(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun onEntityPreSave(entity: RaceRecordEntity, auth: Authentication): Boolean {
+    override fun onEntityPreSave(entity: FreestyleRaceRecordEntity, auth: Authentication): Boolean {
         return when (startupPropertyConfig.raceOwnershipMode) {
             OwnershipType.USER -> processUserSubmission(entity)
             OwnershipType.GROUP -> processGroupSubmission(entity)
         }
     }
 
-    private fun processGroupSubmission(entity: RaceRecordEntity): Boolean {
+    private fun processGroupSubmission(entity: FreestyleRaceRecordEntity): Boolean {
         if (entity.groupName.isNotBlank()) {
             val groupEntity = transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }
             if (groupEntity.isPresent) {
@@ -110,7 +110,7 @@ class FreestyleRaceRecordController(
         return true
     }
 
-    private fun processUserSubmission(entity: RaceRecordEntity): Boolean {
+    private fun processUserSubmission(entity: FreestyleRaceRecordEntity): Boolean {
         if (entity.userName.isNotBlank() && entity.userName != "-") {
             val id = entity.userName.split("|")[0].trim().toIntOrNull() ?: 0
             val user = transactionManager.transaction(readOnly = true) { users.findById(id) }
@@ -129,7 +129,7 @@ class FreestyleRaceRecordController(
         return true
     }
 
-    override fun onPreEdit(actualEntity: RaceRecordEntity): RaceRecordEntity {
+    override fun onPreEdit(actualEntity: FreestyleRaceRecordEntity): FreestyleRaceRecordEntity {
         val userId = actualEntity.userId ?: return actualEntity
         val copy = actualEntity.copy()
         val user = users.findById(userId).orElse(null) ?: return actualEntity
