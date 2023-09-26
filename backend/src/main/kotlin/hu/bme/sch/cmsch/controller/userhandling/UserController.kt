@@ -7,7 +7,6 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
-import hu.bme.sch.cmsch.controller.admin.SearchSettings
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
@@ -33,6 +32,7 @@ class UserController(
     objectMapper: ObjectMapper,
     private val profileService: UserProfileGeneratorService,
     private val groups: GroupRepository,
+    private val users: UserRepository,
     private val staticPageService: Optional<StaticPageService>,
     private val startupPropertyConfig: StartupPropertyConfig,
     components: List<ComponentBase>,
@@ -120,6 +120,21 @@ class UserController(
 
         adminMenuService.invalidateUser(entity.internalId)
         return true
+    }
+
+    override fun fetchOverview(user: CmschUser): Iterable<UserEntity> {
+        return users.findAllUserHandlerView()
+            .map {
+                UserEntity(
+                    id = it.id,
+                    fullName = it.name,
+                    alias = it.alias,
+                    neptun = it.neptun,
+                    groupName = it.groupName,
+                    email = it.email,
+                    guild = it.guild
+                )
+            }
     }
 
 }

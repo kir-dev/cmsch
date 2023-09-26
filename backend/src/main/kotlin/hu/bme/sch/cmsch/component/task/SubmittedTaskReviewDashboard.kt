@@ -45,6 +45,7 @@ class SubmittedTaskReviewDashboard(
     auditLogService,
     StaffPermissions.PERMISSION_TASK_MANUAL_SUBMIT,
     adminMenuIcon = "task_alt",
+    adminMenuPriority = 7
 ) {
     val ownershipType get() = startupPropertyConfig.taskOwnershipMode
     val isUserOwnership get() = ownershipType == OwnershipType.USER
@@ -71,13 +72,13 @@ class SubmittedTaskReviewDashboard(
             "Válaszd ki a ${if (isUserOwnership) "felhasználót" else "csoportot"}, akinek a beadását értékelni akarod, majd a feladatot!",
             listOf(
                 FormElement(
-                    "author", if (isUserOwnership) "Felhasználó" else "Csoport", FormElementType.SELECT,
+                    "author", if (isUserOwnership) "Felhasználó" else "Csoport", FormElementType.SEARCHABLE_SELECT,
                     ".*", "", getAuthorList(isUserOwnership),
                     "Akinek értékelni szeretnéd a beadott feladatát",
                     required = true
                 ),
                 FormElement(
-                    "task", "Feladat", FormElementType.SELECT,
+                    "task", "Feladat", FormElementType.SEARCHABLE_SELECT,
                     ".*", "", getTaskList(),
                     "Az értékelendő feladat (automatikusan frissül miután a ${if (isUserOwnership) "felhasználót" else "csoportot"} kiválasztottad)",
                     required = true
@@ -148,11 +149,24 @@ class SubmittedTaskReviewDashboard(
 
 
     fun getAuthorList(isUserOwnership: Boolean): String =
-        if (isUserOwnership)
-            userService.findAll().joinToString(",") { "${it.id}: ${it.fullNameWithAlias.replace(',', ' ')}" }
-        else
-            groupRepository.findAll().joinToString(",") { "${it.id}: ${it.name.replace(',', ' ')}" }
+        if (isUserOwnership) {
+            userService.findAllUserSelectorView()
+                .sortedBy { it.name }
+                .joinToString(",") {
+                    "${it.id}: ${it.fullNameWithAlias.replace(',', ' ')} [${it.provider.firstOrNull() ?: 'n'}]"
+                }
+        } else {
+            groupRepository.findAllThatExists()
+                .sortedBy { it.name }
+                .joinToString(",") {
+                    "${it.id}: ${it.name.replace(',', ' ')}"
+                }
+        }
 
     fun getTaskList(): String =
-        tasksService.getAllTasks().joinToString(",") { "${it.id}: ${it.title.replace(',', ' ')}" }
+        tasksService.getAllTasksNameView()
+            .sortedBy { it.title }
+            .joinToString(",") {
+                "${it.id}: ${it.title.replace(',', ' ')}"
+            }
 }

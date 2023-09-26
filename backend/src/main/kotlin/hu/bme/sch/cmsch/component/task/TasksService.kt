@@ -70,7 +70,10 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getAllTasks() = taskRepository.findAllByVisibleTrue();
+    open fun getAllTasks() = taskRepository.findAllByVisibleTrue()
+
+    @Transactional(readOnly = true)
+    open fun getAllTasksNameView() = taskRepository.findAllTaskNameView()
 
     @Transactional(readOnly = true)
     open fun getAllTasksForGuests(): List<TaskEntityWrapperDto> {

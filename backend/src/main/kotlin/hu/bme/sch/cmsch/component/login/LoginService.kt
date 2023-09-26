@@ -19,8 +19,10 @@ import hu.bme.sch.cmsch.repository.UserDetailsByInternalIdMappingRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
+import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.PlatformTransactionManager
 
 @Service
 open class LoginService(
@@ -33,7 +35,8 @@ open class LoginService(
     private val loginComponent: LoginComponent,
     private val unitScopeComponent: UnitScopeComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val adminMenuService: AdminMenuService
+    private val adminMenuService: AdminMenuService,
+    private val transactionManager: PlatformTransactionManager
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -62,8 +65,8 @@ open class LoginService(
                 )
                 log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as authsch user")
             }
-            updateFieldsForAuthsch(user, profile)
-            users.save(user)
+            transactionManager.transaction(readOnly = true) { updateFieldsForAuthsch(user, profile) }
+            transactionManager.transaction(readOnly = false) { users.save(user) }
             adminMenuService.invalidateUser(user.internalId)
             return user
         } finally {
@@ -95,8 +98,8 @@ open class LoginService(
                 )
                 log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as google user profile picture: ${profile.picture}")
             }
-            updateFieldsForGoogle(user)
-            users.save(user)
+            transactionManager.transaction(readOnly = true) { updateFieldsForGoogle(user) }
+            transactionManager.transaction(readOnly = false) { users.save(user) }
             adminMenuService.invalidateUser(user.internalId)
             return user
         } finally {

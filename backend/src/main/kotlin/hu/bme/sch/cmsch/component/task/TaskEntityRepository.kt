@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository
 
 data class TaskCountByCategory(val categoryId: Int, val count: Long)
 
+data class TaskNameView(val id: Int, val title: String)
+
 @Repository
 @ConditionalOnBean(TaskComponent::class)
 interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
@@ -15,6 +17,10 @@ interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
 
     fun findAllByHighlightedTrueAndVisibleTrue(): List<TaskEntity>
     fun findAllByVisibleTrue(): List<TaskEntity>
+
+    @Query("SELECT NEW hu.bme.sch.cmsch.component.task.TaskNameView(e.id, e.title) FROM TaskEntity e")
+    fun findAllTaskNameView(): List<TaskNameView>
+
     fun findAllByVisibleTrueAndAvailableFromLessThanAndAvailableToGreaterThan(availableFrom: Long, availableTo: Long): List<TaskEntity>
     fun countAllByVisibleTrue(): Int
     fun findAllByCategoryIdAndVisibleTrue(categoryId: Int): List<TaskEntity>

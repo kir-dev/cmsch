@@ -565,15 +565,11 @@
                                         th:disabled="${!input.second.enabled || readOnly}"
                                         th:unless="${entityMode}"
                                 >
-                                    <option th:if="${editMode || duplicateMode}"
-                                            th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
-                                            th:value="${opt}"
-                                            th:text="${opt}"
-                                            th:selected="${#strings.equals(input.first.get(data), opt)}"></option>
                                     <option th:unless="${editMode || duplicateMode}"
                                             th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${opt}"
-                                            th:text="${opt}"></option>
+                                            th:text="${opt}"
+                                            th:selected="${(editMode || duplicateMode) && #strings.equals(input.first.get(data), opt)}"></option>
                                 </select>
 
                                 <object th:remove="tag" th:if="${input.second.interpreter == 'search'}">

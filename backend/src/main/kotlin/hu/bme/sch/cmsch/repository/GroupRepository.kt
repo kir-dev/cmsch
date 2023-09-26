@@ -7,6 +7,10 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
+data class GroupNameView(
+    val name: String
+)
+
 @Repository
 interface GroupRepository : CrudRepository<GroupEntity, Int>,
     EntityPageDataSource<GroupEntity, Int> {
@@ -26,4 +30,7 @@ interface GroupRepository : CrudRepository<GroupEntity, Int>,
     fun findByName(name: String): Optional<GroupEntity>
     fun findByNameIgnoreCase(name: String): Optional<GroupEntity>
     fun findAllBySelectableTrue(): List<GroupEntity>
+
+    @Query("select new hu.bme.sch.cmsch.repository.GroupNameView(e.name) from GroupEntity e")
+    fun findAllGroupNames(): List<GroupNameView>
 }

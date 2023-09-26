@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.UserSelectorView
 import org.postgresql.util.PSQLException
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
@@ -47,6 +48,9 @@ open class UserService(
 
     @Transactional(readOnly = true)
     open fun findAll(): Iterable<UserEntity> = users.findAll()
+
+    @Transactional(readOnly = true)
+    open fun findAllUserSelectorView(): Iterable<UserSelectorView> = users.findAllSelectorView()
 
     @Transactional(readOnly = true)
     open fun exists(id: String) = users.existsByInternalId(id)

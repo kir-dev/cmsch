@@ -73,6 +73,7 @@ enum class FormElementType(
     LINK_VIEW,
     IMAGE_VIEW,
     HTML_INFO_BOX,
+    SEARCHABLE_SELECT
     ;
 
     open fun fetchValue(user: UserEntity): String {

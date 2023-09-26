@@ -839,6 +839,24 @@ open class TestConfig(
         )
         profileService.generateFullProfileForUser(u3)
         users.save(u3)
+
+        val random = Random()
+        for (i in 0..2000) {
+            val un = UserEntity(
+                internalId = UUID.randomUUID().toString(),
+                neptun = "NE" + i,
+                email = "${random.nextLong()}@beme.hu",
+                major = MajorType.BPROF,
+                role = RoleType.BASIC,
+                fullName = "Random Npc $i",
+                guild = GuildType.BLACK,
+                config = "c" + i,
+                cmschId = "cmsch" + i,
+                profileTopMessage = "msg${random.nextLong()}-${random.nextLong()}-${random.nextLong()}${random.nextLong()}",
+                permissions = "PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,$i"
+            )
+            users.save(un)
+        }
     }
 
     private fun addProducts(products: ProductRepository, productsService: ProductService) {

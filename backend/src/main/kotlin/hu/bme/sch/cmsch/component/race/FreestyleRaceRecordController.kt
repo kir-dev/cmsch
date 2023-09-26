@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.UserSelectorView
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.transaction
@@ -52,7 +53,7 @@ class FreestyleRaceRecordController(
         "GroupEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(transactionManager.transaction(readOnly = true) { groups.findAll() }
+            results.addAll(transactionManager.transaction(readOnly = true) { groups.findAllGroupNames() }
                 .map { it.name }
                 .sorted()
                 .toList())
@@ -61,8 +62,8 @@ class FreestyleRaceRecordController(
         "UserEntity" to {
             val results = mutableListOf<String>()
             results.add("-")
-            results.addAll(transactionManager.transaction(readOnly = true) { users.findAll() }
-                .sortedBy { it.fullName }
+            results.addAll(transactionManager.transaction(readOnly = true) { users.findAllSelectorView() }
+                .sortedBy { it.name }
                 .map { mapUsername(it) }
                 .toList())
             return@to results
@@ -140,4 +141,7 @@ class FreestyleRaceRecordController(
 }
 
 private fun mapUsername(it: UserEntity) =
+    "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
+
+private fun mapUsername(it: UserSelectorView) =
     "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
