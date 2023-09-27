@@ -8,7 +8,7 @@ import { LeaderBoardTable } from '../../../common-components/LeaderboardTable'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
 import { RaceView } from '../../../util/views/race.view'
-import { createRef, useEffect, useState } from 'react'
+import { createRef, useEffect, useMemo, useState } from 'react'
 import { LeaderBoardItemView } from '../../../util/views/leaderBoardView'
 import { SearchIcon } from '@chakra-ui/icons'
 
@@ -22,6 +22,7 @@ type Props = {
 const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
   const inputRef = createRef<HTMLInputElement>()
   const [filteredBoard, setFilteredBoard] = useState<LeaderBoardItemView[] | undefined>(data?.board)
+  const showDescription = useMemo(() => data?.board.some((i) => !!i.description), [data?.board])
 
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
@@ -63,7 +64,7 @@ const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
         <BoardStat label="Legjobb időd" value={(data.bestTime || '-') + ' mp'} />
       </Flex>
       <Divider mb={10} />
-      <LeaderBoardTable data={filteredBoard || []} showGroup={true} suffix="mp" />
+      <LeaderBoardTable data={filteredBoard || []} showGroup={true} suffix="mp" showDescription={showDescription} />
     </CmschPage>
   )
 }

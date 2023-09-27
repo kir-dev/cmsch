@@ -5,14 +5,23 @@ import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 
 type CollapsableTableRowProps = {
   collapsable: boolean
-  data: LeaderBoardItemView
+  data: LeaderBoardItemView & { position: number }
   idx: number
   showGroup: boolean
   suffix?: string
   categorized?: boolean
+  showDescription: boolean
 }
 
-export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup, categorized = false }: CollapsableTableRowProps) => {
+export const CollapsableTableRow = ({
+  collapsable,
+  data,
+  idx,
+  suffix,
+  showGroup,
+  categorized = false,
+  showDescription
+}: CollapsableTableRowProps) => {
   const { isOpen, onToggle } = useDisclosure()
   const bg = useOpaqueBackground(1)
   return (
@@ -27,15 +36,16 @@ export const CollapsableTableRow = ({ collapsable, data, idx, suffix, showGroup,
         bg={idx % 2 === 0 ? bg : undefined}
       >
         <>
-          <Td w="1rem">{collapsable && (isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />)}</Td>
-          {!categorized && <Td w="1rem">{idx + 1}.</Td>}
-          <Td colSpan={categorized ? 3 : 2}>{data.name}</Td>
-          {showGroup && 'groupName' in data ? <Td>{data.groupName}</Td> : <Td />}
+          {collapsable && <Td w="1rem">{isOpen ? <ChevronDownIcon boxSize={5} /> : <ChevronRightIcon boxSize={5} />}</Td>}
+          {!categorized && <Td w="1rem">{data.position}.</Td>}
           {data.score || data.total ? (
             <Td w="5rem">{`${new Intl.NumberFormat('hu-HU').format(data.score || data.total || 0)} ${suffix || ''}`}</Td>
           ) : (
             <Td w="5rem" />
           )}
+          <Td colSpan={categorized ? 3 : 2}>{data.name}</Td>
+          {showDescription && <Td>{data.description ?? ''}</Td>}
+          {showGroup && 'groupName' in data ? <Td>{data.groupName}</Td> : <Td />}
         </>
       </Tr>
       {isOpen &&

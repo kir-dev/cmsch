@@ -118,6 +118,8 @@ export interface Race {
   title: string
   visible: boolean
   defaultCategoryDescription: string
+  freestyleCategoryName: string
+  extraCategoriesVisible: boolean
   searchEnabled: boolean
 }
 
