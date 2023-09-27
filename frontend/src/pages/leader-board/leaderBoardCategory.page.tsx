@@ -1,37 +1,20 @@
-import { SearchIcon } from '@chakra-ui/icons'
-import {
-  Flex,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-  useBreakpoint,
-  VStack
-} from '@chakra-ui/react'
+import { Flex, Heading, TabList, TabPanel, TabPanels, Tabs, Text, useBreakpoint, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { AbsolutePaths } from '../../util/paths'
-import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CustomTabButton } from '../../common-components/CustomTabButton'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { LeaderBoardView } from '../../util/views/leaderBoardView'
-import { createRef, useState } from 'react'
+import { AbsolutePaths } from '../../util/paths'
+
 export default function LeaderboardCategoryPage() {
   const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
   const component = useConfigContext()?.components.leaderboard
   const breakpoint = useBreakpoint()
-  const inputRef = createRef<HTMLInputElement>()
-  const [filteredData, setFilteredData] = useState<LeaderBoardView | undefined>(data)
 
   if (!component) return <ComponentUnavailable />
 
@@ -41,26 +24,10 @@ export default function LeaderboardCategoryPage() {
 
   if (!component.leaderboardDetailsByCategoryEnabled) return <Navigate to={AbsolutePaths.LEADER_BOARD} />
 
-  const handleInput = () => {
-    const search = inputRef?.current?.value.toLowerCase()
-    if (!data) {
-      setFilteredData(undefined)
-    } else if (!search) setFilteredData(data)
-    else {
-      setFilteredData({
-        userBoard: data.userBoard?.filter((item) => {
-          return item.name.toLocaleLowerCase().includes(search)
-        }),
-        groupBoard: data.groupBoard?.filter((item) => {
-          return item.name.toLocaleLowerCase().includes(search)
-        }),
-        userScore: data.userScore
-      })
-    }
-  }
   const userBoard = component.showUserBoard && (
     <LeaderBoardTable
-      data={filteredData?.userBoard || []}
+      searchEnabled={component.searchEnabled}
+      data={data?.userBoard || []}
       showGroup={component.showGroupOfUser}
       categorized
       detailed={component.leaderboardDetailsEnabled}
@@ -68,7 +35,13 @@ export default function LeaderboardCategoryPage() {
     />
   )
   const groupBoard = component.showGroupBoard && (
-    <LeaderBoardTable data={filteredData?.groupBoard || []} detailed={component.leaderboardDetailsEnabled} suffix="pont" categorized />
+    <LeaderBoardTable
+      searchEnabled={component.searchEnabled}
+      data={data?.groupBoard || []}
+      detailed={component.leaderboardDetailsEnabled}
+      suffix="pont"
+      categorized
+    />
   )
   return (
     <CmschPage>
@@ -84,14 +57,6 @@ export default function LeaderboardCategoryPage() {
           </LinkButton>
         </VStack>
       </Flex>
-      {component.searchEnabled && (
-        <InputGroup mt={5}>
-          <InputLeftElement h="100%">
-            <SearchIcon />
-          </InputLeftElement>
-          <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
-        </InputGroup>
-      )}
 
       {component.showUserBoard && component.showGroupBoard ? (
         <Tabs size={{ base: 'sm', md: 'md' }} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
