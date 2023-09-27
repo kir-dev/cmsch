@@ -9,6 +9,7 @@ export type LeaderBoardItemView = {
   id?: number
   name: string
   groupName: string
+  description?: string
   score?: number
   items?: LeaderBoardDetail[]
   total?: number

@@ -7,11 +7,11 @@ export interface CmschContainerProps extends CardProps {
 export const CmschContainer = ({ children, title, ...props }: CmschContainerProps) => (
   <Card
     flexDirection="column"
-    p={5}
+    p={[0, null, 4]}
     mx="auto"
-    w="100%"
+    maxW="100%"
     borderRadius={[0, null, 'xl']}
-    maxWidth={['100%', '64rem']}
+    w={['100%', '64rem']}
     bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
     {...props}
   >

@@ -5,18 +5,27 @@ import { CollapsableTableRow } from './CollapsableTableRow'
 type LeaderboardTableProps = {
   data: LeaderBoardItemView[]
   showGroup?: boolean
+  showDescription?: boolean
   suffix?: string
   detailed?: boolean
   categorized?: boolean
 }
 
-export const LeaderBoardTable = ({ data, showGroup = false, suffix, detailed = false, categorized = false }: LeaderboardTableProps) => {
+export const LeaderBoardTable = ({
+  data,
+  showGroup = false,
+  suffix,
+  detailed = false,
+  categorized = false,
+  showDescription = false
+}: LeaderboardTableProps) => {
+  const dataWithPosition = data.map((item, idx) => ({ ...item, position: idx + 1 }))
   return (
     <>
       <TableContainer>
         <Table variant="unstyled">
           <Tbody>
-            {data.map((item, idx) => (
+            {dataWithPosition.map((item, idx) => (
               <CollapsableTableRow
                 collapsable={detailed && (item.items || false) && item.items.length > 0}
                 key={item.name}
@@ -25,6 +34,7 @@ export const LeaderBoardTable = ({ data, showGroup = false, suffix, detailed = f
                 showGroup={showGroup}
                 suffix={suffix}
                 categorized={categorized}
+                showDescription={showDescription}
               />
             ))}
           </Tbody>
