@@ -216,7 +216,7 @@ class RiddleComponent(
         updateBanLists()
     }
 
-    private fun updateBanLists() {
+    fun updateBanLists() {
         riddleModerationService.setGroupBans(groupBanList.getValue())
         riddleModerationService.setGroupShadowBans(groupShadowBanList.getValue())
         riddleModerationService.setUserBans(userBanList.getValue())

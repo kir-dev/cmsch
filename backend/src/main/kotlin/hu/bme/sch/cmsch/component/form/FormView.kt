@@ -50,6 +50,9 @@ data class FormView(
      * - else -> just print to the top of the page
      */
     @field:JsonView(FullDetails::class)
-    val message: String? = null
+    val message: String? = null,
+
+    @field:JsonView(FullDetails::class)
+    val comment: String? = null
 
 )
