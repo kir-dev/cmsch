@@ -118,7 +118,7 @@ class RaceComponent(
 
     val freestyleCategoryName = SettingProxy(componentSettingService, component,
         "freestyleCategoryName", "Funky mérés",
-        fieldName = "Szabad kategória neve", description = "Ez lesz a szabad kategória neve"
+        fieldName = "Szabad kategória neve", description = "Ez lesz a szabad kategória neve, és a menü neve is"
     )
 
     val freestyleCategoryDescription = SettingProxy(componentSettingService, component,
@@ -131,7 +131,7 @@ class RaceComponent(
             return listOf(
                 MenuSettingItem(
                     this.javaClass.simpleName + "@funky",
-                    minRole.getValue(), "/race/freestyle", 0,
+                    freestyleCategoryName.getValue(), "/race/freestyle", 0,
                     visible = false, subMenu = false, external = false
                 )
             )
