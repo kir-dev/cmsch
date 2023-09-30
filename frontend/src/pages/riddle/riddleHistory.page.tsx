@@ -22,62 +22,16 @@ const RiddleHistoryPage = () => {
   const [category, setCategory] = useState('')
   const [loaded, setLoaded] = useState(false)
   const [index, setIndex] = useState(0)
-  const data = [
-    {
-      categoryName: 'Incisimogató \uD83D\uDC78\uD83E\uDD84\uD83C\uDF08',
 
-      submissions: [
-        {
-          imageUrl: 'riddles/0000018a-acb5-3cf3-19c5-3d8d96a86384.png',
-          title: 'Haladás',
-          hint: '',
-          solved: true,
-          skipped: false,
-          creator: 'Inci',
-          firstSolver: 'SchöRétes Rend',
-          solution: 'tejút',
-          description: ''
-        },
-        {
-          imageUrl: 'riddles/0000018a-acb6-690b-3fa9-58ef0e175652.png',
-          title: 'Csapatmunka',
-          hint: '',
-          solved: true,
-          skipped: false,
-          creator: 'Inci',
-          firstSolver: 'Egzisztenciálisch Krízisch',
-          solution: 'Schugárút',
-          description: ''
-        },
-        {
-          imageUrl: 'riddles/0000018a-acb7-9d98-57c1-2b8c8ac24df9.jpg',
-          title: 'Pajtások',
-          hint: '',
-          solved: true,
-          skipped: false,
-          creator: 'Inci',
-          firstSolver: 'Egzisztenciálisch Krízisch',
-          solution: 'Tom és Jerry',
-          description: ''
-        }
-      ]
+  const query = useRiddleHistoryQuery(onError)
+  useEffect(() => {
+    if (!loaded && query.isSuccess) {
+      setLoaded(true)
+      if (query.data.length > 0) {
+        setCategory(query.data!![0].categoryName)
+      }
     }
-  ]
-  const query = {
-    data: data,
-    isSuccess: true,
-    isError: false,
-    isLoading: false
-  }
-  //const query = useRiddleHistoryQuery(onError)
-  // useEffect(() => {
-  //   if (!loaded && query.isSuccess) {
-  //     setLoaded(true)
-  //     if (query.data.length > 0) {
-  //       setCategory(query.data!![0].categoryName)
-  //     }
-  //   }
-  // }, [query.isSuccess])
+  }, [query.isSuccess])
 
   useEffect(() => {
     setIndex(0)
@@ -101,27 +55,30 @@ const RiddleHistoryPage = () => {
       title: 'Megoldott riddleök'
     }
   ]
-
   return (
     <CmschPage>
       <Helmet title="Megoldott riddleök" />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'center']}>
         <Heading my={5}>Megoldott riddleök</Heading>
-        <Select value={category} onChange={(e) => setCategory(e.target.value)} w="20rem">
-          {query.data!!.map((c) => (
-            <option value={c.categoryName} key={c.categoryName}>
-              {c.categoryName} ({c.submissions.length} megoldott riddle)
-            </option>
-          ))}
-        </Select>
-        <Select value={riddleList ? riddleList[index].title : ''} onChange={(e) => setIndex(1)} w="20rem">
-          {riddleList?.map((r, idx) => (
-            <option value={r.title} key={idx}>
-              {r.title}
-            </option>
-          ))}
-        </Select>
+        <Stack direction={['column']}>
+          <Select value={category} onChange={(e) => setCategory(e.target.value)} w="20rem">
+            {query.data!!.map((c) => (
+              <option value={c.categoryName} key={c.categoryName}>
+                {c.categoryName} ({c?.submissions?.length} megoldott riddle)
+              </option>
+            ))}
+          </Select>
+          {riddleList && (
+            <Select value={riddleList[index].title} onChange={(e) => setIndex(e.target.options.selectedIndex)} w="20rem">
+              {riddleList?.map((r, idx) => (
+                <option value={r.title} key={idx}>
+                  {r.title}
+                </option>
+              ))}
+            </Select>
+          )}
+        </Stack>
       </Stack>
 
       {!riddle || !riddleList ? (
