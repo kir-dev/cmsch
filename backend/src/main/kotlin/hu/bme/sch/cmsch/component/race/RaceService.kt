@@ -244,18 +244,20 @@ open class RaceService(
                     submission.userId ?: 0,
                     submission.userName,
                     submission.groupName,
-                    submission.time
+                    submission.time,
+                    submission.description
                 )
             }
             .sortedBy { it.time }
     } else {
-        raceRecordRepository.findAll()
+        freestyleRaceRecordRepository.findAll()
             .map { submission ->
                 FreestyleRaceEntryDto(
                     submission.userId ?: 0,
                     submission.userName,
                     submission.groupName,
-                    submission.time
+                    submission.time,
+                    submission.description
                 )
             }
             .sortedByDescending { it.time }

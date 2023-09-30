@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.race
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.app.MenuSettingItem
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -123,5 +125,18 @@ class RaceComponent(
         "freestyleCategoryDescription", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Szabad kategória leírása", description = "Ez lesz a szabad kategória leírása"
     )
+
+    override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
+        if (minRole.isAvailableForRole(role) || role.isAdmin) {
+            return listOf(
+                MenuSettingItem(
+                    this.javaClass.simpleName + "@funky",
+                    minRole.getValue(), "/race/freestyle", 0,
+                    visible = false, subMenu = false, external = false
+                )
+            )
+        }
+        return listOf()
+    }
 
 }
