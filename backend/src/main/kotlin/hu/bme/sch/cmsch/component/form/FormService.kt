@@ -49,10 +49,10 @@ open class FormService(
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     open fun fetchForm(user: CmschUser, path: String): FormView {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
-            ?: return FormView(status = FormStatus.NOT_FOUND, comment = "2 '$path'")
+            ?: return FormView(status = FormStatus.NOT_FOUND)
 
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
-            return FormView(status = FormStatus.NOT_FOUND, comment = "3 ${form.minRole.value} ${form.maxRole.value} ${user.role.value}")
+            return FormView(status = FormStatus.NOT_FOUND)
 
         val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (!form.open)
