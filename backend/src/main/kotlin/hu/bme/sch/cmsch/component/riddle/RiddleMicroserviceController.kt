@@ -47,6 +47,7 @@ class RiddleMicroserviceController(
         }
         log.info("Calling remote command: reloadRiddleAndCategoryCache")
         riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
+        riddleComponent.updateBanLists()
         return OK
     }
 

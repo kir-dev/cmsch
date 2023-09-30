@@ -12,7 +12,10 @@ data class SiteContext(
     val frontendUrl: String,
     val version: String,
     var rpm: Int,
-    var activeUsers: Int
+    var activeUsers: Int,
+    var brandColor: String,
+    var brandColorDarker: String,
+    var brandColorDarker2: String
 )
 
 data class UserSiteContext(

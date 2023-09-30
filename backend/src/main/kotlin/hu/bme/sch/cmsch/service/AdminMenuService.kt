@@ -52,7 +52,10 @@ class AdminMenuService(
         "",
         Runtime.version().toString(),
         0,
-        0
+        0,
+        applicationComponent.adminBrandColor.getValue(),
+        darkenHexColor(applicationComponent.adminBrandColor.getValue(), 90),
+        darkenHexColor(applicationComponent.adminBrandColor.getValue(), 80)
     )
 
     @PostConstruct
@@ -63,18 +66,22 @@ class AdminMenuService(
                         " - ${applicationComponent.adminPanelName.getValue()}" else ""),
             if (environment.activeProfiles.contains("internal")
                     || environment.activeProfiles.contains("test")
-                    || environment.activeProfiles.contains("dev"))
+                    || environment.activeProfiles.contains("dev")) {
                 "dev"
-            else if (applicationComponent.isLive.isValueTrue())
+            } else if (applicationComponent.isLive.isValueTrue()) {
                 "live"
-            else
-                "staging",
+            } else {
+                "staging"
+            },
             applicationComponent.motd.getValue(),
             applicationComponent.adminSiteUrl.getValue(),
             applicationComponent.siteUrl.getValue(),
             CMSCH_VERSION,
             stats.map { it.rpm }.orElse(0),
             stats.map { it.usersIn5Minutes }.orElse(0),
+            applicationComponent.adminBrandColor.getValue(),
+            darkenHexColor(applicationComponent.adminBrandColor.getValue(), 90),
+            darkenHexColor(applicationComponent.adminBrandColor.getValue(), 80)
         )
     }
 
@@ -201,3 +208,20 @@ data class AdminMenuEntry(
     val priority: Int,
     val showPermission: PermissionValidator
 )
+
+fun darkenHexColor(hexColor: String, percentage: Int): String {
+    val color = if (hexColor.length < 7) "#DEDEDE" else hexColor
+    require(percentage in 0..100) { "Percentage should be between 0 and 100" }
+
+    val r = color.substring(1, 3).toInt(16)
+    val g = color.substring(3, 5).toInt(16)
+    val b = color.substring(5, 7).toInt(16)
+
+    val factor = percentage / 100.0
+
+    val newR = (r * factor).toInt().coerceIn(0, 255)
+    val newG = (g * factor).toInt().coerceIn(0, 255)
+    val newB = (b * factor).toInt().coerceIn(0, 255)
+
+    return String.format("#%02X%02X%02X", newR, newG, newB)
+}
