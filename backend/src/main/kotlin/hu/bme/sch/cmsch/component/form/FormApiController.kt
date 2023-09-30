@@ -30,7 +30,7 @@ class FormApiController(
     @GetMapping("/form/{path}")
     fun specificForm(@PathVariable path: String, auth: Authentication?): FormView {
         val user = auth?.getUserOrNull()
-            ?: return FormView(status = FormStatus.NOT_FOUND)
+            ?: return FormView(status = FormStatus.NOT_FOUND, comment = "1")
 
         return formService.fetchForm(user, path)
     }

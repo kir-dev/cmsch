@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import java.security.MessageDigest
 
 @Service
 class ApplicationComponent(
@@ -40,6 +41,7 @@ class ApplicationComponent(
             isLive,
             siteUrl,
             adminSiteUrl,
+            adminBrandColor,
             motd,
             staffMessage,
 
@@ -121,6 +123,11 @@ class ApplicationComponent(
         fieldName = "Admin Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
     )
 
+    val adminBrandColor = SettingProxy(componentSettingService, component,
+        "adminBrandColor", "#DEDEDE", type = SettingType.TEXT, serverSideOnly = true,
+        fieldName = "Admin menü színe", description = "Ez lesz az admin oldal színe"
+    )
+
     val motd = SettingProxy(componentSettingService, component,
         "motd", "Message of the day", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "MOTD", description = "Ez jelenik meg belépés után"
@@ -130,5 +137,27 @@ class ApplicationComponent(
         "staffMessage", "...", type = SettingType.LONG_TEXT_MARKDOWN, serverSideOnly = true,
         fieldName = "Szolgálati közlemény", description = "Ez fog megjelenni az admin oldal kezdőlapján"
     )
+
+    override fun onPersist() {
+        super.onPersist()
+        if (adminBrandColor.getValue().isEmpty()) {
+            adminBrandColor.setAndPersistValue(generateColor(adminSiteUrl.getValue()))
+        }
+    }
+
+    fun generateColor(input: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+
+        var red = bytes[0].toInt() and 0xFF
+        var green = bytes[1].toInt() and 0xFF
+        var blue = bytes[2].toInt() and 0xFF
+
+        red = (red % 128) + 64
+        green = (green % 128) + 64
+        blue = (blue % 128) + 64
+
+        return String.format("#%02X%02X%02X", red, green, blue)
+    }
+
 
 }

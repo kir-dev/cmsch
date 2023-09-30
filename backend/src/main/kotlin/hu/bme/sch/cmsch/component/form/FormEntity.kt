@@ -33,7 +33,6 @@ data class FormEntity(
     @property:ImportFormat(ignore = false, columnId = 0)
     var name: String = "",
 
-    @Lob
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
