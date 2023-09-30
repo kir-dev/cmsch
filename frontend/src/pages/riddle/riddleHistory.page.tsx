@@ -69,7 +69,7 @@ const RiddleHistoryPage = () => {
               </option>
             ))}
           </Select>
-          {riddleList && (
+          {riddleList && riddle && (
             <Select value={riddleList[index].title} onChange={(e) => setIndex(e.target.options.selectedIndex)} w="20rem">
               {riddleList?.map((r, idx) => (
                 <option value={r.title} key={idx}>
