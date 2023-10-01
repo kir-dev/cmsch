@@ -1,6 +1,8 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Td, Tr, useDisclosure } from '@chakra-ui/react'
-import { useOpaqueBackground } from '../util/core-functions.util'
+import { Td, Tr, useDisclosure, Link as ChakraLink } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
+import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
+import { AbsolutePaths } from '../util/paths'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 
 type CollapsableTableRowProps = {
@@ -24,6 +26,7 @@ export const CollapsableTableRow = ({
 }: CollapsableTableRowProps) => {
   const { isOpen, onToggle } = useDisclosure()
   const bg = useOpaqueBackground(1)
+  const isGroupLink = typeof data.groupId !== 'undefined'
   return (
     <>
       <Tr
@@ -45,7 +48,19 @@ export const CollapsableTableRow = ({
           )}
           <Td colSpan={categorized ? 3 : 2}>{data.name}</Td>
           {showDescription && <Td>{data.description ?? ''}</Td>}
-          {showGroup && 'groupName' in data ? <Td>{data.groupName}</Td> : <Td />}
+          {showGroup && data.groupName ? (
+            <Td>
+              {isGroupLink ? (
+                <Link to={joinPath(AbsolutePaths.TEAMS, 'details', data.groupId)}>
+                  <ChakraLink textDecoration="underline">{data.groupName}</ChakraLink>
+                </Link>
+              ) : (
+                data.groupName
+              )}
+            </Td>
+          ) : (
+            <Td />
+          )}
         </>
       </Tr>
       {isOpen &&
