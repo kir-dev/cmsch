@@ -270,21 +270,25 @@ export interface Login {
 
 export interface Team {
   myTitle: string
-  title: string
+  adminTitle: string
   createTitle: string
-  teamCreationTopMessage: string
   creationEnabled: boolean
   joinEnabled: boolean
-  racesByDefault: boolean
-  selectableByDefault: boolean
-  adminTitle: string
-  togglePermissionEnabled: boolean
   kickEnabled: boolean
   promoteLeadershipEnabled: boolean
+  racesByDefault: boolean
+  leaderNotes: string
+  selectableByDefault: boolean
+  showAdvertisedForms: boolean
+  showRaceButton: boolean
+  showTasks: boolean
   showTeamDetails: boolean
   showTeamMembersPublicly: boolean
   showTeamScore: boolean
   showTeamScoreDetailsButton: boolean
+  teamCreationTopMessage: string
+  title: string
+  togglePermissionEnabled: boolean
 }
 
 export interface QrFight {
