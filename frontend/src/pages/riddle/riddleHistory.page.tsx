@@ -12,8 +12,8 @@ import Markdown from '../../common-components/Markdown'
 import { API_BASE_URL } from '../../util/configs/environment.config'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
+import { RiddleGrid } from './components/RiddleGrid'
 import { SpoilerText } from './components/SpoilerText'
-import { RiddleCategoryHistory } from '../../util/views/riddle.view'
 
 const RiddleHistoryPage = () => {
   const toast = useToast()
@@ -69,18 +69,9 @@ const RiddleHistoryPage = () => {
               </option>
             ))}
           </Select>
-          {riddleList && riddle && (
-            <Select value={riddleList[index].title} onChange={(e) => setIndex(e.target.options.selectedIndex)} w="20rem">
-              {riddleList?.map((r, idx) => (
-                <option value={r.title} key={idx}>
-                  {r.title}
-                </option>
-              ))}
-            </Select>
-          )}
         </Stack>
       </Stack>
-
+      {riddleList && <RiddleGrid riddleList={riddleList} onClick={setIndex} selected={index} />}
       {!riddle || !riddleList ? (
         <>
           <Text mt={2}>Ebben a kategóriában még nincsenek megoldott riddleök.</Text>

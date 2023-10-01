@@ -3,17 +3,12 @@
   "files.encoding": "utf8",
   "search.exclude": {
     "public/**": true,
-    "node_modules/**": true,
-    "**/.yarn": true,
-    "**/.pnp.*": true
+    "node_modules/**": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.formatDocument": true,
-    "source.fixAll.eslint": true
+    "source.fixAll": true,
+    "source.organizeImports": true
   },
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "eslint.nodePath": ".yarn/sdks",
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

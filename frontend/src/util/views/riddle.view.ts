@@ -8,6 +8,7 @@ export interface Riddle {
   firstSolver?: string
   creator?: string
   skipPermitted: boolean
+  skipped: boolean
 }
 
 export interface RiddleWithSolution extends Riddle {
