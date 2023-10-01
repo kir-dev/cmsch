@@ -17,6 +17,7 @@ import { CmschPage } from '../../../common-components/layout/CmschPage'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
+import { joinPath } from '../../../util/core-functions.util'
 import { AbsolutePaths, Paths } from '../../../util/paths'
 import { RoleType } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
@@ -35,7 +36,9 @@ interface TeamDetailsCoreProps {
 
 export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetch = () => {} }: TeamDetailsCoreProps) {
   const toast = useToast()
-  const component = useConfigContext().components.team
+  const { components } = useConfigContext()
+  const teamComponent = components.team
+  const raceComponent = components.race
   const userRole = useConfigContext().role
   const navigate = useNavigate()
   const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
@@ -75,11 +78,11 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
     if (response === TeamResponses.OK) navigate(AbsolutePaths.TEAMS)
   })
 
-  if (!component) return <ComponentUnavailable />
+  if (!teamComponent) return <ComponentUnavailable />
 
-  if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={component.title} />
+  if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={teamComponent.title} />
 
-  const title = myTeam ? component.myTitle : undefined
+  const title = myTeam ? teamComponent.myTitle : undefined
   return (
     <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined}>
       <Helmet title={title ?? team.name} />
@@ -133,9 +136,9 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               Csoport elhagyása
             </Button>
           )}
-          {team.showRaceButton && (
-            <LinkButton href={AbsolutePaths.TEAMS + `/details/${team.id}/` + Paths.RACE} ml={5} colorScheme="brand">
-              Sörmérés eredmény
+          {teamComponent.showRaceButton && (
+            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} ml={5} colorScheme="brand">
+              {raceComponent?.title ?? 'Verseny'} eredmények
             </LinkButton>
           )}
         </VStack>
@@ -145,7 +148,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
           <Markdown text={team.leaderNotes} />
         </Box>
       )}
-      {team.forms && team.forms.length > 0 && (
+      {teamComponent.showAdvertisedForms && team.forms && team.forms.length > 0 && (
         <>
           <Divider mt={5} borderWidth={2} />
           <Heading fontSize="lg">Űrlapok</Heading>
@@ -154,7 +157,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
           ))}
         </>
       )}
-      {team.taskCategories && team.taskCategories.length > 0 && (
+      {teamComponent.showTasks && team.taskCategories && team.taskCategories.length > 0 && (
         <>
           <Divider mt={5} borderWidth={2} />
           <Heading fontSize="lg">Feladatok</Heading>
@@ -199,21 +202,21 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               key={m.id}
               member={m}
               onPromoteLeadership={
-                isEditingMembers && component?.promoteLeadershipEnabled && !m.admin && !m.you
+                isEditingMembers && teamComponent?.promoteLeadershipEnabled && !m.admin && !m.you
                   ? () => {
                       promoteLeadership(m.id)
                     }
                   : undefined
               }
               onRoleChange={
-                isEditingMembers && component?.togglePermissionEnabled && !m.you
+                isEditingMembers && teamComponent?.togglePermissionEnabled && !m.you
                   ? () => {
                       togglePermissions(m.id)
                     }
                   : undefined
               }
               onDelete={
-                isEditingMembers && component?.kickEnabled && !m.admin && !m.you
+                isEditingMembers && teamComponent?.kickEnabled && !m.admin && !m.you
                   ? () => {
                       kickMember(m.id)
                     }
