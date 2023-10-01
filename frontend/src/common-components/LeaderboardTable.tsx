@@ -43,7 +43,7 @@ export const LeaderBoardTable = ({
             {searchArgs.filteredData.map((item, idx) => (
               <CollapsableTableRow
                 collapsable={detailed && (item.items || false) && item.items.length > 0}
-                key={item.name}
+                key={item.position}
                 data={item}
                 idx={idx}
                 showGroup={showGroup}
