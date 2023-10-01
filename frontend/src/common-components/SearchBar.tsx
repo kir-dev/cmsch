@@ -4,7 +4,7 @@ import { useSearch } from '../util/useSearch'
 
 interface SearchBarProps extends ReturnType<typeof useSearch>, InputGroupProps {}
 
-export function SearchBar({ inputRef, handleInput, setSearch, search, ...inputGroupProps }: SearchBarProps) {
+export function SearchBar({ inputRef, handleInput, setSearch, search, filteredData, ...inputGroupProps }: SearchBarProps) {
   return (
     <InputGroup {...inputGroupProps}>
       <InputLeftElement h="100%">
