@@ -43,6 +43,9 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val riddleMicroserviceEnabled: Boolean,
     val managementToken: String,
     val nodeName: String,
+
+    // CDN
+    val cdnCacheMaxAge: Long
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
