@@ -11,10 +11,12 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -30,7 +32,8 @@ class AdmissionApiController(
     private val bmejegyService: Optional<BmejegyService>,
     private val auditLogService: AuditLogService,
     private val responseRepository: Optional<ResponseRepository>,
-    private val admissionService: AdmissionService
+    private val admissionService: AdmissionService,
+    private val transactionManager: PlatformTransactionManager
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -73,34 +76,36 @@ class AdmissionApiController(
     @PostMapping("/resolve")
     fun resolve(@RequestBody resolve: ResolveRequest, auth: Authentication): AdmissionResponse {
         log.info("Resolving admission for: ${resolve.cmschId}")
-        val admissionResponse = if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
-            userService.searchByCmschId(resolve.cmschId)
-                .map { mapUserByDetails(it) }
-                .orElse(
+        val admissionResponse = transactionManager.transaction(readOnly = true) {
+            if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
+                userService.searchByCmschId(resolve.cmschId)
+                    .map { mapUserByDetails(it) }
+                    .orElse(
+                        AdmissionResponse(
+                            "NOT FOUND BY CMSCHID", "NOT FOUND BY CMSCH",
+                            RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
+                        )
+                    )
+            } else if (bmejegyService.isPresent) {
+                val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
+                if (ticket.isEmpty) {
                     AdmissionResponse(
-                        "NOT FOUND BY CMSCHID", "NOT FOUND BY CMSCH",
+                        "NOT FOUND BY BMEJEGY", "NOT FOUND BY BMEJEGY",
                         RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
                     )
-                )
-        } else if (bmejegyService.isPresent) {
-            val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
-            if (ticket.isEmpty) {
+
+                } else if (ticket.orElseThrow().matchedUserId > 0) {
+                    mapTicketUser(userService.getByUserId(ticket.orElseThrow().matchedUserId), ticket.orElseThrow())
+
+                } else {
+                    mapTicket(ticket.orElseThrow())
+                }
+            } else {
                 AdmissionResponse(
-                    "NOT FOUND BY BMEJEGY", "NOT FOUND BY BMEJEGY",
+                    "NOT FOUND AT ALL", "NOT FOUND AT ALL",
                     RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
                 )
-
-            } else if (ticket.orElseThrow().matchedUserId > 0) {
-                mapTicketUser(userService.getByUserId(ticket.orElseThrow().matchedUserId), ticket.orElseThrow())
-
-            } else {
-                mapTicket(ticket.orElseThrow())
             }
-        } else {
-            AdmissionResponse(
-                "NOT FOUND AT ALL", "NOT FOUND AT ALL",
-                RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
-            )
         }
         admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
         return admissionResponse
@@ -114,22 +119,24 @@ class AdmissionApiController(
         auth: Authentication
     ): AdmissionResponse {
         log.info("Resolving admission for: ${resolve.cmschId} by form: ${formId}")
-        val admissionResponse = if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
-            userService.searchByCmschId(resolve.cmschId)
-                .map { mapUserByForm(it, formId) }
-                .orElse(
-                    AdmissionResponse(
-                        groupName = "NOT FOUND BY CMSCHID", userName = "NOT FOUND BY CMSCH",
-                        role = RoleType.GUEST, entryRole = EntryRole.CANNOT_ATTEND,
-                        accessGranted = false, formId = formId
+        val admissionResponse = transactionManager.transaction(readOnly = true) {
+            if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
+                userService.searchByCmschId(resolve.cmschId)
+                    .map { mapUserByForm(it, formId) }
+                    .orElse(
+                        AdmissionResponse(
+                            groupName = "NOT FOUND BY CMSCHID", userName = "NOT FOUND BY CMSCH",
+                            role = RoleType.GUEST, entryRole = EntryRole.CANNOT_ATTEND,
+                            accessGranted = false, formId = formId
+                        )
                     )
+            } else {
+                AdmissionResponse(
+                    groupName = "NOT FOUND AT ALL", userName = "NOT FOUND AT ALL",
+                    role = RoleType.GUEST, entryRole = EntryRole.CANNOT_ATTEND,
+                    accessGranted = false, formId = formId
                 )
-        } else {
-            AdmissionResponse(
-                groupName = "NOT FOUND AT ALL", userName = "NOT FOUND AT ALL",
-                role = RoleType.GUEST, entryRole = EntryRole.CANNOT_ATTEND,
-                accessGranted = false, formId = formId
-            )
+            }
         }
         admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
         return admissionResponse
