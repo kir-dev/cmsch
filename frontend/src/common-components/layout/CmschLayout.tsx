@@ -5,8 +5,10 @@ import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import CurrentEvent from '../../pages/events/components/CurrentEvent'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
+import CurrentEventCard from '../CurrentEvent'
 import { Footer } from '../footer/Footer'
 import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
@@ -34,6 +36,7 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
         <Navbar />
         <Box background={background} flex={1} pb={20}>
           <Warning />
+          <CurrentEventCard />
           {children}
         </Box>
         <Footer />
