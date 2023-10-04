@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import CurrentEventCard from '../CurrentEventCard'
 
 export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
@@ -64,6 +65,7 @@ export const Navbar = () => {
       >
         <MobileNav />
       </Collapse>
+      <CurrentEventCard />
     </Box>
   )
 }

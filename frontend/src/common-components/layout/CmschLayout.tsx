@@ -36,7 +36,6 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
         <Navbar />
         <Box background={background} flex={1} pb={20}>
           <Warning />
-          <CurrentEventCard />
           {children}
         </Box>
         <Footer />
