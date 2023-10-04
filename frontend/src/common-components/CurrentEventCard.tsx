@@ -1,6 +1,8 @@
 import { Alert, AlertDescription, AlertIcon, HStack } from '@chakra-ui/react'
 import { useEventListQuery } from '../api/hooks/event/useEventListQuery'
 import { isCurrentEvent } from '../util/core-functions.util'
+import { AbsolutePaths } from '../util/paths'
+import { Link } from 'react-router-dom'
 
 export default function CurrentEventCard() {
   const { data, error } = useEventListQuery()
@@ -22,8 +24,15 @@ export default function CurrentEventCard() {
         <AlertIcon />
         <AlertDescription wordBreak="break-word">
           <p>
-            A <b>{currentEvents.map((event) => event.title).join(', ')}</b>
-            {currentEvents.length == 1 ? ' esemény éppen most zajlik' : ' események éppen most zajlanak.'}
+            A{' '}
+            <b>
+              {currentEvents.map((event, idx) => (
+                <Link key={event.url} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
+                  {event.title + (idx == currentEvents.length - 1 ? ' ' : ', ')}
+                </Link>
+              ))}
+            </b>
+            {currentEvents.length == 1 ? 'esemény éppen most zajlik' : 'események éppen most zajlanak.'}
           </p>
         </AlertDescription>
       </HStack>
