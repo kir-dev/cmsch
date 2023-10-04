@@ -272,7 +272,10 @@ export interface Team {
   myTitle: string
   adminTitle: string
   createTitle: string
+  teamEditTitle: string
+  teamEditTopMessage: string
   creationEnabled: boolean
+  teamEditEnabled: boolean
   joinEnabled: boolean
   kickEnabled: boolean
   promoteLeadershipEnabled: boolean
