@@ -17,6 +17,7 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.util.uploadFile
 import org.postgresql.util.PSQLException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -25,6 +26,7 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -46,6 +48,9 @@ open class TeamService(
     private val riddleReadonlyService: Optional<RiddleReadonlyService>,
     private val clock: TimeService
 ) {
+    companion object {
+        val target = "team"
+    }
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -222,6 +227,7 @@ open class TeamService(
             name = team.name,
             coverUrl = team.coverImageUrl,
             description = team.description,
+            logo = team.logo,
             points = score,
             members = members,
             applicants = requests,
@@ -531,5 +537,35 @@ open class TeamService(
         log.info("User '{}' kicked from '{}', reason: by admin '{}'", user.fullName, groupName, adminUser.userName)
         return true
     }
+    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
+        val groupId = user.groupId ?: throw IllegalStateException("The user is not member of a group yet")
 
+        if (logo != null && !isImageNameValid(logo)) {
+            throw IllegalStateException("Invalid image format")
+        }
+        val group = groupRepository.findById(groupId).getOrNull() ?: return TeamEditStatus.ERROR
+        group.description = description
+        if (logo != null)
+            group.logo = logo.uploadFile(target) ?: throw IllegalStateException("Failed to save the image")
+
+        groupRepository.save(group)
+        log.info(
+            "Description and icon (optionally) updated for group {}, with values: {}, {}",
+            group.name,
+            logo?.originalFilename,
+            description
+        )
+        return TeamEditStatus.OK
+    }
+
+    private fun isImageNameValid(file: MultipartFile): Boolean {
+        return file.originalFilename != null && (
+                file.originalFilename!!.lowercase().endsWith(".png")
+                        || file.originalFilename!!.lowercase().endsWith(".jpg")
+                        || file.originalFilename!!.lowercase().endsWith(".jpeg")
+                        || file.originalFilename!!.lowercase().endsWith(".gif")
+                )
+    }
 }
