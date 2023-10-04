@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api")
@@ -34,6 +35,19 @@ class TeamApiController(
         if (user == null || !teamComponent.minRole.isAvailableForRole(user.role))
             return TeamJoinStatus.INSUFFICIENT_PERMISSIONS
         return teamService.joinTeam(user, teamJoinDto.id)
+    }
+
+    @PostMapping("/team/edit")
+    fun setDescriptionAndLogo(
+        @RequestParam description: String,
+        @RequestParam logo: MultipartFile?,
+        auth: Authentication?,
+    ): TeamEditStatus {
+        val user = auth?.getUserEntityFromDatabaseOrNull()
+        if (user == null || user.role.value < RoleType.PRIVILEGED.value)
+            throw IllegalStateException("Insufficient permissions")
+
+        return teamService.setDescriptionAndLogo(description, logo, user)
     }
 
     @PostMapping("/team/cancel-join")
