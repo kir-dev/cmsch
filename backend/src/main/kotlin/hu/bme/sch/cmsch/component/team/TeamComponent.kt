@@ -43,6 +43,9 @@ class TeamComponent(
             createTitle, createMenuDisplayName, createMinRole,
             teamCreationTopMessage,
             creationEnabled,
+            teamEditTitle,
+            teamEditTopMessage,
+            teamEditEnabled,
             joinEnabled,
             grantPrivilegedRole,
             grantAttendeeRole,
@@ -209,6 +212,21 @@ class TeamComponent(
     val creationEnabled = SettingProxy(componentSettingService, component,
         "creationEnabled", "false", type = SettingType.BOOLEAN,
         fieldName = "Csoport készítés engedélyezve", description = "Ha igaz, lehet csapatot készíteni"
+    )
+
+    val teamEditTitle = SettingProxy(componentSettingService, component,
+        "teamEditTitle", "Csapat szerkesztése",
+        fieldName = "Csoport adatainak szerkesztés lap címe", description = "A csoport szerkesztési lapjának tetején megjelenő címe"
+    )
+
+    val teamEditTopMessage = SettingProxy(componentSettingService, component,
+        "teamEditTopMessage", "Adj meg leírást és logót!", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Csoport szerkesztés felső szöveg", description = "Ha üres, akkor nincs ilyen"
+    )
+
+    val teamEditEnabled = SettingProxy(componentSettingService, component,
+        "teamEditEnabled", "true", type = SettingType.BOOLEAN,
+        fieldName = "Csoport szerkesztés engedélyezése", description = "Ha igaz, lehet a csapat logóját és leírását szerkeszteni"
     )
 
     val joinEnabled = SettingProxy(componentSettingService, component,
