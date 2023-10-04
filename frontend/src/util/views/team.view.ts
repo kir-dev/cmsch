@@ -31,6 +31,7 @@ export type TeamView = {
   stats: TeamStatView[]
   taskCategories?: TeamTaskCategoriesView[]
   forms?: TeamFormView[]
+  logo?: string
 } & TeamListItemView
 
 export type TeamStatView = { name: string; value1: string; value2?: string; navigate?: string; percentage?: number }
@@ -94,4 +95,9 @@ export const TeamResponseMessages: Record<TeamResponses, string> = {
 
 export interface CreateTeamDto {
   name: string
+}
+
+export interface TeamEditDto {
+  description: string
+  logo?: File
 }
