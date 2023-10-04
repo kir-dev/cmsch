@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Grid, Heading, HStack, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Grid, Heading, HStack, Image, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
@@ -25,6 +25,7 @@ import { MemberRow } from './MemberRow'
 import { TeamFormItem } from './TeamFormItem'
 import { TeamStat } from './TeamStat'
 import { TeamTaskCategoryListItem } from './TeamTaskCategoryListItem'
+import { API_BASE_URL } from '../../../util/configs/environment.config'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -81,18 +82,31 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   if (!teamComponent) return <ComponentUnavailable />
 
   if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={teamComponent.title} />
-
   const title = myTeam ? teamComponent.myTitle : undefined
   return (
     <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined}>
       <Helmet title={title ?? team.name} />
       {title && <Heading mb={5}>{title}</Heading>}
       <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
-        <Box p={4} bg={bannerBlanket}>
-          <Heading fontSize={25} my={0}>
-            {team.name}
-          </Heading>
-          <Text>{team.description}</Text>
+        <Box p={4} bg={bannerBlanket} display="flex" justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>
+          <Box pb={4}>
+            <Heading fontSize={25} my={0}>
+              {team.name}
+            </Heading>
+            <Text>{team.description}</Text>
+          </Box>
+          <Box>
+            {team.logo && (
+              <Image
+                maxW={'md'}
+                maxH={'md'}
+                maxWidth="100%"
+                src={`${API_BASE_URL}/cdn/team/${team.logo}`}
+                alt="Csapat logó"
+                borderRadius="md"
+              />
+            )}
+          </Box>
         </Box>
       </Box>
       <Flex flex={1} gap={5} justify="space-between" flexDirection={['column', null, 'row']} align="flex-start">
@@ -192,9 +206,14 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               Csapattagok
             </Heading>
             {isUserGroupAdmin && myTeam && (
-              <Button variant={isEditingMembers ? 'outline' : 'solid'} onClick={() => setIsEditingMembers((prev) => !prev)}>
-                {isEditingMembers ? 'Szerkesztés befejezése' : 'Tagok szerkesztése'}
-              </Button>
+              <HStack>
+                <Button variant={isEditingMembers ? 'outline' : 'solid'} onClick={() => setIsEditingMembers((prev) => !prev)}>
+                  {isEditingMembers ? 'Szerkesztés befejezése' : 'Tagok szerkesztése'}
+                </Button>
+                <LinkButton variant="solid" href={AbsolutePaths.EDIT_TEAM}>
+                  Csoport szerkesztése
+                </LinkButton>
+              </HStack>
             )}
           </HStack>
           {team.members?.map((m) => (
