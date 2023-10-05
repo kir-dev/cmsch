@@ -15,6 +15,9 @@ export default function CurrentEventCard() {
   if (!data || error) return null
   const currentEvents = data.filter((event) => isCurrentEvent(event))
   if (currentEvents.length === 0) return null
+  function isVowel(x: any) {
+    return /[aeiouAEIOU]/.test(x)
+  }
   return (
     <Flex
       color={useColorModeValue('brand.800', 'white')}
@@ -30,7 +33,7 @@ export default function CurrentEventCard() {
     >
       <PulsingDot color={'green.300'} mr="4" />
       <Box position={'relative'} bottom="0px">
-        A{' '}
+        {isVowel(currentEvents[0].title[0]) ? 'Az ' : 'A '}
         <b>
           {currentEvents.map((event, idx) => (
             <Link key={event.url} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
