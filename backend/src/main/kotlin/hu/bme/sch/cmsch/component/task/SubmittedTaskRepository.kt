@@ -79,36 +79,36 @@ interface SubmittedTaskRepository : CrudRepository<SubmittedTaskEntity, Int>,
     fun findAllByTask_IdInAndUserId(taskIds: List<Int>, userId: Int): List<SubmittedTaskEntity>
 
     @Query("""
-        SELECT 
-            s.task.id as taskId, 
-            s.task.title as taskTitle,
-            SUM(CASE WHEN s.approved = TRUE THEN 1 ELSE 0 END) as approvedCount,
-            SUM(CASE WHEN s.rejected = TRUE THEN 1 ELSE 0 END) as rejectedCount,
-            SUM(CASE WHEN s.approved = FALSE AND s.rejected = FALSE THEN 1 ELSE 0 END) as notGradedCount
+        SELECT NEW hu.bme.sch.cmsch.component.task.TaskAggregateDto(
+            s.task.id, 
+            s.task.title,
+            SUM(CASE WHEN s.approved = TRUE THEN 1 ELSE 0 END),
+            SUM(CASE WHEN s.rejected = TRUE THEN 1 ELSE 0 END),
+            SUM(CASE WHEN s.approved = FALSE AND s.rejected = FALSE THEN 1 ELSE 0 END)
+        )
         FROM SubmittedTaskEntity s
         GROUP BY s.task.id, s.task.title
     """)
     fun findAllAggregated(): List<TaskAggregateDto>
 
     @Query("""
-        SELECT 
-            new hu.bme.sch.cmsch.component.task.SubmittedTaskEntity(
-                s.id,
-                s.task,
-                s.groupId,
-                s.groupName,
-                s.userId,
-                s.userName,
-                s.categoryId,
-                '',
-                s.imageUrlAnswer,
-                s.fileUrlAnswer,
-                s.response,
-                s.approved,
-                s.rejected,
-                s.score,
-                ''
-            )
+        SELECT NEW hu.bme.sch.cmsch.component.task.SubmittedTaskEntity(
+            s.id,
+            s.task,
+            s.groupId,
+            s.groupName,
+            s.userId,
+            s.userName,
+            s.categoryId,
+            '',
+            s.imageUrlAnswer,
+            s.fileUrlAnswer,
+            s.response,
+            s.approved,
+            s.rejected,
+            s.score,
+            ''
+        )
         FROM SubmittedTaskEntity s
         WHERE s.task.id = :taskId AND s.rejected = FALSE AND s.approved = FALSE
     """)
