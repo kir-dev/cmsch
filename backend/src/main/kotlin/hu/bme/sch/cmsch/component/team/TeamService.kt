@@ -542,6 +542,9 @@ open class TeamService(
     fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
         val groupId = user.groupId ?: throw IllegalStateException("The user is not member of a group yet")
 
+        if (logo != null && !teamComponent.teamLogoUploadEnabled.isValueTrue()) {
+            return TeamEditStatus.ERROR
+        }
         if (logo != null && !isImageNameValid(logo)) {
             throw IllegalStateException("Invalid image format")
         }

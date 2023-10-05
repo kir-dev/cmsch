@@ -130,11 +130,11 @@ data class GroupEntity(
     var profileTopMessage: String = "",
 
     @Column(nullable = true)
-    @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
+    @field:JsonView(value = [Edit::class, FullDetails::class, Preview::class])
     @property:GenerateInput(order = 19, label = "Logó url", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 12)
-    var logo: String = "",
+    var logo: String? = null,
 
 ): ManagedEntity {
 

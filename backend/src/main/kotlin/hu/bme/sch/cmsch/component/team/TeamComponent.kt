@@ -46,6 +46,7 @@ class TeamComponent(
             teamEditTitle,
             teamEditTopMessage,
             teamEditEnabled,
+            teamLogoUploadEnabled,
             joinEnabled,
             grantPrivilegedRole,
             grantAttendeeRole,
@@ -226,7 +227,12 @@ class TeamComponent(
 
     val teamEditEnabled = SettingProxy(componentSettingService, component,
         "teamEditEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Csoport szerkesztés engedélyezése", description = "Ha igaz, lehet a csapat logóját és leírását szerkeszteni"
+        fieldName = "Csoport szerkesztés engedélyezése", description = "Ha igaz, lehet a csapat leírását szerkeszteni"
+    )
+
+    val teamLogoUploadEnabled = SettingProxy(componentSettingService, component,
+        "teamLogoUploadEnabled", "false", type = SettingType.BOOLEAN,
+        fieldName = "Csoport logó feltöltés engedélyezése", description = "Ha igaz, lehet a vezetőknek logót feltölteni"
     )
 
     val joinEnabled = SettingProxy(componentSettingService, component,
