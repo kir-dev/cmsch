@@ -1,7 +1,9 @@
 package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/admin/control/task")
 @ConditionalOnBean(TaskComponent::class)
 class TaskController(
-    repo: TaskEntityRepository,
+    private val repo: TaskEntityRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: TaskComponent,
@@ -52,4 +54,12 @@ class TaskController(
 
     adminMenuIcon = "task",
     adminMenuPriority = 1,
-)
+
+    searchSettings = calculateSearchSettings<TaskEntity>(false)
+) {
+
+    override fun fetchOverview(user: CmschUser): Iterable<TaskEntity> {
+        return repo.findAllWithoutLobs()
+    }
+
+}

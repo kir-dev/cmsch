@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.location
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -63,7 +64,9 @@ class RawLocationController(
             "refresh",
             false
         )
-    )
+    ),
+
+    searchSettings = calculateSearchSettings<LocationEntity>(false)
 ) {
 
     @GetMapping("/refresh")

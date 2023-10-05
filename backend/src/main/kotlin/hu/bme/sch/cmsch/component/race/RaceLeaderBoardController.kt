@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_RACE
@@ -66,5 +67,7 @@ class RaceLeaderBoardController(
 
     adminMenuIcon = "leaderboard",
     adminMenuPriority = 5,
+
+    searchSettings = calculateSearchSettings<RaceEntryDto>(false)
 )
 

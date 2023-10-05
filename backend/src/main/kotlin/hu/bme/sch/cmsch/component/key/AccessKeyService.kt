@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.key
 
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.AuditLogService

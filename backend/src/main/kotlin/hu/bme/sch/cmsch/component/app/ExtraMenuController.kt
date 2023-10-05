@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.app
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
@@ -50,4 +51,6 @@ class ExtraMenuController(
     adminMenuCategory = ApplicationComponent.CONTENT_CATEGORY,
     adminMenuIcon = "new_label",
     adminMenuPriority = 4,
+
+    searchSettings = calculateSearchSettings<ExtraMenuEntity>(false)
 )

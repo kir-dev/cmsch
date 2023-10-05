@@ -2,7 +2,6 @@ package hu.bme.sch.cmsch.component.email
 
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.AuditLogService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean

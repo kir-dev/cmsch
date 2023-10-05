@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -86,4 +87,6 @@ class TokenSubmissionsController(
 
     adminMenuIcon = "raw_on",
     adminMenuPriority = 6,
+
+    searchSettings = calculateSearchSettings<TokenPropertyEntity>(false)
 )

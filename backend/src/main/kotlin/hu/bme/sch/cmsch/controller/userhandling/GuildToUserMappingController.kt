@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.model.GuildToUserMappingEntity
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -55,5 +56,7 @@ class GuildToUserMappingController(
 
     adminMenuIcon = "badge",
     adminMenuPriority = 4,
-    adminMenuCategory = ApplicationComponent.DATA_SOURCE_CATEGORY
+    adminMenuCategory = ApplicationComponent.DATA_SOURCE_CATEGORY,
+
+    searchSettings = calculateSearchSettings<GuildToUserMappingEntity>(false)
 )

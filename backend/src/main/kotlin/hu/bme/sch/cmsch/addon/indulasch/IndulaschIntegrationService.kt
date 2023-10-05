@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.addon.indulasch
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
