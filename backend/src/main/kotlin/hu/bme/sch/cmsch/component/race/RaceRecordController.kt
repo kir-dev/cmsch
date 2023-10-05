@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.repository.UserSelectorView
 import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.repository.UserSelectorView
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
@@ -92,6 +93,8 @@ class RaceRecordController(
 
     adminMenuIcon = "timer",
     adminMenuPriority = 1,
+
+    searchSettings = calculateSearchSettings<RaceRecordEntity>(false)
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

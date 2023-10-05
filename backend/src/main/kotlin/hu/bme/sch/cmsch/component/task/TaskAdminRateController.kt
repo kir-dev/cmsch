@@ -2,7 +2,6 @@ package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.form.*
-import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
@@ -42,22 +41,18 @@ class TaskAdminRateController(
     transactionManager,
     object : ManualRepository<GradedTaskGroupDto, Int>() {
         override fun findAll(): Iterable<GradedTaskGroupDto> {
-            return submittedRepository.findAll()
-                .groupBy { it.task }
-                .map { it.value }
-                .filter { it.isNotEmpty() }
-                .map { submissions ->
-                    GradedTaskGroupDto(
-                        submissions[0].task?.id ?: 0,
-                        submissions[0].task?.title ?: "n/a",
-                        submissions.count { it.approved },
-                        submissions.count { it.rejected },
-                        submissions.count { !it.approved && !it.rejected }
-                    )
-                }
-                .sortedByDescending { it.notGraded }.toList()
-        }
+            val aggregatedResults = submittedRepository.findAllAggregated()
 
+            return aggregatedResults.map {
+                GradedTaskGroupDto(
+                    it.taskId,
+                    it.taskTitle,
+                    it.approvedCount.toInt(),
+                    it.rejectedCount.toInt(),
+                    it.notGradedCount.toInt()
+                )
+            }.sortedByDescending { it.notGraded }.toList()
+        }
     },
     submittedRepository,
     importService,
@@ -129,7 +124,7 @@ class TaskAdminRateController(
         model.addAttribute("columnData", descriptor.getColumnsAsJson())
         model.addAttribute("tableData", descriptor.getTableDataAsJson(
             transactionManager.transaction(readOnly = true) {
-                submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalse(id)
+                submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalseWithoutLobs(id)
             }
         ))
 

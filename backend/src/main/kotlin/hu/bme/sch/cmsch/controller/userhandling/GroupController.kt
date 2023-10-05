@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.*
@@ -80,7 +81,9 @@ class GroupController(
             primary = false,
             newPage = true
         )
-    )
+    ),
+
+    searchSettings = calculateSearchSettings<GroupEntity>(false)
 
 ) {
 

@@ -32,4 +32,25 @@ interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
 
     fun findAllByVisibleTrueAndCategoryId(categoryId: Int): List<TaskEntity>
 
+    @Query("""SELECT NEW hu.bme.sch.cmsch.component.task.TaskEntity(
+        t.id, 
+        t.title, 
+        t.categoryId, 
+        '', 
+        '', 
+        '', 
+        t.type,
+        t.format, 
+        '',
+        t.availableFrom,
+        t.availableTo, 
+        t.maxScore, 
+        t.visible, 
+        t.highlighted, 
+        t.order, 
+        t.tag) 
+        FROM TaskEntity t
+    """)
+    fun findAllWithoutLobs(): List<TaskEntity>
+
 }

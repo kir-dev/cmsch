@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.model.GroupToUserMappingEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
@@ -59,5 +60,7 @@ class GroupToUserMappingController(
 
     adminMenuIcon = "people",
     adminMenuPriority = 3,
-    adminMenuCategory = ApplicationComponent.DATA_SOURCE_CATEGORY
+    adminMenuCategory = ApplicationComponent.DATA_SOURCE_CATEGORY,
+
+    searchSettings = calculateSearchSettings<GroupToUserMappingEntity>(false)
 )

@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.admin.dashboard.SubmissionHistory
 import hu.bme.sch.cmsch.admin.dashboard.historyReader
@@ -13,10 +11,10 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 @Entity
 @Table(name="submittedTasks",

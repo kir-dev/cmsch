@@ -24,6 +24,7 @@ import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.lang.reflect.Method
 import java.util.*
 import java.util.function.Supplier
 import kotlin.reflect.KClass
@@ -64,16 +65,26 @@ data class SearchSettings(
 inline fun <reified T> calculateSearchSettings(fuzzy: Boolean): SearchSettings {
     return SearchSettings(
         rows = T::class.java.declaredMethods
-            .filter { field -> field.getAnnotationsByType(GenerateOverview::class.java).firstOrNull()?.useForSearch ?: false }
+            .filter { field -> filterForSearchableFields(field) }
             .map { field -> field.name
                 .removePrefix("get")
                 .removeSuffix("\$annotations")
                 .replaceFirstChar { it.lowercase(Locale.getDefault()) }
             },
         displayNames = T::class.java.declaredMethods
-            .filter { field -> field.getAnnotationsByType(GenerateOverview::class.java).firstOrNull()?.useForSearch ?: false }
+            .filter { field -> filterForSearchableFields(field) }
             .map { field -> field.getAnnotationsByType(GenerateOverview::class.java).firstOrNull()?.columnName ?: "" },
         fuzzy = fuzzy)
+}
+
+fun filterForSearchableFields(field: Method): Boolean {
+    val overviewAnnotation = field.getAnnotationsByType(GenerateOverview::class.java).firstOrNull()
+        ?: return false
+    return overviewAnnotation.visible
+            && overviewAnnotation.useForSearch
+            && (overviewAnnotation.renderer == OVERVIEW_TYPE_TEXT
+                || overviewAnnotation.renderer == OVERVIEW_TYPE_NUMBER
+            )
 }
 
 const val INVALID_ID_ERROR = "Object with this id was not found in the database"

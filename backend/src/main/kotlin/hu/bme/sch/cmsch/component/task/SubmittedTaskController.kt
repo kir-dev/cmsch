@@ -4,18 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/submitted-tasks")
@@ -69,7 +70,9 @@ class SubmittedTaskController(
             primary = false,
             newPage = true
         )
-    )
+    ),
+
+    searchSettings = calculateSearchSettings<SubmittedTaskEntity>(false)
 ) {
 
     data class SubmittedTaskFilteredView(

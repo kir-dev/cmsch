@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.debt
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -52,6 +53,8 @@ class SoldProductController(
 
     adminMenuIcon = "sync_alt",
     adminMenuPriority = 2,
+
+    searchSettings = calculateSearchSettings<SoldProductEntity>(false)
 ) {
 
     override fun onEntityPreSave(entity: SoldProductEntity, auth: Authentication): Boolean {

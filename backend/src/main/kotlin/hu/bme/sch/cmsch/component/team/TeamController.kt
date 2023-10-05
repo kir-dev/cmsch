@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.team
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
@@ -49,4 +50,6 @@ class TeamController(
 
     adminMenuIcon = "group_add",
     adminMenuPriority = 2,
+
+    searchSettings = calculateSearchSettings<TeamJoinRequestEntity>(false)
 )

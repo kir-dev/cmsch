@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.qrfight
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
@@ -52,4 +53,6 @@ class QrTowerController(
 
     adminMenuIcon = "cell_tower",
     adminMenuPriority = 2,
+
+    searchSettings = calculateSearchSettings<QrTowerEntity>(false)
 )

@@ -16,7 +16,7 @@ annotation class GenerateOverview(
     val centered: Boolean = false,
     val order: Int = 0,
     val renderer: String = OVERVIEW_TYPE_TEXT,
-    val useForSearch: Boolean = false
+    val useForSearch: Boolean = true
 )
 
 fun GenerateOverview.alignment(): String {
