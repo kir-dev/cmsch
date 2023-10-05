@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Grid, Heading, HStack, Image, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Grid, Heading, Image, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
@@ -201,21 +201,23 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
       {team.members?.length > 0 && (
         <>
           <Divider my={5} borderWidth={2} />
-          <HStack alignItems="center" justify="space-between">
+          <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={4}>
             <Heading m={0} fontSize="lg">
               Csapattagok
             </Heading>
             {isUserGroupAdmin && myTeam && (
-              <HStack>
+              <Box display="flex" flexWrap="wrap" gap={4}>
                 <Button variant={isEditingMembers ? 'outline' : 'solid'} onClick={() => setIsEditingMembers((prev) => !prev)}>
                   {isEditingMembers ? 'Szerkesztés befejezése' : 'Tagok szerkesztése'}
                 </Button>
-                <LinkButton variant="solid" href={AbsolutePaths.EDIT_TEAM}>
-                  Csoport szerkesztése
-                </LinkButton>
-              </HStack>
+                {teamComponent.teamEditEnabled && (
+                  <LinkButton variant="solid" href={AbsolutePaths.EDIT_TEAM}>
+                    Csoport adatok szerkesztése
+                  </LinkButton>
+                )}
+              </Box>
             )}
-          </HStack>
+          </Box>
           {team.members?.map((m) => (
             <MemberRow
               key={m.id}

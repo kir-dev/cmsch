@@ -53,15 +53,17 @@ export default function EditMyTeamPage() {
           />
           {errors.description?.message && <Text color="red">{errors.description.message}</Text>}
 
-          <Box pt={4}>
-            <FormLabel>Csapat Logó</FormLabel>
-            <FilePicker
-              onFileChange={(files) => setLogo(files[0])}
-              placeholder="Csapat logó"
-              clearButtonLabel="Törlés"
-              accept={'image/jpeg,image/png,image/jpg,image/gif'}
-            />
-          </Box>
+          {component.teamLogoUploadEnabled && (
+            <Box pt={4}>
+              <FormLabel>Csapat Logó</FormLabel>
+              <FilePicker
+                onFileChange={(files) => setLogo(files[0])}
+                placeholder="Csapat logó"
+                clearButtonLabel="Törlés"
+                accept={'image/jpeg,image/png,image/jpg,image/gif'}
+              />
+            </Box>
+          )}
         </FormControl>
         <VStack alignItems="start">
           <Button isLoading={teamEditLoading} type="submit" colorScheme="brand">

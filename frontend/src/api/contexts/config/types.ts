@@ -276,6 +276,7 @@ export interface Team {
   teamEditTopMessage: string
   creationEnabled: boolean
   teamEditEnabled: boolean
+  teamLogoUploadEnabled: boolean
   joinEnabled: boolean
   kickEnabled: boolean
   promoteLeadershipEnabled: boolean
