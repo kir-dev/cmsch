@@ -27,7 +27,7 @@ data class TeamView(
     var name: String = "",
     val coverUrl: String = "",
     val description: String = "",
-    val logo: String,
+    val logo: String? = null,
     var points: Int? = null,
     var members: List<TeamMemberView>? = null,
     var applicants: List<TeamMemberView>? = null,
