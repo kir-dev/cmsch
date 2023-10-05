@@ -25,7 +25,8 @@ export default function CurrentEventCard() {
       borderRadius={[0, null, 'xl']}
       m="2"
       direction={'row'}
-      justify="center"
+      justify="left"
+      alignItems="center"
     >
       <PulsingDot color={'green.300'} mr="4" />
       <Box position={'relative'} bottom="0px">
@@ -37,48 +38,8 @@ export default function CurrentEventCard() {
             </Link>
           ))}
         </b>
-        {currentEvents.length == 1 ? 'esemény éppen most zajlik' : 'események éppen most zajlanak.'}
+        {currentEvents.length == 1 ? 'éppen most zajlik' : 'események éppen most zajlanak.'}
       </Box>
     </Flex>
   )
-  // return (
-  //   <Flex
-  //     color={useColorModeValue('brand.800', 'white')}
-  //     minH={{ base: '3rem', md: '4.5rem' }}
-  //     maxW={['100%', '100%', '56rem', '72rem']}
-  //     py={{ base: 2 }}
-  //     px={{ base: 4 }}
-  //     align="center"
-  //   >
-
-  //   </Flex>
-
-  // <Alert
-  //   borderRadius={[0, null, 'xl']}
-  //   opacity={1}
-  //   status={'info'}
-  //   variant="solid"
-  //   mx="auto"
-  //   w="100%"
-  //   maxWidth={['100%', '64rem']}
-  //   mb={5}
-  // >
-  //   <HStack justify="left" flex={1}>
-  //     <AlertIcon />
-  //     <AlertDescription wordBreak="break-word">
-  //       <p>
-  //         A{' '}
-  //         <b>
-  //           {currentEvents.map((event, idx) => (
-  //             <Link key={event.url} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
-  //               {event.title + (idx == currentEvents.length - 1 ? ' ' : ', ')}
-  //             </Link>
-  //           ))}
-  //         </b>
-  //         {currentEvents.length == 1 ? 'esemény éppen most zajlik' : 'események éppen most zajlanak.'}
-  //       </p>
-  //     </AlertDescription>
-  //   </HStack>
-  // </Alert>
-  //)
 }
