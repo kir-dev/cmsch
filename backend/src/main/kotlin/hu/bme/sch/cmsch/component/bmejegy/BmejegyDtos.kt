@@ -13,7 +13,7 @@ data class BmeJegyResponse(
 )
 
 data class BmejegyRow(
-    var cell: BmejegyItemDto? = null
+    var cell: Map<String, String>? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

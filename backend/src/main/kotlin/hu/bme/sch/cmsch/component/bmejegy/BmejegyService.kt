@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.bmejegy
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.form.FormService
 import hu.bme.sch.cmsch.extending.BmeJegyListener
 import hu.bme.sch.cmsch.model.GroupEntity
@@ -46,6 +47,7 @@ open class BmejegyService(
     private val listeners: List<BmeJegyListener>,
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
+    private val cellMapper = jacksonObjectMapper()
 
     private fun extractNonceFromResponse(response: ResponseEntity<String>): String {
         val body = response.body ?: ""
@@ -66,23 +68,24 @@ open class BmejegyService(
         val newTickets = mutableListOf<BmejegyRecordEntity>()
         tickets.rows?.forEach {
             val cell = it.cell
-            if (cell != null && !registered.containsKey(cell.order_item_id)) {
+            if (cell != null && !registered.containsKey(cell["order_item_id"])) {
                 newTickets.add(BmejegyRecordEntity(
                     id = 0,
-                    item = cell.order_item_name ?: "",
-                    fullName = cell.full_name ?: "",
-                    status = cell.post_status ?: "N/A",
-                    orderKey = cell.order_key ?: "",
-                    email = cell.email ?: "",
-                    qrCode = cell.voucher_code ?: "INVALID",
-                    photoId = cell.ic_21?.uppercase() ?: "",
-                    date = cell.post_date ?: "",
+                    item = cell["order_item_name"] ?: "",
+                    fullName = cell["full_name"] ?: "",
+                    status = cell["post_status"] ?: "N/A",
+                    orderKey = cell["order_key"] ?: "",
+                    email = cell["email"] ?: "",
+                    qrCode = cell["voucher_code"] ?: "INVALID",
+                    photoId = cell[bmejegy.szigFieldName.getValue()]?.uppercase() ?: "",
+                    date = cell["post_date"] ?: "",
                     registered = clock.getTimeInSeconds(),
-                    idId = cell.id ?: "",
-                    itemId = cell.order_item_id ?: "",
-                    total = cell.line_total ?: "",
+                    idId = cell["id"] ?: "",
+                    itemId = cell["order_item_id"] ?: "",
+                    total = cell["line_total"] ?: "",
                     faculty = "",
-                    matchedUserId = 0
+                    matchedUserId = 0,
+                    rawData = cellMapper.writeValueAsString(cell)
                 ))
                 listeners.forEach { listener -> listener.onTicketRaw(it.cell) }
             }
@@ -288,41 +291,57 @@ open class BmejegyService(
 
         log.info("[BMEJEGY] Reports GET {}", reportResponse.statusCode)
 
-        val ajaxResponse = client.post()
-            .uri {
-                it.path("/wp-admin/admin-ajax.php")
-                    .queryParam("action", "onliner_ajax")
-                    .queryParam("onliner_ajax_action", "jqgrid_order_result")
-                    .build()
+        val results = mutableListOf<BmejegyRow>()
+        var page = 0
+        while (true) {
+            ++page
+            val ajaxResponse = client.post()
+                .uri {
+                    it.path("/wp-admin/admin-ajax.php")
+                        .queryParam("action", "onliner_ajax")
+                        .queryParam("onliner_ajax_action", "jqgrid_order_result")
+                        .build()
+                }
+                .header(HttpHeaders.USER_AGENT, USER_AGENT)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .header("Sec-Fetch-Dest", "empty")
+                .header("Sec-Fetch-Mode", "cors")
+                .header("Sec-Fetch-Site", "same-origin")
+                .header("Host", "www.bmejegy.hu")
+                .header("Origin", "https://www.bmejegy.hu")
+                .header("Referer", "https://www.bmejegy.hu/rendeles-riportok/")
+                .header(
+                    "Cookie", sessionCookieWpAdmin[0] + "=" + sessionCookieWpAdmin[1] + "; "
+                            + sessionCookieSite[0] + "=" + sessionCookieSite[1] + "; " +
+                            "euCookie=set; _icl_current_language=hu"
+                )
+                .body(
+                    BodyInserters.fromFormData("_search", "false")
+                        .with("nd", bmejegy.minTimestamp.getValue())
+                        .with("rows", bmejegy.countToFetch.getValue())
+                        .with("page", page.toString())
+                        .with("sidx", "")
+                        .with("sord", "asc")
+                )
+                .retrieve()
+                .toEntity(String::class.java)
+                .block()!!
+
+
+            val ajaxBody = ajaxResponse.body
+            log.info("[BMEJEGY] Partial response page:{} is {} long", page, ajaxBody?.length ?: -1)
+            log.info("[BMEJEGY] Result: $ajaxBody")
+            val response = objectMapper.readerFor(BmeJegyResponse::class.java).readValue<BmeJegyResponse>(ajaxBody ?: "{}")
+            results.addAll(response?.rows ?: listOf())
+
+            if (response == null || page == response.total || response.records?.isEmpty() != false) {
+                break
             }
-            .header(HttpHeaders.USER_AGENT, USER_AGENT)
-            .accept(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .header("Sec-Fetch-Dest", "empty")
-            .header("Sec-Fetch-Mode", "cors")
-            .header("Sec-Fetch-Site", "same-origin")
-            .header("Host", "www.bmejegy.hu")
-            .header("Origin", "https://www.bmejegy.hu")
-            .header("Referer", "https://www.bmejegy.hu/rendeles-riportok/")
-            .header("Cookie", sessionCookieWpAdmin[0] + "=" + sessionCookieWpAdmin[1] + "; "
-                    + sessionCookieSite[0] + "=" + sessionCookieSite[1] + "; " +
-                    "euCookie=set; _icl_current_language=hu")
-            .body(
-                BodyInserters.fromFormData("_search", "false")
-                    .with("nd", bmejegy.minTimestamp.getValue())
-                    .with("rows", bmejegy.countToFetch.getValue())
-                    .with("page", "1")
-                    .with("sidx", "")
-                    .with("sord", "asc")
-            )
-            .retrieve()
-            .toEntity(String::class.java)
-            .block()!!
+        }
 
-
-        val ajaxBody = ajaxResponse.body
-        log.info("[BMEJEGY] Full response is {} long", ajaxBody?.length ?: -1)
-        return objectMapper.readerFor(BmeJegyResponse::class.java).readValue(ajaxBody ?: "[]")
+        log.info("[BMEJEGY] Finished! Found: ${results.size}")
+        return BmeJegyResponse(page = page.toString(), total = page, records = results.size.toString(), rows = results)
     }
 
     @Transactional(readOnly = true)
