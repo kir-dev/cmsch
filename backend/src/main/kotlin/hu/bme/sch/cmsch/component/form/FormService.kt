@@ -16,6 +16,7 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(FormComponent::class)
@@ -44,7 +45,6 @@ open class FormService(
         return formRepository.findAllByAdvertizedTrueAndOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
-
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     open fun fetchForm(user: CmschUser, path: String): FormView {
@@ -277,8 +277,18 @@ open class FormService(
     }
 
     @Transactional(readOnly = true)
+    open fun getForm(formId: Int): FormEntity? {
+        return formRepository.findById(formId).getOrNull()
+    }
+
+    @Transactional(readOnly = true)
     open fun getSubmissions(form: FormEntity): List<ResponseEntity> {
         return responseRepository.findAllByFormId(form.id)
+    }
+
+    @Transactional(readOnly = true)
+    open fun getSubmissionCount(form: FormEntity): Long {
+        return responseRepository.countByFormId(form.id)
     }
 
     @Transactional(readOnly = true)

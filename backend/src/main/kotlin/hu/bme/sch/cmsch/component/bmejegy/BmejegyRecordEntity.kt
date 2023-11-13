@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
+import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -121,6 +122,14 @@ data class BmejegyRecordEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_INT)
     var matchedUserId: Int = 0,
+
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 15, label = "Összes adat")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
+    var rawData: String = "",
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
