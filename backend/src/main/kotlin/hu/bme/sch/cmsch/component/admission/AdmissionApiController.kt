@@ -133,6 +133,7 @@ class AdmissionApiController(
     fun ticketResolve(@RequestBody resolve: ResolveRequest, auth: Authentication): AdmissionResponse {
         log.info("Resolving ticket admission for: ${resolve.cmschId}")
         var additionalInfo = ""
+
         val admissionResponse = transactionManager.transaction(readOnly = true) {
             if (bmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
                 val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
@@ -143,11 +144,11 @@ class AdmissionApiController(
                     )
 
                 } else if (ticket.orElseThrow().matchedUserId > 0) {
+                    additionalInfo = ticket.orElseThrow().item
                     mapTicketUser(
                         user = userService.getByUserId(ticket.orElseThrow().matchedUserId),
                         ticket = ticket.orElseThrow()
                     )
-                    additionalInfo = ticket.orElseThrow().item
 
                 } else {
                     mapTicket(ticket.orElseThrow())
