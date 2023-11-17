@@ -12,4 +12,6 @@ interface AdmissionEntryRepository : JpaRepository<AdmissionEntryEntity, Int>,
 
     fun findAllByFormIdAndAllowedTrue(formId: Int): List<AdmissionEntryEntity>
 
+    fun countAllByToken(token: String): Long
+
 }

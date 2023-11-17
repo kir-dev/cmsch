@@ -33,5 +33,12 @@ class AdmissionComponentController(
             1,
             StaffPermissions.PERMISSION_VALIDATE_ADMISSION
         ))
+        adminMenuService.registerEntry(AdmissionComponent::class.java.simpleName, AdminMenuEntry(
+            "Jegyellenőrzés",
+            "mobile_friendly",
+            "/admin/admission/ticket",
+            6,
+            StaffPermissions.PERMISSION_VALIDATE_ADMISSION
+        ))
     }
 }

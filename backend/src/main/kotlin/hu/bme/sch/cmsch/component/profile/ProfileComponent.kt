@@ -51,6 +51,7 @@ class ProfileComponent(
             showEmail,
             showProfilePicture,
             showQr,
+            showQrOnlyIfTicketPresent,
             qrTitle,
             bmejegyQrIfPresent,
             showGroupMessage,
@@ -203,7 +204,12 @@ class ProfileComponent(
 
     val showQr = SettingProxy(componentSettingService, component,
         "showQr", "false", type = SettingType.BOOLEAN,
-        fieldName = "Egyedi QR kód látható", description = "Ezt lehet használni a fizetéshez, meg belépés szabályozáshoz"
+        fieldName = "Egyedi QR kód látható", description = "Jelenlen meg a jegy. Ezt lehet használni a fizetéshez, meg belépés szabályozáshoz"
+    )
+
+    val showQrOnlyIfTicketPresent = SettingProxy(componentSettingService, component,
+        "showQrOnlyIfTicketPresent", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "QR csak ha van jegye", description = "A profil QR csak akkor látszik ha van jegye az illetőnek (Nem BMEJEGY)"
     )
 
     val qrTitle = SettingProxy(componentSettingService, component,

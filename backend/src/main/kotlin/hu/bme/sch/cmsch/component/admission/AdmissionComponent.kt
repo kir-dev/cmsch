@@ -58,6 +58,10 @@ class AdmissionComponent(
             banListGroup,
             bannedGroups,
             bannedUsers,
+
+            ticketGroup,
+            ticketShowEntryCount,
+            ticketAllowBmejegy,
         )
     }
 
@@ -224,5 +228,26 @@ class AdmissionComponent(
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val ticketGroup = SettingProxy(componentSettingService, component,
+        "ticketGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Jegyek",
+        description = "A jegyellenőrzés menü beállításai"
+    )
+
+    val ticketShowEntryCount = SettingProxy(componentSettingService, component,
+        "ticketShowEntryCount", "true", type = SettingType.BOOLEAN,
+        fieldName = "Belépések számának mutatása",
+        description = "Beolvasáskor mutatja a beolvasónak",
+        serverSideOnly = true
+    )
+
+    val ticketAllowBmejegy = SettingProxy(componentSettingService, component,
+        "ticketAllowBmejegy", "true", type = SettingType.BOOLEAN,
+        fieldName = "BME Jegyesek beengedése",
+        description = "Csak akkor működik, ha a bmejegy komponens be van kapcsolva",
+        serverSideOnly = true
+    )
 
 }

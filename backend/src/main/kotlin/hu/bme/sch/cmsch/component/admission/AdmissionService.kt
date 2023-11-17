@@ -4,6 +4,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.io.ByteArrayOutputStream
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.full.memberProperties
 
 @Service
@@ -22,6 +24,8 @@ open class AdmissionService(
     private val auditLogService: AuditLogService,
     private val admissionComponent: AdmissionComponent,
     private val responseRepository: Optional<ResponseRepository>,
+    private val ticketRepository: TicketRepository,
+    private val userRepository: UserRepository
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
@@ -33,7 +37,7 @@ open class AdmissionService(
         if (admissionComponent.saveEntryLog.isValueTrue()) {
             admissionEntryRepository.save(
                 AdmissionEntryEntity(
-                    userName = response.userEntity?.fullName ?: "n/a",
+                    userName = response.userEntity?.fullName ?: response.userName,
                     userId = response.userEntity?.id ?: 0,
                     timestamp = clock.getTimeInSeconds(),
                     formId = response.formId ?: 0,
@@ -94,6 +98,33 @@ open class AdmissionService(
             .with(csvSchema)
             .writeValue(outputStream, content)
         return outputStream
+    }
+
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+    open fun getTicketByQr(cmschId: String): TicketEntity? {
+        val user = userRepository.findByCmschId(cmschId).getOrNull()
+        if (user == null) {
+            return ticketRepository.findTop1ByQrCodeAndUseCmschIdTrue(cmschId).firstOrNull()
+
+        } else {
+            val ticketByEmail = ticketRepository.findTop1ByEmailAndUseCmschIdFalse(user.email).firstOrNull()
+            if (ticketByEmail != null) {
+                return ticketByEmail
+            }
+
+            return ticketRepository.findTop1ByQrCodeAndUseCmschIdTrue(cmschId).firstOrNull()
+        }
+    }
+
+
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+    open fun countEntries(cmschId: String): Long {
+        return admissionEntryRepository.countAllByToken(cmschId)
+    }
+
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+    open fun hasTicket(cmschId: String): Boolean {
+        return getTicketByQr(cmschId) != null
     }
 
 }

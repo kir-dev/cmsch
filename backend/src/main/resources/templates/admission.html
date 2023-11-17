@@ -94,9 +94,9 @@
                 const result = JSON.parse(raw);
 
                 if (result.accessGranted) {
-                    alert(`-------------------\nRENDBEN\n-------------------\n\nNév: ${result.userName}\nCsoport: ${result.groupName}\n\nJOGKÖR: ${ROLE_MAPPING[result.entryRole]}\n${result.comment}`)
+                    alert(`-------------------\nRENDBEN\n-------------------\n\nNév: ${result.userName}\nBelépés: ${result.groupName}\n\nJOGKÖR: ${ROLE_MAPPING[result.entryRole]}\n${result.comment}`)
                 } else {
-                    alert(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nBELÉPÉS MEGTAGADVA\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nNév: ${result.userName}\nCsoport: ${result.groupName}\n\nJOGKÖR: ${ROLE_MAPPING[result.entryRole]}\n${result.comment}`)
+                    alert(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nBELÉPÉS MEGTAGADVA\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\nNév: ${result.userName}\nBelépés: ${result.groupName}\n\nJOGKÖR: ${ROLE_MAPPING[result.entryRole]}\n${result.comment}`)
                 }
                 lastSuccessful = Date.now();
             } catch (e) {
