@@ -151,6 +151,7 @@ class AdmissionApiController(
                     )
 
                 } else {
+                    additionalInfo = ticket.orElseThrow().item
                     mapTicket(ticket.orElseThrow())
                 }
             } else {
@@ -171,7 +172,7 @@ class AdmissionApiController(
             val count = admissionService.countEntries(resolve.cmschId)
             admissionResponse.groupName = if (count > 1) "NEM ELSŐ!!! (${count}.)" else "($count)"
         }
-        admissionResponse.groupName += additionalInfo
+        admissionResponse.groupName += " $additionalInfo"
 
         return admissionResponse
     }
