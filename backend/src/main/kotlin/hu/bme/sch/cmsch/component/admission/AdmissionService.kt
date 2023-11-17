@@ -108,7 +108,7 @@ open class AdmissionService(
 
         } else {
             val ticketByEmail = ticketRepository.findTop1ByEmailAndUseCmschIdFalse(user.email).firstOrNull()
-            if (ticketByEmail != null) {
+            if (user.email.isNotEmpty() && ticketByEmail != null) {
                 return ticketByEmail
             }
 
