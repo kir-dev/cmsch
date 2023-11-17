@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.profile
 
+import hu.bme.sch.cmsch.component.admission.AdmissionService
 import hu.bme.sch.cmsch.component.bmejegy.BmejegyService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(ProfileService::class)
@@ -44,7 +46,8 @@ open class ProfileService(
     private val loginComponent: Optional<LoginComponent>,
     private val bmejegyService: Optional<BmejegyService>,
     private val clock: TimeService,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val admissionService: Optional<AdmissionService>
 ) {
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
@@ -66,9 +69,7 @@ open class ProfileService(
             guild = profileComponent.showGuild.mapIfTrue { user.guild },
             email = profileComponent.showEmail.mapIfTrue { user.email },
             neptun = profileComponent.showNeptun.mapIfTrue { user.neptun },
-            cmschId = if (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue()) {
-                if (profileComponent.bmejegyQrIfPresent.isValueTrue()) fetchBmejegyTicket(user) else user.cmschId
-            } else null,
+            cmschId = mapQr(user),
             major = profileComponent.showMajor.mapIfTrue { user.major },
 
             groupLeaders = profileComponent.showGroupLeaders.mapIfTrue { fetchGroupLeaders(group) },
@@ -112,6 +113,20 @@ open class ProfileService(
             // Leaderboard controller
             leaderboard = null
         )
+    }
+
+    private fun mapQr(user: UserEntity): String? {
+        if (profileComponent.showQrOnlyIfTicketPresent.isValueTrue()
+            && (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue())) {
+
+            return if (admissionService.map { it.hasTicket(user.cmschId) }.orElse(false)) user.cmschId else null
+        }
+
+        return if (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue()) {
+            if (profileComponent.bmejegyQrIfPresent.isValueTrue())
+                fetchBmejegyTicket(user)
+            else user.cmschId
+        } else null
     }
 
     private fun fetchBmejegyTicket(user: UserEntity): String {

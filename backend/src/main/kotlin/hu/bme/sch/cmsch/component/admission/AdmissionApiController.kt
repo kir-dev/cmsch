@@ -55,6 +55,23 @@ class AdmissionApiController(
         return "admission"
     }
 
+    @GetMapping("/ticket")
+    fun ticketAdmission(model: Model, auth: Authentication): String {
+        val user = auth.getUser()
+        if (StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user).not()) {
+            model.addAttribute("permission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
+            model.addAttribute("user", user)
+
+            auditLogService.admin403(user, admissionComponent.component,
+                "GET /admission/ticket", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
+            return "admin403"
+        }
+
+        model.addAttribute("prefix", startupPropertyConfig.profileQrPrefix)
+        model.addAttribute("resolveUrl", "/ticket-resolve")
+        return "admission"
+    }
+
     @GetMapping("/form/{formId}")
     fun admissionForm(model: Model, auth: Authentication, @PathVariable formId: Int): String {
         val user = auth.getUser()
@@ -63,7 +80,7 @@ class AdmissionApiController(
             model.addAttribute("user", user)
 
             auditLogService.admin403(user, admissionComponent.component,
-                "GET /admission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
+                "GET /admission/form/${formId}", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
             return "admin403"
         }
 
@@ -108,6 +125,59 @@ class AdmissionApiController(
             }
         }
         admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
+        return admissionResponse
+    }
+
+    @ResponseBody
+    @PostMapping("/ticket-resolve")
+    fun ticketResolve(@RequestBody resolve: ResolveRequest, auth: Authentication): AdmissionResponse {
+        log.info("Resolving ticket admission for: ${resolve.cmschId}")
+        val admissionResponse = transactionManager.transaction(readOnly = true) {
+            if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
+                userService.searchByCmschId(resolve.cmschId)
+                    .map { mapUserByDetails(it) }
+                    .orElse(
+                        AdmissionResponse(
+                            "NOT FOUND BY CMSCHID", "NOT FOUND BY CMSCH",
+                            RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
+                        )
+                    )
+            } else if (bmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
+                val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
+                if (ticket.isEmpty) {
+                    AdmissionResponse(
+                        "NOT FOUND BY BMEJEGY", "NOT FOUND BY BMEJEGY",
+                        RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
+                    )
+
+                } else if (ticket.orElseThrow().matchedUserId > 0) {
+                    mapTicketUser(
+                        user = userService.getByUserId(ticket.orElseThrow().matchedUserId),
+                        ticket = ticket.orElseThrow()
+                    )
+
+                } else {
+                    mapTicket(ticket.orElseThrow())
+                }
+            } else {
+                val ticket = admissionService.getTicketByQr(resolve.cmschId)
+                if (ticket == null) {
+                    AdmissionResponse(
+                        "NOT FOUND BY TICKET", "NOT FOUND BY TICKET",
+                        RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
+                    )
+
+                } else {
+                    mapTicketUser(ticket = ticket)
+                }
+            }
+        }
+        admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
+        if (admissionComponent.ticketShowEntryCount.isValueTrue()) {
+            val count = admissionService.countEntries(resolve.cmschId)
+            admissionResponse.groupName = if (count > 1) "NEM ELSŐ!!! (${count}.)" else "($count)"
+        }
+
         return admissionResponse
     }
 
@@ -167,6 +237,14 @@ class AdmissionApiController(
             "${user.groupName} ${ticket.faculty.ifBlank { "KÜLSŐS" }}",
             "${ticket.fullName} @ ${ticket.photoId}",
             user.role, grant, grant.canAttend)
+    }
+
+    private fun mapTicketUser(ticket: TicketEntity): AdmissionResponse {
+        log.info("Admission (with voucher ticket) is GRANTED for user '${ticket.owner}' with email '${ticket.email}' as ${ticket.grantType.name}")
+        return AdmissionResponse(
+            "JEGY",
+            "${ticket.owner} @ ${ticket.email}",
+            RoleType.BASIC, ticket.grantType, true)
     }
 
     private fun mapUserByDetails(user: UserEntity): AdmissionResponse {

@@ -941,6 +941,30 @@ object StaffPermissions : PermissionGroup {
         component = AdmissionComponent::class
     )
 
+    val PERMISSION_SHOW_TICKETS = PermissionValidator(
+        "TICKET_SHOW",
+        "Jegyek megtekintése",
+        component = AdmissionComponent::class
+    )
+
+    val PERMISSION_EDIT_TICKETS = PermissionValidator(
+        "TICKET_EDIT",
+        "Jegyek szerkesztése",
+        component = AdmissionComponent::class
+    )
+
+    val PERMISSION_CREATE_TICKETS = PermissionValidator(
+        "TICKET_CREATE",
+        "Jegyek létrehozása",
+        component = AdmissionComponent::class
+    )
+
+    val PERMISSION_DELETE_TICKETS = PermissionValidator(
+        "TICKET_DELETE",
+        "Jegyek törlése",
+        component = AdmissionComponent::class
+    )
+
     /// RaceComponent
 
     val PERMISSION_SHOW_RACE = PermissionValidator(
@@ -1249,6 +1273,10 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_ADMISSIONS,
         PERMISSION_CREATE_ADMISSIONS,
         PERMISSION_DELETE_ADMISSIONS,
+        PERMISSION_SHOW_TICKETS,
+        PERMISSION_EDIT_TICKETS,
+        PERMISSION_CREATE_TICKETS,
+        PERMISSION_DELETE_TICKETS,
 
         PERMISSION_SHOW_RACE,
         PERMISSION_EDIT_RACE,

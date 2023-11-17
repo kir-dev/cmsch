@@ -18,7 +18,7 @@ enum class EntryRole(
 }
 
 data class AdmissionResponse(
-    val groupName: String,
+    var groupName: String,
     val userName: String,
     val role: RoleType,
     val entryRole: EntryRole,
