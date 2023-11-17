@@ -169,8 +169,9 @@ open class LeaderBoardService(
             OwnershipType.USER -> listOf()
         }
         val tasksTitle = taskComponent.map { it.menuDisplayName.getValue() }.orElse("")
-        tasks.forEach {
-            details.computeIfAbsent(it.id) { key -> TopListDetails(key, it.name) }.items[tasksTitle] = it.taskScore
+        tasks.forEach { task ->
+            details.computeIfAbsent(task.id) { key -> TopListDetails(key, task.name) }
+                .items.compute(tasksTitle) { _, value -> (value ?: 0) + task.taskScore }
         }
 
         val riddlesPercent = leaderBoardComponent.riddlesPercent.getIntValue(100) / 100.0f
@@ -194,8 +195,9 @@ open class LeaderBoardService(
             OwnershipType.USER -> listOf()
         }
         val riddleTitle = riddleComponent.map { it.menuDisplayName.getValue() }.orElse("")
-        riddles.forEach {
-            details.computeIfAbsent(it.id) { key -> TopListDetails(key, it.name) }.items[riddleTitle] = it.riddleScore
+        riddles.forEach { riddle ->
+            details.computeIfAbsent(riddle.id) { key -> TopListDetails(key, riddle.name) }
+                .items.compute(riddleTitle) { _, value -> (value ?: 0) + riddle.riddleScore }
         }
 
         val challengesPercent = leaderBoardComponent.challengesPercent.getIntValue(100) / 100.0f
@@ -206,12 +208,11 @@ open class LeaderBoardService(
                     .filter { groups.findByName(it.key.name).map { m -> m.races }.orElse(false) }
                     .map { entity ->
                         entity.value.forEach { challenge ->
-                            details.computeIfAbsent(entity.key.id) { key ->
-                                TopListDetails(
-                                    key,
-                                    entity.value[0].groupName
-                                )
-                            }.items[challenge.category] = (challenge.score * challengesPercent).toInt()
+                            details.computeIfAbsent(entity.key.id) {
+                                key -> TopListDetails(key, entity.value[0].groupName)
+                            }.items.compute(challenge.category) {
+                                _, value -> (value ?: 0) + (challenge.score * challengesPercent).toInt()
+                            }
                         }
                         LeaderBoardAsGroupEntryDto(
                             entity.key.id,
@@ -239,8 +240,9 @@ open class LeaderBoardService(
         }
 
         val tokenTitle = tokenComponent.map { it.menuDisplayName.getValue() }.orElse("")
-        tokens.forEach {
-            details.computeIfAbsent(it.id) { key -> TopListDetails(key, it.name) }.items[tokenTitle] = it.tokenScore
+        tokens.forEach { token ->
+            details.computeIfAbsent(token.id) { key -> TopListDetails(key, token.name) }
+                .items.compute(tokenTitle) { _, value -> (value ?: 0) + token.tokenScore }
         }
 
         cachedTopListForGroups = sequenceOf(tasks, riddles, challenges, tokens)
