@@ -142,7 +142,7 @@ const ProfilePage = ({}: Props) => {
         </>
       )}
 
-      {component.showQr && <ProfileQR profile={profile} component={component} />}
+      {component.showQr && profile.cmschId && <ProfileQR profile={profile} component={component} />}
       {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={10} borderWidth={2} />}
       <Flex justify="center" alignItems="center" flexWrap="wrap">
         {component.showTasks && (
