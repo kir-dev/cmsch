@@ -132,6 +132,7 @@ class AdmissionApiController(
     @PostMapping("/ticket-resolve")
     fun ticketResolve(@RequestBody resolve: ResolveRequest, auth: Authentication): AdmissionResponse {
         log.info("Resolving ticket admission for: ${resolve.cmschId}")
+        var additionalInfo = ""
         val admissionResponse = transactionManager.transaction(readOnly = true) {
             if (bmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
                 val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
@@ -146,6 +147,7 @@ class AdmissionApiController(
                         user = userService.getByUserId(ticket.orElseThrow().matchedUserId),
                         ticket = ticket.orElseThrow()
                     )
+                    additionalInfo = ticket.orElseThrow().item
 
                 } else {
                     mapTicket(ticket.orElseThrow())
@@ -168,6 +170,7 @@ class AdmissionApiController(
             val count = admissionService.countEntries(resolve.cmschId)
             admissionResponse.groupName = if (count > 1) "NEM ELSŐ!!! (${count}.)" else "($count)"
         }
+        admissionResponse.groupName += additionalInfo
 
         return admissionResponse
     }
