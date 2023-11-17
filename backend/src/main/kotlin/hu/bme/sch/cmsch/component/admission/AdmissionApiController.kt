@@ -133,16 +133,7 @@ class AdmissionApiController(
     fun ticketResolve(@RequestBody resolve: ResolveRequest, auth: Authentication): AdmissionResponse {
         log.info("Resolving ticket admission for: ${resolve.cmschId}")
         val admissionResponse = transactionManager.transaction(readOnly = true) {
-            if (resolve.cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) {
-                userService.searchByCmschId(resolve.cmschId)
-                    .map { mapUserByDetails(it) }
-                    .orElse(
-                        AdmissionResponse(
-                            "NOT FOUND BY CMSCHID", "NOT FOUND BY CMSCH",
-                            RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
-                        )
-                    )
-            } else if (bmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
+            if (bmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
                 val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
                 if (ticket.isEmpty) {
                     AdmissionResponse(
