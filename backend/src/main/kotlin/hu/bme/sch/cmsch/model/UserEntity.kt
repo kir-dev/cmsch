@@ -136,7 +136,7 @@ data class UserEntity(
     @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3, useForSearch = true)
     override var groupName: String = "",
 
-    @JsonIgnore
+    @field:JsonIgnore
     @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.EAGER)
     var group: GroupEntity? = null,
 

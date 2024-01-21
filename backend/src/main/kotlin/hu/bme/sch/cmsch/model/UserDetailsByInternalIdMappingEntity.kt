@@ -53,7 +53,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @property:GenerateOverview(columnName = "Csoport", centered = true, order = 2)
     var groupName: String? = null,
 
-    @JsonIgnore
+    @field:JsonIgnore
     @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
     var group: GroupEntity? = null,

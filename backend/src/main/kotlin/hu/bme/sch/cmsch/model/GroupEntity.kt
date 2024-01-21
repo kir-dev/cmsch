@@ -78,7 +78,7 @@ data class GroupEntity(
     @property:GenerateOverview(visible = false)
     var coverImageUrl: String = "",
 
-    @JsonIgnore
+    @field:JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserEntity::class, mappedBy = "group")
     @property:GenerateInput(type = INPUT_TYPE_LIST_ENTITIES, order = 12, label = "Csoport tagjai",
             ignore = true, enabled = false, entitySource = "UserEntity")

@@ -72,7 +72,7 @@ class EmailTemplateEntity(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as EventEntity
+        other as EmailTemplateEntity
 
         return id != 0 && id == other.id
     }

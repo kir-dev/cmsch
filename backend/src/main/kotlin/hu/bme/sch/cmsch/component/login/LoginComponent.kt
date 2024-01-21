@@ -137,7 +137,7 @@ class LoginComponent(
     )
 
     val googleSsoEnabled = SettingProxy(componentSettingService, component,
-        "googleSsoEnabled", "false", type = SettingType.BOOLEAN,
+        "googleSsoEnabled", "true", type = SettingType.BOOLEAN,
         fieldName = "Google opció látszik", description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Google SSO"
     )
 

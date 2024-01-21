@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.bmejegy.BmejegyComponent
 import hu.bme.sch.cmsch.component.challenge.ChallengeComponent
 import hu.bme.sch.cmsch.component.communities.CommunitiesComponent
+import hu.bme.sch.cmsch.component.conference.ConferenceComponent
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.component.debt.DebtComponent
 import hu.bme.sch.cmsch.component.email.EmailComponent
@@ -20,6 +21,7 @@ import hu.bme.sch.cmsch.component.location.LocationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.messaging.MessagingComponent
 import hu.bme.sch.cmsch.component.news.NewsComponent
+import hu.bme.sch.cmsch.component.proto.ProtoComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
@@ -332,6 +334,18 @@ object ControlPermissions : PermissionGroup {
         component = AccessKeyComponent::class
     )
 
+    val PERMISSION_CONTROL_PROTO = PermissionValidator(
+        "PROTO_CONTROL",
+        "Prototípusok testreszabása",
+        component = ApplicationComponent::class
+    )
+
+    val PERMISSION_CONTROL_CONFERENCE = PermissionValidator(
+        "CONFERENCE_CONTROL",
+        "Konferencia testreszabása",
+        component = ApplicationComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -369,6 +383,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_EMAILS,
         PERMISSION_SEND_EMAIL,
         PERMISSION_CONTROL_ACCESS_KEYS,
+        PERMISSION_CONTROL_PROTO,
+        PERMISSION_CONTROL_CONFERENCE,
     )
 
 }
@@ -1172,6 +1188,58 @@ object StaffPermissions : PermissionGroup {
         component = EmailComponent::class
     )
 
+    /// ProtoComponent
+
+    val PERMISSION_SHOW_PROTO = PermissionValidator(
+        "PROTO_SHOW",
+        "Prototípusok megtekintése",
+        component = ProtoComponent::class
+    )
+
+    val PERMISSION_EDIT_PROTO = PermissionValidator(
+        "PROTO_EDIT",
+        "Prototípusok szerkesztése",
+        component = ProtoComponent::class
+    )
+
+    val PERMISSION_CREATE_PROTO = PermissionValidator(
+        "PROTO_CREATE",
+        "Prototípusok létrehozása",
+        component = ProtoComponent::class
+    )
+
+    val PERMISSION_DELETE_PROTO = PermissionValidator(
+        "PROTO_DELETE",
+        "Prototípusok törlése",
+        component = ProtoComponent::class
+    )
+
+    /// ConferenceComponent
+
+    val PERMISSION_SHOW_CONFERENCE = PermissionValidator(
+        "CONFERENCE_SHOW",
+        "Konferencia tartalmának megtekintése",
+        component = ConferenceComponent::class
+    )
+
+    val PERMISSION_EDIT_CONFERENCE = PermissionValidator(
+        "CONFERENCE_EDIT",
+        "Konferencia tartalmának szerkesztése",
+        component = ConferenceComponent::class
+    )
+
+    val PERMISSION_CREATE_CONFERENCE = PermissionValidator(
+        "CONFERENCE_CREATE",
+        "Konferencia tartalmának létrehozása",
+        component = ConferenceComponent::class
+    )
+
+    val PERMISSION_DELETE_CONFERENCE = PermissionValidator(
+        "CONFERENCE_DELETE",
+        "Konferencia tartalmának törlése",
+        component = ConferenceComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_SHOW_TASKS,
@@ -1316,6 +1384,16 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_EMAILS,
         PERMISSION_CREATE_EMAILS,
         PERMISSION_DELETE_EMAILS,
+
+        PERMISSION_SHOW_PROTO,
+        PERMISSION_EDIT_PROTO,
+        PERMISSION_CREATE_PROTO,
+        PERMISSION_DELETE_PROTO,
+
+        PERMISSION_SHOW_CONFERENCE,
+        PERMISSION_EDIT_CONFERENCE,
+        PERMISSION_CREATE_CONFERENCE,
+        PERMISSION_DELETE_CONFERENCE,
     )
 
 }
