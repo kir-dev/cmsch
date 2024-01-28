@@ -1262,6 +1262,13 @@ form .file-input:active::before {
     background-color: var(--dark-4);
 }
 
+form .file-name {
+    margin-left: 10px;
+    color: var(--primary-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
 form p,
 form li {
     color: var(--text-color);

@@ -7,7 +7,7 @@ data class PreviousConferences(
 
 data class Registration(
     var buttonText: String,
-    var url: String,
+    var cooltixEventId: String,
 )
 
 data class MobileApp(
@@ -20,6 +20,7 @@ data class Giveaway(
     var sectionTitle: String,
     var description: String,
     var pictureUrl: String,
+    var rules: String,
 )
 
 data class PromoVideo(

@@ -42,7 +42,7 @@ class ConferenceComponent(
 
             registrationGroup,
             registrationButtonText,
-            registrationUrl,
+            registrationCooltixEventId,
 
             mobileAppGroup,
             mobileAppDescription,
@@ -53,6 +53,7 @@ class ConferenceComponent(
             giveawaySectionTitle,
             giveawayDescription,
             giveawayPictureUrl,
+            giveawayRules,
 
             promoVideoGroup,
             promoVideoSectionTitle,
@@ -108,9 +109,9 @@ class ConferenceComponent(
         fieldName = "registration.buttonText mező", description = ""
     )
 
-    val registrationUrl = SettingProxy(componentSettingService, component,
-        "registrationUrl", "https://url.com/", type = SettingType.TEXT,
-        fieldName = "registration.url mező", description = ""
+    val registrationCooltixEventId = SettingProxy(componentSettingService, component,
+        "registrationCooltixEventId", "https://url.com/", type = SettingType.TEXT,
+        fieldName = "registration.cooltixEventId mező", description = ""
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -156,7 +157,12 @@ class ConferenceComponent(
 
     val giveawayPictureUrl = SettingProxy(componentSettingService, component,
         "giveawayPictureUrl", "https://", type = SettingType.TEXT,
-        fieldName = "giveaway.iosUrl mező", description = ""
+        fieldName = "giveaway.pictureUrl mező", description = ""
+    )
+
+    val giveawayRules = SettingProxy(componentSettingService, component,
+        "giveawayRules", "", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "giveaway.rules mező", description = ""
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -173,8 +179,9 @@ class ConferenceComponent(
     )
 
     val promoVideoYoutubeUrl = SettingProxy(componentSettingService, component,
-        "promoVideoYoutubeUrl", "https://youtube.com/xy", type = SettingType.TEXT,
-        fieldName = "promoVideo.youtubeUrl mező", description = ""
+        "promoVideoYoutubeUrl", "https://www.youtube.com/embed/xxxxxx", type = SettingType.TEXT,
+        fieldName = "promoVideo.youtubeUrl mező", description = "Beágyazható URL-nek kell lennie." +
+                " A legjobb ha a Youtubeos megosztandó iframe kódjából másolod ki!"
     )
 
     val promoVideoDescription = SettingProxy(componentSettingService, component,
