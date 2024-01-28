@@ -304,6 +304,7 @@
                                       th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
                                 </span>
                                 <div style="clear:both"></div>
+                                <span th:id="|file-name-${input.property}|" class="file-name"></span>
                                 <input type="file"
                                        class="file-input"
                                        th:name="${input.property}"
@@ -311,6 +312,17 @@
                                 />
                                 <span class="note" th:text="${input.description}"></span>
                                 <img th:src="|${input.rawValue}|" />
+                                <script th:inline="javascript">
+                                    let id = /*[[${input.property}]]*/ '';
+                                    document.getElementById(id).addEventListener('change', function() {
+                                        let fileNameSpan = document.getElementById(`file-name-${id}`);
+                                        if (this.files.length > 0) {
+                                            fileNameSpan.textContent = this.files[0].name;
+                                        } else {
+                                            fileNameSpan.textContent = '';
+                                        }
+                                    });
+                                </script>
                             </div>
 
                             <div th:if="${input.type.name() == 'DATE_TIME'}" class="field-group" th:id="|_${input.property}|">

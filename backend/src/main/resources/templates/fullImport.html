@@ -51,7 +51,10 @@
                       method="post"
                       enctype="multipart/form-data">
 
-                    <label for="file">Importálás fájlból</label>
+                    <label for="file">
+                        Importálás fájlból
+                        <span id="file-name" class="file-name"></span>
+                    </label>
                     <input type="file" class="file-input" name="file" id="file" /><br />
 
                     <div class="button-group">
@@ -60,6 +63,16 @@
                             <ins>IMPORTÁLÁS</ins>
                         </button>
                     </div>
+                    <script>
+                        document.getElementById('file').addEventListener('change', function() {
+                            let fileNameSpan = document.getElementById('file-name');
+                            if (this.files.length > 0) {
+                                fileNameSpan.textContent = this.files[0].name;
+                            } else {
+                                fileNameSpan.textContent = '';
+                            }
+                        });
+                    </script>
                 </form>
             </div>
 

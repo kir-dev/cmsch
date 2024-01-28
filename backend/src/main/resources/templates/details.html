@@ -680,6 +680,7 @@
                                        th:text="${input.second.label}">
                                 </label>
                                 <div style="clear: both"></div>
+                                <span th:id="|file-name-${iter.index}|" class="file-name"></span>
                                 <input type="file"
                                        class="file-input"
                                        th:name="|file${input.second.fileId}|"
@@ -687,6 +688,18 @@
                                        th:disabled="${!input.second.enabled || readOnly}"
                                        th:unless="${entityMode}"
                                 />
+
+                                <script th:inline="javascript">
+                                    let id = /*[[${iter.index}]]*/ '';
+                                    document.getElementById(`input${id}`).addEventListener('change', function() {
+                                        let fileNameSpan = document.getElementById(`file-name-${id}`);
+                                        if (this.files.length > 0) {
+                                            fileNameSpan.textContent = this.files[0].name;
+                                        } else {
+                                            fileNameSpan.textContent = '';
+                                        }
+                                    });
+                                </script>
 
                                 <object th:if="${input.second.fileType == 'image' && (editMode || duplicateMode)}" th:remove="tag">
                                     <object th:unless="${input.first.get(data) == null || input.first.get(data) == ''}" th:remove="tag">

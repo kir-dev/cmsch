@@ -52,13 +52,27 @@
                     </div>
 
                     <div class="field-group">
-                        <label for="imageField">Fájl</label>
+                        <label for="imageField">
+                            Fájl
+                            <span id="file-name" class="file-name"></span>
+                        </label>
                         <div style="clear: both"></div>
                         <input type="file"
                                class="file-input"
                                name="file"
                                id="imageField"
                         />
+
+                        <script>
+                            document.getElementById('imageField').addEventListener('change', function() {
+                                let fileNameSpan = document.getElementById('file-name');
+                                if (this.files.length > 0) {
+                                    fileNameSpan.textContent = this.files[0].name;
+                                } else {
+                                    fileNameSpan.textContent = '';
+                                }
+                            });
+                        </script>
                     </div>
 
                     <div class="button-group">

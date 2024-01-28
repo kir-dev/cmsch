@@ -23,7 +23,7 @@ class ConferenceApiController(
             ),
             registration = Registration(
                 buttonText = conferenceComponent.registrationButtonText.getValue(),
-                url = conferenceComponent.registrationUrl.getValue(),
+                cooltixEventId = conferenceComponent.registrationCooltixEventId.getValue(),
             ),
             mobilApp = MobileApp(
                 description = conferenceComponent.mobileAppDescription.getValue(),
@@ -34,6 +34,7 @@ class ConferenceApiController(
                 sectionTitle = conferenceComponent.giveawaySectionTitle.getValue(),
                 description = conferenceComponent.giveawayDescription.getValue(),
                 pictureUrl = conferenceComponent.giveawayPictureUrl.getValue(),
+                rules = conferenceComponent.giveawayRules.getValue(),
             ),
             promoVideo = PromoVideo(
                 sectionTitle = conferenceComponent.promoVideoSectionTitle.getValue(),
