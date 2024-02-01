@@ -43,7 +43,7 @@ data class ConferencePresentationEntity(
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 128, order = 1, label = "Slug", interpreter = INTERPRETER_PATH)
+    @property:GenerateInput(maxLength = 128, order = 1, label = "Slug")
     @property:GenerateOverview(columnName = "Slug", order = 2)
     @property:ImportFormat(ignore = false)
     var slug: String = "",
