@@ -24,7 +24,7 @@ data class ConferencePresenterEntity(
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 128, order = 1, label = "Név", interpreter = INTERPRETER_PATH)
+    @property:GenerateInput(maxLength = 128, order = 1, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 1)
     @property:ImportFormat(ignore = false)
     var name: String = "",
