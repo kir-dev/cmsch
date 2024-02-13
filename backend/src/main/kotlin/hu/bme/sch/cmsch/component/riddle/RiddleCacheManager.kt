@@ -29,7 +29,6 @@ open class RiddleCacheManager(
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
     private val riddlePersistenceService: RiddlePersistenceService,
-    private val riddleComponent: RiddleComponent,
     private val config: StartupPropertyConfig
 ) {
 
@@ -110,11 +109,6 @@ open class RiddleCacheManager(
         userLocks.forEach { (_, lock) -> lock.lock() }
         log.info("Got all locks for 'periodicSave'")
         try {
-            println(categories)
-            println(findAllCategoriesByVisibleTrueAndMinRoleAtMost(RoleType.ADMIN))
-            println(findAllCategoriesByVisibleTrueAndMinRoleAtMost(RoleType.GUEST))
-            println(mappings)
-            println(riddles)
             riddlePersistenceService.saveAllRiddleMapping(lazyPersists)
             lazyPersists.clear()
         } finally {
