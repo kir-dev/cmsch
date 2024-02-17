@@ -1,5 +1,4 @@
-import { Button } from '@chakra-ui/button'
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/modal'
+import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import GetSomeHelp from '../assets/stop-it-get-some-help-just-stop.gif'
 
 type Props = {
@@ -15,7 +14,7 @@ export const StopItModal = ({ isOpen, onClose }: Props) => {
         <ModalHeader>Egy kicsit lassabban!</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <img src={GetSomeHelp} />
+          <img alt="Stop spamming, get some help!" src={GetSomeHelp} />
         </ModalBody>
 
         <ModalFooter>
