@@ -10,6 +10,7 @@ import IndexPage from './pages/index/index.page'
 import { l } from './util/language'
 
 export function App() {
+  console.log('hello world')
   return (
     <CountdownPage>
       <CmschLayout>
