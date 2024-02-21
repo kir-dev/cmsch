@@ -7,11 +7,15 @@ import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserOrNull
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatusCode
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 import java.util.*
 
 @RestController
@@ -55,5 +59,19 @@ class ApplicationApiController(
 
     private fun appComponentFields() =
         mapOf(applicationComponent.defaultComponent.property to applicationComponent.defaultComponent.getValue())
+
+    @GetMapping("/app/font-display.css")
+    fun getDisplayFont(): ResponseEntity<Any> {
+        val headers = HttpHeaders()
+        headers.location = URI.create(stylingComponent.displayFontCdn.rawValue)
+        return ResponseEntity.status(HttpStatusCode.valueOf(303)).headers(headers).build()
+    }
+
+    @GetMapping("/app/font-main.css")
+    fun getMainFont(): ResponseEntity<Any> {
+        val headers = HttpHeaders()
+        headers.location = URI.create(stylingComponent.mainFontCdn.rawValue)
+        return ResponseEntity.status(HttpStatusCode.valueOf(303)).headers(headers).build()
+    }
 
 }
