@@ -3,7 +3,6 @@ import { useConfigContext } from '../config/ConfigContext'
 import { ChakraProvider, useColorMode } from '@chakra-ui/react'
 import { PropsWithChildren, useMemo } from 'react'
 import { mode } from '@chakra-ui/theme-tools'
-import { Helmet } from 'react-helmet-async'
 import { getColorShadesForColor } from '../../../util/core-functions.util'
 
 export const ThemeConfig = ({ children }: PropsWithChildren) => {
@@ -38,22 +37,12 @@ export const ThemeConfig = ({ children }: PropsWithChildren) => {
         }
       })
       customTheme.fonts = {
-        heading: "'Roboto Condensed', sans-serif",
-        body: "'Roboto', sans-serif",
+        heading: config.components.style.displayFontName,
+        body: config.components.style.mainFontName,
         mono: 'monospace'
       }
     }
     return customTheme
   }, [config])
-  return (
-    <ChakraProvider theme={chakraConfig}>
-      {(config?.components.style.mainFontCdn || config?.components.style.displayFontCdn) && (
-        <Helmet>
-          <link href={config?.components.style.displayFontCdn} rel="stylesheet" />
-          <link href={config?.components.style.mainFontCdn} rel="stylesheet" />
-        </Helmet>
-      )}
-      {children}
-    </ChakraProvider>
-  )
+  return <ChakraProvider theme={chakraConfig}>{children}</ChakraProvider>
 }
