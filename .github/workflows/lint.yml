@@ -32,7 +32,7 @@ jobs:
       run: corepack enable
 
     - name: Set Yarn version
-      run: yarn set version 4
+      run: yarn set version 3.8.0
 
     - name: Install Node.js dependencies
       run: yarn install --immutable
