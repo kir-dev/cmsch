@@ -35,7 +35,7 @@ jobs:
       run: yarn set version 4
 
     - name: Install Node.js dependencies
-      run: yarn install
+      run: yarn install --immutable
 
     - name: ESLint
       run: yarn lint:eslint
