@@ -752,6 +752,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             }
             after = dataSource.count()
         }
+        onImported()
         model.addAttribute("importedCount", after - before)
         val action = "imported $view (new entities: ${after - before})"
         auditLog.create(user, component.component, action)
@@ -791,6 +792,10 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     open fun onPreEdit(actualEntity: T): T {
         // Overridden when notification is required
         return actualEntity
+    }
+
+    open fun onImported() {
+        // Overridden when notification is required
     }
 
     open fun filterOverview(user: CmschUser, rows: Iterable<T>): Iterable<T> {
