@@ -29,7 +29,6 @@ open class RiddleCacheManager(
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
     private val riddlePersistenceService: RiddlePersistenceService,
-    private val riddleComponent: RiddleComponent,
     private val config: StartupPropertyConfig
 ) {
 
