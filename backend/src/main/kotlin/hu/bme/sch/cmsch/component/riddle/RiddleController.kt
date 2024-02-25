@@ -62,5 +62,9 @@ class RiddleController(
         riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
     }
 
+    override fun onImported() {
+        riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
+    }
+
 }
 
