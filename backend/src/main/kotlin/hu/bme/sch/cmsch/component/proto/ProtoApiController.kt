@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.proto
 
 import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,17 +17,22 @@ class ProtoApiController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/**")
-    fun getProtoEntity(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<String> {
+    fun getProtoEntity(request: HttpServletRequest): ResponseEntity<String> {
         val dynamicPath = extractDynamicPath(request)
             ?: return ResponseEntity.notFound().build()
 
         val protoEntity = protoService.getProtoEntityByPath(dynamicPath)
         return if (protoEntity != null) {
-            log.info("Proto found with path {} response type {} code {}",
-                dynamicPath, protoEntity.mimeType, protoEntity.statusCode)
+            log.info(
+                "Proto found with path {} response type {} code {}",
+                dynamicPath, protoEntity.mimeType, protoEntity.statusCode
+            )
 
-            response.contentType = protoEntity.mimeType
-            ResponseEntity.status(protoEntity.statusCode).body(protoEntity.responseValue)
+            val headers = HttpHeaders()
+            if (protoEntity.mimeType.isNotBlank()) {
+                headers.set("Content-Type", protoEntity.mimeType)
+            }
+            ResponseEntity.status(protoEntity.statusCode).headers(headers).body(protoEntity.responseValue)
         } else {
             log.info("No proto found with path {}, returning NOT_FOUND", dynamicPath)
             ResponseEntity.notFound().build()
