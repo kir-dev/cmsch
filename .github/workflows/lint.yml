@@ -20,22 +20,25 @@ jobs:
         working-directory: ./frontend
 
     steps:
-    - name: Check out Git repository
-      uses: actions/checkout@v3
+      - name: Check out Git repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js 20
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-    - name: Install Node.js dependencies
-      run: yarn install
+      - name: Set yarn version
+        run: yarn set version 1.22.17
 
-    - name: ESLint
-      run: yarn lint:eslint
+      - name: Install Node.js dependencies
+        run: yarn install --frozen-lockfile
 
-    - name: Prettier
-      run: yarn lint:eslint
+      - name: ESLint
+        run: yarn lint:eslint
 
-    - name: TSC
-      run: yarn lint:typescript
+      - name: Prettier
+        run: yarn lint:eslint
+
+      - name: TSC
+        run: yarn lint:typescript
