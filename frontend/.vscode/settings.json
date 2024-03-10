@@ -9,8 +9,8 @@
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.formatDocument": true,
-    "source.fixAll.eslint": true
+    "source.formatDocument": "explicit",
+    "source.fixAll.eslint": "explicit"
   },
   "typescript.enablePromptUseWorkspaceTsdk": true
 }
