@@ -20,9 +20,9 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.readAsset
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -116,27 +116,26 @@ class TokenAdminTokensByUsersOfGroupsController(
         val document = Document(pdfDoc, PageSize.A4)
         document.setMargins(20f, 40f, 20f, 40f)
 
-        val kirdevLogo: Image = Image(ImageDataFactory.create(
-            ClassPathResource("/static/images/kirdev-logo.png").inputStream.readAllBytes()
-        )).scaleToFit(70f, 70f)
-
-        val ssslLogo: Image = Image(ImageDataFactory.create(
-            ClassPathResource("/static/images/sssl-logo.png").inputStream.readAllBytes()
-        )).scaleToFit(70f, 70f)
-
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
         val header = Paragraph()
-            .add(ssslLogo)
-            // FIXME: place it into a setting
-            .add(Paragraph("GÓLYAKÖRTE 2023\nJELENLÉTI - ${group.name}")
+        readAsset(tokenComponent.reportLogo.getValue().replace("/cdn/", "/")).map {
+            Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
+        }.ifPresent(header::add)
+
+        val eventName = tokenComponent.reportTitle.getValue()
+        header.add(Paragraph("${eventName}\nJELENLÉTI - ${group.name}")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE)
                 .setFont(font)
                 .setFontSize(28f)
                 .setMarginLeft(40f)
                 .setMarginRight(40f))
-            .add(kirdevLogo)
-            .setTextAlignment(TextAlignment.CENTER)
+
+        readAsset("/static/images/kirdev-logo.png").map {
+            Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
+        }.ifPresent(header::add)
+
+        header.setTextAlignment(TextAlignment.CENTER)
             .setVerticalAlignment(VerticalAlignment.MIDDLE)
             .setMarginBottom(20f)
         document.add(header)
@@ -246,7 +245,8 @@ class TokenAdminTokensByUsersOfGroupsController(
             document.add(userTable)
         }
 
-        document.add(Paragraph("Az exportot az SSSL megbízásából a Kir-Dev generálta a résztvevők hozzájárulásával!\nkir-dev@sch.bme.hu | https://kir-dev.sch.bme.hu")
+        val footerText = tokenComponent.reportFooterText.getValue()
+        document.add(Paragraph("${footerText}\nkir-dev@sch.bme.hu | https://kir-dev.sch.bme.hu")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font)
             .setFontSize(12f)
