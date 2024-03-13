@@ -40,7 +40,12 @@ class TokenComponent(
             styleGroup,
             showCollector,
             defaultTokenIcon,
-            defaultTestTokenIcon
+            defaultTestTokenIcon,
+
+            reportGroup,
+            reportTitle,
+            reportLogo,
+            reportFooterText
         )
     }
 
@@ -121,6 +126,30 @@ class TokenComponent(
     val defaultTestTokenIcon = SettingProxy(componentSettingService, component,
         "defaultTestIcon", "rocket", type = SettingType.TEXT,
         fieldName = "Alapértelmezett test ikon", description = "Azoknak a teszt tokeneknek ahova nincs egyedi megadva (0-100 egész szám)"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val reportGroup = SettingProxy(componentSettingService, component,
+        "styleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
+        fieldName = "Jelenléti ív",
+        description = "Jelenléti ív beállítások"
+    )
+
+    final val reportTitle = SettingProxy(componentSettingService, component,
+        "reportTitle", "GÓLYAKÖRTE 2025",
+        fieldName = "Jelenléti ív címe", description = "Ez lesz a jelenléti ív címe"
+    )
+
+    final val reportLogo = SettingProxy(componentSettingService, component,
+        "reportLogo", "/cdn/manifest/report-logo.png",
+        fieldName = "Jelenléti ív logója", description = "Ez lesz a jelenléti íven megjelenített logó (csak PNG és JPG jó)",
+        type = SettingType.IMAGE,
+    )
+
+    final val reportFooterText = SettingProxy(componentSettingService, component,
+        "reportFooterText", "Az exportot a Kir-Dev generálta a résztvevők hozzájárulásával!",
+        fieldName = "Jelenléti footer szöveg", description = "Ez lesz a jelenléti ív footerében"
     )
 
 }
