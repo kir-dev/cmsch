@@ -102,6 +102,20 @@ data class TokenEntity(
     @property:ImportFormat(ignore = false)
     var displayDescription: String = "",
 
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @Column(nullable = true)
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 11, label = "Scannelhető innentől")
+    @property:GenerateOverview(columnName = "Ettől", order = 5, renderer = OVERVIEW_TYPE_DATE)
+    @property:ImportFormat(ignore = false, type = IMPORT_LONG)
+    var availableFrom: Long? = null,
+
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @Column(nullable = true)
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Scannelhető eddig")
+    @property:GenerateOverview(columnName = "Eddig", order = 6, renderer = OVERVIEW_TYPE_DATE)
+    @property:ImportFormat(ignore = false, type = IMPORT_LONG)
+    var availableUntil: Long? = null,
+
 ): ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
