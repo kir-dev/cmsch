@@ -105,6 +105,7 @@
 <script th:inline="javascript">
     function timestampFormatter(cell, formatterParams, onRendered) {
         const value = cell.getValue();
+        if (!value) return "-";
         const dt = luxon.DateTime.fromSeconds(value);
         return dt.toFormat("yyyy-MM-dd HH:mm");
     }
