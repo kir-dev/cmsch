@@ -5,6 +5,7 @@ enum class TokenCollectorStatus {
     ALREADY_SCANNED,
     WRONG,
     CANNOT_COLLECT,
+    INACTIVE,
     QR_FIGHT_LEVEL_NOT_OPEN,
     QR_FIGHT_LEVEL_LOCKED,
     QR_FIGHT_TOWER_LOCKED,
