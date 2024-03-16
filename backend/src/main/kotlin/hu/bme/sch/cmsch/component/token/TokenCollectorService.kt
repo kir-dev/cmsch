@@ -16,6 +16,7 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -153,7 +154,7 @@ open class TokenCollectorService(
         clock.inRange(
             tokenEntity.availableFrom ?: 0,
             tokenEntity.availableUntil ?: Long.MAX_VALUE,
-            clock.getTimeInSeconds(),
+            Instant.now().epochSecond,
         )
 
 
