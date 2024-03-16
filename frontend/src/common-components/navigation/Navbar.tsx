@@ -37,12 +37,12 @@ export const Navbar = () => {
             aria-label="Navigáció megnyitása"
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+        <Flex justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
             {logoUrl ? (
               <Image maxH={16} maxW={28} src={logoUrl} alt={config?.components.app.siteName} />
             ) : (
-              <Heading>{config?.components.app.siteName}</Heading>
+              <Heading my={2}>{config?.components.app.siteName}</Heading>
             )}
           </Link>
         </Flex>
