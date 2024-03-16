@@ -103,14 +103,14 @@ data class TokenEntity(
     var displayDescription: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "BIGINT DEFAULT NULL")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 11, label = "Scannelhető innentől")
     @property:GenerateOverview(columnName = "Ettől", order = 5, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, type = IMPORT_LONG)
     var availableFrom: Long? = null,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "BIGINT DEFAULT NULL")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Scannelhető eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 6, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, type = IMPORT_LONG)
