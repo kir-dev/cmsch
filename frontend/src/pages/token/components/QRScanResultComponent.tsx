@@ -22,6 +22,8 @@ export const QRScanResultComponent = ({ response, isError }: QrScanResultProps) 
           return <WarningTwoIcon color="yellow.500" boxSize="120px" />
         case ScanStatus.CANNOT_COLLECT:
           return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+        case ScanStatus.INACTIVE:
+          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
         case ScanStatus.QR_FIGHT_LEVEL_LOCKED:
           return <InfoIcon color="orange.500" boxSize="120px" />
         case ScanStatus.QR_FIGHT_LEVEL_NOT_OPEN:

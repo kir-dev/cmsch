@@ -40,7 +40,7 @@ open class TokenCollectorService(
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
             if (!isTokenActive(tokenEntity)) {
-                return TokenSubmittedView(TokenCollectorStatus.CANNOT_COLLECT, null, null, null)
+                return TokenSubmittedView(TokenCollectorStatus.INACTIVE, null, null, null)
             }
             val userEntity = userService.getById(user.internalId)
             return qrFightService
@@ -67,7 +67,7 @@ open class TokenCollectorService(
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
             if (!isTokenActive(tokenEntity)) {
-                return TokenSubmittedView(TokenCollectorStatus.CANNOT_COLLECT, null, null, null)
+                return TokenSubmittedView(TokenCollectorStatus.INACTIVE, null, null, null)
             }
             return qrFightService
                 .filter { qrFightComponent.map { it.enabled.isValueTrue() }.orElse(false) }
@@ -149,11 +149,13 @@ open class TokenCollectorService(
         )
     }
 
-    private fun isTokenActive(tokenEntity: TokenEntity): Boolean {
-        val now = clock.getTimeInSeconds()
-        return (tokenEntity.availableFrom == null || tokenEntity.availableFrom!! <= now) &&
-                (tokenEntity.availableUntil == null || tokenEntity.availableUntil!! >= now)
-    }
+    private fun isTokenActive(tokenEntity: TokenEntity): Boolean =
+        clock.inRange(
+            tokenEntity.availableFrom ?: 0,
+            tokenEntity.availableUntil ?: Long.MAX_VALUE,
+            clock.getTimeInSeconds(),
+        )
+
 
     private fun fetchTotalTokenCount(tokenCategoryToDisplay: String) =
         if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
