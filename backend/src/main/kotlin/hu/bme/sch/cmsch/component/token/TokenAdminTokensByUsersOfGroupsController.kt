@@ -145,20 +145,19 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(20f))
 
+        val description = tokenComponent.reportDescription.getValue()
         val minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE
         val preferredTokenType = tokenComponent.collectRequiredType.getValue()
         val signed = tokensByUsers
             .filter { it.value.count { t -> preferredTokenType == ALL_TOKEN_TYPE || t.token?.type == preferredTokenType } >= minTokenToComplete }
             .count()
-        document.add(Paragraph("A hallgatók a rendezvény alatt ellátogathattak a Schönherz öntevékeny köreinek " +
-                "standjaihoz, ahol miután megismerkedtek az adott körrel, beolvashattak egy-egy QR kódot. Ezáltal digitális " +
-                "pecséteket szerezhettek. A tanköri jelenléthez szükséges pecsétek száma: ")
+        document.add(Paragraph("$description A tanköri jelenléthez szükséges pecsétek száma: ")
             .add(Text("$minTokenToComplete db").setUnderline())
             .add(". A tankörből ")
             .add(Text("${tokensByUsers.count{ it.value.isNotEmpty() }} fő").setUnderline())
             .add(" legalább egy pecséttel rendelkezik, és ")
             .add(Text("$signed fő").setUnderline())
-            .add(" szerezte meg a jelenlétet. A rendezvényen a hallgatók megoldhattak logikai és kreatív feladatokat is.")
+            .add(" szerezte meg a jelenlétet.")
             .setTextAlignment(TextAlignment.JUSTIFIED)
             .setMarginBottom(20f)
             .setFont(font)
