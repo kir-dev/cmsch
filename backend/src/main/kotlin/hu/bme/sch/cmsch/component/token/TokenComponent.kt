@@ -44,6 +44,7 @@ class TokenComponent(
 
             reportGroup,
             reportTitle,
+            reportDescription,
             reportLogo,
             reportFooterText
         )
@@ -139,6 +140,13 @@ class TokenComponent(
     final val reportTitle = SettingProxy(componentSettingService, component,
         "reportTitle", "GÓLYAKÖRTE 2025",
         fieldName = "Jelenléti ív címe", description = "Ez lesz a jelenléti ív címe"
+    )
+
+    final val reportDescription = SettingProxy(componentSettingService, component,
+        "reportDescription", "A hallgatók a rendezvény alatt ellátogathattak a Schönherz öntevékeny köreinek " +
+                "standjaihoz, ahol miután megismerkedtek az adott körrel, beolvashattak egy-egy QR kódot. Ezáltal digitális " +
+                "pecséteket szerezhettek.  A rendezvényen a hallgatók megoldhattak logikai és kreatív feladatokat is.",
+        fieldName = "Jelenléti ív leírás", description = "Jelenléti ív leírás a cím alatti bekezdésben", type = SettingType.LONG_TEXT
     )
 
     final val reportLogo = SettingProxy(componentSettingService, component,
