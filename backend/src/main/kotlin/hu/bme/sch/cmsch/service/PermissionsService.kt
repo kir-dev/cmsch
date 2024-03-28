@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.component.debt.DebtComponent
 import hu.bme.sch.cmsch.component.email.EmailComponent
 import hu.bme.sch.cmsch.component.event.EventComponent
 import hu.bme.sch.cmsch.component.form.FormComponent
+import hu.bme.sch.cmsch.component.gallery.GalleryComponent
 import hu.bme.sch.cmsch.component.home.HomeComponent
 import hu.bme.sch.cmsch.component.impressum.ImpressumComponent
 import hu.bme.sch.cmsch.component.key.AccessKeyComponent
@@ -123,6 +124,12 @@ object ControlPermissions : PermissionGroup {
         "EVENT_CONTROL",
         "Események komponens testreszabása",
         component = EventComponent::class
+    )
+
+    val PERMISSION_CONTROL_GALLERY = PermissionValidator(
+        "GALLERY_CONTROL",
+        "Galéria komponens testreszabása",
+        component = GalleryComponent::class
     )
 
     val PERMISSION_CONTROL_DEBTS = PermissionValidator(
@@ -350,6 +357,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
         PERMISSION_CONTROL_EVENTS,
+        PERMISSION_CONTROL_GALLERY,
         PERMISSION_CONTROL_DEBTS,
         PERMISSION_CONTROL_RIDDLE,
         PERMISSION_CONTROL_TOKEN,
@@ -677,6 +685,32 @@ object StaffPermissions : PermissionGroup {
         "EVENT_DELETE",
         "Események törlése",
         component = EventComponent::class
+    )
+
+    /// GalleryComponent
+
+    val PERMISSION_SHOW_GALLERY = PermissionValidator(
+        "GALLERY_SHOW",
+        "Galéria megtekintése",
+        component = GalleryComponent::class
+    )
+
+    val PERMISSION_EDIT_GALLERY = PermissionValidator(
+        "GALLERY_EDIT",
+        "Galéria szerkesztése",
+        component = GalleryComponent::class
+    )
+
+    val PERMISSION_CREATE_GALLERY = PermissionValidator(
+        "GALLERY_CREATE",
+        "Kép létrehozása a Galériában",
+        component = GalleryComponent::class
+    )
+
+    val PERMISSION_DELETE_GALLERY = PermissionValidator(
+        "GALLERY_DELETE",
+        "Kép törlése a Galériában",
+        component = GalleryComponent::class
     )
 
     /// TokenComponent
@@ -1291,6 +1325,11 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_EVENTS,
         PERMISSION_CREATE_EVENTS,
         PERMISSION_DELETE_EVENTS,
+
+        PERMISSION_SHOW_GALLERY,
+        PERMISSION_EDIT_GALLERY,
+        PERMISSION_CREATE_GALLERY,
+        PERMISSION_DELETE_GALLERY,
 
         PERMISSION_SHOW_TOKENS,
         PERMISSION_EDIT_TOKENS,

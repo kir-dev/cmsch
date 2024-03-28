@@ -1,0 +1,130 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="~{layout4 :: head(${context.siteName})}">
+</head>
+<body>
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}">
+        </div>
+
+        <div class="content">
+            <h1 class="narrow">
+                <ins>Fájlfeltöltés</ins>
+                <span class="material-symbols-outlined color-yellow star-button"
+                      th:class="|material-symbols-outlined color-yellow star-button ${userContext.favoriteMenus.contains('Fájlfeltöltés') ? 'favorite' : ''}|"
+                      id="star-page"
+                      data-star="Fájlfeltöltés"
+                      onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>
+            </h1>
+
+            <div class="card wide-false" th:if="${uploaded != null && uploaded != 'no'}">
+                <h4>Fájl feltöltve</h4>
+
+                <div class="desc">
+                    A fájl url-je: <b th:text="|${baseUrl}cdn/public/${uploaded}|">myFile.png</b><br/>
+                </div>
+
+                <div class="button-group">
+                    <a href="#" class="btn btn-primary"
+                       onclick="copyToClipboard(this.getAttribute('data-copy')); return false"
+                       th:data-copy="|${baseUrl}cdn/public/${uploaded}|">
+                        <span class="material-symbols-outlined regular">content_copy</span>
+                        <ins>MÁSOLÁS</ins>
+                    </a>
+
+                    <a th:href="|${baseUrl}cdn/public/${uploaded}|" class="btn" target="_blank">
+                        <span class="material-symbols-outlined regular">open_in_new</span>
+                        <ins>MEGNYITÁS</ins>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card wide-false">
+                <h4>Új fájl feltöltése</h4>
+                <form th:action="|@{/admin/control}/upload-photo|" method="post" enctype="multipart/form-data">
+
+                    <div class="field-group">
+                        <label for="name">Név</label>
+                        <div style="clear: both"></div>
+                        <input type="text" name="name" id="name" autocomplete="off"/>
+                    </div>
+
+                    <div class="field-group">
+                        <div>Kiemelt</div>
+                        <div style="clear: both"></div>
+                        <label class="switch" for="highlighted">
+                            <input type="checkbox" name="highlighted" id="highlighted"/>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="imageField">
+                            Fájl
+                            <span id="file-name" class="file-name"></span>
+                        </label>
+                        <div style="clear: both"></div>
+                        <input type="file"
+                               class="file-input"
+                               name="file"
+                               id="imageField"
+                        />
+
+                        <script>
+                          document.getElementById('imageField').addEventListener('change', function () {
+                            let fileNameSpan = document.getElementById('file-name');
+                            if (this.files.length > 0) {
+                              fileNameSpan.textContent = this.files[0].name;
+                            } else {
+                              fileNameSpan.textContent = '';
+                            }
+                          });
+                        </script>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined regular">upload</span>
+                            <ins>Feltöltés</ins>
+                        </button>
+                        <a th:href="@{/admin/control/files/view/public}" class="btn btn-secondary">
+                            <span class="material-symbols-outlined regular">folder_open</span>
+                            <ins>Fájlok megtekintése</ins>
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card wide-false" th:if="${user.isAdmin()}">
+                <h4>Jogosultságok</h4>
+
+                <div class="options">
+                    <div class="option">
+                        <div><span class="material-symbols-outlined">local_police</span></div>
+                        <div>
+                            <h5 th:text="${permission}">PERMISSION_NAME</h5>
+                            <span>Ez a jog szükséges ennek az oldalnak az módosításához és olvasásához.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  function copyToClipboard(str) {
+    const el = document.createElement('textarea');
+    el.value = str;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  }
+</script>
+
+</body>
+</html>
