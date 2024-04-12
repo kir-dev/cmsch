@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.itextpdf.io.image.ImageDataFactory
+import com.itextpdf.kernel.font.PdfFont
 import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.kernel.pdf.PdfDocument
@@ -15,6 +16,7 @@ import hu.bme.sch.cmsch.component.riddle.RiddleBusinessLogicService
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
+import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
@@ -96,6 +98,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     )
 ) {
 
+    private val supportedColumns = listOf("stamp", "attendance", "riddle", "achievement")
     private val payPermission = ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 
     @ResponseBody
@@ -163,48 +166,22 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(12f))
 
-        val table: Table = Table(UnitValue.createPercentArray(floatArrayOf(40f, 15f, 15f, 15f)))
+        val columns = tokenComponent.reportSummaryTableColumns.getValue().split(",")
+            .map { it.trim().lowercase() }
+            .filter { supportedColumns.contains(it) }
+
+        val nameHeaderPercent = 40f
+        val headerPercents = ArrayList<Float>().also {
+            it.add(nameHeaderPercent)
+            it.addAll(columns.map { (100f - nameHeaderPercent) / columns.size })
+        }
+
+        val table: Table = Table(UnitValue.createPercentArray(headerPercents.toFloatArray()))
             .useAllAvailableWidth()
         table.setMarginBottom(40f)
 
-        table.addHeaderCell(Cell().add(Paragraph("NÉV")
-            .setTextAlignment(TextAlignment.CENTER)
-            .setFont(font).setFontSize(12f)))
-        table.addHeaderCell(Cell().add(Paragraph("PECSÉT")
-            .setTextAlignment(TextAlignment.CENTER)
-            .setFont(font).setFontSize(12f)))
-        table.addHeaderCell(Cell().add(Paragraph("JELENLÉT")
-            .setTextAlignment(TextAlignment.CENTER)
-            .setFont(font).setFontSize(12f)))
-        table.addHeaderCell(Cell().add(Paragraph("RIDDLE")
-            .setTextAlignment(TextAlignment.CENTER)
-            .setFont(font).setFontSize(12f)))
-        table.addHeaderCell(Cell().add(Paragraph("REJTVÉNYEK")
-            .setTextAlignment(TextAlignment.CENTER)
-            .setFont(font).setFontSize(12f)))
-
-        tokensByUsers.forEach { user ->
-            table.addCell(Cell().add(Paragraph(user.key.fullName)
-                .setPaddingLeft(4f)
-                .setFont(font).setFontSize(12f)))
-            val tokens = user.value.count { preferredTokenType == ALL_TOKEN_TYPE || it.token?.type == preferredTokenType }
-            table.addCell(Cell().add(Paragraph("$tokens db")
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFont(font).setFontSize(12f)))
-            table.addCell(Cell().add(Paragraph(
-                if (tokens >= minTokenToComplete) "igen" else "nem")
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFont(font).setFontSize(12f)))
-
-            val riddles = riddleService.map { it.getCompletedRiddleCountUser(user.key) }.orElse(0)
-            table.addCell(Cell().add(Paragraph("$riddles db")
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFont(font).setFontSize(12f)))
-            val achievemnts = tasksService.map{ it.getSubmittedTasksForUser(user.key) }.orElse(0)
-            table.addCell(Cell().add(Paragraph("$achievemnts db")
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFont(font).setFontSize(12f)))
-        }
+        addSummaryTableHeaders(table, font, columns)
+        tokensByUsers.forEach { addSummaryTableRow(it, table, font, columns, minTokenToComplete, preferredTokenType) }
         document.add(table)
 
         document.add(Paragraph("Pecsétek hallgatónként".uppercase())
@@ -254,6 +231,65 @@ class TokenAdminTokensByUsersOfGroupsController(
         document.close()
         response.addHeader("Content-Disposition", "attachment; filename=jelenleti-export-${group.name}.pdf")
         return ResponseEntity.ok(output.toByteArray())
+    }
+
+    private fun addSummaryTableRow(
+        user: Map.Entry<UserEntity, List<TokenPropertyEntity>>,
+        table: Table,
+        font: PdfFont?,
+        columns: List<String>,
+        minTokenToComplete: Int,
+        preferredTokenType: String
+    ) {
+        table.addCell(Cell().add(Paragraph(user.key.fullName)
+            .setPaddingLeft(4f)
+            .setFont(font).setFontSize(12f)))
+        val tokens = user.value.count { preferredTokenType == ALL_TOKEN_TYPE || it.token?.type == preferredTokenType }
+        columns.forEach {
+            when (it) {
+                "stamp" -> table.addCell(Cell().add(Paragraph("$tokens db")
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setFont(font).setFontSize(12f)))
+                "attendance" -> table.addCell(Cell().add(Paragraph(
+                    if (tokens >= minTokenToComplete) "igen" else "nem")
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setFont(font).setFontSize(12f)))
+                "riddle"-> {
+                    val riddles = riddleService.map { it.getCompletedRiddleCountUser(user.key) }.orElse(0)
+                    table.addCell(Cell().add(Paragraph("$riddles db")
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setFont(font).setFontSize(12f)))
+                }
+                "achievement"-> {
+                    val achievements = tasksService.map{ it.getSubmittedTasksForUser(user.key) }.orElse(0)
+                    table.addCell(Cell().add(Paragraph("$achievements db")
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setFont(font).setFontSize(12f)))
+                }
+            }
+        }
+    }
+
+    private fun addSummaryTableHeaders(table: Table, font: PdfFont, columns: List<String>) {
+        table.addHeaderCell(Cell().add(Paragraph("NÉV")
+            .setTextAlignment(TextAlignment.CENTER)
+            .setFont(font).setFontSize(12f)))
+        columns.forEach {
+            when (it) {
+                "stamp" -> table.addHeaderCell(Cell().add(Paragraph("PECSÉT")
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setFont(font).setFontSize(12f)))
+                "attendance" -> table.addHeaderCell(Cell().add(Paragraph("JELENLÉT")
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setFont(font).setFontSize(12f)))
+                "riddle"-> table.addHeaderCell(Cell().add(Paragraph("RIDDLE")
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setFont(font).setFontSize(12f)))
+                "achievement"-> table.addHeaderCell(Cell().add(Paragraph("REJTVÉNYEK")
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setFont(font).setFontSize(12f)))
+            }
+        }
     }
 
 }

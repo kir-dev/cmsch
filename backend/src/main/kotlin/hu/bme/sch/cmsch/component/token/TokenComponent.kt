@@ -44,6 +44,7 @@ class TokenComponent(
 
             reportGroup,
             reportTitle,
+            reportSummaryTableColumns,
             reportDescription,
             reportLogo,
             reportFooterText
@@ -140,6 +141,12 @@ class TokenComponent(
     final val reportTitle = SettingProxy(componentSettingService, component,
         "reportTitle", "GÓLYAKÖRTE 2025",
         fieldName = "Jelenléti ív címe", description = "Ez lesz a jelenléti ív címe"
+    )
+
+    final val reportSummaryTableColumns = SettingProxy(componentSettingService, component,
+        "reportSummaryTableColumns", "stamp,attendance,riddle,achievement",
+        fieldName = "Riport összefoglaló táblázat oszlopai", description = "Ezek az oszlopok fognak megjelenni az összefoglaló táblázatban" +
+                ", vesszővel elválasztva kell őket megadni, lehetséges értékek: stamp,attendance,riddle,achievement"
     )
 
     final val reportDescription = SettingProxy(componentSettingService, component,
