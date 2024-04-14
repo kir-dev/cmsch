@@ -33,7 +33,7 @@ class GalleryApiController(
         ApiResponse(responseCode = "200", description = "List of photos in the gallery"),
         ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header")
     ])
-    fun events(auth: Authentication?): ResponseEntity<GalleryView> {
+    fun gallery(auth: Authentication?): ResponseEntity<GalleryView> {
         val user = auth?.getUserOrNull()
         if (!galleryComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()

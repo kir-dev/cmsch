@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service
 
 @Service
 @ConditionalOnBean(GalleryComponent::class)
-open class GalleryService(
+class GalleryService(
     private val galleryRepository: GalleryRepository
 ) {
     @Transactional
     fun savePhoto(galleryEntity: GalleryEntity) = galleryRepository.save(galleryEntity)
 
+    @Transactional
     fun fetchAllPhotos(): List<GalleryEntity> = galleryRepository.findAll()
 }
