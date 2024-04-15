@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -61,13 +62,7 @@ class PhotoUploadController(
     }
 
     @PostMapping
-    fun uploadImage(
-        model: Model,
-        auth: Authentication,
-        @RequestParam name: String,
-        @RequestParam highlighted: Boolean = false,
-        @RequestBody file: MultipartFile?,
-    ): String {
+    fun uploadImage(model: Model, auth: Authentication, @RequestParam names: List<String>, @RequestBody files: List<MultipartFile>): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
@@ -77,16 +72,21 @@ class PhotoUploadController(
             return "admin403"
         }
 
-        val originalFilename = file?.originalFilename ?: ""
-        val newName = name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
-                "_${Random().nextLong().absoluteValue.toString(36).uppercase()}" +
-                originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0)
-        file?.uploadFile("public", newName)
-
-        val fileUrl = "${applicationComponent.adminSiteUrl.getValue()}cdn/public/${newName}"
-        galleryService.savePhoto(GalleryEntity(title = name, highlighted = highlighted, url = fileUrl))
-
-        return "redirect:/admin/control/upload-photo?uploaded=${newName}"
+        if (names.size != files.size) {
+            throw IllegalArgumentException("The length of names and files does not match")
+        }
+        val newNames = mutableListOf<String>()
+        for ((file, name) in files.zip(names)) {
+            val originalFilename = file.originalFilename ?: ""
+            val newName = name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
+                    "_${Random().nextLong().absoluteValue.toString(36).uppercase()}" +
+                    originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0)
+            val fileUrl = "${applicationComponent.adminSiteUrl.getValue()}cdn/public/${newName}"
+            galleryService.savePhoto(GalleryEntity(title = name, highlighted = false, url = fileUrl))
+            file.uploadFile("public", newName)
+            newNames.add(newName)
+        }
+        return "redirect:/admin/control/upload-photo?uploaded=${newNames.joinToString(",")}"
     }
 
 }
