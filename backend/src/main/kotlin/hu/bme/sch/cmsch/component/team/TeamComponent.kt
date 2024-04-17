@@ -109,7 +109,7 @@ class TeamComponent(
         if (adminMinRole.isAvailableForRole(role) || role.isAdmin) {
             result.add(MenuSettingItem(
                 this.javaClass.simpleName + "@admin",
-                adminMenuDisplayName.getValue(), "/team-admin", 0,
+                adminMenuDisplayName.getValue(), "/edit-team", 0,
                 visible = false, subMenu = false, external = false
             ))
         }
