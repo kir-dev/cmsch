@@ -17,6 +17,16 @@ export type TeamDashboardView = {
   }
 }
 
+export type OptionalTeamView = {
+  status: TeamStatus
+  team?: TeamView
+}
+
+export enum TeamStatus {
+  PLAYING = 'PLAYING',
+  NOT_VISIBLE = 'NOT_VISIBLE'
+}
+
 export type TeamView = {
   coverUrl: string
   description: string

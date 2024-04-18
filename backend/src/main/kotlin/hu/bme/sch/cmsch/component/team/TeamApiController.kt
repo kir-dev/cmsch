@@ -67,7 +67,7 @@ class TeamApiController(
     }
 
     @GetMapping("/team/my")
-    fun showMyGroup(auth: Authentication?): ResponseEntity<TeamView> {
+    fun showMyGroup(auth: Authentication?): ResponseEntity<OptionalTeamView> {
         val user = auth?.getUserOrNull()
         if (user == null || !teamComponent.myMinRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
@@ -83,7 +83,7 @@ class TeamApiController(
     }
 
     @GetMapping("/team/{teamId}")
-    fun showGroupDetails(@PathVariable teamId: Int, auth: Authentication?): ResponseEntity<TeamView> {
+    fun showGroupDetails(@PathVariable teamId: Int, auth: Authentication?): ResponseEntity<OptionalTeamView> {
         val user = auth?.getUserOrNull()
         if (!teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()

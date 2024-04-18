@@ -22,6 +22,16 @@ data class AdvertisedFormPreview(
     var url: String = ""
 )
 
+data class OptionalTeamView (
+    var status: TeamStatus,
+    var team: TeamView?
+)
+
+enum class TeamStatus {
+    PLAYING,
+    NOT_VISIBLE
+}
+
 data class TeamView(
     var id: Int = 0,
     var name: String = "",

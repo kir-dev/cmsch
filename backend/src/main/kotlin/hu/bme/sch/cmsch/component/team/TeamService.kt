@@ -195,15 +195,15 @@ open class TeamService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun showTeam(teamId: Int, user: CmschUser?): TeamView? {
+    open fun showTeam(teamId: Int, user: CmschUser?): OptionalTeamView? {
         val team = groupRepository.findById(teamId)
         if (team.isEmpty)
             return null
 
         return if (showThisTeam(team.orElseThrow())) {
-            mapTeam(team.orElseThrow(), user, user?.groupId == teamId)
+            OptionalTeamView(TeamStatus.PLAYING, mapTeam(team.orElseThrow(), user, user?.groupId == teamId))
         } else {
-            null
+            OptionalTeamView(TeamStatus.NOT_VISIBLE, null)
         }
     }
 
