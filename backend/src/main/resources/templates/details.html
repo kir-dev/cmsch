@@ -565,7 +565,7 @@
                                         th:disabled="${!input.second.enabled || readOnly}"
                                         th:unless="${entityMode}"
                                 >
-                                    <option th:unless="${editMode || duplicateMode}"
+                                    <option th:if="${editMode || duplicateMode}"
                                             th:each="opt : ${mappings.get(input.second.entitySource).invoke(data)}"
                                             th:value="${opt}"
                                             th:text="${opt}"
