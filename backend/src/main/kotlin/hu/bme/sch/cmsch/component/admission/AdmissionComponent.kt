@@ -51,6 +51,7 @@ class AdmissionComponent(
             roleGroup,
             grantUserByDefault,
             grantUserByAttendee,
+            grantUserByPrivileged,
             grantUserByStaff,
             grantOrganizerByStaff,
             grantOrganizerByAdmin,
@@ -188,6 +189,12 @@ class AdmissionComponent(
         "grantUserByAttendee", "false", type = SettingType.BOOLEAN,
         fieldName = "USER hozzáférés résztvevőknek",
         description = "Ha be van kapcsolva, akkor minden résztvevő (ATTENDEE+) felhasználó jogosult a belépésre"
+    )
+
+    val grantUserByPrivileged = SettingProxy(componentSettingService, component,
+        "grantUserByPrivileged", "false", type = SettingType.BOOLEAN,
+        fieldName = "USER hozzáférés privileged résztvevőknek",
+        description = "Ha be van kapcsolva, akkor minden résztvevő (PRIVILEGED+) felhasználó jogosult a belépésre"
     )
 
     val grantUserByStaff = SettingProxy(componentSettingService, component,

@@ -116,13 +116,15 @@ open class ProfileService(
     }
 
     private fun mapQr(user: UserEntity): String? {
+        val canSeeQr =
+            profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr.isValueTrue()
         if (profileComponent.showQrOnlyIfTicketPresent.isValueTrue()
-            && (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue())) {
+            && (canSeeQr || profileComponent.showProfilePicture.isValueTrue())) {
 
             return if (admissionService.map { it.hasTicket(user.cmschId) }.orElse(false)) user.cmschId else null
         }
 
-        return if (profileComponent.showQr.isValueTrue() || profileComponent.showProfilePicture.isValueTrue()) {
+        return if (canSeeQr || profileComponent.showProfilePicture.isValueTrue()) {
             if (profileComponent.bmejegyQrIfPresent.isValueTrue())
                 fetchBmejegyTicket(user)
             else user.cmschId
