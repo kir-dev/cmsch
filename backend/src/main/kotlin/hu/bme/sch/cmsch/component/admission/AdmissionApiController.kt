@@ -411,6 +411,9 @@ class AdmissionApiController(
         if (admissionComponent.grantUserByAttendee.isValueTrue() && user.role.value >= RoleType.ATTENDEE.value)
             grants.add(EntryRole.USER)
 
+        if (admissionComponent.grantUserByPrivileged.isValueTrue() && user.role.value >= RoleType.PRIVILEGED.value)
+            grants.add(EntryRole.USER)
+
         if (admissionComponent.grantUserByStaff.isValueTrue() && user.role.value >= RoleType.STAFF.value)
             grants.add(EntryRole.USER)
 
