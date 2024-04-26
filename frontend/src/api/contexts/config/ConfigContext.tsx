@@ -26,14 +26,15 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
         </VStack>
       </Center>
     )
-  if (error)
+  if (error) {
+    const is500Status = Math.floor(Number(error?.response?.status) / 100) === 5
     return (
       <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
         <Helmet title={l('error-page-helmet')} />
         <VStack spacing={5} p={5} borderRadius={5} bg={bg}>
-          <Heading textAlign="center">{l('error-page-title')}</Heading>
+          <Heading textAlign="center">{is500Status ? l('error-service-unavailable-title') : l('error-page-title')}</Heading>
           <Text textAlign="center" color="gray.500" marginTop={10}>
-            {l('error-connection-unsuccessful')}
+            {is500Status ? l('error-service-unavailable') : l('error-connection-unsuccessful')}
           </Text>
           <ButtonGroup justifyContent="center" marginTop={10}>
             <Button
@@ -48,6 +49,7 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
         </VStack>
       </Center>
     )
+  }
   return <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>
 }
 
