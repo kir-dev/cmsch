@@ -35,20 +35,6 @@ class EntrypointController(
         return if (auth == null) "hey!" else "hoo!"
     }
 
-    @GetMapping("/control/entrypoint")
-    fun entrypoint(model: Model, auth: Authentication): String {
-        val user = auth.getUserOrNull() ?:
-            return "redirect:/control/logged-out?error=invalid-permissions"
-        if (user.role.value < RoleType.STAFF.value)
-            return "redirect:${applicationComponent.siteUrl.getValue()}"
-
-        model.addAttribute("greetings", GREETINGS[Random.nextInt(GREETINGS.size)])
-        model.addAttribute("motd", applicationComponent.motd.getValue())
-        model.addAttribute("website", applicationComponent.siteUrl.getValue())
-
-        return "entrypoint"
-    }
-
     @RequestMapping(value = [ "/oauth2/authorization", "/login" ])
     fun authorize(model: Model, @RequestParam(defaultValue = "") error: String): String {
         model.addAttribute("siteName", applicationComponent.siteName.getValue())

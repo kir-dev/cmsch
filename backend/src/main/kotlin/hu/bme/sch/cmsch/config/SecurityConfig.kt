@@ -118,10 +118,7 @@ open class SecurityConfig(
             ).permitAll()
 
             it.requestMatchers(
-                antMatcher("/control/entrypoint"),
                 antMatcher("/control/open-site"),
-                antMatcher("/control/stamps"),
-                antMatcher("/export-tasks")
             ).hasAnyRole(
                 RoleType.BASIC.name,
                 RoleType.STAFF.name,
