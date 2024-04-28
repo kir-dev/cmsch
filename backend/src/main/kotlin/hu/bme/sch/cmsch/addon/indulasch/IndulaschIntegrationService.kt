@@ -19,7 +19,7 @@ enum class IndulaschMessageType {
 
     companion object {
         fun getByNameOrNull(name: String): IndulaschMessageType? {
-            for (v in values())
+            for (v in entries)
                 if (v.name == name)
                     return v
             return null

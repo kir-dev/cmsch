@@ -2,8 +2,6 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.LoginComponent
-import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import kotlin.random.Random
 
 
 val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",

@@ -22,7 +22,7 @@ enum class Scope(val scope: String) {
 
     companion object {
         fun byNameOrNull(name: String): Scope? {
-            for (v in values())
+            for (v in entries)
                 if (v.name == name)
                     return v
             return null

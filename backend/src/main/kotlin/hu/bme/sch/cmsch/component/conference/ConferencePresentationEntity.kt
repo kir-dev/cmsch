@@ -2,13 +2,10 @@ package hu.bme.sch.cmsch.component.conference
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
-import hu.bme.sch.cmsch.component.communities.CommunityEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
-import hu.bme.sch.cmsch.util.StringToArraySerializer
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean

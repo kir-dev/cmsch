@@ -1,6 +1,9 @@
 package hu.bme.sch.cmsch.component.messaging
 
-import hu.bme.sch.cmsch.admin.dashboard.*
+import hu.bme.sch.cmsch.admin.dashboard.DashboardComponent
+import hu.bme.sch.cmsch.admin.dashboard.DashboardFormCard
+import hu.bme.sch.cmsch.admin.dashboard.DashboardPage
+import hu.bme.sch.cmsch.admin.dashboard.DashboardPermissionCard
 import hu.bme.sch.cmsch.component.form.FormElement
 import hu.bme.sch.cmsch.component.form.FormElementType
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -14,7 +17,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import java.util.*
 
 private const val VIEW = "messaging"
 

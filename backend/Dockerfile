@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 MAINTAINER kir-dev@sch.bme.hu
 COPY build/libs/cmsch.jar /opt/cmsch/
 WORKDIR /opt/cmsch

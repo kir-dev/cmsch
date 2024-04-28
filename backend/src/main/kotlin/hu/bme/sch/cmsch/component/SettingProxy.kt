@@ -116,9 +116,9 @@ class MinRoleSettingProxy(
 ) {
 
     companion object {
-        val ALL_ROLES by lazy { RoleType.values().joinToString(",") { it.name } }
-        val ALL_ROLES_FROM_ATTENDEE by lazy { RoleType.values().filter { it.value >= RoleType.ATTENDEE.value }.joinToString(",") { it.name } }
-        val ALL_ROLES_FROM_PRIVILEGED by lazy { RoleType.values().filter { it.value >= RoleType.PRIVILEGED.value }.joinToString(",") { it.name } }
+        val ALL_ROLES by lazy { RoleType.entries.joinToString(",") { it.name } }
+        val ALL_ROLES_FROM_ATTENDEE by lazy { RoleType.entries.filter { it.value >= RoleType.ATTENDEE.value }.joinToString(",") { it.name } }
+        val ALL_ROLES_FROM_PRIVILEGED by lazy { RoleType.entries.filter { it.value >= RoleType.PRIVILEGED.value }.joinToString(",") { it.name } }
     }
 
     fun isAvailableForRole(role: RoleType): Boolean {

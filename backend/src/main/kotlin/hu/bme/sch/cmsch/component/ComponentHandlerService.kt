@@ -41,7 +41,7 @@ class ComponentHandlerService(
     fun invalidateCaches() {
         log.info("Invalidating ComponentHandlerService cache")
         val newCache = EnumMap<RoleType, String>(RoleType::class.java)
-        for (role in RoleType.values()) {
+        for (role in RoleType.entries) {
             newCache[role] = writer.writeValueAsString(getComponentConstantsForRole(role))
         }
         cache.set(newCache)

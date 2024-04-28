@@ -1,9 +1,9 @@
-FROM gradle:jdk17 as build
+FROM gradle:jdk21 as build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle clean assemble bootJar
 
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:21-jre-jammy
 MAINTAINER kir-dev@sch.bme.hu
 COPY --from=build /home/gradle/src/build/libs/cmsch.jar /opt/cmsch/
 WORKDIR /opt/cmsch

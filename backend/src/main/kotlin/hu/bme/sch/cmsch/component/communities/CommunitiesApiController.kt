@@ -5,7 +5,6 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/api")

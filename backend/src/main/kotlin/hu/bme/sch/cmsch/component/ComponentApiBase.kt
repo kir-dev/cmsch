@@ -118,7 +118,7 @@ abstract class ComponentApiBase(
         component.onPersist()
         component.onFirePersistEvent()
         auditLogService.edit(user, component.component, newValues.toString())
-        RoleType.values().forEach { role -> menuService.regenerateMenuCache(role) }
+        RoleType.entries.forEach { role -> menuService.regenerateMenuCache(role) }
         onUpdate()
         return "redirect:/admin/control/component/${component.component}/settings"
     }

@@ -7,15 +7,13 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
+import jakarta.annotation.PostConstruct
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
-import jakarta.annotation.PostConstruct
-import java.lang.IllegalArgumentException
-import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
 @Controller
