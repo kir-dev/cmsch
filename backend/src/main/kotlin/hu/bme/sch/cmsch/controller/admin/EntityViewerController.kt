@@ -2,14 +2,16 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.util.getUser
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
 import kotlin.reflect.full.createInstance
 
 @Controller

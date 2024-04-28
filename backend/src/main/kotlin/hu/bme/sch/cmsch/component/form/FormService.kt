@@ -295,7 +295,7 @@ open class FormService(
     open fun getResponsesById(id: Int) = responseRepository.findAllByFormId(id)
 
     @Transactional(readOnly = true)
-    open fun getAllResponses() = responseRepository.findAll()
+    open fun getAllResponses(): List<ResponseEntity> = responseRepository.findAll()
 
     @Transactional(readOnly = true)
     open fun doesGroupFilled(groupId: Int, formId: Int): Boolean {

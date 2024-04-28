@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
-import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 @Entity
 @Table(name="bmejegyRecords")

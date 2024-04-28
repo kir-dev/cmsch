@@ -41,7 +41,7 @@ open class MenuService(
 
     @PostConstruct
     fun init() {
-        RoleType.values().forEach { role ->
+        RoleType.entries.forEach { role ->
             menusForRoles[role] = mutableListOf()
         }
     }
@@ -49,7 +49,7 @@ open class MenuService(
     @EventListener
     fun onStarted(event: ContextRefreshedEvent) {
         log.info("Refreshing menu from database")
-        RoleType.values().forEach { role ->
+        RoleType.entries.forEach { role ->
             regenerateMenuCache(role)
         }
     }
@@ -221,7 +221,7 @@ open class MenuService(
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     fun exportMenu(): List<MenuImportEntry> {
-        return RoleType.values().flatMap { role ->
+        return RoleType.entries.flatMap { role ->
             getMenusForRole(role)
                 .map { MenuImportEntry(role, it.name, it.order, it.visible, it.subMenu, it.external) }
         }

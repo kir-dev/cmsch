@@ -98,7 +98,7 @@ class LoginComponent(
         type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Oauth scopeok",
         description = "Ezek lesznek elkérve a providertől; ezek vannak: "
-                + Scope.values().joinToString(", ") { it.name }
+                + Scope.entries.joinToString(", ") { it.name }
     )
 
     val authschScopes = mutableListOf<Scope>()
