@@ -27,15 +27,15 @@ enum class RoleType(val value: Int, val displayName: String, val description: St
 
     companion object {
         fun atLeast(type: RoleType): List<RoleType> {
-            return values().filter { it.value >= type.value }
+            return entries.filter { it.value >= type.value }
         }
 
         fun atMost(type: RoleType): List<RoleType> {
-            return values().filter { it.value <= type.value }
+            return entries.filter { it.value <= type.value }
         }
 
         @JvmStatic
-        fun names(): List<String> = values().map { it.name }.toList()
+        fun names(): List<String> = entries.map { it.name }.toList()
     }
 
     val isAdmin

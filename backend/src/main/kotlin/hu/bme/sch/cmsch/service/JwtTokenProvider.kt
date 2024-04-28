@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.login.CmschUserPrincipal
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.jwt.InvalidJwtAuthenticationException
 import hu.bme.sch.cmsch.model.RoleType
@@ -28,10 +28,10 @@ private const val EXPIRED_OR_INVALID_TOKEN = "Expired or invalid JWT token"
 @Service
 class JwtTokenProvider(
     private val startupPropertyConfig: StartupPropertyConfig
-){
+) {
 
     private val secretKey = Keys.hmacShaKeyFor(startupPropertyConfig.secretKey.toByteArray())
-    private val parser = Jwts.parserBuilder().setSigningKey(secretKey).build()
+    private val parser = Jwts.parser().verifyWith(secretKey).build()
 
     fun createToken(cmschUser: CmschUser): String {
         return createToken(
@@ -54,21 +54,21 @@ class JwtTokenProvider(
         groupId: Int?,
         groupName: String
     ): String {
-        val claims: Claims = Jwts.claims().setSubject(internalId)
-        claims[JWT_CLAIM_ROLE] = role.name
-        claims[JWT_CLAIM_PERMISSIONS] = permissions
-        claims[JWT_CLAIM_USERID] = userId.toString()
-        claims[JWT_CLAIM_USERNAME] = fullName
-        claims[JWT_CLAIM_GROUP_ID] = groupId
-        claims[JWT_CLAIM_GROUP_NAME] = groupName
+        val claims = Jwts.claims().subject(internalId)
+        claims.add(JWT_CLAIM_ROLE, role.name)
+        claims.add(JWT_CLAIM_PERMISSIONS, permissions)
+        claims.add(JWT_CLAIM_USERID, userId.toString())
+        claims.add(JWT_CLAIM_USERNAME, fullName)
+        claims.add(JWT_CLAIM_GROUP_ID, groupId)
+        claims.add(JWT_CLAIM_GROUP_NAME, groupName)
 
         val now = Date()
         val validity = Date(now.time + startupPropertyConfig.sessionValidityInMilliseconds)
         return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(validity)
-            .signWith(secretKey, SignatureAlgorithm.HS256)
+            .claims(claims.build())
+            .issuedAt(now)
+            .expiration(validity)
+            .signWith(secretKey, Jwts.SIG.HS256)
             .compact()
     }
 
@@ -93,10 +93,10 @@ class JwtTokenProvider(
     }
 
     fun getInternalId(token: String): String {
-        return parser.parseClaimsJws(token).body.subject
+        return parser.parseSignedClaims(token).payload.subject
     }
 
-    private fun parseToken(token: String) = parser.parseClaimsJws(token).body
+    private fun parseToken(token: String) = parser.parseSignedClaims(token).payload
 
     fun resolveToken(req: HttpServletRequest): String? {
         val bearerToken = req.getHeader("Authorization")
@@ -109,13 +109,13 @@ class JwtTokenProvider(
 
     fun validateToken(token: String): Boolean {
         return try {
-            val claims: Jws<Claims> = parser.parseClaimsJws(token)
-            !claims.body.expiration.before(Date())
+            val claims: Jws<Claims> = parser.parseSignedClaims(token)
+            !claims.payload.expiration.before(Date())
         } catch (e: JwtException) {
             throw InvalidJwtAuthenticationException(EXPIRED_OR_INVALID_TOKEN)
         } catch (e: IllegalArgumentException) {
             throw InvalidJwtAuthenticationException(EXPIRED_OR_INVALID_TOKEN)
-        } catch (e: SignatureException) {
+        } catch (e: io.jsonwebtoken.security.SignatureException) {
             throw InvalidJwtAuthenticationException(EXPIRED_OR_INVALID_TOKEN)
         }
     }

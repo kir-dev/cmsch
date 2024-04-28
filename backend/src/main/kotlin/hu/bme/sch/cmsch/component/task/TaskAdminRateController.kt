@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.task
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.form.*
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage

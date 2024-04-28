@@ -23,6 +23,7 @@ import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.retry.annotation.EnableRetry
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -139,8 +140,8 @@ open class SecurityConfig(
         }
         http.formLogin { it.disable() }
         http.exceptionHandling { it.accessDeniedPage("/403") }
-        http.apply(JwtConfigurer(jwtTokenProvider))
-        http.apply(SessionFilterConfigurer(startupPropertyConfig))
+        http.with(JwtConfigurer(jwtTokenProvider), Customizer.withDefaults())
+        http.with(SessionFilterConfigurer(startupPropertyConfig), Customizer.withDefaults())
         http.oauth2Login { oauth2 ->
             oauth2.loginPage("/oauth2/authorization")
                 .authorizationEndpoint {
@@ -161,7 +162,7 @@ open class SecurityConfig(
                         .userService { resolveAuthschUser(it) }
                 }.defaultSuccessUrl("/control/post-login")
         }
-        countdownConfigurer.ifPresent { http.apply(it) }
+        countdownConfigurer.ifPresent { http.with(it, Customizer.withDefaults()) }
         http.csrf {
             it.ignoringRequestMatchers(
                 antMatcher("/api/**"),
