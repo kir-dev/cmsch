@@ -128,7 +128,7 @@ class MenuAdminController(
     }
 
     private fun fetchOverview(): List<MenuSetupByRoleVirtualEntity> {
-        return RoleType.values()
+        return RoleType.entries
             .filter { it.value < 10000 }
             .map { MenuSetupByRoleVirtualEntity(it.ordinal, it.name, it.description) }
     }
@@ -143,7 +143,7 @@ class MenuAdminController(
             auditLogService.admin403(user, "menu", "GET /$view/edit/$id", showPermission.permissionString)
             return "admin403"
         }
-        val role = RoleType.values()[id]
+        val role = RoleType.entries[id]
         model.addAttribute("id", id)
         model.addAttribute("role", role)
         model.addAttribute("rows", menuService.getMenusForRole(role).sortedBy { it.order })
@@ -173,7 +173,7 @@ class MenuAdminController(
             i++
         }
         auditLogService.edit(user, "menu", menus.toString())
-        menuService.persistSettings(menus, RoleType.values()[id])
+        menuService.persistSettings(menus, RoleType.entries[id])
         return "redirect:/admin/control/menu/edit/$id"
     }
 
@@ -232,7 +232,7 @@ class MenuAdminController(
             throw IllegalStateException("Insufficient permissions")
         }
 
-        val roles = RoleType.values().filter { params.containsKey(it.name) }
+        val roles = RoleType.entries.filter { params.containsKey(it.name) }
         val menuEntries = mutableListOf<MenuService.MenuImportEntry>()
 
         try {

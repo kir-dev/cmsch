@@ -6,14 +6,15 @@ import hu.bme.sch.cmsch.admin.dashboard.DashboardPermissionCard
 import hu.bme.sch.cmsch.admin.dashboard.DashboardTableCard
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.ImplicitPermissions
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import java.util.*
 
 @Controller
 @RequestMapping("/admin/control/debug-dashboard")

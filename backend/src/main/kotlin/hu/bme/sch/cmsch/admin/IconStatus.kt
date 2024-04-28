@@ -27,13 +27,13 @@ enum class IconStatus(
     ;
     companion object {
         @JvmStatic
-        fun names() = values().map { it.name }
+        fun names() = entries.map { it.name }
 
         @JvmStatic
-        fun icons() = values().map { it.icon }
+        fun icons() = entries.map { it.icon }
 
         @JvmStatic
-        fun colors() = values().map { it.color }
+        fun colors() = entries.map { it.color }
     }
 
 }
