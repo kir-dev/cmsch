@@ -1,5 +1,4 @@
-import { Grid, GridItem, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
+import { Grid, GridItem, LinkBox, LinkOverlay, Text, useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../../util/paths'

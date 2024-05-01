@@ -1,5 +1,4 @@
-import { Box, Divider, Grid, Heading, Text, VStack } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
+import { Box, Divider, Grid, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'

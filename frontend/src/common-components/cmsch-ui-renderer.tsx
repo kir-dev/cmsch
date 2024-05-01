@@ -1,9 +1,8 @@
-import { ReactNode } from 'react-markdown/lib/react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
 import { CmschLink } from './CmschLink'
 import { Divider, ListItem, Table, TableContainer, UnorderedList, useColorModeValue } from '@chakra-ui/react'
 import ChakraUIRenderer from './chakra-md-renderer'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 
 const sliceHref = (href: string, pattern: string): string => {
   if (href.indexOf(pattern) === 0) {
