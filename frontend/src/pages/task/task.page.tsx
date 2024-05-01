@@ -4,6 +4,7 @@ import {
   Badge,
   Box,
   Button,
+  chakra,
   Flex,
   FormLabel,
   Heading,
@@ -14,7 +15,6 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { chakra } from '@chakra-ui/system'
 import { lazy, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Controller, SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'

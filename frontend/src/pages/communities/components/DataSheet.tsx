@@ -1,6 +1,5 @@
 import { EditIcon, LinkIcon } from '@chakra-ui/icons'
-import { Box, Flex, Heading, HStack, Image, Link, Tag, VStack, Wrap } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
+import { Box, Flex, Heading, HStack, Image, Link, Tag, useColorModeValue, VStack, Wrap } from '@chakra-ui/react'
 import { FC, ReactNode } from 'react'
 import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
 

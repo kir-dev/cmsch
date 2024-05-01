@@ -1,7 +1,6 @@
 import { Button, ButtonGroup, Fade, Heading, Spinner, useColorModeValue } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
-import QRreader from 'react-qr-reader'
 import { useNavigate } from 'react-router-dom'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -10,6 +9,7 @@ import { useScanTokenMutation } from '../../api/hooks/token/useScanTokenMutation
 import { useEffect } from 'react'
 import { AbsolutePaths } from '../../util/paths'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { QrReader } from '../../common-components/QrReader'
 
 const TokenScan = () => {
   const navigate = useNavigate()
@@ -31,14 +31,12 @@ const TokenScan = () => {
     }
   }, [])
 
-  const handleError = () => {}
-
   return (
     <CmschPage loginRequired>
       <Helmet title="QR beolvasás" />
       <Heading mb={5}>QR beolvasás</Heading>
       {isLoading && <Spinner color={spinnerColor} size="xl" thickness="0.3rem" />}
-      {isIdle && <QRreader delay={300} onError={handleError} onScan={handleScan} />}
+      {isIdle && <QrReader onScan={handleScan} />}
 
       {!isIdle && (
         <Fade in>

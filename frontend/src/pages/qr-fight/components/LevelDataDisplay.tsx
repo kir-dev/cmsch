@@ -1,7 +1,6 @@
-import { Box, chakra } from '@chakra-ui/react'
+import { Box, chakra, useColorModeValue } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { useColorModeValue } from '@chakra-ui/system'
 import { ResponsiveBar } from '@nivo/bar'
 
 interface LevelDataDisplayProps {
