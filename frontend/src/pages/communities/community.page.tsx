@@ -31,12 +31,8 @@ export default function CommunityPage() {
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={data} />
 
-      {data.videoIds?.map((id) => (
-        <Frame key={id} id={id} />
-      ))}
-      {data.imageIds?.map((url) => (
-        <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
-      ))}
+      {data.videoIds?.map((id) => <Frame key={id} id={id} />)}
+      {data.imageIds?.map((url) => <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />)}
     </CmschPage>
   )
 }
