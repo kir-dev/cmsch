@@ -2,25 +2,24 @@ import * as React from 'react'
 import deepmerge from 'deepmerge'
 import { Components } from 'react-markdown'
 import {
+  chakra,
+  Checkbox,
   Code,
   Divider,
   Heading,
+  Image,
   Link,
   ListItem,
   OrderedList,
-  Text,
-  UnorderedList,
-  Image,
-  Checkbox,
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
-  Tr
+  Tr,
+  UnorderedList
 } from '@chakra-ui/react'
-
-import { chakra } from '@chakra-ui/system'
 
 type GetCoreProps = {
   children?: React.ReactNode
@@ -31,14 +30,7 @@ function getCoreProps(props: GetCoreProps): any {
   return props['data-sourcepos'] ? { 'data-sourcepos': props['data-sourcepos'] } : {}
 }
 
-interface Defaults extends Components {
-  /**
-   * @deprecated Use `h1, h2, h3, h4, h5, h6` instead.
-   */
-  heading?: Components['h1']
-}
-
-export const defaults: Defaults = {
+export const defaults: Components = {
   p: (props) => {
     const { children } = props
     return <Text mb={2}>{children}</Text>
@@ -56,7 +48,7 @@ export const defaults: Defaults = {
     )
   },
   code: (props) => {
-    const { inline, children, className } = props
+    const { inline, children, className } = props as any
 
     if (inline) {
       return <Code p={2} children={children} />
@@ -78,7 +70,7 @@ export const defaults: Defaults = {
     return <Text as="span">{children}</Text>
   },
   ul: (props) => {
-    const { ordered, children, depth } = props
+    const { ordered, children, depth } = props as any
     const attrs = getCoreProps(props)
     let Element = UnorderedList
     let styleType = 'disc'
@@ -94,7 +86,7 @@ export const defaults: Defaults = {
     )
   },
   ol: (props) => {
-    const { ordered, children, depth } = props
+    const { ordered, children, depth } = props as any
     const attrs = getCoreProps(props)
     let Element = UnorderedList
     let styleType = 'disc'
@@ -110,7 +102,7 @@ export const defaults: Defaults = {
     )
   },
   li: (props) => {
-    const { children, checked } = props
+    const { children, checked } = props as any
     let checkbox = null
     if (checked !== null && checked !== undefined) {
       checkbox = (
@@ -125,12 +117,45 @@ export const defaults: Defaults = {
       </ListItem>
     )
   },
-  heading: (props) => {
-    const { level, children } = props
-    const sizes = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs']
+  h1: (props) => {
     return (
-      <Heading my={4} as={`h${level}`} size={sizes[`${level - 1}`]} {...getCoreProps(props)}>
-        {children}
+      <Heading my={4} as="h1" size="2xl" {...getCoreProps(props)}>
+        {props.children}
+      </Heading>
+    )
+  },
+  h2: (props) => {
+    return (
+      <Heading my={4} as="h2" size="xl" {...getCoreProps(props)}>
+        {props.children}
+      </Heading>
+    )
+  },
+  h3: (props) => {
+    return (
+      <Heading my={4} as="h3" size="lg" {...getCoreProps(props)}>
+        {props.children}
+      </Heading>
+    )
+  },
+  h4: (props) => {
+    return (
+      <Heading my={4} as="h4" size="md" {...getCoreProps(props)}>
+        {props.children}
+      </Heading>
+    )
+  },
+  h5: (props) => {
+    return (
+      <Heading my={4} as="h5" size="sm" {...getCoreProps(props)}>
+        {props.children}
+      </Heading>
+    )
+  },
+  h6: (props) => {
+    return (
+      <Heading my={4} as="h6" size="xs" {...getCoreProps(props)}>
+        {props.children}
       </Heading>
     )
   },
@@ -146,7 +171,7 @@ export const defaults: Defaults = {
   th: (props) => <Th>{props.children}</Th>
 }
 
-function ChakraUIRenderer(theme?: Defaults, merge = true): Components {
+function ChakraUIRenderer(theme?: Components, merge = true): Components {
   const elements = {
     p: defaults.p,
     em: defaults.em,
@@ -160,12 +185,12 @@ function ChakraUIRenderer(theme?: Defaults, merge = true): Components {
     ul: defaults.ul,
     ol: defaults.ol,
     li: defaults.li,
-    h1: defaults.heading,
-    h2: defaults.heading,
-    h3: defaults.heading,
-    h4: defaults.heading,
-    h5: defaults.heading,
-    h6: defaults.heading,
+    h1: defaults.h1,
+    h2: defaults.h2,
+    h3: defaults.h3,
+    h4: defaults.h4,
+    h5: defaults.h5,
+    h6: defaults.h6,
     pre: defaults.pre,
     table: defaults.table,
     thead: defaults.thead,

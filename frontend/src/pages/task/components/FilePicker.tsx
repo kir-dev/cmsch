@@ -1,8 +1,8 @@
 // from https://github.com/PedroDBFlores/chakra-ui-file-picker
 
-import { Button, InputRightElement, Input, InputGroup, InputGroupProps } from '@chakra-ui/react'
+import { Button, Input, InputGroup, InputGroupProps, InputRightElement } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
-import { ChangeEvent, Component, createRef, VFC } from 'react'
+import { ChangeEvent, Component, createRef, FC } from 'react'
 
 interface FilePickerProps {
   onFileChange: (fileList: Array<File>) => void
@@ -55,6 +55,35 @@ export class FilePicker extends Component<FilePickerProps, FilePickerState> {
 
   public reset = (): void => this.handleOnClearClick()
 
+  render = () => {
+    const { placeholder, clearButtonLabel, hideClearButton, multipleFiles, accept, inputProps, inputGroupProps } = this.props
+
+    return (
+      <InputGroup {...inputGroupProps}>
+        <input
+          type="file"
+          ref={this.inputRef}
+          accept={accept}
+          style={{ display: 'none' }}
+          multiple={multipleFiles}
+          onChange={this.handleOnFileChange}
+          data-testid={inputProps?._placeholder ?? placeholder}
+        />
+        <Input
+          placeholder={placeholder}
+          {...{
+            ...inputProps,
+            readOnly: true,
+            isReadOnly: true,
+            value: this.state.fileName,
+            onClick: this.handleOnInputClick
+          }}
+        />
+        {!hideClearButton && <ClearButton clearButtonLabel={clearButtonLabel ?? 'Clear'} onButtonClick={this.handleOnClearClick} />}
+      </InputGroup>
+    )
+  }
+
   private handleOnFileChange = (ev: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, files: ev.target.files })
     this.clearInnerInput()
@@ -77,42 +106,13 @@ export class FilePicker extends Component<FilePickerProps, FilePickerState> {
       this.inputRef.current.click()
     }
   }
-
-  render = (): JSX.Element => {
-    const { placeholder, clearButtonLabel, hideClearButton, multipleFiles, accept, inputProps, inputGroupProps } = this.props
-
-    return (
-      <InputGroup {...inputGroupProps}>
-        <input
-          type="file"
-          ref={this.inputRef}
-          accept={accept}
-          style={{ display: 'none' }}
-          multiple={multipleFiles}
-          onChange={this.handleOnFileChange}
-          data-testid={inputProps?.placeholder ?? placeholder}
-        />
-        <Input
-          placeholder={placeholder}
-          {...{
-            ...inputProps,
-            readOnly: true,
-            isReadOnly: true,
-            value: this.state.fileName,
-            onClick: this.handleOnInputClick
-          }}
-        />
-        {!hideClearButton && <ClearButton clearButtonLabel={clearButtonLabel ?? 'Clear'} onButtonClick={this.handleOnClearClick} />}
-      </InputGroup>
-    )
-  }
 }
 
 type ClearButtonProps = Pick<FilePickerProps, 'clearButtonLabel'> & {
   onButtonClick: () => void
 }
 
-const ClearButton: VFC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) => (
+const ClearButton: FC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) => (
   <InputRightElement width="4.5rem">
     <Button onClick={onButtonClick}>{clearButtonLabel ?? 'Clear'}</Button>
   </InputRightElement>

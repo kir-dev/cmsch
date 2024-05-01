@@ -1,5 +1,4 @@
-import { Box, HStack, Icon, Popover, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
-import { chakra, useColorModeValue } from '@chakra-ui/system'
+import { Box, chakra, HStack, Icon, Popover, PopoverContent, PopoverTrigger, Stack, useColorModeValue } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
 import { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'

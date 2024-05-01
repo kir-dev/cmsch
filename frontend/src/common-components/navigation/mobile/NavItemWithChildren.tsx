@@ -1,6 +1,4 @@
-import { Collapse, Flex, Icon, Stack, Text, useDisclosure } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
-import styled from '@emotion/styled'
+import { Collapse, Flex, Icon, Stack, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { Menu } from '../../../api/contexts/config/types'
@@ -10,16 +8,11 @@ type Props = {
   menu: Menu
 }
 
-/** Small hack needed because the Chakra system is too strong to accept my overrides */
-const MyDiv = styled.div`
-  margin-top: 0 !important;
-`
-
 export const NavItemWithChildren = ({ menu: { external, url, children, name } }: Props) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <MyDiv onClick={onToggle}>
+    <div style={{ marginTop: '0 !important;' }} onClick={onToggle}>
       <LinkComponent url={url} external={external}>
         <Flex
           py={2}
@@ -45,6 +38,6 @@ export const NavItemWithChildren = ({ menu: { external, url, children, name } }:
           ))}
         </Stack>
       </Collapse>
-    </MyDiv>
+    </div>
   )
 }

@@ -1,6 +1,5 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Heading, HStack, Image, Spacer, Text, VStack } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
+import { Box, Heading, HStack, Image, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { Organization } from '../../../util/views/organization'
 

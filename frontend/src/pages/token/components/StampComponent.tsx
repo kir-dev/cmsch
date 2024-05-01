@@ -1,5 +1,4 @@
-import { Box, Center, Flex, Icon, Text } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/system'
+import { Box, Center, Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react'
 import { FC } from 'react'
 import { FaRocket, FaStamp } from 'react-icons/fa'
 import { IconType } from 'react-icons/lib'

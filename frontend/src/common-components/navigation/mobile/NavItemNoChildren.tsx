@@ -1,5 +1,4 @@
-import { Flex } from '@chakra-ui/react'
-import { chakra, useColorModeValue } from '@chakra-ui/system'
+import { chakra, Flex, useColorModeValue } from '@chakra-ui/react'
 import { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
 
