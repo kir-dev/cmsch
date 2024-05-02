@@ -5,12 +5,12 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@chakra-ui/icons": "2.0.17",
+    "@chakra-ui/icons": "2.1.1",
     "@chakra-ui/react": "^2.8.2",
-    "@chakra-ui/theme-tools": "2.0.16",
     "@chakra-ui/styled-system": "2.9.2",
-    "@emotion/react": "11.10.5",
-    "@emotion/styled": "11.10.5",
+    "@chakra-ui/theme-tools": "2.1.2",
+    "@emotion/react": "11.11.4",
+    "@emotion/styled": "11.11.5",
     "@nivo/bar": "^0.86.0",
     "@zxing/browser": "^0.1.4",
     "@zxing/library": "^0.20.0",
@@ -54,8 +54,8 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "npm-run-all": "4.1.5",
     "prettier": "3.2.5",
-    "vite": "^5.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
   },
   "scripts": {
     "dev": "vite",
