@@ -1,5 +1,5 @@
 import { Box, Button, ButtonGroup, Center, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
-import React, { createContext, PropsWithChildren, useContext } from 'react'
+import { createContext, PropsWithChildren, useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Loading } from '../../../common-components/Loading'
 import { INITIAL_BG_IMAGE } from '../../../util/configs/environment.config'

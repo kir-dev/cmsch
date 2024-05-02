@@ -46,7 +46,6 @@ export const ScanMessages: Record<ScanStatus, string> = {
   [ScanStatus.QR_TOTEM_LOGGED]: 'QR totem megjelölve',
   [ScanStatus.QR_TOWER_ENSLAVED]: 'QR torony leigázva', // bocsi
   [ScanStatus.QR_TOWER_ALREADY_ENSLAVED]: 'Ez a QR torony már le van igázva',
-  [ScanStatus.QR_TOWER_ALREADY_ENSLAVED]: 'QR totem megjelölve',
   [ScanStatus.QR_TOTEM_ENSLAVED]: 'QR totem elfoglalva',
   [ScanStatus.QR_TOTEM_ALREADY_ENSLAVED]: 'Ez a QR totem már el van foglalva',
   [ScanStatus.QR_FIGHT_TOTEM_LOCKED]: 'QR totem zárva'

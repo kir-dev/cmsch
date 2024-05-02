@@ -3,29 +3,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>%REACT_APP_NAME%</title>
-    <meta name="description" content="%REACT_APP_DESCRIPTION%" />
-    <link rel="icon" type="image/png" sizes="192x192" href="%REACT_APP_API_BASE_URL%/cdn/manifest/icon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="256x256" href="%REACT_APP_API_BASE_URL%/cdn/manifest/icon-256x256.png" />
-    <link rel="icon" type="image/png" sizes="384x384" href="%REACT_APP_API_BASE_URL%/cdn/manifest/icon-384x384.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="%REACT_APP_API_BASE_URL%/cdn/manifest/icon-512x512.png" />
-    <link rel="icon" type="image/x-icon" href="%REACT_APP_API_BASE_URL%/cdn/manifest/favicon.ico" />
-    <link rel="manifest" href="%REACT_APP_API_BASE_URL%/manifest/manifest.json" />
-    <meta name="theme-color" content="%REACT_APP_THEME_COLOR%" />
+    <title>%VITE_NAME%</title>
+    <meta name="description" content="%VITE_DESCRIPTION%" />
+    <link rel="icon" type="image/png" sizes="192x192" href="%VITE_API_BASE_URL%/cdn/manifest/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="%VITE_API_BASE_URL%/cdn/manifest/icon-256x256.png" />
+    <link rel="icon" type="image/png" sizes="384x384" href="%VITE_API_BASE_URL%/cdn/manifest/icon-384x384.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="%VITE_API_BASE_URL%/cdn/manifest/icon-512x512.png" />
+    <link rel="icon" type="image/x-icon" href="%VITE_API_BASE_URL%/cdn/manifest/favicon.ico" />
+    <link rel="manifest" href="%VITE_API_BASE_URL%/manifest/manifest.json" />
+    <meta name="theme-color" content="%VITE_THEME_COLOR%" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="%REACT_APP_API_BASE_URL%" />
+    <link rel="preconnect" href="%VITE_API_BASE_URL%" />
     <link
-      href="%REACT_APP_API_BASE_URL%/api/app/font-display.css"
+      href="%VITE_API_BASE_URL%/api/app/font-display.css"
       rel="stylesheet"
     />
     <link
-      href="%REACT_APP_API_BASE_URL%/api/app/font-main.css"
+      href="%VITE_API_BASE_URL%/api/app/font-main.css"
       rel="stylesheet"
     />
-    <script defer data-domain="%REACT_APP_PLAUSIBLE_URL%" src="https://visit.kir-dev.hu/js/plausible.js"></script>
+    <script defer data-domain="%VITE_PLAUSIBLE_URL%" src="https://visit.kir-dev.hu/js/plausible.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-B3L21908J0%22%3E"></script>
+    <script type="module" src="/src/index.tsx"></script>
     <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {

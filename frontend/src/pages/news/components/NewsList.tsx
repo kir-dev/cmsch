@@ -1,6 +1,6 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Divider, Grid, Heading, Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react'
-import { debounce } from 'lodash'
+import debounce from 'lodash/debounce'
 import { createRef, useMemo, useState } from 'react'
 
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
