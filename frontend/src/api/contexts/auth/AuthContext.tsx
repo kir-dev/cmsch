@@ -37,7 +37,7 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate()
 
-  const onLoginFailure = (err: any) => {
+  const onLoginFailure = () => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
     Cookies.remove(CookieKeys.SESSION_ID)
     queryClient.invalidateQueries(QueryKeys.USER, { refetchInactive: false })

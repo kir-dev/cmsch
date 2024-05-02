@@ -1,5 +1,4 @@
 import { Box, CircularProgress, HStack, Stat, StatHelpText, StatLabel, StatNumber, StatProps } from '@chakra-ui/react'
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
 import { TeamStatView } from '../../../util/views/team.view'
