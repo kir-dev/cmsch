@@ -19,6 +19,7 @@ yarn-error.log
 
 # production
 /build
+/dist
 .env
 .env.development
 

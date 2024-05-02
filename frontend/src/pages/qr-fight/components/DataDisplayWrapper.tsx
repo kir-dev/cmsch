@@ -6,7 +6,7 @@ import { LevelDataDisplay } from './LevelDataDisplay'
 import { TowerDataDisplay } from './TowerDataDisplay'
 import Markdown from '../../../common-components/Markdown'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
-import _ from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import { TotemDataDisplay } from './TotemDataDisplay'
 
 interface DataDisplayWrapperProps {
@@ -36,7 +36,7 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
           <Markdown text={level.description} />
         </VStack>
       </HStack>
-      {!_.isEmpty(level.teams) && <LevelDataDisplay teams={level.teams} />}
+      {!isEmpty(level.teams) && <LevelDataDisplay teams={level.teams} />}
       {level.towers?.length > 0 && <TowerDataDisplay level={level} />}
       {level.totems?.length > 0 && <TotemDataDisplay level={level} />}
     </VStack>

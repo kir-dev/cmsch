@@ -1,6 +1,5 @@
-import { Box, Button, Divider, Flex, Grid, Heading, Image, Text, useToast, VStack } from '@chakra-ui/react'
-import { useColorModeValue } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Box, Button, Divider, Flex, Grid, Heading, Image, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'

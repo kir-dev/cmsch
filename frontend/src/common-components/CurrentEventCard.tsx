@@ -3,11 +3,9 @@ import { useEventListQuery } from '../api/hooks/event/useEventListQuery'
 import { isCurrentEvent, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
 import { Link } from 'react-router-dom'
-import { useConfigContext } from '../api/contexts/config/ConfigContext'
 import { PulsingDot } from './PulsingDot'
 
 export default function CurrentEventCard() {
-  const config = useConfigContext()
   const { data, error } = useEventListQuery()
   const color = useColorModeValue('brand.800', 'white')
   const background = useOpaqueBackground(1)

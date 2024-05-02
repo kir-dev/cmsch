@@ -13,7 +13,7 @@ import {
   useBreakpointValue,
   useDisclosure
 } from '@chakra-ui/react'
-import _ from 'lodash'
+import uniq from 'lodash/uniq'
 import { Helmet } from 'react-helmet-async'
 import { FaCalendar } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -106,7 +106,7 @@ const EventListPage = () => {
               <Stack>
                 <CardListItem title="Mind" open={isOpen} toggle={onToggle} />
                 {filter === FILTER.DAY && <EventFilterOption name="Korábbi" events={pastEvents || []} forceOpen={isOpen} />}
-                {_.uniq(upcomingEvents?.map((event) => mapper(filter, event))).map((option) => (
+                {uniq(upcomingEvents?.map((event) => mapper(filter, event))).map((option) => (
                   <EventFilterOption
                     key={option}
                     name={option}
