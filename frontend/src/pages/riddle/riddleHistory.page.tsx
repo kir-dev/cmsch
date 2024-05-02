@@ -13,7 +13,6 @@ import { API_BASE_URL } from '../../util/configs/environment.config'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { SpoilerText } from './components/SpoilerText'
-import { RiddleCategoryHistory } from '../../util/views/riddle.view'
 
 const RiddleHistoryPage = () => {
   const toast = useToast()

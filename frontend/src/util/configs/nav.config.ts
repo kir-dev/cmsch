@@ -21,7 +21,7 @@ class NavItem implements INavItem {
     this.path = path
   }
 
-  public shouldBeShown = (isLoggedIn: boolean) => true
+  public shouldBeShown = (_isLoggedIn: boolean) => true
 }
 
 const Item1 = new NavItem({
