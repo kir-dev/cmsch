@@ -1,0 +1,330 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+
+    <div th:if="${generateInput.type == 'form-editor'}" class="field-group" th:id="|_${index}|">
+        <label th:text="${generateInput.label}">
+        </label>
+        <div style="clear:both"></div>
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+
+        <div th:id="|field_${property.name}|">
+
+        </div>
+
+        <input type="text"
+               th:name="${property.name}"
+               th:id="${property.name}"
+               th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+               autocomplete="off"
+               style="display: none"
+               th:unless="${entityMode}"
+               readonly
+        />
+        <script th:inline="javascript"
+                th:unless="${entityMode}">
+            changeFieldsText(/*[[${property.name}]]*/ '');
+        </script>
+        <span class="note type-note" th:if="${entityMode}">Típus: Összetett</span>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript" th:remove="tag">
+
+    <script th:inline="javascript">
+
+        function changeFieldsText(property) {
+            /*<![CDATA[*/
+            const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
+            /*]]>*/
+            const fields = JSON.parse(document.getElementById(property).value);
+            let resultHtml = "";
+            let id = 0;
+            fields.forEach(field => {
+                if (typeof field.fieldName !== 'undefined'
+                    && typeof field.label !== 'undefined'
+                    && typeof field.type !== 'undefined'
+                    && typeof field.formatRegex !== 'undefined'
+                    && typeof field.invalidFormatMessage !== 'undefined'
+                    && typeof field.values !== 'undefined'
+                    && typeof field.note !== 'undefined'
+                    && typeof field.required !== 'undefined'
+                    && typeof field.permanent !== 'undefined'
+                    && field.fieldName !== ''
+                ) {
+                    resultHtml += `
+                    <div class="sub-card" id="form_${property}_${id}">
+                        <div class="button-group">
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                            <button type="button" class="btn btn-danger btn-small" onclick="deleteValues('${property}', ${id})"><span class="material-symbols-outlined">delete</span><ins>TÖRÖL</ins></button>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_fieldName">Mező neve *</label>
+                            <input id="${property}_${id}_fieldName" type="text" value="${field.fieldName}" onchange="saveField('${property}')">
+                            <span class="note">Ez lesz az adat neve, olyasmi mint egy változó név. Az exportban is ez fog látszódni.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_type">Típus *</label>
+                            <div style="clear:both"></div>
+                            <select id="${property}_${id}_type" onchange="saveField('${property}')">
+                                ${elementTypes.map(opt => `<option value="${opt}" ${opt === field.type ? 'selected' : ''}>${opt}</option>`).join('')}
+                            </select><br/>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_label">Cimke *</label>
+                            <input id="${property}_${id}_label" type="text" value="${field.label}" onchange="saveField('${property}')">
+                            <span class="note">Mi jelenjen meg a felhasználóknak.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_defaultValue">Alapértelmezett érték</label>
+                            <input id="${property}_${id}_defaultValue" type="text" value="${field.defaultValue || ''}" onchange="saveField('${property}')">
+                            <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_values">Értékek</label>
+                            <input id="${property}_${id}_values" type="text" value="${field.values}" onchange="saveField('${property}')">
+                            <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_note">Leírás</label>
+                            <input id="${property}_${id}_note" type="text" value="${field.note}" onchange="saveField('${property}')">
+                            <span class="note">A mező alatt megjelenő szöveg.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_required">Kötelező kitölteni</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_required" ${field.required ? 'checked' : ''} onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_permanent" ${field.permanent ? 'checked' : ''} onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_formatRegex">RegEx minta</label>
+                            <input id="${property}_${id}_formatRegex" type="text" value="${field.formatRegex}" onchange="saveField('${property}')">
+                            <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
+                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="${field.invalidFormatMessage}" onchange="saveField('${property}')">
+                            <span class="note">Akkor ejelenik meg ha validációs hiba van.</span>
+                        </div>
+                    </div>`;
+                    ++id;
+                }
+            });
+
+            resultHtml += `
+        <div class="sub-card centered" id="field_${property}_add">
+            <button type="button" class="btn btn-primary" onclick="addField('${property}')">
+                <span class="material-symbols-outlined regular">add</span>
+                <ins>Új mező</ins>
+            </button>
+            <button type="button" class="btn" onclick="showAndUpdateJson('${property}')">
+                <span class="material-symbols-outlined regular">save</span>
+                <ins>Export</ins>
+            </button>
+            <button type="button" class="btn" onclick="showImport('${property}')">
+                <span class="material-symbols-outlined regular">publish</span>
+                <ins>Import</ins>
+            </button>
+        </div>`;
+
+            document.getElementById(`field_${property}`).innerHTML = resultHtml;
+        }
+
+        function showAndUpdateJson(property) {
+            document.getElementById(property).style.display = 'block';
+        }
+
+        function showImport(property) {
+            const json = prompt("Add meg a JSON-t az importhoz:", "[]");
+            document.getElementById(property).value = json;
+            changeFieldsText(property);
+        }
+
+        function addField(property) {
+            /*<![CDATA[*/
+            const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
+            /*]]>*/
+            let id = 0;
+            while (typeof document.getElementById(`${property}_${id}_fieldName`) !== 'undefined'
+            && document.getElementById(`${property}_${id}_fieldName`) !== null) {
+                ++id;
+            }
+            const element = document.createElement('div');
+            element.innerHTML = `
+                    <div class="sub-card" id="form_${property}_${id}">
+
+                         <div class="button-group">
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
+                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
+                            <button type="button" class="btn btn-danger btn-small" onclick="deleteValues('${property}', ${id})"><span class="material-symbols-outlined">delete</span><ins>TÖRÖL</ins></button>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_fieldName">Mező neve *</label>
+                            <input id="${property}_${id}_fieldName" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Ez lesz az adat neve, olyasmi mint egy változó név. Az exportban is ez fog látszódni.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_type">Típus *</label>
+                            <div style="clear:both"></div>
+                            <select id="${property}_${id}_type" onchange="saveField('${property}')">
+                                ${elementTypes.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                            </select><br/>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_label">Cimke *</label>
+                            <input id="${property}_${id}_label" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Mi jelenjen meg a felhasználóknak.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_defaultValue">Alapértelmezett érték</label>
+                            <input id="${property}_${id}_defaultValue" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_values">Értékek</label>
+                            <input id="${property}_${id}_values" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_note">Leírás</label>
+                            <input id="${property}_${id}_note" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">A mező alatt megjelenő szöveg.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_required">Kötelező kitölteni</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_required" onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
+                            <div style="clear:both"></div>
+                            <label class="switch">
+                                <input type="checkbox" id="${property}_${id}_permanent" onchange="saveField('${property}')" />
+                                <span class="slider"></span>
+                            </label><br/>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_formatRegex">RegEx minta</label>
+                            <input id="${property}_${id}_formatRegex" type="text" value=".*" onchange="saveField('${property}')">
+                            <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
+                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="" onchange="saveField('${property}')">
+                            <span class="note">Akkor ejelenik meg ha validációs hiba van.</span>
+                        </div>
+                    </div>`;
+            let target = document.getElementById(`field_${property}_add`);
+            target.parentNode.insertBefore(element, target);
+        }
+
+        function saveField(property) {
+            let id = 0;
+            let result = [];
+            while (typeof document.getElementById(`${property}_${id}_fieldName`) !== 'undefined'
+            && document.getElementById(`${property}_${id}_fieldName`) !== null) {
+
+                const fieldName = document.getElementById(`${property}_${id}_fieldName`).value;
+                const label = document.getElementById(`${property}_${id}_label`).value;
+                const type = document.getElementById(`${property}_${id}_type`).value;
+                const formatRegex = document.getElementById(`${property}_${id}_formatRegex`).value;
+                const invalidFormatMessage = document.getElementById(`${property}_${id}_invalidFormatMessage`).value;
+                const defaultValue = document.getElementById(`${property}_${id}_defaultValue`).value;
+                const values = document.getElementById(`${property}_${id}_values`).value;
+                const note = document.getElementById(`${property}_${id}_note`).value;
+                const required = document.getElementById(`${property}_${id}_required`).checked;
+                const permanent = document.getElementById(`${property}_${id}_permanent`).checked;
+
+                if (fieldName !== null && label !== null && type !== null && fieldName !== '') {
+                    result.push({
+                        fieldName : fieldName,
+                        label : label,
+                        type : type,
+                        formatRegex : formatRegex,
+                        invalidFormatMessage : invalidFormatMessage,
+                        values : values,
+                        note : note,
+                        required : required,
+                        permanent : permanent,
+                        defaultValue : defaultValue
+                    });
+                }
+                ++id;
+            }
+            document.getElementById(property).value = JSON.stringify(result);
+        }
+
+        function swapValues(property, id1, id2) {
+            const form1 = document.getElementById(`form_${property}_${id1}`);
+            const form2 = document.getElementById(`form_${property}_${id2}`);
+            if (typeof form1 === 'undefined' || form1 == null || typeof form2 === 'undefined' || form2 == null)
+                return
+
+            const inputs1 = form1.querySelectorAll('input, select, textarea');
+            const inputs2 = form2.querySelectorAll('input, select, textarea');
+
+            for (let i = 0; i < inputs1.length; i++) {
+                const tempValue = inputs1[i].value;
+                const tempChecked = inputs1[i].checked;
+                inputs1[i].value = inputs2[i].value;
+                inputs1[i].checked = inputs2[i].checked;
+                inputs2[i].value = tempValue;
+                inputs2[i].checked = tempChecked;
+            }
+        }
+
+        function deleteValues(property, id) {
+            const form = document.getElementById(`form_${property}_${id}`);
+            const inputs = form.querySelectorAll('input, textarea');
+
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].value = '';
+                inputs[i].checked = false;
+            }
+        }
+
+    </script>
+
+</object>

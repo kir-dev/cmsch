@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.UserRepository
 
 interface CmschUser {
     val id: Int
@@ -29,4 +31,10 @@ interface CmschUser {
         role = cmschUser.role
         permissionsAsList = cmschUser.permissionsAsList
     }
+}
+
+fun CmschUser.asUserEntity(userRepository: UserRepository): UserEntity {
+    if (this is UserEntity)
+        return this
+    return userRepository.findById(this.id).orElseThrow()
 }
