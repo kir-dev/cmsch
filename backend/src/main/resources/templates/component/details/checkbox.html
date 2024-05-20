@@ -1,0 +1,35 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+
+    <div th:if="${generateInput.type == 'checkbox'}" class="field-group" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <label class="switch" th:unless="${entityMode}">
+            <input type="checkbox"
+                   th:checked="${(!editMode && !duplicateMode) ? (generateInput.defaultValue == 'true') : (property.get(data))}"
+                   th:name="${property.name}"
+                   th:id="|input${index}|"
+                   th:disabled="${!generateInput.enabled || readOnly}"
+            />
+            <span class="slider"></span>
+        </label>
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Igaz/hamis</span>
+        <div style="clear: both"></div>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript" th:remove="tag">
+
+</object>

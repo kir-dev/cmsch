@@ -1,0 +1,100 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+
+    <div th:if="${generateInput.type == 'boolean-list'}" class="field-group" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <table style="width: auto; margin: 20px auto 10px auto">
+            <tr>
+                <td th:each="i : ${#numbers.sequence(-5, -1)}"
+                    th:text="|T${i}|"
+                    style="text-align: center; padding-left: 5px">T-5</td>
+            </tr>
+            <tr>
+                <td th:each="i : ${#numbers.sequence(0, 4)}" width="60">
+                    <label class="switch">
+                        <input type="checkbox"
+                               th:name="|input${index}_${i}|"
+                               th:id="|input${index}_${i}|"
+                               th:data-prop="|input${index}|"
+                               onchange="changeBoolList(this.getAttribute('data-prop'))" />
+                        <span class="slider"></span>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td th:each="i : ${#numbers.sequence(1, 5)}"
+                    th:text="|T+${i}|"
+                    style="text-align: center; padding-left: 5px">T+1</td>
+            </tr>
+            <tr>
+                <td th:each="i : ${#numbers.sequence(5, 9)}" width="60">
+                    <label class="switch">
+                        <input type="checkbox"
+                               th:name="|input${index}_${i}|"
+                               th:id="|input${index}_${i}|"
+                               th:data-prop="|input${index}|"
+                               onchange="changeBoolList(this.getAttribute('data-prop'))" />
+                        <span class="slider"></span>
+                    </label>
+                </td>
+            </tr>
+        </table>
+
+        <input type="text"
+               th:name="${property.name}"
+               th:id="|input${index}|"
+               th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+               th:unless="${entityMode}"
+               autocomplete="off"
+               th:data-prop="${index}"
+               onchange="loadBoolList(this.getAttribute('data-prop'))"
+        />
+
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <script th:inline="javascript">
+            loadBoolList(/*[[${index}]]*/ '');
+        </script>
+        <span class="note type-note" th:if="${entityMode}">Típus: 10db igaz/hamis érték</span>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript" th:remove="tag">
+
+    <script th:inline="javascript">
+
+        function changeBoolList(property) {
+            const dataArray = [];
+
+            for (let i = 0; i < 10; i++) {
+                const checkbox = document.getElementById(`${property}_${i}`);
+                dataArray.push(checkbox.checked);
+            }
+
+            document.getElementById(property).value = JSON.stringify(dataArray).replaceAll(",", ", ");
+        }
+
+        function loadBoolList(property) {
+            if (document.getElementById(`input${property}`).value === '')
+                return;
+            const dataArray = JSON.parse(document.getElementById(`input${property}`).value);
+            for (let i = 0; i < 10; i++) {
+                const checkbox = document.getElementById(`input${property}_${i}`);
+                checkbox.checked = dataArray[i];
+            }
+        }
+
+    </script>
+
+</object>

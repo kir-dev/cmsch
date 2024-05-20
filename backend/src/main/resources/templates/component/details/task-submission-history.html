@@ -1,0 +1,66 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+
+    <div th:if="${generateInput.type == 'task-submission-history'}" class="field-group" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+
+        <div th:id="|input${index}_cards|" style="margin-top: 20px">
+        </div>
+
+        <input th:type="text"
+               th:name="${property.name}"
+               th:id="|input${index}|"
+               th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+               th:disabled="${!generateInput.enabled || readOnly}"
+               autocomplete="off"
+               th:unless="${entityMode}"
+               th:data-prop="${index}"
+               onchange="loadTaskHistory(this.getAttribute('data-prop'))"
+               style="display: none"
+        />
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Beadás történet</span>
+        <script th:inline="javascript">
+            loadTaskHistory(/*[[${index}]]*/ '')
+        </script>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript" th:remove="tag">
+
+    <script th:inline="javascript">
+
+        function loadTaskHistory(property) {
+            if (document.getElementById(`input${property}`).value === '')
+                return;
+
+            let result = "";
+            const dataArray = JSON.parse(document.getElementById(`input${property}`).value);
+            for (id in dataArray) {
+                result += ` <div class="sub-card ${dataArray[id].adminResponse ? 'admin-response' : ''}">
+                            <div class="field-group">
+                                <ins>${dataArray[id].submitterName}</ins> ${dataArray[id].adminResponse ? '[RENDEZŐ]' : '[RÉSZTVEVŐ]'}<br>
+                                <b>Státusz:</b> <ins>${dataArray[id].status}</ins><br>
+                                <b>${dataArray[id].adminResponse ? 'Válasz' : 'Beadás'}:</b> <ins>${dataArray[id].content}</ins><br>
+                                ${dataArray[id].type !== 'TEXT' ? `<a href="/cdn/${dataArray[id].contentUrl}" target="_blank">${dataArray[id].contentUrl}</a>` : ''}
+                            </div>
+                        </div>`;
+            }
+            document.getElementById(`input${property}_cards`).innerHTML = result;
+        }
+
+    </script>
+
+</object>
