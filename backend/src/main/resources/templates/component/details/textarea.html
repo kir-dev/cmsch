@@ -1,0 +1,33 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+
+    <div th:if="${generateInput.type == 'textarea'}" class="field-group" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <textarea
+                th:name="${property.name}"
+                th:id="|input${index}|"
+                th:text="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+                th:disabled="${!generateInput.enabled || readOnly}"
+                th:autocomplete="${generateInput.autocomplete}"
+                th:unless="${entityMode}">
+                                </textarea>
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Több soros szöveg</span>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript" th:remove="tag">
+
+</object>
