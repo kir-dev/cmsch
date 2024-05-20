@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.model.RoleType
 const val INPUT_TYPE_TEXT = "text"
 const val INPUT_TYPE_NUMBER = "number"
 const val INPUT_TYPE_DATE = "date"
+const val INPUT_TYPE_SQL_DATE = "sql-date"
 const val INPUT_TYPE_TIME = "time"
 const val INPUT_TYPE_FLOAT = "float"
 const val INPUT_TYPE_BLOCK_TEXT = "textarea"
