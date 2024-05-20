@@ -1,5 +1,6 @@
 
 <!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="data" type="kotlin.Any"-->
 <!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
 <!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
 <!--@thymesVar id="editMode" type="boolean"-->
@@ -7,7 +8,7 @@
 <!--@thymesVar id="duplicateMode" type="boolean"-->
 <!--@thymesVar id="readOnly" type="boolean"-->
 
-<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
 
     <div th:if="${generateInput.type == 'select'}" class="field-group" th:id="|_${index}|">
         <label th:for="|input${index}|"
