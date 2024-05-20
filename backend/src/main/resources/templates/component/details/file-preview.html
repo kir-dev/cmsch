@@ -1,0 +1,36 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+
+    <div th:if="${generateInput.type == 'file-preview' && (editMode || duplicateMode)}" class="field-group" th:id="|_${index}|">
+        <label th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <object th:unless="${property.get(data) == null || property.get(data) == ''}" th:remove="tag">
+            <a href="#"
+               target="_blank"
+               th:href="|@{/cdn/}${property.get(data)}|"
+               th:text="|${property.get(data)}|"
+               th:unless="${entityMode}"
+            >
+            </a>
+        </object>
+        <p th:if="${(property.get(data) == null || property.get(data) == '') && !entityMode}">
+            Nincs fájl feltöltve
+        </p>
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Fájl előnézet</span>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript" th:remove="tag">
+
+</object>

@@ -1,0 +1,72 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+
+    <div th:if="${generateInput.type == 'time'}" class="field-group" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="|${generateInput.label} (s)|">
+        </label>
+        <div style="clear: both"></div>
+        <input th:type="number"
+               th:name="|${property.name}_ss|"
+               th:id="|input${index}_ss|"
+               th:max="86400"
+               th:min="0"
+               th:value="${#numbers.formatInteger(T(java.lang.Math).floor((!editMode && !duplicateMode) ? T(java.lang.Float).parseFloat(generateInput.defaultValue) : property.get(data)), 0)}"
+               th:placeholder="${generateInput.placeholder}"
+               th:disabled="${!generateInput.enabled || readOnly}"
+               th:autocomplete="${generateInput.autocomplete}"
+               required
+               th:data-field-name="|input${index}|"
+               onchange="updateTime(this.getAttribute('data-field-name'))"
+               th:unless="${entityMode}"
+        />
+        <label th:for="|input${index}|"
+               th:text="|${generateInput.label} (ms)|">
+        </label>
+        <div style="clear: both"></div>
+        <input th:type="number"
+               th:name="|${property.name}_SSS|"
+               th:id="|input${index}_SSS|"
+               th:max="999"
+               th:min="0"
+               th:value="${#numbers.formatInteger((((!editMode && !duplicateMode) ? T(java.lang.Float).parseFloat(generateInput.defaultValue) : property.get(data)) * 1000) % 1000, 0)}"
+               th:placeholder="${generateInput.placeholder}"
+               th:disabled="${!generateInput.enabled || readOnly}"
+               th:autocomplete="${generateInput.autocomplete}"
+               required
+               th:data-field-name="|input${index}|"
+               onchange="updateTime(this.getAttribute('data-field-name'))"
+               th:unless="${entityMode}"
+        />
+        <input th:type="text"
+               th:name="${property.name}"
+               th:id="|input${index}|"
+               th:value="${#numbers.formatInteger((!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data), 0)}"
+               readonly
+               th:unless="${entityMode}"
+               style="display: none"
+        />
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Idő</span>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript" th:remove="tag">
+
+    <script th:inline="javascript">
+
+        function updateTime(id) {
+            document.getElementById(id).value = parseInt(document.getElementById(`${id}_ss`).value) + (parseInt(document.getElementById(`${id}_SSS`).value) / 1000.0)
+
+    </script>
+
+</object>

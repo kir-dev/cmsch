@@ -70,3 +70,12 @@ class OverviewBuilder<T : Any>(val type: KClass<T>) {
     }
 
 }
+
+object DetailsHelper {
+
+    @JvmStatic
+    fun inputTypes(inputs: List<Pair<KProperty1<out Any, *>, GenerateInput>>): List<String> {
+        return inputs.map { it.second.type }.distinct().toList()
+    }
+
+}
