@@ -9,6 +9,8 @@ import { ProfileView } from '../../../util/views/profile.view'
 import { useProfileQuery } from '../../hooks/profile/useProfileQuery'
 import { useTokenRefresh } from '../../hooks/useTokenRefresh'
 import { QueryKeys } from '../../hooks/queryKeys'
+import { useConfigContext } from '../config/ConfigContext.tsx'
+import { unsubscribeFromNotifications } from '../../../util/configs/firebase.config.ts'
 
 export type AuthContextType = {
   isLoggedIn: boolean
@@ -36,6 +38,7 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate()
+  const config = useConfigContext()
 
   const onLoginFailure = () => {
     Cookies.remove(CookieKeys.JWT_TOKEN)
@@ -56,7 +59,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }
 
-  const onLogout = () => {
+  const onLogout = async () => {
+    if (config.components.pushnotification?.notificationsEnabled) {
+      await unsubscribeFromNotifications()
+    }
     Cookies.remove(CookieKeys.JWT_TOKEN)
     Cookies.remove(CookieKeys.SESSION_ID)
     window.location.href = `${API_BASE_URL}/control/logout`

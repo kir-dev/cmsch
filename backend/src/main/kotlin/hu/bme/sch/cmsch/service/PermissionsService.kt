@@ -22,6 +22,7 @@ import hu.bme.sch.cmsch.component.location.LocationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.messaging.MessagingComponent
 import hu.bme.sch.cmsch.component.news.NewsComponent
+import hu.bme.sch.cmsch.component.pushnotification.PushNotificationComponent
 import hu.bme.sch.cmsch.component.proto.ProtoComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
@@ -245,6 +246,17 @@ object ControlPermissions : PermissionGroup {
         component = HomeComponent::class
     )
 
+    val PERMISSION_CONTROL_NOTIFICATIONS = PermissionValidator(
+        "NOTIFICATION_CONTROL",
+        "Értesítés komponens testreszabása",
+        component = PushNotificationComponent::class
+    )
+
+    val PERMISSION_SEND_NOTIFICATIONS = PermissionValidator(
+        "NOTIFICATION_SEND",
+        "Push Értesítés küldése",
+        component = PushNotificationComponent::class
+    )
     val PERMISSION_CONTROL_COMMUNITIES = PermissionValidator(
         "COMMUNITIES_CONTROL",
         "Kezdőlap komponens testreszabása",
@@ -376,6 +388,8 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_FORM,
         PERMISSION_CONTROL_CHALLENGE,
         PERMISSION_CONTROL_HOME,
+        PERMISSION_CONTROL_NOTIFICATIONS,
+        PERMISSION_SEND_NOTIFICATIONS,
         PERMISSION_CONTROL_COMMUNITIES,
         PERMISSION_CONTROL_ADMISSION,
         PERMISSION_CONTROL_RACE,

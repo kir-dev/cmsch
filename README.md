@@ -73,7 +73,7 @@ or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 
 You must install:
 
-- Node v16
+- Node v20
 - Yarn v1.22.17
 - optional: IDEA
 
@@ -100,6 +100,24 @@ Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active
 
 - `local,test` if you want test data in the database also
 - `local` if you don't
+
+## Set up push notifications
+
+1. Enable the push notification component on the backend.
+2. Create a Firebase project and enable Firebase Cloud Messaging by navigating to `Run` > `Messaging` and clicking on enable.
+
+### Backend setup
+1. Navigate to the Firebase Console of your project and open `Project Settings` > `Service accounts` 
+2. Click on `Generate new private key` and download the .json file
+3. If you are working locally set the value of `hu.bme.sch.cmsch.google.service-account-key` property to the contents of the JSON file
+4. If you are setting up the application inside docker set `FIREBASE_SERVICE_ACCOUNT_KEY` to the contents of the JSON file
+
+### Frontend setup
+1. Navigate to the Firebase Console of your project and open `Project Settings` > `General`
+2. Scroll down and create a __Web App__ if there is no app already by clicking `Add app`
+3. Find the values of `apiKey, projectId, appId, messagingSenderId` and set the `FIREBASE_*` properties in .env
+4. Navigate to `Project Settings` > `General` and scroll down to `Web Push certificates`
+5. If there is no key, click on `Generate key pair`. Copy the value from `Key pair` column and set `VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY` to it.
 
 ## Sponsors
 

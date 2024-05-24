@@ -9,6 +9,11 @@ interface ImportMetaEnv {
   readonly VITE_PASS_TEMPLATE: string
   readonly VITE_NEW_RIDDLE_ENDPOINTS: string
   readonly VITE_INITIAL_BG_IMAGE: string
+  readonly VITE_FIREBASE_PROJECT_ID: string
+  readonly VITE_FIREBASE_APP_ID: string
+  readonly VITE_FIREBASE_API_KEY: string
+  readonly VITE_FIREBASE_SENDER_ID: string
+  readonly VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY: string
 }
 
 interface ImportMeta {
