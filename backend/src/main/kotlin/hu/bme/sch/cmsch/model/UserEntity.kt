@@ -34,6 +34,10 @@ enum class RoleType(val value: Int, val displayName: String, val description: St
             return entries.filter { it.value <= type.value }
         }
 
+        fun fromValue(value: Int): RoleType? {
+            return entries.find { it.value == value }
+        }
+
         @JvmStatic
         fun names(): List<String> = entries.map { it.name }.toList()
     }

@@ -11,6 +11,8 @@
     "@chakra-ui/theme-tools": "2.1.2",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
+    "@firebase/app": "0.10.3",
+    "@firebase/messaging": "0.12.9",
     "@nivo/bar": "^0.86.0",
     "@zxing/browser": "^0.1.4",
     "@zxing/library": "^0.20.0",
@@ -34,8 +36,7 @@
     "react-router-dom": "6.23.0",
     "react-simple-code-editor": "0.13.1",
     "remark-gfm": "4.0.0",
-    "values.js": "2.1.1",
-    "web-vitals": "3.5.2"
+    "values.js": "2.1.1"
   },
   "devDependencies": {
     "@types/js-cookie": "3.0.6",
