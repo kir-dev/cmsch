@@ -1,11 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.2.5"
-    id("io.spring.dependency-management") version "1.1.4"
-    id("org.owasp.dependencycheck") version "9.1.0"
-    kotlin("jvm") version "1.9.23"
-    kotlin("plugin.spring") version "1.9.23"
+    id("org.springframework.boot") version "3.3.0"
+    id("io.spring.dependency-management") version "1.1.5"
+    id("org.owasp.dependencycheck") version "9.2.0"
+    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.spring") version "2.0.0"
 }
 
 group = "hu.bme.sch"
@@ -35,7 +36,7 @@ dependencies {
     api("org.springframework.retry:spring-retry")
     api("org.springframework.boot:spring-boot-starter-aop")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
-    api("com.itextpdf:itext-core:8.0.3")
+    api("com.itextpdf:itext-core:8.0.4")
     api("org.jetbrains.kotlin:kotlin-reflect")
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
@@ -51,7 +52,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
     implementation("org.postgresql:postgresql")
-    implementation(platform("io.micrometer:micrometer-bom:1.12.5"))
+    implementation(platform("io.micrometer:micrometer-bom:1.13.0"))
     implementation("io.micrometer:micrometer-core")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.micrometer:micrometer-observation")
@@ -64,9 +65,10 @@ dependencyCheck {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "21"
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
