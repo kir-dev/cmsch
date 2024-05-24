@@ -9,6 +9,7 @@ import { AbsolutePaths } from '../../util/paths'
 import { Footer } from '../footer/Footer'
 import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
+import { EnableNotifications } from '../EnableNotifications'
 import { ScrollToTop } from './ScrollToTop'
 
 interface CmschLayoutProps extends PropsWithChildren {
@@ -33,6 +34,7 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
         <Navbar />
         <Box background={background} flex={1} pb={20}>
           <Warning />
+          <EnableNotifications />
           {children}
         </Box>
         <Footer />

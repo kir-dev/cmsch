@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-admin:9.3.0")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.springframework.boot:spring-boot-starter-data-jpa")
