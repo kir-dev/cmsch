@@ -35,6 +35,7 @@ export interface Components {
   task: Task
   team: Team
   token: Token
+  pushnotification: PushNotification
   qrFight: QrFight
   communities: Communities
   footer: Footer
@@ -293,6 +294,14 @@ export interface Team {
   teamCreationTopMessage: string
   title: string
   togglePermissionEnabled: boolean
+}
+
+export interface PushNotification {
+  notificationsEnabled: boolean
+  permissionPromptText: string
+  permissionAcceptText: string
+  permissionDenyText: string
+  permissionAllowNeverShowAgain: boolean
 }
 
 export interface QrFight {
