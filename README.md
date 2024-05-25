@@ -104,7 +104,7 @@ Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active
 ## Set up push notifications
 
 1. Enable the push notification component on the backend.
-2. Create a Firebase project and enable Firebase Cloud Messaging by navigating to `Run` > `Messaging` and clicking on enable.
+2. Create a Firebase project and make sure Firebase Cloud Messaging is enabled by navigating to `Run` > `Messaging`.
 
 ### Backend setup
 1. Navigate to the Firebase Console of your project and open `Project Settings` > `Service accounts` 
@@ -116,7 +116,7 @@ Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active
 1. Navigate to the Firebase Console of your project and open `Project Settings` > `General`
 2. Scroll down and create a __Web App__ if there is no app already by clicking `Add app`
 3. Find the values of `apiKey, projectId, appId, messagingSenderId` and set the `FIREBASE_*` properties in .env
-4. Navigate to `Project Settings` > `General` and scroll down to `Web Push certificates`
+4. Navigate to `Project Settings` > `Cloud Messaging` and scroll down to `Web Push certificates`
 5. If there is no key, click on `Generate key pair`. Copy the value from `Key pair` column and set `VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY` to it.
 
 ## Sponsors
