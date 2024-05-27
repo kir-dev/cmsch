@@ -22,6 +22,7 @@ const val INPUT_TYPE_FILE_PREVIEW = "file-preview"
 const val INPUT_TYPE_FORM_EDITOR = "form-editor"
 const val INPUT_TYPE_BOOLEAN_LIST = "boolean-list"
 const val INPUT_TYPE_TASK_SUBMISSION_HISTORY = "task-submission-history"
+const val INPUT_TYPE_SECTION_SEPARATOR = "section-separator"
 
 const val INTERPRETER_INHERIT = "inherit"
 const val INTERPRETER_PATH = "path"
