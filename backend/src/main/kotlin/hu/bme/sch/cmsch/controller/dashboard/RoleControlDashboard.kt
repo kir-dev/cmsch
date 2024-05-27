@@ -46,7 +46,7 @@ class RoleControlDashboard(
         wide = false
     )
 
-    override fun getComponents(user: CmschUser): List<DashboardComponent> {
+    override fun getComponents(user: CmschUser, requestParams: Map<String, String>): List<DashboardComponent> {
         val users = transactionManager.transaction(readOnly = true) { userRepository.findAll() }
             .filter { it.role.value >= RoleType.STAFF.value }
         return listOf(

@@ -35,7 +35,7 @@ abstract class DashboardPage(
     private var ignoreFromMenu: Boolean = false
 ) {
 
-    abstract fun getComponents(user: CmschUser): List<DashboardComponent>
+    abstract fun getComponents(user: CmschUser, requestParams: Map<String, String>): List<DashboardComponent>
 
     @PostConstruct
     fun init() {
@@ -54,7 +54,7 @@ abstract class DashboardPage(
     }
 
     @GetMapping("")
-    fun view(model: Model, auth: Authentication, @RequestParam(defaultValue = "-1") card: Int, @RequestParam(defaultValue = "") message: String): String {
+    fun view(model: Model, auth: Authentication, @RequestParam requestParams: Map<String, String>): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {
@@ -68,25 +68,30 @@ abstract class DashboardPage(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
         model.addAttribute("wide", wide)
-        model.addAttribute("components", getComponents(user))
+        model.addAttribute("components", getComponents(user, requestParams))
         model.addAttribute("user", user)
-        model.addAttribute("card", card)
-        model.addAttribute("message", message)
+        model.addAttribute("card", requestParams.getOrDefault("card", "-1"))
+        model.addAttribute("message", requestParams.getOrDefault("message", ""))
 
         return "dashboard"
     }
 
     @ResponseBody
     @GetMapping("/export/{id}", produces = [ MediaType.APPLICATION_OCTET_STREAM_VALUE ])
-    fun export(auth: Authentication, response: HttpServletResponse, @PathVariable id: Int): ByteArray {
+    fun export(
+        auth: Authentication,
+        response: HttpServletResponse,
+        @PathVariable id: Int,
+        @RequestParam requestParams: Map<String, String>
+    ): ByteArray {
         val user = auth.getUser()
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
 
         val outputStream = ByteArrayOutputStream()
-        val components = getComponents(user)
-        val exportable = components.firstOrNull() { it.id == id }
+        val components = getComponents(user, requestParams)
+        val exportable = components.firstOrNull { it.id == id }
         if (exportable == null || exportable !is DashboardTableCard || !exportable.exportable)
             return outputStream.toByteArray()
 
