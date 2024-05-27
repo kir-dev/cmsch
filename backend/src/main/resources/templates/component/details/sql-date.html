@@ -10,7 +10,7 @@
 
 <object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
 
-    <div th:if="${generateInput.type == 'date'}" class="field-group" th:id="|_${index}|">
+    <div th:if="${generateInput.type == 'sql-date'}" class="field-group" th:id="|_${index}|">
         <label th:for="|input${index}|"
                th:text="${generateInput.label}">
         </label>
@@ -25,7 +25,7 @@
                required
         />
         <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
-        <span class="note type-note" th:if="${entityMode}">Típus: Dátum</span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Dátum (napra)</span>
     </div>
 
 </object>
