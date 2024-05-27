@@ -21,35 +21,35 @@ class PushNotificationService(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    fun sendToUser(userId: Int, notification: CmschNotification) {
+    fun sendToUser(userId: Int, notification: CmschNotification): Int {
         log.info("Sending notification {} to user: {}", notification, userId)
         val tokens = messagingTokenRepository.findAllTokensByUserId(userId)
-        sendNotifications(tokens, notification)
+        return sendNotifications(tokens, notification)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    fun sendToGroup(groupId: Int, notification: CmschNotification) {
+    fun sendToGroup(groupId: Int, notification: CmschNotification): Int {
         log.info("Sending notification {} to group: {}", notification, groupId)
         val tokens = messagingTokenRepository.findAllTokensByGroupId(groupId)
-        sendNotifications(tokens, notification)
+        return sendNotifications(tokens, notification)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    fun sendToAllUsers(notification: CmschNotification) {
+    fun sendToAllUsers(notification: CmschNotification): Int {
         log.info("Sending notification {} to all users", notification)
         val tokens = messagingTokenRepository.findAllTokens()
-        sendNotifications(tokens, notification)
+        return sendNotifications(tokens, notification)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    fun sendToRole(role: RoleType, notification: CmschNotification) {
+    fun sendToRole(role: RoleType, notification: CmschNotification): Int {
         log.info("Sending notification {} to users with role {}", notification, role.displayName)
         val tokens = messagingTokenRepository.findAllTokensByRole(role)
-        sendNotifications(tokens, notification)
+        return sendNotifications(tokens, notification)
     }
 
-    private fun sendNotifications(tokens: List<String>, notification: CmschNotification) {
-        if (tokens.isEmpty()) return
+    private fun sendNotifications(tokens: List<String>, notification: CmschNotification): Int {
+        if (tokens.isEmpty()) return 0
 
         var tokensRemaining = tokens
         val sendResult = runCatching {
@@ -80,6 +80,7 @@ class PushNotificationService(
             log.info("Failed to send notification {} to {} devices", notification, tokensRemaining.size)
             // Maybe purge old and invalidated tokens?
         }
+        return tokens.size - tokensRemaining.size
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
