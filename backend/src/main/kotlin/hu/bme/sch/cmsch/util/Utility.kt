@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -73,6 +75,10 @@ fun Authentication.getUserEntityFromDatabase(): UserEntity {
 
 fun Authentication?.getUserEntityFromDatabaseOrNull(): UserEntity? {
     return if (this == null) null else DI.instance.userService.findById(this.name).orElse(null)
+}
+
+fun Map<String, String>.urlEncode(): String = this.entries.joinToString("&") {
+    URLEncoder.encode(it.key, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(it.value, StandardCharsets.UTF_8)
 }
 
 fun readAsset(assetName: String): Optional<ByteArray> {

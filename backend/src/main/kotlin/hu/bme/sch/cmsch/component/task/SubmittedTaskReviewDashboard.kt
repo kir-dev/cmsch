@@ -57,7 +57,7 @@ class SubmittedTaskReviewDashboard(
         wide = false
     )
 
-    override fun getComponents(user: CmschUser): List<DashboardComponent> {
+    override fun getComponents(user: CmschUser, requestParams: Map<String, String>): List<DashboardComponent> {
         return listOf(
             permissionCard,
             getForm(),

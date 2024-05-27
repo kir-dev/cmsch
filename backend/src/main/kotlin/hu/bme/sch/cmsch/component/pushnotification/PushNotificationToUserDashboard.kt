@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -46,11 +47,11 @@ class PushNotificationToUserDashboard(
     5
 ) {
 
-    override fun getComponents(user: CmschUser): List<DashboardComponent> {
+    override fun getComponents(user: CmschUser, requestParams: Map<String, String>): List<DashboardComponent> {
         return listOf(
             permissionCard,
-            getUserNotificationForm(),
-            getAllUserNotificationForm(),
+            getUserNotificationForm(requestParams),
+            getAllUserNotificationForm(requestParams),
         )
     }
 
@@ -61,7 +62,7 @@ class PushNotificationToUserDashboard(
         wide = false
     )
 
-    fun getUserNotificationForm(): DashboardFormCard {
+    fun getUserNotificationForm(requestParams: Map<String, String>): DashboardFormCard {
         return DashboardFormCard(
             2,
             false,
@@ -72,31 +73,31 @@ class PushNotificationToUserDashboard(
                     "userId", "Felhasználó", FormElementType.SEARCHABLE_SELECT,
                     ".*", "", getUserList(),
                     "Akinek az értesítést küldöd",
-                    required = true
+                    required = true, defaultValue = requestParams.getOrDefault("userId", "")
                 ),
                 FormElement(
                     "title", "Cím", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítés címe",
-                    required = true, permanent = false, defaultValue = ""
+                    required = true, permanent = false, defaultValue = requestParams.getOrDefault("title", "")
                 ),
                 FormElement(
                     "body", "Üzenet", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítés szövege",
-                    required = true, permanent = false, defaultValue = ""
+                    required = true, permanent = false, defaultValue = requestParams.getOrDefault("body", "")
                 ),
                 FormElement(
                     "image", "Kép", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítésben megjelenő kép URL-je (opcionális)",
-                    required = false, permanent = false, defaultValue = ""
+                    required = false, permanent = false, defaultValue = requestParams.getOrDefault("image", "")
                 ),
                 FormElement(
                     "url", "Link", FormElementType.TEXT,
                     ".*", "", "",
                     "Ez a link nyílik meg, amikor a felhasználó az értesítésre kattint (opcionális)",
-                    required = false, permanent = false, defaultValue = ""
+                    required = false, permanent = false, defaultValue = requestParams.getOrDefault("url", "")
                 ),
             ),
             buttonCaption = "Küldés",
@@ -106,36 +107,36 @@ class PushNotificationToUserDashboard(
         )
     }
 
-    fun getAllUserNotificationForm(): DashboardFormCard {
+    fun getAllUserNotificationForm(requestParams: Map<String, String>): DashboardFormCard {
         return DashboardFormCard(
-            2,
+            3,
             false,
             "Push Értesítés Az Összes Felhasználónak",
             "Értesítés küldése az összes felhasználónak. Egy felhasználó csak akkor kapja meg az értesítést, ha engedélyezte azokat. Ezzel ÓVATOSAN, nem fogják szeretni, ha spammeled őket!",
             listOf(
                 FormElement(
-                    "title", "Cím", FormElementType.TEXT,
+                    "allTitle", "Cím", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítés címe",
-                    required = true, permanent = false, defaultValue = ""
+                    required = true, permanent = false, defaultValue = requestParams.getOrDefault("allTitle", "")
                 ),
                 FormElement(
-                    "body", "Üzenet", FormElementType.TEXT,
+                    "allBody", "Üzenet", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítés szövege",
-                    required = true, permanent = false, defaultValue = ""
+                    required = true, permanent = false, defaultValue = requestParams.getOrDefault("allBody", "")
                 ),
                 FormElement(
-                    "image", "Kép", FormElementType.TEXT,
+                    "allImage", "Kép", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítésben megjelenő kép URL-je (opcionális)",
-                    required = false, permanent = false, defaultValue = ""
+                    required = false, permanent = false, defaultValue = requestParams.getOrDefault("allImage", "")
                 ),
                 FormElement(
-                    "url", "Link", FormElementType.TEXT,
+                    "allUrl", "Link", FormElementType.TEXT,
                     ".*", "", "",
                     "Ez a link nyílik meg, amikor a felhasználó az értesítésre kattint (opcionális)",
-                    required = false, permanent = false, defaultValue = ""
+                    required = false, permanent = false, defaultValue = requestParams.getOrDefault("allUrl", "")
                 ),
             ),
             buttonCaption = "Küldés",
@@ -152,18 +153,25 @@ class PushNotificationToUserDashboard(
             throw IllegalStateException("Insufficient permissions")
         }
 
-        val title = allRequestParams["title"] ?: throw IllegalStateException("The title must be provided!")
-        val body = allRequestParams["body"] ?: throw IllegalStateException("The body must be provided!")
-        val image = allRequestParams["image"]
-        val url = allRequestParams["url"]
+        val title = allRequestParams["allTitle"] ?: throw IllegalStateException("The title must be provided!")
+        val body = allRequestParams["allBody"] ?: throw IllegalStateException("The body must be provided!")
+        val image = allRequestParams["allImage"]
+        val url = allRequestParams["allUrl"]
         auditLogService.fine(
             user,
             "pushnotification",
             "sent a push notification to all users: title: $title, body: $body, image: $image url:$url"
         )
 
-        notificationService.sendToAllUsers(CmschNotification(title = title, body = body, image = image, link = url))
-        return "redirect:/admin/control/$VIEW"
+        val count = notificationService.sendToAllUsers(
+            CmschNotification(title = title, body = body, image = image, link = url)
+        )
+
+        val params = HashMap<String, String>()
+        params.putAll(allRequestParams)
+        params["message"] = "Értesítés elküldve $count eszközre"
+        params["card"] = "3"
+        return "redirect:/admin/control/$VIEW?${params.urlEncode()}"
     }
 
     @PostMapping("/send-to-user")
@@ -185,11 +193,16 @@ class PushNotificationToUserDashboard(
             "sent a push notification to user: title: $title, body: $body, image: $image url:$url to user: $authorId"
         )
 
-        notificationService.sendToUser(
+        val count = notificationService.sendToUser(
             authorId,
             CmschNotification(title = title, body = body, image = image, link = url)
         )
-        return "redirect:/admin/control/$VIEW"
+
+        val params = HashMap<String, String>()
+        params.putAll(allRequestParams)
+        params["message"] = "Értesítés elküldve $count eszközre"
+        params["card"] = "2"
+        return "redirect:/admin/control/$VIEW?${params.urlEncode()}"
     }
 
     private fun getUserList(): String =

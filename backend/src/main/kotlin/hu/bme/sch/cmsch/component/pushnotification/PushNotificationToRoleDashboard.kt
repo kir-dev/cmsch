@@ -9,11 +9,11 @@ import hu.bme.sch.cmsch.component.form.FormElementType
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.CmschNotification
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -31,7 +31,6 @@ class PushNotificationToRoleDashboard(
     component: PushNotificationComponent,
     private val auditLogService: AuditLogService,
     private val notificationService: PushNotificationService,
-    private val groupRepository: GroupRepository
 ) : DashboardPage(
     VIEW,
     "Push értesítés jogosultságkörnek",
@@ -46,10 +45,10 @@ class PushNotificationToRoleDashboard(
     5
 ) {
 
-    override fun getComponents(user: CmschUser): List<DashboardComponent> {
+    override fun getComponents(user: CmschUser, requestParams: Map<String, String>): List<DashboardComponent> {
         return listOf(
             permissionCard,
-            getUserNotificationForm(),
+            getUserNotificationForm(requestParams),
         )
     }
 
@@ -60,7 +59,7 @@ class PushNotificationToRoleDashboard(
         wide = false
     )
 
-    fun getUserNotificationForm(): DashboardFormCard {
+    fun getUserNotificationForm(requestParams: Map<String, String>): DashboardFormCard {
         return DashboardFormCard(
             2,
             false,
@@ -71,31 +70,31 @@ class PushNotificationToRoleDashboard(
                     "role", "Jogosultság", FormElementType.SELECT,
                     ".*", "", getAllRoles(),
                     "A jogosultságkör, mely felhasználóinak értesítést akarsz küldeni",
-                    required = true
+                    required = true, defaultValue = requestParams.getOrDefault("role", "")
                 ),
                 FormElement(
                     "title", "Cím", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítés címe",
-                    required = true, permanent = false, defaultValue = ""
+                    required = true, permanent = false, defaultValue = requestParams.getOrDefault("title", "")
                 ),
                 FormElement(
                     "body", "Üzenet", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítés szövege",
-                    required = true, permanent = false, defaultValue = ""
+                    required = true, permanent = false, defaultValue = requestParams.getOrDefault("body", "")
                 ),
                 FormElement(
                     "image", "Kép", FormElementType.TEXT,
                     ".*", "", "",
                     "Az értesítésben megjelenő kép URL-je (opcionális)",
-                    required = false, permanent = false, defaultValue = ""
+                    required = false, permanent = false, defaultValue = requestParams.getOrDefault("image", "")
                 ),
                 FormElement(
                     "url", "Link", FormElementType.TEXT,
                     ".*", "", "",
                     "Ez a link nyílik meg, amikor a felhasználó az értesítésre kattint (opcionális)",
-                    required = false, permanent = false, defaultValue = ""
+                    required = false, permanent = false, defaultValue = requestParams.getOrDefault("url", "")
                 ),
             ),
             buttonCaption = "Küldés",
@@ -125,11 +124,16 @@ class PushNotificationToRoleDashboard(
             "sent a push notification to role: ${role.displayName} title: $title, body: $body, image: $image url: $url"
         )
 
-        notificationService.sendToRole(
+        val count = notificationService.sendToRole(
             role,
             CmschNotification(title = title, body = body, image = image, link = url)
         )
-        return "redirect:/admin/control/$VIEW"
+
+        val params = HashMap<String, String>()
+        params.putAll(allRequestParams)
+        params["message"] = "Értesítés elküldve $count eszközre"
+        params["card"] = "2"
+        return "redirect:/admin/control/$VIEW?${params.urlEncode()}"
     }
 
     private fun getAllRoles(): String =
