@@ -4,7 +4,7 @@ import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
 export const EnableNotifications = () => {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
   const config = useConfigContext()
-  if (Notification.permission != 'default') return null // we cannot ask again
+  if (Notification.permission !== 'default') return null // we cannot ask again
 
   const component = config.components.pushnotification
   if (!component?.notificationsEnabled || !isOpen || !shouldShowAlert(component.permissionAllowNeverShowAgain)) return null

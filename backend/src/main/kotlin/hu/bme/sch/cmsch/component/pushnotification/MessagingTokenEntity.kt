@@ -1,12 +1,14 @@
 package hu.bme.sch.cmsch.component.pushnotification
 
 import jakarta.persistence.*
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 
 @Entity
 @Table(
     name = "messaging_tokens",
     indexes = [Index(columnList = "userId"), Index(columnList = "userId,token", unique = true)]
 )
+@ConditionalOnBean(PushNotificationComponent::class)
 class MessagingTokenEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

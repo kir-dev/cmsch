@@ -37,12 +37,10 @@ export async function initNotifications(messaging: Messaging, onNotification: (p
   await axios.post(ApiPaths.ADD_PUSH_NOTIFICATION_TOKEN, { token })
 }
 
-export async function disableNotifications() {
-  return unregisterServiceWorker()
-}
+export const disableNotifications = () => unregisterServiceWorker()
 
 export async function unsubscribeFromNotifications() {
-  if (Notification.permission != 'granted') return // There is nothing to unsubscribe from
+  if (Notification.permission !== 'granted') return // We cannot obtain a messaging token if the permission is not granted
 
   try {
     const messaging = getCloudMessaging()
