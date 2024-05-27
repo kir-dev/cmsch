@@ -13,6 +13,7 @@ import org.springframework.retry.policy.SimpleRetryPolicy
 import org.springframework.retry.support.RetryTemplate
 
 @Configuration
+@ConditionalOnBean(PushNotificationComponent::class)
 class FirebaseMessagingConfiguration {
     private val messagingScope = "https://www.googleapis.com/auth/firebase.messaging"
 
