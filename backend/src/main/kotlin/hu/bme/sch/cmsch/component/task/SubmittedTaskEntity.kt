@@ -113,6 +113,9 @@ data class SubmittedTaskEntity(
     var submissionHistory: String = "",
 ) : ManagedEntity {
 
+    @property:GenerateOverview(columnName = "Feladat", order = 0)
+    val taskTitle get() = task?.title ?: ""
+
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "SubmittedTask",
         view = "control/rate-tasks",
