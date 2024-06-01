@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*
 @ConditionalOnBean(TaskComponent::class)
 class TaskAdminRateController(
     private val submittedRepository: SubmittedTaskRepository,
+    private val taskRepository: TaskEntityRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: TaskComponent,
@@ -117,15 +118,13 @@ class TaskAdminRateController(
 
         model.addAttribute("title", titlePlural)
         model.addAttribute("titleSingular", titleSingular)
-        model.addAttribute("description", description)
         model.addAttribute("view", view)
 
         model.addAttribute("columnData", descriptor.getColumnsAsJson())
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(
-            transactionManager.transaction(readOnly = true) {
-                submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalseWithoutLobs(id)
-            }
-        ))
+        val submissions = transactionManager.transaction(readOnly = true) {
+            submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalseWithoutLobs(id)
+        }
+        model.addAttribute("tableData", descriptor.getTableDataAsJson(submissions))
 
         model.addAttribute("user", user)
         model.addAttribute("controlActions", descriptor.toJson(
@@ -133,6 +132,12 @@ class TaskAdminRateController(
             objectMapper))
         model.addAttribute("allControlActions", rateControlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
+
+        val taskTitle = submissions.firstOrNull()?.task?.title
+            ?: (transactionManager.transaction(readOnly = true) { taskRepository.findById(id) })
+                .orElseThrow()
+                .title
+        model.addAttribute("description", "Feladat: $taskTitle");
 
         return "overview4"
     }
