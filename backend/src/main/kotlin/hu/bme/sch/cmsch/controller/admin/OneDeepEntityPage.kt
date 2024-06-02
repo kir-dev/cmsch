@@ -25,6 +25,9 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.lang.reflect.Method
+import java.sql.Date
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.function.Supplier
 import kotlin.reflect.KClass
@@ -643,6 +646,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         return "redirect:/admin/control/$view"
     }
 
+    private val sqlDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
     internal fun updateEntity(
         descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T,
         newValues: StringBuilder, file0: MultipartFile?, file1: MultipartFile?
@@ -676,7 +681,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                         newValues.append(it.first.name).append("=").append(it.first.getter.call(dto)?.toString()
                             ?.replace("\r", "")?.replace("\n", "") ?: "<null>").append(", ")
                     }
-                    it.second.interpreter == "path" -> {
+                    it.second.interpreter == INTERPRETER_PATH -> {
                         val value = it.first.getter.call(dto)
                             ?.toString()
                             ?.lowercase()
