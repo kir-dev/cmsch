@@ -5,7 +5,6 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.TimeService
-import org.postgresql.util.PSQLException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.retry.annotation.Backoff
@@ -13,6 +12,7 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLException
 
 private const val ACCESS_KEY = "access-key"
 
@@ -29,7 +29,7 @@ open class AccessKeyService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun validateKey(user: CmschUser, key: String): AccessKeyResponse {
         if (key.isEmpty()) {
