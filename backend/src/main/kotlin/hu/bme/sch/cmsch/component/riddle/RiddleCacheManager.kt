@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.component.riddle
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import jakarta.annotation.PostConstruct
-import org.postgresql.util.PSQLException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.retry.annotation.Backoff
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLException
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
@@ -59,7 +59,7 @@ open class RiddleCacheManager(
         resetCache(persistMapping = false, overrideMappings = true)
     }
 
-    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun resetCache(persistMapping: Boolean, overrideMappings: Boolean) {
         log.info("Getting all locks for 'resetCache({}, {})'", persistMapping, overrideMappings)
