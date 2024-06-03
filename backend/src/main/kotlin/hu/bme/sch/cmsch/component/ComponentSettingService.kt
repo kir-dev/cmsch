@@ -1,12 +1,12 @@
 package hu.bme.sch.cmsch.component
 
-import org.postgresql.util.PSQLException
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLException
 
 @Service
 open class ComponentSettingService(
@@ -26,7 +26,7 @@ open class ComponentSettingService(
         settings.forEach(this::refreshCachedSetting)
     }
 
-    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun persistSetting(setting: SettingProxy) {
         if (!setting.persist)
@@ -46,13 +46,13 @@ open class ComponentSettingService(
             })
     }
 
-    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun persistSettings(settings: List<SettingProxy>) {
         settings.forEach(this::persistSetting)
     }
 
-    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun loadDefaultSetting(setting: SettingProxy) {
         if (!setting.persist)
@@ -71,7 +71,7 @@ open class ComponentSettingService(
             })
     }
 
-    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun loadDefaultSettings(settings: List<SettingProxy>) {
         settings.forEach(this::loadDefaultSetting)

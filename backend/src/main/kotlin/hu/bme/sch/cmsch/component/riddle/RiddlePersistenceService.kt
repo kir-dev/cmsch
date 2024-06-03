@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.riddle
 
-import org.postgresql.util.PSQLException
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLException
 
 @Service
 @ConditionalOnBean(RiddleComponent::class)
@@ -16,7 +16,7 @@ open class RiddlePersistenceService(
     private val riddleMappingRepository: RiddleMappingRepository,
 ) {
 
-    @Retryable(value = [ PSQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun saveAllRiddleMapping(entities: MutableIterable<RiddleMappingEntity>) {
         riddleMappingRepository.saveAll(entities)
