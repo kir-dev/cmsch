@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(StaticPageComponent::class)
 class StaticPageApiController(
     private val staticPageService: StaticPageService,

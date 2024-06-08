@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(TeamComponent::class)
 class TeamApiController(
     private val teamComponent: TeamComponent,
