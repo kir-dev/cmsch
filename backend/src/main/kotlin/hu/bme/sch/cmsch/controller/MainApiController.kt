@@ -10,7 +10,6 @@ val UNKNOWN_USER = UserEntity(0, fullName = "Feature Not Available")
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 class MainApiController(
     private val clock: TimeService
 ) {

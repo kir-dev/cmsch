@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.app
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -10,7 +9,6 @@ const val IMAGE_PNG = "image/png"
 
 @RestController
 @RequestMapping("/manifest")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(ApplicationComponent::class)
 class ManifestApiController(
     private val manifestComponent: ManifestComponent,

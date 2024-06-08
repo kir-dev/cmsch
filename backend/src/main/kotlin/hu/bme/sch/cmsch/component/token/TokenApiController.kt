@@ -21,7 +21,6 @@ const val SESSION_TOKEN_COLLECTOR_ATTRIBUTE = "TOKEN_COLLECTOR_ATTRIBUTE"
 
 @Controller
 @RequestMapping("/api")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(TokenComponent::class)
 class TokenApiController(
     private val tokens: TokenCollectorService,

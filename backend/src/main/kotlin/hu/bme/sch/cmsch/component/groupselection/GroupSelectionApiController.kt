@@ -9,7 +9,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(GroupSelectionComponent::class)
 class GroupSelectionApiController(
     private val groupSelectionService: GroupSelectionService,
