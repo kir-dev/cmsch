@@ -8,7 +8,7 @@
 <!--@thymesVar id="duplicateMode" type="boolean"-->
 <!--@thymesVar id="readOnly" type="boolean"-->
 
-<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly)" th:remove="tag">
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
 
     <div th:if="${generateInput.type == 'checkbox'}" class="field-group" th:id="|_${index}|">
         <label th:for="|input${index}|"
@@ -31,6 +31,6 @@
 
 </object>
 
-<object th:fragment="detailsSegmentScript" th:remove="tag">
+<object th:fragment="detailsSegmentScript (ext)" th:remove="tag">
 
 </object>
