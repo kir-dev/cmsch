@@ -27,6 +27,7 @@ const val INPUT_TYPE_SECTION_SEPARATOR = "section-separator"
 const val INTERPRETER_INHERIT = "inherit"
 const val INTERPRETER_PATH = "path"
 const val INTERPRETER_SEARCH = "search"
+const val INTERPRETER_CUSTOM = "custom"
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)

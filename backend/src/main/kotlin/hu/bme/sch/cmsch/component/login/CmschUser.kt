@@ -19,6 +19,10 @@ interface CmschUser {
         return role == RoleType.STAFF
     }
 
+    fun isAtLeastStaff(): Boolean {
+        return role == RoleType.STAFF || role == RoleType.ADMIN || role == RoleType.SUPERUSER
+    }
+
     fun isAdmin(): Boolean {
         return role == RoleType.ADMIN || role == RoleType.SUPERUSER
     }

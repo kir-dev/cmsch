@@ -32,6 +32,7 @@ import java.util.*
 import java.util.function.Supplier
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KProperty1
 
 data class ControlAction(
     val name: String,
@@ -690,6 +691,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, value)
                         newValues.append(it.first.name).append("=").append(value).append(", ")
                     }
+                    it.second.interpreter == INTERPRETER_CUSTOM -> {
+                        handleCustomInterpreter(it, newValues)
+                    }
                 }
             }
         }
@@ -817,6 +821,10 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
     open fun fetchOverview(user: CmschUser): Iterable<T> {
         return dataSource.findAll()
+    }
+
+    open fun handleCustomInterpreter(it: Pair<KProperty1<out Any, *>, GenerateInput>, newValues: StringBuilder) {
+        TODO("Custom interpreter was found but handleCustomInterpreter() was not overridden")
     }
 
 }
