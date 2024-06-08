@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/admin/api/settings")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 class SettingsApiController(
     private val adminMenuService: AdminMenuService
 ) {
