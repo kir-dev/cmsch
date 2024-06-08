@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = ["\${cmsch.frontend.production-url}"], allowedHeaders = ["*"])
 @ConditionalOnBean(AccessKeyComponent::class)
 class AccessKeyApiController(
     private val accessKeyComponent: AccessKeyComponent,
