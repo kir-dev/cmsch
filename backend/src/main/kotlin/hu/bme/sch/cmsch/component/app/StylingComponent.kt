@@ -74,7 +74,7 @@ class StylingComponent(
 
     val lightFooterTransparent = SettingProxy(componentSettingService, component,
         "lightFooterTransparent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
+        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a footer áttetsző"
     )
 
     val lightNavbarTransparent = SettingProxy(componentSettingService, component,
@@ -143,7 +143,7 @@ class StylingComponent(
 
     val darkFooterTransparent = SettingProxy(componentSettingService, component,
         "darkFooterTransparent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
+        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a footer áttetsző"
     )
 
     val darkNavbarTransparent = SettingProxy(componentSettingService, component,
