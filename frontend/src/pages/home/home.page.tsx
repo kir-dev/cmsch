@@ -68,7 +68,7 @@ const HomePage = () => {
               <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
             ))}
           </Grid>
-          <LinkButton mt={5} href={AbsolutePaths.NEWS}>
+          <LinkButton colorScheme="brand" mt={5} href={AbsolutePaths.NEWS}>
             Összes hír
           </LinkButton>
         </>
