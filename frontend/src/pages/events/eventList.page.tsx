@@ -73,7 +73,7 @@ const EventListPage = () => {
     <CmschPage>
       <Helmet title={component.title ?? 'Események'} />
       <Box mb={5}>
-        <Heading as="h1" mb={5}>
+        <Heading as="h1" variant="main-title" mb={5}>
           {component.title}
         </Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}

@@ -48,7 +48,9 @@ export default function LeaderboardCategoryPage() {
       <Helmet title={title} />
       <Flex wrap="wrap" justify="space-between">
         <VStack mb={5} align="flex-start">
-          <Heading as="h1">{title}</Heading>
+          <Heading as="h1" variant="main-title">
+            {title}
+          </Heading>
           <Text>Kategóriák szerint</Text>
         </VStack>
         <VStack>
