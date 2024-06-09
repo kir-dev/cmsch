@@ -11,7 +11,7 @@
 <object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
 
     <div th:if="${generateInput.type == 'markdown'}"
-         class="field-group"
+         th:class="|field-group ${generateInput.style}|"
          th:class="|field-group ${!generateInput.enabled || readOnly ? 'disabled' : ''}|"
          th:id="|_${index}|">
 
