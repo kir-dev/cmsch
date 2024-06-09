@@ -31,7 +31,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
 
   return (
     <>
-      <Heading>{config?.components.news.title}</Heading>
+      <Heading as="h1">{config?.components.news.title}</Heading>
       <InputGroup my={10}>
         <InputLeftElement h="100%">
           <SearchIcon />

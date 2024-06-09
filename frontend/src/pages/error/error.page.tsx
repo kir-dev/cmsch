@@ -33,7 +33,9 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   return (
     <CmschPage>
       <Helmet title={l('error-page-helmet')} />
-      <Heading textAlign="center">{l('error-page-title')}</Heading>
+      <Heading as="h1" textAlign="center">
+        {l('error-page-title')}
+      </Heading>
       <Box textAlign="center" color="gray.500" marginTop={10}>
         <Markdown text={clonedMessage} />
       </Box>

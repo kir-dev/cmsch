@@ -20,7 +20,7 @@ const ImpressumPage = () => {
   return (
     <CmschPage>
       <Helmet title={component.title} />
-      <Heading>{component.title}</Heading>
+      <Heading as="h1">{component.title}</Heading>
       <Markdown text={component.topMessage} />
       <Heading as="h2" size="lg" my="5" textAlign="center">
         Fejlesztők

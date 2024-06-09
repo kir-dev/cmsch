@@ -37,7 +37,7 @@ const TaskCategoryList = () => {
     <CmschPage loginRequired>
       <Helmet title={component.title} />
       {required}
-      <Heading>{component.regularTitle}</Heading>
+      <Heading as="h1">{component.regularTitle}</Heading>
       {component.regularMessage && <Markdown text={component.regularMessage} />}
       {normalCategories.length > 0 ? (
         <VStack spacing={4} mt={5} align="stretch">
