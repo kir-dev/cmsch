@@ -17,9 +17,15 @@ export const ThemeConfig = ({ children }: PropsWithChildren) => {
       customTheme.colors.darkContainerBg = config.components.style.darkContainerColor
       setColorMode((config.components.style.deviceTheme && 'system') || (config.components.style.forceDarkMode && 'dark') || 'light')
       customTheme.fonts = {
-        heading: config.components.style.displayFontName,
+        heading: config.components.style.mainFontName,
         body: config.components.style.mainFontName,
         mono: 'monospace'
+      }
+      customTheme.components.Heading = {
+        ...customTheme.components.Heading,
+        variants: {
+          'main-title': { fontFamily: config.components.style.displayFontName }
+        }
       }
     }
     return customTheme

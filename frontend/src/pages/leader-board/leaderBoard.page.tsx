@@ -47,7 +47,9 @@ const LeaderboardPage = () => {
       <Helmet title={title} />
       <Flex wrap="wrap" justify="space-between">
         <VStack>
-          <Heading as="h1">{title}</Heading>
+          <Heading as="h1" variant="main-title">
+            {title}
+          </Heading>
         </VStack>
         {component.leaderboardDetailsByCategoryEnabled && (
           <VStack>

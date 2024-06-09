@@ -59,7 +59,7 @@ const RiddleHistoryPage = () => {
       <Helmet title="Megoldott riddleök" />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'center']}>
-        <Heading as="h1" my={5}>
+        <Heading as="h1" variant="main-title" my={5}>
           Megoldott riddleök
         </Heading>
         <Stack direction={['column']}>
