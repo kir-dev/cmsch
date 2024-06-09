@@ -26,7 +26,9 @@ const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
   return (
     <CmschPage>
       <Helmet title={data.categoryName} />
-      <Heading mb={3}>{data.categoryName}</Heading>
+      <Heading as="h1" mb={3}>
+        {data.categoryName}
+      </Heading>
       <Markdown text={data.description || component.defaultCategoryDescription} />
       <Flex my={5} gap={5} flexWrap="wrap">
         <BoardStat label="Helyezésed" value={data.place || '-'} />

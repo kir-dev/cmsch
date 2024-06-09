@@ -11,7 +11,9 @@ export const UnauthorizedPage = () => {
   return (
     <CmschPage>
       <Helmet title={l('unauthorized-page-helmet')} />
-      <Heading textAlign="center">{l('unauthorized-page-title')}</Heading>
+      <Heading as="h1" textAlign="center">
+        {l('unauthorized-page-title')}
+      </Heading>
       <Text textAlign="center" color="gray.500" marginTop={10}>
         {l('unauthorized-page-description')}
       </Text>

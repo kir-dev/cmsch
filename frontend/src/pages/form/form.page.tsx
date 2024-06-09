@@ -67,7 +67,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />
       <Box w="100%" mx="auto">
-        <Heading>{form?.name || 'Űrlap'}</Heading>
+        <Heading as="h1">{form?.name || 'Űrlap'}</Heading>
         <FormStatusBadge status={status} />
 
         {(submission?.rejectionMessage || message) && (

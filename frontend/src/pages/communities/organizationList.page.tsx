@@ -42,7 +42,7 @@ export default function OrganizationListPage() {
   return (
     <CmschPage>
       <Helmet title={l('organization-title')} />
-      <Heading>{l('organization-title')}</Heading>
+      <Heading as="h1">{l('organization-title')}</Heading>
       <InputGroup mt={5}>
         <InputLeftElement h="100%">
           <SearchIcon />
