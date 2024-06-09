@@ -4,12 +4,14 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.UserService
+import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 import org.springframework.core.io.ClassPathResource
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
@@ -17,7 +19,6 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -94,9 +95,20 @@ fun readAsset(assetName: String): Optional<ByteArray> {
     return Optional.empty()
 }
 
+private val markdownExtensions = listOf(TablesExtension.create())
+private val markdownParser: Parser = Parser.builder().extensions(markdownExtensions).build()
+private val markdownRenderer = HtmlRenderer.builder().extensions(markdownExtensions).build()
+
 fun markdownToHtml(markdown: String): String {
-    val parser: Parser = Parser.builder().build()
-    val document: Node = parser.parse(markdown)
-    val renderer = HtmlRenderer.builder().build()
-    return renderer.render(document)
+    val document: Node = markdownParser.parse(markdown)
+    return markdownRenderer.render(document)
+}
+
+@Service
+class ThymeleafUtility {
+
+    fun convertMarkdownToHtml(markdown: String): String = markdownToHtml(markdown)
+
+    fun convertMarkdownToHtmlAndTrimIdent(markdown: String): String = markdownToHtml(markdown.trimIndent())
+
 }

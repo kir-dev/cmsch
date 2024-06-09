@@ -10,7 +10,7 @@
 
 <object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
 
-    <div th:if="${generateInput.type == 'permissions'}" class="field-group">
+    <div th:if="${generateInput.type == 'permissions'}" th:class="|field-group ${generateInput.style}|">
         <label th:for="|input${index}|"
                th:text="${generateInput.label}">
         </label>
@@ -77,7 +77,7 @@
 
         <h4 class="permission-header" th:unless="${entityMode}">Nyers jogosultságok</h4>
 
-        <div class="field-group" th:id="|_${index}|">
+        <div th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
             <input th:type="text"
                    th:name="${property.name}"
                    th:id="|input${index}|"

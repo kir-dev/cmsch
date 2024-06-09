@@ -10,19 +10,15 @@
 
 <object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
 
-    <div th:if="${generateInput.type == 'list-entities'}" th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
+    <div th:if="${generateInput.type == 'docs'}" th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
         <label th:text="${generateInput.label}">
         </label>
         <div style="clear: both"></div>
-        <ul th:unless="${entityMode}">
-            <li th:each="ent : ${mappings.get(generateInput.entitySource).invoke(data)}"
-                th:value="${ent}"
-                th:text="${ent}">
-            </li>
-        </ul>
-        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <div class="details-docs"
+             th:utext="${@thymeleafUtility.convertMarkdownToHtmlAndTrimIdent(generateInput.note)}"
+             th:if="${generateInput.note != ''}"
+        ></div>
     </div>
-
 
 </object>
 

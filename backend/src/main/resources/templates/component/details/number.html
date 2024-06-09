@@ -10,24 +10,27 @@
 
 <object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
 
-    <div th:if="${generateInput.type == 'number'}" class="field-group" th:id="|_${index}|">
+    <div th:if="${generateInput.type == 'number'}" th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
         <label th:for="|input${index}|"
                th:text="${generateInput.label}">
         </label>
         <div style="clear: both"></div>
-        <input th:type="${generateInput.type}"
-               th:name="${property.name}"
-               th:id="|input${index}|"
-               th:max="${generateInput.max}"
-               th:min="${generateInput.min}"
-               th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
-               th:placeholder="${generateInput.placeholder}"
-               th:disabled="${!generateInput.enabled || readOnly}"
-               th:autocomplete="${generateInput.autocomplete}"
-               inputmode="numeric"
-               th:unless="${entityMode}"
-               required
-        />
+        <div th:class="|input-container ${generateInput.icon != '' ? 'icon' : ''}|">
+            <input th:type="${generateInput.type}"
+                   th:name="${property.name}"
+                   th:id="|input${index}|"
+                   th:max="${generateInput.max}"
+                   th:min="${generateInput.min}"
+                   th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+                   th:placeholder="${generateInput.placeholder}"
+                   th:disabled="${!generateInput.enabled || readOnly}"
+                   th:autocomplete="${generateInput.autocomplete}"
+                   inputmode="numeric"
+                   th:unless="${entityMode}"
+                   required
+            />
+            <span th:if="${generateInput.icon != ''}" class="material-symbols-outlined" th:text="${generateInput.icon}">encrypted</span>
+        </div>
         <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
         <span class="note type-note" th:if="${entityMode}">Típus: Egész szám</span>
     </div>

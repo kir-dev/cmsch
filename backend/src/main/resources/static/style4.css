@@ -1003,6 +1003,67 @@ form label,
     margin-left: 4px;
 }
 
+.field-group .details-docs {
+    font-size: 0.8em;
+    margin-left: 2px;
+}
+
+.field-group .details-docs p {
+    margin-left: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+.field-group .details-docs table {
+    border-collapse: collapse;
+}
+
+.field-group .details-docs table th {
+    border-bottom: 1px solid #31353a;
+    padding: 5px;
+    background-color: var(--dark-4);
+}
+
+.field-group .details-docs table td {
+    border-bottom: 1px solid #31353a;
+    padding: 5px;
+}
+
+.field-group .details-docs table tr:nth-of-type(2n) td {
+    background-color: var(--dark-3);
+}
+
+.field-group .details-docs p:last-of-type {
+    margin-bottom: 0;
+}
+
+.field-group .details-docs code {
+    background-color: var(--dark-4);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.field-group .input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.field-group .input-container.icon input {
+    padding-right: 45px !important;
+}
+
+.field-group .input-container .material-symbols-outlined {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-color);
+    margin-top: 2px;
+}
+
 form .details-section-separator {
     display: flex;
     margin: 30px 0 10px 0;
