@@ -17,7 +17,11 @@ export const Navbar = () => {
       maxWidth={['100%', '64rem']}
       w="full"
       fontFamily="heading"
-      bg={config.components.style.darkContainerColor}
+      bg={
+        useColorModeValue(config.components.style.lightNavbarTransparent, config.components.style.darkNavbarTransparent)
+          ? undefined
+          : useColorModeValue(config.components.style.lightContainerColor, config.components.style.darkContainerColor)
+      }
       borderBottomRadius={[0, null, 'xl']}
       mb={4}
     >
