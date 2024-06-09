@@ -226,6 +226,10 @@ export interface Style {
   displayFontName: string
   displayFontCdn: string
   displayFontWeight: number
+  lightFooterTransparent: boolean
+  lightNavbarTransparent: boolean
+  darkFooterTransparent: boolean
+  darkNavbarTransparent: boolean
 }
 
 export interface Task {
