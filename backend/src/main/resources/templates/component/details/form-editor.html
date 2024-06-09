@@ -10,7 +10,7 @@
 
 <object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
 
-    <div th:if="${generateInput.type == 'form-editor'}" class="field-group" th:id="|_${index}|">
+    <div th:if="${generateInput.type == 'form-editor'}" th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
         <label th:text="${generateInput.label}">
         </label>
         <div style="clear:both"></div>

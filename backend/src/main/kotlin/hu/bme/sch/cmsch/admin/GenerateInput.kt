@@ -23,11 +23,16 @@ const val INPUT_TYPE_FORM_EDITOR = "form-editor"
 const val INPUT_TYPE_BOOLEAN_LIST = "boolean-list"
 const val INPUT_TYPE_TASK_SUBMISSION_HISTORY = "task-submission-history"
 const val INPUT_TYPE_SECTION_SEPARATOR = "section-separator"
+const val INPUT_TYPE_DOCS = "docs"
 
 const val INTERPRETER_INHERIT = "inherit"
 const val INTERPRETER_PATH = "path"
 const val INTERPRETER_SEARCH = "search"
 const val INTERPRETER_CUSTOM = "custom"
+
+const val STYLE_SECURE = "secure"
+
+const val ICON_SECURE = "encrypted"
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)
@@ -50,5 +55,7 @@ annotation class GenerateInput(
         val fileType: String = "image",
         val source: Array<String> = [],
         val entitySource: String = "Nothing",
-        val minimumRole: RoleType = RoleType.STAFF
+        val minimumRole: RoleType = RoleType.STAFF,
+        val icon: String = "",
+        val style: String = "",
 )

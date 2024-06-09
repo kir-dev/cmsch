@@ -48,6 +48,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
     api("com.fasterxml.uuid:java-uuid-generator:5.0.0")
     api("org.commonmark:commonmark:0.22.0")
+    api("org.commonmark:commonmark-ext-gfm-tables:0.22.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
