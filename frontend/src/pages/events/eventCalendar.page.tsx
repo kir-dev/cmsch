@@ -23,7 +23,7 @@ function EventCalendarPage() {
   return (
     <CmschPage>
       <Helmet title="Naptár" />
-      <LinkButton href={AbsolutePaths.EVENTS} leftIcon={<FaArrowLeft />}>
+      <LinkButton colorScheme="brand" href={AbsolutePaths.EVENTS} leftIcon={<FaArrowLeft />}>
         Vissza a listához
       </LinkButton>
       <Box mb={10}>

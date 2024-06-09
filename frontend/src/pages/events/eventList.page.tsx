@@ -76,7 +76,7 @@ const EventListPage = () => {
         <Heading mb={5}>{component.title}</Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
       </Box>
-      <LinkButton mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
+      <LinkButton colorScheme="brand" mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
         Megtekintés a naptárban
       </LinkButton>
       <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">

@@ -49,7 +49,7 @@ const HomePage = () => {
     <CmschPage>
       <Helmet />
       {homeConfig?.welcomeMessage && (
-        <Heading size="3xl" textAlign="center" marginTop={10}>
+        <Heading size="3xl" textAlign="center" marginTop={10} lineHeight="1.2">
           {homeConfig?.welcomeMessage.split('{}')[0] + ' '}
           {homeConfig?.welcomeMessage.split('{}').length > 1 && (
             <>
@@ -115,7 +115,9 @@ const HomePage = () => {
                 Nincs több esemény.
               </Text>
             )}
-            <LinkButton href={AbsolutePaths.EVENTS}>Részletek</LinkButton>
+            <LinkButton colorScheme="brand" href={AbsolutePaths.EVENTS}>
+              Részletek
+            </LinkButton>
           </VStack>
         </VStack>
       )}

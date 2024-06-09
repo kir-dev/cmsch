@@ -51,11 +51,11 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
   return (
     <Box my={5} w="full" display={['none', null, 'block']}>
       <HStack justify="space-between">
-        <IconButton aria-label="Előző hét" icon={<FaChevronLeft />} onClick={decrementWeek} />
+        <IconButton colorScheme="brand" aria-label="Előző hét" icon={<FaChevronLeft />} onClick={decrementWeek} />
         <Heading as="h2" size="md">
           {formatHu(startDate, 'MM. dd.')} - {formatHu(days[days.length - 1].date, 'MM. dd.')}
         </Heading>
-        <IconButton aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
+        <IconButton colorScheme="brand" aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
       </HStack>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
       <HStack flex={1} maxH={830} overflowY="auto" overflowX="hidden" w="full" mt={5} align="flex-start">
