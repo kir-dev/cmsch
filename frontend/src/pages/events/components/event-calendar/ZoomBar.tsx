@@ -9,10 +9,10 @@ interface ZoomBarProps {
 
 export function ZoomBar({ scale, incrementScale, decrementScale }: ZoomBarProps) {
   return (
-    <HStack justify="center">
-      <IconButton aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
+    <HStack justify="center" mt={2}>
+      <IconButton colorScheme="brand" aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
       <Text>{Math.round(scale * 100)}%</Text>
-      <IconButton aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
+      <IconButton colorScheme="brand" aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
     </HStack>
   )
 }
