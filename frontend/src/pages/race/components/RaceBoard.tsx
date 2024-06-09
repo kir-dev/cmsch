@@ -26,7 +26,7 @@ const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
   return (
     <CmschPage>
       <Helmet title={data.categoryName} />
-      <Heading as="h1" mb={3}>
+      <Heading as="h1" variant="main-title" mb={3}>
         {data.categoryName}
       </Heading>
       <Markdown text={data.description || component.defaultCategoryDescription} />

@@ -24,7 +24,9 @@ export default function TeamListPage() {
   return (
     <CmschPage>
       <Helmet title={component.title} />
-      <Heading as="h1">{component.title}</Heading>
+      <Heading as="h1" variant="main-title">
+        {component.title}
+      </Heading>
       <SearchBar mt={5} {...searchArgs} />
       {searchArgs.filteredData?.map((team) => (
         <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />

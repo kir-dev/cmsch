@@ -38,7 +38,9 @@ const RiddleCategoryList = () => {
     <CmschPage>
       <Helmet title="Riddleök" />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
-        <Heading as="h1">Riddleök</Heading>
+        <Heading as="h1" variant="main-title">
+          Riddleök
+        </Heading>
         <Button colorScheme="brand" as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
           Megoldott riddleök
         </Button>

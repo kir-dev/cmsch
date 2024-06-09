@@ -12,7 +12,7 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { l } from '../../util/language'
 import { PageStatus } from '../../common-components/PageStatus'
 
-interface ExtraPageProps {}
+interface ExtraPageProps { }
 
 const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   const params = useParams()
@@ -29,7 +29,9 @@ const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   return (
     <CmschPage>
       <Helmet title={data.title} />
-      <Heading as="h1">{data.title}</Heading>
+      <Heading as="h1" variant="main-title">
+        {data.title}
+      </Heading>
       <Markdown text={data.content} />
     </CmschPage>
   )

@@ -66,7 +66,9 @@ function AccessKeyPage() {
   return (
     <CmschPage>
       <Helmet title={query.data.title} />
-      <Heading as="h1">{query.data.title}</Heading>
+      <Heading as="h1" variant="main-title">
+        {query.data.title}
+      </Heading>
 
       {query.data.enabled ? (
         <Markdown text={query.data.topMessage} />
