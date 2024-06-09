@@ -26,7 +26,9 @@ export default function QrLevelsPage() {
     <CmschPage>
       <Helmet>{component.title}</Helmet>
       <Flex align="baseline" justifyContent="space-between" wrap="wrap">
-        <Heading mt={5}>{component.title}</Heading>
+        <Heading as="h1" mt={5}>
+          {component.title}
+        </Heading>
         <LinkButton my={5} colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           QR kód beolvasása
         </LinkButton>

@@ -59,7 +59,9 @@ const RiddleHistoryPage = () => {
       <Helmet title="Megoldott riddleök" />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'center']}>
-        <Heading my={5}>Megoldott riddleök</Heading>
+        <Heading as="h1" my={5}>
+          Megoldott riddleök
+        </Heading>
         <Stack direction={['column']}>
           <Select value={category} onChange={(e) => setCategory(e.target.value)} w="20rem">
             {query.data!!.map((c) => (
