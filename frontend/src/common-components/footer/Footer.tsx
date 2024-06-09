@@ -17,8 +17,18 @@ export const Footer = () => {
   if (!component) return null
   const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
   const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
+  const transparentNavbar = useColorModeValue(config.components.style.lightFooterTransparent, config.components.style.darkFooterTransparent)
   return (
-    <Flex flexDirection="column" align="center" w="full" bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}>
+    <Flex
+      flexDirection="column"
+      align="center"
+      w="full"
+      bg={
+        transparentNavbar
+          ? useColorModeValue(config.components.style.lightContainerColor, config.components.style.darkContainerColor) + '50'
+          : useColorModeValue('lightContainerBg', 'darkContainerBg')
+      }
+    >
       {topBarVisible && (
         <Flex justify="center" w="full" bg={bgShadowColor} p={5}>
           <Flex
@@ -85,7 +95,7 @@ export const Footer = () => {
           />
         </Flex>
       </Flex>
-      <Text w="full" textAlign="center" p={3} bg={bgShadowColor}>
+      <Text w="full" textAlign="center" p={3} bg={transparentNavbar ? undefined : bgShadowColor}>
         Made with <FaHeart style={{ display: 'inline' }} color="red" size="1rem" /> by Kir-Dev <br /> Minden jog fenntartva. &copy;{' '}
         {new Date().getFullYear()}
       </Text>
