@@ -44,7 +44,9 @@ export default function CommunityListPage() {
   return (
     <CmschPage>
       <Helmet title={l('community-title')} />
-      <Heading as="h1">{l('community-title')}</Heading>
+      <Heading as="h1" variant="main-title">
+        {l('community-title')}
+      </Heading>
       <InputGroup mt={5}>
         <InputLeftElement h="100%">
           <SearchIcon />

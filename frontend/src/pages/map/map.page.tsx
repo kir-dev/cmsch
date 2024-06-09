@@ -16,7 +16,9 @@ export default function MapPage() {
   return (
     <CmschPage>
       <Helmet>Térkép</Helmet>
-      <Heading as="h1">Térkép</Heading>
+      <Heading as="h1" variant="main-title">
+        Térkép
+      </Heading>
       {component.topMessage && <Markdown text={component.topMessage} />}
       <Checkbox my={3} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
         {l('location-show-own')}

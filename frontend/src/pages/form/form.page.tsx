@@ -22,7 +22,7 @@ import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } fr
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
 
-interface FormPageProps {}
+interface FormPageProps { }
 
 const FormPage: FunctionComponent<FormPageProps> = () => {
   const toast = useToast()
@@ -67,7 +67,9 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />
       <Box w="100%" mx="auto">
-        <Heading as="h1">{form?.name || 'Űrlap'}</Heading>
+        <Heading as="h1" variant="main-title">
+          {form?.name || 'Űrlap'}
+        </Heading>
         <FormStatusBadge status={status} />
 
         {(submission?.rejectionMessage || message) && (

@@ -119,7 +119,7 @@ export const defaults: Components = {
   },
   h1: (props) => {
     return (
-      <Heading my={4} as="h1" size="2xl" {...getCoreProps(props)}>
+      <Heading my={4} as="h1" variant="main-title" size="2xl" {...getCoreProps(props)}>
         {props.children}
       </Heading>
     )

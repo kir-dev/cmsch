@@ -46,7 +46,7 @@ export const Navbar = () => {
             {logoUrl ? (
               <Image maxH={16} maxW={28} src={logoUrl} alt={config?.components.app.siteName} />
             ) : (
-              <Heading as="h1" my={2}>
+              <Heading as="h1" variant="main-title" my={2}>
                 {config?.components.app.siteName}
               </Heading>
             )}
