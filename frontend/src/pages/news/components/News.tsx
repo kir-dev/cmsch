@@ -5,6 +5,7 @@ import Markdown from '../../../common-components/Markdown'
 import { getCdnUrl, stringifyTimeStamp } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { NewsArticleView } from '../../../util/views/news.view'
+import { FaArrowLeft } from 'react-icons/fa'
 
 interface NewsProps {
   news: NewsArticleView
@@ -32,7 +33,9 @@ const News = ({ news }: NewsProps) => {
       )}
       <Markdown text={news.content} />
       <Link to={AbsolutePaths.NEWS}>
-        <Button mt={4}>Vissza a hírekhez</Button>
+        <Button leftIcon={<FaArrowLeft />} colorScheme="brand" mt={4}>
+          Vissza a hírekhez
+        </Button>
       </Link>
     </>
   )
