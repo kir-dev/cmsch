@@ -49,7 +49,7 @@ const HomePage = () => {
     <CmschPage>
       <Helmet />
       {homeConfig?.welcomeMessage && (
-        <Heading size="3xl" textAlign="center" marginTop={10} lineHeight="1.2">
+        <Heading as="h1" size="3xl" textAlign="center" marginTop={10} lineHeight="1.2">
           {homeConfig?.welcomeMessage.split('{}')[0] + ' '}
           {homeConfig?.welcomeMessage.split('{}').length > 1 && (
             <>

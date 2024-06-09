@@ -73,7 +73,9 @@ const EventListPage = () => {
     <CmschPage>
       <Helmet title={component.title ?? 'Események'} />
       <Box mb={5}>
-        <Heading mb={5}>{component.title}</Heading>
+        <Heading as="h1" mb={5}>
+          {component.title}
+        </Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
       </Box>
       <LinkButton colorScheme="brand" mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
