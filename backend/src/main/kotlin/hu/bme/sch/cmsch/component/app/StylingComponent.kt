@@ -24,6 +24,8 @@ class StylingComponent(
             minRole,
 
             lightGroup,
+            lightFooterTransparent,
+            lightNavbarTransparent,
             lightBackgroundColor,
             lightContainerColor,
             lightTextColor,
@@ -36,6 +38,8 @@ class StylingComponent(
             darkModeEnabled,
             deviceTheme,
             forceDarkMode,
+            darkFooterTransparent,
+            darkNavbarTransparent,
             darkBackgroundColor,
             darkContainerColor,
             darkTextColor,
@@ -66,6 +70,16 @@ class StylingComponent(
         "lightGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Világos téma",
         description = "Az oldal világos stílusának színei, háttérképek"
+    )
+
+    val lightFooterTransparent = SettingProxy(componentSettingService, component,
+        "lightFooterTransparent", "false", type = SettingType.BOOLEAN,
+        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
+    )
+
+    val lightNavbarTransparent = SettingProxy(componentSettingService, component,
+        "lightNavbarTransparent", "false", type = SettingType.BOOLEAN,
+        fieldName = "Navbar áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
     )
 
     val lightBackgroundColor = SettingProxy(componentSettingService, component,
@@ -125,6 +139,16 @@ class StylingComponent(
     val forceDarkMode = SettingProxy(componentSettingService, component,
         "forceDarkMode", "false", type = SettingType.BOOLEAN,
         fieldName = "Csak a sötét téma érhető el", description = "Ha be van kapcsolva, akkor csak a sötét téma használható"
+    )
+
+    val darkFooterTransparent = SettingProxy(componentSettingService, component,
+        "darkFooterTransparent", "false", type = SettingType.BOOLEAN,
+        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
+    )
+
+    val darkNavbarTransparent = SettingProxy(componentSettingService, component,
+        "darkNavbarTransparent", "false", type = SettingType.BOOLEAN,
+        fieldName = "Navbar áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
     )
 
     val darkBackgroundColor = SettingProxy(componentSettingService, component,
