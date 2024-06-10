@@ -1,7 +1,9 @@
 package hu.bme.sch.cmsch.component.proto
 
+import hu.bme.sch.cmsch.component.profile.ProfileComponent
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/proto")
+@ConditionalOnBean(ProfileComponent::class)
 class ProtoApiController(
     private val protoService: ProtoService
 ) {
