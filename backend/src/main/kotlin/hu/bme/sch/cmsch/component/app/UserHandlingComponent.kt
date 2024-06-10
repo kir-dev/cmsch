@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.ComponentSettingService
 import hu.bme.sch.cmsch.component.MinRoleSettingProxy
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuCategory

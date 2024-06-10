@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
+import hu.bme.sch.cmsch.component.app.ComponentSettingService
 import hu.bme.sch.cmsch.component.impressum.OrganizerDto
 import hu.bme.sch.cmsch.model.RoleType
 
