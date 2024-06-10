@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.app.ComponentSettingService
 import hu.bme.sch.cmsch.component.login.authsch.Scope
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.service.ControlPermissions

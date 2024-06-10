@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component
+package hu.bme.sch.cmsch.component.app
 
 import java.io.Serializable
 import jakarta.persistence.*
