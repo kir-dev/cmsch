@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.component
+package hu.bme.sch.cmsch.component.app
 
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository

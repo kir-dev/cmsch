@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.app.ComponentSettingsPersistedEvent
 import hu.bme.sch.cmsch.model.RoleType
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory

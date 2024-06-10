@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component
 
 import hu.bme.sch.cmsch.admin.GenerateInput
+import hu.bme.sch.cmsch.component.app.ComponentSettingService
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.dto.SearchableResource
 import hu.bme.sch.cmsch.dto.SearchableResourceType

@@ -1,5 +1,6 @@
-package hu.bme.sch.cmsch.component
+package hu.bme.sch.cmsch.component.app
 
+import hu.bme.sch.cmsch.component.SettingProxy
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
@@ -42,7 +43,8 @@ open class ComponentSettingService(
                     component = setting.component,
                     property = setting.property,
                     value = setting.rawValue
-                ))
+                )
+                )
             })
     }
 
@@ -67,7 +69,8 @@ open class ComponentSettingService(
                     component = setting.component,
                     property = setting.property,
                     value = setting.rawValue
-                ))
+                )
+                )
             })
     }
 

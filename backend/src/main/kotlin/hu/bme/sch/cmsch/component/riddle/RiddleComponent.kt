@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.app.ComponentSettingService
 import hu.bme.sch.cmsch.component.race.RaceCategoryEntity
 import hu.bme.sch.cmsch.service.ControlPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
