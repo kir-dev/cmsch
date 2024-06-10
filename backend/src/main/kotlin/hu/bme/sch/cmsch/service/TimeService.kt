@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
@@ -15,8 +16,10 @@ class TimeService(
 ) {
 
     val timeZone: ZoneId = Objects.requireNonNull(ZoneId.of(startupPropertyConfig.zoneId), "Invalid time zone")
+    private val sqlDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     fun getTimeInSeconds() = LocalDateTime.now(timeZone).atZone(ZoneOffset.UTC)?.toInstant()?.epochSecond ?: 0
+
     fun getTime() = LocalDateTime.now(timeZone).atZone(ZoneOffset.UTC)?.toInstant()?.toEpochMilli() ?: 0
 
     fun inRange(availableFrom: Long, availableTo: Long, timeInSeconds: Long): Boolean {
@@ -32,5 +35,7 @@ class TimeService(
     fun getNowInSeconds(): Long {
         return getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
     }
+
+    fun todayInSqlFormat() = LocalDateTime.now(timeZone).format(sqlDateFormatter)
 
 }

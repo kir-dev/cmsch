@@ -90,9 +90,9 @@ abstract class DashboardPage(
         }
 
         val outputStream = ByteArrayOutputStream()
-        val components = getComponents(user, requestParams)
+        val components = getComponents(user)
         val exportable = components.firstOrNull { it.id == id }
-        if (exportable == null || exportable !is DashboardTableCard || !exportable.exportable)
+        if (exportable == null)
             return outputStream.toByteArray()
 
         val csvMapper = CsvMapper()
@@ -100,20 +100,51 @@ abstract class DashboardPage(
             .setUseHeader(true)
             .setReorderColumns(true)
 
-        exportable.header.forEach {
-            csvSchemaBuilder.addColumn(it)
+        if (exportable is DashboardTableCard) {
+            if (!exportable.exportable)
+                return outputStream.toByteArray()
+
+            exportable.header.forEach {
+                csvSchemaBuilder.addColumn(it)
+            }
+
+            val csvSchema = csvSchemaBuilder.build()
+                .withQuoteChar('"')
+                .withEscapeChar('\\')
+                .withColumnSeparator(',')
+
+            csvMapper.writerFor(List::class.java)
+                .with(csvSchema)
+                .writeValue(outputStream, exportable.content)
+
+            response.setHeader("Content-Disposition", "attachment; filename=\"${exportable.fileName()}.csv\"")
         }
 
-        val csvSchema = csvSchemaBuilder.build()
-            .withQuoteChar('"')
-            .withEscapeChar('\\')
-            .withColumnSeparator(',')
+        if (exportable is DashboardStatusTableCard) {
+            if (!exportable.exportable)
+                return outputStream.toByteArray()
 
-        csvMapper.writerFor(List::class.java)
-            .with(csvSchema)
-            .writeValue(outputStream, exportable.content)
+            exportable.header.forEach {
+                csvSchemaBuilder.addColumn(it)
+            }
+            csvSchemaBuilder.addColumn("icon")
 
-        response.setHeader("Content-Disposition", "attachment; filename=\"${exportable.fileName()}.csv\"")
+            val csvSchema = csvSchemaBuilder.build()
+                .withQuoteChar('"')
+                .withEscapeChar('\\')
+                .withColumnSeparator(',')
+
+            csvMapper.writerFor(List::class.java)
+                .with(csvSchema)
+                .writeValue(outputStream, exportable.content.map {
+                    val rows = it.row.toMutableList()
+                    rows.add(it.status.icon)
+                    rows
+                })
+
+            response.setHeader("Content-Disposition", "attachment; filename=\"${exportable.fileName()}.csv\"")
+        }
+
         return outputStream.toByteArray()
     }
 
