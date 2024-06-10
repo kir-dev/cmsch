@@ -11,7 +11,8 @@ class DashboardFormCard(
     val buttonCaption: String = "Küld",
     val buttonIcon: String = "check_circle",
     val method: String = "post",
-    val action: String = "submit"
+    val action: String = "submit",
+    val multipartForm: Boolean = false
 ) : DashboardComponent {
 
     override val type: String = javaClass.simpleName

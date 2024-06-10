@@ -69,6 +69,7 @@ enum class FormElementType(
     },
 
     // BACKEND ONLY
+    FILE,
     HISTORY_VIEW,
     LINK_VIEW,
     IMAGE_VIEW,
