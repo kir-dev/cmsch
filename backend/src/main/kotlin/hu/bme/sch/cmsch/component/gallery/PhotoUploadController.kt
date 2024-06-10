@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
 import jakarta.annotation.PostConstruct
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -19,6 +20,7 @@ import kotlin.math.absoluteValue
 
 @Controller
 @RequestMapping("/admin/control/upload-photo")
+@ConditionalOnBean(GalleryComponent::class)
 class PhotoUploadController(
     private val adminMenuService: AdminMenuService,
     private val applicationComponent: ApplicationComponent,

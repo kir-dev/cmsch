@@ -30,7 +30,7 @@ import java.sql.SQLException
 import java.util.*
 
 @Service
-@ConditionalOnBean(ProfileService::class)
+@ConditionalOnBean(ProfileComponent::class)
 open class ProfileService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,

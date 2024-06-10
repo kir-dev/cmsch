@@ -76,7 +76,7 @@ open class TestConfig(
     private val formRepository: Optional<FormRepository>,
     private val formResponseRepository: Optional<ResponseRepository>,
     private val extraMenuRepository: ExtraMenuRepository,
-    private val riddleCacheManager: RiddleCacheManager
+    private val riddleCacheManager: Optional<RiddleCacheManager>
 ) {
 
     private var now = System.currentTimeMillis() / 1000
@@ -126,7 +126,7 @@ open class TestConfig(
         if (inited)
             return
         inited = true
-        riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
+        riddleCacheManager.ifPresent { it.resetCache(persistMapping = false, overrideMappings = false) }
     }
 
     private fun addForms(form: FormRepository, response: ResponseRepository) {
