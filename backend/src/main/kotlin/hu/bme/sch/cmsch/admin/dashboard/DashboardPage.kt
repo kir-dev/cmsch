@@ -90,7 +90,7 @@ abstract class DashboardPage(
         }
 
         val outputStream = ByteArrayOutputStream()
-        val components = getComponents(user)
+        val components = getComponents(user, requestParams)
         val exportable = components.firstOrNull { it.id == id }
         if (exportable == null)
             return outputStream.toByteArray()
