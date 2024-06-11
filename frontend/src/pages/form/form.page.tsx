@@ -22,7 +22,7 @@ import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } fr
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
 
-interface FormPageProps { }
+interface FormPageProps {}
 
 const FormPage: FunctionComponent<FormPageProps> = () => {
   const toast = useToast()

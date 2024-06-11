@@ -28,9 +28,7 @@ export default function TeamListPage() {
         {component.title}
       </Heading>
       <SearchBar mt={5} {...searchArgs} />
-      {searchArgs.filteredData?.map((team) => (
-        <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />
-      ))}
+      {searchArgs.filteredData?.map((team) => <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />)}
     </CmschPage>
   )
 }
