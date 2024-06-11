@@ -12,7 +12,7 @@ import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { l } from '../../util/language'
 import { PageStatus } from '../../common-components/PageStatus'
 
-interface ExtraPageProps { }
+interface ExtraPageProps {}
 
 const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   const params = useParams()
