@@ -14,7 +14,9 @@ export const Footer = () => {
   const config = useConfigContext()
   const component = config?.components.footer
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
+  const partners = useMemo(() => parseSponsors(component?.partnerLogoUrls, component?.partnerAlts, component?.partnerWebsiteUrls), [config])
   if (!component) return null
+  console.log(component)
   const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
   const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
   const transparentNavbar = useColorModeValue(config.components.style.lightFooterTransparent, config.components.style.darkFooterTransparent)
@@ -61,6 +63,11 @@ export const Footer = () => {
                   {component.vikEnabled && <PartnerLogo name="vik" />}
                   {component.schonherzEnabled && <PartnerLogo name="schonherz" />}
                   {component.schdesignEnabled && <PartnerLogo name="schdesign" />}
+                  {partners.map((partner, index) => (
+                    <a href={partner.url} key={index} target="_blank" referrerPolicy="origin">
+                      <Image m={5} src={partner.image} alt={partner.alt} maxH={20} maxW={32} />
+                    </a>
+                  ))}
                 </Flex>
               </Box>
             )}
