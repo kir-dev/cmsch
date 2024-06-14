@@ -34,9 +34,8 @@ data class ConferenceEntity(
     @property:ImportFormat(ignore = false, type = IMPORT_INT)
     var priority: Int = 0,
 
-    @Lob
     @field:JsonIgnore
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(maxLength = 65535, order = 3, label = "Képek URL-jei",
         note = "A képek URL-jeit vesszővel elválasztva kell megadni.")
     @property:GenerateOverview(visible = false)

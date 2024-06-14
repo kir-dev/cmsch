@@ -53,16 +53,14 @@ data class TaskEntity(
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
     var categoryId: Int = 0,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_LOB)
     var description: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Beadandó formátum",
             note = "Ez a beadó mező mellett jelenik meg, külön a leírástól")
@@ -70,7 +68,6 @@ data class TaskEntity(
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LOB)
     var expectedResultDescription: String = "",
 
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",
@@ -97,8 +94,7 @@ data class TaskEntity(
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = TaskFormat::class)
     var format: TaskFormat = TaskFormat.NONE,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 7, label = "Formátum leírása",
         note = "Ha a formátum FORM akkor ide kell beírni a form jsonját. " +

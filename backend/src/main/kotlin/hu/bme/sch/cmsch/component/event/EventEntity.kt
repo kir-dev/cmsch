@@ -71,17 +71,15 @@ data class EventEntity(
     @property:ImportFormat(ignore = false, columnId = 5)
     var place: String = "",
 
-    @Lob
     @field:JsonView(value = [ Edit::class, Preview::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 8, label = "Rövid leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6)
     var previewDescription: String = "",
 
-    @Lob
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 9, label = "Hosszú leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7)

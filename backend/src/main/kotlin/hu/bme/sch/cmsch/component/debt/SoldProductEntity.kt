@@ -116,9 +116,8 @@ data class SoldProductEntity(
     @property:ImportFormat(ignore = false, columnId = 14)
     var finsihed: Boolean = false,
 
-    @Lob
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 10, label = "Napló", enabled = false, ignore = true)
     @property:ImportFormat(ignore = false, columnId = 15)
     var log: String = "",

@@ -43,8 +43,7 @@ data class StaticPageEntity(
     @property:ImportFormat(ignore = false, columnId = 1)
     var title: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Az oldal tartalma")
     @property:GenerateOverview(visible = false)

@@ -40,9 +40,8 @@ data class RaceCategoryEntity(
     @property:ImportFormat(ignore = false, columnId = 1)
     var slug: String = "",
 
-    @Lob
     @field:JsonView(value = [ Edit::class, Preview::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás",
         note = "Meg fog jelenni a kategória menüjének tetején")
     @property:GenerateOverview(visible = false)
