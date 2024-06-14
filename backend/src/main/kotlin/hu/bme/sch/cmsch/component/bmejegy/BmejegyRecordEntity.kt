@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
@@ -123,7 +124,8 @@ data class BmejegyRecordEntity(
     var matchedUserId: Int = 0,
 
     @Lob
-    @Column(nullable = false, columnDefinition = "CLOB default ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 15, label = "Összes adat")
     @property:GenerateOverview(visible = false)

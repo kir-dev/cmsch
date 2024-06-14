@@ -12,6 +12,7 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name="riddles")
@@ -91,7 +92,8 @@ data class RiddleEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Lob
-    @Column(nullable = false, columnDefinition = "TEXT default ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 10, label = "Leírás",
         note = "Akkor jelenik meg ha nem üres",
         type = INPUT_TYPE_BLOCK_TEXT)

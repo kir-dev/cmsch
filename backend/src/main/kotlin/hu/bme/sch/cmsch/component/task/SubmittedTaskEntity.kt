@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
@@ -106,7 +107,8 @@ data class SubmittedTaskEntity(
     var score: Int = 0,
 
     @Lob
-    @Column(nullable = false, columnDefinition = "TEXT default ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 11, label = "Beadás történet", type = INPUT_TYPE_TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)
