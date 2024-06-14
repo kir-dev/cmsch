@@ -45,9 +45,8 @@ class EmailTemplateEntity(
     @property:ImportFormat
     var subject: String = "",
 
-    @Lob
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 3, label = "Tartalom",
         note = "Ez az email tartalma, a változókat {{variable}} formátumban kell feltüntetni", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)

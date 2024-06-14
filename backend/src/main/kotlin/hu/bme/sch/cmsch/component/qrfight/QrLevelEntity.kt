@@ -91,24 +91,21 @@ data class QrLevelEntity(
     @property:ImportFormat(ignore = false, columnId = 8)
     var dependsOn: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 10, label = "Leírás amég nem elérhető")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_LOB)
     var hintBeforeEnabled: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 11, label = "Leírás ha elérhető")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
     var hintWhileOpen: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 12, label = "Leírás miután teljesítve lett")
     @property:GenerateOverview(visible = false)

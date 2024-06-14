@@ -34,9 +34,8 @@ data class ProtoEntity(
     @property:ImportFormat(ignore = false)
     var path: String = "",
 
-    @Lob
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 2, label = "Válasz",
         note = "Ez a válasz jelenik meg a megadott útvonalon.")
     @property:GenerateOverview(visible = false)

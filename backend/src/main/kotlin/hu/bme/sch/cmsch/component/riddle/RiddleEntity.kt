@@ -91,7 +91,6 @@ data class RiddleEntity(
     var firstSolver: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Lob
     @ColumnDefault("''")
     @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 10, label = "Leírás",

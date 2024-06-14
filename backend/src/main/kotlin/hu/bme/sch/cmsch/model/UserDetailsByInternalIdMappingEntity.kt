@@ -72,9 +72,8 @@ data class UserDetailsByInternalIdMappingEntity(
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
     var major: MajorType? = null,
 
-    @Lob
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 7, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
     @property:ImportFormat(ignore = false, columnId = 5)
     var permissions: String? = null,
@@ -85,7 +84,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @property:ImportFormat(ignore = false, columnId = 6)
     var profilePicture: String? = null,
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 9, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)

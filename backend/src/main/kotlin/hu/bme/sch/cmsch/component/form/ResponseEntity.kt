@@ -120,8 +120,7 @@ data class ResponseEntity(
     @property:ImportFormat(ignore = false, columnId = 11)
     var email: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 255, order = 10, label = "Kitöltés",
         note = "A kitöltés JSON formátumban", type = INPUT_TYPE_BLOCK_TEXT)
@@ -143,7 +142,6 @@ data class ResponseEntity(
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LONG)
     var detailsValidatedAt: Long = 0,
 
-    @Lob
     @ColumnDefault("''")
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])

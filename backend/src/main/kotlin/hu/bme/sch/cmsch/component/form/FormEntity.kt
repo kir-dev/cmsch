@@ -50,9 +50,8 @@ data class FormEntity(
     @property:ImportFormat(ignore = false, columnId = 2)
     var menuName: String = "",
 
-    @Lob
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(type = INPUT_TYPE_FORM_EDITOR, order = 4, label = "Kitöltendő űrlap", defaultValue = "[]")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LOB)
@@ -78,16 +77,14 @@ data class FormEntity(
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = RoleType::class)
     var maxRole: RoleType = RoleType.SUPERUSER,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 7, label = "Sikeres leadás utáni üzenet")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LOB)
     var submittedMessage: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 8, label = "Elfogadás utáni üzenet")
     @property:GenerateOverview(visible = false)
@@ -148,8 +145,7 @@ data class FormEntity(
     @property:ImportFormat(ignore = false, columnId = 14)
     var allowedGroups: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 16, label = "Csoport tagság miatt eltiltva üzenet")
     @property:GenerateOverview(visible = false)

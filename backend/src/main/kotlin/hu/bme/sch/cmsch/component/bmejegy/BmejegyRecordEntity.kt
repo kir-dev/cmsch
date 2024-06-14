@@ -123,7 +123,6 @@ data class BmejegyRecordEntity(
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_INT)
     var matchedUserId: Int = 0,
 
-    @Lob
     @ColumnDefault("''")
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
