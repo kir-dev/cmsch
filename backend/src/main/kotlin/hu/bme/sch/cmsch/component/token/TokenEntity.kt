@@ -12,6 +12,7 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name="tokens")
@@ -78,7 +79,8 @@ data class TokenEntity(
     var action: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "BOOLEAN default FALSE")
+    @ColumnDefault("false")
+    @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Aktív cél",
         note = "Csak akkor ha a QR Fight komponens is be van töltve")
     @property:GenerateOverview(visible = false)
@@ -86,7 +88,8 @@ data class TokenEntity(
     var activeTarget: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) default ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, length = 255)
     @property:GenerateInput(maxLength = 255, order = 9, label = "Kijelzett kép URL-je",
         note = "Ha nem üres, megjelenik beolvasás után")
     @property:GenerateOverview(visible = false)
@@ -95,7 +98,8 @@ data class TokenEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Lob
-    @Column(nullable = false, columnDefinition = "TEXT default ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 10, label = "Kijelzett szöveg",
         note = "Ha nem üres, megjelenik beolvasás után", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
@@ -103,14 +107,16 @@ data class TokenEntity(
     var displayDescription: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Column(nullable = true, columnDefinition = "BIGINT DEFAULT NULL")
+    @ColumnDefault("null")
+    @Column(nullable = true, columnDefinition = "BIGINT")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 11, label = "Scannelhető innentől")
     @property:GenerateOverview(columnName = "Ettől", order = 5, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, type = IMPORT_LONG)
     var availableFrom: Long? = null,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @Column(nullable = true, columnDefinition = "BIGINT DEFAULT NULL")
+    @ColumnDefault("null")
+    @Column(nullable = true, columnDefinition = "BIGINT")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Scannelhető eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 6, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, type = IMPORT_LONG)
