@@ -11,6 +11,7 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name="soldProducts")
@@ -123,7 +124,8 @@ data class SoldProductEntity(
     var log: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "varchar(255) default 'payments'")
+    @ColumnDefault("'payments'")
+    @Column(nullable = false, length = 255)
     @property:GenerateInput(order = 11, label = "Material Icon")
     @property:ImportFormat(ignore = false, columnId = 16)
     var materialIcon: String = "",

@@ -12,6 +12,7 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 
 enum class ProductType {
     MERCH,
@@ -80,7 +81,8 @@ data class ProductEntity(
     @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
     var visible: Boolean = false,
 
-    @Column(nullable = false, columnDefinition = "varchar(255) default 'payments'")
+    @ColumnDefault("'payments'")
+    @Column(nullable = false, length = 255)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 8, label = "Material Ikon",
         note = "Innen kell kimásolni a nevét az ikonnak: https://fonts.google.com/icons")

@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
@@ -110,14 +111,15 @@ data class LocationEntity(
     @property:GenerateOverview(visible = false)
     var markerShape: MapMarkerShape = MapMarkerShape.CIRCLE,
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(16) default ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, length = 16)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 16, order = 18, label = "Szín")
     @property:GenerateOverview(visible = false)
     var markerColor: String = "#000000",
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "VARCHAR(64) default ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, length = 64)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 19, label = "Leírás", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)

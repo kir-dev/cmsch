@@ -12,6 +12,7 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 
 enum class TaskCategoryType {
     REGULAR,
@@ -68,7 +69,8 @@ data class TaskCategoryEntity(
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskCategoryType::class)
     var type: TaskCategoryType = TaskCategoryType.REGULAR,
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN default false")
+    @ColumnDefault("false")
+    @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Hírdetett",
         note = "Külön kijelzésre kerülnek bizonyos helyeken az oldalon (pl. team komponens)")

@@ -13,6 +13,7 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name="forms")
@@ -164,7 +165,8 @@ data class FormEntity(
     var ownerIsGroup: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "BOOLEAN default false")
+    @ColumnDefault("false")
+    @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Hírdetett",
         note = "Ha be van kapcsolva, akkor bizonyos oldalakon megjelenik mint kitöltendő form")
     @property:GenerateOverview(visible = false)
