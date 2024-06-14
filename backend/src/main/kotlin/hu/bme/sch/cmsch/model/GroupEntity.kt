@@ -113,16 +113,14 @@ data class GroupEntity(
     @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
     var manuallyCreated: Boolean = false,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 17, label = "Leírás", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
     var description: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)

@@ -63,8 +63,7 @@ data class SubmittedTaskEntity(
     @Column(nullable = false)
     var categoryId: Int = 0,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 4, label = "Szöveges válasz (teljes)", enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
@@ -106,7 +105,6 @@ data class SubmittedTaskEntity(
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     var score: Int = 0,
 
-    @Lob
     @ColumnDefault("''")
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])

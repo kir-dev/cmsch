@@ -97,7 +97,6 @@ data class TokenEntity(
     var displayIconUrl: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Lob
     @ColumnDefault("''")
     @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 10, label = "Kijelzett szöveg",

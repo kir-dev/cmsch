@@ -77,8 +77,7 @@ data class ConferencePresentationEntity(
     @property:ImportFormat(ignore = false)
     var endTime: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 7, type = INPUT_TYPE_BLOCK_TEXT, label = "Leírás", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, type = IMPORT_LOB)

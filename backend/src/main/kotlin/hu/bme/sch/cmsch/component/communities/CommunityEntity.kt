@@ -43,16 +43,14 @@ data class CommunityEntity(
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_BOOLEAN)
     var hideName: Boolean = false,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Rövid leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2)
     var shortDescription: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 4, label = "Teljes leírás")
     @property:GenerateOverview(visible = false)
@@ -141,8 +139,7 @@ data class CommunityEntity(
     @property:ImportFormat(ignore = false, columnId = 14)
     var application: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 16, type = INPUT_TYPE_BLOCK_TEXT, label = "Képek URL-jei", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
@@ -151,8 +148,7 @@ data class CommunityEntity(
     @get:JsonSerialize(using = StringToArraySerializer::class)
     var imageIds: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 17, type = INPUT_TYPE_BLOCK_TEXT, label = "Videók URL-jei", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
@@ -175,8 +171,7 @@ data class CommunityEntity(
     @property:ImportFormat(ignore = false, columnId = 18, type = IMPORT_INT)
     var resortId: Int = 0,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
     @property:GenerateInput(order = 20, type = INPUT_TYPE_BLOCK_TEXT, label = "Kulcsszavak", enabled = true)
     @property:GenerateOverview(visible = false)

@@ -20,8 +20,7 @@ class ComponentSettingEntity(
     @Column(nullable = false)
     var property: String = "",
 
-    @Lob
-    @Column(nullable = false, name = "`value`")
+    @Column(nullable = false, name = "`value`", columnDefinition = "TEXT")
     var value: String = "",
 
 ) : Serializable

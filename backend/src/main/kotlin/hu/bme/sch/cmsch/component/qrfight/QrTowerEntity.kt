@@ -105,16 +105,14 @@ data class QrTowerEntity(
     @property:ImportFormat(ignore = false, columnId = 9)
     var ownerGroupName: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 11, label = "Publikus leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
     var publicMessage: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 12, label = "Leírás a tulajdonosoknak")
     @property:GenerateOverview(visible = false)
@@ -128,16 +126,14 @@ data class QrTowerEntity(
     @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_BOOLEAN)
     var recordTime: Boolean = false,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 14, label = "Beolvasás log")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_LOB)
     var history: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 15, label = "Birtoklás állása")
     @property:GenerateOverview(visible = false)

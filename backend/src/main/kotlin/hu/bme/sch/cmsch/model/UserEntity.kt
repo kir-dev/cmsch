@@ -158,9 +158,8 @@ data class UserEntity(
     @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
     var major: MajorType = MajorType.UNKNOWN,
 
-    @Lob
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 16, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS, maxLength = 20000)
     @property:ImportFormat(ignore = false, columnId = 9)
     var permissions: String = "",
@@ -185,8 +184,7 @@ data class UserEntity(
     @property:ImportFormat(ignore = false, columnId = 12)
     var unitScopes: String = "",
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 15, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
@@ -200,8 +198,7 @@ data class UserEntity(
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
     var detailsImported: Boolean = false,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 16, label = "Konfigurációs beállítások", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)

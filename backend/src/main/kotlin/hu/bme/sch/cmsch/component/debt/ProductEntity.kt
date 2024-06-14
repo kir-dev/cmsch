@@ -53,8 +53,7 @@ data class ProductEntity(
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_ENUM, enumSource = ProductType::class)
     var type: ProductType = ProductType.OTHER,
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Termék leírása")
     @property:GenerateOverview(visible = false)
