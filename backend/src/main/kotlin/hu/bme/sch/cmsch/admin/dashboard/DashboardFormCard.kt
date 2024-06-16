@@ -15,6 +15,6 @@ class DashboardFormCard(
     val multipartForm: Boolean = false
 ) : DashboardComponent {
 
-    override val type: String = javaClass.simpleName
+    override val type: String = pascalToKebab(javaClass.simpleName)
 
 }

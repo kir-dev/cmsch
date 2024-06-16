@@ -8,6 +8,6 @@ class DashboardCard(
     val content: List<String>
 ) : DashboardComponent {
 
-    override val type: String = javaClass.simpleName
+    override val type: String = pascalToKebab(javaClass.simpleName)
 
 }

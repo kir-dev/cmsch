@@ -10,6 +10,6 @@ class DashboardButtonGroup(
     val buttons: List<ButtonAction>
 ) : DashboardComponent {
 
-    override val type: String = javaClass.simpleName
+    override val type: String = pascalToKebab(javaClass.simpleName)
 
 }

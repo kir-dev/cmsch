@@ -1,0 +1,28 @@
+
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardButtonGroup"-->
+<!--@thymesVar id="view" type="String"-->
+<!--@thymesVar id="card" type="int"-->
+<!--@thymesVar id="message" type="String"-->
+
+<object th:fragment="dashboardCard (component, view, card, message)" th:remove="tag">
+
+    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+        <h4 th:text="${component.title}">Title</h4>
+        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
+
+        <p th:each="p : ${content}" th:text="${p}"></p>
+
+        <div class="button-group">
+            <object th:each="button : ${component.buttons}" th:remove="tag">
+                <a href="#" th:href="|@{/admin/control}/${view}/${button.target}|" class="btn"
+                   th:class="|btn ${button.primary ? 'btn-primary' : 'btn-secondary'}|"
+                   th:target="${button.newPage ? '_blank' : ''}"
+                ><span class="material-symbols-outlined regular" th:text="${button.icon}">code</span> <ins th:text="${button.name}">Button name</ins></a>
+            </object>
+        </div>
+    </div>
+
+</object>
+
+<object th:fragment="dashboardScript (components)" th:remove="tag">
+</object>

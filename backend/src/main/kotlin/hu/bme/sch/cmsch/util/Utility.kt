@@ -1,5 +1,8 @@
 package hu.bme.sch.cmsch.util
 
+import hu.bme.sch.cmsch.admin.dashboard.DashboardComponent
+import hu.bme.sch.cmsch.admin.dashboard.DashboardFormCard
+import hu.bme.sch.cmsch.component.form.FormElementType
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
@@ -110,5 +113,24 @@ class ThymeleafUtility {
     fun convertMarkdownToHtml(markdown: String): String = markdownToHtml(markdown)
 
     fun convertMarkdownToHtmlAndTrimIdent(markdown: String): String = markdownToHtml(markdown.trimIndent())
+
+    fun dashboardCardTypes(components: List<DashboardComponent>) = components.map { it.type }.distinct().toList()
+
+    fun dashboardFormTypes(components: List<DashboardComponent>) = components
+        .asSequence()
+        .filterIsInstance<DashboardFormCard>()
+        .flatMap { it.content }
+        .map { it.type.templateName }
+        .distinct()
+        .toList()
+
+    fun dashboardCustomFormTypes(components: List<DashboardComponent>) = components
+        .asSequence()
+        .filterIsInstance<DashboardFormCard>()
+        .flatMap { it.content }
+        .filter { it.type == FormElementType.CUSTOM_BACKEND_ONLY }
+        .map { it.customType }
+        .distinct()
+        .toList()
 
 }

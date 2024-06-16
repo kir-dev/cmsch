@@ -1,0 +1,58 @@
+
+<!--@thymesVar id="input" type="hu.bme.sch.cmsch.component.form.FormElement"-->
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardCard"-->
+<!--@thymesVar id="view" type="String"-->
+
+<object th:fragment="dashboardFormInput (input, index, component, view)" th:remove="tag">
+
+    <div class="field-group" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${input.label}">
+        </label>
+        <div style="clear: both"></div>
+        <select th:id="|input${index}|"
+                th:name="${input.fieldName}">
+            <option th:each="opt : ${input.values.split(', *')}"
+                    th:value="${opt}"
+                    th:text="${opt}"
+                    th:selected="${#strings.equals(input.defaultValue, opt)}"></option>
+        </select>
+
+        <input type="text"
+               th:id="|search${index}|"
+               th:name="|search${index}|"
+               placeholder="Kereső"
+        />
+        <script th:inline="javascript">
+            (function() {
+                const id = /*[[${index}]]*/ '';
+                const select = document.querySelectorAll(`select#input${id}`);
+                const options = Array.from(select[0].options);
+                const input = document.querySelector(`input#search${id}`);
+                function findMatches (search, options) {
+                    return options.filter(option => {
+                        const regex = new RegExp(search, 'gi');
+                        return option.text.match(regex);
+                    });
+                }
+                function filterOptions () {
+                    options.forEach(option => {
+                        option.remove();
+                        option.selected = false;
+                    });
+                    const matchArray = findMatches(this.value, options);
+                    select[0].append(...matchArray);
+                }
+                input.addEventListener('change', filterOptions);
+                input.addEventListener('keyup', filterOptions);
+            })();
+        </script>
+
+        <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+    </div>
+
+</object>
+
+<object th:fragment="dashboardFormScript (components)" th:remove="tag">
+</object>

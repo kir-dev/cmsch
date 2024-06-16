@@ -1,0 +1,42 @@
+
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardFormCard"-->
+<!--@thymesVar id="view" type="String"-->
+<!--@thymesVar id="card" type="int"-->
+<!--@thymesVar id="message" type="String"-->
+
+<object th:fragment="dashboardCard (component, view, card, message)" th:remove="tag">
+
+    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+        <h4 th:text="${component.title}">Title</h4>
+        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
+        <span th:text="${component.description}" class="desc">A little description fits there.</span>
+
+        <form th:action="|@{/admin/control}/${view}/${component.action}|" th:method="${component.method}" th:enctype="${component.multipartForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}">
+
+            <object th:remove="tag" th:each="input,iter : ${component.content}">
+
+                <object th:replace="~{('component/dashboard/form/' + ${input.type.templateName}) :: dashboardFormInput (${input}, ${iter.index}, ${component}, ${view})}" th:remove="tag"></object>
+
+            </object>
+
+            <div class="button-group" th:if="${component.buttonCaption != ''}">
+                <button type="submit" class="btn btn-primary">
+                    <span class="material-symbols-outlined" th:text="${component.buttonIcon}">check_circle</span>
+                    <ins th:text="${component.buttonCaption}">SUBMIT</ins>
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</object>
+
+
+<object th:fragment="dashboardScript (components)" th:remove="tag">
+
+    <object th:each="type : ${@thymeleafUtility.dashboardFormTypes(components)}" th:remove="tag">
+        <script th:replace="~{('component/dashboard/form/' + ${type}) :: dashboardFormScript(${components}) }" th:remove="tag"></script>
+    </object>
+
+</object>

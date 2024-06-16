@@ -1,0 +1,27 @@
+
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardPermissionCard"-->
+<!--@thymesVar id="view" type="String"-->
+<!--@thymesVar id="card" type="int"-->
+<!--@thymesVar id="message" type="String"-->
+
+<object th:fragment="dashboardCard (component, view, card, message)" th:remove="tag">
+
+    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:if="${user.isAdmin()}" th:id="${component.id}">
+        <h4 th:text="${component.title}">Jogosultságok</h4>
+        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
+
+        <div class="options">
+            <div class="option">
+                <div><span class="material-symbols-outlined">local_police</span></div>
+                <div>
+                    <h5 th:text="${component.permission}">PERMISSION_NAME</h5>
+                    <span th:text="${component.description}">Ez a jog szükséges ennek az oldalnak az módosításához és olvasásához.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</object>
+
+<object th:fragment="dashboardScript (components)" th:remove="tag">
+</object>

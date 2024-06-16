@@ -1,0 +1,34 @@
+
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardStatusTableCard"-->
+<!--@thymesVar id="view" type="String"-->
+<!--@thymesVar id="card" type="int"-->
+<!--@thymesVar id="message" type="String"-->
+
+<object th:fragment="dashboardCard (component, view, card, message)" th:remove="tag">
+
+    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+        <h4 th:text="${component.title}">Title</h4>
+        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
+        <span th:text="${component.description}" class="desc">A little description fits there.</span>
+
+        <table class="dashboard-table" cellspacing="0" style="margin-top: 20px">
+            <tr>
+                <th th:each="th : ${component.header}" th:text="${th}"></th>
+                <th> </th>
+            </tr>
+            <tr th:each="tr : ${component.content}">
+                <td th:each="col : ${tr.row}" th:text="${col}"></td>
+                <td><span class='material-symbols-outlined' th:style="|color: ${tr.status.color}|" th:text="${tr.status.icon}">close</span></td>
+            </tr>
+        </table>
+
+        <div class="button-group" th:if="${component.exportable}">
+            <a href="#" th:href="|@{/admin/control}/${view}/export/${component.id}|" class="btn btn-primary" target="_blank"
+            ><span class="material-symbols-outlined regular">download</span> <ins>LETÖLTÉS (.csv)</ins></a>
+        </div>
+    </div>
+
+</object>
+
+<object th:fragment="dashboardScript (components)" th:remove="tag">
+</object>

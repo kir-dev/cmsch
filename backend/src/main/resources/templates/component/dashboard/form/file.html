@@ -1,0 +1,37 @@
+
+<!--@thymesVar id="input" type="hu.bme.sch.cmsch.component.form.FormElement"-->
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardCard"-->
+<!--@thymesVar id="view" type="String"-->
+
+<object th:fragment="dashboardFormInput (input, index, component, view)" th:remove="tag">
+
+    <div class="field-group" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${input.label}">
+        </label>
+        <div style="clear: both"></div>
+        <input type="file"
+               class="file-input"
+               th:name="${input.fieldName}"
+               th:id="|input${index}|"
+               th:value="${input.defaultValue}"
+               autocomplete="off"
+               th:required="${input.required}"
+        />
+        <span class="file-name"></span>
+        <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+        <script th:inline="javascript">
+            let index = /*[[${index}]]*/ 0;
+            document.getElementById(`input${index}`).addEventListener('change', function() {
+                const groupIndex = index;
+                const fileName = this.files && this.files.length > 0 ? this.files[0].name : "";
+                document.querySelector(`#_${groupIndex} > .file-name`).innerText = fileName;
+            });
+        </script>
+    </div>
+
+</object>
+
+<object th:fragment="dashboardFormScript (components)" th:remove="tag">
+</object>
