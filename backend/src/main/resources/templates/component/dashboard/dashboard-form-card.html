@@ -15,7 +15,7 @@
 
             <object th:remove="tag" th:each="input,iter : ${component.content}">
 
-                <object th:replace="~{('component/dashboard/form/' + ${input.type.templateName}) :: dashboardFormInput (${input}, ${iter.index}, ${component}, ${view})}" th:remove="tag"></object>
+                <object th:replace="~{('component/dashboard/form/' + ${input.type.templateName}) :: dashboardFormInput (${input}, ${component.id + '_' + iter.index}, ${component}, ${view})}" th:remove="tag"></object>
 
             </object>
 

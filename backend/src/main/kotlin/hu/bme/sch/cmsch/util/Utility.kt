@@ -124,7 +124,7 @@ class ThymeleafUtility {
         .distinct()
         .toList()
 
-    fun dashboardCustomFormTypes(components: List<DashboardComponent>) = components
+    fun dashboardFormCustomTypes(components: List<DashboardComponent>) = components
         .asSequence()
         .filterIsInstance<DashboardFormCard>()
         .flatMap { it.content }
