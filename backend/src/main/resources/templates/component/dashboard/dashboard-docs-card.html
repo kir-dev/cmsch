@@ -1,0 +1,22 @@
+
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardDocsCard"-->
+<!--@thymesVar id="view" type="String"-->
+<!--@thymesVar id="card" type="int"-->
+<!--@thymesVar id="message" type="String"-->
+
+<object th:fragment="dashboardCard (component, view, card, message)" th:remove="tag">
+
+    <div th:class="|card ${component.wide ? '' : 'wide-false'}|" th:id="${component.id}">
+        <h4 th:text="${component.title}">Title</h4>
+        <span class="info-message" th:if="${card == component.id && message != ''}" th:text="${message}">Üzenet</span>
+        <span th:text="${component.description}" class="desc">A little description fits there.</span>
+
+        <div class="field-group">
+            <div class="details-docs" th:utext="${@thymeleafUtility.convertMarkdownToHtmlAndTrimIdent(component.markdownContent)}"></div>
+        </div>
+    </div>
+
+</object>
+
+<object th:fragment="dashboardScript (components)" th:remove="tag">
+</object>

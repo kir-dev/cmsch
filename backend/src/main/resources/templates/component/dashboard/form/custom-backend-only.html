@@ -1,0 +1,19 @@
+
+<!--@thymesVar id="input" type="hu.bme.sch.cmsch.component.form.FormElement"-->
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardCard"-->
+<!--@thymesVar id="view" type="String"-->
+
+<object th:fragment="dashboardFormInput (input, index, component, view)" th:remove="tag">
+
+    <object th:replace="~{('component/dashboard/form/' + ${input.customType}) :: dashboardFormInput (${input}, ${iter.index}, ${component}, ${view})}" th:remove="tag"></object>
+
+</object>
+
+<object th:fragment="dashboardFormScript (components)" th:remove="tag">
+
+    <object th:each="customType : ${@thymeleafUtility.dashboardFormCustomTypes(components)}" th:remove="tag">
+        <script th:replace="~{('component/dashboard/form/' + ${customType}) :: dashboardFormScript(${components}) }" th:remove="tag"></script>
+    </object>
+
+</object>
