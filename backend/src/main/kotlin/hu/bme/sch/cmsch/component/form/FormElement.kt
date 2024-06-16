@@ -1,7 +1,9 @@
 package hu.bme.sch.cmsch.component.form
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonView
+import hu.bme.sch.cmsch.admin.dashboard.pascalToKebab
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.UserEntity
 
@@ -74,13 +76,18 @@ enum class FormElementType(
     LINK_VIEW,
     IMAGE_VIEW,
     HTML_INFO_BOX,
-    SEARCHABLE_SELECT
+    SEARCHABLE_SELECT,
+    CUSTOM_BACKEND_ONLY,
     ;
+
+    val templateName = shoutingSnakeToKebab(name)
 
     open fun fetchValue(user: UserEntity): String {
         return "not-server-side-value"
     }
 }
+
+fun shoutingSnakeToKebab(input: String) = input.split('_').joinToString("-") { it.lowercase() }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class FormElement(
@@ -113,4 +120,7 @@ data class FormElement(
 
     @field:JsonView(FullDetails::class)
     var defaultValue: String = "",
+
+    @field:JsonIgnore
+    var customType: String? = null,
 )

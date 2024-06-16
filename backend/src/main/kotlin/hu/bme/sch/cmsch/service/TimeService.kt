@@ -36,6 +36,6 @@ class TimeService(
         return getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
     }
 
-    fun todayInSqlFormat() = LocalDateTime.now(timeZone).format(sqlDateFormatter)
+    fun todayInSqlFormat(): String = LocalDateTime.now(timeZone).format(sqlDateFormatter)
 
 }

@@ -1,0 +1,26 @@
+
+<!--@thymesVar id="input" type="hu.bme.sch.cmsch.component.form.FormElement"-->
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardCard"-->
+<!--@thymesVar id="view" type="String"-->
+
+<object th:fragment="dashboardFormInput (input, index, component, view)" th:remove="tag">
+
+    <div class="field-group">
+        <label th:text="${input.label}">
+        </label>
+        <div style="clear: both"></div>
+        <div class="button-group" style="margin: 0">
+            <a th:href="${input.values}" class="btn btn-primary" th:target="${input.defaultValue == '_blank' ? '_blank' : ''}">
+                <span class="material-symbols-outlined">link</span>
+                <ins th:text="${input.label}">OPEN</ins>
+            </a>
+        </div>
+
+        <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
+    </div>
+
+</object>
+
+<object th:fragment="dashboardFormScript (components)" th:remove="tag">
+</object>

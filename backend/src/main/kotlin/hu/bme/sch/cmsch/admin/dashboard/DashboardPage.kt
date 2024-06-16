@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import org.thymeleaf.util.StringUtils
 import java.io.ByteArrayOutputStream
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 abstract class DashboardPage(
     internal var view: String,
@@ -70,7 +73,7 @@ abstract class DashboardPage(
         model.addAttribute("wide", wide)
         model.addAttribute("components", getComponents(user, requestParams))
         model.addAttribute("user", user)
-        model.addAttribute("card", requestParams.getOrDefault("card", "-1"))
+        model.addAttribute("card", requestParams.getOrDefault("card", "-1").toIntOrNull())
         model.addAttribute("message", requestParams.getOrDefault("message", ""))
 
         return "dashboard"
@@ -146,6 +149,10 @@ abstract class DashboardPage(
         }
 
         return outputStream.toByteArray()
+    }
+
+    fun encodeMessage(message: String): String {
+        return URLEncoder.encode(message, StandardCharsets.UTF_8)
     }
 
 }

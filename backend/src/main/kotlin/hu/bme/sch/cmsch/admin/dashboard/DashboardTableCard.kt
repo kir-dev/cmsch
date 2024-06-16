@@ -10,7 +10,7 @@ open class DashboardTableCard(
     val exportable: Boolean = false,
 ) : DashboardComponent {
 
-    override val type: String = javaClass.simpleName
+    override val type: String = pascalToKebab(javaClass.simpleName)
 
     open fun fileName() = "export"
 
