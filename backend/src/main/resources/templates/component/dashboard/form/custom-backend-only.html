@@ -6,7 +6,7 @@
 
 <object th:fragment="dashboardFormInput (input, index, component, view)" th:remove="tag">
 
-    <object th:replace="~{('component/dashboard/form/' + ${input.customType}) :: dashboardFormInput (${input}, ${iter.index}, ${component}, ${view})}" th:remove="tag"></object>
+    <object th:replace="~{('component/dashboard/form/' + ${input.customType}) :: dashboardFormInput (${input}, ${index}, ${component}, ${view})}" th:remove="tag"></object>
 
 </object>
 
