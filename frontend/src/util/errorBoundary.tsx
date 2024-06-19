@@ -28,7 +28,6 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   }
 
   render() {
-    console.log({ prod: import.meta.env.PROD })
     if (this.state.hasError) {
       return (
         <CmschPage>

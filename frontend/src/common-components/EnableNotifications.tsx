@@ -29,7 +29,7 @@ export const EnableNotifications = () => {
           <VStack align="flex-start" flex={1}>
             <AlertDescription wordBreak="break-word">{permissionPromptText}</AlertDescription>
           </VStack>
-          <Button variant="ghost" textColor="000" mr={2} onClick={() => enableNotifications(onClose)}>
+          <Button variant="ghost" textColor="000" mr={2} onClick={() => enableNotifications(onClose, () => window.location.reload())}>
             {permissionAcceptText || 'Igen'}
           </Button>
           {!!permissionDenyText && (
@@ -51,9 +51,12 @@ function disableAlert() {
   localStorage.setItem('show-notification-alert', 'false')
 }
 
-function enableNotifications(onClose: () => void) {
+async function enableNotifications(onClose: () => void, onEnabled: () => void) {
   onClose()
-  Notification.requestPermission()
+  const result = await Notification.requestPermission()
+  if (result === 'granted') {
+    onEnabled()
+  }
 }
 
 function disableNotifications(onClose: () => void) {
