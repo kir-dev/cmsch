@@ -1,9 +1,11 @@
 import { Alert, AlertDescription, AlertIcon, Box, Button, HStack, useDisclosure, VStack } from '@chakra-ui/react'
 import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
+import { areNotificationsSupported } from '../util/configs/firebase.config.ts'
 
 export const EnableNotifications = () => {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
   const config = useConfigContext()
+  if (!areNotificationsSupported()) return
   if (Notification.permission !== 'default') return null // we cannot ask again
 
   const component = config.components.pushnotification
