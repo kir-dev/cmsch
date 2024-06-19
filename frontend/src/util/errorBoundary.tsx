@@ -7,15 +7,20 @@ import { l } from './language'
 
 interface State {
   hasError: boolean
+  error?: any
 }
 
 export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
+    error: undefined
   }
 
-  static getDerivedStateFromError(_: Error) {
-    return { hasError: true }
+  static getDerivedStateFromError(err: Error) {
+    return {
+      hasError: true,
+      error: { error: err, cause: err.cause, message: err.message, name: err.name, stack: err.stack }
+    }
   }
 
   componentDidCatch(_: Error, errorInfo: ErrorInfo) {
@@ -31,6 +36,12 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
           <Text textAlign="center" color="gray.500" marginTop={10}>
             {l('error-boundary-message')}
           </Text>
+          {!import.meta.env.PROD &&
+            Object.entries(this.state.error).map((err) => (
+              <pre style={{ whiteSpace: 'pre-wrap' }}>
+                {err[0]}: {String(err[1])}
+              </pre>
+            ))}
           <ButtonGroup justifyContent="center" marginTop={10}>
             <LinkButton
               onClick={() => {
