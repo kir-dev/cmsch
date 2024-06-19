@@ -129,11 +129,12 @@ class PushNotificationToGroupDashboard(
             CmschNotification(title = title, body = body, image = image, link = url)
         )
 
+        val card = "2"
         val params = HashMap<String, String>()
         params.putAll(allRequestParams)
         params["message"] = "Értesítés elküldve $count eszközre"
-        params["card"] = "2"
-        return "redirect:/admin/control/$VIEW?${params.urlEncode()}"
+        params["card"] = card
+        return "redirect:/admin/control/$VIEW?${params.urlEncode()}#${card}"
     }
 
     private fun getGroupList(): String =
