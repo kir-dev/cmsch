@@ -29,6 +29,10 @@ export function getCloudMessaging(): Messaging | null {
   }
 }
 
+export function areNotificationsSupported() {
+  return 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window
+}
+
 export async function initNotifications(messaging: Messaging, onNotification: (payload: MessagePayload) => void): Promise<void> {
   onMessage(messaging, onNotification)
   const token = await getMessagingToken(messaging)
@@ -40,6 +44,7 @@ export async function initNotifications(messaging: Messaging, onNotification: (p
 export const disableNotifications = () => unregisterServiceWorker()
 
 export async function unsubscribeFromNotifications() {
+  if (!areNotificationsSupported()) return
   if (Notification.permission !== 'granted') return // We cannot obtain a messaging token if the permission is not granted
 
   try {
