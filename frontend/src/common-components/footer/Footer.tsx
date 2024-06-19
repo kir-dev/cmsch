@@ -16,7 +16,7 @@ export const Footer = () => {
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   const partners = useMemo(() => parseSponsors(component?.partnerLogoUrls, component?.partnerAlts, component?.partnerWebsiteUrls), [config])
   if (!component) return null
-  console.log(component)
+
   const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
   const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
   const transparentNavbar = useColorModeValue(config.components.style.lightFooterTransparent, config.components.style.darkFooterTransparent)

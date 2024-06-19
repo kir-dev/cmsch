@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useEffect } from 'react'
-import { disableNotifications, getCloudMessaging, initNotifications } from '../util/configs/firebase.config.ts'
+import { areNotificationsSupported, disableNotifications, getCloudMessaging, initNotifications } from '../util/configs/firebase.config.ts'
 import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
 import { Alert, AlertDescription, AlertTitle, Box, Button, CloseButton, useToast } from '@chakra-ui/react'
 import { useAuthContext } from '../api/contexts/auth/useAuthContext.ts'
@@ -12,9 +12,10 @@ export const PushNotificationHandler: FC<PropsWithChildren> = ({ children }) => 
   const toast = useToast()
 
   useEffect(() => {
+    if (!areNotificationsSupported()) return
     if (!authContext.isLoggedIn) return
     const shouldShowNotifications = config.components.pushnotification?.notificationsEnabled
-    const permissionGranted = Notification?.permission === 'granted'
+    const permissionGranted = Notification.permission === 'granted'
     if (shouldShowNotifications && permissionGranted) {
       const messaging = getCloudMessaging()
       if (messaging === null) return
