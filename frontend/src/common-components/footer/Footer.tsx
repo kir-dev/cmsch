@@ -86,7 +86,7 @@ export const Footer = () => {
       >
         {component?.footerMessage && <Markdown text={component?.footerMessage} />}
 
-        <Flex justify="center" gap={5} align="center" flexDirection={['column', null, 'row']}>
+        <Flex w="full" justify="center" gap={5} align="center" flexDirection={['column', null, 'row']}>
           <OrganizerLogo
             imageSrc={component?.hostLogo}
             websiteUrl={component?.hostWebsiteUrl}
