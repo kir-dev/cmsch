@@ -15,9 +15,9 @@ type Props = {
 const NewsListItem = ({ news, fontSize, useLink }: Props) => {
   return (
     <GridItem as={LinkBox} borderRadius="base" borderColor={news.highlighted ? 'brand.200' : 'whiteAlpha.200'} borderWidth="1px" p={4}>
-      <HStack>
+      <Box display="flex" flexDirection={['column-reverse', 'column-reverse', 'row']} gap={4}>
         {news.imageUrl && (
-          <Image borderRadius="md" w={32} h={32} objectFit="cover" objectPosition="center" src={getCdnUrl(news.imageUrl)} mr={3} />
+          <Image borderRadius="md" w={32} h={32} objectFit="cover" objectPosition="center" src={getCdnUrl(news.imageUrl)} />
         )}
         <Box w="full">
           <HStack justifyContent="space-between">
@@ -40,7 +40,7 @@ const NewsListItem = ({ news, fontSize, useLink }: Props) => {
             )}
           </Heading>
         </Box>
-      </HStack>
+      </Box>
       {news.briefContent && (
         <Box mt={3}>
           <Markdown text={news.briefContent} />
