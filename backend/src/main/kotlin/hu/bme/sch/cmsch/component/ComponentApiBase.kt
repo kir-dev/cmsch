@@ -5,7 +5,6 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
@@ -27,7 +26,8 @@ abstract class ComponentApiBase(
     private val insertComponentCategory: Boolean = true,
     private val componentCategory: String = componentClass.simpleName,
     private val menuService: MenuService,
-    private val auditLogService: AuditLogService
+    private val auditLogService: AuditLogService,
+    private val storageService: StorageService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -102,7 +102,7 @@ abstract class ComponentApiBase(
                         if (it.size > 0) {
                             log.info("Uploading image {}.{} size: {}", setting.component, setting.property, it.size)
                             newValues.append(setting.property).append("=size@").append(it.size).append(", ")
-                            it.uploadFile("manifest", setting.rawValue.split("/").last())
+                            storageService.saveNamedObject("manifest", setting.rawValue.split("/").last(), it)
                         }
                     }
                 }
