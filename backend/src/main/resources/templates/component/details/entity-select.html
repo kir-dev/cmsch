@@ -20,11 +20,10 @@
                 th:disabled="${!generateInput.enabled || readOnly}"
                 th:unless="${entityMode}"
         >
-            <option th:if="${editMode || duplicateMode}"
-                    th:each="opt : ${mappings.get(generateInput.entitySource).invoke(data)}"
+            <option th:each="opt : ${mappings.get(generateInput.entitySource).invoke(data)}"
                     th:value="${opt}"
                     th:text="${opt}"
-                    th:selected="${(editMode || duplicateMode) && #strings.equals(property.get(data), opt)}"></option>
+                    th:selected="${data != null && #strings.equals(property.get(data), opt)}"></option>
         </select>
 
         <object th:remove="tag" th:if="${generateInput.interpreter == 'search'}">
