@@ -54,7 +54,7 @@ class UserController(
     objectMapper,
     env,
 
-    entitySourceMapping = mapOf("GroupEntity" to { groups.findAll().map { it.name }.toList() }),
+    entitySourceMapping = mapOf("GroupEntity" to { listOf("") + groups.findAll().map { it.name }.toList() }),
 
     showPermission =   StaffPermissions.PERMISSION_SHOW_USERS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
