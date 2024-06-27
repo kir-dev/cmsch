@@ -124,6 +124,8 @@ open class LoginService(
             user.detailsImported = true
         }
 
+        grantGuildAndGroup(user)
+
         // Assign fallback group if user still don't have one
         if (user.groupName.isBlank()) {
             groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
@@ -156,15 +158,7 @@ open class LoginService(
             user.email = profile.email ?: user.email
         }
 
-        // Check neptun; grant group and guild if mapping present
-        if (user.neptun.isNotBlank()) {
-            groupToUserMapping.findByNeptun(user.neptun).ifPresent {
-                user.major = it.major
-                user.groupName = it.groupName
-                user.group = groups.findByName(it.groupName).orElse(null)
-                user.detailsImported = true
-            }
-        }
+        grantGuildAndGroup(user)
 
         if (user.internalId.isNotBlank() && !user.detailsImported) {
             userDetailsByInternalIdMapping.findByInternalId(user.internalId).ifPresent {
@@ -264,6 +258,29 @@ open class LoginService(
         // If fallback is still not found, set the group name to empty string
         if (user.groupName != user.group?.name)
             user.groupName = user.group?.name ?: ""
+    }
+
+    private fun grantGuildAndGroup(user: UserEntity) {
+        if (user.detailsImported) return
+        var alreadySetGroupAndGuild = false
+        if (user.neptun.isNotBlank()) {
+            groupToUserMapping.findByNeptun(user.neptun).ifPresent {
+                user.major = it.major
+                user.groupName = it.groupName
+                user.group = groups.findByName(it.groupName).orElse(null)
+                user.detailsImported = true
+                alreadySetGroupAndGuild = true
+            }
+        }
+
+        if (user.email.isNotBlank() && !alreadySetGroupAndGuild) {
+            groupToUserMapping.findByEmailIgnoreCase(user.email).ifPresent {
+                user.major = it.major
+                user.groupName = it.groupName
+                user.group = groups.findByName(it.groupName).orElse(null)
+                user.detailsImported = true
+            }
+        }
     }
 
     private fun processUnitScopeStatus(
@@ -422,6 +439,8 @@ open class LoginService(
             user.role = RoleType.SUPERUSER
             user.detailsImported = true
         }
+
+        grantGuildAndGroup(user)
 
         // Assign fallback group if user still don't have one
         if (user.groupName.isBlank()) {

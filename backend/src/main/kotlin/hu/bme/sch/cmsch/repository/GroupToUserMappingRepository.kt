@@ -10,5 +10,6 @@ interface GroupToUserMappingRepository : CrudRepository<GroupToUserMappingEntity
     EntityPageDataSource<GroupToUserMappingEntity, Int> {
 
     fun findByNeptun(neptun: String): Optional<GroupToUserMappingEntity>
+    fun findByEmailIgnoreCase(email: String): Optional<GroupToUserMappingEntity>
     fun findAllByGroupName(groupName: String): List<GroupToUserMappingEntity>
 }
