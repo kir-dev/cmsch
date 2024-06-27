@@ -64,7 +64,7 @@ open class UserService(
     open fun allMembersOfGroup(groupName: String): Collection<GroupMemberVirtualEntity> {
         val mappings = groupMapping.findAllByGroupName(groupName)
                 .asSequence()
-                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, findGuildFor(it.neptun), "-") }
+                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun ?: "", findGuildFor(it.neptun ?: ""), "-") }
         val users = users.findAllByGroupName(groupName)
                 .asSequence()
                 .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, it.guild.displayName, resolveRoleStatus(it)) }
