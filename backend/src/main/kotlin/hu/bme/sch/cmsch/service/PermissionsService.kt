@@ -27,6 +27,7 @@ import hu.bme.sch.cmsch.component.proto.ProtoComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
+import hu.bme.sch.cmsch.component.sheets.SheetsComponent
 import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
 import hu.bme.sch.cmsch.component.team.TeamComponent
@@ -365,6 +366,12 @@ object ControlPermissions : PermissionGroup {
         component = ApplicationComponent::class
     )
 
+    val PERMISSION_CONTROL_SHEETS = PermissionValidator(
+        "SHEETS_CONTROL",
+        "Sheets integráció testreszabása",
+        component = SheetsComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -407,6 +414,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_ACCESS_KEYS,
         PERMISSION_CONTROL_PROTO,
         PERMISSION_CONTROL_CONFERENCE,
+        PERMISSION_CONTROL_SHEETS,
     )
 
 }
@@ -1288,6 +1296,32 @@ object StaffPermissions : PermissionGroup {
         component = ConferenceComponent::class
     )
 
+    /// SheeetsComponent
+
+    val PERMISSION_SHOW_SHEETS = PermissionValidator(
+        "SHEETS_SHOW",
+        "Sheets integrációk megtekintése",
+        component = SheetsComponent::class
+    )
+
+    val PERMISSION_EDIT_SHEETS = PermissionValidator(
+        "SHEETS_EDIT",
+        "Sheets integrációk szerkesztése",
+        component = SheetsComponent::class
+    )
+
+    val PERMISSION_CREATE_SHEETS = PermissionValidator(
+        "SHEETS_CREATE",
+        "Sheets integrációk létrehozása",
+        component = SheetsComponent::class
+    )
+
+    val PERMISSION_DELETE_SHEETS = PermissionValidator(
+        "SHEETS_DELETE",
+        "Sheets integrációk törlése",
+        component = SheetsComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_SHOW_TASKS,
@@ -1447,6 +1481,11 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_CONFERENCE,
         PERMISSION_CREATE_CONFERENCE,
         PERMISSION_DELETE_CONFERENCE,
+
+        PERMISSION_SHOW_SHEETS,
+        PERMISSION_EDIT_SHEETS,
+        PERMISSION_CREATE_SHEETS,
+        PERMISSION_DELETE_SHEETS,
     )
 
 }

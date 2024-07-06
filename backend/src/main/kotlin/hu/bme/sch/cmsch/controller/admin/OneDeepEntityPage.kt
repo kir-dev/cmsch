@@ -563,6 +563,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         log.info("Purged {} on view '{}'", before - after, view)
         auditLog.delete(user, component.component, "purge all in $view (affected: ${before - after})")
 
+        onEntitiesPurged()
+
         model.addAttribute("title", titlePlural)
         model.addAttribute("view", view)
         model.addAttribute("user", user)
@@ -823,6 +825,10 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
     open fun handleCustomInterpreter(it: Pair<KProperty1<out Any, *>, GenerateInput>, newValues: StringBuilder) {
         TODO("Custom interpreter was found but handleCustomInterpreter() was not overridden")
+    }
+
+    open fun onEntitiesPurged() {
+        // Overridden when notification is required
     }
 
 }

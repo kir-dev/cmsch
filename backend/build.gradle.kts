@@ -50,6 +50,7 @@ dependencies {
     api("org.commonmark:commonmark:0.22.0")
     api("org.commonmark:commonmark-ext-gfm-tables:0.22.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
+    api("com.squareup.okhttp3:okhttp:4.12.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")

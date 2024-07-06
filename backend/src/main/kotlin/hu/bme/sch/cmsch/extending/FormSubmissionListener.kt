@@ -10,4 +10,8 @@ interface FormSubmissionListener {
 
     fun onFormUpdated(user: CmschUser, form: FormEntity, response: ResponseEntity)
 
+    fun onResponseDeleted(entity: ResponseEntity) { }
+
+    fun onResponsesPurged() { }
+
 }

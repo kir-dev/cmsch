@@ -251,7 +251,8 @@ open class FormService(
                 accepted = false,
                 rejected = false,
                 email = userEntity.email,
-                submission = objectMapper.writeValueAsString(submission)
+                submission = objectMapper.writeValueAsString(submission),
+                line = (responseRepository.findTop1ByFormIdOrderByLineDesc(form.id).firstOrNull()?.line ?: 0) + 1
             )
             responseRepository.save(responseEntity)
             listeners.forEach { it.onFormSubmitted(user, form, responseEntity) }
