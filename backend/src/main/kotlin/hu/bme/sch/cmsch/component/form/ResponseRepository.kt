@@ -27,4 +27,6 @@ interface ResponseRepository : JpaRepository<ResponseEntity, Int>,
 
     fun countTop1ByFormIdAndSubmitterUserId(formId: Int, userId: Int): Int
 
+    fun findTop1ByFormIdOrderByLineDesc(formId: Int): List<ResponseEntity>
+
 }

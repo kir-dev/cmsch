@@ -155,4 +155,15 @@ abstract class DashboardPage(
         return URLEncoder.encode(message, StandardCharsets.UTF_8)
     }
 
+    companion object {
+        fun dashboardPage(view: String, card: Int = -1, message: String? = null): String {
+            val anchor = if (card >= 0) "#${card}" else ""
+            return if (message == null) {
+                "redirect:/admin/control/$view$anchor"
+            } else {
+                "redirect:/admin/control/$view?card=$card&message=${URLEncoder.encode(message, StandardCharsets.UTF_8)}${anchor}"
+            }
+        }
+    }
+
 }

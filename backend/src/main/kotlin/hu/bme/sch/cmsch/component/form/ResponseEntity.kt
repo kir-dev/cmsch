@@ -150,6 +150,13 @@ data class ResponseEntity(
     @property:ImportFormat
     var rejectionHistory: String = "",
 
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @property:GenerateInput(order = 14, label = "Sorszám", type = INPUT_TYPE_NUMBER, note = "Exportokhoz van használva")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var line: Int = 0,
+
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
