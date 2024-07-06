@@ -4,14 +4,12 @@ import hu.bme.sch.cmsch.component.SettingProxy
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
 import hu.bme.sch.cmsch.component.login.keycloak.KeycloakUserInfoResponse
+import hu.bme.sch.cmsch.component.team.TeamService
 import hu.bme.sch.cmsch.config.AUTHSCH
 import hu.bme.sch.cmsch.config.GOOGLE
 import hu.bme.sch.cmsch.config.KEYCLOAK
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.model.GuildType
-import hu.bme.sch.cmsch.model.MajorType
-import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
@@ -23,6 +21,7 @@ import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
+import java.util.*
 
 @Service
 open class LoginService(
@@ -36,7 +35,8 @@ open class LoginService(
     private val unitScopeComponent: UnitScopeComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService,
-    private val transactionManager: PlatformTransactionManager
+    private val transactionManager: PlatformTransactionManager,
+    private val teamService: Optional<TeamService>
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -266,8 +266,7 @@ open class LoginService(
         if (user.neptun.isNotBlank()) {
             groupToUserMapping.findByNeptun(user.neptun).ifPresent {
                 user.major = it.major
-                user.groupName = it.groupName
-                user.group = groups.findByName(it.groupName).orElse(null)
+                addUserToGroup(user, it)
                 user.detailsImported = true
                 alreadySetGroupAndGuild = true
             }
@@ -276,10 +275,19 @@ open class LoginService(
         if (user.email.isNotBlank() && !alreadySetGroupAndGuild) {
             groupToUserMapping.findByEmailIgnoreCase(user.email).ifPresent {
                 user.major = it.major
-                user.groupName = it.groupName
-                user.group = groups.findByName(it.groupName).orElse(null)
+                addUserToGroup(user, it)
                 user.detailsImported = true
             }
+        }
+    }
+
+    private fun addUserToGroup(user: UserEntity, groupMapping: GroupToUserMappingEntity) {
+        val group = groups.findByName(groupMapping.groupName)
+        if (teamService.isPresent && group.isPresent) {
+            teamService.get().addUserToGroup(user, group.get())
+        } else {
+            user.groupName = groupMapping.groupName
+            user.group = group.orElse(null)
         }
     }
 

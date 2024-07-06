@@ -381,19 +381,23 @@ open class TeamService(
 
         if (teamJoinRequestRepository.existsByUserIdAndGroupId(userId, group.id)) {
             val user = userRepository.findById(userId).orElse(null) ?: return false
-            user.groupName = group.name
-            user.group = group
-            if (teamComponent.grantAttendeeRole.isValueTrue() && user.role.value <= RoleType.ATTENDEE.value) {
-                log.info("User '{}' accepted for group '{}' (ATTENDEE granted)", user.fullName, group.name)
-                user.role = RoleType.ATTENDEE
-            } else {
-                log.info("User '{}' accepted for group '{}' (ATTENDEE not granted)", user.fullName, group.name)
-            }
+            addUserToGroup(user, group)
             userRepository.save(user)
             teamJoinRequestRepository.deleteAllByUserId(userId)
             return true
         }
         return false
+    }
+
+    fun addUserToGroup(user: UserEntity, group: GroupEntity) {
+        user.groupName = group.name
+        user.group = group
+        if (teamComponent.grantAttendeeRole.isValueTrue() && user.role.value <= RoleType.ATTENDEE.value) {
+            log.info("User '{}' accepted for group '{}' (ATTENDEE granted)", user.fullName, group.name)
+            user.role = RoleType.ATTENDEE
+        } else {
+            log.info("User '{}' accepted for group '{}' (ATTENDEE not granted)", user.fullName, group.name)
+        }
     }
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
