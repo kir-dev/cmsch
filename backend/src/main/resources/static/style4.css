@@ -1044,6 +1044,14 @@ form label,
     border-radius: 4px;
 }
 
+.field-group .details-docs pre {
+    background-color: var(--dark-4);
+}
+
+.field-group .details-docs pre code {
+    text-wrap: wrap;
+}
+
 .field-group .input-container {
     position: relative;
     display: inline-block;

@@ -9,25 +9,26 @@ import hu.bme.sch.cmsch.model.UserEntity
 
 enum class FormElementType(
     val serverSide: Boolean = false,
-    val persist: Boolean = true
+    val persist: Boolean = true,
+    val rendersOnServerSide: Boolean = false,
 ) {
 
-    TEXT,
-    LONG_TEXT,
-    NUMBER,
+    TEXT(rendersOnServerSide = true),
+    LONG_TEXT(rendersOnServerSide = true),
+    NUMBER(rendersOnServerSide = true),
     EMAIL,
     PHONE,
-    CHECKBOX,
-    SELECT,
-    MUST_AGREE,
+    CHECKBOX(rendersOnServerSide = true),
+    SELECT(rendersOnServerSide = true),
+    MUST_AGREE(rendersOnServerSide = true),
     VOTE, // value = [{"title":"","value":"","img":"","text":""}, {...}]
     SELECTION_GRID, // value = { "prefix": "day", "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
     CHOICE_GRID, // value = { "prefix": "day", "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
 
-    INFO_BOX(persist = false),
-    WARNING_BOX(persist = false),
-    TEXT_BOX(persist = false),
-    SECTION_START(persist = false),
+    INFO_BOX(persist = false, rendersOnServerSide = true),
+    WARNING_BOX(persist = false, rendersOnServerSide = true),
+    TEXT_BOX(persist = false, rendersOnServerSide = true),
+    SECTION_START(persist = false, rendersOnServerSide = true),
 
     INJECT_USER_FULLNAME(serverSide = true) {
         override fun fetchValue(user: UserEntity): String {
@@ -71,13 +72,13 @@ enum class FormElementType(
     },
 
     // BACKEND ONLY
-    FILE,
-    HISTORY_VIEW,
-    LINK_VIEW,
-    IMAGE_VIEW,
-    HTML_INFO_BOX,
-    SEARCHABLE_SELECT,
-    CUSTOM_BACKEND_ONLY,
+    FILE(rendersOnServerSide = true),
+    HISTORY_VIEW(rendersOnServerSide = true),
+    LINK_VIEW(rendersOnServerSide = true),
+    IMAGE_VIEW(rendersOnServerSide = true),
+    HTML_INFO_BOX(rendersOnServerSide = true),
+    SEARCHABLE_SELECT(rendersOnServerSide = true),
+    CUSTOM_BACKEND_ONLY(rendersOnServerSide = true),
     ;
 
     val templateName = shoutingSnakeToKebab(name)
