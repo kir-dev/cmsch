@@ -64,7 +64,10 @@ class SheetsUpdaterService(
                 .build()
 
             client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                if (!response.isSuccessful) {
+                    println(response.body?.string())
+                    throw IOException("Unexpected code $response")
+                }
 
                 return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body?.string())?.status
                     ?: SheetsUpdateStatus.CONNECTION_ERROR
