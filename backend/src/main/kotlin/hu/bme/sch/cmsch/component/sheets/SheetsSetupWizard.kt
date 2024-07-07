@@ -111,9 +111,11 @@ class SheetsSetupWizard(
                 markdownContent = """
                     |Ezzel a funkcióval élőben követheted az űrlapod állapotát Google Sheetsben.
                     |
-                    |Készíts egy új google sheets-et, ehhez menj például a [https://sheets.new/](https://sheets.new/) oldalra. Ha már korábban létrehoztad használhatod a meglévő táblázatodat is.
+                    |Készíts egy új Google Sheets-et, ehhez menj például a [https://sheets.new/](https://sheets.new/) oldalra. Ha már korábban létrehoztad használhatod a meglévő táblázatodat is. 
                     |
-                    |Kattints a fölső menüben a `Extensions` menüben az `Apps Script` lehetőségre.
+                    |Nevezd el a dokumentumot, például "$name"-re, aztán menj a mentésre. 
+                    |
+                    |Kattints a fölső menüben a `Extensions` (Bővítmények) menüben az `Apps Script` lehetőségre.
                     |
                     |Másold be az alábbi kódot:
                     |
@@ -123,11 +125,27 @@ class SheetsSetupWizard(
                     |
                     |Mentsd el a scriptet. Névnek add meg például, hogy "$name".
                     |
-                    |Kattins a `Deployment` / `New deployment` gombra. Add meg a deployment nevét (pl. "$name"). Válaszd ki, hogy mindenki által hozzáférhető legyen a script. Ne aggódj az adatokhoz nem fog senki hozzáférni, csak az akinek megvan a token.
+                    |Kattins a `Deployment` / `New deployment` gombra.
+                    |
+                    |Válaszd ki, hogy a `Select type` menüből `Web app` legyen a tíypusa a deploymentnek.
+                    |
+                    |Add meg a deployment leírását (pl. "$name"). 
+                    |
+                    |Állítsd be, hogy mindenki által hozzáférhető legyen a script. Ne aggódj az adatokhoz nem fog senki hozzáférni, csak az akinek megvan a token.
                     |
                     |Nyomd meg a `Deploy` gombot.
                     |
-                    |Másold be a a Deployment URL-jét az alábbi űrlapba. Ha sikeres volt a beállítás, akkor erre utaló üzenetet fogsz kapni. Ha nem, akkor nézd meg, nem hagytál-e ki valamit.
+                    |Ha kéri, akkor add meg a jogosultságokat. Kattints az 'Authorize access' gombra. 
+                    |
+                    |A felugró menüben válaszd ki a saját Google felhasználódat.
+                    |
+                    |Mivel ezt a kódot nem ellenőrizte a Google, ezért kattints az `Advanced` linkre, majd az alatt a `Go to $name (unsafe)` opcióra. Ha nem bízol a kódban, akkor olvasd át nyugodtan. Csak azt a táblázatot fogja tudni szerkeszteni amin keresztül létrehoztad. Ha érzed magadban a kreativitást, módosíthatod is nyugodtan a scriptet.
+                    |
+                    |Utána adj jogosultságot írásra és olvasásra, hogy a script tudja frissíteni a dokumentumodat. Ehhez menj az 'Allow' gombra a felugró menü alján.
+                    |
+                    |Másold be a a Web App URL-jét az alábbi űrlapba. Ha sikeres volt a beállítás, akkor erre utaló üzenetet fogsz kapni. Ha nem, akkor nézd meg, nem hagytál-e ki valamit.
+                    |
+                    |Ha azt íírja, hogy a token hibás, akkor ellenőrizd, hogy azt adod-e meg itt a menüben, mint ami a kódban szerepel az Apps Script oldalon.
                     |
                     |Ha a Google átvariálná a lépéseket, akkor kérlek értesítsd a ˙kir-dev˙-et. 
                     |    
