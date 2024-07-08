@@ -65,7 +65,6 @@ class SheetsUpdaterService(
 
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
-                    println(response.body?.string())
                     throw IOException("Unexpected code $response")
                 }
 
