@@ -22,8 +22,8 @@ enum class FormElementType(
     SELECT(rendersOnServerSide = true),
     MUST_AGREE(rendersOnServerSide = true),
     VOTE, // value = [{"title":"","value":"","img":"","text":""}, {...}]
-    SELECTION_GRID, // value = { "prefix": "day", "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
-    CHOICE_GRID, // value = { "prefix": "day", "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
+    SELECTION_GRID, // value = { "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
+    CHOICE_GRID, // value = { "options": [{ "key": "lunch", "label": "ebéd" },{"key": "dinner", "label": "vacsora" }], "questions": [{ "key": "1", "label": "T-1" }] }
 
     INFO_BOX(persist = false, rendersOnServerSide = true),
     WARNING_BOX(persist = false, rendersOnServerSide = true),
