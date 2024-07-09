@@ -28,7 +28,7 @@ class AuditLogService(
     private val timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
     @Scheduled(cron = "0 1 0 * * ?", zone = "Europe/Budapest")
-    fun myScheduledFunction() {
+    fun updateFile() {
         targetFile = getTargetFile()
     }
 
