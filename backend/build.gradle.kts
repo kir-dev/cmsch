@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "hu.bme.sch"
-version = "4.6.0"
+version = "4.7.0"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 tasks {
