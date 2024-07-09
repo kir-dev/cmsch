@@ -33,6 +33,12 @@ open class FormService(
 
     internal val log = LoggerFactory.getLogger(javaClass)
 
+    private val gridReader = objectMapper.readerFor(FormGridValue::class.java)
+    private val choiceGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
+    private val selectionGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
+    private val choiceGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, String>>() {})
+    private val selectionGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
+
     @Transactional(readOnly = true)
     open fun getAllForms(role: RoleType): List<FormEntity> {
         val now = clock.getTimeInSeconds()
@@ -179,7 +185,7 @@ open class FormService(
             if (field.type.serverSide) {
                 submission[field.fieldName] = field.type.fetchValue(userEntity)
             } else {
-                val value = data[field.fieldName]
+                var value = data[field.fieldName]
                 if (value == null) {
                     log.info("User {} missing value {}", user.id, field.fieldName)
                     return FormSubmissionStatus.INVALID_VALUES
@@ -216,6 +222,41 @@ open class FormService(
                             return FormSubmissionStatus.INVALID_VALUES
                         }
                     }
+                    FormElementType.CHOICE_GRID -> {
+                        val valueTree = try {
+                            choiceGridReader.readValue<Map<String, String>>(value)
+                        } catch (e: Exception) {
+                            log.info("User {} invalid CHOICE_GRID value {} = '{}'", user.id, field.fieldName, value)
+                            return FormSubmissionStatus.INVALID_VALUES
+                        }
+                        val componentStruct = gridReader.readValue<FormGridValue>(field.values)
+                        val newValue = mutableMapOf<String, String>()
+                        val options = componentStruct.options.map { it.key }
+                        componentStruct.questions.forEach { question ->
+                            newValue[question.key] = if (valueTree.containsKey(question.key) && valueTree[question.key] in options) {
+                                valueTree[question.key] ?: options.firstOrNull() ?: "n/a"
+                            } else {
+                                options.firstOrNull() ?: "n/a"
+                            }
+                        }
+                        value = choiceGridWriter.writeValueAsString(newValue)!!
+                    }
+                    FormElementType.SELECTION_GRID -> {
+                        val valueTree = try {
+                            selectionGridReader.readValue<Map<String, Boolean>>(value)
+                        } catch (e: Exception) {
+                            log.info("User {} invalid SELECTION_GRID value {} = '{}'", user.id, field.fieldName, value)
+                            return FormSubmissionStatus.INVALID_VALUES
+                        }
+                        val componentStruct = gridReader.readValue<FormGridValue>(field.values)
+                        val newValue = mutableMapOf<String, Boolean>()
+                        componentStruct.questions.forEach { question ->
+                            componentStruct.options.forEach { option ->
+                                newValue["${question.key}_${option.key}"] = valueTree["${question.key}_${option.key}"] ?: false
+                            }
+                        }
+                        value = selectionGridWriter.writeValueAsString(newValue)!!
+                    }
                     else -> {
                         // more validators not necessary
                     }
@@ -226,7 +267,7 @@ open class FormService(
                     return FormSubmissionStatus.INVALID_VALUES
                 }
 
-                submission[field.fieldName] = data[field.fieldName]!!
+                submission[field.fieldName] = value
                 if (field.type == FormElementType.CHECKBOX && value == "") {
                     submission[field.fieldName] = "false"
                 }
