@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import { Control, useController } from 'react-hook-form'
 import Markdown from '../../../common-components/Markdown'
 import { VotingField } from '../../../common-components/VotingField'
-import { isCheckbox } from '../../../util/core-functions.util'
+import { isCheckbox, isGridField } from '../../../util/core-functions.util'
 import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
 import { GridField } from './GridField'
 
@@ -19,7 +19,9 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
   let defaultValue = isCheckbox(fieldProps.type) ? fieldProps.defaultValue === 'true' : fieldProps.defaultValue
 
   if (submittedValue) {
-    defaultValue = isCheckbox(fieldProps.type) ? submittedValue === 'true' : submittedValue
+    if (isCheckbox(fieldProps.type)) defaultValue = submittedValue === 'true'
+    else if (isGridField(fieldProps.type)) defaultValue = JSON.parse(submittedValue)
+    else defaultValue = submittedValue
   } else if (!defaultValue) {
     if (fieldProps.type === FormFieldVariants.SELECT) defaultValue = selectValues[0]
     else defaultValue = ''
@@ -123,7 +125,14 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       break
     case FormFieldVariants.SELECTION_GRID:
     case FormFieldVariants.CHOICE_GRID:
-      component = <GridField disabled={disabled} field={fieldProps} choice={fieldProps.type === FormFieldVariants.CHOICE_GRID} />
+      component = (
+        <GridField
+          disabled={disabled}
+          field={fieldProps}
+          dirty={!!submittedValue}
+          choice={fieldProps.type === FormFieldVariants.CHOICE_GRID}
+        />
+      )
       break
   }
   return (

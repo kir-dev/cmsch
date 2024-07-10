@@ -15,14 +15,14 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { CookieKeys } from '../../util/configs/cookies.config'
-import { isCheckbox } from '../../util/core-functions.util'
+import { isCheckbox, isGridField } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
 
-interface FormPageProps {}
+interface FormPageProps { }
 
 const FormPage: FunctionComponent<FormPageProps> = () => {
   const toast = useToast()
@@ -50,15 +50,15 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const { form, submission, message, status, detailsValidated } = data
   const available = form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !detailsValidated
 
-  const onSubmit = (values: Record<string, string>) => {
-    form?.formFields
-      .filter(({ type }) => type === FormFieldVariants.CHOICE_GRID || type === FormFieldVariants.SELECTION_GRID)
-      .forEach(({ fieldName }) => {
-        delete values[fieldName]
-      })
+  const onSubmit = (values: Record<string, any>) => {
     const newValues: Record<string, string> = {}
     Object.keys(values).forEach((v) => {
-      newValues[v] = values[v].toString()
+      const formField = form?.formFields.find((ff) => ff.fieldName === v)
+      if (isGridField(formField?.type)) {
+        newValues[v] = JSON.stringify(values[v])
+      } else {
+        newValues[v] = values[v]
+      }
     })
     if (available) {
       submit(newValues, status !== FormStatus.NO_SUBMISSION)
