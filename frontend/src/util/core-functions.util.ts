@@ -71,6 +71,10 @@ export function isCheckbox(type: FormFieldVariants) {
   return type === FormFieldVariants.CHECKBOX || type === FormFieldVariants.MUST_AGREE
 }
 
+export function isGridField(type?: FormFieldVariants | undefined) {
+  return type === FormFieldVariants.CHOICE_GRID || type === FormFieldVariants.SELECTION_GRID
+}
+
 export function getCdnUrl(path: string) {
   return joinPath(API_BASE_URL, 'cdn', path)
 }

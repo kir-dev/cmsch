@@ -11,31 +11,19 @@ type Props = {
 }
 
 export function GridFieldItem({ questionKey, optionKey, fieldName, disabled, radio }: Props) {
-  const { register, setValue, watch } = useFormContext()
+  const { setValue, watch } = useFormContext()
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (radio) {
-      setValue(`${fieldName}${questionKey}`, optionKey)
+      setValue(fieldName, { ...watch(fieldName), [questionKey]: optionKey })
     } else {
-      setValue(`${fieldName}${questionKey}${optionKey}`, `${e.target.checked}`)
+      setValue(fieldName, { ...watch(fieldName), [`${questionKey}_${optionKey}`]: e.target.checked })
     }
   }
 
   return radio ? (
-    <Radio
-      {...register(`${fieldName}${questionKey}`)}
-      isChecked={watch(`${fieldName}${questionKey}`) === optionKey}
-      onChange={onChange}
-      colorScheme="brand"
-      isDisabled={disabled}
-    />
+    <Radio isChecked={watch(fieldName)[questionKey] === optionKey} onChange={onChange} colorScheme="brand" isDisabled={disabled} />
   ) : (
-    <Checkbox
-      {...register(`${fieldName}${questionKey}${optionKey}`)}
-      isChecked={`${watch(`${fieldName}${questionKey}${optionKey}`)}` === 'true'}
-      onChange={onChange}
-      colorScheme="brand"
-      isDisabled={disabled}
-    />
+    <Checkbox isChecked={watch(fieldName)[`${questionKey}_${optionKey}`]} onChange={onChange} colorScheme="brand" isDisabled={disabled} />
   )
 }

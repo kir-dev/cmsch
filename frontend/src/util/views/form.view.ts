@@ -30,7 +30,6 @@ export type FormField = {
 }
 
 export type GridFieldValues = {
-  prefix: string
   options: {
     key: string
     label: string

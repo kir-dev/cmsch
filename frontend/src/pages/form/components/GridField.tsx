@@ -1,4 +1,4 @@
-import { Grid, GridItem } from '@chakra-ui/react'
+import { Grid, GridItem, Input } from '@chakra-ui/react'
 import { FormField, GridFieldValues } from '../../../util/views/form.view'
 import { Fragment, useEffect } from 'react'
 import { GridFieldItem } from './GridFieldItem'
@@ -9,21 +9,30 @@ type Props = {
   field: FormField
   choice: boolean
   disabled: boolean
+  dirty: boolean
 }
 
-export function GridField({ field, choice, disabled }: Props) {
+export function GridField({ field, choice, disabled, dirty }: Props) {
   try {
     const format: GridFieldValues = JSON.parse(field.values)
     if (!isValidGridField(format)) {
       throw new Error('Invalid form format')
     }
-    const { setValue } = useFormContext()
+    const { setValue, watch, register } = useFormContext()
 
     useEffect(() => {
-      if (choice) {
-        format.questions.forEach((q) => {
-          setValue(`${format.prefix}${field.fieldName}${q.key}`, format.options[0].key)
-        })
+      if (!dirty) {
+        if (choice) {
+          format.questions.forEach((q) => {
+            setValue(field.fieldName, { ...watch(field.fieldName), [q.key]: format.options[0].key })
+          })
+        } else {
+          format.questions.forEach((q) => {
+            format.options.forEach((o) => {
+              setValue(field.fieldName, { ...watch(field.fieldName), [`${q.key}_${o.key}`]: false })
+            })
+          })
+        }
       }
     }, [])
     return (
@@ -34,6 +43,7 @@ export function GridField({ field, choice, disabled }: Props) {
         templateColumns={`repeat(${format.options.length + 1}, 1fr)`}
         gap={2}
       >
+        <Input {...register(field.fieldName)} disabled hidden />
         <GridItem />
         {format.options.map((opt) => (
           <GridItem key={opt.key}>{opt.label}</GridItem>
@@ -44,13 +54,7 @@ export function GridField({ field, choice, disabled }: Props) {
             <GridItem>{q.label}</GridItem>
             {format.options.map((o) => (
               <GridItem key={o.key}>
-                <GridFieldItem
-                  radio={choice}
-                  disabled={disabled}
-                  questionKey={q.key}
-                  optionKey={o.key}
-                  fieldName={format.prefix + field.fieldName}
-                />
+                <GridFieldItem radio={choice} disabled={disabled} questionKey={q.key} optionKey={o.key} fieldName={field.fieldName} />
               </GridItem>
             ))}
           </Fragment>
@@ -65,7 +69,6 @@ export function GridField({ field, choice, disabled }: Props) {
 
 function isValidGridField(metadata: any): metadata is GridFieldValues {
   return (
-    typeof metadata.prefix === 'string' &&
     Array.isArray(metadata.questions) &&
     Array.isArray(metadata.options) &&
     ![...metadata.questions, ...metadata.options].some((v) => !v.label || !v.key)
