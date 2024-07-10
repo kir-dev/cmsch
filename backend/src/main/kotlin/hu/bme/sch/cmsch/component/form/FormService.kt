@@ -27,7 +27,8 @@ open class FormService(
     private val clock: TimeService,
     private val objectMapper: ObjectMapper,
     private val debugComponent: DebugComponent,
-    private val listeners: List<FormSubmissionListener>,
+    private val listeners: MutableList<out FormSubmissionListener>,
+    private val formComponent: FormComponent,
 ) {
 
     internal val log = LoggerFactory.getLogger(javaClass)
@@ -102,10 +103,9 @@ open class FormService(
                     submission = submittedFields,
                     detailsValidated = entity.detailsValidated,
                     status = FormStatus.SUBMITTED,
-                    // TODO: Remove hardcoded string
                     message = form.submittedMessage
                             + (if (!entity.detailsValidated && entity.rejectionMessage.isNotBlank())
-                                    ("\n\n**Üzenet a rendezőktől:** " + entity.rejectionMessage) else "")
+                                    ("\n\n " + formComponent.langMessageFromOrganizers.getValue() + entity.rejectionMessage) else "")
                 )
             }
         }

@@ -42,7 +42,8 @@ class FormComponent(
             langRejected,
             langAccepted,
             langGroupInsufficient,
-            langNoSubmission
+            langNoSubmission,
+            langMessageFromOrganizers,
         )
     }
 
@@ -110,6 +111,11 @@ class FormComponent(
     val langNoSubmission = SettingProxy(componentSettingService, component,
         "langNoSubmission", "Nincs leadott jelentkezés", type = SettingType.TEXT,
         fieldName = "'Nincs leadott jelentkezés' szöveg", description = "Akkor jelenik meg amikor kitölthető a jelentkezés."
+    )
+
+    val langMessageFromOrganizers = SettingProxy(componentSettingService, component,
+        "langMessageFromOrganizers", "**Üzenet a rendezőktől:**", type = SettingType.TEXT,
+        fieldName = "Visszadobás üzenet fejléce", description = "Ha egy rendező visszadobja a profilt, akkor jelenik meg."
     )
 
 }
