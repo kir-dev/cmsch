@@ -22,7 +22,6 @@ class NovaIntegrationController(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-
     @PostMapping("/valid-users")
     fun updateValidSignups(
         @RequestHeader(defaultValue = "none") token: String,
