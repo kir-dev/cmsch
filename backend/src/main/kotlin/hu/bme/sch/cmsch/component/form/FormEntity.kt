@@ -14,6 +14,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnDefault
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name="forms")
@@ -57,6 +59,8 @@ data class FormEntity(
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LOB)
     var formJson: String = "[]",
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5,
@@ -67,6 +71,8 @@ data class FormEntity(
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = RoleType::class)
     var minRole: RoleType = RoleType.BASIC,
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6,

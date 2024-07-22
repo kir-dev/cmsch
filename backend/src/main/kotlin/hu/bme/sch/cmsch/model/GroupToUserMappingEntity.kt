@@ -10,6 +10,8 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "groupToUser", indexes = [
@@ -55,6 +57,7 @@ data class GroupToUserMappingEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(columnName = "Szak", order = 5, centered = true)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")

@@ -186,12 +186,13 @@ class FormMasterFillDashboard(
             val submission = mutableMapOf<String, String>()
 
             for (field in formStruct) {
-                val value = allRequestParams[field.fieldName]
+                var value = allRequestParams[field.fieldName] ?: ""
 
-                submission[field.fieldName] = allRequestParams[field.fieldName] ?: ""
-                if (field.type == FormElementType.CHECKBOX && value == "") {
-                    submission[field.fieldName] = "false"
+                if (field.type == FormElementType.CHECKBOX) {
+                    value = (value.equals("on", ignoreCase = true)).toString()
                 }
+
+                submission[field.fieldName] = value
             }
 
             val responseEntity = ResponseEntity(

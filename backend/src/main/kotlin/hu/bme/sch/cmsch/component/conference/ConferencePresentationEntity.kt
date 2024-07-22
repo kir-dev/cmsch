@@ -8,6 +8,8 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
@@ -53,6 +55,7 @@ data class ConferencePresentationEntity(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Terem", source = [ "IB028", "IB025", "OTHERS" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, type = IMPORT_ENUM)
@@ -60,6 +63,7 @@ data class ConferencePresentationEntity(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Nyelv", source = [ "HU", "EN" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, type = IMPORT_ENUM)
