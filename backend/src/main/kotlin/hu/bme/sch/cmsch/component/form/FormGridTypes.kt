@@ -9,8 +9,3 @@ data class FormGridValue(
     val options: List<GridElement>,
     val questions: List<GridElement>,
 )
-
-data class ChoiceGridElement(
-    val key: String,
-    val value: String,
-)
