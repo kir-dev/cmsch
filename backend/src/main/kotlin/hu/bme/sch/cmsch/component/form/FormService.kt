@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
@@ -25,7 +26,6 @@ open class FormService(
     private val responseRepository: ResponseRepository,
     private val userRepository: UserRepository,
     private val clock: TimeService,
-    private val objectMapper: ObjectMapper,
     private val debugComponent: DebugComponent,
     private val listeners: MutableList<out FormSubmissionListener>,
     private val formComponent: FormComponent,
@@ -33,6 +33,7 @@ open class FormService(
 
     internal val log = LoggerFactory.getLogger(javaClass)
 
+    private val objectMapper = jacksonObjectMapper()
     private val gridReader = objectMapper.readerFor(FormGridValue::class.java)
     private val choiceGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
     private val selectionGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, Boolean>>() {})

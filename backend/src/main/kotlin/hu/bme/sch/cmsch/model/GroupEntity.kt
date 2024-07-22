@@ -11,6 +11,8 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(
@@ -33,6 +35,8 @@ data class GroupEntity(
     @property:ImportFormat(ignore = false, columnId = 0)
     var name: String = "",
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 2, label = "Típus", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])

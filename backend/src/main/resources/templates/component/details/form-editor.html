@@ -71,7 +71,7 @@
 
                         <div class="field-group">
                             <label for="${property}_${id}_fieldName">Mező neve *</label>
-                            <input id="${property}_${id}_fieldName" type="text" value="${field.fieldName}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_fieldName" type="text" value="${escapeHtml(field.fieldName)}" onchange="saveField('${property}')">
                             <span class="note">Ez lesz az adat neve, olyasmi mint egy változó név. Az exportban is ez fog látszódni.</span>
                         </div>
 
@@ -85,25 +85,25 @@
 
                         <div class="field-group">
                             <label for="${property}_${id}_label">Cimke *</label>
-                            <input id="${property}_${id}_label" type="text" value="${field.label}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_label" type="text" value="${escapeHtml(field.label || '')}" onchange="saveField('${property}')">
                             <span class="note">Mi jelenjen meg a felhasználóknak.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_defaultValue">Alapértelmezett érték</label>
-                            <input id="${property}_${id}_defaultValue" type="text" value="${field.defaultValue || ''}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_defaultValue" type="text" value="${escapeHtml(field.defaultValue || '')}" onchange="saveField('${property}')">
                             <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_values">Értékek</label>
-                            <input id="${property}_${id}_values" type="text" value="${field.values}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_values" type="text" value="${escapeHtml(field.values)}" onchange="saveField('${property}')">
                             <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_note">Leírás</label>
-                            <input id="${property}_${id}_note" type="text" value="${field.note}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_note" type="text" value="${escapeHtml(field.note)}" onchange="saveField('${property}')">
                             <span class="note">A mező alatt megjelenő szöveg.</span>
                         </div>
 
@@ -127,13 +127,13 @@
 
                         <div class="field-group">
                             <label for="${property}_${id}_formatRegex">RegEx minta</label>
-                            <input id="${property}_${id}_formatRegex" type="text" value="${field.formatRegex}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_formatRegex" type="text" value="${escapeHtml(field.formatRegex)}" onchange="saveField('${property}')">
                             <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
-                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="${field.invalidFormatMessage}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="${escapeHtml(field.invalidFormatMessage)}" onchange="saveField('${property}')">
                             <span class="note">Akkor ejelenik meg ha validációs hiba van.</span>
                         </div>
                     </div>`;
@@ -324,6 +324,14 @@
                 inputs[i].value = '';
                 inputs[i].checked = false;
             }
+        }
+
+        function escapeHtml(value) {
+            return value.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
     </script>

@@ -11,6 +11,8 @@ import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import org.springframework.core.env.Environment
 
 @Entity
@@ -40,6 +42,7 @@ data class UserDetailsByInternalIdMappingEntity(
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Jogkör",
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ],
         note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
@@ -60,6 +63,7 @@ data class UserDetailsByInternalIdMappingEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 3)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
@@ -67,6 +71,7 @@ data class UserDetailsByInternalIdMappingEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")

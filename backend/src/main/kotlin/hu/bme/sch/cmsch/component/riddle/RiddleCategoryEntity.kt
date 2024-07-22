@@ -13,6 +13,8 @@ import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name="riddleCategories")
@@ -48,6 +50,8 @@ data class RiddleCategoryEntity(
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
     var visible: Boolean = false,
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Minimum rang",

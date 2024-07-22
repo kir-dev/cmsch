@@ -9,6 +9,8 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
@@ -55,6 +57,7 @@ class EmailTemplateEntity(
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Formátum", source = [ "TEXT", "HTML" ], defaultValue = "TEXT")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat

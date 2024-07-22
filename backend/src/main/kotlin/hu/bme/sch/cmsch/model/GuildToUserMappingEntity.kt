@@ -10,6 +10,8 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name="guildToUser")
@@ -31,6 +33,7 @@ data class GuildToUserMappingEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 2, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 2)
     @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
