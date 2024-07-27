@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.profile
 
 import hu.bme.sch.cmsch.component.admission.AdmissionService
-import hu.bme.sch.cmsch.component.bmejegy.BmejegyService
+import hu.bme.sch.cmsch.component.bmejegy.LegacyBmejegyService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
 import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
@@ -43,7 +43,7 @@ open class ProfileService(
     private val tasksService: Optional<TasksService>,
     private val riddleService: Optional<RiddleBusinessLogicService>,
     private val loginComponent: Optional<LoginComponent>,
-    private val bmejegyService: Optional<BmejegyService>,
+    private val legacyBmejegyService: Optional<LegacyBmejegyService>,
     private val clock: TimeService,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val admissionService: Optional<AdmissionService>
@@ -131,7 +131,7 @@ open class ProfileService(
     }
 
     private fun fetchBmejegyTicket(user: UserEntity): String {
-        return bmejegyService.flatMap { it.findVoucherByUser(user.id) }.orElse(user.cmschId)
+        return legacyBmejegyService.flatMap { it.findVoucherByUser(user.id) }.orElse(user.cmschId)
     }
 
     private fun fetchWhetherGroupLeavable(group: GroupEntity?) =

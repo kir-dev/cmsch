@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.admission
 
 import hu.bme.sch.cmsch.component.bmejegy.BmejegyRecordEntity
-import hu.bme.sch.cmsch.component.bmejegy.BmejegyService
+import hu.bme.sch.cmsch.component.bmejegy.LegacyBmejegyService
 import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.ResolveRequest
@@ -29,7 +29,7 @@ class AdmissionApiController(
     private val userService: UserService,
     private val admissionComponent: AdmissionComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val bmejegyService: Optional<BmejegyService>,
+    private val legacyBmejegyService: Optional<LegacyBmejegyService>,
     private val auditLogService: AuditLogService,
     private val responseRepository: Optional<ResponseRepository>,
     private val admissionService: AdmissionService,
@@ -103,8 +103,8 @@ class AdmissionApiController(
                             RoleType.GUEST, EntryRole.CANNOT_ATTEND, false
                         )
                     )
-            } else if (bmejegyService.isPresent) {
-                val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
+            } else if (legacyBmejegyService.isPresent) {
+                val ticket = legacyBmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
                 if (ticket.isEmpty) {
                     AdmissionResponse(
                         "NOT FOUND BY BMEJEGY", "NOT FOUND BY BMEJEGY",
@@ -135,8 +135,8 @@ class AdmissionApiController(
         var additionalInfo = ""
 
         val admissionResponse = transactionManager.transaction(readOnly = true) {
-            if (bmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
-                val ticket = bmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
+            if (legacyBmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
+                val ticket = legacyBmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
                 if (ticket.isEmpty) {
                     AdmissionResponse(
                         "NOT FOUND BY BMEJEGY", "NOT FOUND BY BMEJEGY",

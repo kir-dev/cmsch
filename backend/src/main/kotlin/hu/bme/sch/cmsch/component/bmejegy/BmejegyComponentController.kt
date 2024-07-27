@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import java.util.*
 
 @Controller
 @RequestMapping("/admin/control/component/bmejegy")
@@ -19,7 +20,7 @@ class BmejegyComponentController(
     adminMenuService: AdminMenuService,
     component: BmejegyComponent,
     menuService: MenuService,
-    private val bmejegyTimer: BmejegyTimer,
+    private val legacyBmejegyTimer: Optional<LegacyBmejegyTimer>,
     auditLogService: AuditLogService
 ) : ComponentApiBase(
     adminMenuService,
@@ -32,11 +33,10 @@ class BmejegyComponentController(
     menuService = menuService
 ) {
 
-    // FIXME: Add buttons to do this
     @GetMapping("/action/clean")
     fun actionClean(auth: Authentication?): String {
         if (auth?.getUserOrNull()?.role?.isAdmin == true) {
-            bmejegyTimer.clean()
+            legacyBmejegyTimer.ifPresent { it.clean() }
         }
         return "redirect:/admin/control/component/bmejegy"
     }
