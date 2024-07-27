@@ -14,6 +14,7 @@ import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -32,9 +33,12 @@ import java.util.*
 
 const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
 
+const val LEGACY_BMEJEGY_CONFIG_PROPERTY = "hu.bme.sch.cmsch.legacy-bmejegy-url"
+
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
-open class BmejegyService(
+@ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "true", matchIfMissing = false)
+open class LegacyBmejegyService(
     @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.username:}") private val bmejegyUsername: String,
     @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.password:}") private val bmejegyPassword: String,
     private val bmejegy: BmejegyComponent,
@@ -87,7 +91,7 @@ open class BmejegyService(
                     matchedUserId = 0,
                     rawData = cellMapper.writeValueAsString(cell)
                 ))
-                listeners.forEach { listener -> listener.onTicketRaw(it.cell) }
+//                listeners.forEach { listener -> listener.onTicketRaw(it.cell) }
             }
         }
         log.info("[BMEJEGY] Found new tickets: {}", newTickets.size)

@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.extending
 
 import hu.bme.sch.cmsch.component.bmejegy.BmejegyRecordEntity
+import hu.bme.sch.cmsch.component.bmejegy.CheersTicket
 import hu.bme.sch.cmsch.model.UserEntity
 
 interface BmeJegyListener {
@@ -9,6 +10,6 @@ interface BmeJegyListener {
 
     fun onTicketAssigned(userEntity: UserEntity, ticket: BmejegyRecordEntity)
 
-    fun onTicketRaw(cell: Map<String, String>?)
+    fun onTicketRaw(ticket: CheersTicket)
 
 }

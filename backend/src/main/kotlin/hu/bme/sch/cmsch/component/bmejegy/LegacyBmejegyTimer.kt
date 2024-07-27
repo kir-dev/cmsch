@@ -2,14 +2,16 @@ package hu.bme.sch.cmsch.component.bmejegy
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.util.concurrent.Executors
 
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
-open class BmejegyTimer(
-    private val bmejegyService: BmejegyService,
+@ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "true", matchIfMissing = false)
+open class LegacyBmejegyTimer(
+    private val legacyBmejegyService: LegacyBmejegyService,
     private val bmejegyComponent: BmejegyComponent
 ) {
 
@@ -22,9 +24,9 @@ open class BmejegyTimer(
         executor.submit {
             log.info("[BMEJEGY] Synchronizing started")
             try {
-                val responseData = bmejegyService.fetchData()
-                bmejegyService.updateTickets(responseData)
-                bmejegyService.updateUserStatuses()
+                val responseData = legacyBmejegyService.fetchData()
+                legacyBmejegyService.updateTickets(responseData)
+                legacyBmejegyService.updateUserStatuses()
             } catch (e: Throwable) {
                 log.error("[BMEJEGY] Exception during fetch", e)
             }
