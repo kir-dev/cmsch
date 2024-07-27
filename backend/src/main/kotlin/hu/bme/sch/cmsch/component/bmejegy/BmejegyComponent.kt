@@ -40,6 +40,7 @@ class BmejegyComponent(
             bufferSize,
             minTimestamp,
             countToFetch,
+            emailFieldName,
             szigFieldName,
 
             grantGroup1,
@@ -104,22 +105,27 @@ class BmejegyComponent(
 
     val completeByPhotoId = SettingProxy(componentSettingService, component,
         "completeByPhotoId", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Keresés SZIGSZÁM alapján", description = "Szigszám alapján keresi a fizetett jegyeket (ellenőrizni kell, hogy jó-e a formátum)"
+        fieldName = "NEM TÁMOGATOTT | Keresés SZIGSZÁM alapján", description = "Szigszám alapján keresi a fizetett jegyeket (ellenőrizni kell, hogy jó-e a formátum)"
     )
 
     val minTimestamp = SettingProxy(componentSettingService, component,
         "minTimestamp", "1689858001000", type = SettingType.NUMBER, serverSideOnly = true,
-        fieldName = "Ekkortól nézve", description = "Unix timestamp (ms pontossággal)"
+        fieldName = "NEM TÁMOGATOTT | Ekkortól nézve", description = "Unix timestamp (ms pontossággal)"
     )
 
     val countToFetch = SettingProxy(componentSettingService, component,
         "countToFetch", "10000", type = SettingType.NUMBER, serverSideOnly = true,
-        fieldName = "Ennyit töltsön le", description = "Az első ennyi darabot syncelje fel"
+        fieldName = "NEM TÁMOGATOTT | Ennyit töltsön le", description = "Az első ennyi darabot syncelje fel"
+    )
+
+    val emailFieldName = SettingProxy(componentSettingService, component,
+        "emailFieldName", "email", serverSideOnly = true,
+        fieldName = "Email mező neve", description = "Hozzárendeléshez használatos (a formban ez a neve)"
     )
 
     val szigFieldName = SettingProxy(componentSettingService, component,
         "szigFieldName", "szig", serverSideOnly = true,
-        fieldName = "Szig. szám mező neve", description = "Hozzárendeléshez használatos"
+        fieldName = "NEM TÁMOGATOTT | Szig. szám mező neve", description = "Hozzárendeléshez használatos"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
