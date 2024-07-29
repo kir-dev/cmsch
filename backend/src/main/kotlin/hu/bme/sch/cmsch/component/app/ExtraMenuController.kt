@@ -17,6 +17,7 @@ class ExtraMenuController(
     repo: ExtraMenuRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
+    private val menuService: MenuService,
     component: ApplicationComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
@@ -53,4 +54,9 @@ class ExtraMenuController(
     adminMenuPriority = 4,
 
     searchSettings = calculateSearchSettings<ExtraMenuEntity>(false)
-)
+) {
+    override fun onImported() { menuService.regenerateMenuCache() }
+    override fun onEntityChanged(entity: ExtraMenuEntity) { menuService.regenerateMenuCache() }
+    override fun onEntitiesPurged() { menuService.regenerateMenuCache() }
+    override fun onEntityDeleted(entity: ExtraMenuEntity) { menuService.regenerateMenuCache() }
+}
