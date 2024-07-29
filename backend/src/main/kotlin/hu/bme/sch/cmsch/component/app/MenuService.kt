@@ -47,13 +47,12 @@ open class MenuService(
     }
 
     @EventListener
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     fun onStarted(event: ContextRefreshedEvent) {
-        log.info("Refreshing menu from database")
-        RoleType.entries.forEach { role ->
-            regenerateMenuCache(role)
-        }
+        regenerateMenuCache()
     }
 
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     fun getMenusForRole(role: RoleType): List<MenuSettingItem> {
         val possibleMenus = mutableListOf<MenuSettingItem>()
 
@@ -146,6 +145,14 @@ open class MenuService(
         }
         menuRepository.saveAll(menusToStore)
         regenerateMenuCache(role)
+    }
+
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+    fun regenerateMenuCache() {
+        log.info("Refreshing menu from database")
+        RoleType.entries.forEach { role ->
+            regenerateMenuCache(role)
+        }
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
