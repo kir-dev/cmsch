@@ -4,6 +4,8 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 
 interface EmailProvider {
 
+    fun getProviderName(): String
+
     fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>)
 
     fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>)

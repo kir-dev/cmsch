@@ -27,7 +27,12 @@ class MailgunEmailProvider(
         .defaultHeaders { header -> header.setBasicAuth("api", startupPropertyConfig.mailgunToken) }
         .build()
 
+    override fun getProviderName() = "mailgun"
+
     override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
+        if (!emailComponent.enableMailgun.isValueTrue())
+            return
+
         val formData = LinkedMultiValueMap<String, String>()
         formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
         formData.put("to", to)
@@ -43,6 +48,9 @@ class MailgunEmailProvider(
     }
 
     override fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
+        if (!emailComponent.enableMailgun.isValueTrue())
+            return
+
         val formData = LinkedMultiValueMap<String, String>()
         formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
         formData.put("to", to)
