@@ -34,8 +34,16 @@ data class AccessKeyEntity(
     var accessKey: String = "",
 
     @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ''")
+    @property:GenerateInput(maxLength = 128, order = 2, label = "Cimke",
+        note = "Például a név aminek majd szerepelnie kellene")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var tag: String = "",
+
+    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 128, order = 2, label = "Felhasználó ID-je",
+    @property:GenerateInput(maxLength = 128, order = 10, label = "Felhasználó ID-je",
         type = INPUT_TYPE_NUMBER, defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -43,7 +51,7 @@ data class AccessKeyEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 128, order = 3, label = "Felhasználó neve",
+    @property:GenerateInput(maxLength = 128, order = 11, label = "Felhasználó neve",
         note = "Ez csak logolás miatt van ideírva")
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
     @property:ImportFormat
@@ -86,7 +94,7 @@ data class AccessKeyEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 8, label = "Mikor használta fel", defaultValue = "0")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Mikor használta fel", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LONG)
     var usedAt: Long = 0,
