@@ -30,24 +30,49 @@ class EmailComponent(
 
     final override val allSettings by lazy {
         listOf(
-            mailgunGroup,
             minRole,
+            emailGroup,
+            emailProvider,
+
+            mailgunGroup,
             enableMailgun,
             mailgunEmailAccount,
             mailgunAccountName,
-            mailgunDomain
+            mailgunDomain,
+
+            kirmailGroup,
+            enableKirMail,
+            kirmailToken,
+            kirmailEmailAddress,
+            kirmailAccountName,
+            kirmailReplyTo,
+            kirmailQueue,
         )
     }
 
-    val mailgunGroup = SettingProxy(componentSettingService, component,
-        "eventsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Mailgun beállítások",
+    val emailGroup = SettingProxy(componentSettingService, component,
+        "emailGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Email küldés",
         description = ""
     )
+
+    val emailProvider = SettingProxy(componentSettingService, component,
+        "emailProvider", "kirmail",
+        fieldName = "Email szolgáltató", serverSideOnly = true,
+        description = "Ezek lehetnek: kirmail, mailgun (ettől még be kell kapcsolni őket lentebb)"
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    val mailgunGroup = SettingProxy(componentSettingService, component,
+        "mailgunGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Mailgun beállítások",
+        description = ""
     )
 
     val enableMailgun = SettingProxy(componentSettingService, component,
@@ -72,6 +97,50 @@ class EmailComponent(
         "mailgunDomain", "golya.sch-bme.hu",
         fieldName = "Email domainje", serverSideOnly = true,
         description = "Ez a @ utáni rész. Fel kell konfigolva legyen, nem lehet akármit ideírni."
+    )
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val kirmailGroup = SettingProxy(componentSettingService, component,
+        "kirmailGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+        fieldName = "Kir Mail beállítások",
+        description = ""
+    )
+
+    val enableKirMail = SettingProxy(componentSettingService, component,
+        "enableKirMail", "false", type = SettingType.BOOLEAN,
+        fieldName = "Küldés Kir Maillel", serverSideOnly = true,
+        description = "Csak akkor működik ha token be van állítva"
+    )
+
+    val kirmailToken = SettingProxy(componentSettingService, component,
+        "kirmailToken", "",
+        fieldName = "Kir Mail Token", serverSideOnly = true, minRoleToEdit = RoleType.SUPERUSER,
+        description = "Ez az access token. Generáld az admin.mail.kir-dev.hu-n!"
+    )
+
+    val kirmailEmailAddress = SettingProxy(componentSettingService, component,
+        "kirmailEmailAddress", "noreply-golyatabor@sch.bme.hu",
+        fieldName = "Kir Mail Email cím", serverSideOnly = true,
+        description = "Erről a címről fogja küldeni"
+    )
+
+    val kirmailAccountName = SettingProxy(componentSettingService, component,
+        "kirmailAccountName", "Rendezők",
+        fieldName = "Kir Mail Email teljes név", serverSideOnly = true,
+        description = "Ez a név lesz elküldve a felhasználóhoz"
+    )
+
+    val kirmailReplyTo = SettingProxy(componentSettingService, component,
+        "kirmailReplyTo", "golyatabor@sch.bme.hu",
+        fieldName = "Kir Mail Válasz emailcím", serverSideOnly = true,
+        description = "Erre küldjék a választ a felhasználók (reply-to)"
+    )
+
+    val kirmailQueue = SettingProxy(componentSettingService, component,
+        "kirmailQueue", "ms-golya",
+        fieldName = "Kir Mail Queue", serverSideOnly = true,
+        description = "Erre küldjék a választ a felhasználók (reply-to)"
     )
 
 }
