@@ -18,8 +18,7 @@ export function QrReader({ onScan }: QrReaderProps) {
       const videoInputDevices = await BrowserCodeReader.listVideoInputDevices()
       const selectedDeviceId = videoInputDevices[0].deviceId
       if (cancelled) return
-      controls = await codeReader.current.decodeFromVideoDevice(selectedDeviceId, videoElement.current, (result, err, controls) => {
-        console.debug(result, err)
+      controls = await codeReader.current.decodeFromVideoDevice(selectedDeviceId, videoElement.current, (result, _err, controls) => {
         if (result) {
           controls.stop()
           onScan(result.getText())
