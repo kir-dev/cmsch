@@ -619,7 +619,6 @@ table span.favorite {
     vertical-align: top;
     max-width: 240px;
     display: block;
-    margin: 6px 0;
 }
 
 .menu > div > .menu-group a.favorite {
@@ -651,10 +650,11 @@ table span.favorite {
     border: 0;
     outline: 0;
     margin: 30px auto 20px auto;
-    box-sizing: content-box;
+    box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     text-transform: uppercase;
+    width: 100%;
 }
 
 .menu #menu-results {
