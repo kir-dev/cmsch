@@ -89,7 +89,6 @@ class InstanceInfoDashboard(
             listOf("Task ownership mode",           startupPropertyConfig.taskOwnershipMode.name),
             listOf("Riddle ownership mode",         startupPropertyConfig.riddleOwnershipMode.name),
             listOf("Token ownership mode",          startupPropertyConfig.tokenOwnershipMode.name),
-            listOf("Form ownership mode",           startupPropertyConfig.formOwnershipMode.name),
             listOf("Challenge ownership mode",      startupPropertyConfig.challengeOwnershipMode.name),
             listOf("Race ownership mode",           startupPropertyConfig.raceOwnershipMode.name),
             listOf("Max threads",                   env.getProperty("server.tomcat.threads.max", "n/a")),
