@@ -31,7 +31,8 @@ open class AccessKeyService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun validateKey(user: CmschUser, key: String): AccessKeyResponse {
+    open fun validateKey(user: CmschUser, inputKey: String): AccessKeyResponse {
+        val key = inputKey.trim()
         if (key.isEmpty()) {
             auditLogService.fine(user, ACCESS_KEY, "user tried an empty key")
             log.info("User {} tried an empty key", user.userName)
@@ -54,7 +55,7 @@ open class AccessKeyService(
 
         val keys = accessKeyRepository.findTop1ByAccessKey(key)
         if (keys.isEmpty()) {
-            auditLogService.fine(user, ACCESS_KEY, "invalid key: $key")
+            auditLogService.fine(user, ACCESS_KEY, "invalid key: '$key'")
             log.info("User {} invalid key: {}", user.userName, key)
             return AccessKeyResponse(success = false,
                 reason = accessKeyComponent.invalidCodeErrorMessage.getValue(),

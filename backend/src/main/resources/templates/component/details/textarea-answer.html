@@ -1,0 +1,69 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="data" type="kotlin.Any"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
+
+    <div th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <div th:id="|textField${index}|"
+             style="
+                    color: var(--light-text-color);
+                    font-weight: 300;
+                    margin: 16px 4px;
+                    border-left: 4px dashed var(--primary-darker-color);
+                    padding-left: 8px;
+                    word-break: break-word;
+                    overflow-wrap: break-word;
+            ">
+            ...
+        </div>
+        <textarea
+                th:name="${property.name}"
+                th:id="|input${index}|"
+                th:text="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+                th:disabled="${!generateInput.enabled || readOnly}"
+                th:autocomplete="${generateInput.autocomplete}"
+                th:unless="${entityMode}"
+        >
+        </textarea>
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Több soros szöveg</span>
+        <script th:inline="javascript">
+            updateTextareaAnswer(/*[[${index}]]*/ 0);
+        </script>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript (ext)" th:remove="tag">
+
+    <script th:inline="javascript">
+        function updateTextareaAnswer(index) {
+            document.getElementById(`textField${index}`).innerHTML = textareaAnswerFormatString(document.getElementById(`input${index}`).value);
+        }
+        function textareaAnswerFormatString(input) {
+            input = input.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+            const urlRegex = /https?:\/\/\S+/g;
+            let formattedString = input.replace(urlRegex, (url) => {
+                return `<a href="${url}" target="_blank">${url}</a>`;
+            });
+            formattedString = formattedString.replace(/\n/g, '<br><br>');
+            return formattedString;
+        }
+    </script>
+
+</object>

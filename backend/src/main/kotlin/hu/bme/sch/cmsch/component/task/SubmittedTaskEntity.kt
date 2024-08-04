@@ -65,7 +65,8 @@ data class SubmittedTaskEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 4, label = "Szöveges válasz (teljes)", enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateInput(order = 4, label = "Szöveges válasz (teljes)",
+        enabled = false, ignore = true, type = INPUT_TYPE_BLOCK_TEXT_ANSWER)
     @property:GenerateOverview(visible = false)
     var textAnswerLob: String = "",
 
@@ -157,4 +158,14 @@ data class SubmittedTaskEntity(
         submissionHistory = historyWriter.writeValueAsString(history)
         return this
     }
+
+    fun getUserSubmissionCount(): Int {
+        val history = if (submissionHistory.isBlank()) {
+            listOf<SubmissionHistory>()
+        } else {
+            historyReader.readValue(submissionHistory)
+        }
+        return history.count { !it.adminResponse }
+    }
+
 }

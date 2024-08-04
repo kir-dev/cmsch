@@ -202,4 +202,13 @@ data class ResponseEntity(
         return this
     }
 
+    fun getUserResubmissionCount(): Int {
+        val history = if (rejectionHistory.isBlank()) {
+            mutableListOf<SubmissionHistory>()
+        } else {
+            historyReader.readValue(rejectionHistory)
+        }
+        return history.count { !it.adminResponse }
+    }
+
 }

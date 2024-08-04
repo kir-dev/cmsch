@@ -114,4 +114,6 @@ interface SubmittedTaskRepository : CrudRepository<SubmittedTaskEntity, Int>,
     """)
     fun findByTask_IdAndRejectedIsFalseAndApprovedIsFalseWithoutLobs(taskId: Int): List<SubmittedTaskEntity>
 
+    fun countAllByUserId(userId: Int): Long
+
 }
