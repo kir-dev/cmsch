@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
@@ -18,6 +20,7 @@ class FormApiController(
 ) {
 
     internal val log = LoggerFactory.getLogger(javaClass)
+    private val objectMapper = jacksonObjectMapper()
 
     @JsonView(Preview::class)
     @GetMapping("/forms")
@@ -39,8 +42,8 @@ class FormApiController(
         val user = auth?.getUserOrNull()
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
-        val status = formService.submitForm(user, path, data, false)
-        log.info("User '{}' filling out form '{}' status: {}", user.userName, path, status)
+        val (status, exitId) = formService.submitForm(user, path, data, false)
+        log.info("User '{}' filling out form '{}' status: {} exitId: {} data: {}", user.userName, path, status, exitId, objectMapper.writeValueAsString(data))
         return status
     }
 
@@ -49,8 +52,8 @@ class FormApiController(
         val user = auth?.getUserOrNull()
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
-        val status = formService.submitForm(user, path, data, true)
-        log.info("User '{}' updating form '{}' status: {}", user.userName, path, status)
+        val (status, exitId) = formService.submitForm(user, path, data, true)
+        log.info("User '{}' updating form '{}' status: {} exitId: {} data: {}", user.userName, path, status, exitId, objectMapper.writeValueAsString(data))
         return status
     }
 
