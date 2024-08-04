@@ -31,7 +31,6 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val taskOwnershipMode: OwnershipType,
     val riddleOwnershipMode: OwnershipType,
     val tokenOwnershipMode: OwnershipType,
-    val formOwnershipMode: OwnershipType,
     val challengeOwnershipMode: OwnershipType,
     val raceOwnershipMode: OwnershipType,
 
