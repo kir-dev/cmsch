@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -39,7 +40,7 @@ class FormApiController(
 
     @PostMapping("/form/{path}")
     fun fillOutForm(@PathVariable path: String, auth: Authentication?, @RequestBody data: Map<String, String>): FormSubmissionStatus {
-        val user = auth?.getUserOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull()
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         val (status, exitId) = formService.submitForm(user, path, data, false)
@@ -49,7 +50,7 @@ class FormApiController(
 
     @PutMapping("/form/{path}")
     fun updateForm(@PathVariable path: String, auth: Authentication?, @RequestBody data: Map<String, String>): FormSubmissionStatus {
-        val user = auth?.getUserOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull()
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         val (status, exitId) = formService.submitForm(user, path, data, true)
