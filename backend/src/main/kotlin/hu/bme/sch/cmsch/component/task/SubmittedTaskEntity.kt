@@ -159,13 +159,16 @@ data class SubmittedTaskEntity(
         return this
     }
 
-    fun getUserSubmissionCount(): Int {
-        val history = if (submissionHistory.isBlank()) {
-            listOf<SubmissionHistory>()
+    fun getImmutableHistory(): List<SubmissionHistory> {
+        return if (submissionHistory.isBlank()) {
+            listOf()
         } else {
             historyReader.readValue(submissionHistory)
         }
-        return history.count { !it.adminResponse }
+    }
+
+    fun getUserSubmissionCount(): Int {
+        return getImmutableHistory().count { !it.adminResponse }
     }
 
 }

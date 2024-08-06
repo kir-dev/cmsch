@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
+import kotlin.math.min
 
 
 @Component
@@ -132,5 +133,13 @@ class ThymeleafUtility {
         .map { it.customType }
         .distinct()
         .toList()
+
+    fun <T> partition(list: List<T>, size: Int): List<List<T>> {
+        val partitioned = mutableListOf<List<T>>()
+        for (i in list.indices step size) {
+            partitioned.add(list.subList(i, min(i + size, list.size)))
+        }
+        return partitioned
+    }
 
 }
