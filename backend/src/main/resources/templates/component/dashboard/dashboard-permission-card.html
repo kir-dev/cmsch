@@ -12,7 +12,7 @@
 
         <div class="options">
             <div class="option">
-                <div><span class="material-symbols-outlined">local_police</span></div>
+                <div><span class="material-symbols-outlined" th:text="${component.icon}">local_police</span></div>
                 <div>
                     <h5 th:text="${component.permission}">PERMISSION_NAME</h5>
                     <span th:text="${component.description}">Ez a jog szükséges ennek az oldalnak az módosításához és olvasásához.</span>
