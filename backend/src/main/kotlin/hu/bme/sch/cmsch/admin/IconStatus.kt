@@ -23,7 +23,12 @@ enum class IconStatus(
     COLOR_BLUE("humidity_high", "#0ba6c1"),
     COLOR_YELLOW("humidity_high", "#f1b962"),
     COLOR_BLACK("humidity_low", "#ffffff"),
-    EMPTY("", "")
+    TARGET_BLUE("target", "#0f9cb8"),
+    TARGET_GREEN("target", "#0fb823"),
+    TARGET_ORANGE("target", "#e9a107"),
+    TARGET_PINK("target", "#ee8af5"),
+
+    EMPTY("", ""),
     ;
     companion object {
         @JvmStatic
