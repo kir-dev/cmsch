@@ -62,11 +62,18 @@ data class TokenEntity(
     @property:ImportFormat(ignore = false)
     var icon: String = "",
 
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Rarity",
+        source = ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY", "RAINBOW"])
+    @property:GenerateOverview(columnName = "Rarity", order = 4)
+    @property:ImportFormat(ignore = false)
+    var rarity: String? = "",
+
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 6, label = "Pont", type = INPUT_TYPE_NUMBER, defaultValue = "0",
         note = "Egész szám, hány pontot ér a megszerzése")
-    @property:GenerateOverview(columnName = "Pont", order = 4, centered = true)
+    @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     @property:ImportFormat(ignore = false)
     var score: Int? = 0,
 
@@ -109,7 +116,7 @@ data class TokenEntity(
     @ColumnDefault("null")
     @Column(nullable = true, columnDefinition = "BIGINT")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 11, label = "Scannelhető innentől")
-    @property:GenerateOverview(columnName = "Ettől", order = 5, renderer = OVERVIEW_TYPE_DATE)
+    @property:GenerateOverview(columnName = "Ettől", order = 6, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, type = IMPORT_LONG)
     var availableFrom: Long? = null,
 
@@ -117,7 +124,7 @@ data class TokenEntity(
     @ColumnDefault("null")
     @Column(nullable = true, columnDefinition = "BIGINT")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Scannelhető eddig")
-    @property:GenerateOverview(columnName = "Eddig", order = 6, renderer = OVERVIEW_TYPE_DATE)
+    @property:GenerateOverview(columnName = "Eddig", order = 7, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, type = IMPORT_LONG)
     var availableUntil: Long? = null,
 
