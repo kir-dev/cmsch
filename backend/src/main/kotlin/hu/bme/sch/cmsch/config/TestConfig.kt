@@ -173,7 +173,8 @@ open class TestConfig(
             "Kir-Dev",
             "A5BCD8242".sha256(),
             true,
-            "default"
+            "default",
+            rarity = "EPIC"
         ))
         tokenRepository.save(TokenEntity(
             0,
@@ -187,7 +188,8 @@ open class TestConfig(
             "NFT-sch kör",
             "NFT".sha256(),
             true,
-            "default"
+            "default",
+            rarity = "COMMON"
         ))
         tokenRepository.save(TokenEntity(
             0,
@@ -201,7 +203,8 @@ open class TestConfig(
             "Kollégiumi Szak-Kollégium (KSZK)",
             "kszk".sha256(),
             true,
-            "default"
+            "default",
+            rarity = "RAINBOW"
         ))
         tokenRepository.save(TokenEntity(
             0,
