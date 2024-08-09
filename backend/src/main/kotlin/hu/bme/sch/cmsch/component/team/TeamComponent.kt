@@ -363,6 +363,7 @@ class TeamComponent(
         fieldName = "Mérés gomb látszódik", description = "Ha igaz, látszik a gomb"
     )
 
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val statGroup = SettingProxy(componentSettingService, component,

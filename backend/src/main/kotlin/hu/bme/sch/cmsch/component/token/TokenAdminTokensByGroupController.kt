@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
@@ -14,6 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/admin/control/token-properties-group")
 @ConditionalOnBean(TokenComponent::class)
+@ConditionalOnProperty(
+    prefix = "hu.bme.sch.cmsch.startup",
+    name = ["token-ownership-mode"],
+    havingValue = "GROUP",
+    matchIfMissing = false
+)
 class TokenAdminTokensByGroupController(
     private val repo: TokenPropertyRepository,
     importService: ImportService,
