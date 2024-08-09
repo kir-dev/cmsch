@@ -56,13 +56,13 @@ class UserController(
 
     entitySourceMapping = mapOf("GroupEntity" to { listOf("") + groups.findAll().map { it.name }.toList() }),
 
-    showPermission =   StaffPermissions.PERMISSION_SHOW_USERS,
+    showPermission = StaffPermissions.PERMISSION_SHOW_USERS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    editPermission =   StaffPermissions.PERMISSION_EDIT_USERS,
+    editPermission = StaffPermissions.PERMISSION_EDIT_USERS,
     deletePermission = StaffPermissions.PERMISSION_DELETE_USERS,
 
     createEnabled = false,
-    editEnabled   = true,
+    editEnabled = true,
     deleteEnabled = true,
     importEnabled = false,
     exportEnabled = true,
@@ -109,6 +109,7 @@ class UserController(
             profileService.generateProfileIdForUser(entity)
         }
 
+
         if (entity.groupName.isNotBlank()) {
             transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({
                 entity.group = it
@@ -116,6 +117,8 @@ class UserController(
                 entity.fullName = ""
                 entity.group = null
             })
+        } else {
+            entity.group = null
         }
 
         adminMenuService.invalidateUser(entity.internalId)
