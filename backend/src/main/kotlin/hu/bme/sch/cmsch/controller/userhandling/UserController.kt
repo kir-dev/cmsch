@@ -109,6 +109,7 @@ class UserController(
             profileService.generateProfileIdForUser(entity)
         }
 
+
         if (entity.groupName.isNotBlank()) {
             transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({
                 entity.group = it
@@ -116,6 +117,8 @@ class UserController(
                 entity.fullName = ""
                 entity.group = null
             })
+        }else {
+            entity.group = null
         }
 
         adminMenuService.invalidateUser(entity.internalId)
