@@ -39,10 +39,12 @@ interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int>,
 
     fun countAllByOwnerUser_Id(ownerId: Int): Int
 
-    @Query("select new hu.bme.sch.cmsch.component.token.UserGroupTokenCount(coalesce(g.id, -1) , coalesce(g.name, 'n/a'), count(*), (select count(*) from UserEntity u where u.group.id = g.id or (u.group.id is null and g.id is null))) " +
-            "from GroupEntity g " +
-            "         right outer join UserEntity u on u.group.id = g.id " +
-            "         inner join TokenPropertyEntity p on u.id = p.ownerUser.id " +
-            "group by g.id")
+    @Query(
+        "select new hu.bme.sch.cmsch.component.token.UserGroupTokenCount(coalesce(g.id, -1) , coalesce(g.name, 'n/a'), count(*), sum(p.token.score), coalesce(g.memberCount, (select count(*) from UserEntity u where u.group.id = g.id or (u.group.id is null and g.id is null))) ) " +
+                "from GroupEntity g " +
+                "         right outer join UserEntity u on u.group.id = g.id " +
+                "         inner join TokenPropertyEntity p on u.id = p.ownerUser.id " +
+                "group by g.id"
+    )
     fun countByAllUserGroup(): List<UserGroupTokenCount>
 }

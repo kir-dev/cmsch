@@ -29,11 +29,11 @@ public class TokenAdminTokensByTeamController(
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
     env: Environment
-): OneDeepEntityPage<UserGroupTokenCount>(
+) : OneDeepEntityPage<UserGroupTokenCount>(
     "token-properties-team",
     UserGroupTokenCount::class, ::UserGroupTokenCount,
     "Csoportos tokenek", "Csoportos tokenek",
-    "Tokenek csoportonként csoportosítva",
+    "Felhasználói tokenek csoportonként",
 
     transactionManager,
     object : ManualRepository<UserGroupTokenCount, Int>() {
@@ -50,13 +50,13 @@ public class TokenAdminTokensByTeamController(
     objectMapper,
     env,
 
-    showPermission =   StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS,
+    showPermission = StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    editPermission =   ImplicitPermissions.PERMISSION_NOBODY,
+    editPermission = ImplicitPermissions.PERMISSION_NOBODY,
     deletePermission = ImplicitPermissions.PERMISSION_NOBODY,
 
     createEnabled = false,
-    editEnabled   = false,
+    editEnabled = false,
     deleteEnabled = false,
     importEnabled = false,
     exportEnabled = false,
