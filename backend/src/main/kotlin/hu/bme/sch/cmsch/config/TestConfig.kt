@@ -14,11 +14,14 @@ import hu.bme.sch.cmsch.component.form.ResponseEntity
 import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
+import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.riddle.*
 import hu.bme.sch.cmsch.component.staticpage.StaticPageEntity
 import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.component.task.*
 import hu.bme.sch.cmsch.component.token.TokenEntity
+import hu.bme.sch.cmsch.component.token.TokenPropertyEntity
+import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
 import hu.bme.sch.cmsch.component.token.TokenRepository
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.GroupRepository
@@ -57,8 +60,8 @@ const val A_DAY = 60 * 60 * 24
 @Profile("test")
 @Configuration
 open class TestConfig(
-    private val users: UserRepository,
-    private val groups: GroupRepository,
+    private val userRepository: UserRepository,
+    private val groupRepository: GroupRepository,
     private val groupToUserMapping: GroupToUserMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
     private val profileService: UserProfileGeneratorService,
@@ -73,10 +76,13 @@ open class TestConfig(
     private val riddleRepository: Optional<RiddleEntityRepository>,
     private val riddleCategoryRepository: Optional<RiddleCategoryRepository>,
     private val tokenRepository: Optional<TokenRepository>,
+    private val tokenPropertyRepository: Optional<TokenPropertyRepository>,
+    private val qrFightComponent: Optional<QrFightComponent>,
     private val formRepository: Optional<FormRepository>,
     private val formResponseRepository: Optional<ResponseRepository>,
     private val extraMenuRepository: ExtraMenuRepository,
-    private val riddleCacheManager: Optional<RiddleCacheManager>
+    private val riddleCacheManager: Optional<RiddleCacheManager>,
+    private val startupPropertyConfig: StartupPropertyConfig,
 ) {
 
     private var now = System.currentTimeMillis() / 1000
@@ -85,13 +91,13 @@ open class TestConfig(
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     open fun init() {
-        if (users.findAll().toList().isNotEmpty())
+        if (userRepository.findAll().toList().isNotEmpty())
             return
 
         news.ifPresent { addNews(it) }
         events.ifPresent { addEvents(it) }
-        addGroups()
-        addUsers()
+        val groups = addGroups()
+        val users = addUsers()
         tasks.ifPresent { task ->
             submittedTasks.ifPresent { submitted ->
                 categories.ifPresent { category ->
@@ -112,7 +118,12 @@ open class TestConfig(
                 addRiddles(riddle, category)
             }
         }
-        tokenRepository.ifPresent { addTokens(it) }
+
+        tokenRepository.ifPresent {
+            val tokens = addTokens(it)
+            addTokenProperties(tokenPropertyRepository.orElseThrow(), tokens, users, groups)
+        }
+
         addExtraMenus()
         formRepository.ifPresent { form ->
             formResponseRepository.ifPresent { response ->
@@ -167,52 +178,118 @@ open class TestConfig(
         ))
     }
 
-    private fun addTokens(tokenRepository: TokenRepository) {
-        tokenRepository.save(TokenEntity(
-            0,
-            "Kir-Dev",
-            "A5BCD8242".sha256(),
-            true,
-            "default",
-            rarity = "EPIC"
-        ))
-        tokenRepository.save(TokenEntity(
-            0,
-            "Invisible token",
-            "XDDD".sha256(),
-            false,
-            "default"
-        ))
-        tokenRepository.save(TokenEntity(
-            0,
-            "NFT-sch kör",
-            "NFT".sha256(),
-            true,
-            "default",
-            rarity = "COMMON"
-        ))
-        tokenRepository.save(TokenEntity(
-            0,
-            "Crypto Reszort",
-            "crypto".sha256(),
-            true,
-            "default"
-        ))
-        tokenRepository.save(TokenEntity(
-            0,
-            "Kollégiumi Szak-Kollégium (KSZK)",
-            "kszk".sha256(),
-            true,
-            "default",
-            rarity = "RAINBOW"
-        ))
-        tokenRepository.save(TokenEntity(
-            0,
-            "Extra Token",
-            "x".sha256(),
-            true,
-            "extra"
-        ))
+    private fun addTokens(tokenRepository: TokenRepository): List<TokenEntity> {
+        val tokens = listOf<TokenEntity>(
+            tokenRepository.save(
+                TokenEntity(
+                    0,
+                    "Kir-Dev",
+                    "A5BCD8242".sha256(),
+                    true,
+                    "default",
+                    rarity = "EPIC"
+                )
+            ),
+            tokenRepository.save(
+                TokenEntity(
+                    0,
+                    "Invisible token",
+                    "XDDD".sha256(),
+                    false,
+                    "default"
+                )
+            ),
+            tokenRepository.save(
+                TokenEntity(
+                    0,
+                    "NFT-sch kör",
+                    "NFT".sha256(),
+                    true,
+                    "default",
+                    rarity = "COMMON"
+                )
+            ),
+            tokenRepository.save(
+                TokenEntity(
+                    0,
+                    "Crypto Reszort",
+                    "crypto".sha256(),
+                    true,
+                    "default"
+                )
+            ),
+            tokenRepository.save(
+                TokenEntity(
+                    0,
+                    "Kollégiumi Szak-Kollégium (KSZK)",
+                    "kszk".sha256(),
+                    true,
+                    "default",
+                    rarity = "RAINBOW"
+                )
+            ),
+            tokenRepository.save(
+                TokenEntity(
+                    0,
+                    "Extra Token",
+                    "x".sha256(),
+                    true,
+                    "extra"
+                )
+            ),
+            *(1..100).map { i ->
+                tokenRepository.save(
+                    TokenEntity(
+                        0,
+                        "Teszt $i",
+                        "token$i".sha256(),
+                        true,
+                        "default",
+                        rarity = when {
+                            i % 2 == 0 -> "COMMON"
+                            i % 3 == 0 -> "UNCOMMON"
+                            i % 5 == 0 -> "RARE"
+                            i % 7 == 0 -> "EPIC"
+                            i % 11 == 0 -> "LEGENDARY"
+                            else -> "COMMON"
+                        }
+                    )
+                )
+            }.toTypedArray()
+        )
+        return tokens
+    }
+
+    private fun addTokenProperties(
+        tokenPropertyRepository: TokenPropertyRepository,
+        tokens: List<TokenEntity>,
+        users: List<UserEntity>,
+        groups: List<GroupEntity>
+    ) {
+        var visibleTokens = tokens.filter { it.visible }
+        var competingGroups = groups.filter { it.races }
+        var collected = hashSetOf<Pair<Int, Int>>()
+
+        for (i in 1..100) {
+            val token = visibleTokens.random()
+            val received = now - (i * 1000)
+            when (startupPropertyConfig.tokenOwnershipMode) {
+                OwnershipType.USER -> {
+                    val user = users.random()
+                    if (collected.contains(user.id to token.id))
+                        continue
+                    collected.add(user.id to token.id)
+                    tokenPropertyRepository.save(TokenPropertyEntity(0, user, null, token, received))
+                }
+                OwnershipType.GROUP -> {
+                    val group = competingGroups.random()
+                    if (collected.contains(group.id to token.id))
+                        continue
+                    collected.add(group.id to token.id)
+                    tokenPropertyRepository.save(TokenPropertyEntity(0, null, group, token, received))
+                }
+            }
+        }
     }
 
     private fun addRiddles(riddleRepository: RiddleEntityRepository, riddleCategoryRepository: RiddleCategoryRepository) {
@@ -310,8 +387,9 @@ open class TestConfig(
         )
     }
 
-    private fun addGroups() {
-        groups.save(GroupEntity(
+    private fun addGroups(): List<GroupEntity> {
+        val groups = listOf(
+        groupRepository.save(GroupEntity(
                 name = "V10",
                 major = MajorType.EE,
                 staff1 = "Kelep Elek| fb.com/kelep| +36301002000",
@@ -321,9 +399,9 @@ open class TestConfig(
                 races = true,
                 selectable = true,
                 leaveable = false
-        ))
+        )),
 
-        groups.save(GroupEntity(
+        groupRepository.save(GroupEntity(
                 name = "I16",
                 major = MajorType.IT,
                 staff1 = "Tony Stork| fb.com/kelep| +36301003000",
@@ -333,9 +411,9 @@ open class TestConfig(
                 races = true,
                 selectable = true,
                 leaveable = false
-        ))
+        )),
 
-        groups.save(GroupEntity(
+        groupRepository.save(GroupEntity(
                 name = "I09",
                 major = MajorType.IT,
                 staff1 = "Nem Mindegy| fb.com/kelep| +36301003000",
@@ -345,9 +423,9 @@ open class TestConfig(
                 races = true,
                 selectable = true,
                 leaveable = false
-        ))
+        )),
 
-        groups.save(GroupEntity(
+        groupRepository.save(GroupEntity(
             name = "Vendég",
             major = MajorType.UNKNOWN,
             staff1 = "",
@@ -357,9 +435,9 @@ open class TestConfig(
             races = false,
             selectable = true,
             leaveable = false
-        ))
+        )),
 
-        groups.save(GroupEntity(
+        groupRepository.save(GroupEntity(
             name = "Kiállító",
             major = MajorType.UNKNOWN,
             staff1 = "",
@@ -369,7 +447,8 @@ open class TestConfig(
             races = false,
             selectable = false,
             leaveable = false
-        ))
+        )))
+        return groups
     }
 
     private fun addNews(news: NewsRepository) {
@@ -679,9 +758,9 @@ open class TestConfig(
         )
         )
 
-        val groupI16 = groups.findByName("I16").orElseThrow()
-        val groupI09 = groups.findByName("I09").orElseThrow()
-        val groupV10 = groups.findByName("V10").orElseThrow()
+        val groupI16 = groupRepository.findByName("I16").orElseThrow()
+        val groupI09 = groupRepository.findByName("I09").orElseThrow()
+        val groupV10 = groupRepository.findByName("V10").orElseThrow()
 
         submittedTasks.save(
             SubmittedTaskEntity(
@@ -802,7 +881,8 @@ open class TestConfig(
             ))
     }
 
-    private fun addUsers() {
+    private fun addUsers(): MutableList<UserEntity> {
+        val users = mutableListOf<UserEntity>()
         user1 = UserEntity(
                 internalId = UUID.randomUUID().toString(),
                 neptun = "HITMAN",
@@ -812,10 +892,11 @@ open class TestConfig(
                 fullName = "Hitman János",
                 guild = GuildType.YELLOW,
                 groupName = "V10",
-                group = groups.findByName("V10").orElse(null)
+                group = groupRepository.findByName("V10").orElse(null)
         )
         profileService.generateFullProfileForUser(user1!!)
-        users.save(user1!!)
+        userRepository.save(user1!!)
+        users.add(user1!!)
 
         val u2 = UserEntity(
                 internalId = UUID.randomUUID().toString(),
@@ -826,10 +907,11 @@ open class TestConfig(
                 fullName = "Bat Man",
                 guild = GuildType.RED,
                 groupName = "V10",
-                group = groups.findByName("V10").orElse(null)
+                group = groupRepository.findByName("V10").orElse(null)
         )
         profileService.generateFullProfileForUser(u2)
-        users.save(u2)
+        userRepository.save(u2)
+        users.add(u2)
 
         val u3 = UserEntity(
                 internalId = UUID.randomUUID().toString(),
@@ -841,7 +923,8 @@ open class TestConfig(
                 guild = GuildType.BLACK
         )
         profileService.generateFullProfileForUser(u3)
-        users.save(u3)
+        userRepository.save(u3)
+        users.add(u3)
 
         val random = Random()
         for (i in 0..2000) {
@@ -858,8 +941,11 @@ open class TestConfig(
                 profileTopMessage = "msg${random.nextLong()}-${random.nextLong()}-${random.nextLong()}${random.nextLong()}",
                 permissions = "PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,PERMISSION_GOES_HERE,$i"
             )
-            users.save(un)
+            userRepository.save(un)
+            users.add(un)
         }
+
+        return users
     }
 
     private fun addProducts(products: ProductRepository, productsService: ProductService) {
@@ -928,9 +1014,9 @@ open class TestConfig(
                 visible = false,
         ))
 
-        val user1 = users.findByNeptun("BATMAN").orElseThrow()
-        val user2 = users.findByNeptun("HITMAN").orElseThrow()
-        val merchant = users.findByNeptun("FITYMA").orElseThrow()
+        val user1 = userRepository.findByNeptun("BATMAN").orElseThrow()
+        val user2 = userRepository.findByNeptun("HITMAN").orElseThrow()
+        val merchant = userRepository.findByNeptun("FITYMA").orElseThrow()
 
         productsService.sellProductByCmschId(product1.id, merchant, user1.cmschId)
         productsService.sellProductByNeptun(product2.id, merchant, user1.neptun)
