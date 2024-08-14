@@ -30,6 +30,7 @@ class TokenComponent(
         listOf(
             tokenGroup,
             title, menuDisplayName, minRole,
+            qrFrontendBaseUrl,
 
             collectTokensGroup,
             collectFeatureEnabled,
@@ -71,6 +72,11 @@ class TokenComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    val qrFrontendBaseUrl = SettingProxy(componentSettingService, component,
+        "qrFrontendBaseUrl", "https://todo.sch.bme.hu/token/scan?token=", serverSideOnly = false, type = SettingType.TEXT,
+        fieldName = "QR frontend url", description = "Ez lesz a tokenek elé generálva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

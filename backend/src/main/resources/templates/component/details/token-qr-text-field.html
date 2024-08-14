@@ -1,0 +1,135 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="data" type="kotlin.Any"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
+
+    <div th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <div th:class="|input-container ${generateInput.icon != '' ? 'icon' : ''}|">
+            <input type="text"
+                   th:name="${property.name}"
+                   th:id="|input${index}|"
+                   th:maxlength="${generateInput.maxLength}"
+                   th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+                   th:placeholder="${generateInput.placeholder}"
+                   th:disabled="${!generateInput.enabled || readOnly}"
+                   th:autocomplete="${generateInput.autocomplete}"
+                   th:data-index="${index}"
+                   th:unless="${entityMode}"
+                   onchange="tokenQrTextField_qrPopulate(this.getAttribute('data-index'))"
+                   onkeypress="tokenQrTextField_qrPopulate(this.getAttribute('data-index'))"
+            />
+            <span th:if="${generateInput.icon != ''}" class="material-symbols-outlined" th:text="${generateInput.icon}">encrypted</span>
+        </div>
+        <div class="button-group" th:if="${!readOnly && !entityMode}">
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="tokenQrTextField_generateSecureRandomSequence(12, this.getAttribute('data-index')); return false">
+                ÚJ (12)
+            </button>
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="tokenQrTextField_generateSecureRandomSequence(20, this.getAttribute('data-index')); return false">
+                ÚJ (20)
+            </button>
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="tokenQrTextField_generateSecureRandomSequence(30, this.getAttribute('data-index')); return false">
+                ÚJ (30)
+            </button>
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="tokenQrTextField_generateSecureRandomSequence(40, this.getAttribute('data-index')); return false">
+                ÚJ (40)
+            </button>
+        </div>
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Szöveg</span>
+        <script th:unless="${entityMode}" th:inline="javascript">
+            requestAnimationFrame(() => {
+                tokenQrTextField_qrPopulate(/*[[${index}]]*/0);
+            });
+        </script>
+    </div>
+
+    <div th:class="|field-group qr-holder ${generateInput.style}|">
+        <div
+             th:id="|smallQr${index}|"
+             style="display: inline-block; min-height: 128px;"
+             onerror="this.onerror=null; this.parentNode.style.display = 'none';"
+        ></div>
+        <div
+             th:id="|fullQr${index}|"
+             style="display: inline-block; min-height: 128px;"
+             onerror="this.onerror=null; this.parentNode.style.display = 'none';"
+        ></div>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript (ext)" th:remove="tag">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script th:inline="javascript">
+
+        const frontendBaseUrl = /*[[${ext.qrFrontendBaseUrl}]]*/'';
+
+        function tokenQrTextField_qrPopulate(index) {
+            const text = document.getElementById(`input${index}`).value;
+            if (!text) {
+                return;
+            }
+
+            const smallQrCodeContainer = document.getElementById(`smallQr${index}`);
+            smallQrCodeContainer.innerHTML = "";
+
+            new QRCode(smallQrCodeContainer, {
+                text: text,
+                width: 512,
+                height: 512,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            const fullQrCodeContainer = document.getElementById(`fullQr${index}`);
+            fullQrCodeContainer.innerHTML = "";
+
+            new QRCode(fullQrCodeContainer, {
+                text: `${frontendBaseUrl}${text}`,
+                width: 512,
+                height: 512,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+            });
+        }
+
+        function tokenQrTextField_generateSecureRandomSequence(length, index) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+
+            const randomArray = new Uint8Array(40);
+            window.crypto.getRandomValues(randomArray);
+
+            let randomString = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = randomArray[i] % charactersLength;
+                randomString += characters[randomIndex];
+            }
+
+            document.getElementById(`input${index}`).value = randomString;
+            tokenQrTextField_qrPopulate(index);
+        }
+    </script>
+
+</object>
