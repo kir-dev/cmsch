@@ -41,7 +41,7 @@ class TokenAdminTokensByTeamController(
         override fun findAll(): Iterable<UserGroupTokenCount> {
             transactionManager.transaction(readOnly = true) {
                 val data = repo.countByAllUserGroup()
-                val highestTeamMemberCount = data.maxBy { it.correctedPoints }.memberCount
+                val highestTeamMemberCount = data.maxByOrNull { it.correctedPoints }?.memberCount ?: 0
                 data.forEach { it.finalPoints = (it.correctedPoints * highestTeamMemberCount).toInt() }
                 return data
             }
