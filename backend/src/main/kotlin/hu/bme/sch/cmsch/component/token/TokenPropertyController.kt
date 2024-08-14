@@ -86,7 +86,7 @@ class TokenSubmissionsController(
     exportEnabled = true,
 
     adminMenuIcon = "raw_on",
-    adminMenuPriority = 6,
+    adminMenuPriority = 8,
 
     searchSettings = calculateSearchSettings<TokenPropertyEntity>(false)
 )

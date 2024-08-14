@@ -82,7 +82,7 @@ class TokenAdminTokensByTypeController(
     exportEnabled = false,
 
     adminMenuIcon = "analytics",
-    adminMenuPriority = 5,
+    adminMenuPriority = 6,
 ) {
 
     override fun fetchSublist(id: Int): Iterable<TokenPropertyVirtualEntity> {

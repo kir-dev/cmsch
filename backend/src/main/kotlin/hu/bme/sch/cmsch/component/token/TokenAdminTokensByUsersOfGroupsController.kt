@@ -83,7 +83,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     env,
 
     adminMenuIcon = "file_download",
-    adminMenuPriority = 4,
+    adminMenuPriority = 5,
 
     controlActions = mutableListOf(
         ControlAction(
