@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
@@ -20,7 +22,7 @@ class TokenController(
     repo: TokenRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
-    component: TokenComponent,
+    val tokenComponent: TokenComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
@@ -35,7 +37,7 @@ class TokenController(
     repo,
     importService,
     adminMenuService,
-    component,
+    tokenComponent,
     auditLog,
     objectMapper,
     env,
@@ -55,4 +57,16 @@ class TokenController(
     adminMenuPriority = 1,
 
     searchSettings = calculateSearchSettings<TokenEntity>(false)
-)
+) {
+
+    data class TokenDetailsExtension(
+        val qrFrontendBaseUrl: String
+    )
+
+    override fun onDetailsView(entity: CmschUser, model: Model) {
+        model.addAttribute("ext", TokenDetailsExtension(
+            qrFrontendBaseUrl = tokenComponent.qrFrontendBaseUrl.getValue())
+        )
+    }
+
+}

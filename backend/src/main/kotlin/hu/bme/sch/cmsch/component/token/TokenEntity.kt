@@ -36,7 +36,8 @@ data class TokenEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 128, order = 2, label = "Token")
+    @property:GenerateInput(maxLength = 128, order = 2, label = "Token", type = INPUT_TYPE_TOKEN_QR_TEXT_FIELD,
+        note = "Mind a két alább generált QR jó, de csak a sűrűbb az ami a sima olvasóval is működik, mert abban benne van az oldal URL-je. A másik QR-kód csak az oldalon megnyitott olvasóval működik.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false)
     var token: String = "",

@@ -25,6 +25,7 @@ const val INPUT_TYPE_BOOLEAN_LIST = "boolean-list"
 const val INPUT_TYPE_TASK_SUBMISSION_HISTORY = "task-submission-history"
 const val INPUT_TYPE_SECTION_SEPARATOR = "section-separator"
 const val INPUT_TYPE_DOCS = "docs"
+const val INPUT_TYPE_TOKEN_QR_TEXT_FIELD = "token-qr-text-field"
 
 const val INTERPRETER_INHERIT = "inherit"
 const val INTERPRETER_PATH = "path"
