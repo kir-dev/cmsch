@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -38,12 +39,13 @@ class TokenAdminTokensByTeamController(
     transactionManager,
     object : ManualRepository<UserGroupTokenCount, Int>() {
         override fun findAll(): Iterable<UserGroupTokenCount> {
-            val data = repo.countByAllUserGroup()
-            val highestTeamMemberCount = data.maxBy { it.correctedPoints }.memberCount
-            data.forEach { it.finalPoints = (it.correctedPoints * highestTeamMemberCount).toInt() }
-            return data
+            transactionManager.transaction(readOnly = true) {
+                val data = repo.countByAllUserGroup()
+                val highestTeamMemberCount = data.maxBy { it.correctedPoints }.memberCount
+                data.forEach { it.finalPoints = (it.correctedPoints * highestTeamMemberCount).toInt() }
+                return data
+            }
         }
-
     },
 
     importService,
@@ -65,5 +67,5 @@ class TokenAdminTokensByTeamController(
     exportEnabled = false,
 
     adminMenuIcon = "local_activity",
-    adminMenuPriority = 3,
+    adminMenuPriority = 4,
 )
