@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping
     havingValue = "USER",
     matchIfMissing = false
 )
-public class TokenAdminTokensByTeamController(
+class TokenAdminTokensByTeamController(
     private val repo: TokenPropertyRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -38,7 +38,10 @@ public class TokenAdminTokensByTeamController(
     transactionManager,
     object : ManualRepository<UserGroupTokenCount, Int>() {
         override fun findAll(): Iterable<UserGroupTokenCount> {
-            return repo.countByAllUserGroup()
+            val data = repo.countByAllUserGroup()
+            val highestTeamMemberCount = data.maxBy { it.correctedPoints }.memberCount
+            data.forEach { it.finalPoints = (it.correctedPoints * highestTeamMemberCount).toInt() }
+            return data
         }
 
     },
