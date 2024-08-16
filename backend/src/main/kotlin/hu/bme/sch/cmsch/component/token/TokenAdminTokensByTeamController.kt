@@ -2,7 +2,9 @@ package hu.bme.sch.cmsch.component.token
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
+import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -29,6 +31,7 @@ class TokenAdminTokensByTeamController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
+    private val userRepository: UserRepository,
     env: Environment
 ) : OneDeepEntityPage<UserGroupTokenCount>(
     "token-properties-team",
@@ -41,6 +44,7 @@ class TokenAdminTokensByTeamController(
         override fun findAll(): Iterable<UserGroupTokenCount> {
             transactionManager.transaction(readOnly = true) {
                 val data = repo.countByAllUserGroup()
+                data.forEach { it.memberCount = userRepository.findAllByGroupName(it.groupName).size }
                 val highestTeamMemberCount = data.maxByOrNull { it.correctedPoints }?.memberCount ?: 0
                 data.forEach { it.finalPoints = (it.correctedPoints * highestTeamMemberCount).toInt() }
                 return data
