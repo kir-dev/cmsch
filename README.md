@@ -13,7 +13,7 @@ CMSch web backend and frontend monorepo
 ## Run
 
 ```bash
-  ./gradlew bootRun --args='--spring.profiles.include=test,internal,golyakorte2022'
+  ./gradlew bootRun --args='--spring.profiles.include=test,internal'
 ```
 
 ## Enable profiling
@@ -30,12 +30,12 @@ Use your authsch details for docker login. Tag `rc` for staging (release candida
   docker login harbor.sch.bme.hu
   
   # Release candidate
-  docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:rc
-  docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:rc
+  docker image tag cmsch:latest harbor.sch.bme.hu/org-kir-dev/cmsch:rc
+  docker image push harbor.sch.bme.hu/org-kir-dev/cmsch:rc
   
   # Release (you can use versions like ':major.minor.build' as well)
-  docker image tag cmsch:latest harbor.sch.bme.hu/org-golyakorte/cmsch:release
-  docker image push harbor.sch.bme.hu/org-golyakorte/cmsch:release
+  docker image tag cmsch:latest harbor.sch.bme.hu/org-kir-dev/cmsch:release
+  docker image push harbor.sch.bme.hu/org-kir-dev/cmsch:release
 ```
 
 ## Run (you can start here)
@@ -54,13 +54,13 @@ For development:
 or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
 
 ```bash
-  docker pull harbor.sch.bme.hu/org-golyakorte/cmsch
+  docker pull harbor.sch.bme.hu/org-kir-dev/cmsch
   docker run --rm -p 8080:80 \
         -e AUTHSCH_CLIENT_ID=20_CHARS \
         -e AUTHSCH_CLIENT_KEY=80_CHARS \
         -e PROFILE_SALT=RANDOM_STRING \
         -e SYSADMINS=YOUR_AUTH_SCH_UUID \
-        harbor.sch.bme.hu/org-golyakorte/cmsch
+        harbor.sch.bme.hu/org-kir-dev/cmsch
 ```
 
 ## Where to start?
