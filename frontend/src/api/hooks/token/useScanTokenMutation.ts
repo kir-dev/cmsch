@@ -6,7 +6,11 @@ import { ScanResponseView } from '../../../util/views/token.view'
 export function useScanTokenMutation(onSuccess?: () => void, onError?: () => void) {
   return useMutation({
     mutationFn: async (qrData: string) => {
-      const token = new URL(qrData).searchParams.get('token')
+      let token
+      try {
+        token = new URL(qrData).searchParams.get('token')
+      } catch (e) {}
+      token = token || qrData
       if (!token) throw new Error()
       const response = await axios.post<ScanResponseView>(joinPath('/api/token', token))
       return response.data
