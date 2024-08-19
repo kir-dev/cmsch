@@ -33,10 +33,10 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
         <Helmet title={l('error-page-helmet')} />
         <VStack spacing={5} p={5} borderRadius={5} bg={bg}>
           <Heading textAlign="center">{is500Status ? l('error-service-unavailable-title') : l('error-page-title')}</Heading>
-          <Text textAlign="center" color="gray.500" marginTop={10}>
+          <Text textAlign="center" color="gray.500" marginTop={4} maxW={96}>
             {is500Status ? l('error-service-unavailable') : l('error-connection-unsuccessful')}
           </Text>
-          <ButtonGroup justifyContent="center" marginTop={10}>
+          <ButtonGroup justifyContent="center" marginTop={4}>
             <Button
               colorScheme="brand"
               onClick={() => {
