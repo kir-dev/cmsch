@@ -8,4 +8,4 @@
 
 ${application.title} ${application.version}
 Powered by Spring Boot ${spring-boot.version}
-Developed by Kir-Dev https://kir-dev.sch.bme.hu/
+Developed by Kir-Dev https://kir-dev.hu/
