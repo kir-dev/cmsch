@@ -260,7 +260,10 @@ export interface Token {
   defaultTestIcon: string
 }
 
-export interface Debt {}
+export interface Debt {
+  topMessage: string
+  title: string
+}
 
 export interface UserHandling {}
 

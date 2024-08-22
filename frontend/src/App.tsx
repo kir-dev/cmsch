@@ -45,6 +45,7 @@ import RaceByTeamPage from './pages/race/raceByTeam.page.tsx'
 import CreateTeamPage from './pages/teams/createTeam.page.tsx'
 import EditMyTeamPage from './pages/teams/editMyTeam.page.tsx'
 import MyTeamPage from './pages/teams/myTeam.page.tsx'
+import DebtPage from './pages/debt/debt.page.tsx'
 
 export function App() {
   return (
@@ -61,6 +62,9 @@ export function App() {
                 <Route path={Paths.COMMUNITY}>
                   <Route path=":id" element={<CommunityPage />} />
                   <Route index element={<CommunityListPage />} />
+                </Route>
+                <Route path={Paths.DEBT}>
+                  <Route index element={<DebtPage />} />
                 </Route>
                 <Route path={Paths.ORGANIZATION}>
                   <Route path=":id" element={<OrganizationPage />} />
