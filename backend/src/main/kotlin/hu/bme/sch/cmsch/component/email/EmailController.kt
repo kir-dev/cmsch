@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.email
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.RealEntityController
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -9,6 +10,7 @@ import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
+import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/admin/control/email-templates")
 @ConditionalOnBean(EmailComponent::class)
 class EmailController(
-    repo: EmailTemplateRepository,
+    override val repo: EmailTemplateRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: EmailComponent,
@@ -54,4 +56,4 @@ class EmailController(
     adminMenuIcon = "mail",
     adminMenuPriority = 1,
     searchSettings = calculateSearchSettings<EmailTemplateEntity>(true)
-)
+), RealEntityController

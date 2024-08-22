@@ -30,7 +30,10 @@ class DebtComponent(
     final override val allSettings by lazy {
         listOf(
             debtGroup,
-            minRole
+            title,
+            menuDisplayName,
+            minRole,
+            topMessage,
         )
     }
 
@@ -40,10 +43,25 @@ class DebtComponent(
         description = "Jelenleg nincs mit beállítani itt"
     )
 
-    final override val menuDisplayName = null
+    final val title = SettingProxy(componentSettingService, component,
+        "title", "Fogyasztás",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    )
+
+    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+        "menuDisplayName", "Fogyasztás", serverSideOnly = true,
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
+    )
 
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.NOBODY,
+        "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
+
+    val topMessage = SettingProxy(componentSettingService, component,
+        "topMessage", "",
+        type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
+    )
+
 }

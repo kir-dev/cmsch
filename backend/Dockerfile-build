@@ -12,7 +12,7 @@ RUN java -Djarmode=tools -jar cmsch.jar extract --destination application
 RUN rm cmsch.jar
 
 WORKDIR /opt/cmsch/application
-RUN java "-Dspring.profiles.include=prewarm" "-XX:ArchiveClassesAtExit=application.jsa" "-XX:+UseSerialGC" "-XX:MaxRAMPercentage=75" "-Dspring.context.exit=onRefresh" -jar cmsch.jar
+RUN java "-Dspring.profiles.include=prewarm" "-XX:ArchiveClassesAtExit=application.jsa" "-XX:+UnlockExperimentalVMOptions" "-XX:+UseContainerSupport" "-XX:+UseSerialGC" "-XX:MaxRAMPercentage=90" "-Dspring.context.exit=onRefresh" -jar cmsch.jar
 
-ENTRYPOINT ["java", "-Dspring.profiles.include=docker", "-XX:SharedArchiveFile=application.jsa", "-XX:+UseSerialGC", "-XX:MaxRAMPercentage=75", "-jar", "/opt/cmsch/application/cmsch.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.include=docker", "-XX:SharedArchiveFile=application.jsa", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:+UseSerialGC", "-XX:MaxRAMPercentage=90", "-jar", "/opt/cmsch/application/cmsch.jar"]
 EXPOSE 80

@@ -18,3 +18,7 @@ class DashboardFormCard(
     override val type: String = pascalToKebab(javaClass.simpleName)
 
 }
+
+object FormElementBackendCustomType {
+    const val HIDDEN = "hidden"
+}

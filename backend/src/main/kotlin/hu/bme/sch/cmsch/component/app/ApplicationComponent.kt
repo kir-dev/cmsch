@@ -44,6 +44,7 @@ class ApplicationComponent(
             adminBrandColor,
             motd,
             staffMessage,
+            documentsForOrganizers,
 
             siteGroup,
             siteName,
@@ -136,6 +137,11 @@ class ApplicationComponent(
     val staffMessage = SettingProxy(componentSettingService, component,
         "staffMessage", "...", type = SettingType.LONG_TEXT_MARKDOWN, serverSideOnly = true,
         fieldName = "Szolgálati közlemény", description = "Ez fog megjelenni az admin oldal kezdőlapján"
+    )
+
+    val documentsForOrganizers = SettingProxy(componentSettingService, component,
+        "documentsForOrganizers", "[]", type = SettingType.LONG_TEXT, serverSideOnly = true,
+        fieldName = "Linkelt doksik", description = "Linkelt doksik az admin oldal kezdőlapján", minRoleToEdit = RoleType.SUPERUSER
     )
 
     override fun onPersist() {

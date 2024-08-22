@@ -32,5 +32,5 @@ data class DebtDto(
     var log: String,
 
     @field:JsonView(FullDetails::class)
-    var materialIcon: String
+    var icons: String
 )

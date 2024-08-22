@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.repository
 
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.GuildType
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -40,11 +41,14 @@ interface UserRepository : CrudRepository<UserEntity, Int>,
     fun findAllByGroupName(groupName: String): List<UserEntity>
     fun findByEmail(email: String): Optional<UserEntity>
     fun countAllByGroup(group: GroupEntity): Long
+    fun findAllByRoleOrRoleOrPermissionsNot(role1: RoleType, role2: RoleType, emptyString: String): List<UserEntity>
+    fun findAllByRoleOrRole(role1: RoleType, role2: RoleType): List<UserEntity>
 
     @Query("SELECT NEW hu.bme.sch.cmsch.repository.UserSelectorView(e.id, e.fullName, e.alias, e.provider, e.email) FROM UserEntity e")
     fun findAllSelectorView(): List<UserSelectorView>
 
     @Query("SELECT NEW hu.bme.sch.cmsch.repository.UserHandlerView(e.id, e.fullName, e.alias, e.neptun, e.guild, e.groupName, e.email) FROM UserEntity e")
     fun findAllUserHandlerView(): List<UserHandlerView>
+
 
 }

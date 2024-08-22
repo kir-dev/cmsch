@@ -59,7 +59,7 @@ class UserController(
     showPermission = StaffPermissions.PERMISSION_SHOW_USERS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission = StaffPermissions.PERMISSION_EDIT_USERS,
-    deletePermission = StaffPermissions.PERMISSION_DELETE_USERS,
+    deletePermission = ImplicitPermissions.PERMISSION_SUPERUSER_ONLY,
 
     createEnabled = false,
     editEnabled = true,

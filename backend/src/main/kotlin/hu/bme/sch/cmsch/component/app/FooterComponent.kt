@@ -97,7 +97,7 @@ class FooterComponent(
     )
 
     val footerMessage = SettingProxy(componentSettingService, component,
-        "footerMessage", "email [at] sch.bme.hu\n2022", type = SettingType.LONG_TEXT,
+        "footerMessage", "email [at] sch.bme.hu\n2024", type = SettingType.LONG_TEXT,
         fieldName = "Footer szöveg", description = "Ez jelenik meg középen a footer alján"
     )
 

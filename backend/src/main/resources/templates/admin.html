@@ -21,11 +21,22 @@
             </h1>
             <div class="details">Üdv a rendezvény rendezői felületén!</div>
 
-            <div class="card">
+            <div class="card" th:if="${staffMessage != ''}">
                 <h4>Rendezői üzenet</h4>
                 <div th:utext="${staffMessage}">
                 </div>
 
+            </div>
+
+            <div class="card" th:if="${not docs.isEmpty()}">
+                <h4>Dokumentumok</h4>
+                <a th:each="doc : ${docs}" href="#" th:href="${doc.url}">
+                    <div>
+                        <img src="admin-icons/sheets.png" th:src="|@{/admin-icons/}${doc.type}.png|" th:alt="${doc.type}">
+                        <h3 th:text="${doc.title}">Doksi neve</h3>
+                        <span th:text="${doc.url}">https://dsadsadsad</span>
+                    </div>
+                </a>
             </div>
 
         </div>
