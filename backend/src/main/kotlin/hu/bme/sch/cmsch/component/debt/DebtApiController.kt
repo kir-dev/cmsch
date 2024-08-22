@@ -13,24 +13,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
 @ConditionalOnBean(DebtComponent::class)
 class DebtApiController(
-    private val debtsRepository: SoldProductRepository
+    private val debtService: DebtService
 ) {
 
     @JsonView(FullDetails::class)
     @GetMapping("/debts")
     fun debts(auth: Authentication): DebtsView {
         return DebtsView(
-            debts = debtsRepository.findAllByOwnerId(auth.getUser().id)
-                .map { DebtDto(
-                    it.product,
-                    it.price,
-                    it.sellerName,
-                    it.responsibleName,
-                    it.payed,
-                    it.shipped,
-                    it.log,
-                    it.materialIcon
-                ) }
+            debts = debtService.getDebtsForUser(auth.getUser())
         )
     }
 

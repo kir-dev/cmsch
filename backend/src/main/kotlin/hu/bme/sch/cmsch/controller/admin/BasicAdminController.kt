@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.service.*
@@ -58,6 +60,8 @@ class BasicAdminController(
         return "redirect:/admin/control/basics"
     }
 
+    private val docsReader = jacksonObjectMapper().readerFor(object : TypeReference<List<DocsForOrganizers>>() {})
+
     @GetMapping("/basics")
     fun dashboard(model: Model, auth: Authentication): String {
         val user = auth.getUser()
@@ -65,8 +69,12 @@ class BasicAdminController(
         model.addAttribute("user", user)
 
         model.addAttribute("staffMessage", markdownToHtml(applicationComponent.staffMessage.getValue()))
+        model.addAttribute("docs", docsReader
+            .readValue<List<DocsForOrganizers>>(applicationComponent.documentsForOrganizers.getValue())
+            .filter { it.visible })
 
         return "admin"
     }
 
 }
+

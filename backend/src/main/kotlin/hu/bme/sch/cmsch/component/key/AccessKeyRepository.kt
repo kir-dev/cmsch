@@ -11,7 +11,7 @@ interface AccessKeyRepository : CrudRepository<AccessKeyEntity, Int>, EntityPage
 
     override fun findAll(): List<AccessKeyEntity>
 
-    fun findTop1ByUsedByUserId(usedByUserId: Int): List<AccessKeyEntity>
+    fun findTop1ByUsedByUserId(userId: Int): List<AccessKeyEntity>
 
     fun findTop1ByAccessKey(accessKey: String): List<AccessKeyEntity>
 

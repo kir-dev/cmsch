@@ -60,7 +60,7 @@ class GroupController(
     showPermission =   StaffPermissions.PERMISSION_SHOW_GROUPS,
     createPermission = StaffPermissions.PERMISSION_CREATE_GROUPS,
     editPermission =   StaffPermissions.PERMISSION_EDIT_GROUPS,
-    deletePermission = StaffPermissions.PERMISSION_DELETE_GROUPS,
+    deletePermission = ImplicitPermissions.PERMISSION_SUPERUSER_ONLY,
 
     createEnabled = true,
     editEnabled   = true,
