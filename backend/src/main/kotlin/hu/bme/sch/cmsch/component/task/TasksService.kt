@@ -195,7 +195,7 @@ open class TasksService(
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
-        if (user.role.value < task.minRole.value || user.role.value > task.maxRole.value) {
+        if ((user.role.value < task.minRole.value || user.role.value > task.maxRole.value) && !user.isAdmin()) {
             log.warn("User ${user.userName} wants to access protected task '${task.title}'")
             return TaskSubmissionStatus.NO_PERMISSION
         }
@@ -223,7 +223,7 @@ open class TasksService(
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
-        if (user.role.value < task.minRole.value || user.role.value > task.maxRole.value) {
+        if ((user.role.value < task.minRole.value || user.role.value > task.maxRole.value) && !user.isAdmin()) {
             log.warn("User ${user.userName} wants to access protected task '${task.title}'")
             return TaskSubmissionStatus.NO_PERMISSION
         }
@@ -501,7 +501,7 @@ open class TasksService(
         }
 
         return allCategories
-            .filter { userRole.value >= it.minRole.value && userRole.value <= it.maxRole.value }
+            .filter { userRole.isAdmin || (userRole.value >= it.minRole.value && userRole.value <= it.maxRole.value) }
             .map { category ->
                 val submissionSummary = submissionByCategory[category.categoryId]
                 val taskCount = taskCountByCategory[category.categoryId] ?: 0
@@ -533,7 +533,7 @@ open class TasksService(
         val allCategories = categories.findAllByAvailableFromLessThanAndAvailableToGreaterThan(now, now)
 
         return allCategories
-            .filter { userRole.value >= it.minRole.value && userRole.value <= it.maxRole.value }
+            .filter { userRole.isAdmin || (userRole.value >= it.minRole.value && userRole.value <= it.maxRole.value) }
             .map { category ->
                 val submissionSummary = submissionByCategory[category.categoryId]
                 val taskCount = taskCountByCategory[category.categoryId] ?: 0
