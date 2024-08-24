@@ -37,7 +37,7 @@ data class AccessKeyEntity(
     @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ''")
     @property:GenerateInput(maxLength = 128, order = 2, label = "Cimke",
         note = "Például a név aminek majd szerepelnie kellene")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(columnName = "Cimke", order = 3)
     @property:ImportFormat
     var tag: String = "",
 
@@ -53,7 +53,7 @@ data class AccessKeyEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 11, label = "Felhasználó neve",
         note = "Ez csak logolás miatt van ideírva")
-    @property:GenerateOverview(columnName = "Felhasználó", order = 1)
+    @property:GenerateOverview(columnName = "Felhasználó", order = 2)
     @property:ImportFormat
     var usedByUserName: String = "",
 

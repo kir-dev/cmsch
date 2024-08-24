@@ -183,7 +183,9 @@ class TaskAdminRateController(
     fun grade(@PathVariable id: Int,
              @ModelAttribute(binding = false) dto: SubmittedTaskEntity,
              model: Model,
-             auth: Authentication
+             auth: Authentication,
+             @RequestParam(defaultValue = "false") delete0: Boolean,
+             @RequestParam(defaultValue = "false") delete1: Boolean,
     ): String {
         val user = auth.getUser()
         if (editPermission.validate(user).not()) {
@@ -199,7 +201,7 @@ class TaskAdminRateController(
         }
 
         val newValues = StringBuilder("grade new value: ")
-        updateEntity(descriptor, user, entity.get(), dto, newValues, null, null)
+        updateEntity(descriptor, user, entity.get(), dto, newValues,  delete0, null, delete1, null)
         if (entity.get().approved && entity.get().rejected)
             entity.get().rejected = false
         saveChangeHistory(entity.get(), user.userName)
