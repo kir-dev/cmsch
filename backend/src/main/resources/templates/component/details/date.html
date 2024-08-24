@@ -26,10 +26,39 @@
         />
         <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
         <span class="note type-note" th:if="${entityMode}">Típus: Dátum</span>
+        <div class="button-group" th:if="${!readOnly && !entityMode}">
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="dateField_setDiff(-86400, this.getAttribute('data-index')); return false">
+                -1d
+            </button>
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="dateField_setDiff(0, this.getAttribute('data-index')); return false">
+                most
+            </button>
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="dateField_setDiff(86400, this.getAttribute('data-index')); return false">
+                +1d
+            </button>
+            <button class="btn"
+                    th:data-index="${index}"
+                    onclick="dateField_setDiff(604800, this.getAttribute('data-index')); return false">
+                +1w
+            </button>
+        </div>
     </div>
 
 </object>
 
 <object th:fragment="detailsSegmentScript (ext)" th:remove="tag">
+
+    <script>
+        function dateField_setDiff(diff, index) {
+            const dateTimeElement = document.getElementById(`input${index}`);
+            dateTimeElement._flatpickr?.setDate(Math.floor(Date.now()) + (diff * 1000));
+        }
+    </script>
 
 </object>

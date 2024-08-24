@@ -43,7 +43,7 @@ data class GalleryEntity(
     @Column(nullable = false)
     @property:GenerateInput(
         maxLength = 64, order = 3, label = "Url",
-        note = "A galériában tárolt kép linkje", interpreter = INTERPRETER_PATH
+        note = "A galériában tárolt kép linkje"
     )
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 3)
