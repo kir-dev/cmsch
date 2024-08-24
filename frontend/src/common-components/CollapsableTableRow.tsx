@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { Td, Tr, useDisclosure, Link as ChakraLink } from '@chakra-ui/react'
+import { useDisclosure, Link as ChakraLink, Grid, GridItem, Box } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
@@ -25,68 +25,75 @@ export const CollapsableTableRow = ({
   showDescription
 }: CollapsableTableRowProps) => {
   const { isOpen, onToggle } = useDisclosure()
-  const bg = useOpaqueBackground(1)
+  const bg = idx % 2 === 0 ? useOpaqueBackground(1) : undefined
   const isGroupLink = typeof data.groupId !== 'undefined'
 
-  let colCount = 3
-  if (collapsable) colCount++
-  if (showGroup) colCount++
+  collapsable = (collapsable && data.items && data.items.length > 0) || false
+
+  let outerColTemplate: string[] = []
+  if (!categorized) outerColTemplate.push('[place] auto')
+  outerColTemplate.push('[name] 1fr')
+  if (showGroup) outerColTemplate.push('[group] 1fr')
+  outerColTemplate.push('[score] auto [chevron] 20px')
+
+  let innerColTemplate: string[] = []
+  if (categorized) innerColTemplate.push('[place] auto')
+  innerColTemplate.push('[name] 1fr [score] auto')
+  if (!categorized) innerColTemplate.push('[chevron] 20px')
 
   return (
     <>
-      <Tr
+      <Grid
         onClick={() => {
           if (collapsable) onToggle()
         }}
         _hover={{ cursor: collapsable ? 'pointer' : 'default' }}
-        alignItems="start"
         fontWeight="bold"
-        bg={idx % 2 === 0 ? bg : undefined}
+        bg={bg}
+        gridTemplateColumns={outerColTemplate.join(' ')}
+        gap={3}
+        p={3}
       >
-        <>
-          {!categorized && <Td>{data.position}.</Td>}
-          <Td colSpan={categorized ? 2 : 1}>{data.name}</Td>
-          {showGroup && data.groupName ? (
-            <Td>
-              {isGroupLink ? (
-                <Link to={joinPath(AbsolutePaths.TEAMS, 'details', data.groupId)}>
-                  <ChakraLink textDecoration="underline">{data.groupName}</ChakraLink>
-                </Link>
-              ) : (
-                data.groupName
-              )}
-            </Td>
-          ) : (
-            <Td />
-          )}
-          {data.score || data.total ? (
-            <Td>{`${new Intl.NumberFormat('hu-HU').format(data.score || data.total || 0)} ${suffix || ''}`}</Td>
-          ) : (
-            <Td />
-          )}
-          {collapsable && <Td textAlign="right">{isOpen ? <ChevronUpIcon boxSize={5} /> : <ChevronDownIcon boxSize={5} />}</Td>}
-        </>
-      </Tr>
+        {!categorized && <GridItem>{data.position}.</GridItem>}
+        <GridItem>{data.name}</GridItem>
+        {showGroup && data.groupName && (
+          <GridItem gridColumn="group">
+            {isGroupLink ? (
+              <Link to={joinPath(AbsolutePaths.TEAMS, 'details', data.groupId)}>
+                <ChakraLink textDecoration="underline">{data.groupName}</ChakraLink>
+              </Link>
+            ) : (
+              data.groupName
+            )}
+          </GridItem>
+        )}
+        {(data.score || data.total) && (
+          <GridItem gridColumn="score" justifySelf="end">
+            {`${new Intl.NumberFormat('hu-HU').format(data.score || data.total || 0)} ${suffix || ''}`}
+          </GridItem>
+        )}
+        {collapsable && <GridItem gridColumn="chevron">{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}</GridItem>}
+      </Grid>
+
       {showDescription && data.description && (
-        <Tr>
-          <Td pt="0" pb="4px" colSpan={colCount} bg={idx % 2 === 0 ? bg : undefined}>
-            {data.description}
-          </Td>
-        </Tr>
+        <Box pt="0" pb="4px" bg={bg}>
+          {data.description}
+        </Box>
       )}
-      {isOpen &&
-        data.items
-          ?.sort((a, b) => b.value - a.value)
-          .map((item, itemIndex) => (
-            <>
-              <Tr bg={idx % 2 === 0 ? bg : undefined}>
-                {categorized && <Td w="1rem">{itemIndex + 1}.</Td>}
-                <Td colSpan={categorized ? 2 : 3}>{item.name}</Td>
-                <Td>{`${new Intl.NumberFormat('hu-HU').format(item.value)} ${suffix || ''}`}</Td>
-                <Td /> {/* needed so that the background color covers the entire line */}
-              </Tr>
-            </>
-          ))}
+
+      {isOpen && (
+        <Grid gap={3} gridTemplateColumns={innerColTemplate.join(' ')} bg={bg} p={3} pt={0}>
+          {data.items
+            ?.sort((a, b) => b.value - a.value)
+            .map((item, itemIndex) => (
+              <>
+                {categorized && <GridItem gridColumn="place">{itemIndex + 1}.</GridItem>}
+                <GridItem gridColumn="name">{item.name}</GridItem>
+                <GridItem justifySelf="end">{`${new Intl.NumberFormat('hu-HU').format(item.value)} ${suffix || ''}`}</GridItem>
+              </>
+            ))}
+        </Grid>
+      )}
     </>
   )
 }

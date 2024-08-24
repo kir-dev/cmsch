@@ -1,4 +1,4 @@
-import { Box, Table, TableContainer, Tbody, Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { useSearch } from '../util/useSearch'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
@@ -42,24 +42,20 @@ export const LeaderBoardTable = ({
           <SearchBar mb={5} {...searchArgs} />
         </Box>
       )}
-      <TableContainer>
-        <Table variant="unstyled">
-          <Tbody>
-            {searchArgs.filteredData.map((item, idx) => (
-              <CollapsableTableRow
-                collapsable={detailed && (item.items || false) && item.items.length > 0}
-                key={item.position}
-                data={item}
-                idx={idx}
-                showGroup={showGroup}
-                suffix={suffix}
-                categorized={categorized}
-                showDescription={showDescription}
-              />
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <Box>
+        {searchArgs.filteredData.map((item, idx) => (
+          <CollapsableTableRow
+            collapsable={detailed && (item.items || false) && item.items.length > 0}
+            key={item.position}
+            data={item}
+            idx={idx}
+            showGroup={showGroup}
+            suffix={suffix}
+            categorized={categorized}
+            showDescription={showDescription}
+          />
+        ))}
+      </Box>
       {data.length === 0 && <Text>Nincs megjeleníthető információ.</Text>}
     </>
   )
