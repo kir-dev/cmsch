@@ -577,7 +577,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                @RequestParam(required = false) file0: MultipartFile?,
                @RequestParam(required = false) file1: MultipartFile?,
                model: Model,
-               auth: Authentication
+               auth: Authentication,
     ): String {
         val user = auth.getUser()
         if (createPermission.validate(user).not()) {
@@ -592,7 +592,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         val entity = supplier.get()
         val newValues = StringBuilder("entity new value: ")
-        updateEntity(descriptor, user, entity, dto, newValues, file0, file1)
+        updateEntity(descriptor, user, entity, dto, newValues, false, file0, false, file1)
         entity.id = 0
         if (onEntityPreSave(entity, auth)) {
             auditLog.create(user, component.component, newValues.toString())
@@ -610,7 +610,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
              @RequestParam(required = false) file0: MultipartFile?,
              @RequestParam(required = false) file1: MultipartFile?,
              model: Model,
-             auth: Authentication
+             auth: Authentication,
+             @RequestParam(defaultValue = "false") delete0: Boolean,
+             @RequestParam(defaultValue = "false") delete1: Boolean,
     ): String {
         val user = auth.getUser()
         if (editPermission.validate(user).not()) {
@@ -635,7 +637,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "redirect:/admin/control/$view/"
 
         val newValues = StringBuilder("entity new value: ")
-        updateEntity(descriptor, user, actualEntity, dto, newValues, file0, file1)
+        updateEntity(descriptor, user, actualEntity, dto, newValues, delete0, file0, delete1, file1)
         actualEntity.id = id
         if (onEntityPreSave(actualEntity, auth)) {
             auditLog.edit(user, component.component, newValues.toString())
@@ -650,8 +652,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     private val sqlDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     internal fun updateEntity(
-        descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T,
-        newValues: StringBuilder, file0: MultipartFile?, file1: MultipartFile?
+        descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, newValues: StringBuilder,
+        delete0: Boolean, file0: MultipartFile?,
+        delete1: Boolean, file1: MultipartFile?
     ) {
         descriptor.getInputs().forEach {
             if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
@@ -659,17 +662,25 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     it.second.interpreter == INTERPRETER_INHERIT && it.second.type == INPUT_TYPE_FILE -> {
                         when (it.second.fileId) {
                             "0" -> {
-                                file0?.uploadFile(view)?.let { file ->
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
-                                    newValues.append(it.first.name).append("=name@").append(view)
-                                        .append("/").append(file).append(", ")
+                                if (delete0) {
+                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "")
+                                } else {
+                                    file0?.uploadFile(view)?.let { file ->
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
+                                        newValues.append(it.first.name).append("=name@").append(view)
+                                            .append("/").append(file).append(", ")
+                                    }
                                 }
                             }
                             "1" -> {
-                                file1?.uploadFile(view)?.let { file ->
-                                    newValues.append(it.first.name).append("=name@").append(view)
-                                        .append("/").append(file).append(", ")
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
+                                if (delete1) {
+                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "")
+                                } else {
+                                    file1?.uploadFile(view)?.let { file ->
+                                        newValues.append(it.first.name).append("=name@").append(view)
+                                            .append("/").append(file).append(", ")
+                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
+                                    }
                                 }
                             }
                             else -> {

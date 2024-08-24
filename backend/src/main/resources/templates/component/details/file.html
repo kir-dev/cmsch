@@ -44,7 +44,8 @@
                     <img src="#"
                          alt="Image preview"
                          onerror="this.onerror=null; this.parentNode.style.display = 'none'; "
-                         width="528"
+                         width="400"
+                         style="display: block; margin: 0 auto"
                          th:id="|input${index}|"
                          th:unless="${(property.get(data) == null || property.get(data) == '') && entityMode}"
                          th:src="|@{/cdn/}${property.get(data)}|"
@@ -59,6 +60,22 @@
                 >
                     Megnyitás nagyban (új lapon)
                 </a>
+                <div style="clear: both; margin-bottom: 20px;"></div>
+
+                <label th:for="|delete${index}|"
+                       th:text="|${generateInput.label} törlése|">
+                </label>
+                <div style="clear: both"></div>
+                <label class="switch" th:unless="${entityMode}">
+                    <input type="checkbox"
+                           th:name="|delete${generateInput.fileId}|"
+                           th:id="|delete${index}|"
+                           th:disabled="${!generateInput.enabled || readOnly}"
+                    />
+                    <span class="slider"></span>
+                </label>
+                <div style="clear: both"></div>
+
             </object>
             <p th:if="${(property.get(data) == null || property.get(data) == '') && !entityMode}">
                 Nincs kép feltöltve
