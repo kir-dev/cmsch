@@ -2,12 +2,13 @@ import { Card, CardBody, CardHeader, CardProps, Heading, useColorModeValue } fro
 
 export interface CmschContainerProps extends CardProps {
   title?: string
+  disablePadding?: boolean
 }
 
-export const CmschContainer = ({ children, title, ...props }: CmschContainerProps) => (
+export const CmschContainer = ({ children, title, disablePadding, ...props }: CmschContainerProps) => (
   <Card
     flexDirection="column"
-    p={[0, null, 4]}
+    p={[0, null, 0]}
     mx="auto"
     maxW="100%"
     borderRadius={[0, null, 'xl']}
@@ -20,6 +21,6 @@ export const CmschContainer = ({ children, title, ...props }: CmschContainerProp
         <Heading>{title}</Heading>
       </CardHeader>
     )}
-    <CardBody>{children}</CardBody>
+    <CardBody p={disablePadding ? 0 : undefined}>{children}</CardBody>
   </Card>
 )

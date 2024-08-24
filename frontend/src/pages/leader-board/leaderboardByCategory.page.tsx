@@ -1,20 +1,16 @@
-import { Flex, Heading, TabList, TabPanel, TabPanels, Tabs, Text, useBreakpoint, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
+import { TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CustomTabButton } from '../../common-components/CustomTabButton'
-import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
-import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
 import { AbsolutePaths } from '../../util/paths'
 
-export default function LeaderboardCategoryPage() {
+export default function LeaderboardByCategoryPage() {
   const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
   const component = useConfigContext()?.components.leaderboard
-  const breakpoint = useBreakpoint()
 
   if (!component) return <ComponentUnavailable />
 
@@ -44,25 +40,10 @@ export default function LeaderboardCategoryPage() {
     />
   )
   return (
-    <CmschPage>
-      <Helmet title={title} />
-      <Flex wrap="wrap" justify="space-between">
-        <VStack mb={5} align="flex-start">
-          <Heading as="h1" variant="main-title">
-            {title}
-          </Heading>
-          <Text>Kategóriák szerint</Text>
-        </VStack>
-        <VStack>
-          <LinkButton href={AbsolutePaths.LEADER_BOARD} my={5}>
-            Összesített nézet
-          </LinkButton>
-        </VStack>
-      </Flex>
-
+    <>
       {component.showUserBoard && component.showGroupBoard ? (
-        <Tabs size={{ base: 'sm', md: 'md' }} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
-          <TabList>
+        <Tabs size={{ base: 'sm', md: 'md' }} variant="soft-rounded" colorScheme="brand">
+          <TabList px="2rem">
             {data?.userBoard && <CustomTabButton>Egyéni</CustomTabButton>}
             {data?.groupBoard && <CustomTabButton>Csoportos</CustomTabButton>}
           </TabList>
@@ -78,6 +59,6 @@ export default function LeaderboardCategoryPage() {
           {data?.groupBoard && groupBoard}
         </>
       )}
-    </CmschPage>
+    </>
   )
 }
