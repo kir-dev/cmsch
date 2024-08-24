@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -50,14 +51,14 @@ data class TaskCategoryEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 3, label = "Beadhatóak ekkortól")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 3, label = "Beadhatóak ekkortól", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_LONG)
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Beadhatóak eddig")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Beadhatóak eddig", defaultValue = "0")
     @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LONG)
     var availableTo: Long = 0,
@@ -80,6 +81,32 @@ data class TaskCategoryEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false)
     var advertised: Boolean = false,
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'BASIC'")
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7,
+        label = "Minimum rang a megtekintéshez",
+        defaultValue = "BASIC",
+        note = "A ranggal rendelkező már megtekintheti (BASIC = belépett, STAFF = rendező)",
+        source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var minRole: RoleType = RoleType.BASIC,
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'SUPERUSER'")
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8,
+        label = "Maximum rang a megtekintéshez",
+        defaultValue = "SUPERUSER",
+        note = "A ranggal rendelkező még megtekintheti (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező)",
+        source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var maxRole: RoleType = RoleType.SUPERUSER,
 
 ): ManagedEntity {
 

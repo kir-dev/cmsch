@@ -150,7 +150,7 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW", "PURPLE" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
     var guild: GuildType = GuildType.UNKNOWN,

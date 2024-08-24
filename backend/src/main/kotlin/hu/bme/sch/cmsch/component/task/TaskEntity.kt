@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
@@ -72,7 +73,7 @@ data class TaskEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 15, label = "Mintamegoldás",
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 17, label = "Mintamegoldás",
         note = "A leadási határidő után jelenik meg")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
@@ -156,6 +157,32 @@ data class TaskEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 13)
     var tag: String = "",
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'BASIC'")
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 15,
+        label = "Minimum rang a megtekintéshez",
+        defaultValue = "BASIC",
+        note = "A ranggal rendelkező már megtekintheti (BASIC = belépett, STAFF = rendező)",
+        source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var minRole: RoleType = RoleType.BASIC,
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'SUPERUSER'")
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 16,
+        label = "Maximum rang a megtekintéshez",
+        defaultValue = "SUPERUSER",
+        note = "A ranggal rendelkező még megtekintheti (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező)",
+        source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat(ignore = false)
+    var maxRole: RoleType = RoleType.SUPERUSER,
 
 ): ManagedEntity {
 

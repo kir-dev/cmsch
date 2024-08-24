@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserOrNull
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -19,13 +20,13 @@ import java.util.*
 @RequestMapping("/api")
 @ConditionalOnBean(TaskComponent::class)
 class TaskApiController(
-    private val leaderBoardService: Optional<LeaderBoardService>,
-    private val leaderBoardComponent: Optional<LeaderBoardComponent>,
     private val tasks: TasksService,
     private val clock: TimeService,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val taskComponent: TaskComponent
 ) {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @JsonView(Preview::class)
     @GetMapping("/task")
@@ -36,7 +37,7 @@ class TaskApiController(
         when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
                 user ?: return TasksView()
-                categories = tasks.getCategoriesForUserInTimeRange(user.id, clock.getNowInSeconds())
+                categories = tasks.getCategoriesForUserInTimeRange(user.id, clock.getNowInSeconds(), user.role)
 
                 return TasksView(
                     categories = categories
@@ -45,7 +46,7 @@ class TaskApiController(
             }
             OwnershipType.GROUP -> {
                 val groupId = user?.groupId ?: return TasksView( )
-                categories = tasks.getCategoriesForGroupInRange(groupId, clock.getNowInSeconds())
+                categories = tasks.getCategoriesForGroupInRange(groupId, clock.getNowInSeconds(), userRole = user.role)
 
                 return TasksView(
                     categories = categories
@@ -63,21 +64,29 @@ class TaskApiController(
             tasks = listOf()
         )
 
+        val user = auth?.getUserOrNull()
         val taskList = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth?.getUserOrNull() ?: return TaskCategoryView(
+                user ?: return TaskCategoryView(
                     categoryName = "Nem található",
                     tasks = listOf()
                 )
                 tasks.getAllTasksForUser(user, categoryId)
             }
             OwnershipType.GROUP -> {
-                val groupId = auth?.getUserOrNull()?.groupId ?: return TaskCategoryView(
+                val groupId = user?.groupId ?: return TaskCategoryView(
                     categoryName = "Nem található",
                     tasks = listOf()
                 )
                 tasks.getAllTasksForGroup(groupId, categoryId)
             }
+        }
+        if (user.role.value < category.minRole.value || user.role.value > category.maxRole.value) {
+            log.warn("User ${user.userName} wants to access protected category '${category.name}'")
+            return TaskCategoryView(
+                categoryName = "Nem található",
+                tasks = listOf()
+            )
         }
 
         return TaskCategoryView(
@@ -93,22 +102,25 @@ class TaskApiController(
     @GetMapping("/task/submit/{taskId}")
     fun task(@PathVariable taskId: Int, auth: Authentication?): SingleTaskView {
         val task = tasks.getById(taskId)
+        val user = auth?.getUserOrNull()
+            ?: return SingleTaskView(task = null, submission = null)
+
         val now = clock.getTimeInSeconds()
         if (task.orElse(null)?.visible?.not() == true)
             return SingleTaskView(task = null, submission = null)
+        if (user.role.value < task.orElseThrow().minRole.value || user.role.value > task.orElseThrow().maxRole.value) {
+            log.warn("User ${user.userName} wants to access protected task '${task.orElseThrow().title}'")
+            return SingleTaskView(task = null, submission = null)
+        }
 
         val categoryName = task.map { tasks.getCategoryName(it.categoryId) }.orElse(null)
         val submission = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
-                val user = auth?.getUserOrNull() ?: return SingleTaskView(
-                    task = task.map { TaskEntityDto(it, now, categoryName) }.orElse(null),
-                    submission = null,
-                    status = TaskStatus.NOT_SUBMITTED
-                )
+
                 tasks.getSubmissionForUserOrNull(user, task)
             }
             OwnershipType.GROUP -> {
-                val group = auth?.getUserOrNull()?.groupId ?: return SingleTaskView(
+                val group = user.groupId ?: return SingleTaskView(
                     task = task.map { TaskEntityDto(it, now, categoryName) }.orElse(null),
                     submission = null,
                     status = TaskStatus.NOT_SUBMITTED
