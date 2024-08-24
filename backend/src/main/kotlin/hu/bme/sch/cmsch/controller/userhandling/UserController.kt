@@ -70,7 +70,7 @@ class UserController(
     adminMenuIcon = "person",
     adminMenuPriority = 1,
 
-    searchSettings = calculateSearchSettings<UserEntity>(fuzzy = true)
+    searchSettings = calculateSearchSettings<UserEntity>(fuzzy = false)
 ) {
 
     private val componentClasses = components.map { it::class }.toSet()

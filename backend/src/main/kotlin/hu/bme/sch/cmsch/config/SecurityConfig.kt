@@ -86,6 +86,7 @@ open class SecurityConfig(
                 antMatcher("/control/test-user"),
                 antMatcher("/images/**"),
                 antMatcher("/js/**"),
+                antMatcher("/docs-icons/**"),
                 antMatcher("/files/**"),
                 antMatcher("/admin/logout"),
                 antMatcher("/cdn/events/**"),

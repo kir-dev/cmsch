@@ -63,28 +63,25 @@
 <script th:inline="javascript">
     const apiUrl = /*[[${url}]]*/ "/api/track";
     const defaultGroupColor = /*[[${defaultGroupColor}]]*/ "";
-    const blackGroupName = /*[[${blackGroupName}]]*/ "";
-    const blueGroupName = /*[[${blueGroupName}]]*/ "";
-    const cyanGroupName = /*[[${cyanGroupName}]]*/ "";
-    const pinkGroupName = /*[[${pinkGroupName}]]*/ "";
-    const orangeGroupName = /*[[${orangeGroupName}]]*/ "";
-    const greenGroupName = /*[[${greenGroupName}]]*/ "";
-    const redGroupName = /*[[${redGroupName}]]*/ "";
-    const whiteGroupName = /*[[${whiteGroupName}]]*/ "";
-    const yellowGroupName = /*[[${yellowGroupName}]]*/ "";
-    const purpleGroupName = /*[[${purpleGroupName}]]*/ "";
-    const grayGroupName = /*[[${grayGroupName}]]*/ "";
 
-    let attribution = new ol.control.Attribution({
-        collapsible: false
-    });
+    const groupNames = {
+        black: /*[[${blackGroupName}]]*/ "",
+        blue: /*[[${blueGroupName}]]*/ "",
+        cyan: /*[[${cyanGroupName}]]*/ "",
+        pink: /*[[${pinkGroupName}]]*/ "",
+        orange: /*[[${orangeGroupName}]]*/ "",
+        green: /*[[${greenGroupName}]]*/ "",
+        red: /*[[${redGroupName}]]*/ "",
+        white: /*[[${whiteGroupName}]]*/ "",
+        yellow: /*[[${yellowGroupName}]]*/ "",
+        purple: /*[[${purpleGroupName}]]*/ "",
+        gray: /*[[${grayGroupName}]]*/ "",
+    };
 
-    let map = new ol.Map({
-        controls: ol.control.defaults({attribution: false}).extend([attribution]),
+    const map = new ol.Map({
         layers: [
             new ol.layer.Tile({
-                title:'terrain-background',
-                source: new ol.source.Stamen({ layer: 'terrain' })
+                source: new ol.source.StadiaMaps({ layer: 'stamen_terrain' })
             })
         ],
         target: 'map',
@@ -95,104 +92,30 @@
         })
     });
 
-
-    let iconStyleDefault = new ol.style.Style({
+    const createIconStyle = (color) => new ol.style.Style({
         image: new ol.style.Circle({
             radius: 4,
             stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: defaultGroupColor })
+            fill: new ol.style.Fill({ color: color })
         })
     });
 
-    let iconStyleBlack = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#000000' })
-        })
-    });
+    const iconStyles = {
+        default: createIconStyle(defaultGroupColor),
+        black: createIconStyle('#000000'),
+        blue: createIconStyle('#5fa8d3'),
+        cyan: createIconStyle('#70d6ff'),
+        pink: createIconStyle('#ff70a6'),
+        orange: createIconStyle('#f8961e'),
+        green: createIconStyle('#a7c957'),
+        red: createIconStyle('#ef233c'),
+        white: createIconStyle('#ffffff'),
+        yellow: createIconStyle('#fee440'),
+        purple: createIconStyle('#9d4edd'),
+        gray: createIconStyle('#c0c0c0')
+    };
 
-    let iconStyleBlue = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#5fa8d3' })
-        })
-    });
-
-    let iconStyleCyan = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#70d6ff' })
-        })
-    });
-
-    let iconStylePink = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#ff70a6' })
-        })
-    });
-
-    let iconStyleOrange = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#f8961e' })
-        })
-    });
-
-    let iconStyleGreen = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#a7c957' })
-        })
-    });
-
-    let iconStyleRed = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#ef233c' })
-        })
-    });
-
-    let iconStyleWhite = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#000' }),
-            fill: new ol.style.Fill({ color: '#ffffff' })
-        })
-    });
-
-    let iconStyleYellow = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#000' }),
-            fill: new ol.style.Fill({ color: '#fee440' })
-        })
-    });
-
-    let iconStylePurple = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#9d4edd' })
-        })
-    });
-
-    let iconStyleGray = new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 4,
-            stroke: new ol.style.Stroke({ color: '#fff' }),
-            fill: new ol.style.Fill({ color: '#c0c0c0' })
-        })
-    });
-
-    let labelStyle = new ol.style.Style({
+    const labelStyle = new ol.style.Style({
         text: new ol.style.Text({
             font: '16px Calibri,sans-serif',
             overflow: true,
@@ -208,192 +131,105 @@
         })
     });
 
-    let style = [iconStyleDefault, labelStyle];
-    let styleBlack = [iconStyleBlack, labelStyle];
-    let styleBlue = [iconStyleBlue, labelStyle];
-    let styleCyan = [iconStyleCyan, labelStyle];
-    let stylePink = [iconStylePink, labelStyle];
-    let styleOrange = [iconStyleOrange, labelStyle];
-    let styleGreen = [iconStyleGreen, labelStyle];
-    let styleRed = [iconStyleRed, labelStyle];
-    let styleWhite = [iconStyleWhite, labelStyle];
-    let styleYellow = [iconStyleYellow, labelStyle];
-    let stylePurple = [iconStylePurple, labelStyle];
-    let styleGray = [iconStyleGray, labelStyle];
+    const styles = {
+        default: [iconStyles.default, labelStyle],
+        black: [iconStyles.black, labelStyle],
+        blue: [iconStyles.blue, labelStyle],
+        cyan: [iconStyles.cyan, labelStyle],
+        pink: [iconStyles.pink, labelStyle],
+        orange: [iconStyles.orange, labelStyle],
+        green: [iconStyles.green, labelStyle],
+        red: [iconStyles.red, labelStyle],
+        white: [iconStyles.white, labelStyle],
+        yellow: [iconStyles.yellow, labelStyle],
+        purple: [iconStyles.purple, labelStyle],
+        gray: [iconStyles.gray, labelStyle]
+    };
 
-    let layer = new ol.layer.Vector({
-        source: new ol.source.Vector({
-            features: [
-
-            ]
-        }),
-        style: function(feature) {
-            labelStyle.getText().setText(feature.get('name'));
-            if (feature.get('category') === 10) {
-                return styleBlack;
-            } else if (feature.get('category') === 11) {
-                return styleBlue;
-            } else if (feature.get('category') === 12) {
-                return styleCyan;
-            } else if (feature.get('category') === 13) {
-                return stylePink;
-            } else if (feature.get('category') === 14) {
-                return styleOrange;
-            } else if (feature.get('category') === 15) {
-                return styleGreen;
-            } else if (feature.get('category') === 16) {
-                return styleRed;
-            } else if (feature.get('category') === 17) {
-                return styleWhite;
-            } else if (feature.get('category') === 18) {
-                return styleYellow;
-            } else if (feature.get('category') === 19) {
-                return stylePurple;
-            } else if (feature.get('category') === 20) {
-                return styleGray;
-            } else {
-                return style;
-            }
-        }
-    });
-    map.addLayer(layer);
-
-    async function httpFetchData(method = 'POST', url = '') {
-        const response = await fetch(url, {
-            method: method,
-            mode: 'no-cors',
-            cache: 'no-cache'
-        });
-        return response.text();
-    }
+    let layer;
 
     async function refreshAll() {
-        await fetch(apiUrl, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin'
-        }).then((response) => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                throw `error with status ${response.status}`;
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin'
+            });
+
+            if (response.status !== 200) {
+                throw new Error(`Error with status ${response.status}`);
             }
-        }).then(data => {
-            layer.getSource().refresh();
+
+            const data = await response.json();
+            layer.getSource().clear();
+
             let tableData = "";
-            const currentTime = new Date(Date.now()+(-new Date().getTimezoneOffset()*60000)).getTime()/1000|0;
-            for (feature in data) {
-                let elapsed = currentTime - parseInt(data[feature].timestamp);
-                let elapsedStr = elapsed.toFixed(0) + "s";
+            const currentTime = Math.floor(Date.now() / 1000);
+            for (const feature of data) {
+                let elapsed = currentTime - parseInt(feature.timestamp);
+                let elapsedStr = `${elapsed}s`;
 
                 if (elapsed > 120) {
                     elapsed = elapsed / 60;
-                    elapsedStr = elapsed.toFixed(0) + "m";
+                    elapsedStr = `${elapsed.toFixed(0)}m`;
                 }
-                if (currentTime - parseInt(data[feature].timestamp) <= 600) {
-                    let name = data[feature].alias !== "" ? data[feature].alias : data[feature].groupName;
-                    if (data[feature].groupName === blackGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 10
-                        }));
-                        tableData += `<tr><td><div class="cat cat-10"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === blueGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 11
-                        }));
-                        tableData += `<tr><td><div class="cat cat-11"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === cyanGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 12
-                        }));
-                        tableData += `<tr><td><div class="cat cat-12"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === pinkGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 13
-                        }));
-                        tableData += `<tr><td><div class="cat cat-13"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === orangeGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 14
-                        }));
-                        tableData += `<tr><td><div class="cat cat-14"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === greenGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 15
-                        }));
-                        tableData += `<tr><td><div class="cat cat-15"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === redGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 16
-                        }));
-                        tableData += `<tr><td><div class="cat cat-16"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === whiteGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 17
-                        }));
-                        tableData += `<tr><td><div class="cat cat-17"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === yellowGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 18
-                        }));
-                        tableData += `<tr><td><div class="cat cat-18"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === purpleGroupName) {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 19
-                        }));
-                        tableData += `<tr><td><div class="cat cat-19"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else if (data[feature].groupName === grayGroupName) {
-                        let name = data[feature].alias !== "" ? data[feature].alias : data[feature].groupName;
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: name,
-                            category: 20
-                        }));
-                        tableData += `<tr><td><div class="cat cat-20"></td><td>${name}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    } else {
-                        layer.getSource().addFeature(new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.fromLonLat([data[feature].longitude, data[feature].latitude])),
-                            name: data[feature].groupName,
-                            category: 1
-                        }));
-                        tableData += `<tr><td><div class="cat cat-1"></td><td>${data[feature].groupName}</td><td>${elapsedStr}</td><td>${data[feature].accuracy.toFixed(1)}</td><td>${data[feature].altitude.toFixed(0)}</td></tr>`;
-                    }
+
+                if (currentTime - parseInt(feature.timestamp) <= 600) {
+                    const name = feature.alias || feature.groupName;
+                    const groupName = feature.groupName;
+
+                    let category = Object.keys(groupNames).find(key => groupNames[key] === groupName);
+                    if (!category) category = 'default';
+                    category = category === 'default' ? 1 : 10 + Object.keys(iconStyles).indexOf(category);
+
+                    const olFeature = new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([feature.longitude, feature.latitude])),
+                        name: name,
+                        category: category
+                    });
+                    layer.getSource().addFeature(olFeature);
+
+                    tableData += `<tr><td><div class="cat cat-${category}"></td><td>${name}</td><td>${elapsedStr}</td><td>${feature.accuracy.toFixed(1)}</td><td>${feature.altitude.toFixed(0)}</td></tr>`;
                 }
             }
             document.getElementById('data').innerHTML = tableData;
-        }).catch((error) => {
-            console.log(error);
-        });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function onInit() {
-        setTimeout(async () => refreshAll(), 0);
-        setInterval(async () => {
-            await refreshAll();
-        }, 5000);
+        layer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: []
+            }),
+            style: function (feature) {
+                labelStyle.getText().setText(feature.get('name'));
+                const category = feature.get('category');
+                switch (category) {
+                    case 10: return styles.black;
+                    case 11: return styles.blue;
+                    case 12: return styles.cyan;
+                    case 13: return styles.pink;
+                    case 14: return styles.orange;
+                    case 15: return styles.green;
+                    case 16: return styles.red;
+                    case 17: return styles.white;
+                    case 18: return styles.yellow;
+                    case 19: return styles.purple;
+                    case 20: return styles.gray;
+                    default: return styles.default;
+                }
+            }
+        });
+        map.addLayer(layer);
+
+        setTimeout(() => refreshAll(), 0);
+        setInterval(() => refreshAll(), 5000);
     }
 
+    onInit();
 </script>
 
 </body>

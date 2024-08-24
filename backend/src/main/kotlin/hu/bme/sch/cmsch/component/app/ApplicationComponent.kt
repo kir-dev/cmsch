@@ -141,7 +141,7 @@ class ApplicationComponent(
 
     val documentsForOrganizers = SettingProxy(componentSettingService, component,
         "documentsForOrganizers", "[]", type = SettingType.LONG_TEXT, serverSideOnly = true,
-        fieldName = "Linkelt doksik", description = "Linkelt doksik az admin oldal kezdőlapján", minRoleToEdit = RoleType.SUPERUSER
+        fieldName = "Linkelt doksik", description = "Linkelt doksik az admin oldal kezdőlapján. Ikonok: sheets, docs, drive, calendar, forms, youtube, slides. Formátum: [{\"type\":\"sheets\",\"url\":\"https://xy\",\"title\":\"Title\",\"visible\":true}]"
     )
 
     override fun onPersist() {

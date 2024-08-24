@@ -25,7 +25,7 @@ function init() {
 
         // Double shift
         if (event.keyCode === 16) {
-            if (currentTime - lastShiftPress < 300) {
+            if (currentTime - lastShiftPress < 500 && currentTime - lastShiftPress > 120) {
                 openSearch();
             }
             lastShiftPress = currentTime;
@@ -89,10 +89,14 @@ function searchListener() {
             openAllMenuGroups();
 
         menuItems.forEach(function (menuItem) {
-            let menuItemText = menuItem.getAttribute('data-search').toLowerCase();
+            if (menuItem.getAttribute('data-search')) {
+                let menuItemText = menuItem.getAttribute('data-search').toLowerCase();
 
-            if (menuItemText.includes(searchString)) {
-                menuItem.style.display = 'block';
+                if (menuItemText.includes(searchString)) {
+                    menuItem.style.display = 'block';
+                } else {
+                    menuItem.style.display = 'none';
+                }
             } else {
                 menuItem.style.display = 'none';
             }

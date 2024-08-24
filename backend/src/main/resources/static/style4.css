@@ -425,6 +425,15 @@ table span.favorite {
     font-weight: normal;
 }
 
+.card.md-card p {
+    color: var(--text-color);
+    font-weight: 400;
+}
+
+.card.md-card p a {
+    color: var(--primary-lighter-color);
+}
+
 .card > h4 {
     font-weight: 500;
     color: #d6dddd;
@@ -442,23 +451,32 @@ table span.favorite {
     margin-top: 20px;
 }
 
+.card > .options a {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.card > .options a:last-of-type {
+    margin-bottom: 0;
+}
+
 .card > .options > .option {
     display: table-row;
 }
 
-.card > .options > .option div {
+.card > .options .option div {
     padding-bottom: 20px;
 }
 
-.card > .options > .option.small-icon div {
+.card > .options .option.small-icon div {
     padding-bottom: 0;
 }
 
-.card > .options > .option:last-of-type div {
+.card > .options .option:last-of-type div {
     padding-bottom: 0;
 }
 
-.card > .options > .option > div:first-of-type {
+.card > .options .option > div:first-of-type {
     display: table-cell;
     height: 100px;
     width: 100px;
@@ -466,12 +484,12 @@ table span.favorite {
     vertical-align: center;
 }
 
-.card > .options > .option.small-icon > div:first-of-type {
+.card > .options .option.small-icon > div:first-of-type {
     height: 50px;
     width: 50px;
 }
 
-.card > .options > .option > div:first-of-type > span {
+.card > .options .option > div:first-of-type > span {
     font-size: 5.5em;
     font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 0, 'opsz' 48;
     background-color: #181b1d;
@@ -482,30 +500,30 @@ table span.favorite {
     padding: 6px;
 }
 
-.card > .options > .option.small-icon > div:first-of-type > span {
+.card > .options .option.small-icon > div:first-of-type > span {
     font-size: 2em;
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }
 
-.card > .options > .option > div:last-of-type {
+.card > .options .option > div:last-of-type {
     display: table-cell;
     padding-left: 20px;
     padding-right: 20px;
     vertical-align: top;
 }
 
-.card > .options > .option > div:last-of-type > h5 {
+.card > .options .option > div:last-of-type > h5 {
     font-size: 1em;
     text-transform: uppercase;
     margin: 14px 0 10px 0;
     font-weight: 500;
 }
 
-.card > .options > .option.small-icon > div:last-of-type > h5 {
+.card > .options .option.small-icon > div:last-of-type > h5 {
     font-weight: 300;
 }
 
-.card > .options > .option > div:last-of-type > span {
+.card > .options .option > div:last-of-type > span {
     color: #585c5f;
     font-size: 1em;
     font-weight: 300;
@@ -519,6 +537,25 @@ table span.favorite {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.card > .options .docs-icon {
+    display: block;
+    min-width: 50px;
+    min-height: 50px;
+    background-size: contain;
+}
+
+.card > .options a:hover h5 {
+    color: var(--primary-lighter-color);
+}
+
+.card > .options a:hover span {
+    background-color: var(--dark-5) !important;
+}
+
+.card > .options a h5 {
+    margin-top: 20px !important;
 }
 
 .card.selected {
