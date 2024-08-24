@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.task
 import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.TaskSubmissionListener
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -194,6 +195,10 @@ open class TasksService(
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
+        if (user.role.value < task.minRole.value || user.role.value > task.maxRole.value) {
+            log.warn("User ${user.userName} wants to access protected task '${task.title}'")
+            return TaskSubmissionStatus.NO_PERMISSION
+        }
 
         val previous = submitted.findByTask_IdAndGroupId(answer.taskId, groupId)
         if (previous.isPresent) {
@@ -217,6 +222,10 @@ open class TasksService(
         val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
+        }
+        if (user.role.value < task.minRole.value || user.role.value > task.maxRole.value) {
+            log.warn("User ${user.userName} wants to access protected task '${task.title}'")
+            return TaskSubmissionStatus.NO_PERMISSION
         }
 
         val previous = submitted.findByTask_IdAndUserId(answer.taskId, user.id)
@@ -301,6 +310,9 @@ open class TasksService(
 
             }
             TaskType.BOTH -> {
+                if (file != null && imageFileNameInvalid(file))
+                    return TaskSubmissionStatus.INVALID_IMAGE
+
                 val fileName = file?.uploadFile(target) ?: ""
 
                 val submission = SubmittedTaskEntity(
@@ -474,7 +486,7 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoriesForGroupInRange(groupId: Int, now: Long, advertisedOnly: Boolean = false): List<TaskCategoryDto> {
+    open fun getCategoriesForGroupInRange(groupId: Int, now: Long, advertisedOnly: Boolean = false, userRole: RoleType): List<TaskCategoryDto> {
 
         val submissionSummaries = submitted.findSubmissionSummaryByGroupId(groupId)
         val submissionByCategory = submissionSummaries.associateBy({ it.categoryId }, { it })
@@ -488,27 +500,30 @@ open class TasksService(
             categories.findAllByAvailableFromLessThanAndAvailableToGreaterThan(now, now)
         }
 
-        return allCategories.map { category ->
-            val submissionSummary = submissionByCategory[category.categoryId]
-            val taskCount = taskCountByCategory[category.categoryId] ?: 0
+        return allCategories
+            .filter { userRole.value >= it.minRole.value && userRole.value <= it.maxRole.value }
+            .map { category ->
+                val submissionSummary = submissionByCategory[category.categoryId]
+                val taskCount = taskCountByCategory[category.categoryId] ?: 0
 
-            TaskCategoryDto(
-                name = category.name,
-                categoryId = category.categoryId,
-                availableFrom = category.availableFrom,
-                availableTo = category.availableTo,
-                type = category.type,
+                TaskCategoryDto(
+                    name = category.name,
+                    categoryId = category.categoryId,
+                    availableFrom = category.availableFrom,
+                    availableTo = category.availableTo,
+                    type = category.type,
 
-                sum = taskCount,
-                approved = submissionSummary?.approved?.toInt() ?: 0,
-                rejected = submissionSummary?.rejected?.toInt() ?: 0,
-                notGraded = submissionSummary?.notGraded?.toInt() ?: 0
-            )
-        }.sortedBy { it.categoryId }
+                    sum = taskCount,
+                    approved = submissionSummary?.approved?.toInt() ?: 0,
+                    rejected = submissionSummary?.rejected?.toInt() ?: 0,
+                    notGraded = submissionSummary?.notGraded?.toInt() ?: 0
+                )
+            }
+            .sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoriesForUserInTimeRange(userId: Int, now: Long): List<TaskCategoryDto> {
+    open fun getCategoriesForUserInTimeRange(userId: Int, now: Long, userRole: RoleType): List<TaskCategoryDto> {
         val submissionSummaries = submitted.findSubmissionSummaryByUserId(userId)
         val submissionByCategory = submissionSummaries.associateBy({ it.categoryId }, { it })
 
@@ -517,23 +532,26 @@ open class TasksService(
 
         val allCategories = categories.findAllByAvailableFromLessThanAndAvailableToGreaterThan(now, now)
 
-        return allCategories.map { category ->
-            val submissionSummary = submissionByCategory[category.categoryId]
-            val taskCount = taskCountByCategory[category.categoryId] ?: 0
+        return allCategories
+            .filter { userRole.value >= it.minRole.value && userRole.value <= it.maxRole.value }
+            .map { category ->
+                val submissionSummary = submissionByCategory[category.categoryId]
+                val taskCount = taskCountByCategory[category.categoryId] ?: 0
 
-            TaskCategoryDto(
-                name = category.name,
-                categoryId = category.categoryId,
-                availableFrom = category.availableFrom,
-                availableTo = category.availableTo,
-                type = category.type,
+                TaskCategoryDto(
+                    name = category.name,
+                    categoryId = category.categoryId,
+                    availableFrom = category.availableFrom,
+                    availableTo = category.availableTo,
+                    type = category.type,
 
-                sum = taskCount,
-                approved = submissionSummary?.approved?.toInt() ?: 0,
-                rejected = submissionSummary?.rejected?.toInt() ?: 0,
-                notGraded = submissionSummary?.notGraded?.toInt() ?: 0
-            )
-        }.sortedBy { it.categoryId }
+                    sum = taskCount,
+                    approved = submissionSummary?.approved?.toInt() ?: 0,
+                    rejected = submissionSummary?.rejected?.toInt() ?: 0,
+                    notGraded = submissionSummary?.notGraded?.toInt() ?: 0
+                )
+            }
+            .sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)

@@ -236,7 +236,7 @@ open class TeamService(
             joinCancellable = joinCancellable,
             ownTeam = ownTeam,
             stats = mapStats(team),
-            taskCategories = if (ownTeam && teamComponent.showTasks.isValueTrue()) mapTasks(team) else listOf(),
+            taskCategories = if (ownTeam && teamComponent.showTasks.isValueTrue() && user != null) mapTasks(team, user) else listOf(),
             forms = if (user != null && ownTeam && teamComponent.showAdvertisedForms.isValueTrue()) mapForms(user) else listOf(),
             leaderNotes = if (ownTeam && ((user?.role?.value ?: RoleType.GUEST.value) >= RoleType.PRIVILEGED.value)) teamComponent.leaderNotes.getValue() else ""
         )
@@ -248,9 +248,9 @@ open class TeamService(
         return groupRepository.findById(groupId).getOrNull()
     }
 
-    private fun mapTasks(team: GroupEntity): List<TaskCategoryPreview> {
+    private fun mapTasks(team: GroupEntity, user: CmschUser): List<TaskCategoryPreview> {
         return tasksService.map { tasks ->
-            tasks.getCategoriesForGroupInRange(team.id, clock.getNowInSeconds(), advertisedOnly = true)
+            tasks.getCategoriesForGroupInRange(team.id, clock.getNowInSeconds(), advertisedOnly = true, user.role)
                 .map { TaskCategoryPreview(
                     name = it.name,
                     completed = it.approved,

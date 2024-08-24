@@ -48,7 +48,9 @@ interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
         t.visible, 
         t.highlighted, 
         t.order, 
-        t.tag) 
+        t.tag,
+        t.minRole,
+        t.maxRole) 
         FROM TaskEntity t
     """)
     fun findAllWithoutLobs(): List<TaskEntity>
