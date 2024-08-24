@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
+import { Fragment } from 'react'
 
 type CollapsableTableRowProps = {
   collapsable: boolean
@@ -86,11 +87,11 @@ export const CollapsableTableRow = ({
           {data.items
             ?.sort((a, b) => b.value - a.value)
             .map((item, itemIndex) => (
-              <>
+              <Fragment key={item.name}>
                 {categorized && <GridItem gridColumn="place">{itemIndex + 1}.</GridItem>}
                 <GridItem gridColumn="name">{item.name}</GridItem>
                 <GridItem justifySelf="end">{`${new Intl.NumberFormat('hu-HU').format(item.value)} ${suffix || ''}`}</GridItem>
-              </>
+              </Fragment>
             ))}
         </Grid>
       )}
