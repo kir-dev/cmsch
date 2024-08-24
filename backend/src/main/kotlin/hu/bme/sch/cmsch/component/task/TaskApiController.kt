@@ -81,7 +81,7 @@ class TaskApiController(
                 tasks.getAllTasksForGroup(groupId, categoryId)
             }
         }
-        if (user.role.value < category.minRole.value || user.role.value > category.maxRole.value) {
+        if ((user.role.value < category.minRole.value || user.role.value > category.maxRole.value) && !user.isAdmin()) {
             log.warn("User ${user.userName} wants to access protected category '${category.name}'")
             return TaskCategoryView(
                 categoryName = "Nem található",
@@ -108,7 +108,7 @@ class TaskApiController(
         val now = clock.getTimeInSeconds()
         if (task.orElse(null)?.visible?.not() == true)
             return SingleTaskView(task = null, submission = null)
-        if (user.role.value < task.orElseThrow().minRole.value || user.role.value > task.orElseThrow().maxRole.value) {
+        if ((user.role.value < task.orElseThrow().minRole.value || user.role.value > task.orElseThrow().maxRole.value) && !user.isAdmin()) {
             log.warn("User ${user.userName} wants to access protected task '${task.orElseThrow().title}'")
             return SingleTaskView(task = null, submission = null)
         }
