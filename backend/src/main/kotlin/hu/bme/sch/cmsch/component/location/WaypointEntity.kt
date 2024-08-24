@@ -78,7 +78,7 @@ data class WaypointEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Helyzet frissült ekkor")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Helyzet frissült ekkor", defaultValue = "0")
     @property:GenerateOverview(columnName = "Frissült", order = 6, renderer = OVERVIEW_TYPE_DATE, centered = true)
     var timestamp: Long = 0,
 

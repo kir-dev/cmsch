@@ -26,7 +26,7 @@
         }
     </style>
 </head>
-<body onload="onInit();">
+<body>
 
 <div class="buttons">
     <button onclick="document.getElementById('table').style.display = 'block'">&forall;</button>
@@ -81,7 +81,7 @@
     const map = new ol.Map({
         layers: [
             new ol.layer.Tile({
-                source: new ol.source.StadiaMaps({ layer: 'stamen_terrain' })
+                source: new ol.source.OSM()
             })
         ],
         target: 'map',
