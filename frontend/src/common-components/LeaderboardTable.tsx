@@ -1,4 +1,4 @@
-import { Table, TableContainer, Tbody, Text } from '@chakra-ui/react'
+import { Box, Table, TableContainer, Tbody, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { useSearch } from '../util/useSearch'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
@@ -29,14 +29,19 @@ export const LeaderBoardTable = ({
   const searchArgs = useSearch(
     dataWithPosition,
     (item, searchWord) =>
-      item.name.toLowerCase().includes(searchWord) ||
-      (item.groupName.toLowerCase() ?? '').includes(searchWord) ||
-      (item.description?.toLowerCase().includes(searchWord) ?? false)
+      (item.name.toLowerCase().includes(searchWord) ||
+        item.groupName?.toLowerCase().includes(searchWord) ||
+        item.description?.toLowerCase().includes(searchWord)) ??
+      false
   )
 
   return (
     <>
-      {searchEnabled && <SearchBar mb={5} {...searchArgs} />}
+      {searchEnabled && (
+        <Box mx={5}>
+          <SearchBar mb={5} {...searchArgs} />
+        </Box>
+      )}
       <TableContainer>
         <Table variant="unstyled">
           <Tbody>

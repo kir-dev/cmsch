@@ -187,7 +187,8 @@ open class TestConfig(
                     "A5BCD8242".sha256(),
                     true,
                     "default",
-                    rarity = "EPIC"
+                    rarity = "EPIC",
+                    score = 10
                 )
             ),
             tokenRepository.save(
@@ -206,7 +207,8 @@ open class TestConfig(
                     "NFT".sha256(),
                     true,
                     "default",
-                    rarity = "COMMON"
+                    rarity = "COMMON",
+                    score = 1
                 )
             ),
             tokenRepository.save(
@@ -225,7 +227,8 @@ open class TestConfig(
                     "kszk".sha256(),
                     true,
                     "default",
-                    rarity = "RAINBOW"
+                    rarity = "RAINBOW",
+                    score = 100
                 )
             ),
             tokenRepository.save(
@@ -246,12 +249,18 @@ open class TestConfig(
                         true,
                         "default",
                         rarity = when {
-                            i % 2 == 0 -> "COMMON"
-                            i % 3 == 0 -> "UNCOMMON"
-                            i % 5 == 0 -> "RARE"
-                            i % 7 == 0 -> "EPIC"
-                            i % 11 == 0 -> "LEGENDARY"
+                            i % 2 == 0 -> "UNCOMMON"
+                            i % 3 == 0 -> "RARE"
+                            i % 5 == 0 -> "EPIC"
+                            i % 7 == 0 -> "LEGENDARY"
                             else -> "COMMON"
+                        },
+                        score = when {
+                            i % 2 == 0 -> 2
+                            i % 3 == 0 -> 3
+                            i % 5 == 0 -> 5
+                            i % 7 == 0 -> 7
+                            else -> 1
                         }
                     )
                 )
