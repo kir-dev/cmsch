@@ -27,7 +27,7 @@ interface EventBoxProps {
 
 export function EventBox({ event, boxRef }: EventBoxProps) {
   const component = useConfigContext().components.event
-  const eventBg = useColorModeValue('brand.5000', 'brand.300')
+  const eventBg = useColorModeValue('brand.500', 'brand.300')
   const eventTextColor = useColorModeValue('white', 'black')
   return (
     <Popover>
