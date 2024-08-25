@@ -101,4 +101,27 @@
 
 <object th:fragment="detailsSegmentScript (ext)" th:remove="tag">
 
+    <script th:inline="javascript" th:if="${staffPermissionList != null && customPermissionList != null && adminPermissionList != null}">
+        function changePermissionText(inputId) {
+            const permissions = document.getElementById(`input${inputId}`).value.split(',');
+            /*<![CDATA[*/
+            const staffPermissionList = [[${staffPermissionList}]];
+            const customPermissionList = [[${customPermissionList}]];
+            const adminPermissionList = [[${adminPermissionList}]];
+            /*]]>*/
+            staffPermissionList.forEach(perm => document.getElementById(`input${inputId}_${perm}`).checked = permissions.includes(perm));
+            customPermissionList.forEach(perm => document.getElementById(`input${inputId}_${perm}`).checked = permissions.includes(perm));
+            adminPermissionList.forEach(perm => document.getElementById(`input${inputId}_${perm}`).checked = permissions.includes(perm));
+        }
+    </script>
+    <script>
+        function changePermissionField(inputId, permission) {
+            let permissions = document.getElementById(`input${inputId}`).value.split(',');
+            permissions = permissions.filter(item => item !== permission && item !== '')
+            if (document.getElementById(`input${inputId}_${permission}`).checked)
+                permissions.push(permission)
+            document.getElementById(`input${inputId}`).value = permissions.join(",")
+        }
+    </script>
+
 </object>

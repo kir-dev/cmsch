@@ -33,6 +33,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     adminMenuCategory: String? = null,
     adminMenuIcon: String = "check_box_outline_blank",
     adminMenuPriority: Int = 1,
+    ignoreFromMenu: Boolean = false,
 
     controlActions: MutableList<ControlAction> = mutableListOf(),
     buttonActions: MutableList<ButtonAction> = mutableListOf(),
@@ -70,6 +71,7 @@ abstract class SimpleEntityPage<T : IdentifiableEntity>(
     adminMenuCategory = adminMenuCategory,
     adminMenuIcon = adminMenuIcon,
     adminMenuPriority = adminMenuPriority,
+    ignoreFromMenu = ignoreFromMenu,
 
     controlActions = controlActions,
     buttonActions = buttonActions,

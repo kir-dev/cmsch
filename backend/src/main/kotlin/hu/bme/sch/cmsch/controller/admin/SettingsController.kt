@@ -21,18 +21,20 @@ import java.util.*
 class SettingsController(
     private val adminMenuService: AdminMenuService,
     private val staticPageService: Optional<StaticPageService>,
-    private val permissionsService: PermissionsService
+    private val permissionsService: PermissionsService,
+    private val permissionGroupService: PermissionGroupService,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/settings")
     fun setting(model: Model, auth: Authentication): String {
-        val user = auth.getUser()
+        val user = auth.getUserEntityFromDatabase()
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("user", user)
 
         val userPermissions = user.permissionsAsList
+        val userPermissionGroups = user.permissionGroupsAsList
 
         model.addAttribute("customPermissions", staticPageService.map { service ->
             service.getAll().groupBy { it.permissionToEdit }.map { group ->
@@ -52,6 +54,9 @@ class SettingsController(
         model.addAttribute("adminPermissions", permissionsService.allControlPermissions
             .filter { it.permissionString.isNotEmpty() }
             .filter { userPermissions.contains(it.permissionString) })
+
+        model.addAttribute("permissionGroups", permissionGroupService.allPermissionGroups
+            .filter { userPermissionGroups.contains(it.key) })
 
         return "settings"
     }

@@ -905,7 +905,7 @@ object StaffPermissions : PermissionGroup {
 
     val PERMISSION_DELETE_GROUPS = PermissionValidator(
         "GROUP_DELETE",
-        "Csoportok törlése",
+        "Csoportok törlése", // NOTE: Ezt a jogot most csak a SUPERUSER birtokolja
         readOnly = false,
         component = UserHandlingComponent::class
     )
@@ -983,6 +983,34 @@ object StaffPermissions : PermissionGroup {
     val PERMISSION_DELETE_GROUP_MAPPINGS = PermissionValidator(
         "GROUP_MAPPING_DELETE",
         "Csoport hozzárendelések törlése",
+        readOnly = false,
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_SHOW_PERMISSION_GROUPS = PermissionValidator(
+        "PERMISSION_GROUP_SHOW",
+        "Jogkörök megtekintése",
+        readOnly = true,
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_EDIT_PERMISSION_GROUPS = PermissionValidator(
+        "PERMISSION_GROUP_EDIT",
+        "Jogkörök szerkesztése",
+        readOnly = false,
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_CREATE_PERMISSION_GROUPS = PermissionValidator(
+        "PERMISSION_GROUP_CREATE",
+        "Jogkörök létrehozása",
+        readOnly = false,
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_DELETE_PERMISSION_GROUPS = PermissionValidator(
+        "PERMISSION_GROUP_DELETE",
+        "Jogkörök törlése",
         readOnly = false,
         component = UserHandlingComponent::class
     )
@@ -1593,6 +1621,10 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_GROUP_MAPPINGS,
         PERMISSION_CREATE_GROUP_MAPPINGS,
         PERMISSION_DELETE_GROUP_MAPPINGS,
+        PERMISSION_SHOW_PERMISSION_GROUPS,
+        PERMISSION_EDIT_PERMISSION_GROUPS,
+        PERMISSION_CREATE_PERMISSION_GROUPS,
+        PERMISSION_DELETE_PERMISSION_GROUPS,
 
         PERMISSION_SHOW_STATIC_PAGES,
         PERMISSION_EDIT_STATIC_PAGES,

@@ -50,5 +50,6 @@ interface UserRepository : CrudRepository<UserEntity, Int>,
     @Query("SELECT NEW hu.bme.sch.cmsch.repository.UserHandlerView(e.id, e.fullName, e.alias, e.neptun, e.guild, e.groupName, e.email) FROM UserEntity e")
     fun findAllUserHandlerView(): List<UserHandlerView>
 
+    fun findAllByPermissionGroupsNot(emptyString: String): List<UserEntity>
 
 }

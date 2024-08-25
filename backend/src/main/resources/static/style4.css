@@ -40,6 +40,7 @@
     --menu-color: #0ba6c1;
     --entity-color: #eaa12f;
     --anchor-color: #d1d1d1;
+    --alt-color: #b649e1;
 }
 
 object {
@@ -1210,6 +1211,10 @@ h4.permission-header:hover {
 
 .admin-permissions {
     color: var(--info-color);
+}
+
+.permission-groups {
+    color: var(--alt-color);
 }
 
 .field-group .hidden {

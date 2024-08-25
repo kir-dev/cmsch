@@ -55,7 +55,7 @@
 
             <div class="card wide-false">
                 <h4>Jogosultságok</h4>
-                <div class="desc">A little description fits there. Lorem ipsum dolor sit amet.</div>
+                <div class="desc">Az egyes jogosultságok egy vagy több menü vagy funkció használatára jogosít fel. Adminoknak majdnem minden menüben ki van írva, hogy ahhoz a menühöz milyen jogosultságra van szükség. Ezáltal könnyedén tudnak jogokat adni 1-1 funkcióhoz.</div>
 
                 <p th:if="${user.role.isAdmin()}" class="light-color">Mivel admin vagy, mindenhez van jogosultságod, nem csak az itt felsoroltakhoz!</p>
 
@@ -64,6 +64,13 @@
                         <div class="permission-part">
                             <span class="material-symbols-outlined fix-icons">person</span>&nbsp;<b th:text="${user.role.displayName}">ROLE_NAME</b><br>
                             <span class="note" th:text="${user.role.description}">description</span>
+                        </div>
+                        <div class="permission-part"></div>
+                    </div>
+                    <div class="permission-box" th:each="permission : ${permissionGroups}">
+                        <div class="permission-part">
+                            <span class="material-symbols-outlined fix-icons permission-groups">shield_person</span>&nbsp;<b th:text="${permission.displayName}">PERMISSION GROUP</b><br>
+                            <span class="note" th:text="${permission.key}">KEY</span>
                         </div>
                         <div class="permission-part"></div>
                     </div>
