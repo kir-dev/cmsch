@@ -206,7 +206,7 @@ data class UserEntity(
     var config: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT default ''")
     @property:GenerateInput(order = 18, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSION_GROUPS, maxLength = 20000)
     @property:ImportFormat(ignore = false, columnId = 9)
     var permissionGroups: String = "",
