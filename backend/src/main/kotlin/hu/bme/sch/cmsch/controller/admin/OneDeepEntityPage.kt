@@ -126,6 +126,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     private val adminMenuCategory: String? = null,
     private val adminMenuIcon: String = "check_box_outline_blank",
     private val adminMenuPriority: Int = 1,
+    private var ignoreFromMenu: Boolean = false,
 
     internal val controlActions: MutableList<ControlAction> = mutableListOf(),
     internal val buttonActions: MutableList<ButtonAction> = mutableListOf(),
@@ -137,14 +138,18 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
     @PostConstruct
     fun init() {
-        val category = adminMenuCategory ?: component.javaClass.simpleName
-        adminMenuService.registerEntry(category, AdminMenuEntry(
-            titlePlural,
-            adminMenuIcon,
-            "/admin/control/${view}",
-            adminMenuPriority,
-            showPermission
-        ))
+        if (!ignoreFromMenu) {
+            val category = adminMenuCategory ?: component.javaClass.simpleName
+            adminMenuService.registerEntry(
+                category, AdminMenuEntry(
+                    titlePlural,
+                    adminMenuIcon,
+                    "/admin/control/${view}",
+                    adminMenuPriority,
+                    showPermission
+                )
+            )
+        }
 
         when {
             importEnabled && !exportEnabled -> {

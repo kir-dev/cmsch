@@ -57,6 +57,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     adminMenuCategory: String? = null,
     adminMenuIcon: String = "check_box_outline_blank",
     adminMenuPriority: Int = 1,
+    ignoreFromMenu: Boolean = false,
 
     private val outerControlActions: MutableList<ControlAction> = mutableListOf(),
     innerControlActions: MutableList<ControlAction> = mutableListOf(),
@@ -95,6 +96,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     adminMenuCategory,
     adminMenuIcon,
     adminMenuPriority,
+    ignoreFromMenu,
 
     innerControlActions,
     buttonActions

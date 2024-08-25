@@ -6,45 +6,46 @@ import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.controller.admin.ButtonAction
+import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
-import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.model.PermissionGroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.repository.PermissionGroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
-import hu.bme.sch.cmsch.util.transaction
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SELL_ANY_PRODUCT
 import org.springframework.core.env.Environment
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.*
 
 @Controller
-@RequestMapping("/admin/control/users")
-class UserController(
-    repo: UserRepository,
+@RequestMapping("/admin/control/permission-groups")
+class PermissionGroupController(
+    repo: PermissionGroupRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: UserHandlingComponent,
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
-    private val profileService: UserProfileGeneratorService,
-    private val groups: GroupRepository,
-    private val users: UserRepository,
     private val staticPageService: Optional<StaticPageService>,
-    private val startupPropertyConfig: StartupPropertyConfig,
     components: MutableList<out ComponentBase>,
     env: Environment,
     transactionManager: PlatformTransactionManager,
     private val permissionsService: PermissionsService,
-    private val permissionGroupService: PermissionGroupService
-) : OneDeepEntityPage<UserEntity>(
-    "users",
-    UserEntity::class, ::UserEntity,
-    "Felhasználó", "Felhasználók",
-    "Az összes felhasználó (résztvevők és rendezők egyaránt) kezelése.",
+    private val permissionGroupService: PermissionGroupService,
+) : OneDeepEntityPage<PermissionGroupEntity>(
+    "permission-groups",
+    PermissionGroupEntity::class, ::PermissionGroupEntity,
+    "Jogkör", "Jogkörök",
+    "Jogosultságok csoportosítva, hogy könnyedén felhasználókhoz rendelhető legyen. " +
+            "A felhasználó által használható jogosultságok listája az összes egyéni jogosultságainak és a jögköreiban szereplők halmaza.",
 
     transactionManager,
     repo,
@@ -55,23 +56,33 @@ class UserController(
     objectMapper,
     env,
 
-    entitySourceMapping = mapOf("GroupEntity" to { listOf("") + groups.findAll().map { it.name }.toList() }),
+    showPermission = StaffPermissions.PERMISSION_SHOW_PERMISSION_GROUPS,
+    createPermission = StaffPermissions.PERMISSION_CREATE_PERMISSION_GROUPS,
+    editPermission = StaffPermissions.PERMISSION_EDIT_PERMISSION_GROUPS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_PERMISSION_GROUPS,
 
-    showPermission = StaffPermissions.PERMISSION_SHOW_USERS,
-    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    editPermission = StaffPermissions.PERMISSION_EDIT_USERS,
-    deletePermission = ImplicitPermissions.PERMISSION_SUPERUSER_ONLY,
-
-    createEnabled = false,
+    createEnabled = true,
     editEnabled = true,
     deleteEnabled = true,
-    importEnabled = false,
+    importEnabled = true,
     exportEnabled = true,
 
-    adminMenuIcon = "person",
-    adminMenuPriority = 1,
+    adminMenuIcon = "shield_person",
+    adminMenuPriority = 4,
 
-    searchSettings = calculateSearchSettings<UserEntity>(fuzzy = false)
+    searchSettings = calculateSearchSettings<PermissionGroupEntity>(fuzzy = false),
+
+    controlActions = mutableListOf(
+        ControlAction(
+            "Felhasználók",
+            "users/{id}",
+            "rule",
+            StaffPermissions.PERMISSION_SHOW_USERS,
+            160,
+            false,
+            "Jogkörbe tartozó felhasználók"
+        )
+    )
 ) {
 
     private val componentClasses = components.map { it::class }.toSet()
@@ -95,52 +106,19 @@ class UserController(
             .filter { it.component != null }
             .filter { it.component in componentClasses }
             .filter { it.permissionString.isNotEmpty() }
-        val permissionGroups = permissionGroupService.allPermissionGroups
         model.addAttribute("customPermissions", customPermissions)
         model.addAttribute("staffPermissions", staffPermissions)
         model.addAttribute("adminPermissions", adminPermissions)
-        model.addAttribute("permissionGroups", permissionGroups)
         model.addAttribute("customPermissionList", customPermissions.map { it.permissionString })
         model.addAttribute("staffPermissionList", staffPermissions.map { it.permissionString })
         model.addAttribute("adminPermissionList", adminPermissions.map { it.permissionString })
-        model.addAttribute("permissionGroupList", permissionGroups.map { it.key })
     }
 
-    override fun onEntityPreSave(entity: UserEntity, auth: Authentication): Boolean {
-        if (startupPropertyConfig.profileQrEnabled) {
-            profileService.generateFullProfileForUser(entity)
-        } else {
-            profileService.generateProfileIdForUser(entity)
-        }
-
-        if (entity.groupName.isNotBlank()) {
-            transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({
-                entity.group = it
-            }, {
-                entity.fullName = ""
-                entity.group = null
-            })
-        } else {
-            entity.group = null
-        }
-
-        adminMenuService.invalidateUser(entity.internalId)
-        return true
+    override fun onEntityChanged(entity: PermissionGroupEntity) {
+        permissionGroupService.invalidatePermissionCaches()
     }
 
-    override fun fetchOverview(user: CmschUser): Iterable<UserEntity> {
-        return users.findAllUserHandlerView()
-            .map {
-                UserEntity(
-                    id = it.id,
-                    fullName = it.name,
-                    alias = it.alias,
-                    neptun = it.neptun,
-                    groupName = it.groupName,
-                    email = it.email,
-                    guild = it.guild
-                )
-            }
-    }
+    @GetMapping("/users/{id}")
+    fun redirectToUsersView(@PathVariable id: Int) = "redirect:/admin/control/permission-groups-for-users/${id}"
 
 }

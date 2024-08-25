@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.service.PermissionGroupService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
@@ -164,12 +165,6 @@ data class UserEntity(
     var major: MajorType = MajorType.UNKNOWN,
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(order = 16, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS, maxLength = 20000)
-    @property:ImportFormat(ignore = false, columnId = 9)
-    var permissions: String = "",
-
-    @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 11, label = "Forrás", note = "Honnan jön az adat (authsch, google, keycloak)")
     @property:GenerateOverview(visible = false)
@@ -205,10 +200,22 @@ data class UserEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 16, label = "Konfigurációs beállítások", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateInput(order = 17, label = "Konfigurációs beállítások", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_LOB)
     var config: String = "",
+
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @property:GenerateInput(order = 18, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSION_GROUPS, maxLength = 20000)
+    @property:ImportFormat(ignore = false, columnId = 9)
+    var permissionGroups: String = "",
+
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @property:GenerateInput(order = 19, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS, maxLength = 20000)
+    @property:ImportFormat(ignore = false, columnId = 9)
+    var permissions: String = "",
 
 ): ManagedEntity, CmschUser {
 
@@ -236,17 +243,25 @@ data class UserEntity(
         return this::class.simpleName + "(id = $id )"
     }
 
+    @get:Transient
+    val permissionGroupsResolved
+        get() = PermissionGroupService.getBean().resolvePermissionGroups(permissionGroups)
+
     val fullNameWithAlias: String
-        get() = if (alias != "") "${fullName} ($alias)" else fullName
+        get() = if (alias != "") "$fullName ($alias)" else fullName
 
     override var permissionsAsList
-        get() = permissions.split(",")
+        get() = permissions.split(",") + permissionGroupsResolved.split(",")
+        set(value) = throw RuntimeException("Value cannot be changed")
+
+    var permissionGroupsAsList
+        get() = permissionGroups.split(",")
         set(value) = throw RuntimeException("Value cannot be changed")
 
     override val userName
         get() = fullName
 
     override fun hasPermission(permission: String): Boolean {
-        return permissionsAsList.contains(permission)
+        return permission.isNotEmpty() && permissionsAsList.contains(permission)
     }
 }
