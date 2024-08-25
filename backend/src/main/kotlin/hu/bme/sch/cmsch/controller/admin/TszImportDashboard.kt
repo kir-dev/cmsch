@@ -108,7 +108,7 @@ class TszImportDashboard(
             id = 3,
             wide = false,
             title = "TSZ-ek importálása",
-            description = "",
+            description = "Csak azokat a tanköröket írja felül, akik melítve vannak. Érdemes a teljes táblázatot importálni vagy tankörönként csoportosítva.",
             content = listOf(
                 FormElement(
                     fieldName = "csvFile", label = "CSV fájl", type = FormElementType.FILE,
@@ -123,25 +123,25 @@ class TszImportDashboard(
                     required = true, permanent = false, defaultValue = lastValues?.selectorColumn ?: "group"
                 ),
                 FormElement(
-                    fieldName = NAME_COLUMN, label = "Csoport név oszlop", type = FormElementType.TEXT,
+                    fieldName = NAME_COLUMN, label = "Név oszlop", type = FormElementType.TEXT,
                     formatRegex = ".*", invalidFormatMessage = "", values = "",
                     note = "A CSV-ben ezzel a névvel szerepel a TSZ neve oszlop",
                     required = true, permanent = false, defaultValue = lastValues?.nameColumn ?: "name"
                 ),
                 FormElement(
-                    fieldName = NICKNAME_COLUMN, label = "Csoport név oszlop", type = FormElementType.TEXT,
+                    fieldName = NICKNAME_COLUMN, label = "Becenév oszlop", type = FormElementType.TEXT,
                     formatRegex = ".*", invalidFormatMessage = "", values = "",
                     note = "A CSV-ben ezzel a névvel szerepel a TSZ beceneve oszlop",
                     required = true, permanent = false, defaultValue = lastValues?.nicknameColumn ?: "nickname"
                 ),
                 FormElement(
-                    fieldName = PHONE_COLUMN, label = "Csoport név oszlop", type = FormElementType.TEXT,
+                    fieldName = PHONE_COLUMN, label = "Telefonszám oszlop", type = FormElementType.TEXT,
                     formatRegex = ".*", invalidFormatMessage = "", values = "",
                     note = "A CSV-ben ezzel a névvel szerepel a TSZ telefonszáma oszlop",
                     required = true, permanent = false, defaultValue = lastValues?.phoneColumn ?: "phone"
                 ),
                 FormElement(
-                    fieldName = FACEBOOK_COLUMN, label = "Csoport név oszlop", type = FormElementType.TEXT,
+                    fieldName = FACEBOOK_COLUMN, label = "Facebook oszlop", type = FormElementType.TEXT,
                     formatRegex = ".*", invalidFormatMessage = "", values = "",
                     note = "A CSV-ben ezzel a névvel szerepel a TSZ facebookja oszlop",
                     required = true, permanent = false, defaultValue = lastValues?.facebookColumn ?: "facebook"
