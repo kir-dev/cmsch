@@ -14,6 +14,7 @@ import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
 import java.lang.RuntimeException
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
@@ -206,7 +207,8 @@ data class UserEntity(
     var config: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "TEXT default ''")
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @ColumnDefault("''")
     @property:GenerateInput(order = 18, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSION_GROUPS, maxLength = 20000)
     @property:ImportFormat(ignore = false, columnId = 9)
     var permissionGroups: String = "",
