@@ -5,6 +5,7 @@ import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 import { Fragment } from 'react'
+import { TokenRarityDisplay } from './TokenRarityDisplay.tsx'
 
 type CollapsableTableRowProps = {
   collapsable: boolean
@@ -41,6 +42,7 @@ export const CollapsableTableRow = ({
   if (categorized) innerColTemplate.push('[place] auto')
   innerColTemplate.push('[name] 1fr [score] auto')
   if (!categorized) innerColTemplate.push('[chevron] 20px')
+  innerColTemplate.push('[end]')
 
   return (
     <>
@@ -83,7 +85,7 @@ export const CollapsableTableRow = ({
       )}
 
       {isOpen && (
-        <Grid gap={3} gridTemplateColumns={innerColTemplate.join(' ')} bg={bg} p={3} pt={0}>
+        <Grid gap="var(--chakra-space-1) var(--chakra-space-3)" gridTemplateColumns={innerColTemplate.join(' ')} bg={bg} p={3} pt={0}>
           {data.items
             ?.sort((a, b) => b.value - a.value)
             .map((item, itemIndex) => (
@@ -91,6 +93,12 @@ export const CollapsableTableRow = ({
                 {categorized && <GridItem gridColumn="place">{itemIndex + 1}.</GridItem>}
                 <GridItem gridColumn="name">{item.name}</GridItem>
                 <GridItem justifySelf="end">{`${new Intl.NumberFormat('hu-HU').format(item.value)} ${suffix || ''}`}</GridItem>
+
+                {item.name === 'QR kódok' && data.tokenRarities && (
+                  <GridItem gridColumn="1 / end">
+                    <TokenRarityDisplay collected={data.tokenRarities} />
+                  </GridItem>
+                )}
               </Fragment>
             ))}
         </Grid>
