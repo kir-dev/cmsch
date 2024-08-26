@@ -29,24 +29,31 @@ data class GalleryEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1, useForSearch = true)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var title: String = "",
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 2, label = "Kiemelt")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 2, label = "Ezek a képek szerepelnek először")
     @property:GenerateOverview(columnName = "Kiemelt", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var highlighted: Boolean = false,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Megjelenhet a kezdőlapon")
+    @property:GenerateOverview(columnName = "Kezdőlapra", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:ImportFormat
+    var showOnHomePage: Boolean = false,
+
+    @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
+    @Column(nullable = false)
     @property:GenerateInput(
-        maxLength = 64, order = 3, label = "Url",
+        maxLength = 64, order = 4, label = "Url",
         note = "A galériában tárolt kép linkje"
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat
     var url: String = "",
 ) : ManagedEntity {
 

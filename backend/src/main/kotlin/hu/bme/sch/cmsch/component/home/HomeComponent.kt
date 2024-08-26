@@ -40,6 +40,7 @@ class HomeComponent(
             newsEmbeddedComponentGroup,
             maxVisibleCount,
             showNews,
+            showGalleryImages,
         )
     }
 
@@ -93,6 +94,12 @@ class HomeComponent(
         "showEvents", "false", type = SettingType.BOOLEAN,
         fieldName = "Események láthatóak",
         description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon"
+    )
+
+    val showGalleryImages = SettingProxy(componentSettingService, component,
+        "showGalleryImages", "false", type = SettingType.BOOLEAN,
+        fieldName = "Galéria képek láthatóak",
+        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------

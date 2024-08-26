@@ -14,4 +14,7 @@ class GalleryService(
 
     @Transactional(readOnly = true)
     fun fetchAllPhotos(): List<GalleryEntity> = galleryRepository.findAll()
+
+    @Transactional(readOnly = true)
+    fun fetchHomePagePhotos(): List<GalleryEntity> = galleryRepository.findByShowOnHomePage(true)
 }
