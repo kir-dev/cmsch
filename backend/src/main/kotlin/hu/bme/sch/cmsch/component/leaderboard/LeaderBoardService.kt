@@ -48,7 +48,8 @@ open class LeaderBoardService(
     class TopListDetails(
         var id: Int,
         var name: String,
-        var items: MutableMap<String, Int> = mutableMapOf()
+        var items: MutableMap<String, Int> = mutableMapOf(),
+        var tokenRarities: Map<String, Int> = mapOf()
     ) {
         val total: Int
             get() = items.values.sumOf { it }
@@ -224,28 +225,39 @@ open class LeaderBoardService(
         }
 
         val tokenPercent = leaderBoardComponent.tokenPercent.getIntValue(100) / 100.0f
-        val tokens = when (startupPropertyConfig.tokenOwnershipMode) {
-            OwnershipType.GROUP -> {
-                tokenSubmissions.map { it.findAll() }.orElse(listOf())
-                    .groupBy { it.ownerGroup }
-                    .map { entity ->
-                        LeaderBoardAsGroupEntryDto(
-                            entity.key?.id ?: 0,
-                            entity.key?.name ?: "n/a",
-                            tokenScore = (entity.value.sumOf { s -> s.token?.score ?: 0 } * tokenPercent).toInt()
-                        )
-                    }
-            }
-            OwnershipType.USER -> listOf()
-        }
-
         val tokenTitle = tokenComponent.map { it.menuDisplayName.getValue() }.orElse("")
-        tokens.forEach { token ->
-            details.computeIfAbsent(token.id) { key -> TopListDetails(key, token.name) }
-                .items.compute(tokenTitle) { _, value -> (value ?: 0) + token.tokenScore }
+        val pointsFromTokens = when (startupPropertyConfig.tokenOwnershipMode) {
+            OwnershipType.USER -> listOf()
+            OwnershipType.GROUP -> {
+                tokenSubmissions.map { submissions ->
+                    submissions
+                        .findAll()
+                        .groupBy { it.ownerGroup }
+                        .map { (group, tokens) ->
+                            val groupId = group?.id ?: 0
+                            val groupName = group?.name ?: "n/a"
+                            val tokenScore = (tokens.sumOf { s -> s.token?.score ?: 0 } * tokenPercent).toInt()
+
+                            val groupDetails = details.computeIfAbsent(groupId) { TopListDetails(groupId, groupName) }
+                            groupDetails.items.compute(tokenTitle) { _, value -> (value ?: 0) + tokenScore }
+                            groupDetails.tokenRarities = tokens
+                                .groupBy { it.token?.rarity }
+                                .mapNotNull { (rarity, tokens) ->
+                                    if (rarity.isNullOrBlank()) null
+                                    else (rarity to tokens.size)
+                                }.toMap()
+
+                            LeaderBoardAsGroupEntryDto(
+                                groupId,
+                                groupName,
+                                tokenScore = tokenScore
+                            )
+                        }
+                }.orElse(listOf())
+            }
         }
 
-        cachedTopListForGroups = sequenceOf(tasks, riddles, challenges, tokens)
+        cachedTopListForGroups = sequenceOf(tasks, riddles, challenges, pointsFromTokens)
             .flatMap { it }
             .groupBy { CombinedKey(it.id, it.name) }
             .map { entries ->
