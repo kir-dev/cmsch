@@ -19,6 +19,7 @@ export const ThemeConfig = ({ children }: PropsWithChildren) => {
       customTheme.fonts = {
         heading: config.components.style.mainFontName,
         body: config.components.style.mainFontName,
+        display: config.components.style.displayFontName,
         mono: 'monospace'
       }
       customTheme.components.Heading = {
