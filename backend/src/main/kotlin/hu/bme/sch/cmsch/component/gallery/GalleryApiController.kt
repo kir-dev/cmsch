@@ -40,4 +40,23 @@ class GalleryApiController(
 
         return ResponseEntity.ok(GalleryView(photos = photos))
     }
+
+    @JsonView(Preview::class)
+    @GetMapping("/gallery/home")
+    @Operation(
+        summary = "List all photos home page photos for the authenticated user.",
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "List of photos in the gallery for the home page"),
+        ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header")
+    ])
+    fun homePageGallery(auth: Authentication?): ResponseEntity<GalleryView> {
+        val user = auth?.getUserOrNull()
+        if (!galleryComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        val photos = galleryService.fetchHomePagePhotos()
+
+        return ResponseEntity.ok(GalleryView(photos = photos))
+    }
 }
