@@ -36,12 +36,14 @@ class ApplicationApiController(
         if (countdownComponent.isPresent) {
             val countdown = countdownComponent.orElseThrow()
             if (countdown.isBlockedAt(clock.getTimeInSeconds(), role)) {
+                val countdownSettings = countdown.attachConstants().toMutableMap().also { it["showOnly"] = true }
+
+                // Remove any image urls from the styles, because it might be a spoiler
+                val styleSettings = stylingComponent.attachConstants().filter { !it.key.lowercase().contains("url") }
                 val components = mapOf(
                     applicationComponent.component to appComponentFields(),
-                    countdown.component to countdown.attachConstants().toMutableMap().also {
-                        it["showOnly"] = true
-                    },
-                    stylingComponent.component to stylingComponent.attachConstants()
+                    countdown.component to countdownSettings,
+                    stylingComponent.component to styleSettings
                 )
                 return ApplicationConfigDto(
                     role = role,
