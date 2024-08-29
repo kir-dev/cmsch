@@ -35,10 +35,12 @@ class ApplicationApiController(
         val role = auth?.getUserOrNull()?.role ?: RoleType.GUEST
         if (countdownComponent.isPresent) {
             val countdown = countdownComponent.orElseThrow()
-            if (countdown.isBlockedAt(clock.getTimeInSeconds())) {
+            if (countdown.isBlockedAt(clock.getTimeInSeconds(), role)) {
                 val components = mapOf(
                     applicationComponent.component to appComponentFields(),
-                    countdown.component to countdown.attachConstants(),
+                    countdown.component to countdown.attachConstants().toMutableMap().also {
+                        it["showOnly"] = true
+                    },
                     stylingComponent.component to stylingComponent.attachConstants()
                 )
                 return ApplicationConfigDto(

@@ -16,7 +16,7 @@ const CountdownPage = ({ children }: PropsWithChildren) => {
       return new Date()
     }
   }, [component])
-  if (component?.enabled && component?.showOnly && (component?.informativeOnly || countTo.getTime() > Date.now())) {
+  if (component?.enabled && component?.showOnly && (component?.keepOnAfterCountdownOver || countTo.getTime() > Date.now())) {
     return (
       <Flex h="100%" w="100%">
         <Helmet title={component?.title} />

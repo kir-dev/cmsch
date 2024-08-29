@@ -455,36 +455,19 @@
                                 <span class="note" th:text="${input.description}" style="margin-bottom: 20px;"></span>
 
                                 <table>
-                                    <tr th:each="role : ${T(hu.bme.sch.cmsch.model.RoleType).values()}"
-                                        th:if="${role.value < T(hu.bme.sch.cmsch.model.RoleType).ADMIN.value}">
+                                    <tr th:each="role : ${T(hu.bme.sch.cmsch.component.MinRoleSettingProxy).Companion.ALL_POSSIBLE_ROLES}">
 
-                                        <td th:text="${role.name()}">BASIC</td>
+                                        <td th:text="${role.name()}" th:class="${input.grantedForRoles.contains(role.name()) ? 'disabled' : ''}">BASIC</td>
                                         <td>
-                                            <label class="switch"
+                                            <label th:class="|switch ${input.grantedForRoles.contains(role.name()) ? 'disabled' : ''}|"
                                                    th:data-param1="${input.property}" th:data-param2="${role.name()}"
                                                    th:onclick="|changeRoleField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
                                                 <input type="checkbox"
+                                                       th:disabled="${input.grantedForRoles.contains(role.name())}"
+                                                       th:checked="${input.grantedForRoles.contains(role.name())}"
                                                        th:name="|${input.property}_${role.name()}|"
-                                                       th:id="|${input.property}_${role.name()}|"/>
-                                                <span class="slider"></span>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td th:text="${T(hu.bme.sch.cmsch.model.RoleType).ADMIN.name()}" class="disabled">ADMIN</td>
-                                        <td>
-                                            <label class="switch disabled">
-                                                <input type="checkbox" th:name="|${input.property}_ADMIN|" checked disabled />
-                                                <span class="slider disabled"></span>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td th:text="${T(hu.bme.sch.cmsch.model.RoleType).SUPERUSER.name()}" class="disabled">SUPERUSER</td>
-                                        <td>
-                                            <label class="switch disabled">
-                                                <input type="checkbox" th:name="|${input.property}_SUPERUSER|" checked disabled />
-                                                <span class="slider disabled"></span>
+                                                       th:id="|${input.property}_${role.name()}${input.grantedForRoles.contains(role.name()) ? '_' : ''}|"/>
+                                                <span th:class="|slider ${input.grantedForRoles.contains(role.name()) ? 'disabled' : ''}|"></span>
                                             </label>
                                         </td>
                                     </tr>

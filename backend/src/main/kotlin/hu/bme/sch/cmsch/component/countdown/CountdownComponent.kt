@@ -33,17 +33,20 @@ class CountdownComponent(
             title, minRole,
 
             enabled,
-            showOnly,
+            showOnlyCountdownForRoles,
+            keepOnAfterCountdownOver,
             topMessage,
             timeToCountTo,
-            informativeOnly,
             imageUrl,
             blurredImage,
         )
     }
 
-    fun isBlockedAt(timeInSec: Long): Boolean {
-        return enabled.isValueTrue() && showOnly.isValueTrue() && (informativeOnly.isValueTrue() || ((timeToCountTo.getValue().toLongOrNull() ?: 0) > timeInSec))
+    fun isBlockedAt(timeInSec: Long, role: RoleType): Boolean {
+        if (!enabled.isValueTrue()) return false
+        if (!showOnlyCountdownForRoles.isAvailableForRole(role)) return false
+        val isCountdownOver = (timeToCountTo.getValue().toLongOrNull() ?: 0) < timeInSec
+        return (keepOnAfterCountdownOver.isValueTrue() || !isCountdownOver)
     }
 
     val countdownGroup = SettingProxy(componentSettingService, component,
@@ -70,10 +73,17 @@ class CountdownComponent(
         fieldName = "Bekapcsolva", description = "Legyen aktív a visszaszámlálás komponens"
     )
 
-    val showOnly = SettingProxy(componentSettingService, component,
-        "showOnly", "true", type = SettingType.BOOLEAN,
-        fieldName = "Erőltetett", description = "Más komponensek ne legyenek elérhetőek. " +
-                "Csak akkor működik, ha be van kapcsolva  a komponens."
+    val showOnlyCountdownForRoles = MinRoleSettingProxy(componentSettingService, component,
+        "showOnlyCountdownForRoles", MinRoleSettingProxy.ALL_ROLES,
+        fieldName = "Kinek legyen erőltetett", description = "Ezek a roleok számára más komponensek ne legyenek elérhetőek. " +
+                "Csak akkor működik, ha be van kapcsolva a komponens.",
+        minRoleToEdit = RoleType.SUPERUSER, grantedForRoles = ArrayList() // Thymeleaf doesn't like emptyList() (EmptyList)
+    )
+
+    val keepOnAfterCountdownOver = SettingProxy(componentSettingService, component,
+        "keepOnAfterCountdownOver", "false", type = SettingType.BOOLEAN,
+        fieldName = "Ne engedjen be az oldalra lejárat után",
+        description = "Ha be van kapcsolva és erőltetett a visszaszámláló a felhasználó, akkor a lejárta után sem enged az oldalhoz hozzáférni"
     )
 
     val topMessage = SettingProxy(componentSettingService, component,
@@ -85,12 +95,6 @@ class CountdownComponent(
     val timeToCountTo = SettingProxy(componentSettingService, component,
         "timeToCountTo", "0", type = SettingType.DATE_TIME,
         fieldName = "Visszaszámlálás eddig"
-    )
-
-    val informativeOnly = SettingProxy(componentSettingService, component,
-        "informativeOnly", "false", type = SettingType.BOOLEAN,
-        fieldName = "Tájékoztató jellegű",
-        description = "Ha be van kapcsolva akkor a lejárta után sem enged az oldalhoz hozzáférni"
     )
 
     val imageUrl = SettingProxy(componentSettingService, component,

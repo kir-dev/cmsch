@@ -108,7 +108,8 @@ class MinRoleSettingProxy(
     defaultValue: String,
     fieldName: String = "",
     description: String = "",
-    minRoleToEdit: RoleType = RoleType.STAFF
+    minRoleToEdit: RoleType = RoleType.STAFF,
+    val grantedForRoles: List<String> = listOf(RoleType.ADMIN.name, RoleType.SUPERUSER.name)
 ) : SettingProxy(
     componentPropertyService, component, property,
     defaultValue = defaultValue, type = SettingType.MIN_ROLE,
@@ -120,11 +121,11 @@ class MinRoleSettingProxy(
         val ALL_ROLES by lazy { RoleType.entries.joinToString(",") { it.name } }
         val ALL_ROLES_FROM_ATTENDEE by lazy { RoleType.entries.filter { it.value >= RoleType.ATTENDEE.value }.joinToString(",") { it.name } }
         val ALL_ROLES_FROM_PRIVILEGED by lazy { RoleType.entries.filter { it.value >= RoleType.PRIVILEGED.value }.joinToString(",") { it.name } }
+        val ALL_POSSIBLE_ROLES by lazy { RoleType.entries.filter { it.value != RoleType.NOBODY.value } }
     }
 
     fun isAvailableForRole(role: RoleType): Boolean {
-        return rawValue.split(",").contains(role.name) || role == RoleType.ADMIN || role == RoleType.SUPERUSER
+        return rawValue.split(",").contains(role.name) || grantedForRoles.contains(role.name)
     }
 
 }
-
