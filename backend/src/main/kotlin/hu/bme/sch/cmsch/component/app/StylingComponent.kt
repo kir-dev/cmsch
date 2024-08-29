@@ -196,7 +196,7 @@ class StylingComponent(
 
     val mainFontCdn = SettingProxy(componentSettingService, component,
         "mainFontCdn", "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap", type = SettingType.TEXT,
-        fieldName = "Általános betűtípus CDN", description = "Az általános betűtípus CDN URL-je"
+        fieldName = "Általános betűtípus CDN", description = "Az általános betűtípus CDN URL-je", serverSideOnly = true
     )
 
     val mainFontWeight = SettingProxy(componentSettingService, component,
@@ -211,7 +211,7 @@ class StylingComponent(
 
     val displayFontCdn = SettingProxy(componentSettingService, component,
         "displayFontCdn", "https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap", type = SettingType.TEXT,
-        fieldName = "Kiemelt betűtípus CDN", description = "A kiemelt betűtípus CDN URL-je"
+        fieldName = "Kiemelt betűtípus CDN", description = "A kiemelt betűtípus CDN URL-je", serverSideOnly = true
     )
 
     val displayFontWeight = SettingProxy(componentSettingService, component,
