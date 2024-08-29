@@ -77,10 +77,10 @@ export interface Footer {
 export interface Countdown {
   title: string
   enabled: boolean
-  showOnly: boolean
+  showOnly?: boolean
   topMessage: string
   timeToCountTo: number
-  informativeOnly: boolean
+  keepOnAfterCountdownOver: boolean
   imageUrl: string
   blurredImage: boolean
 }
