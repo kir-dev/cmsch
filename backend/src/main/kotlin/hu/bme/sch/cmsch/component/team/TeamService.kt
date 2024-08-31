@@ -39,6 +39,7 @@ open class TeamService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val teamJoinRequestRepository: TeamJoinRequestRepository,
+    private val teamIntroductionRepository: TeamIntroductionRepository,
     private val leaderBoardService: Optional<LeaderBoardService>,
     private val raceService: Optional<RaceService>,
     private val startupPropertyConfig: StartupPropertyConfig,
@@ -85,11 +86,18 @@ open class TeamService(
             teamComponent.selectableByDefault.isValueTrue(),
             leaveable = false,
             manuallyCreated = true,
-            description = "$TEAM_LEADER: ${user.fullNameWithAlias}",
             profileTopMessage = ""
         )
-
         groupRepository.save(groupEntity)
+
+        val introduction = TeamIntroductionEntity(
+            creationDate = clock.getNowInSeconds(),
+            group = groupEntity,
+            introduction = "$TEAM_LEADER: ${user.fullNameWithAlias}",
+            approved = true,
+        )
+        teamIntroductionRepository.save(introduction)
+
         return userRepository.findByInternalId(user.internalId).map {
             it.groupName = groupEntity.name
             it.group = groupEntity
@@ -222,12 +230,15 @@ open class TeamService(
         val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || ownTeam) mapMembers(team, user?.id) else null
         val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value && ownTeam) mapRequests(team) else null
 
+        val introduction = teamIntroductionRepository.findIntroductionsForGroup(team.id)
+            .firstOrNull { it.approved }
+
         return TeamView(
             id = team.id,
             name = team.name,
             coverUrl = team.coverImageUrl,
-            description = team.description,
-            logo = team.logo,
+            description = introduction?.introduction ?: "",
+            logo = introduction?.logo ?: "",
             points = score,
             members = members,
             applicants = requests,
@@ -495,7 +506,6 @@ open class TeamService(
         userRepository.save(adminUserEntity)
 
         val group = groupRepository.findById(groupId).orElseThrow()
-        group.description = "$TEAM_LEADER: ${user.fullNameWithAlias}"
         groupRepository.save(group)
         log.info("User '{}' is now group leader at '{}' switched with '{}'", user.fullName, groupName, adminUser.userName)
         return true
@@ -552,12 +562,18 @@ open class TeamService(
         if (logo != null && !isImageNameValid(logo)) {
             throw IllegalStateException("Invalid image format")
         }
-        val group = groupRepository.findById(groupId).getOrNull() ?: return TeamEditStatus.ERROR
-        group.description = description
-        if (logo != null)
-            group.logo = logo.uploadFile(target) ?: throw IllegalStateException("Failed to save the image")
 
-        groupRepository.save(group)
+        val group = groupRepository.findById(groupId).getOrNull() ?: return TeamEditStatus.ERROR
+
+        val introduction = TeamIntroductionEntity(
+            creationDate = clock.getTimeInSeconds(),
+            group = group,
+            introduction = description,
+        )
+        if (logo != null)
+            introduction.logo = logo.uploadFile(target) ?: throw IllegalStateException("Failed to save the image")
+
+        teamIntroductionRepository.save(introduction)
         log.info(
             "Description and icon (optionally) updated for group {}, with values: {}, {}",
             group.name,

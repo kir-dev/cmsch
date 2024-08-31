@@ -1392,6 +1392,20 @@ object StaffPermissions : PermissionGroup {
         component = TeamComponent::class
     )
 
+    val PERMISSION_SHOW_TEAM_INTRODUCTIONS = PermissionValidator(
+        "TEAM_INTRODUCTION_SHOW",
+        "Csapat bemutatkozások megtekintése",
+        readOnly = true,
+        component = TeamComponent::class
+    )
+
+    val PERMISSION_EDIT_TEAM_INTRODUCTIONS = PermissionValidator(
+        "TEAM_INTRODUCTION_EDIT",
+        "Csapat bemutatkozások elfogadása vagy elutasítása",
+        readOnly = false,
+        component = TeamComponent::class
+    )
+
     /// AccessKeyComponent
 
     val PERMISSION_SHOW_ACCESS_KEYS = PermissionValidator(
@@ -1685,6 +1699,9 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_TEAM_JOINS,
         PERMISSION_CREATE_TEAM_JOINS,
         PERMISSION_DELETE_TEAM_JOINS,
+
+        PERMISSION_SHOW_TEAM_INTRODUCTIONS,
+        PERMISSION_EDIT_TEAM_INTRODUCTIONS,
 
         PERMISSION_SHOW_ACCESS_KEYS,
         PERMISSION_EDIT_ACCESS_KEYS,

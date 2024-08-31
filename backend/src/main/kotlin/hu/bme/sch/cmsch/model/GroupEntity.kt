@@ -8,11 +8,11 @@ import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.StaffPermissions
-import org.hibernate.Hibernate
-import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.Hibernate
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
+import org.springframework.core.env.Environment
 
 @Entity
 @Table(
@@ -149,24 +149,10 @@ data class GroupEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(order = 17, label = "Leírás", type = INPUT_TYPE_BLOCK_TEXT)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat
-    var description: String = "",
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    @field:JsonView(value = [Edit::class])
     @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var profileTopMessage: String = "",
-
-    @Column(nullable = true)
-    @field:JsonView(value = [Edit::class, FullDetails::class, Preview::class])
-    @property:GenerateInput(order = 19, label = "Logó url", enabled = true)
-    @property:GenerateOverview(visible = false)
-    @property:ImportFormat
-    var logo: String? = null,
 
     @Column(nullable = true)
     @field:JsonView(value = [Edit::class])
@@ -180,7 +166,6 @@ data class GroupEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var memberCount: Int? = null,
-
 
     ) : ManagedEntity {
 
