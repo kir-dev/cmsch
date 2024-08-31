@@ -88,7 +88,7 @@ open class RaceService(
         val place = board.indexOfFirst { it.id == teamId }
         return RaceView(
             team.name,
-            team.description,
+            "", // TODO: set raceByTeam team description
             if (place < 0) null else (place + 1),
             board.find { it.id == userId }?.time,
             board
