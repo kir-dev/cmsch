@@ -77,7 +77,7 @@ class CountdownComponent(
         "showOnlyCountdownForRoles", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Kinek legyen erőltetett", description = "Ezek a roleok számára más komponensek ne legyenek elérhetőek. " +
                 "Csak akkor működik, ha be van kapcsolva a komponens.",
-        minRoleToEdit = RoleType.SUPERUSER, grantedForRoles = ArrayList() // Thymeleaf doesn't like emptyList() (EmptyList)
+        minRoleToEdit = RoleType.STAFF, grantedForRoles = ArrayList() // Thymeleaf doesn't like emptyList() (EmptyList)
     )
 
     val keepOnAfterCountdownOver = SettingProxy(componentSettingService, component,
