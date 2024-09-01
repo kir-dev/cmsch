@@ -17,7 +17,7 @@ import { CmschPage } from '../../../common-components/layout/CmschPage'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
-import { joinPath } from '../../../util/core-functions.util'
+import { getCdnUrl, joinPath } from '../../../util/core-functions.util'
 import { AbsolutePaths, Paths } from '../../../util/paths'
 import { RoleType } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
@@ -25,7 +25,6 @@ import { MemberRow } from './MemberRow'
 import { TeamFormItem } from './TeamFormItem'
 import { TeamStat } from './TeamStat'
 import { TeamTaskCategoryListItem } from './TeamTaskCategoryListItem'
-import { API_BASE_URL } from '../../../util/configs/environment.config'
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -96,16 +95,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Text>{team.description}</Text>
           </Box>
           <Box>
-            {team.logo && (
-              <Image
-                maxW={'md'}
-                maxH={'md'}
-                maxWidth="100%"
-                src={`${API_BASE_URL}/cdn/team/${team.logo}`}
-                alt="Csapat logó"
-                borderRadius="md"
-              />
-            )}
+            {team.logo && <Image maxW="128px" maxH="128px" src={getCdnUrl(`team/${team.logo}`)} alt="Csapat logó" borderRadius="md" />}
           </Box>
         </Box>
       </Box>

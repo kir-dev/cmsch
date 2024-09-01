@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Heading, HStack, Spacer, VStack } from '@chakra-ui/react'
+import { Box, Heading, HStack, Image, Spacer, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { useOpaqueBackground } from '../../../util/core-functions.util'
+import { getCdnUrl, useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 
 import { TeamListItemView } from '../../../util/views/team.view'
@@ -28,8 +28,21 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
             <Heading as="h3" size="md" marginY={0} maxWidth="100%">
               {team.name}
             </Heading>
+            {team.introduction && <Box>{team.introduction}</Box>}
           </VStack>
           <Spacer />
+          {team.logo && (
+            <Image
+              display="block"
+              src={getCdnUrl('team/' + team.logo)}
+              alt={team.name}
+              w="64px"
+              h="64px"
+              objectFit="contain"
+              alignSelf="center"
+              borderRadius="md"
+            />
+          )}
           {detailEnabled && <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />}
         </HStack>
       </Box>
