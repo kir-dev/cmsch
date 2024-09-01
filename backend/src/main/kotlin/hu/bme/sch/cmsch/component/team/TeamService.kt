@@ -189,6 +189,19 @@ open class TeamService(
         if (teamComponent.sortByName.isValueTrue())
             teams = teams.sortedBy { it.name }
 
+        val introductions = teamIntroductionRepository.findAll()
+            .filter { it.approved }
+            .groupBy { it.group?.id ?: 0 }
+            .map { entries -> entries.key to entries.value.maxBy { it.creationDate } }
+            .toMap()
+        teams.forEach { team ->
+            val introduction = introductions[team.id]
+            if (introduction != null) {
+                team.introduction = introduction.introduction
+                team.logo = introduction.logo
+            }
+        }
+
         return teams
     }
 

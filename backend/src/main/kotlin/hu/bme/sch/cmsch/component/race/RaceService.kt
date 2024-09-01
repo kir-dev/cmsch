@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.race
 
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.team.TeamIntroductionRepository
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -19,7 +20,8 @@ open class RaceService(
     private val freestyleRaceRecordRepository: FreestyleRaceRecordRepository,
     private val raceComponent: RaceComponent,
     private val userRepository: UserRepository,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val teamIntroductionRepository: TeamIntroductionRepository,
 ) {
 
     @Transactional(readOnly = true)
@@ -82,13 +84,14 @@ open class RaceService(
     open fun getRaceByTeam(teamId: Int, userId: Int): RaceView {
         val team = groupRepository.findById(teamId).getOrNull()
             ?: return RaceView("Nem található", "", null, null, listOf())
+        val introduction = teamIntroductionRepository.findIntroductionsForGroup(teamId).firstOrNull { it.approved }
         val board = getBoardForUsers(DEFAULT_CATEGORY, false)
             .filter { it.groupName == team.name }
 
         val place = board.indexOfFirst { it.id == teamId }
         return RaceView(
             team.name,
-            "", // TODO: set raceByTeam team description
+            introduction?.introduction ?: "",
             if (place < 0) null else (place + 1),
             board.find { it.id == userId }?.time,
             board

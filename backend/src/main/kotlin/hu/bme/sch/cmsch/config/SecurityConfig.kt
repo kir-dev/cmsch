@@ -105,6 +105,7 @@ open class SecurityConfig(
                 antMatcher("/manifest/manifest.json"),
                 antMatcher("/cdn/public/**"),
                 antMatcher("/cdn/task/**"),
+                antMatcher("/cdn/team/**"),
                 antMatcher("/cdn/news/**"),
                 antMatcher("/cdn/event/**"),
                 antMatcher("/cdn/manifest/**"),
