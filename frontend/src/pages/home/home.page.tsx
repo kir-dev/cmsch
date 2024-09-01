@@ -65,7 +65,7 @@ const HomePage = () => {
         <>
           <Grid mt={10} templateColumns="1fr" gap={4}>
             {sortByHighlighted(homeNews.data).map((n: NewsArticleView) => (
-              <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
+              <NewsListItem news={n} fontSize="xl" useLink={config?.components?.news?.showDetails} key={n.title + n.timestamp} />
             ))}
           </Grid>
           <LinkButton colorScheme="brand" mt={5} href={AbsolutePaths.NEWS}>
