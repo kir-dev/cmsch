@@ -60,5 +60,9 @@ data class TeamMemberView(
 
 data class TeamListView(
     var id: Int = 0,
-    var name: String = ""
-)
+    var name: String = "",
+    var introduction: String? = null,
+    var logo: String? = null,
+) {
+    constructor(id: Int, name: String) : this(id, name, null, null)
+}

@@ -3,7 +3,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
-import { Box, Button, FormControl, FormLabel, Heading, Input, Text, VStack } from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Text, VStack } from '@chakra-ui/react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
 import { useState } from 'react'
@@ -43,9 +43,13 @@ export default function EditMyTeamPage() {
       <Helmet title={component.teamEditTitle} />
       <Heading>{component.teamEditTitle}</Heading>
       <Markdown text={component.teamEditTopMessage} />
+      <Alert status="info" my={5}>
+        <AlertIcon />
+        Az új bemutatkozás csak ellenőrzés után lesz látható.
+      </Alert>
       <Box as="form" onSubmit={handleSubmit((dto) => teamEdit({ ...dto, logo }))}>
         <FormControl my={10}>
-          <FormLabel>Csapat leírása</FormLabel>
+          <FormLabel>Bemutatkozás</FormLabel>
           <Input
             {...register('description', { required: true })}
             isInvalid={!!errors.description}
@@ -55,7 +59,7 @@ export default function EditMyTeamPage() {
 
           {component.teamLogoUploadEnabled && (
             <Box pt={4}>
-              <FormLabel>Csapat Logó</FormLabel>
+              <FormLabel>Csapat logó</FormLabel>
               <FilePicker
                 onFileChange={(files) => setLogo(files[0])}
                 placeholder="Csapat logó"
