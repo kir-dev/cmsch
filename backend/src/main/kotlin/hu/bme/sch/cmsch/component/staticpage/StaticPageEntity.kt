@@ -35,35 +35,35 @@ data class StaticPageEntity(
             note = "Csupa nem ékezetes kisbetű és kötőjel megengedett. " +
                     "Oldal megosztása: https://BASE_URL/share/page/{URL}", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var url: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var title: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Az oldal tartalma")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var content: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Látható", note = "Listázott az oldal")
     @property:GenerateOverview(columnName = "Látható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Elérhető", note = "Meg lehet nyitni az oldalt")
     @property:GenerateOverview(columnName = "Elérhető", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var open: Boolean = false,
 
     @Column(nullable = false)
@@ -71,7 +71,7 @@ data class StaticPageEntity(
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 6, label = "Jog a szerkesztéshez", minimumRole = RoleType.ADMIN,
         note = "pl.: `STATICPAGE_EDIT_CONTACTS` alapértelmezett: `STATICPAGE_EDIT` (ezt mindenki tudja szerkeszteni aki látja a menüt is)")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 5)
+    @property:ImportFormat
     var permissionToEdit: String = "EXTRAPAGE_EDIT",
 
     @Column(nullable = false)
@@ -79,14 +79,14 @@ data class StaticPageEntity(
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható a menüben",
         note = "Ha be van kapcsolva, akkor a menü szerkesztőben kiválasztható")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var showAsMenu: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(maxLength = 64, order = 8, label = "Menü cím")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7)
+    @property:ImportFormat
     var menuTitle: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
@@ -96,28 +96,28 @@ data class StaticPageEntity(
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ],
         note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_ENUM, enumSource = RoleType::class)
+    @property:ImportFormat
     var minRole: RoleType = RoleType.GUEST,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 10, label = "OG:Title")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 9)
+    @property:ImportFormat
     override var ogTitle: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(order = 11, label = "OG:Image")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 10)
+    @property:ImportFormat
     override var ogImage: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 12, label = "OG:Description")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 11)
+    @property:ImportFormat
     override var ogDescription: String = ""
 
 ): ManagedEntity, OpenGraphResource {

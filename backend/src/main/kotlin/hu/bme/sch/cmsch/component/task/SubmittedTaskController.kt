@@ -76,37 +76,37 @@ class SubmittedTaskController(
 ) {
 
     data class SubmittedTaskFilteredView(
-        @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
+        @property:ImportFormat
         var taskId: Int = 0,
 
-        @property:ImportFormat(ignore = false, columnId = 1)
+        @property:ImportFormat
         var taskName: String = "",
 
-        @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
+        @property:ImportFormat
         var groupId: Int = 0,
 
-        @property:ImportFormat(ignore = false, columnId = 3)
+        @property:ImportFormat
         var groupName: String = "",
 
-        @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
+        @property:ImportFormat
         var score: Int = 0,
 
-        @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
+        @property:ImportFormat
         var approved: Boolean = false,
 
-        @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_BOOLEAN)
+        @property:ImportFormat
         var rejected: Boolean = false,
 
-        @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_LOB)
+        @property:ImportFormat
         var textAnswer: String = "",
 
-        @property:ImportFormat(ignore = false, columnId = 8)
+        @property:ImportFormat
         var imageAnswer: String = "",
 
-        @property:ImportFormat(ignore = false, columnId = 9)
+        @property:ImportFormat
         var fileAnswer: String = "",
 
-        @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
+        @property:ImportFormat
         var response: String = "",
     )
 

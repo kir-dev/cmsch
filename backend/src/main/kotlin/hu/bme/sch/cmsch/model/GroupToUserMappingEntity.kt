@@ -31,28 +31,28 @@ data class GroupToUserMappingEntity(
     @Column(nullable = true, name = "neptun")
     @property:GenerateInput(maxLength = 6, order = 1, label = "Neptun kód")
     @property:GenerateOverview(columnName = "Neptun kód", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var neptun: String? = null,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = true, name = "email")
     @property:GenerateInput(order = 2, label = "E-mail cím")
     @property:GenerateOverview(columnName = "E-mail cím", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var email: String? = null,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 2, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 3)
-    @property:ImportFormat(ignore = false, columnId = 4)
+    @property:ImportFormat
     var fullName: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 3, label = "Csoport", entitySource = "GroupEntity")
     @property:GenerateOverview(columnName = "Csoport", order = 4, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var groupName: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -60,7 +60,7 @@ data class GroupToUserMappingEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(columnName = "Szak", order = 5, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
+    @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN
 
 ): ManagedEntity {

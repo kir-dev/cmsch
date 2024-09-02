@@ -96,7 +96,7 @@ data class AccessKeyEntity(
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Mikor használta fel", defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LONG)
+    @property:ImportFormat
     var usedAt: Long = 0,
 
 ) : ManagedEntity {

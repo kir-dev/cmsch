@@ -32,7 +32,7 @@ data class GroupEntity(
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Csoport neve")
     @property:GenerateOverview(columnName = "Csoport", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var name: String = "",
 
     @Enumerated(EnumType.STRING)
@@ -46,7 +46,7 @@ data class GroupEntity(
         source = ["UNKNOWN", "IT", "EE", "BPROF"]
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_ENUM, enumSource = MajorType::class)
+    @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN,
 
     @Column(nullable = false)
@@ -56,7 +56,7 @@ data class GroupEntity(
         note = "Ha üres, nem jelenik meg", placeholder = "Kiss Pista | fb.com/pista1234 | +36 30 6969 420"
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat
     var staff1: String = "",
 
     @Column(nullable = false)
@@ -66,7 +66,7 @@ data class GroupEntity(
         note = "Ha üres, nem jelenik meg", placeholder = ""
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4)
+    @property:ImportFormat
     var staff2: String = "",
 
     @Column(nullable = false)
@@ -76,7 +76,7 @@ data class GroupEntity(
         note = "Ha üres, nem jelenik meg", placeholder = ""
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 5)
+    @property:ImportFormat
     var staff3: String = "",
 
     @Column(nullable = false)
@@ -86,7 +86,7 @@ data class GroupEntity(
         note = "Ha üres, nem jelenik meg", placeholder = ""
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6)
+    @property:ImportFormat
     var staff4: String = "",
 
     @Column(nullable = false)
@@ -108,7 +108,7 @@ data class GroupEntity(
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Játszik a csoport a versenyben?")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var races: Boolean = false,
 
     @field:JsonView(value = [Edit::class])
@@ -120,7 +120,7 @@ data class GroupEntity(
         note = "Szabadon válaszható a csoport"
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var selectable: Boolean = false,
 
     @field:JsonView(value = [Edit::class])
@@ -132,7 +132,7 @@ data class GroupEntity(
         note = "A csoport tagjai megváltoztathatják a csoportjukat"
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var leaveable: Boolean = false,
 
     @field:JsonView(value = [Edit::class])
@@ -144,28 +144,28 @@ data class GroupEntity(
         note = "A csoportot egy felhasználó hozta létre és nem egy admin"
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var manuallyCreated: Boolean = false,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class])
     @property:GenerateInput(order = 17, label = "Leírás", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
+    @property:ImportFormat
     var description: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class])
     @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_LOB)
+    @property:ImportFormat
     var profileTopMessage: String = "",
 
     @Column(nullable = true)
     @field:JsonView(value = [Edit::class, FullDetails::class, Preview::class])
     @property:GenerateInput(order = 19, label = "Logó url", enabled = true)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 12)
+    @property:ImportFormat
     var logo: String? = null,
 
     @Column(nullable = true)
@@ -178,7 +178,7 @@ data class GroupEntity(
         enabled = true
     )
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 13)
+    @property:ImportFormat
     var memberCount: Int? = null,
 
 

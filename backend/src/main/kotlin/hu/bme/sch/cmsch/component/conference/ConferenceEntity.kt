@@ -25,13 +25,13 @@ data class ConferenceEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 255, order = 1, label = "Név")
     @property:GenerateOverview(visible = true, columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var title: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Prioritás", defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_INT)
+    @property:ImportFormat
     var priority: Int = 0,
 
     @field:JsonIgnore
@@ -39,7 +39,7 @@ data class ConferenceEntity(
     @property:GenerateInput(maxLength = 65535, order = 3, label = "Képek URL-jei",
         note = "A képek URL-jeit vesszővel elválasztva kell megadni.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var imageUrlsArray: String = "",
 ) : ManagedEntity {
 

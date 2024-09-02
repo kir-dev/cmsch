@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.controller.userhandling
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.admin.IMPORT_INT
 import hu.bme.sch.cmsch.admin.ImportFormat
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
@@ -88,10 +87,10 @@ class GroupController(
 ) {
 
     data class GroupFilteredExportView(
-        @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
+        @property:ImportFormat
         var groupId: Int = 0,
 
-        @property:ImportFormat(ignore = false, columnId = 1)
+        @property:ImportFormat
         var groupName: String = ""
     )
 

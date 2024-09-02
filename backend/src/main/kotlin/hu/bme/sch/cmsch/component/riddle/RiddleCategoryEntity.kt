@@ -33,21 +33,21 @@ data class RiddleCategoryEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var title: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je")
     @property:GenerateOverview(columnName = "Kategória", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+    @property:ImportFormat
     var categoryId: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Látható-e a riddle kategória")
     @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false,
 
     @Enumerated(EnumType.STRING)
@@ -58,7 +58,7 @@ data class RiddleCategoryEntity(
         note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező ",
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_ENUM, enumSource = RoleType::class)
+    @property:ImportFormat
     var minRole: RoleType = RoleType.GUEST
 
 ) : ManagedEntity {

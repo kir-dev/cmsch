@@ -15,13 +15,13 @@ enum class TestType {
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TestData(
-    @property:ImportFormat()
+    @property:ImportFormat
     val id: Int = 0,
 
-    @property:ImportFormat()
+    @property:ImportFormat
     val type: TestType = TestType.TYPE1,
 
-    @property:ImportFormat()
+    @property:ImportFormat
     val name: String = "",
 
     @JsonView(value = [ Edit::class ])

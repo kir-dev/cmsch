@@ -90,7 +90,7 @@ data class UserEntity(
     @property:GenerateInput(order = 1, label = "PéK internal id",
         note = "Ez módosítható eseti hiba kezelésre", enabled = true)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     override var internalId: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
@@ -98,7 +98,7 @@ data class UserEntity(
     @property:GenerateInput(order = 2, label = "Neptun kód", enabled = true,
         note = "Ez módosítható eseti hiba kezelésre", maxLength = 6)
     @property:GenerateOverview(columnName = "Neptun", order = 2, useForSearch = true)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var neptun: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
@@ -106,27 +106,27 @@ data class UserEntity(
     @property:GenerateInput(order = 3, label = "Cmsch id", enabled = false,
         note = "Automatikusan generálódik a PéK ID-ből")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var cmschId: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 4, label = "Teljes név", enabled = true)
     @property:GenerateOverview(columnName = "Név", order = 1, useForSearch = true)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat
     var fullName: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 5, label = "Becenév", enabled = true)
-    @property:ImportFormat(ignore = false, columnId = 4)
+    @property:ImportFormat
     var alias: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 6, label = "Email cím")
     @property:GenerateOverview(columnName = "Email", order = 4, useForSearch = true)
-    @property:ImportFormat(ignore = false, columnId = 5)
+    @property:ImportFormat
     var email: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
@@ -136,13 +136,14 @@ data class UserEntity(
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
         note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6, enumSource = RoleType::class, defaultValue = "GUEST")
+    @property:ImportFormat
     override var role: RoleType = RoleType.GUEST,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 8, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
     @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3, useForSearch = true)
+    @property:ImportFormat
     override var groupName: String = "",
 
     @field:JsonIgnore
@@ -154,7 +155,7 @@ data class UserEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW", "PURPLE" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
+    @property:ImportFormat
     var guild: GuildType = GuildType.UNKNOWN,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -162,61 +163,61 @@ data class UserEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 10, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_ENUM, enumSource = MajorType::class, defaultValue = "UNKNOWN")
+    @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 11, label = "Forrás", note = "Honnan jön az adat (authsch, google, keycloak)")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 10)
+    @property:ImportFormat
     var provider: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 12, label = "Profilkép", enabled = true)
-    @property:ImportFormat(ignore = false, columnId = 11)
+    @property:ImportFormat
     var profilePicture: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Melyik kar, milyen szak, aktív-e és gólya-e?")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 12)
+    @property:ImportFormat
     var unitScopes: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 15, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_LOB)
+    @property:ImportFormat
     var profileTopMessage: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Importált adatok", note = "Volt-e már máshonnan importálva adat")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var detailsImported: Boolean = false,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 17, label = "Konfigurációs beállítások", type = INPUT_TYPE_BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 15, type = IMPORT_LOB)
+    @property:ImportFormat
     var config: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
     @ColumnDefault("''")
     @property:GenerateInput(order = 18, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSION_GROUPS, maxLength = 20000)
-    @property:ImportFormat(ignore = false, columnId = 9)
+    @property:ImportFormat
     var permissionGroups: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 19, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS, maxLength = 20000)
-    @property:ImportFormat(ignore = false, columnId = 9)
+    @property:ImportFormat
     var permissions: String = "",
 
 ): ManagedEntity, CmschUser {

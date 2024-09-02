@@ -31,28 +31,28 @@ data class TicketEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Tulajdonos")
     @property:GenerateOverview(columnName = "Tulajdonos", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var owner: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Email")
     @property:GenerateOverview(columnName = "Email", order = 2)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var email: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Profil QR kód használata")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var useCmschId: Boolean = false,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 4, label = "QR")
     @property:GenerateOverview(columnName = "QR", order = 3)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var qrCode: String = "",
 
     @Enumerated(EnumType.STRING)
@@ -63,14 +63,14 @@ data class TicketEntity(
         label = "Belépési jogosultság",
         source = [ "BANNED", "CANNOT_ATTEND", "USER", "ORGANIZER", "VIP", "PERFORMER", "LEAD_ORGANIZER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var grantType: EntryRole = EntryRole.CANNOT_ATTEND,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 6, label = "Megjegyzés")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var comment: String = "",
 ) : ManagedEntity {
 

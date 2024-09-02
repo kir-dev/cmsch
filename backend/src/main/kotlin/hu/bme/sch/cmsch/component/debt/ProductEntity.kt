@@ -38,14 +38,14 @@ data class ProductEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var name: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Ár", min = 1, defaultValue = "100", note = "JMF-ben természetesen")
     @property:GenerateOverview(columnName = "Ár", order = 1, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+    @property:ImportFormat
     var price: Int = 0,
 
     @Enumerated(EnumType.STRING)
@@ -53,14 +53,14 @@ data class ProductEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Típus", source = [ "MERCH", "FOOD", "OTHER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_ENUM, enumSource = ProductType::class)
+    @property:ImportFormat
     var type: ProductType = ProductType.OTHER,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Termék leírása")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3)
+    @property:ImportFormat
     var description: String = "",
 
     @Column(nullable = false)
@@ -73,14 +73,14 @@ data class ProductEntity(
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Elérhető")
     @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var available: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható")
     @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false,
 
     @ColumnDefault("'payments'")
@@ -89,7 +89,7 @@ data class ProductEntity(
     @property:GenerateInput(order = 8, label = "Material Ikon",
         note = "Innen kell kimásolni a nevét az ikonnak: https://fonts.google.com/icons")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6)
+    @property:ImportFormat
     var materialIcon: String = "payments"
 
 ): ManagedEntity {

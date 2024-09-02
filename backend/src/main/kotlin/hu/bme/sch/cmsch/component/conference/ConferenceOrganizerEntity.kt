@@ -26,38 +26,38 @@ data class ConferenceOrganizerEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var name: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Beosztás")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var rank: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 3, label = "Email cím")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var emailAddress: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 255, order = 4, label = "Profilkép url")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var pictureUrl: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 5, label = "Prioritás", defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_INT)
+    @property:ImportFormat
     var priority: Int = 0,
 
     @field:JsonIgnore
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Látható")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false
 ) : ManagedEntity {
 

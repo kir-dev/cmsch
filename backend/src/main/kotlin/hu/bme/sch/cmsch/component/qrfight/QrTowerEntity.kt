@@ -31,7 +31,7 @@ data class QrTowerEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Torony neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var displayName: String = "",
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ data class QrTowerEntity(
     @property:GenerateInput(maxLength = 64, order = 2, label = "Selector név",
         note = "Ez alapján lesz kiválasztható token olvasáskor")
     @property:GenerateOverview(columnName = "Selector", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var selector: String = "",
 
     @Column(nullable = false)
@@ -47,28 +47,28 @@ data class QrTowerEntity(
     @property:GenerateInput(maxLength = 64, order = 3, label = "Kategória",
         note = "Ez alapján lesz szinthez hozzárendelve")
     @property:GenerateOverview(columnName = "Kategória", order = 3)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var category: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 4, label = "Lezárva")
     @property:GenerateOverview(columnName = "Lezárva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var locked: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Foglalható ekkortól")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Foglalható eddig")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableTo: Long = 0,
 
     @Column(nullable = false)
@@ -76,7 +76,7 @@ data class QrTowerEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 7, label = "Tulajdonos felhasználó ID-je", defaultValue = "0",
         note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_INT)
+    @property:ImportFormat
     var ownerUserId: Int = 0,
 
     @Column(nullable = false)
@@ -85,7 +85,7 @@ data class QrTowerEntity(
         note = "Ez csak megjegyzés, nem ez alapján számolódik. " +
                 "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7)
+    @property:ImportFormat
     var ownerUserName: String = "",
 
     @Column(nullable = false)
@@ -93,7 +93,7 @@ data class QrTowerEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 9, label = "Tulajdonos csoport ID-je", defaultValue = "0",
         note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_INT)
+    @property:ImportFormat
     var ownerGroupId: Int = 0,
 
     @Column(nullable = false)
@@ -102,42 +102,42 @@ data class QrTowerEntity(
         note = "Ez csak megjegyzés, nem ez alapján számolódik. " +
                 "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 9)
+    @property:ImportFormat
     var ownerGroupName: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 11, label = "Publikus leírás")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_LOB)
+    @property:ImportFormat
     var publicMessage: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 12, label = "Leírás a tulajdonosoknak")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_LOB)
+    @property:ImportFormat
     var ownerMessage: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Idő logolása", note = "10 percenként eggyel megnöveli a tulaj sorát")
     @property:GenerateOverview(columnName = "Számlál", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var recordTime: Boolean = false,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 14, label = "Beolvasás log")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 13, type = IMPORT_LOB)
+    @property:ImportFormat
     var history: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 15, label = "Birtoklás állása")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
+    @property:ImportFormat
     var state: String = "",
 
     @Column(nullable = false, length = 64)
@@ -146,7 +146,7 @@ data class QrTowerEntity(
         note = "Ha a birtokos felhasználó az ID-je, ha csoport akkor a neve. " +
                 "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 15)
+    @property:ImportFormat
     var holder: String = "",
 
     @Column(nullable = false)
@@ -154,7 +154,7 @@ data class QrTowerEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 17, label = "Helytartás ennyi időegysége (perc)",
         note = "Ezt a rendszer majd magának tartja karban, nem kell ide semmit se írni.", defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 16, type = IMPORT_INT)
+    @property:ImportFormat
     var holderFor: Int = 0,
 
     @ColumnDefault("false")
@@ -162,7 +162,7 @@ data class QrTowerEntity(
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Totem", note = "A totemek véglegesen kerülnek foglalásra, nem váltanak gazdát")
     @property:GenerateOverview(columnName = "Totem", centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 17, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var totem: Boolean = false,
 
 ) : ManagedEntity {

@@ -28,7 +28,7 @@ data class GuildToUserMappingEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 6, order = 1, label = "Neptun kód")
     @property:GenerateOverview(columnName = "Neptun kód", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var neptun: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -36,7 +36,7 @@ data class GuildToUserMappingEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 2, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_ENUM, enumSource = GuildType::class, defaultValue = "UNKNOWN")
+    @property:ImportFormat
     var guild: GuildType = GuildType.UNKNOWN
 
 ): ManagedEntity {

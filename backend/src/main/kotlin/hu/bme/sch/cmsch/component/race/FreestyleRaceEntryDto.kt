@@ -15,28 +15,28 @@ data class FreestyleRaceEntryDto(
 
     @field:JsonView(FullDetails::class)
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var name: String = "",
 
     @field:JsonView(FullDetails::class)
     @property:GenerateOverview(columnName = "Csoport", order = 2)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var groupName: String? = null,
 
     @field:JsonView(FullDetails::class)
     @get:JsonProperty("score")
     @property:GenerateOverview(columnName = "Idő", order = 3, renderer = OVERVIEW_TYPE_TIME)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var time: Float = 0.0f,
 
     @field:JsonView(FullDetails::class)
     @property:GenerateOverview(columnName = "Beadás módja", order = 4)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var description: String = "",
 
     @field:JsonView(Edit::class)
     @property:GenerateOverview(columnName = "Email", order = 5)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var email: String = "",
 
 ) : ManagedEntity {

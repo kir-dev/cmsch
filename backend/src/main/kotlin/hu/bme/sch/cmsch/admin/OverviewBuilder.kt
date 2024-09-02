@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.admin
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
+import org.hibernate.Hibernate
 import java.io.ByteArrayOutputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
