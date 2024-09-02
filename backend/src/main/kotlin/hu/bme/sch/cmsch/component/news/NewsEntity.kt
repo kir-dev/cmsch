@@ -35,14 +35,14 @@ data class NewsEntity(
         note = "Csupa nem ékezetes kisbetű és kötőjel megengedett. " +
                 "Oldal megosztása: https://BASE_URL/share/news/{URL}", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var url: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var title: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
@@ -50,7 +50,7 @@ data class NewsEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Rövid tartalom",
         note = "Ez a hír összesítésben megjelenő tartalma")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var briefContent: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
@@ -58,7 +58,7 @@ data class NewsEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Tartalom",
             note = "Ez a hír teljes tartalma")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var content: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -71,14 +71,14 @@ data class NewsEntity(
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Látható a hír")
     @property:GenerateOverview(columnName = "Látható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false,
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Kiemelt hír")
     @property:GenerateOverview(columnName = "Kiemelt", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var highlighted: Boolean = false,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -86,7 +86,7 @@ data class NewsEntity(
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Publikálás időpontja",
         note = "Az időpont előtt nem látszódik. Alkalmas időzítésre.", defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_LONG)
+    @property:ImportFormat
     var timestamp: Long = 0,
 
     @Enumerated(EnumType.STRING)
@@ -97,7 +97,7 @@ data class NewsEntity(
             note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező ",
             source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_ENUM, enumSource = RoleType::class)
+    @property:ImportFormat
     var minRole: RoleType = RoleType.GUEST,
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])

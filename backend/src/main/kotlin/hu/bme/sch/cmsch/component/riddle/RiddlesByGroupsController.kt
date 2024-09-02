@@ -128,31 +128,31 @@ class RiddlesByGroupsController(
     }
 
     data class RiddleByGroupFilteredView(
-        @property:ImportFormat(ignore = false, columnId = 0, type = IMPORT_INT)
+        @property:ImportFormat
         var riddleId: Int = 0,
 
-        @property:ImportFormat(ignore = false, columnId = 1)
+        @property:ImportFormat
         var riddleName: String = "",
 
-        @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_INT)
+        @property:ImportFormat
         var groupId: Int = 0,
 
-        @property:ImportFormat(ignore = false, columnId = 3)
+        @property:ImportFormat
         var groupName: String = "",
 
-        @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_INT)
+        @property:ImportFormat
         var score: Int = 0,
 
-        @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_BOOLEAN)
+        @property:ImportFormat
         var hint: Boolean = false,
 
-        @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_BOOLEAN)
+        @property:ImportFormat
         var completed: Boolean = false,
 
-        @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_BOOLEAN)
+        @property:ImportFormat
         var skipped: Boolean = false,
 
-        @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_INT)
+        @property:ImportFormat
         var attemptCount: Int = 0,
     )
 

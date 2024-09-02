@@ -31,7 +31,7 @@ data class ProtoEntity(
                 "Regex és minták nem támogatottak. " +
                 "Per \"/\" jellel kell kezdődjön.", defaultValue = "/")
     @property:GenerateOverview(columnName = "Útvonal", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var path: String = "",
 
     @field:JsonView(value = [ Edit::class ])
@@ -39,7 +39,7 @@ data class ProtoEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 2, label = "Válasz",
         note = "Ez a válasz jelenik meg a megadott útvonalon.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var responseValue: String = "",
 
     @field:JsonView(value = [ Edit::class ])
@@ -47,7 +47,7 @@ data class ProtoEntity(
     @property:GenerateInput(maxLength = 255, order = 3, label = "Mime type",
         note = "A válasz mime type-ja. Pl.: application/json", defaultValue = "application/json")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var mimeType: String = "",
 
     @Column(nullable = false)
@@ -55,14 +55,14 @@ data class ProtoEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 4, label = "HTTP code",
         note = "HTTP válasz kódja", defaultValue = "200")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_INT)
+    @property:ImportFormat
     var statusCode: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Aktív")
     @property:GenerateOverview(columnName = "Aktív", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var enabled: Boolean = false,
 
 ) : ManagedEntity {

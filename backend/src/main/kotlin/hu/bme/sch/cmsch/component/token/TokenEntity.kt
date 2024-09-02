@@ -31,7 +31,7 @@ data class TokenEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Token neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var title: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -39,35 +39,35 @@ data class TokenEntity(
     @property:GenerateInput(maxLength = 128, order = 2, label = "Token", type = INPUT_TYPE_TOKEN_QR_TEXT_FIELD,
         note = "Mind a két alább generált QR jó, de csak a sűrűbb az ami a sima olvasóval is működik, mert abban benne van az oldal URL-je. A másik QR-kód csak az oldalon megnyitott olvasóval működik.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var token: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Beolvasható-e a token")
     @property:GenerateOverview(columnName = "Olvasható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var visible: Boolean = false,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 4, label = "Típus")
     @property:GenerateOverview(columnName = "Típus", order = 3)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var type: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 5, label = "Ikon")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var icon: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Rarity",
         source = ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY", "RAINBOW"])
     @property:GenerateOverview(columnName = "Rarity", order = 4)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var rarity: String? = "",
 
     @field:JsonView(value = [ Edit::class ])
@@ -75,7 +75,7 @@ data class TokenEntity(
     @property:GenerateInput(order = 6, label = "Pont", type = INPUT_TYPE_NUMBER, defaultValue = "0",
         note = "Egész szám, hány pontot ér a megszerzése")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var score: Int? = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -83,7 +83,7 @@ data class TokenEntity(
     @property:GenerateInput(maxLength = 32, order = 7, label = "Kiváltott esemény",
         note = "QR fighthoz az akció amit kivált. capture:<tower>, history:<tower> vagy enslave:<tower>")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var action: String = "",
 
     @field:JsonView(value = [ Edit::class ])
@@ -92,7 +92,7 @@ data class TokenEntity(
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 8, label = "Aktív cél",
         note = "Csak akkor ha a QR Fight komponens is be van töltve")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var activeTarget: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
@@ -101,7 +101,7 @@ data class TokenEntity(
     @property:GenerateInput(maxLength = 255, order = 9, label = "Kijelzett kép URL-je",
         note = "Ha nem üres, megjelenik beolvasás után")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var displayIconUrl: String = "",
 
     @field:JsonView(value = [ Edit::class ])
@@ -110,7 +110,7 @@ data class TokenEntity(
     @property:GenerateInput(order = 10, label = "Kijelzett szöveg",
         note = "Ha nem üres, megjelenik beolvasás után", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var displayDescription: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -118,7 +118,7 @@ data class TokenEntity(
     @Column(nullable = true, columnDefinition = "BIGINT")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 11, label = "Scannelhető innentől")
     @property:GenerateOverview(columnName = "Ettől", order = 6, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableFrom: Long? = null,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -126,7 +126,7 @@ data class TokenEntity(
     @Column(nullable = true, columnDefinition = "BIGINT")
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Scannelhető eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 7, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableUntil: Long? = null,
 
 ): ManagedEntity {

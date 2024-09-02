@@ -29,28 +29,28 @@ data class TeamJoinRequestEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Felhasználó")
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var userName: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Felhasználó ID-je")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+    @property:ImportFormat
     var userId: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 3, label = "Csapat")
     @property:GenerateOverview(columnName = "Csapat", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var groupName: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 4, label = "Csapat ID-je")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
+    @property:ImportFormat
     var groupId: Int = 0,
 
 ) : ManagedEntity {

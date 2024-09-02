@@ -15,23 +15,23 @@ data class RaceEntryDto(
 
     @field:JsonView(FullDetails::class)
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var name: String = "",
 
     @field:JsonView(FullDetails::class)
     @property:GenerateOverview(columnName = "Csoport", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var groupName: String? = null,
 
     @field:JsonView(FullDetails::class)
     @get:JsonProperty("score")
     @property:GenerateOverview(columnName = "Idő", order = 3, renderer = OVERVIEW_TYPE_TIME)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_FLOAT)
+    @property:ImportFormat
     var time: Float = 0.0f,
 
     @field:JsonView(Edit::class)
     @property:GenerateOverview(columnName = "Email", order = 4)
-    @property:ImportFormat(ignore = false, columnId = 4)
+    @property:ImportFormat
     var email: String = "",
 
 ) : ManagedEntity {

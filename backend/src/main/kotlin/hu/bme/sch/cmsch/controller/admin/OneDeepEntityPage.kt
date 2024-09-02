@@ -756,7 +756,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-export.csv\"")
-        val overview = transactionManager.transaction(readOnly = true) { fetchOverview(user) }
+        val overview = transactionManager.transaction(readOnly = true) { fetchOverviewForExport(user) }
         return descriptor.exportToCsv(filterOverview(user, overview).toList()).toByteArray()
     }
 
@@ -836,6 +836,10 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     open fun fetchOverview(user: CmschUser): Iterable<T> {
+        return dataSource.findAll()
+    }
+
+    open fun fetchOverviewForExport(user: CmschUser): Iterable<T> {
         return dataSource.findAll()
     }
 

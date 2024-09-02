@@ -29,7 +29,7 @@ data class RaceCategoryEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var name: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
@@ -37,7 +37,7 @@ data class RaceCategoryEntity(
     @property:GenerateInput(maxLength = 64, order = 2, label = "Slug (url)",
         note = "Csupa nem ékezetes kisbetű és kötőjel megengedett.", interpreter = INTERPRETER_PATH)
     @property:GenerateOverview(columnName = "Slug", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 1)
+    @property:ImportFormat
     var slug: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
@@ -45,14 +45,14 @@ data class RaceCategoryEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás",
         note = "Meg fog jelenni a kategória menüjének tetején")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var description: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 4, label = "Látható-e a kategória")
     @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false
 
 ): ManagedEntity {

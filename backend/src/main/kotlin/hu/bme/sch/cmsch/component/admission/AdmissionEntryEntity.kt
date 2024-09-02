@@ -32,35 +32,35 @@ data class AdmissionEntryEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Felhasználó")
     @property:GenerateOverview(columnName = "Felhasználó", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var userName: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Felhasználó ID-je", min = 0, defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var userId: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Időbélyeg", min = 0, defaultValue = "0")
     @property:GenerateOverview(columnName = "Frissült", order = 3, renderer = OVERVIEW_TYPE_DATE, centered = true)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var timestamp: Long = 0L,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 4, label = "Űrlap ID-je", min = 0, defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var formId: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 5, label = "Beadás ID-je", min = 0, defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var responseId: Int = 0,
 
     @Enumerated(EnumType.STRING)
@@ -71,35 +71,35 @@ data class AdmissionEntryEntity(
         label = "Belépési jogosultság",
         source = [ "BANNED", "CANNOT_ATTEND", "USER", "ORGANIZER", "VIP", "PERFORMER", "LEAD_ORGANIZER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var grantType: EntryRole = EntryRole.CANNOT_ATTEND,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Beengedés engedélyezve")
     @property:GenerateOverview(columnName = "Engedélyezve", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var allowed: Boolean = false,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 8, label = "Token")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var token: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 9, label = "Válasz")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var response: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 10, label = "Beléptető ID-je", min = 0, defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var gateUserId: Int = 0,
 
 ): ManagedEntity {

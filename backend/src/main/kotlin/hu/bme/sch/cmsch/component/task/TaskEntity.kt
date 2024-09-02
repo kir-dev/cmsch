@@ -46,21 +46,21 @@ data class TaskEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Feladat neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var title: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je")
     @property:GenerateOverview(columnName = "Kategória", order = 2, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+    @property:ImportFormat
     var categoryId: Int = 0,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_LOB)
+    @property:ImportFormat
     var description: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -68,7 +68,7 @@ data class TaskEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Beadandó formátum",
             note = "Ez a beadó mező mellett jelenik meg, külön a leírástól")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LOB)
+    @property:ImportFormat
     var expectedResultDescription: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -76,7 +76,7 @@ data class TaskEntity(
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 17, label = "Mintamegoldás",
         note = "A leadási határidő után jelenik meg")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 14, type = IMPORT_LOB)
+    @property:ImportFormat
     var solution: String = "",
 
     @Enumerated(EnumType.STRING)
@@ -86,7 +86,7 @@ data class TaskEntity(
         source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF" ],
         note = "Mit tároljon el a szerver? A BOTH az szöveg és kép is. A PDF csak önmagában használható.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskType::class)
+    @property:ImportFormat
     var type: TaskType = TaskType.TEXT,
 
     @Enumerated(EnumType.STRING)
@@ -96,7 +96,7 @@ data class TaskEntity(
         source = [ "NONE", "TEXT", "CODE", "FORM" ],
         note = "Mi legyen a beadás módja. NONE: személyes beadás, TEXT: egy soros form vagy fájl tallózó, CODE: kód editor, FORM: lásd lejjebb a formátumot")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_ENUM, enumSource = TaskFormat::class)
+    @property:ImportFormat
     var format: TaskFormat = TaskFormat.NONE,
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -105,35 +105,35 @@ data class TaskEntity(
         note = "Ha a formátum FORM akkor ide kell beírni a form jsonját. " +
                 "Formátum: [{\"title\":\"\",\"type\":\"number|text|textarea\",\"suffix\":\"\"}]")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LOB)
+    @property:ImportFormat
     var formatDescriptor: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 8, label = "Beadható ekkortól")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 7, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Beadható eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 4, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 8, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableTo: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 10, label = "Max pont")
     @property:GenerateOverview(columnName = "Max pont", order = 5, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 9, type = IMPORT_INT)
+    @property:ImportFormat
     var maxScore: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 11, label = "Látható")
     @property:GenerateOverview(columnName = "Látható", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 10, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false,
 
     @Column(nullable = false)
@@ -141,21 +141,21 @@ data class TaskEntity(
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "Kiemelt",
             note = "Olyan szöveggel jelenik meg, hogy hamarosan lejár")
     @property:GenerateOverview(columnName = "Kiemelt", order = 7, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat(ignore = false, columnId = 11, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var highlighted: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, name = "`order`")
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 13, label = "Sorrend")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 12, type = IMPORT_LONG)
+    @property:ImportFormat
     var order: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 14, label = "Címke", note = "Ha nem tudod mi ez, hagyd üresen!")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 13)
+    @property:ImportFormat
     var tag: String = "",
 
     @Enumerated(EnumType.STRING)
@@ -168,7 +168,7 @@ data class TaskEntity(
         note = "A ranggal rendelkező már megtekintheti (BASIC = belépett, STAFF = rendező)",
         source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var minRole: RoleType = RoleType.BASIC,
 
     @Enumerated(EnumType.STRING)
@@ -181,7 +181,7 @@ data class TaskEntity(
         note = "A ranggal rendelkező még megtekintheti (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező)",
         source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var maxRole: RoleType = RoleType.SUPERUSER,
 
 ): ManagedEntity {

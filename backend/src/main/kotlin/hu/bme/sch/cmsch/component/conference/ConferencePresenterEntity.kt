@@ -26,19 +26,19 @@ data class ConferencePresenterEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Név")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var name: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Beosztás")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var rank: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 255, order = 3, label = "Fotó URL")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var pictureUrl: String = "",
 
     @field:JsonIgnore
@@ -47,7 +47,7 @@ data class ConferencePresenterEntity(
         note = "Annak a cégnek a selectora ami ehhez az előadóhoz van rendelve. " +
                 "Ha üres vagy nem létező cég van megadva, akkor null lesz.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var companySelector: String = "",
 
     @field:JsonIgnore
@@ -55,14 +55,14 @@ data class ConferencePresenterEntity(
     @property:GenerateInput(maxLength = 64, order = 5, label = "Selector",
         note = "Ezzel lehet hivatkozni erre az előadóra.")
     @property:GenerateOverview(visible = true, columnName = "Selector", order = 2)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var selector: String = "",
 
     @field:JsonIgnore
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Látható")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false
 
 ) : ManagedEntity {

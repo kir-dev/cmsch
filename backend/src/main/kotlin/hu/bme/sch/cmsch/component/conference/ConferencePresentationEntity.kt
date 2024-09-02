@@ -44,13 +44,13 @@ data class ConferencePresentationEntity(
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Slug")
     @property:GenerateOverview(columnName = "Slug", order = 2)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var slug: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 2, label = "Cím")
     @property:GenerateOverview(columnName = "Cím", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var title: String = "",
 
     @Column(nullable = false)
@@ -58,7 +58,7 @@ data class ConferencePresentationEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Terem", source = [ "IB028", "IB025", "OTHERS" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_ENUM)
+    @property:ImportFormat
     var room: RoomType = RoomType.OTHERS,
 
     @Column(nullable = false)
@@ -66,31 +66,31 @@ data class ConferencePresentationEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Nyelv", source = [ "HU", "EN" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_ENUM)
+    @property:ImportFormat
     var language: LanguageType = LanguageType.HU,
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 5, label = "Kezdet ideje")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var startTime: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 6, label = "Eddig tart")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var endTime: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 7, type = INPUT_TYPE_BLOCK_TEXT, label = "Leírás", enabled = true)
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_LOB)
+    @property:ImportFormat
     var description: String = "",
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 255, order = 8, label = "Kérdések URL")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var questionsUrl: String = "",
 
     @field:JsonIgnore
@@ -99,7 +99,7 @@ data class ConferencePresentationEntity(
         note = "Annak az előadónak a selectora ami ehhez az előadáshoz van rendelve. " +
                 "Ha üres vagy nem létező cég van megadva, akkor null lesz.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var presenterSelector: String = "",
 
     @field:JsonIgnore
@@ -108,14 +108,14 @@ data class ConferencePresentationEntity(
         note = "Ez a mező van arra használva, hogy meg tudd hivatkozni ezt az entitást. " +
                 "Egyedinek kell lennie, hogy működjön!")
     @property:GenerateOverview(columnName = "Selector", order = 1)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var selector: String = "",
 
     @field:JsonIgnore
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "Látható")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, type = IMPORT_BOOLEAN)
+    @property:ImportFormat
     var visible: Boolean = false,
 
 ) : ManagedEntity {

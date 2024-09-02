@@ -38,7 +38,7 @@ data class TaskCategoryEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 1, label = "Kategória neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var name: String = "",
 
     @Column(nullable = false)
@@ -46,21 +46,21 @@ data class TaskCategoryEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je. " +
             "Egyedinek kell lennie, különben összeakad a rendszer!")
     @property:GenerateOverview(columnName = "ID", order = 2)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+    @property:ImportFormat
     var categoryId: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 3, label = "Beadhatóak ekkortól", defaultValue = "0")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 2, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Beadhatóak eddig", defaultValue = "0")
     @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_LONG)
+    @property:ImportFormat
     var availableTo: Long = 0,
 
     @Enumerated(EnumType.STRING)
@@ -70,7 +70,7 @@ data class TaskCategoryEntity(
         note = "A PROFILE_REQUIRED olyan task ami a többi feladattól külön jelenik meg, és külön van mutatva a profil oldalon. " +
                 "Ideális profilkép vagy motivációs levél feltöltéshez.")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false, columnId = 4, type = IMPORT_ENUM, enumSource = TaskCategoryType::class)
+    @property:ImportFormat
     var type: TaskCategoryType = TaskCategoryType.REGULAR,
 
     @ColumnDefault("false")
@@ -79,7 +79,7 @@ data class TaskCategoryEntity(
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Hírdetett",
         note = "Külön kijelzésre kerülnek bizonyos helyeken az oldalon (pl. team komponens)")
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var advertised: Boolean = false,
 
     @Enumerated(EnumType.STRING)
@@ -92,7 +92,7 @@ data class TaskCategoryEntity(
         note = "A ranggal rendelkező már megtekintheti (BASIC = belépett, STAFF = rendező)",
         source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var minRole: RoleType = RoleType.BASIC,
 
     @Enumerated(EnumType.STRING)
@@ -105,7 +105,7 @@ data class TaskCategoryEntity(
         note = "A ranggal rendelkező még megtekintheti (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező)",
         source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)
-    @property:ImportFormat(ignore = false)
+    @property:ImportFormat
     var maxRole: RoleType = RoleType.SUPERUSER,
 
 ): ManagedEntity {

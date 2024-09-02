@@ -30,12 +30,12 @@ data class RaceRecordEntity(
     @property:GenerateInput(order = 2, label = "Kategória", type = INPUT_TYPE_ENTITY_SELECT,
         entitySource = "RaceCategoryEntity", note = "Az üres az alapértelmezett kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 1)
-    @property:ImportFormat(ignore = false, columnId = 0)
+    @property:ImportFormat
     var category: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
-    @property:ImportFormat(ignore = false, columnId = 1, type = IMPORT_INT)
+    @property:ImportFormat
     var userId: Int? = null,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -44,12 +44,12 @@ data class RaceRecordEntity(
         note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `id| Teljes Név [a/g] email` ahol az: a = authsch, g = google",
         interpreter = INTERPRETER_SEARCH)
     @property:GenerateOverview(columnName = "Felhasználó", order = 2, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 2)
+    @property:ImportFormat
     var userName: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = true)
-    @property:ImportFormat(ignore = false, columnId = 3, type = IMPORT_INT)
+    @property:ImportFormat
     var groupId: Int? = null,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -57,7 +57,7 @@ data class RaceRecordEntity(
     @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 3, label = "Csoport", entitySource = "GroupEntity",
         note = "Csak akkor kell kijelölni ha csoportok kapnak pontot")
     @property:GenerateOverview(columnName = "Csoport", order = 3, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 4)
+    @property:ImportFormat
     var groupName: String = "",
 
     @Column(nullable = false)
@@ -65,14 +65,14 @@ data class RaceRecordEntity(
     @property:GenerateInput(type = INPUT_TYPE_FLOAT3, order = 4, label = "Mért idő", defaultValue = "0.0",
         note = "Másodpercben kell megadni, és ponttal (.) van elválasztva, nem vesszővel! 3 tizedes pontig lehet megadni pontosságot.")
     @property:GenerateOverview(columnName = "Idő", order = 4, centered = true)
-    @property:ImportFormat(ignore = false, columnId = 5, type = IMPORT_FLOAT)
+    @property:ImportFormat
     var time: Float = 0.0f,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Időbélyeg", enabled = false, visible = false)
     @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OVERVIEW_TYPE_DATE)
-    @property:ImportFormat(ignore = false, columnId = 6, type = IMPORT_LONG)
+    @property:ImportFormat
     var timestamp: Long = 0,
 
 ) : ManagedEntity {
