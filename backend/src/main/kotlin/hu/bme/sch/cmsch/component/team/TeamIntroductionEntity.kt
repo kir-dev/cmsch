@@ -50,11 +50,13 @@ data class TeamIntroductionEntity(
         note = "Ha ez igaz az felülírja az elutasított státuszt"
     )
     @property:GenerateOverview(columnName = "Elfogadva", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:ImportFormat
     var approved: Boolean = false,
 
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Elutasítva")
     @property:GenerateOverview(columnName = "Elutasítva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:ImportFormat
     var rejected: Boolean = false,
 
     @Column(nullable = false)
@@ -64,6 +66,7 @@ data class TeamIntroductionEntity(
         label = "Elutasítás oka",
     )
     @property:GenerateOverview(columnName = "Elutasítás oka", order = 5)
+    @property:ImportFormat
     var rejectionReason: String = "",
 
     ) : ManagedEntity {
