@@ -84,7 +84,7 @@ open class RaceService(
     open fun getRaceByTeam(teamId: Int, userId: Int): RaceView {
         val team = groupRepository.findById(teamId).getOrNull()
             ?: return RaceView("Nem található", "", null, null, listOf())
-        val introduction = teamIntroductionRepository.findIntroductionsForGroup(teamId).firstOrNull { it.approved }
+        val introduction = teamIntroductionRepository.findApprovedIntroductionsForGroup(teamId).firstOrNull()
         val board = getBoardForUsers(DEFAULT_CATEGORY, false)
             .filter { it.groupName == team.name }
 

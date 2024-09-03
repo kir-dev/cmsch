@@ -91,7 +91,7 @@ open class TeamService(
         groupRepository.save(groupEntity)
 
         val introduction = TeamIntroductionEntity(
-            creationDate = clock.getNowInSeconds(),
+            creationDate = clock.getTimeInSeconds(),
             group = groupEntity,
             introduction = "$TEAM_LEADER: ${user.fullNameWithAlias}",
             approved = true,
@@ -566,7 +566,7 @@ open class TeamService(
     }
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
+    open fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
         val groupId = user.groupId ?: throw IllegalStateException("The user is not member of a group yet")
 
         if (logo != null && !teamComponent.teamLogoUploadEnabled.isValueTrue()) {
