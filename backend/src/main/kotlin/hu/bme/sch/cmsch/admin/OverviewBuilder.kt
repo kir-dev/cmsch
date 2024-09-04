@@ -3,7 +3,6 @@ package hu.bme.sch.cmsch.admin
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
-import org.hibernate.Hibernate
 import java.io.ByteArrayOutputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -35,7 +34,12 @@ class OverviewBuilder<T : Any>(val type: KClass<T>) {
     }
 
     private fun formatValue(type: GenerateOverview, value: Any?): String {
-        return if (type.renderer == OVERVIEW_TYPE_TEXT || type.renderer == OVERVIEW_TYPE_ICON) {
+        return if (type.renderer == OVERVIEW_TYPE_CDN_IMAGE) {
+            if (value is String && !value.isNullOrBlank())
+                "\"/cdn/${type.cdnImageFolder}/${value}\""
+            else
+                "\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\"" // empty image
+        } else if (type.renderer == OVERVIEW_TYPE_TEXT || type.renderer == OVERVIEW_TYPE_ICON) {
             "\"${(value ?: "").toString().replace("\"", "")}\""
         } else {
             (value ?: "0").toString().replace("\"", "")
