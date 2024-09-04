@@ -104,7 +104,7 @@ class FilesByViewController(
     }
 
     private fun fetchOverview(): List<FilesByViewVirtualEntity> {
-        return sequenceOf("profiles", "news", "events", "products", "groups", "task", "public")
+        return sequenceOf("profiles", "news", "events", "products", "groups", "task", "public", "team")
                 .filter { Files.exists(Path.of(startupPropertyConfig.external, it)) }
                 .map { FilesByViewVirtualEntity(it, Files.walk(Path.of(startupPropertyConfig.external, it)).count() - 1, "~${Path.of(startupPropertyConfig.external, it).fileSize() / 1024} KB") }
                 .toList()
