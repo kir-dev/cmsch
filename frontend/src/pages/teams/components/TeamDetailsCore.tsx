@@ -99,6 +99,16 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
           </Box>
         </Box>
       </Box>
+      {team.descriptionRejected && (
+        <Box backgroundImage={team.coverUrl} mt={5} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
+          <Box p={4} bg={bannerBlanket}>
+            <Heading fontSize={25} my={0}>
+              A csapat leírása elutasításra került
+            </Heading>
+            <Text>Az adminisztrátor üzenete: {team.descriptionRejectionReason ?? ''}</Text>
+          </Box>
+        </Box>
+      )}
       <Flex flex={1} gap={5} justify="space-between" flexDirection={['column', null, 'row']} align="flex-start">
         <VStack align="flex-start" w="full">
           <Grid mt={5} gridAutoRows="auto" w="full" gridTemplateColumns={['full', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={5}>

@@ -243,15 +243,21 @@ open class TeamService(
         val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || ownTeam) mapMembers(team, user?.id) else null
         val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value && ownTeam) mapRequests(team) else null
 
-        val introduction = teamIntroductionRepository.findIntroductionsForGroup(team.id)
-            .firstOrNull { it.approved }
+        val introductions = teamIntroductionRepository.findIntroductionsForGroup(team.id)
+        val latestIntro = introductions.firstOrNull { it.approved }
+        val latestRejectedIntro = introductions.firstOrNull { it.rejected }
 
+        // if there is a newer introduction that is rejected than the latest accepted, we should display the reason
+        val descriptionRejected = (latestRejectedIntro?.creationDate ?: 0) > (latestIntro?.creationDate ?: 0)
+        val rejectionReason = if (descriptionRejected) latestRejectedIntro?.rejectionReason else null
         return TeamView(
             id = team.id,
             name = team.name,
             coverUrl = team.coverImageUrl,
-            description = introduction?.introduction ?: "",
-            logo = introduction?.logo ?: "",
+            description = latestIntro?.introduction ?: "",
+            descriptionRejected = if (ownTeam) descriptionRejected else false,
+            descriptionRejectionReason = if (ownTeam) rejectionReason else null,
+            logo = latestIntro?.logo ?: "",
             points = score,
             members = members,
             applicants = requests,
