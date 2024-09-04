@@ -30,6 +30,8 @@ export enum TeamStatus {
 export type TeamView = {
   coverUrl: string
   description: string
+  descriptionRejected: boolean
+  descriptionRejectionReason?: String
   leaderNotes: string
   points: number
   members: TeamMemberView[]
