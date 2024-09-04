@@ -7,6 +7,7 @@ const val OVERVIEW_TYPE_BOOLEAN = "boolean"
 const val OVERVIEW_TYPE_ICON = "icon"
 const val OVERVIEW_TYPE_TIME = "time"
 const val OVERVIEW_TYPE_NUMBER = "number"
+const val OVERVIEW_TYPE_CDN_IMAGE = "cdn-image"
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)
@@ -16,6 +17,7 @@ annotation class GenerateOverview(
     val centered: Boolean = false,
     val order: Int = 0,
     val renderer: String = OVERVIEW_TYPE_TEXT,
+    val cdnImageFolder: String = "",
     val useForSearch: Boolean = true
 )
 
@@ -45,6 +47,7 @@ fun GenerateOverview.extra(): String {
         OVERVIEW_TYPE_TEXT -> ", \"vertAlign\":\"middle\""
         OVERVIEW_TYPE_DATE -> ", \"vertAlign\":\"middle\",\"formatter\":\"datetime\""
         OVERVIEW_TYPE_BOOLEAN -> ", \"formatter\":\"tickCross\", \"width\":120"
+        OVERVIEW_TYPE_CDN_IMAGE -> ", \"formatter\":\"image\", \"width\":120, \"formatterParams\":{\"height\":\"100px\"}"
         OVERVIEW_TYPE_TIME -> ", \"vertAlign\":\"middle\""
         OVERVIEW_TYPE_NUMBER -> ", \"vertAlign\":\"middle\""
         OVERVIEW_TYPE_ICON -> ", \"vertAlign\":\"middle\", \"formatter\":\"enumIconsFormatter\", \"width\":120"
