@@ -88,6 +88,16 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
+    builder = "paketobuildpacks/builder-jammy-tiny"
+    environment = mapOf(
+        "BP_NATIVE_IMAGE" to "false",
+        "CDS_TRAINING_JAVA_TOOL_OPTIONS" to "-Dspring.profiles.include=prewarm",
+        "BP_JVM_CDS_ENABLED" to "true",
+        "BPL_JVM_THREAD_COUNT" to "25"
+    )
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
