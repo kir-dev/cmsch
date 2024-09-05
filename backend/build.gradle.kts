@@ -13,6 +13,10 @@ group = "hu.bme.sch"
 version = "4.8.0"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
+springBoot {
+    buildInfo()
+}
+
 tasks {
     bootJar {
         archiveFileName.set("cmsch.jar")
@@ -78,4 +82,3 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
