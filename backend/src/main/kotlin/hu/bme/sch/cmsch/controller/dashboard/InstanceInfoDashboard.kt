@@ -15,6 +15,7 @@ import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.statistics.UserActivityFilter
 import org.apache.catalina.util.ServerInfo
+import org.springframework.boot.info.BuildProperties
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -30,8 +31,9 @@ class InstanceInfoDashboard(
     env: Environment,
     startupPropertyConfig: StartupPropertyConfig,
     componentLoadConfig: ComponentLoadConfig,
+    buildProperties: BuildProperties?,
     private val userActivityFilter: Optional<UserActivityFilter>,
-    private val clock: TimeService
+    private val clock: TimeService,
 ) : DashboardPage(
     "instance-info",
     "Szerver adatok",
@@ -61,6 +63,11 @@ class InstanceInfoDashboard(
             listOf("Max memory",            "${Runtime.getRuntime().maxMemory() / (1000 * 1000)} MB"),
             listOf("Server version",        ServerInfo.getServerInfo()),
             listOf("Server built",          ServerInfo.getServerBuilt()),
+            listOf("Build Artifact",        buildProperties?.artifact ?: "n/a"),
+            listOf("Build Group",           buildProperties?.group ?: "n/a"),
+            listOf("Build Name",            buildProperties?.name ?: "n/a"),
+            listOf("Build Time",            buildProperties?.time?.toString() ?: "n/a"),
+            listOf("Build version",         buildProperties?.version ?: "n/a"),
             listOf("Server number",         ServerInfo.getServerNumber()),
             listOf("Profiles",              env.activeProfiles.joinToString(", ")),
             listOf("CMSCH version",         CMSCH_VERSION),
