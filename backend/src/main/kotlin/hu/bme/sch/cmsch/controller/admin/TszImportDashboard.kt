@@ -231,7 +231,7 @@ class TszImportDashboard(
                         return@mapNotNull null
                     }
 
-                val mappedString = "$name${if (nickname.isNotBlank()) (" ($nickname)") else ""} | $phone | $facebook"
+                val mappedString = "$name${if (nickname.isNotBlank()) (" ($nickname)") else ""} | $facebook | $phone"
 
                 if (groupRepository.findByName(selector.trim()).isEmpty) {
                     missingUsers.add(selector)
