@@ -1,18 +1,21 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
 import { ApiPaths } from '../../util/paths'
+import { QueryKeys } from './queryKeys.ts'
 
-export const useTokenRefresh = (onError?: (err: any) => void) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const refresh = (onSuccess: (token: string) => void) => {
-    setLoading(true)
-    axios
-      .post<string>(ApiPaths.REFRESH)
-      .then((res) => {
-        onSuccess(res.data)
-      })
-      .catch(onError)
-      .finally(() => setLoading(false))
-  }
-  return { refresh, loading }
+const queriesToInvalidate = [QueryKeys.USER, QueryKeys.CONFIG]
+
+export function useTokenRefresh(onSuccess?: () => void) {
+  const queryClient = useQueryClient()
+  return useMutation(() => axios.post<void>(ApiPaths.REFRESH), {
+    onSuccess: async () => {
+      for (const queryKey of queriesToInvalidate) {
+        await queryClient.invalidateQueries(queryKey)
+      }
+
+      if (onSuccess) {
+        onSuccess()
+      }
+    }
+  })
 }
