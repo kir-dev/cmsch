@@ -1,5 +1,4 @@
 import { Box, Button, Divider, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
-import Cookies from 'js-cookie'
 import { FunctionComponent, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -14,7 +13,6 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { CookieKeys } from '../../util/configs/cookies.config'
 import { isCheckbox, isGridField } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
@@ -31,7 +29,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const formMethods = useForm()
   const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
-  const { refresh } = useTokenRefresh()
+  const tokenRefresh = useTokenRefresh()
   const { sendMessage } = useServiceContext()
 
   useEffect(() => {
@@ -39,8 +37,8 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
       const success = result === FormSubmitResult.OK || result === FormSubmitResult.OK_RELOG_REQUIRED
       toast({ title: FormSubmitMessage[result as FormSubmitResult], status: success ? 'success' : 'error' })
     }
-    if (result === FormSubmitResult.OK_RELOG_REQUIRED && Cookies.get(CookieKeys.JWT_TOKEN)) {
-      refresh((token) => Cookies.set(CookieKeys.JWT_TOKEN, token))
+    if (result === FormSubmitResult.OK_RELOG_REQUIRED) {
+      tokenRefresh.mutate()
     }
     refetch()
   }, [result])
