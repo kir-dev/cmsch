@@ -1,24 +1,26 @@
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { CmschPage } from '../../common-components/layout/CmschPage'
+import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Text, VStack } from '@chakra-ui/react'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
-import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Text, VStack } from '@chakra-ui/react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { AbsolutePaths } from '../../util/paths'
-import { useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import Markdown from '../../common-components/Markdown'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { useTeamEdit } from '../../api/hooks/team/actions/useTeamEdit'
-import { FilePicker } from '../task/components/FilePicker'
+import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown'
+import { AbsolutePaths } from '../../util/paths.ts'
 import { RoleType } from '../../util/views/profile.view'
+import { TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
+import { FilePicker } from '../task/components/FilePicker'
 
 export default function EditMyTeamPage() {
   const navigate = useNavigate()
   const [requestError, setRequestError] = useState<string>()
   const [logo, setLogo] = useState<File>()
-  const { refreshToken } = useAuthContext()
+  const tokenRefresh = useTokenRefresh(() => {
+    navigate(AbsolutePaths.MY_TEAM)
+  })
   const config = useConfigContext()
   const {
     register,
@@ -28,7 +30,7 @@ export default function EditMyTeamPage() {
 
   const { teamEditLoading, teamEditError, teamEdit } = useTeamEdit((response) => {
     if (response === TeamResponses.OK) {
-      refreshToken(() => navigate(AbsolutePaths.MY_TEAM))
+      tokenRefresh.mutate()
     } else {
       setRequestError(TeamResponseMessages[response as TeamResponses])
     }
