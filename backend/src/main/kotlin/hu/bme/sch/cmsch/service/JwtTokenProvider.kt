@@ -99,12 +99,8 @@ class JwtTokenProvider(
     private fun parseToken(token: String) = parser.parseSignedClaims(token).payload
 
     fun resolveToken(req: HttpServletRequest): String? {
-        val bearerToken = req.getHeader("Authorization")
-        return if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            bearerToken.substring(7, bearerToken.length)
-        } else {
-            null
-        }
+        val jwtCookie = req.cookies?.find { it.name == "jwt" }?.value
+        return jwtCookie
     }
 
     fun validateToken(token: String): Boolean {

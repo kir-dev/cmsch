@@ -28,6 +28,7 @@ class WebMvcConfig(
         arrayOf("/api/**", "/manifest/**", "/cdn/**").forEach {
             registry.addMapping(it)
                 .allowedOrigins(productionUrl)
+                .allowCredentials(true)
                 .allowedOriginPatterns(*allowedOrigins.toTypedArray())
                 .allowedMethods(*HttpMethod.values().map(HttpMethod::name).toTypedArray())
         }
