@@ -91,7 +91,7 @@ const HomePage = () => {
       {eventList.data && homeConfig?.showEvents && (
         <VStack>
           <Heading as="h2" size="lg" textAlign="center" mb={5} mt={20}>
-            {config?.components.event.title}
+            {config?.components?.event?.title}
           </Heading>
           <VStack spacing={10}>
             <Text textAlign="center" fontSize={25} fontWeight="bolder" marginTop={10}>
