@@ -13,14 +13,14 @@ interface EventListProps {
 const EventList = ({ eventList, groupByDay }: EventListProps) => {
   const config = useConfigContext()
   const eventGroups = useMemo(() => groupEventsByDay(eventList), [eventList])
-  if (!groupByDay) return <EventListGroup eventList={eventList} useLink={config?.components.event?.enableDetailedView} />
+  if (!groupByDay) return <EventListGroup eventList={eventList} useLink={config?.components?.event?.enableDetailedView} />
 
   return (
     <VStack>
       {eventGroups.map((group) => (
         <Box key={group.date.getTime()} w="full">
           <Heading mb={2}>{group.date.toLocaleDateString('hu-HU', { month: '2-digit', day: '2-digit' })}</Heading>
-          <EventListGroup eventList={group.events} useLink={config?.components.event?.enableDetailedView} />
+          <EventListGroup eventList={group.events} useLink={config?.components?.event?.enableDetailedView} />
         </Box>
       ))}
     </VStack>

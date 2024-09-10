@@ -13,7 +13,7 @@ import { DayCalendar } from './components/event-calendar/DayCalendar'
 import { WeekCalendar } from './components/event-calendar/WeekCalendar'
 
 function EventCalendarPage() {
-  const component = useConfigContext()?.components.event
+  const component = useConfigContext()?.components?.event
 
   const { isLoading, isError, data } = useEventListQuery()
 

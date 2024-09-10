@@ -14,7 +14,7 @@ export const Schedule = ({ events, verbose }: ScheduleProps) => {
   return (
     <>
       {events.map((event, idx) => (
-        <EventDisplay verbose={verbose} key={idx} event={event} useLink={config?.components.event.enableDetailedView} />
+        <EventDisplay verbose={verbose} key={idx} event={event} useLink={config?.components?.event?.enableDetailedView} />
       ))}
     </>
   )
