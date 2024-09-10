@@ -1,12 +1,10 @@
 package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.component.token.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.bme.sch.cmsch.util.getUserOrNull
 import jakarta.servlet.http.Cookie
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -37,11 +35,7 @@ class AuthschLoginController(
     }
 
     @GetMapping("/control/post-login")
-    fun postLogin(request: HttpServletRequest, httpResponse: HttpServletResponse, auth: Authentication?) {
-        if (request.getSession(true).getAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE) != null) {
-            httpResponse.sendRedirect("/api/token-after-login")
-            return
-        }
+    fun postLogin(httpResponse: HttpServletResponse, auth: Authentication?) {
         httpResponse.sendRedirect(
             if (auth != null && auth.isAuthenticated)
                 "/control/open-site"
@@ -51,21 +45,17 @@ class AuthschLoginController(
     }
 
     @GetMapping("/control/login")
-    fun loginDefault(request: HttpServletRequest): String {
+    fun loginDefault(): String {
         return "redirect:${applicationComponent.siteUrl.getValue()}login"
     }
 
     @GetMapping("/control/logout")
-    fun logout(request: HttpServletRequest, auth: Authentication?, httpResponse: HttpServletResponse): String {
+    fun logout(auth: Authentication?, httpResponse: HttpServletResponse): String {
         log.info("Logging out from user {}", auth?.getUserOrNull()?.internalId ?: "n/a")
 
         try {
             httpResponse.addCookie(createJwtCookie(null).apply { maxAge = 0 })
             SecurityContextHolder.getContext().authentication = null
-            val session = request.getSession(false)
-            session?.invalidate()
-            request.changeSessionId()
-
         } catch (e: Exception) {
             // It should be logged out anyway
         }
