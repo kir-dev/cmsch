@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.component.login.LoginService
-import hu.bme.sch.cmsch.component.login.SessionFilterConfigurer
 import hu.bme.sch.cmsch.component.login.authsch.CmschAuthschUser
 import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.CmschGoogleUser
@@ -26,6 +25,7 @@ import org.springframework.retry.annotation.EnableRetry
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
@@ -48,7 +48,6 @@ open class SecurityConfig(
     private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
     private val authschLoginService: LoginService,
     private val loginComponent: LoginComponent,
-    private val startupPropertyConfig: StartupPropertyConfig,
     @Value("\${custom.keycloak.base-url:http://localhost:8081/auth/realms/master}") private val keycloakBaseUrl: String,
     private val auditLogService: AuditLogService
 ) {
@@ -144,7 +143,7 @@ open class SecurityConfig(
         http.formLogin { it.disable() }
         http.exceptionHandling { it.accessDeniedPage("/403") }
         http.with(JwtConfigurer(jwtTokenProvider), Customizer.withDefaults())
-        http.with(SessionFilterConfigurer(startupPropertyConfig), Customizer.withDefaults())
+        http.sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         http.oauth2Login { oauth2 ->
             oauth2.loginPage("/oauth2/authorization")
                 .authorizationEndpoint {
@@ -163,7 +162,8 @@ open class SecurityConfig(
                             }
                         }
                         .userService { resolveAuthschUser(it) }
-                }.defaultSuccessUrl("/control/post-login")
+                }
+                .defaultSuccessUrl("/control/post-login")
         }
         countdownConfigurer.ifPresent { http.with(it, Customizer.withDefaults()) }
         http.csrf {
