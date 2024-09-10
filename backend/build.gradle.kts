@@ -2,15 +2,15 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.3.0"
-    id("io.spring.dependency-management") version "1.1.5"
-    id("org.owasp.dependencycheck") version "9.2.0"
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.spring") version "2.0.0"
+    id("org.springframework.boot") version "3.3.3"
+    id("io.spring.dependency-management") version "1.1.6"
+    id("org.owasp.dependencycheck") version "10.0.4"
+    kotlin("jvm") version "2.0.20"
+    kotlin("plugin.spring") version "2.0.20"
 }
 
 group = "hu.bme.sch"
-version = "4.8.0"
+version = "4.8.1"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 springBoot {
@@ -42,16 +42,16 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-aop")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
     api("com.squareup.okhttp3:okhttp:4.12.0")
-    api("com.itextpdf:itext-core:8.0.4")
+    api("com.itextpdf:itext-core:8.0.5")
     api("org.jetbrains.kotlin:kotlin-reflect")
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+    api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     api("com.google.zxing:core:3.5.3")
     api("com.google.zxing:javase:3.5.3")
-    api("io.jsonwebtoken:jjwt-api:0.12.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
-    api("com.fasterxml.uuid:java-uuid-generator:5.0.0")
+    api("io.jsonwebtoken:jjwt-api:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+    api("com.fasterxml.uuid:java-uuid-generator:5.1.0")
     api("org.commonmark:commonmark:0.22.0")
     api("org.commonmark:commonmark-ext-gfm-tables:0.22.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
@@ -59,7 +59,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
     implementation("org.postgresql:postgresql")
-    implementation(platform("io.micrometer:micrometer-bom:1.13.0"))
+    implementation(platform("io.micrometer:micrometer-bom:1.13.4"))
     implementation("io.micrometer:micrometer-core")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.micrometer:micrometer-observation")

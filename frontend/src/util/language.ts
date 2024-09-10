@@ -1,7 +1,7 @@
 import { OFFICIAL_LANGUAGE } from './configs/environment.config'
 
 export function l<T extends keyof typeof friendlyLanguageData>(key: T, fields?: (typeof parameters)[T]) {
-  let message = OFFICIAL_LANGUAGE ? officialLanguageData[key] ?? friendlyLanguageData[key] : friendlyLanguageData[key]
+  let message = OFFICIAL_LANGUAGE ? (officialLanguageData[key] ?? friendlyLanguageData[key]) : friendlyLanguageData[key]
   if (parameters[key]) {
     Object.entries(parameters[key] as Record<string, string>).forEach(([templateKey, value]) => {
       const field = fields?.[templateKey]
