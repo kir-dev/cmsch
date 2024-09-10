@@ -36,7 +36,7 @@ import { EventListView } from '../../util/views/event.view'
 
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
-  const component = useConfigContext()?.components.event
+  const component = useConfigContext()?.components?.event
   const { isOpen, onToggle } = useDisclosure()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()

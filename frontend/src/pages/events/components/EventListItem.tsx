@@ -48,7 +48,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
 
   return (
     <Box w="100%">
-      {config.components.event?.enableDetailedView ? (
+      {config.components?.event?.enableDetailedView ? (
         <Link to={`${AbsolutePaths.EVENTS}/${event.url}`}> {innerComponent} </Link>
       ) : (
         innerComponent
