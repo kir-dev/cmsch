@@ -51,7 +51,7 @@ const RiddleCategoryList = () => {
             <RiddleCategoryListItem
               category={riddleCategory}
               key={riddleCategory.categoryId}
-              onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
+              onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddles[0]?.id)}
             />
           ))
         ) : (
