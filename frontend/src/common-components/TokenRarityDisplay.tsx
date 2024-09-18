@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 
 type TokenRarityChipProps = {
-  count: string
+  count: number
   max?: number
   color: string
   background: string
@@ -9,6 +9,7 @@ type TokenRarityChipProps = {
 
 // based on https://fortnite.fandom.com/wiki/Rarity
 const TokenRarityChip = ({ count, max, color, background }: TokenRarityChipProps) => {
+  const unique = max == 1
   return (
     <Box
       display="inline-block"
@@ -24,9 +25,9 @@ const TokenRarityChip = ({ count, max, color, background }: TokenRarityChipProps
       fontSize="1.1em"
     >
       <Text as="span" transform="skew(10deg)" fontFamily="Rubik, Impact, var(--chakra-fonts-display), sans-serif">
-        {count}
+        {unique ? 'LGBTQ' : count}
       </Text>
-      {max && (
+      {max && !unique && (
         <Text fontSize=".7em" as="sub">
           /{max}
         </Text>
@@ -46,7 +47,8 @@ export const TokenRarityDisplay = ({ collected }: TokenRarityDisplayProps) => {
     UNCOMMON: 500,
     RARE: 250,
     EPIC: 125,
-    LEGENDARY: 62
+    LEGENDARY: 62,
+    RAINBOW: 1
   }
 
   const rarities = [
@@ -74,6 +76,11 @@ export const TokenRarityDisplay = ({ collected }: TokenRarityDisplayProps) => {
       rarity: 'LEGENDARY',
       color: '#ffe8cf',
       background: '#de6e0e'
+    },
+    {
+      rarity: 'RAINBOW',
+      color: '#000',
+      background: 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080)'
     }
   ]
 
@@ -84,23 +91,12 @@ export const TokenRarityDisplay = ({ collected }: TokenRarityDisplayProps) => {
         .map((rarity) => (
           <TokenRarityChip
             key={rarity.rarity}
-            count={collected[rarity.rarity].toString()}
+            count={collected[rarity.rarity]}
             max={maxByRarity[rarity.rarity]}
             color={rarity.color}
             background={rarity.background}
           />
         ))}
-      {collected['RAINBOW'] > 0 && (
-        <TokenRarityChip
-          color="#000"
-          count="LGBTQ"
-          background={
-            'linear-gradient(45deg,' +
-            ' #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080' +
-            ')'
-          }
-        />
-      )}
     </Flex>
   )
 }
