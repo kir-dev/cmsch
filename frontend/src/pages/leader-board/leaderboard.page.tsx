@@ -14,7 +14,6 @@ const LeaderboardPage = () => {
   const component = useConfigContext()?.components.leaderboard
   const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
   const byCategory = useMatch('/leaderboard/category')
-  const byToken = useMatch('/leaderboard/token')
   const navigate = useNavigate()
 
   if (!component) return <ComponentUnavailable />
@@ -23,18 +22,15 @@ const LeaderboardPage = () => {
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={title} />
 
-  const tabIndex = byToken ? 2 : byCategory ? 1 : 0
+  const tabIndex = byCategory ? 1 : 0
 
-  const handleTabChange = (i: number) => {
+  const onTabSelected = (i: number) => {
     switch (i) {
       case 0:
         navigate('/leaderboard')
         break
       case 1:
         navigate('/leaderboard/category')
-        break
-      case 2:
-        navigate('/leaderboard/token')
         break
     }
   }
@@ -51,11 +47,10 @@ const LeaderboardPage = () => {
         {data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={data.groupScore} />}
       </HStack>
 
-      <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={handleTabChange}>
+      <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
         <TabList>
           <Tab>Csapat</Tab>
           <Tab>Kategória</Tab>
-          <Tab>QR kód</Tab>
         </TabList>
         <TabPanels>
           <TabPanel px={0}>
@@ -64,7 +59,6 @@ const LeaderboardPage = () => {
           <TabPanel px={0}>
             <LeaderboardByCategoryPage />
           </TabPanel>
-          <TabPanel px={0}>Hello</TabPanel>
         </TabPanels>
       </Tabs>
     </CmschPage>
