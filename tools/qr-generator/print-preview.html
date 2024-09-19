@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Print Preview</title>
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+    #previewRoot {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+</style>
+<body>
+
+<div id="previewRoot"></div>
+
+<script>
+  let imgTags = ''
+  for (let i = 0; i < 10; i++) {
+    imgTags += `<img src="qr-${i + 1}.svg" onerror="this.style.display='none'">`
+  }
+  for (let i = 0; i < 100; i++) {
+    imgTags += `<img src="qr-${(i + 1).toString().padStart(2, '0')}.svg" onerror="this.style.display='none'">`
+  }
+  for (let i = 0; i < 250; i++) {
+    imgTags += `<img src="qr-${(i + 1).toString().padStart(3, '0')}.svg" onerror="this.style.display='none'">`
+  }
+  document.getElementById('previewRoot').innerHTML = imgTags
+</script>
+</body>
+</html>
