@@ -24,13 +24,13 @@
 <script>
   let imgTags = ''
   for (let i = 0; i < 10; i++) {
-    imgTags += `<img src="qr-${i + 1}.svg" onerror="this.style.display='none'">`
+    imgTags += `<img style='width=10cm;height=10cm' src="qr-${i + 1}.svg" onerror="this.style.display='none'">`
   }
   for (let i = 0; i < 100; i++) {
-    imgTags += `<img src="qr-${(i + 1).toString().padStart(2, '0')}.svg" onerror="this.style.display='none'">`
+    imgTags += `<img style='width=10cm;height=10cm' src="qr-${(i + 1).toString().padStart(2, '0')}.svg" onerror="this.style.display='none'">`
   }
   for (let i = 0; i < 250; i++) {
-    imgTags += `<img src="qr-${(i + 1).toString().padStart(3, '0')}.svg" onerror="this.style.display='none'">`
+    imgTags += `<img style='width=10cm;height=10cm' src="qr-${(i + 1).toString().padStart(3, '0')}.svg" onerror="this.style.display='none'">`
   }
   document.getElementById('previewRoot').innerHTML = imgTags
 </script>
