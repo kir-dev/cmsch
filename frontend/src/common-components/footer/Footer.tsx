@@ -42,7 +42,7 @@ export const Footer = () => {
             {component?.sponsorsEnabled && sponsors.length > 0 && (
               <Box w={['full', null, '50%']}>
                 <Heading textAlign="center" mb={3} mt={0}>
-                  Támogatóink
+                  {component.sponsorTitle}
                 </Heading>
                 <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
                   {sponsors.map((sp, index) => (
@@ -56,7 +56,7 @@ export const Footer = () => {
             {partnersVisible && (
               <Box w={['full', null, '50%']}>
                 <Heading textAlign="center" mb={3} mt={[10, null, 0]}>
-                  Partnereink
+                  {component.partnerTitle}
                 </Heading>
                 <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
                   {component.bmeEnabled && <PartnerLogo name="bme" />}
