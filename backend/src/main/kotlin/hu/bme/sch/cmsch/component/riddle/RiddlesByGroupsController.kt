@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import jakarta.servlet.http.HttpServletResponse
+import java.util.*
 import org.springframework.transaction.PlatformTransactionManager
 import kotlin.jvm.optionals.getOrNull
 
@@ -67,6 +68,10 @@ class RiddlesByGroupsController(
         }
     },
     object : ManualRepository<RiddleMappingVirtualEntity, Int>() {
+        override fun findById(id: Int): Optional<RiddleMappingVirtualEntity> {
+            return riddleMappingRepository.findById(id).map { it.toVirtualEntity(riddleRepository) }
+        }
+
         override fun delete(entity: RiddleMappingVirtualEntity) {
             riddleMappingRepository.deleteById(entity.id)
         }
@@ -112,19 +117,7 @@ class RiddlesByGroupsController(
 
     override fun fetchSublist(id: Int): Iterable<RiddleMappingVirtualEntity> {
         return riddleMappingRepository.findAllByOwnerGroupId(id)
-            .map { submission ->
-                val riddle = riddleRepository.findById(submission.riddleId).getOrNull()
-                RiddleMappingVirtualEntity(
-                    submission.id,
-                    riddle?.categoryId ?: 0,
-                    riddle?.title ?: "n/a",
-                    submission.hintUsed,
-                    submission.completed,
-                    submission.skipped,
-                    submission.attemptCount,
-                    submission.completedAt
-                )
-            }
+            .map { submission -> submission.toVirtualEntity(riddleRepository) }
     }
 
     data class RiddleByGroupFilteredView(
@@ -184,5 +177,4 @@ class RiddlesByGroupsController(
                 )
             }).toByteArray()
     }
-
 }
