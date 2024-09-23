@@ -32,7 +32,6 @@ class RiddleComponent(
         listOf(
             riddleGroup,
             title, menuDisplayName, minRole,
-            visibleRiddlesPerCategory,
 
             shadowBanModerationGroup,
             userShadowBanList,
@@ -80,11 +79,6 @@ class RiddleComponent(
     final override val minRole = MinRoleSettingProxy(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
-
-    val visibleRiddlesPerCategory = SettingProxy(componentSettingService, component,
-        "visibleRiddlesPerCategory", "3", type = SettingType.NUMBER, fieldName = "Egyidőben mutatott riddleök száma",
-        description = "Kategóriánként ennyi kerül megjelenítésre egyidőben, ennyi közül lehet választani"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
