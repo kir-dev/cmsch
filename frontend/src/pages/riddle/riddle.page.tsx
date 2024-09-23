@@ -92,8 +92,8 @@ const RiddlePage = () => {
                 isClosable: true
               }) || null
           }
-          if (result.status === RiddleSubmissionStatus.CORRECT && result.nextRiddles.length) {
-            navigate(`${AbsolutePaths.RIDDLE}/solve/${result.nextRiddles[0].id}`)
+          if (result.status === RiddleSubmissionStatus.CORRECT && result.nextId) {
+            navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
             const input = document.getElementById('solution') as HTMLInputElement
             input.value = ''
             toast({
@@ -104,7 +104,7 @@ const RiddlePage = () => {
               isClosable: true
             })
           }
-          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextRiddles.length) {
+          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextId) {
             navigate(AbsolutePaths.RIDDLE)
             toast({
               title: l('riddle-completed-title'),
@@ -126,8 +126,8 @@ const RiddlePage = () => {
     if (riddleConfig.skipEnabled && data.skipPermitted) {
       skipMutation.mutate(id, {
         onSuccess: (result) => {
-          if (result.nextRiddles.length) {
-            navigate(`${AbsolutePaths.RIDDLE}/solve/${result.nextRiddles[0].id}`)
+          if (result.nextId) {
+            navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
             const input = document.getElementById('solution') as HTMLInputElement
             input.value = ''
             toast({
@@ -138,7 +138,7 @@ const RiddlePage = () => {
               isClosable: true
             })
           }
-          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextRiddles.length) {
+          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextId) {
             navigate(AbsolutePaths.RIDDLE)
             toast({
               title: l('riddle-completed-title'),
@@ -173,6 +173,7 @@ const RiddlePage = () => {
       <StopItModal isOpen={isOpen} onClose={onClose} />
       <Heading my={5}> {data.title} </Heading>
       <Box maxW="100%" w="30rem" mx="auto">
+        {data.imageUrl && <Image width="100%" src={`${API_BASE_URL}/cdn/${data.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
         <VStack mt={5} align="flex-start">
           {data.creator && <Text>Létrehozó: {data.creator}</Text>}
           {data.firstSolver && <Text>Első megoldó: {data.firstSolver}</Text>}
@@ -184,12 +185,10 @@ const RiddlePage = () => {
             <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={data.solved} />
           </FormControl>
 
-          <VStack spacing={5} mt={5}>
+          <VStack spacing={5} mt={10}>
             <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme="brand" width="100%">
               Beadom
             </Button>
-            {data.imageUrl && <Image width="100%" src={`${API_BASE_URL}/cdn/${data.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
-
             {hintQuery.isSuccess || data.hint ? (
               <Alert status="info" borderRadius="md">
                 <AlertIcon />
@@ -211,22 +210,22 @@ const RiddlePage = () => {
               <>
                 <Alert status="info" borderRadius="md">
                   <AlertIcon />
-                  Kihagyhatjátok a riddlet, ha már {riddleConfig.skipAfterGroupsSolved} csapat megoldotta. Ilyenkor 0 pontot kaptok érte.
+                  Átugorhatjátok a riddlet, ha már {riddleConfig.skipAfterGroupsSolved} csapat megoldotta. Ilyenkor 0 pontot kaptok érte.
                 </Alert>
                 {data.skipPermitted ? (
                   <ConfirmDialogButton
                     buttonColorScheme="gray"
                     buttonVariant="outline"
                     buttonWidth="100%"
-                    buttonText="Riddle kihagyása"
-                    headerText="Riddle kihagyása"
-                    bodyText="Biztosan kihagyod ezt a riddlet? Így nem kaptok pontot érte."
-                    confirmButtonText="Riddle kihagyása"
+                    buttonText="Riddle átugrása"
+                    headerText="Riddle átugrása"
+                    bodyText="Biztosan átugrod ezt a riddlet? Így nem kaptok pontot érte."
+                    confirmButtonText="Riddle átugrása"
                     confirmAction={skipSolution}
                   />
                 ) : (
                   <Button width="100%" colorScheme="gray" isDisabled>
-                    Riddle kihagyása
+                    Riddle átugrása
                   </Button>
                 )}
               </>
