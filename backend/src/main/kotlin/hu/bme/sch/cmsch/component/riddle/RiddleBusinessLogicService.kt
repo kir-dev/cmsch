@@ -247,7 +247,7 @@ open class RiddleBusinessLogicService(
                 riddle.firstSolver = user.userName
                 riddleCacheManager.updateRiddle(riddle)
             }
-            return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextRiddlesUser(user, riddle))
+            return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, nextRiddles)
         }
     }
 

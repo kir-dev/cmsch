@@ -9,7 +9,6 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { RiddleCategoryListItem } from './components/RiddleCategoryListItem'
-import { RiddleCategory } from '../../util/views/riddle.view.ts'
 
 const RiddleCategoryList = () => {
   const navigate = useNavigate()
@@ -21,11 +20,9 @@ const RiddleCategoryList = () => {
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
-  const onRiddleCategoryClick = (category: RiddleCategory) => {
-    if (category.nextRiddles.length > 1) {
-      navigate(`${AbsolutePaths.RIDDLE}/category/${category.categoryId}`)
-    } else if (category.nextRiddles[0]) {
-      navigate(`${AbsolutePaths.RIDDLE}/solve/${category.nextRiddles[0].id}`)
+  const onRiddleCategoryClick = (nextRiddle?: number) => {
+    if (nextRiddle) {
+      navigate(`${AbsolutePaths.RIDDLE}/${nextRiddle}`)
     } else {
       toast({
         title: l('riddle-completed-category-title'),
@@ -54,7 +51,7 @@ const RiddleCategoryList = () => {
             <RiddleCategoryListItem
               category={riddleCategory}
               key={riddleCategory.categoryId}
-              onClick={() => onRiddleCategoryClick(riddleCategory)}
+              onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddles[0]?.id)}
             />
           ))
         ) : (
