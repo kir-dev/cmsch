@@ -6,9 +6,6 @@ import hu.bme.sch.cmsch.dto.FullDetails
 data class RiddleView(
 
     @field:JsonView(FullDetails::class)
-    var id: Int,
-
-    @field:JsonView(FullDetails::class)
     var imageUrl: String = "",
 
     @field:JsonView(FullDetails::class)

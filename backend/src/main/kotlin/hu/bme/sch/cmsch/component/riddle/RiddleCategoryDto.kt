@@ -12,7 +12,7 @@ data class RiddleCategoryDto(
     var title: String = "",
 
     @field:JsonView(Preview::class)
-    var nextRiddles: List<RiddleView> = listOf(),
+    var nextRiddle: Int? = null,
 
     @field:JsonView(Preview::class)
     var completed: Int = 0,
