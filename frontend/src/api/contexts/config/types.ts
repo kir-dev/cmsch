@@ -168,6 +168,8 @@ export interface Leaderboard {
   showUserBoard: boolean
   title: string
   searchEnabled: boolean
+  showTokenCountByRarity: boolean
+  showTokenMaxCountByRarity: boolean
 }
 
 export interface Profile {

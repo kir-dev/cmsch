@@ -51,7 +51,9 @@ class LeaderBoardComponent(
             showGroupBoard,
             maxGroupEntryToShow,
             showGroupOfUser,
-            searchEnabled
+            searchEnabled,
+            showTokenCountByRarity,
+            showTokenMaxCountByRarity
         )
     }
 
@@ -186,6 +188,18 @@ class LeaderBoardComponent(
         "searchEnabled", "false", type = SettingType.BOOLEAN,
         fieldName = "Keresés elérhető",
         description = "Legyen-e kereső az oldal tetején"
+    )
+
+    val showTokenCountByRarity = SettingProxy(componentSettingService, component,
+        "showTokenCountByRarity", "false", type = SettingType.BOOLEAN,
+        fieldName = "Begyűjtött tokenek száma ritkaság szerint",
+        description = "Legyen-e látható a begyűjtött tokenek száma ritkaság szerint, módosítás után nyomj egy újraszámolást"
+    )
+
+    val showTokenMaxCountByRarity = SettingProxy(componentSettingService, component,
+        "showTokenMaxCountByRarity", "false", type = SettingType.BOOLEAN,
+        fieldName = "Összes token szám ritkaság szerint",
+        description = "Legyen-e látható az összesen begyűjthető tokenek száma ritkaság szerint"
     )
 
 }
