@@ -1,14 +1,16 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
+import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
 
 type TokenRarityChipProps = {
   count: number
   max?: number
   color: string
   background: string
+  showMax?: boolean
 }
 
 // based on https://fortnite.fandom.com/wiki/Rarity
-const TokenRarityChip = ({ count, max, color, background }: TokenRarityChipProps) => {
+const TokenRarityChip = ({ count, max, color, background, showMax }: TokenRarityChipProps) => {
   const unique = max == 1
   return (
     <Box
@@ -21,13 +23,12 @@ const TokenRarityChip = ({ count, max, color, background }: TokenRarityChipProps
       lineHeight="normal"
       color={color}
       background={background}
-      fontWeight={900}
       fontSize="1.1em"
     >
-      <Text as="span" transform="skew(10deg)" fontFamily="Rubik, Impact, var(--chakra-fonts-display), sans-serif">
+      <Text as="span" fontWeight="900">
         {unique ? 'LGBTQ' : count}
       </Text>
-      {max && !unique && (
+      {showMax && max && !unique && (
         <Text fontSize=".7em" as="sub">
           /{max}
         </Text>
@@ -41,6 +42,8 @@ interface TokenRarityDisplayProps {
 }
 
 export const TokenRarityDisplay = ({ collected }: TokenRarityDisplayProps) => {
+  const showMaxCount = useConfigContext().components.leaderboard.showTokenMaxCountByRarity
+
   // TODO: get count by rarity from config
   const maxByRarity: { [key: string]: number } = {
     COMMON: 1500,
@@ -95,6 +98,7 @@ export const TokenRarityDisplay = ({ collected }: TokenRarityDisplayProps) => {
             max={maxByRarity[rarity.rarity]}
             color={rarity.color}
             background={rarity.background}
+            showMax={showMaxCount}
           />
         ))}
     </Flex>
