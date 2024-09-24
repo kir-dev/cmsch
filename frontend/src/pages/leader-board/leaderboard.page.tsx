@@ -49,8 +49,8 @@ const LeaderboardPage = () => {
 
       <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
         <TabList>
-          <Tab>Csapat</Tab>
-          <Tab>Kategória</Tab>
+          <Tab>Csapatonként</Tab>
+          <Tab>Kategóriánként</Tab>
         </TabList>
         <TabPanels>
           <TabPanel px={0}>

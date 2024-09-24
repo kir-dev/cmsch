@@ -240,12 +240,14 @@ open class LeaderBoardService(
 
                             val groupDetails = details.computeIfAbsent(groupId) { TopListDetails(groupId, groupName) }
                             groupDetails.items.compute(tokenTitle) { _, value -> (value ?: 0) + tokenScore }
-                            groupDetails.tokenRarities = tokens
-                                .groupBy { it.token?.rarity }
-                                .mapNotNull { (rarity, tokens) ->
-                                    if (rarity.isNullOrBlank()) null
-                                    else (rarity to tokens.size)
-                                }.toMap()
+
+                            if (leaderBoardComponent.showTokenCountByRarity.isValueTrue())
+                                groupDetails.tokenRarities = tokens
+                                    .groupBy { it.token?.rarity }
+                                    .mapNotNull { (rarity, tokens) ->
+                                        if (rarity.isNullOrBlank()) null
+                                        else (rarity to tokens.size)
+                                    }.toMap()
 
                             LeaderBoardAsGroupEntryDto(
                                 groupId,
