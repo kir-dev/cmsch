@@ -118,6 +118,7 @@ open class SecurityConfig(
                 antMatcher("/scanner.css"),
                 antMatcher("/redirect/beacon"),
                 antMatcher("/actuator/prometheus"),
+                antMatcher("/actuator/health/liveness"),
             ).permitAll()
 
             it.requestMatchers(
