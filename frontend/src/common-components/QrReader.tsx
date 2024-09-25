@@ -5,6 +5,12 @@ interface QrReaderProps {
   onScan: (data: string) => void
 }
 
+const selectCamera = async (): Promise<string> => {
+  let cameras = await BrowserCodeReader.listVideoInputDevices()
+  cameras = cameras.filter((camera) => !camera.label.toLowerCase().includes('virtual'))
+  return cameras[cameras.length - 1].deviceId
+}
+
 export function QrReader({ onScan }: QrReaderProps) {
   const codeReader = useRef(new BrowserQRCodeReader())
   const videoElement = useRef<HTMLVideoElement>(null)
@@ -15,9 +21,8 @@ export function QrReader({ onScan }: QrReaderProps) {
 
     async function decodeContinuously() {
       if (!videoElement.current) return
-      const videoInputDevices = await BrowserCodeReader.listVideoInputDevices()
-      const selectedDeviceId = videoInputDevices[0].deviceId
       if (cancelled) return
+      const selectedDeviceId = await selectCamera()
       controls = await codeReader.current.decodeFromVideoDevice(selectedDeviceId, videoElement.current, (result, _err, controls) => {
         if (result) {
           controls.stop()
