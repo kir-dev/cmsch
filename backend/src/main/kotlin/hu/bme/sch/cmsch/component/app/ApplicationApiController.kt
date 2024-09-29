@@ -1,12 +1,18 @@
 package hu.bme.sch.cmsch.component.app
 
+import com.fasterxml.jackson.annotation.JsonView
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.ComponentHandlerService
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
+import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
@@ -25,7 +31,8 @@ class ApplicationApiController(
     private val componentHandlerService: ComponentHandlerService,
     private val countdownComponent: Optional<CountdownComponent>,
     private val clock: TimeService,
-    private val stylingComponent: StylingComponent
+    private val stylingComponent: StylingComponent,
+    private val applicationService: ApplicationService
 ) {
 
     private val componentWriter = ObjectMapper().writerFor(object : TypeReference<Map<String, Map<String, Any>>>() {})
@@ -57,6 +64,29 @@ class ApplicationApiController(
             menu = menuService.getCachedMenuForRole(role),
             components = componentHandlerService.getComponentConstantsForRoleFast(role)
         )
+    }
+
+    @JsonView(FullDetails::class)
+    @GetMapping("/whoami")
+    @Operation(summary = "Show authentication info")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "The user is authenticated and data is provided or " +
+                        "no valid token present (in this case the loggedIn is false)"
+            ),
+            ApiResponse(
+                responseCode = "403", description = "Valid token is provided but the endpoint is not available " +
+                        "for the role that the user have"
+            )
+        ]
+    )
+    fun profile(auth: Authentication?): ResponseEntity<UserAuthInfoView> {
+        val jwtUser = auth?.getUserOrNull()
+            ?: return ResponseEntity.ok(UserAuthInfoView(authState = AuthState.LOGGED_OUT))
+
+        val actualUser = auth.getUserEntityFromDatabaseOrNull()
+        return ResponseEntity.ok(applicationService.getUserAuthInfo(jwtUser, actualUser))
     }
 
     private fun appComponentFields() =

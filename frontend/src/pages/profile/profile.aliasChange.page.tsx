@@ -2,8 +2,6 @@ import { Box, Button, FormControl, FormLabel, Heading, HStack, Input, useColorMo
 import { FormEvent, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router-dom'
-
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useAliasChangeMutation } from '../../api/hooks/alias/useAliasChangeMutation'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -11,13 +9,14 @@ import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { PageStatus } from '../../common-components/PageStatus'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
 
 export const AliasChangePage = () => {
   const navigate = useNavigate()
   const toast = useToast()
   const submissionMutation = useAliasChangeMutation()
   const borderColor = useColorModeValue('gray.200', 'gray.600')
-  const { profile, profileLoading, profileError } = useAuthContext()
+  const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
   const component = useConfigContext()?.components.profile
 

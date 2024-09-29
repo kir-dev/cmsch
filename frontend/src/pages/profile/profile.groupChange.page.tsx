@@ -3,15 +3,15 @@ import { Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VSt
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { useGroupChangeMutation } from '../../api/hooks/group-change/useGroupChangeMutation'
+import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
 
 export function ProfileGroupChangePage() {
-  const { profile, refetch } = useAuthContext()
+  const { data: profile, refetch } = useProfileQuery()
   const [value, setValue] = useState<string>()
   const [error, setError] = useState<string>()
   const { sendMessage } = useServiceContext()
