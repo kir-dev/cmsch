@@ -11,13 +11,13 @@ interface CmschPageProps extends CmschContainerProps {
 }
 
 export const CmschPage = ({ loginRequired, children, minRole, ...props }: CmschPageProps) => {
-  const { profile, profileLoading, isLoggedIn } = useAuthContext()
+  const { authInfo, authInfoLoading, isLoggedIn } = useAuthContext()
   if (loginRequired) {
-    if (profileLoading) return <LoadingPage />
+    if (authInfoLoading) return <LoadingPage />
     if (!isLoggedIn) return <LoginRequired />
   }
   if (minRole && minRole > 0) {
-    if (!profile?.role || RoleType[profile?.role] < minRole) {
+    if (!authInfo?.role || RoleType[authInfo?.role] < minRole) {
       return <Navigate to="/" replace />
     }
   }

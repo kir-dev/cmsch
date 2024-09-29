@@ -74,7 +74,7 @@ class AuthschLoginController(
 
     @GetMapping("/control/open-site")
     fun openSite(auth: Authentication?, response: HttpServletResponse): String {
-        if (auth != null && startupPropertyConfig.jwtEnabled) {
+        if (auth != null) {
             if (auth.principal !is CmschUser) {
                 log.error("User is not CmschUser {} {}", auth, auth.javaClass.simpleName)
                 return "redirect:${applicationComponent.siteUrl.getValue()}?error=cannot-generate-jwt"
@@ -93,8 +93,6 @@ class AuthschLoginController(
     fun refreshToken(auth: Authentication?, response: HttpServletResponse): ResponseEntity<String> {
         if (auth == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        if (!startupPropertyConfig.jwtEnabled)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT not enabled")
 
         response.addCookie(createJwtCookie(jwtTokenProvider.refreshToken(auth)))
 
