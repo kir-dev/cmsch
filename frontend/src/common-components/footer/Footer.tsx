@@ -47,7 +47,7 @@ export const Footer = () => {
                 <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
                   {sponsors.map((sp, index) => (
                     <a href={sp.url} key={index} target="_blank" referrerPolicy="origin">
-                      <Image m={5} src={sp.image} alt={sp.alt} maxH={20} maxW={32} />
+                      <Image m={5} src={sp.image} alt={sp.alt} maxH={20} maxW={32} loading="lazy" />
                     </a>
                   ))}
                 </Flex>
@@ -65,7 +65,7 @@ export const Footer = () => {
                   {component.schdesignEnabled && <PartnerLogo name="schdesign" />}
                   {partners.map((partner, index) => (
                     <a href={partner.url} key={index} target="_blank" referrerPolicy="origin">
-                      <Image m={5} src={partner.image} alt={partner.alt} maxH={20} maxW={32} />
+                      <Image m={5} src={partner.image} alt={partner.alt} maxH={20} maxW={32} loading="lazy" />
                     </a>
                   ))}
                 </Flex>
