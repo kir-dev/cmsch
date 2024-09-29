@@ -9,12 +9,12 @@ import { LoginRequired } from './LoginRequired'
 
 export function ComponentUnavailable() {
   const { sendMessage } = useServiceContext()
-  const { isLoggedIn, profileLoading } = useAuthContext()
+  const { isLoggedIn, authInfoLoading } = useAuthContext()
   useEffect(() => {
     if (isLoggedIn) sendMessage(l('component-unavailable'))
   }, [])
   if (!isLoggedIn) {
-    if (profileLoading) return <LoadingPage />
+    if (authInfoLoading) return <LoadingPage />
     return <LoginRequired />
   }
   return <Navigate to={AbsolutePaths.ERROR} />
