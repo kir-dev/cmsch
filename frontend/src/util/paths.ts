@@ -76,6 +76,7 @@ export enum ApiPaths {
   WARNING = '/api/warning',
   TASK_CATEGORY = '/api/task/category',
   PROFILE = '/api/profile',
+  WHO_AM_I = '/api/whoami',
   LEVELS = '/api/levels',
   LOCATION = '/api/track-my-group',
   TOKENS = '/api/tokens',

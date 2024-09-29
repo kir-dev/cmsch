@@ -13,7 +13,6 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val zoneId: String,
 
     // JWT
-    val jwtEnabled: Boolean,
     val secretKey: String,
     val sessionValidityInMilliseconds: Long,
 

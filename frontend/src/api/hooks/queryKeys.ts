@@ -7,6 +7,7 @@ export enum QueryKeys {
   WARNING = 'WARNING',
   NEWS = 'NEWS',
   USER = 'USER',
+  WHO_AM_I = 'WHO_AM_I',
   RACE = 'RACE',
   FREESTYLE_RACE = 'FREESTYLE_RACE',
   RIDDLE_HINT = 'RIDDLE_HINT',

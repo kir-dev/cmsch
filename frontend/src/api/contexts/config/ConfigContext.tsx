@@ -1,12 +1,8 @@
-import { Box, Button, ButtonGroup, Center, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { createContext, PropsWithChildren, useContext } from 'react'
-import { Helmet } from 'react-helmet-async'
-import { Loading } from '../../../common-components/Loading'
-import { INITIAL_BG_IMAGE } from '../../../util/configs/environment.config'
-import { l } from '../../../util/language'
 import { useConfigQuery } from '../../hooks/config/useConfigQuery'
 import { ConfigDto } from './types'
-import { KirDevLogo } from '../../../assets/kir-dev-logo'
+import { LoadingView } from '../../../util/LoadingView.tsx'
+import { l } from '../../../util/language.ts'
 
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
@@ -14,43 +10,19 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   const { data, isLoading, error, refetch } = useConfigQuery((err) =>
     console.error('[ERROR] at ConfigProvider', JSON.stringify(err, null, 2))
   )
-  const bg = useColorModeValue('white', 'gray.900')
-  if (isLoading)
-    return (
-      <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
-        <VStack p={5} borderRadius={5} bg={bg}>
-          <Loading />
-          <Box w={40} maxH={40} my={3}>
-            <KirDevLogo />
-          </Box>
-        </VStack>
-      </Center>
-    )
-  if (error) {
-    const is500Status = Math.floor(Number(error?.response?.status) / 100) === 5
-    return (
-      <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
-        <Helmet title={l('error-page-helmet')} />
-        <VStack spacing={5} p={5} borderRadius={5} bg={bg}>
-          <Heading textAlign="center">{is500Status ? l('error-service-unavailable-title') : l('error-page-title')}</Heading>
-          <Text textAlign="center" color="gray.500" marginTop={4} maxW={96}>
-            {is500Status ? l('error-service-unavailable') : l('error-connection-unsuccessful')}
-          </Text>
-          <ButtonGroup justifyContent="center" marginTop={4}>
-            <Button
-              colorScheme="brand"
-              onClick={() => {
-                refetch()
-              }}
-            >
-              Újra
-            </Button>
-          </ButtonGroup>
-        </VStack>
-      </Center>
-    )
-  }
-  return <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>
+
+  const is500Status = Math.floor(Number(error?.response?.status) / 100) === 5
+  return (
+    <LoadingView
+      isLoading={isLoading}
+      hasError={!!error}
+      errorAction={refetch}
+      errorMessage={is500Status ? l('error-service-unavailable') : l('error-connection-unsuccessful')}
+      errorTitle={is500Status ? l('error-service-unavailable-title') : l('error-page-title')}
+    >
+      <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>
+    </LoadingView>
+  )
 }
 
 export const useConfigContext = () => {

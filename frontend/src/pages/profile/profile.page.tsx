@@ -33,13 +33,15 @@ import { ProfileQR } from './components/ProfileQR'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
 
 const Map = React.lazy(() => import('../../common-components/map/GroupMapContainer'))
 
 type Props = {}
 
 const ProfilePage = ({}: Props) => {
-  const { onLogout, profile, profileLoading, profileError, refetch } = useAuthContext()
+  const { onLogout } = useAuthContext()
+  const { isLoading: profileLoading, data: profile, error: profileError, refetch } = useProfileQuery()
   const navigate = useNavigate()
 
   useEffect(() => {

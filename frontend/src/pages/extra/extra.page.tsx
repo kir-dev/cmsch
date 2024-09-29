@@ -6,7 +6,7 @@ import { Navigate, useParams } from 'react-router-dom'
 import { useExtraPage } from '../../api/hooks/extra/useExtraPage'
 import { Helmet } from 'react-helmet-async'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { RoleType } from '../../util/views/profile.view'
+import { RoleType, RoleTypeString } from '../../util/views/profile.view'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { l } from '../../util/language'
@@ -16,13 +16,13 @@ interface ExtraPageProps {}
 
 const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   const params = useParams()
-  const { profile } = useAuthContext()
+  const { authInfo } = useAuthContext()
   const { data, isLoading, isError } = useExtraPage(params.slug || '')
   const { sendMessage } = useServiceContext()
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 
-  if (RoleType[data.minRole] > RoleType.GUEST && profile && RoleType[profile.role] < RoleType[data.minRole]) {
+  if (RoleType[data.minRole] > RoleType.GUEST && authInfo && RoleType[authInfo?.role ?? RoleTypeString.BASIC] < RoleType[data.minRole]) {
     sendMessage(l('no-permission'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
