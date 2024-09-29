@@ -41,6 +41,7 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
               objectFit="contain"
               alignSelf="center"
               borderRadius="md"
+              loading="lazy"
             />
           )}
           {detailEnabled && <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />}
