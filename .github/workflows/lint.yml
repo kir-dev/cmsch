@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'frontend/**'
+      - staging
   pull_request:
-    branches:
-      - master
-    paths:
-      - 'frontend/**'
+    types: [opened, synchronize, reopened]
 
 jobs:
   run-linters:
@@ -42,3 +38,11 @@ jobs:
 
     - name: TSC
       run: yarn lint:typescript
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        projectBaseDir: frontend
