@@ -7,6 +7,7 @@ plugins {
     id("org.owasp.dependencycheck") version "10.0.4"
     kotlin("jvm") version "2.0.20"
     kotlin("plugin.spring") version "2.0.20"
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "hu.bme.sch"
@@ -20,6 +21,14 @@ springBoot {
 tasks {
     bootJar {
         archiveFileName.set("cmsch.jar")
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "kir-dev_cmsch-backend")
+        property("sonar.organization", "kir-dev")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
