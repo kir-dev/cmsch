@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.task
 
-import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.TaskSubmissionListener
 import hu.bme.sch.cmsch.model.RoleType
@@ -29,7 +28,6 @@ open class TasksService(
     private val categories: TaskCategoryRepository,
     private val clock: TimeService,
     private val taskComponent: TaskComponent,
-    private val debugComponent: DebugComponent,
     private val listeners: List<TaskSubmissionListener>,
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository
@@ -191,7 +189,7 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        val now = clock.getTimeInSeconds()
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
@@ -219,7 +217,7 @@ open class TasksService(
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
-        val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        val now = clock.getTimeInSeconds()
         if (task.availableFrom > now || task.availableTo < now) {
             return TaskSubmissionStatus.TOO_EARLY_OR_LATE
         }
