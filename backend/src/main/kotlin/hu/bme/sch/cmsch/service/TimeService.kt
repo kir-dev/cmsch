@@ -3,9 +3,8 @@ package hu.bme.sch.cmsch.service
 import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -18,9 +17,9 @@ class TimeService(
     val timeZone: ZoneId = Objects.requireNonNull(ZoneId.of(startupPropertyConfig.zoneId), "Invalid time zone")
     private val sqlDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-    fun getTimeInSeconds() = LocalDateTime.now(timeZone).atZone(ZoneOffset.UTC)?.toInstant()?.epochSecond ?: 0
+    fun getTimeInSeconds() = ZonedDateTime.now(timeZone)?.toInstant()?.epochSecond ?: 0
 
-    fun getTime() = LocalDateTime.now(timeZone).atZone(ZoneOffset.UTC)?.toInstant()?.toEpochMilli() ?: 0
+    fun getTime() = ZonedDateTime.now(timeZone)?.toInstant()?.toEpochMilli() ?: 0
 
     fun inRange(availableFrom: Long, availableTo: Long, timeInSeconds: Long): Boolean {
         val now = timeInSeconds + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
@@ -36,6 +35,6 @@ class TimeService(
         return getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
     }
 
-    fun todayInSqlFormat(): String = LocalDateTime.now(timeZone).format(sqlDateFormatter)
+    fun todayInSqlFormat(): String = ZonedDateTime.now(timeZone).format(sqlDateFormatter)
 
 }
