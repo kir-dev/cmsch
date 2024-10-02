@@ -137,14 +137,12 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", outerDescriptor.getColumnsAsJson())
+        model.addAttribute("columnData", outerDescriptor.getColumns())
         val overview = transactionManager.transaction(readOnly = true) { fetchOuterOverview() }
-        model.addAttribute("tableData", outerDescriptor.getTableDataAsJson(overview))
+        model.addAttribute("tableData", outerDescriptor.getTableData(overview))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", outerDescriptor.toJson(
-            outerControlActions.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", outerControlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", outerControlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
@@ -174,14 +172,12 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", descriptor.getColumnsAsJson())
+        model.addAttribute("columnData", descriptor.getColumns())
         val overview = transactionManager.transaction(readOnly = true) { filterOverview(user, fetchSublist(id)) }
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(overview))
+        model.addAttribute("tableData", descriptor.getTableData(overview))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", descriptor.toJson(
-            controlActions.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 

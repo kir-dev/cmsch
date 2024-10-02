@@ -140,7 +140,7 @@ class PermissionGroupUserListPage(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", descriptor.getColumnsAsJson())
+        model.addAttribute("columnData", descriptor.getColumns())
         val overview = transactionManager.transaction(readOnly = true) {
             userRepository.findAllByPermissionGroupsNot("")
                 .filter { permissionGroup.key.isNotEmpty() && it.permissionGroups.split(",").contains(permissionGroup.key) }
@@ -154,12 +154,10 @@ class PermissionGroupUserListPage(
                     )
                 }
         }
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, overview)))
+        model.addAttribute("tableData", descriptor.getTableData(filterOverview(user, overview)))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", descriptor.toJson(
-            controlActionsForView.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActionsForView.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActionsForView)
         model.addAttribute("buttonActions", buttonActionsForView.filter { it.permission.validate(user) })
         model.addAttribute("searchSettings", searchSettings)
@@ -201,4 +199,3 @@ class PermissionGroupUserListPage(
     fun redirectToUsersView() = "redirect:/admin/control/permission-groups"
 
 }
-
