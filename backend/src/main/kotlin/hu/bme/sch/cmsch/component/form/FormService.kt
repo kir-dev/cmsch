@@ -1,9 +1,7 @@
 package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import hu.bme.sch.cmsch.component.app.DebugComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.model.RoleType
@@ -26,7 +24,6 @@ open class FormService(
     private val responseRepository: ResponseRepository,
     private val userRepository: UserRepository,
     private val clock: TimeService,
-    private val debugComponent: DebugComponent,
     private val listeners: MutableList<out FormSubmissionListener>,
     private val formComponent: FormComponent,
 ) {
@@ -62,7 +59,7 @@ open class FormService(
         if ((form.minRole.value > user.role.value || form.maxRole.value < user.role.value) && !user.role.isAdmin)
             return FormView(status = FormStatus.NOT_FOUND)
 
-        val now = clock.getTimeInSeconds() + (debugComponent.submitDiff.getValue().toLongOrNull() ?: 0)
+        val now = clock.getTimeInSeconds()
         if (!form.open)
             return FormView(status = FormStatus.NOT_ENABLED)
         if (form.availableFrom > now)

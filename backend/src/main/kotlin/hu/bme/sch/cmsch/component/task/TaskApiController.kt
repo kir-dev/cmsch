@@ -37,16 +37,16 @@ class TaskApiController(
         when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.USER -> {
                 user ?: return TasksView()
-                categories = tasks.getCategoriesForUserInTimeRange(user.id, clock.getNowInSeconds(), user.role)
+                categories = tasks.getCategoriesForUserInTimeRange(user.id, clock.getTimeInSeconds(), user.role)
 
                 return TasksView(
                     categories = categories
-                        .filter { clock.inRange(it.availableFrom, it.availableTo, clock.getNowInSeconds()) },
+                        .filter { clock.inRange(it.availableFrom, it.availableTo, clock.getTimeInSeconds()) },
                 )
             }
             OwnershipType.GROUP -> {
                 val groupId = user?.groupId ?: return TasksView( )
-                categories = tasks.getCategoriesForGroupInRange(groupId, clock.getNowInSeconds(), userRole = user.role)
+                categories = tasks.getCategoriesForGroupInRange(groupId, clock.getTimeInSeconds(), userRole = user.role)
 
                 return TasksView(
                     categories = categories
