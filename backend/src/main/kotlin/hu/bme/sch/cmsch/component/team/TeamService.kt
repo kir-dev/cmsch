@@ -280,7 +280,7 @@ open class TeamService(
 
     private fun mapTasks(team: GroupEntity, user: CmschUser): List<TaskCategoryPreview> {
         return tasksService.map { tasks ->
-            tasks.getCategoriesForGroupInRange(team.id, clock.getNowInSeconds(), advertisedOnly = true, user.role)
+            tasks.getCategoriesForGroupInRange(team.id, clock.getTimeInSeconds(), advertisedOnly = true, user.role)
                 .map { TaskCategoryPreview(
                     name = it.name,
                     completed = it.approved,
