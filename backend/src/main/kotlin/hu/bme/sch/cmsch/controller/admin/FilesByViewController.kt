@@ -90,13 +90,11 @@ class FilesByViewController(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", overviewDescriptor.getColumnsAsJson())
-        model.addAttribute("tableData", overviewDescriptor.getTableDataAsJson(fetchOverview()))
+        model.addAttribute("columnData", overviewDescriptor.getColumns())
+        model.addAttribute("tableData", overviewDescriptor.getTableData(fetchOverview()))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", overviewDescriptor.toJson(
-            controlActions.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", listOf<ButtonAction>())
 
@@ -126,8 +124,8 @@ class FilesByViewController(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", submittedDescriptor.getColumnsAsJson())
-        model.addAttribute("tableData", submittedDescriptor.getTableDataAsJson(listFilesInView(id)))
+        model.addAttribute("columnData", submittedDescriptor.getColumns())
+        model.addAttribute("tableData", submittedDescriptor.getTableData(listFilesInView(id)))
 
         model.addAttribute("user", user)
         val controlActionForCategory = listOf(
@@ -152,9 +150,7 @@ class FilesByViewController(
                 basic = true
             )
         )
-        model.addAttribute("controlActions", overviewDescriptor.toJson(
-            controlActionForCategory.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActionForCategory.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActionForCategory)
         model.addAttribute("buttonActions", listOf<ButtonAction>())
 

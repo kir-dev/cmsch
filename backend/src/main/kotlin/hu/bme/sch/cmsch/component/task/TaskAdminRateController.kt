@@ -120,16 +120,14 @@ class TaskAdminRateController(
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", descriptor.getColumnsAsJson())
+        model.addAttribute("columnData", descriptor.getColumns())
         val submissions = transactionManager.transaction(readOnly = true) {
             submittedRepository.findByTask_IdAndRejectedIsFalseAndApprovedIsFalseWithoutLobs(id)
         }
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(submissions))
+        model.addAttribute("tableData", descriptor.getTableData(submissions))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", descriptor.toJson(
-            rateControlActions.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", rateControlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", rateControlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
 
