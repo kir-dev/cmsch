@@ -31,31 +31,4 @@ class HomeApiController(
             .take(homeComponent.maxVisibleCount.getValue().toIntOrNull() ?: 0)
     }
 
-//    @JsonView(Preview::class)
-//    fun legacyHome(auth: Authentication): LegacyHomeView {
-//        val user = auth.getUserOrNull()
-//        val events = eventsRepository.map { it.findAllByVisibleTrueOrderByTimestampStart() }
-//            .orElse(listOf())
-//            .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
-//
-//        val dayStart = LocalDate.now(clock.timeZone).atStartOfDay(clock.timeZone).toEpochSecond()
-//        val dayEnd = LocalDate.now(clock.timeZone).plusDays(1).atStartOfDay(clock.timeZone).toEpochSecond()
-//        var upcomingEvents = events.filter { it.timestampStart in (dayStart + 1) until dayEnd }
-//        if (upcomingEvents.isEmpty())
-//            upcomingEvents = events.filter { it.timestampStart >= dayStart }.take(6)
-//
-//        return LegacyHomeView(
-//            news = newsRepository.map { it.findAllByVisibleTrueOrderByTimestampDesc() }
-//                .orElse(listOf())
-//                .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
-//                .take(homeComponent.maxVisibleCount.getValue().toIntOrNull() ?: 0),
-//            upcomingEvents = upcomingEvents,
-//            tasks = tasks.map { tasksService ->
-//                user?.groupId?.let { tasksService.getAllTasksForGroup(it) }
-//                    ?: tasksService.getAllTasksForGuests()
-//            }.orElse(listOf()),
-//            leaderBoard = leaderBoardService.map { it.getBoardForGroups() }.orElse(listOf()),
-//        )
-//    }
-
 }
