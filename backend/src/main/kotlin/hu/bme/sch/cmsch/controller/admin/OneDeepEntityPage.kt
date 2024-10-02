@@ -283,14 +283,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", descriptor.getColumnsAsJson())
+        model.addAttribute("columnData", descriptor.getColumns())
         val overview = transactionManager.transaction(readOnly = true) { fetchOverview(user) }
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, overview)))
+        model.addAttribute("tableData", descriptor.getTableData(filterOverview(user, overview)))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", descriptor.toJson(
-            controlActions.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
         model.addAttribute("searchSettings", searchSettings)

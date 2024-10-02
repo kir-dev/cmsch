@@ -91,13 +91,11 @@ class AuditLogController(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", descriptor.getColumnsAsJson())
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(listFilesInView()))
+        model.addAttribute("columnData", descriptor.getColumns())
+        model.addAttribute("tableData", descriptor.getTableData(listFilesInView()))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", descriptor.toJson(
-            controlActions.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", listOf<ButtonAction>())
 
