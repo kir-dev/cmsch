@@ -208,6 +208,12 @@ export interface Profile {
 export interface Style {
   lightBackgroundColor: string
   lightContainerColor: string
+  lightBorderColor: string
+  lightSuccessColor: string
+  lightWarningColor: string
+  lightInfoColor: string
+  lightErrorColor: string
+  lightBrandForeground: string
   lightTextColor: string
   lightBrandingColor: string
   lightBackgroundUrl: string
@@ -218,7 +224,14 @@ export interface Style {
   forceDarkMode: boolean
   darkBackgroundColor: string
   darkContainerColor: string
+  darkBorderColor: string
+  darkSuccessColor: string
+  darkWarningColor: string
+  darkInfoColor: string
+  darkErrorColor: string
+  darkBrandForeground: string
   darkTextColor: string
+  darkBrandingColor: string
   darkBackgroundUrl: string
   darkMobileBackgroundUrl: string
   darkLogoUrl: string

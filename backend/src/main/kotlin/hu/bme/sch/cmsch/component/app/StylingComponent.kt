@@ -28,6 +28,12 @@ class StylingComponent(
             lightNavbarTransparent,
             lightBackgroundColor,
             lightContainerColor,
+            lightBorderColor,
+            lightSuccessColor,
+            lightWarningColor,
+            lightInfoColor,
+            lightErrorColor,
+            lightBrandForeground,
             lightTextColor,
             lightBrandingColor,
             lightBackgroundUrl,
@@ -42,7 +48,14 @@ class StylingComponent(
             darkNavbarTransparent,
             darkBackgroundColor,
             darkContainerColor,
+            darkBorderColor,
+            darkSuccessColor,
+            darkWarningColor,
+            darkInfoColor,
+            darkErrorColor,
+            darkBrandForeground,
             darkTextColor,
+            darkBrandingColor,
             darkBackgroundUrl,
             darkMobileBackgroundUrl,
             darkLogoUrl,
@@ -90,6 +103,36 @@ class StylingComponent(
     val lightContainerColor = SettingProxy(componentSettingService, component,
         "lightContainerColor", "transparent", type = SettingType.COLOR,
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
+    )
+
+    val lightBorderColor = SettingProxy(componentSettingService, component,
+        "lightBorderColor", "#718096", type = SettingType.COLOR,
+        fieldName = "Szegélyek színe", description = "Kártyák és tabok szegélyének a színe"
+    )
+
+    val lightSuccessColor = SettingProxy(componentSettingService, component,
+        "lightSuccessColor", "#38A169", type = SettingType.COLOR,
+        fieldName = "Sikeres műveletet jelző szín", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val lightWarningColor = SettingProxy(componentSettingService, component,
+        "lightWarningColor", "#38A169", type = SettingType.COLOR,
+        fieldName = "Veszélyt jelző szín", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val lightInfoColor = SettingProxy(componentSettingService, component,
+        "lightInfoColor", "#3182ce", type = SettingType.COLOR,
+        fieldName = "Informatív felhívás színe", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val lightErrorColor = SettingProxy(componentSettingService, component,
+        "lightErrorColor", "#E53E3E", type = SettingType.COLOR,
+        fieldName = "Hibát jelző szín", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val lightBrandForeground = SettingProxy(componentSettingService, component,
+        "lightBrandForeground", "#000000", type = SettingType.COLOR,
+        fieldName = "Brand háttér feletti szövegszín", description = "Például a brand színű gombok szövege lesz ilyen"
     )
 
     val lightTextColor = SettingProxy(componentSettingService, component,
@@ -161,9 +204,44 @@ class StylingComponent(
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
     )
 
+    val darkBorderColor = SettingProxy(componentSettingService, component,
+        "darkBorderColor", "#718096", type = SettingType.COLOR,
+        fieldName = "Szegélyek színe", description = "Kártyák és tabok szegélyének a színe"
+    )
+
+    val darkSuccessColor = SettingProxy(componentSettingService, component,
+        "darkSuccessColor", "#38A169", type = SettingType.COLOR,
+        fieldName = "Sikeres műveletet jelző szín", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val darkWarningColor = SettingProxy(componentSettingService, component,
+        "darkWarningColor", "#38A169", type = SettingType.COLOR,
+        fieldName = "Veszélyt jelző szín", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val darkInfoColor = SettingProxy(componentSettingService, component,
+        "darkInfoColor", "#3182ce", type = SettingType.COLOR,
+        fieldName = "Informatív felhívás színe", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val darkErrorColor = SettingProxy(componentSettingService, component,
+        "darkErrorColor", "#E53E3E", type = SettingType.COLOR,
+        fieldName = "Hibát jelző szín", description = "Bizonyos szövegek és ikonok ezzel a színnel jelennek meg"
+    )
+
+    val darkBrandForeground = SettingProxy(componentSettingService, component,
+        "darkBrandForeground", "#000000", type = SettingType.COLOR,
+        fieldName = "Brand háttér feletti szövegszín", description = "Például a brand színű gombok szövege lesz ilyen"
+    )
+
     val darkTextColor = SettingProxy(componentSettingService, component,
         "darkTextColor", "#000000", type = SettingType.COLOR,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe"
+    )
+
+    val darkBrandingColor = SettingProxy(componentSettingService, component,
+        "darkBrandingColor", "#880000", type = SettingType.COLOR,
+        fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre"
     )
 
     val darkBackgroundUrl = SettingProxy(componentSettingService, component,

@@ -48,7 +48,8 @@ export const stringifyTimeRange = (fromTimeStamp: number, toTimeStamp: number) =
   }
 }
 
-export function getColorShadesForColor(color: string) {
+export function getColorShadesForColor(color?: string) {
+  if (!color) return null
   const colors = new Values(color)
   const tints = colors.tints(21).reverse()
   const shades = colors.shades(21)

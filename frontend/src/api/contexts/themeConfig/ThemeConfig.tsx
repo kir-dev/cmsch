@@ -1,35 +1,24 @@
-import { customTheme } from '../../../util/configs/theme.config'
+import { createCustomTheme } from '../../../util/configs/theme.config'
 import { useConfigContext } from '../config/ConfigContext'
 import { ChakraProvider, useColorMode } from '@chakra-ui/react'
-import { PropsWithChildren, useMemo } from 'react'
-import { getColorShadesForColor } from '../../../util/core-functions.util'
+import { PropsWithChildren, useEffect, useMemo } from 'react'
+
+export const BaseTheme = ({ children }: PropsWithChildren) => {
+  const { colorMode } = useColorMode()
+  const chakraConfig = useMemo(() => createCustomTheme({ colorMode }), [colorMode])
+  return <ChakraProvider theme={chakraConfig}>{children}</ChakraProvider>
+}
 
 export const ThemeConfig = ({ children }: PropsWithChildren) => {
-  const config = useConfigContext()
-  const { setColorMode } = useColorMode()
+  const style = useConfigContext()?.components?.style
+  const { colorMode, setColorMode } = useColorMode()
 
-  const chakraConfig = useMemo(() => {
-    if (config?.components.style) {
-      customTheme.colors.brand = getColorShadesForColor(config.components.style.lightBrandingColor)
-      customTheme.colors.lightContainerColor = getColorShadesForColor(config.components.style.lightContainerColor)
-      customTheme.colors.lightContainerBg = config.components.style.lightContainerColor
-      customTheme.colors.darkContainerColor = getColorShadesForColor(config.components.style.darkContainerColor)
-      customTheme.colors.darkContainerBg = config.components.style.darkContainerColor
-      setColorMode((config.components.style.deviceTheme && 'system') || (config.components.style.forceDarkMode && 'dark') || 'light')
-      customTheme.fonts = {
-        heading: config.components.style.mainFontName,
-        body: config.components.style.mainFontName,
-        display: config.components.style.displayFontName,
-        mono: 'monospace'
-      }
-      customTheme.components.Heading = {
-        ...customTheme.components.Heading,
-        variants: {
-          'main-title': { fontFamily: config.components.style.displayFontName }
-        }
-      }
-    }
-    return customTheme
-  }, [config])
+  const deviceTheme = style?.deviceTheme
+  const forceDarkMode = style?.forceDarkMode
+  useEffect(() => {
+    setColorMode((deviceTheme && 'system') || (forceDarkMode && 'dark') || 'light')
+  }, [deviceTheme, forceDarkMode])
+
+  const chakraConfig = useMemo(() => createCustomTheme({ colorMode }, style), [style, colorMode])
   return <ChakraProvider theme={chakraConfig}>{children}</ChakraProvider>
 }
