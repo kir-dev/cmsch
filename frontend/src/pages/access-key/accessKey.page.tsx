@@ -85,11 +85,11 @@ function AccessKeyPage() {
             <Input value={value} onChange={(e) => setValue(e.target.value)} isDisabled={!query.data.enabled} />
           </FormControl>
           <HStack>
-            <Button type="submit" colorScheme="brand" isLoading={query.isLoading} isDisabled={!query.data.enabled}>
+            <Button type="submit" colorScheme="brand" color="brandForeground" isLoading={query.isLoading} isDisabled={!query.data.enabled}>
               Beküldés
             </Button>
             {error && (
-              <Text color="red.500" textAlign="center">
+              <Text color="error.500" textAlign="center">
                 {error}
               </Text>
             )}

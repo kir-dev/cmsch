@@ -258,7 +258,7 @@ const TaskPage = () => {
           <TaskStatusBadge status={data.status} fontSize="lg" />
           {expired && (
             <Box>
-              <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
+              <Badge ml={2} variant="solid" colorScheme="error.500" fontSize="lg">
                 LEJÁRT
               </Badge>
             </Box>
@@ -286,7 +286,13 @@ const TaskPage = () => {
                 <Image src={`${API_BASE_URL}/cdn/${data.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
               )}
               {data.submission.fileUrlAnswer && data.submission.fileUrlAnswer.length > 'task/'.length && (
-                <LinkButton href={`${API_BASE_URL}/cdn/${data.submission.fileUrlAnswer}`} external colorScheme="brand" mt={5}>
+                <LinkButton
+                  href={`${API_BASE_URL}/cdn/${data.submission.fileUrlAnswer}`}
+                  external
+                  colorScheme="brand"
+                  color="brandForeground"
+                  mt={5}
+                >
                   Letöltés
                 </LinkButton>
               )}
@@ -323,7 +329,7 @@ const TaskPage = () => {
                 {textInput}
                 {fileInput}
                 <Flex justifyContent="end" mt={4}>
-                  <Button mt={3} colorScheme="brand" type="submit">
+                  <Button mt={3} colorScheme="brand" color="brandForeground" type="submit">
                     Küldés
                   </Button>
                 </Flex>

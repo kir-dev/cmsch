@@ -22,8 +22,20 @@ export function GridFieldItem({ questionKey, optionKey, fieldName, disabled, rad
   }
 
   return radio ? (
-    <Radio isChecked={watch(fieldName)[questionKey] === optionKey} onChange={onChange} colorScheme="brand" isDisabled={disabled} />
+    <Radio
+      isChecked={watch(fieldName)[questionKey] === optionKey}
+      onChange={onChange}
+      colorScheme="brand"
+      color="brandForeground"
+      isDisabled={disabled}
+    />
   ) : (
-    <Checkbox isChecked={watch(fieldName)[`${questionKey}_${optionKey}`]} onChange={onChange} colorScheme="brand" isDisabled={disabled} />
+    <Checkbox
+      isChecked={watch(fieldName)[`${questionKey}_${optionKey}`]}
+      onChange={onChange}
+      colorScheme="brand"
+      color="brandForeground"
+      isDisabled={disabled}
+    />
   )
 }

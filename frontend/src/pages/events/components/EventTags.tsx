@@ -10,7 +10,7 @@ const EventTags = ({ tags, my }: EventTagsProps) => {
     <HStack spacing={2} my={my} justifyContent="end">
       {tags.filter(Boolean).map((tag) => {
         return (
-          <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>
+          <Tag size={'md'} variant="solid" color="brandForeground" colorScheme="brand" key={tag}>
             {tag}
           </Tag>
         )

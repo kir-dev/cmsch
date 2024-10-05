@@ -30,7 +30,7 @@ export default function CurrentEventCard() {
       justify="left"
       alignItems="center"
     >
-      <PulsingDot color={'green.300'} mr="4" />
+      <PulsingDot color={'success.300'} mr="4" />
       <Box position={'relative'} bottom="0px">
         {isVowel(currentEvents[0].title[0]) ? 'Az ' : 'A '}
         <b>

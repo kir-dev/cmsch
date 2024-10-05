@@ -30,19 +30,10 @@ const TokenList = () => {
         {component.title || 'QR kódok'}
       </Heading>
       <PresenceAlert acquired={data.collectedTokenCount} needed={data.minTokenToComplete} />
-      {/* <Paragraph>
-        A standoknál végzett aktív tevékenységért QR kódokat lehet beolvasni. Ha eleget összegyűjt, beválthatja egy tanköri jelenlétre.
-      </Paragraph> */}
-
       <ButtonGroup mt="5">
-        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
+        <LinkButton colorScheme="brand" color="brandForeground" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           QR kód beolvasása
         </LinkButton>
-        {/* {progress?.groupName === 'Kiállító' && (
-          <LinkButton colorScheme="brand" leftIcon={<FaStamp />} href="/control/stamps" external newTab={false}>
-            Pecsét statisztika
-          </LinkButton>
-        )} */}
       </ButtonGroup>
 
       <Heading as="h3" mt="10" size="lg">
@@ -51,7 +42,7 @@ const TokenList = () => {
       <Heading as="h4" size="md" mt={5}>
         Eddig beolvasott kódok: {data.collectedTokenCount} / {data.totalTokenCount}
       </Heading>
-      <Progress hasStripe colorScheme="green" mt="1" value={calculate_progress(data.collectedTokenCount, data.totalTokenCount)} />
+      <Progress hasStripe colorScheme="success.500" mt="1" value={calculate_progress(data.collectedTokenCount, data.totalTokenCount)} />
       {data.tokens.length > 0 ? (
         <>
           <Heading as="h4" size="md" mt="5">

@@ -1,11 +1,11 @@
 import {
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
   AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   useDisclosure
 } from '@chakra-ui/react'
@@ -16,10 +16,12 @@ interface ConfirmDialogButtonProps {
   bodyText?: string
   buttonText?: string
   buttonColorScheme?: string
+  buttonColor?: string
   buttonVariant?: string
   confirmButtonText?: string
   refuseButtonText?: string
   buttonWidth?: string
+
   confirmAction(): void
 }
 
@@ -30,6 +32,7 @@ export const ConfirmDialogButton = ({
   buttonColorScheme,
   buttonVariant,
   buttonWidth,
+  buttonColor,
   confirmButtonText = 'Igen',
   refuseButtonText = 'Mégse',
   confirmAction
@@ -39,7 +42,7 @@ export const ConfirmDialogButton = ({
 
   return (
     <>
-      <Button onClick={onOpen} width={buttonWidth} colorScheme={buttonColorScheme} variant={buttonVariant}>
+      <Button onClick={onOpen} width={buttonWidth} colorScheme={buttonColorScheme} color={buttonColor} variant={buttonVariant}>
         {buttonText}
       </Button>
       <AlertDialog
@@ -59,7 +62,7 @@ export const ConfirmDialogButton = ({
             <Button ref={cancelRef} onClick={onClose}>
               {refuseButtonText}
             </Button>
-            <Button colorScheme="brand" ml={3} onClick={confirmAction}>
+            <Button colorScheme="brand" color="brandForeground" ml={3} onClick={confirmAction}>
               {confirmButtonText}
             </Button>
           </AlertDialogFooter>

@@ -9,7 +9,7 @@ interface RoleButtonProps {
 export function RoleButton({ onRoleChange, isAdmin }: RoleButtonProps) {
   return (
     <Tooltip label="Jogosultság adása">
-      <Button colorScheme="yellow" variant="outline" onClick={onRoleChange}>
+      <Button colorScheme="warning" variant="outline" onClick={onRoleChange}>
         {isAdmin ? <TbShieldOff /> : <TbShield />}
       </Button>
     </Tooltip>

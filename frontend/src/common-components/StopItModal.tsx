@@ -18,10 +18,10 @@ export const StopItModal = ({ isOpen, onClose }: Props) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="gray" mr={3} onClick={onClose}>
+          <Button colorScheme="info.500" mr={3} onClick={onClose}>
             Oké
           </Button>
-          <Button colorScheme="brand" onClick={onClose}>
+          <Button colorScheme="brand" color="brandForeground" onClick={onClose}>
             Értettem
           </Button>
         </ModalFooter>

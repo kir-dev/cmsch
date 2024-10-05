@@ -33,7 +33,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
         <CmschPage>
           <Helmet title="Hiba" />
           <Heading textAlign="center">{l('error-boundary-title')}</Heading>
-          <Text textAlign="center" color="gray.500" marginTop={10}>
+          <Text textAlign="center" color="text.400" marginTop={10}>
             {l('error-boundary-message')}
           </Text>
           {!import.meta.env.PROD &&
@@ -49,6 +49,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
               }}
               href="/"
               colorScheme="brand"
+              color="brandForeground"
             >
               Főoldal
             </LinkButton>

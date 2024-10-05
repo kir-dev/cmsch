@@ -14,11 +14,11 @@ export const UnauthorizedPage = () => {
       <Heading as="h1" variant="main-title" textAlign="center">
         {l('unauthorized-page-title')}
       </Heading>
-      <Text textAlign="center" color="gray.500" marginTop={10}>
+      <Text textAlign="center" color="text.500" marginTop={10}>
         {l('unauthorized-page-description')}
       </Text>
       <ButtonGroup justifyContent="center" marginTop={10}>
-        <Button colorScheme="brand" onClick={() => navigate('/login')}>
+        <Button colorScheme="brand" color="brandForeground" onClick={() => navigate('/login')}>
           Belépés
         </Button>
         <LinkButton href="/" variant="ghost">

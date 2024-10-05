@@ -15,7 +15,7 @@ export const AliasChangePage = () => {
   const navigate = useNavigate()
   const toast = useToast()
   const submissionMutation = useAliasChangeMutation()
-  const borderColor = useColorModeValue('gray.200', 'gray.600')
+  const borderColor = useColorModeValue('border.200', 'border.600')
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
   const component = useConfigContext()?.components.profile
@@ -80,13 +80,13 @@ export const AliasChangePage = () => {
         </FormControl>
 
         <HStack spacing={3} mt={10}>
-          <Button type="submit" colorScheme="brand" width="100%">
+          <Button type="submit" colorScheme="brand" color="brandForeground" width="100%">
             Mentés
           </Button>
-          <Button type="button" onClick={removeAlias} colorScheme="red" width="100%">
+          <Button type="button" onClick={removeAlias} colorScheme="error.500" width="100%">
             Törlés
           </Button>
-          <Button type="button" onClick={() => navigate(AbsolutePaths.PROFILE)} colorScheme="gray" width="100%">
+          <Button type="button" onClick={() => navigate(AbsolutePaths.PROFILE)} colorScheme="info.500" width="100%">
             Mégse
           </Button>
         </HStack>

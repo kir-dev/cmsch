@@ -14,7 +14,7 @@ export function VotingField({ options, onChange, value, required, disabled }: Vo
     <VStack spacing={5} align="flex-start">
       <HStack justify="flex-end" w={'100%'}>
         <Collapse in={!required && !!value && !disabled}>
-          <Button variant="outline" onClick={() => onChange('')}>
+          <Button variant="outline" colorScheme="brand" onClick={() => onChange('')}>
             Választásom törlése
           </Button>
         </Collapse>
@@ -54,7 +54,7 @@ function VotingFieldElement({ onChange, selected, option }: VotingFieldElementPr
         <Heading fontSize="3xl">{option.title}</Heading>
         <Text>{option.text}</Text>
       </VStack>
-      <Radio position="absolute" top={5} right={5} size="lg" isChecked={selected} colorScheme="brand" />
+      <Radio position="absolute" top={5} right={5} size="lg" isChecked={selected} colorScheme="brand" color="brandForeground" />
     </Stack>
   )
 }

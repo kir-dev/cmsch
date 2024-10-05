@@ -45,15 +45,15 @@ export default function CreateTeamPage() {
         <FormControl my={10}>
           <FormLabel>Név</FormLabel>
           <Input {...register('name', { required: true })} isInvalid={!!errors.name} placeholder="Kedves csapatom" />
-          {errors.name?.message && <Text color="red">{errors.name.message}</Text>}
+          {errors.name?.message && <Text color="error">{errors.name.message}</Text>}
         </FormControl>
         <HStack>
-          <Button isLoading={createTeamLoading} type="submit" colorScheme="brand">
+          <Button isLoading={createTeamLoading} type="submit" colorScheme="brand" color="brandForeground">
             Létrehozom!
           </Button>
           <VStack>
-            {requestError && <Text color="red">{requestError}</Text>}
-            {createTeamError && <Text color="red">Hiba történt a csoport létrehozása közben!</Text>}
+            {requestError && <Text color="error">{requestError}</Text>}
+            {createTeamError && <Text color="error">Hiba történt a csoport létrehozása közben!</Text>}
           </VStack>
         </HStack>
       </form>

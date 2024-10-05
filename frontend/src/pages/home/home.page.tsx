@@ -68,7 +68,7 @@ const HomePage = () => {
               <NewsListItem news={n} fontSize="xl" useLink={config?.components?.news?.showDetails} key={n.title + n.timestamp} />
             ))}
           </Grid>
-          <LinkButton colorScheme="brand" mt={5} href={AbsolutePaths.NEWS}>
+          <LinkButton colorScheme="brand" color="brandForeground" mt={5} href={AbsolutePaths.NEWS}>
             Összes hír
           </LinkButton>
         </>
@@ -100,7 +100,7 @@ const HomePage = () => {
             {eventsToday.length > 0 ? (
               <Schedule events={eventsToday} />
             ) : (
-              <Text textAlign="center" color="gray.500" marginTop={10}>
+              <Text textAlign="center" color="border.500" marginTop={10}>
                 Nincs több esemény.
               </Text>
             )}
@@ -111,11 +111,11 @@ const HomePage = () => {
             {eventsLater.length > 0 ? (
               <Schedule verbose events={eventsLater} />
             ) : (
-              <Text textAlign="center" color="gray.500" marginTop={10}>
+              <Text textAlign="center" color="border.500" marginTop={10}>
                 Nincs több esemény.
               </Text>
             )}
-            <LinkButton colorScheme="brand" href={AbsolutePaths.EVENTS}>
+            <LinkButton colorScheme="brand" color="brandForeground" href={AbsolutePaths.EVENTS}>
               Részletek
             </LinkButton>
           </VStack>

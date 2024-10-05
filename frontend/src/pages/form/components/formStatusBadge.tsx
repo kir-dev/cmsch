@@ -10,19 +10,19 @@ interface FormStatusBadgeProps {
 export const FormStatusBadge = ({ status }: FormStatusBadgeProps) => {
   const config = useConfigContext()
   const component = config?.components.form
-  let color = 'gray'
+  let color = 'border'
   switch (status) {
     case FormStatus.ACCEPTED:
-      color = 'green'
+      color = 'success'
       break
     case FormStatus.SUBMITTED:
-      color = 'yellow'
+      color = 'warning'
       break
     case FormStatus.FULL:
-      color = 'red'
+      color = 'error'
       break
     case FormStatus.REJECTED:
-      color = 'red'
+      color = 'error'
       break
   }
   return (

@@ -14,7 +14,7 @@ export function MapMarker({ color = 'brand.600', text, markerShape = MapMarkerSh
   let icon = null
   if (Object.keys(MapMarkerIcons).includes(markerShape))
     icon = MapMarkerIcons[markerShape]({ color: getTextColorFromLuminance(color), size: 12 })
-  const bg = useColorModeValue('white', 'gray.800')
+  const bg = useColorModeValue('white', 'border.800')
 
   return (
     <VStack w={200} spacing={1}>

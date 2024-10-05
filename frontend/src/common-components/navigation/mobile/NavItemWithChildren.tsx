@@ -22,13 +22,13 @@ export const NavItemWithChildren = ({ menu: { external, url, children, name } }:
             textDecoration: 'none'
           }}
         >
-          <Text color={useColorModeValue('gray.800', 'gray.200')}>{name}</Text>
+          <Text>{name}</Text>
           <Icon as={FaChevronDown} transition="all .25s ease-in-out" transform={isOpen ? 'rotate(180deg)' : ''} w={4} h={4} />
         </Flex>
       </LinkComponent>
 
       <Collapse in={isOpen} animateOpacity style={{ marginTop: '0' }}>
-        <Stack pl={4} borderLeft={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.800')} align="start">
+        <Stack pl={4} borderLeft={1} borderStyle="solid" borderColor={useColorModeValue('border.200', 'border.800')} align="start">
           {children.map((child) => (
             <Link key={child.url} to={child.url || '#'} className="navitem" style={{ width: '100%' }}>
               <Text key={child.url} py={2}>

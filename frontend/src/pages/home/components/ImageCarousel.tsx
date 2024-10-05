@@ -56,12 +56,12 @@ const CurrentImageIndicatorDot = ({ index, currentIndex, onClick }: CurrentImage
     padding={0}
     borderWidth={2}
     borderStyle="solid"
-    borderColor="gray.500"
+    borderColor="border.500"
     borderRadius="full"
     cursor="pointer"
     transition="border-width .1s"
     _hover={{ borderWidth: 10 }}
-    backgroundColor={index === currentIndex ? 'gray.500' : 'transparent'}
+    backgroundColor={index === currentIndex ? 'border.500' : 'transparent'}
     onClick={() => {
       onClick(index)
     }}
@@ -78,7 +78,7 @@ enum Directions {
 }
 
 const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => (
-  <Button onClick={onClick} fontSize="6xl" padding={0} variant="ghost" color="gray.500">
+  <Button onClick={onClick} fontSize="6xl" padding={0} variant="ghost" color="border.500">
     {direction === Directions.LEFT ? <ChevronLeftIcon /> : <ChevronRightIcon />}
   </Button>
 )

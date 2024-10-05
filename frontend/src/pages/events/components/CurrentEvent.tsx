@@ -50,7 +50,7 @@ const CurrentEvent = ({ event }: EventProps) => {
       )}
       <Markdown text={event.description} />
       <ButtonGroup justifyContent="space-between" mt={10}>
-        <LinkButton href={AbsolutePaths.EVENTS} variant="outline">
+        <LinkButton href={AbsolutePaths.EVENTS} colorScheme="brand" variant="outline">
           Vissza
         </LinkButton>
         {event.extraButtonUrl && (

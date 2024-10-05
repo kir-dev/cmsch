@@ -21,7 +21,7 @@ export const TaskCategoryListItem = ({ category }: { category: TaskCategoryPrevi
               size={10}
               value={category.approved + category.notGraded}
               max={category.sum}
-              color={category.notGraded > 0 ? 'yellow.400' : 'green.400'}
+              color={category.notGraded > 0 ? 'warning.400' : 'success.400'}
             />
           </HStack>
         </Flex>

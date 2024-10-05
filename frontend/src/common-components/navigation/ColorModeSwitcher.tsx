@@ -13,7 +13,7 @@ export const ColorModeSwitcher = (props: Props) => {
       aria-label="Sötét-világos mód váltás"
       icon={useColorModeValue(<SunIcon w={5} h={5} />, <MoonIcon w={5} h={5} />)}
       onClick={toggleColorMode}
-      variant="ghost"
+      variant="outline"
       {...props}
     />
   ) : null

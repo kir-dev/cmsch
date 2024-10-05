@@ -42,7 +42,7 @@ export default function LeaderboardByCategoryPage() {
   return (
     <>
       {component.showUserBoard && component.showGroupBoard ? (
-        <Tabs size={{ base: 'sm', md: 'md' }} variant="soft-rounded" colorScheme="brand">
+        <Tabs size={{ base: 'sm', md: 'md' }} variant="soft-rounded" colorScheme="brand" color="brandForeground">
           <TabList px="2rem">
             {data?.userBoard && <CustomTabButton>Egyéni</CustomTabButton>}
             {data?.groupBoard && <CustomTabButton>Csoportos</CustomTabButton>}

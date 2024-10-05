@@ -123,6 +123,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               leftIcon={<FaSignInAlt />}
               isLoading={joinTeamLoading}
               colorScheme="brand"
+              color="brandForeground"
               onClick={() => {
                 joinTeam(team?.id)
                 refetch()
@@ -136,7 +137,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               leftIcon={<FaUndoAlt />}
               isLoading={cancelLoading}
               variant="outline"
-              colorScheme="red"
+              colorScheme="error"
               onClick={() => {
                 cancelJoin()
                 refetch()
@@ -146,12 +147,17 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             </Button>
           )}
           {team.leaveEnabled && (
-            <Button leftIcon={<FaSignOutAlt />} isLoading={leaveTeamLoading} colorScheme="red" onClick={leaveTeam}>
+            <Button leftIcon={<FaSignOutAlt />} isLoading={leaveTeamLoading} colorScheme="error.500" onClick={leaveTeam}>
               Csoport elhagyása
             </Button>
           )}
           {teamComponent.showRaceButton && (
-            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} ml={5} colorScheme="brand">
+            <LinkButton
+              href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)}
+              ml={5}
+              colorScheme="brand"
+              color="brandForeground"
+            >
               {raceComponent?.title ?? 'Verseny'} eredmények
             </LinkButton>
           )}

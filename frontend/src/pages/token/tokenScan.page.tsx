@@ -54,7 +54,7 @@ const TokenScan = () => {
           Vissza
         </Button>
         {!isIdle && (
-          <Button colorScheme="brand" leftIcon={<FaQrcode />} onClick={reset}>
+          <Button colorScheme="brand" color="brandForeground" leftIcon={<FaQrcode />} onClick={reset}>
             Új QR scannelése
           </Button>
         )}

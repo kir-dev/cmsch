@@ -41,11 +41,17 @@ export function DayCalendar({ events }: DayCalendarProps) {
   return (
     <Box my={5} w="full" display={['block', null, 'none']}>
       <HStack justify="space-between">
-        <IconButton colorScheme="brand" aria-label="Előző nap" icon={<FaChevronLeft />} onClick={decrementDay} />
+        <IconButton colorScheme="brand" color="brandForeground" aria-label="Előző nap" icon={<FaChevronLeft />} onClick={decrementDay} />
         <Heading as="h2" size="md">
           {formatHu(startDate, 'EEEE, MMMM dd.')}
         </Heading>
-        <IconButton colorScheme="brand" aria-label="Következő nap" icon={<FaChevronRight />} onClick={incrementDay} />
+        <IconButton
+          colorScheme="brand"
+          color="brandForeground"
+          aria-label="Következő nap"
+          icon={<FaChevronRight />}
+          onClick={incrementDay}
+        />
       </HStack>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
       <HStack maxH={820} mt={5} overflowY="auto" overflowX="hidden" pt={5} align="flex-start">

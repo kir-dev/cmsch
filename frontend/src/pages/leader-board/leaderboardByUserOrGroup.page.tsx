@@ -39,7 +39,7 @@ const LeaderboardByUserOrGroupPage = () => {
   return (
     <>
       {component.showUserBoard && component.showGroupBoard ? (
-        <Tabs size={tabsSize} variant="soft-rounded" colorScheme="brand">
+        <Tabs size={tabsSize} variant="soft-rounded" colorScheme="brand" color="brandForeground">
           <TabList px="2rem">
             {data?.userBoard && <CustomTabButton>Egyéni</CustomTabButton>}
             {data?.groupBoard && <CustomTabButton>Csoportos</CustomTabButton>}

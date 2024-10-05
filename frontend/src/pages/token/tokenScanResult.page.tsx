@@ -22,7 +22,7 @@ const TokenScanResult = () => {
         <LinkButton leftIcon={<FaArrowLeft />} href={AbsolutePaths.TOKEN}>
           Vissza
         </LinkButton>
-        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
+        <LinkButton colorScheme="brand" color="brandForeground" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           Új QR-kód scannelése
         </LinkButton>
       </ButtonGroup>

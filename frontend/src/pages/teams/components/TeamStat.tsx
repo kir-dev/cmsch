@@ -20,7 +20,7 @@ export function TeamStat({ stat, ...props }: TeamStatProps) {
           <StatHelpText>{value2}</StatHelpText>
         </Box>
         {typeof percentage !== 'undefined' && (
-          <CircularProgress color="green.500" size={50} max={100} value={percentage}></CircularProgress>
+          <CircularProgress color="success.500" size={50} max={100} value={percentage}></CircularProgress>
         )}
       </HStack>
     </Stat>

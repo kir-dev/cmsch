@@ -26,7 +26,6 @@ export const Navbar = () => {
       mb={4}
     >
       <Flex
-        color={useColorModeValue('gray.800', 'white')}
         minH={{ base: '3rem', md: '4.5rem' }}
         maxW={['100%', '100%', '56rem', '72rem']}
         py={{ base: 2 }}

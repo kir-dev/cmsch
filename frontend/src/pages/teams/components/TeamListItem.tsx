@@ -44,7 +44,7 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
               loading="lazy"
             />
           )}
-          {detailEnabled && <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />}
+          {detailEnabled && <ChevronRightIcon boxSize={{ base: 10, md: 16 }} />}
         </HStack>
       </Box>
     </Link>

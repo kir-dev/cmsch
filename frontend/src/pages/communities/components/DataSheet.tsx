@@ -70,7 +70,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
           </LinkButton>
         )}
         {organization.application && (
-          <LinkButton href={organization.application} external leftIcon={<EditIcon />} colorScheme="brand">
+          <LinkButton href={organization.application} external leftIcon={<EditIcon />} color="brandForeground" colorScheme="brand">
             Jelentkezés
           </LinkButton>
         )}
@@ -96,7 +96,7 @@ type DataFieldProps = {
 }
 
 const DataField: FC<DataFieldProps> = ({ icon, label, children }) => (
-  <HStack color={useColorModeValue('gray.700', 'gray.200')}>
+  <HStack color={useColorModeValue('border.700', 'border.200')}>
     <Box>{icon}</Box>
     <Box fontWeight={700}>{label}</Box>
     {children}

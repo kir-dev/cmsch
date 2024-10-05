@@ -138,7 +138,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
   return (
     <>
       {component}
-      {error && <Text color="red">{error.message}</Text>}
+      {error && <Text color="error">{error.message}</Text>}
     </>
   )
 }

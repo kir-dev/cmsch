@@ -14,8 +14,8 @@ export function EventIndicator({ isCurrent, isUpcoming, color, showLabel, ...pro
     return (
       <HStack backgroundColor={bg} py={1} pl={4} pr={1} borderRadius="full" {...props}>
         <Text>{isUpcoming ? 'Hamarosan kezdődik' : 'Most zajlik'}</Text>
-        <PulsingDot color={(color ?? isUpcoming) ? 'yellow.400' : undefined} />
+        <PulsingDot color={(color ?? isUpcoming) ? 'warning.400' : undefined} />
       </HStack>
     )
-  return <PulsingDot color={(color ?? isUpcoming) ? 'yellow.400' : undefined} {...props} />
+  return <PulsingDot color={(color ?? isUpcoming) ? 'warning.400' : undefined} {...props} />
 }

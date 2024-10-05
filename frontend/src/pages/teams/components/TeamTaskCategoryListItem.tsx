@@ -16,7 +16,7 @@ export const TeamTaskCategoryListItem = ({ category }: { category: TeamTaskCateg
         <Text fontWeight="bold">
           {category.completed}/{category.outOf}
         </Text>
-        <CircularProgress size={10} value={category.completed} max={category.outOf} color={'green.400'} />
+        <CircularProgress size={10} value={category.completed} max={category.outOf} color={'success.400'} />
       </HStack>
     </Flex>
   )

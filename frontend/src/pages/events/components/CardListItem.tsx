@@ -22,11 +22,7 @@ export const CardListItem = ({ title, open, toggle, showPulsingDot, pulsingDotCo
         <Spacer />
         <HStack>
           {showPulsingDot && <PulsingDot color={pulsingDotColor} />}
-          {open ? (
-            <ChevronUpIcon boxSize={{ base: 5, md: 8 }} color={useColorModeValue('gray.700', 'gray.300')} />
-          ) : (
-            <ChevronDownIcon boxSize={{ base: 5, md: 8 }} color={useColorModeValue('gray.700', 'gray.300')} />
-          )}
+          {open ? <ChevronUpIcon boxSize={{ base: 5, md: 8 }} /> : <ChevronDownIcon boxSize={{ base: 5, md: 8 }} />}
         </HStack>
       </HStack>
     </Box>

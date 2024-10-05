@@ -10,8 +10,8 @@ interface StampComponentProps {
 }
 
 export const StampComponent: FC<StampComponentProps> = ({ title, type }: StampComponentProps) => {
-  const backgroundBase = useColorModeValue('gray.100', 'gray.700')
-  const stampCorner = useColorModeValue('gray.800', 'gray.200')
+  const backgroundBase = useColorModeValue('border.100', 'border.700')
+  const stampCorner = useColorModeValue('border.800', 'border.200')
   const component = useConfigContext()?.components.token
 
   const icon: IconType = type === component?.collectType ? FaStamp : FaRocket

@@ -8,7 +8,7 @@ interface AcceptButtonProps {
 export function AcceptButton({ onAccept }: AcceptButtonProps) {
   return (
     <Tooltip label="Elfogadás">
-      <Button colorScheme="green" variant="outline" onClick={onAccept}>
+      <Button colorScheme="success" variant="outline" onClick={onAccept}>
         <CheckIcon />
       </Button>
     </Tooltip>

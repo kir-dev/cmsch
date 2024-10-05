@@ -7,7 +7,7 @@ type Props = {
 
 export const OrganizerWrapItem = ({ organizer: { name, avatar, roles } }: Props) => {
   return (
-    <WrapItem border="2px" borderColor={useColorModeValue('gray.200', 'gray.700')} borderRadius="md">
+    <WrapItem border="2px" borderColor={useColorModeValue('border.200', 'border.700')} borderRadius="md">
       <HStack align="center" w="20rem" p={2}>
         <Avatar name={name} src={avatar} size="lg" />
         <VStack flex={1} align="stretch" spacing={0}>

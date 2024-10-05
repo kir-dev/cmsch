@@ -18,7 +18,7 @@ export function TeamFormItem({ form }: { form: TeamFormView }) {
             </Text>
             <Text>{form.filled ? 'Kitöltve' : `Határidő: ${formatHu(new Date(form.availableUntil * 1000), 'MM. dd. HH:mm')}`}</Text>
           </Box>
-          <HStack color={form.filled ? 'green.400' : 'red.400'} fontSize={25}>
+          <HStack color={form.filled ? 'success.400' : 'error.400'} fontSize={25}>
             {form.filled ? <FaCheckCircle /> : <FaExclamationCircle />}
           </HStack>
         </Flex>

@@ -57,7 +57,7 @@ export default function EditMyTeamPage() {
             isInvalid={!!errors.description}
             placeholder="A legjobb csapat a világon (っ◕‿◕)っ"
           />
-          {errors.description?.message && <Text color="red">{errors.description.message}</Text>}
+          {errors.description?.message && <Text color="error">{errors.description.message}</Text>}
 
           {component.teamLogoUploadEnabled && (
             <Box pt={4}>
@@ -72,12 +72,12 @@ export default function EditMyTeamPage() {
           )}
         </FormControl>
         <VStack alignItems="start">
-          <Button isLoading={teamEditLoading} type="submit" colorScheme="brand">
+          <Button isLoading={teamEditLoading} type="submit" colorScheme="brand" color="brandForeground">
             Mentés
           </Button>
           <VStack alignItems="start">
-            {requestError && <Text color="red">{requestError}</Text>}
-            {teamEditError && <Text color="red">Hiba történt a csoport adatainak szerkesztése közben!</Text>}
+            {requestError && <Text color="error">{requestError}</Text>}
+            {teamEditError && <Text color="error">Hiba történt a csoport adatainak szerkesztése közben!</Text>}
           </VStack>
         </VStack>
       </Box>

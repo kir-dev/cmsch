@@ -36,11 +36,11 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
       <Heading as="h1" variant="main-title" textAlign="center">
         {l('error-page-title')}
       </Heading>
-      <Box textAlign="center" color="gray.500" marginTop={10}>
+      <Box textAlign="center" color="text" marginTop={10}>
         <Markdown text={clonedMessage} />
       </Box>
       <ButtonGroup justifyContent="center" marginTop={10}>
-        <LinkButton href="/" colorScheme="brand">
+        <LinkButton href="/" colorScheme="brand" color="brandForeground">
           Főoldal
         </LinkButton>
       </ButtonGroup>

@@ -11,11 +11,11 @@ const STATUS_TEXT_MAP = new Map<taskStatus, string>([
 ])
 
 const STATUS_COLOR_MAP = new Map<taskStatus, string>([
-  [taskStatus.ACCEPTED, 'green'],
-  [taskStatus.NOT_SUBMITTED, 'gray'],
-  [taskStatus.REJECTED, 'red'],
+  [taskStatus.ACCEPTED, 'success'],
+  [taskStatus.NOT_SUBMITTED, 'border'],
+  [taskStatus.REJECTED, 'error'],
   [taskStatus.SUBMITTED, '#DE970B'], //dark yellow
-  [taskStatus.NOT_LOGGED_IN, 'gray']
+  [taskStatus.NOT_LOGGED_IN, 'border']
 ])
 
 type TaskStatusBadgeProps = {

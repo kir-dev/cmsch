@@ -78,10 +78,10 @@ const EventListPage = () => {
         </Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
       </Box>
-      <LinkButton colorScheme="brand" mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
+      <LinkButton colorScheme="brand" color="brandForeground" mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
         Megtekintés a naptárban
       </LinkButton>
-      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
+      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand" color="brandForeground">
         {availableFilters.length > 0 && (
           <TabList>
             <CustomTabButton>Mind</CustomTabButton>

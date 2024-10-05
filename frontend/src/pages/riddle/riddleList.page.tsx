@@ -41,7 +41,7 @@ const RiddleCategoryList = () => {
         <Heading as="h1" variant="main-title">
           Riddleök
         </Heading>
-        <Button colorScheme="brand" as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
+        <Button colorScheme="brand" color="brandForeground" as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
           Megoldott riddleök
         </Button>
       </Stack>

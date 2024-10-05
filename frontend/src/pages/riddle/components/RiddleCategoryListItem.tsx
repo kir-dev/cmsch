@@ -21,7 +21,7 @@ export function RiddleCategoryListItem({ category, onClick }: RiddleCategoryList
           <Text fontWeight="bold">
             {category.completed}/{category.total}
           </Text>
-          <CircularProgress size={10} value={category.completed} max={category.total} color="green.400" />
+          <CircularProgress size={10} value={category.completed} max={category.total} color="success.400" />
         </HStack>
       </Flex>
     </Box>

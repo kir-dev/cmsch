@@ -186,7 +186,14 @@ const RiddlePage = () => {
           </FormControl>
 
           <VStack spacing={5} mt={10}>
-            <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme="brand" width="100%">
+            <Button
+              isLoading={!allowSubmission}
+              loadingText="Küldés..."
+              type="submit"
+              color="brandForeground"
+              colorScheme="brand"
+              width="100%"
+            >
               Beadom
             </Button>
             {hintQuery.isSuccess || data.hint ? (
@@ -197,6 +204,7 @@ const RiddlePage = () => {
             ) : (
               <ConfirmDialogButton
                 buttonColorScheme="brand"
+                buttonColor="brandForeground"
                 buttonVariant="outline"
                 buttonWidth="100%"
                 buttonText="Hintet kérek"
@@ -214,7 +222,7 @@ const RiddlePage = () => {
                 </Alert>
                 {data.skipPermitted ? (
                   <ConfirmDialogButton
-                    buttonColorScheme="gray"
+                    buttonColorScheme="info"
                     buttonVariant="outline"
                     buttonWidth="100%"
                     buttonText="Riddle átugrása"
@@ -224,7 +232,7 @@ const RiddlePage = () => {
                     confirmAction={skipSolution}
                   />
                 ) : (
-                  <Button width="100%" colorScheme="gray" isDisabled>
+                  <Button width="100%" colorScheme="info.500" isDisabled>
                     Riddle átugrása
                   </Button>
                 )}

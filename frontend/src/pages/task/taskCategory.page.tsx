@@ -51,7 +51,7 @@ const TaskCategoryPage = () => {
                       {task.task.title}
                     </Text>
                     {task.task.availableTo < new Date().valueOf() / 1000 && (
-                      <Badge ml={5} variant="solid" colorScheme="red" fontSize="sm">
+                      <Badge ml={5} variant="solid" colorScheme="error.500" fontSize="sm">
                         LEJÁRT
                       </Badge>
                     )}

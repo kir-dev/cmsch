@@ -11,43 +11,43 @@ interface QrScanResultProps {
 export const QRScanResultComponent = ({ response, isError }: QrScanResultProps) => {
   const renderIcon = () => {
     if (!response?.status || isError) {
-      return <CloseIcon color="red.500" boxSize="120px" />
+      return <CloseIcon color="error.500" boxSize="120px" />
     } else
       switch (response.status) {
         case ScanStatus.SCANNED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircleIcon color="success.500" boxSize="120px" />
         case ScanStatus.ALREADY_SCANNED:
           return <InfoIcon color="blue.500" boxSize="120px" />
         case ScanStatus.WRONG:
-          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+          return <WarningTwoIcon color="warning.500" boxSize="120px" />
         case ScanStatus.CANNOT_COLLECT:
-          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+          return <WarningTwoIcon color="warning.500" boxSize="120px" />
         case ScanStatus.INACTIVE:
-          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+          return <WarningTwoIcon color="warning.500" boxSize="120px" />
         case ScanStatus.QR_FIGHT_LEVEL_LOCKED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <InfoIcon color="info.500" boxSize="120px" />
         case ScanStatus.QR_FIGHT_LEVEL_NOT_OPEN:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <InfoIcon color="info.500" boxSize="120px" />
         case ScanStatus.QR_FIGHT_TOWER_LOCKED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <InfoIcon color="info.500" boxSize="120px" />
         case ScanStatus.QR_TOWER_CAPTURED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircleIcon color="success.500" boxSize="120px" />
         case ScanStatus.QR_TOWER_LOGGED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircleIcon color="success.500" boxSize="120px" />
         case ScanStatus.QR_TOWER_ENSLAVED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircleIcon color="success.500" boxSize="120px" />
         case ScanStatus.QR_TOWER_ALREADY_ENSLAVED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <InfoIcon color="info.500" boxSize="120px" />
         case ScanStatus.QR_TOTEM_LOGGED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircleIcon color="success.500" boxSize="120px" />
         case ScanStatus.QR_TOTEM_ENSLAVED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircleIcon color="success.500" boxSize="120px" />
         case ScanStatus.QR_TOTEM_ALREADY_ENSLAVED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <InfoIcon color="info.500" boxSize="120px" />
         case ScanStatus.QR_FIGHT_TOTEM_LOCKED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <InfoIcon color="info.500" boxSize="120px" />
         default:
-          return <WarningIcon color="red.500" boxSize="120px" />
+          return <WarningIcon color="error.500" boxSize="120px" />
       }
   }
 

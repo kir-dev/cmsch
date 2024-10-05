@@ -7,19 +7,19 @@ interface LevelStatusBadgeProps {
 
 export function LevelStatusBadge({ level }: LevelStatusBadgeProps) {
   let label = 'Ismeretlen'
-  let color = 'gray'
+  let color = 'border'
   switch (level.status) {
     case LevelStatus.OPEN:
       label = 'Elérhető'
-      color = 'yellow'
+      color = 'warning'
       break
     case LevelStatus.COMPLETED:
       label = 'Teljesítve'
-      color = 'green'
+      color = 'success'
       break
     case LevelStatus.NOT_UNLOCKED:
       label = 'Zárt'
-      color = 'red'
+      color = 'error'
       break
     case LevelStatus.NOT_LOGGED_IN:
       label = 'Kijelentkezve'

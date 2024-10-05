@@ -8,7 +8,7 @@ interface DeleteButtonProps {
 export function DeleteButton({ onDelete }: DeleteButtonProps) {
   return (
     <Tooltip label="Törlés">
-      <Button colorScheme="red" variant="outline" onClick={onDelete}>
+      <Button colorScheme="error" variant="outline" onClick={onDelete}>
         <DeleteIcon />
       </Button>
     </Tooltip>

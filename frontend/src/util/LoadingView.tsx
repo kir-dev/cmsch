@@ -15,7 +15,7 @@ export type LoadingViewProps = PropsWithChildren & {
 }
 
 export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, errorTitle, errorMessage, isLoading, children }) => {
-  const bg = useColorModeValue('white', 'gray.900')
+  const bg = useColorModeValue('white', 'border.900')
   if (isLoading)
     return (
       <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
@@ -33,11 +33,11 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
         <Helmet title={l('error-page-helmet')} />
         <VStack spacing={5} p={5} borderRadius={5} bg={bg}>
           <Heading textAlign="center">{errorTitle}</Heading>
-          <Text textAlign="center" color="gray.500" marginTop={4} maxW={96}>
+          <Text textAlign="center" color="text.500" marginTop={4} maxW={96}>
             {errorMessage}
           </Text>
           <ButtonGroup justifyContent="center" marginTop={4}>
-            <Button colorScheme="brand" onClick={errorAction}>
+            <Button colorScheme="brand" color="brandForeground" onClick={errorAction}>
               Újra
             </Button>
           </ButtonGroup>

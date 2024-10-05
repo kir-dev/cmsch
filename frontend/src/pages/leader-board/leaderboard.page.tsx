@@ -47,7 +47,7 @@ const LeaderboardPage = () => {
         {data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={data.groupScore} />}
       </HStack>
 
-      <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
+      <Tabs isLazy isFitted colorScheme="brand" color="brandForeground" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
         <TabList>
           <Tab>Csapatonként</Tab>
           <Tab>Kategóriánként</Tab>

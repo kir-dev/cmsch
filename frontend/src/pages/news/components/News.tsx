@@ -33,7 +33,7 @@ const News = ({ news }: NewsProps) => {
       )}
       <Markdown text={news.content} />
       <Link to={AbsolutePaths.NEWS}>
-        <Button leftIcon={<FaArrowLeft />} colorScheme="brand" mt={4}>
+        <Button leftIcon={<FaArrowLeft />} colorScheme="brand" color="brandForeground" mt={4}>
           Vissza a hírekhez
         </Button>
       </Link>

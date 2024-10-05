@@ -98,7 +98,7 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteL
                 Mégse
               </Button>
               <Button
-                colorScheme="red"
+                colorScheme="error.500"
                 onClick={() => {
                   onContinue.current()
                   onClose()

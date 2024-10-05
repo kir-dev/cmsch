@@ -26,7 +26,7 @@ export const EventFilterOption = ({ name, events, forceOpen }: EventFilterOption
     <Stack spacing={0} my={0}>
       <CardListItem
         showPulsingDot={hasCurrentEvent || hasUpcomingEvent}
-        pulsingDotColor={hasUpcomingEvent ? 'yellow.400' : undefined}
+        pulsingDotColor={hasUpcomingEvent ? 'warning.400' : undefined}
         title={name}
         open={isOpen}
         toggle={onToggle}

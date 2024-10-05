@@ -57,7 +57,7 @@ export function ProfileGroupChangePage() {
       <Text mt={10} textAlign="center">
         Állítsd be a tankörödet, hogy részt vehess a feladatokban!
       </Text>
-      <Text color="gray.500" textAlign="center">
+      <Text color="border.500" textAlign="center">
         Csak helyesen beállított tankörrel fog érvényesülni a tanköri jelenlét!
       </Text>
       <form>
@@ -81,6 +81,7 @@ export function ProfileGroupChangePage() {
             <Button
               variant="ghost"
               colorScheme="brand"
+              color="brandForeground"
               onClick={() => {
                 setValue(profile?.fallbackGroup.toString())
               }}
@@ -89,15 +90,15 @@ export function ProfileGroupChangePage() {
             </Button>
           </ButtonGroup>
           <ButtonGroup>
-            <Button onClick={onSubmit} colorScheme="brand" isLoading={isLoading}>
+            <Button onClick={onSubmit} colorScheme="brand" color="brandForeground" isLoading={isLoading}>
               Mentés
             </Button>
-            <LinkButton href={AbsolutePaths.PROFILE} colorScheme="red" variant="outline">
+            <LinkButton href={AbsolutePaths.PROFILE} colorScheme="error" variant="outline">
               Mégse
             </LinkButton>
           </ButtonGroup>
           {error && (
-            <Text color="red.500" textAlign="center">
+            <Text color="error.500" textAlign="center">
               {error}
             </Text>
           )}

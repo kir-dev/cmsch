@@ -20,7 +20,7 @@ export const CardListItem = ({ data, link }: CardListItemProps) => {
       <Box
         borderRadius="lg"
         padding={4}
-        backgroundColor={useColorModeValue('gray.100', 'gray.700')}
+        backgroundColor="brand"
         marginTop={5}
         transition="transform .2s ease-in-out"
         _hover={{ transform: 'translateX(0.5em)' }}
@@ -40,7 +40,7 @@ export const CardListItem = ({ data, link }: CardListItemProps) => {
             )}
           </VStack>
           <Spacer />
-          <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />
+          <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="text" />
         </HStack>
       </Box>
     </Link>

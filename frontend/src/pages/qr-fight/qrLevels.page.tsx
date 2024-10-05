@@ -29,12 +29,12 @@ export default function QrLevelsPage() {
         <Heading as="h1" variant="main-title" mt={5}>
           {component.title}
         </Heading>
-        <LinkButton my={5} colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
+        <LinkButton my={5} colorScheme="brand" color="brandForeground" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           QR kód beolvasása
         </LinkButton>
       </Flex>
       <Markdown text={component.topMessage} />
-      <Tabs mt={10} size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
+      <Tabs mt={10} size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" color="brandForeground" colorScheme="brand">
         <TabList>
           <CustomTabButton>Fő szintek</CustomTabButton>
           <CustomTabButton>Extra szintek</CustomTabButton>

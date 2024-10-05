@@ -31,6 +31,7 @@ const LoginPage = () => {
           <>
             <Button
               colorScheme="brand"
+              color="brandForeground"
               onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}
               leftIcon={<FaSignInAlt />}
             >
@@ -43,6 +44,7 @@ const LoginPage = () => {
           <>
             <Button
               colorScheme="brand"
+              color="brandForeground"
               onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/google`)}
               leftIcon={<FaGoogle />}
             >
@@ -55,6 +57,7 @@ const LoginPage = () => {
           <>
             <Button
               colorScheme="brand"
+              color="brandForeground"
               onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/keycloak`)}
               leftIcon={<FaKey />}
             >

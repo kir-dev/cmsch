@@ -86,7 +86,7 @@ const RiddleHistoryPage = () => {
         <>
           <Text mt={2}>Ebben a kategóriában még nincsenek megoldott riddleök.</Text>
           <Center mt={3}>
-            <LinkButton colorScheme="brand" href={AbsolutePaths.RIDDLE}>
+            <LinkButton colorScheme="brand" color="brandForeground" href={AbsolutePaths.RIDDLE}>
               Összes riddle
             </LinkButton>
           </Center>
@@ -122,7 +122,7 @@ const RiddleHistoryPage = () => {
               </Button>
             </HStack>
             <Center>
-              <LinkButton colorScheme="brand" href={AbsolutePaths.RIDDLE}>
+              <LinkButton colorScheme="brand" color="brandForeground" href={AbsolutePaths.RIDDLE}>
                 Összes riddle
               </LinkButton>
             </Center>

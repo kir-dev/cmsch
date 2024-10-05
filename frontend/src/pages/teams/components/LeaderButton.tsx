@@ -8,7 +8,7 @@ interface LeaderButtonProps {
 export function LeaderButton({ onPromoteLeadership }: LeaderButtonProps) {
   return (
     <Tooltip label="Csapatkapitánnyá tevés">
-      <Button colorScheme="blue" variant="outline" onClick={onPromoteLeadership}>
+      <Button colorScheme="info" variant="outline" onClick={onPromoteLeadership}>
         <FaChessKing />
       </Button>
     </Tooltip>

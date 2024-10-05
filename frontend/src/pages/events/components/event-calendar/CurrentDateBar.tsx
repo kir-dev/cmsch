@@ -18,7 +18,7 @@ export function CurrentDateBar({ maxTimestamp, minTimestamp }: CurrentDateBarPro
       top={position + '%'}
       left={0}
       right={0}
-      borderColor="red.500"
+      borderColor="error.500"
       borderWidth={2}
       borderRadius="full"
     />
