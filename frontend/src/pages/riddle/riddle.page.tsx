@@ -78,6 +78,7 @@ const RiddlePage = () => {
                 duration: 5000,
                 isClosable: true
               }) || null
+            solutionInput.current?.focus()
           }
           if (result.status === RiddleSubmissionStatus.SUBMITTER_BANNED) {
             if (toastIdRef.current) {
