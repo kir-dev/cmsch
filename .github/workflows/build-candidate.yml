@@ -1,9 +1,9 @@
-name: Build and Push Docker Image
+name: Build and Push Docker RC Docker Image
 
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   build-and-push-rc:

@@ -1,11 +1,12 @@
 name: SonarCloud
+
 on:
   push:
     branches:
-      - staging
-      - master
+      - main
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches:
+      - main
 
 jobs:
   build:
