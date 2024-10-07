@@ -1,9 +1,10 @@
-name: Build and Push Docker Image
+name: Build and Push Release Docker Image
 
 on:
+  workflow_dispatch: # allow manually running this workflow
   push:
-    branches:
-      - master
+    tags:
+    - v*
 
 jobs:
   build-and-push-release:
