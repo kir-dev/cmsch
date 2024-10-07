@@ -133,6 +133,20 @@ Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active
 4. Navigate to `Project Settings` > `Cloud Messaging` and scroll down to `Web Push certificates`
 5. If there is no key, click on `Generate key pair`. Copy the value from `Key pair` column and set `VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY` to it.
 
+## Contributing
+
+Follow the [instructions by Samu](https://gist.github.com/Tschonti/4397e43fef11895235e25c46ae0ed65e#workflow-) with the following differences:
+- Pull requests will be squash merged, so keep them small and focused. When merged, the commits on your branch will get replaced by a single commit on the main branch. A good rule of thumb is to make sure the resulting squashed commit can be reverted without affecting unrelated parts of the codebase.
+- When there are conflicts with the main branch, rebase your feature branch onto main (`git fetch && git rebase origin/main`), fix the conflicts, **commit**, then force push the updated branch (`git push --force`).
+- To make it easier to review your pull request, consider cleaning up the commits with `git rebase --interactive`. You may also use `git commit --amend` to add the currently staged changes to the last commit instead of creating a new commit.
+
+> [!note]
+>  After using either of these you will have to use `git push --force` to allow pushing modified history to GitHub.
+
+- Commit messages should follow the rules outlined [here](https://cbea.ms/git-commit/). As this project is not versioned, [conventional commits](https://conventionalcommits.org) don't have too many benefits, so instead let's keep things consistent.
+
+
+
 ## Sponsors
 
 <a href="https://vercel.com?utm_source=kir-dev&utm_campaign=oss"><img src="client/public/img/powered-by-vercel.svg" height="46" /></a>
