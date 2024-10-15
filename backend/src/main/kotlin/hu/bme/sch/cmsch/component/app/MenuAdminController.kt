@@ -114,13 +114,11 @@ class MenuAdminController(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", overviewDescriptor.getColumnsAsJson())
-        model.addAttribute("tableData", overviewDescriptor.getTableDataAsJson(fetchOverview()))
+        model.addAttribute("columnData", overviewDescriptor.getColumns())
+        model.addAttribute("tableData", overviewDescriptor.getTableData(fetchOverview()))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", overviewDescriptor.toJson(
-            controlActions.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", buttonActions)
 

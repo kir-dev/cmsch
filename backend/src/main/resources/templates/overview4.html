@@ -110,8 +110,8 @@
         return dt.toFormat("yyyy-MM-dd HH:mm");
     }
 
-    const buttons = JSON.parse(/*[[${controlActions}]]*/ "[]");
-    let tableData = JSON.parse(/*[[${tableData}]]*/ "[]");
+    const buttons = /*[[${controlActions}]]*/ [];
+    let tableData = /*[[${tableData}]]*/ [];
     let view = /*[[${view}]]*/ "";
     for (let rowId in tableData) {
         const row = tableData[rowId];
@@ -140,7 +140,7 @@
         return enumElementMap[value] || "";
     }
 
-    let columData = JSON.parse(/*[[${columnData}]]*/ "[]");
+    let columData = /*[[${columnData}]]*/ [];
     for (let columnId in columData) {
         if (columData[columnId].formatter === 'tickCross') {
             columData[columnId]['formatterParams'] = {

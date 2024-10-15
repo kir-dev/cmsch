@@ -129,7 +129,7 @@ class PermissionGroupAssignPage(
         model.addAttribute("description", "Válassz, hogy melyik felhasználó kapja meg a(z) ${permissionGroup.displayName} jogkört")
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", descriptor.getColumnsAsJson())
+        model.addAttribute("columnData", descriptor.getColumns())
         val overview = transactionManager.transaction(readOnly = true) {
             userRepository.findAll()
                 .filter { permissionGroup.key.isNotEmpty() && !it.permissionGroups.split(",").contains(permissionGroup.key) }
@@ -143,12 +143,10 @@ class PermissionGroupAssignPage(
                     )
                 }
         }
-        model.addAttribute("tableData", descriptor.getTableDataAsJson(filterOverview(user, overview)))
+        model.addAttribute("tableData", descriptor.getTableData(filterOverview(user, overview)))
 
         model.addAttribute("user", user)
-        model.addAttribute("controlActions", descriptor.toJson(
-            controlActionsForView.filter { it.permission.validate(user) },
-            objectMapper))
+        model.addAttribute("controlActions", controlActionsForView.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActionsForView)
         model.addAttribute("buttonActions", buttonActionsForView.filter { it.permission.validate(user) })
         model.addAttribute("searchSettings", searchSettings)
@@ -188,4 +186,3 @@ class PermissionGroupAssignPage(
     fun redirectToUsersView(@PathVariable id: Int) = "redirect:/admin/control/permission-groups-for-users/${id}"
 
 }
-
