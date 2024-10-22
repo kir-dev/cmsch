@@ -2,6 +2,8 @@ package hu.bme.sch.cmsch.config
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.TypeDescriptor
@@ -24,6 +26,7 @@ class AppConfig {
     @Bean
     fun objectMapper(): ObjectMapper {
         val objectMapper = ObjectMapper()
+        objectMapper.registerKotlinModule()
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         return objectMapper
     }

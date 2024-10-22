@@ -32,6 +32,15 @@ data class ComponentLoadConfig @ConstructorBinding constructor(
     var task: Boolean,
     var team: Boolean,
     var token: Boolean,
+    var accessKeys: Boolean,
+    var conference: Boolean,
+    var email: Boolean,
+    var errorlog: Boolean,
+    var gallery: Boolean,
+    var messaging: Boolean,
+    var proto: Boolean,
+    var pushnotification: Boolean,
+    var sheets: Boolean,
 
 ) {
 

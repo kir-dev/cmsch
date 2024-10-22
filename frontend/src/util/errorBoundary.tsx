@@ -23,8 +23,11 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
     }
   }
 
-  componentDidCatch(_: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error(errorInfo)
+
+    const win: any = window
+    win.processAndReportError?.call(error.message, error.stack)
   }
 
   render() {
