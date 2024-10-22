@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.component.conference.ConferenceComponent
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.component.debt.DebtComponent
 import hu.bme.sch.cmsch.component.email.EmailComponent
+import hu.bme.sch.cmsch.component.errorlog.ErrorLogComponent
 import hu.bme.sch.cmsch.component.event.EventComponent
 import hu.bme.sch.cmsch.component.form.FormComponent
 import hu.bme.sch.cmsch.component.gallery.GalleryComponent
@@ -135,6 +136,13 @@ object ControlPermissions : PermissionGroup {
         "Események komponens testreszabása",
         readOnly = false,
         component = EventComponent::class
+    )
+
+    val PERMISSION_CONTROL_ERROR_LOG = PermissionValidator(
+        "ERROR_LOG_CONTROL",
+        "Kliens hibaüzenetek komponens testreszabása",
+        readOnly = false,
+        component = ErrorLogComponent::class
     )
 
     val PERMISSION_CONTROL_GALLERY = PermissionValidator(
@@ -427,6 +435,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
         PERMISSION_CONTROL_EVENTS,
+        PERMISSION_CONTROL_ERROR_LOG,
         PERMISSION_CONTROL_GALLERY,
         PERMISSION_CONTROL_DEBTS,
         PERMISSION_CONTROL_RIDDLE,
@@ -805,6 +814,23 @@ object StaffPermissions : PermissionGroup {
         readOnly = false,
         component = EventComponent::class
     )
+
+    /// ErrorLogComponent
+
+    val PERMISSION_SHOW_ERROR_LOG = PermissionValidator(
+        "ERROR_LOG_SHOW",
+        "Hibaüzenetek megtekintése",
+        readOnly = true,
+        component = ErrorLogComponent::class
+    )
+
+    val PERMISSION_DELETE_ERROR_LOG = PermissionValidator(
+        "ERROR_LOG_DELETE",
+        "Hibaüzenetek törlése",
+        readOnly = false,
+        component = ErrorLogComponent::class
+    )
+
 
     /// GalleryComponent
 
@@ -1607,6 +1633,9 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_EVENTS,
         PERMISSION_CREATE_EVENTS,
         PERMISSION_DELETE_EVENTS,
+
+        PERMISSION_SHOW_ERROR_LOG,
+        PERMISSION_DELETE_ERROR_LOG,
 
         PERMISSION_SHOW_GALLERY,
         PERMISSION_EDIT_GALLERY,
