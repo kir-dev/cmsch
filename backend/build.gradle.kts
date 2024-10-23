@@ -11,7 +11,12 @@ plugins {
 }
 
 group = "hu.bme.sch"
-version = System.getenv("CMSCH_VERSION") ?: "dev"
+
+// Set release version from the git tag when running in the workflow for the tag
+// https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+val ghRef = System.getenv("GITHUB_REF")
+version = if (ghRef != null && ghRef.startsWith("refs/tags/v")) { ghRef.substring(11) } else "dev"
+
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 springBoot {
