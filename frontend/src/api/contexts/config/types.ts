@@ -105,7 +105,7 @@ export interface Home {
   title: string
   welcomeMessage: string
   content: string
-  youtubeVideoId: string
+  youtubeVideoIds: string
   showEvents: boolean
   showNews: boolean
 }

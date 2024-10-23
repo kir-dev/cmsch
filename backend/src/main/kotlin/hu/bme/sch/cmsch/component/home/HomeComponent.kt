@@ -33,7 +33,7 @@ class HomeComponent(
 
             displayGroup,
             welcomeMessage,
-            youtubeVideoId,
+            youtubeVideoIds,
             content,
             showEvents,
 
@@ -78,9 +78,9 @@ class HomeComponent(
         fieldName = "Üdvözlő üzenet", description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
     )
 
-    val youtubeVideoId = SettingProxy(componentSettingService, component,
-        "youtubeVideoId", "", type = SettingType.TEXT,
-        fieldName = "Promó videó", description = "Ha üres akkor nincs, csak youtube videó id-vel működik," +
+    val youtubeVideoIds = SettingProxy(componentSettingService, component,
+        "youtubeVideoIds", "", type = SettingType.TEXT,
+        fieldName = "Promó videó(k)", description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni" +
                 " pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)"
     )
 
