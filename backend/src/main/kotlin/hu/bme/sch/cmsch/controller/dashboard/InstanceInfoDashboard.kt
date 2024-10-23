@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.controller.dashboard
 
-import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.admin.dashboard.DashboardComponent
 import hu.bme.sch.cmsch.admin.dashboard.DashboardPage
 import hu.bme.sch.cmsch.admin.dashboard.DashboardPermissionCard
@@ -31,7 +30,7 @@ class InstanceInfoDashboard(
     env: Environment,
     startupPropertyConfig: StartupPropertyConfig,
     componentLoadConfig: ComponentLoadConfig,
-    buildProperties: BuildProperties?,
+    buildProperties: BuildProperties,
     private val userActivityFilter: Optional<UserActivityFilter>,
     private val clock: TimeService,
 ) : DashboardPage(
@@ -64,13 +63,12 @@ class InstanceInfoDashboard(
             listOf("Server version",        ServerInfo.getServerInfo()),
             listOf("Server built",          ServerInfo.getServerBuilt()),
             listOf("Server number",         ServerInfo.getServerNumber()),
-            listOf("Build Artifact",        buildProperties?.artifact ?: "n/a"),
-            listOf("Build Group",           buildProperties?.group ?: "n/a"),
-            listOf("Build Name",            buildProperties?.name ?: "n/a"),
-            listOf("Build Time",            buildProperties?.time?.toString() ?: "n/a"),
-            listOf("Build version",         buildProperties?.version ?: "n/a"),
+            listOf("Build Artifact",        buildProperties.artifact ?: "n/a"),
+            listOf("Build Group",           buildProperties.group ?: "n/a"),
+            listOf("Build Name",            buildProperties.name ?: "n/a"),
+            listOf("Build Time",            buildProperties.time?.toString() ?: "n/a"),
+            listOf("Build version",         buildProperties.version ?: "n/a"),
             listOf("Profiles",              env.activeProfiles.joinToString(", ")),
-            listOf("CMSCH version",         CMSCH_VERSION),
         ),
         false
     )

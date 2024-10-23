@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "hu.bme.sch"
-version = "4.8.1"
+version = System.getenv("CMSCH_VERSION") ?: "dev"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 springBoot {

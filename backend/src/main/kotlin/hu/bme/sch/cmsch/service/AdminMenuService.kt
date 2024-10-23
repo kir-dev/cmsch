@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.service
 
-import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.*
@@ -15,6 +14,7 @@ import java.security.MessageDigest
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import jakarta.annotation.PostConstruct
+import org.springframework.boot.info.BuildProperties
 
 private fun String.md5(): String {
     val md = MessageDigest.getInstance("MD5")
@@ -34,7 +34,8 @@ class AdminMenuService(
     private val environment: Environment,
     private val userService: UserService,
     private val clock: TimeService,
-    private val stats: Optional<UserActivityFilter>
+    private val stats: Optional<UserActivityFilter>,
+    private val buildProperties: BuildProperties,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -76,7 +77,7 @@ class AdminMenuService(
             applicationComponent.motd.getValue(),
             applicationComponent.adminSiteUrl.getValue(),
             applicationComponent.siteUrl.getValue(),
-            CMSCH_VERSION,
+            buildProperties.version,
             stats.map { it.rpm }.orElse(0),
             stats.map { it.usersIn5Minutes }.orElse(0),
             applicationComponent.adminBrandColor.getValue(),
