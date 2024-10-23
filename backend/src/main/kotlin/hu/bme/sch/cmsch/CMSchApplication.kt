@@ -8,8 +8,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
-const val CMSCH_VERSION = "4.8.1"
-
 @SpringBootApplication
 @EnableConfigurationProperties(value = [ComponentLoadConfig::class, StartupPropertyConfig::class])
 @EntityScan(basePackages = ["hu.bme.sch.cmsch.model"], basePackageClasses = [ApplicationComponent::class])
