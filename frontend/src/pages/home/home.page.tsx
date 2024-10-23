@@ -44,6 +44,10 @@ const HomePage = () => {
 
   const eventsToday = events?.filter((ev) => isToday(ev.timestampStart)) || []
   const eventsLater = events?.filter((ev) => !isToday(ev.timestampStart)).slice(0, 3) || []
+  const videoIds = homeConfig?.youtubeVideoIds
+    ?.split(',')
+    ?.map((videoId) => videoId.trim())
+    ?.filter(Boolean)
 
   return (
     <CmschPage>
@@ -80,7 +84,13 @@ const HomePage = () => {
         </>
       )}
 
-      {homeConfig?.youtubeVideoId && <EmbeddedVideo key={homeConfig?.youtubeVideoId} id={homeConfig?.youtubeVideoId} />}
+      {videoIds?.length > 0 && (
+        <>
+          {videoIds.map((videoId) => (
+            <EmbeddedVideo key={videoId} id={videoId} />
+          ))}
+        </>
+      )}
 
       {homeConfig?.content && (
         <Box mt={10}>
