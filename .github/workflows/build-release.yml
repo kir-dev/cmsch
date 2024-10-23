@@ -42,6 +42,7 @@ jobs:
         run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}
 
       # https://vercel.com/guides/can-you-deploy-based-on-tags-releases-on-vercel
+      - run: npm install --global vercel@latest
       - run: VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID_KOZELOK }} vercel --prod
       - run: VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID_GOLYABAL }} vercel --prod
       - run: VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID_TANFOLYAM }} vercel --prod
