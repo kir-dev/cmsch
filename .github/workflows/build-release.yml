@@ -37,3 +37,9 @@ jobs:
 
       - name: Logout from Docker Registry
         run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}
+
+      # deploy to vercel using deploy hooks
+      - run: curl ${{ secrets.QPA_DEPLOY_HOOK }}
+      - run: curl ${{ secrets.KOZELOK_DEPLOY_HOOK }}
+      - run: curl ${{ secrets.GOLYABAL_DEPLOY_HOOK }}
+      - run: curl ${{ secrets.TANFOLYAM_DEPLOY_HOOK }}
