@@ -1,4 +1,4 @@
-name: Build and Push Release Docker Image
+name: Deploy new release
 
 on:
   workflow_dispatch: # allow manually running this workflow
@@ -6,9 +6,12 @@ on:
     tags:
     - v*
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
 jobs:
-  build-and-push-release:
-    name: Build and Push Release Docker Image
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -38,8 +41,7 @@ jobs:
       - name: Logout from Docker Registry
         run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}
 
-      # deploy to vercel using deploy hooks
-      - run: curl ${{ secrets.QPA_DEPLOY_HOOK }}
-      - run: curl ${{ secrets.KOZELOK_DEPLOY_HOOK }}
-      - run: curl ${{ secrets.GOLYABAL_DEPLOY_HOOK }}
-      - run: curl ${{ secrets.TANFOLYAM_DEPLOY_HOOK }}
+      # https://vercel.com/guides/can-you-deploy-based-on-tags-releases-on-vercel
+      - run: VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID_KOZELOK }} vercel --prod
+      - run: VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID_GOLYABAL }} vercel --prod
+      - run: VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID_TANFOLYAM }} vercel --prod
