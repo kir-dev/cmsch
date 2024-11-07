@@ -169,7 +169,7 @@ class InstanceInfoDashboard(
         listOf("Property", "Value"),
         listOf(
             listOf("Time",          formatter.format(clock.getTimeInSeconds() * 1000)),
-            listOf("Used memory",   "${(Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) 
+            listOf("Used memory",   "${(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) 
                                         / (1000 * 1000)} MB"),
             listOf("RPM",           userActivityFilter.map { it.rpm.toString() }.orElse("")),
             listOf("Users in 5m",   userActivityFilter.map { it.usersIn5Minutes.toString() }.orElse("")),
