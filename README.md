@@ -6,8 +6,7 @@ CMSch web backend and frontend monorepo
 ## Build docker
 
 ```bash
-  ./gradlew clean build
-  docker build -t cmsch .
+  ./gradlew clean bootBuildImage --imageName=<your registry>/cmsch:release
 ```
 
 ## Run
@@ -37,6 +36,21 @@ Use your authsch details for docker login. Tag `rc` for staging (release candida
   docker image tag cmsch:latest harbor.sch.bme.hu/org-kir-dev/cmsch:release
   docker image push harbor.sch.bme.hu/org-kir-dev/cmsch:release
 ```
+
+## Deploy to Kubernetes
+
+### Prerequisites
+- Install Kubectl
+- Install Helm
+
+### Deploy the application
+
+- Create a copy of _helm/cmsch/values.yaml and modify the values for your needs; you can delete the properties you don't modify to make the config cleaner
+- **Select the correct Kubernetes context:** `kubectl config use-context <context>`
+- Run `helm upgrade --install cmsch-<instance name> --values <path-to-your.yaml> ./helm/cmsch`
+- If you need to change a value, or update the config, run the command above and everything updates automagically
+- If you want to delete the instance, run `helm delete cmsch-<instance name>`
+
 
 ## Run (you can start here)
 
