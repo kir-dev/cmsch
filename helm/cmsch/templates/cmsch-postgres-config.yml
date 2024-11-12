@@ -1,0 +1,12 @@
+{{ if .Values.postgres.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: postgres
+  name: {{ .Release.Name }}-postgres-config
+data:
+  POSTGRES_DB: {{ .Values.postgres.db | quote }}
+  POSTGRES_DDL: {{ .Values.postgres.ddl | quote }}
+{{end}}

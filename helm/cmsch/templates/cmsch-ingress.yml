@@ -1,0 +1,36 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+  annotations:
+    cert-manager.io/cluster-issuer: le-http01
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+    nginx.ingress.kubernetes.io/proxy-body-size: {{ .Values.ingress.maxBodySize }}
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.apiHost }}
+      secretName: {{ .Release.Name }}-cert
+  rules:
+    - host: {{ .Values.apiHost }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}
+                port:
+                  number: 80
+          {{ if .Values.blockActuatorEndpoints }}
+          - path: /actuator/
+            pathType: Prefix
+            backend:
+              service:
+                name: default-backend
+                port:
+                  number: 80
+          {{ end }}

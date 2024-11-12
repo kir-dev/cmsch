@@ -1,0 +1,92 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}
+        kir-dev-spring-monitored: enabled
+      annotations:
+        prometheus.io/path: /actuator/prometheus
+        prometheus.io/port: "80"
+        prometheus.io/scrape: "true"
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecretName }}
+      volumes:
+        - name: {{ .Release.Name }}-pv
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pv
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.apiImage }}
+          ports:
+            - name: web
+              containerPort: 80
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-secrets
+            - configMapRef:
+                name: {{ .Release.Name }}-config
+            {{ if .Values.postgres.enabled }}
+            - secretRef:
+                name: {{ .Release.Name }}-postgres-secrets
+            - configMapRef:
+                name: {{ .Release.Name }}-postgres-config
+            {{ end }}
+          env:
+            {{ if .Values.postgres.enabled }}
+            - name: POSTGRES_PW
+              value: "$(POSTGRES_PASSWORD)"
+            - name: POSTGRES_IP
+              value: "$({{ .Release.Name | upper | replace "-" "_" }}_POSTGRES_SERVICE_HOST):$({{ .Release.Name | upper | replace "-" "_" }}_POSTGRES_SERVICE_PORT)"
+            {{ end }}
+            - name: CMSCH_SPRING_PROFILES
+              value: {{ .Values.springProfiles }}
+            - name: PORT
+              value: '80'
+          resources:
+            {{ if or (.Values.resources.limits.cpu) (.Values.resources.limits.memory) }}
+            limits:
+              {{ if .Values.resources.limits.cpu }}
+              cpu: {{ .Values.resources.limits.cpu }}
+              {{ end }}
+              {{ if .Values.resources.limits.memory }}
+              memory: {{ .Values.resources.limits.memory }}
+              {{ end }}
+            {{ end }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-pv
+              mountPath: /pv
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 80
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: { }
+      schedulerName: default-scheduler
+  strategy:
+    type: {{ .Values.deploymentStrategy }}
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

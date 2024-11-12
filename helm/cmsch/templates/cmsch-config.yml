@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-config
+data:
+  FRONTEND_URL: "https://{{ .Values.frontendHost }}"
+  ALLOWED_ORIGIN_PATTERNS: {{ .Values.allowedOriginPatterns | quote }}
+  BACKEND_URL: "https://{{ .Values.apiHost }}/"
+  SYSADMINS: {{ .Values.superusers.pekIds | quote }}
+  GOOGLE_ADMIN_ADDRESSES: {{ .Values.superusers.googleEmails | quote }}
+
+  LOAD_APP: {{ .Values.load.app | quote }}
+  LOAD_LOGIN: {{ .Values.load.login | quote }}
+  LOAD_PROFILE: {{ .Values.load.profile | quote }}
+  LOAD_IMPRESSUM: {{ .Values.load.impressum | quote }}
+  LOAD_PROTO: {{ .Values.load.proto | quote }}
+  LOAD_ERRORLOG: {{ .Values.load.errorlog | quote }}
+  LOAD_ACCESS_KEYS: {{ .Values.load.access_keys | quote }}
+  LOAD_ADMISSION: {{ .Values.load.admission | quote }}
+  LOAD_BMEJEGY: {{ .Values.load.bmejegy | quote }}
+  LOAD_CHALLANGE: {{ .Values.load.challange | quote }}
+  LOAD_COMMUNITIES: {{ .Values.load.communities | quote }}
+  LOAD_CONFERENCE: {{ .Values.load.conference | quote }}
+  LOAD_COUNTDOWN: {{ .Values.load.countdown | quote }}
+  LOAD_DEBT: {{ .Values.load.debt | quote }}
+  LOAD_EMAIL: {{ .Values.load.email | quote }}
+  LOAD_FORM: {{ .Values.load.form | quote }}
+  LOAD_GROUPSELECTION: {{ .Values.load.groupselection | quote }}
+  LOAD_HOME: {{ .Values.load.home | quote }}
+  LOAD_LEADERBOARD: {{ .Values.load.leaderboard | quote }}
+  LOAD_LOCATION: {{ .Values.load.location | quote }}
+  LOAD_MESSAGING: {{ .Values.load.messaging | quote }}
+  LOAD_NEWS: {{ .Values.load.news | quote }}
+  LOAD_QRFIGHT: {{ .Values.load.qrfight | quote }}
+  LOAD_RACE: {{ .Values.load.race | quote }}
+  LOAD_RIDDLE: {{ .Values.load.riddle | quote }}
+  LOAD_STATIC_PAGE: {{ .Values.load.static_page | quote }}
+  LOAD_TASK: {{ .Values.load.task | quote }}
+  LOAD_TEAM: {{ .Values.load.team | quote }}
+  LOAD_TOKEN: {{ .Values.load.token | quote }}
+  LOAD_EVENT: {{ .Values.load.event | quote }}
+  LOAD_PUSHNOTIFICATION: {{ .Values.load.pushnotification | quote }}
+  LOAD_SHEETS: {{ .Values.load.sheets | quote }}
+
+  OWNER_TOKEN: {{ .Values.owner.token | quote }}
+  OWNER_TASK: {{ .Values.owner.task | quote }}
+  OWNER_RIDDLE: {{ .Values.owner.riddle | quote }}
+  OWNER_FORM: {{ .Values.owner.form | quote }}
+  OWNER_CHALLENGE: {{ .Values.owner.challenge | quote }}
+  OWNER_RACE: {{ .Values.owner.race | quote }}
+
+  MS_MASTER_ROLE: {{ .Values.riddle.masterRole | quote }}
+  RIDDLE_MICROSERVICE: {{ .Values.riddle.microservice | quote }}
+  MANAGEMENT_TOKEN: {{ .Values.riddle.managementToken | quote }}
+  MS_NODE_NAME: {{ .Values.riddle.msNodeName | quote }}
+  METRICS_NAME: {{ .Release.Name | quote }}
+  SWAGGER_ENABLED: {{ .Values.swaggerEnabled | quote }}

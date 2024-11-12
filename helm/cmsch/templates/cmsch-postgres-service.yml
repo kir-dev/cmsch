@@ -1,0 +1,16 @@
+{{ if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-postgres
+spec:
+  selector:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+  type: ClusterIP
+  ipFamilies:
+    - IPv4
+{{ end }}

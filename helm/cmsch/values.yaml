@@ -1,0 +1,113 @@
+frontendHost: cmsch.basic
+apiHost: api.cmsch.basic
+
+# For staging environments you can enable vercel previews and localhost for easier frontend development, like this:
+#  allowedOriginPatterns: "https://cmsch-basic-*-kir-dev.vercel.app,http://127.0.0.1:3000,http://localhost:3000"
+allowedOriginPatterns: ""
+
+apiImage: harbor.sch.bme.hu/org-kir-dev/cmsch:release
+imagePullSecretName: harbor-cred
+imagePullPolicy: Always
+
+springProfiles: prod,docker,env
+deploymentStrategy: Recreate # because of resource constraints and H2 allowing only 1 connection at a time
+
+ingress:
+  maxBodySize: 20m
+
+blockActuatorEndpoints: true
+swaggerEnabled: false
+
+superusers:
+  pekIds: ""
+  googleEmails: ""
+
+resources:
+  limits:
+    cpu:
+    memory:
+  requests:
+    cpu: 500m
+    memory: 750Mi
+    storage: 3Gi
+
+secret:
+  jwtSecret: this is a secret value # openssl rand -hex 16
+  profileSalt: this is a secret value # openssl rand -hex 16
+  authschClientId: this is a secret value
+  authschClientKey: this is a secret value
+  googleClientId: this is a secret value
+  googleClientKey: this is a secret value
+  bmejegyUsername: this is a secret value
+  bmejegyPassword: this is a secret value
+  firebaseServiceAccountKey: contents of the serviceAccount.json file as a string
+
+postgres:
+  enabled: false # Remember to set this too → springProfiles: prod,docker,env,postgres
+  tagName: 17-alpine # the image will be: postgres:17-alpine
+  db: cmsch
+  ddl: update
+  secret:
+    user: admin
+    password: admin
+  resources:
+    limits:
+      cpu:
+      memory:
+    requests:
+      cpu: 1000m
+      memory: 500Mi
+
+load:
+  app: true
+  login: true
+  profile: true
+  impressum: true
+  proto: true
+  errorlog: true
+  access_keys: false
+  admission: false
+  bmejegy: false
+  challange: false
+  communities: false
+  conference: false
+  countdown: false
+  debt: false
+  email: false
+  form: false
+  groupselection: false
+  home: false
+  leaderboard: false
+  location: false
+  messaging: false
+  news: false
+  qrfight: false
+  race: false
+  riddle: false
+  static_page: false
+  task: false
+  team: false
+  token: false
+  event: false
+  pushnotification: false
+  sheets: false
+
+owner:
+  token: USER
+  task: USER
+  riddle: USER
+  form: USER
+  challenge: USER
+  race: USER
+
+riddle:
+  masterRole: true
+  microservice: false
+  managementToken: ""
+  msNodeName: NOT_SET
+
+livenessProbe:
+  initialDelaySeconds: 600 # might be overkill, but it shouldn't matter that much
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 5
