@@ -1,0 +1,57 @@
+{{ if .Values.postgres.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: postgres
+  name: {{ .Release.Name }}-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}
+      app.kubernetes.io/component: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/component: postgres
+    spec:
+      containers:
+        - image: "postgres:{{ .Values.postgres.tagName }}"
+          name: {{ .Release.Name }}-postgres
+          resources:
+            {{ if or (.Values.postgres.resources.limits.cpu) (.Values.postgres.resources.limits.memory) }}
+            limits:
+              {{ if .Values.postgres.resources.limits.cpu }}
+              cpu: {{ .Values.postgres.resources.limits.cpu }}
+              {{ end }}
+              {{ if .Values.postgres.resources.limits.memory }}
+              memory: {{ .Values.postgres.resources.limits.memory }}
+              {{ end }}
+            {{ end }}
+            requests:
+              cpu: {{ .Values.postgres.resources.requests.cpu }}
+              memory: {{ .Values.postgres.resources.requests.memory }}
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: {{ .Release.Name }}-postgres
+              mountPath: /var/lib/postgresql/data
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-postgres-secrets
+            - configMapRef:
+                name: {{ .Release.Name }}-postgres-config
+      restartPolicy: Always
+      volumes:
+        - name: {{ .Release.Name }}-postgres
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-postgres
+        - name: {{ .Release.Name }}-postgres-secrets
+          secret:
+            secretName: {{ .Release.Name }}-postgres-secrets
+{{end}}
