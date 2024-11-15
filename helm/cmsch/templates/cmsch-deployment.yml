@@ -48,7 +48,7 @@ spec:
             - name: POSTGRES_PW
               value: "$(POSTGRES_PASSWORD)"
             - name: POSTGRES_IP
-              value: "$({{ .Release.Name | upper | replace "-" "_" }}_POSTGRES_SERVICE_HOST):$({{ .Release.Name | upper | replace "-" "_" }}_POSTGRES_SERVICE_PORT)"
+              value: "{{ .Release.Name }}-postgres:5432"
             {{ end }}
             - name: CMSCH_SPRING_PROFILES
               value: {{ .Values.springProfiles }}
