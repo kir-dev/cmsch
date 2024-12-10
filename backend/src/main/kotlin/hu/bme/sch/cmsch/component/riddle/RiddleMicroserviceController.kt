@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.component.riddle
 
-import hu.bme.sch.cmsch.CMSCH_VERSION
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.info.BuildProperties
 import org.springframework.core.env.Environment
 import org.springframework.web.bind.annotation.*
 
@@ -19,7 +19,8 @@ class RiddleMicroserviceController(
     private val riddleComponent: RiddleComponent,
     private val riddleCacheManager: RiddleCacheManager,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val env: Environment
+    private val env: Environment,
+    private val buildProperties: BuildProperties
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -103,7 +104,7 @@ class RiddleMicroserviceController(
             log.info("${it.component}.${it.property} = ${it.getValue()}")
         }
         log.info("cmsch.frontend.production-url = ${env.getProperty("cmsch.frontend.production-url")}")
-        return "PONG ${startupPropertyConfig.nodeName} ${CMSCH_VERSION}"
+        return "PONG ${startupPropertyConfig.nodeName} ${buildProperties.version!!}"
     }
 
 }
