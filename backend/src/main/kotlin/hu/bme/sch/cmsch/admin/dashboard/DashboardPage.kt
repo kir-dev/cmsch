@@ -21,16 +21,16 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 abstract class DashboardPage(
-    internal var view: String,
-    internal var title: String,
-    internal var description: String,
-    internal var wide: Boolean,
+    var view: String,
+    var title: String,
+    var description: String,
+    var wide: Boolean,
 
     private var adminMenuService: AdminMenuService,
-    internal var component: ComponentBase,
-    internal var auditLog: AuditLogService,
+    var component: ComponentBase,
+    var auditLog: AuditLogService,
 
-    internal var showPermission: PermissionValidator,
+    var showPermission: PermissionValidator,
 
     private var adminMenuCategory: String? = null,
     private var adminMenuIcon: String = "check_box_outline_blank",

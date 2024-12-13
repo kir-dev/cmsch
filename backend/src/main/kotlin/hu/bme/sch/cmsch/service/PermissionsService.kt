@@ -49,7 +49,7 @@ class PermissionsService(
     final val allPermissions = listOf(allControlPermissions, allStaffPermissions).flatten()
 }
 
-class PermissionValidator internal constructor(
+class PermissionValidator constructor(
     val permissionString: String = "",
     val description: String = "",
     val component: KClass<out ComponentBase>? = null,
