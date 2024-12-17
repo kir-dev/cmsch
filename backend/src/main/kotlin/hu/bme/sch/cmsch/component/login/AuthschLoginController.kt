@@ -50,11 +50,11 @@ class AuthschLoginController(
     }
 
     @GetMapping("/control/logout")
-    fun logout(auth: Authentication?, httpResponse: HttpServletResponse): String {
+    fun logout(auth: Authentication?, response: HttpServletResponse): String {
         log.info("Logging out from user {}", auth?.getUserOrNull()?.internalId ?: "n/a")
 
         try {
-            httpResponse.addCookie(createJwtCookie(null).apply { maxAge = 0 })
+            createJwtCookies(null).forEach { response.addCookie(it) }
             SecurityContextHolder.getContext().authentication = null
         } catch (e: Exception) {
             // It should be logged out anyway
@@ -70,8 +70,7 @@ class AuthschLoginController(
                 return "redirect:${applicationComponent.siteUrl.getValue()}?error=cannot-generate-jwt"
             }
             val jwtToken = jwtTokenProvider.createToken(auth.principal as CmschUser)
-
-            response.addCookie(createJwtCookie(jwtToken))
+            createJwtCookies(jwtToken).forEach { response.addCookie(it) }
 
             return "redirect:${applicationComponent.siteUrl.getValue()}"
         }
@@ -84,7 +83,7 @@ class AuthschLoginController(
         if (auth == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
-        response.addCookie(createJwtCookie(jwtTokenProvider.refreshToken(auth)))
+        createJwtCookies(jwtTokenProvider.refreshToken(auth)).forEach { response.addCookie(it) }
 
         return ResponseEntity.ok().build()
     }
@@ -93,13 +92,22 @@ class AuthschLoginController(
         return URI(url).host
     }
 
-    private fun createJwtCookie(value: String?): Cookie {
-        return Cookie("jwt", value).apply {
-            isHttpOnly = true
-            path = "/"
-            maxAge = startupPropertyConfig.sessionValidityInMilliseconds.toInt() / 1000
-            secure = true
-            domain = getDomainFromUrl(applicationComponent.siteUrl.getValue())
-        }
+    private fun createJwtCookies(value: String?): List<Cookie> {
+        return listOf(
+            Cookie("jwt", value).apply {
+                isHttpOnly = true
+                path = "/"
+                maxAge = startupPropertyConfig.sessionValidityInMilliseconds.toInt() / 1000
+                secure = true
+                domain = getDomainFromUrl(applicationComponent.siteUrl.getValue())
+            },
+            Cookie("jwt", value).apply {
+                isHttpOnly = true
+                path = "/"
+                maxAge = startupPropertyConfig.sessionValidityInMilliseconds.toInt() / 1000
+                secure = true
+                domain = getDomainFromUrl(applicationComponent.adminSiteUrl.getValue())
+            },
+        )
     }
 }

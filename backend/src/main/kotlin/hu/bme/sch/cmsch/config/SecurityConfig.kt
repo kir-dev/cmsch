@@ -21,12 +21,15 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -34,11 +37,13 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession
 import org.springframework.web.reactive.function.client.WebClient
 import java.util.*
 
-@EnableWebSecurity
 @Configuration
+@EnableJdbcHttpSession
+@EnableWebSecurity
 @EnableRetry(order = Ordered.HIGHEST_PRECEDENCE)
 @ConditionalOnBean(LoginComponent::class)
 open class SecurityConfig(
@@ -66,8 +71,18 @@ open class SecurityConfig(
         .defaultHeader(HttpHeaders.USER_AGENT, "AuthSchKotlinAPI")
         .build()
 
+
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun authorizedClientService(
+        jdbcTemplate: JdbcTemplate,
+        clientRegistrationRepository: ClientRegistrationRepository
+    ): OAuth2AuthorizedClientService = JdbcOAuth2AuthorizedClientService(jdbcTemplate, clientRegistrationRepository)
+
+    @Bean
+    fun securityFilterChain(
+        http: HttpSecurity,
+        authorizedClientService: OAuth2AuthorizedClientService
+    ): SecurityFilterChain {
         http.authorizeHttpRequests {
             it.requestMatchers(
                 antMatcher("/"),
@@ -130,7 +145,6 @@ open class SecurityConfig(
                 RoleType.ADMIN.name,
                 RoleType.SUPERUSER.name
             )
-
             it.requestMatchers(
                 antMatcher("/admin/**"),
                 antMatcher("/cdn/**")
@@ -143,16 +157,18 @@ open class SecurityConfig(
         http.formLogin { it.disable() }
         http.exceptionHandling { it.accessDeniedPage("/403") }
         http.with(JwtConfigurer(jwtTokenProvider), Customizer.withDefaults())
-        http.sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         http.oauth2Login { oauth2 ->
-            oauth2.loginPage("/oauth2/authorization")
+            oauth2
+                .loginPage("/oauth2/authorization")
                 .authorizationEndpoint {
                     it.authorizationRequestResolver(
                         CustomAuthorizationRequestResolver(
                             clientRegistrationRepository, "/oauth2/authorization", loginComponent
                         )
                     )
-                }.userInfoEndpoint { userInfo ->
+                }
+                .authorizedClientService(authorizedClientService)
+                .userInfoEndpoint { userInfo ->
                     userInfo
                         .oidcUserService {
                             if (it.clientRegistration.clientId.contains("google")) {
@@ -212,7 +228,7 @@ open class SecurityConfig(
     private fun resolveKeycloakUser(request: OidcUserRequest): DefaultOidcUser {
         val decodedPayload = String(Base64.getDecoder().decode(request.accessToken.tokenValue.split(".")[1]))
         val profile: KeycloakUserInfoResponse = objectMapper.readerFor(KeycloakUserInfoResponse::class.java)
-                .readValue(decodedPayload)
+            .readValue(decodedPayload)
         val userEntity = authschLoginService.fetchKeycloakUserEntity(profile)
 
         auditLogService.login(userEntity, "keycloak user login g:${userEntity.group} r:${userEntity.role}")
