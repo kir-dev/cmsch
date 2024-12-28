@@ -78,12 +78,12 @@ class FormController(
         val name = transactionManager.transaction(readOnly = true) {
             return@transaction formRepository.findById(id).getOrNull()?.name ?: "Névtelen"
         }
-        return "redirect:/admin/control/$SHEETS_WIZARD/form/${id}?name=${URLEncoder.encode("$name űrlap", StandardCharsets.UTF_8)}"
+        return "redirect:/admin/control/$SHEETS_WIZARD/form/$id?name=${URLEncoder.encode("$name űrlap", StandardCharsets.UTF_8)}"
     }
 
     @GetMapping("/fill/{id}")
     fun fill(@PathVariable id: Int): String {
-        return "redirect:/admin/control/$FORM_MASTER_FILL/form/${id}"
+        return "redirect:/admin/control/$FORM_MASTER_FILL/form/$id"
     }
 
     @GetMapping("/refresh/{id}")

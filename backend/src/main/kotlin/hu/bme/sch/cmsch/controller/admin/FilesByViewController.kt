@@ -56,7 +56,7 @@ class FilesByViewController(
             ApplicationComponent.CONTENT_CATEGORY, AdminMenuEntry(
                 titlePlural,
                 "folder",
-                "/admin/control/${view}",
+                "/admin/control/$view",
                 1,
                 showPermission
             )
@@ -131,7 +131,7 @@ class FilesByViewController(
         val controlActionForCategory = listOf(
             ControlAction(
                 "Megnyitás",
-                "cdn/${id}/{id}",
+                "cdn/$id/{id}",
                 "visibility",
                 showPermission,
                 100,
@@ -141,7 +141,7 @@ class FilesByViewController(
             ),
             ControlAction(
                 "Törlés",
-                "delete/${id}/{id}",
+                "delete/$id/{id}",
                 "delete",
                 deletePermission,
                 200,
@@ -173,7 +173,7 @@ class FilesByViewController(
 
     @GetMapping("/cdn/{type}/{id}")
     fun redirectCdn(@PathVariable type: String, @PathVariable id: String): String {
-        return "redirect:/cdn/${type}/${id}"
+        return "redirect:/cdn/$type/$id"
     }
 
     @GetMapping("/delete/{type}/{id}")

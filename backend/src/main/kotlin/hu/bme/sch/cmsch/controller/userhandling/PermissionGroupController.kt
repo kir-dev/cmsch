@@ -119,6 +119,6 @@ class PermissionGroupController(
     }
 
     @GetMapping("/users/{id}")
-    fun redirectToUsersView(@PathVariable id: Int) = "redirect:/admin/control/permission-groups-for-users/${id}"
+    fun redirectToUsersView(@PathVariable id: Int) = "redirect:/admin/control/permission-groups-for-users/$id"
 
 }

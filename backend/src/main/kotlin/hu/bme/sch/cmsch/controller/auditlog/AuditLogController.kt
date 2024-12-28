@@ -56,7 +56,7 @@ class AuditLogController(
             ApplicationComponent.DEVELOPER_CATEGORY, AdminMenuEntry(
                 titlePlural,
                 "playlist_add_check_circle",
-                "/admin/control/${view}",
+                "/admin/control/$view",
                 20,
                 showPermission
             )

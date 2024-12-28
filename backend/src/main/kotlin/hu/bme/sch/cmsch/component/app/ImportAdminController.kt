@@ -37,7 +37,7 @@ class ImportAdminController(
             ApplicationComponent.DEVELOPER_CATEGORY, AdminMenuEntry(
                 "Importálás",
                 "file_upload",
-                "/admin/control/${view}",
+                "/admin/control/$view",
                 31,
                 permissionControl
             )
@@ -75,7 +75,7 @@ class ImportAdminController(
         if (permissionControl.validate(user).not()) {
             auditLogService.admin403(user, "import",
                 "POST /import/file", permissionControl.permissionString)
-            return "redirect:/admin/control/${view}"
+            return "redirect:/admin/control/$view"
         }
 
         return try {
@@ -90,10 +90,10 @@ class ImportAdminController(
             val action = "Imported $imported properties from (file) ${propertiesMap.size} entries"
             auditLogService.create(user, "import", action)
             log.info("{} {}", user.userName, action)
-            "redirect:/admin/control/${view}?count=${imported}&outOf=${propertiesMap.size}"
+            "redirect:/admin/control/$view?count=${imported}&outOf=${propertiesMap.size}"
         } catch (e: IOException) {
             log.error("Failed to import properties file by ${user.userName}", e)
-            "redirect:/admin/control/${view}?count=0"
+            "redirect:/admin/control/$view?count=0"
         }
     }
 
@@ -104,7 +104,7 @@ class ImportAdminController(
         if (permissionControl.validate(user).not()) {
             auditLogService.admin403(user, "import",
                 "POST /import/string", permissionControl.permissionString)
-            return "redirect:/admin/control/${view}"
+            return "redirect:/admin/control/$view"
         }
 
         return try {
@@ -114,10 +114,10 @@ class ImportAdminController(
             val action = "Imported $imported properties from (string) ${propertiesMap.size} entries"
             auditLogService.create(user, "import", action)
             log.info("{} {}", user.userName, action)
-            "redirect:/admin/control/${view}?count=${imported}&outOf=${propertiesMap.size}"
+            "redirect:/admin/control/$view?count=${imported}&outOf=${propertiesMap.size}"
         } catch (e: IOException) {
             log.error("Failed to import properties string by ${user.userName}", e)
-            "redirect:/admin/control/${view}?count=0"
+            "redirect:/admin/control/$view?count=0"
         }
     }
 

@@ -48,7 +48,7 @@ abstract class DashboardPage(
                 category, AdminMenuEntry(
                     title,
                     adminMenuIcon,
-                    "/admin/control/${view}",
+                    "/admin/control/$view",
                     adminMenuPriority,
                     showPermission
                 )
@@ -63,7 +63,7 @@ abstract class DashboardPage(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}", showPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view", showPermission.permissionString)
             return "admin403"
         }
 
