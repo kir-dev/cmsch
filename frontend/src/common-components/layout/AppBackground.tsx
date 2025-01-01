@@ -6,18 +6,16 @@ export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
   const config = useConfigContext()
   const textColor = useColorModeValue(config.components.style.lightTextColor, config.components.style.darkTextColor)
   const background = useColorModeValue(config.components.style.lightBackgroundColor, config.components.style.darkBackgroundColor)
-  let backgroundImageData: [string, string] = [
+
+  const backgroundImage = useColorModeValue(
     `url(${config.components.style.lightBackgroundUrl})`,
     `url(${config.components.style.darkBackgroundUrl})`
-  ];
+  )
 
-  if (window.innerWidth <= 768)
-    backgroundImageData = [
-      `url(${config.components.style.lightMobileBackgroundUrl})`,
-      `url(${config.components.style.darkMobileBackgroundUrl})`
-    ];
-
-  const backgroundImage = useColorModeValue(...backgroundImageData)
+  const mobileBackgroundImage = useColorModeValue(
+    `url(${config.components.style.lightMobileBackgroundUrl})`,
+    `url(${config.components.style.darkMobileBackgroundUrl})`
+  )
 
   return (
     <>
@@ -28,7 +26,7 @@ export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
         width="100vw"
         bg={background}
         color={textColor}
-        bgImage={backgroundImage}
+        bgImage={{ base: mobileBackgroundImage, md: backgroundImage }}
         bgRepeat={'no-repeat'}
         bgSize={'cover'}
         bgPosition={'center'}
