@@ -1,9 +1,10 @@
-name: Build and Push Docker Image
+name: Build and Push Release Docker Image
 
 on:
+  workflow_dispatch: # allow manually running this workflow
   push:
-    branches:
-      - master
+    tags:
+      - v*
 
 jobs:
   build-and-push-release:
@@ -31,8 +32,12 @@ jobs:
           arguments: clean bootBuildImage --imageName=${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:release
           build-root-directory: backend
 
+      - name: Tag image with version
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }} # if this workflow was triggered by a new tag starting with "v"
+        run: docker image tag ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:release ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:${{ github.ref_name }}
+
       - name: Push OCI Image
-        run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:release
+        run: docker image push --all-tags ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch
 
       - name: Logout from Docker Registry
         run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}
