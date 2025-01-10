@@ -37,7 +37,7 @@ class ExportAdminController(
             ApplicationComponent.DEVELOPER_CATEGORY, AdminMenuEntry(
                 "Exportálás",
                 "file_download",
-                "/admin/control/${view}",
+                "/admin/control/$view",
                 30,
                 permissionControl
             )

@@ -118,7 +118,7 @@ class PermissionGroupAssignPage(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}", showPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view", showPermission.permissionString)
             return "admin403"
         }
 
@@ -162,7 +162,7 @@ class PermissionGroupAssignPage(
         if (addPermission.validate(user).not()) {
             model.addAttribute("permission", addPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/$permissionGroupId/add/$userId", deletePermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/$permissionGroupId/add/$userId", deletePermission.permissionString)
             return "admin403"
         }
 
@@ -183,6 +183,6 @@ class PermissionGroupAssignPage(
     }
 
     @GetMapping("/{id}/back")
-    fun redirectToUsersView(@PathVariable id: Int) = "redirect:/admin/control/permission-groups-for-users/${id}"
+    fun redirectToUsersView(@PathVariable id: Int) = "redirect:/admin/control/permission-groups-for-users/$id"
 
 }

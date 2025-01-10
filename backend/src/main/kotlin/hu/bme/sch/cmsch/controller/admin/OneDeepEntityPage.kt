@@ -144,7 +144,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                 category, AdminMenuEntry(
                     titlePlural,
                     adminMenuIcon,
-                    "/admin/control/${view}",
+                    "/admin/control/$view",
                     adminMenuPriority,
                     showPermission
                 )
@@ -274,7 +274,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}", showPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view", showPermission.permissionString)
             return "admin403"
         }
 
@@ -322,7 +322,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/edit/$id", showPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/edit/$id", showPermission.permissionString)
             return "admin403"
         }
 
@@ -337,7 +337,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             model.addAttribute("data", actualEntity)
             if (!editPermissionCheck(user, actualEntity)) {
                 model.addAttribute("user", user)
-                auditLog.admin403(user, component.component, "GET /${view}/edit/$id",
+                auditLog.admin403(user, component.component, "GET /$view/edit/$id",
                     "editPermissionCheck() validation")
                 return "admin403"
             }
@@ -365,7 +365,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/show/$id", showPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/show/$id", showPermission.permissionString)
             return "admin403"
         }
 
@@ -398,7 +398,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (createPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/create", createPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/create", createPermission.permissionString)
             return "admin403"
         }
 
@@ -427,7 +427,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (createPermission.validate(user).not() && showPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/duplicate/${id}", createPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/duplicate/$id", createPermission.permissionString)
             return "admin403"
         }
 
@@ -462,7 +462,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/delete/$id",
+            auditLog.admin403(user, component.component, "GET /$view/delete/$id",
                 deletePermission.permissionString)
             return "admin403"
         }
@@ -483,7 +483,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             model.addAttribute("item", actualEntity.toString())
             if (!editPermissionCheck(user, actualEntity)) {
                 model.addAttribute("user", user)
-                auditLog.admin403(user, component.component, "GET /${view}/delete/$id",
+                auditLog.admin403(user, component.component, "GET /$view/delete/$id",
                     "editPermissionCheck() validation")
                 return "admin403"
             }
@@ -497,7 +497,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "POST /${view}/delete/$id", deletePermission.permissionString)
+            auditLog.admin403(user, component.component, "POST /$view/delete/$id", deletePermission.permissionString)
             return "admin403"
         }
 
@@ -508,7 +508,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                 auditLog.admin403(
                     user,
                     component.component,
-                    "POST /${view}/delete/$id",
+                    "POST /$view/delete/$id",
                     "editPermissionCheck() validation"
                 )
                 return "admin403"
@@ -531,7 +531,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (!deleteEnabled || deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/purge", deletePermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/purge", deletePermission.permissionString)
             return "admin403"
         }
 
@@ -586,7 +586,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (createPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "POST /${view}/create", createPermission.permissionString)
+            auditLog.admin403(user, component.component, "POST /$view/create", createPermission.permissionString)
             return "admin403"
         }
 
@@ -621,7 +621,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "POST /${view}/edit/${id}", editPermission.permissionString)
+            auditLog.admin403(user, component.component, "POST /$view/edit/$id", editPermission.permissionString)
             return "admin403"
         }
 
@@ -632,7 +632,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val actualEntity = entity.orElseThrow()
         if (!editPermissionCheck(user, actualEntity)) {
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "POST /${view}/edit/${id}", "editPermissionCheck() validation")
+            auditLog.admin403(user, component.component, "POST /$view/edit/$id", "editPermissionCheck() validation")
             return "admin403"
         }
 
@@ -721,20 +721,20 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             if (createPermission.validate(user).not() || showPermission.validate(user).not()) {
                 model.addAttribute("permission", createPermission.permissionString)
                 model.addAttribute("user", user)
-                auditLog.admin403(user, component.component, "GET /${view}/resource", createPermission.permissionString)
+                auditLog.admin403(user, component.component, "GET /$view/resource", createPermission.permissionString)
                 return "admin403"
             }
         } else if (exportEnabled) {
             if (showPermission.validate(user).not()) {
                 model.addAttribute("permission", showPermission.permissionString)
                 model.addAttribute("user", user)
-                auditLog.admin403(user, component.component, "GET /${view}/resource", showPermission.permissionString)
+                auditLog.admin403(user, component.component, "GET /$view/resource", showPermission.permissionString)
                 return "admin403"
             }
         } else {
             model.addAttribute("permission", PERMISSION_NOBODY.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/resource", PERMISSION_NOBODY.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/resource", PERMISSION_NOBODY.permissionString)
             return "admin403"
         }
 

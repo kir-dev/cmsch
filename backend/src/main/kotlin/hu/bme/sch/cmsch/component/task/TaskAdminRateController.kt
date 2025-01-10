@@ -112,7 +112,7 @@ class TaskAdminRateController(
         if (viewPermission.validate(user).not()) {
             model.addAttribute("permission", viewPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/rate/$id", viewPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/rate/$id", viewPermission.permissionString)
             return "admin403"
         }
 
@@ -147,7 +147,7 @@ class TaskAdminRateController(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "GET /${view}/grade/$id", editPermission.permissionString)
+            auditLog.admin403(user, component.component, "GET /$view/grade/$id", editPermission.permissionString)
             return "admin403"
         }
 
@@ -189,7 +189,7 @@ class TaskAdminRateController(
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
-            auditLog.admin403(user, component.component, "POST /${view}/grade", editPermission.permissionString)
+            auditLog.admin403(user, component.component, "POST /$view/grade", editPermission.permissionString)
             return "admin403"
         }
 

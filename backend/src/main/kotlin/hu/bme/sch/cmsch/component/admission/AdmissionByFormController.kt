@@ -108,7 +108,7 @@ class AdmissionByFormController(
         if (showPermission.validate(auth.getUser()).not()) {
             return "redirect:/admin/control/admission-by-form?error=access"
         }
-        return "redirect:/admin/admission/form/${id}"
+        return "redirect:/admin/admission/form/$id"
     }
 
     data class AdmissionExportDto(

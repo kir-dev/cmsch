@@ -59,7 +59,7 @@ class MenuAdminController(
             ApplicationComponent.CONTENT_CATEGORY, AdminMenuEntry(
                 titlePlural,
                 "menu_open",
-                "/admin/control/${view}",
+                "/admin/control/$view",
                 3,
                 showPermission
             )
@@ -251,12 +251,12 @@ class MenuAdminController(
                     "for roles: ${roles.joinToString(", ")}"
             auditLogService.edit(user, view, action)
             log.info("{}: {}", user.userName, action)
-            return "redirect:/admin/control/${view}/import-csv?imported=$imported&notAffected=$notAffected"
+            return "redirect:/admin/control/$view/import-csv?imported=$imported&notAffected=$notAffected"
 
         } catch (e: Exception) {
             auditLogService.error(view, "Failed to import menus: ${e.message}")
             log.error("{}: {}", user.userName, e.message, e)
-            return "redirect:/admin/control/${view}/import-csv?error=${URLEncoder.encode(e.message, "UTF-8")}"
+            return "redirect:/admin/control/$view/import-csv?error=${URLEncoder.encode(e.message, "UTF-8")}"
         }
     }
 }

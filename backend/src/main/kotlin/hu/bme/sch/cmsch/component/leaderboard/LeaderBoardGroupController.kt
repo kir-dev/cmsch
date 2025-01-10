@@ -87,7 +87,7 @@ class LeaderBoardGroupController(
         }
 
         leaderBoardService.forceRecalculateForGroups()
-        return "redirect:/admin/control/${view}"
+        return "redirect:/admin/control/$view"
     }
 
     @ResponseBody

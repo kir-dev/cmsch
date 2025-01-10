@@ -62,7 +62,7 @@ class TrackOneGroupController(
 
     @GetMapping("/tracking/{id}")
     fun redirectToTracker(@PathVariable id: String): String {
-        return "redirect:/admin/control/tracking/${id}"
+        return "redirect:/admin/control/tracking/$id"
     }
 
 }
