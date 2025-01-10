@@ -90,7 +90,7 @@ tasks.withType<KotlinCompile> {
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
     buildpacks = listOf("gcr.io/paketo-buildpacks/adoptium", "urn:cnb:builder:paketo-buildpacks/java")
-    builder = "paketobuildpacks/builder-noble-java-tiny"
+    builder = "paketobuildpacks/builder-jammy-base"
     environment = mapOf(
         "BP_NATIVE_IMAGE" to "false",
         "CDS_TRAINING_JAVA_TOOL_OPTIONS" to "-Dspring.profiles.include=prewarm",
