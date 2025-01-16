@@ -34,7 +34,9 @@ jobs:
 
       - name: Tag image with version
         if: ${{ startsWith(github.ref, 'refs/tags/v') }} # if this workflow was triggered by a new tag starting with "v"
-        run: docker image tag ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:release ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:${{ github.ref_name }}
+        run: docker image tag ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:release ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:"$GITHUB_REF_NAME"
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
 
       - name: Push OCI Image
         run: docker image push --all-tags ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch
