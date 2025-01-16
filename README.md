@@ -3,98 +3,115 @@ CMSch web backend and frontend monorepo
 
 <a href="https://cmsch.vercel.app"><img src="https://therealsujitk-vercel-badge.vercel.app/?app=cmsch&style=for-the-badge"></a>
 
-## Build docker
+# Contributing
+
+Follow the [instructions by Samu](https://gist.github.com/Tschonti/4397e43fef11895235e25c46ae0ed65e#workflow-) with the
+following differences:
+
+- Pull requests will be squash merged, so keep them small and focused. When merged, the commits on your branch will get
+  replaced by a single commit on the main branch. A good rule of thumb is to make sure the resulting squashed commit can
+  be reverted without affecting unrelated parts of the codebase.
+- When there are conflicts with the main branch, rebase your feature branch onto main (
+  `git fetch && git rebase origin/main`), fix the conflicts, **commit**, then force push the updated branch (
+  `git push --force`).
+- To make it easier to review your pull request, consider cleaning up the commits with `git rebase --interactive`. You
+  may also use `git commit --amend` to add the currently staged changes to the last commit instead of creating a new
+  commit.
+
+> [!note]
+> After using either of these you will have to use `git push --force` to allow pushing modified history to GitHub.
+
+- Commit messages should follow the rules outlined [here](https://cbea.ms/git-commit/). As this project is not
+  versioned, [conventional commits](https://conventionalcommits.org) don't have too many benefits, so instead let's keep
+  things consistent.
+
+# Build and deployment
+
+## Build the frontend
+
+Copy the `.env.example` file to `.env` and fill it with the required data.
+
+```bash
+  yarn run build
+```
+
+## Build the backend OCI image
 
 ```bash
   ./gradlew clean bootBuildImage --imageName=<your registry>/cmsch:release
 ```
 
-## Run
-
-```bash
-  ./gradlew bootRun --args='--spring.profiles.include=test,internal'
-```
-
-## Enable profiling
-
-```bash
-  ./gradlew -Dorg.gradle.jvmargs="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -XX:+UseSerialGC" clean bootRun --args='--spring.profiles.include=test,internal'
-```
-
-## Publish
-
-Use your authsch details for docker login. Tag `rc` for staging (release candidate) and tag release for release.
-
-```bash
-  docker login harbor.sch.bme.hu
-  
-  # Release candidate
-  docker image tag cmsch:latest harbor.sch.bme.hu/org-kir-dev/cmsch:rc
-  docker image push harbor.sch.bme.hu/org-kir-dev/cmsch:rc
-  
-  # Release (you can use versions like ':major.minor.build' as well)
-  docker image tag cmsch:latest harbor.sch.bme.hu/org-kir-dev/cmsch:release
-  docker image push harbor.sch.bme.hu/org-kir-dev/cmsch:release
-```
-
 ## Deploy to Kubernetes
 
 ### Prerequisites
+
 - Install Kubectl
 - Install Helm
 
 ### Deploy the application
 
-- Create a copy of helm/cmsch/values.yaml and modify the values for your needs; you can delete the properties you don't modify to make the config cleaner
+- Create a copy of helm/cmsch/values.yaml and modify the values for your needs; you can delete the properties you don't
+  modify to make the config cleaner
 - **Select the correct Kubernetes context:** `kubectl config use-context <context>`
 - Run `helm upgrade --install cmsch-<instance name> --values <path-to-your.yaml> ./helm/cmsch`
 - If you need to change a value, or update the config, run the command above and everything updates automagically
 - If you want to delete the instance, run `helm delete cmsch-<instance name>`
 
+## Set up push notifications
 
-## Run (you can start here)
+1. Enable the push notification component on the backend.
+2. Create a Firebase project and make sure Firebase Cloud Messaging is enabled by navigating to `Run` > `Messaging`.
 
-For development:
+### Backend setup
+
+1. Navigate to the Firebase Console of your project and open `Project Settings` > `Service accounts`
+2. Click on `Generate new private key` and download the .json file
+3. If you are working locally set the value of `hu.bme.sch.cmsch.google.service-account-key` property to the contents of
+   the JSON file
+4. If you are setting up the application inside docker set `FIREBASE_SERVICE_ACCOUNT_KEY` to the contents of the JSON
+   file
+
+### Frontend setup
+
+1. Navigate to the Firebase Console of your project and open `Project Settings` > `General`
+2. Scroll down and create a __Web App__ if there is no app already by clicking `Add app`
+3. Find the values of `apiKey, projectId, appId, messagingSenderId` and set the `FIREBASE_*` properties in .env
+4. Navigate to `Project Settings` > `Cloud Messaging` and scroll down to `Web Push certificates`
+5. If there is no key, click on `Generate key pair`. Copy the value from `Key pair` column and set
+   `VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY` to it.
+
+# Local Development Environment
+
+## Database
+
+The backend supports both PostgreSQL and H2.
+While it is a lot easier to develop under H2, you might want to test the application with Postgres too.
+Possibly the easiest way to do this is to run it via Docker.
+Important, You need to add `postgres` to the Spring profiles.
+This command starts an instance that works with the default backend configuration:
 
 ```bash
-  docker run --rm -p 8080:80 \
-        -e AUTHSCH_CLIENT_ID=20_CHARS \
-        -e AUTHSCH_CLIENT_KEY=80_CHARS \
-        -e PROFILE_SALT=RANDOM_STRING \
-        -e SYSADMINS=YOUR_AUTH_SCH_UUID \
-        cmsch
+docker run -p5432:5432 --name cmsch-postgres -e POSTGRES_PASSWORD=psqlpw -e POSTGRES_USER=psqluser -e POSTGRES_DB=cmsch -d postgres:17-alpine
 ```
 
-or from the registry: **YOU MIGHT PROBABLY WANT TO START WITH THIS**
+## Backend
+
+Open the monorepo in Intellij and run `CMSchApplication`.
+You can seed the database by editing the run configuration of
+`CMSchApplication` and adding `test` to the active profiles.
+
+You can run the application manually through the CLI, but you miss out on a lot of features that ease development.
+You can also seed the database with some test data by setting the active Spring profile to `test`
+Just simply open a terminal in the `backend` folder and run
 
 ```bash
-  docker pull harbor.sch.bme.hu/org-kir-dev/cmsch
-  docker run --rm -p 8080:80 \
-        -e AUTHSCH_CLIENT_ID=20_CHARS \
-        -e AUTHSCH_CLIENT_KEY=80_CHARS \
-        -e PROFILE_SALT=RANDOM_STRING \
-        -e SYSADMINS=YOUR_AUTH_SCH_UUID \
-        harbor.sch.bme.hu/org-kir-dev/cmsch
+./gradlew bootRun --args='--spring.profiles.active=test,local'
 ```
 
-## Where to start?
+## Local properties for development
 
-- Api docs: BASE_URL/swagger-ui.html
-- Admin UI: BASE_URL/admin/control/basics
-- API: BASE_URL/api/... (see swagger for more)
-
-## Required apps
-
-You must install:
-
-- Node v20
-- Yarn v1.22.17
-- optional: IDEA
-
-## Application local properties
-
-Create an application-local.properties file in the `src/main/resources/config` folder, 
-and fill the file with these configurations (using your credentials): 
+Create a file named `application-local.properties` in the `src/main/resources/config` folder,
+and specify these configurations (using your credentials):
 
 ```properties
 spring.security.oauth2.client.registration.authsch.client-id=<insert the shorter key>
@@ -107,46 +124,28 @@ hu.bme.sch.cmsch.login.googleAdminAddresses=<your email address>
 logging.level.web=DEBUG
 ```
 
-Your pekId can be found in the console log of the Spring app when signing in with AuthSCH. The `cmsch.website-default-url`
-property's IP address needs to be either `localhost` or the IP of your current device running your Spring app on your network.
+Your pekId can be found in the console log of the Spring app when signing in with AuthSCH.
+The`cmsch.website-default-url`property's IP address needs
+to be either `localhost` or the IP of your current device running your Spring app on your network.
 
 Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active Profiles to use (see image down below)
 
 - `local,test` if you want test data in the database also
 - `local` if you don't
 
-## Set up push notifications
+## Frontend
 
-1. Enable the push notification component on the backend.
-2. Create a Firebase project and make sure Firebase Cloud Messaging is enabled by navigating to `Run` > `Messaging`.
+Copy the `.env.example` file to `.env` and fill it with the required data.
+You can leave the defaults for local development.
 
-### Backend setup
-1. Navigate to the Firebase Console of your project and open `Project Settings` > `Service accounts` 
-2. Click on `Generate new private key` and download the .json file
-3. If you are working locally set the value of `hu.bme.sch.cmsch.google.service-account-key` property to the contents of the JSON file
-4. If you are setting up the application inside docker set `FIREBASE_SERVICE_ACCOUNT_KEY` to the contents of the JSON file
+Open a terminal in the `frontend` folder and pull the packages
 
-### Frontend setup
-1. Navigate to the Firebase Console of your project and open `Project Settings` > `General`
-2. Scroll down and create a __Web App__ if there is no app already by clicking `Add app`
-3. Find the values of `apiKey, projectId, appId, messagingSenderId` and set the `FIREBASE_*` properties in .env
-4. Navigate to `Project Settings` > `Cloud Messaging` and scroll down to `Web Push certificates`
-5. If there is no key, click on `Generate key pair`. Copy the value from `Key pair` column and set `VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY` to it.
+```bash
+yarn
+```
 
-## Contributing
+then start the frontend development server
 
-Follow the [instructions by Samu](https://gist.github.com/Tschonti/4397e43fef11895235e25c46ae0ed65e#workflow-) with the following differences:
-- Pull requests will be squash merged, so keep them small and focused. When merged, the commits on your branch will get replaced by a single commit on the main branch. A good rule of thumb is to make sure the resulting squashed commit can be reverted without affecting unrelated parts of the codebase.
-- When there are conflicts with the main branch, rebase your feature branch onto main (`git fetch && git rebase origin/main`), fix the conflicts, **commit**, then force push the updated branch (`git push --force`).
-- To make it easier to review your pull request, consider cleaning up the commits with `git rebase --interactive`. You may also use `git commit --amend` to add the currently staged changes to the last commit instead of creating a new commit.
-
-> [!note]
->  After using either of these you will have to use `git push --force` to allow pushing modified history to GitHub.
-
-- Commit messages should follow the rules outlined [here](https://cbea.ms/git-commit/). As this project is not versioned, [conventional commits](https://conventionalcommits.org) don't have too many benefits, so instead let's keep things consistent.
-
-
-
-## Sponsors
-
-<a href="https://vercel.com?utm_source=kir-dev&utm_campaign=oss"><img src="client/public/img/powered-by-vercel.svg" height="46" /></a>
+```bash
+yarn start
+```
