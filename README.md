@@ -5,25 +5,15 @@ CMSch web backend and frontend monorepo
 
 # Contributing
 
-Follow the [instructions by Samu](https://gist.github.com/Tschonti/4397e43fef11895235e25c46ae0ed65e#workflow-) with the
-following differences:
+Follow the [instructions by Samu](https://gist.github.com/Tschonti/4397e43fef11895235e25c46ae0ed65e#workflow-), with the
+following additions:
 
-- Pull requests will be squash merged, so keep them small and focused. When merged, the commits on your branch will get
-  replaced by a single commit on the main branch. A good rule of thumb is to make sure the resulting squashed commit can
-  be reverted without affecting unrelated parts of the codebase.
-- When there are conflicts with the main branch, rebase your feature branch onto main (
-  `git fetch && git rebase origin/main`), fix the conflicts, **commit**, then force push the updated branch (
-  `git push --force`).
-- To make it easier to review your pull request, consider cleaning up the commits with `git rebase --interactive`. You
-  may also use `git commit --amend` to add the currently staged changes to the last commit instead of creating a new
-  commit.
-
-> [!note]
-> After using either of these you will have to use `git push --force` to allow pushing modified history to GitHub.
-
-- Commit messages should follow the rules outlined [here](https://cbea.ms/git-commit/). As this project is not
-  versioned, [conventional commits](https://conventionalcommits.org) don't have too many benefits, so instead let's keep
-  things consistent.
+- This project uses squash merging, meaning pull requests result in a single commit on the main branch.
+If you find something, unrelated to the feature you are working on, that could be improved, **consider opening another PR** instead of adding the changes to the original one.
+This makes reviewing the pull request, searching through the history and reverting changes easier.
+- **Follow [How to Write a Git Commit Message](https://cbea.ms/git-commit/)**. As this project is not versioned, **don't use [conventional commits](https://conventionalcommits.org)** ("feat (thing): add thing").
+- If there are conflicts with the main branch, **rebase** your feature branch onto `origin/staging` (`git fetch && git rebase origin/staging`), fix the conflicts, *commit*, then force push the updated branch (`git push --force`).
+- To make it easier to review your pull request, consider cleaning up the commits with `git rebase --interactive`. You can also use `git commit --amend` to add the currently staged changes to the last commit instead of creating a new commit. Both of these require force pushing to allow modifying published history.
 
 # Build and deployment
 
