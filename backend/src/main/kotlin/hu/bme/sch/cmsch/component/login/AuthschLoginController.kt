@@ -8,6 +8,8 @@ import hu.bme.sch.cmsch.util.getUserOrNull
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.apache.tomcat.util.descriptor.web.Constants
+import org.apache.tomcat.util.http.SameSiteCookies
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
@@ -110,6 +112,7 @@ class AuthschLoginController(
             maxAge = startupPropertyConfig.sessionValidityInMilliseconds.toInt() / 1000
             secure = true
             domain = getDomainFromUrl(applicationComponent.siteUrl.getValue())
+            setAttribute(Constants.COOKIE_SAME_SITE_ATTR, SameSiteCookies.LAX.value)
         }
     }
 }
