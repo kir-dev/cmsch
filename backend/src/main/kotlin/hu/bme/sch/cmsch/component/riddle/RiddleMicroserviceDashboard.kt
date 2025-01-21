@@ -58,38 +58,11 @@ class RiddleMicroserviceDashboard(
         return listOf(
             permissionCard,
             pingForm(),
-            reloadComponentConfigForm(),
             reloadRiddleAndCategoryCache(),
             reloadAllForm(),
             saveAllForm(),
             forceUnlockEverythingForm(),
         )
-    }
-
-    private fun reloadComponentConfigForm(): DashboardFormCard {
-        return DashboardFormCard(
-            2,
-            false,
-            "Komponens config újratöltése",
-            "A riddle komponens konfigurációjának frissítése a riddle nodeon",
-            listOf(),
-            buttonCaption = "Újratöltés",
-            buttonIcon = "start",
-            action = "reload-component-config",
-            method = "post"
-        )
-    }
-
-    @PostMapping("/reload-component-config")
-    fun reloadComponentConfigPost(auth: Authentication): String {
-        val user = auth.getUser()
-        if (!showPermission.validate(user)) {
-            throw IllegalStateException("Insufficient permissions")
-        }
-
-        val status = sendRequest("reload-component-config", user)
-
-        return "redirect:/admin/control/riddle-ms?card=2&message=$status"
     }
 
     private fun reloadRiddleAndCategoryCache(): DashboardFormCard {
@@ -264,4 +237,3 @@ class RiddleMicroserviceDashboard(
     }
 
 }
-

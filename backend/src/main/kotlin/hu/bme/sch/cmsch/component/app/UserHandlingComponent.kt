@@ -1,11 +1,12 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.MinRoleSettingProxy
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.ComponentSettingService
+import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import jakarta.annotation.PostConstruct

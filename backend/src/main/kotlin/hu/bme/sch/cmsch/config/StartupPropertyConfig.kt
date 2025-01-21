@@ -7,6 +7,8 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding
 
 @ConfigurationProperties(prefix = "hu.bme.sch.cmsch.startup")
 data class StartupPropertyConfig @ConstructorBinding constructor(
+    val distributedMode: Boolean,
+
     val sysadmins: String,
     val external: String,
     val auditLog: String,

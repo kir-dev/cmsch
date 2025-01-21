@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import com.fasterxml.jackson.annotation.JsonView
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.component.ComponentHandlerService
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.RoleType
@@ -28,11 +28,11 @@ import java.util.*
 class ApplicationApiController(
     private val menuService: MenuService,
     private val applicationComponent: ApplicationComponent,
-    private val componentHandlerService: ComponentHandlerService,
     private val countdownComponent: Optional<CountdownComponent>,
     private val clock: TimeService,
     private val stylingComponent: StylingComponent,
-    private val applicationService: ApplicationService
+    private val applicationService: ApplicationService,
+    private val components: List<ComponentBase>
 ) {
 
     private val componentWriter = ObjectMapper().writerFor(object : TypeReference<Map<String, Map<String, Any>>>() {})
@@ -59,10 +59,13 @@ class ApplicationApiController(
                 )
             }
         }
+        val components = components
+            .filter { it.minRole.isAvailableForRole(role) || role.isAdmin }
+            .associate { it.component to it.attachConstants() }
         return ApplicationConfigDto(
             role = role,
             menu = menuService.getCachedMenuForRole(role),
-            components = componentHandlerService.getComponentConstantsForRoleFast(role)
+            components = componentWriter.writeValueAsString(components)
         )
     }
 

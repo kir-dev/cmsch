@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
@@ -114,9 +115,7 @@ abstract class ComponentApiBase(
                 }
             }
         }
-        component.persistChanges()
         component.onPersist()
-        component.onFirePersistEvent()
         auditLogService.edit(user, component.component, newValues.toString())
         RoleType.entries.forEach { role -> menuService.regenerateMenuCache(role) }
         onUpdate()

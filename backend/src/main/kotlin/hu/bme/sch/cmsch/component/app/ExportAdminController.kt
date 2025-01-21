@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.app
 
-import hu.bme.sch.cmsch.component.ComponentHandlerService
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import jakarta.annotation.PostConstruct
@@ -23,7 +23,7 @@ import java.util.*
 @ConditionalOnBean(ApplicationComponent::class)
 class ExportAdminController(
     private val adminMenuService: AdminMenuService,
-    private val componentHandlerService: ComponentHandlerService,
+    private val components: List<ComponentBase>,
     private val auditLogService: AuditLogService,
     private val clock: TimeService
 ) {
@@ -82,7 +82,7 @@ class ExportAdminController(
 
     private fun generateProperties(): String {
         val properties = Properties()
-        componentHandlerService.components
+        components
             .associateWith { it.allSettings }
             .flatMap { component ->
                 component.value
