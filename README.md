@@ -8,8 +8,9 @@ CMSch web backend and frontend monorepo
 Follow the [instructions by Samu](https://gist.github.com/Tschonti/4397e43fef11895235e25c46ae0ed65e#workflow-), with the
 following additions:
 
-- This project uses squash merging, meaning pull requests result in a single commit on the main branch.
-If you find something, unrelated to the feature you are working on, that could be improved, **consider opening another PR** instead of adding the changes to the original one.
+- This project uses squash merging, meaning a pull request results in a single commit on the main branch.
+If you find something unrelated to the feature you are working on, that could be improved,
+  **consider opening another PR** instead of adding the changes to the original one.
 This makes reviewing the pull request, searching through the history and reverting changes easier.
 - **Follow [How to Write a Git Commit Message](https://cbea.ms/git-commit/)**. As this project is not versioned, **don't use [conventional commits](https://conventionalcommits.org)** ("feat (thing): add thing").
 - If there are conflicts with the main branch, **rebase** your feature branch onto `origin/staging` (`git fetch && git rebase origin/staging`), fix the conflicts, *commit*, then force push the updated branch (`git push --force`).
@@ -44,7 +45,7 @@ Copy the `.env.example` file to `.env` and fill it with the required data.
   modify to make the config cleaner
 - **Select the correct Kubernetes context:** `kubectl config use-context <context>`
 - Run `helm upgrade --install cmsch-<instance name> --values <path-to-your.yaml> ./helm/cmsch`
-- If you need to change a value, or update the config, run the command above and everything updates automagically
+- If you need to change a value or update the config, run the command above and everything updates automagically
 - If you want to delete the instance, run `helm delete cmsch-<instance name>`
 
 ### Set up push notifications
