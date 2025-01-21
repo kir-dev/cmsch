@@ -3,7 +3,7 @@ CMSch web backend and frontend monorepo
 
 <a href="https://cmsch.vercel.app"><img src="https://therealsujitk-vercel-badge.vercel.app/?app=cmsch&style=for-the-badge"></a>
 
-# Contributing
+## Contributing
 
 Follow the [instructions by Samu](https://gist.github.com/Tschonti/4397e43fef11895235e25c46ae0ed65e#workflow-), with the
 following additions:
@@ -15,9 +15,9 @@ This makes reviewing the pull request, searching through the history and reverti
 - If there are conflicts with the main branch, **rebase** your feature branch onto `origin/staging` (`git fetch && git rebase origin/staging`), fix the conflicts, *commit*, then force push the updated branch (`git push --force`).
 - To make it easier to review your pull request, consider cleaning up the commits with `git rebase --interactive`. You can also use `git commit --amend` to add the currently staged changes to the last commit instead of creating a new commit. Both of these require force pushing to allow modifying published history.
 
-# Build and deployment
+## Build and deployment
 
-## Build the frontend
+### Build the frontend
 
 Copy the `.env.example` file to `.env` and fill it with the required data.
 
@@ -25,20 +25,20 @@ Copy the `.env.example` file to `.env` and fill it with the required data.
   yarn run build
 ```
 
-## Build the backend OCI image
+### Build the backend OCI image
 
 ```bash
   ./gradlew clean bootBuildImage --imageName=<your registry>/cmsch:release
 ```
 
-## Deploy to Kubernetes
+### Deploy to Kubernetes
 
-### Prerequisites
+#### Prerequisites
 
 - Install Kubectl
 - Install Helm
 
-### Deploy the application
+#### Deploy the application
 
 - Create a copy of helm/cmsch/values.yaml and modify the values for your needs; you can delete the properties you don't
   modify to make the config cleaner
@@ -47,12 +47,12 @@ Copy the `.env.example` file to `.env` and fill it with the required data.
 - If you need to change a value, or update the config, run the command above and everything updates automagically
 - If you want to delete the instance, run `helm delete cmsch-<instance name>`
 
-## Set up push notifications
+### Set up push notifications
 
 1. Enable the push notification component on the backend.
 2. Create a Firebase project and make sure Firebase Cloud Messaging is enabled by navigating to `Run` > `Messaging`.
 
-### Backend setup
+#### Backend setup
 
 1. Navigate to the Firebase Console of your project and open `Project Settings` > `Service accounts`
 2. Click on `Generate new private key` and download the .json file
@@ -61,7 +61,7 @@ Copy the `.env.example` file to `.env` and fill it with the required data.
 4. If you are setting up the application inside docker set `FIREBASE_SERVICE_ACCOUNT_KEY` to the contents of the JSON
    file
 
-### Frontend setup
+#### Frontend setup
 
 1. Navigate to the Firebase Console of your project and open `Project Settings` > `General`
 2. Scroll down and create a __Web App__ if there is no app already by clicking `Add app`
@@ -70,9 +70,9 @@ Copy the `.env.example` file to `.env` and fill it with the required data.
 5. If there is no key, click on `Generate key pair`. Copy the value from `Key pair` column and set
    `VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY` to it.
 
-# Local Development Environment
+## Local Development Environment
 
-## Database
+### Database
 
 The backend supports both PostgreSQL and H2.
 While it is a lot easier to develop under H2, you might want to test the application with Postgres too.
@@ -84,7 +84,7 @@ This command starts an instance that works with the default backend configuratio
 docker run -p5432:5432 --name cmsch-postgres -e POSTGRES_PASSWORD=psqlpw -e POSTGRES_USER=psqluser -e POSTGRES_DB=cmsch -d postgres:17-alpine
 ```
 
-## Backend
+### Backend
 
 Open the monorepo in Intellij and run `CMSchApplication`.
 You can seed the database by editing the run configuration of
@@ -98,7 +98,7 @@ Just simply open a terminal in the `backend` folder and run
 ./gradlew bootRun --args='--spring.profiles.active=test,local'
 ```
 
-## Local properties for development
+### Local properties for development
 
 Create a file named `application-local.properties` in the `src/main/resources/config` folder,
 and specify these configurations (using your credentials):
@@ -123,7 +123,7 @@ Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active
 - `local,test` if you want test data in the database also
 - `local` if you don't
 
-## Frontend
+### Frontend
 
 Copy the `.env.example` file to `.env` and fill it with the required data.
 You can leave the defaults for local development.
