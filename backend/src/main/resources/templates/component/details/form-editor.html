@@ -275,10 +275,16 @@
                 const defaultValue = document.getElementById(`${property}_${id}_defaultValue`).value;
                 const values = document.getElementById(`${property}_${id}_values`).value;
                 const note = document.getElementById(`${property}_${id}_note`).value;
-                const required = document.getElementById(`${property}_${id}_required`).checked;
+                let required = document.getElementById(`${property}_${id}_required`).checked;
                 const permanent = document.getElementById(`${property}_${id}_permanent`).checked;
 
                 if (fieldName !== null && label !== null && type !== null && fieldName !== '') {
+                    // This may not be a final fix, since the option is displayed in the select,
+                    // but the value is not saved as the user expects it to be
+                    // Will avoid the frontend error for now
+                    if (type.startsWith('INJECT_'))
+                        required = false;
+
                     result.push({
                         fieldName : fieldName,
                         label : label,
