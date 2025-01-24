@@ -107,11 +107,11 @@
                             <span class="note">A mező alatt megjelenő szöveg.</span>
                         </div>
 
-                        <div class="field-group">
+                        <div class="field-group" style='${field.type.startsWith('INJECT_') ? 'display:none' : ''}'>
                             <label for="${property}_${id}_required">Kötelező kitölteni</label>
                             <div style="clear:both"></div>
                             <label class="switch">
-                                <input type="checkbox" id="${property}_${id}_required" ${field.required ? 'checked' : ''} onchange="saveField('${property}')" />
+                                <input type="checkbox" id="${property}_${id}_required" ${field.required && !field.type.startsWith('INJECT_')? 'checked' : ''} onchange="saveField('${property}')" ${field.type.startsWith('INJECT_') ? 'disabled' : ''} />
                                 <span class="slider"></span>
                             </label><br/>
                         </div>
@@ -275,8 +275,19 @@
                 const defaultValue = document.getElementById(`${property}_${id}_defaultValue`).value;
                 const values = document.getElementById(`${property}_${id}_values`).value;
                 const note = document.getElementById(`${property}_${id}_note`).value;
-                const required = document.getElementById(`${property}_${id}_required`).checked;
+                let required = document.getElementById(`${property}_${id}_required`);
                 const permanent = document.getElementById(`${property}_${id}_permanent`).checked;
+
+                if (type.startsWith('INJECT_')) {
+                    required.checked = false;
+                    required.disabled = true;
+                    required.parentElement.parentElement.style.display = 'none';
+                } else {
+                    required.disabled = false;
+                    required.parentElement.parentElement.style.display = 'block';
+                }
+
+                required = required.checked
 
                 if (fieldName !== null && label !== null && type !== null && fieldName !== '') {
                     result.push({

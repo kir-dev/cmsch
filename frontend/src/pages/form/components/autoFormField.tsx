@@ -17,6 +17,7 @@ interface AutoFormFieldProps {
 export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }: AutoFormFieldProps) => {
   const selectValues = fieldProps.values.split(',').map((opt) => opt.trim())
   let defaultValue = isCheckbox(fieldProps.type) ? fieldProps.defaultValue === 'true' : fieldProps.defaultValue
+  let requiredValue = fieldProps.required
 
   if (submittedValue) {
     if (isCheckbox(fieldProps.type)) defaultValue = submittedValue === 'true'
@@ -27,6 +28,9 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     else defaultValue = ''
   }
 
+  if (fieldProps.type.startsWith('INJECT_'))
+    requiredValue = false
+
   const {
     field,
     fieldState: { error }
@@ -36,7 +40,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     defaultValue: defaultValue,
     rules: {
       required: {
-        value: fieldProps.required || fieldProps.type === FormFieldVariants.MUST_AGREE,
+        value: requiredValue || fieldProps.type === FormFieldVariants.MUST_AGREE,
         message: 'Ez a mező kötelező!'
       },
       pattern: { value: new RegExp(fieldProps.formatRegex), message: 'Ellenőrizze a formátumot!' }
