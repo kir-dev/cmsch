@@ -1,10 +1,10 @@
 package hu.bme.sch.cmsch.setting
 
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-@Component
+@Service
 class SettingCache {
     private val backingStorage: MutableMap<String, MutableMap<String, Optional<String>>> = ConcurrentHashMap()
 
