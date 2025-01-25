@@ -134,7 +134,7 @@ class ImportAdminController(
         components.forEach { component ->
             component.allSettings.forEach { setting ->
                 propertiesMap["hu.bme.sch.cmsch.${component.component}.${setting.property}"]?.let {
-                    setting.setAndPersistValue(it)
+                    setting.setValue(it)
                     ++imported
 
                     val action = "set ${component.component}.${setting.property} to '${it}'"

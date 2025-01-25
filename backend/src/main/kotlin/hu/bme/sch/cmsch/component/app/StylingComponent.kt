@@ -3,6 +3,10 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.*
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.ComponentSettingService
+import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.SettingType
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 

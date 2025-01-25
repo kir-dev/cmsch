@@ -25,19 +25,6 @@ class RiddleMicroserviceController(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @PostMapping("/reload-component-config")
-    fun reloadComponentConfig(@RequestHeader token: String): String {
-        if (!startupPropertyConfig.riddleMicroserviceEnabled) {
-            return DISABLED
-        }
-        if (token != startupPropertyConfig.managementToken) {
-            return INVALID_TOKEN
-        }
-        log.info("Calling remote command: reloadComponentConfig")
-        riddleComponent.updateFromDatabase()
-        return OK
-    }
-
     @PostMapping("/reload-riddle-and-category-cache")
     fun reloadRiddleAndCategoryCache(@RequestHeader token: String): String {
         if (!startupPropertyConfig.riddleMicroserviceEnabled) {

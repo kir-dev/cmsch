@@ -1,8 +1,7 @@
-package hu.bme.sch.cmsch.component
+package hu.bme.sch.cmsch.setting
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
-import hu.bme.sch.cmsch.component.app.ComponentSettingService
 import hu.bme.sch.cmsch.component.impressum.OrganizerDto
 import hu.bme.sch.cmsch.model.RoleType
 
@@ -46,10 +45,9 @@ open class SettingProxy(
     private val componentPropertyService: ComponentSettingService,
     val component: String,
     val property: String,
-    defaultValue: String = "",
-    private val cache: Boolean = true,
+    val defaultValue: String = "",
+    val cache: Boolean = true,
     val persist: Boolean = true,
-    val constant: Boolean = true,
     private val serverSideOnly: Boolean = false,
     val type: SettingType = SettingType.TEXT,
     val fieldName: String = property,
@@ -57,31 +55,19 @@ open class SettingProxy(
     val minRoleToEdit: RoleType = RoleType.ADMIN
 ) {
 
-    private var lastTimeUpdated = 0L
+    var rawValue: String
+        get() = componentPropertyService.getSettingValue(this)
+        set(value) = componentPropertyService.setSettingValue(this, value)
 
-    var rawValue: String = defaultValue
 
     val isServerSideOnly: Boolean
         get() = (type == SettingType.COMPONENT_GROUP) || serverSideOnly
 
     fun setValue(value: String) {
-        lastTimeUpdated = System.currentTimeMillis()
         rawValue = value
     }
 
-    fun getValue(): String {
-        if (cache && System.currentTimeMillis() > lastTimeUpdated + cachePeriod)
-            return rawValue
-        if (persist)
-            componentPropertyService.refreshCachedSetting(this)
-        return rawValue
-    }
-
-    fun setAndPersistValue(value: String) {
-        setValue(value)
-        if (persist)
-            componentPropertyService.persistSetting(this)
-    }
+    fun getValue(): String = rawValue
 
     fun isValueTrue(): Boolean {
         return getValue().equals("true", ignoreCase = true)

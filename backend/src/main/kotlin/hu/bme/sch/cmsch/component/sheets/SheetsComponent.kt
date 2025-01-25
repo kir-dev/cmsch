@@ -1,13 +1,13 @@
 package hu.bme.sch.cmsch.component.sheets
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.MinRoleSettingProxy
-import hu.bme.sch.cmsch.component.SettingProxy
-import hu.bme.sch.cmsch.component.SettingType
-import hu.bme.sch.cmsch.component.app.ComponentSettingService
+import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.SettingType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service

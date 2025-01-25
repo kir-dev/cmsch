@@ -1,10 +1,13 @@
 package hu.bme.sch.cmsch.component.login
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.component.app.ComponentSettingService
+import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.component.login.authsch.Scope
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.SettingType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -52,6 +55,7 @@ class LoginComponent(
 
             grantRoleGroup,
             staffGroups,
+            staffGroupName,
             adminGroups,
 
             grantGroupGroup,
@@ -115,7 +119,7 @@ class LoginComponent(
             .mapNotNull { Scope.byNameOrNull(it) }
             .distinct()
         authschScopes.addAll(scopes)
-        authschScopesRaw.setAndPersistValue(scopes.joinToString(",") { it.name })
+        authschScopesRaw.setValue(scopes.joinToString(",") { it.name })
         log.info("Authsch scopes changed to '{}' and saved to the db as: '{}'", authschScopes.map { it.name }, authschScopesRaw.rawValue)
     }
 

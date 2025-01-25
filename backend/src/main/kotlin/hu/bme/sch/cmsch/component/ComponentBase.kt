@@ -1,13 +1,15 @@
 package hu.bme.sch.cmsch.component
 
 import hu.bme.sch.cmsch.admin.GenerateInput
-import hu.bme.sch.cmsch.component.app.ComponentSettingService
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.dto.SearchableResource
 import hu.bme.sch.cmsch.dto.SearchableResourceType
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.setting.ComponentSettingService
+import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.SettingProxy
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
@@ -45,9 +47,6 @@ abstract class ComponentBase(
         validateComponentName()
         validateAllSettingsAdded()
 
-        loadFromSettings()
-        updateFromDatabase()
-
         onInit()
     }
 
@@ -62,57 +61,44 @@ abstract class ComponentBase(
     private fun validateComponentName() {
         allSettings.forEach { setting ->
             if (setting.component != component) {
-                log.error("Invalid component name {} in component: {}, property: {}",
-                    setting.component, component, setting.property)
+                log.error(
+                    "Invalid component name {} in component: {}, property: {}",
+                    setting.component, component, setting.property
+                )
             }
         }
     }
 
     private fun validateAllSettingsAdded() {
-        val settingsFieldsCount = javaClass.declaredFields.count { it.type is SettingProxy && it.get(this) != null }
-        val settingListSize = allSettings.distinct().count()
+        val settingFields: List<String> = javaClass.declaredFields
+            .filter { SettingProxy::class.java.isAssignableFrom(it.type) }
+            .map {
+                val accessible = it.canAccess(this)
+                it.isAccessible = true
+                val property = (it[this] as SettingProxy).property
+                it.isAccessible = accessible
+                return@map property
+            }.distinct()
+        val providedSettings = allSettings.map { it.property }.distinct()
 
-        if (settingsFieldsCount != settingListSize) {
-            log.error("Some of the settings are missing, {} out of {} added to the list",
-                settingListSize, settingsFieldsCount)
-        }
-    }
-
-    private fun loadFromSettings() {
-        allSettings.forEach { setting ->
-            env.getProperty("hu.bme.sch.cmsch.${setting.component}.${setting.property}")?.let {
-                if (it.isNotBlank())
-                    setting.rawValue = it
-            }
-            log.info(" - Setting prepared from config: {}.{} = '{}'", setting.component, setting.property, setting.rawValue)
-        }
-    }
-
-    fun updateFromDatabase() {
-        log.info("Loading {} component settings from database", component)
-        componentSettingService.loadDefaultSettings(allSettings)
-        allSettings.forEach {
-            log.info(" - Setting loaded from db: {}.{} = '{}'", it.component, it.property, it.getValue())
+        if (settingFields.count() != providedSettings.count()) {
+            log.error(
+                "Some of the settings are missing, {} out of {} added to the list, {}",
+                providedSettings.count(),
+                settingFields.count(),
+                settingFields.toMutableSet().also { it.removeAll(providedSettings) }
+            )
         }
     }
 
     fun attachConstants(): Map<String, Any> {
-        componentSettingService.refreshCachedSettings(allSettings)
         return allSettings
-            .filter { it.constant && !it.isServerSideOnly }
+            .filter { !it.isServerSideOnly }
             .associate { it.property to it.getMappedValue() }
-    }
-
-    fun persistChanges() {
-        componentSettingService.persistSettings(allSettings)
     }
 
     open fun onPersist() {
         // Empty implementation, override it when its needed
-    }
-
-    fun onFirePersistEvent() {
-        componentSettingService.onPersisted()
     }
 
     open fun onInit() {

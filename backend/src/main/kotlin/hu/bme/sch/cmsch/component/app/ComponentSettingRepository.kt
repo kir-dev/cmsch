@@ -9,4 +9,6 @@ interface ComponentSettingRepository : CrudRepository<ComponentSettingEntity, In
 
     fun findByComponentAndProperty(component: String, property: String): Optional<ComponentSettingEntity>
 
+    fun findAllByComponent(component: String): List<ComponentSettingEntity>
+
 }

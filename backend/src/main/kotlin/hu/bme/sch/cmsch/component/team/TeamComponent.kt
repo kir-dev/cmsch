@@ -1,10 +1,13 @@
 package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.component.app.ComponentSettingService
+import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.SettingType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -49,6 +52,7 @@ class TeamComponent(
             teamEditEnabled,
             teamLogoUploadEnabled,
             joinEnabled,
+            leaveEnabled,
             grantPrivilegedRole,
             grantAttendeeRole,
             nameRegex,
@@ -243,7 +247,7 @@ class TeamComponent(
 
     val leaveEnabled = SettingProxy(componentSettingService, component,
         "leaveEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csatlakozás engedélyezve", description = "Ha igaz, lehet ki lehet lépni csapatból"
+        fieldName = "Kilépés engedélyezve", description = "Ha igaz, lehet ki lehet lépni csapatból"
     )
 
     val grantPrivilegedRole = SettingProxy(componentSettingService, component,

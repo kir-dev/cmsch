@@ -1,10 +1,13 @@
 package hu.bme.sch.cmsch.component.race
 
 import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.component.app.ComponentSettingService
+import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.SettingType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -46,6 +49,7 @@ class RaceComponent(
 
             freestyleGroup,
             freestyleCategoryName,
+            freestyleCategoryDescription,
 
         )
     }
