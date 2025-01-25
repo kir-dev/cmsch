@@ -107,11 +107,11 @@
                             <span class="note">A mező alatt megjelenő szöveg.</span>
                         </div>
 
-                        <div class="field-group">
+                        <div class="field-group" style='${field.type.startsWith('INJECT_') ? 'display:none' : ''}'>
                             <label for="${property}_${id}_required">Kötelező kitölteni</label>
                             <div style="clear:both"></div>
                             <label class="switch">
-                                <input type="checkbox" id="${property}_${id}_required" ${field.required ? 'checked' : ''} onchange="saveField('${property}')" />
+                                <input type="checkbox" id="${property}_${id}_required" ${field.required && !field.type.startsWith('INJECT_')? 'checked' : ''} onchange="saveField('${property}')" ${field.type.startsWith('INJECT_') ? 'disabled' : ''} />
                                 <span class="slider"></span>
                             </label><br/>
                         </div>
@@ -275,16 +275,21 @@
                 const defaultValue = document.getElementById(`${property}_${id}_defaultValue`).value;
                 const values = document.getElementById(`${property}_${id}_values`).value;
                 const note = document.getElementById(`${property}_${id}_note`).value;
-                let required = document.getElementById(`${property}_${id}_required`).checked;
+                let required = document.getElementById(`${property}_${id}_required`);
                 const permanent = document.getElementById(`${property}_${id}_permanent`).checked;
 
-                if (fieldName !== null && label !== null && type !== null && fieldName !== '') {
-                    // This may not be a final fix, since the option is displayed in the select,
-                    // but the value is not saved as the user expects it to be
-                    // Will avoid the frontend error for now
-                    if (type.startsWith('INJECT_'))
-                        required = false;
+                if (type.startsWith('INJECT_')) {
+                    required.checked = false;
+                    required.disabled = true;
+                    required.parentElement.parentElement.style.display = 'none';
+                } else {
+                    required.disabled = false;
+                    required.parentElement.parentElement.style.display = 'block';
+                }
 
+                required = required.checked
+
+                if (fieldName !== null && label !== null && type !== null && fieldName !== '') {
                     result.push({
                         fieldName : fieldName,
                         label : label,
