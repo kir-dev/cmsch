@@ -27,6 +27,9 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     else defaultValue = ''
   }
 
+  if (fieldProps.type.startsWith('INJECT_'))
+    fieldProps.required = false
+
   const {
     field,
     fieldState: { error }
