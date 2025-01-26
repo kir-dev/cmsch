@@ -1,4 +1,5 @@
-import { Image, useColorModeValue } from '@chakra-ui/react'
+import { Image } from '@chakra-ui/react'
+import { useColorModeValue } from '../../components/ui/color-mode.tsx'
 
 interface PartnerLogoProps {
   name: 'bme' | 'schonherz' | 'schdesign' | 'vik'

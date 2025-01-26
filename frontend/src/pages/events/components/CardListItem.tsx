@@ -1,6 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { Box, BoxProps, Heading, HStack, Spacer, useColorModeValue } from '@chakra-ui/react'
+import { Box, BoxProps, Heading, HStack, Spacer } from '@chakra-ui/react'
 import { PulsingDot } from '../../../common-components/PulsingDot'
+import { useColorModeValue } from '../../../components/ui/color-mode.tsx'
 
 type CardListItemProps = {
   title: string

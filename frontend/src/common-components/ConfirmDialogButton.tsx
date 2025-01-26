@@ -1,25 +1,25 @@
+import { Button } from '@chakra-ui/react'
 import {
-  AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
-  AlertDialogBody,
-  AlertDialogFooter,
-  Button,
-  useDisclosure
-} from '@chakra-ui/react'
-import React from 'react'
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTrigger
+} from '../components/ui/dialog.tsx'
 
 interface ConfirmDialogButtonProps {
   headerText?: string
   bodyText?: string
   buttonText?: string
   buttonColorScheme?: string
-  buttonVariant?: string
+  buttonVariant?: 'solid' | 'subtle' | 'surface' | 'outline' | 'ghost' | 'plain'
   confirmButtonText?: string
   refuseButtonText?: string
   buttonWidth?: string
+
   confirmAction(): void
 }
 
@@ -34,37 +34,28 @@ export const ConfirmDialogButton = ({
   refuseButtonText = 'Mégse',
   confirmAction
 }: ConfirmDialogButtonProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = React.useRef(null)
-
   return (
     <>
-      <Button onClick={onOpen} width={buttonWidth} colorScheme={buttonColorScheme} variant={buttonVariant}>
-        {buttonText}
-      </Button>
-      <AlertDialog
-        preserveScrollBarGap={true}
-        motionPreset="slideInBottom"
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered
-      >
-        <AlertDialogOverlay />
-        <AlertDialogContent>
-          {headerText && <AlertDialogHeader>{headerText}</AlertDialogHeader>}
-          <AlertDialogCloseButton />
-          {bodyText && <AlertDialogBody>{bodyText}</AlertDialogBody>}
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              {refuseButtonText}
-            </Button>
+      <DialogRoot motionPreset="slide-in-bottom" placement="center">
+        <DialogTrigger asChild>
+          <Button width={buttonWidth} colorScheme={buttonColorScheme} variant={buttonVariant}>
+            {buttonText}
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          {headerText && <DialogHeader>{headerText}</DialogHeader>}
+          <DialogCloseTrigger />
+          {bodyText && <DialogBody>{bodyText}</DialogBody>}
+          <DialogFooter>
+            <DialogActionTrigger>
+              <Button>{refuseButtonText}</Button>
+            </DialogActionTrigger>
             <Button colorScheme="brand" ml={3} onClick={confirmAction}>
               {confirmButtonText}
             </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
     </>
   )
 }

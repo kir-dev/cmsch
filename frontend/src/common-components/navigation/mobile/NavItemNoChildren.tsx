@@ -1,6 +1,7 @@
-import { chakra, Flex, useColorModeValue } from '@chakra-ui/react'
+import { chakra, Flex } from '@chakra-ui/react'
 import { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
+import { useColorModeValue } from '../../../components/ui/color-mode.tsx'
 
 type Props = {
   menu: Menu

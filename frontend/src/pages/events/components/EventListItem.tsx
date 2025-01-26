@@ -1,4 +1,4 @@
-import { Box, Heading, LinkBox, LinkOverlay, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Heading, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { EventIndicator } from '../../../common-components/EventIndicator'
@@ -6,6 +6,7 @@ import { getCdnUrl, isCurrentEvent, isUpcomingEvent, stringifyTimeRange } from '
 import { AbsolutePaths } from '../../../util/paths'
 import { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
+import { useColorModeValue } from '../../../components/ui/color-mode.tsx'
 
 interface EventListItemProps {
   event: EventListView
@@ -28,7 +29,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
         <Box p={4} bg={event.previewImageUrl ? useColorModeValue('#FFFFFFAA', '#00000080') : undefined}>
           <Heading fontSize={25} my={0}>
             {useLink ? (
-              <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
+              <LinkOverlay as={Link} href={`${AbsolutePaths.EVENTS}/${event.url}`}>
                 {event.title}
               </LinkOverlay>
             ) : (

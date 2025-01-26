@@ -1,4 +1,4 @@
-import { Divider, HStack, Image, Link, VStack } from '@chakra-ui/react'
+import { HStack, Image, Link, Separator, VStack } from '@chakra-ui/react'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
 
 interface OrganizerLogoProps {
@@ -16,15 +16,15 @@ export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, 
       <Image src={imageSrc} w={32} h={32} objectPosition="center" objectFit="contain" />
       {!minimalistic && (
         <>
-          <Divider orientation="vertical" h={20} />
+          <Separator orientation="vertical" h={20} />
           <VStack align="flex-start">
             {websiteUrl && (
-              <Link isExternal fontSize="xl" _hover={{ color: 'brand.500', textDecorationLine: 'underline' }} href={websiteUrl}>
+              <Link fontSize="xl" _hover={{ color: 'brand.500', textDecorationLine: 'underline' }} href={websiteUrl}>
                 Weboldal
               </Link>
             )}
             {contactUrl && (
-              <Link isExternal fontSize="xl" _hover={{ color: 'brand.500', textDecorationLine: 'underline' }} href={contactUrl}>
+              <Link fontSize="xl" _hover={{ color: 'brand.500', textDecorationLine: 'underline' }} href={contactUrl}>
                 Kapcsolat
               </Link>
             )}

@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons'
-import { Heading, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react'
+import { Heading, Input, Text } from '@chakra-ui/react'
 import { createRef, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -10,6 +10,7 @@ import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { Community } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
+import { InputGroup } from '../../components/ui/input-group.tsx'
 
 export default function CommunityListPage() {
   const config = useConfigContext()?.components.communities
@@ -44,13 +45,8 @@ export default function CommunityListPage() {
   return (
     <CmschPage>
       <Helmet title={l('community-title')} />
-      <Heading as="h1" variant="main-title">
-        {l('community-title')}
-      </Heading>
-      <InputGroup mt={5}>
-        <InputLeftElement h="100%">
-          <SearchIcon />
-        </InputLeftElement>
+      <Heading as="h1">{l('community-title')}</Heading>
+      <InputGroup mt={5} startElement={<SearchIcon />}>
         <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
       </InputGroup>
       <Text mt={5}>{l('community-description')}</Text>

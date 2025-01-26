@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { useDisclosure, Link as ChakraLink, Grid, GridItem, Box } from '@chakra-ui/react'
+import { Box, Grid, GridItem, Link as ChakraLink, useDisclosure } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
@@ -26,7 +26,7 @@ export const CollapsableTableRow = ({
   categorized = false, // order inner items by value
   showDescription
 }: CollapsableTableRowProps) => {
-  const { isOpen, onToggle } = useDisclosure()
+  const { open, onToggle } = useDisclosure()
   const bg = idx % 2 === 0 ? useOpaqueBackground(1) : undefined
   const isGroupLink = typeof data.groupId !== 'undefined'
 
@@ -75,7 +75,7 @@ export const CollapsableTableRow = ({
             {`${new Intl.NumberFormat('hu-HU').format(data.score || data.total || 0)} ${suffix || ''}`}
           </GridItem>
         )}
-        {collapsable && <GridItem gridColumn="chevron">{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}</GridItem>}
+        {collapsable && <GridItem gridColumn="chevron">{open ? <ChevronUpIcon /> : <ChevronDownIcon />}</GridItem>}
       </Grid>
 
       {showDescription && data.description && (
@@ -84,7 +84,7 @@ export const CollapsableTableRow = ({
         </Box>
       )}
 
-      {isOpen && (
+      {open && (
         <Grid gap="var(--chakra-space-1) var(--chakra-space-3)" gridTemplateColumns={innerColTemplate.join(' ')} bg={bg} p={3} pt={0}>
           {data.items
             ?.sort((a, b) => b.value - a.value)

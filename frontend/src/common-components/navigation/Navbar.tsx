@@ -1,4 +1,4 @@
-import { Box, Collapse, Flex, Heading, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
+import { Box, Collapsible, Flex, Heading, Icon, IconButton, Image, useDisclosure } from '@chakra-ui/react'
 import { DesktopNav } from './desktop/DesktopNav'
 import { MobileNav } from './mobile/MobileNav'
 import { Link } from 'react-router-dom'
@@ -6,9 +6,10 @@ import { FaBars, FaTimes } from 'react-icons/fa'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import CurrentEventCard from '../CurrentEventCard'
+import { useColorModeValue } from '../../components/ui/color-mode'
 
 export const Navbar = () => {
-  const { isOpen, onToggle } = useDisclosure()
+  const { open, onToggle } = useDisclosure()
   const config = useConfigContext()
   const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
   return (
@@ -34,19 +35,16 @@ export const Navbar = () => {
         align="center"
       >
         <Flex flex={{ base: 1, md: '1' }} ml={{ base: -2, md: 0 }} display={{ base: 'flex', md: 'none' }}>
-          <IconButton
-            onClick={onToggle}
-            icon={isOpen ? <Icon as={FaTimes} w={5} h={5} /> : <Icon as={FaBars} w={5} h={5} />}
-            variant="ghost"
-            aria-label="Navigáció megnyitása"
-          />
+          <IconButton onClick={onToggle} variant="ghost" aria-label="Navigáció megnyitása">
+            open ? <Icon as={FaTimes} w={5} h={5} /> : <Icon as={FaBars} w={5} h={5} />
+          </IconButton>
         </Flex>
         <Flex justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
             {logoUrl ? (
               <Image maxH={16} maxW={28} src={logoUrl} alt={config?.components.app.siteName} />
             ) : (
-              <Heading as="h1" variant="main-title" my={2}>
+              <Heading as="h1" my={2}>
                 {config?.components.app.siteName}
               </Heading>
             )}
@@ -62,15 +60,16 @@ export const Navbar = () => {
         </Flex>
       </Flex>
       {/*The method in onClick hides the menu items when a menu item is clicked. Works for collapsible items too!*/}
-      <Collapse
-        in={isOpen}
-        animateOpacity
+      <Collapsible.Root
+        open={open}
         onClick={(evt) => {
           if ((evt.target as Element).closest('.navitem')) onToggle()
         }}
       >
-        <MobileNav />
-      </Collapse>
+        <Collapsible.Content>
+          <MobileNav />
+        </Collapsible.Content>
+      </Collapsible.Root>
       <CurrentEventCard />
     </Box>
   )

@@ -9,6 +9,7 @@ import CountdownPage from './pages/countdown/countdown.page'
 import IndexPage from './pages/index/index.page'
 import { l } from './util/language'
 import { AppBackground } from './common-components/layout/AppBackground'
+import { Toaster } from './components/ui/toaster.tsx'
 
 export function App() {
   return (
@@ -28,6 +29,7 @@ export function App() {
               </Route>
             </Routes>
           </Suspense>
+          <Toaster />
         </CmschLayout>
       </CountdownPage>
     </AppBackground>

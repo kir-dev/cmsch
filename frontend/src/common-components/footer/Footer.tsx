@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Heading, Image, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { FaHeart } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -7,6 +7,7 @@ import Markdown from '../Markdown'
 import { OrganizerLogo } from './OrganizerLogo'
 import { PartnerLogo } from './PartnerLogo'
 import parseSponsors from './utils/parseSponsors'
+import { useColorModeValue } from '../../components/ui/color-mode.tsx'
 
 const bgShadowColor = '#00000025'
 

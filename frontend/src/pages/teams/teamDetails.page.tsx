@@ -8,6 +8,10 @@ import { TeamIsNotPlaying } from './components/TeamIsNotPlaying'
 
 export default function TeamDetailsPage() {
   const { id } = useParams()
+  if (!id) {
+    return <TeamIsNotPlaying />
+  }
+
   const { data: optionalTeam, isLoading, error, refetch } = useTeamDetails(id)
   if (optionalTeam?.status === TeamStatus.NOT_VISIBLE) {
     return <TeamIsNotPlaying />

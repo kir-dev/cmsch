@@ -1,9 +1,10 @@
 import { customTheme } from '../../../util/configs/theme.config'
 import { useConfigContext } from '../config/ConfigContext'
-import { ChakraProvider, useColorMode } from '@chakra-ui/react'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { getColorShadesForColor } from '../../../util/core-functions.util'
 import { Style } from '../config/types.ts'
+import { useColorMode } from '../../../components/ui/color-mode.tsx'
+import { Provider } from '../../../components/ui/provider.tsx'
 
 export const ThemeConfig = ({ children }: PropsWithChildren) => {
   const config = useConfigContext()
@@ -32,7 +33,7 @@ export const ThemeConfig = ({ children }: PropsWithChildren) => {
     return customTheme
   }, [config])
 
-  return <ChakraProvider theme={chakraConfig}>{children}</ChakraProvider>
+  return <Provider value={chakraConfig}>{children}</Provider>
 }
 
 const useThemeUpdate = (style?: Style) => {
@@ -41,6 +42,6 @@ const useThemeUpdate = (style?: Style) => {
     if (!style) return
     if (colorMode !== 'dark' && style.forceDarkMode) {
       setColorMode('dark')
-    } else if (!style.darkModeEnabled) setColorMode('white')
+    } else if (!style.darkModeEnabled) setColorMode('light')
   }, [!!style, style?.deviceTheme, style?.forceDarkMode])
 }

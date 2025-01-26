@@ -1,14 +1,14 @@
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { TeamListItemView } from '../../../../util/views/team.view'
+import { QueryKeys } from '../../queryKeys.ts'
 
-export const useTeamList = (onError?: (err: any) => void) => {
-  return useQuery<TeamListItemView[], Error>(
-    ['team', 'list'],
-    async () => {
+export const useTeamList = () => {
+  return useQuery<TeamListItemView[], Error>({
+    queryKey: [QueryKeys.TEAM_LIST],
+    queryFn: async () => {
       const response = await axios.get<TeamListItemView[]>(`/api/teams`)
       return response.data
-    },
-    { onError: onError }
-  )
+    }
+  })
 }

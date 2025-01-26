@@ -51,6 +51,6 @@ const ClockSegment = ({ value, label }: ClockSegmentProps) => {
   )
 }
 
-const Dash = () => <Icon size={30} as={BsDashLg} />
+const Dash = () => <Icon fontSize={30} as={BsDashLg} />
 
 export default Clock

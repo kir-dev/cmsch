@@ -1,6 +1,7 @@
-import { Box, chakra, useColorModeValue } from '@chakra-ui/react'
+import { Box, chakra } from '@chakra-ui/react'
 import { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
+import { useColorModeValue } from '../../../components/ui/color-mode'
 
 type Props = {
   menu: Menu

@@ -1,5 +1,5 @@
 import { EditIcon, LinkIcon } from '@chakra-ui/icons'
-import { Box, Flex, Heading, HStack, Image, Link, Tag, useColorModeValue, VStack, Wrap } from '@chakra-ui/react'
+import { Box, Flex, Heading, HStack, Image, Link, VStack } from '@chakra-ui/react'
 import { FC, ReactNode } from 'react'
 import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
 
@@ -8,6 +8,8 @@ import { Community, Organization } from '../../../util/views/organization'
 import { joinPath } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import Markdown from '../../../common-components/Markdown'
+import { useColorModeValue } from '../../../components/ui/color-mode.tsx'
+import { Tag } from '../../../components/ui/tag.tsx'
 
 type DataSheetProps = {
   organization: Organization | Community
@@ -63,35 +65,35 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
       </Flex>
       {organization.descriptionParagraphs && <Markdown text={organization.descriptionParagraphs} />}
 
-      <Wrap marginTop={10} justify={{ base: 'center', md: 'flex-start' }}>
+      <HStack wrap={'wrap'} marginTop={10} justify={{ base: 'center', md: 'flex-start' }}>
         {organization.website && (
-          <LinkButton href={organization.website} external leftIcon={<LinkIcon />} colorScheme={organization.color}>
-            Weboldal
+          <LinkButton href={organization.website} external colorScheme={organization.color}>
+            <LinkIcon /> Weboldal
           </LinkButton>
         )}
         {organization.application && (
-          <LinkButton href={organization.application} external leftIcon={<EditIcon />} colorScheme="brand">
-            Jelentkezés
+          <LinkButton href={organization.application} external colorScheme="brand">
+            <EditIcon /> Jelentkezés
           </LinkButton>
         )}
         {organization.facebook && (
-          <LinkButton href={organization.facebook} external leftIcon={<FaFacebook />} colorScheme="facebook">
-            Facebook
+          <LinkButton href={organization.facebook} external colorScheme="facebook">
+            <FaFacebook /> Facebook
           </LinkButton>
         )}
         {organization.instagram && (
-          <LinkButton href={organization.instagram} external leftIcon={<FaInstagram />} colorScheme="purple">
-            Instagram
+          <LinkButton href={organization.instagram} external colorScheme="purple">
+            <FaInstagram /> Instagram
           </LinkButton>
         )}
-      </Wrap>
+      </HStack>
     </>
   )
 }
 
 type DataFieldProps = {
   children?: ReactNode
-  icon: JSX.Element
+  icon: ReactNode
   label: string
 }
 
@@ -103,7 +105,7 @@ const DataField: FC<DataFieldProps> = ({ icon, label, children }) => (
   </HStack>
 )
 
-const generateLogo = (org: Organization): JSX.Element | null => {
+const generateLogo = (org: Organization) => {
   let logoSource: string | null | undefined
 
   if (org.logo) {

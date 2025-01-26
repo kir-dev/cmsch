@@ -1,10 +1,11 @@
 import { FC, PropsWithChildren } from 'react'
-import { Box, Button, ButtonGroup, Center, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Center, Heading, Text, VStack } from '@chakra-ui/react'
 import { INITIAL_BG_IMAGE } from './configs/environment.config.ts'
 import { Loading } from '../common-components/Loading.tsx'
 import { KirDevLogo } from '../assets/kir-dev-logo.tsx'
 import { Helmet } from 'react-helmet-async'
 import { l } from './language.ts'
+import { useColorModeValue } from '../components/ui/color-mode.tsx'
 
 export type LoadingViewProps = PropsWithChildren & {
   hasError: boolean
@@ -31,7 +32,7 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
     return (
       <Center flexDirection="column" h="100vh" backgroundImage={INITIAL_BG_IMAGE} backgroundPosition="center" backgroundSize="cover">
         <Helmet title={l('error-page-helmet')} />
-        <VStack spacing={5} p={5} borderRadius={5} bg={bg}>
+        <VStack gap={5} p={5} borderRadius={5} bg={bg}>
           <Heading textAlign="center">{errorTitle}</Heading>
           <Text textAlign="center" color="gray.500" marginTop={4} maxW={96}>
             {errorMessage}

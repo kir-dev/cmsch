@@ -1,18 +1,4 @@
-import {
-  Box,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useBreakpoint,
-  useBreakpointValue,
-  useDisclosure
-} from '@chakra-ui/react'
+import { Box, Heading, Input, Stack, Tabs, useBreakpoint, useBreakpointValue, useDisclosure } from '@chakra-ui/react'
 import uniq from 'lodash/uniq'
 import { Helmet } from 'react-helmet-async'
 import { FaCalendar } from 'react-icons/fa'
@@ -37,7 +23,7 @@ import { EventListView } from '../../util/views/event.view'
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
   const component = useConfigContext()?.components?.event
-  const { isOpen, onToggle } = useDisclosure()
+  const { open, onToggle } = useDisclosure()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
   const inputRef = createRef<HTMLInputElement>()
@@ -73,7 +59,7 @@ const EventListPage = () => {
     <CmschPage>
       <Helmet title={component.title ?? 'Események'} />
       <Box mb={5}>
-        <Heading as="h1" variant="main-title" mb={5}>
+        <Heading as="h1" mb={5}>
           {component.title}
         </Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
@@ -81,14 +67,14 @@ const EventListPage = () => {
       <LinkButton colorScheme="brand" mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
         Megtekintés a naptárban
       </LinkButton>
-      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
+      <Tabs.Root size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
         {availableFilters.length > 0 && (
-          <TabList>
+          <Tabs.List>
             <CustomTabButton>Mind</CustomTabButton>
             {component.filterByCategory && <CustomTabButton>Kategória szerint</CustomTabButton>}
             {component.filterByLocation && <CustomTabButton>Helyszín szerint</CustomTabButton>}
             {component.filterByDay && <CustomTabButton>Időpont szerint</CustomTabButton>}
-          </TabList>
+          </Tabs.List>
         )}
 
         <TabPanels>
@@ -120,7 +106,7 @@ const EventListPage = () => {
             </TabPanel>
           ))}
         </TabPanels>
-      </Tabs>
+      </Tabs.Root>
     </CmschPage>
   )
 }

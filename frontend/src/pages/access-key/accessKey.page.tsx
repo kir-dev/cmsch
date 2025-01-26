@@ -1,18 +1,5 @@
 import { FormEvent, useState } from 'react'
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Button,
-  FormControl,
-  FormLabel,
-  HStack,
-  Heading,
-  Input,
-  Text,
-  VStack,
-  useToast
-} from '@chakra-ui/react'
+import { Alert, AlertDescription, Button, Fieldset, Heading, HStack, Input, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../util/paths'
@@ -24,12 +11,14 @@ import { PageStatus } from '../../common-components/PageStatus'
 import Markdown from '../../common-components/Markdown'
 import { AccessKeyResponse } from '../../util/views/accessKey'
 import { l } from '../../util/language'
+import { toaster } from '../../components/ui/toaster'
+import { CiCircleAlert } from 'react-icons/ci'
+import { Field } from '../../components/ui/field.tsx'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()
   const [value, setValue] = useState<string>()
   const [error, setError] = useState<string>()
-  const toast = useToast()
   const navigate = useNavigate()
 
   const onData = (response: AccessKeyResponse) => {
@@ -37,10 +26,10 @@ function AccessKeyPage() {
       if (response.refreshSession) {
         refetch()
       }
-      toast({ title: l('access-token-success'), status: 'success' })
+      toaster.create({ title: l('access-token-success'), type: 'success' })
       navigate(AbsolutePaths.PROFILE)
     } else {
-      toast({ title: response.reason, status: 'error' })
+      toaster.create({ title: response.reason, type: 'error' })
       setError(response.reason)
     }
   }
@@ -66,36 +55,39 @@ function AccessKeyPage() {
   return (
     <CmschPage>
       <Helmet title={query.data.title} />
-      <Heading as="h1" variant="main-title">
-        {query.data.title}
-      </Heading>
+      <Heading as="h1">{query.data.title}</Heading>
 
       {query.data.enabled ? (
         <Markdown text={query.data.topMessage} />
       ) : (
-        <Alert status="error">
-          <AlertIcon />
-          <AlertDescription>{l('access-token-not-available')}</AlertDescription>
-        </Alert>
+        <Alert.Root status="error">
+          <Alert.Content>
+            <CiCircleAlert />
+            <AlertDescription>{l('access-token-not-available')}</AlertDescription>\
+          </Alert.Content>
+        </Alert.Root>
       )}
-      <form onSubmit={onSubmit}>
-        <VStack spacing={5} mt={10} alignItems="flex-start">
-          <FormControl>
-            <FormLabel>{query.data.fieldName}</FormLabel>
-            <Input value={value} onChange={(e) => setValue(e.target.value)} isDisabled={!query.data.enabled} />
-          </FormControl>
-          <HStack>
-            <Button type="submit" colorScheme="brand" isLoading={query.isLoading} isDisabled={!query.data.enabled}>
-              Beküldés
-            </Button>
-            {error && (
-              <Text color="red.500" textAlign="center">
-                {error}
-              </Text>
-            )}
-          </HStack>
-        </VStack>
-      </form>
+      <Fieldset.Root>
+        <form onSubmit={onSubmit}>
+          <VStack gap={5} mt={10} alignItems="flex-start">
+            <Fieldset.Content>
+              <Field label={query.data.fieldName}>
+                <Input value={value} onChange={(e) => setValue(e.target.value)} disabled={!query.data.enabled} />
+              </Field>
+              <HStack>
+                <Button type="submit" colorScheme="brand" loading={query.isLoading} disabled={!query.data.enabled}>
+                  Beküldés
+                </Button>
+                {error && (
+                  <Text color="red.500" textAlign="center">
+                    {error}
+                  </Text>
+                )}
+              </HStack>
+            </Fieldset.Content>
+          </VStack>
+        </form>
+      </Fieldset.Root>
     </CmschPage>
   )
 }

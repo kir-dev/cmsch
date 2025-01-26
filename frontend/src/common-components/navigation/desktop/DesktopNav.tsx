@@ -9,7 +9,7 @@ export const DesktopNav = () => {
   if (!config?.menu) return null
 
   return (
-    <Stack direction="row" spacing={4}>
+    <Stack direction="row" gap={4}>
       {config.menu.map((menu) =>
         menu.children && menu.children.length > 0 ? (
           <NavItemWithChildren key={menu.name} menu={menu} />

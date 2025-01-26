@@ -1,7 +1,8 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Heading, HStack, Image, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Heading, HStack, Image, Spacer, Text, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { Organization } from '../../../util/views/organization'
+import { useColorModeValue } from '../../../components/ui/color-mode.tsx'
 
 type CardListItemProps = {
   data: Organization
@@ -25,7 +26,7 @@ export const CardListItem = ({ data, link }: CardListItemProps) => {
         transition="transform .2s ease-in-out"
         _hover={{ transform: 'translateX(0.5em)' }}
       >
-        <HStack spacing={4}>
+        <HStack gap={4}>
           {logoSource && (
             <Image src={logoSource} alt={data.name} minW={{ base: 12, sm: 16 }} boxSize={{ base: 12, sm: 16 }} objectFit="contain" />
           )}

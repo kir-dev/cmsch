@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, IconButton, useColorModeValue } from '@chakra-ui/react'
+import { Box, Heading, HStack, IconButton } from '@chakra-ui/react'
 import { addDays, addWeeks, endOfDay, startOfWeek } from 'date-fns'
 import { useMemo, useRef, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
@@ -9,6 +9,7 @@ import { EventBox, EventBoxItem } from './EventBox'
 import { HourColumn } from './HourColumn'
 import { mapEventsForDay } from './utils'
 import { ZoomBar } from './ZoomBar'
+import { useColorModeValue } from '../../../../components/ui/color-mode.tsx'
 
 interface WeekCalendarProps {
   events: EventListView[]
@@ -51,16 +52,20 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
   return (
     <Box my={5} w="full" display={['none', null, 'block']}>
       <HStack justify="space-between">
-        <IconButton colorScheme="brand" aria-label="Előző hét" icon={<FaChevronLeft />} onClick={decrementWeek} />
+        <IconButton colorScheme="brand" aria-label="Előző hét" onClick={decrementWeek}>
+          <FaChevronLeft />
+        </IconButton>
         <Heading as="h2" size="md">
           {formatHu(startDate, 'MM. dd.')} - {formatHu(days[days.length - 1].date, 'MM. dd.')}
         </Heading>
-        <IconButton colorScheme="brand" aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
+        <IconButton colorScheme="brand" aria-label="Következő hét" onClick={incrementWeek}>
+          <FaChevronRight />
+        </IconButton>
       </HStack>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
       <HStack flex={1} maxH={830} overflowY="auto" overflowX="hidden" w="full" mt={5} align="flex-start">
         <HourColumn mt={30} h={scale * 800} />
-        <HStack flex={1} spacing={1} mt={5} justifyContent="space-evenly" align="flex-start">
+        <HStack flex={1} gap={1} mt={5} justifyContent="space-evenly" align="flex-start">
           {days.map((day) => (
             <Box key={day.date.toISOString()} w="full">
               <Heading h={30} textAlign="center" as="h3" size="sm" m={0}>

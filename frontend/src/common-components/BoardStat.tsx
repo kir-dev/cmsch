@@ -1,8 +1,9 @@
-import { Stat, StatHelpText, StatLabel, StatNumber, StatProps } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useOpaqueBackground } from '../util/core-functions.util'
+import { StatHelpText, StatLabel, StatRoot, StatValueText } from '../components/ui/stat.tsx'
+import { StatRootProps } from '@chakra-ui/react'
 
-interface BoardStatProps extends StatProps {
+interface BoardStatProps extends StatRootProps {
   label: string
   value: string | number
   subValue?: string | number
@@ -13,7 +14,7 @@ export const BoardStat = ({ label, value, subValue, navigateTo, bg, ...props }: 
   const background = useOpaqueBackground(1)
   const navigate = useNavigate()
   return (
-    <Stat
+    <StatRoot
       borderRadius="lg"
       px={5}
       py={2}
@@ -25,8 +26,8 @@ export const BoardStat = ({ label, value, subValue, navigateTo, bg, ...props }: 
       {...props}
     >
       <StatLabel>{label}</StatLabel>
-      <StatNumber>{value}</StatNumber>
+      <StatValueText>{value}</StatValueText>
       {subValue && <StatHelpText>{subValue}</StatHelpText>}
-    </Stat>
+    </StatRoot>
   )
 }

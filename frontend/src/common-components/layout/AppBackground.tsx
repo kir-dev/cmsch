@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren } from 'react'
-import { Box, useColorModeValue } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useColorModeValue } from '../../components/ui/color-mode'
 
 export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
   const config = useConfigContext()
@@ -29,7 +30,7 @@ export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
         bgImage={{ base: mobileBackgroundImage, md: backgroundImage }}
         bgRepeat={'no-repeat'}
         bgSize={'cover'}
-        bgPosition={'center'}
+        bgPos={'center'}
       ></Box>
       {children}
     </>

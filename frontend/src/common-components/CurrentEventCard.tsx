@@ -1,9 +1,10 @@
-import { Box, Flex, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { useEventListQuery } from '../api/hooks/event/useEventListQuery'
 import { isCurrentEvent, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
 import { Link } from 'react-router-dom'
 import { PulsingDot } from './PulsingDot'
+import { useColorModeValue } from '../components/ui/color-mode.tsx'
 
 export default function CurrentEventCard() {
   const { data, error } = useEventListQuery()

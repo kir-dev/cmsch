@@ -3,13 +3,11 @@ import {
   Popover,
   PopoverArrow,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
   PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
-  Text,
-  useColorModeValue
+  Text
 } from '@chakra-ui/react'
 import { RefObject } from 'react'
 import { useConfigContext } from '../../../../api/contexts/config/ConfigContext'
@@ -17,11 +15,13 @@ import { LinkButton } from '../../../../common-components/LinkButton'
 import { formatHu, stringifyTimeRange } from '../../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../../util/paths'
 import { EventListView } from '../../../../util/views/event.view'
+import { useColorModeValue } from '../../../../components/ui/color-mode.tsx'
+import { PopoverCloseTrigger } from '../../../../components/ui/popover.tsx'
 
 export type EventBoxItem = EventListView & { top: number; bottom: number; conflictingEventsBefore?: number }
 
 interface EventBoxProps {
-  boxRef?: RefObject<HTMLDivElement>
+  boxRef?: RefObject<HTMLDivElement | null>
   event: EventBoxItem
 }
 
@@ -30,7 +30,7 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
   const eventBg = useColorModeValue('brand.500', 'brand.300')
   const eventTextColor = useColorModeValue('white', 'black')
   return (
-    <Popover>
+    <Popover.Root>
       <PopoverTrigger>
         <Box
           ml={(event.conflictingEventsBefore ?? 0) * 2}
@@ -49,7 +49,7 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
           p={1}
           color={eventTextColor}
         >
-          <Text fontSize="sm" fontWeight="bold" isTruncated>
+          <Text fontSize="sm" fontWeight="bold" truncate>
             {event.title}
           </Text>
           <Text opacity={0.5}>
@@ -59,8 +59,8 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
       </PopoverTrigger>
       <PopoverContent>
         <PopoverArrow />
-        <PopoverCloseButton />
-        <PopoverHeader isTruncated>{event.title}</PopoverHeader>
+        <PopoverCloseTrigger />
+        <PopoverHeader truncate>{event.title}</PopoverHeader>
         <PopoverBody>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</PopoverBody>
         {component.enableDetailedView && (
           <PopoverFooter>
@@ -68,6 +68,6 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
           </PopoverFooter>
         )}
       </PopoverContent>
-    </Popover>
+    </Popover.Root>
   )
 }

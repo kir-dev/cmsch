@@ -1,7 +1,6 @@
-import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import React from 'react'
-import { QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/contexts/auth/AuthContext'
 
@@ -15,6 +14,7 @@ import { customTheme } from './util/configs/theme.config'
 import { HelmetProvider } from 'react-helmet-async'
 import { ErrorBoundary } from './util/errorBoundary'
 import { PushNotificationHandler } from './common-components/PushNotificationHandler.tsx'
+import { Provider } from './components/ui/provider.tsx'
 
 initAxios()
 
@@ -22,12 +22,11 @@ const root = createRoot(document.getElementById('root')!)
 
 root.render(
   <React.StrictMode>
-    <ColorModeScript />
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <BrowserRouter>
           <ServiceProvider>
-            <ChakraProvider theme={customTheme}>
+            <Provider value={customTheme}>
               <ConfigProvider>
                 <ThemeConfig>
                   <ErrorBoundary>
@@ -40,7 +39,7 @@ root.render(
                   </ErrorBoundary>
                 </ThemeConfig>
               </ConfigProvider>
-            </ChakraProvider>
+            </Provider>
           </ServiceProvider>
         </BrowserRouter>
       </HelmetProvider>

@@ -1,12 +1,13 @@
-import { Card, CardBody, CardHeader, CardProps, Heading, useColorModeValue } from '@chakra-ui/react'
+import { Card, CardBody, CardHeader, CardRootProps, Heading } from '@chakra-ui/react'
+import { useColorModeValue } from '../../components/ui/color-mode.tsx'
 
-export interface CmschContainerProps extends CardProps {
+export interface CmschContainerProps extends CardRootProps {
   title?: string
   disablePadding?: boolean
 }
 
 export const CmschContainer = ({ children, title, disablePadding, ...props }: CmschContainerProps) => (
-  <Card
+  <Card.Root
     flexDirection="column"
     p={[0, null, 0]}
     mx="auto"
@@ -22,5 +23,5 @@ export const CmschContainer = ({ children, title, disablePadding, ...props }: Cm
       </CardHeader>
     )}
     <CardBody p={disablePadding ? 0 : undefined}>{children}</CardBody>
-  </Card>
+  </Card.Root>
 )

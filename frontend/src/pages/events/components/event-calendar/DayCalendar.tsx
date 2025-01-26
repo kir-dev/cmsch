@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, IconButton, useColorModeValue } from '@chakra-ui/react'
+import { Box, Heading, HStack, IconButton } from '@chakra-ui/react'
 import { addDays, endOfDay, startOfDay } from 'date-fns'
 import { useMemo, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
@@ -9,6 +9,7 @@ import { EventBox } from './EventBox'
 import { HourColumn } from './HourColumn'
 import { mapEventsForDay } from './utils'
 import { ZoomBar } from './ZoomBar'
+import { useColorModeValue } from '../../../../components/ui/color-mode.tsx'
 
 interface DayCalendarProps {
   events: EventListView[]
@@ -41,11 +42,15 @@ export function DayCalendar({ events }: DayCalendarProps) {
   return (
     <Box my={5} w="full" display={['block', null, 'none']}>
       <HStack justify="space-between">
-        <IconButton colorScheme="brand" aria-label="Előző nap" icon={<FaChevronLeft />} onClick={decrementDay} />
+        <IconButton colorScheme="brand" aria-label="Előző nap" onClick={decrementDay}>
+          <FaChevronLeft />
+        </IconButton>
         <Heading as="h2" size="md">
           {formatHu(startDate, 'EEEE, MMMM dd.')}
         </Heading>
-        <IconButton colorScheme="brand" aria-label="Következő nap" icon={<FaChevronRight />} onClick={incrementDay} />
+        <IconButton colorScheme="brand" aria-label="Következő nap" onClick={incrementDay}>
+          <FaChevronRight />
+        </IconButton>
       </HStack>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
       <HStack maxH={820} mt={5} overflowY="auto" overflowX="hidden" pt={5} align="flex-start">

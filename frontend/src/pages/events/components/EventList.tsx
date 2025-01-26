@@ -34,7 +34,7 @@ interface EventListGroupProps {
 
 function EventListGroup({ eventList, useLink }: EventListGroupProps) {
   return (
-    <VStack spacing={3}>
+    <VStack gap={3}>
       {eventList.map((e: EventListView) => (
         <EventListItem event={e} key={e.url + e.timestampStart} useLink={useLink} />
       ))}

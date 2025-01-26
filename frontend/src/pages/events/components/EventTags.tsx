@@ -1,13 +1,14 @@
-import { HStack, SpaceProps, Tag } from '@chakra-ui/react'
+import { HStack } from '@chakra-ui/react'
+import { Tag } from '../../../components/ui/tag.tsx'
 
 interface EventTagsProps {
   tags: Array<string>
-  my?: SpaceProps['my']
+  my?: number
 }
 
 const EventTags = ({ tags, my }: EventTagsProps) => {
   return (
-    <HStack spacing={2} my={my} justifyContent="end">
+    <HStack gap={2} my={my} justifyContent="end">
       {tags.filter(Boolean).map((tag) => {
         return (
           <Tag size={'md'} variant="solid" colorScheme="brand" key={tag}>

@@ -1,7 +1,8 @@
-import { Box, Flex, Icon, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
 import { FaChevronRight } from 'react-icons/fa'
 import { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
+import { useColorModeValue } from '../../../components/ui/color-mode.tsx'
 
 type Props = {
   menu: Menu

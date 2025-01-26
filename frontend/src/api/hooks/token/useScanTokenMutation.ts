@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
 import { ScanResponseView } from '../../../util/views/token.view'

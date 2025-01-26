@@ -1,9 +1,9 @@
-import { useColorModeValue } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import { hu } from 'date-fns/locale'
 import Values from 'values.js'
 import { API_BASE_URL } from './configs/environment.config'
 import { FormFieldVariants } from './views/form.view'
+import { useColorModeValue } from '../components/ui/color-mode'
 
 export const TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
   month: 'short',

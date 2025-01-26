@@ -1,8 +1,8 @@
-import { useToast } from '@chakra-ui/react'
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AbsolutePaths } from '../../../util/paths'
 import { l } from '../../../util/language'
+import { toaster } from '../../../components/ui/toaster.tsx'
 
 export enum MessageTypes {
   GENERAL = 'general',
@@ -32,12 +32,11 @@ export const ServiceContext = createContext<ServiceContextType>({
 export const ServiceProvider = ({ children }: PropsWithChildren) => {
   const [message, setMessage] = useState<string | undefined>(undefined)
   const [type, setType] = useState<MessageTypes>(MessageTypes.GENERAL)
-  const toast = useToast()
   const navigate = useNavigate()
 
   const sendMessage = (message: string, options?: MessageOptions) => {
     if (options?.toast) {
-      toast({ status: options.toastStatus || 'error', title: getToastTitle(options.toastStatus), description: message })
+      toaster.create({ type: options.toastStatus || 'error', title: getToastTitle(options.toastStatus), description: message })
       if (options.toHomePage) navigate('/')
     } else {
       setMessage(message)

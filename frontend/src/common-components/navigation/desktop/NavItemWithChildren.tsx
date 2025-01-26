@@ -1,8 +1,10 @@
-import { Box, chakra, HStack, Icon, Popover, PopoverContent, PopoverTrigger, Stack, useColorModeValue } from '@chakra-ui/react'
+import { Box, chakra, HStack, Icon, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
 import { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
 import { ChildNavItem } from './ChildNavItem'
+import { useColorModeValue } from '../../../components/ui/color-mode.tsx'
+import { PopoverRoot } from '../../../components/ui/popover.tsx'
 
 type Props = {
   menu: Menu
@@ -12,7 +14,7 @@ export const NavItemWithChildren = ({ menu }: Props) => {
   const bg = useColorModeValue('darkContainerColor.600', 'darkContainerColor.600')
   return (
     <Box key={menu.name} p={2}>
-      <Popover trigger="hover" placement="bottom-start">
+      <PopoverRoot positioning={{ placement: 'bottom-start' }}>
         <PopoverTrigger>
           <Box>
             <LinkComponent url={menu.url || '#'} external={menu.external}>
@@ -37,7 +39,7 @@ export const NavItemWithChildren = ({ menu }: Props) => {
             ))}
           </Stack>
         </PopoverContent>
-      </Popover>
+      </PopoverRoot>
     </Box>
   )
 }

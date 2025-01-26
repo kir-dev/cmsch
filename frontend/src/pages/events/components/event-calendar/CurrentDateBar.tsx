@@ -1,5 +1,5 @@
-import { Divider } from '@chakra-ui/react'
 import { calculatePosition } from './utils'
+import { Separator } from '@chakra-ui/react'
 
 interface CurrentDateBarProps {
   minTimestamp: number
@@ -11,7 +11,7 @@ export function CurrentDateBar({ maxTimestamp, minTimestamp }: CurrentDateBarPro
   if (now < minTimestamp || now > maxTimestamp) return null
   const position = calculatePosition(minTimestamp, maxTimestamp, now)
   return (
-    <Divider
+    <Separator
       opacity={1}
       zIndex={10}
       position="absolute"
