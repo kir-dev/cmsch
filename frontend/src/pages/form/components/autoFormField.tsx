@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Checkbox, Flex, FormLabel, Input, Select, Text, Textarea } from '@chakra-ui/react'
+import { Flex, Input, Select, Text, Textarea } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { Control, useController } from 'react-hook-form'
 import Markdown from '../../../common-components/Markdown'
@@ -6,6 +6,7 @@ import { VotingField } from '../../../common-components/VotingField'
 import { isCheckbox, isGridField } from '../../../util/core-functions.util'
 import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
 import { GridField } from './GridField'
+import { Checkbox } from '../../../components/ui/checkbox.tsx'
 
 interface AutoFormFieldProps {
   fieldProps: FormField
@@ -47,34 +48,32 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     case FormFieldVariants.CHECKBOX:
       component = (
         <Flex alignItems="center" mt={10}>
-          <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={!!defaultValue} />
-          <FormLabel ml={3} mb={0} fontSize={20} htmlFor={fieldProps.fieldName}>
+          <Checkbox {...field} invalid={!!error} disabled={disabled} defaultChecked={!!defaultValue}>
             {fieldProps.label}
-          </FormLabel>
+          </Checkbox>
         </Flex>
       )
       break
     case FormFieldVariants.EMAIL:
-      component = <Input type="email" {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Input type="email" {...field} invalid={!!error} disabled={disabled} />
       break
     case FormFieldVariants.LONG_TEXT:
-      component = <Textarea {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Textarea {...field} invalid={!!error} disabled={disabled} />
       break
     case FormFieldVariants.MUST_AGREE:
       component = (
         <Flex alignItems="center" my={10}>
-          <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={!!defaultValue} />
-          <FormLabel ml={3} mb={0} fontSize={20} htmlFor={fieldProps.fieldName}>
+          <Checkbox {...field} invalid={!!error} disabled={disabled} defaultChecked={!!defaultValue}>
             {fieldProps.label}
-          </FormLabel>
+          </Checkbox>
         </Flex>
       )
       break
     case FormFieldVariants.NUMBER:
-      component = <Input type="number" {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Input type="number" {...field} invalid={!!error} disabled={disabled} />
       break
     case FormFieldVariants.PHONE:
-      component = <Input type="phone" {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Input type="phone" {...field} invalid={!!error} disabled={disabled} />
       break
     case FormFieldVariants.SELECT:
       component = (

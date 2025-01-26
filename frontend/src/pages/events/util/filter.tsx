@@ -8,7 +8,7 @@ export enum FILTER {
   DAY = 'day'
 }
 
-export const mapper = (f: FILTER, e: EventListView) => {
+export const mapper = (f: FILTER, e: EventListView): string => {
   switch (f) {
     case FILTER.ALL:
       throw 'Cannot map if filter is set to all'

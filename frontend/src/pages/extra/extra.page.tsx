@@ -29,9 +29,7 @@ const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
   return (
     <CmschPage>
       <Helmet title={data.title} />
-      <Heading as="h1" variant="main-title">
-        {data.title}
-      </Heading>
+      <Heading as="h1">{data.title}</Heading>
       <Markdown text={data.content} />
     </CmschPage>
   )
