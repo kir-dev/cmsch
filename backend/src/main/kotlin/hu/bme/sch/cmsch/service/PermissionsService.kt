@@ -34,6 +34,7 @@ import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
 import hu.bme.sch.cmsch.component.team.TeamComponent
 import hu.bme.sch.cmsch.component.token.TokenComponent
+import hu.bme.sch.cmsch.component.tournament.TournamentComponent
 import hu.bme.sch.cmsch.extending.CmschPermissionSource
 import hu.bme.sch.cmsch.util.DI
 import org.springframework.stereotype.Component
@@ -431,6 +432,13 @@ object ControlPermissions : PermissionGroup {
         component = SheetsComponent::class
     )
 
+    val PERMISSION_CONTROL_TOURNAMENT = PermissionValidator(
+        "TOURNAMENT_CONTROL",
+        "Tournament komponens testreszabása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -475,6 +483,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_PROTO,
         PERMISSION_CONTROL_CONFERENCE,
         PERMISSION_CONTROL_SHEETS,
+        PERMISSION_CONTROL_TOURNAMENT,
     )
 
 }
@@ -1582,6 +1591,78 @@ object StaffPermissions : PermissionGroup {
         component = SheetsComponent::class
     )
 
+    /// TournamentComponent
+
+    val PERMISSION_SHOW_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_SHOW",
+        "Verseny megtekintése",
+        readOnly = true,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_CREATE_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_CREATE",
+        "Versenyek létrehozása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_DELETE_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_DELETE",
+        "Versenyek törlése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_EDIT_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_EDIT",
+        "Versenyek szerkesztése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_SHOW_TOURNAMENT_PARTICIPANTS = PermissionValidator(
+        "TOURNAMENT_PARTICIPANTS_SHOW",
+        "Verseny résztvevők megtekintése",
+        readOnly = true,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_SET_SEEDS = PermissionValidator(
+        "TOURNAMENT_SET_SEEDS",
+        "Versenyzők seedjeinek állítása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_GENERATE_GROUPS = PermissionValidator(
+        "TOURNAMENT_GENERATE_GROUPS",
+        "Verseny csoportok generálása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_GENERATE_BRACKETS = PermissionValidator(
+        "TOURNAMENT_GENERATE_BRACKETS",
+        "Verseny táblák generálása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_GENERATE_MATCHES = PermissionValidator(
+        "TOURNAMENT_GENERATE_MATCHES",
+        "Verseny meccsek generálása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_EDIT_RESULTS = PermissionValidator(
+        "TOURNAMENT_EDIT_RESULTS",
+        "Verseny eredmények szerkesztése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_SHOW_TASKS,
@@ -1756,6 +1837,17 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_SHEETS,
         PERMISSION_CREATE_SHEETS,
         PERMISSION_DELETE_SHEETS,
+
+        PERMISSION_SHOW_TOURNAMENTS,
+        PERMISSION_CREATE_TOURNAMENTS,
+        PERMISSION_DELETE_TOURNAMENTS,
+        PERMISSION_EDIT_TOURNAMENTS,
+        PERMISSION_SHOW_TOURNAMENT_PARTICIPANTS,
+        PERMISSION_SET_SEEDS,
+        PERMISSION_GENERATE_GROUPS,
+        PERMISSION_GENERATE_BRACKETS,
+        PERMISSION_GENERATE_MATCHES,
+        PERMISSION_EDIT_RESULTS,
     )
 
 }
