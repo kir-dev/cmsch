@@ -31,7 +31,14 @@ data class TournamentEntity(
     @property:GenerateInput(maxLength = 64, order = 1, label = "Verseny neve")
     @property:GenerateOverview(columnName = "Név", order = 1)
     @property:ImportFormat
-    var displayName: String = "",
+    var title: String = "",
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(maxLength = 64, order = 2, label = "Verseny leírása")
+    @property:GenerateOverview(columnName = "Leírás", order = 2)
+    @property:ImportFormat
+    var description: String = "",
 
     //TODO: Add more fields
 
@@ -54,6 +61,6 @@ data class TournamentEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id, name = '$displayName')"
+        return this::class.simpleName + "(id = $id, name = '$title')"
     }
 }

@@ -36,10 +36,10 @@ const TournamentListPage = () => {
           data.map((tournament: TournamentView) => (
           <Box key={tournament.id}>
             <Heading as="h2" size="lg">
-              {tournament.displayName}
+              {tournament.title}
             </Heading>
             <Box>
-              {tournament.displayName}
+              {tournament.description}
             </Box>
           </Box>
         ))
