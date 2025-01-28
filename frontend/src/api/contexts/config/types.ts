@@ -39,6 +39,7 @@ export interface Components {
   qrFight: QrFight
   communities: Communities
   footer: Footer
+  tournament: Tournament
 }
 
 export interface App {
@@ -328,5 +329,9 @@ export interface Signup {
 }
 
 export interface Communities {
+  title: string
+}
+
+export interface Tournament {
   title: string
 }
