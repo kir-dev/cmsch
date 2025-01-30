@@ -55,8 +55,8 @@ class PermissionValidator constructor(
     val description: String = "",
     val component: KClass<out ComponentBase>? = null,
     val readOnly: Boolean = false, // Note: this is just a label but used for giving read-only permissions
-    val validate: Function1<CmschUser, Boolean> = {
-            user -> user.isAdmin() || (permissionString.isNotEmpty() && user.hasPermission(permissionString))
+    val validate: Function1<CmschUser, Boolean> = { user ->
+        user.isAdmin() || (permissionString.isNotEmpty() && user.hasPermission(permissionString))
     }
 )
 
@@ -91,20 +91,20 @@ object ImplicitPermissions : PermissionGroup {
     val PERMISSION_IMPLICIT_HAS_GROUP = PermissionValidator(
         description = "The user has a group",
         readOnly = false,
-        permissionString = "HAS_GROUP")
-            { user -> DI.instance.userService.getById(user.internalId).group != null }
+        permissionString = "HAS_GROUP"
+    ) { user -> DI.instance.userService.getById(user.internalId).group != null }
 
     val PERMISSION_IMPLICIT_ANYONE = PermissionValidator(
         description = "Everyone has this permission",
         readOnly = false,
-        permissionString = "ANYONE")
-            { _ -> true }
+        permissionString = "ANYONE"
+    ) { _ -> true }
 
     val PERMISSION_NOBODY = PermissionValidator(
         description = "Nobody has this permission",
         readOnly = false,
-        permissionString = "NOBODY")
-            { _ -> false }
+        permissionString = "NOBODY"
+    ) { _ -> false }
 
     val PERMISSION_SUPERUSER_ONLY = PermissionValidator { user -> user.isSuperuser() }
 

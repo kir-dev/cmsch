@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/admin/control/component/tournaments")
+@RequestMapping("/admin/control/component/tournament")
 @ConditionalOnBean(TournamentComponent::class)
 class TournamentComponentController(
     adminMenuService: AdminMenuService,

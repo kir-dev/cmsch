@@ -35,12 +35,26 @@ data class TournamentEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 64, order = 2, label = "Verseny leírása")
-    @property:GenerateOverview(columnName = "Leírás", order = 2)
+    @property:GenerateInput(maxLength = 16, order = 2, label = "URL")
+    @property:GenerateOverview(columnName = "URL", order = 2)
+    @property:ImportFormat
+    var url: String = "",
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(maxLength = 64, order = 3, label = "Verseny leírása")
+    @property:GenerateOverview(columnName = "Leírás", order = 3)
     @property:ImportFormat
     var description: String = "",
 
-    //TODO: Add more fields
+    @Column(nullable = true)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(maxLength = 64, order = 4, label = "Verseny helyszíne")
+    @property:GenerateOverview(columnName = "Helyszín", order = 4)
+    @property:ImportFormat
+    var location: String = "",
+
+    //TODO: Add more fields ?
 
 ): ManagedEntity {
 
