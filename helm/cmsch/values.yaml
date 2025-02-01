@@ -2,7 +2,7 @@ frontendHost: cmsch.basic
 apiHost: api.cmsch.basic
 
 # For staging environments you can enable vercel previews and localhost for easier frontend development, like this:
-#  allowedOriginPatterns: "https://cmsch-basic-*-kir-dev.vercel.app,http://127.0.0.1:3000,http://localhost:3000"
+#  allowedOriginPatterns: "https://cmsch-basic-*-kir-dev.vercel.app,http://localhost:3000,http://localhost:3000"
 allowedOriginPatterns: ""
 
 apiImage: harbor.sch.bme.hu/org-kir-dev/cmsch:release

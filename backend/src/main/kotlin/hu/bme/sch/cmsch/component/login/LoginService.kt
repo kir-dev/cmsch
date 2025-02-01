@@ -126,7 +126,7 @@ open class LoginService(
 
         grantGuildAndGroup(user)
 
-        // Assign fallback group if user still don't have one
+        // Assign a fallback group if the user still doesn't have one
         if (user.groupName.isBlank()) {
             groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
                 user.groupName = it.name
