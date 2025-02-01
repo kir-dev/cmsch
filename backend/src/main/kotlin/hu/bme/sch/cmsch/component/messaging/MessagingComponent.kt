@@ -56,7 +56,7 @@ class MessagingComponent(
     )
 
     val proxyBaseUrl = SettingProxy(componentSettingService, component,
-        "proxyBaseUrl", "http://127.0.0.1:8080", type = SettingType.COLOR,
+        "proxyBaseUrl", "http://localhost:8080", type = SettingType.COLOR,
         fieldName = "A proxy elérhetősége", serverSideOnly = true
     )
 

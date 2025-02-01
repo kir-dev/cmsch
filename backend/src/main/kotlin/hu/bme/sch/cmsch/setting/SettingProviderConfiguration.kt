@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration
 class SettingProviderConfiguration {
 
     companion object {
-        const val DATABASE_SETTING_PROVIDER_CACHE = "databaseSettingProviderCache"
+        const val DATABASE_SETTING_CACHE = "databaseSettingCache"
     }
 
     @Bean
-    @Qualifier(DATABASE_SETTING_PROVIDER_CACHE)
+    @Qualifier(DATABASE_SETTING_CACHE)
     @ConditionalOnProperty(
         prefix = "hu.bme.sch.cmsch.startup",
         name = ["distributed-mode"],
