@@ -6,9 +6,11 @@ import { AbsolutePaths } from '../../util/paths'
 import { TeamStatus } from '../../util/views/team.view'
 import { TeamIsNotPlaying } from './components/TeamIsNotPlaying'
 
+const DefaultTeam = 'my' // my team
+
 export default function TeamDetailsPage() {
   const { id } = useParams()
-  const { data: optionalTeam, isLoading, error, refetch } = useTeamDetails(id)
+  const { data: optionalTeam, isLoading, error, refetch } = useTeamDetails(id ?? DefaultTeam)
   if (optionalTeam?.status === TeamStatus.NOT_VISIBLE) {
     return <TeamIsNotPlaying />
   }

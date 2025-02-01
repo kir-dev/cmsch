@@ -9,7 +9,7 @@ import Markdown from '../../common-components/Markdown'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { PageStatus } from '../../common-components/PageStatus'
 
-const TaskCategoryList = () => {
+const TaskCategoryListPage = () => {
   const component = useConfigContext()?.components.task
 
   const { isLoading, isError, data } = useTaskCategoriesQuery()
@@ -54,4 +54,4 @@ const TaskCategoryList = () => {
   )
 }
 
-export default TaskCategoryList
+export default TaskCategoryListPage

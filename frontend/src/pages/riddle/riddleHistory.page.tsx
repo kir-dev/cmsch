@@ -17,12 +17,11 @@ import { SpoilerText } from './components/SpoilerText'
 const RiddleHistoryPage = () => {
   const toast = useToast()
   const navigate = useNavigate()
-  const onError = () => toast({ title: l('riddle-history-query-failed'), status: 'error' })
   const [category, setCategory] = useState('')
   const [loaded, setLoaded] = useState(false)
   const [index, setIndex] = useState(0)
 
-  const query = useRiddleHistoryQuery(onError)
+  const query = useRiddleHistoryQuery()
   useEffect(() => {
     if (!loaded && query.isSuccess) {
       setLoaded(true)
@@ -36,10 +35,13 @@ const RiddleHistoryPage = () => {
     setIndex(0)
   }, [category])
 
-  if (query.isError) {
-    onError()
-    navigate(AbsolutePaths.RIDDLE)
-  }
+  useEffect(() => {
+    if (query.isError) {
+      toast({ title: l('riddle-history-query-failed'), status: 'error' })
+      navigate(AbsolutePaths.RIDDLE)
+    }
+  }, [query.isError])
+
   if (query.isLoading || !query.data) {
     return <Loading />
   }

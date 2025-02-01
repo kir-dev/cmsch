@@ -1,16 +1,15 @@
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { ApiPaths } from '../../../util/paths'
 import { NewsArticleView } from '../../../util/views/news.view'
 import { QueryKeys } from '../queryKeys'
 
-export const useHomeNews = (onError?: (err: any) => void) => {
-  return useQuery<NewsArticleView[], Error>(
-    [QueryKeys.HOME_NEWS],
-    async () => {
+export const useHomeNews = () => {
+  return useQuery<NewsArticleView[], Error>({
+    queryKey: [QueryKeys.HOME_NEWS],
+    queryFn: async () => {
       const response = await axios.get<NewsArticleView[]>(ApiPaths.HOME_NEWS)
       return response.data
-    },
-    { onError: onError }
-  )
+    }
+  })
 }

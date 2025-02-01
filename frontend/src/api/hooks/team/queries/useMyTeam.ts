@@ -1,14 +1,15 @@
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { OptionalTeamView } from '../../../../util/views/team.view'
+import { QueryKeys } from '../../queryKeys.ts'
+import { ApiPaths } from '../../../../util/paths.ts'
 
-export const useMyTeam = (onError?: (err: any) => void) => {
-  return useQuery<OptionalTeamView, Error>(
-    ['team', 'my'],
-    async () => {
-      const response = await axios.get<OptionalTeamView>(`/api/team/my`)
+export const useMyTeam = () => {
+  return useQuery<OptionalTeamView, Error>({
+    queryKey: [QueryKeys.TEAM_MY],
+    queryFn: async () => {
+      const response = await axios.get<OptionalTeamView>(ApiPaths.MY_TEAM)
       return response.data
-    },
-    { onError: onError }
-  )
+    }
+  })
 }

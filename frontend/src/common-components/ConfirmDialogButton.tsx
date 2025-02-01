@@ -1,15 +1,15 @@
 import {
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
   AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   useDisclosure
 } from '@chakra-ui/react'
-import React from 'react'
+import { useRef } from 'react'
 
 interface ConfirmDialogButtonProps {
   headerText?: string
@@ -20,6 +20,7 @@ interface ConfirmDialogButtonProps {
   confirmButtonText?: string
   refuseButtonText?: string
   buttonWidth?: string
+
   confirmAction(): void
 }
 
@@ -35,7 +36,7 @@ export const ConfirmDialogButton = ({
   confirmAction
 }: ConfirmDialogButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = React.useRef(null)
+  const cancelRef = useRef<any>(null)
 
   return (
     <>

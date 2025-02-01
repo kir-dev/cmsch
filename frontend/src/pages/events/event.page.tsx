@@ -8,7 +8,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 
 const EventPage = () => {
   const params = useParams()
-  const { isLoading, isError, data } = useEventQuery(params.path!!, () => console.log('Event query failed!'))
+  const { isLoading, isError, data } = useEventQuery(params.path!!)
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 

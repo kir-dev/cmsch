@@ -21,7 +21,7 @@ import { EventListView } from '../../../../util/views/event.view'
 export type EventBoxItem = EventListView & { top: number; bottom: number; conflictingEventsBefore?: number }
 
 interface EventBoxProps {
-  boxRef?: RefObject<HTMLDivElement>
+  boxRef?: RefObject<HTMLDivElement | null>
   event: EventBoxItem
 }
 

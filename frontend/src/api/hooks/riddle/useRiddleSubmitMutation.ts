@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { NEW_RIDDLE_ENDPOINTS } from '../../../util/configs/environment.config'
 import { ApiPaths } from '../../../util/paths'
 import { RiddleSubmissionResult } from '../../../util/views/riddle.view'
@@ -12,9 +12,9 @@ interface RiddleSubmissionParams {
 }
 
 export const useRiddleSubmitMutation = (onTooManyRequests: () => void) => {
-  return useMutation<RiddleSubmissionResult, Error, RiddleSubmissionParams>(
-    QueryKeys.RIDDLE_SUBMIT,
-    async ({ id, solution }: RiddleSubmissionParams) => {
+  return useMutation<RiddleSubmissionResult, Error, RiddleSubmissionParams>({
+    mutationKey: [QueryKeys.RIDDLE_SUBMIT],
+    mutationFn: async ({ id, solution }: RiddleSubmissionParams) => {
       const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'solve', id) : joinPath(ApiPaths.RIDDLE, id)
       try {
         const res = await axios.post(
@@ -35,5 +35,5 @@ export const useRiddleSubmitMutation = (onTooManyRequests: () => void) => {
         }
       }
     }
-  )
+  })
 }

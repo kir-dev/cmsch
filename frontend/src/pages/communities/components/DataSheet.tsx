@@ -59,7 +59,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
             )}
           </VStack>
         )}
-        {generateLogo(organization)}
+        <OrgLogo {...organization} />
       </Flex>
       {organization.descriptionParagraphs && <Markdown text={organization.descriptionParagraphs} />}
 
@@ -91,7 +91,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
 
 type DataFieldProps = {
   children?: ReactNode
-  icon: JSX.Element
+  icon: ReactNode
   label: string
 }
 
@@ -103,13 +103,13 @@ const DataField: FC<DataFieldProps> = ({ icon, label, children }) => (
   </HStack>
 )
 
-const generateLogo = (org: Organization): JSX.Element | null => {
+const OrgLogo = ({ logo, darkLogo, name }: Organization | Community) => {
   let logoSource: string | null | undefined
-
-  if (org.logo) {
-    logoSource = org.darkLogo ? useColorModeValue(org.logo, org.darkLogo) : org.logo
+  const conditionalLogo = useColorModeValue(logo, darkLogo)
+  if (logo) {
+    logoSource = darkLogo ? conditionalLogo : logo
   } else {
-    logoSource = org.darkLogo
+    logoSource = darkLogo
   }
 
   if (logoSource) {
@@ -118,7 +118,7 @@ const generateLogo = (org: Organization): JSX.Element | null => {
         my={2}
         alignSelf={{ base: 'center', sm: 'flex-start' }}
         src={logoSource}
-        alt={org.name}
+        alt={name}
         maxH={{ base: '10rem', sm: '10rem', md: '12rem' }}
         maxW={{ base: '16rem', sm: '10rem', md: '16rem' }}
         objectFit="contain"
