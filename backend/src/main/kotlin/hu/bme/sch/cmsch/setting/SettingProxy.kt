@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectReader
 import hu.bme.sch.cmsch.component.impressum.OrganizerDto
 import hu.bme.sch.cmsch.model.RoleType
 
-const val cachePeriod: Long = 60 * 60 * 1000
-
 val multiplePeopleMapper: ObjectReader = ObjectMapper().readerForListOf(OrganizerDto::class.java)
 
 enum class SettingType {
@@ -45,7 +43,7 @@ open class SettingProxy(
     private val componentPropertyService: ComponentSettingService,
     val component: String,
     val property: String,
-    val defaultValue: String = "",
+    defaultValue: String = "",
     val cache: Boolean = true,
     val persist: Boolean = true,
     private val serverSideOnly: Boolean = false,
@@ -55,9 +53,11 @@ open class SettingProxy(
     val minRoleToEdit: RoleType = RoleType.ADMIN
 ) {
 
+    val defaultValue = componentPropertyService.getBaseValue(this, defaultValue)
+
     var rawValue: String
-        get() = componentPropertyService.getSettingValue(this)
-        set(value) = componentPropertyService.setSettingValue(this, value)
+        get() = componentPropertyService.getValue(this)
+        set(value) = componentPropertyService.setValue(this, value)
 
 
     val isServerSideOnly: Boolean
