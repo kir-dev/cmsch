@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.annotation.JsonView
+import com.google.j2objc.annotations.GenerateObjectiveCGenerics
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
@@ -14,7 +15,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
 @Entity
-@Table(name="tournaments")
+@Table(name="tournament")
 @ConditionalOnBean(TournamentComponent::class)
 data class TournamentEntity(
 
@@ -54,13 +55,32 @@ data class TournamentEntity(
     @property:ImportFormat
     var location: String = "",
 
-    //TODO: Add more fields ?
+    @Column(nullable = false)
+    @field:JsonView(value = [ Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(columnName = "Résztvevők száma", order = 5)
+    @property:ImportFormat
+    var participantCount: Int = 0,
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @field:JsonView(value = [ FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var participants: String = "",
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var status: Int = 0,
 
 ): ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Tournament",
-        view = "control/tournaments",
+        view = "control/tournament",
         showPermission = StaffPermissions.PERMISSION_SHOW_TOURNAMENTS,
     )
 

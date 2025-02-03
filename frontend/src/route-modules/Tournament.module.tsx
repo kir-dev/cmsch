@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom'
 import { Paths } from '../util/paths.ts'
-import TournamentListPage from '../pages/tournament/TournamentList.page.tsx'
+import TournamentListPage from '../pages/tournament/tournamentList.page.tsx'
 
 export function TournamentModule() {
   return (
