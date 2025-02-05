@@ -1,19 +1,22 @@
 import axios from 'axios'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { ApiPaths } from '../../../util/paths'
 import { QueryKeys } from '../queryKeys'
 
 export const useAliasChangeMutation = () => {
-  return useMutation<boolean, Error, string>(QueryKeys.ALIAS_CHANGE, async (alias: string) => {
-    const res = await axios.put(
-      ApiPaths.CHANGE_ALIAS,
-      { alias },
-      {
-        headers: {
-          'Content-Type': 'application/json'
+  return useMutation<boolean, Error, string>({
+    mutationKey: [QueryKeys.ALIAS_CHANGE],
+    mutationFn: async (alias: string) => {
+      const res = await axios.put(
+        ApiPaths.CHANGE_ALIAS,
+        { alias },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    )
-    return res.data
+      )
+      return res.data
+    }
   })
 }

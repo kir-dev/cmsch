@@ -15,7 +15,7 @@ const TokenScan = () => {
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthContext()
   const spinnerColor = useColorModeValue('brand.500', 'brand.600')
-  const { mutate, isLoading, isError, reset, data, isIdle } = useScanTokenMutation()
+  const { mutate, isPending, isError, reset, data, isIdle } = useScanTokenMutation()
 
   const handleScan = (qrData: string | null) => {
     if (qrData) {
@@ -35,7 +35,7 @@ const TokenScan = () => {
     <CmschPage loginRequired>
       <Helmet title="QR beolvasás" />
       <Heading mb={5}>QR beolvasás</Heading>
-      {isLoading && <Spinner color={spinnerColor} size="xl" thickness="0.3rem" />}
+      {isPending && <Spinner color={spinnerColor} size="xl" thickness="0.3rem" />}
       {isIdle && <QrReader onScan={handleScan} />}
 
       {!isIdle && (

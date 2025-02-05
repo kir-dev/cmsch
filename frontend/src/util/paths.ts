@@ -87,5 +87,8 @@ export enum ApiPaths {
   ACCESS_KEY = '/api/access-key',
   HOME_NEWS = '/api/home/news',
   ADD_PUSH_NOTIFICATION_TOKEN = '/api/pushnotification/add-token',
-  DELETE_PUSH_NOTIFICATION_TOKEN = '/api/pushnotification/delete-token'
+  DELETE_PUSH_NOTIFICATION_TOKEN = '/api/pushnotification/delete-token',
+  MY_TEAM = '/api/team/my',
+  TEAM = '/api/team',
+  ALL_TEAMS = '/api/teams'
 }

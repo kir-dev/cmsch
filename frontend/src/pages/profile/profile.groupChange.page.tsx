@@ -41,7 +41,7 @@ export function ProfileGroupChangePage() {
 
   const onError = () => setError('Nem sikerült a módosítás!')
 
-  const { mutate, isLoading } = useGroupChangeMutation(onData, onError)
+  const { mutate, isPending } = useGroupChangeMutation(onData, onError)
 
   const onSubmit = () => {
     if (value) mutate(value)
@@ -89,7 +89,7 @@ export function ProfileGroupChangePage() {
             </Button>
           </ButtonGroup>
           <ButtonGroup>
-            <Button onClick={onSubmit} colorScheme="brand" isLoading={isLoading}>
+            <Button onClick={onSubmit} colorScheme="brand" isLoading={isPending}>
               Mentés
             </Button>
             <LinkButton href={AbsolutePaths.PROFILE} colorScheme="red" variant="outline">

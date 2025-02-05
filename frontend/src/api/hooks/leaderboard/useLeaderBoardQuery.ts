@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { LeaderBoardView } from '../../../util/views/leaderBoardView'
 import { joinPath } from '../../../util/core-functions.util'
 import { QueryKeys } from '../queryKeys'
@@ -20,7 +20,7 @@ export type TempLeaderBoardView = {
   groupBoard?: Array<TempLeaderBoardItemView>
 }
 
-export const useLeaderBoardQuery = (type: 'short' | 'detailed' | 'categorized' = 'short', onError?: (err: any) => void) => {
+export const useLeaderBoardQuery = (type: 'short' | 'detailed' | 'categorized' = 'short') => {
   let url = 'leaderboard'
   switch (type) {
     case 'detailed':
@@ -30,6 +30,7 @@ export const useLeaderBoardQuery = (type: 'short' | 'detailed' | 'categorized' =
       url = 'detailed-leaderboard-by-category'
       break
   }
+
   async function fetchLeaderBoard() {
     const result = await axios.get<TempLeaderBoardView>(joinPath('/api', url))
     return {
@@ -39,7 +40,10 @@ export const useLeaderBoardQuery = (type: 'short' | 'detailed' | 'categorized' =
     }
   }
 
-  return useQuery<TempLeaderBoardView, Error, LeaderBoardView>(QueryKeys.LEADERBOARD, fetchLeaderBoard, { onError: onError })
+  return useQuery<TempLeaderBoardView, Error, LeaderBoardView>({
+    queryKey: [QueryKeys.LEADERBOARD],
+    queryFn: fetchLeaderBoard
+  })
 }
 
 const mapBoard = (boardItems: TempLeaderBoardItemView) => ({
