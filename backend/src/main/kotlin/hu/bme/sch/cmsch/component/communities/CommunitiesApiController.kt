@@ -18,6 +18,7 @@ class CommunitiesApiController(
     fun allCommunities(): List<CommunityEntity> {
         return organizationService.getCommunities()
             .filter { it.visible }
+            .sortedBy { it.name.lowercase() }
     }
 
     @JsonView(Preview::class)
@@ -25,6 +26,7 @@ class CommunitiesApiController(
     fun allOrganizations(): List<OrganizationEntity> {
         return organizationService.getOrganizations()
             .filter { it.visible }
+            .sortedBy { it.name.lowercase() }
     }
 
     @JsonView(FullDetails::class)
