@@ -9,10 +9,14 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
+import java.security.Provider
 import kotlin.math.ceil
 import kotlin.math.log2
+import kotlin.math.pow
 
 
 @Entity
@@ -68,7 +72,12 @@ data class KnockoutStageEntity(
 
 ): ManagedEntity {
 
+    @Autowired
+    @Transient
+    private lateinit var knockoutStageService: KnockoutStageService
+
     fun rounds() = ceil(log2(participantCount.toDouble())).toInt() + 1
+    fun matches() = 2.0.pow(ceil(log2(participantCount.toDouble()))).toInt() - 1
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "KnockoutStage",
@@ -92,5 +101,9 @@ data class KnockoutStageEntity(
     }
 
 
+    @PrePersist
+    fun onPrePersist(){
+       knockoutStageService.createMatchesForStage(this)
+    }
 
 }
