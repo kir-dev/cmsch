@@ -175,7 +175,7 @@ open class SecurityConfig(
                 antMatcher("/admin/admission/**"),
                 antMatcher("/cdn/**")
             )
-        }
+        }.cors(Customizer.withDefaults())
         return http.build()
     }
 
@@ -212,7 +212,7 @@ open class SecurityConfig(
     private fun resolveKeycloakUser(request: OidcUserRequest): DefaultOidcUser {
         val decodedPayload = String(Base64.getDecoder().decode(request.accessToken.tokenValue.split(".")[1]))
         val profile: KeycloakUserInfoResponse = objectMapper.readerFor(KeycloakUserInfoResponse::class.java)
-                .readValue(decodedPayload)
+            .readValue(decodedPayload)
         val userEntity = authschLoginService.fetchKeycloakUserEntity(profile)
 
         auditLogService.login(userEntity, "keycloak user login g:${userEntity.group} r:${userEntity.role}")
