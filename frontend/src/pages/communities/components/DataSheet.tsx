@@ -75,7 +75,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
           </LinkButton>
         )}
         {organization.facebook && (
-          <LinkButton href={organization.facebook} external leftIcon={<FaFacebook />} colorScheme="facebook">
+          <LinkButton href={organization.facebook} external leftIcon={<FaFacebook />} colorScheme="blue">
             Facebook
           </LinkButton>
         )}
