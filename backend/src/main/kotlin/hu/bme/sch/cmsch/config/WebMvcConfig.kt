@@ -25,12 +25,9 @@ class WebMvcConfig(
     }
 
     override fun addCorsMappings(registry: CorsRegistry) {
-        arrayOf("/api/**", "/manifest/**", "/cdn/**").forEach {
-            registry.addMapping(it)
-                .allowedOrigins(productionUrl)
-                .allowCredentials(true)
-                .allowedOriginPatterns(*allowedOrigins.toTypedArray())
-                .allowedMethods(*HttpMethod.values().map(HttpMethod::name).toTypedArray())
-        }
+        registry.addMapping("/**")
+            .allowCredentials(true)
+            .allowedOriginPatterns(*allowedOrigins.toTypedArray(), productionUrl)
+            .allowedMethods(*HttpMethod.values().map(HttpMethod::name).toTypedArray())
     }
 }
