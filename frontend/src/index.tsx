@@ -1,4 +1,4 @@
-import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import { ColorModeScript } from '@chakra-ui/react'
 import React from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -11,7 +11,6 @@ import { createRoot } from 'react-dom/client'
 import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
 import { ServiceProvider } from './api/contexts/service/ServiceContext'
-import { customTheme } from './util/configs/theme.config'
 import { HelmetProvider } from 'react-helmet-async'
 import { ErrorBoundary } from './util/errorBoundary'
 import { PushNotificationHandler } from './common-components/PushNotificationHandler.tsx'
@@ -23,27 +22,25 @@ const root = createRoot(document.getElementById('root')!)
 root.render(
   <React.StrictMode>
     <ColorModeScript />
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <BrowserRouter>
-          <ServiceProvider>
-            <ChakraProvider theme={customTheme}>
+    <ThemeConfig>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <BrowserRouter>
+            <ServiceProvider>
               <ConfigProvider>
-                <ThemeConfig>
-                  <ErrorBoundary>
-                    <AuthProvider>
-                      <PushNotificationHandler>
-                        <App />
-                        <ReactQueryDevtools />
-                      </PushNotificationHandler>
-                    </AuthProvider>
-                  </ErrorBoundary>
-                </ThemeConfig>
+                <ErrorBoundary>
+                  <AuthProvider>
+                    <PushNotificationHandler>
+                      <App />
+                      <ReactQueryDevtools />
+                    </PushNotificationHandler>
+                  </AuthProvider>
+                </ErrorBoundary>
               </ConfigProvider>
-            </ChakraProvider>
-          </ServiceProvider>
-        </BrowserRouter>
-      </HelmetProvider>
-    </QueryClientProvider>
+            </ServiceProvider>
+          </BrowserRouter>
+        </HelmetProvider>
+      </QueryClientProvider>
+    </ThemeConfig>
   </React.StrictMode>
 )
