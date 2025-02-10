@@ -1595,7 +1595,7 @@ object StaffPermissions : PermissionGroup {
 
     val PERMISSION_SHOW_TOURNAMENTS = PermissionValidator(
         "TOURNAMENTS_SHOW",
-        "Verseny megtekintése",
+        "Versenyek megtekintése",
         readOnly = true,
         component = TournamentComponent::class
     )
@@ -1621,9 +1621,9 @@ object StaffPermissions : PermissionGroup {
         component = TournamentComponent::class
     )
 
-    val PERMISSION_SHOW_TOURNAMENT_PARTICIPANTS = PermissionValidator(
+    val PERMISSION_EDIT_TOURNAMENT_PARTICIPANTS = PermissionValidator(
         "TOURNAMENT_PARTICIPANTS_SHOW",
-        "Verseny résztvevők megtekintése",
+        "Verseny résztvevők kezelése",
         readOnly = true,
         component = TournamentComponent::class
     )
@@ -1842,7 +1842,7 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_CREATE_TOURNAMENTS,
         PERMISSION_DELETE_TOURNAMENTS,
         PERMISSION_EDIT_TOURNAMENTS,
-        PERMISSION_SHOW_TOURNAMENT_PARTICIPANTS,
+        PERMISSION_EDIT_TOURNAMENT_PARTICIPANTS,
         PERMISSION_SET_SEEDS,
         PERMISSION_GENERATE_GROUPS,
         PERMISSION_GENERATE_BRACKETS,

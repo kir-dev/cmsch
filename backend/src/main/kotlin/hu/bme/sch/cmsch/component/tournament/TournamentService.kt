@@ -21,15 +21,6 @@ open class TournamentService(
         return tournamentRepository.findAll()
     }
 
-    @Transactional(readOnly = true)
-    open fun findTournamentById(id: Int) : Optional<TournamentEntity> {
-        return tournamentRepository.findById(id)
-    }
-
-    @Transactional(readOnly = true)
-    open fun findStagesByTournamentId(tournamentId: Int) : List<KnockoutStageEntity> {
-        return stageRepository.findAllByTournamentId(tournamentId)
-    }
 
     @Transactional
     fun teamRegister(tournamentId: Int, teamId: Int, teamName: String): Boolean {
@@ -42,7 +33,7 @@ open class TournamentService(
             return false
         }
         val participants = tournament.get().participants
-        val parsed = mutableListOf(ParticipantDto(teamId, teamName))
+        val parsed = mutableListOf<ParticipantDto>()
         parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
 
         parsed.add(ParticipantDto(teamId, teamName))
