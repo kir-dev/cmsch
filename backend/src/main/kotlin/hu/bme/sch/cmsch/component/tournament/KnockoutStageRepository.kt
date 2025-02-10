@@ -22,6 +22,7 @@ interface KnockoutStageRepository : CrudRepository<KnockoutStageEntity, Int>,
 
     override fun findAll(): List<KnockoutStageEntity>
     override fun findById(id: Int): Optional<KnockoutStageEntity>
+    @Query("select k from KnockoutStageEntity k where k.tournament.id = ?1")
     fun findAllByTournamentId(tournamentId: Int): List<KnockoutStageEntity>
 
     @Query("""

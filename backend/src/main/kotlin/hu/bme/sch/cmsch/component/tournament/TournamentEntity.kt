@@ -65,7 +65,7 @@ data class TournamentEntity(
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(visible = true)
     @property:ImportFormat
     var participants: String = "",
 

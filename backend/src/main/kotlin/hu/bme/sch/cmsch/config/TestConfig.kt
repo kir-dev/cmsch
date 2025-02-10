@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.app.ExtraMenuEntity
 import hu.bme.sch.cmsch.component.app.ExtraMenuRepository
 import hu.bme.sch.cmsch.component.debt.ProductEntity
@@ -23,6 +24,7 @@ import hu.bme.sch.cmsch.component.token.TokenEntity
 import hu.bme.sch.cmsch.component.token.TokenPropertyEntity
 import hu.bme.sch.cmsch.component.token.TokenPropertyRepository
 import hu.bme.sch.cmsch.component.token.TokenRepository
+import hu.bme.sch.cmsch.component.tournament.*
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
@@ -82,7 +84,10 @@ open class TestConfig(
     private val formResponseRepository: Optional<ResponseRepository>,
     private val extraMenuRepository: ExtraMenuRepository,
     private val riddleCacheManager: Optional<RiddleCacheManager>,
+    private val tournamentRepository: Optional<TournamentRepository>,
+    private val stageRepository: Optional<KnockoutStageRepository>,
     private val startupPropertyConfig: StartupPropertyConfig,
+    private val objectMapper: ObjectMapper,
 ) {
 
     private var now = System.currentTimeMillis() / 1000
@@ -146,7 +151,7 @@ open class TestConfig(
             "Teszt Form",
             "test-from",
             "Form",
-            "[{\"fieldName\":\"phone\",\"label\":\"Telefonszám\",\"type\":\"PHONE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"allergy\",\"label\":\"Étel érzékenység\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Nincs, Glutén, Laktóz, Glutés és laktóz\",\"note\":\"Ha egyéb is van, kérem írja megjegyzésbe\",\"required\":true,\"permanent\":true},{\"fieldName\":\"love-trains\",\"label\":\"Szereted a mozdonyokat?\",\"type\":\"CHECKBOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"warn1\",\"label\":\"FIGYELEM\",\"type\":\"WARNING_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Ha nem szereti a mozdonyokat, akkor nagyon kellemetlen élete lesz magának kolléga!\",\"required\":false,\"permanent\":false},{\"fieldName\":\"text1\",\"label\":\"Szabályzat\",\"type\":\"TEXT_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"A tábor szabályzata itt olvasható: https://szabalyzat.ssl.nincs.ilyen.domain.hu/asdasdasd/kutya\",\"note\":\"\",\"required\":false,\"permanent\":false},{\"fieldName\":\"agree\",\"label\":\"A szabályzatot elfogadom\",\"type\":\"MUST_AGREE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Különben nem jöhet am\",\"required\":false,\"permanent\":false},{\"fieldName\":\"food\",\"label\":\"Mit enne?\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Gyros tál, Brassói, Pho Leves\",\"note\":\"Első napi kaja\",\"required\":true,\"permanent\":true}]",
+            "[{\"fieldName\":\"phone\",\"label\":\"Telefonszám\",\"type\":\"PHONE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"allergy\",\"label\":\"Étel érzékenység\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Nincs, Glutén, Laktóz, Glutén és laktóz\",\"note\":\"Ha egyéb is van, kérem írja megjegyzésbe\",\"required\":true,\"permanent\":true},{\"fieldName\":\"love-trains\",\"label\":\"Szereted a mozdonyokat?\",\"type\":\"CHECKBOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"warn1\",\"label\":\"FIGYELEM\",\"type\":\"WARNING_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Ha nem szereti a mozdonyokat, akkor nagyon kellemetlen élete lesz magának kolléga!\",\"required\":false,\"permanent\":false},{\"fieldName\":\"text1\",\"label\":\"Szabályzat\",\"type\":\"TEXT_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"A tábor szabályzata itt olvasható: https://szabalyzat.ssl.nincs.ilyen.domain.hu/asdasdasd/kutya\",\"note\":\"\",\"required\":false,\"permanent\":false},{\"fieldName\":\"agree\",\"label\":\"A szabályzatot elfogadom\",\"type\":\"MUST_AGREE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Különben nem jöhet am\",\"required\":false,\"permanent\":false},{\"fieldName\":\"food\",\"label\":\"Mit enne?\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Gyros tál, Brassói, Pho Leves\",\"note\":\"Első napi kaja\",\"required\":true,\"permanent\":true}]",
             RoleType.BASIC,
             RoleType.SUPERUSER,
             "form submitted",
@@ -1123,6 +1128,30 @@ open class TestConfig(
     private fun addExtraMenus() {
         extraMenuRepository.save(ExtraMenuEntity(0, "Feladatok", "", false))
         extraMenuRepository.save(ExtraMenuEntity(0, "Facebook", "https://facebook.com/xddddddddddd", true))
+    }
+
+    private fun addTournaments(repository: TournamentRepository, stageRepository: KnockoutStageRepository, matchRepository: TournamentMatchRepository){
+        val participants1 = mutableListOf<ParticipantDto>()
+        participants1.add(ParticipantDto(groupRepository.findByName("V10").orElseThrow().id, "V10"))
+        participants1.add(ParticipantDto(groupRepository.findByName("I16").orElseThrow().id, "I16"))
+        participants1.add(ParticipantDto(groupRepository.findByName("I09").orElseThrow().id, "I09"))
+        participants1.add(ParticipantDto(groupRepository.findByName("Vendég").orElseThrow().id, "Vendég"))
+        participants1.add(ParticipantDto(groupRepository.findByName("Kiállító").orElseThrow().id, "Kiállító"))
+        val tournament1 = TournamentEntity(
+            title = "Foci verseny",
+            description = "A legjobb foci csapat nyer",
+            location = "BME Sporttelep",
+            participants = participants1.joinToString("\n") { objectMapper.writeValueAsString(it) },
+            participantCount = participants1.size,
+        )
+        repository.save(tournament1)
+        val stage1 = KnockoutStageEntity(
+            name = "Kieséses szakasz",
+            tournament = tournament1,
+            level = 1,
+            participantCount = participants1.size,
+        )
+        stageRepository.save(stage1)
     }
 
 }

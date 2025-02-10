@@ -22,7 +22,7 @@ interface TournamentMatchRepository : CrudRepository<TournamentMatchEntity, Int>
     override fun findAll(): List<TournamentMatchEntity>
     override fun findById(id: Int): Optional<TournamentMatchEntity>
     fun findAllByStageId(stageId: Int): List<TournamentMatchEntity>
-    @Query("select t from TournamentMatchEntity t where t.stage.tournamentId = ?1")
+    @Query("select t from TournamentMatchEntity t where t.stage.tournament.id = ?1")
     fun findAllByStageTournamentId(tournamentId: Int): List<TournamentMatchEntity>
 
     @Query("""

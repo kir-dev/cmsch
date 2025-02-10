@@ -9,11 +9,8 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
-import java.security.Provider
 import kotlin.math.ceil
 import kotlin.math.log2
 import kotlin.math.pow
@@ -39,15 +36,7 @@ data class KnockoutStageEntity(
     @property:ImportFormat
     var name: String = "",
 
-    @Column(nullable = false)
-    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 2, label = "Verseny ID")
-    @property:GenerateOverview(columnName = "Verseny ID", order = 2)
-    @property:ImportFormat
-    var tournamentId: Int = 0,
-
     @ManyToOne(targetEntity = TournamentEntity::class)
-    @JoinColumn(name = "tournamentId", insertable = false, updatable = false)
     var tournament: TournamentEntity? = null,
 
     @Column(nullable = false)
@@ -64,6 +53,13 @@ data class KnockoutStageEntity(
     @property:ImportFormat
     var participantCount: Int = 1,
 
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @field:JsonView(value = [ FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var participants: String = "",
+
     @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Következő kör", order = 4, centered = true)
@@ -71,10 +67,6 @@ data class KnockoutStageEntity(
     var nextRound: Int = 0,
 
 ): ManagedEntity {
-
-    @Autowired
-    @Transient
-    private lateinit var knockoutStageService: KnockoutStageService
 
     fun rounds() = ceil(log2(participantCount.toDouble())).toInt() + 1
     fun matches() = 2.0.pow(ceil(log2(participantCount.toDouble()))).toInt() - 1
@@ -102,8 +94,9 @@ data class KnockoutStageEntity(
 
 
     @PrePersist
-    fun onPrePersist(){
-       knockoutStageService.createMatchesForStage(this)
+    fun prePersist() {
+        val stageService = KnockoutStageService.getBean()
+        stageService.createMatchesForStage(this)
     }
 
 }
