@@ -72,7 +72,7 @@ class TokenPublicTokensStatsController(
         if (!user.isAdmin() && user.groupName != loginComponent.organizerGroupName.getValue()) {
             model.addAttribute("user", user)
             model.addAttribute("permission", "IN_ORGANIZER_GROUP")
-            auditLog.admin403(user, component.component, "GET /${view}", "IN_ORGANIZER_GROUP")
+            auditLog.admin403(user, component.component, "GET /$view", "IN_ORGANIZER_GROUP")
             return "admin403"
         }
 

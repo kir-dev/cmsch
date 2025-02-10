@@ -34,7 +34,7 @@ abstract class ComponentBase(
 
     abstract val minRole: MinRoleSettingProxy
 
-    internal abstract val allSettings: List<SettingProxy>
+    abstract val allSettings: List<SettingProxy>
 
     val menuPriority: Int
         get() = env.getProperty("hu.bme.sch.cmsch.${component}.priority")?.toIntOrNull() ?: 0

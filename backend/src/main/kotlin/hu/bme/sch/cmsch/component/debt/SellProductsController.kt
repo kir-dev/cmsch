@@ -69,7 +69,7 @@ class SellProductsController(
 
     @GetMapping("/sell/{id}")
     fun redirectSelling(@PathVariable id: String): String {
-        return "redirect:/admin/sell/${id}"
+        return "redirect:/admin/sell/$id"
     }
 
 }
@@ -122,7 +122,7 @@ class SellFoodController(
 
     @GetMapping("/sell/{id}")
     fun redirectSelling(@PathVariable id: String): String {
-        return "redirect:/admin/sell/${id}"
+        return "redirect:/admin/sell/$id"
     }
 
 }
@@ -175,7 +175,7 @@ class SellMerchController(
 
     @GetMapping("/sell/{id}")
     fun redirectSelling(@PathVariable id: String): String {
-        return "redirect:/admin/sell/${id}"
+        return "redirect:/admin/sell/$id"
     }
 
 }

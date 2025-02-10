@@ -39,7 +39,7 @@ class LocationSharingController(
             LocationComponent::class.simpleName!!, AdminMenuEntry(
                 titlePlural,
                 "share_location",
-                "/admin/control/${view}",
+                "/admin/control/$view",
                 6,
                 permissionControl
             )

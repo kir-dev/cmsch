@@ -92,7 +92,7 @@ class VoteListDashboard(
 
     @GetMapping("/votes/{id}")
     fun redirect(@PathVariable id: Int): String {
-        return "redirect:/admin/control/form-vote/${id}"
+        return "redirect:/admin/control/form-vote/$id"
     }
 
 }
