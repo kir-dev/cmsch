@@ -34,8 +34,7 @@ class UserProfileGeneratorService(
     @Throws(WriterException::class, IOException::class)
     private fun createQR(data: String, path: String) {
         val matrix = MultiFormatWriter().encode(
-                String(data.toByteArray(StandardCharsets.UTF_8), StandardCharsets.UTF_8),
-                BarcodeFormat.QR_CODE,
+                data, BarcodeFormat.QR_CODE,
                 startupPropertyConfig.profileQrCodeSize, startupPropertyConfig.profileQrCodeSize,
                 mutableMapOf(
                         EncodeHintType.ERROR_CORRECTION to ErrorCorrectionLevel.M,

@@ -6,9 +6,9 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 
 interface FormSubmissionListener {
 
-    fun onFormSubmitted(user: CmschUser, form: FormEntity, response: ResponseEntity)
+    fun onFormSubmitted(user: CmschUser?, form: FormEntity, response: ResponseEntity)
 
-    fun onFormUpdated(user: CmschUser, form: FormEntity, response: ResponseEntity)
+    fun onFormUpdated(user: CmschUser?, form: FormEntity, response: ResponseEntity)
 
     fun onResponseDeleted(entity: ResponseEntity) { }
 

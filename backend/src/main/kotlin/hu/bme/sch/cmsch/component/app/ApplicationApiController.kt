@@ -3,6 +3,11 @@ package hu.bme.sch.cmsch.component.app
 import com.fasterxml.jackson.annotation.JsonView
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.client.j2se.MatrixToImageWriter
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -13,14 +18,15 @@ import hu.bme.sch.cmsch.util.getUserOrNull
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatusCode
-import org.springframework.http.ResponseEntity
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.*
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 @RestController
@@ -109,4 +115,22 @@ class ApplicationApiController(
         return ResponseEntity.status(HttpStatusCode.valueOf(303)).headers(headers).build()
     }
 
+    @GetMapping("/app/render-qr")
+    fun renderQr(response: HttpServletResponse, @RequestParam text: String?, @RequestParam size: Int = 300) {
+        if (text.isNullOrBlank() || size < 20) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            return
+        }
+
+        val qrHints = mapOf(
+            EncodeHintType.ERROR_CORRECTION to ErrorCorrectionLevel.M,
+            EncodeHintType.CHARACTER_SET to StandardCharsets.UTF_8.toString(),
+            EncodeHintType.MARGIN to 1
+        )
+        val matrix = MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, size, size, qrHints)
+
+        val imageFormat = "PNG"
+        response.contentType = MediaType.IMAGE_PNG_VALUE
+        MatrixToImageWriter.writeToStream(matrix, imageFormat, response.outputStream)
+    }
 }

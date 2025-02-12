@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.form
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.admin.dashboard.pascalToKebab
+import com.fasterxml.uuid.Generators
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.UserEntity
 
@@ -31,43 +31,48 @@ enum class FormElementType(
     SECTION_START(persist = false, rendersOnServerSide = true),
 
     INJECT_USER_FULLNAME(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.fullName
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.fullName ?: ""
         }
     },
     INJECT_USER_NEPTUN(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.neptun
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.neptun ?: ""
         }
     },
     INJECT_USER_EMAIL(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.email
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.email ?: ""
         }
     },
     INJECT_USER_INTERNAL_ID(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.internalId
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.internalId ?: ""
         }
     },
     INJECT_USER_CMSCH_ID(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.cmschId
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.cmschId ?: ""
         }
     },
     INJECT_GROUP_NAME(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.groupName
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.groupName ?: ""
         }
     },
     INJECT_UNIT_SCOPE(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.unitScopes
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.unitScopes ?: ""
         }
     },
     INJECT_PROFILE_PICTURE(serverSide = true) {
-        override fun fetchValue(user: UserEntity): String {
-            return user.profilePicture
+        override fun fetchValue(user: UserEntity?): String {
+            return user?.profilePicture ?: ""
+        }
+    },
+    INJECT_RANDOM_TOKEN(serverSide = true) {
+        override fun fetchValue(user: UserEntity?): String {
+            return Generators.timeBasedEpochRandomGenerator().generate().toString()
         }
     },
 
@@ -83,7 +88,7 @@ enum class FormElementType(
 
     val templateName = shoutingSnakeToKebab(name)
 
-    open fun fetchValue(user: UserEntity): String {
+    open fun fetchValue(user: UserEntity?): String {
         return "not-server-side-value"
     }
 }

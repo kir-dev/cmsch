@@ -31,12 +31,12 @@ class SheetsFormsListener(
     private final val formStructReader: ObjectReader = objectMapper.readerFor(object : TypeReference<List<FormElement>>() {})
 
     @Async
-    override fun onFormSubmitted(user: CmschUser, form: FormEntity, response: ResponseEntity) {
+    override fun onFormSubmitted(user: CmschUser?, form: FormEntity, response: ResponseEntity) {
         updateLine(form, response)
     }
 
     @Async
-    override fun onFormUpdated(user: CmschUser, form: FormEntity, response: ResponseEntity) {
+    override fun onFormUpdated(user: CmschUser?, form: FormEntity, response: ResponseEntity) {
         updateLine(form, response)
     }
 
