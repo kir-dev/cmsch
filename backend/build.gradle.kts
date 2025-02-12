@@ -57,6 +57,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.itextpdf:itext-core:8.0.5")
+    implementation("com.github.spullara.mustache.java:compiler:0.9.14")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")

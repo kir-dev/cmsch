@@ -29,4 +29,6 @@ interface ResponseRepository : JpaRepository<ResponseEntity, Int>,
 
     fun findTop1ByFormIdOrderByLineDesc(formId: Int): List<ResponseEntity>
 
+    fun findTop1ByFormIdAndEntryTokenOrderByLineDesc(formId: Int, entryToken: String): List<ResponseEntity>
+
 }

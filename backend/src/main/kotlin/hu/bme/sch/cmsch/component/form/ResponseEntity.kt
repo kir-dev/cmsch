@@ -23,7 +23,7 @@ private val mapper = ObjectMapper()
 private val mapType = object : TypeReference<Map<String, String>>() {}
 
 @Entity
-@Table(name="formResponses")
+@Table(name="formResponses", indexes = [Index(columnList = "entryToken")])
 @ConditionalOnBean(FormComponent::class)
 data class ResponseEntity(
     @Id
@@ -92,6 +92,14 @@ data class ResponseEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
+    @ColumnDefault("false")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "E-mail értesítés elküldve")
+    @property:GenerateOverview(columnName = "E-mail értesítés elküldve", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:ImportFormat
+    var sentConfirmation: Boolean = false,
+
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Fizetve ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -118,6 +126,15 @@ data class ResponseEntity(
     @property:GenerateOverview(columnName = "Beküldő emailje", order = 2)
     @property:ImportFormat
     var email: String = "",
+
+    @Column(nullable = false)
+    @ColumnDefault("''")
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(maxLength = 255, order = 9, label = "Beléptető token",
+        note = "Anonim kitöltéskor generált beléptető token")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var entryToken: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])

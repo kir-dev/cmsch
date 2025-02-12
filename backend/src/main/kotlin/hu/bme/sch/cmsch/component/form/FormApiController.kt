@@ -26,14 +26,13 @@ class FormApiController(
     @JsonView(Preview::class)
     @GetMapping("/forms")
     fun forms(auth: Authentication?): List<FormEntity> {
-        return formService.getAllForms(auth?.getUserOrNull()?.role ?: RoleType.BASIC)
+        return formService.getAllForms(auth?.getUserOrNull()?.role ?: RoleType.GUEST)
     }
 
     @JsonView(FullDetails::class)
     @GetMapping("/form/{path}")
     fun specificForm(@PathVariable path: String, auth: Authentication?): FormView {
         val user = auth?.getUserOrNull()
-            ?: return FormView(status = FormStatus.NOT_FOUND)
 
         return formService.fetchForm(user, path)
     }
@@ -41,10 +40,9 @@ class FormApiController(
     @PostMapping("/form/{path}")
     fun fillOutForm(@PathVariable path: String, auth: Authentication?, @RequestBody data: Map<String, String>): FormSubmissionStatus {
         val user = auth?.getUserEntityFromDatabaseOrNull()
-            ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
 
         val (status, exitId) = formService.submitForm(user, path, data, false)
-        log.info("User '{}' filling out form '{}' status: {} exitId: {} data: {}", user.userName, path, status, exitId, objectMapper.writeValueAsString(data))
+        log.info("User '{}' filling out form '{}' status: {} exitId: {} data: {}", user?.userName, path, status, exitId, objectMapper.writeValueAsString(data))
         return status
     }
 
