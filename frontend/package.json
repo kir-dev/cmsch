@@ -39,6 +39,9 @@
     "remark-gfm": "4.0.0",
     "values.js": "2.1.1"
   },
+  "resolutions": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
+  },
   "devDependencies": {
     "@eslint/compat": "^1.2.6",
     "@eslint/eslintrc": "^3.2.0",
