@@ -3,14 +3,13 @@ package hu.bme.sch.cmsch.component.form
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import hu.bme.sch.cmsch.component.sheets.SHEETS_WIZARD
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.transaction
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
@@ -18,9 +17,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.*
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
-import kotlin.jvm.optionals.getOrNull
 
 @Controller
 @RequestMapping("/admin/control/signup-responses")
@@ -120,7 +116,7 @@ class ResponsesController(
 
     @ResponseBody
     @GetMapping(value = ["/export/csv/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun exportCsv(@PathVariable id: Int, auth: Authentication): String {
+    fun exportCsv(@PathVariable id: Int, response: HttpServletResponse, auth: Authentication): String {
         val user = auth.getUser()
         if (exportPermission.validate(user).not()) {
             return "403"
@@ -136,7 +132,7 @@ class ResponsesController(
             .keys
             .joinToString(",")
         val result = CsvMapper().writeValueAsString(entries)
-
+        response.setHeader("Content-Disposition", "attachment; filename=\"form-${id}-responses.csv\"")
         return headers + "\n" + result
     }
 
@@ -162,5 +158,3 @@ class ResponsesController(
     }
 
 }
-
-
