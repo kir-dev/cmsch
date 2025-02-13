@@ -42,6 +42,13 @@ data class ConferencePresentationEntity(
     override var id: Int = 0,
 
     @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "Szünet-e?",
+        note = "Amennyiben előadások közötti szünetet szeretnél felvenni, kapcsold be")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var isBreak: Boolean = false,
+
+    @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Slug")
     @property:GenerateOverview(columnName = "Slug", order = 2)
     @property:ImportFormat
