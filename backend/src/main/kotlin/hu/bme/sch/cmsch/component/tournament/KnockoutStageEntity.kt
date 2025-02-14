@@ -69,7 +69,7 @@ data class KnockoutStageEntity(
 ): ManagedEntity {
 
     fun rounds() = ceil(log2(participantCount.toDouble())).toInt() + 1
-    fun matches() = 2.0.pow(ceil(log2(participantCount.toDouble()))).toInt() - 1
+    fun matches() = participantCount - 1
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "KnockoutStage",

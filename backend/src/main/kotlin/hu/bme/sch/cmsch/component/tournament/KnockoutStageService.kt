@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.pow
 
 @Service
 @ConditionalOnBean(TournamentComponent::class)
@@ -14,14 +15,10 @@ class KnockoutStageService(
 
     @Transactional
     fun createMatchesForStage(stage: KnockoutStageEntity) {
-        for (i in 1..stage.matches()) {
-            val match = TournamentMatchEntity(
-                stage = stage,
-                gameId = i,
+        val secondRoundGames = 2.0.pow(stage.rounds().toDouble() - 2).toInt()
+        val firstRoundGames = stage.matches() - 2 * secondRoundGames + 1
+        val byeWeekParticipants = stage.participantCount - firstRoundGames * 2
 
-            )
-            matchRepository.save(match)
-        }
     }
 
     companion object {

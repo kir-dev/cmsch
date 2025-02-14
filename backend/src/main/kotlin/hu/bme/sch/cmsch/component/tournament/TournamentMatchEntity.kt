@@ -53,8 +53,8 @@ data class TournamentMatchEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Home seed")
     var homeSeed: Int = 0,
 
-    @Column(nullable = false)
-    var homeTeamId: Int = 0,
+    @Column(nullable = true)
+    var homeTeamId: Int? = null,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -67,8 +67,8 @@ data class TournamentMatchEntity(
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 3, label = "Away seed")
     var awaySeed: Int = 0,
 
-    @Column(nullable = false)
-    var awayTeamId: Int = 0,
+    @Column(nullable = true)
+    var awayTeamId: Int? = null,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -126,6 +126,17 @@ data class TournamentMatchEntity(
 
     override fun toString(): String {
         return javaClass.simpleName + "(id = $id)"
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    fun winnerId(): Int? {
+        return when {
+            homeTeamScore == null || awayTeamScore == null -> null
+            homeTeamScore!! > awayTeamScore!! -> homeTeamId
+            homeTeamScore!! < awayTeamScore!! -> awayTeamId
+            else -> null
+        }
     }
 
 }
