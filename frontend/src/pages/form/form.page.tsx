@@ -3,12 +3,10 @@ import { FunctionComponent, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Navigate, useParams } from 'react-router-dom'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useFormPage } from '../../api/hooks/form/useFormPage'
 import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
@@ -25,7 +23,6 @@ interface FormPageProps {}
 const FormPage: FunctionComponent<FormPageProps> = () => {
   const toast = useToast()
   const params = useParams()
-  const { isLoggedIn } = useAuthContext()
   const formMethods = useForm()
   const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
@@ -63,7 +60,6 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
       window.scrollTo(0, 0)
     }
   }
-  if (!isLoggedIn) return <ComponentUnavailable />
   if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED) {
     if (status === FormStatus.NOT_FOUND) sendMessage(message ?? l('form-not-available'))
     else sendMessage(message ?? l('form-disabled'))

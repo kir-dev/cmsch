@@ -32,7 +32,7 @@ class OverviewBuilder<T : Any>(val type: KClass<T>) {
     fun getTableData(overview: Iterable<T>): List<Map<String, Any>> {
         val fields = getColumnDefinitions()
         return overview.map { row ->
-            fields.map { it.first.name to it.second.formatValue(it.first.get(row)) }.toMap()
+            fields.associate { it.first.name to it.second.formatValue(it.first.get(row)) }
         }
     }
 
