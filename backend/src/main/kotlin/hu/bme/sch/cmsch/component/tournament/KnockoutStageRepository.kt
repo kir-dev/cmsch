@@ -38,4 +38,6 @@ interface KnockoutStageRepository : CrudRepository<KnockoutStageEntity, Int>,
     """)
     fun findAllAggregated(): List<StageCountDto>
 
+    fun findAllByTournamentIdAndLevel(tournamentId: Int, level: Int): List<KnockoutStageEntity>
+
 }

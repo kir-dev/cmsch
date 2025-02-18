@@ -13,13 +13,9 @@ import org.springframework.core.env.Environment
 
 enum class MatchStatus {
     NOT_STARTED,
-    FIRST_HALF,
     HT,
-    SECOND_HALF,
     FT,
-    EXTRA_TIME,
     AET,
-    PENALTY_KICKS,
     AP,
     IN_PROGRESS,
     CANCELLED
@@ -132,10 +128,20 @@ data class TournamentMatchEntity(
 
     fun winnerId(): Int? {
         return when {
+            status in listOf(MatchStatus.NOT_STARTED, MatchStatus.IN_PROGRESS, MatchStatus.CANCELLED) -> null
             homeTeamScore == null || awayTeamScore == null -> null
             homeTeamScore!! > awayTeamScore!! -> homeTeamId
             homeTeamScore!! < awayTeamScore!! -> awayTeamId
             else -> null
+        }
+    }
+
+    fun isDraw(): Boolean {
+        return when {
+            status in listOf(MatchStatus.NOT_STARTED, MatchStatus.IN_PROGRESS, MatchStatus.CANCELLED) -> false
+            homeTeamScore == null || awayTeamScore == null -> false
+            homeTeamScore!! == awayTeamScore!! -> true
+            else -> false
         }
     }
 
