@@ -13,7 +13,16 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import kotlin.math.ceil
 import kotlin.math.log2
-import kotlin.math.pow
+
+
+enum class TournamentStatus {
+    CREATED,
+    DRAFT,
+    SET,
+    ONGOING,
+    FINISHED,
+    CANCELLED
+}
 
 
 @Entity
@@ -65,6 +74,12 @@ data class KnockoutStageEntity(
     @property:GenerateOverview(columnName = "Következő kör", order = 4, centered = true)
     @property:ImportFormat
     var nextRound: Int = 0,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Preview::class, FullDetails::class ])
+    @property:GenerateOverview(columnName = "Status", order = 5, centered = true)
+    @property:ImportFormat
+    var status: TournamentStatus = TournamentStatus.CREATED,
 
 ): ManagedEntity {
 

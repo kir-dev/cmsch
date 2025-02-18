@@ -21,6 +21,45 @@ open class TournamentService(
         return tournamentRepository.findAll()
     }
 
+    @Transactional(readOnly = true)
+    fun getParticipants(tournamentId: Int): List<ParticipantDto> {
+        val tournament = tournamentRepository.findById(tournamentId)
+        if (tournament.isEmpty) {
+            return emptyList()
+        }
+        return tournament.get().participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) }
+    }
+
+    @Transactional(readOnly = true)
+    fun getResultsInStage(tournamentId: Int, stageId: Int): List<StageResultDto> {
+        val stage = stageRepository.findById(stageId)
+        if (stage.isEmpty || stage.get().tournament?.id != tournamentId) {
+            return emptyList()
+        }
+        return stage.get().participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
+    }
+
+
+    @Transactional(readOnly = true)
+    fun getResultsFromLevel(tournamentId: Int, level: Int): List<StageResultDto> {
+        if (level < 1) {
+            return getParticipants(tournamentId).map { StageResultDto(0, "Lobby", it.teamId, it.teamName) }
+        }
+        val stages = stageRepository.findAllByTournamentIdAndLevel(tournamentId, level)
+        if (stages.isEmpty()) {
+            return emptyList()
+        }
+        return stages.flatMap { it.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) } }.sortedWith(
+            compareBy(
+                { it.position },
+                { it.points },
+                { it.won },
+                { it.goalDifference },
+                { it.goalsFor }
+            )
+        )
+    }
+
 
     @Transactional
     fun teamRegister(tournamentId: Int, teamId: Int, teamName: String): Boolean {
