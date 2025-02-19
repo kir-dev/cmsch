@@ -94,4 +94,12 @@ class KnockoutStageService(
     override fun setApplicationContext(context: ApplicationContext) {
         applicationContext = context
     }
+
+    fun findStagesByTournamentId(tournamentId: Int): List<KnockoutStageEntity> {
+        return stageRepository.findAllByTournamentId(tournamentId)
+    }
+
+    fun findMatchesByStageId(stageId: Int): List<TournamentMatchEntity> {
+        return matchRepository.findAllByStageId(stageId)
+    }
 }

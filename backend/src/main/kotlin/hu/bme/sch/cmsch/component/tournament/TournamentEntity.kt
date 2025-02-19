@@ -34,13 +34,6 @@ data class TournamentEntity(
     @property:ImportFormat
     var title: String = "",
 
-    @Column(nullable = false)
-    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 16, order = 2, label = "URL")
-    @property:GenerateOverview(columnName = "URL", order = 2)
-    @property:ImportFormat
-    var url: String = "",
-
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 3, label = "Verseny leírása")

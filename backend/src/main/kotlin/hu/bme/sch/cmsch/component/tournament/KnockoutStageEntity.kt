@@ -15,7 +15,7 @@ import kotlin.math.ceil
 import kotlin.math.log2
 
 
-enum class TournamentStatus {
+enum class StageStatus {
     CREATED,
     DRAFT,
     SET,
@@ -79,7 +79,7 @@ data class KnockoutStageEntity(
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Status", order = 5, centered = true)
     @property:ImportFormat
-    var status: TournamentStatus = TournamentStatus.CREATED,
+    var status: StageStatus = StageStatus.CREATED,
 
 ): ManagedEntity {
 
