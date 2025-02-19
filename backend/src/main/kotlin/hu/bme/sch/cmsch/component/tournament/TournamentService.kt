@@ -22,6 +22,11 @@ open class TournamentService(
     }
 
     @Transactional(readOnly = true)
+    fun findById(tournamentId: Int): Optional<TournamentEntity> {
+        return tournamentRepository.findById(tournamentId)
+    }
+
+    @Transactional(readOnly = true)
     fun getParticipants(tournamentId: Int): List<ParticipantDto> {
         val tournament = tournamentRepository.findById(tournamentId)
         if (tournament.isEmpty) {
@@ -83,6 +88,5 @@ open class TournamentService(
         tournamentRepository.save(tournament.get())
         return true
     }
-
 
 }
