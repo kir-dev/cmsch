@@ -17,7 +17,7 @@ export interface MessageOptions {
 }
 
 export type ServiceContextType = {
-  sendMessage: (message: string | undefined, options?: MessageOptions) => void
+  sendMessage: (message: string, options?: MessageOptions) => void
   clearMessage: () => void
   message?: string
   type: MessageTypes
