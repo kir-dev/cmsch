@@ -8,7 +8,7 @@ export type TournamentPreview = {
   status: string
 }
 
-type TournamentWithParticipantsView = {
+export type TournamentWithParticipantsView = {
   id: number
   title: string
   description: string
@@ -16,12 +16,12 @@ type TournamentWithParticipantsView = {
   participants: ParticipantView[]
 }
 
-type ParticipantView = {
+export type ParticipantView = {
   id: number
   name: string
 }
 
-enum StageStatus {
+export enum StageStatus {
   CREATED= 'CREATED',
   DRAFT = 'DRAFT',
   SET = 'SET',
@@ -30,7 +30,7 @@ enum StageStatus {
   CANCELLED = 'CANCELLED',
 }
 
-enum MatchStatus {
+export enum MatchStatus {
   NOT_STARTED = 'NOT_STARTED',
   HT = 'HT',
   FT = 'FT',
@@ -40,17 +40,22 @@ enum MatchStatus {
   CANCELLED = 'CANCELLED',
 }
 
-type MatchView = {
+export type MatchView = {
   id: number
   gameId: number
-  participant1: ParticipantView
-  participant2: ParticipantView
-  score1: number
-  score2: number
+  kickoffTime?: number
+  level: number
+  location: string
+  seed1: number
+  seed2: number
+  participant1?: ParticipantView
+  participant2?: ParticipantView
+  score1?: number
+  score2?: number
   status: MatchStatus
 }
 
-type TournamentStageView = {
+export type TournamentStageView = {
   id: number
   name: string
   level: number

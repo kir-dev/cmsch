@@ -10,6 +10,8 @@ const Tournament = ({tournament}: TournamentProps) => {
     <div>
       <h1>{tournament.tournament.title}</h1>
       <p>{tournament.tournament.description}</p>
+      <p>{tournament.tournament.location}</p>
+      
     </div>
   )
 }

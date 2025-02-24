@@ -69,6 +69,10 @@ class TournamentApiController(
             stageService.findMatchesByStageId(it.id).map { MatchDto(
                 it.id,
                 it.gameId,
+                it.kickoffTime,
+                it.location,
+                it.homeSeed,
+                it.awaySeed,
                 if(it.homeTeamId!=null) ParticipantDto(it.homeTeamId!!, it.homeTeamName) else null,
                 if(it.awayTeamId!=null) ParticipantDto(it.awayTeamId!!, it.awayTeamName) else null,
                 it.homeTeamScore,

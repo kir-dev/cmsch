@@ -13,6 +13,10 @@ data class TournamentWithParticipants(
 data class MatchDto(
     val id: Int,
     val gameId: Int,
+    val kickoffTime: Long?,
+    val location: String,
+    val homeSeed: Int,
+    val awaySeed: Int,
     val home: ParticipantDto?,
     val away: ParticipantDto?,
     val homeScore: Int?,

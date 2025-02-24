@@ -73,34 +73,41 @@ data class TournamentMatchEntity(
     @property:ImportFormat
     var awayTeamName: String = "",
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Kickoff time")
     @property:GenerateOverview(columnName = "Kickoff time", order = 4)
     @property:ImportFormat
     var kickoffTime: Long = 0,
 
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 5, label = "Location")
+    @property:GenerateOverview(columnName = "Location", order = 5)
+    @property:ImportFormat
+    var location: String = "",
+
     @Column(nullable = true)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 5, label = "Home team score")
-    @property:GenerateOverview(columnName = "Home team score", order = 5)
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 6, label = "Home team score")
+    @property:GenerateOverview(columnName = "Home team score", order = 6)
     @property:ImportFormat
     var homeTeamScore: Int? = null,
 
     @Column(nullable = true)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 6, label = "Away team score")
-    @property:GenerateOverview(columnName = "Away team score", order = 6)
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 7, label = "Away team score")
+    @property:GenerateOverview(columnName = "Away team score", order = 7)
     @property:ImportFormat
     var awayTeamScore: Int? = null,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7, label = "Match status",
+    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Match status",
         source = [ "NOT_STARTED", "FIRST_HALF", "HT", "SECOND_HALF", "FT", "EXTRA_TIME", "AET", "PENALTY_KICKS", "AP", "IN_PROGRESS", "CANCELLED" ],
         visible = false, ignore = true
     )
-    @property:GenerateOverview(columnName = "Match status", order = 7)
+    @property:GenerateOverview(columnName = "Match status", order = 8)
     @property:ImportFormat
     val status: MatchStatus = MatchStatus.NOT_STARTED,
 
