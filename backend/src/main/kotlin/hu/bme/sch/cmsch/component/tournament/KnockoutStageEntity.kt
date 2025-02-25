@@ -45,8 +45,11 @@ data class KnockoutStageEntity(
     @property:ImportFormat
     var name: String = "",
 
-    @ManyToOne(targetEntity = TournamentEntity::class)
-    var tournament: TournamentEntity? = null,
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 2, label = "Verseny ID")
+    @property:GenerateOverview(columnName = "Verseny ID", order = 2, centered = true)
+    @property:ImportFormat
+    var tournamentId: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -83,8 +86,10 @@ data class KnockoutStageEntity(
 
 ): ManagedEntity {
 
-    fun rounds() = ceil(log2(participantCount.toDouble())).toInt() + 1
+    fun rounds() = ceil(log2(participantCount.toDouble())).toInt()
     fun matches() = participantCount - 1
+    fun getStageService() = KnockoutStageService.getBean()
+    fun tournament(): TournamentEntity = getStageService().getTournamentService().findById(tournamentId).orElse(null)
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "KnockoutStage",
@@ -104,14 +109,14 @@ data class KnockoutStageEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id, name = $name, tournamentId = $tournament.id, participantCount = $participantCount)"
+        return this::class.simpleName + "(id = $id, name = $name, tournamentId = $tournamentId, participantCount = $participantCount)"
     }
 
 
     @PrePersist
     fun prePersist() {
-        val stageService = KnockoutStageService.getBean()
-        stageService.createMatchesForStage(this)
+        tournament()!!
+        getStageService().createMatchesForStage(this)
     }
 
 }

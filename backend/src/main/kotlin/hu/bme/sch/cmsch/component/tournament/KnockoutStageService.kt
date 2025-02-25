@@ -24,7 +24,7 @@ class KnockoutStageService(
         val firstRoundGames = stage.matches() - 2 * secondRoundGames + 1
         val byeWeekParticipantCount = stage.participantCount - firstRoundGames * 2
 
-        val seedSpots = (1..2*secondRoundGames).asIterable().shuffled().subList(0, byeWeekParticipantCount)
+        val seedSpots = (1..2*secondRoundGames).asIterable().shuffled().subList(0, byeWeekParticipantCount) //TODO bye week participant count wrong
         // TODO do better seeding, this is just random stuff
         val matches = mutableListOf<TournamentMatchEntity>()
 
@@ -58,7 +58,7 @@ class KnockoutStageService(
         }
 
         val teamSeeds = (1..stage.participantCount).asIterable().shuffled().toList()
-        val participants = tournamentService.getResultsFromLevel(stage.tournament!!.id, stage.level - 1).subList(0, stage.participantCount)
+        val participants = tournamentService.getResultsFromLevel(stage.tournamentId, stage.level - 1).subList(0, stage.participantCount)
             .map { StageResultDto(stage.id, stage.name, it.teamId, it.teamName) }
         for (i in 0 until stage.participantCount) {
             participants[i].seed = teamSeeds[i]
@@ -82,6 +82,8 @@ class KnockoutStageService(
             matchRepository.save(match)
         }
     }
+
+    fun getTournamentService(): TournamentService = tournamentService
 
 
     companion object {

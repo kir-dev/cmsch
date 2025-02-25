@@ -37,17 +37,17 @@ class KnockoutStageController(
     transactionManager,
     object : ManualRepository<KnockoutGroupDto, Int>() {
         override fun findAll(): Iterable<KnockoutGroupDto> {
-            val stages = stageRepository.findAllAggregated()
-            val tournaments = tournamentRepository.findAll().associateBy { it.id }
-            return stages.map {
+            val stages = stageRepository.findAllAggregated().associateBy { it.tournamentId }
+            val tournaments = tournamentRepository.findAll()
+            return tournaments.map {
                 KnockoutGroupDto(
-                    it.tournamentId,
-                    it.tournamentName,
-                    it.tournamentLocation,
+                    it.id,
+                    it.title,
+                    it.location,
                     it.participantCount,
-                    it.stageCount.toInt()
+                    stages[it.id]?.stageCount?.toInt() ?: 0
                 )
-            }.sortedByDescending { it.stageCount }.toList()
+            }.sortedByDescending { it.stageCount }
         }
     },
     stageRepository,

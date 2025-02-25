@@ -9,9 +9,6 @@ import java.util.*
 
 data class StageCountDto(
     var tournamentId: Int = 0,
-    var tournamentName: String = "",
-    var tournamentLocation : String = "",
-    var participantCount: Int = 0,
     var stageCount: Long = 0
 )
 
@@ -22,22 +19,20 @@ interface KnockoutStageRepository : CrudRepository<KnockoutStageEntity, Int>,
 
     override fun findAll(): List<KnockoutStageEntity>
     override fun findById(id: Int): Optional<KnockoutStageEntity>
-    @Query("select k from KnockoutStageEntity k where k.tournament.id = ?1")
     fun findAllByTournamentId(tournamentId: Int): List<KnockoutStageEntity>
 
     @Query("""
         SELECT NEW hu.bme.sch.cmsch.component.tournament.StageCountDto(
-            s.tournament.id,
-            s.tournament.title,
-            s.tournament.location,
-            s.tournament.participantCount,
+            s.tournamentId,
             COUNT(s.id)
         )
         FROM KnockoutStageEntity s
-        GROUP BY s.tournament
+        GROUP BY s.tournamentId
     """)
     fun findAllAggregated(): List<StageCountDto>
 
+
+    @Query("select k from KnockoutStageEntity k where k.tournamentId = ?1 and k.level = ?2")
     fun findAllByTournamentIdAndLevel(tournamentId: Int, level: Int): List<KnockoutStageEntity>
 
 }

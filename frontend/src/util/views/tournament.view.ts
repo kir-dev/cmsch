@@ -3,9 +3,7 @@ export type TournamentPreview = {
   title: string
   description: string
   location: string
-  startDate: string
-  endDate: string
-  status: string
+  status: number
 }
 
 export type TournamentWithParticipantsView = {

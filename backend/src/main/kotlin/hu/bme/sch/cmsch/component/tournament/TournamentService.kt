@@ -29,7 +29,7 @@ open class TournamentService(
     @Transactional(readOnly = true)
     fun getParticipants(tournamentId: Int): List<ParticipantDto> {
         val tournament = tournamentRepository.findById(tournamentId)
-        if (tournament.isEmpty) {
+        if (tournament.isEmpty || tournament.get().participants.isEmpty()) {
             return emptyList()
         }
         return tournament.get().participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) }
@@ -38,7 +38,7 @@ open class TournamentService(
     @Transactional(readOnly = true)
     fun getResultsInStage(tournamentId: Int, stageId: Int): List<StageResultDto> {
         val stage = stageRepository.findById(stageId)
-        if (stage.isEmpty || stage.get().tournament?.id != tournamentId) {
+        if (stage.isEmpty || stage.get().tournamentId != tournamentId) {
             return emptyList()
         }
         return stage.get().participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }

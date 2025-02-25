@@ -28,9 +28,17 @@ class TournamentApiController(
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "List of tournaments")
     ])
-    fun tournaments(): ResponseEntity<List<TournamentEntity>> {
+    fun tournaments(): ResponseEntity<List<TournamentPreviewView>> {
         val tournaments = tournamentService.findAll()
-        return ResponseEntity.ok(tournaments)
+        return ResponseEntity.ok(tournaments.map {
+            TournamentPreviewView(
+                it.id,
+                it.title,
+                it.description,
+                it.location,
+                it.status
+            )
+        })
     }
 
 

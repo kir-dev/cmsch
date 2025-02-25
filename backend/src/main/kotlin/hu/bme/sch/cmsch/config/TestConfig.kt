@@ -1149,7 +1149,7 @@ open class TestConfig(
         repository.save(tournament1)
         val stage1 = KnockoutStageEntity(
             name = "Kieséses szakasz",
-            tournament = tournament1,
+            tournamentId = tournament1.id,
             level = 1,
             participantCount = participants1.size,
         )

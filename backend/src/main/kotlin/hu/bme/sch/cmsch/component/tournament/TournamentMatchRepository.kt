@@ -9,8 +9,6 @@ import java.util.*
 
 data class MatchCountDto(
     var tournamentId: Int = 0,
-    var tournamentName: String = "",
-    var tournamentLocation : String = "",
     var matchCount: Long = 0
 )
 
@@ -22,19 +20,17 @@ interface TournamentMatchRepository : CrudRepository<TournamentMatchEntity, Int>
     override fun findAll(): List<TournamentMatchEntity>
     override fun findById(id: Int): Optional<TournamentMatchEntity>
     fun findAllByStageId(stageId: Int): List<TournamentMatchEntity>
-    @Query("select t from TournamentMatchEntity t where t.stage.tournament.id = ?1")
+    @Query("select t from TournamentMatchEntity t where t.stage.tournamentId = ?1")
     fun findAllByStageTournamentId(tournamentId: Int): List<TournamentMatchEntity>
 
     @Query("""
         SELECT NEW hu.bme.sch.cmsch.component.tournament.MatchCountDto(
-            s.tournament.id,
-            s.tournament.title,
-            s.tournament.location,
+            s.tournamentId,
             COUNT(t.id)
         )
         FROM TournamentMatchEntity t
         JOIN t.stage s
-        GROUP BY s.tournament
+        GROUP BY s.tournamentId
     """)
     fun findAllAggregated(): List<MatchCountDto>
 }
