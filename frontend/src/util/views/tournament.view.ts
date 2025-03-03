@@ -15,8 +15,8 @@ export type TournamentWithParticipantsView = {
 }
 
 export type ParticipantView = {
-  id: number
-  name: string
+  teamId: number
+  teamName: string
 }
 
 export enum StageStatus {
@@ -30,12 +30,9 @@ export enum StageStatus {
 
 export enum MatchStatus {
   NOT_STARTED = 'NOT_STARTED',
-  HT = 'HT',
-  FT = 'FT',
-  AET = 'AET',
-  AP = 'AP',
   IN_PROGRESS = 'IN_PROGRESS',
   CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
 }
 
 export type MatchView = {
@@ -44,12 +41,12 @@ export type MatchView = {
   kickoffTime?: number
   level: number
   location: string
-  seed1: number
-  seed2: number
-  participant1?: ParticipantView
-  participant2?: ParticipantView
-  score1?: number
-  score2?: number
+  homeSeed: number
+  awaySeed: number
+  home?: ParticipantView
+  away?: ParticipantView
+  homeScore?: number
+  awayScore?: number
   status: MatchStatus
 }
 

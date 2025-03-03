@@ -57,7 +57,8 @@ export enum AbsolutePaths {
   QR_FIGHT = '/qr-fight',
   LEADER_BOARD = '/leaderboard',
   ACCESS_KEY = '/access-key',
-  MAP = '/map'
+  MAP = '/map',
+  TOURNAMENTS = '/tournament',
 }
 
 export enum ApiPaths {

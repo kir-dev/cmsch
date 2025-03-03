@@ -48,7 +48,7 @@ open class TournamentService(
     @Transactional(readOnly = true)
     fun getResultsFromLevel(tournamentId: Int, level: Int): List<StageResultDto> {
         if (level < 1) {
-            return getParticipants(tournamentId).map { StageResultDto(0, "Lobby", it.teamId, it.teamName) }
+            return getParticipants(tournamentId).map { StageResultDto(it.teamId, it.teamName) }
         }
         val stages = stageRepository.findAllByTournamentIdAndLevel(tournamentId, level)
         if (stages.isEmpty()) {

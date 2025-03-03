@@ -32,24 +32,22 @@ const Tournament = ({tournament}: TournamentProps) => {
           }
         </TabList>
         <TabPanels>
-          <TabPanel px={0}>
-            <div>
-              {
-                tournament.tournament.participants.map((participant) => (
-                  <div key={participant.id}>
-                    <h2>{participant.name}</h2>
-                  </div>
-                ))
-              }
-            </div>
-          </TabPanel>
-          <TabPanel px={0}>
+          <TabPanel px={100}>
             {
-              tournament.stages.map((stage) => (
-                <KnockoutStage key={stage.id} stage={stage}/>
+              tournament.tournament.participants.map((participant) => (
+                <div key={participant.teamId}>
+                  <h2>{participant.teamName}</h2>
+                </div>
               ))
             }
           </TabPanel>
+            {
+              tournament.stages.map((stage) => (
+                <TabPanel px={0}>
+                  <KnockoutStage key={stage.id} stage={stage}/>
+                </TabPanel>
+              ))
+            }
         </TabPanels>
       </Tabs>
     </div>

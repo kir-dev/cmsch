@@ -60,7 +60,7 @@ class KnockoutStageService(
 
         val teamSeeds = (1..stage.participantCount).asIterable().shuffled().toList()
         val participants = tournamentService.getResultsFromLevel(stage.tournamentId, stage.level - 1).subList(0, stage.participantCount)
-            .map { StageResultDto(stage.id, stage.name, it.teamId, it.teamName) }
+            .map { StageResultDto(it.teamId, it.teamName) }
         for (i in 0 until stage.participantCount) {
             participants[i].seed = teamSeeds[i]
         }
@@ -87,6 +87,11 @@ class KnockoutStageService(
 
     fun findById(id: Int): KnockoutStageEntity {
         return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
+    }
+
+    fun getParticipants(stageId: Int): List<StageResultDto> {
+        val stage = findById(stageId)
+        return stage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
     }
 
 

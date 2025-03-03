@@ -1,14 +1,14 @@
-import type React from "react"
-import { MatchView, MatchStatus } from "../../../util/views/tournament.view.ts"
+import {MatchView, ParticipantView} from "../../../util/views/tournament.view.ts";
+import {Box, Flex, Text} from "@chakra-ui/react";
 
 interface MatchProps {
   match: MatchView
 }
 
-const Match: React.FC<MatchProps> = ({ match }) => {
+const Match = ({match}: MatchProps) => {
   const getScoreColor = (score1?: number, score2?: number) => {
-    if (match.status in [MatchStatus.CANCELLED, MatchStatus.NOT_STARTED] || score1 === undefined || score2 === undefined) return "text-gray-600"
-    return score1 > score2 ? "text-green-600 font-bold" : "text-red-600"
+    if (match.status !== "COMPLETED" || score1 === undefined || score2 === undefined) return "gray.600"
+    return score1 > score2 ? "green.600" : "red.600"
   }
 
   const formatKickOffTime = (timestamp?: number) => {
@@ -22,31 +22,54 @@ const Match: React.FC<MatchProps> = ({ match }) => {
     })
   }
 
-  const getParticipantName = (seed: number, participant?: { name: string }) => {
-    if (participant) return participant.name
+  const getParticipantName = (seed: number, participant?: ParticipantView) => {
+    if (participant) return participant.teamName
     if (seed < 0) return `Winner of Game ${-seed}`
     return "TBD"
   }
 
   return (
-    <div className="border rounded-lg p-2 w-64 bg-white">
-      <div className="text-xs text-gray-500 mb-1">Game {match.gameId}</div>
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-sm font-medium">{getParticipantName(match.seed1, match.participant1)}</span>
-        <span className={`text-sm ${getScoreColor(match.score1, match.score2)}`}>{match.score1 ?? "-"}</span>
-      </div>
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">{getParticipantName(match.seed2, match.participant2)}</span>
-        <span className={`text-sm ${getScoreColor(match.score2, match.score1)}`}>{match.score2 ?? "-"}</span>
-      </div>
-      <div className="text-xs text-gray-500 mt-1 flex justify-between">
-        <span>{match.status}</span>
-        <span>{formatKickOffTime(match.kickoffTime)}</span>
-      </div>
-      <div className="text-xs text-gray-500 mt-1">{match.location}</div>
-    </div>
+    <Box borderWidth="1px" borderRadius="lg" p={2} width="64" bg="white">
+      <Text fontSize="sm" color="gray.500">
+        Game {match.id}
+      </Text>
+      <Flex justifyContent="space-between" alignItems="center" mb={1}>
+        <Text fontSize="sm" fontWeight="medium">
+          {getParticipantName(match.homeSeed, match.home)}
+        </Text>
+        <Text
+          fontSize="sm"
+          color={getScoreColor(match.homeScore, match.awayScore)}
+          fontWeight={match.status === "COMPLETED" ? "bold" : "normal"}
+        >
+          {match.homeScore ?? "-"}
+        </Text>
+      </Flex>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Text fontSize="sm" fontWeight="medium">
+          {getParticipantName(match.awaySeed, match.away)}
+        </Text>
+        <Text
+          fontSize="sm"
+          color={getScoreColor(match.awayScore, match.homeScore)}
+          fontWeight={match.status === "COMPLETED" ? "bold" : "normal"}
+        >
+          {match.awayScore ?? "-"}
+        </Text>
+      </Flex>
+      <Flex justifyContent="space-between" mt={1}>
+        <Text fontSize="xs" color="gray.500">
+          {match.status}
+        </Text>
+        <Text fontSize="xs" color="gray.500">
+          {formatKickOffTime(match.kickoffTime)}
+        </Text>
+      </Flex>
+      <Text fontSize="xs" color="gray.500" mt={1}>
+        {match.location}
+      </Text>
+    </Box>
   )
 }
 
 export default Match
-

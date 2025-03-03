@@ -1,11 +1,13 @@
 import { useTournamentListQuery } from '../../api/hooks/tournament/useTournamentListQuery.ts'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
-import { Box, Heading, VStack } from '@chakra-ui/react'
+import {Box, Heading, LinkOverlay, VStack} from '@chakra-ui/react'
 import { TournamentPreview } from '../../util/views/tournament.view.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
 import { Helmet } from 'react-helmet-async'
+import {Link} from "react-router-dom";
+import {AbsolutePaths} from "../../util/paths.ts";
 
 
 const TournamentListPage = () => {
@@ -31,7 +33,9 @@ const TournamentListPage = () => {
           data.map((tournament: TournamentPreview) => (
           <Box key={tournament.id}>
             <Heading as="h2" size="lg">
-              {tournament.title}
+              <LinkOverlay as={Link} to={`${AbsolutePaths.TOURNAMENTS}/${tournament.id}`}>
+                {tournament.title}
+              </LinkOverlay>
             </Heading>
             <Box>
               {tournament.description}

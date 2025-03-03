@@ -121,6 +121,14 @@ data class TournamentMatchEntity(
 
     fun stage(): KnockoutStageEntity = KnockoutStageService.getBean().findById(stageId)
 
+    @PrePersist
+    @PreUpdate
+    fun setTeams() {
+        val teams = KnockoutStageService.getBean().getParticipants(stageId)
+        homeTeamId = teams.find { it.teamName == homeTeamName }?.teamId ?: null
+        awayTeamId = teams.find { it.teamName == awayTeamName }?.teamId ?: null
+    }
+
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TournamentMatch",
         view = "control/tournament/match",

@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.tournament
 
 data class StageResultDto(
-    var stageId: Int,
-    var stageName: String,
     var teamId: Int,
     var teamName: String,
     var seed: Int = 0,
