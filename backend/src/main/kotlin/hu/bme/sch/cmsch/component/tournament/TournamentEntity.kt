@@ -24,7 +24,7 @@ data class TournamentEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateOverview(renderer = OVERVIEW_TYPE_NUMBER, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -58,7 +58,7 @@ data class TournamentEntity(
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(visible = true)
+    @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var participants: String = "",
 

@@ -78,6 +78,7 @@ class TournamentApiController(
                 it.id,
                 it.gameId,
                 it.kickoffTime,
+                it.level,
                 it.location,
                 it.homeSeed,
                 it.awaySeed,

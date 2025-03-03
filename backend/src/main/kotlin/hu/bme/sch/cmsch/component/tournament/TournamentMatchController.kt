@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 class TournamentMatchController(
     private val matchRepository: TournamentMatchRepository,
     private val tournamentRepository: TournamentRepository,
+    private val stageService: KnockoutStageService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: TournamentComponent,
@@ -35,16 +36,7 @@ class TournamentMatchController(
     transactionManager,
     object : ManualRepository<MatchGroupDto, Int>() {
         override fun findAll(): Iterable<MatchGroupDto> {
-            val matches = matchRepository.findAllAggregated().associateBy { it.tournamentId }
-            val tournaments = tournamentRepository.findAll()
-            return tournaments.map {
-                MatchGroupDto(
-                    it.id,
-                    it.title,
-                    it.location,
-                    matches[it.id]?.matchCount?.toInt() ?: 0
-                )
-            }.sortedByDescending { it.matchCount }
+            return stageService.getAggregatedMatchesByTournamentId()
         }
     },
     matchRepository,
@@ -60,7 +52,7 @@ class TournamentMatchController(
     editPermission = StaffPermissions.PERMISSION_EDIT_TOURNAMENTS,
     deletePermission = StaffPermissions.PERMISSION_DELETE_TOURNAMENTS,
 
-    createEnabled = false,
+    createEnabled = true,
     editEnabled = true,
     deleteEnabled = false,
     importEnabled = false,
@@ -69,6 +61,6 @@ class TournamentMatchController(
     adminMenuIcon = "compare_arrows",
 ) {
     override fun fetchSublist(id: Int): Iterable<TournamentMatchEntity> {
-        return matchRepository.findAllByStageTournamentId(id)
+        return stageService.getMatchesByStageTournamentId(id)
     }
 }

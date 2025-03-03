@@ -24,14 +24,15 @@ class KnockoutStageService(
         val firstRoundGames = stage.matches() - 2 * secondRoundGames + 1
         val byeWeekParticipantCount = stage.participantCount - firstRoundGames * 2
 
-        val seedSpots = (1..2*secondRoundGames).asIterable().shuffled().subList(0, byeWeekParticipantCount) //TODO bye week participant count wrong
+        val seedSpots = (1..2*secondRoundGames).asIterable().shuffled()
+            .subList(0, byeWeekParticipantCount) //TODO bye week participant count wrong
         // TODO do better seeding, this is just random stuff
         val matches = mutableListOf<TournamentMatchEntity>()
 
         for (i in 0 until firstRoundGames) {
             matches.add(TournamentMatchEntity(
                 gameId = i + 1,
-                stage = stage,
+                stageId = stage.id,
                 homeSeed = i + 1 + byeWeekParticipantCount,
                 awaySeed = i + 2 + byeWeekParticipantCount
             ))
@@ -40,7 +41,7 @@ class KnockoutStageService(
         for (i in 1 until secondRoundGames + 1) {
             matches.add(TournamentMatchEntity(
                 gameId = firstRoundGames + j,
-                stage = stage,
+                stageId = stage.id,
                 homeSeed = if(seedSpots.contains(2*i-1)) j++ else -(k++),
                 awaySeed = if(seedSpots.contains(2*i)) j++ else -(k++)
             ))
@@ -48,7 +49,7 @@ class KnockoutStageService(
         for (i in firstRoundGames + secondRoundGames until stage.matches()) {
             matches.add(TournamentMatchEntity(
                 gameId = i + 1,
-                stage = stage,
+                stageId = stage.id,
                 homeSeed = -(k++),
                 awaySeed = -(k++)
             ))
@@ -65,7 +66,6 @@ class KnockoutStageService(
         }
         stage.participants = participants.joinToString("\n") { objectMapper.writeValueAsString(it) }
         stageRepository.save(stage)
-        calculateTeamsFromSeeds(stage)
     }
 
     @Transactional
@@ -85,6 +85,37 @@ class KnockoutStageService(
 
     fun getTournamentService(): TournamentService = tournamentService
 
+    fun findById(id: Int): KnockoutStageEntity {
+        return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
+    }
+
+
+    fun getMatchesByStageTournamentId(tournamentId: Int): List<TournamentMatchEntity> {
+        val stages = stageRepository.findAllByTournamentId(tournamentId)
+        val matches = mutableListOf<TournamentMatchEntity>()
+        for (stage in stages) {
+            matches.addAll(matchRepository.findAllByStageId(stage.id))
+        }
+        return matches
+    }
+
+    fun getAggregatedMatchesByTournamentId(): List<MatchGroupDto> {
+        val tournaments = tournamentService.findAll().associateBy { it.id }
+        val stages = stageRepository.findAll().associateBy { it.id }
+        val aggregatedByStageId = matchRepository.findAllAggregated()
+        val aggregated = mutableMapOf<Int, Long>()
+        for(aggregatedStage in aggregatedByStageId) {
+            aggregated[stages[aggregatedStage.stageId]!!.tournamentId] = aggregated.getOrDefault(stages[aggregatedStage.stageId]!!.tournamentId, 0) + aggregatedStage.matchCount
+        }
+        return aggregated.map {
+            MatchGroupDto(
+                it.key,
+                tournaments[it.key]?.title ?:"",
+                tournaments[it.key]?.location ?:"",
+                it.value.toInt()
+                )
+        }.sortedByDescending { it.matchCount }
+    }
 
     companion object {
         private var applicationContext: ApplicationContext? = null

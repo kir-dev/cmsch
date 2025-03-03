@@ -14,6 +14,7 @@ data class MatchDto(
     val id: Int,
     val gameId: Int,
     val kickoffTime: Long?,
+    val level: Int,
     val location: String,
     val homeSeed: Int,
     val awaySeed: Int,

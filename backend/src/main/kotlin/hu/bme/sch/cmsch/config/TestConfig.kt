@@ -135,6 +135,12 @@ open class TestConfig(
                 addForms(form, response)
             }
         }
+
+        tournamentRepository.ifPresent { tournament ->
+            stageRepository.ifPresent { stage ->
+                addTournaments(tournament, stage)
+            }
+        }
     }
 
     @Scheduled(fixedDelay = 3000L)
@@ -463,12 +469,49 @@ open class TestConfig(
             races = false,
             selectable = false,
             leaveable = false
+        )),
+
+        groupRepository.save(GroupEntity(
+            name = "Chillámák",
+            major = MajorType.UNKNOWN,
+            staff1 = "",
+            staff2 = "",
+            staff3 = "",
+            staff4 = "",
+            races = true,
+            selectable = true,
+            leaveable = false
+        )),
+
+        groupRepository.save(GroupEntity(
+            name = "Bóbisch",
+            major = MajorType.UNKNOWN,
+            staff1 = "",
+            staff2 = "",
+            staff3 = "",
+            staff4 = "",
+            races = true,
+            selectable = true,
+            leaveable = false
+        )),
+
+        groupRepository.save(GroupEntity(
+            name = "Schugár",
+            major = MajorType.UNKNOWN,
+            staff1 = "",
+            staff2 = "",
+            staff3 = "",
+            staff4 = "",
+            races = true,
+            selectable = true,
+            leaveable = false
         )))
+
         return groups
     }
 
     private fun addNews(news: NewsRepository) {
-        news.save(NewsEntity(title = "Az eslő hír",
+        news.save(NewsEntity(title = "Az első hír",
                 content = LOREM_IPSUM_SHORT_1,
                 visible = true, highlighted = false
         ))
@@ -1132,13 +1175,16 @@ open class TestConfig(
         extraMenuRepository.save(ExtraMenuEntity(0, "Facebook", "https://facebook.com/xddddddddddd", true))
     }
 
-    private fun addTournaments(repository: TournamentRepository, stageRepository: KnockoutStageRepository, matchRepository: TournamentMatchRepository){
+    private fun addTournaments(repository: TournamentRepository, stageRepository: KnockoutStageRepository){
         val participants1 = mutableListOf<ParticipantDto>()
         participants1.add(ParticipantDto(groupRepository.findByName("V10").orElseThrow().id, "V10"))
         participants1.add(ParticipantDto(groupRepository.findByName("I16").orElseThrow().id, "I16"))
         participants1.add(ParticipantDto(groupRepository.findByName("I09").orElseThrow().id, "I09"))
         participants1.add(ParticipantDto(groupRepository.findByName("Vendég").orElseThrow().id, "Vendég"))
         participants1.add(ParticipantDto(groupRepository.findByName("Kiállító").orElseThrow().id, "Kiállító"))
+        participants1.add(ParticipantDto(groupRepository.findByName("Chillámák").orElseThrow().id, "Chillámák"))
+        participants1.add(ParticipantDto(groupRepository.findByName("Bóbisch").orElseThrow().id, "Bóbisch"))
+        participants1.add(ParticipantDto(groupRepository.findByName("Schugár").orElseThrow().id, "Schugár"))
         val tournament1 = TournamentEntity(
             title = "Foci verseny",
             description = "A legjobb foci csapat nyer",

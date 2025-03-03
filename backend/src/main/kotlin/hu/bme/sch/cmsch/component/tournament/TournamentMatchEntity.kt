@@ -41,12 +41,20 @@ data class TournamentMatchEntity(
     @property:ImportFormat
     var gameId: Int = 0,
 
-    @ManyToOne(targetEntity = KnockoutStageEntity::class)
-    @JoinColumn(name = "stageId", insertable = false, updatable = false)
-    var stage: KnockoutStageEntity? = null,
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 1, label = "Stage ID")
+    @property:GenerateOverview(columnName = "Stage ID", order = 1)
+    @property:ImportFormat
+    var stageId: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Home seed")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 1, label = "Level")
+    @property:GenerateOverview(columnName = "Level", order = 1)
+    @property:ImportFormat
+    var level: Int = 0,
+
+    @Column(nullable = false)
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = Int.MIN_VALUE, order = 2, label = "Home seed")
     var homeSeed: Int = 0,
 
     @Column(nullable = true)
@@ -55,12 +63,12 @@ data class TournamentMatchEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 2, label = "Home team name")
-    //@property:GenerateOverview(columnName = "Home team name", order = 2)
+    @property:GenerateOverview(columnName = "Home team name", order = 2)
     @property:ImportFormat
     var homeTeamName: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 3, label = "Away seed")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = Int.MIN_VALUE, order = 3, label = "Away seed")
     var awaySeed: Int = 0,
 
     @Column(nullable = true)
@@ -69,7 +77,7 @@ data class TournamentMatchEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_TEXT, min = 1, order = 3, label = "Away team name")
-    //@property:GenerateOverview(columnName = "Away team name", order = 3)
+    @property:GenerateOverview(columnName = "Away team name", order = 3)
     @property:ImportFormat
     var awayTeamName: String = "",
 
@@ -89,14 +97,12 @@ data class TournamentMatchEntity(
 
     @Column(nullable = true)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 6, label = "Home team score")
     @property:GenerateOverview(columnName = "Home team score", order = 6)
     @property:ImportFormat
     var homeTeamScore: Int? = null,
 
     @Column(nullable = true)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 7, label = "Away team score")
     @property:GenerateOverview(columnName = "Away team score", order = 7)
     @property:ImportFormat
     var awayTeamScore: Int? = null,
@@ -112,6 +118,8 @@ data class TournamentMatchEntity(
     val status: MatchStatus = MatchStatus.NOT_STARTED,
 
 ): ManagedEntity{
+
+    fun stage(): KnockoutStageEntity = KnockoutStageService.getBean().findById(stageId)
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TournamentMatch",

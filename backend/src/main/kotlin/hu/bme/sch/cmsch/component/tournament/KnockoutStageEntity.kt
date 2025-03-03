@@ -113,10 +113,11 @@ data class KnockoutStageEntity(
     }
 
 
-    @PrePersist
-    fun prePersist() {
+    /*@PostPersist
+    fun postPersist() {
         tournament()!!
         getStageService().createMatchesForStage(this)
-    }
+        //getStageService().calculateTeamsFromSeeds(this)
+    }*/
 
 }
