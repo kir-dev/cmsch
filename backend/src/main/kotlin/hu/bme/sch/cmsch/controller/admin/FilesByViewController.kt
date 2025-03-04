@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
@@ -27,12 +26,13 @@ import kotlin.io.path.fileSize
 import kotlin.io.path.isRegularFile
 import kotlin.streams.asSequence
 
+// todo XDDDDDDDDD
+
 @Controller
 @RequestMapping("/admin/control/files")
 class FilesByViewController(
     private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService,
-    private val objectMapper: ObjectMapper,
     private val auditLog: AuditLogService
 ) {
 
