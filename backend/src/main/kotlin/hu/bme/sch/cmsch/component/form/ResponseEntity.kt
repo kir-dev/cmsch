@@ -92,14 +92,6 @@ data class ResponseEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @ColumnDefault("false")
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "E-mail értesítés elküldve")
-    @property:GenerateOverview(columnName = "E-mail értesítés elküldve", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
-    @property:ImportFormat
-    var sentConfirmation: Boolean = false,
-
-    @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Fizetve ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
