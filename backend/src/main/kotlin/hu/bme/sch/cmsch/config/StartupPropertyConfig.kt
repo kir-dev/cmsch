@@ -44,6 +44,13 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val managementToken: String,
     val nodeName: String,
 
+    // S3
+    val s3AccessKey: String = "",
+    val s3SecretKey: String = "",
+    val s3Region: String = "",
+    val s3Bucket: String = "",
+    val s3Endpoint: String = "",
+
     // CDN
     val storageImplementation: StorageImplementation,
     val cdnCacheMaxAge: Long

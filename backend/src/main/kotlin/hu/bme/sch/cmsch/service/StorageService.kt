@@ -1,13 +1,12 @@
 package hu.bme.sch.cmsch.service
 
+import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import java.util.*
 
 interface StorageService {
 
-    // Only needed when using FilesystemStorageService to serve files automatically
-    fun addResourceHandlers(registry: ResourceHandlerRegistry) {}
+    val defaultContentType get() = MediaType.APPLICATION_OCTET_STREAM_VALUE
 
     fun exists(fullName: String): Boolean = getObjectUrl(fullName).isPresent
 
@@ -15,7 +14,9 @@ interface StorageService {
 
     fun getObjectUrl(fullName: String): Optional<String>
 
-    fun getObjectUrl(path: String, name: String): Optional<String> = getObjectUrl("${path}/${name}")
+    fun getObjectName(path: String, name: String): String = "${path}/${name}"
+
+    fun getObjectUrl(path: String, name: String): Optional<String> = getObjectUrl(getObjectName(path, name))
 
     /**
      * Commit a multipart file into storage
@@ -28,8 +29,8 @@ interface StorageService {
      * Commit an object into storage
      * @return hashed file name if successful
      */
-    fun saveObject(path: String, fileName: String, data: ByteArray): Optional<String> =
-        saveNamedObject(path, hashName(fileName), data)
+    fun saveObject(path: String, fileName: String, contentType: String, data: ByteArray): Optional<String> =
+        saveNamedObject(path, hashName(fileName), contentType, data)
 
     /**
      * Commit a multipart file into storage with a predefined name
@@ -41,9 +42,9 @@ interface StorageService {
      * Commit an object into storage with a predefined name
      * @return file name if successful
      */
-    fun saveNamedObject(path: String, name: String, data: ByteArray): Optional<String>
+    fun saveNamedObject(path: String, name: String, contentType: String, data: ByteArray): Optional<String>
 
-    fun readObject(path: String, name: String): Optional<ByteArray> = readObject("${path}/${name}")
+    fun readObject(path: String, name: String): Optional<ByteArray> = readObject(getObjectName(path, name))
 
     fun readObject(fullName: String): Optional<ByteArray>
 
