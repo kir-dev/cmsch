@@ -9,13 +9,14 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.util.sha256
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import jakarta.annotation.PostConstruct
-import java.io.ByteArrayOutputStream
 
 
 @Service
@@ -34,8 +35,9 @@ class UserProfileGeneratorService(
     @Throws(WriterException::class, IOException::class)
     private fun createQR(user: UserEntity) {
         val format = "png"
+        val contentType = MediaType.IMAGE_PNG_VALUE
         val path = "profiles"
-        val fileName =  "${user.cmschId}.$format"
+        val fileName = "${user.cmschId}.$format"
         if (storageService.exists(path, fileName)) {
             log.info("QR code already exists for user ${user.fullName}")
             return
@@ -53,7 +55,7 @@ class UserProfileGeneratorService(
 
         val qrData = ByteArrayOutputStream()
         MatrixToImageWriter.writeToStream(matrix, format, qrData)
-        storageService.saveNamedObject(path, fileName, qrData.toByteArray())
+        storageService.saveNamedObject(path, fileName, contentType, qrData.toByteArray())
 
         log.info("New QR code was generated to /cdn/$path/$fileName for user ${user.fullName}")
     }
