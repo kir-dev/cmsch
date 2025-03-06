@@ -5,9 +5,11 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
   name: {{ .Release.Name }}-config
 data:
-  FRONTEND_URL: "https://{{ .Values.frontendHost }}"
+  ROOT_LOGGING_LEVEL: {{ .Values.springLoggingLevel | quote }}
+  DISTRIBUTED_MODE: {{ .Values.backendDistributedMode | quote }}
+  FRONTEND_URL: "{{ .Values.frontendHostProtocol }}://{{ .Values.frontendHost }}"
   ALLOWED_ORIGIN_PATTERNS: {{ .Values.allowedOriginPatterns | quote }}
-  BACKEND_URL: "https://{{ .Values.apiHost }}/"
+  BACKEND_URL: "{{ .Values.apiHostProtocol }}://{{ .Values.apiHost }}/"
   SYSADMINS: {{ .Values.superusers.pekIds | quote }}
   GOOGLE_ADMIN_ADDRESSES: {{ .Values.superusers.googleEmails | quote }}
 
