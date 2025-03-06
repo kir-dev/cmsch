@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -40,6 +41,14 @@ data class ConferencePresentationEntity(
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
     override var id: Int = 0,
+
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "Szünet-e?",
+        note = "Amennyiben előadások közötti szünetet szeretnél felvenni, kapcsold be")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var isBreak: Boolean = false,
 
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 1, label = "Slug")
