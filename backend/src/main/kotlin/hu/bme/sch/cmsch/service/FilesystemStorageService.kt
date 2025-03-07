@@ -1,21 +1,26 @@
 package hu.bme.sch.cmsch.service
 
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.util.UriComponentsBuilder
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
+import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
+import kotlin.io.path.fileSize
 
 @Service
 @ConditionalOnExpression("'\${hu.bme.sch.cmsch.startup.storage-implementation}'.equalsIgnoreCase(T(hu.bme.sch.cmsch.config.StorageImplementation).FILESYSTEM.name)")
 class FilesystemStorageService(
+    private val applicationComponent: ApplicationComponent,
     private val startupPropertyConfig: StartupPropertyConfig
 ) : StorageService {
 
@@ -25,14 +30,31 @@ class FilesystemStorageService(
         log.info("Using filesystem for storage")
     }
 
-    override fun getObjectUrl(fullName: String): Optional<String> {
-        val url = if (fullName.startsWith("/cdn/"))
-            fullName
-        else
-            "/cdn${if (fullName.startsWith("/")) "" else "/"}$fullName"
+    val objectServePath = "files"
 
-        if (Paths.get(getFileStoragePath(), url.replace("/cdn/", "/")).exists()) {
-            return Optional.of(url)
+    override fun listObjects(): List<Pair<String, Long>> {
+        val objectRoot = Paths.get(getFileStoragePath())
+        return objectRoot.toFile().walkTopDown()
+            .asSequence()
+            .filter { it.isFile }
+            .map {
+                objectRoot.relativize(it.toPath()).toString().replace(File.separator, "/") to it.toPath().fileSize()
+            }
+            .toList()
+    }
+
+    override fun deleteObject(fullName: String): Boolean {
+        return Paths.get(getFileStoragePath(), fullName).deleteIfExists()
+    }
+
+    override fun getObjectUrl(fullName: String): Optional<String> {
+        if (Paths.get(getFileStoragePath(), fullName).exists()) {
+            return Optional.of(fullName).map {
+                UriComponentsBuilder.fromHttpUrl(applicationComponent.adminSiteUrl.getValue())
+                    .pathSegment(objectServePath, it)
+                    .build()
+                    .toUriString()
+            }
         }
         return Optional.empty()
     }
