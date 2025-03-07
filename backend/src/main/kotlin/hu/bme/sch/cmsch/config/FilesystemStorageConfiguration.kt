@@ -16,7 +16,7 @@ class FilesystemStorageConfiguration(
 ) : WebMvcConfigurer {
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        val handler = registry.addResourceHandler("/cdn/**")
+        val handler = registry.addResourceHandler("/${storageService.objectServePath}/**")
             .addResourceLocations("file:${storageService.getFileStoragePath()}")
         if (startupPropertyConfig.cdnCacheMaxAge > 0) {
             handler.setCacheControl(CacheControl.maxAge(Duration.ofSeconds(startupPropertyConfig.cdnCacheMaxAge)))

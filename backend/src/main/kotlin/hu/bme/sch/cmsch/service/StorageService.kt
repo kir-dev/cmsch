@@ -12,36 +12,30 @@ interface StorageService {
 
     fun exists(path: String, name: String): Boolean = getObjectUrl(path, name).isPresent
 
+    fun listObjects(): List<Pair<String, Long>>
+
+    fun delete(path: String, name: String): Boolean = deleteObject(getObjectName(path, name))
+
+    fun deleteObject(fullName: String): Boolean
+
     fun getObjectUrl(fullName: String): Optional<String>
 
     fun getObjectName(path: String, name: String): String = "${path}/${name}"
 
     fun getObjectUrl(path: String, name: String): Optional<String> = getObjectUrl(getObjectName(path, name))
 
-    /**
-     * Commit a multipart file into storage
-     * @return hashed file name if successful
-     */
-    fun saveObject(path: String, file: MultipartFile): Optional<String> =
+    fun saveObjectWithHashedName(path: String, file: MultipartFile): Optional<String> =
         saveNamedObject(path, hashName(file.originalFilename ?: ""), file)
 
-    /**
-     * Commit an object into storage
-     * @return hashed file name if successful
-     */
-    fun saveObject(path: String, fileName: String, contentType: String, data: ByteArray): Optional<String> =
-        saveNamedObject(path, hashName(fileName), contentType, data)
+    fun saveObjectWithHashedName(
+        path: String,
+        fileName: String,
+        contentType: String,
+        data: ByteArray
+    ): Optional<String> = saveNamedObject(path, hashName(fileName), contentType, data)
 
-    /**
-     * Commit a multipart file into storage with a predefined name
-     * @return file name if successful
-     */
     fun saveNamedObject(path: String, name: String, file: MultipartFile): Optional<String>
 
-    /**
-     * Commit an object into storage with a predefined name
-     * @return file name if successful
-     */
     fun saveNamedObject(path: String, name: String, contentType: String, data: ByteArray): Optional<String>
 
     fun readObject(path: String, name: String): Optional<ByteArray> = readObject(getObjectName(path, name))
