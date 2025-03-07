@@ -668,7 +668,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                                 if (delete0) {
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "")
                                 } else {
-                                    file0?.let { file -> storageService.saveObject(view, file) }?.ifPresent { file ->
+                                    file0?.let { file -> storageService.saveObjectWithHashedName(view, file) }?.ifPresent { file ->
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
                                         newValues.append(it.first.name).append("=name@").append(view)
                                             .append("/").append(file).append(", ")
@@ -679,7 +679,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                                 if (delete1) {
                                     (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "")
                                 } else {
-                                    file1?.let { file -> storageService.saveObject(view, file) }?.ifPresent { file ->
+                                    file1?.let { file -> storageService.saveObjectWithHashedName(view, file) }?.ifPresent { file ->
                                         newValues.append(it.first.name).append("=name@").append(view)
                                             .append("/").append(file).append(", ")
                                         (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")

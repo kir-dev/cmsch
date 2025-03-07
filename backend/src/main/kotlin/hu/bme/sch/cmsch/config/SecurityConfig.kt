@@ -89,7 +89,7 @@ open class SecurityConfig(
                 antMatcher("/docs-icons/**"),
                 antMatcher("/files/**"),
                 antMatcher("/admin/logout"),
-                antMatcher("/cdn/events/**"),
+                antMatcher("/cdn/events/**"), // todo do something with these
                 antMatcher("/cdn/riddles/**"),
                 antMatcher("/countdown"),
                 antMatcher("/control/logout"),

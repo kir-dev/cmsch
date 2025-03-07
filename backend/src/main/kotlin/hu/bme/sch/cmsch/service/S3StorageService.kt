@@ -10,10 +10,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.model.GetObjectRequest
-import software.amazon.awssdk.services.s3.model.HeadObjectRequest
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException
-import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.model.*
 import java.net.URI
 import java.util.*
 
@@ -45,6 +42,33 @@ class S3StorageService(
             .pathSegment(startupPropertyConfig.s3Bucket, fullName)
             .build()
             .toUriString()
+
+    override fun listObjects(): List<Pair<String, Long>> {
+        try {
+            val request = ListObjectsRequest.builder()
+                .bucket(startupPropertyConfig.s3Bucket)
+                .build()
+            val list = s3.listObjects(request)
+            return list.contents().map { it.key() to it.size() }
+        } catch (error: Throwable) {
+            log.error("Error listing S3 bucket", error)
+        }
+        return listOf()
+    }
+
+    override fun deleteObject(fullName: String): Boolean {
+        try {
+            val request = DeleteObjectRequest.builder()
+                .bucket(startupPropertyConfig.s3Bucket)
+                .key(fullName)
+                .build()
+            s3.deleteObject(request)
+            return true
+        } catch (error: Throwable) {
+            log.error("Error deleting S3 object", error)
+        }
+        return false
+    }
 
     override fun getObjectUrl(fullName: String): Optional<String> {
         try {
