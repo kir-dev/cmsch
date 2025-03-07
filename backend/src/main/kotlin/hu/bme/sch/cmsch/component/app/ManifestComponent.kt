@@ -117,7 +117,7 @@ class ManifestComponent(
     )
 
     val icon192 = SettingProxy(componentSettingService, component,
-        "icon192", "/cdn/manifest/icon-192x192.png",
+        "icon192", "/cdn/manifest/icon-192x192.png", // todo solve this
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 192", description = "192x192 pixeles png fájl"
     )

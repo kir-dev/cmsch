@@ -57,7 +57,7 @@ class UserProfileGeneratorService(
         MatrixToImageWriter.writeToStream(matrix, format, qrData)
         storageService.saveNamedObject(path, fileName, contentType, qrData.toByteArray())
 
-        log.info("New QR code was generated to /cdn/$path/$fileName for user ${user.fullName}")
+        log.info("New QR code was generated to $path/$fileName for user ${user.fullName}")
     }
 
     fun generateFullProfileForUser(user: UserEntity) {

@@ -8,7 +8,7 @@ data class FilesByViewVirtualEntity(
         val id: String,
 
         @property:GenerateOverview(columnName = "Mennyiség", order = 2)
-        val count: Long,
+        val count: Int,
 
         @property:GenerateOverview(columnName = "Méret", order = 3)
         val size: String

@@ -28,7 +28,7 @@ class ManifestApiController(
             short_name = manifestComponent.shortName.getValue(),
             description = manifestComponent.description.getValue(),
             icons = listOf(
-                ManifestIconView(
+                ManifestIconView( // todo solve this
                     src = "${baseUrl}cdn/manifest/icon-192x192.png",
                     sizes = "192x192",
                     type = IMAGE_PNG),

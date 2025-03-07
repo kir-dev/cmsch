@@ -4,27 +4,17 @@ import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.virtual.FileVirtualEntity
-import hu.bme.sch.cmsch.dto.virtual.FilesByViewVirtualEntity
-import hu.bme.sch.cmsch.service.AdminMenuEntry
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.AuditLogService
-import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
-import org.slf4j.LoggerFactory
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Path
-import jakarta.annotation.PostConstruct
-import kotlin.io.path.fileSize
-import kotlin.io.path.isRegularFile
-import kotlin.streams.asSequence
+import org.springframework.web.servlet.HandlerMapping
 
 // todo XDDDDDDDDD
 
@@ -33,10 +23,10 @@ import kotlin.streams.asSequence
 class FilesByViewController(
     private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService,
-    private val auditLog: AuditLogService
+    private val auditLog: AuditLogService,
+    private val storageService: StorageService
 ) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
 
     private val view = "files"
     private val titleSingular = "Fájl"
@@ -45,7 +35,6 @@ class FilesByViewController(
     private val showPermission = ControlPermissions.PERMISSION_SHOW_FILES
     private val deletePermission = ControlPermissions.PERMISSION_DELETE_FILES
 
-    private val overviewDescriptor = OverviewBuilder(FilesByViewVirtualEntity::class)
     private val submittedDescriptor = OverviewBuilder(FileVirtualEntity::class)
 
     private val controlActions: MutableList<ControlAction> = mutableListOf()
@@ -90,48 +79,14 @@ class FilesByViewController(
         model.addAttribute("description", description)
         model.addAttribute("view", view)
 
-        model.addAttribute("columnData", overviewDescriptor.getColumns())
-        model.addAttribute("tableData", overviewDescriptor.getTableData(fetchOverview()))
-
-        model.addAttribute("user", user)
-        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
-        model.addAttribute("allControlActions", controlActions)
-        model.addAttribute("buttonActions", listOf<ButtonAction>())
-
-        return "overview4"
-    }
-
-    private fun fetchOverview(): List<FilesByViewVirtualEntity> {
-        return sequenceOf("profiles", "news", "events", "products", "groups", "task", "public", "team")
-                .filter { Files.exists(Path.of(startupPropertyConfig.external, it)) }
-                .map { FilesByViewVirtualEntity(it, Files.walk(Path.of(startupPropertyConfig.external, it)).count() - 1, "~${Path.of(startupPropertyConfig.external, it).fileSize() / 1024} KB") }
-                .toList()
-
-    }
-
-    @GetMapping("/view/{id}")
-    fun viewAll(@PathVariable id: String, model: Model, auth: Authentication): String {
-        val user = auth.getUser()
-        adminMenuService.addPartsForMenu(user, model)
-        if (showPermission.validate(user).not()) {
-            model.addAttribute("permission", showPermission.permissionString)
-            model.addAttribute("user", user)
-            return "admin403"
-        }
-
-        model.addAttribute("title", titlePlural)
-        model.addAttribute("titleSingular", titleSingular)
-        model.addAttribute("description", description)
-        model.addAttribute("view", view)
-
         model.addAttribute("columnData", submittedDescriptor.getColumns())
-        model.addAttribute("tableData", submittedDescriptor.getTableData(listFilesInView(id)))
+        model.addAttribute("tableData", submittedDescriptor.getTableData(listFilesInView()))
 
         model.addAttribute("user", user)
         val controlActionForCategory = listOf(
             ControlAction(
                 "Megnyitás",
-                "cdn/$id/{id}",
+                "cdn/{id}",
                 "visibility",
                 showPermission,
                 100,
@@ -141,7 +96,7 @@ class FilesByViewController(
             ),
             ControlAction(
                 "Törlés",
-                "delete/$id/{id}",
+                "delete/{id}",
                 "delete",
                 deletePermission,
                 200,
@@ -157,27 +112,21 @@ class FilesByViewController(
         return "overview4"
     }
 
-    private fun listFilesInView(view: String): List<FileVirtualEntity> {
-        return try {
-            Files.walk(Path.of(startupPropertyConfig.external, view))
-                .asSequence()
-                .filter { it.isRegularFile() }
-                .sortedByDescending { it.fileSize() }
-                .map { FileVirtualEntity(it.fileName.toString(), "${it.fileSize() / 1024} KB") }
-                .toList()
-        } catch (e: IOException) {
-            log.warn("No file or directory found: {}", e.message)
-            listOf()
-        }
+    private fun listFilesInView(): List<FileVirtualEntity> {
+        return storageService.listObjects().map { FileVirtualEntity(it.first, "${it.second / 1024} KB") }
     }
 
-    @GetMapping("/cdn/{type}/{id}")
-    fun redirectCdn(@PathVariable type: String, @PathVariable id: String): String {
-        return "redirect:/cdn/$type/$id"
+    @GetMapping("/cdn/**")
+    fun redirectCdn(request: HttpServletRequest): String {
+        val requestPath = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString()
+        val objectPath = requestPath.split("/admin/control/files/cdn/")[1]
+        return storageService.getObjectUrl(objectPath).map { "redirect:$it" }.orElse("error-404")
     }
 
-    @GetMapping("/delete/{type}/{id}")
-    fun deleteConfirm(@PathVariable type: String, @PathVariable id: String, model: Model, auth: Authentication): String {
+    @GetMapping("/delete/**")
+    fun deleteConfirm(model: Model, auth: Authentication, request: HttpServletRequest): String {
+        val requestPath = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString()
+        val objectPath = requestPath.split("/admin/control/files/delete/")[1]
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {
@@ -188,15 +137,17 @@ class FilesByViewController(
 
         model.addAttribute("title", titleSingular)
         model.addAttribute("view", view)
-        model.addAttribute("id", "$type/$id")
+        model.addAttribute("id", objectPath)
         model.addAttribute("user", user)
-        model.addAttribute("item", id)
+        model.addAttribute("item", objectPath)
 
         return "delete"
     }
 
-    @PostMapping("/delete/{type}/{id}")
-    fun delete(@PathVariable type: String, @PathVariable id: String, model: Model, auth: Authentication): String {
+    @PostMapping("/delete/**")
+    fun delete(request: HttpServletRequest, model: Model, auth: Authentication): String {
+        val requestPath = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString()
+        val objectPath = requestPath.split("/admin/control/files/delete/")[1]
         val user = auth.getUser()
         if (showPermission.validate(user).not()) {
             model.addAttribute("permission", showPermission.permissionString)
@@ -204,10 +155,10 @@ class FilesByViewController(
             return "admin403"
         }
 
-        auditLog.delete(user, "files", Path.of(startupPropertyConfig.external, type, id).toString())
-        Files.deleteIfExists(Path.of(startupPropertyConfig.external, type, id))
+        auditLog.delete(user, "files", objectPath)
+        storageService.deleteObject(objectPath)
 
-        return "redirect:/admin/control/$view/view/$type"
+        return "redirect:/admin/control/$view"
     }
 
 }

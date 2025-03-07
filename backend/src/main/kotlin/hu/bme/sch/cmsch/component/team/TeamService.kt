@@ -591,7 +591,7 @@ open class TeamService(
             introduction = description,
         )
         if (logo != null)
-            introduction.logo = storageService.saveObject(target, logo)
+            introduction.logo = storageService.saveObjectWithHashedName(target, logo)
                 .orElseThrow { throw IllegalStateException("Failed to save the image") }
 
         teamIntroductionRepository.save(introduction)

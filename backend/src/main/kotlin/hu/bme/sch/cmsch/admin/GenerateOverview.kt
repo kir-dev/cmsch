@@ -44,7 +44,7 @@ fun GenerateOverview.sorter(): String {
 fun GenerateOverview.formatValue(value: Any?): Any =
     if (renderer == OVERVIEW_TYPE_CDN_IMAGE) {
         if (value is String && value.isNotBlank())
-            "/cdn/${cdnImageFolder}/${value}"
+            "${cdnImageFolder}/${value}" // todo solve this
         else
             "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" // empty image
     } else if (renderer == OVERVIEW_TYPE_TEXT || renderer == OVERVIEW_TYPE_ICON) {
