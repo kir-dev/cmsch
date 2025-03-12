@@ -210,7 +210,7 @@ class AdmissionApiController(
                     ?.findTop1ByFormIdAndEntryTokenOrderByLineDesc(formId, resolve.cmschId)
                     ?.firstOrNull()
                 if (response != null) {
-                    return mapFormResponse(response, null, formId)
+                    return@transaction mapFormResponse(response, null, formId)
                 }
             }
 
