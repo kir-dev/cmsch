@@ -46,6 +46,7 @@ abstract class ComponentBase(
         validateNoDuplication()
         validateComponentName()
         validateAllSettingsAdded()
+        touchDefinedProperties()
 
         onInit()
     }
@@ -67,6 +68,11 @@ abstract class ComponentBase(
                 )
             }
         }
+    }
+
+    // This saves the default value if not present and loads the property into the cache if enabled
+    private fun touchDefinedProperties() {
+        allSettings.forEach { it.getValue() }
     }
 
     private fun validateAllSettingsAdded() {
