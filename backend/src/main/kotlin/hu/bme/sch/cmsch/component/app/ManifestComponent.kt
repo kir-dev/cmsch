@@ -20,7 +20,7 @@ class ManifestComponent(
     "Manifest",
     ControlPermissions.PERMISSION_CONTROL_APP,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

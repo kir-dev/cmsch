@@ -27,7 +27,7 @@ class CountdownComponent(
     "Visszaszámlálás",
     ControlPermissions.PERMISSION_CONTROL_COUNTDOWN,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

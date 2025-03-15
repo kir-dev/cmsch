@@ -26,7 +26,7 @@ class EventComponent(
     "Események",
     ControlPermissions.PERMISSION_CONTROL_EVENTS,
     listOf(EventEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

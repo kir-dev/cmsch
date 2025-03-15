@@ -28,7 +28,7 @@ class CommunitiesComponent(
     "Körök",
     ControlPermissions.PERMISSION_CONTROL_COMMUNITIES,
     listOf(CommunityEntity::class, OrganizationEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

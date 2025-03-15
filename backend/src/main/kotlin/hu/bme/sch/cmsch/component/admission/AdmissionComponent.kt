@@ -27,7 +27,7 @@ class AdmissionComponent(
     "Beléptetés",
     ControlPermissions.PERMISSION_CONTROL_ADMISSION,
     listOf(AdmissionEntryEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

@@ -25,7 +25,7 @@ class GroupSelectionComponent(
     "Csapat választás",
     ImplicitPermissions.PERMISSION_NOBODY,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

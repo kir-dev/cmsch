@@ -27,7 +27,7 @@ class BmejegyComponent(
     "BME jegy",
     ControlPermissions.PERMISSION_CONTROL_BMEJEGY,
     listOf(BmejegyRecordEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

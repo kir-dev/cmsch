@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.util.transaction
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
@@ -60,7 +61,7 @@ class SheetsUpdaterService(
 
             val request = Request.Builder()
                 .url("$url?postData=${URLEncoder.encode(getPostData(sheetsUpdateRequest), StandardCharsets.UTF_8)}")
-                .post(RequestBody.create(null, ByteArray(0)))
+                .post(ByteArray(0).toRequestBody())
                 .build()
 
             client.newCall(request).execute().use { response ->
@@ -188,7 +189,7 @@ class SheetsUpdaterService(
 
         val request = Request.Builder()
             .url("${sheet.url}?postData=${URLEncoder.encode(postData, StandardCharsets.UTF_8)}")
-            .post(RequestBody.create(null, ByteArray(0)))
+            .post(ByteArray(0).toRequestBody())
             .build()
         return Pair(client, request)
     }

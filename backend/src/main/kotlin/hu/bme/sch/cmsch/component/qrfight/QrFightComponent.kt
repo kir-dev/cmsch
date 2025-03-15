@@ -27,7 +27,7 @@ class QrFightComponent(
     "QR Fight",
     ControlPermissions.PERMISSION_CONTROL_QR_FIGHT,
     listOf(QrLevelEntity::class, QrTowerEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {
