@@ -13,6 +13,8 @@ interface ResponseRepository : JpaRepository<ResponseEntity, Int>,
 
     fun findAllByFormId(formId: Int): List<ResponseEntity>
 
+    fun findAllByFormIdOrderByLineAsc(formId: Int): List<ResponseEntity>
+
     fun countByFormId(formId: Int): Long
 
     fun findAllByFormIdAndEmail(formId: Int, email: String): List<ResponseEntity>

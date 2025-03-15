@@ -61,7 +61,7 @@ open class AdmissionService(
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     open fun generateAdmissionExportForForm(id: Int): ByteArrayOutputStream {
         val outputStream = ByteArrayOutputStream()
-        val responses = responseRepository.orElseThrow().findAllByFormId(id)
+        val responses = responseRepository.orElseThrow().findAllByFormIdOrderByLineAsc(id)
         val admissions = admissionEntryRepository.findAllByFormIdAndAllowedTrue(id)
             .associateBy { it.responseId }
 

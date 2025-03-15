@@ -363,15 +363,18 @@ class AdmissionApiController(
             "Admission is {} for user '{}' with group '{}' as {}",
             if (grant.canAttend) "OK" else "DENIED", user?.fullName, user?.groupName, grant
         )
+
+        val commentIfAnonymousFill = if (user == null) response.submission else ""
         return AdmissionResponse(
             groupName = user?.groupName ?: "",
-            userName = user?.fullName ?: "",
+            userName = user?.fullName ?: response.email,
             role = user?.role ?: RoleType.GUEST,
             entryRole = grant,
             accessGranted = grant.canAttend,
             userEntity = user,
             formId = formId,
-            responseId = response.id
+            responseId = response.id,
+            comment = commentIfAnonymousFill
         )
     }
 
