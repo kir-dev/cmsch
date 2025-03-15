@@ -26,7 +26,7 @@ class TokenComponent(
     "Tokenek",
     ControlPermissions.PERMISSION_CONTROL_TOKEN,
     listOf(TokenEntity::class, TokenPropertyEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

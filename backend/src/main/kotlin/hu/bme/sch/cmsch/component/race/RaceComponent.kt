@@ -32,7 +32,7 @@ class RaceComponent(
         RaceCategoryEntity::class,
         FreestyleRaceRecordEntity::class
     ),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

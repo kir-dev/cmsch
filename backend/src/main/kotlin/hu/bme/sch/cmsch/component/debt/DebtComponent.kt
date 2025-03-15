@@ -26,7 +26,7 @@ class DebtComponent(
     "Tartozások",
     ControlPermissions.PERMISSION_CONTROL_DEBTS,
     listOf(ProductEntity::class, SoldProductEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

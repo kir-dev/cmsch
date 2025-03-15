@@ -28,7 +28,7 @@ class LoginComponent(
     "Bejelentkezés",
     ControlPermissions.PERMISSION_CONTROL_APP,
     listOf(UserEntity::class, GroupEntity::class, GroupToUserMappingEntity::class, GuildToUserMappingEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

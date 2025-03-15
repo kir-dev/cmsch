@@ -28,7 +28,7 @@ class EmailComponent(
     "Email",
     ControlPermissions.PERMISSION_CONTROL_EVENTS,
     listOf(EventEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

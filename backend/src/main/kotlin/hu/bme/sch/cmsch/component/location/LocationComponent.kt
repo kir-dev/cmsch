@@ -26,7 +26,7 @@ class LocationComponent(
     "Helymeghatározás",
     ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

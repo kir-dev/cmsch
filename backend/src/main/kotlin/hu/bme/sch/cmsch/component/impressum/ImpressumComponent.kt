@@ -26,7 +26,7 @@ class ImpressumComponent(
     "Impresszum",
     ControlPermissions.PERMISSION_CONTROL_IMPRESSUM,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

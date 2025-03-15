@@ -27,7 +27,7 @@ class ChallengeComponent(
     "Beadások",
     ControlPermissions.PERMISSION_CONTROL_CHALLENGE,
     listOf(ChallengeSubmissionEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

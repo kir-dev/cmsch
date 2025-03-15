@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
     indexes = [Index(columnList = "userId"), Index(columnList = "userId,token", unique = true)]
 )
 @ConditionalOnBean(PushNotificationComponent::class)
-class MessagingTokenEntity(
+open class MessagingTokenEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)

@@ -26,7 +26,7 @@ class PushNotificationComponent(
     "Push Értesítések",
     ControlPermissions.PERMISSION_CONTROL_NOTIFICATIONS,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

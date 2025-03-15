@@ -27,7 +27,7 @@ class ProtoComponent(
     "Prototípusok",
     ControlPermissions.PERMISSION_CONTROL_APP,
     listOf(ProtoEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

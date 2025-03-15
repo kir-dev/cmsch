@@ -33,7 +33,7 @@ class ConferenceComponent(
         ConferencePresentationEntity::class,
         ConferencePresenterEntity::class,
     ),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

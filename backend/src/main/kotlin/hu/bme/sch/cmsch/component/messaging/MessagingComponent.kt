@@ -27,7 +27,7 @@ class MessagingComponent(
     "Értesítések",
     ControlPermissions.PERMISSION_CONTROL_MESSAGING,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

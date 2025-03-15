@@ -7,7 +7,6 @@ import hu.bme.sch.cmsch.dto.SearchableResourceType
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.PermissionValidator
-import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
 import hu.bme.sch.cmsch.setting.SettingProxy
 import jakarta.annotation.PostConstruct
@@ -24,7 +23,6 @@ abstract class ComponentBase(
     private val componentName: String,
     val showPermission: PermissionValidator,
     val entities: List<KClass<out ManagedEntity>>,
-    private val componentSettingService: ComponentSettingService,
     private val env: Environment,
 ) {
 
