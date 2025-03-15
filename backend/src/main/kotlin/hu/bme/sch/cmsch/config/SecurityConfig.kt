@@ -119,6 +119,7 @@ open class SecurityConfig(
                 antMatcher("/redirect/beacon"),
                 antMatcher("/actuator/prometheus"),
                 antMatcher("/actuator/health/liveness"),
+                antMatcher("/actuator/health/readiness"),
             ).permitAll()
 
             it.requestMatchers(

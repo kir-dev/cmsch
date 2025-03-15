@@ -114,8 +114,18 @@ riddle:
   managementToken: ""
   msNodeName: NOT_SET
 
+startupProbe:
+  failureThreshold: 60
+  periodSeconds: 5
+
+readinessProbe:
+  initialDelaySeconds: 0
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 10
+
 livenessProbe:
-  initialDelaySeconds: 600 # might be overkill, but it shouldn't matter that much
+  initialDelaySeconds: 0
   periodSeconds: 5
   timeoutSeconds: 5
   failureThreshold: 5
