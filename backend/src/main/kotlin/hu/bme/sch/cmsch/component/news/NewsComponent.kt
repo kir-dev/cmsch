@@ -26,7 +26,7 @@ class NewsComponent(
     "Hírek",
     ControlPermissions.PERMISSION_CONTROL_APP,
     listOf(NewsEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

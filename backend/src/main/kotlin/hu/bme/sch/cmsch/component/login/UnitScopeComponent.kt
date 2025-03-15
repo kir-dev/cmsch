@@ -28,7 +28,7 @@ class UnitScopeComponent(
     "Jogviszonyok",
     ControlPermissions.PERMISSION_CONTROL_APP,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

@@ -21,7 +21,7 @@ class ApplicationComponent(
     "Alkalmazás",
     ControlPermissions.PERMISSION_CONTROL_APP,
     listOf(ExtraMenuEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     companion object {

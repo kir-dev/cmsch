@@ -27,7 +27,7 @@ class FormComponent(
     "Űrlapok",
     ControlPermissions.PERMISSION_CONTROL_FORM,
     listOf(FormEntity::class, ResponseEntity::class),
-    componentSettingService, env
+    env
 ) {
 
 

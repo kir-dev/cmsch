@@ -27,7 +27,7 @@ class ErrorLogComponent(
     "Kliens hibaüzenetek",
     ControlPermissions.PERMISSION_CONTROL_ERROR_LOG,
     listOf(ErrorLogEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

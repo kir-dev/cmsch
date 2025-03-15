@@ -26,7 +26,7 @@ class AccessKeyComponent(
     "Hozzáférési kulcsok",
     ControlPermissions.PERMISSION_CONTROL_ACCESS_KEYS,
     listOf(AccessKeyEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

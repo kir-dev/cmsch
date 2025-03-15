@@ -27,7 +27,7 @@ class StaticPageComponent(
     "Statikus Oldalak",
     ControlPermissions.PERMISSION_CONTROL_STATIC_PAGES,
     listOf(StaticPageEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

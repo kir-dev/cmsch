@@ -26,7 +26,7 @@ class HomeComponent(
     "Kezdőlap",
     ControlPermissions.PERMISSION_CONTROL_HOME,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

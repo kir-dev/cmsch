@@ -20,7 +20,7 @@ class FooterComponent(
     "Lábléc",
     ControlPermissions.PERMISSION_CONTROL_FOOTER,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

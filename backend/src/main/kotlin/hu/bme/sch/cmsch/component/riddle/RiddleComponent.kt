@@ -28,7 +28,7 @@ class RiddleComponent(
     "Riddleök",
     ControlPermissions.PERMISSION_CONTROL_RIDDLE,
     listOf(RiddleEntity::class, RaceCategoryEntity::class, RiddleMappingEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

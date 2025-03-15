@@ -28,7 +28,7 @@ class TeamComponent(
     "Csapatok",
     ControlPermissions.PERMISSION_CONTROL_TEAM,
     listOf(TeamJoinRequestEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {
