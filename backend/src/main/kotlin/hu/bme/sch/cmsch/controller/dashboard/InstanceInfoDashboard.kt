@@ -102,6 +102,8 @@ class InstanceInfoDashboard(
             listOf("Race ownership mode",           startupPropertyConfig.raceOwnershipMode.name),
             listOf("Max threads",                   serverProperties?.tomcat?.threads?.max?.toString() ?: "n/a"),
             listOf("Min spare threads",             serverProperties?.tomcat?.threads?.minSpare?.toString() ?: "n/a"),
+            listOf("Accept count",                  serverProperties?.tomcat?.acceptCount?.toString() ?: "n/a"),
+            listOf("Max connections",               serverProperties?.tomcat?.maxConnections?.toString() ?: "n/a"),
             listOf("Max swallow size ( ͡° ͜ʖ ͡°)",  serverProperties?.tomcat?.maxSwallowSize?.toString() ?: "n/a"),
             listOf("Max file size",                 multipartProperties?.maxFileSize?.toString() ?: "n/a"),
             listOf("Max request size",              multipartProperties?.maxRequestSize?.toString() ?: "n/a"),
