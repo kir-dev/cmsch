@@ -17,7 +17,7 @@
         <object th:unless="${property.get(data) == null || property.get(data) == ''}" th:remove="tag">
             <a href="#"
                target="_blank"
-               th:href="|@{/cdn/}${property.get(data)}|"
+               th:href="|${property.get(data)}|"
                th:text="|${property.get(data)}|"
                th:unless="${entityMode}"
             >

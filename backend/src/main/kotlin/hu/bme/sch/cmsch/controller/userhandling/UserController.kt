@@ -109,11 +109,7 @@ class UserController(
     }
 
     override fun onEntityPreSave(entity: UserEntity, auth: Authentication): Boolean {
-        if (startupPropertyConfig.profileQrEnabled) {
-            profileService.generateFullProfileForUser(entity)
-        } else {
-            profileService.generateProfileIdForUser(entity)
-        }
+        profileService.generateProfileIdForUser(entity)
 
         if (entity.groupName.isNotBlank()) {
             transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({

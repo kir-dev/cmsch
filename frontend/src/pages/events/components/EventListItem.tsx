@@ -2,7 +2,7 @@ import { Box, Heading, LinkBox, LinkOverlay, Text, useColorModeValue } from '@ch
 import { Link, Navigate } from 'react-router-dom'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { EventIndicator } from '../../../common-components/EventIndicator'
-import { getCdnUrl, isCurrentEvent, isUpcomingEvent, stringifyTimeRange } from '../../../util/core-functions.util'
+import { isCurrentEvent, isUpcomingEvent, stringifyTimeRange } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
@@ -21,7 +21,7 @@ const EventListItem = ({ event, useLink }: EventListItemProps) => {
   const innerComponent = (
     <Box overflow="hidden" position="relative" as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px">
       <Box
-        backgroundImage={event.previewImageUrl ? getCdnUrl(event.previewImageUrl) : undefined}
+        backgroundImage={event.previewImageUrl ? event.previewImageUrl : undefined}
         backgroundPosition="center"
         backgroundSize="cover"
       >

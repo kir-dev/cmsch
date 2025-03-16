@@ -111,31 +111,31 @@ class ManifestComponent(
     )
 
     val favicon = SettingProxy(componentSettingService, component,
-        "favicon", "/cdn/manifest/favicon.ico",
+        "favicon", "manifest/favicon.ico",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Favicon", description = "16x16-os ico fájl"
     )
 
     val icon192 = SettingProxy(componentSettingService, component,
-        "icon192", "/cdn/manifest/icon-192x192.png", // todo solve this
+        "icon192", "manifest/icon-192x192.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 192", description = "192x192 pixeles png fájl"
     )
 
     val icon256 = SettingProxy(componentSettingService, component,
-        "icon256", "/cdn/manifest/icon-256x256.png",
+        "icon256", "manifest/icon-256x256.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 256", description = "256x256 pixeles png fájl"
     )
 
     val icon384 = SettingProxy(componentSettingService, component,
-        "icon384", "/cdn/manifest/icon-384x384.png",
+        "icon384", "manifest/icon-384x384.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 384", description = "384x384 pixeles png fájl"
     )
 
     val icon512 = SettingProxy(componentSettingService, component,
-        "icon512", "/cdn/manifest/icon-512x512.png",
+        "icon512", "manifest/icon-512x512.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 512", description = "512x512 pixeles png fájl"
     )

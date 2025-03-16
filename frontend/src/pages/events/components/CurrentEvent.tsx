@@ -4,7 +4,6 @@ import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import {
   DETAILED_TIMESTAMP_OPTIONS,
-  getCdnUrl,
   isCurrentEvent,
   isUpcomingEvent,
   stringifyTimeStamp
@@ -46,7 +45,7 @@ const CurrentEvent = ({ event }: EventProps) => {
       </Text>
       <EventTags my={1} tags={[event.category, event.place]} />
       {event.fullImageUrl && event.fullImageUrl !== '' && (
-        <Image mb="1rem" display="block" ml="auto" mr="auto" src={getCdnUrl(event.fullImageUrl)} maxH="20rem" />
+        <Image mb="1rem" display="block" ml="auto" mr="auto" src={event.fullImageUrl} maxH="20rem" />
       )}
       <Markdown text={event.description} />
       <ButtonGroup justifyContent="space-between" mt={10}>

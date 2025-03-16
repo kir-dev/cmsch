@@ -80,10 +80,9 @@ class PhotoUploadController(
             val newName = name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
                     "_${Random().nextLong().absoluteValue.toString(36).uppercase()}" +
                     originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0)
-            val fileUrl = "${applicationComponent.adminSiteUrl.getValue()}cdn/public/${newName}" // todo fix this
-            galleryService.savePhoto(GalleryEntity(title = name, highlighted = false, url = fileUrl))
-            storageService.saveNamedObject("public", newName, file)
-            newNames.add(newName)
+            val url = storageService.saveNamedObject("public", newName, file)
+            if (url.isPresent)
+                newNames.add(url.get())
         }
         return "redirect:/admin/control/upload-photo?uploaded=${newNames.joinToString(",")}"
     }

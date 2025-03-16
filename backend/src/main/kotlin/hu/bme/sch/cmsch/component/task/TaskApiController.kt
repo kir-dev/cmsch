@@ -115,10 +115,7 @@ class TaskApiController(
 
         val categoryName = task.map { tasks.getCategoryName(it.categoryId) }.orElse(null)
         val submission = when (startupPropertyConfig.taskOwnershipMode) {
-            OwnershipType.USER -> {
-
-                tasks.getSubmissionForUserOrNull(user, task)
-            }
+            OwnershipType.USER -> tasks.getSubmissionForUserOrNull(user, task)
             OwnershipType.GROUP -> {
                 val group = user.groupId ?: return SingleTaskView(
                     task = task.map { TaskEntityDto(it, now, categoryName) }.orElse(null),

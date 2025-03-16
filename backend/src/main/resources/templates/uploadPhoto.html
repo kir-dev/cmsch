@@ -25,17 +25,17 @@
 
                 <ul class="desc" th:each="file : ${#strings.arraySplit(uploaded, ',')}">
                     <li>
-                        A kép url-je: <b th:text="|${baseUrl}cdn/public/${file}|">myFile.png</b><br />
+                        A kép url-je: <b th:text="|${file}|">myFile.png</b><br />
 
                         <div class="button-group">
                             <a href="#" class="btn btn-primary"
                                onclick="copyToClipboard(this.getAttribute('data-copy')); return false"
-                               th:data-copy="|${baseUrl}cdn/public/${file}|">
+                               th:data-copy="|${file}|">
                                 <span class="material-symbols-outlined regular">content_copy</span>
                                 <ins>MÁSOLÁS</ins>
                             </a>
 
-                            <a th:href="|${baseUrl}cdn/public/${file}|" class="btn" target="_blank">
+                            <a th:href="|${file}|" class="btn" target="_blank">
                                 <span class="material-symbols-outlined regular">open_in_new</span>
                                 <ins>MEGNYITÁS</ins>
                             </a>

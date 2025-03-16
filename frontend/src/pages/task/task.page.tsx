@@ -28,8 +28,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { API_BASE_URL } from '../../util/configs/environment.config'
-import { stringifyTimeStamp } from '../../util/core-functions.util'
+import { stringifyTimeStamp } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
@@ -282,11 +281,9 @@ const TaskPage = () => {
           {submittedText}
           {fileAllowed && data.submission && (
             <Box>
-              {data.submission.imageUrlAnswer && data.submission.imageUrlAnswer.length > 'task/'.length && (
-                <Image src={`${API_BASE_URL}/cdn/${data.submission.imageUrlAnswer}`} alt="Beküldött megoldás" />
-              )}
-              {data.submission.fileUrlAnswer && data.submission.fileUrlAnswer.length > 'task/'.length && (
-                <LinkButton href={`${API_BASE_URL}/cdn/${data.submission.fileUrlAnswer}`} external colorScheme="brand" mt={5}>
+              {data.submission.imageUrlAnswer && <Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" />}
+              {data.submission.fileUrlAnswer && (
+                <LinkButton href={data.submission.fileUrlAnswer} external colorScheme="brand" mt={5}>
                   Letöltés
                 </LinkButton>
               )}

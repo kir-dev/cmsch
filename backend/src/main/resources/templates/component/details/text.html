@@ -36,7 +36,7 @@
          th:class="|field-group ${generateInput.style}|"
          th:unless="${entityMode}">
         <img src="#"
-             th:src="|@{/cdn/profiles/}${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}.png|"
+             th:src="|@{/api/app/render-qr?text=}${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}|"
              height="180px"
              alt="QR code preview"
              onerror="this.onerror=null; this.parentNode.style.display = 'none';"

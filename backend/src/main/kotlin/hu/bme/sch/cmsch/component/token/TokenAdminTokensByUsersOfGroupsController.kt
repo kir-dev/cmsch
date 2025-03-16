@@ -22,7 +22,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.readLocalAsset
+import hu.bme.sch.cmsch.util.readBundledAsset
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
@@ -139,7 +139,7 @@ class TokenAdminTokensByUsersOfGroupsController(
                 .setMarginLeft(40f)
                 .setMarginRight(40f))
 
-        readLocalAsset("/static/images/kirdev-logo.png").map {
+        readBundledAsset("/static/images/kirdev-logo.png").map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 

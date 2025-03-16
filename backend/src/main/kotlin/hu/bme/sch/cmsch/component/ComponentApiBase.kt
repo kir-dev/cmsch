@@ -100,9 +100,10 @@ abstract class ComponentApiBase(
                 SettingType.IMAGE -> {
                     multipartRequest.fileMap[setting.property]?.let {
                         if (it.size > 0) {
-                            log.info("Uploading image {}.{} size: {}", setting.component, setting.property, it.size)
-                            newValues.append(setting.property).append("=size@").append(it.size).append(", ")
-                            storageService.saveNamedObject("manifest", setting.rawValue.split("/").last(), it)
+                            val (path, name) = setting.rawValue.split("/")
+                            val url = storageService.saveNamedObject(path, name, it)
+                            log.info("Uploading image {}.{} url: {}", setting.component, setting.property, url)
+                            newValues.append(setting.property).append("=url@").append(url).append(", ")
                         }
                     }
                 }

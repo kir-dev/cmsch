@@ -27,7 +27,6 @@ import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { API_BASE_URL } from '../../util/configs/environment.config'
 import { useOpaqueBackground } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
@@ -174,7 +173,7 @@ const RiddlePage = () => {
       <StopItModal isOpen={isOpen} onClose={onClose} />
       <Heading my={5}> {data.title} </Heading>
       <Box maxW="100%" w="30rem" mx="auto">
-        {data.imageUrl && <Image width="100%" src={`${API_BASE_URL}/cdn/${data.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
+        {data.imageUrl && <Image width="100%" src={data.imageUrl} alt="Riddle Kép" borderRadius="md" />}
         <VStack mt={5} align="flex-start">
           {data.creator && <Text>Létrehozó: {data.creator}</Text>}
           {data.firstSolver && <Text>Első megoldó: {data.firstSolver}</Text>}

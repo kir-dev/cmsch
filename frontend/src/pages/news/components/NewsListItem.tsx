@@ -2,7 +2,7 @@ import { Box, GridItem, Heading, HStack, Icon, Image, LinkBox, LinkOverlay } fro
 import { FaExclamation } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import Markdown from '../../../common-components/Markdown'
-import { getCdnUrl, stringifyTimeStamp } from '../../../util/core-functions.util'
+import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { NewsArticleView } from '../../../util/views/news.view'
 
@@ -16,9 +16,7 @@ const NewsListItem = ({ news, fontSize, useLink }: Props) => {
   return (
     <GridItem as={LinkBox} borderRadius="base" borderColor={news.highlighted ? 'brand.200' : 'whiteAlpha.200'} borderWidth="1px" p={4}>
       <Box display="flex" flexDirection={['column-reverse', 'column-reverse', 'row']} gap={4}>
-        {news.imageUrl && (
-          <Image borderRadius="md" w={32} h={32} objectFit="cover" objectPosition="center" src={getCdnUrl(news.imageUrl)} />
-        )}
+        {news.imageUrl && <Image borderRadius="md" w={32} h={32} objectFit="cover" objectPosition="center" src={news.imageUrl} />}
         <Box w="full">
           <HStack justifyContent="space-between">
             <Box fontSize="sm" mb={2} fontWeight={300}>
