@@ -160,7 +160,7 @@ class TaskImageOptimizerTask(
     override fun run() {
         processStatus.set("Optimizer elindult")
 
-        Files.walk(Path.of(startupPropertyConfig.external, "task"))
+        Files.walk(Path.of(startupPropertyConfig.filesystemStoragePath, "task"))
             .filter {
                 val fileName = it.fileName.toString().lowercase()
                 val image = fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")

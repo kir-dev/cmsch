@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.*
 import kotlin.math.min
 
@@ -35,12 +33,6 @@ final class DI(
     init {
         instance = this
     }
-}
-
-private fun getFileStoragePath(): String = if (!DI.instance.startupPropertyConfig.external.startsWith("/")) {
-    System.getProperty("user.dir") + "/" + DI.instance.startupPropertyConfig.external
-} else {
-    DI.instance.startupPropertyConfig.external
 }
 
 fun Authentication.getUser(): CmschUser {
@@ -63,13 +55,9 @@ fun Map<String, String>.urlEncode(): String = this.entries.joinToString("&") {
     URLEncoder.encode(it.key, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(it.value, StandardCharsets.UTF_8)
 }
 
-fun readLocalAsset(assetName: String): Optional<ByteArray> {
+fun readBundledAsset(assetName: String): Optional<ByteArray> {
     try {
         return Optional.of(ClassPathResource(assetName).inputStream.readAllBytes())
-    } catch (ignored: Throwable) {
-    }
-    try {
-        return Optional.of(Files.readAllBytes(Paths.get(getFileStoragePath(), assetName)))
     } catch (ignored: Throwable) {
     }
     return Optional.empty()

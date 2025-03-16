@@ -18,8 +18,8 @@ class FilesystemStorageConfiguration(
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         val handler = registry.addResourceHandler("/${storageService.objectServePath}/**")
             .addResourceLocations("file:${storageService.getFileStoragePath()}")
-        if (startupPropertyConfig.cdnCacheMaxAge > 0) {
-            handler.setCacheControl(CacheControl.maxAge(Duration.ofSeconds(startupPropertyConfig.cdnCacheMaxAge)))
+        if (startupPropertyConfig.storageCacheMaxAge > 0) {
+            handler.setCacheControl(CacheControl.maxAge(Duration.ofSeconds(startupPropertyConfig.storageCacheMaxAge)))
         }
     }
 

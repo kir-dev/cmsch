@@ -49,12 +49,7 @@ class FilesystemStorageService(
 
     override fun getObjectUrl(fullName: String): Optional<String> {
         if (Paths.get(getFileStoragePath(), fullName).exists()) {
-            return Optional.of(fullName).map {
-                UriComponentsBuilder.fromHttpUrl(applicationComponent.adminSiteUrl.getValue())
-                    .pathSegment(objectServePath, it)
-                    .build()
-                    .toUriString()
-            }
+            return Optional.of(constructObjectUrl(fullName))
         }
         return Optional.empty()
     }
@@ -75,11 +70,12 @@ class FilesystemStorageService(
         try {
             val filePath = Paths.get(storagePath, path, name)
             Files.write(filePath, data)
+            return Optional.of(constructObjectUrl(path, name))
         } catch (e: IOException) {
             log.error("Failed to write object to filesystem", e)
-            return Optional.empty()
         }
-        return Optional.of(name)
+
+        return Optional.empty()
     }
 
     override fun readObject(fullName: String): Optional<ByteArray> {
@@ -96,9 +92,17 @@ class FilesystemStorageService(
         return Optional.empty()
     }
 
-    fun getFileStoragePath(): String = if (!startupPropertyConfig.external.startsWith("/")) {
-        System.getProperty("user.dir") + "/" + startupPropertyConfig.external
+    private fun constructObjectUrl(path: String, name: String) = constructObjectUrl(getObjectName(path, name))
+
+    private fun constructObjectUrl(fullName: String): String =
+        UriComponentsBuilder.fromHttpUrl(applicationComponent.adminSiteUrl.getValue())
+            .pathSegment(objectServePath, fullName)
+            .build()
+            .toUriString()
+
+    fun getFileStoragePath(): String = if (!startupPropertyConfig.filesystemStoragePath.startsWith("/")) {
+        System.getProperty("user.dir") + "/" + startupPropertyConfig.filesystemStoragePath
     } else {
-        startupPropertyConfig.external
+        startupPropertyConfig.filesystemStoragePath
     }
 }

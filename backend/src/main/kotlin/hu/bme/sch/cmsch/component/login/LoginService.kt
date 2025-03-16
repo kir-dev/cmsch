@@ -110,11 +110,7 @@ open class LoginService(
     private fun updateFieldsForGoogle(user: UserEntity) {
         // Generate CMSch id if not present
         if (user.cmschId.isBlank()) {
-            if (startupPropertyConfig.profileQrEnabled) {
-                profileService.generateFullProfileForUser(user)
-            } else {
-                profileService.generateProfileIdForUser(user)
-            }
+            profileService.generateProfileIdForUser(user)
         }
 
         // Grant admin by email
@@ -143,11 +139,7 @@ open class LoginService(
     private fun updateFieldsForAuthsch(user: UserEntity, profile: ProfileResponse) {
         // Generate CMSch id if not present
         if (user.cmschId.isBlank()) {
-            if (startupPropertyConfig.profileQrEnabled) {
-                profileService.generateFullProfileForUser(user)
-            } else {
-                profileService.generateProfileIdForUser(user)
-            }
+            profileService.generateProfileIdForUser(user)
         }
 
         // Update user profile values
@@ -415,11 +407,7 @@ open class LoginService(
     private fun updateFieldsForKeycloak(profile: KeycloakUserInfoResponse, user: UserEntity) {
         // Generate CMSch id if not present
         if (user.cmschId.isBlank()) {
-            if (startupPropertyConfig.profileQrEnabled) {
-                profileService.generateFullProfileForUser(user)
-            } else {
-                profileService.generateProfileIdForUser(user)
-            }
+            profileService.generateProfileIdForUser(user)
         }
 
         // Grant admin by email
