@@ -132,7 +132,7 @@ class TokenAdminTokensByUsersOfGroupsController(
 
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
         val header = Paragraph()
-        storageService.readObject(tokenComponent.reportLogo.getValue().replace("/cdn/", "/")).map { // todo investigate this
+        storageService.readObject(tokenComponent.reportLogo.getValue()).map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 

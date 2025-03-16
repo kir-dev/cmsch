@@ -51,6 +51,7 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val s3Region: String = "",
     val s3Bucket: String = "",
     val s3Endpoint: String = "",
+    val s3PublicEndpoint: String = "",
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
