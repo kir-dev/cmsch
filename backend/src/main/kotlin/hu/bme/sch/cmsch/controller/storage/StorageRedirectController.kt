@@ -1,7 +1,9 @@
 package hu.bme.sch.cmsch.controller.storage
 
+import hu.bme.sch.cmsch.service.S3StorageService
 import hu.bme.sch.cmsch.service.StorageService
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
@@ -15,6 +17,7 @@ private const val view = "cdn"
 
 @RestController
 @RequestMapping("/$view")
+@ConditionalOnBean(S3StorageService::class)
 class StorageRedirectController(private val storageService: StorageService) {
 
     @GetMapping("/**")

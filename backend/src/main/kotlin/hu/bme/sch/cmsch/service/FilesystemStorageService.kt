@@ -11,6 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import kotlin.io.path.deleteIfExists
@@ -30,7 +31,7 @@ class FilesystemStorageService(
         log.info("Using filesystem for storage")
     }
 
-    val objectServePath = "files"
+    val objectServePath = "cdn"
 
     override fun listObjects(): List<Pair<String, Long>> {
         val objectRoot = Paths.get(getFileStoragePath())
@@ -44,11 +45,11 @@ class FilesystemStorageService(
     }
 
     override fun deleteObject(fullName: String): Boolean {
-        return Paths.get(getFileStoragePath(), fullName).deleteIfExists()
+        return getSanitizedPath(fullName)?.deleteIfExists() == true
     }
 
     override fun getObjectUrl(fullName: String): Optional<String> {
-        if (Paths.get(getFileStoragePath(), fullName).exists()) {
+        if (getSanitizedPath(fullName)?.exists() == true) {
             return Optional.of(constructObjectUrl(fullName))
         }
         return Optional.empty()
@@ -68,9 +69,11 @@ class FilesystemStorageService(
         dir.mkdirs()
 
         try {
-            val filePath = Paths.get(storagePath, path, name)
-            Files.write(filePath, data)
-            return Optional.of(constructObjectUrl(path, name))
+            val filePath = getSanitizedPath(getObjectName(path, name))
+            if (filePath != null) {
+                Files.write(filePath, data)
+                return Optional.of(constructObjectUrl(path, name))
+            }
         } catch (e: IOException) {
             log.error("Failed to write object to filesystem", e)
         }
@@ -80,16 +83,34 @@ class FilesystemStorageService(
 
     override fun readObject(fullName: String): Optional<ByteArray> {
         try {
+            val file = Optional.ofNullable(getSanitizedPath(fullName)?.let { Files.readAllBytes(it) })
+            if (file.isPresent) return file
+        } catch (e: Throwable) {
+            log.error("Failed to read object from filesystem", e)
+        }
+        try {
             return Optional.of(ClassPathResource(fullName).inputStream.readAllBytes())
         } catch (e: Throwable) {
             log.error("Failed to read object from classpath", e)
         }
-        try {
-            return Optional.of(Files.readAllBytes(Paths.get(getFileStoragePath(), fullName)))
-        } catch (e: Throwable) {
-            log.error("Failed to read object from filesystem", e)
-        }
         return Optional.empty()
+    }
+
+    private fun getSanitizedPath(fullName: String): Path? {
+        val storagePath = getFileStoragePath()
+        val path = Paths.get(storagePath, fullName)
+
+        // This means we are reading outside the storage folder, which might be malicious
+        if (!path.startsWith(storagePath)) {
+            log.warn(
+                "Got a relative path that escapes the parent folder '{}', possibly malicious: '{}'",
+                storagePath,
+                fullName
+            )
+            return null
+        }
+
+        return path
     }
 
     private fun constructObjectUrl(path: String, name: String) = constructObjectUrl(getObjectName(path, name))
