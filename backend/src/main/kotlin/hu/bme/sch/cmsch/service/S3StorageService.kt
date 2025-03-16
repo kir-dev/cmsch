@@ -93,7 +93,12 @@ class S3StorageService(
         path: String,
         name: String,
         file: MultipartFile
-    ): Optional<String> = saveNamedObject(path, name, file.contentType ?: defaultContentType, file.bytes)
+    ): Optional<String> {
+        if (file.isEmpty || file.contentType == null)
+            return Optional.empty()
+
+        return saveNamedObject(path, name, file.contentType ?: defaultContentType, file.bytes)
+    }
 
     override fun saveNamedObject(
         path: String,
@@ -101,6 +106,8 @@ class S3StorageService(
         contentType: String,
         data: ByteArray
     ): Optional<String> {
+        if (data.isEmpty()) return Optional.empty()
+
         try {
             val fullName = getObjectName(path, name)
             val request = PutObjectRequest.builder()
