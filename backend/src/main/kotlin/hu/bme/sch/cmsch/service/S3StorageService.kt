@@ -38,7 +38,7 @@ class S3StorageService(
     }
 
     private fun getS3PublicUrl(fullName: String) =
-        UriComponentsBuilder.fromHttpUrl(startupPropertyConfig.s3Endpoint)
+        UriComponentsBuilder.fromHttpUrl(startupPropertyConfig.s3PublicEndpoint)
             .pathSegment(startupPropertyConfig.s3Bucket, fullName)
             .build()
             .toUriString()

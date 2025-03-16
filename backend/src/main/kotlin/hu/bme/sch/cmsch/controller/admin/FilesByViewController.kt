@@ -16,17 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.HandlerMapping
 
-// todo XDDDDDDDDD
 
 @Controller
 @RequestMapping("/admin/control/files")
 class FilesByViewController(
-    private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService,
     private val auditLog: AuditLogService,
     private val storageService: StorageService
 ) {
-
 
     private val view = "files"
     private val titleSingular = "Fájl"
