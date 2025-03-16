@@ -11,7 +11,6 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
 
     val sysadmins: String,
     val external: String,
-    val auditLog: String,
     val zoneId: String,
 
     // JWT
