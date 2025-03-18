@@ -29,7 +29,7 @@ const TokenScan = () => {
     if (params.has('token')) {
       mutate(location.href)
     }
-  }, [])
+  }, [isLoggedIn])
 
   return (
     <CmschPage loginRequired>
