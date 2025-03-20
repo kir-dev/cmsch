@@ -7,6 +7,10 @@ version: 1.0.0
 dependencies:
   - name: postgresql
     alias: postgres
-    version: 16.4.16
+    version: 16.5.0
     repository: https://charts.bitnami.com/bitnami
     condition: postgres.enabled
+  - name: minio
+    version: 15.0.7
+    repository: https://charts.bitnami.com/bitnami
+    condition: minio.enabled
