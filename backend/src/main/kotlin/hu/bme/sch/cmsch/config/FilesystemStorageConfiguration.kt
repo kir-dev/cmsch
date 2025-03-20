@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.service.FilesystemStorageService
+import hu.bme.sch.cmsch.service.StorageService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.CacheControl
@@ -16,7 +17,7 @@ class FilesystemStorageConfiguration(
 ) : WebMvcConfigurer {
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        val handler = registry.addResourceHandler("/${storageService.objectServePath}/**")
+        val handler = registry.addResourceHandler("/${StorageService.OBJECT_SERVE_PATH}/**")
             .addResourceLocations("file:${storageService.getFileStoragePath()}")
         if (startupPropertyConfig.storageCacheMaxAge > 0) {
             handler.setCacheControl(CacheControl.maxAge(Duration.ofSeconds(startupPropertyConfig.storageCacheMaxAge)))
