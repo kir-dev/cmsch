@@ -27,10 +27,12 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretName }}
 {{ end }}
+      {{ if not (or .Values.minio.enabled .Values.s3.useS3) }}
       volumes:
         - name: {{ .Release.Name }}-pv
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-pv
+      {{ end }}
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.apiImage }}
@@ -67,11 +69,11 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
               memory: {{ .Values.resources.requests.memory }}
+          {{ if not (or .Values.minio.enabled .Values.s3.useS3) }}
           volumeMounts:
             - name: {{ .Release.Name }}-pv
               mountPath: /pv
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
+          {{ end }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           startupProbe:
             httpGet:
@@ -97,10 +99,5 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
-      dnsPolicy: ClusterFirst
-      securityContext: { }
-      schedulerName: default-scheduler
   strategy:
     type: {{ .Values.deploymentStrategy }}
-  revisionHistoryLimit: 10
-  progressDeadlineSeconds: 600
