@@ -2,7 +2,6 @@ import { useColorModeValue } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import { hu } from 'date-fns/locale'
 import Values from 'values.js'
-import { API_BASE_URL } from './configs/environment.config'
 import { FormFieldVariants } from './views/form.view'
 
 export const TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
@@ -73,10 +72,6 @@ export function isCheckbox(type: FormFieldVariants) {
 
 export function isGridField(type?: FormFieldVariants | undefined) {
   return type === FormFieldVariants.CHOICE_GRID || type === FormFieldVariants.SELECTION_GRID
-}
-
-export function getCdnUrl(path: string) {
-  return joinPath(API_BASE_URL, 'cdn', path)
 }
 
 export function isCurrentEvent(event: { timestampStart: number; timestampEnd: number }) {

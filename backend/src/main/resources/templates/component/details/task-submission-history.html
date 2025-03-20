@@ -55,7 +55,7 @@
                                 <ins>${dataArray[id].submitterName}</ins> ${dataArray[id].adminResponse ? '[RENDEZŐ]' : '[RÉSZTVEVŐ]'}<br>
                                 <b>Státusz:</b> <ins>${dataArray[id].status}</ins><br>
                                 <b>${dataArray[id].adminResponse ? 'Válasz' : 'Beadás'}:</b> <ins>${dataArray[id].content}</ins><br>
-                                ${dataArray[id].type !== 'TEXT' ? `<a href="/cdn/${dataArray[id].contentUrl}" target="_blank">${dataArray[id].contentUrl}</a>` : ''}
+                                ${dataArray[id].type !== 'TEXT' ? `<a href="${dataArray[id].contentUrl}" target="_blank">${dataArray[id].contentUrl}</a>` : ''}
                             </div>
                         </div>`;
             }

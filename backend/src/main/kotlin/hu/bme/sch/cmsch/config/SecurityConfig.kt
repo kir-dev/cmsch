@@ -14,6 +14,7 @@ import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.JwtTokenProvider
+import hu.bme.sch.cmsch.service.StorageService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -89,8 +90,6 @@ open class SecurityConfig(
                 antMatcher("/docs-icons/**"),
                 antMatcher("/files/**"),
                 antMatcher("/admin/logout"),
-                antMatcher("/cdn/events/**"),
-                antMatcher("/cdn/riddles/**"),
                 antMatcher("/countdown"),
                 antMatcher("/control/logout"),
                 antMatcher("/control/test"),
@@ -101,14 +100,8 @@ open class SecurityConfig(
                 antMatcher("/swagger-ui.html"),
                 antMatcher("/swagger-ui/**"),
                 antMatcher("/v3/api-docs/**"),
-                antMatcher("/cdn/manifest/**"),
+                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**"),
                 antMatcher("/manifest/manifest.json"),
-                antMatcher("/cdn/public/**"),
-                antMatcher("/cdn/task/**"),
-                antMatcher("/cdn/team/**"),
-                antMatcher("/cdn/news/**"),
-                antMatcher("/cdn/event/**"),
-                antMatcher("/cdn/manifest/**"),
                 antMatcher("/control/refresh"),
                 antMatcher("/oauth2/authorization"),
                 antMatcher("/c/**"),
@@ -135,7 +128,7 @@ open class SecurityConfig(
 
             it.requestMatchers(
                 antMatcher("/admin/**"),
-                antMatcher("/cdn/**")
+                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**")
             ).hasAnyRole(
                 RoleType.STAFF.name,
                 RoleType.ADMIN.name,
@@ -174,7 +167,7 @@ open class SecurityConfig(
                 antMatcher("/admin/api/**"),
                 antMatcher("/admin/sell/**"),
                 antMatcher("/admin/admission/**"),
-                antMatcher("/cdn/**")
+                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**")
             )
         }.cors(Customizer.withDefaults())
         return http.build()

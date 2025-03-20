@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Box, Heading, HStack, Image, Spacer, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { getCdnUrl, useOpaqueBackground } from '../../../util/core-functions.util'
+import { useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 
 import { TeamListItemView } from '../../../util/views/team.view'
@@ -34,7 +34,7 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
           {team.logo && (
             <Image
               display="block"
-              src={getCdnUrl('team/' + team.logo)}
+              src={team.logo}
               alt={team.name}
               w="64px"
               h="64px"

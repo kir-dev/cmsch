@@ -9,7 +9,6 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { Loading } from '../../common-components/Loading'
 import Markdown from '../../common-components/Markdown'
-import { API_BASE_URL } from '../../util/configs/environment.config'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { SpoilerText } from './components/SpoilerText'
@@ -99,7 +98,7 @@ const RiddleHistoryPage = () => {
             <Heading my={5} size="lg">
               {riddle.title}
             </Heading>
-            {riddle.imageUrl && <Image width="100%" src={`${API_BASE_URL}/cdn/${riddle.imageUrl}`} alt="Riddle Kép" borderRadius="md" />}
+            {riddle.imageUrl && <Image width="100%" src={riddle.imageUrl} alt="Riddle Kép" borderRadius="md" />}
 
             <VStack mt={5} align="flex-start">
               <Text>Sorszám: {index + 1}</Text>

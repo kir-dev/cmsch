@@ -17,20 +17,20 @@
         <object th:unless="${property.get(data) == null || property.get(data) == ''}" th:remove="tag">
             <a href="#"
                target="_blank"
-               th:href="|@{/cdn/}${property.get(data)}|">
+               th:href="|${property.get(data)}|">
                 <img src="#"
                      alt="Image preview"
                      onerror="this.onerror=null; this.parentNode.innerHTML = '<p>A kép nem létezik</p>'; "
                      height="400"
                      th:id="|input${index}|"
                      th:unless="${(property.get(data) == null || property.get(data) == '') && entityMode}"
-                     th:src="|@{/cdn/}${property.get(data)}|"
+                     th:src="|${property.get(data)}|"
                 />
             </a>
             <br>
             <a href="#"
                target="_blank"
-               th:href="|@{/cdn/}${property.get(data)}|"
+               th:href="|${property.get(data)}|"
                class="btn btn-secondary"
                th:unless="${entityMode}"
             >

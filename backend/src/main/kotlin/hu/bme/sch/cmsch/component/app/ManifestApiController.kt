@@ -1,23 +1,22 @@
 package hu.bme.sch.cmsch.component.app
 
+import hu.bme.sch.cmsch.service.StorageService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
-const val IMAGE_PNG = "image/png"
 
 @RestController
 @RequestMapping("/manifest")
 @ConditionalOnBean(ApplicationComponent::class)
 class ManifestApiController(
     private val manifestComponent: ManifestComponent,
-    private val applicationComponent: ApplicationComponent
+    private val storageService: StorageService,
 ) {
 
     @GetMapping("/manifest.json")
     fun manifestJson(): ManifestJsonView {
-        val baseUrl = applicationComponent.adminSiteUrl.getValue()
         return ManifestJsonView(
             theme_color = manifestComponent.themeColor.getValue(),
             background_color = manifestComponent.backgroundColor.getValue(),
@@ -29,25 +28,28 @@ class ManifestApiController(
             description = manifestComponent.description.getValue(),
             icons = listOf(
                 ManifestIconView(
-                    src = "${baseUrl}cdn/manifest/icon-192x192.png",
+                    src = storageService.getObjectUrl("manifest/icon-192x192.png").orElse(""),
                     sizes = "192x192",
-                    type = IMAGE_PNG),
+                    type = MediaType.IMAGE_PNG_VALUE
+                ),
                 ManifestIconView(
-                    src = "${baseUrl}cdn/manifest/icon-256x256.png",
+                    src = storageService.getObjectUrl("manifest/icon-256x256.png").orElse(""),
                     sizes = "256x256",
-                    type = IMAGE_PNG),
+                    type = MediaType.IMAGE_PNG_VALUE
+                ),
                 ManifestIconView(
-                    src = "${baseUrl}cdn/manifest/icon-384x384.png",
+                    src = storageService.getObjectUrl("manifest/icon-384x384.png").orElse(""),
                     sizes = "384x384",
-                    type = IMAGE_PNG),
+                    type = MediaType.IMAGE_PNG_VALUE
+                ),
                 ManifestIconView(
-                    src = "${baseUrl}cdn/manifest/icon-512x512.png",
+                    src = storageService.getObjectUrl("manifest/icon-512x512.png").orElse(""),
                     sizes = "512x512",
-                    type = IMAGE_PNG),
+                    type = MediaType.IMAGE_PNG_VALUE
+                ),
             )
         )
     }
-
 }
 
 data class ManifestJsonView(
@@ -63,7 +65,5 @@ data class ManifestJsonView(
 )
 
 data class ManifestIconView(
-    val src: String,
-    val sizes: String,
-    val type: String
+    val src: String, val sizes: String, val type: String
 )
