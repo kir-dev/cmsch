@@ -14,6 +14,7 @@ import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.JwtTokenProvider
+import hu.bme.sch.cmsch.service.StorageService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -99,7 +100,7 @@ open class SecurityConfig(
                 antMatcher("/swagger-ui.html"),
                 antMatcher("/swagger-ui/**"),
                 antMatcher("/v3/api-docs/**"),
-                antMatcher("/cdn/**"),
+                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**"),
                 antMatcher("/manifest/manifest.json"),
                 antMatcher("/control/refresh"),
                 antMatcher("/oauth2/authorization"),
@@ -127,7 +128,7 @@ open class SecurityConfig(
 
             it.requestMatchers(
                 antMatcher("/admin/**"),
-                antMatcher("/cdn/**")
+                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**")
             ).hasAnyRole(
                 RoleType.STAFF.name,
                 RoleType.ADMIN.name,
@@ -166,7 +167,7 @@ open class SecurityConfig(
                 antMatcher("/admin/api/**"),
                 antMatcher("/admin/sell/**"),
                 antMatcher("/admin/admission/**"),
-                antMatcher("/cdn/**")
+                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**")
             )
         }.cors(Customizer.withDefaults())
         return http.build()

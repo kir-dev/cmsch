@@ -72,6 +72,9 @@ data class AuditLogEntity(
         val thisEffectiveClass =
             if (this is HibernateProxy) this.hibernateLazyInitializer.persistentClass else this.javaClass
         if (thisEffectiveClass != oEffectiveClass) return false
+        if (other.javaClass != this.javaClass) {
+            return false
+        }
         other as AuditLogEntity
 
         return id != null && id == other.id

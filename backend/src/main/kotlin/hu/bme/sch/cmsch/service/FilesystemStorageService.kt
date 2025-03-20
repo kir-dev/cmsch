@@ -31,8 +31,6 @@ class FilesystemStorageService(
         log.info("Using filesystem for storage")
     }
 
-    val objectServePath = "cdn"
-
     override fun listObjects(): List<Pair<String, Long>> {
         val objectRoot = Paths.get(getFileStoragePath())
         return objectRoot.toFile().walkTopDown()
@@ -117,7 +115,7 @@ class FilesystemStorageService(
 
     private fun constructObjectUrl(fullName: String): String =
         UriComponentsBuilder.fromHttpUrl(applicationComponent.adminSiteUrl.getValue())
-            .pathSegment(objectServePath, fullName)
+            .pathSegment(StorageService.OBJECT_SERVE_PATH, fullName)
             .build()
             .toUriString()
 

@@ -13,17 +13,16 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.HandlerMapping
 import java.net.URI
 
-private const val view = "cdn"
 
 @RestController
-@RequestMapping("/$view")
+@RequestMapping("/${StorageService.OBJECT_SERVE_PATH}")
 @ConditionalOnBean(S3StorageService::class)
 class StorageRedirectController(private val storageService: StorageService) {
 
     @GetMapping("/**")
     fun redirectToObject(request: HttpServletRequest): ResponseEntity<Any> {
         val requestPath = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString()
-        val objectPath = requestPath.split("/$view/", limit = 2)[1]
+        val objectPath = requestPath.split("/${StorageService.OBJECT_SERVE_PATH}/", limit = 2)[1]
 
         return storageService.getObjectUrl(objectPath).map {
             val headers = HttpHeaders()

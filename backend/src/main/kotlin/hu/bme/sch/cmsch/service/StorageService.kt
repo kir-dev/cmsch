@@ -1,10 +1,15 @@
 package hu.bme.sch.cmsch.service
 
+import com.fasterxml.uuid.Generators
 import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 interface StorageService {
+
+    companion object {
+        const val OBJECT_SERVE_PATH = "cdn"
+    }
 
     val defaultContentType get() = MediaType.APPLICATION_OCTET_STREAM_VALUE
 
@@ -42,6 +47,6 @@ interface StorageService {
 
     fun readObject(fullName: String): Optional<ByteArray>
 
-    private fun hashName(name: String) = (UUID(System.currentTimeMillis(), Random().nextLong()).toString()
+    private fun hashName(name: String) = (Generators.timeBasedEpochRandomGenerator().generate().toString()
             + name.substring(if (name.contains(".")) name.lastIndexOf('.') else 0))
 }
