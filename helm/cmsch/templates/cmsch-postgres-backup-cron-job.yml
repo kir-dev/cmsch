@@ -1,0 +1,32 @@
+{{ if and .Values.postgres.enabled .Values.postgres.driveBackup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-postgres-backup
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  schedule: {{ .Values.postgres.driveBackup.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: postgres-backup
+              image: {{ .Values.postgres.driveBackup.image }}
+              env:
+                - name: DRIVE_FILE_NAME
+                  value: {{ .Release.Name }}
+                - name: DBNAME
+                  value: {{ .Values.postgres.global.postgresql.auth.database }}
+                - name: PGHOST
+                  value: "{{ .Release.Name }}-postgres"
+                - name: PGPORT
+                  value: "5432"
+              envFrom:
+                - secretRef:
+                    optional: false
+                    name: "{{ .Release.Name }}-postgres-backup-secrets"
+              imagePullPolicy: {{ .Values.postgres.driveBackup.imagePullPolicy }}
+          restartPolicy: {{ .Values.postgres.driveBackup.restartPolicy }}
+{{ end }}
