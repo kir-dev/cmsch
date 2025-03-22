@@ -19,10 +19,16 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.readAsset
+import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
@@ -30,18 +36,16 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
-import java.util.*
-import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
-import org.springframework.transaction.PlatformTransactionManager
 import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.*
 
 @Controller
 @RequestMapping("/admin/control/token-properties-of-groups")
@@ -53,6 +57,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     private val tokenComponent: TokenComponent,
     private val riddleService: Optional<RiddleBusinessLogicService>,
     private val tasksService: Optional<TasksService>,
+    private val clock: TimeService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: TokenComponent,
@@ -93,7 +98,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             "Mentés",
             "pdf/{id}",
             "save",
-            ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP,
+            PERMISSION_SHOW_TOKEN_SUBMISSIONS,
             100,
             false,
             "Mentés PDF fájlba"
@@ -192,7 +197,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(20f))
 
-        val formatter = SimpleDateFormat("yyyy.MM.dd. HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm:ss")
         tokensByUsers.forEach { user ->
             document.add(Paragraph(user.key.fullName)
                 .setTextAlignment(TextAlignment.LEFT)
@@ -215,7 +220,8 @@ class TokenAdminTokensByUsersOfGroupsController(
                     userTable.addCell(Cell().add(Paragraph(it.token?.title ?: "n/a")
                         .setPaddingLeft(4f)
                         .setFont(font).setFontSize(12f)))
-                    userTable.addCell(Cell().add(Paragraph(formatter.format(it.recieved * 1000))
+                    val date = Instant.ofEpochSecond(it.recieved).atZone(clock.timeZone).format(formatter)
+                    userTable.addCell(Cell().add(Paragraph(date)
                         .setTextAlignment(TextAlignment.CENTER)
                         .setFont(font).setFontSize(12f)))
                 }
