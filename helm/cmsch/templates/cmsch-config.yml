@@ -61,6 +61,7 @@ data:
   LOAD_EVENT: {{ .Values.load.event | quote }}
   LOAD_PUSHNOTIFICATION: {{ .Values.load.pushnotification | quote }}
   LOAD_SHEETS: {{ .Values.load.sheets | quote }}
+  LOAD_SERVICE_ACCOUNT : {{ .Values.load.serviceAccount | quote }}
 
   OWNER_TOKEN: {{ .Values.owner.token | quote }}
   OWNER_TASK: {{ .Values.owner.task | quote }}

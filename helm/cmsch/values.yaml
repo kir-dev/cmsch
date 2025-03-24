@@ -140,6 +140,7 @@ load:
   event: false
   pushnotification: false
   sheets: false
+  serviceAccount: false
 
 owner:
   token: USER

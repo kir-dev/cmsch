@@ -189,6 +189,7 @@ class TaskAdminRateController(
     ): String {
         val user = auth.getUser()
         if (editPermission.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "POST /$view/grade", editPermission.permissionString)

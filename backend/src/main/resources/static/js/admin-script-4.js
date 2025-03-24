@@ -15,8 +15,8 @@ function init() {
     loadMenuFromStorage();
     rememberMenuPosition();
 
-    document.getElementById('search').addEventListener('keyup', searchListener());
-    document.getElementById('search-input').addEventListener('keyup', siteSearchListener());
+    document.getElementById('search')?.addEventListener('keyup', searchListener());
+    document.getElementById('search-input')?.addEventListener('keyup', siteSearchListener());
 
     searchInput = document.querySelector("#search");
 
@@ -51,7 +51,7 @@ function init() {
         return result.style.display !== 'none';
     });
 
-    input.addEventListener("keydown", function(event) {
+    input?.addEventListener("keydown", function(event) {
         if (event.keyCode === 38) {
             event.preventDefault();
             selectedIndex = selectedIndex > 0 ? selectedIndex - 1 : results.length - 1;

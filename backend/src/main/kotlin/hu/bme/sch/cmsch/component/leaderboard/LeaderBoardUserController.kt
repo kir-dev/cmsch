@@ -81,6 +81,7 @@ class LeaderBoardUserController(
     fun refreshUserTopList(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         if (refreshPermission.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", refreshPermission.permissionString)
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "GET /$view/refresh",

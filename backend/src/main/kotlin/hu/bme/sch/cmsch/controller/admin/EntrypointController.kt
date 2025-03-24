@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.LoginComponent
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.ResponseStatus
 
 
 val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
@@ -33,6 +35,7 @@ class EntrypointController(
     }
 
     @RequestMapping(value = [ "/oauth2/authorization", "/login" ])
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun authorize(model: Model, @RequestParam(defaultValue = "") error: String): String {
         model.addAttribute("siteName", applicationComponent.siteName.getValue())
         model.addAttribute("error", error)

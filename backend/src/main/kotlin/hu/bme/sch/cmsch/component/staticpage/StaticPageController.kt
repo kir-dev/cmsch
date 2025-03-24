@@ -61,17 +61,17 @@ class StaticPageController(
 ) {
 
     override fun filterOverview(user: CmschUser, rows: Iterable<StaticPageEntity>): Iterable<StaticPageEntity> {
-        return rows.filter { editPermissionCheck(user, it) }
+        return rows.filter { editPermissionCheck(user, it, null) }
     }
 
-    override fun editPermissionCheck(user: CmschUser, entity: StaticPageEntity): Boolean {
-        return user.isAdmin() || entity.permissionToEdit.isBlank() || user.hasPermission(entity.permissionToEdit)
+    override fun editPermissionCheck(user: CmschUser, oldEntity: StaticPageEntity?, newEntity: StaticPageEntity?): Boolean {
+        return user.isAdmin() || oldEntity?.permissionToEdit.isNullOrBlank() || user.hasPermission(oldEntity.permissionToEdit)
                 || StaffPermissions.PERMISSION_MODIFY_ANY_STATIC_PAGES.validate(user)
     }
 
     override fun purgeAllEntities(user: CmschUser) {
         dataSource.findAll()
-            .filter { editPermissionCheck(user, it) }
+            .filter { editPermissionCheck(user, it, null) }
             .forEach { dataSource.delete(it) }
     }
 

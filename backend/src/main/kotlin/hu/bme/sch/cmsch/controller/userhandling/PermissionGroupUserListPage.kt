@@ -174,6 +174,7 @@ class PermissionGroupUserListPage(
     fun removePermissionGroupFromUser(auth: Authentication, model: Model, @PathVariable permissionGroupId: Int, @PathVariable userId: Int): String {
         val user = auth.getUser()
         if (removePermission.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", removePermission.permissionString)
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "GET /$view/$permissionGroupId/remove/$userId", deletePermission.permissionString)
