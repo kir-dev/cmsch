@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.CmschGoogleUser
 import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
 import hu.bme.sch.cmsch.component.login.keycloak.KeycloakUserInfoResponse
+import hu.bme.sch.cmsch.component.serviceaccount.ServiceAccountFilterConfigurer
 import hu.bme.sch.cmsch.jwt.JwtConfigurer
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AuditLogService
@@ -47,6 +48,7 @@ open class SecurityConfig(
     private val objectMapper: ObjectMapper,
     private val jwtTokenProvider: JwtTokenProvider,
     private val countdownConfigurer: Optional<CountdownFilterConfigurer>,
+    private val serviceAccountFilterConfigurer: Optional<ServiceAccountFilterConfigurer>,
     private val authschLoginService: LoginService,
     private val loginComponent: LoginComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
@@ -159,6 +161,7 @@ open class SecurityConfig(
                         .userService { resolveAuthschUser(it) }
                 }.defaultSuccessUrl("/control/post-login")
         }
+        serviceAccountFilterConfigurer.ifPresent { http.with(it, Customizer.withDefaults()) }
         countdownConfigurer.ifPresent { http.with(it, Customizer.withDefaults()) }
         http.csrf {
             it.ignoringRequestMatchers(

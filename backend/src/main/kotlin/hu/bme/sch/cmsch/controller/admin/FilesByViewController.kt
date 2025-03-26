@@ -147,6 +147,7 @@ class FilesByViewController(
         val objectPath = requestPath.split("/admin/control/files/delete/")[1]
         val user = auth.getUser()
         if (showPermission.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", showPermission.permissionString)
             model.addAttribute("user", user)
             return "admin403"

@@ -334,7 +334,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         } else {
             val actualEntity = onPreEdit(entity.orElseThrow())
             model.addAttribute("data", actualEntity)
-            if (!editPermissionCheck(user, actualEntity)) {
+            if (!editPermissionCheck(user, actualEntity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(user, component.component, "GET /$view/edit/$id",
                     "editPermissionCheck() validation")
@@ -480,7 +480,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         } else {
             val actualEntity = entity.orElseThrow()
             model.addAttribute("item", actualEntity.toString())
-            if (!editPermissionCheck(user, actualEntity)) {
+            if (!editPermissionCheck(user, actualEntity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(user, component.component, "GET /$view/delete/$id",
                     "editPermissionCheck() validation")
@@ -493,6 +493,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     @PostMapping("/delete/{id}")
     fun delete(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+
         if (deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
@@ -502,7 +504,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
             val entity = dataSource.findById(id).orElseThrow()
-            if (!editPermissionCheck(user, entity)) {
+            if (!editPermissionCheck(user, entity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(
                     user,
@@ -582,6 +584,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                auth: Authentication,
     ): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (createPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
@@ -591,6 +594,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         if (!createEnabled)
             return "redirect:/admin/control/$view"
+
+        if (!editPermissionCheck(user, null, dto)) {
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/create", "editPermissionCheck() validation")
+            return "admin403"
+        }
 
         val entity = supplier.get()
         val newValues = StringBuilder("entity new value: ")
@@ -617,6 +626,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
              @RequestParam(defaultValue = "false") delete1: Boolean,
     ): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
@@ -629,7 +639,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "redirect:/admin/control/$view/edit/$id"
         }
         val actualEntity = entity.orElseThrow()
-        if (!editPermissionCheck(user, actualEntity)) {
+        if (!editPermissionCheck(user, actualEntity, dto)) {
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "POST /$view/edit/$id", "editPermissionCheck() validation")
             return "admin403"
@@ -824,7 +834,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         return rows
     }
 
-    open fun editPermissionCheck(user: CmschUser, entity: T): Boolean {
+    open fun editPermissionCheck(user: CmschUser, oldEntity: T?, newEntity: T?): Boolean {
         return true
     }
 

@@ -152,6 +152,7 @@ class MenuAdminController(
     @PostMapping("/edit/{id}")
     fun editFormTarget(@PathVariable id: Int, auth: Authentication, model: Model, @RequestParam allRequestParams: Map<String, String>): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)

@@ -81,6 +81,7 @@ abstract class ComponentApiBase(
         multipartRequest: MultipartRequest
     ): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (!permissionToShow.validate(user)) {
             model.addAttribute("permission", permissionToShow.permissionString)
             model.addAttribute("user", user)
