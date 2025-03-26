@@ -167,7 +167,7 @@ class TokenComponent(
     )
 
     final val reportLogo = SettingProxy(componentSettingService, component,
-        "reportLogo", "/cdn/manifest/report-logo.png",
+        "reportLogo", "manifest/report-logo.png",
         fieldName = "Jelenléti ív logója", description = "Ez lesz a jelenléti íven megjelenített logó (csak PNG és JPG jó)",
         type = SettingType.IMAGE,
     )

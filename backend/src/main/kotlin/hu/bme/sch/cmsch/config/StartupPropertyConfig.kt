@@ -10,8 +10,6 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val distributedMode: Boolean,
 
     val sysadmins: String,
-    val external: String,
-    val auditLog: String,
     val zoneId: String,
 
     // JWT
@@ -22,11 +20,8 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val mailgunToken: String,
 
     // Profile Qr
-    val profileQrEnabled: Boolean,
     val profileQrPrefix: String,
     val profileSalt: String,
-    val profileGenerationTarget: String,
-    val profileQrCodeSize: Int,
 
     // Strategies
     val taskOwnershipMode: OwnershipType,
@@ -44,8 +39,19 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val managementToken: String,
     val nodeName: String,
 
-    // CDN
-    val cdnCacheMaxAge: Long
+    // Storage
+    val storageImplementation: StorageImplementation,
+    val storageCacheMaxAge: Long,
+
+    val filesystemStoragePath: String,
+
+    // S3
+    val s3AccessKey: String = "",
+    val s3SecretKey: String = "",
+    val s3Region: String = "",
+    val s3Bucket: String = "",
+    val s3Endpoint: String = "",
+    val s3PublicEndpoint: String = "",
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

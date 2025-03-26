@@ -7,7 +7,7 @@ const val OVERVIEW_TYPE_BOOLEAN = "boolean"
 const val OVERVIEW_TYPE_ICON = "icon"
 const val OVERVIEW_TYPE_TIME = "time"
 const val OVERVIEW_TYPE_NUMBER = "number"
-const val OVERVIEW_TYPE_CDN_IMAGE = "cdn-image"
+const val OVERVIEW_TYPE_IMAGE = "image"
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)
@@ -17,7 +17,6 @@ annotation class GenerateOverview(
     val centered: Boolean = false,
     val order: Int = 0,
     val renderer: String = OVERVIEW_TYPE_TEXT,
-    val cdnImageFolder: String = "",
     val useForSearch: Boolean = true
 )
 
@@ -42,9 +41,9 @@ fun GenerateOverview.sorter(): String {
 }
 
 fun GenerateOverview.formatValue(value: Any?): Any =
-    if (renderer == OVERVIEW_TYPE_CDN_IMAGE) {
+    if (renderer == OVERVIEW_TYPE_IMAGE) {
         if (value is String && value.isNotBlank())
-            "/cdn/${cdnImageFolder}/${value}"
+            value
         else
             "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" // empty image
     } else if (renderer == OVERVIEW_TYPE_TEXT || renderer == OVERVIEW_TYPE_ICON) {
@@ -59,7 +58,7 @@ fun GenerateOverview.extra(): Array<Pair<String, Any>> {
         OVERVIEW_TYPE_TEXT -> arrayOf("vertAlign" to "middle")
         OVERVIEW_TYPE_DATE -> arrayOf("vertAlign" to "middle", "formatter" to "datetime")
         OVERVIEW_TYPE_BOOLEAN -> arrayOf("formatter" to "tickCross", "width" to 120)
-        OVERVIEW_TYPE_CDN_IMAGE -> arrayOf(
+        OVERVIEW_TYPE_IMAGE -> arrayOf(
             "formatter" to "image",
             "width" to 120,
             "formatterParams" to mapOf("height" to "100px")

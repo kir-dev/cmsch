@@ -33,6 +33,7 @@ class ResponsesController(
     env: Environment,
     transactionManager: PlatformTransactionManager,
     private val listeners: List<FormSubmissionListener>,
+    storageService: StorageService
 ) : TwoDeepEntityPage<FormVirtualEntity, ResponseEntity>(
     "signup-responses",
     FormVirtualEntity::class,
@@ -67,6 +68,7 @@ class ResponsesController(
     responseRepository,
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,

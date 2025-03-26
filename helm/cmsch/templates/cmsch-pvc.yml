@@ -1,11 +1,10 @@
+{{ if not (or .Values.minio.enabled .Values.s3.useS3) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-pv
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
-  finalizers:
-    - kubernetes.io/pvc-protection
 spec:
   accessModes:
     - ReadWriteOnce
@@ -17,4 +16,5 @@ spec:
 {{ end }}
 {{ if  .Values.resources.volumeMode  }}
   volumeMode: {{ .Values.resources.volumeMode }}
+{{ end }}
 {{ end }}

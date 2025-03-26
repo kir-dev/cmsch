@@ -121,7 +121,7 @@
                 </tr>
             </table>
             <div class="image-holder" th:if="${task.task.type.name != 'TEXT'}" >
-                <img src="" th:src="|@{/cdn}/${task.imageUrlAnswer}|" alt="Beadás képe">
+                <img src="" th:src="|${task.imageUrlAnswer}|" alt="Beadás képe">
             </div>
         </div>
 

@@ -75,6 +75,38 @@ postgres:
   primary:
     resourcesPreset: "micro"
 
+minioHostProtocol: https
+minio:
+  enabled: false
+  mode: standalone
+  cmschBucket:
+    name: cmsch
+    region: us-east-1
+  auth:
+    rootUser: cmsch
+    rootPassword: cmschpassword # min 8 chars
+  service:
+    type: LoadBalancer
+  global:
+    defaultStorageClass: local-path
+  apiIngress:
+    enabled: false
+    tls: true
+    hostname: storage.cmsch.basic
+    annotations:
+      cert-manager.io/cluster-issuer: le-http01
+      kubernetes.io/tls-acme: 'true'
+      nginx.ingress.kubernetes.io/proxy-body-size: 20m
+
+s3:
+  useS3: false
+  accessKey: secret
+  secretKey: secret
+  bucket: cmsch
+  region: region
+  endpoint:
+  publicEndpoint:
+
 load:
   app: true
   login: true

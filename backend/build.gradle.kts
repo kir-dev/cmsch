@@ -43,6 +43,7 @@ repositories {
 
 dependencies {
     implementation("com.google.firebase:firebase-admin:9.3.0")
+    implementation("software.amazon.awssdk:s3:2.30.32")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

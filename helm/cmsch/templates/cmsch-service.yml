@@ -15,8 +15,3 @@ spec:
     app: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
   type: {{ .Values.service.type }}
-  sessionAffinity: None
-  ipFamilies:
-    - IPv4
-  ipFamilyPolicy: SingleStack
-  internalTrafficPolicy: Cluster

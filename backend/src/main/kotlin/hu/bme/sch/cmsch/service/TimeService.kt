@@ -15,6 +15,8 @@ class TimeService(startupPropertyConfig: StartupPropertyConfig) {
 
     fun getTimeInSeconds() = ZonedDateTime.now(timeZone)?.toInstant()?.epochSecond ?: 0
 
+    fun getZoneOffset() = ZonedDateTime.now(timeZone).offset.totalSeconds
+
     fun getTime() = ZonedDateTime.now(timeZone)?.toInstant()?.toEpochMilli() ?: 0
 
     fun inRange(availableFrom: Long, availableTo: Long, timeInSeconds: Long): Boolean =

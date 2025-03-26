@@ -24,9 +24,9 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS
+import hu.bme.sch.cmsch.service.StorageService
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.readAsset
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -58,6 +58,7 @@ class TokenAdminTokensByUsersOfGroupsController(
     private val riddleService: Optional<RiddleBusinessLogicService>,
     private val tasksService: Optional<TasksService>,
     private val clock: TimeService,
+    storageService: StorageService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: TokenComponent,
@@ -85,6 +86,7 @@ class TokenAdminTokensByUsersOfGroupsController(
 
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -129,7 +131,7 @@ class TokenAdminTokensByUsersOfGroupsController(
 
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
         val header = Paragraph()
-        readAsset(tokenComponent.reportLogo.getValue().replace("/cdn/", "/")).map {
+        storageService.readObject(tokenComponent.reportLogo.getValue()).map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 
@@ -142,7 +144,7 @@ class TokenAdminTokensByUsersOfGroupsController(
                 .setMarginLeft(40f)
                 .setMarginRight(40f))
 
-        readAsset("/static/images/kirdev-logo.png").map {
+        storageService.readBundledAsset("/static/images/kirdev-logo.png").map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 

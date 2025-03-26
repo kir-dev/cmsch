@@ -37,6 +37,7 @@ class UserController(
     private val startupPropertyConfig: StartupPropertyConfig,
     components: MutableList<out ComponentBase>,
     env: Environment,
+    storageService: StorageService,
     transactionManager: PlatformTransactionManager,
     private val permissionsService: PermissionsService,
     private val permissionGroupService: PermissionGroupService
@@ -50,6 +51,7 @@ class UserController(
     repo,
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -107,11 +109,7 @@ class UserController(
     }
 
     override fun onEntityPreSave(entity: UserEntity, auth: Authentication): Boolean {
-        if (startupPropertyConfig.profileQrEnabled) {
-            profileService.generateFullProfileForUser(entity)
-        } else {
-            profileService.generateProfileIdForUser(entity)
-        }
+        profileService.generateProfileIdForUser(entity)
 
         if (entity.groupName.isNotBlank()) {
             transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({

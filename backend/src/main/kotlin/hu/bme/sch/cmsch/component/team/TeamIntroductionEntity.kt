@@ -38,7 +38,7 @@ data class TeamIntroductionEntity(
     var introduction: String = "",
 
     @property:GenerateInput(order = 19, label = "Logó url", enabled = true)
-    @property:GenerateOverview(columnName = "Logó", renderer = OVERVIEW_TYPE_CDN_IMAGE, cdnImageFolder = "team")
+    @property:GenerateOverview(columnName = "Logó", renderer = OVERVIEW_TYPE_IMAGE)
     @property:ImportFormat
     var logo: String? = null,
 
