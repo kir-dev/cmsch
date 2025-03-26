@@ -2,9 +2,11 @@ package hu.bme.sch.cmsch.component.serviceaccount
 
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
+@ConditionalOnBean(ServiceAccountComponent::class)
 interface ServiceAccountKeyRepository : CrudRepository<ServiceAccountKeyEntity, Int>,
     EntityPageDataSource<ServiceAccountKeyEntity, Int> {
 

@@ -75,6 +75,7 @@ postgres:
   primary:
     resourcesPreset: "micro"
 
+# only use if you want to deploy your own minio for the instance too
 minioHostProtocol: https
 minio:
   enabled: false
