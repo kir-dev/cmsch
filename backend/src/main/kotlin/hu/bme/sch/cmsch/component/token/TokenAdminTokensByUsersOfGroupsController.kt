@@ -27,7 +27,6 @@ import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIO
 import hu.bme.sch.cmsch.service.StorageService
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.readBundledAsset
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -145,7 +144,7 @@ class TokenAdminTokensByUsersOfGroupsController(
                 .setMarginLeft(40f)
                 .setMarginRight(40f))
 
-        readBundledAsset("/static/images/kirdev-logo.png").map {
+        storageService.readBundledAsset("/static/images/kirdev-logo.png").map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 

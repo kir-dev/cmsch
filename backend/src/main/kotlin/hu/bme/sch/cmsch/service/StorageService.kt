@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.service
 
 import com.fasterxml.uuid.Generators
+import org.slf4j.LoggerFactory
+import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -29,15 +31,15 @@ interface StorageService {
 
     fun getObjectUrl(path: String, name: String): Optional<String> = getObjectUrl(getObjectName(path, name))
 
-    fun saveObjectWithHashedName(path: String, file: MultipartFile): Optional<String> =
-        saveNamedObject(path, hashName(file.originalFilename ?: ""), file)
+    fun saveObjectWithRandomName(path: String, file: MultipartFile): Optional<String> =
+        saveNamedObject(path, generateName(file.originalFilename ?: ""), file)
 
-    fun saveObjectWithHashedName(
+    fun saveObjectWithRandomName(
         path: String,
         fileName: String,
         contentType: String,
         data: ByteArray
-    ): Optional<String> = saveNamedObject(path, hashName(fileName), contentType, data)
+    ): Optional<String> = saveNamedObject(path, generateName(fileName), contentType, data)
 
     fun saveNamedObject(path: String, name: String, file: MultipartFile): Optional<String>
 
@@ -47,6 +49,15 @@ interface StorageService {
 
     fun readObject(fullName: String): Optional<ByteArray>
 
-    private fun hashName(name: String) = (Generators.timeBasedEpochRandomGenerator().generate().toString()
+    private fun generateName(name: String) = (Generators.timeBasedEpochRandomGenerator().generate().toString()
             + name.substring(if (name.contains(".")) name.lastIndexOf('.') else 0))
+
+    fun readBundledAsset(assetName: String): Optional<ByteArray> {
+        try {
+            return Optional.of(ClassPathResource(assetName).inputStream.readAllBytes())
+        } catch (error: Throwable) {
+            LoggerFactory.getLogger(javaClass).error("Failed to read jar bundled asset '{}'!", assetName, error)
+        }
+        return Optional.empty()
+    }
 }

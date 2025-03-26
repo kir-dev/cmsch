@@ -284,7 +284,7 @@ open class TasksService(
                 if (file == null || imageFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_IMAGE
 
-                val fileName = storageService.saveObjectWithHashedName(target, file).orElse("")
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
                 val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
@@ -309,7 +309,7 @@ open class TasksService(
 
             }
             TaskType.BOTH -> {
-                val fileName = file?.let { storageService.saveObjectWithHashedName(target, it) }?.getOrNull() ?: ""
+                val fileName = file?.let { storageService.saveObjectWithRandomName(target, it) }?.getOrNull() ?: ""
                 if (file != null && imageFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_IMAGE
 
@@ -339,7 +339,7 @@ open class TasksService(
                 if (file == null || pdfFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_PDF
 
-                val fileName = storageService.saveObjectWithHashedName(target, file).orElse("")
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
                 val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
@@ -401,7 +401,7 @@ open class TasksService(
             TaskType.IMAGE -> {
                 if (file == null || imageFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_IMAGE
-                val fileName = storageService.saveObjectWithHashedName(target, file).orElse("")
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
                 submission.imageUrlAnswer = fileName
                 submission.rejected = false
@@ -422,7 +422,7 @@ open class TasksService(
             }
             TaskType.BOTH -> {
                 if (file != null && !imageFileNameInvalid(file)) {
-                    val fileName = storageService.saveObjectWithHashedName(target, file).orElse("")
+                    val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
                     submission.imageUrlAnswer = fileName
                 }
                 submission.textAnswerLob = answer.textAnswer
@@ -445,7 +445,7 @@ open class TasksService(
             TaskType.ONLY_PDF -> {
                 if (file == null || pdfFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_PDF
-                val fileName = storageService.saveObjectWithHashedName(target, file).orElse("")
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
                 submission.fileUrlAnswer = fileName
                 submission.rejected = false

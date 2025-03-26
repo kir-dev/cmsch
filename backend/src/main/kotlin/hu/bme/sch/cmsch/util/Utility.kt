@@ -55,14 +55,6 @@ fun Map<String, String>.urlEncode(): String = this.entries.joinToString("&") {
     URLEncoder.encode(it.key, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(it.value, StandardCharsets.UTF_8)
 }
 
-fun readBundledAsset(assetName: String): Optional<ByteArray> {
-    try {
-        return Optional.of(ClassPathResource(assetName).inputStream.readAllBytes())
-    } catch (ignored: Throwable) {
-    }
-    return Optional.empty()
-}
-
 private val markdownExtensions = listOf(TablesExtension.create())
 private val markdownParser: Parser = Parser.builder().extensions(markdownExtensions).build()
 private val markdownRenderer = HtmlRenderer.builder().extensions(markdownExtensions).build()

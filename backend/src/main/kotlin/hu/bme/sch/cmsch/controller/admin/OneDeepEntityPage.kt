@@ -703,7 +703,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         if (delete) {
             property.setter.call(entity, "")
         } else {
-            file?.let { file -> storageService.saveObjectWithHashedName(view, file) }
+            file?.let { file -> storageService.saveObjectWithRandomName(view, file) }
                 ?.ifPresent { url ->
                     newValues.append(property.name).append("=name@").append(url).append(", ")
                     property.setter.call(entity, url)
