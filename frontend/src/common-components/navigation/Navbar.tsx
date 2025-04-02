@@ -11,17 +11,16 @@ export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
   const config = useConfigContext()
   const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
+  const backdropFilter = useColorModeValue(config?.components.style?.lightNavbarFilter, config?.components.style?.darkNavbarFilter)
+  const background = useColorModeValue(config.components.style?.lightNavbarColor, config.components.style?.darkNavbarColor)
   return (
     <Box
       mx="auto"
       maxWidth={['100%', '64rem']}
       w="full"
       fontFamily="heading"
-      bg={
-        useColorModeValue(config.components.style.lightNavbarTransparent, config.components.style.darkNavbarTransparent)
-          ? undefined
-          : useColorModeValue(config.components.style.lightContainerColor, config.components.style.darkContainerColor)
-      }
+      backdropFilter={backdropFilter}
+      bg={background}
       borderBottomRadius={[0, null, 'xl']}
       mb={4}
     >

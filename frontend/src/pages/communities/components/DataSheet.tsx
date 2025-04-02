@@ -49,8 +49,8 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
             {organization.interests && (
               <Flex flexWrap="wrap">
                 {organization.interests.map((interest) => (
-                  <Box p={0.5}>
-                    <Tag colorScheme={organization.color} variant="solid" key={interest}>
+                  <Box key={interest} p={0.5}>
+                    <Tag colorScheme={organization.color} variant="solid">
                       {interest}
                     </Tag>
                   </Box>
