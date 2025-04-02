@@ -44,3 +44,5 @@ export const useConfigContext = () => {
   }
   return ctx
 }
+
+export const useStyleFromContext = () => useContext(ConfigContext)?.components?.style
