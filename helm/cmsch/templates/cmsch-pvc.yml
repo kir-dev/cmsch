@@ -1,4 +1,4 @@
-{{ if not (or .Values.minio.enabled .Values.s3.useS3) }}
+{{ if not .Values.s3.useS3 }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:

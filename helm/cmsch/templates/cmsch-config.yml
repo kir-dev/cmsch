@@ -19,12 +19,6 @@ data:
   S3_REGION: {{ .Values.s3.region }}
   S3_ENDPOINT: {{ .Values.s3.endpoint }}
   S3_PUBLIC_ENDPOINT: {{ .Values.s3.publicEndpoint }}
-  {{ else if .Values.minio.enabled }}
-  STORAGE_IMPLEMENTATION: S3
-  S3_BUCKET: {{ .Values.minio.cmschBucket.name }}
-  S3_REGION: {{ .Values.minio.cmschBucket.region }}
-  S3_ENDPOINT: "http://{{ .Release.Name }}-minio:9000"
-  S3_PUBLIC_ENDPOINT: "{{ .Values.minioHostProtocol }}://{{ .Values.minio.apiIngress.hostname }}"
   {{ else }}
   STORAGE_IMPLEMENTATION: FILESYSTEM
   {{end }}

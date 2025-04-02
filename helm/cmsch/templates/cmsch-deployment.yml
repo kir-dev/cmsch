@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretName }}
 {{ end }}
-      {{ if not (or .Values.minio.enabled .Values.s3.useS3) }}
+      {{ if not .Values.s3.useS3 }}
       volumes:
         - name: {{ .Release.Name }}-pv
           persistentVolumeClaim:
@@ -69,7 +69,7 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
               memory: {{ .Values.resources.requests.memory }}
-          {{ if not (or .Values.minio.enabled .Values.s3.useS3) }}
+          {{ if not .Values.s3.useS3 }}
           volumeMounts:
             - name: {{ .Release.Name }}-pv
               mountPath: /pv
