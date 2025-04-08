@@ -337,4 +337,7 @@ export interface Signup {
 
 export interface Communities {
   title: string
+  description:string
+  titleResort: string
+  descriptionResort: string
 }
