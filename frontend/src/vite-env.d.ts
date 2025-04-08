@@ -3,6 +3,7 @@
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string
   readonly VITE_BUGREPORT_URL: string
+  readonly VITE_HIDE_KIR_DEV_IN_FOOTER: string
   readonly VITE_CLIENT_BASE_URL: string
   readonly VITE_OFFICIAL_LANGUAGE: string
   readonly VITE_PASS_SERVER_URL: string

@@ -17,7 +17,7 @@ export default function OrganizationPage() {
 
   const breadcrumbItems = [
     {
-      title: 'Reszortok',
+      title: config?.titleResort,
       to: AbsolutePaths.ORGANIZATION
     },
     {
@@ -25,7 +25,7 @@ export default function OrganizationPage() {
     }
   ]
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.titleResort} />
 
   return (
     <CmschPage>
