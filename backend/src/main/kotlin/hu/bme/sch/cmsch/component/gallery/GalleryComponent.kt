@@ -26,7 +26,7 @@ class GalleryComponent(
     "Galéria",
     ControlPermissions.PERMISSION_CONTROL_GALLERY,
     listOf(GalleryEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

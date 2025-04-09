@@ -130,22 +130,31 @@ open class FormService(
         return form.submissionLimit >= 0 && (responseRepository.countAllByFormIdAndRejectedFalse(form.id) >= form.submissionLimit)
     }
 
+    data class FormSubmissionResult(val status: FormSubmissionStatus, val exitId: Int, val data: FormSubmissionData? = null)
+
+    data class FormSubmissionData(
+        val form: FormEntity,
+        val email: String?,
+        val submission: MutableMap<String, String>
+    )
+
+
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitForm(user: CmschUser?, path: String, data: Map<String, String>, update: Boolean): Pair<FormSubmissionStatus, Int> {
+    open fun submitForm(user: CmschUser?, path: String, data: Map<String, String>, update: Boolean): FormSubmissionResult {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
-            ?: return Pair(FormSubmissionStatus.FORM_NOT_AVAILABLE, 1)
+            ?: return FormSubmissionResult(FormSubmissionStatus.FORM_NOT_AVAILABLE, 1)
 
         val role = user?.role ?: RoleType.GUEST
         if ((form.minRole.value > role.value || form.maxRole.value < role.value) && !role.isAdmin)
-            return Pair(FormSubmissionStatus.FORM_NOT_AVAILABLE, 2)
+            return FormSubmissionResult(FormSubmissionStatus.FORM_NOT_AVAILABLE, 2)
         val now = clock.getTimeInSeconds()
         if (!form.open || !clock.inRange(form.availableFrom, form.availableUntil, now))
-            return Pair(FormSubmissionStatus.FORM_NOT_AVAILABLE, 3)
+            return FormSubmissionResult(FormSubmissionStatus.FORM_NOT_AVAILABLE, 3)
 
         val groupId = user?.groupId
         if (form.ownerIsGroup && groupId == null)
-            return Pair(FormSubmissionStatus.FORM_NOT_AVAILABLE, 4)
+            return FormSubmissionResult(FormSubmissionStatus.FORM_NOT_AVAILABLE, 4)
 
         val submissionEntity: ResponseEntity? = if (form.ownerIsGroup) {
             responseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0).getOrNull()
@@ -154,17 +163,17 @@ open class FormService(
         }
 
         if (!update && submissionEntity != null)
-            return Pair(FormSubmissionStatus.ALREADY_SUBMITTED, 5)
+            return FormSubmissionResult(FormSubmissionStatus.ALREADY_SUBMITTED, 5)
         if (update && submissionEntity == null)
-            return Pair(FormSubmissionStatus.EDIT_SUBMISSION_NOT_FOUND, 6)
+            return FormSubmissionResult(FormSubmissionStatus.EDIT_SUBMISSION_NOT_FOUND, 6)
         if (update && submissionEntity!!.detailsValidated)
-            return Pair(FormSubmissionStatus.EDIT_CANNOT_BE_CHANGED, 7)
+            return FormSubmissionResult(FormSubmissionStatus.EDIT_CANNOT_BE_CHANGED, 7)
         if (form.allowedGroups.isNotBlank() && user?.groupName !in form.allowedGroups.split(Regex(", *"))) {
-            return Pair(FormSubmissionStatus.FORM_NOT_AVAILABLE, 8)
+            return FormSubmissionResult(FormSubmissionStatus.FORM_NOT_AVAILABLE, 8)
         }
 
         if (!update && isFull(form))
-            return Pair(FormSubmissionStatus.FORM_IS_FULL, 9)
+            return FormSubmissionResult(FormSubmissionStatus.FORM_IS_FULL, 9)
 
         val formStruct = objectMapper.readerFor(object : TypeReference<List<FormElement>>() {})
             .readValue<List<FormElement>>(form.formJson)
@@ -193,38 +202,38 @@ open class FormService(
                 var value = data[field.fieldName]
                 if (value == null) {
                     log.info("User {} missing value {}", user?.id, field.fieldName)
-                    return Pair(FormSubmissionStatus.INVALID_VALUES, 10)
+                    return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 10)
                 }
 
                 when (field.type) {
                     FormElementType.NUMBER -> {
                         if (!value.matches(Regex("[0-9]+"))) {
                             log.info("User {} invalid NUMBER value {} = '{}'", user?.id, field.fieldName, value)
-                            return Pair(FormSubmissionStatus.INVALID_VALUES, 11)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 11)
                         }
                     }
                     FormElementType.EMAIL -> {
                         if (!value.matches(Regex(".+@.+\\..+"))) {
                             log.info("User {} invalid EMAIL value {} = '{}'", user?.id, field.fieldName, value)
-                            return Pair(FormSubmissionStatus.INVALID_VALUES, 12)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 12)
                         }
                     }
                     FormElementType.CHECKBOX -> {
                         if (!value.equals("true", ignoreCase = true) && !value.equals("false", ignoreCase = true) && value != "") {
                             log.info("User {} invalid CHECKBOX value {} = '{}'", user?.id, field.fieldName, value)
-                            return Pair(FormSubmissionStatus.INVALID_VALUES, 13)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 13)
                         }
                     }
                     FormElementType.SELECT -> {
                         if (value !in field.values.split(Regex(", *")).map { it.trim() }) {
                             log.info("User {} invalid SELECT value {} = '{}'", user?.id, field.fieldName, value)
-                            return Pair(FormSubmissionStatus.INVALID_VALUES, 14)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 14)
                         }
                     }
                     FormElementType.MUST_AGREE -> {
                         if (value != "true") {
                             log.info("User {} invalid MUST_AGREE value {} = '{}'", user?.id, field.fieldName, value)
-                            return Pair(FormSubmissionStatus.INVALID_VALUES, 15)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 15)
                         }
                     }
                     FormElementType.CHOICE_GRID -> {
@@ -232,7 +241,7 @@ open class FormService(
                             choiceGridReader.readValue<Map<String, String>>(value)
                         } catch (e: Exception) {
                             log.info("User {} invalid CHOICE_GRID value {} = '{}'", user?.id, field.fieldName, value)
-                            return Pair(FormSubmissionStatus.INVALID_VALUES, 16)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 16)
                         }
                         val componentStruct = gridReader.readValue<FormGridValue>(field.values)
                         val newValue = mutableMapOf<String, String>()
@@ -251,7 +260,7 @@ open class FormService(
                             selectionGridReader.readValue<Map<String, Boolean>>(value)
                         } catch (e: Exception) {
                             log.info("User {} invalid SELECTION_GRID value {} = '{}'", user?.id, field.fieldName, value)
-                            return Pair(FormSubmissionStatus.INVALID_VALUES, 17)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 17)
                         }
                         val componentStruct = gridReader.readValue<FormGridValue>(field.values)
                         val newValue = mutableMapOf<String, Boolean>()
@@ -269,7 +278,7 @@ open class FormService(
 
                 if (!value.matches(Regex(field.formatRegex))) {
                     log.info("User {} invalid REGEX value {} = {}", user?.id, field.fieldName, value)
-                    return Pair(FormSubmissionStatus.INVALID_VALUES, 18)
+                    return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 18)
                 }
 
                 submission[field.fieldName] = value
@@ -279,18 +288,13 @@ open class FormService(
             }
         }
 
-
         val email = getEmailAddressForConfirmation(form, userEntity, submission) ?: ""
-        val confirmationResult = runCatching { sendConfirmationEmail(form, email, submissionEntity, submission) }
-        confirmationResult.exceptionOrNull()?.let { log.error("Failed to send email {}", it) }
-        val sentConfirmation = confirmationResult.getOrNull() ?: false
         val entryToken = getEntryToken(form, submission) ?: ""
 
         if (update) {
             log.info("User {} changed form {} successfully", user?.id, form.id)
             submissionEntity!!.submission = objectMapper.writeValueAsString(submission)
             submissionEntity.lastUpdatedDate = now
-            submissionEntity.sentConfirmation = submissionEntity.sentConfirmation || sentConfirmation
             submissionEntity.entryToken = entryToken
             submissionEntity.email = email
             responseRepository.save(submissionEntity)
@@ -298,7 +302,6 @@ open class FormService(
         } else {
             log.info("User {} filled out form {} successfully", user?.id, form.id)
             val responseEntity = ResponseEntity(
-                sentConfirmation = sentConfirmation,
                 entryToken = entryToken,
                 submitterUserId = if (form.ownerIsGroup) null else user?.id,
                 submitterUserName = if (form.ownerIsGroup) "" else user?.userName ?: "GUEST",
@@ -316,6 +319,7 @@ open class FormService(
             listeners.forEach { it.onFormSubmitted(user, form, responseEntity) }
         }
 
+        val submissionData = FormSubmissionData(form, email, submission)
         if (form.grantAttendeeRole) {
             if (userEntity != null && userEntity.role.value <= RoleType.ATTENDEE.value) {
                 userEntity.role = RoleType.ATTENDEE
@@ -324,10 +328,10 @@ open class FormService(
             } else {
                 log.info("NOT granting ATTENDEE for user {} for filling form {} successfully because higher role", user?.id, form.id)
             }
-            return Pair(FormSubmissionStatus.OK_RELOG_REQUIRED, 201)
+            return FormSubmissionResult(FormSubmissionStatus.OK_RELOG_REQUIRED, 201, submissionData)
         }
 
-        return Pair(FormSubmissionStatus.OK, 200)
+        return FormSubmissionResult(FormSubmissionStatus.OK, 200, submissionData)
     }
 
     private fun getEntryToken(form: FormEntity, values: Map<String, String>): String? {
@@ -337,17 +341,17 @@ open class FormService(
         return values[field]
     }
 
-    private fun sendConfirmationEmail(
+    fun sendConfirmationEmail(
         form: FormEntity,
         email: String?,
-        previousSubmission: ResponseEntity?,
+        update: Boolean,
         submission: MutableMap<String, String>
     ): Boolean {
         if (!form.sendConfirmationEmail) {
             return false
         }
 
-        if (form.sendConfirmationEmailOnlyOnce && previousSubmission?.sentConfirmation == true) {
+        if (form.sendConfirmationEmailOnlyOnce && update) {
             return false
         }
 

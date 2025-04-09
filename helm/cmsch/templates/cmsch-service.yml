@@ -3,17 +3,15 @@ apiVersion: v1
 metadata:
   name: {{ .Release.Name }}
   labels:
+    app: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
 spec:
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+      name: http-{{ .Release.Name }}
   selector:
+    app: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
-  type: ClusterIP
-  sessionAffinity: None
-  ipFamilies:
-    - IPv4
-  ipFamilyPolicy: SingleStack
-  internalTrafficPolicy: Cluster
+  type: {{ .Values.service.type }}

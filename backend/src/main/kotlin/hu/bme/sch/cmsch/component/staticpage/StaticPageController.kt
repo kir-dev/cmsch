@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.AuditLogService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
@@ -25,7 +22,8 @@ class StaticPageController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
-    env: Environment
+    env: Environment,
+    storageService: StorageService
 ) : OneDeepEntityPage<StaticPageEntity>(
     "static-pages",
     StaticPageEntity::class, ::StaticPageEntity,
@@ -39,6 +37,7 @@ class StaticPageController(
     repo,
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -62,19 +61,18 @@ class StaticPageController(
 ) {
 
     override fun filterOverview(user: CmschUser, rows: Iterable<StaticPageEntity>): Iterable<StaticPageEntity> {
-        return rows.filter { editPermissionCheck(user, it) }
+        return rows.filter { editPermissionCheck(user, it, null) }
     }
 
-    override fun editPermissionCheck(user: CmschUser, entity: StaticPageEntity): Boolean {
-        return user.isAdmin() || entity.permissionToEdit.isBlank() || user.hasPermission(entity.permissionToEdit)
+    override fun editPermissionCheck(user: CmschUser, oldEntity: StaticPageEntity?, newEntity: StaticPageEntity?): Boolean {
+        return user.isAdmin() || oldEntity?.permissionToEdit.isNullOrBlank() || user.hasPermission(oldEntity.permissionToEdit)
                 || StaffPermissions.PERMISSION_MODIFY_ANY_STATIC_PAGES.validate(user)
     }
 
     override fun purgeAllEntities(user: CmschUser) {
         dataSource.findAll()
-            .filter { editPermissionCheck(user, it) }
+            .filter { editPermissionCheck(user, it, null) }
             .forEach { dataSource.delete(it) }
     }
 
 }
-

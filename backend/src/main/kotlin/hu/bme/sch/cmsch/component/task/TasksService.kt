@@ -6,8 +6,8 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.service.StorageService
 import hu.bme.sch.cmsch.service.TimeService
-import hu.bme.sch.cmsch.util.uploadFile
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.retry.annotation.Backoff
@@ -30,7 +30,8 @@ open class TasksService(
     private val taskComponent: TaskComponent,
     private val listeners: List<TaskSubmissionListener>,
     private val userRepository: UserRepository,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val storageService: StorageService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -283,14 +284,14 @@ open class TasksService(
                 if (file == null || imageFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_IMAGE
 
-                val fileName = file.uploadFile(target)
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
                 val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
                     textAnswerLob = "",
-                    imageUrlAnswer = "$target/$fileName",
+                    imageUrlAnswer = fileName,
                     fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
                 ).addSubmissionHistory(
@@ -298,7 +299,7 @@ open class TasksService(
                     submitterName = user.userName,
                     adminResponse = false,
                     content = "",
-                    contentUrl = "$target/$fileName",
+                    contentUrl = fileName,
                     status = "0 pont | beadva",
                     type = "IMAGE"
                 )
@@ -308,17 +309,16 @@ open class TasksService(
 
             }
             TaskType.BOTH -> {
+                val fileName = file?.let { storageService.saveObjectWithRandomName(target, it) }?.getOrNull() ?: ""
                 if (file != null && imageFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_IMAGE
-
-                val fileName = file?.uploadFile(target) ?: ""
 
                 val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
                     userId, userName ?: "",
                     task.categoryId,
                     textAnswerLob = answer.textAnswer,
-                    imageUrlAnswer = "$target/$fileName",
+                    imageUrlAnswer = fileName,
                     fileUrlAnswer = "",
                     response = "", approved = false, rejected = false, score = 0
                 ).addSubmissionHistory(
@@ -326,7 +326,7 @@ open class TasksService(
                     submitterName = user.userName,
                     adminResponse = false,
                     content = answer.textAnswer,
-                    contentUrl = "$target/$fileName",
+                    contentUrl = fileName,
                     status = "0 pont | beadva",
                     type = "BOTH"
                 )
@@ -339,7 +339,7 @@ open class TasksService(
                 if (file == null || pdfFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_PDF
 
-                val fileName = file.uploadFile(target)
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
                 val submission = SubmittedTaskEntity(
                     0, task, groupId, groupName ?: "",
@@ -347,14 +347,14 @@ open class TasksService(
                     task.categoryId,
                     textAnswerLob = "",
                     imageUrlAnswer = "",
-                    fileUrlAnswer = "$target/$fileName",
+                    fileUrlAnswer = fileName,
                     response = "", approved = false, rejected = false, score = 0
                 ).addSubmissionHistory(
                     date = clock.getTimeInSeconds(),
                     submitterName = user.userName,
                     adminResponse = false,
                     content = "",
-                    contentUrl = "$target/$fileName",
+                    contentUrl = fileName,
                     status = "0 pont | beadva",
                     type = "PDF"
                 )
@@ -401,9 +401,9 @@ open class TasksService(
             TaskType.IMAGE -> {
                 if (file == null || imageFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_IMAGE
-                val fileName = file.uploadFile(target)
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
-                submission.imageUrlAnswer = "$target/$fileName"
+                submission.imageUrlAnswer = fileName
                 submission.rejected = false
                 submission.approved = false
                 submission.addSubmissionHistory(
@@ -411,7 +411,7 @@ open class TasksService(
                     submitterName = user.userName,
                     adminResponse = false,
                     content = "",
-                    contentUrl = "$target/$fileName",
+                    contentUrl = fileName,
                     status = "${submission.score} pont | beadva",
                     type = "IMAGE"
                 )
@@ -422,8 +422,8 @@ open class TasksService(
             }
             TaskType.BOTH -> {
                 if (file != null && !imageFileNameInvalid(file)) {
-                    val fileName = file.uploadFile(target)
-                    submission.imageUrlAnswer = "$target/$fileName"
+                    val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
+                    submission.imageUrlAnswer = fileName
                 }
                 submission.textAnswerLob = answer.textAnswer
                 submission.rejected = false
@@ -445,9 +445,9 @@ open class TasksService(
             TaskType.ONLY_PDF -> {
                 if (file == null || pdfFileNameInvalid(file))
                     return TaskSubmissionStatus.INVALID_PDF
-                val fileName = file.uploadFile(target)
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
 
-                submission.fileUrlAnswer = "$target/$fileName"
+                submission.fileUrlAnswer = fileName
                 submission.rejected = false
                 submission.approved = false
                 submission.addSubmissionHistory(
@@ -455,7 +455,7 @@ open class TasksService(
                     submitterName = user.userName,
                     adminResponse = false,
                     content = "",
-                    contentUrl = "$target/$fileName",
+                    contentUrl = fileName,
                     status = "${submission.score} pont | beadva",
                     type = "PDF"
                 )

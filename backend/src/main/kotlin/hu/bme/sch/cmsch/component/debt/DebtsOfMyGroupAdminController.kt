@@ -30,7 +30,8 @@ class DebtsOfMyGroupAdminController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
-    env: Environment
+    env: Environment,
+    storageService: StorageService
 ) : SimpleEntityPage<SoldProductEntity>(
     "debts-of-my-group",
     SoldProductEntity::class, ::SoldProductEntity,
@@ -45,6 +46,7 @@ class DebtsOfMyGroupAdminController(
 
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -98,6 +100,7 @@ class DebtsOfMyGroupAdminController(
     fun payed(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         if (payPermission.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", payPermission.permissionString)
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "POST /$view/payed/$id",

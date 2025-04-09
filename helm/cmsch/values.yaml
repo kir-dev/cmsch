@@ -1,19 +1,29 @@
 frontendHost: cmsch.basic
 apiHost: api.cmsch.basic
+frontendHostProtocol: https
+apiHostProtocol: https
 
 # For staging environments you can enable vercel previews and localhost for easier frontend development, like this:
-#  allowedOriginPatterns: "https://cmsch-basic-*-kir-dev.vercel.app,http://localhost:3000,http://localhost:3000"
+#  allowedOriginPatterns: "https://cmsch-basic-*-kir-dev.vercel.app,http://127.0.0.1:3000,http://localhost:3000"
 allowedOriginPatterns: ""
 
 apiImage: harbor.sch.bme.hu/org-kir-dev/cmsch:release
 imagePullSecretName: harbor-cred
 imagePullPolicy: Always
 
+springLoggingLevel: INFO
 springProfiles: prod,docker,env
 deploymentStrategy: Recreate # because of resource constraints and H2 allowing only 1 connection at a time
+backendDistributedMode: false
+replicas: 1
+
+service:
+  type: ClusterIP
 
 ingress:
+  enabled: true
   maxBodySize: 20m
+  className: nginx
 
 blockActuatorEndpoints: true
 swaggerEnabled: false
@@ -23,13 +33,15 @@ superusers:
   googleEmails: ""
 
 resources:
+  storageClassName: local-path
+  volumeMode: Filesystem
   limits:
     cpu:
     memory:
   requests:
     cpu: 500m
     memory: 750Mi
-    storage: 3Gi
+    storage: 3G
 
 secret:
   jwtSecret: this is a secret value # openssl rand -hex 16
@@ -44,19 +56,34 @@ secret:
 
 postgres:
   enabled: false # Remember to set this too → springProfiles: prod,docker,env,postgres
-  tagName: 17-alpine # the image will be: postgres:17-alpine
-  db: cmsch
-  ddl: update
-  secret:
-    user: admin
-    password: admin
-  resources:
-    limits:
-      cpu:
-      memory:
-    requests:
-      cpu: 1000m
-      memory: 500Mi
+  driveBackup:
+    enabled: true
+    schedule: "0 3 * * *"
+    restartPolicy: Never
+    imagePullPolicy: Always
+    image: harbor.sch.bme.hu/org-kir-dev/postgres-backup:latest
+    googleServiceAccount: 'service account json contents'
+    driveParentId: "the ID of the drive folder for the files"
+    driveId: "the ID of the shared drive"
+  global:
+    defaultStorageClass: local-path
+    postgresql:
+      auth:
+        database: cmsch
+        username: admin
+        password: admin
+  architecture: standalone
+  primary:
+    resourcesPreset: "micro"
+
+s3:
+  useS3: false
+  accessKey: secret
+  secretKey: secret
+  bucket: cmsch
+  region: region
+  endpoint:
+  publicEndpoint:
 
 load:
   app: true
@@ -91,6 +118,7 @@ load:
   event: false
   pushnotification: false
   sheets: false
+  serviceAccount: false
 
 owner:
   token: USER
@@ -106,8 +134,18 @@ riddle:
   managementToken: ""
   msNodeName: NOT_SET
 
+startupProbe:
+  failureThreshold: 60
+  periodSeconds: 5
+
+readinessProbe:
+  initialDelaySeconds: 0
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 10
+
 livenessProbe:
-  initialDelaySeconds: 600 # might be overkill, but it shouldn't matter that much
+  initialDelaySeconds: 0
   periodSeconds: 5
   timeoutSeconds: 5
   failureThreshold: 5

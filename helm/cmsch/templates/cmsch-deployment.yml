@@ -3,15 +3,19 @@ apiVersion: apps/v1
 metadata:
   name: {{ .Release.Name }}
   labels:
+    app: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
+      app: {{ .Release.Name }}
       app.kubernetes.io/name: {{ .Release.Name }}
   template:
     metadata:
+      name: {{ .Release.Name }}
       labels:
+        app: {{ .Release.Name }}
         app.kubernetes.io/name: {{ .Release.Name }}
         kir-dev-spring-monitored: enabled
       annotations:
@@ -19,15 +23,21 @@ spec:
         prometheus.io/port: "80"
         prometheus.io/scrape: "true"
     spec:
+{{ if  .Values.imagePullSecretName  }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretName }}
+{{ end }}
+      {{ if not .Values.s3.useS3 }}
       volumes:
         - name: {{ .Release.Name }}-pv
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-pv
+      {{ end }}
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.apiImage }}
+          securityContext:
+            runAsUser: 0
           ports:
             - name: web
               containerPort: 80
@@ -37,16 +47,8 @@ spec:
                 name: {{ .Release.Name }}-secrets
             - configMapRef:
                 name: {{ .Release.Name }}-config
-            {{ if .Values.postgres.enabled }}
-            - secretRef:
-                name: {{ .Release.Name }}-postgres-secrets
-            - configMapRef:
-                name: {{ .Release.Name }}-postgres-config
-            {{ end }}
           env:
             {{ if .Values.postgres.enabled }}
-            - name: POSTGRES_PW
-              value: "$(POSTGRES_PASSWORD)"
             - name: POSTGRES_IP
               value: "{{ .Release.Name }}-postgres:5432"
             {{ end }}
@@ -67,12 +69,26 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
               memory: {{ .Values.resources.requests.memory }}
+          {{ if not .Values.s3.useS3 }}
           volumeMounts:
             - name: {{ .Release.Name }}-pv
               mountPath: /pv
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
+          {{ end }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 80
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 80
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
@@ -83,10 +99,5 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
-      dnsPolicy: ClusterFirst
-      securityContext: { }
-      schedulerName: default-scheduler
   strategy:
     type: {{ .Values.deploymentStrategy }}
-  revisionHistoryLimit: 10
-  progressDeadlineSeconds: 600

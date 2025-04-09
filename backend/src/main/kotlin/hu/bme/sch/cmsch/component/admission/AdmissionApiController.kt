@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.UserService
@@ -35,7 +36,8 @@ class AdmissionApiController(
     private val auditLogService: AuditLogService,
     private val responseRepository: Optional<ResponseRepository>,
     private val admissionService: AdmissionService,
-    private val transactionManager: PlatformTransactionManager
+    private val transactionManager: PlatformTransactionManager,
+    private val adminMenuService: AdminMenuService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -44,6 +46,7 @@ class AdmissionApiController(
     fun admission(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         if (StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
             model.addAttribute("user", user)
 
@@ -63,6 +66,7 @@ class AdmissionApiController(
     fun ticketAdmission(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         if (StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
             model.addAttribute("user", user)
 
@@ -82,6 +86,7 @@ class AdmissionApiController(
     fun admissionForm(model: Model, auth: Authentication, @PathVariable formId: Int): String {
         val user = auth.getUser()
         if (StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", StaffPermissions.PERMISSION_VALIDATE_ADMISSION.permissionString)
             model.addAttribute("user", user)
 
@@ -210,7 +215,7 @@ class AdmissionApiController(
                     ?.findTop1ByFormIdAndEntryTokenOrderByLineDesc(formId, resolve.cmschId)
                     ?.firstOrNull()
                 if (response != null) {
-                    return mapFormResponse(response, null, formId)
+                    return@transaction mapFormResponse(response, null, formId)
                 }
             }
 
@@ -363,15 +368,18 @@ class AdmissionApiController(
             "Admission is {} for user '{}' with group '{}' as {}",
             if (grant.canAttend) "OK" else "DENIED", user?.fullName, user?.groupName, grant
         )
+
+        val commentIfAnonymousFill = if (user == null) response.submission else ""
         return AdmissionResponse(
             groupName = user?.groupName ?: "",
-            userName = user?.fullName ?: "",
+            userName = user?.fullName ?: response.email,
             role = user?.role ?: RoleType.GUEST,
             entryRole = grant,
             accessGranted = grant.canAttend,
             userEntity = user,
             formId = formId,
-            responseId = response.id
+            responseId = response.id,
+            comment = commentIfAnonymousFill
         )
     }
 

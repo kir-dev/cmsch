@@ -4,8 +4,8 @@
 </head>
 <body>
 
-<object th:each="type : ${T(hu.bme.sch.cmsch.admin.DetailsHelper).inputTypes(inputs)}" th:remove="tag">
-    <script th:replace="~{('component/details/' + ${type}) :: detailsSegmentScript(${ext}) }" th:remove="tag"></script>
+<object th:each="input : ${inputs}" th:remove="tag">
+    <script th:replace="~{('component/details/' + ${input.second.type}) :: detailsSegmentScript(${ext}) }" th:remove="tag"></script>
 </object>
 
 <div th:replace="~{layout4 :: mobile(null)}"></div>

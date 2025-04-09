@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.repository.PermissionGroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.StorageService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_PERMISSION_GROUPS
@@ -60,6 +61,7 @@ class PermissionGroupUserListPage(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     env: Environment,
+    storageService: StorageService,
     transactionManager: PlatformTransactionManager,
     private val userRepository: UserRepository,
     private val permissionGroupRepository: PermissionGroupRepository,
@@ -78,6 +80,7 @@ class PermissionGroupUserListPage(
 
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -171,6 +174,7 @@ class PermissionGroupUserListPage(
     fun removePermissionGroupFromUser(auth: Authentication, model: Model, @PathVariable permissionGroupId: Int, @PathVariable userId: Int): String {
         val user = auth.getUser()
         if (removePermission.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", removePermission.permissionString)
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "GET /$view/$permissionGroupId/remove/$userId", deletePermission.permissionString)

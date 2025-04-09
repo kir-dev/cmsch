@@ -26,7 +26,7 @@ class TokenComponent(
     "Tokenek",
     ControlPermissions.PERMISSION_CONTROL_TOKEN,
     listOf(TokenEntity::class, TokenPropertyEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {
@@ -102,8 +102,8 @@ class TokenComponent(
     )
 
     val collectRequiredType = SettingProxy(componentSettingService, component,
-        "collectType", "default", serverSideOnly = false, type = SettingType.TEXT,
-        fieldName = "Pecsét token típusa", description = "Ebből a fajából kell összegyűjteni az n darabot; Ha '*' akkor bármilyen típust elfogad."
+        "collectType", "*", serverSideOnly = false, type = SettingType.TEXT,
+        fieldName = "Pecsét token típusa", description = "Ebből a fajtából kell összegyűjteni az n darabot; Ha '*' akkor bármilyen típust elfogad."
     )
 
     val minTokenNotEnoughMessage = SettingProxy(componentSettingService, component,
@@ -156,7 +156,7 @@ class TokenComponent(
     final val reportSummaryTableColumns = SettingProxy(componentSettingService, component,
         "reportSummaryTableColumns", "stamp,attendance,riddle,achievement",
         fieldName = "Riport összefoglaló táblázat oszlopai", description = "Ezek az oszlopok fognak megjelenni az összefoglaló táblázatban" +
-                ", vesszővel elválasztva kell őket megadni, lehetséges értékek: stamp,attendance,riddle,achievement"
+                ", vesszővel elválasztva kell őket megadni, lehetséges értékek: stamp,attendance,riddle,achievement,time-between-scans"
     )
 
     final val reportDescription = SettingProxy(componentSettingService, component,
@@ -167,7 +167,7 @@ class TokenComponent(
     )
 
     final val reportLogo = SettingProxy(componentSettingService, component,
-        "reportLogo", "/cdn/manifest/report-logo.png",
+        "reportLogo", "manifest/report-logo.png",
         fieldName = "Jelenléti ív logója", description = "Ez lesz a jelenléti íven megjelenített logó (csak PNG és JPG jó)",
         type = SettingType.IMAGE,
     )

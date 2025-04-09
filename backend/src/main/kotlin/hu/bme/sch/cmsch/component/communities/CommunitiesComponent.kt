@@ -28,7 +28,7 @@ class CommunitiesComponent(
     "Körök",
     ControlPermissions.PERMISSION_CONTROL_COMMUNITIES,
     listOf(CommunityEntity::class, OrganizationEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {
@@ -37,11 +37,13 @@ class CommunitiesComponent(
             title,
             menuDisplayName,
             minRole,
+            description,
 
             resortGroup,
             titleResort,
             menuDisplayNameResort,
-            minRoleResort
+            minRoleResort,
+            descriptionResort
         )
     }
 
@@ -66,6 +68,11 @@ class CommunitiesComponent(
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
+    final val description = SettingProxy(componentSettingService, component, "description",
+        "A körök fogják össze az azonos érdeklődési körű hallgatókat. A körök a Schönherz Kollégiumban működnek.",
+        fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon", type = SettingType.LONG_TEXT_MARKDOWN
+    )
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val resortGroup = SettingProxy(componentSettingService, component,
@@ -87,6 +94,11 @@ class CommunitiesComponent(
     final val minRoleResort = MinRoleSettingProxy(componentSettingService, component,
         "minRoleResort", MinRoleSettingProxy.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    )
+
+    final val descriptionResort = SettingProxy(componentSettingService, component,
+        "descriptionResort", "Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.",
+        fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon", type = SettingType.LONG_TEXT_MARKDOWN
     )
 
     override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {

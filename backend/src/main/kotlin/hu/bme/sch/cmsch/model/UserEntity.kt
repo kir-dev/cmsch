@@ -220,6 +220,14 @@ data class UserEntity(
     @property:ImportFormat
     var permissions: String = "",
 
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 20, label = "Service Account", note = "Lehet-e API keyekkel irányitani")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var isServiceAccount: Boolean = false,
+
 ): ManagedEntity, CmschUser {
 
     override val groupId

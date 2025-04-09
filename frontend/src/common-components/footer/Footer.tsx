@@ -2,35 +2,30 @@ import { Box, Flex, Heading, Image, Text, useColorModeValue } from '@chakra-ui/r
 import { useMemo } from 'react'
 import { FaHeart } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { BUGREPORT_URL } from '../../util/configs/environment.config'
+import { BUGREPORT_URL, HIDE_KIR_DEV_IN_FOOTER } from '../../util/configs/environment.config'
 import Markdown from '../Markdown'
 import { OrganizerLogo } from './OrganizerLogo'
 import { PartnerLogo } from './PartnerLogo'
 import parseSponsors from './utils/parseSponsors'
-
-const bgShadowColor = '#00000025'
 
 export const Footer = () => {
   const config = useConfigContext()
   const component = config?.components.footer
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   const partners = useMemo(() => parseSponsors(component?.partnerLogoUrls, component?.partnerAlts, component?.partnerWebsiteUrls), [config])
+  const backdropFilter = useColorModeValue(config?.components?.style?.lightFooterFilter, config?.components?.style?.darkFooterFilter)
+  const background = useColorModeValue(config?.components?.style?.lightFooterBackground, config?.components?.style?.darkFooterBackground)
+  const bgShadowColor = useColorModeValue(
+    config?.components?.style?.lightFooterShadowColor,
+    config?.components?.style?.darkFooterShadowColor
+  )
+
   if (!component) return null
 
   const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
   const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
-  const transparentNavbar = useColorModeValue(config.components.style.lightFooterTransparent, config.components.style.darkFooterTransparent)
   return (
-    <Flex
-      flexDirection="column"
-      align="center"
-      w="full"
-      bg={
-        transparentNavbar
-          ? useColorModeValue(config.components.style.lightContainerColor, config.components.style.darkContainerColor) + '50'
-          : useColorModeValue('lightContainerBg', 'darkContainerBg')
-      }
-    >
+    <Flex flexDirection="column" align="center" w="full" backdropFilter={backdropFilter} bg={background}>
       {topBarVisible && (
         <Flex justify="center" w="full" bg={bgShadowColor} p={5}>
           <Flex
@@ -94,15 +89,17 @@ export const Footer = () => {
             instagramUrl={component?.instagramUrl}
             minimalistic={component?.minimalisticFooter}
           />
-          <OrganizerLogo
-            imageSrc={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')}
-            websiteUrl={component.devWebsiteUrl}
-            contactUrl={BUGREPORT_URL}
-            minimalistic={component.minimalisticFooter}
-          />
+          {!HIDE_KIR_DEV_IN_FOOTER && (
+            <OrganizerLogo
+              imageSrc={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')}
+              websiteUrl={component.devWebsiteUrl}
+              contactUrl={BUGREPORT_URL}
+              minimalistic={component.minimalisticFooter}
+            />
+          )}
         </Flex>
       </Flex>
-      <Text w="full" textAlign="center" p={3} bg={transparentNavbar ? undefined : bgShadowColor}>
+      <Text w="full" textAlign="center" p={3} bg={bgShadowColor}>
         Made with <FaHeart style={{ display: 'inline' }} color="red" size="1rem" /> by Kir-Dev <br /> Minden jog fenntartva. &copy;{' '}
         {new Date().getFullYear()}
       </Text>

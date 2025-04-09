@@ -29,7 +29,8 @@ class LeaderBoardGroupController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
-    env: Environment
+    env: Environment,
+    storageService: StorageService
 ) : SimpleEntityPage<LeaderBoardAsGroupEntryDto>(
     "group-toplist",
     LeaderBoardAsGroupEntryDto::class, ::LeaderBoardAsGroupEntryDto,
@@ -45,6 +46,7 @@ class LeaderBoardGroupController(
 
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -79,6 +81,7 @@ class LeaderBoardGroupController(
     fun refreshUserTopList(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         if (refreshPermission.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", refreshPermission.permissionString)
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "GET /$view/refresh",

@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -37,6 +38,7 @@ class UserController(
     private val startupPropertyConfig: StartupPropertyConfig,
     components: MutableList<out ComponentBase>,
     env: Environment,
+    storageService: StorageService,
     transactionManager: PlatformTransactionManager,
     private val permissionsService: PermissionsService,
     private val permissionGroupService: PermissionGroupService
@@ -50,6 +52,7 @@ class UserController(
     repo,
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -58,11 +61,11 @@ class UserController(
     entitySourceMapping = mapOf("GroupEntity" to { listOf("") + groups.findAll().map { it.name }.toList() }),
 
     showPermission = StaffPermissions.PERMISSION_SHOW_USERS,
-    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
+    createPermission = ImplicitPermissions.PERMISSION_SUPERUSER_ONLY,
     editPermission = StaffPermissions.PERMISSION_EDIT_USERS,
     deletePermission = ImplicitPermissions.PERMISSION_SUPERUSER_ONLY,
 
-    createEnabled = false,
+    createEnabled = true,
     editEnabled = true,
     deleteEnabled = true,
     importEnabled = false,
@@ -107,11 +110,7 @@ class UserController(
     }
 
     override fun onEntityPreSave(entity: UserEntity, auth: Authentication): Boolean {
-        if (startupPropertyConfig.profileQrEnabled) {
-            profileService.generateFullProfileForUser(entity)
-        } else {
-            profileService.generateProfileIdForUser(entity)
-        }
+        profileService.generateProfileIdForUser(entity)
 
         if (entity.groupName.isNotBlank()) {
             transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({
@@ -125,6 +124,26 @@ class UserController(
         }
 
         adminMenuService.invalidateUser(entity.internalId)
+        return true
+    }
+
+    override fun editPermissionCheck(
+        user: CmschUser,
+        oldEntity: UserEntity?,
+        newEntity: UserEntity?
+    ): Boolean {
+        val guestValue = RoleType.GUEST.value
+        val isEditingHigherRole = user.role.value < (oldEntity?.role?.value ?: guestValue) || user.role.value < (newEntity?.role?.value ?: guestValue)
+        if (isEditingHigherRole) {
+            auditLog.error(view, "User: $user tried to edit user data with higher role $oldEntity -> $newEntity")
+            return false
+        }
+
+        // only superusers are allowed to interact with service accounts
+        val isServiceAccount = oldEntity?.isServiceAccount == true || newEntity?.isServiceAccount == true
+        if (user.role != RoleType.SUPERUSER && isServiceAccount) {
+            return false
+        }
         return true
     }
 

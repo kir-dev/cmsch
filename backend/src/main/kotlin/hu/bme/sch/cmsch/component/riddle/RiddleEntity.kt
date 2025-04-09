@@ -37,12 +37,13 @@ data class RiddleEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = INPUT_TYPE_FILE, order = 2, label = "A képrejtvény", fileType = "image")
-    @property:GenerateOverview(columnName = "Kép", order = 0, renderer = OVERVIEW_TYPE_CDN_IMAGE, cdnImageFolder = "riddles")
+    @property:GenerateOverview(columnName = "Kép", order = 0, renderer = OVERVIEW_TYPE_IMAGE)
     var imageUrl: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 128, order = 3, label = "Megoldás")
+    @property:GenerateInput(maxLength = 128, order = 3, label = "Megoldás", note = "A lehetséges megoldásokat pontosvesszővel elválasztva lehet megadni;"
+            + "Pontosvesszőt a lehetséges válaszok nem tartalmazhatnak")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var solution: String = "",

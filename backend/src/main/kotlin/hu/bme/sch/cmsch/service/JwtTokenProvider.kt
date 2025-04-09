@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
+import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -30,6 +31,7 @@ class JwtTokenProvider(
     private val startupPropertyConfig: StartupPropertyConfig
 ) {
 
+    private val log = LoggerFactory.getLogger(javaClass)
     private val secretKey = Keys.hmacShaKeyFor(startupPropertyConfig.secretKey.toByteArray())
     private val parser = Jwts.parser().verifyWith(secretKey).build()
 
@@ -75,14 +77,13 @@ class JwtTokenProvider(
     @Throws(NoSuchElementException::class)
     fun getAuthentication(token: String): Authentication {
         val parsed = parseToken(token)
-        val permissions = parsed[JWT_CLAIM_PERMISSIONS]!!
         val role = RoleType.valueOf(parsed[JWT_CLAIM_ROLE]?.toString() ?: RoleType.GUEST.name)
         return UsernamePasswordAuthenticationToken(
             CmschUserPrincipal(
                 id = parsed[JWT_CLAIM_USERID]?.toString()?.toInt() ?: 0,
                 internalId = parsed.subject,
                 role = role,
-                permissionsAsList = if (permissions is List<*>) (permissions as List<String>) else listOf(),
+                permissionsAsList = getPermissionsFromClaims(parsed),
                 userName = parsed[JWT_CLAIM_USERNAME]?.toString() ?: "unnamed",
                 groupId = parsed[JWT_CLAIM_GROUP_ID]?.toString()?.toIntOrNull(),
                 groupName = parsed[JWT_CLAIM_GROUP_NAME]?.toString() ?: ""
@@ -90,6 +91,20 @@ class JwtTokenProvider(
             "",
             listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
         )
+    }
+
+    private fun getPermissionsFromClaims(claims: Claims): List<String> {
+        val permissionClaim = claims[JWT_CLAIM_PERMISSIONS]
+        if (permissionClaim !is List<*>) {
+            log.error("Invalid JWT format! Permission claim is not a list of strings: {}", permissionClaim)
+            return listOf()
+        }
+
+        val permissions = permissionClaim.filterIsInstance<String>()
+        if (permissions.size != permissionClaim.size) {
+            log.error("Invalid JWT format! Permission claim is not a list of strings: {}", permissionClaim)
+        }
+        return permissions
     }
 
     fun getInternalId(token: String): String {

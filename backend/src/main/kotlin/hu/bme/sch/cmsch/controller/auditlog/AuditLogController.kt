@@ -1,14 +1,14 @@
 package hu.bme.sch.cmsch.controller.auditlog
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.ControlAction
+import hu.bme.sch.cmsch.model.AuditLogByDayEntry
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
-import org.slf4j.LoggerFactory
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -19,26 +19,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import java.nio.file.Path
-import jakarta.annotation.PostConstruct
-import jakarta.servlet.http.HttpServletResponse
-import kotlin.io.path.fileSize
-import kotlin.io.path.isRegularFile
-import kotlin.streams.asSequence
 
 @Controller
 @RequestMapping("/admin/control/auditlog")
 class AuditLogController(
-    private val startupPropertyConfig: StartupPropertyConfig,
     private val adminMenuService: AdminMenuService,
-    private val objectMapper: ObjectMapper,
     private val auditLogService: AuditLogService
 ) {
-
-    private val log = LoggerFactory.getLogger(javaClass)
 
     private val view = "auditlog"
     private val titleSingular = "Audit log"
@@ -46,7 +34,7 @@ class AuditLogController(
     private val description = "Minden admin panelen végrehajtott módosítás naponta szortírozva"
     private val showPermission = ControlPermissions.PERMISSION_SHOW_AUDIT_LOG
 
-    private val descriptor = OverviewBuilder(AuditLogVirtualEntity::class)
+    private val descriptor = OverviewBuilder(AuditLogByDayEntry::class)
 
     private val controlActions: MutableList<ControlAction> = mutableListOf()
 
@@ -90,20 +78,23 @@ class AuditLogController(
         model.addAttribute("titleSingular", titleSingular)
         model.addAttribute("description", description)
         model.addAttribute("view", view)
+        model.addAttribute("exportEnabled", true)
 
         model.addAttribute("columnData", descriptor.getColumns())
-        model.addAttribute("tableData", descriptor.getTableData(listFilesInView()))
+        model.addAttribute("tableData", descriptor.getTableData(auditLogService.listDaysWithLogs()))
 
         model.addAttribute("user", user)
         model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActions)
-        model.addAttribute("buttonActions", listOf<ButtonAction>())
+
+        val exportAction = ButtonAction("Export", "export", showPermission, 200, "upload_file", false)
+        model.addAttribute("buttonActions", listOf<ButtonAction>(exportAction))
 
         return "overview4"
     }
 
     @GetMapping("/view/{id}")
-    fun viewFile(@PathVariable id: String, model: Model, auth: Authentication): String {
+    fun viewFile(@PathVariable id: Long, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {
@@ -114,34 +105,35 @@ class AuditLogController(
         }
 
         model.addAttribute("id", id)
-        model.addAttribute("log", auditLogService.readLog(id))
+        model.addAttribute("log", auditLogService.getLogTextForDay(id))
 
         return "auditLog"
     }
 
-    private fun listFilesInView(): List<AuditLogVirtualEntity> {
-        return try {
-            Files.walk(Path.of(startupPropertyConfig.auditLog))
-                .asSequence()
-                .filter { it.isRegularFile() }
-                .sortedBy { it.fileName.toString() }
-                .map { AuditLogVirtualEntity(it.fileName.toString(), "${it.fileSize() / 1024} KB") }
-                .toList()
-        } catch (e: IOException) {
-            log.warn("No file or directory found: {}", e.message)
-            listOf()
+    @ResponseBody
+    @GetMapping("/export", produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    fun exportAll(auth: Authentication, response: HttpServletResponse): String {
+        val user = auth.getUser()
+        if (!showPermission.validate(user)) {
+            throw IllegalStateException("Insufficient permissions")
         }
+        response.setHeader("Content-Disposition", "attachment; filename=\"audit-log-full.txt\"")
+        return auditLogService.getAllLogText()
     }
 
     @ResponseBody
     @GetMapping(value = ["/download/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun generatePdf(@PathVariable id: String, auth: Authentication, response: HttpServletResponse): ResponseEntity<ByteArray> {
+    fun generatePdf(
+        @PathVariable id: Long,
+        auth: Authentication,
+        response: HttpServletResponse
+    ): ResponseEntity<ByteArray> {
         if (showPermission.validate(auth.getUser()).not()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
 
         response.addHeader("Content-Disposition", "attachment; filename=audit-log-${id}.txt")
-        return ResponseEntity.ok(auditLogService.readLog(id).toByteArray(StandardCharsets.UTF_8))
+        return ResponseEntity.ok(auditLogService.getLogTextForDay(id).toByteArray(StandardCharsets.UTF_8))
     }
 
 }

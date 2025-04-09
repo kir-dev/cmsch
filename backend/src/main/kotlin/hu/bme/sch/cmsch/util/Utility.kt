@@ -15,19 +15,14 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
-import java.io.File
-import java.io.IOException
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.*
 import kotlin.math.min
 
 
 @Component
-class DI(
+final class DI(
     val userService: UserService,
     val startupPropertyConfig: StartupPropertyConfig
 ) {
@@ -38,33 +33,6 @@ class DI(
     init {
         instance = this
     }
-}
-
-private fun getFileStoragePath(): String = if (!DI.instance.startupPropertyConfig.external.startsWith("/")) {
-    System.getProperty("user.dir") + "/" + DI.instance.startupPropertyConfig.external
-} else {
-    DI.instance.startupPropertyConfig.external
-}
-
-fun MultipartFile.uploadFile(target: String, overrideName: String? = null): String? {
-    if (this.isEmpty || this.contentType == null)
-        return null
-
-    var path = getFileStoragePath()
-    val dir = File(path, target)
-    dir.mkdirs()
-    val originalFilename = this.originalFilename ?: ""
-    val fileName = overrideName
-        ?: (UUID(System.currentTimeMillis(), Random().nextLong()).toString()
-                + originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0))
-
-    path += (if (path.endsWith("/")) "" else "/") + "$target/$fileName"
-    try {
-        this.transferTo(File(path))
-    } catch (e: IOException) {
-        return null
-    }
-    return fileName
 }
 
 fun Authentication.getUser(): CmschUser {
@@ -85,18 +53,6 @@ fun Authentication?.getUserEntityFromDatabaseOrNull(): UserEntity? {
 
 fun Map<String, String>.urlEncode(): String = this.entries.joinToString("&") {
     URLEncoder.encode(it.key, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(it.value, StandardCharsets.UTF_8)
-}
-
-fun readAsset(assetName: String): Optional<ByteArray> {
-    try {
-        return Optional.of(ClassPathResource(assetName).inputStream.readAllBytes())
-    } catch (ignored: Throwable) {
-    }
-    try {
-        return Optional.of(Files.readAllBytes(Paths.get(getFileStoragePath(), assetName)))
-    } catch (ignored: Throwable) {
-    }
-    return Optional.empty()
 }
 
 private val markdownExtensions = listOf(TablesExtension.create())

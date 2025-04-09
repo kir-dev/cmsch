@@ -1,5 +1,6 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 export const BUGREPORT_URL = import.meta.env.VITE_BUGREPORT_URL ?? 'https://kir-dev.hu/about/contact'
+export const HIDE_KIR_DEV_IN_FOOTER = import.meta.env.VITE_HIDE_KIR_DEV_IN_FOOTER === 'true'
 export const CLIENT_BASE_URL = import.meta.env.VITE_CLIENT_BASE_URL ?? 'http://localhost:3000'
 export const OFFICIAL_LANGUAGE = import.meta.env.VITE_OFFICIAL_LANGUAGE === 'true'
 export const PASS_SERVER_URL = import.meta.env.VITE_PASS_SERVER_URL

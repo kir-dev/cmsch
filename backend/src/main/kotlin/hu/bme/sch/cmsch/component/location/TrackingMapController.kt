@@ -61,6 +61,7 @@ class TrackingMapController(
     fun view(auth: Authentication, model: Model): String {
         val user = auth.getUser()
         if (PERMISSION_TRACK_EVERYBODY.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", PERMISSION_TRACK_EVERYBODY.permissionString)
             model.addAttribute("user", user)
             auditLogService.admin403(user, locationComponent.component, "GET /tracking",
@@ -77,6 +78,7 @@ class TrackingMapController(
     fun viewGroup(@PathVariable groupId: Int, auth: Authentication, model: Model): String {
         val user = auth.getUser()
         if (PERMISSION_TRACK_ONE_GROUP.validate(user).not()) {
+            adminMenuService.addPartsForMenu(user, model)
             model.addAttribute("permission", PERMISSION_TRACK_ONE_GROUP.permissionString)
             model.addAttribute("user", user)
             auditLogService.admin403(user, locationComponent.component, "GET /tracking/$groupId",

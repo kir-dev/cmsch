@@ -209,6 +209,7 @@ export interface Profile {
 export interface Style {
   lightBackgroundColor: string
   lightContainerColor: string
+  lightContainerFilter: string
   lightTextColor: string
   lightBrandingColor: string
   lightBackgroundUrl: string
@@ -219,6 +220,7 @@ export interface Style {
   forceDarkMode: boolean
   darkBackgroundColor: string
   darkContainerColor: string
+  darkContainerFilter: string
   darkTextColor: string
   darkBackgroundUrl: string
   darkMobileBackgroundUrl: string
@@ -227,10 +229,16 @@ export interface Style {
   mainFontWeight: number
   displayFontName: string
   displayFontWeight: number
-  lightFooterTransparent: boolean
-  lightNavbarTransparent: boolean
-  darkFooterTransparent: boolean
-  darkNavbarTransparent: boolean
+  lightNavbarFilter: string
+  darkNavbarFilter: string
+  lightNavbarColor: string
+  darkNavbarColor: string
+  lightFooterFilter: string
+  darkFooterFilter: string
+  lightFooterBackground: string
+  darkFooterBackground: string
+  lightFooterShadowColor: string
+  darkFooterShadowColor: string
 }
 
 export interface Task {
@@ -330,6 +338,9 @@ export interface Signup {
 
 export interface Communities {
   title: string
+  description:string
+  titleResort: string
+  descriptionResort: string
 }
 
 export interface Tournament {

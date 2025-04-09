@@ -19,10 +19,16 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_EDIT_TOKENS
+import hu.bme.sch.cmsch.service.StaffPermissions.PERMISSION_SHOW_TOKEN_SUBMISSIONS
+import hu.bme.sch.cmsch.service.StorageService
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUser
-import hu.bme.sch.cmsch.util.readAsset
+import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
@@ -30,15 +36,16 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/token-properties-of-groups")
@@ -50,6 +57,8 @@ class TokenAdminTokensByUsersOfGroupsController(
     private val tokenComponent: TokenComponent,
     private val riddleService: Optional<RiddleBusinessLogicService>,
     private val tasksService: Optional<TasksService>,
+    private val clock: TimeService,
+    storageService: StorageService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: TokenComponent,
@@ -77,6 +86,7 @@ class TokenAdminTokensByUsersOfGroupsController(
 
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,
@@ -90,7 +100,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             "Mentés",
             "pdf/{id}",
             "save",
-            ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP,
+            PERMISSION_SHOW_TOKEN_SUBMISSIONS,
             100,
             false,
             "Mentés PDF fájlba"
@@ -98,8 +108,8 @@ class TokenAdminTokensByUsersOfGroupsController(
     )
 ) {
 
-    private val supportedColumns = listOf("stamp", "attendance", "riddle", "achievement")
-    private val payPermission = ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
+    private val log = LoggerFactory.getLogger(javaClass)
+    private val supportedColumns = listOf("stamp", "time-between-scans", "attendance", "riddle", "achievement")
 
     @ResponseBody
     @GetMapping(value = ["/pdf/{id}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
@@ -121,7 +131,7 @@ class TokenAdminTokensByUsersOfGroupsController(
 
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
         val header = Paragraph()
-        readAsset(tokenComponent.reportLogo.getValue().replace("/cdn/", "/")).map {
+        storageService.readObject(tokenComponent.reportLogo.getValue()).map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 
@@ -134,7 +144,7 @@ class TokenAdminTokensByUsersOfGroupsController(
                 .setMarginLeft(40f)
                 .setMarginRight(40f))
 
-        readAsset("/static/images/kirdev-logo.png").map {
+        storageService.readBundledAsset("/static/images/kirdev-logo.png").map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 
@@ -189,7 +199,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(20f))
 
-        val formatter = SimpleDateFormat("yyyy.MM.dd. HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm:ss")
         tokensByUsers.forEach { user ->
             document.add(Paragraph(user.key.fullName)
                 .setTextAlignment(TextAlignment.LEFT)
@@ -212,7 +222,8 @@ class TokenAdminTokensByUsersOfGroupsController(
                     userTable.addCell(Cell().add(Paragraph(it.token?.title ?: "n/a")
                         .setPaddingLeft(4f)
                         .setFont(font).setFontSize(12f)))
-                    userTable.addCell(Cell().add(Paragraph(formatter.format(it.recieved * 1000))
+                    val date = Instant.ofEpochSecond(it.recieved).atZone(clock.timeZone).format(formatter)
+                    userTable.addCell(Cell().add(Paragraph(date)
                         .setTextAlignment(TextAlignment.CENTER)
                         .setFont(font).setFontSize(12f)))
                 }
@@ -222,7 +233,7 @@ class TokenAdminTokensByUsersOfGroupsController(
         }
 
         val footerText = tokenComponent.reportFooterText.getValue()
-        document.add(Paragraph("${footerText}\nkir-dev@sch.bme.hu | https://kir-dev.sch.bme.hu")
+        document.add(Paragraph("${footerText}\nhello@kir-dev.hu | https://kir-dev.hu")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font)
             .setFontSize(12f)
@@ -244,30 +255,32 @@ class TokenAdminTokensByUsersOfGroupsController(
         table.addCell(Cell().add(Paragraph(user.key.fullName)
             .setPaddingLeft(4f)
             .setFont(font).setFontSize(12f)))
-        val tokens = user.value.count { preferredTokenType == ALL_TOKEN_TYPE || it.token?.type == preferredTokenType }
+        val tokens = user.value.filter { preferredTokenType == ALL_TOKEN_TYPE || it.token?.type == preferredTokenType }
+        val tokenCount = tokens.size
         columns.forEach {
-            when (it) {
-                "stamp" -> table.addCell(Cell().add(Paragraph("$tokens db")
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setFont(font).setFontSize(12f)))
-                "attendance" -> table.addCell(Cell().add(Paragraph(
-                    if (tokens >= minTokenToComplete) "igen" else "nem")
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setFont(font).setFontSize(12f)))
-                "riddle"-> {
-                    val riddles = riddleService.map { it.getCompletedRiddleCountUser(user.key) }.orElse(0)
-                    table.addCell(Cell().add(Paragraph("$riddles db")
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setFont(font).setFontSize(12f)))
-                }
-                "achievement"-> {
-                    val achievements = tasksService.map{ it.getSubmittedTasksForUser(user.key) }.orElse(0)
-                    table.addCell(Cell().add(Paragraph("$achievements db")
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setFont(font).setFontSize(12f)))
-                }
-            }
+           val cellValue = when (it) {
+               "time-between-scans" -> getDurationMinutesBetweenFirstAndLastScan(tokens)
+               "stamp" -> "$tokenCount db"
+               "attendance" -> if (tokenCount >= minTokenToComplete) "igen" else "nem"
+               "riddle" -> "${riddleService.map { it.getCompletedRiddleCountUser(user.key) }.orElse(0)} db"
+               "achievement" -> "${tasksService.map { it.getSubmittedTasksForUser(user.key) }.orElse(0)} db"
+
+               else -> {
+                   log.warn("Unknown column when generating attendance report '{}'", it)
+                   ""
+               }
+           }
+            table.addCell(Cell().add(Paragraph(cellValue)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFont(font).setFontSize(12f)))
         }
+    }
+
+    private fun getDurationMinutesBetweenFirstAndLastScan(tokens: List<TokenPropertyEntity>): String {
+        if (tokens.size < 2) return "n/a"
+        val stats = tokens.stream().mapToLong { it.recieved }.summaryStatistics()
+        val minutes = ChronoUnit.MINUTES.between(Instant.ofEpochSecond(stats.min), Instant.ofEpochSecond(stats.max))
+        return "$minutes perc"
     }
 
     private fun addSummaryTableHeaders(table: Table, font: PdfFont, columns: List<String>) {
@@ -275,22 +288,21 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font).setFontSize(12f)))
         columns.forEach {
-            when (it) {
-                "stamp" -> table.addHeaderCell(Cell().add(Paragraph("PECSÉT")
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setFont(font).setFontSize(12f)))
-                "attendance" -> table.addHeaderCell(Cell().add(Paragraph("JELENLÉT")
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setFont(font).setFontSize(12f)))
-                "riddle"-> table.addHeaderCell(Cell().add(Paragraph("RIDDLE")
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setFont(font).setFontSize(12f)))
-                "achievement"-> table.addHeaderCell(Cell().add(Paragraph("REJTVÉNYEK")
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setFont(font).setFontSize(12f)))
+            val headerName = when (it) {
+                "time-between-scans" -> "ELTÖLTÖTT IDŐ"
+                "stamp" -> "PECSÉT"
+                "attendance" -> "JELENLÉT"
+                "riddle" -> "RIDDLE"
+                "achievement" -> "REJTVÉNYEK"
+                else -> {
+                    log.warn("Unknown column when generating attendance report '{}'", it)
+                    ""
+                }
             }
+            table.addHeaderCell(Cell().add(Paragraph(headerName)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFont(font).setFontSize(12f)))
         }
     }
 
 }
-

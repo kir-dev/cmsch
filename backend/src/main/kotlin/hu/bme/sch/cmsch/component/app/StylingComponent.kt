@@ -20,7 +20,7 @@ class StylingComponent(
     "Stílus",
     ControlPermissions.PERMISSION_CONTROL_APP,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {
@@ -28,10 +28,14 @@ class StylingComponent(
             minRole,
 
             lightGroup,
-            lightFooterTransparent,
-            lightNavbarTransparent,
             lightBackgroundColor,
             lightContainerColor,
+            lightContainerFilter,
+            lightNavbarColor,
+            lightNavbarFilter,
+            lightFooterBackground,
+            lightFooterFilter,
+            lightFooterShadowColor,
             lightTextColor,
             lightBrandingColor,
             lightBackgroundUrl,
@@ -42,10 +46,14 @@ class StylingComponent(
             darkModeEnabled,
             deviceTheme,
             forceDarkMode,
-            darkFooterTransparent,
-            darkNavbarTransparent,
             darkBackgroundColor,
             darkContainerColor,
+            darkContainerFilter,
+            darkNavbarColor,
+            darkNavbarFilter,
+            darkFooterBackground,
+            darkFooterFilter,
+            darkFooterShadowColor,
             darkTextColor,
             darkBackgroundUrl,
             darkMobileBackgroundUrl,
@@ -76,16 +84,6 @@ class StylingComponent(
         description = "Az oldal világos stílusának színei, háttérképek"
     )
 
-    val lightFooterTransparent = SettingProxy(componentSettingService, component,
-        "lightFooterTransparent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a footer áttetsző"
-    )
-
-    val lightNavbarTransparent = SettingProxy(componentSettingService, component,
-        "lightNavbarTransparent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Navbar áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
-    )
-
     val lightBackgroundColor = SettingProxy(componentSettingService, component,
         "lightBackgroundColor", "#FFFFFF", type = SettingType.COLOR,
         fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik"
@@ -94,6 +92,36 @@ class StylingComponent(
     val lightContainerColor = SettingProxy(componentSettingService, component,
         "lightContainerColor", "transparent", type = SettingType.COLOR,
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
+    )
+
+    val lightContainerFilter = SettingProxy(componentSettingService, component,
+        "lightContainerFilter", "", type = SettingType.TEXT,
+        fieldName = "A lapra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+    )
+
+    val lightNavbarColor = SettingProxy(componentSettingService, component,
+        "lightNavbarColor", "transparent", type = SettingType.COLOR,
+        fieldName = "Navbar színe", description = "A Navbar háttérszíne"
+    )
+
+    val lightNavbarFilter = SettingProxy(componentSettingService, component,
+        "lightNavbarFilter", "", type = SettingType.TEXT,
+        fieldName = "A navbarra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+    )
+
+    val lightFooterBackground = SettingProxy(componentSettingService, component,
+        "lightFooterBackground", "transparent", type = SettingType.COLOR,
+        fieldName = "Footer színe", description = "A Footer háttérszíne"
+    )
+
+    val lightFooterFilter = SettingProxy(componentSettingService, component,
+        "lightFooterFilter", "", type = SettingType.TEXT,
+        fieldName = "A footerre alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+    )
+
+    val lightFooterShadowColor = SettingProxy(componentSettingService, component,
+        "lightFooterShadowColor", "#00000025", type = SettingType.COLOR,
+        fieldName = "Footer alsó sáv színe", description = "Footer legalsó sávjának a színe"
     )
 
     val lightTextColor = SettingProxy(componentSettingService, component,
@@ -145,16 +173,6 @@ class StylingComponent(
         fieldName = "Csak a sötét téma érhető el", description = "Ha be van kapcsolva, akkor csak a sötét téma használható"
     )
 
-    val darkFooterTransparent = SettingProxy(componentSettingService, component,
-        "darkFooterTransparent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Footer áttetsző", description = "Ha be van kapcsolva, a footer áttetsző"
-    )
-
-    val darkNavbarTransparent = SettingProxy(componentSettingService, component,
-        "darkNavbarTransparent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Navbar áttetsző", description = "Ha be van kapcsolva, a navbar áttetsző"
-    )
-
     val darkBackgroundColor = SettingProxy(componentSettingService, component,
         "darkBackgroundColor", "#FFFFFF", type = SettingType.COLOR,
         fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik"
@@ -163,6 +181,36 @@ class StylingComponent(
     val darkContainerColor = SettingProxy(componentSettingService, component,
         "darkContainerColor", "transparent", type = SettingType.COLOR,
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne"
+    )
+
+    val darkContainerFilter = SettingProxy(componentSettingService, component,
+        "darkContainerFilter", "", type = SettingType.TEXT,
+        fieldName = "A lapra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+    )
+
+    val darkNavbarColor = SettingProxy(componentSettingService, component,
+        "darkNavbarColor", "transparent", type = SettingType.COLOR,
+        fieldName = "Navbar színe", description = "A Navbar háttérszíne"
+    )
+
+    val darkNavbarFilter = SettingProxy(componentSettingService, component,
+        "darkNavbarFilter", "", type = SettingType.TEXT,
+        fieldName = "A navbarra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+    )
+
+    val darkFooterBackground = SettingProxy(componentSettingService, component,
+        "darkFooterBackground", "transparent", type = SettingType.COLOR,
+        fieldName = "Footer színe", description = "A Footer háttérszíne"
+    )
+
+    val darkFooterFilter = SettingProxy(componentSettingService, component,
+        "darkFooterFilter", "", type = SettingType.TEXT,
+        fieldName = "A footerre alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+    )
+
+    val darkFooterShadowColor = SettingProxy(componentSettingService, component,
+        "darkFooterShadowColor", "#00000025", type = SettingType.COLOR,
+        fieldName = "Footer alsó sáv színe", description = "Footer legalsó sávjának a színe"
     )
 
     val darkTextColor = SettingProxy(componentSettingService, component,

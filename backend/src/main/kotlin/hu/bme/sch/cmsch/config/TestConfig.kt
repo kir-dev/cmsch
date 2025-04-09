@@ -181,7 +181,6 @@ open class TestConfig(
             now,
             0,
             false,
-            false,
             0,
             false,
             "",
@@ -953,7 +952,7 @@ open class TestConfig(
                 groupName = "V10",
                 group = groupRepository.findByName("V10").orElse(null)
         )
-        profileService.generateFullProfileForUser(user1!!)
+        profileService.generateProfileIdForUser(user1!!)
         userRepository.save(user1!!)
         users.add(user1!!)
 
@@ -968,7 +967,7 @@ open class TestConfig(
                 groupName = "V10",
                 group = groupRepository.findByName("V10").orElse(null)
         )
-        profileService.generateFullProfileForUser(u2)
+        profileService.generateProfileIdForUser(u2)
         userRepository.save(u2)
         users.add(u2)
 
@@ -981,7 +980,7 @@ open class TestConfig(
                 fullName = "Fitty Mátyás",
                 guild = GuildType.BLACK
         )
-        profileService.generateFullProfileForUser(u3)
+        profileService.generateProfileIdForUser(u3)
         userRepository.save(u3)
         users.add(u3)
 

@@ -5,11 +5,23 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
   name: {{ .Release.Name }}-config
 data:
-  FRONTEND_URL: "https://{{ .Values.frontendHost }}"
+  ROOT_LOGGING_LEVEL: {{ .Values.springLoggingLevel | quote }}
+  DISTRIBUTED_MODE: {{ .Values.backendDistributedMode | quote }}
+  FRONTEND_URL: "{{ .Values.frontendHostProtocol }}://{{ .Values.frontendHost }}"
   ALLOWED_ORIGIN_PATTERNS: {{ .Values.allowedOriginPatterns | quote }}
-  BACKEND_URL: "https://{{ .Values.apiHost }}/"
+  BACKEND_URL: "{{ .Values.apiHostProtocol }}://{{ .Values.apiHost }}/"
   SYSADMINS: {{ .Values.superusers.pekIds | quote }}
   GOOGLE_ADMIN_ADDRESSES: {{ .Values.superusers.googleEmails | quote }}
+
+  {{ if .Values.s3.useS3 }}
+  STORAGE_IMPLEMENTATION: S3
+  S3_BUCKET: {{ .Values.s3.bucket }}
+  S3_REGION: {{ .Values.s3.region }}
+  S3_ENDPOINT: {{ .Values.s3.endpoint }}
+  S3_PUBLIC_ENDPOINT: {{ .Values.s3.publicEndpoint }}
+  {{ else }}
+  STORAGE_IMPLEMENTATION: FILESYSTEM
+  {{end }}
 
   LOAD_APP: {{ .Values.load.app | quote }}
   LOAD_LOGIN: {{ .Values.load.login | quote }}
@@ -43,6 +55,7 @@ data:
   LOAD_EVENT: {{ .Values.load.event | quote }}
   LOAD_PUSHNOTIFICATION: {{ .Values.load.pushnotification | quote }}
   LOAD_SHEETS: {{ .Values.load.sheets | quote }}
+  LOAD_SERVICE_ACCOUNT : {{ .Values.load.serviceAccount | quote }}
 
   OWNER_TOKEN: {{ .Values.owner.token | quote }}
   OWNER_TASK: {{ .Values.owner.task | quote }}

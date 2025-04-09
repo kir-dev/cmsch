@@ -26,7 +26,7 @@ class TaskComponent(
     "Feladatok",
     ControlPermissions.PERMISSION_CONTROL_TASKS,
     listOf(TaskEntity::class, TaskCategoryEntity::class, SubmittedTaskEntity::class),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

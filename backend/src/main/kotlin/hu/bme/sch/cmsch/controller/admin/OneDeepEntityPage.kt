@@ -12,7 +12,6 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_NOBODY
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.transaction
-import hu.bme.sch.cmsch.util.uploadFile
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
@@ -25,7 +24,6 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.lang.reflect.Method
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.function.Supplier
 import kotlin.reflect.KClass
@@ -103,6 +101,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val dataSource: EntityPageDataSource<T, Int>,
     internal val importService: ImportService,
     internal val adminMenuService: AdminMenuService,
+    internal val storageService: StorageService,
     internal val component: ComponentBase,
     internal val auditLog: AuditLogService,
     internal val objectMapper: ObjectMapper,
@@ -335,7 +334,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         } else {
             val actualEntity = onPreEdit(entity.orElseThrow())
             model.addAttribute("data", actualEntity)
-            if (!editPermissionCheck(user, actualEntity)) {
+            if (!editPermissionCheck(user, actualEntity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(user, component.component, "GET /$view/edit/$id",
                     "editPermissionCheck() validation")
@@ -481,7 +480,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         } else {
             val actualEntity = entity.orElseThrow()
             model.addAttribute("item", actualEntity.toString())
-            if (!editPermissionCheck(user, actualEntity)) {
+            if (!editPermissionCheck(user, actualEntity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(user, component.component, "GET /$view/delete/$id",
                     "editPermissionCheck() validation")
@@ -494,6 +493,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     @PostMapping("/delete/{id}")
     fun delete(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+
         if (deletePermission.validate(user).not()) {
             model.addAttribute("permission", deletePermission.permissionString)
             model.addAttribute("user", user)
@@ -503,7 +504,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
             val entity = dataSource.findById(id).orElseThrow()
-            if (!editPermissionCheck(user, entity)) {
+            if (!editPermissionCheck(user, entity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(
                     user,
@@ -583,6 +584,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                auth: Authentication,
     ): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (createPermission.validate(user).not()) {
             model.addAttribute("permission", createPermission.permissionString)
             model.addAttribute("user", user)
@@ -592,6 +594,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         if (!createEnabled)
             return "redirect:/admin/control/$view"
+
+        if (!editPermissionCheck(user, null, dto)) {
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/create", "editPermissionCheck() validation")
+            return "admin403"
+        }
 
         val entity = supplier.get()
         val newValues = StringBuilder("entity new value: ")
@@ -618,6 +626,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
              @RequestParam(defaultValue = "false") delete1: Boolean,
     ): String {
         val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
         if (editPermission.validate(user).not()) {
             model.addAttribute("permission", editPermission.permissionString)
             model.addAttribute("user", user)
@@ -630,7 +639,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "redirect:/admin/control/$view/edit/$id"
         }
         val actualEntity = entity.orElseThrow()
-        if (!editPermissionCheck(user, actualEntity)) {
+        if (!editPermissionCheck(user, actualEntity, dto)) {
             model.addAttribute("user", user)
             auditLog.admin403(user, component.component, "POST /$view/edit/$id", "editPermissionCheck() validation")
             return "admin403"
@@ -652,66 +661,66 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         return "redirect:/admin/control/$view"
     }
 
-    private val sqlDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
     internal fun updateEntity(
         descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, newValues: StringBuilder,
         delete0: Boolean, file0: MultipartFile?,
         delete1: Boolean, file1: MultipartFile?
-    ) {
+    ) =
         descriptor.getInputs().forEach {
-            if (it.first is KMutableProperty1<out Any, *> && !it.second.ignore && it.second.minimumRole.value <= user.role.value) {
-                when {
-                    it.second.interpreter == INTERPRETER_INHERIT && it.second.type == INPUT_TYPE_FILE -> {
-                        when (it.second.fileId) {
-                            "0" -> {
-                                if (delete0) {
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "")
-                                } else {
-                                    file0?.uploadFile(view)?.let { file ->
-                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
-                                        newValues.append(it.first.name).append("=name@").append(view)
-                                            .append("/").append(file).append(", ")
-                                    }
-                                }
-                            }
-                            "1" -> {
-                                if (delete1) {
-                                    (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "")
-                                } else {
-                                    file1?.uploadFile(view)?.let { file ->
-                                        newValues.append(it.first.name).append("=name@").append(view)
-                                            .append("/").append(file).append(", ")
-                                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, "$view/$file")
-                                    }
-                                }
-                            }
-                            else -> {
-                                log.error("Invalid file field name: file${it.second.fileId}")
-                            }
-                        }
+            val (property, input) = it
+
+            if (property !is KMutableProperty1<out Any, *>) return@forEach
+            if (input.ignore || input.minimumRole.value > user.role.value) return@forEach
+
+            when {
+                input.interpreter == INTERPRETER_INHERIT && input.type == INPUT_TYPE_FILE -> {
+                    when (input.fileId) {
+                        "0" -> saveFileForEntity(delete0, file0, property, entity, newValues)
+                        "1" -> saveFileForEntity(delete1, file1, property, entity, newValues)
+                        else -> log.error("Invalid file field name: file${input.fileId}")
                     }
-                    (it.second.interpreter == INTERPRETER_INHERIT || it.second.interpreter == INTERPRETER_SEARCH) && it.second.type != INPUT_TYPE_FILE -> {
-                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, it.first.getter.call(dto))
-                        newValues.append(it.first.name).append("=").append(it.first.getter.call(dto)?.toString()
-                            ?.replace("\r", "")?.replace("\n", "") ?: "<null>").append(", ")
-                    }
-                    it.second.interpreter == INTERPRETER_PATH -> {
-                        val value = it.first.getter.call(dto)
-                            ?.toString()
-                            ?.lowercase()
-                            ?.replace(" ", "-")
-                            ?.replace(Regex("[^a-z0-9-.]"), "") ?: "<null>"
-                        (it.first as KMutableProperty1<out Any, *>).setter.call(entity, value)
-                        newValues.append(it.first.name).append("=").append(value).append(", ")
-                    }
-                    it.second.interpreter == INTERPRETER_CUSTOM -> {
-                        handleCustomInterpreter(it, newValues)
-                    }
+                }
+
+                (input.interpreter == INTERPRETER_INHERIT || input.interpreter == INTERPRETER_SEARCH) && input.type != INPUT_TYPE_FILE -> {
+                    property.setter.call(entity, property.getter.call(dto))
+                    newValues.append(property.name).append("=").append(property.getter.call(dto)?.toString()
+                        ?.replace("\r", "")?.replace("\n", "") ?: "<null>").append(", ")
+                }
+
+                input.interpreter == INTERPRETER_PATH -> {
+                    val value = property.getter.call(dto)
+                        ?.toString()
+                        ?.lowercase()
+                        ?.replace(" ", "-")
+                        ?.replace(Regex("[^a-z0-9-.]"), "") ?: "<null>"
+                    property.setter.call(entity, value)
+                    newValues.append(property.name).append("=").append(value).append(", ")
+                }
+
+                input.interpreter == INTERPRETER_CUSTOM -> {
+                    handleCustomInterpreter(it, newValues)
                 }
             }
         }
+
+    private fun saveFileForEntity(
+        delete: Boolean,
+        file: MultipartFile?,
+        property: KMutableProperty1<out Any, *>,
+        entity: T,
+        newValues: StringBuilder
+    ) {
+        if (delete) {
+            property.setter.call(entity, "")
+        } else {
+            file?.let { file -> storageService.saveObjectWithRandomName(view, file) }
+                ?.ifPresent { url ->
+                    newValues.append(property.name).append("=name@").append(url).append(", ")
+                    property.setter.call(entity, url)
+                }
+        }
     }
+
 
     @GetMapping("/resource")
     fun resource(model: Model, auth: Authentication): String {
@@ -825,7 +834,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         return rows
     }
 
-    open fun editPermissionCheck(user: CmschUser, entity: T): Boolean {
+    open fun editPermissionCheck(user: CmschUser, oldEntity: T?, newEntity: T?): Boolean {
         return true
     }
 

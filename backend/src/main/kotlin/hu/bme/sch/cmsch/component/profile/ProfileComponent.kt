@@ -26,7 +26,7 @@ class ProfileComponent(
     "Profil",
     ControlPermissions.PERMISSION_CONTROL_PROFILE,
     listOf(),
-    componentSettingService, env
+    env
 ) {
 
     final override val allSettings by lazy {

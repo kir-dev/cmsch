@@ -71,7 +71,7 @@ class SettingsController(
             auth.principal, auth.credentials,
             mutableListOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
         )
-        log.info("User ${user.fullName} is just relogged")
+        log.info("User ${user.fullName} has just relogged")
 
         return "redirect:/admin/control/settings"
     }
