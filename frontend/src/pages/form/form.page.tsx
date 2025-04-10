@@ -17,6 +17,8 @@ import { AbsolutePaths } from '../../util/paths'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
+import { useAuthContext } from '../../api/contexts/auth/useAuthContext.ts'
 
 interface FormPageProps {}
 
@@ -28,6 +30,7 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
   const tokenRefresh = useTokenRefresh()
   const { sendMessage } = useServiceContext()
+  const { isLoggedIn } = useAuthContext()
 
   useEffect(() => {
     if (result) {
@@ -60,6 +63,8 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
       window.scrollTo(0, 0)
     }
   }
+
+  if (!isLoggedIn && status === FormStatus.NOT_FOUND) return <ComponentUnavailable />
   if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED) {
     if (status === FormStatus.NOT_FOUND) sendMessage(message ?? l('form-not-available'))
     else sendMessage(message ?? l('form-disabled'))
