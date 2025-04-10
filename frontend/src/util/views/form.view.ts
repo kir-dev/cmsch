@@ -81,6 +81,7 @@ export enum FormFieldVariants {
   TEXT_BOX = 'TEXT_BOX',
   SECTION_START = 'SECTION_START',
   CHOICE_GRID = 'CHOICE_GRID',
+  DATE = 'DATE',
   SELECTION_GRID = 'SELECTION_GRID'
 }
 
