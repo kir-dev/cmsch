@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.login.LoginComponent
-import org.springframework.http.HttpStatus
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.ResponseStatus
 
 
 val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
@@ -24,8 +23,8 @@ val GREETINGS = listOf("Csuma-luma!", "Csumm gecc!", "Na' csá!",
 
 @Controller
 class EntrypointController(
-        private val applicationComponent: ApplicationComponent,
-        private val loginComponent: LoginComponent
+    private val applicationComponent: ApplicationComponent,
+    private val loginComponent: LoginComponent
 ) {
 
     @GetMapping("/")
@@ -34,13 +33,28 @@ class EntrypointController(
         return if (auth == null) "hey!" else "hoo!"
     }
 
-    @RequestMapping(value = [ "/oauth2/authorization", "/login" ])
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    fun authorize(model: Model, @RequestParam(defaultValue = "") error: String): String {
+    @RequestMapping(value = ["/oauth2/authorization", "/login"])
+    fun authorize(model: Model, @RequestParam(defaultValue = "") error: String, response: HttpServletResponse): String {
         model.addAttribute("siteName", applicationComponent.siteName.getValue())
         model.addAttribute("error", error)
-        model.addAttribute("googleEnabled", loginComponent.googleSsoEnabled.isValueTrue())
-        model.addAttribute("keycloakEnabled", loginComponent.keycloakEnabled.isValueTrue())
+        val googleEnabled = loginComponent.googleSsoEnabled.isValueTrue()
+        val keycloakEnabled = loginComponent.keycloakEnabled.isValueTrue()
+        val authschEnabled = loginComponent.authschPromoted.isValueTrue()
+
+        // AuthSCH option must always be available, so it's fine if we don't check it, otherwise nobody can log in
+        if (!googleEnabled && !keycloakEnabled)
+            return "redirect:/oauth2/authorization/authsch"
+
+        if (!keycloakEnabled && !authschEnabled)
+            return "redirect:/oauth2/authorization/google"
+
+        if (!authschEnabled && !googleEnabled)
+            return "redirect:/oauth2/authorization/keycloak"
+
+        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        model.addAttribute("showAuthSch", authschEnabled)
+        model.addAttribute("googleEnabled", googleEnabled)
+        model.addAttribute("keycloakEnabled", keycloakEnabled)
         return "authSelection"
     }
 
