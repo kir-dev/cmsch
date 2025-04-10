@@ -5,6 +5,7 @@ enum class TaskSubmissionStatus {
     EMPTY_ANSWER,
     INVALID_IMAGE,
     INVALID_PDF,
+    INVALID_ZIP,
     ALREADY_SUBMITTED,
     ALREADY_APPROVED,
     NO_ASSOCIATE_GROUP,
