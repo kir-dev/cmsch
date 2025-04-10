@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -56,7 +58,13 @@ class FileUploadController(
     }
 
     @PostMapping("")
-    fun uploadImage(model: Model, auth: Authentication, @RequestParam names: List<String>, @RequestBody files: List<MultipartFile>): String {
+    fun uploadImage(
+        model: Model,
+        auth: Authentication,
+        @RequestParam names: List<String>,
+        @RequestParam keepNames: Boolean?,
+        @RequestBody files: List<MultipartFile>
+    ): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
@@ -72,14 +80,20 @@ class FileUploadController(
         val newNames = mutableListOf<String>()
         for ((file, name) in files.zip(names)) {
             val originalFilename = file.originalFilename ?: ""
-            val newName = name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
+            val newName = renameFile(keepNames, originalFilename, name)
+            storageService.saveNamedObject("public", newName, file).ifPresent { newNames.add(it) }
+        }
+        val links = newNames.joinToString(",") { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) }
+        return "redirect:/admin/control/upload-file?uploaded=${links}"
+    }
+
+    private fun renameFile(keepNames: Boolean?, originalFilename: String, name: String): String {
+        if (keepNames == true && originalFilename.isNotBlank())
+            return originalFilename
+        else
+            return name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
                     "_${Random().nextLong().absoluteValue.toString(36).uppercase()}" +
                     originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0)
-            val url = storageService.saveNamedObject("public", newName, file)
-            if (url.isPresent)
-                newNames.add(url.get())
-        }
-        return "redirect:/admin/control/upload-file?uploaded=${newNames.joinToString(",")}"
     }
 
 }
