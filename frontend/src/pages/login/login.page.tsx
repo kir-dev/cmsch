@@ -1,4 +1,4 @@
-import { Button, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { FaGoogle, FaKey, FaSignInAlt } from 'react-icons/fa'
 import { Navigate } from 'react-router-dom'
@@ -24,9 +24,13 @@ const LoginPage = () => {
     <CmschPage>
       <Helmet title={l('login-helmet')} />
       <VStack spacing={10} mb={10}>
-        <Heading size="lg" textAlign="center" mt={10} mb={2}>
-          {l('login-consent')}
-        </Heading>
+        {component.topMessage ? (
+          <Box textAlign="center">
+            <Markdown text={component.topMessage} />
+          </Box>
+        ) : (
+          <Box mt={4} />
+        )}
         {component.authschPromoted && (
           <>
             <Button
@@ -62,7 +66,11 @@ const LoginPage = () => {
             </Button>
           </>
         )}
-        {component.bottomMessage && <Markdown text={component.bottomMessage} />}
+        {component.bottomMessage && (
+          <Box maxW={440} textAlign="center">
+            <Markdown text={component.bottomMessage} />
+          </Box>
+        )}
       </VStack>
     </CmschPage>
   )

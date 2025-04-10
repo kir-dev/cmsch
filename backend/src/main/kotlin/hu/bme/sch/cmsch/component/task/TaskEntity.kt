@@ -20,7 +20,8 @@ enum class TaskType {
     TEXT,
     IMAGE,
     BOTH,
-    ONLY_PDF
+    ONLY_PDF,
+    ONLY_ZIP
 }
 
 enum class TaskFormat {
@@ -83,7 +84,7 @@ data class TaskEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus",
-        source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF" ],
+        source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF", "ONLY_ZIP" ],
         note = "Mit tároljon el a szerver? A BOTH az szöveg és kép is. A PDF csak önmagában használható.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat

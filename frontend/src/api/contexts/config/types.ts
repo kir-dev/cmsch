@@ -273,6 +273,7 @@ export interface Location {
 
 export interface Login {
   authschPromoted: boolean
+  topMessage: string
   bottomMessage: string
   googleSsoEnabled: boolean
   keycloakAuthName: string

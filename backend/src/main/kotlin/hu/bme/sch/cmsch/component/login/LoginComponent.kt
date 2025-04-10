@@ -64,6 +64,7 @@ class LoginComponent(
             fallbackGroupName,
 
             langGroup,
+            topMessage,
             bottomMessage,
         )
     }
@@ -246,6 +247,11 @@ class LoginComponent(
         "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
         fieldName = "Nyelvi beállítások",
         description = ""
+    )
+
+    val topMessage = SettingProxy(componentSettingService, component,
+        "topMessage", "Válassz belépési módot!", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Felső szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
     val bottomMessage = SettingProxy(componentSettingService, component,

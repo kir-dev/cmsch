@@ -20,6 +20,8 @@ import java.sql.SQLException
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
+private const val target = "task"
+
 @Service
 @ConditionalOnBean(TaskComponent::class)
 open class TasksService(
@@ -36,9 +38,6 @@ open class TasksService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    companion object {
-        private val target = "task"
-    }
 
     @Transactional(readOnly = true)
     open fun getById(id: Int): Optional<TaskEntity> {
@@ -362,8 +361,32 @@ open class TasksService(
                 listeners.forEach { it.onTaskSubmit(user, task, submission) }
                 return TaskSubmissionStatus.OK
             }
-            else -> {
-                throw IllegalStateException("Invalid task type: " + task.type)
+            TaskType.ONLY_ZIP -> {
+                if (file == null || zipFileNameInvalid(file))
+                    return TaskSubmissionStatus.INVALID_ZIP
+
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
+
+                val submission = SubmittedTaskEntity(
+                    0, task, groupId, groupName ?: "",
+                    userId, userName ?: "",
+                    task.categoryId,
+                    textAnswerLob = "",
+                    imageUrlAnswer = "",
+                    fileUrlAnswer = fileName,
+                    response = "", approved = false, rejected = false, score = 0
+                ).addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.userName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = fileName,
+                    status = "0 pont | beadva",
+                    type = "ZIP"
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskSubmit(user, task, submission) }
+                return TaskSubmissionStatus.OK
             }
         }
     }
@@ -464,8 +487,26 @@ open class TasksService(
                 return TaskSubmissionStatus.OK
 
             }
-            else -> {
-                throw IllegalStateException("Invalid task type: " + task.type)
+            TaskType.ONLY_ZIP -> {
+                if (file == null || zipFileNameInvalid(file))
+                    return TaskSubmissionStatus.INVALID_ZIP
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
+
+                submission.fileUrlAnswer = fileName
+                submission.rejected = false
+                submission.approved = false
+                submission.addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.userName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = fileName,
+                    status = "${submission.score} pont | beadva",
+                    type = "ZIP"
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskUpdate(user, task, submission) }
+                return TaskSubmissionStatus.OK
             }
         }
     }
@@ -481,6 +522,10 @@ open class TasksService(
 
     private fun pdfFileNameInvalid(file: MultipartFile): Boolean {
         return file.originalFilename == null || (!file.originalFilename!!.lowercase().endsWith(".pdf"))
+    }
+
+    private fun zipFileNameInvalid(file: MultipartFile): Boolean {
+        return file.originalFilename == null || (!file.originalFilename!!.lowercase().endsWith(".zip"))
     }
 
     @Transactional(readOnly = true)

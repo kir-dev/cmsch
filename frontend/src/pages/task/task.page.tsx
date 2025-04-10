@@ -47,6 +47,11 @@ export interface FormInput {
   } & TaskFormatDescriptor)[]
 }
 
+const getAcceptedFileType = (type?: taskType) => {
+  if (type === taskType.ONLY_ZIP) return '.zip'
+  else if (type === taskType.ONLY_PDF) return '.pdf'
+  else return 'image/jpeg,image/png,image/jpg,image/gif'
+}
 const TaskPage = () => {
   const [fileAnswer, setFileAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
@@ -78,7 +83,12 @@ const TaskPage = () => {
 
   const expired = data.task?.availableTo ? data.task?.availableTo < new Date().valueOf() / 1000 : false
   const textAllowed = data.task?.type === taskType.TEXT || data.task?.type === taskType.BOTH
-  const fileAllowed = data.task?.type === taskType.IMAGE || data.task?.type === taskType.BOTH || data.task?.type === taskType.ONLY_PDF
+  const fileAllowed =
+    data.task?.type === taskType.IMAGE ||
+    data.task?.type === taskType.BOTH ||
+    data.task?.type === taskType.ONLY_PDF ||
+    data.task?.type === taskType.ONLY_ZIP
+
   const submissionAllowed =
     (data?.status === taskStatus.NOT_SUBMITTED ||
       data?.status === taskStatus.REJECTED ||
@@ -225,7 +235,7 @@ const TaskPage = () => {
         onFileChange={(fileArray) => setFileAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
         clearButtonLabel="Törlés"
-        accept={data.task?.type === taskType.ONLY_PDF ? '.pdf' : 'image/jpeg,image/png,image/jpg,image/gif'}
+        accept={getAcceptedFileType(data.task?.type)}
         ref={filePickerRef}
       />
     </Box>
