@@ -74,6 +74,9 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
         </Flex>
       )
       break
+    case FormFieldVariants.DATE:
+      component = <Input type="date" {...field} isInvalid={!!error} disabled={disabled} />
+      break
     case FormFieldVariants.NUMBER:
       component = <Input type="number" {...field} isInvalid={!!error} disabled={disabled} />
       break
