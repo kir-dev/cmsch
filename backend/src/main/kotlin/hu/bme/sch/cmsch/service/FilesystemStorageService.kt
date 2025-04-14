@@ -10,13 +10,16 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.util.UriComponentsBuilder
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 import java.util.*
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
+import kotlin.io.path.inputStream
 
 @Service
 @ConditionalOnExpression("'\${hu.bme.sch.cmsch.startup.storage-implementation}'.equalsIgnoreCase(T(hu.bme.sch.cmsch.config.StorageImplementation).FILESYSTEM.name)")
@@ -53,15 +56,24 @@ class FilesystemStorageService(
         return Optional.empty()
     }
 
-
     override fun saveNamedObject(path: String, name: String, file: MultipartFile): Optional<String> {
         if (file.isEmpty || file.contentType == null)
             return Optional.empty()
 
-        return saveNamedObject(path, name, file.contentType ?: defaultContentType, file.bytes)
+        return saveNamedObject(path, name, file.bytes.inputStream())
     }
 
-    override fun saveNamedObject(path: String, name: String, contentType: String, data: ByteArray): Optional<String> {
+    override fun saveNamedObject(
+        path: String,
+        name: String,
+        contentType: String,
+        data: ByteArray
+    ): Optional<String> = saveNamedObject(path, name, data.inputStream())
+
+    override fun saveNamedObject(path: String, name: String, filesystemPath: Path): Optional<String> =
+        saveNamedObject(path, name, filesystemPath.inputStream())
+
+    fun saveNamedObject(path: String, name: String, data: InputStream): Optional<String> {
         val storagePath = getFileStoragePath()
         val dir = File(storagePath, path)
         dir.mkdirs()
@@ -69,7 +81,7 @@ class FilesystemStorageService(
         try {
             val filePath = getSanitizedPath(getObjectName(path, name))
             if (filePath != null) {
-                Files.write(filePath, data)
+                Files.copy(data, filePath, StandardCopyOption.REPLACE_EXISTING)
                 return Optional.of(constructObjectUrl(path, name))
             }
         } catch (e: IOException) {
