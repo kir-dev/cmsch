@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import java.io.Serializable
 
-const val TWO_HOURS = 60 * 60 * 2
-
 data class TaskEntityDto(
 
     @field:JsonView(FullDetails::class)
@@ -51,7 +49,7 @@ data class TaskEntityDto(
         other.title,
         other.categoryId,
 
-        if (time - TWO_HOURS > other.availableTo)
+        if (time > other.availableTo)
             (other.description + "\n\n" + other.solution)
         else
             other.description,

@@ -48,7 +48,8 @@ class TaskComponent(
             logicGroup,
             resubmissionEnabled,
             scoreVisible,
-            scoreVisibleAtAll
+            scoreVisibleAtAll,
+            enableViewAudit,
         )
     }
 
@@ -150,6 +151,11 @@ class TaskComponent(
         "scoreVisibleAtAll", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
         fieldName = "Pontok látszódnak egyáltalán", description = "Bármikor látszódjon-e a megszerzett pont (ha ki van " +
                 "kapcsolva az nem látszik egyáltalán a feladatnál, csak az összesítésben)"
+    )
+
+    val enableViewAudit = SettingProxy(componentSettingService, component,
+        "enableViewAudit", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
+        fieldName = "Feladatok megnyitásának logolása", description = "Mentésre kerüljön-e ha valaki megnyit egy feladatot"
     )
 
 }
