@@ -79,8 +79,7 @@ class FileUploadController(
         }
         val newNames = mutableListOf<String>()
         for ((file, name) in files.zip(names)) {
-            val originalFilename = file.originalFilename ?: ""
-            val newName = renameFile(keepNames, originalFilename, name)
+            val newName = renameFile(keepNames, file.originalFilename ?: "", name)
             storageService.saveNamedObject("public", newName, file).ifPresent { newNames.add(it) }
         }
         val links = newNames.joinToString(",") { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) }
@@ -88,12 +87,15 @@ class FileUploadController(
     }
 
     private fun renameFile(keepNames: Boolean?, originalFilename: String, name: String): String {
-        if (keepNames == true && originalFilename.isNotBlank())
-            return originalFilename
+        val newName = if (keepNames == true && name.isNotBlank())
+            name
         else
-            return name.replace(" ", "_").replace(Regex("[^A-Za-z0-9_]+"), "").uppercase() +
-                    "_${Random().nextLong().absoluteValue.toString(36).uppercase()}" +
-                    originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0)
+            name.replace(" ", "_")
+                .replace(Regex("[^A-Za-z0-9_]+"), "")
+                .uppercase() + "_${Random().nextLong().absoluteValue.toString(36).uppercase()}"
+
+        val extension = originalFilename.substringAfterLast(".")
+        return "$newName.$extension"
     }
 
 }
