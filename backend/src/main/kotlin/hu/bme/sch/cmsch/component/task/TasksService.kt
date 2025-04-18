@@ -45,21 +45,13 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForUserOrNull(user: CmschUser, task: Optional<TaskEntity>): SubmittedTaskEntity? {
-        if (task.isEmpty)
-            return null
-
-        return submitted.findByTask_IdAndUserId(task.get().id, user.id)
-            .orElse(null)
+    open fun getSubmissionForUserOrNull(user: CmschUser, task: TaskEntity): SubmittedTaskEntity? {
+        return submitted.findByTask_IdAndUserId(task.id, user.id).orElse(null)
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForGroupOrNull(groupId: Int, task: Optional<TaskEntity>): SubmittedTaskEntity? {
-        if (task.isEmpty)
-            return null
-
-        return submitted.findByTask_IdAndGroupId(task.get().id, groupId)
-                .orElse(null)
+    open fun getSubmissionForGroupOrNull(groupId: Int, task: TaskEntity): SubmittedTaskEntity? {
+        return submitted.findByTask_IdAndGroupId(task.id, groupId).orElse(null)
     }
 
     @Transactional(readOnly = true)

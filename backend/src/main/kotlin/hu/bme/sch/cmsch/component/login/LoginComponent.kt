@@ -250,7 +250,7 @@ class LoginComponent(
     )
 
     val topMessage = SettingProxy(componentSettingService, component,
-        "topMessage", "Válassz belépési módot!", type = SettingType.LONG_TEXT_MARKDOWN,
+        "topMessage", "### Válassz belépési módot!", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Felső szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
