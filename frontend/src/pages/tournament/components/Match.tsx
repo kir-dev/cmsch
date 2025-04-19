@@ -66,7 +66,7 @@ const Match = ({match}: MatchProps) => {
         </Text>
       </Flex>
       <Text fontSize="xs" color="gray.500" mt={1}>
-        {match.location}
+        {match.location!="" ? match.location : "Location TBD"}
       </Text>
     </Box>
   )

@@ -33,6 +33,9 @@ const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: Tourname
   }
 
   let trees: MatchTree[] = []
+  if (levelCount < 1) {
+    return <></>
+  }
   for (let i = 0; i < levels[levelCount].length; i++) {
     trees.push(buildTree(levelCount, i))
   }
