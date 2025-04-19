@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.StorageService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,6 +19,7 @@ class TournamentComponentController(
     private val menuService: MenuService,
     private val tournamentService: TournamentService,
     private val auditLogService: AuditLogService,
+    private val storageService: StorageService,
     service: MenuService
 ) : ComponentApiBase(
     adminMenuService,
@@ -27,7 +29,8 @@ class TournamentComponentController(
     "Tournament",
     "Tournament beállítások",
     auditLogService = auditLogService,
-    menuService = menuService
+    menuService = menuService,
+    storageService = storageService
 ) {
 
 }

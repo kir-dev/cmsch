@@ -25,7 +25,7 @@ class TournamentComponent (
     "Tournament",
     ControlPermissions.PERMISSION_CONTROL_TOURNAMENT,
     listOf(),
-    componentSettingService, env
+    env
 ){
     final override val allSettings by lazy {
         listOf(

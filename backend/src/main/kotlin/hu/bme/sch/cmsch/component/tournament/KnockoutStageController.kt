@@ -8,6 +8,7 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.StorageService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
@@ -27,6 +28,7 @@ class KnockoutStageController(
     auditLog: AuditLogService,
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
+    storageService: StorageService,
     env: Environment
 ) : TwoDeepEntityPage<KnockoutGroupDto, KnockoutStageEntity>(
     "knockout-stage",
@@ -53,6 +55,7 @@ class KnockoutStageController(
     stageRepository,
     importService,
     adminMenuService,
+    storageService,
     component,
     auditLog,
     objectMapper,

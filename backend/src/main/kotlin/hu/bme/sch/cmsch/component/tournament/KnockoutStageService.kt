@@ -20,44 +20,49 @@ class KnockoutStageService(
 
     @Transactional
     fun createMatchesForStage(stage: KnockoutStageEntity) {
-        val secondRoundGames = 2.0.pow(stage.rounds().toDouble() - 2).toInt()
-        val firstRoundGames = stage.matches() - 2 * secondRoundGames + 1
-        val byeWeekParticipantCount = stage.participantCount - firstRoundGames * 2
+        val firstRound = 2.0.pow(stage.rounds() - 1).toInt()
+        val gameCount = 2*firstRound
+        val byeSlotCount = 2*firstRound-stage.participantCount
 
-        val seedSpots = (1..2*secondRoundGames).asIterable().shuffled()
-            .subList(0, byeWeekParticipantCount) //TODO bye week participant count wrong
-        // TODO do better seeding, this is just random stuff
+        val byeGames = (1..firstRound).asIterable().shuffled().subList(0,byeSlotCount).sorted()
         val matches = mutableListOf<TournamentMatchEntity>()
 
-        for (i in 0 until firstRoundGames) {
+        var j = 0; var k = 0
+        for (i in 0 until firstRound){
             matches.add(TournamentMatchEntity(
-                gameId = i + 1,
+                gameId = i,
                 stageId = stage.id,
-                homeSeed = i + 1 + byeWeekParticipantCount,
-                awaySeed = i + 2 + byeWeekParticipantCount
+                level = 1,
+                homeSeed = j++,
+                awaySeed = if (byeGames[k] == i) {
+                    k++
+                    0
+                } else {
+                    j++
+                }
             ))
         }
-        var j = 1; var k = 1
-        for (i in 1 until secondRoundGames + 1) {
+        var roundMatches = firstRound; j = 0; k = 2
+        for (i in firstRound until gameCount){
             matches.add(TournamentMatchEntity(
-                gameId = firstRoundGames + j,
+                gameId = i,
                 stageId = stage.id,
-                homeSeed = if(seedSpots.contains(2*i-1)) j++ else -(k++),
-                awaySeed = if(seedSpots.contains(2*i)) j++ else -(k++)
+                level = k,
+                homeSeed = -(j++),
+                awaySeed = -(j++)
             ))
+            if (j == roundMatches) {
+                j = 0
+                k++
+                roundMatches /= 2
+            }
         }
-        for (i in firstRoundGames + secondRoundGames until stage.matches()) {
-            matches.add(TournamentMatchEntity(
-                gameId = i + 1,
-                stageId = stage.id,
-                homeSeed = -(k++),
-                awaySeed = -(k++)
-            ))
-        }
+
         for (match in matches) {
             matchRepository.save(match)
         }
 
+        //placeholder seeding for testing
         val teamSeeds = (1..stage.participantCount).asIterable().shuffled().toList()
         val participants = tournamentService.getResultsFromLevel(stage.tournamentId, stage.level - 1).subList(0, stage.participantCount)
             .map { StageResultDto(it.teamId, it.teamName) }

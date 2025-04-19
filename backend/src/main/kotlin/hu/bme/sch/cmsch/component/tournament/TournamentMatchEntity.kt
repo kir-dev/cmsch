@@ -125,8 +125,8 @@ data class TournamentMatchEntity(
     @PreUpdate
     fun setTeams() {
         val teams = KnockoutStageService.getBean().getParticipants(stageId)
-        homeTeamId = teams.find { it.teamName == homeTeamName }?.teamId ?: null
-        awayTeamId = teams.find { it.teamName == awayTeamName }?.teamId ?: null
+        homeTeamId = teams.find { it.teamName == homeTeamName }?.teamId
+        awayTeamId = teams.find { it.teamName == awayTeamName }?.teamId
     }
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
