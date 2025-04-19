@@ -41,13 +41,13 @@ const Tournament = ({tournament}: TournamentProps) => {
               ))
             }
           </TabPanel>
-            {
-              tournament.stages.map((stage) => (
-                <TabPanel px={0}>
-                  <KnockoutStage key={stage.id} stage={stage}/>
-                </TabPanel>
-              ))
-            }
+          {
+            tournament.stages.map((stage) => (
+              <TabPanel px={0}>
+                <KnockoutStage key={stage.id} stage={stage}/>
+              </TabPanel>
+            ))
+          }
         </TabPanels>
       </Tabs>
     </div>
