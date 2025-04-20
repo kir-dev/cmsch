@@ -92,6 +92,7 @@ class TaskApiController(
 
         return TaskCategoryView(
             categoryName = category.name,
+            description = category.description,
             tasks = taskList,
             availableFrom = category.availableFrom,
             availableTo = category.availableTo,

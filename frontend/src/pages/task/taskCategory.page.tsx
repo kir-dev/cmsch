@@ -10,6 +10,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { useOpaqueBackground } from '../../util/core-functions.util'
 import { AbsolutePaths } from '../../util/paths'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
+import Markdown from '../../common-components/Markdown.tsx'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()
@@ -40,6 +41,11 @@ const TaskCategoryPage = () => {
       <Helmet title={data.categoryName} />
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{data.categoryName}</Heading>
+      {!!data.description && (
+        <Box pb={4}>
+          <Markdown text={data.description} />
+        </Box>
+      )}
       {data.tasks && data.tasks.length > 0 ? (
         <VStack spacing={4} mt={5} align="stretch">
           {data.tasks.map((task) => (

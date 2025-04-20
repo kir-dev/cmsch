@@ -30,7 +30,7 @@ interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
     @Query("SELECT NEW hu.bme.sch.cmsch.component.task.TaskCountByCategory(t.categoryId, COUNT(t)) FROM TaskEntity t WHERE t.visible = true AND t.availableFrom < :now AND t.availableTo > :now GROUP BY t.categoryId")
     fun findTaskCountByCategory(now: Long): List<TaskCountByCategory>
 
-    fun findAllByVisibleTrueAndCategoryId(categoryId: Int): List<TaskEntity>
+    fun findAllByVisibleTrueAndCategoryIdOrderByOrder(categoryId: Int): List<TaskEntity>
 
     @Query("""SELECT NEW hu.bme.sch.cmsch.component.task.TaskEntity(
         t.id, 
