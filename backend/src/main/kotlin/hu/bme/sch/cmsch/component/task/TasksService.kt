@@ -74,7 +74,7 @@ open class TasksService(
 
     @Transactional(readOnly = true)
     open fun getAllTasksForGroup(groupId: Int, categoryId: Int): List<TaskEntityWrapperDto> {
-        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryId(categoryId)
+        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryIdOrderByOrder(categoryId)
         val taskIds = allTasks.map { it.id }
         val submissions = submitted.findAllByTask_IdInAndGroupId(taskIds, groupId).associateBy { it.task?.id ?: 0 }
         return allTasks.map { findSubmission(submissions[it.id], it) }
@@ -82,7 +82,7 @@ open class TasksService(
 
     @Transactional(readOnly = true)
     open fun getAllTasksForUser(user: CmschUser, categoryId: Int): List<TaskEntityWrapperDto> {
-        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryId(categoryId)
+        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryIdOrderByOrder(categoryId)
         val taskIds = allTasks.map { it.id }
         val submissions = submitted.findAllByTask_IdInAndUserId(taskIds, user.id).associateBy { it.task?.id ?: 0 }
         return allTasks.map { findSubmission(submissions[it.id], it) }
