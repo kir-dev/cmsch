@@ -75,6 +75,7 @@ export interface TaskCategoryPreview {
 
 export interface TaskCategoryFullDetails {
   categoryName: string
+  description: string
   tasks: TaskWrapper[]
 }
 

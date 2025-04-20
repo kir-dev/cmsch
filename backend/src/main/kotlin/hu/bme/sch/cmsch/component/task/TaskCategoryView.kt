@@ -8,6 +8,9 @@ data class TaskCategoryView(
     val categoryName: String,
 
     @field:JsonView(FullDetails::class)
+    val description: String = "",
+
+    @field:JsonView(FullDetails::class)
     val tasks: List<TaskEntityWrapperDto> = listOf(),
 
     @field:JsonView(FullDetails::class)
