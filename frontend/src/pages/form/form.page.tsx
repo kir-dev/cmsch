@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
 import { FunctionComponent, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -106,9 +106,11 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
                   {formField.note && <Markdown text={formField.note} />}
                 </FormControl>
               ))}
-              <Button mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
-                {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
-              </Button>
+              <Flex justifyContent="flex-end">
+                <Button colorScheme="brand" mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
+                  {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
+                </Button>
+              </Flex>
             </form>
           </FormProvider>
         )}
