@@ -1,4 +1,4 @@
-import { Badge, Box } from '@chakra-ui/react'
+import { Badge } from '@chakra-ui/react'
 import { FC } from 'react'
 import { taskStatus } from '../../../util/views/task.view'
 
@@ -24,9 +24,7 @@ type TaskStatusBadgeProps = {
 }
 
 export const TaskStatusBadge: FC<TaskStatusBadgeProps> = ({ status, fontSize }) => (
-  <Box>
-    <Badge variant="solid" bg={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
-      {STATUS_TEXT_MAP.get(status)}
-    </Badge>
-  </Box>
+  <Badge variant="solid" bg={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
+    {STATUS_TEXT_MAP.get(status)}
+  </Badge>
 )
