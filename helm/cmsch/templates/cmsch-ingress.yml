@@ -5,10 +5,9 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
-  annotations:
-    cert-manager.io/cluster-issuer: le-http01
-    kubernetes.io/tls-acme: 'true'
-    nginx.ingress.kubernetes.io/proxy-body-size: {{ .Values.ingress.maxBodySize }}
+  {{- with .Values.ingress.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   tls:

@@ -1,5 +1,5 @@
-{{ if .Values.s3.useS3 }}
-kind: Deployment
+{{ if not .Values.s3.useS3 }}
+kind: StatefulSet
 apiVersion: apps/v1
 metadata:
   name: {{ .Release.Name }}
@@ -7,7 +7,6 @@ metadata:
     app: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
 spec:
-  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
@@ -24,6 +23,10 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretName }}
       {{ end }}
+      volumes:
+        - name: {{ .Release.Name }}-pv
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pv
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.apiImage }}
@@ -60,6 +63,9 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
               memory: {{ .Values.resources.requests.memory }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-pv
+              mountPath: /pv
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           startupProbe:
             httpGet:
@@ -85,6 +91,22 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
-  strategy:
-    type: {{ .Values.deploymentStrategy }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-pv
+        labels:
+          app: {{ .Release.Name }}
+          app.kubernetes.io/name: {{ .Release.Name }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.resources.requests.storage }}
+        {{ if  .Values.resources.storageClassName  }}
+        storageClassName: {{ .Values.resources.storageClassName }}
+        {{ end }}
+        {{ if  .Values.resources.volumeMode  }}
+        volumeMode: {{ .Values.resources.volumeMode }}
+        {{ end }}
 {{ end }}

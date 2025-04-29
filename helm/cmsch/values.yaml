@@ -8,7 +8,7 @@ apiHostProtocol: https
 allowedOriginPatterns: ""
 
 apiImage: harbor.sch.bme.hu/org-kir-dev/cmsch:release
-imagePullSecretName: harbor-cred
+imagePullSecretName:
 imagePullPolicy: Always
 
 springLoggingLevel: INFO
@@ -17,13 +17,19 @@ deploymentStrategy: Recreate # because of resource constraints and H2 allowing o
 backendDistributedMode: false
 replicas: 1
 
+monitoring:
+  enabled: true
+
 service:
   type: ClusterIP
 
 ingress:
   enabled: true
-  maxBodySize: 20m
   className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/tls-acme: 'true'
+    nginx.ingress.kubernetes.io/proxy-body-size: 20m
 
 blockActuatorEndpoints: true
 swaggerEnabled: false
@@ -33,7 +39,7 @@ superusers:
   googleEmails: ""
 
 resources:
-  storageClassName: local-path
+  storageClassName: memory-ssd
   volumeMode: Filesystem
   limits:
     cpu:
@@ -66,14 +72,35 @@ postgres:
     driveParentId: "the ID of the drive folder for the files"
     driveId: "the ID of the shared drive"
   global:
-    defaultStorageClass: local-path
+    defaultStorageClass: memory-ssd
     postgresql:
       auth:
         database: cmsch
         username: admin
         password: admin
   architecture: standalone
+  metrics:
+    enabled: true
+    serviceMonitor:
+      relabelings:
+        - sourceLabels: [ __meta_kubernetes_pod_name ]
+          targetLabel: instance
+          action: replace
+      enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 50Mi
+      limits:
+        cpu: 150m
+        memory: 192Mi
+        ephemeral-storage: 50Mi
   primary:
+    networkPolicy:
+      allowExternal: false
+    persistence:
+      size: 2Gi
     resourcesPreset: "micro"
 
 s3:
