@@ -21,6 +21,9 @@ sessionDurationSeconds: 172800
 monitoring:
   enabled: true
 
+monitoring:
+  enabled: true
+
 service:
   type: ClusterIP
 
