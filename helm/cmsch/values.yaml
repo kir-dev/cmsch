@@ -16,6 +16,7 @@ springProfiles: prod,docker,env
 deploymentStrategy: Recreate # because of resource constraints and H2 allowing only 1 connection at a time
 backendDistributedMode: false
 replicas: 1
+sessionDurationSeconds: 172800
 
 monitoring:
   enabled: true
