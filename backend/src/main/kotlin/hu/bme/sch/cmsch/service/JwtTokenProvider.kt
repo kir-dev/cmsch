@@ -65,7 +65,7 @@ class JwtTokenProvider(
         claims.add(JWT_CLAIM_GROUP_NAME, groupName)
 
         val now = Date()
-        val validity = Date(now.time + startupPropertyConfig.sessionValidityInMilliseconds)
+        val validity = Date(now.time + startupPropertyConfig.sessionValiditySeconds * 1000)
         return Jwts.builder()
             .claims(claims.build())
             .issuedAt(now)

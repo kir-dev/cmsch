@@ -26,22 +26,20 @@ class ConferenceSeedConfig(
     }
 
     private fun addConference() {
+        if (conferenceRepository.count() != 0L) return
         conferenceRepository.saveAll(
             listOf(
                 ConferenceEntity(
-                    id = 1,
                     title = "Test Conference 2022",
                     priority = 0,
                     imageUrlsArray = "https://example.com/image1.jpg,https://example.com/image2.jpg"
                 ),
                 ConferenceEntity(
-                    id = 2,
                     title = "Test Conference 2023",
                     priority = 1,
                     imageUrlsArray = "https://example.com/image1.jpg,https://example.com/image2.jpg"
                 ),
                 ConferenceEntity(
-                    id = 2,
                     title = "Test Conference 2024",
                     priority = 69,
                     imageUrlsArray = ""
@@ -51,10 +49,10 @@ class ConferenceSeedConfig(
     }
 
     private fun addCompanies() {
+        if (conferenceCompanyRepository.count() != 0L) return
         conferenceCompanyRepository.saveAll(
             listOf(
                 ConferenceCompanyEntity(
-                    id = 1,
                     name = "Test Company 1",
                     selector = "test-company-1",
                     visible = true,
@@ -63,7 +61,6 @@ class ConferenceSeedConfig(
                     url = "https://example.com",
                 ),
                 ConferenceCompanyEntity(
-                    id = 2,
                     name = "Test Company 2",
                     selector = "test-company-2",
                     visible = true,
@@ -72,7 +69,6 @@ class ConferenceSeedConfig(
                     url = "https://example.com",
                 ),
                 ConferenceCompanyEntity(
-                    id = 3,
                     name = "Test Company 3",
                     selector = "test-company-3",
                     visible = true,
@@ -81,7 +77,6 @@ class ConferenceSeedConfig(
                     url = "https://example.com",
                 ),
                 ConferenceCompanyEntity(
-                    id = 4,
                     name = "Invisible Test Company",
                     selector = "invisible-test-company",
                     visible = false,
@@ -94,10 +89,10 @@ class ConferenceSeedConfig(
     }
 
     private fun addPresenters() {
+        if (conferencePresenterRepository.count() != 0L) return
         conferencePresenterRepository.saveAll(
             listOf(
                 ConferencePresenterEntity(
-                    id = 1,
                     name = "Test Presenter 1",
                     selector = "test-presenter-1",
                     visible = true,
@@ -106,7 +101,6 @@ class ConferenceSeedConfig(
                     pictureUrl = "https://example.com/presenter1.jpg",
                 ),
                 ConferencePresenterEntity(
-                    id = 2,
                     name = "Test Presenter 2",
                     selector = "test-presenter-2",
                     visible = true,
@@ -115,7 +109,6 @@ class ConferenceSeedConfig(
                     pictureUrl = "https://example.com/presenter2.jpg",
                 ),
                 ConferencePresenterEntity(
-                    id = 3,
                     name = "Invisible Test Presenter",
                     selector = "test-presenter-3",
                     visible = false,
@@ -128,10 +121,10 @@ class ConferenceSeedConfig(
     }
 
     private fun addPresentations() {
+        if (conferencePresentationRepository.count() != 0L) return
         conferencePresentationRepository.saveAll(
             listOf(
                 ConferencePresentationEntity(
-                    id = 1,
                     slug = "test-presentation-1",
                     title = "Test Presentation 1",
                     room = RoomType.IB028,
@@ -145,7 +138,6 @@ class ConferenceSeedConfig(
                     questionsUrl = "https://example.com",
                 ),
                 ConferencePresentationEntity(
-                    id = 2,
                     slug = "test-presentation-2",
                     title = "Test Presentation 2",
                     room = RoomType.OTHERS,
@@ -159,7 +151,6 @@ class ConferenceSeedConfig(
                     questionsUrl = "https://example.com",
                 ),
                 ConferencePresentationEntity(
-                    id = 3,
                     slug = "test-presentation-3",
                     title = "Test Presentation 3",
                     room = RoomType.IB025,
@@ -173,7 +164,6 @@ class ConferenceSeedConfig(
                     questionsUrl = "https://example.com",
                 ),
                 ConferencePresentationEntity(
-                    id = 4,
                     slug = "test-presentation-4",
                     title = "Test Presentation 4",
                     room = RoomType.IB028,
@@ -187,7 +177,6 @@ class ConferenceSeedConfig(
                     questionsUrl = "https://example.com",
                 ),
                 ConferencePresentationEntity(
-                    id = 5,
                     slug = "test-presentation-5",
                     title = "Test Presentation 5",
                     room = RoomType.IB028,
@@ -205,10 +194,10 @@ class ConferenceSeedConfig(
     }
 
     private fun addOrganizers() {
+        if (conferenceOrganizerRepository.count() != 0L) return
         conferenceOrganizerRepository.saveAll(
             listOf(
                 ConferenceOrganizerEntity(
-                    id = 1,
                     name = "Test Organizer 1",
                     rank = "Test Rank 1",
                     emailAddress = " ",
@@ -217,7 +206,6 @@ class ConferenceSeedConfig(
                     visible = true,
                 ),
                 ConferenceOrganizerEntity(
-                    id = 2,
                     name = "Test Organizer 2",
                     rank = "Test Rank 2",
                     emailAddress = " ",
@@ -226,7 +214,6 @@ class ConferenceSeedConfig(
                     visible = true,
                 ),
                 ConferenceOrganizerEntity(
-                    id = 3,
                     name = "Invisible Test Organizer",
                     rank = "Test Rank 3",
                     emailAddress = " ",

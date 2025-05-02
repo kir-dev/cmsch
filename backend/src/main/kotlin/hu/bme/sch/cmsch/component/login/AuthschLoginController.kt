@@ -109,7 +109,7 @@ class AuthschLoginController(
         return Cookie("jwt", value).apply {
             isHttpOnly = true
             path = "/"
-            maxAge = startupPropertyConfig.sessionValidityInMilliseconds.toInt() / 1000
+            maxAge = startupPropertyConfig.sessionValiditySeconds.toInt()
             secure = true
             domain = getDomainFromUrl(applicationComponent.siteUrl.getValue())
             setAttribute(Constants.COOKIE_SAME_SITE_ATTR, SameSiteCookies.LAX.value)

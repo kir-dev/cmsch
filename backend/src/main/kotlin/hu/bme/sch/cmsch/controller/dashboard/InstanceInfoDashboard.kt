@@ -92,7 +92,7 @@ class InstanceInfoDashboard(
             listOf("S3 bucket",                     startupPropertyConfig.s3Bucket.toString()),
             listOf("S3 region",                     startupPropertyConfig.s3Region.toString()),
             listOf("Mailgun token length",          startupPropertyConfig.mailgunToken.length.toString()),
-            listOf("Session validity (ms)",         startupPropertyConfig.sessionValidityInMilliseconds.toString()),
+            listOf("Session validity seconds",      startupPropertyConfig.sessionValiditySeconds.toString()),
             listOf("Increased session time (ms)",   startupPropertyConfig.increasedSessionTime.toString()),
             listOf("Profile QR prefix",             startupPropertyConfig.profileQrPrefix),
             listOf("Task ownership mode",           startupPropertyConfig.taskOwnershipMode.name),

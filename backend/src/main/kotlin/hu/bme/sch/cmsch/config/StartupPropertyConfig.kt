@@ -14,7 +14,7 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
 
     // JWT
     val secretKey: String,
-    val sessionValidityInMilliseconds: Long,
+    val sessionValiditySeconds: Long,
 
     // Tokens
     val mailgunToken: String,

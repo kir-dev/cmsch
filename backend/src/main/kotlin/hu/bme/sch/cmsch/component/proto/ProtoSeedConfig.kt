@@ -18,15 +18,13 @@ class ProtoSeedConfig(
     }
 
     private fun addProto() {
-        protoRepository.saveAll(
-            listOf(
-                ProtoEntity(
-                    id = 1,
-                    path = "/test",
-                    responseValue = """{"status": "ok"}""",
-                    mimeType = "application/json",
-                    statusCode = 200,
-                )
+        if (protoRepository.count() != 0L) return
+        protoRepository.save(
+            ProtoEntity(
+                path = "/test",
+                responseValue = """{"status": "ok"}""",
+                mimeType = "application/json",
+                statusCode = 200,
             )
         )
     }
