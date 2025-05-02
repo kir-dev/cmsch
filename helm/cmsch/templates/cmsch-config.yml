@@ -14,6 +14,10 @@ data:
   GOOGLE_ADMIN_ADDRESSES: {{ .Values.superusers.googleEmails | quote }}
   SESSION_DURATION_SECONDS: {{ .Values.sessionDurationSeconds | quote}}
 
+  {{ if .Values.redis.enabled }}
+  REDIS_HOST: "{{ .Release.Name }}-redis-master"
+  {{ end }}
+
   {{ if .Values.s3.useS3 }}
   STORAGE_IMPLEMENTATION: S3
   S3_BUCKET: {{ .Values.s3.bucket }}

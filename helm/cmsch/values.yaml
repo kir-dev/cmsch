@@ -61,6 +61,20 @@ secret:
   bmejegyPassword: this is a secret value
   firebaseServiceAccountKey: contents of the serviceAccount.json file as a string
 
+redis:
+  enabled: false # Remember to set this too → springProfiles: prod,docker,env,redis-session
+  architecture: standalone
+  auth:
+    enabled: false
+  master:
+    count: 1
+    resourcesPreset: "micro"
+    persistence:
+      enabled: false
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+
 postgres:
   enabled: false # Remember to set this too → springProfiles: prod,docker,env,postgres
   driveBackup:

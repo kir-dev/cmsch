@@ -7,6 +7,10 @@ version: 1.0.0
 dependencies:
   - name: postgresql
     alias: postgres
-    version: 16.5.0
+    version: 16.6.6
     repository: https://charts.bitnami.com/bitnami
     condition: postgres.enabled
+  - name: redis
+    version: 20.13.3
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
