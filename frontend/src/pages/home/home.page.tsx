@@ -65,6 +65,12 @@ const HomePage = () => {
           )}
         </Heading>
       )}
+      {countdownConfig?.enabled && (
+        <>
+          <Heading textAlign="center">{countdownConfig?.topMessage}</Heading>
+          <Clock countTo={countTo} />
+        </>
+      )}
       {homeConfig.showNews && homeNews.data && homeNews.data.length > 0 && (
         <>
           <Grid mt={10} templateColumns="1fr" gap={4}>
@@ -72,15 +78,6 @@ const HomePage = () => {
               <NewsListItem news={n} fontSize="xl" useLink={config?.components?.news?.showDetails} key={n.title + n.timestamp} />
             ))}
           </Grid>
-          <LinkButton colorScheme="brand" mt={5} href={AbsolutePaths.NEWS}>
-            Összes hír
-          </LinkButton>
-        </>
-      )}
-      {countdownConfig?.enabled && (
-        <>
-          <Heading textAlign="center">{countdownConfig?.topMessage}</Heading>
-          <Clock countTo={countTo} />
         </>
       )}
 
