@@ -377,7 +377,7 @@ open class RiddleBusinessLogicService(
 
         val solutionList = transformedRiddleSolution.split(";")
 
-        return transformedSubmittedSolution in solutionList
+        return !(transformedSubmittedSolution in solutionList)
     }
 
     private fun replaceAccent(transformedSubmittedSolution: String) = transformedSubmittedSolution
