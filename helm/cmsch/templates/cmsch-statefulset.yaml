@@ -17,9 +17,10 @@ spec:
       labels:
         app: {{ .Release.Name }}
         app.kubernetes.io/name: {{ .Release.Name }}
+        '{{ .Release.Name }}-backup-assets': 'true'
         monitor-spring-boot: "{{ .Values.monitoring.enabled }}"
     spec:
-      {{ if  .Values.imagePullSecretName  }}
+      {{ if .Values.imagePullSecretName  }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretName }}
       {{ end }}
