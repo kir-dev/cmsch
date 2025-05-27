@@ -2,8 +2,7 @@ import { Box, Button, Divider, Flex, FormControl, FormLabel, Heading, useToast }
 import { FunctionComponent, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Navigate, useParams } from 'react-router-dom'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { useParams } from 'react-router-dom'
 import { useFormPage } from '../../api/hooks/form/useFormPage'
 import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
@@ -12,8 +11,6 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { isCheckbox, isGridField } from '../../util/core-functions.util'
-import { l } from '../../util/language'
-import { AbsolutePaths } from '../../util/paths'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
@@ -29,7 +26,6 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
   const tokenRefresh = useTokenRefresh()
-  const { sendMessage } = useServiceContext()
   const { isLoggedIn } = useAuthContext()
 
   useEffect(() => {
@@ -65,12 +61,8 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   }
 
   if (!isLoggedIn && status === FormStatus.NOT_FOUND) return <ComponentUnavailable />
-  if (status === FormStatus.NOT_FOUND || status === FormStatus.NOT_ENABLED || status === FormStatus.GROUP_NOT_PERMITTED) {
-    if (status === FormStatus.NOT_FOUND) sendMessage(message ?? l('form-not-available'))
-    else sendMessage(message ?? l('form-disabled'))
 
-    return <Navigate to={AbsolutePaths.ERROR} />
-  }
+
   return (
     <CmschPage>
       <Helmet title={form?.name || 'Űrlap'} />
