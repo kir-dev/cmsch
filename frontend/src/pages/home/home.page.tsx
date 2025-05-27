@@ -107,7 +107,7 @@ const HomePage = () => {
             {eventsToday.length > 0 ? (
               <Schedule events={eventsToday} />
             ) : (
-              <Text textAlign="center" color="gray.500" marginTop={10}>
+              <Text textAlign="center" opacity={0.7} marginTop={10}>
                 Nincs több esemény.
               </Text>
             )}
@@ -118,7 +118,7 @@ const HomePage = () => {
             {eventsLater.length > 0 ? (
               <Schedule verbose events={eventsLater} />
             ) : (
-              <Text textAlign="center" color="gray.500" marginTop={10}>
+              <Text textAlign="center" opacity={0.7} marginTop={10}>
                 Nincs több esemény.
               </Text>
             )}

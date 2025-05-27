@@ -10,7 +10,14 @@ export function SearchBar({ inputRef, handleInput, setSearch, search, filteredDa
       <InputLeftElement h="100%">
         <SearchIcon />
       </InputLeftElement>
-      <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
+      <Input
+        ref={inputRef}
+        placeholder="Keresés..."
+        size="lg"
+        onChange={handleInput}
+        _placeholder={{ color: 'inherit' }}
+        autoFocus={true}
+      />
       {search && (
         <InputRightElement
           h="100%"

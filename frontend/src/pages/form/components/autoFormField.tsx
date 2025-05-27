@@ -64,7 +64,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       )
       break
     case FormFieldVariants.EMAIL:
-      component = <Input type="email" {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Input type="email" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
       break
     case FormFieldVariants.LONG_TEXT:
       component = <Textarea {...field} isInvalid={!!error} disabled={disabled} />
@@ -80,13 +80,13 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       )
       break
     case FormFieldVariants.DATE:
-      component = <Input type="date" {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Input type="date" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
       break
     case FormFieldVariants.NUMBER:
-      component = <Input type="number" {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Input type="number" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
       break
     case FormFieldVariants.PHONE:
-      component = <Input type="phone" {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Input type="phone" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
       break
     case FormFieldVariants.SELECT:
       component = (
@@ -100,7 +100,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       )
       break
     case FormFieldVariants.TEXT:
-      component = <Input isInvalid={!!error} type="text" {...field} disabled={disabled} />
+      component = <Input isInvalid={!!error} type="text" {...field} _placeholder={{ color: 'inherit' }} disabled={disabled} />
       break
     case FormFieldVariants.VOTE:
       let values: VotingFieldOption[] = []
