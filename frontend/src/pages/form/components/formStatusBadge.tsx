@@ -22,6 +22,7 @@ export const FormStatusBadge = ({ status }: FormStatusBadgeProps) => {
       color = 'red'
       break
     case FormStatus.REJECTED:
+    case FormStatus.GROUP_NOT_PERMITTED:
       color = 'red'
       break
   }

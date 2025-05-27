@@ -182,7 +182,14 @@ const RiddlePage = () => {
         <Box as="form" onSubmit={submitSolution} borderWidth={2} borderColor={boxBorder} borderRadius="md" p={5} mt={5}>
           <FormControl>
             <FormLabel htmlFor="solution">Megoldásom:</FormLabel>
-            <Input ref={solutionInput} id="solution" name="solution" autoComplete="off" readOnly={data.solved} />
+            <Input
+              ref={solutionInput}
+              id="solution"
+              name="solution"
+              autoComplete="off"
+              _placeholder={{ color: 'inherit' }}
+              readOnly={data.solved}
+            />
           </FormControl>
 
           <VStack spacing={5} mt={10}>

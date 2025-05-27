@@ -16,6 +16,7 @@ export const CmschContainer = ({ children, title, disablePadding, ...props }: Cm
       maxW="100%"
       borderRadius={[0, null, 'xl']}
       w={['100%', '64rem']}
+      color={useColorModeValue(theme?.lightTextColor, theme?.darkTextColor)}
       backdropFilter={useColorModeValue(theme?.lightContainerFilter, theme?.darkContainerFilter)}
       bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
       {...props}

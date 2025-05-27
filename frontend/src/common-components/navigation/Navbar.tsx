@@ -13,6 +13,7 @@ export const Navbar = () => {
   const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
   const backdropFilter = useColorModeValue(config?.components.style?.lightNavbarFilter, config?.components.style?.darkNavbarFilter)
   const background = useColorModeValue(config.components.style?.lightNavbarColor, config.components.style?.darkNavbarColor)
+  const textColor = useColorModeValue(config.components.style.lightTextColor, config.components.style.darkTextColor)
   return (
     <Box
       mx="auto"
@@ -25,7 +26,7 @@ export const Navbar = () => {
       mb={4}
     >
       <Flex
-        color={useColorModeValue('gray.800', 'white')}
+        color={textColor}
         minH={{ base: '3rem', md: '4.5rem' }}
         maxW={['100%', '100%', '56rem', '72rem']}
         py={{ base: 2 }}
@@ -36,6 +37,7 @@ export const Navbar = () => {
           <IconButton
             onClick={onToggle}
             icon={isOpen ? <Icon as={FaTimes} w={5} h={5} /> : <Icon as={FaBars} w={5} h={5} />}
+            color={textColor}
             variant="ghost"
             aria-label="Navigáció megnyitása"
           />
@@ -57,7 +59,7 @@ export const Navbar = () => {
           </Flex>
         </Flex>
         <Flex flex={{ base: 1, md: 0 }} mr={{ base: -2, md: 0 }} justify="flex-end">
-          {!config?.components?.style?.forceDarkMode && <ColorModeSwitcher />}
+          {!config?.components?.style?.forceDarkMode && <ColorModeSwitcher color={textColor} />}
         </Flex>
       </Flex>
       {/*The method in onClick hides the menu items when a menu item is clicked. Works for collapsible items too!*/}

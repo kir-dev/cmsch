@@ -38,7 +38,14 @@ const NewsList = ({ newsList }: NewsListProps) => {
         <InputLeftElement h="100%">
           <SearchIcon />
         </InputLeftElement>
-        <Input ref={inputRef} placeholder="Keresés címre..." size="lg" onChange={debounce(handleInput, 500)} autoFocus={true} />
+        <Input
+          ref={inputRef}
+          placeholder="Keresés címre..."
+          size="lg"
+          onChange={debounce(handleInput, 500)}
+          autoFocus={true}
+          _placeholder={{ color: 'inherit' }}
+        />
         {search && (
           <InputRightElement
             h="100%"

@@ -6,12 +6,12 @@ import {
   Button,
   FormControl,
   FormLabel,
-  HStack,
   Heading,
+  HStack,
   Input,
   Text,
-  VStack,
-  useToast
+  useToast,
+  VStack
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
@@ -82,7 +82,12 @@ function AccessKeyPage() {
         <VStack spacing={5} mt={10} alignItems="flex-start">
           <FormControl>
             <FormLabel>{query.data.fieldName}</FormLabel>
-            <Input value={value} onChange={(e) => setValue(e.target.value)} isDisabled={!query.data.enabled} />
+            <Input
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              isDisabled={!query.data.enabled}
+              _placeholder={{ color: 'inherit' }}
+            />
           </FormControl>
           <HStack>
             <Button type="submit" colorScheme="brand" isLoading={query.isLoading} isDisabled={!query.data.enabled}>
