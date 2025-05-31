@@ -331,6 +331,17 @@ open class FormService(
             return FormSubmissionResult(FormSubmissionStatus.OK_RELOG_REQUIRED, 201, submissionData)
         }
 
+        if (form.grantPrivilegedRole) {
+            if (userEntity != null && userEntity.role.value <= RoleType.PRIVILEGED.value) {
+                userEntity.role = RoleType.PRIVILEGED
+                userRepository.save(userEntity)
+                log.info("Granting PRIVILEGED for user {} by filling form {} successfully", user.id, form.id)
+            } else {
+                log.info("NOT granting PRIVILEGED for user {} for filling form {} successfully because higher role", user?.id, form.id)
+            }
+            return FormSubmissionResult(FormSubmissionStatus.OK_RELOG_REQUIRED, 201, submissionData)
+        }
+
         return FormSubmissionResult(FormSubmissionStatus.OK, 200, submissionData)
     }
 
