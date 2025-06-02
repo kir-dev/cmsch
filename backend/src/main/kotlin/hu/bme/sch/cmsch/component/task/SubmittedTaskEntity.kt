@@ -82,7 +82,7 @@ data class SubmittedTaskEntity(
     @property:GenerateOverview(visible = false)
     var fileUrlAnswer: String = "",
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 7, label = "Értékelés", note = "Ez a szöveg fog megjelenni a csoportoknak/beadóknak")
     @property:GenerateOverview(visible = false)
