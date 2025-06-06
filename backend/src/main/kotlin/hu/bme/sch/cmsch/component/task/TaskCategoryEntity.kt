@@ -92,7 +92,8 @@ data class TaskCategoryEntity(
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'BASIC'")
+    @ColumnDefault("'BASIC'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8,
         label = "Minimum rang a megtekintéshez",
@@ -105,7 +106,8 @@ data class TaskCategoryEntity(
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'SUPERUSER'")
+    @ColumnDefault("'SUPERUSER'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9,
         label = "Maximum rang a megtekintéshez",
