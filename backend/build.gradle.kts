@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.4.5"
+    id("org.springframework.boot") version "3.5.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.owasp.dependencycheck") version "12.1.1"
-    kotlin("jvm") version "2.1.20"
-    kotlin("plugin.spring") version "2.1.20"
-    id("org.sonarqube") version "4.4.1.3373"
+    kotlin("jvm") version "2.1.21"
+    kotlin("plugin.spring") version "2.1.21"
+    id("org.sonarqube") version "6.2.0.5505"
 }
 
 group = "hu.bme.sch"
@@ -42,8 +42,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.firebase:firebase-admin:9.4.3")
-    implementation("software.amazon.awssdk:s3:2.31.32")
+    implementation("com.google.firebase:firebase-admin:9.5.0")
+    implementation("software.amazon.awssdk:s3:2.31.57")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -59,11 +59,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.itextpdf:itext-core:9.1.0")
+    implementation("com.itextpdf:itext-core:9.2.0")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.google.zxing:javase:3.5.3")
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
@@ -77,7 +77,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
     implementation("org.postgresql:postgresql")
-    implementation(platform("io.micrometer:micrometer-bom:1.14.6"))
+    implementation(platform("io.micrometer:micrometer-bom:1.15.0"))
     implementation("io.micrometer:micrometer-core")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.micrometer:micrometer-observation")
