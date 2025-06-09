@@ -31,7 +31,7 @@ const Match = ({match}: MatchProps) => {
   return (
     <Box borderWidth="1px" borderRadius="lg" p={2} width="64" bg="white">
       <Text fontSize="sm" color="gray.500">
-        Game {match.id}
+        Game {match.gameId}
       </Text>
       <Flex justifyContent="space-between" alignItems="center" mb={1}>
         <Text fontSize="sm" fontWeight="medium">

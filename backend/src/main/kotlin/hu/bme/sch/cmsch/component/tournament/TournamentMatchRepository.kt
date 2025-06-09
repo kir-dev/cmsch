@@ -31,4 +31,6 @@ interface TournamentMatchRepository : CrudRepository<TournamentMatchEntity, Int>
         GROUP BY t.stageId
     """)
     fun findAllAggregated(): List<MatchCountDto>
+
+    fun deleteAllByStageId(stageId: Int): Int
 }

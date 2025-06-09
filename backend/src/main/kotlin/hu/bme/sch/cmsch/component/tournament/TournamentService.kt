@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.tournament
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.repository.GroupRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -87,6 +88,17 @@ open class TournamentService(
 
         tournamentRepository.save(tournament.get())
         return true
+    }
+
+    companion object{
+        private var applicationContext: ApplicationContext? = null
+        fun getBean(): TournamentService = applicationContext?.getBean(TournamentService::class.java)
+            ?: throw IllegalStateException("TournamentService is not initialized. Make sure TournamentComponent is enabled and application context is set.")
+    }
+
+    @Transactional
+    fun deleteStagesForTournament(tournamentId: Int) {
+        stageRepository.deleteAllByTournamentId(tournamentId)
     }
 
 }

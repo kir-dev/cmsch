@@ -43,7 +43,7 @@ const Tournament = ({tournament}: TournamentProps) => {
           </TabPanel>
           {
             tournament.stages.map((stage) => (
-              <TabPanel px={0}>
+              <TabPanel px={0} overflowX="auto" scrollBehavior="smooth">
                 <KnockoutStage key={stage.id} stage={stage}/>
               </TabPanel>
             ))

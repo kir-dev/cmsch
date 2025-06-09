@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.pow
 import kotlin.random.Random
 
@@ -27,14 +29,14 @@ class KnockoutStageService(
         val byeGames = (1..firstRound).asIterable().shuffled().subList(0,byeSlotCount).sorted()
         val matches = mutableListOf<TournamentMatchEntity>()
 
-        var j = 0; var k = 0
-        for (i in 0 until firstRound){
+        var j = 1; var k = 0
+        for (i in 1 until firstRound+1){
             matches.add(TournamentMatchEntity(
                 gameId = i,
                 stageId = stage.id,
                 level = 1,
                 homeSeed = j++,
-                awaySeed = if (byeGames[k] == i) {
+                awaySeed = if (byeGames.size>k && byeGames[k] == i) {
                     k++
                     0
                 } else {
@@ -42,8 +44,8 @@ class KnockoutStageService(
                 }
             ))
         }
-        var roundMatches = firstRound; j = 0; k = 2
-        for (i in firstRound until gameCount){
+        var roundMatches = firstRound; j = 1; k = 2
+        for (i in firstRound+1 until gameCount+1){
             matches.add(TournamentMatchEntity(
                 gameId = i,
                 stageId = stage.id,
@@ -51,21 +53,21 @@ class KnockoutStageService(
                 homeSeed = -(j++),
                 awaySeed = -(j++)
             ))
-            if (j == roundMatches) {
-                j = 0
+            if (j == roundMatches+1) {
                 k++
-                roundMatches /= 2
+                roundMatches += roundMatches/2
             }
         }
+        matchRepository.saveAll(matches)
+    }
 
-        for (match in matches) {
-            matchRepository.save(match)
-        }
-
-        //placeholder seeding for testing
+    @Transactional
+    fun getTeamsForStage(stage: KnockoutStageEntity){
         val teamSeeds = (1..stage.participantCount).asIterable().shuffled().toList()
-        val participants = tournamentService.getResultsFromLevel(stage.tournamentId, stage.level - 1).subList(0, stage.participantCount)
-            .map { StageResultDto(it.teamId, it.teamName) }
+        var participants = tournamentService.getResultsFromLevel(stage.tournamentId, stage.level - 1)
+        if (participants.size >= stage.participantCount) {
+            participants = participants.subList(0, stage.participantCount).map { StageResultDto(it.teamId, it.teamName) }
+        }
         for (i in 0 until stage.participantCount) {
             participants[i].seed = teamSeeds[i]
         }
@@ -90,13 +92,17 @@ class KnockoutStageService(
 
     fun getTournamentService(): TournamentService = tournamentService
 
-    fun findById(id: Int): KnockoutStageEntity {
-        return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
+    fun findById(id: Int): KnockoutStageEntity? {
+        //return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
+        return stageRepository.findById(id).getOrNull()
     }
 
     fun getParticipants(stageId: Int): List<StageResultDto> {
         val stage = findById(stageId)
-        return stage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
+        if (stage == null || stage.participants.isEmpty()) {
+            return emptyList()
+        }
+        return stage!!.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
     }
 
 
@@ -125,6 +131,11 @@ class KnockoutStageService(
                 it.value.toInt()
                 )
         }.sortedByDescending { it.matchCount }
+    }
+
+    @Transactional
+    fun deleteMatchesForStage(stage: KnockoutStageEntity) {
+        matchRepository.deleteAllByStageId(stage.id)
     }
 
     companion object {

@@ -76,6 +76,7 @@ data class TournamentEntity(
         view = "control/tournament",
         showPermission = StaffPermissions.PERMISSION_SHOW_TOURNAMENTS,
     )
+    fun getTournamentService() = TournamentService.getBean()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -89,5 +90,10 @@ data class TournamentEntity(
 
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, name = '$title')"
+    }
+
+    @PreRemove
+    fun preRemove() {
+
     }
 }

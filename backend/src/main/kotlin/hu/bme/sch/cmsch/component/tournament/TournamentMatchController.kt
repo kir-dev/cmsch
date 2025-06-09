@@ -57,7 +57,7 @@ class TournamentMatchController(
 
     createEnabled = true,
     editEnabled = true,
-    deleteEnabled = false,
+    deleteEnabled = true,
     importEnabled = false,
     exportEnabled = false,
 

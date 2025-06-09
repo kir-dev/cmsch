@@ -60,7 +60,7 @@ data class KnockoutStageEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 3, label = "Résztvevők száma")
+    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 3, label = "Résztvevők száma", note = "Legfeljebb annyi csapat, mint a versenyen résztvevők száma")
     @property:GenerateOverview(columnName = "RésztvevőSzám", order = 3, centered = true)
     @property:ImportFormat
     var participantCount: Int = 1,
@@ -113,11 +113,14 @@ data class KnockoutStageEntity(
     }
 
 
-    /*@PostPersist
-    fun postPersist() {
-        tournament()!!
+    @PrePersist
+    fun prePersist() {
         getStageService().createMatchesForStage(this)
-        //getStageService().calculateTeamsFromSeeds(this)
-    }*/
+    }
+
+    @PreRemove
+    fun preRemove() {
+        getStageService().deleteMatchesForStage(this)
+    }
 
 }

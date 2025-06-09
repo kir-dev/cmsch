@@ -119,7 +119,7 @@ data class TournamentMatchEntity(
 
 ): ManagedEntity{
 
-    fun stage(): KnockoutStageEntity = KnockoutStageService.getBean().findById(stageId)
+    fun stage(): KnockoutStageEntity? = KnockoutStageService.getBean().findById(stageId)
 
     @PrePersist
     @PreUpdate

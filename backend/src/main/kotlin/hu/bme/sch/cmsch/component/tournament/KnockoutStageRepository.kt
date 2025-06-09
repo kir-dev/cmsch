@@ -35,4 +35,6 @@ interface KnockoutStageRepository : CrudRepository<KnockoutStageEntity, Int>,
     @Query("select k from KnockoutStageEntity k where k.tournamentId = ?1 and k.level = ?2")
     fun findAllByTournamentIdAndLevel(tournamentId: Int, level: Int): List<KnockoutStageEntity>
 
+    fun deleteAllByTournamentId(tournamentId: Int): Int
+
 }
