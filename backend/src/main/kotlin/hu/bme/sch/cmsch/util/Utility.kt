@@ -44,7 +44,7 @@ fun Authentication.getUser(): CmschUser {
 }
 
 fun Authentication?.getUserOrNull(): CmschUser? {
-    return if (this == null) null else (this.principal as CmschUser?)
+    return if (this == null) null else (this.principal as? CmschUser)
 }
 
 fun Authentication.getUserEntityFromDatabase(): UserEntity {

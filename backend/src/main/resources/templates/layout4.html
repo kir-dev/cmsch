@@ -47,7 +47,7 @@
 <div class="modal" id="search-modal">
     <input type="text" id="search-input" class="search-input" placeholder="" disabled autocomplete="off" spellcheck="false" />
 
-    <div class="search-results" id="search-results">
+    <div th:if="${userContext != null}" class="search-results" id="search-results">
         <div class="search-result" th:each="resource : ${userContext.resources}" th:object="${resource}">
             <a class="text" href="#" th:href="*{target}" onclick="closeSearch()">
                 <span class="material-symbols-outlined tag-menu" th:class="|material-symbols-outlined *{type.cssClass}|" th:text="*{type.icon}">menu</span>
@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<div class="group">
+<div th:if="${context != null}" class="group">
     <div class="nav">
         <div class="left-panel" th:with="finalColor=${#strings.length(context.brandColor) == 7 ? context.brandColor : '#DEDEDE'},
                                          redDecimal=${T(java.lang.Integer).parseInt(#strings.substring(finalColor, 1, 3), 16)},
@@ -129,7 +129,7 @@
 
 <div class="group">
     <div class="app">
-        <section th:fragment="menus(userContext, context)" th:remove="tag">
+        <section th:if="${context != null}" th:fragment="menus(userContext, context)" th:remove="tag">
             <div class="shortcuts-menu">
                 <a href="#" class="tooltip" onclick="openSearch(); return false">
                     <span class="material-symbols-outlined">search</span>

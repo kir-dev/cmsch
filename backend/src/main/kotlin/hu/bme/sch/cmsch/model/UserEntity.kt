@@ -48,6 +48,9 @@ enum class RoleType(val value: Int, val displayName: String, val description: St
 
     val isAdmin
         get() = value >= ADMIN.value
+
+    val isStaff
+        get() = value >= STAFF.value
 }
 
 enum class GuildType(val displayName: String) {
