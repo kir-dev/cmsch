@@ -1,47 +1,30 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Error</title>
-<!--    <meta http-equiv="Refresh" content="0; URL=/control/login">-->
+<head th:replace="~{layout4 :: head(${context?.siteName ?: 'CMSch'})}">
 </head>
 <body>
-<h1>Server Error</h1>
-<table>
-    <tr>
-        <td>Date</td>
-        <td th:text="${timestamp}"/>
-    </tr>
-    <tr>
-        <td>Path</td>
-        <td th:text="${path}"/>
-    </tr>
-    <tr>
-        <td>Error</td>
-        <td th:text="${error}"/>
-    </tr>
-    <tr>
-        <td>Status</td>
-        <td th:text="${status}"/>
-    </tr>
-    <tr>
-        <td>Message</td>
-        <td th:text="${message}"/>
-    </tr>
-    <tr>
-        <td>Exception</td>
-        <td th:text="${exception}"/>
-    </tr>
-    <tr>
-        <td>Trace</td>
-        <td>
-            <pre th:text="${trace}"/>
-        </td>
-    </tr>
-</table>
+
+<div th:if="${isStaff == true}" th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:if="${isStaff == true}" th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+  <div class="app">
+    <div th:if="${isStaff == true}" th:replace="~{layout4 :: menus(${userContext}, ${context})}"></div>
+    <div class="content">
+
+      <h1>Hiba történt</h1>
+      <div class="details">HTTP <span th:text="${status}"></span></div>
+
+      <div class="card" th:if="${isStaff == true && !#strings.isEmpty(exceptionMessage)}">
+        <h3 style="padding-bottom: 1em">Részletek</h3>
+        <form onsubmit="return false">
+                    <textarea id="content" th:text="${exceptionMessage}" readonly
+                              style="height: 600px; width: 100%; font-family: monospace"></textarea>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
