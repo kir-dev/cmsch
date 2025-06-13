@@ -8,7 +8,7 @@ apiHostProtocol: https
 allowedOriginPatterns: ""
 
 apiImage: harbor.sch.bme.hu/org-kir-dev/cmsch:release
-imagePullSecretName: harbor-cred
+imagePullSecretName:
 imagePullPolicy: Always
 
 springLoggingLevel: INFO
@@ -16,14 +16,21 @@ springProfiles: prod,docker,env
 deploymentStrategy: Recreate # because of resource constraints and H2 allowing only 1 connection at a time
 backendDistributedMode: false
 replicas: 1
+sessionDurationSeconds: 172800
+
+monitoring:
+  enabled: true
 
 service:
   type: ClusterIP
 
 ingress:
   enabled: true
-  maxBodySize: 20m
   className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/tls-acme: 'true'
+    nginx.ingress.kubernetes.io/proxy-body-size: 20m
 
 blockActuatorEndpoints: true
 swaggerEnabled: false
@@ -33,7 +40,7 @@ superusers:
   googleEmails: ""
 
 resources:
-  storageClassName: local-path
+  storageClassName: memory-ssd
   volumeMode: Filesystem
   limits:
     cpu:
@@ -54,26 +61,56 @@ secret:
   bmejegyPassword: this is a secret value
   firebaseServiceAccountKey: contents of the serviceAccount.json file as a string
 
-postgres:
-  enabled: false # Remember to set this too → springProfiles: prod,docker,env,postgres
-  driveBackup:
+driveBackup:
+  postgres:
     enabled: true
     schedule: "0 3 * * *"
     restartPolicy: Never
     imagePullPolicy: Always
     image: harbor.sch.bme.hu/org-kir-dev/postgres-backup:latest
-    googleServiceAccount: 'service account json contents'
-    driveParentId: "the ID of the drive folder for the files"
-    driveId: "the ID of the shared drive"
+  filesystem:
+    enabled: true
+    schedule: "0 3 * * *"
+    restartPolicy: Never
+    imagePullPolicy: Always
+    image: harbor.sch.bme.hu/org-kir-dev/folder-backup:latest
+  googleServiceAccount: 'service account json contents'
+  driveParentId: 'the ID of the drive folder for the files'
+  driveId: 'the ID of the shared drive'
+
+
+postgres:
+  enabled: false # Remember to set this too → springProfiles: prod,docker,env,postgres
   global:
-    defaultStorageClass: local-path
+    defaultStorageClass: memory-ssd
     postgresql:
       auth:
         database: cmsch
         username: admin
         password: admin
   architecture: standalone
+  metrics:
+    enabled: true
+    serviceMonitor:
+      relabelings:
+        - sourceLabels: [ __meta_kubernetes_pod_name ]
+          targetLabel: instance
+          action: replace
+      enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 50Mi
+      limits:
+        cpu: 150m
+        memory: 192Mi
+        ephemeral-storage: 50Mi
   primary:
+    networkPolicy:
+      allowExternal: false
+    persistence:
+      size: 2Gi
     resourcesPreset: "micro"
 
 s3:

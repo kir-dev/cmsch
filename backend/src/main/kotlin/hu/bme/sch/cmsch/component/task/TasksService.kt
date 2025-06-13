@@ -20,6 +20,8 @@ import java.sql.SQLException
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
+private const val target = "task"
+
 @Service
 @ConditionalOnBean(TaskComponent::class)
 open class TasksService(
@@ -36,9 +38,6 @@ open class TasksService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    companion object {
-        private val target = "task"
-    }
 
     @Transactional(readOnly = true)
     open fun getById(id: Int): Optional<TaskEntity> {
@@ -46,21 +45,13 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForUserOrNull(user: CmschUser, task: Optional<TaskEntity>): SubmittedTaskEntity? {
-        if (task.isEmpty)
-            return null
-
-        return submitted.findByTask_IdAndUserId(task.get().id, user.id)
-            .orElse(null)
+    open fun getSubmissionForUserOrNull(user: CmschUser, task: TaskEntity): SubmittedTaskEntity? {
+        return submitted.findByTask_IdAndUserId(task.id, user.id).orElse(null)
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForGroupOrNull(groupId: Int, task: Optional<TaskEntity>): SubmittedTaskEntity? {
-        if (task.isEmpty)
-            return null
-
-        return submitted.findByTask_IdAndGroupId(task.get().id, groupId)
-                .orElse(null)
+    open fun getSubmissionForGroupOrNull(groupId: Int, task: TaskEntity): SubmittedTaskEntity? {
+        return submitted.findByTask_IdAndGroupId(task.id, groupId).orElse(null)
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +74,7 @@ open class TasksService(
 
     @Transactional(readOnly = true)
     open fun getAllTasksForGroup(groupId: Int, categoryId: Int): List<TaskEntityWrapperDto> {
-        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryId(categoryId)
+        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryIdOrderByOrder(categoryId)
         val taskIds = allTasks.map { it.id }
         val submissions = submitted.findAllByTask_IdInAndGroupId(taskIds, groupId).associateBy { it.task?.id ?: 0 }
         return allTasks.map { findSubmission(submissions[it.id], it) }
@@ -91,7 +82,7 @@ open class TasksService(
 
     @Transactional(readOnly = true)
     open fun getAllTasksForUser(user: CmschUser, categoryId: Int): List<TaskEntityWrapperDto> {
-        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryId(categoryId)
+        val allTasks = taskRepository.findAllByVisibleTrueAndCategoryIdOrderByOrder(categoryId)
         val taskIds = allTasks.map { it.id }
         val submissions = submitted.findAllByTask_IdInAndUserId(taskIds, user.id).associateBy { it.task?.id ?: 0 }
         return allTasks.map { findSubmission(submissions[it.id], it) }
@@ -362,8 +353,32 @@ open class TasksService(
                 listeners.forEach { it.onTaskSubmit(user, task, submission) }
                 return TaskSubmissionStatus.OK
             }
-            else -> {
-                throw IllegalStateException("Invalid task type: " + task.type)
+            TaskType.ONLY_ZIP -> {
+                if (file == null || zipFileNameInvalid(file))
+                    return TaskSubmissionStatus.INVALID_ZIP
+
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
+
+                val submission = SubmittedTaskEntity(
+                    0, task, groupId, groupName ?: "",
+                    userId, userName ?: "",
+                    task.categoryId,
+                    textAnswerLob = "",
+                    imageUrlAnswer = "",
+                    fileUrlAnswer = fileName,
+                    response = "", approved = false, rejected = false, score = 0
+                ).addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.userName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = fileName,
+                    status = "0 pont | beadva",
+                    type = "ZIP"
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskSubmit(user, task, submission) }
+                return TaskSubmissionStatus.OK
             }
         }
     }
@@ -464,8 +479,26 @@ open class TasksService(
                 return TaskSubmissionStatus.OK
 
             }
-            else -> {
-                throw IllegalStateException("Invalid task type: " + task.type)
+            TaskType.ONLY_ZIP -> {
+                if (file == null || zipFileNameInvalid(file))
+                    return TaskSubmissionStatus.INVALID_ZIP
+                val fileName = storageService.saveObjectWithRandomName(target, file).orElse("")
+
+                submission.fileUrlAnswer = fileName
+                submission.rejected = false
+                submission.approved = false
+                submission.addSubmissionHistory(
+                    date = clock.getTimeInSeconds(),
+                    submitterName = user.userName,
+                    adminResponse = false,
+                    content = "",
+                    contentUrl = fileName,
+                    status = "${submission.score} pont | beadva",
+                    type = "ZIP"
+                )
+                submitted.save(submission)
+                listeners.forEach { it.onTaskUpdate(user, task, submission) }
+                return TaskSubmissionStatus.OK
             }
         }
     }
@@ -481,6 +514,10 @@ open class TasksService(
 
     private fun pdfFileNameInvalid(file: MultipartFile): Boolean {
         return file.originalFilename == null || (!file.originalFilename!!.lowercase().endsWith(".pdf"))
+    }
+
+    private fun zipFileNameInvalid(file: MultipartFile): Boolean {
+        return file.originalFilename == null || (!file.originalFilename!!.lowercase().endsWith(".zip"))
     }
 
     @Transactional(readOnly = true)

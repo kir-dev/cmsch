@@ -1,43 +1,44 @@
 package hu.bme.sch.cmsch.controller
 
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.util.getUserOrNull
 import jakarta.servlet.RequestDispatcher
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.web.servlet.error.ErrorController
-import org.springframework.http.HttpStatus
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-class ServerSideErrorController : ErrorController {
+class ServerSideErrorController(private val adminMenuService: AdminMenuService) : ErrorController {
 
     @RequestMapping("/error")
-    fun handleError(model: Model, request: HttpServletRequest): String {
-        val status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
+    fun handleError(model: Model, auth: Authentication?, req: HttpServletRequest, res: HttpServletResponse): String {
+        auth?.getUserOrNull()?.let {
+            if (it.role.isStaff) {
+                adminMenuService.addPartsForMenu(it, model)
+                model.addAttribute("isStaff", true)
 
-        model.addAttribute("timestamp", System.currentTimeMillis())
-        model.addAttribute("path", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH))
-        model.addAttribute("status", request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE))
-        model.addAttribute("message", request.getAttribute(RequestDispatcher.ERROR_MESSAGE))
-        model.addAttribute("trace", request.getAttribute(RequestDispatcher.ERROR_EXCEPTION))
-
-        if (status != null) {
-            val statusCode = Integer.valueOf(status.toString())
-            if (statusCode == HttpStatus.FORBIDDEN.value()) {
-                return "error-403"
+                val exception = req.getAttribute(RequestDispatcher.ERROR_EXCEPTION)
+                val message = if (exception is Throwable) exception.stackTraceToString() else exception?.toString()
+                model.addAttribute("exceptionMessage", message)
             }
         }
+
+        model.addAttribute("status", res.status)
         return "error"
     }
 
     @RequestMapping("/403")
-    fun error403(): String {
-        return "error-403"
+    fun error403(model: Model, auth: Authentication?, req: HttpServletRequest, res: HttpServletResponse): String {
+        return handleError(model, auth, req, res)
     }
 
     @RequestMapping("/404")
-    fun error404(): String {
-        return "error"
+    fun error404(model: Model, auth: Authentication?, req: HttpServletRequest, res: HttpServletResponse): String {
+        return handleError(model, auth, req, res)
     }
 
 }

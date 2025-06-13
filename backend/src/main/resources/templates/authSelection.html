@@ -7,7 +7,7 @@
         <h1 th:text="${siteName}">ADMIN PANEL</h1>
         <h3 th:if="${error != null && error != ''}" th:text="${error ?: ''}" class="color-red">Don't forget to open the banana before eating it!</h3>
 
-        <a href="#" th:href="@{/oauth2/authorization/authsch}" class="big-btn">AuthSCH</a>
+        <a href="#" th:if="${showAuthSch}" th:href="@{/oauth2/authorization/authsch}" class="big-btn">AuthSCH</a>
         <a href="#" th:if="${googleEnabled}" th:href="@{/oauth2/authorization/google}" class="big-btn">Google</a>
         <a href="#" th:if="${keycloakEnabled}" th:href="@{/oauth2/authorization/keycloak}" class="big-btn">Keycloak</a>
     </div>

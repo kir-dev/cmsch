@@ -49,7 +49,14 @@ export default function OrganizationListPage() {
         <InputLeftElement h="100%">
           <SearchIcon />
         </InputLeftElement>
-        <Input ref={inputRef} placeholder="Keresés..." size="lg" onChange={handleInput} autoFocus={true} />
+        <Input
+          ref={inputRef}
+          placeholder="Keresés..."
+          size="lg"
+          onChange={handleInput}
+          _placeholder={{ color: 'inherit' }}
+          autoFocus={true}
+        />
       </InputGroup>
       {config?.descriptionResort && (
         <Box mt={5}>

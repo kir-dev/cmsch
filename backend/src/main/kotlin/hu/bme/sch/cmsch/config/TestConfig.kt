@@ -163,6 +163,7 @@ open class TestConfig(
             "form submitted",
             "form accepted",
             true,
+            false,
             now - 1000,
             now + A_DAY,
             true,
@@ -914,7 +915,7 @@ open class TestConfig(
                 score = 0
         ))
 
-        categories.save(TaskCategoryEntity(0, "Mine Category", 1, 0, 3000000000))
+        categories.save(TaskCategoryEntity(0, "Mine Category", 1, "Description", 0, 3000000000))
         categories.save(
             TaskCategoryEntity(
                 name = "Mine Category2",

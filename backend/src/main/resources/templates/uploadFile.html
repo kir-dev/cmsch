@@ -73,13 +73,24 @@
                                     const fileNameInput = fileNameInputTemplate.content.cloneNode(true)
                                     fileNameInput.querySelector('.name-label').setAttribute('for', inputId)
                                     fileNameInput.querySelector('.file-name').innerText = file.name
-                                    fileNameInput.querySelector('.name-input').setAttribute('id', inputId)
+                                    const inputField = fileNameInput.querySelector('.name-input')
+                                    inputField.setAttribute('id', inputId)
+                                    inputField.value = file.name.substring(0, file.name.lastIndexOf('.'));
                                     fileNameInputs.appendChild(fileNameInput)
                                 }
                             });
                         </script>
                     </div>
-
+                    <div class="field-group">
+                        <label for="keepNames">Teljes név megtartása</label>
+                        <div style="clear:both"></div>
+                        <label class="switch">
+                            <input type="checkbox" name="keepNames" id="keepNames">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="note">Egyébként egy random string is belekerül a névbe</span>
+                        <div style="clear:both"></div>
+                    </div>
                     <div class="button-group">
                         <button type="submit" class="btn btn-primary">
                             <span class="material-symbols-outlined regular">upload</span>

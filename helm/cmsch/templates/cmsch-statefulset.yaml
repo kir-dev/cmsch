@@ -1,0 +1,113 @@
+{{ if not .Values.s3.useS3 }}
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ .Release.Name }}
+  template:
+    metadata:
+      name: {{ .Release.Name }}
+      labels:
+        app: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ .Release.Name }}
+        '{{ .Release.Name }}-backup-assets': 'true'
+        monitor-spring-boot: "{{ .Values.monitoring.enabled }}"
+    spec:
+      {{ if .Values.imagePullSecretName  }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecretName }}
+      {{ end }}
+      volumes:
+        - name: {{ .Release.Name }}-pv
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pv
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.apiImage }}
+          securityContext:
+            runAsUser: 0
+          ports:
+            - name: web
+              containerPort: 80
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-secrets
+            - configMapRef:
+                name: {{ .Release.Name }}-config
+          env:
+            {{ if .Values.postgres.enabled }}
+            - name: POSTGRES_IP
+              value: "{{ .Release.Name }}-postgres:5432"
+            {{ end }}
+            - name: CMSCH_SPRING_PROFILES
+              value: {{ .Values.springProfiles }}
+            - name: PORT
+              value: '80'
+          resources:
+            {{ if or (.Values.resources.limits.cpu) (.Values.resources.limits.memory) }}
+            limits:
+              {{ if .Values.resources.limits.cpu }}
+              cpu: {{ .Values.resources.limits.cpu }}
+              {{ end }}
+              {{ if .Values.resources.limits.memory }}
+              memory: {{ .Values.resources.limits.memory }}
+              {{ end }}
+            {{ end }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-pv
+              mountPath: /pv
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 80
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 80
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 80
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-pv
+        labels:
+          app: {{ .Release.Name }}
+          app.kubernetes.io/name: {{ .Release.Name }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.resources.requests.storage }}
+        {{ if  .Values.resources.storageClassName  }}
+        storageClassName: {{ .Values.resources.storageClassName }}
+        {{ end }}
+        {{ if  .Values.resources.volumeMode  }}
+        volumeMode: {{ .Values.resources.volumeMode }}
+        {{ end }}
+{{ end }}

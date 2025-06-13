@@ -12,7 +12,11 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.*
 import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.*
+import kotlin.io.path.exists
+import kotlin.io.path.isReadable
 
 @Service
 @ConditionalOnExpression("'\${hu.bme.sch.cmsch.startup.storage-implementation}'.equalsIgnoreCase(T(hu.bme.sch.cmsch.config.StorageImplementation).S3.name)")
@@ -38,7 +42,7 @@ class S3StorageService(
     }
 
     private fun getS3PublicUrl(fullName: String) =
-        UriComponentsBuilder.fromHttpUrl(startupPropertyConfig.s3PublicEndpoint)
+        UriComponentsBuilder.fromUriString(startupPropertyConfig.s3PublicEndpoint)
             .pathSegment(startupPropertyConfig.s3Bucket, fullName)
             .build()
             .toUriString()
@@ -119,6 +123,30 @@ class S3StorageService(
             return Optional.of(getS3PublicUrl(fullName))
         } catch (error: Throwable) {
             log.error("Failed to upload object {}/{} to S3 bucket", path, name, error)
+        }
+        return Optional.empty()
+    }
+
+    override fun saveNamedObject(
+        path: String,
+        name: String,
+        filesystemPath: Path
+    ): Optional<String> {
+        if (!filesystemPath.exists() || !filesystemPath.isReadable()) return Optional.empty()
+
+        try {
+            val fullName = getObjectName(path, name)
+            val contentType = runCatching { Files.probeContentType(filesystemPath) }.getOrNull()
+
+            val request = PutObjectRequest.builder()
+                .bucket(startupPropertyConfig.s3Bucket)
+                .key(fullName)
+                .contentType(contentType)
+                .build()
+            s3.putObject(request, RequestBody.fromFile(filesystemPath))
+            return Optional.of(getS3PublicUrl(fullName))
+        } catch (error: Throwable) {
+            log.error("Failed to upload file {} {}/{} to S3 bucket", filesystemPath, path, name, error)
         }
         return Optional.empty()
     }

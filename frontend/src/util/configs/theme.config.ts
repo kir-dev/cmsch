@@ -11,8 +11,8 @@ export const getCustomTheme = (style?: Style) =>
       styles: {
         global: (props: any) => ({
           body: {
-            color: mode('gray.900', 'whiteAlpha.900')(props),
-            bg: mode('white', 'gray.900')(props)
+            color: mode(style?.lightTextColor ?? 'gray.900', style?.darkTextColor ?? 'whiteAlpha.900')(props),
+            bg: mode(style?.lightBackgroundColor ?? 'white', style?.darkBackgroundColor ?? 'gray.900')(props)
           }
         })
       },

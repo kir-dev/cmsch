@@ -78,20 +78,14 @@ class AuditLogService(
 
     @Transactional(readOnly = true)
     fun getLogTextForDay(dayTimestamp: Long): String =
-        auditLogRepository
-            .findAllLogsOnDay(dayTimestamp, clock.getZoneOffset())
-            .joinToString("\r\n") { formatLogEntry(it) }
+        auditLogRepository.findAllLogsOnDay(dayTimestamp).joinToString("\r\n") { formatLogEntry(it) }
 
     @Transactional(readOnly = true)
-    fun listDaysWithLogs(): List<AuditLogByDayEntry> =
-        auditLogRepository
-            .findAllDaysWithLogs(clock.getZoneOffset())
+    fun listDaysWithLogs(): List<AuditLogByDayEntry> = auditLogRepository.findAllDaysWithLogs()
 
     @Transactional(readOnly = true)
     fun getAllLogText(): String =
-        auditLogRepository
-            .findAllOrderByTimestamp()
-            .joinToString("\r\n") { formatLogEntry(it) }
+        auditLogRepository.findAllOrderByTimestamp().joinToString("\r\n") { formatLogEntry(it) }
 
     private fun formatLogEntry(entry: AuditLogEntity): String {
         val timestamp = Instant.ofEpochSecond(entry.timestamp)

@@ -27,7 +27,8 @@ export enum Paths {
   TEAM_ADMIN = 'team-admin',
   ACCESS_KEY = 'access-key',
   MAP = 'map',
-  TOURNAMENT = 'tournament'
+  TOURNAMENT = 'tournament',
+  DEBT = 'debt'
 }
 
 export enum AbsolutePaths {
@@ -58,6 +59,7 @@ export enum AbsolutePaths {
   LEADER_BOARD = '/leaderboard',
   ACCESS_KEY = '/access-key',
   MAP = '/map',
+  DEBT = '/debt',
   TOURNAMENTS = '/tournament',
 }
 
@@ -88,10 +90,12 @@ export enum ApiPaths {
   ORGANIZATION = '/api/organization',
   ACCESS_KEY = '/api/access-key',
   HOME_NEWS = '/api/home/news',
+  HOME_GALLERY = '/api/gallery/home',
   ADD_PUSH_NOTIFICATION_TOKEN = '/api/pushnotification/add-token',
   DELETE_PUSH_NOTIFICATION_TOKEN = '/api/pushnotification/delete-token',
   TOURNAMENTS = '/api/tournament',
   MY_TEAM = '/api/team/my',
   TEAM = '/api/team',
-  ALL_TEAMS = '/api/teams'
+  ALL_TEAMS = '/api/teams',
+  DEBTS = '/api/debts',
 }

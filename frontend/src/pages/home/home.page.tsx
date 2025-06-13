@@ -14,11 +14,14 @@ import { NewsArticleView } from '../../util/views/news.view'
 import Clock from '../countdown/components/clock'
 import NewsListItem from '../news/components/NewsListItem'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
+import { ImageCarousel } from './components/ImageCarousel.tsx'
 import { Schedule } from './components/Schedule'
+import { useHomeGallery } from '../../api/hooks/gallery/useHomeGallery.ts'
 
 const HomePage = () => {
   const homeNews = useHomeNews()
   const eventList = useEventListQuery()
+  const homeGallery = useHomeGallery()
   const config = useConfigContext()
   const countdownConfig = config?.components.countdown
   const homeConfig = config?.components.home
@@ -65,6 +68,12 @@ const HomePage = () => {
           )}
         </Heading>
       )}
+      {countdownConfig?.enabled && (
+        <>
+          <Heading textAlign="center">{countdownConfig?.topMessage}</Heading>
+          <Clock countTo={countTo} />
+        </>
+      )}
       {homeConfig.showNews && homeNews.data && homeNews.data.length > 0 && (
         <>
           <Grid mt={10} templateColumns="1fr" gap={4}>
@@ -72,15 +81,6 @@ const HomePage = () => {
               <NewsListItem news={n} fontSize="xl" useLink={config?.components?.news?.showDetails} key={n.title + n.timestamp} />
             ))}
           </Grid>
-          <LinkButton colorScheme="brand" mt={5} href={AbsolutePaths.NEWS}>
-            Összes hír
-          </LinkButton>
-        </>
-      )}
-      {countdownConfig?.enabled && (
-        <>
-          <Heading textAlign="center">{countdownConfig?.topMessage}</Heading>
-          <Clock countTo={countTo} />
         </>
       )}
 
@@ -110,7 +110,7 @@ const HomePage = () => {
             {eventsToday.length > 0 ? (
               <Schedule events={eventsToday} />
             ) : (
-              <Text textAlign="center" color="gray.500" marginTop={10}>
+              <Text textAlign="center" opacity={0.7} marginTop={10}>
                 Nincs több esemény.
               </Text>
             )}
@@ -121,7 +121,7 @@ const HomePage = () => {
             {eventsLater.length > 0 ? (
               <Schedule verbose events={eventsLater} />
             ) : (
-              <Text textAlign="center" color="gray.500" marginTop={10}>
+              <Text textAlign="center" opacity={0.7} marginTop={10}>
                 Nincs több esemény.
               </Text>
             )}
@@ -130,6 +130,10 @@ const HomePage = () => {
             </LinkButton>
           </VStack>
         </VStack>
+      )}
+
+      {homeConfig.showGalleryImages && config.components.gallery && homeGallery.data && (
+        <ImageCarousel images={homeGallery.data?.photos?.map((item) => item.url) ?? []} />
       )}
     </CmschPage>
   )

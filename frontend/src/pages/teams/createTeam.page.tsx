@@ -44,7 +44,12 @@ export default function CreateTeamPage() {
       <form onSubmit={handleSubmit(createTeam)}>
         <FormControl my={10}>
           <FormLabel>Név</FormLabel>
-          <Input {...register('name', { required: true })} isInvalid={!!errors.name} placeholder="Kedves csapatom" />
+          <Input
+            {...register('name', { required: true })}
+            isInvalid={!!errors.name}
+            placeholder="Kedves csapatom"
+            _placeholder={{ color: 'inherit' }}
+          />
           {errors.name?.message && <Text color="red">{errors.name.message}</Text>}
         </FormControl>
         <HStack>

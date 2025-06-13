@@ -15,6 +15,10 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.reactive.function.client.bodyToMono
+import java.io.InputStream
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -40,7 +44,7 @@ fun Authentication.getUser(): CmschUser {
 }
 
 fun Authentication?.getUserOrNull(): CmschUser? {
-    return if (this == null) null else (this.principal as CmschUser?)
+    return if (this == null) null else (this.principal as? CmschUser)
 }
 
 fun Authentication.getUserEntityFromDatabase(): UserEntity {
@@ -53,6 +57,12 @@ fun Authentication?.getUserEntityFromDatabaseOrNull(): UserEntity? {
 
 fun Map<String, String>.urlEncode(): String = this.entries.joinToString("&") {
     URLEncoder.encode(it.key, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(it.value, StandardCharsets.UTF_8)
+}
+
+fun fetchFile(url: String): Result<ByteArray?> = runCatching {
+    WebClient.create()
+        .get().uri(url)
+        .retrieve().bodyToMono<ByteArray>().block()
 }
 
 private val markdownExtensions = listOf(TablesExtension.create())

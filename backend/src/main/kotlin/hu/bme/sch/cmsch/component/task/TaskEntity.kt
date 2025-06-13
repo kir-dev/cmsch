@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -20,7 +21,8 @@ enum class TaskType {
     TEXT,
     IMAGE,
     BOTH,
-    ONLY_PDF
+    ONLY_PDF,
+    ONLY_ZIP
 }
 
 enum class TaskFormat {
@@ -83,7 +85,7 @@ data class TaskEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Típus",
-        source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF" ],
+        source = [ "TEXT", "IMAGE", "BOTH", "ONLY_PDF", "ONLY_ZIP" ],
         note = "Mit tároljon el a szerver? A BOTH az szöveg és kép is. A PDF csak önmagában használható.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -160,7 +162,8 @@ data class TaskEntity(
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'BASIC'")
+    @ColumnDefault("'BASIC'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 15,
         label = "Minimum rang a megtekintéshez",
@@ -173,7 +176,8 @@ data class TaskEntity(
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'SUPERUSER'")
+    @ColumnDefault("'SUPERUSER'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 16,
         label = "Maximum rang a megtekintéshez",

@@ -43,7 +43,7 @@ const EventDisplay = ({ event, verbose, useLink }: EventDisplayProps) => (
           event.title
         )}
       </Text>
-      <Text as="i" fontSize="xl" color="gray.500">
+      <Text as="i" fontSize="xl" opacity={0.7}>
         {event.place}
       </Text>
     </GridItem>

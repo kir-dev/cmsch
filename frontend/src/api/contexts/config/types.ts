@@ -23,6 +23,7 @@ export interface Components {
   extraPage: ExtraPage
   groupselection: GroupSelection
   home: Home
+  gallery: Gallery
   impressum: Impressum
   leaderboard: Leaderboard
   location: Location
@@ -109,6 +110,11 @@ export interface Home {
   youtubeVideoIds: string
   showEvents: boolean
   showNews: boolean
+  showGalleryImages: boolean
+}
+
+export interface Gallery {
+  title: string
 }
 
 export interface News {
@@ -261,7 +267,10 @@ export interface Token {
   defaultTestIcon: string
 }
 
-export interface Debt {}
+export interface Debt {
+  topMessage: string
+  title: string
+}
 
 export interface UserHandling {}
 
@@ -274,6 +283,7 @@ export interface Location {
 
 export interface Login {
   authschPromoted: boolean
+  topMessage: string
   bottomMessage: string
   googleSsoEnabled: boolean
   keycloakAuthName: string

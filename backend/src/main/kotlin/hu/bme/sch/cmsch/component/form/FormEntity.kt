@@ -105,16 +105,25 @@ data class FormEntity(
     @property:ImportFormat
     var grantAttendeeRole: Boolean = false,
 
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 12, label = "PRIVILEGED jog automatikusan",
+        note = "Automatikus PRIVILEGED jog adása sikeres kitöltésért")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var grantPrivilegedRole: Boolean = false,
+
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Kitölthető innentől", defaultValue = "0")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 13, label = "Kitölthető innentől", defaultValue = "0")
     @property:GenerateOverview(columnName = "Ettől", order = 2, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat
     var availableFrom: Long = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 13, label = "Kitölthető eddig", defaultValue = "0")
+    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 14, label = "Kitölthető eddig", defaultValue = "0")
     @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
     @property:ImportFormat
     var availableUntil: Long = 0,
@@ -130,7 +139,7 @@ data class FormEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 15, label = "Maximum kitöltés",
-        note = "Ennyi ember töltheti ki maximum. (-1 = végtelen)", min = -1, defaultValue = "0")
+        note = "Ennyiszer tölthetik ki maximum. (-1 = végtelen)", min = -1, defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var submissionLimit: Int = 0,

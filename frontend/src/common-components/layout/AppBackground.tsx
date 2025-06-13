@@ -31,7 +31,7 @@ export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
         bgSize={'cover'}
         bgPosition={'center'}
       ></Box>
-      {children}
+      <Box color={textColor}>{children}</Box>
     </>
   )
 }

@@ -45,9 +45,15 @@ export const CustomForm = ({ formatDescriptor, control, fields, replace }: Custo
             render={({ field }) => (
               <InputWithAddon suffix={f.suffix}>
                 {f.type === 'textarea' ? (
-                  <Textarea id={`customForm.${idx}.value`} placeholder={f.title} {...field} />
+                  <Textarea id={`customForm.${idx}.value`} placeholder={f.title} _placeholder={{ color: 'inherit' }} {...field} />
                 ) : (
-                  <Input id={`customForm.${idx}.value`} placeholder={f.title} {...field} type={f.type} />
+                  <Input
+                    id={`customForm.${idx}.value`}
+                    placeholder={f.title}
+                    {...field}
+                    _placeholder={{ color: 'inherit' }}
+                    type={f.type}
+                  />
                 )}
               </InputWithAddon>
             )}

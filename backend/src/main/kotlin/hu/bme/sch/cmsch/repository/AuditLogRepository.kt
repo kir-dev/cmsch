@@ -7,14 +7,14 @@ import org.springframework.data.jpa.repository.Query
 
 interface AuditLogRepository : JpaRepository<AuditLogEntity, Int> {
 
-    @Query("select new hu.bme.sch.cmsch.model.AuditLogByDayEntry((min(e.timestamp) / 86400) * 86400, count(*)) " +
+    @Query("select new hu.bme.sch.cmsch.model.AuditLogByDayEntry(floor(e.timestamp / 86400) * 86400, count(*)) " +
             "from AuditLogEntity e " +
-            "group by floor((e.timestamp + :offset) / 86400) " +
-            "order by floor(min(e.timestamp) / 86400) * 86400")
-    fun findAllDaysWithLogs(offset: Int): List<AuditLogByDayEntry>
+            "group by floor(e.timestamp / 86400) * 86400 " +
+            "order by floor(e.timestamp / 86400) * 86400")
+    fun findAllDaysWithLogs(): List<AuditLogByDayEntry>
 
-    @Query("select e from AuditLogEntity e where e.timestamp between :day + :offset and :day + 86400 + :offset order by e.timestamp")
-    fun findAllLogsOnDay(day: Long, offset:Int): List<AuditLogEntity>
+    @Query("select e from AuditLogEntity e where e.timestamp between :day and :day + 86400 order by e.timestamp")
+    fun findAllLogsOnDay(day: Long): List<AuditLogEntity>
 
     @Query("select e from AuditLogEntity e order by e.timestamp")
     fun findAllOrderByTimestamp(): List<AuditLogEntity>

@@ -16,6 +16,7 @@ enum class FormElementType(
     TEXT(rendersOnServerSide = true),
     LONG_TEXT(rendersOnServerSide = true),
     NUMBER(rendersOnServerSide = true),
+    DATE,
     EMAIL,
     PHONE,
     CHECKBOX(rendersOnServerSide = true),

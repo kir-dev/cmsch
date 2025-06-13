@@ -1,5 +1,6 @@
 let menuItems;
 let lastShiftPress = 0;
+let lastKeyPressed = 0;
 
 let searchInput;
 let searchItems;
@@ -25,7 +26,7 @@ function init() {
 
         // Double shift
         if (event.keyCode === 16) {
-            if (currentTime - lastShiftPress < 500 && currentTime - lastShiftPress > 120) {
+            if (currentTime - lastShiftPress < 200 && currentTime - lastShiftPress > 100 && lastKeyPressed === event.keyCode) {
                 openSearch();
             }
             lastShiftPress = currentTime;
@@ -44,6 +45,7 @@ function init() {
                 event.preventDefault();
             }
         }
+        lastKeyPressed = event.keyCode
     });
 
     input = document.getElementById('search-input');

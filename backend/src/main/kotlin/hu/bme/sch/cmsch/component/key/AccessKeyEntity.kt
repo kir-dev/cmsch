@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -34,7 +35,8 @@ data class AccessKeyEntity(
     var accessKey: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ''")
+    @ColumnDefault("''")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @property:GenerateInput(maxLength = 128, order = 2, label = "Cimke",
         note = "Például a név aminek majd szerepelnie kellene")
     @property:GenerateOverview(columnName = "Cimke", order = 3)

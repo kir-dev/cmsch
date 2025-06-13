@@ -5,6 +5,7 @@ export const taskSubmissionResponseMap = new Map<taskSubmissionStatus, string>([
   [taskSubmissionStatus.EMPTY_ANSWER, 'Üres megoldás!'],
   [taskSubmissionStatus.INVALID_IMAGE, 'Érvénytelen kép!'],
   [taskSubmissionStatus.INVALID_PDF, 'Érvénytelen PDF!'],
+  [taskSubmissionStatus.INVALID_ZIP, 'Érvénytelen ZIP!'],
   [taskSubmissionStatus.ALREADY_SUBMITTED, 'Ezt ön már beküldte!'],
   [taskSubmissionStatus.ALREADY_APPROVED, 'Önnek ezt a feladatát már elfogadták!'],
   [taskSubmissionStatus.NO_ASSOCIATE_GROUP, 'Nincs önnek csoportja!'],

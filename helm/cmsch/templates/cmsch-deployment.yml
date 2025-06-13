@@ -1,3 +1,4 @@
+{{ if .Values.s3.useS3 }}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -17,21 +18,11 @@ spec:
       labels:
         app: {{ .Release.Name }}
         app.kubernetes.io/name: {{ .Release.Name }}
-        kir-dev-spring-monitored: enabled
-      annotations:
-        prometheus.io/path: /actuator/prometheus
-        prometheus.io/port: "80"
-        prometheus.io/scrape: "true"
+        monitor-spring-boot: "{{ .Values.monitoring.enabled }}"
     spec:
-{{ if  .Values.imagePullSecretName  }}
+      {{ if  .Values.imagePullSecretName  }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretName }}
-{{ end }}
-      {{ if not .Values.s3.useS3 }}
-      volumes:
-        - name: {{ .Release.Name }}-pv
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-pv
       {{ end }}
       containers:
         - name: {{ .Release.Name }}
@@ -69,11 +60,6 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
               memory: {{ .Values.resources.requests.memory }}
-          {{ if not .Values.s3.useS3 }}
-          volumeMounts:
-            - name: {{ .Release.Name }}-pv
-              mountPath: /pv
-          {{ end }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           startupProbe:
             httpGet:
@@ -101,3 +87,4 @@ spec:
       terminationGracePeriodSeconds: 30
   strategy:
     type: {{ .Values.deploymentStrategy }}
+{{ end }}

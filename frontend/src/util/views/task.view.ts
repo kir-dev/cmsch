@@ -4,7 +4,8 @@ export enum taskType {
   TEXT = 'TEXT',
   IMAGE = 'IMAGE',
   BOTH = 'BOTH',
-  ONLY_PDF = 'ONLY_PDF'
+  ONLY_PDF = 'ONLY_PDF',
+  ONLY_ZIP = 'ONLY_ZIP'
 }
 
 export enum taskFormat {
@@ -27,6 +28,7 @@ export enum taskSubmissionStatus {
   EMPTY_ANSWER = 'EMPTY_ANSWER',
   INVALID_IMAGE = 'INVALID_IMAGE',
   INVALID_PDF = 'INVALID_PDF',
+  INVALID_ZIP = 'INVALID_ZIP',
   ALREADY_SUBMITTED = 'ALREADY_SUBMITTED',
   ALREADY_APPROVED = 'ALREADY_APPROVED',
   NO_ASSOCIATE_GROUP = 'NO_ASSOCIATE_GROUP',
@@ -73,6 +75,7 @@ export interface TaskCategoryPreview {
 
 export interface TaskCategoryFullDetails {
   categoryName: string
+  description: string
   tasks: TaskWrapper[]
 }
 

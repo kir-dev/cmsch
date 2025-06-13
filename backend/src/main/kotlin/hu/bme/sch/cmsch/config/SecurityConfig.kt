@@ -35,7 +35,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher
 import org.springframework.web.reactive.function.client.WebClient
 import java.util.*
 
@@ -74,51 +73,51 @@ open class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests {
             it.requestMatchers(
-                antMatcher("/"),
-                antMatcher("/error"),
-                antMatcher("/403"),
-                antMatcher("/404"),
-                antMatcher("/control/loggedin"),
-                antMatcher("/control/login"),
-                antMatcher("/control/logged-out"),
-                antMatcher("/control/post-login"),
-                antMatcher("/style4.css"),
-                antMatcher("/flatpickr_custom.css"),
-                antMatcher("/tabulator_simple.css"),
-                antMatcher("/tabulator_simple.min.css.map"),
-                antMatcher("/control/test-user"),
-                antMatcher("/images/**"),
-                antMatcher("/js/**"),
-                antMatcher("/docs-icons/**"),
-                antMatcher("/files/**"),
-                antMatcher("/admin/logout"),
-                antMatcher("/countdown"),
-                antMatcher("/control/logout"),
-                antMatcher("/control/test"),
-                antMatcher("/control/open-site"),
-                antMatcher("/api/**"),
-                antMatcher("/remote-api/**"),
-                antMatcher("/share/**"),
-                antMatcher("/swagger-ui.html"),
-                antMatcher("/swagger-ui/**"),
-                antMatcher("/v3/api-docs/**"),
-                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**"),
-                antMatcher("/manifest/manifest.json"),
-                antMatcher("/control/refresh"),
-                antMatcher("/oauth2/authorization"),
-                antMatcher("/c/**"),
-                antMatcher("/ol.js"),
-                antMatcher("/ol.css"),
-                antMatcher("/tracker.css"),
-                antMatcher("/scanner.css"),
-                antMatcher("/redirect/beacon"),
-                antMatcher("/actuator/prometheus"),
-                antMatcher("/actuator/health/liveness"),
-                antMatcher("/actuator/health/readiness"),
+                "/",
+                "/error",
+                "/403",
+                "/404",
+                "/control/loggedin",
+                "/control/login",
+                "/control/logged-out",
+                "/control/post-login",
+                "/style4.css",
+                "/flatpickr_custom.css",
+                "/tabulator_simple.css",
+                "/tabulator_simple.min.css.map",
+                "/control/test-user",
+                "/images/**",
+                "/js/**",
+                "/docs-icons/**",
+                "/files/**",
+                "/admin/logout",
+                "/countdown",
+                "/control/logout",
+                "/control/test",
+                "/control/open-site",
+                "/api/**",
+                "/remote-api/**",
+                "/share/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/${StorageService.OBJECT_SERVE_PATH}/**",
+                "/manifest/manifest.json",
+                "/control/refresh",
+                "/oauth2/authorization",
+                "/c/**",
+                "/ol.js",
+                "/ol.css",
+                "/tracker.css",
+                "/scanner.css",
+                "/redirect/beacon",
+                "/actuator/prometheus",
+                "/actuator/health/liveness",
+                "/actuator/health/readiness",
             ).permitAll()
 
             it.requestMatchers(
-                antMatcher("/control/open-site"),
+                "/control/open-site",
             ).hasAnyRole(
                 RoleType.BASIC.name,
                 RoleType.STAFF.name,
@@ -129,8 +128,8 @@ open class SecurityConfig(
             )
 
             it.requestMatchers(
-                antMatcher("/admin/**"),
-                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**")
+                "/admin/**",
+                "/${StorageService.OBJECT_SERVE_PATH}/**",
             ).hasAnyRole(
                 RoleType.STAFF.name,
                 RoleType.ADMIN.name,
@@ -165,12 +164,12 @@ open class SecurityConfig(
         countdownConfigurer.ifPresent { http.with(it, Customizer.withDefaults()) }
         http.csrf {
             it.ignoringRequestMatchers(
-                antMatcher("/api/**"),
-                antMatcher("/remote-api/**"),
-                antMatcher("/admin/api/**"),
-                antMatcher("/admin/sell/**"),
-                antMatcher("/admin/admission/**"),
-                antMatcher("/${StorageService.OBJECT_SERVE_PATH}/**")
+                "/api/**",
+                "/remote-api/**",
+                "/admin/api/**",
+                "/admin/sell/**",
+                "/admin/admission/**",
+                "/${StorageService.OBJECT_SERVE_PATH}/**",
             )
         }.cors(Customizer.withDefaults())
         return http.build()

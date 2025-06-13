@@ -1,0 +1,41 @@
+{{ if and (not .Values.s3.useS3) .Values.driveBackup.filesystem.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-filesystem-backup
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  schedule: {{ .Values.driveBackup.filesystem.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - topologyKey: 'kubernetes.io/hostname'
+                  labelSelector:
+                    matchLabels:
+                      '{{ .Release.Name }}-backup-assets': 'true'
+          containers:
+            - name: filesystem-backup
+              image: {{ .Values.driveBackup.filesystem.image }}
+              volumeMounts:
+                - mountPath: /mounted-folder
+                  name: assets
+              env:
+                - name: DRIVE_FILE_NAME
+                  value: {{ .Release.Name }}
+              envFrom:
+                - secretRef:
+                    optional: false
+                    name: "{{ .Release.Name }}-filesystem-backup-secrets"
+              imagePullPolicy: {{ .Values.driveBackup.filesystem.imagePullPolicy }}
+          restartPolicy: {{ .Values.driveBackup.filesystem.restartPolicy }}
+          volumes:
+            - name: assets
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-pv-{{ .Release.Name }}-0
+
+{{ end }}
