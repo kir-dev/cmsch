@@ -14,7 +14,7 @@ import java.sql.SQLException
 
 @Service
 @ConditionalOnBean(RiddleComponent::class)
-open class RiddleBusinessLogicService(
+class RiddleBusinessLogicService(
     private val riddleCacheManager: RiddleCacheManager,
     private val userService: UserService,
     private val clock: TimeService,

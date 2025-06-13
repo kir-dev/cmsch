@@ -18,7 +18,7 @@ private const val ACCESS_KEY = "access-key"
 
 @Service
 @ConditionalOnBean(AccessKeyComponent::class)
-open class AccessKeyService(
+class AccessKeyService(
     private val accessKeyRepository: AccessKeyRepository,
     private val accessKeyComponent: AccessKeyComponent,
     private val auditLogService: AuditLogService,
@@ -31,7 +31,7 @@ open class AccessKeyService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun validateKey(user: CmschUser, inputKey: String): AccessKeyResponse {
+    fun validateKey(user: CmschUser, inputKey: String): AccessKeyResponse {
         val key = inputKey.trim()
         if (key.isEmpty()) {
             auditLogService.fine(user, ACCESS_KEY, "user tried an empty key")

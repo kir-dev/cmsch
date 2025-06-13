@@ -7,18 +7,18 @@ import java.util.*
 
 @Service
 @ConditionalOnBean(CommunitiesComponent::class)
-open class OrganizationService(
+class OrganizationService(
     private val organizationRepo: OrganizationRepository,
     private val communityRepo: CommunityRepository
 ) {
 
     @Transactional(readOnly = true)
-    open fun getOrganizationById(id: Int): Optional<OrganizationEntity> {
+    fun getOrganizationById(id: Int): Optional<OrganizationEntity> {
         return organizationRepo.findById(id)
     }
 
     @Transactional(readOnly = true)
-    open fun getCommunityById(id: Int): Optional<CommunityEntity> {
+    fun getCommunityById(id: Int): Optional<CommunityEntity> {
         return communityRepo.findById(id).map {  community ->
             community.resortName = organizationRepo.findById(community.resortId)
                 .map { it.name }
@@ -28,12 +28,12 @@ open class OrganizationService(
     }
 
     @Transactional(readOnly = true)
-    open fun getOrganizations(): List<OrganizationEntity> {
+    fun getOrganizations(): List<OrganizationEntity> {
         return organizationRepo.findAll()
     }
 
     @Transactional(readOnly = true)
-    open fun getCommunities(): List<CommunityEntity> {
+    fun getCommunities(): List<CommunityEntity> {
         return communityRepo.findAll()
     }
 

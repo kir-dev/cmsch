@@ -24,7 +24,7 @@ import java.util.concurrent.locks.ReentrantLock
  */
 @Service
 @ConditionalOnBean(RiddleComponent::class)
-open class RiddleCacheManager(
+class RiddleCacheManager(
     private val riddleEntityRepository: RiddleEntityRepository,
     private val riddleCategoryRepository: RiddleCategoryRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
@@ -61,7 +61,7 @@ open class RiddleCacheManager(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
-    open fun resetCache(persistMapping: Boolean, overrideMappings: Boolean) {
+    fun resetCache(persistMapping: Boolean, overrideMappings: Boolean) {
         log.info("Getting all locks for 'resetCache({}, {})'", persistMapping, overrideMappings)
         groupLocks.forEach { (_, lock) -> lock.lock() }
         userLocks.forEach { (_, lock) -> lock.lock() }
@@ -98,7 +98,7 @@ open class RiddleCacheManager(
     }
 
     @Scheduled(fixedRate = 5 * 60 * 1000)
-    open fun periodicSave() {
+    fun periodicSave() {
         if (config.masterRole && config.riddleMicroserviceEnabled) {
             log.info("Riddle periodic save is disabled")
             return

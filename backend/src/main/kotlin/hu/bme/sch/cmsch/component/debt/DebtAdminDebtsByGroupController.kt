@@ -64,7 +64,7 @@ class DebtAdminDebtsByGroupController(
     objectMapper,
     env,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_DEBTS,
+    showPermission = PERMISSION_EDIT_DEBTS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission =   PERMISSION_EDIT_DEBTS,
     deletePermission = ImplicitPermissions.PERMISSION_NOBODY,

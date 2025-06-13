@@ -11,24 +11,24 @@ import java.sql.SQLException
 
 @Service
 @ConditionalOnBean(RiddleComponent::class)
-open class RiddlePersistenceService(
+class RiddlePersistenceService(
     private val riddleEntityRepository: RiddleEntityRepository,
     private val riddleMappingRepository: RiddleMappingRepository,
 ) {
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
-    open fun saveAllRiddleMapping(entities: MutableIterable<RiddleMappingEntity>) {
+    fun saveAllRiddleMapping(entities: MutableIterable<RiddleMappingEntity>) {
         riddleMappingRepository.saveAll(entities)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
-    open fun saveRiddleMapping(entity: RiddleMappingEntity) {
+    fun saveRiddleMapping(entity: RiddleMappingEntity) {
         riddleMappingRepository.save(entity)
     }
 
     @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
-    open fun saveRiddle(entity: RiddleEntity) {
+    fun saveRiddle(entity: RiddleEntity) {
         riddleEntityRepository.save(entity)
     }
 

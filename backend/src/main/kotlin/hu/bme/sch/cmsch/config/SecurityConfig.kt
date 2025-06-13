@@ -42,7 +42,7 @@ import java.util.*
 @Configuration
 @EnableRetry(order = Ordered.HIGHEST_PRECEDENCE)
 @ConditionalOnBean(LoginComponent::class)
-open class SecurityConfig(
+class SecurityConfig(
     private val clientRegistrationRepository: ClientRegistrationRepository,
     private val objectMapper: ObjectMapper,
     private val jwtTokenProvider: JwtTokenProvider,

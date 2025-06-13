@@ -36,7 +36,7 @@ class TrackOneGroupController(
     { locationService.getRecentLocations()
         .map { TrackGroupVirtualEntity(it.id, it.groupName) }.distinct() },
 
-    permission = StaffPermissions.PERMISSION_TRACK_ONE_GROUP,
+    permission = PERMISSION_TRACK_ONE_GROUP,
 
     importService,
     adminMenuService,

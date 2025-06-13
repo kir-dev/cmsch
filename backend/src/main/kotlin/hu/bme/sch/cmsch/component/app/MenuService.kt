@@ -24,7 +24,7 @@ import java.util.*
 
 @Service
 @ConditionalOnBean(ApplicationComponent::class)
-open class MenuService(
+class MenuService(
     private val menuRepository: MenuRepository,
     private val extraMenuRepository: ExtraMenuRepository,
     private val components: List<ComponentBase>,
@@ -132,7 +132,7 @@ open class MenuService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun persistSettings(menus: List<MenuSettingItem>, role: RoleType) {
+    fun persistSettings(menus: List<MenuSettingItem>, role: RoleType) {
         menuRepository.deleteAllByRole(role)
         val menusToStore = menus.map {
             MenuEntity(
@@ -156,7 +156,7 @@ open class MenuService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun regenerateMenuCache(role: RoleType) {
+    fun regenerateMenuCache(role: RoleType) {
         menusForRoles[role]!!.clear()
         val storedMenus = getMenusForRole(role)
             .filter { it.visible }

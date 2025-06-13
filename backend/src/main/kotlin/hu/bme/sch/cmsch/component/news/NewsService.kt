@@ -11,13 +11,13 @@ import java.util.*
 
 @Service
 @ConditionalOnBean(NewsComponent::class)
-open class NewsService(
+class NewsService(
     private val newsRepository: NewsRepository,
     private val clock: TimeService
 ) {
 
     @Transactional(readOnly = true)
-    open fun fetchNews(user: CmschUser?): List<NewsEntity> {
+    fun fetchNews(user: CmschUser?): List<NewsEntity> {
         val now = clock.getTimeInSeconds()
         return newsRepository.findAllByVisibleTrueOrderByTimestampDesc()
             .filter { clock.isTimePassed(it.timestamp, now) }
@@ -25,7 +25,7 @@ open class NewsService(
     }
 
     @Transactional(readOnly = true)
-    open fun fetchSpecificNews(user: CmschUser?, path: String): Optional<ResponseEntity<NewsEntity>> {
+    fun fetchSpecificNews(user: CmschUser?, path: String): Optional<ResponseEntity<NewsEntity>> {
         val now = clock.getTimeInSeconds()
         return newsRepository.findByUrlAndVisibleTrue(path)
             .filter { clock.isTimePassed(it.timestamp, now) }

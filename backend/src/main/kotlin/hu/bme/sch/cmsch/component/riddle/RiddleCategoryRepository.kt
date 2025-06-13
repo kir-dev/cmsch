@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository
 @Repository
 @ConditionalOnBean(RiddleComponent::class)
 interface RiddleCategoryRepository : CrudRepository<RiddleCategoryEntity, Int>,
-    EntityPageDataSource<RiddleCategoryEntity, Int> {
-
-}
+    EntityPageDataSource<RiddleCategoryEntity, Int>

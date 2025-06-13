@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PermissionGroupRepository : CrudRepository<PermissionGroupEntity, Int>,
-    EntityPageDataSource<PermissionGroupEntity, Int>  {
-}
+    EntityPageDataSource<PermissionGroupEntity, Int>

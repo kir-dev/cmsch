@@ -59,7 +59,7 @@ class LeaderBoardUserController(
         ButtonAction(
             "Újraszámol",
             "refresh",
-            ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
+            PERMISSION_CONTROL_LEADERBOARD,
             500,
             "refresh",
             true

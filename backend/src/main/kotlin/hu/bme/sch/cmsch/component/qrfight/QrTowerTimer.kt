@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service
 
 @Service
 @ConditionalOnBean(QrFightComponent::class)
-open class QrTowerTimer(
+class QrTowerTimer(
     private val towerService: QrFightService
 ) {
 
     @Scheduled(fixedRate = 1000 * 60 * 10)
-    open fun towerTimer() {
+    fun towerTimer() {
         towerService.executeTowerTimer()
     }
 

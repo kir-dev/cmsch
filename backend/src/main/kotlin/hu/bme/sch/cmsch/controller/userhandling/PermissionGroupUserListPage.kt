@@ -72,7 +72,7 @@ class PermissionGroupUserListPage(
         listOf()
     },
 
-    permission = StaffPermissions.PERMISSION_SHOW_PERMISSION_GROUPS,
+    permission = PERMISSION_SHOW_PERMISSION_GROUPS,
 
     importService,
     adminMenuService,

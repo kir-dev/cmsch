@@ -14,7 +14,7 @@ import java.sql.SQLException
 
 @Service
 @ConditionalOnBean(GroupSelectionComponent::class)
-open class GroupSelectionService(
+class GroupSelectionService(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository
 ) {
@@ -23,7 +23,7 @@ open class GroupSelectionService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun selectGroup(
+    fun selectGroup(
         user: UserEntity,
         groupId: Int
     ): GroupSelectionResponse {
