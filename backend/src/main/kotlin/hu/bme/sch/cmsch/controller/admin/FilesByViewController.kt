@@ -2,10 +2,10 @@ package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.virtual.FileVirtualEntity
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.urlDecode
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.Authentication
@@ -116,8 +116,8 @@ class FilesByViewController(
     @GetMapping("/cdn/**")
     fun redirectCdn(request: HttpServletRequest): String {
         val requestPath = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString()
-        val objectPath = requestPath.split("/admin/control/files/cdn/")[1]
-        return storageService.getObjectUrl(objectPath).map { "redirect:$it" }.orElse("error-404")
+        val objectPath = requestPath.split("/admin/control/files/cdn/")[1].urlDecode()
+        return "redirect:" + storageService.getObjectUrl(objectPath).orElseThrow()
     }
 
     @GetMapping("/delete/**")

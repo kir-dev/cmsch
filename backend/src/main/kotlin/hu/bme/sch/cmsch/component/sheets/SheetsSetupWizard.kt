@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.transaction
+import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -20,8 +21,6 @@ import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -204,11 +203,11 @@ class SheetsSetupWizard(
         val status = formValidateRequest(token, url, name, formId)
 
         return when (status) {
-            SheetsUpdateStatus.INVALID_TOKEN -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${URLEncoder.encode("Hibás token! Ellenőrizd, hogy jó szerepel a kódban!", StandardCharsets.UTF_8)}&token=$token&name=${URLEncoder.encode(name, StandardCharsets.UTF_8)}#${card}"
-            SheetsUpdateStatus.UNSUPPORTED_MODE -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${URLEncoder.encode("Nem támogatott funkció!", StandardCharsets.UTF_8)}&token=$token&name=${URLEncoder.encode(name, StandardCharsets.UTF_8)}#${card}"
-            SheetsUpdateStatus.VERIFIED, SheetsUpdateStatus.OK -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${URLEncoder.encode("Beállítás sikeres!", StandardCharsets.UTF_8)}#${card}"
-            SheetsUpdateStatus.CONNECTION_ERROR -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${URLEncoder.encode("Hiba a kommunikáció közben!", StandardCharsets.UTF_8)}&token=$token&name=${URLEncoder.encode(name, StandardCharsets.UTF_8)}#${card}"
-            SheetsUpdateStatus.FORM_NOT_FOUND -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${URLEncoder.encode("Ez az űrlap nem található!", StandardCharsets.UTF_8)}&token=$token&name=${URLEncoder.encode(name, StandardCharsets.UTF_8)}#${card}"
+            SheetsUpdateStatus.INVALID_TOKEN -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${"Hibás token! Ellenőrizd, hogy jó szerepel a kódban!".urlEncode()}&token=$token&name=${name.urlEncode()}#${card}"
+            SheetsUpdateStatus.UNSUPPORTED_MODE -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${"Nem támogatott funkció!".urlEncode()}&token=$token&name=${name.urlEncode()}#${card}"
+            SheetsUpdateStatus.VERIFIED, SheetsUpdateStatus.OK -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${"Beállítás sikeres!".urlEncode()}#${card}"
+            SheetsUpdateStatus.CONNECTION_ERROR -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${"Hiba a kommunikáció közben!".urlEncode()}&token=$token&name=${name.urlEncode()}#${card}"
+            SheetsUpdateStatus.FORM_NOT_FOUND -> "redirect:/admin/control/$view/form/$formId?card=$card&message=${"Ez az űrlap nem található!".urlEncode()}&token=$token&name=${name.urlEncode()}#${card}"
         }
     }
 

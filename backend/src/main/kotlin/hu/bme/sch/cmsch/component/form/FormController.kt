@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.service.StorageService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.transaction
+import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
@@ -20,8 +21,6 @@ import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -81,7 +80,7 @@ class FormController(
         val name = transactionManager.transaction(readOnly = true) {
             return@transaction formRepository.findById(id).getOrNull()?.name ?: "Névtelen"
         }
-        return "redirect:/admin/control/$SHEETS_WIZARD/form/$id?name=${URLEncoder.encode("$name űrlap", StandardCharsets.UTF_8)}"
+        return "redirect:/admin/control/$SHEETS_WIZARD/form/$id?name=${"$name űrlap".urlEncode()}"
     }
 
     @GetMapping("/fill/{id}")

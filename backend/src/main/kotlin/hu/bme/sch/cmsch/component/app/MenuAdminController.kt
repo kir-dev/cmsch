@@ -15,6 +15,7 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.urlEncode
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
@@ -27,7 +28,6 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
-import java.net.URLEncoder
 
 @Controller
 @RequestMapping("/admin/control/menu")
@@ -257,7 +257,7 @@ class MenuAdminController(
         } catch (e: Exception) {
             auditLogService.error(view, "Failed to import menus: ${e.message}")
             log.error("{}: {}", user.userName, e.message, e)
-            return "redirect:/admin/control/$view/import-csv?error=${URLEncoder.encode(e.message, "UTF-8")}"
+            return "redirect:/admin/control/$view/import-csv?error=${e.message?.urlEncode()}"
         }
     }
 }

@@ -12,7 +12,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
-import org.apache.catalina.util.URLEncoder
+import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -143,8 +143,7 @@ class SubmittedTaskReviewDashboard(
             )
         }
         val message = if (savedSuccessfully) "A mentés sikeres" else "Sikertelen volt a mentés"
-        val encodedMessage = URLEncoder.QUERY.encode(message, StandardCharsets.UTF_8)
-        return "redirect:$ENDPOINT?card=2&message=$encodedMessage"
+        return "redirect:$ENDPOINT?card=2&message=${message.urlEncode()}"
     }
 
 
