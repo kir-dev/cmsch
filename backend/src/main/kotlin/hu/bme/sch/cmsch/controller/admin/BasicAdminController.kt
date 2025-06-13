@@ -4,17 +4,19 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuCategory
+import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_ANYONE
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.markdownToHtml
+import jakarta.annotation.PostConstruct
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.*
-import jakarta.annotation.PostConstruct
 
 const val CONTROL_MODE_TOPLIST = "toplist"
 const val CONTROL_MODE_PAYED = "payed"

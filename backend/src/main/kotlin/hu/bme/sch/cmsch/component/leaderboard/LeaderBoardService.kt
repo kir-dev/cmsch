@@ -15,17 +15,17 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.util.CombinedKey
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
-import jakarta.annotation.PostConstruct
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
 import java.sql.SQLException
+import java.util.*
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service

@@ -24,8 +24,8 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.messaging.MessagingComponent
 import hu.bme.sch.cmsch.component.news.NewsComponent
 import hu.bme.sch.cmsch.component.profile.ProfileComponent
-import hu.bme.sch.cmsch.component.pushnotification.PushNotificationComponent
 import hu.bme.sch.cmsch.component.proto.ProtoComponent
+import hu.bme.sch.cmsch.component.pushnotification.PushNotificationComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent

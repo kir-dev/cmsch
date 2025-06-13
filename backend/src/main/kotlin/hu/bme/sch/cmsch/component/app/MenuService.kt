@@ -2,25 +2,25 @@ package hu.bme.sch.cmsch.component.app
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
-import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
 import hu.bme.sch.cmsch.component.form.FormRepository
+import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
+import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.util.transaction
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
-import java.util.*
-import jakarta.annotation.PostConstruct
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
+import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
+import java.util.*
 
 @Service
 @ConditionalOnBean(ApplicationComponent::class)

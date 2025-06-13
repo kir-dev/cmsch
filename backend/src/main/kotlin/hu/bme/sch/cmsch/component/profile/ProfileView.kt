@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardEntry
 import hu.bme.sch.cmsch.component.token.TokenDto
-import hu.bme.sch.cmsch.dto.*
+import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.GuildType
 import hu.bme.sch.cmsch.model.MajorType
 import hu.bme.sch.cmsch.model.RoleType

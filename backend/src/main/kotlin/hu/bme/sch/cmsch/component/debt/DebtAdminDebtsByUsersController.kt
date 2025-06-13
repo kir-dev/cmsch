@@ -14,7 +14,7 @@ import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/admin/control/debts-by-users")

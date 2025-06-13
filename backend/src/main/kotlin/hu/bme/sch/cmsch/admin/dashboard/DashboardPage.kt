@@ -4,7 +4,10 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.urlEncode
 import jakarta.annotation.PostConstruct

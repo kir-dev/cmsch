@@ -5,7 +5,9 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.*
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.statistics.UserActivityFilter
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
+import org.springframework.boot.info.BuildProperties
 import org.springframework.core.env.Environment
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -13,8 +15,6 @@ import org.springframework.ui.Model
 import java.security.MessageDigest
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import jakarta.annotation.PostConstruct
-import org.springframework.boot.info.BuildProperties
 
 private fun String.md5(): String {
     val md = MessageDigest.getInstance("MD5")

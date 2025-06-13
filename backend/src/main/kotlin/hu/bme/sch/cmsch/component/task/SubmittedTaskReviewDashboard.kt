@@ -10,7 +10,10 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.repository.GroupRepository
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import java.nio.charset.StandardCharsets
 
 private const val VIEW = "task-review"
 private const val ENDPOINT = "/admin/control/$VIEW"

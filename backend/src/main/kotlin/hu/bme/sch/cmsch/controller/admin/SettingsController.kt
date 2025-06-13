@@ -1,7 +1,10 @@
 package hu.bme.sch.cmsch.controller.admin
 
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.PermissionGroupService
+import hu.bme.sch.cmsch.service.PermissionValidator
+import hu.bme.sch.cmsch.service.PermissionsService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import org.slf4j.LoggerFactory

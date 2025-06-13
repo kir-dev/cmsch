@@ -1,10 +1,10 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.model.RoleType
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import java.io.Serializable
 import java.util.*
-import jakarta.persistence.*
 
 @Entity
 @Table(name="menus")

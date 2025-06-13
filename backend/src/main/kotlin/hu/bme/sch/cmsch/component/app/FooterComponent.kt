@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.app
 
-import hu.bme.sch.cmsch.component.*
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService

@@ -7,11 +7,7 @@ import hu.bme.sch.cmsch.component.sheets.SheetsUpdaterService
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.AuditLogService
-import hu.bme.sch.cmsch.service.StorageService
-import hu.bme.sch.cmsch.service.ImportService
-import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.transaction
 import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean

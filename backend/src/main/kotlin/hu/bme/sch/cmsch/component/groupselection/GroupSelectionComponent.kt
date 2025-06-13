@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.component.groupselection
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ImplicitPermissions
+import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
