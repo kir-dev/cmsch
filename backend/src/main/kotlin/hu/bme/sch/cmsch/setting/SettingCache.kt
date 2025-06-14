@@ -9,11 +9,11 @@ class SettingCache {
     private val backingStorage: MutableMap<String, MutableMap<String, Optional<String>>> = ConcurrentHashMap()
 
     /// Optional.EMPTY means that there is no value
-    fun getValue(setting: SettingProxy): Optional<String>? =
+    fun getValue(setting: SettingRef<*>): Optional<String>? =
         backingStorage[setting.component]?.get(setting.property)
 
 
-    fun setValue(setting: SettingProxy, value: Optional<String>) {
+    fun setValue(setting: SettingRef<*>, value: Optional<String>) {
         checkIfComponentStorageIsCreated(setting.component)
         backingStorage[setting.component]?.put(setting.property, value)
     }
@@ -23,7 +23,7 @@ class SettingCache {
         backingStorage[component]?.putAll(properties)
     }
 
-    fun removeValue(setting: SettingProxy) {
+    fun removeValue(setting: SettingRef<*>) {
         backingStorage[setting.component]?.remove(setting.property)
     }
 

@@ -45,7 +45,7 @@ class TokenCollectorService(
             }
             val userEntity = userService.getById(user.internalId)
             return qrFightService
-                .filter { qrFightComponent.map { it.enabled.isValueTrue() }.orElse(false) }
+                .filter { qrFightComponent.map { it.enabled.getValue() }.orElse(false) }
                 .map {
                     return@map it.onTokenScanForUser(userEntity, tokenEntity)
                 }.orElseGet {
@@ -71,7 +71,7 @@ class TokenCollectorService(
                 return TokenSubmittedView(TokenCollectorStatus.INACTIVE, null, null, null)
             }
             return qrFightService
-                .filter { qrFightComponent.map { it.enabled.isValueTrue() }.orElse(false) }
+                .filter { qrFightComponent.map { it.enabled.getValue() }.orElse(false) }
                 .map {
                     return@map it.onTokenScanForGroup(user, groupEntity.id, groupEntity.name, tokenEntity)
                 }.orElseGet {
@@ -146,7 +146,7 @@ class TokenCollectorService(
             tokens = getTokensForUser(user),
             collectedTokenCount = fetchCollectedTokenCount(user, tokenCategoryToDisplay),
             totalTokenCount = fetchTotalTokenCount(tokenCategoryToDisplay),
-            minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE
+            minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toInt()
         )
     }
 

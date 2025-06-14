@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.setting.MutableSetting
 import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.util.getUser
 import jakarta.annotation.PostConstruct
@@ -93,15 +94,17 @@ abstract class ComponentApiBase(
         component.allSettings.forEach { setting ->
             when (setting.type) {
                 SettingType.BOOLEAN -> {
-                    val parsedValue = allRequestParams[setting.property] != null && allRequestParams[setting.property] != "off"
-                    log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, parsedValue)
-                    newValues.append(setting.property).append("=").append(parsedValue).append(", ")
-                    setting.setValue(if (parsedValue) "true" else "false")
+                    allRequestParams[setting.property]?.let {
+                        val value = allRequestParams[setting.property] != "off"
+                        log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, value)
+                        newValues.append(setting.property).append("=").append(value).append(", ")
+                        (setting as MutableSetting<*>).parseAndSet(if (value) "true" else "false")
+                    }
                 }
                 SettingType.IMAGE -> {
                     multipartRequest.fileMap[setting.property]?.let {
                         if (it.size > 0) {
-                            val (path, name) = setting.rawValue.split("/")
+                            val (path, name) = setting.getValue().toString().split("/")
                             val url = storageService.saveNamedObject(path, name, it)
                             log.info("Uploading image {}.{} url: {}", setting.component, setting.property, url)
                             newValues.append(setting.property).append("=url@").append(url).append(", ")
@@ -112,7 +115,7 @@ abstract class ComponentApiBase(
                     allRequestParams[setting.property]?.let {
                         log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, it)
                         newValues.append(setting.property).append("=").append(it).append(", ")
-                        setting.setValue(it)
+                        (setting as MutableSetting<*>).parseAndSet(it)
                     }
                 }
             }

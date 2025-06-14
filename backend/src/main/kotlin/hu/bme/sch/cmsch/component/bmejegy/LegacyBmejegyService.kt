@@ -109,7 +109,7 @@ class LegacyBmejegyService(
         val changedUsers = mutableListOf<UserEntity>()
         val userToTicketMapping = mutableListOf<Pair<UserEntity, BmejegyRecordEntity>>()
 
-        if (bmejegy.completeByPhotoId.isValueTrue()) {
+        if (bmejegy.completeByPhotoId.getValue()) {
             log.info("[BMEJEGY] Completing by photoId")
 
             val reader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
@@ -167,11 +167,11 @@ class LegacyBmejegyService(
             var changed = false
 
             if (bmejegy.forOrder1.getValue().isNotBlank() && item.contains(bmejegy.forOrder1.getValue())) {
-                if (bmejegy.grantAttendee1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantAttendee1.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged1.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -183,11 +183,11 @@ class LegacyBmejegyService(
             }
 
             if (bmejegy.forOrder2.getValue().isNotBlank() && item.contains(bmejegy.forOrder2.getValue())) {
-                if (bmejegy.grantAttendee2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantAttendee2.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged2.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -199,11 +199,11 @@ class LegacyBmejegyService(
             }
 
             if (bmejegy.forOrder3.getValue().isNotBlank() && item.contains(bmejegy.forOrder3.getValue())) {
-                if (bmejegy.grantAttendee3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantAttendee3.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged3.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -226,7 +226,7 @@ class LegacyBmejegyService(
         log.info("[BMEJEGY] Fetching started")
 
         val strategies: ExchangeStrategies = ExchangeStrategies.builder()
-            .codecs { codecs -> codecs.defaultCodecs().maxInMemorySize(bmejegy.bufferSize.getIntValue(262144)) }
+            .codecs { codecs -> codecs.defaultCodecs().maxInMemorySize(bmejegy.bufferSize.getValue().toInt()) }
             .build()
 
         val client = WebClient.builder()
@@ -322,8 +322,8 @@ class LegacyBmejegyService(
                 )
                 .body(
                     BodyInserters.fromFormData("_search", "false")
-                        .with("nd", bmejegy.minTimestamp.getValue())
-                        .with("rows", bmejegy.countToFetch.getValue())
+                        .with("nd", bmejegy.minTimestamp.getStringValue())
+                        .with("rows", bmejegy.countToFetch.getStringValue())
                         .with("page", page.toString())
                         .with("sidx", "")
                         .with("sord", "asc")

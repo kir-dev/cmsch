@@ -99,7 +99,7 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getBoardForGroups(category: String) = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getBoardForGroups(category: String) = if (raceComponent.ascendingOrder.getValue()) {
         raceRecordRepository.findAllByCategory(category)
             .groupBy { it.groupId }
             .map { submission ->
@@ -128,7 +128,7 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getFreestyleBoardForGroups() = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getFreestyleBoardForGroups() = if (raceComponent.ascendingOrder.getValue()) {
         freestyleRaceRecordRepository.findAll()
             .map { submission ->
                 FreestyleRaceEntryDto(
@@ -205,7 +205,7 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getBoardForUsers(category: String, fetchEmail: Boolean) = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getBoardForUsers(category: String, fetchEmail: Boolean) = if (raceComponent.ascendingOrder.getValue()) {
         raceRecordRepository.findAllByCategory(category)
             .groupBy { it.userId }
             .map { submission ->
@@ -240,7 +240,7 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getFreestyleBoardForUsers() = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getFreestyleBoardForUsers() = if (raceComponent.ascendingOrder.getValue()) {
         freestyleRaceRecordRepository.findAll()
             .map { submission ->
                 FreestyleRaceEntryDto(

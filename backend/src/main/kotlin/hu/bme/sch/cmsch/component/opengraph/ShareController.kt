@@ -42,7 +42,7 @@ class ShareController(
         return openGraphService.findNews(url)
             .map { resource ->
                 fillModelWithCommon(model, resource)
-                if (newsComponent.map { it.showDetails.isValueTrue() }.orElse(false)) {
+                if (newsComponent.map { it.showDetails.getValue() }.orElse(false)) {
                     model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news/${url}")
                 } else {
                     model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news#${url}")

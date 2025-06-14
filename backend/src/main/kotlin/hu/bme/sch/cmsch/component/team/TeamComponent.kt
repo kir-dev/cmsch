@@ -4,10 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -123,331 +120,297 @@ class TeamComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val myTeamGroup = SettingProxy(componentSettingService, component,
-        "myTeamGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csapatom",
-        description = ""
+    val myTeamGroup = ControlGroup(component, "myTeamGroup", fieldName = "Csapatom")
+
+    val myTitle = StringSettingRef(componentSettingService, component,
+        "myTitle", "Csapatom", fieldName = "Csapatom lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    val myTitle = SettingProxy(componentSettingService, component,
-        "myTitle", "Csapatom",
-        fieldName = "Csapatom lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    val myMenuDisplayName = SettingProxy(componentSettingService, component,
+    val myMenuDisplayName = StringSettingRef(componentSettingService, component,
         "myMenuDisplayName", "Csapatom", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    val myMinRole = MinRoleSettingProxy(componentSettingService, component,
-        "myMinRole", MinRoleSettingProxy.ALL_ROLES_FROM_ATTENDEE,
+    val myMinRole = MinRoleSettingRef(componentSettingService, component,
+        "myMinRole", MinRoleSettingRef.ALL_ROLES_FROM_ATTENDEE,
         fieldName = "Csapatom menü jogosultságai", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamListGroup = SettingProxy(componentSettingService, component,
-        "teamListGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csapat lista",
-        description = ""
+    val teamListGroup = ControlGroup(component, "teamListGroup", fieldName = "Csapat lista")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Csapatok", fieldName = "Csapatok lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Csapatok",
-        fieldName = "Csapatok lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Csapatok", serverSideOnly = true,
         fieldName = "Csapatok menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
+        "minRole", MinRoleSettingRef.ALL_ROLES,
         fieldName = "Csapatok menü jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val showTeamsAtAll = SettingProxy(componentSettingService, component,
-        "showTeamsAtAll", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Csapat lista kijelzése", description = "Ha ki van kapcsolva a akkor a csapat lista nincs leküldve"
+    val showTeamsAtAll = BooleanSettingRef(componentSettingService, component,
+        "showTeamsAtAll", false, serverSideOnly = true, fieldName = "Csapat lista kijelzése",
+        description = "Ha ki van kapcsolva a akkor a csapat lista nincs leküldve"
     )
 
-    val showNotRacingTeams = SettingProxy(componentSettingService, component,
-        "showNotRacingTeams", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Nem versenyző csapatok kijelzése", description = "Azoknak is a kijelzése akik nem versenyeznek"
+    val showNotRacingTeams = BooleanSettingRef(componentSettingService, component,
+        "showNotRacingTeams", false, serverSideOnly = true, fieldName = "Nem versenyző csapatok kijelzése",
+        description = "Azoknak is a kijelzése akik nem versenyeznek"
     )
 
-    val showNotManualTeams = SettingProxy(componentSettingService, component,
-        "showNotManualTeams", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Admin által nevezett csapatok is látszanak", description = "Azoknak is a kijelzése akiket az admin panelről neveztek"
+    val showNotManualTeams = BooleanSettingRef(componentSettingService, component,
+        "showNotManualTeams", false, serverSideOnly = true, fieldName = "Admin által nevezett csapatok is látszanak",
+        description = "Azoknak is a kijelzése akiket az admin panelről neveztek"
     )
 
-    val sortByName = SettingProxy(componentSettingService, component,
-        "sortByName", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Név alapján rendezés", description = "Ha igaz, akkor ABC sorrendben vannak kiírva, ha hamis akkor pont alapján"
+    val sortByName = BooleanSettingRef(componentSettingService, component,
+        "sortByName", false, serverSideOnly = true, fieldName = "Név alapján rendezés",
+        description = "Ha igaz, akkor ABC sorrendben vannak kiírva, ha hamis akkor pont alapján"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamCreateGroup = SettingProxy(componentSettingService, component,
-        "teamCreateGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csapat létrehozás",
-        description = ""
-    )
+    val teamCreateGroup = ControlGroup(component, "teamCreateGroup", fieldName = "Csapat létrehozás")
 
-    val createTitle = SettingProxy(componentSettingService, component,
+    val createTitle = StringSettingRef(componentSettingService, component,
         "createTitle", "Csapat készítés",
         fieldName = "Csapat készítés lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    val createMenuDisplayName = SettingProxy(componentSettingService, component,
+    val createMenuDisplayName = StringSettingRef(componentSettingService, component,
         "createMenuDisplayName", "Csapat készítés", serverSideOnly = true,
         fieldName = "Csapat készítés neve", description = "Ez lesz a neve a menünek"
     )
 
-    val createMinRole = MinRoleSettingProxy(componentSettingService, component,
+    val createMinRole = MinRoleSettingRef(componentSettingService, component,
         "createMinRole", RoleType.BASIC.name,
         fieldName = "Csapat készítés menü jogosultságai", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val teamCreationTopMessage = SettingProxy(componentSettingService, component,
+    val teamCreationTopMessage = StringSettingRef(componentSettingService, component,
         "teamCreationTopMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Csapat készítés felső szöveg", description = "Ha üres, akkor nincs ilyen"
     )
 
-    val creationEnabled = SettingProxy(componentSettingService, component,
-        "creationEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport készítés engedélyezve", description = "Ha igaz, lehet csapatot készíteni"
+    val creationEnabled = BooleanSettingRef(componentSettingService, component,
+        "creationEnabled", false, fieldName = "Csoport készítés engedélyezve",
+        description = "Ha igaz, lehet csapatot készíteni"
     )
 
-    val teamEditTitle = SettingProxy(componentSettingService, component,
-        "teamEditTitle", "Csapat szerkesztése",
-        fieldName = "Csoport adatainak szerkesztés lap címe", description = "A csoport szerkesztési lapjának tetején megjelenő címe"
+    val teamEditTitle = StringSettingRef(componentSettingService,
+        component, "teamEditTitle", "Csapat szerkesztése", fieldName = "Csoport adatainak szerkesztés lap címe",
+        description = "A csoport szerkesztési lapjának tetején megjelenő címe"
     )
 
-    val teamEditTopMessage = SettingProxy(componentSettingService, component,
+    val teamEditTopMessage = StringSettingRef(componentSettingService, component,
         "teamEditTopMessage", "Adj meg leírást és logót!", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Csoport szerkesztés felső szöveg", description = "Ha üres, akkor nincs ilyen"
     )
 
-    val teamEditEnabled = SettingProxy(componentSettingService, component,
-        "teamEditEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Csoport szerkesztés engedélyezése", description = "Ha igaz, lehet a csapat leírását szerkeszteni"
+    val teamEditEnabled = BooleanSettingRef(componentSettingService, component,
+        "teamEditEnabled", true, fieldName = "Csoport szerkesztés engedélyezése",
+        description = "Ha igaz, lehet a csapat leírását szerkeszteni"
     )
 
-    val teamLogoUploadEnabled = SettingProxy(componentSettingService, component,
-        "teamLogoUploadEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport logó feltöltés engedélyezése", description = "Ha igaz, lehet a vezetőknek logót feltölteni"
+    val teamLogoUploadEnabled = BooleanSettingRef(componentSettingService, component,
+        "teamLogoUploadEnabled", false, fieldName = "Csoport logó feltöltés engedélyezése",
+        description = "Ha igaz, lehet a vezetőknek logót feltölteni"
     )
 
-    val joinEnabled = SettingProxy(componentSettingService, component,
-        "joinEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csatlakozás engedélyezve", description = "Ha igaz, lehet csapathoz csatlakozni"
+    val joinEnabled = BooleanSettingRef(componentSettingService, component,
+        "joinEnabled", false, fieldName = "Csatlakozás engedélyezve",
+        description = "Ha igaz, lehet csapathoz csatlakozni"
     )
 
-    val leaveEnabled = SettingProxy(componentSettingService, component,
-        "leaveEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Kilépés engedélyezve", description = "Ha igaz, lehet ki lehet lépni csapatból"
+    val leaveEnabled = BooleanSettingRef(componentSettingService, component,
+        "leaveEnabled", false, fieldName = "Kilépés engedélyezve",
+        description = "Ha igaz, lehet ki lehet lépni csapatból"
     )
 
-    val grantPrivilegedRole = SettingProxy(componentSettingService, component,
-        "grantPrivilegedRole", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "PRIVILEGED jog a csapat készítőjének", description = "Ha be val kapcsolva, akkor a csapat készítője PRIVILEGED jogot kap"
+    val grantPrivilegedRole = BooleanSettingRef(componentSettingService, component,
+        "grantPrivilegedRole", true, serverSideOnly = true, fieldName = "PRIVILEGED jog a csapat készítőjének",
+        description = "Ha be val kapcsolva, akkor a csapat készítője PRIVILEGED jogot kap"
     )
 
-    val grantAttendeeRole = SettingProxy(componentSettingService, component,
-        "grantAttendeeRole", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "ATTENDEE jog a csapattagoknak", description = "Ha be val kapcsolva, akkor a csapat tagjai ATTENDEE jogot kapnak (onnantól él, hogy be lett kapcsolva)"
+    val grantAttendeeRole = BooleanSettingRef(componentSettingService, component,
+        "grantAttendeeRole", true, serverSideOnly = true, fieldName = "ATTENDEE jog a csapattagoknak",
+        description = "Ha be val kapcsolva, akkor a csapat tagjai ATTENDEE jogot kapnak (onnantól él, hogy be lett kapcsolva)"
     )
 
-    val nameRegex = SettingProxy(componentSettingService, component,
+    val nameRegex = StringSettingRef(componentSettingService, component,
         "nameRegex", "^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]{1,32}\$", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Csapatnév regex", description = "Ez alapján megy majd a validálás"
     )
 
-    val nameBlocklist = SettingProxy(componentSettingService, component,
+    val nameBlocklist = StringSettingRef(componentSettingService, component,
         "nameBlocklist", "test, dev", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Tiltott nevek", description = "Tiltott csapatnevek vesszővel elválasztva"
     )
 
-    val racesByDefault = SettingProxy(componentSettingService, component,
-        "racesByDefault", "true", type = SettingType.BOOLEAN,
-        fieldName = "Alapból versenyzik", description = "Ha be van kapcsolva, akkor a csapat automatikusan versenyző státuszban van"
+    val racesByDefault = BooleanSettingRef(componentSettingService, component,
+        "racesByDefault", true, fieldName = "Alapból versenyzik",
+        description = "Ha be van kapcsolva, akkor a csapat automatikusan versenyző státuszban van"
     )
 
-    val selectableByDefault = SettingProxy(componentSettingService, component,
-        "selectableByDefault", "true", type = SettingType.BOOLEAN,
-        fieldName = "Alapból lehet bele jelentkezni", description = "Ha be van kapcsolva, akkor a csapatba automatikusan lehet jelentkezni"
+    val selectableByDefault = BooleanSettingRef(componentSettingService, component,
+        "selectableByDefault", true, fieldName = "Alapból lehet bele jelentkezni",
+        description = "Ha be van kapcsolva, akkor a csapatba automatikusan lehet jelentkezni"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamAdminGroup = SettingProxy(componentSettingService, component,
-        "teamAdminGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csapat admin felület",
-        description = ""
-    )
+    val teamAdminGroup = ControlGroup(component, "teamAdminGroup", fieldName = "Csapat admin felület")
 
-    val adminTitle = SettingProxy(componentSettingService, component,
+    val adminTitle = StringSettingRef(componentSettingService, component,
         "adminTitle", "Csapatom kezelése",
         fieldName = "Admin lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    val adminMenuDisplayName = SettingProxy(componentSettingService, component,
+    val adminMenuDisplayName = StringSettingRef(componentSettingService, component,
         "adminMenuDisplayName", "Csapatom kezelése", serverSideOnly = true,
         fieldName = "Admin menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    val adminMinRole = MinRoleSettingProxy(componentSettingService, component,
-        "adminMinRole", MinRoleSettingProxy.ALL_ROLES_FROM_PRIVILEGED,
+    val adminMinRole = MinRoleSettingRef(componentSettingService, component,
+        "adminMinRole", MinRoleSettingRef.ALL_ROLES_FROM_PRIVILEGED,
         fieldName = "Admin oldal jogosultságai", description = "Melyik roleokkal nyitható meg az admin oldal"
     )
 
-    val togglePermissionEnabled = SettingProxy(componentSettingService, component,
-        "togglePermissionEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Jogosultság adás állítása", description = "Ha be van kapcsolva, akkor lehet jogosultságokat állítani"
+    val togglePermissionEnabled = BooleanSettingRef(componentSettingService, component,
+        "togglePermissionEnabled", true, fieldName = "Jogosultság adás állítása",
+        description = "Ha be van kapcsolva, akkor lehet jogosultságokat állítani"
     )
 
-    val kickEnabled = SettingProxy(componentSettingService, component,
-        "kickEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Kidobás gomb", description = "Ha be val kapcsolva, akkor csapat vezetők kirakhatnak embereket"
+    val kickEnabled = BooleanSettingRef(componentSettingService, component,
+        "kickEnabled", true, fieldName = "Kidobás gomb",
+        description = "Ha be val kapcsolva, akkor csapat vezetők kirakhatnak embereket"
     )
 
-    val promoteLeadershipEnabled = SettingProxy(componentSettingService, component,
-        "promoteLeadershipEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Jogosultság átadása", description = "Ha be val kapcsolva, akkor át lehet adni a vezetőséget másnak"
+    val promoteLeadershipEnabled = BooleanSettingRef(componentSettingService, component,
+        "promoteLeadershipEnabled", true, fieldName = "Jogosultság átadása",
+        description = "Ha be val kapcsolva, akkor át lehet adni a vezetőséget másnak"
     )
 
-    val leaderNotes = SettingProxy(componentSettingService, component,
-        "leaderNotes", "", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Üzenet a CSK-knak", description = "A csapat dashboardnál megjelenő üzenet a CSK-k nak. Ha üres nem látszik."
+    val leaderNotes = StringSettingRef(componentSettingService, component,
+        "leaderNotes", "", type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Üzenet a CSK-knak",
+        description = "A csapat dashboardnál megjelenő üzenet a CSK-k nak. Ha üres nem látszik."
     )
 
-    val showTasks = SettingProxy(componentSettingService, component,
-        "showTasks", "true", type = SettingType.BOOLEAN,
-        fieldName = "Feladatok mutatása", description = "Ha be val kapcsolva, akkor az elvégzendő feladatok látszódnak"
+    val showTasks = BooleanSettingRef(componentSettingService, component,
+        "showTasks", true, fieldName = "Feladatok mutatása",
+        description = "Ha be val kapcsolva, akkor az elvégzendő feladatok látszódnak"
     )
 
-    val showAdvertisedForms = SettingProxy(componentSettingService, component,
-        "showAdvertisedForms", "true", type = SettingType.BOOLEAN,
-        fieldName = "Formok mutatása", description = "Ha be val kapcsolva, akkor a hírdetett flaggel " +
-                "ellátott formokat megjelenítjük a csapatnál"
+    val showAdvertisedForms = BooleanSettingRef(componentSettingService, component,
+        "showAdvertisedForms", true, fieldName = "Formok mutatása",
+        description = "Ha be val kapcsolva, akkor a hírdetett flaggel ellátott formokat megjelenítjük a csapatnál"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamDetailsGroup = SettingProxy(componentSettingService, component,
-        "teamDetailsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csapat adatlap",
-        description = ""
+    val teamDetailsGroup = ControlGroup(component, "teamDetailsGroup", fieldName = "Csapat adatlap")
+
+    val showTeamDetails = BooleanSettingRef(componentSettingService, component,
+        "showTeamDetails", false, fieldName = "Csoport részleteinek mutatása",
+        description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek"
     )
 
-    val showTeamDetails = SettingProxy(componentSettingService, component,
-        "showTeamDetails", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport részleteinek mutatása", description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek"
+    val showTeamMembersPublicly = BooleanSettingRef(componentSettingService, component,
+        "showTeamMembersPublicly", false, fieldName = "Csoport tagjai publikusak",
+        description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek"
     )
 
-    val showTeamMembersPublicly = SettingProxy(componentSettingService, component,
-        "showTeamMembersPublicly", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport tagjai publikusak", description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek"
+    val showTeamScore = BooleanSettingRef(componentSettingService, component,
+        "showTeamScore", false, fieldName = "Csoport pontjának kijelzése",
+        description = "Ha be val kapcsolva, akkor az adatlapon kint lesz a csoport pontjainak a mutatója"
     )
 
-    val showTeamScore = SettingProxy(componentSettingService, component,
-        "showTeamScore", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport pontjának kijelzése", description = "Ha be val kapcsolva, akkor az adatlapon kint lesz a csoport pontjainak a mutatója"
+    val showTeamScoreDetailsButton = BooleanSettingRef(componentSettingService, component,
+        "showTeamScoreDetailsButton", false, fieldName = "Csoport részletes pontjaihoz gomb",
+        description = "Ha be val kapcsolva, akkor megjelenik egy gomb a csapat részletes pont listájához"
     )
 
-    val showTeamScoreDetailsButton = SettingProxy(componentSettingService, component,
-        "showTeamScoreDetailsButton", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport részletes pontjaihoz gomb", description = "Ha be val kapcsolva, akkor megjelenik egy gomb a csapat részletes pont listájához"
-    )
-
-    val showRaceButton = SettingProxy(componentSettingService, component,
-        "showRaceButton", "false", type = SettingType.BOOLEAN,
-        fieldName = "Mérés gomb látszódik", description = "Ha igaz, látszik a gomb"
+    val showRaceButton = BooleanSettingRef(componentSettingService, component,
+        "showRaceButton", false, fieldName = "Mérés gomb látszódik", description = "Ha igaz, látszik a gomb"
     )
 
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val statGroup = SettingProxy(componentSettingService, component,
-        "statGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Csapat statisztika",
-        description = ""
-    )
+    val statGroup = ControlGroup(component, "statGroup", fieldName = "Csapat statisztika")
 
-    val membersStatEnabled = SettingProxy(componentSettingService, component,
-        "membersStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Tagok számának kijelzése",
+    val membersStatEnabled = BooleanSettingRef(componentSettingService, component,
+        "membersStatEnabled", false, serverSideOnly = true, fieldName = "Tagok számának kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hányan vannak"
     )
 
-    val membersStatHeader = SettingProxy(componentSettingService, component,
+    val membersStatHeader = StringSettingRef(componentSettingService, component,
         "membersStatHeader", "Tagok", serverSideOnly = true,
         fieldName = "Tagok fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
-    val placeStatEnabled = SettingProxy(componentSettingService, component,
-        "placeStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Helyezés kijelzése",
+    val placeStatEnabled = BooleanSettingRef(componentSettingService, component,
+        "placeStatEnabled", false, serverSideOnly = true, fieldName = "Helyezés kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hanyadik a csapat " +
                 "(Leaderboard komponens kell hozzá)"
     )
 
-    val placeStatHeader = SettingProxy(componentSettingService, component,
+    val placeStatHeader = StringSettingRef(componentSettingService, component,
         "placeStatHeader", "Helyezés", serverSideOnly = true,
         fieldName = "Helyezés fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
-    val scoreStatEnabled = SettingProxy(componentSettingService, component,
-        "scoreStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Pontszám kijelzése",
+    val scoreStatEnabled = BooleanSettingRef(componentSettingService, component,
+        "scoreStatEnabled", false, serverSideOnly = true, fieldName = "Pontszám kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hány pontja van a csapatnak " +
                 "(Leaderboard komponens kell hozzá)"
     )
 
-    val scoreStatHeader = SettingProxy(componentSettingService, component,
+    val scoreStatHeader = StringSettingRef(componentSettingService, component,
         "scoreStatHeader", "Pontszám", serverSideOnly = true,
         fieldName = "Pontszám fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
-    val qrFightStatEnabled = SettingProxy(componentSettingService, component,
-        "qrFightStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "QR Fight kijelzése",
+    val qrFightStatEnabled = BooleanSettingRef(componentSettingService, component,
+        "qrFightStatEnabled", false, serverSideOnly = true, fieldName = "QR Fight kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat által megszerzett pontok és tornyok látszódnak " +
                 "(QRFight komponens kell hozzá)"
     )
 
-    val qrTokenStatHeader = SettingProxy(componentSettingService, component,
+    val qrTokenStatHeader = StringSettingRef(componentSettingService, component,
         "qrTokenStatHeader", "Megtalált QR kód", serverSideOnly = true,
         fieldName = "QR kódok fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
-    val qrTowerStatHeader = SettingProxy(componentSettingService, component,
+    val qrTowerStatHeader = StringSettingRef(componentSettingService, component,
         "qrTowerStatHeader", "Megszerzett tornyok", serverSideOnly = true,
         fieldName = "Tornyok fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
-    val raceStatEnabled = SettingProxy(componentSettingService, component,
-        "raceStatEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Verseny eredmény kijelzése",
+    val raceStatEnabled = BooleanSettingRef(componentSettingService, component,
+        "raceStatEnabled", false, serverSideOnly = true, fieldName = "Verseny eredmény kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy ki és milyen eredménnyel a legjobb " +
                 "(Verseny komponens kell hozzá)"
     )
 
-    val raceStatHeader = SettingProxy(componentSettingService, component,
+    val raceStatHeader = StringSettingRef(componentSettingService, component,
         "raceStatHeader", "Sörmérés", serverSideOnly = true,
         fieldName = "Verseny fejléce", description = "Ez lesz a neve a statisztikának"
     )
 
-    val riddleStatEnabled = SettingProxy(componentSettingService, component,
-        "riddleStatEnable", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Riddle eredmény kijelzése",
+    val riddleStatEnabled = BooleanSettingRef(componentSettingService, component,
+        "riddleStatEnable", false, serverSideOnly = true, fieldName = "Riddle eredmény kijelzése",
         description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hogy állnak a ridleökkel " +
                 "(Riddle komponens kell hozzá)"
     )
 
-    val riddleStatHeader = SettingProxy(componentSettingService, component,
+    val riddleStatHeader = StringSettingRef(componentSettingService, component,
         "riddleStatHeader", "Riddleök", serverSideOnly = true,
         fieldName = "Riddle fejléce", description = "Ez lesz a neve a statisztikának"
     )

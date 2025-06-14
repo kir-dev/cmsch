@@ -20,7 +20,7 @@ class ExportTasksController(
 
     @GetMapping("/export-tasks")
     fun tasks(auth: Authentication, model: Model): String {
-        if (!taskComponent.exportEnabled.isValueTrue())
+        if (!taskComponent.exportEnabled.getValue())
             return "redirect:/"
 
         val user = auth.getUser()

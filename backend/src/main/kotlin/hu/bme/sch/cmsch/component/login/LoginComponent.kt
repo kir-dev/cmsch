@@ -4,10 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.authsch.Scope
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -69,42 +66,34 @@ class LoginComponent(
         )
     }
 
-    val loginGroup = SettingProxy(componentSettingService, component,
-        "loginGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Belépés",
-        description = ""
+    val loginGroup = ControlGroup(component, "loginGroup", fieldName = "Belépés")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Belépés", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Belépés",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Belépés", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", RoleType.GUEST.name, minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val authschGroup = SettingProxy(componentSettingService, component,
-        "authschGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "AuthSCH",
+    val authschGroup = ControlGroup(component, "authschGroup", fieldName = "AuthSCH",
         description = "Csak akkor írd át ha tudod mit csinálsz! Ha elrontod nem fog beengedni, szóval óvatosan!"
     )
 
-    val authschScopesRaw = SettingProxy(componentSettingService, component,
+    val authschScopesRaw = StringSettingRef(componentSettingService, component,
         "authschScopes",
         listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT).joinToString(","),
         type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Oauth scopeok",
-        description = "Ezek lesznek elkérve a providertől; ezek vannak: "
-                + Scope.entries.joinToString(", ") { it.name }
+        description = "Ezek lesznek elkérve a providertől; ezek vannak: " + Scope.entries.joinToString(", ") { it.name }
     )
 
     val authschScopes = mutableListOf<Scope>()
@@ -121,33 +110,33 @@ class LoginComponent(
             .distinct()
         authschScopes.addAll(scopes)
         authschScopesRaw.setValue(scopes.joinToString(",") { it.name })
-        log.info("Authsch scopes changed to '{}' and saved to the db as: '{}'", authschScopes.map { it.name }, authschScopesRaw.rawValue)
+        log.info("Authsch scopes changed to '{}' and saved to the db as: '{}'",
+            authschScopes.map { it.name },
+            authschScopesRaw.rawValue)
     }
 
-    val onlyBmeProvider = SettingProxy(componentSettingService, component,
-        "onlyBmeProvider", "false", type = SettingType.BOOLEAN, serverSideOnly = false,
+    val onlyBmeProvider = BooleanSettingRef(componentSettingService, component,
+        "onlyBmeProvider", false, serverSideOnly = false,
         fieldName = "Címtáron keresztüli belépés", description = "Csak BME címtáron keresztüli belépés jelenik meg"
     )
 
-    val authschPromoted = SettingProxy(componentSettingService, component,
-        "authschPromoted", "true", type = SettingType.BOOLEAN,
-        fieldName = "Authsch opció látszik", description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az AuthSCH SSO"
+    val authschPromoted = BooleanSettingRef(componentSettingService, component,
+        "authschPromoted", true, fieldName = "Authsch opció látszik",
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az AuthSCH SSO"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val googleSsoGroup = SettingProxy(componentSettingService, component,
-        "googleSsoGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "Google SSO",
+    val googleSsoGroup = ControlGroup(component, "googleSsoGroup", fieldName = "Google SSO",
         description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan"
     )
 
-    val googleSsoEnabled = SettingProxy(componentSettingService, component,
-        "googleSsoEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Google opció látszik", description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Google SSO"
+    val googleSsoEnabled = BooleanSettingRef(componentSettingService, component,
+        "googleSsoEnabled", true, fieldName = "Google opció látszik",
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Google SSO"
     )
 
-    val googleAdminAddresses = SettingProxy(componentSettingService, component,
+    val googleAdminAddresses = StringSettingRef(componentSettingService, component,
         "googleAdminAddresses", "", serverSideOnly = true,
         fieldName = "ADMIN jogú emailcímek", description = "Csak Google auth esetén! Ezeknek a felhasználóknak ADMIN " +
                 "joga lesz belépésnél. Az emailcímek vesszővel felsorolva."
@@ -155,106 +144,105 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val keycloakGroup = SettingProxy(componentSettingService, component,
-        "keycloakGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "Keycloak",
+    val keycloakGroup = ControlGroup(component, "keycloakGroup", fieldName = "Keycloak",
         description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan"
     )
 
-    val keycloakEnabled = SettingProxy(componentSettingService, component,
-        "keycloakEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Keycloak opció látszik", description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Keycloak"
+    val keycloakEnabled = BooleanSettingRef(componentSettingService, component,
+        "keycloakEnabled", false, fieldName = "Keycloak opció látszik",
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Keycloak"
     )
 
-    val keycloakAuthName = SettingProxy(componentSettingService, component,
+    val keycloakAuthName = StringSettingRef(componentSettingService, component,
         "keycloakAuthName", "Belső",
         fieldName = "Keycloak gomb felirata", description = "Ezen a néven jelenik meg a bejelentkezési mód."
     )
 
-    val keycloakAdminAddresses = SettingProxy(componentSettingService, component,
+    val keycloakAdminAddresses = StringSettingRef(componentSettingService, component,
         "keycloakAdminAddresses", "", serverSideOnly = true,
         fieldName = "ADMIN jogú emailcímek", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN " +
                 "joga lesz belépésnél. Az emailcímek vesszővel felsorolva."
     )
 
-    val keycloakSuperuserRole = SettingProxy(componentSettingService, component,
-        "keycloakSuperuserRole", "superuser", serverSideOnly = true,
-        fieldName = "SUPERUSER keycloak rule neve", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak SYSADMIN " +
-                "joga lesz belépésnél."
+    val keycloakSuperuserRole = StringSettingRef(componentSettingService, component,
+        "keycloakSuperuserRole", "superuser", serverSideOnly = true, fieldName = "SUPERUSER keycloak rule neve",
+        description = "Csak Keycloak esetén! Ezeknek a felhasználóknak SYSADMIN joga lesz belépésnél."
     )
 
-    val keycloakAdminRole = SettingProxy(componentSettingService, component,
-        "keycloakAdminRole", "admin", serverSideOnly = true,
-        fieldName = "ADMIN keycloak rule neve", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN " +
-                "joga lesz belépésnél."
+    val keycloakAdminRole = StringSettingRef(componentSettingService, component,
+        "keycloakAdminRole", "admin", serverSideOnly = true, fieldName = "ADMIN keycloak rule neve",
+        description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél."
     )
 
-    val keycloakStaffRole = SettingProxy(componentSettingService, component,
-        "keycloakStaffRole", "staff", serverSideOnly = true,
-        fieldName = "STAFF keycloak rule neve", description = "Csak Keycloak esetén! Ezeknek a felhasználóknak STAFF " +
-                "joga lesz belépésnél."
+    val keycloakStaffRole = StringSettingRef(componentSettingService, component,
+        "keycloakStaffRole", "staff", serverSideOnly = true, fieldName = "STAFF keycloak rule neve",
+        description = "Csak Keycloak esetén! Ezeknek a felhasználóknak STAFF joga lesz belépésnél."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val grantRoleGroup = SettingProxy(componentSettingService, component,
-        "grantRoleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Automatikus ROLE",
+    val grantRoleGroup = ControlGroup(component, "grantRoleGroup", fieldName = "Automatikus ROLE",
         description = "ROLE = Az oldalhoz való hozzáférés szintje"
     )
 
-    val staffGroups = SettingProxy(componentSettingService, component,
+    val staffGroups = StringSettingRef(componentSettingService, component,
         "staffGroups", "", serverSideOnly = true,
         fieldName = "STAFF jogú Pék csoportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
-    val staffGroupName = SettingProxy(componentSettingService, component,
-        "staffGroupName", "STAFF", serverSideOnly = true,
-        fieldName = "Rendező csoport neve", description = "Csoport (group) neve amit megkapnak azok akiknek STAFF role is jár. Ha nem létező, akkor nem kapják meg."
+    val staffGroupName = StringSettingRef(componentSettingService,
+        component,
+        "staffGroupName",
+        "STAFF",
+        serverSideOnly = true,
+        fieldName = "Rendező csoport neve",
+        description = "Csoport (group) neve amit megkapnak azok akiknek STAFF role is jár. Ha nem létező, akkor nem kapják meg."
     )
 
-    val adminGroups = SettingProxy(componentSettingService, component,
+    val adminGroups = StringSettingRef(componentSettingService, component,
         "adminGroups", "", serverSideOnly = true,
         fieldName = "ADMIN jogú Pék csoportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val grantGroupGroup = SettingProxy(componentSettingService, component,
-        "grantGroupGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Automatikus GROUP",
+    val grantGroupGroup = ControlGroup(component, "grantGroupGroup", fieldName = "Automatikus GROUP",
         description = "GROUP = Csoport az oldalon belül; először a direkt hozzárendelés, aztán a csoport tagság alapján nézi"
     )
 
-    val organizerGroups = SettingProxy(componentSettingService, component,
+    val organizerGroups = StringSettingRef(componentSettingService, component,
         "organizerGroups", "", serverSideOnly = true,
         fieldName = "Szervező Pék csoportok", description = "A pékes decimális id-k felsorolva, pl: 18,106"
     )
 
-    val organizerGroupName = SettingProxy(componentSettingService, component,
-        "organizerGroupName", "Kiállító", serverSideOnly = true,
-        fieldName = "Szervező csoport neve", description = "Csoport neve amit megkapnak felsorolt pék csoportokból, pl: Kiállító; Ha nem létező, akkor nem kapják meg."
+    val organizerGroupName = StringSettingRef(componentSettingService,
+        component,
+        "organizerGroupName",
+        "Kiállító",
+        serverSideOnly = true,
+        fieldName = "Szervező csoport neve",
+        description = "Csoport neve amit megkapnak felsorolt pék csoportokból, pl: Kiállító; Ha nem létező, akkor nem kapják meg."
     )
 
-    val fallbackGroupName = SettingProxy(componentSettingService, component,
-        "fallbackGroupName", "Vendég", serverSideOnly = true,
-        fieldName = "Fallback csoport neve", description = "Csoport neve, pl: Vendég; Ha nem létező, akkor nem kapják meg."
+    val fallbackGroupName = StringSettingRef(componentSettingService,
+        component,
+        "fallbackGroupName",
+        "Vendég",
+        serverSideOnly = true,
+        fieldName = "Fallback csoport neve",
+        description = "Csoport neve, pl: Vendég; Ha nem létező, akkor nem kapják meg."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val langGroup = SettingProxy(componentSettingService, component,
-        "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Nyelvi beállítások",
-        description = ""
-    )
+    val langGroup = ControlGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
 
-    val topMessage = SettingProxy(componentSettingService, component,
+    val topMessage = StringSettingRef(componentSettingService, component,
         "topMessage", "### Válassz belépési módot!", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Felső szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
-    val bottomMessage = SettingProxy(componentSettingService, component,
+    val bottomMessage = StringSettingRef(componentSettingService, component,
         "bottomMessage", "Mind a két belépési móddal külön felhasználód keletkezik",
         type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Alsó szöveg", description = "Ha üres akkor nincs ilyen"

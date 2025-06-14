@@ -155,7 +155,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFontSize(20f))
 
         val description = tokenComponent.reportDescription.getValue()
-        val minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE
+        val minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toInt()
         val preferredTokenType = tokenComponent.collectRequiredType.getValue()
         val signed = tokensByUsers
             .filter { it.value.count { t -> preferredTokenType == ALL_TOKEN_TYPE || t.token?.type == preferredTokenType } >= minTokenToComplete }

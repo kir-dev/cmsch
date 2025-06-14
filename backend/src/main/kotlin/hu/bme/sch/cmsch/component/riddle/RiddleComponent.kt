@@ -3,10 +3,7 @@ package hu.bme.sch.cmsch.component.riddle
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.race.RaceCategoryEntity
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -63,150 +60,127 @@ class RiddleComponent(
         )
     }
 
-    val riddleGroup = SettingProxy(componentSettingService, component,
-        "riddleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Riddleök",
-        description = ""
+    val riddleGroup = ControlGroup(component, "riddleGroup", fieldName = "Riddleök")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Riddleök", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Riddleök",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Riddleök", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val shadowBanModerationGroup = SettingProxy(componentSettingService, component,
-        "shadowBanModerationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+    val shadowBanModerationGroup = ControlGroup(component, "shadowBanModerationGroup",
         fieldName = "Riddle beadások moderálása - Shadow Ban",
         description = "Küldjük el pihenni a \"túl aktív\" játékosokat, de csak titokban. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
 
-    val userShadowBanList = SettingProxy(componentSettingService, component,
+    val userShadowBanList = StringSettingRef(componentSettingService, component,
         "userShadowBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
         fieldName = "Tiltott játékosok listája",
         description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani"
     )
 
-    val groupShadowBanList = SettingProxy(componentSettingService, component,
+    val groupShadowBanList = StringSettingRef(componentSettingService, component,
         "groupShadowBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
-        fieldName = "Tiltott csoportok listája", description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
+        fieldName = "Tiltott csoportok listája",
+        description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val banModerationGroup = SettingProxy(componentSettingService, component,
-        "banModerationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
+    val banModerationGroup = ControlGroup(component, "banModerationGroup",
         fieldName = "Riddle beadások moderálása - Ban",
         description = "Küldjük el pihenni a \"túl aktív\" játékosokat. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
 
-    val userBanList = SettingProxy(componentSettingService, component,
+    val userBanList = StringSettingRef(componentSettingService, component,
         "userBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
         fieldName = "Tiltott játékosok listája",
         description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani"
     )
 
-    val groupBanList = SettingProxy(componentSettingService, component,
+    val groupBanList = StringSettingRef(componentSettingService, component,
         "groupBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
-        fieldName = "Tiltott csoportok listája", description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
+        fieldName = "Tiltott csoportok listája",
+        description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val scoringGroup = SettingProxy(componentSettingService, component,
-        "scoringGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Pontozás",
-        description = ""
+    val scoringGroup = ControlGroup(component, "scoringGroup", fieldName = "Pontozás")
+
+    val hintScorePercent = NumberSettingRef(componentSettingService, component,
+        "hintScorePercent", 100, serverSideOnly = true, fieldName = "Hint pont érték", strictConversion = false,
+        description = "Ennyi százaléka lesz a hinttel megoldott riddle pont értéke a hint nélkül megoldottnak"
     )
 
-    val hintScorePercent = SettingProxy(componentSettingService, component,
-        "hintScorePercent", "100", serverSideOnly = true, type = SettingType.NUMBER,
-        fieldName = "Hint pont érték", description = "Ennyi százaléka lesz a hinttel megoldott riddle pont " +
-                "értéke a hint nélkül megoldottnak"
-    )
-
-    val saveFailedAttempts = SettingProxy(componentSettingService, component,
-        "saveFailedAttempts", "false", type = SettingType.BOOLEAN,
-        fieldName = "Hibás válaszok számának mentése",
+    val saveFailedAttempts = BooleanSettingRef(componentSettingService, component,
+        "saveFailedAttempts", false, fieldName = "Hibás válaszok számának mentése",
         description = "Jelentős plusz erőforrással jár ennek a használata ha sokan riddleöznek"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val answerGroup = SettingProxy(componentSettingService, component,
-        "answerGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Válaszok ellenőrzése",
+    val answerGroup = ControlGroup(component, "answerGroup", fieldName = "Válaszok ellenőrzése",
         description = "A transzformációt a beküldött és a riddleben található megoldásra is futtatjuk," +
                 " tehát nem kell pl. ékezetek nélkülire átírni a megoldásokat."
     )
 
-    val ignoreCase = SettingProxy(componentSettingService, component,
-        "ignoreCase", "true", type = SettingType.BOOLEAN,
-        fieldName = "Kis/nagy betű ignorálása",
+    val ignoreCase = BooleanSettingRef(componentSettingService, component,
+        "ignoreCase", true, fieldName = "Kis/nagy betű ignorálása",
         description = "A válaszoknál nem számít a kis- és nagybetű"
     )
 
-    val ignoreWhitespace = SettingProxy(componentSettingService, component,
-        "ignoreWhitespace", "false", type = SettingType.BOOLEAN,
-        fieldName = "Elválasztás ignorálása",
+    val ignoreWhitespace = BooleanSettingRef(componentSettingService, component,
+        "ignoreWhitespace", false, fieldName = "Elválasztás ignorálása",
         description = "A válaszoknál nem számít a szavak elválasztása (szóköz, kötőjel, &, +, vessző)"
     )
 
-    val ignoreAccent = SettingProxy(componentSettingService, component,
-        "ignoreAccent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Ékezetek ignorálása",
+    val ignoreAccent = BooleanSettingRef(componentSettingService, component,
+        "ignoreAccent", false, fieldName = "Ékezetek ignorálása",
         description = "A válaszoknál nem számítanak az ékezetek (áéíóöőúüű)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val skipGroup = SettingProxy(componentSettingService, component,
-        "skipGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Átugrás funkció",
+    val skipGroup = ControlGroup(component, "skipGroup", fieldName = "Átugrás funkció",
         description = "Bizonyos megoldó létszám fölött átugorható a riddle"
     )
 
-    val skipEnabled = SettingProxy(componentSettingService, component,
-        "skipEnabled", "true", type = SettingType.BOOLEAN,
-        fieldName = "Átugrás bekapcsolva",
+    val skipEnabled = BooleanSettingRef(componentSettingService, component,
+        "skipEnabled", true, fieldName = "Átugrás bekapcsolva",
         description = "A riddle átugrás gomb elérhető"
     )
 
-    val skipAfterGroupsSolved = SettingProxy(componentSettingService, component,
-        "skipAfterGroupsSolved", "20", type = SettingType.NUMBER,
-        fieldName = "Átugrás ennyi megoldó után",
+    val skipAfterGroupsSolved = NumberSettingRef(componentSettingService, component,
+        "skipAfterGroupsSolved", 20, fieldName = "Átugrás ennyi megoldó után", strictConversion = false,
         description = "Ennyi csapat vagy felhasználó megoldása után elérhető a gomb"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val microserviceGroup = SettingProxy(componentSettingService, component,
-        "microserviceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Riddle microservice",
+    val microserviceGroup = ControlGroup(component, "microserviceGroup", fieldName = "Riddle microservice",
         description = "A riddle megoldások kiszervezhetőek egy külön microservicebe"
     )
 
-    val microserviceNodeBaseUrl = SettingProxy(componentSettingService, component,
+    val microserviceNodeBaseUrl = StringSettingRef(componentSettingService, component,
         "microserviceNodeBaseUrl", "http://<pod>.<namespace>.svc.cluster.local",
-        serverSideOnly = true, type = SettingType.TEXT,
+        serverSideOnly = true, type = SettingType.URL,
         fieldName = "Riddle node base URL-je",
         description = "Ezen a címen érhető el clusteren belül a riddle node. Ez a formátum: http://<pod>.<namespace>.svc.cluster.local"
     )
 
-    val microserviceSyncEnabled = SettingProxy(componentSettingService, component,
-        "microserviceSyncEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Beállítások szinkronizációja",
+    val microserviceSyncEnabled = BooleanSettingRef(componentSettingService, component,
+        "microserviceSyncEnabled", false, fieldName = "Beállítások szinkronizációja",
         description = "Ha egy riddle módosul akkor küld például értesítést a nodenak, hogy invalidálja a cachet (nincs implementálva)"
     )
 

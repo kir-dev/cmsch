@@ -2,10 +2,7 @@ package hu.bme.sch.cmsch.component.leaderboard
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -60,148 +57,121 @@ class LeaderBoardComponent(
         )
     }
 
-    val leaderboardGroup = SettingProxy(componentSettingService, component,
-        "leaderboardGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Toplista",
-        description = ""
+    val leaderboardGroup = ControlGroup(component, "leaderboardGroup", fieldName = "Toplista")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Toplista", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Toplista",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Toplista", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = SettingProxy(componentSettingService, component,
-        "logicGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Működés",
-        description = ""
-    )
+    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
 
-    val leaderboardEnabled = SettingProxy(componentSettingService, component,
-        "leaderboardEnabled", "true", type = SettingType.BOOLEAN,
+    val leaderboardEnabled = BooleanSettingRef(componentSettingService, component,
+        "leaderboardEnabled", true,
         fieldName = "Toplista aktív", description = "A toplista leküldésre kerül"
     )
 
-    val leaderboardDetailsEnabled = SettingProxy(componentSettingService, component,
-        "leaderboardDetailsEnabled", "false", type = SettingType.BOOLEAN,
+    val leaderboardDetailsEnabled = BooleanSettingRef(componentSettingService, component,
+        "leaderboardDetailsEnabled", false,
         fieldName = "Toplista részletek aktív", description = "A részletes toplista leküldésre kerül (Csapatonként)"
     )
 
-    val leaderboardDetailsByCategoryEnabled = SettingProxy(componentSettingService, component,
-        "leaderboardDetailsByCategoryEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Toplista kategória szerint aktív", description = "A részletes toplista leküldésre kerül (Kategóriánként)"
+    val leaderboardDetailsByCategoryEnabled = BooleanSettingRef(componentSettingService,
+        component, "leaderboardDetailsByCategoryEnabled", false, fieldName = "Toplista kategória szerint aktív",
+        description = "A részletes toplista leküldésre kerül (Kategóriánként)"
     )
 
-    val leaderboardFrozen = SettingProxy(componentSettingService, component,
-        "leaderboardFrozen", "true", type = SettingType.BOOLEAN,
+    val leaderboardFrozen = BooleanSettingRef(componentSettingService, component,
+        "leaderboardFrozen", true,
         fieldName = "Toplista befagyasztott", description = "A toplista értéke be van fagyasztva"
     )
 
-    val showScores = SettingProxy(componentSettingService, component,
-        "showScores", "false", type = SettingType.BOOLEAN,
-        fieldName = "Pontok mutatása",
+    val showScores = BooleanSettingRef(componentSettingService, component,
+        "showScores", false, fieldName = "Pontok mutatása",
         description = "Ha igaz, akkor látszódnak a pontok, ha hamis, akkor csak a sorrend"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val calcGroup = SettingProxy(componentSettingService, component,
-        "calcGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Pont számítás",
-        description = ""
-    )
+    val calcGroup = ControlGroup(component, "calcGroup", fieldName = "Pont számítás")
 
-    val tasksPercent = SettingProxy(componentSettingService, component,
-        "tasksPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+    val tasksPercent = NumberSettingRef(componentSettingService, component,
+        "tasksPercent", 100, serverSideOnly = true, strictConversion = false,
         fieldName = "Feladatok szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
-    val riddlesPercent = SettingProxy(componentSettingService, component,
-        "riddlesPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+    val riddlesPercent = NumberSettingRef(componentSettingService, component,
+        "riddlesPercent", 100, serverSideOnly = true, strictConversion = false,
         fieldName = "Riddle szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
-    val challengesPercent = SettingProxy(componentSettingService, component,
-        "challengesPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+    val challengesPercent = NumberSettingRef(componentSettingService, component,
+        "challengesPercent", 100, serverSideOnly = true, strictConversion = false,
         fieldName = "Beadások szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
-    val tokenPercent = SettingProxy(componentSettingService, component,
-        "tokenPercent", "100", type = SettingType.NUMBER, serverSideOnly = true,
+    val tokenPercent = NumberSettingRef(componentSettingService, component,
+        "tokenPercent", 100, serverSideOnly = true, strictConversion = false,
         fieldName = "QR Kódok szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = SettingProxy(componentSettingService, component,
-        "displayGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Kijelzés",
-        description = ""
-    )
+    val displayGroup = ControlGroup(component, "displayGroup", fieldName = "Kijelzés")
 
-    val minScoreToShow = SettingProxy(componentSettingService, component,
-        "minScoreToShow", "1", type = SettingType.NUMBER,
-        fieldName = "Legalább ennyi ponttal",
+    val minScoreToShow = NumberSettingRef(componentSettingService, component,
+        "minScoreToShow", 1, fieldName = "Legalább ennyi ponttal", strictConversion = false,
         description = "Legalább ennyi ponttal mutassa a felhasználókat és csoportokat"
     )
 
-    val showUserBoard = SettingProxy(componentSettingService, component,
-        "showUserBoard", "false", type = SettingType.BOOLEAN,
-        fieldName = "Felhasználói toplista mutatása",
+    val showUserBoard = BooleanSettingRef(componentSettingService, component,
+        "showUserBoard", false, fieldName = "Felhasználói toplista mutatása",
         description = "Felhasználói toplista látható legyen-e"
     )
 
-    val maxUserEntryToShow = SettingProxy(componentSettingService, component,
-        "maxUserEntryToShow", "-1", type = SettingType.NUMBER,
-        fieldName = "Toplista sorainak száma",
+    val maxUserEntryToShow = NumberSettingRef(componentSettingService, component,
+        "maxUserEntryToShow", -1, fieldName = "Toplista sorainak száma", strictConversion = false,
         description = "Hány felhasználót mutasson, -1 = az összeset"
     )
 
-    val showGroupBoard = SettingProxy(componentSettingService, component,
-        "showGroupBoard", "false", type = SettingType.BOOLEAN,
-        fieldName = "Csoport toplista mutatása",
+    val showGroupBoard = BooleanSettingRef(componentSettingService, component,
+        "showGroupBoard", false, fieldName = "Csoport toplista mutatása",
         description = "Csoport toplista látható legyen-e"
     )
 
-    val maxGroupEntryToShow = SettingProxy(componentSettingService, component,
-        "maxGroupEntryToShow", "-1", type = SettingType.NUMBER,
-        fieldName = "Toplista sorainak száma",
+    val maxGroupEntryToShow = NumberSettingRef(componentSettingService, component,
+        "maxGroupEntryToShow", -1, fieldName = "Toplista sorainak száma", strictConversion = false,
         description = "Hány csoportot mutasson, -1 = az összeset"
     )
 
-    val showGroupOfUser = SettingProxy(componentSettingService, component,
-        "showGroupOfUser", "false", type = SettingType.BOOLEAN,
-        fieldName = "Felhasználó csoportjának kijelzése",
+    val showGroupOfUser = BooleanSettingRef(componentSettingService, component,
+        "showGroupOfUser", false, fieldName = "Felhasználó csoportjának kijelzése",
         description = "A felhasználói listán a felhasználó csoportja látható legyen-e"
     )
 
-    val searchEnabled = SettingProxy(componentSettingService, component,
-        "searchEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Keresés elérhető",
+    val searchEnabled = BooleanSettingRef(componentSettingService, component,
+        "searchEnabled", false, fieldName = "Keresés elérhető",
         description = "Legyen-e kereső az oldal tetején"
     )
 
-    val showTokenCountByRarity = SettingProxy(componentSettingService, component,
-        "showTokenCountByRarity", "false", type = SettingType.BOOLEAN,
-        fieldName = "Begyűjtött tokenek száma ritkaság szerint",
+    val showTokenCountByRarity = BooleanSettingRef(componentSettingService, component,
+        "showTokenCountByRarity", false, fieldName = "Begyűjtött tokenek száma ritkaság szerint",
         description = "Legyen-e látható a begyűjtött tokenek száma ritkaság szerint, módosítás után nyomj egy újraszámolást"
     )
 
-    val showTokenMaxCountByRarity = SettingProxy(componentSettingService, component,
-        "showTokenMaxCountByRarity", "false", type = SettingType.BOOLEAN,
-        fieldName = "Összes token szám ritkaság szerint",
+    val showTokenMaxCountByRarity = BooleanSettingRef(componentSettingService, component,
+        "showTokenMaxCountByRarity", false, fieldName = "Összes token szám ritkaság szerint",
         description = "Legyen-e látható az összesen begyűjthető tokenek száma ritkaság szerint"
     )
 

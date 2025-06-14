@@ -51,7 +51,7 @@ class NewsApiController(
         ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header")
     ])
     fun newsArticle(@PathVariable path: String, auth: Authentication?): ResponseEntity<NewsEntity> {
-        if (!newsComponent.showDetails.isValueTrue())
+        if (!newsComponent.showDetails.getValue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         val user = auth?.getUserOrNull()

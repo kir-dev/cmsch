@@ -4,10 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -53,96 +50,76 @@ class EmailComponent(
         )
     }
 
-    val emailGroup = SettingProxy(componentSettingService, component,
-        "emailGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Email küldés",
-        description = ""
-    )
+    val emailGroup = ControlGroup(component, "emailGroup", fieldName = "Email küldés")
 
-    val emailProvider = SettingProxy(componentSettingService, component,
-        "emailProvider", "kirmail",
-        fieldName = "Email szolgáltató", serverSideOnly = true,
+    val emailProvider = StringSettingRef(componentSettingService, component,
+        "emailProvider", "kirmail", fieldName = "Email szolgáltató", serverSideOnly = true,
         description = "Ezek lehetnek: kirmail, mailgun (ettől még be kell kapcsolni őket lentebb)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val mailgunGroup = SettingProxy(componentSettingService, component,
-        "mailgunGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Mailgun beállítások",
-        description = ""
+    val mailgunGroup = StringSettingRef(
+        componentSettingService, component, "mailgunGroup",
+        "", type = SettingType.COMPONENT_GROUP, persist = false, fieldName = "Mailgun beállítások",
     )
 
-    val enableMailgun = SettingProxy(componentSettingService, component,
-        "enableMailgun", "false", type = SettingType.BOOLEAN,
-        fieldName = "Küldés Mailgunnal", serverSideOnly = true,
+    val enableMailgun = BooleanSettingRef(componentSettingService, component,
+        "enableMailgun", false, fieldName = "Küldés Mailgunnal", serverSideOnly = true,
         description = "Csak akkor működik ha API key meg van adva környezeti változónak"
     )
 
-    val mailgunEmailAccount = SettingProxy(componentSettingService, component,
-        "mailgunEmailAccount", "noreply",
-        fieldName = "Email felhasználó", serverSideOnly = true,
+    val mailgunEmailAccount = StringSettingRef(componentSettingService, component,
+        "mailgunEmailAccount", "noreply", fieldName = "Email felhasználó", serverSideOnly = true,
         description = "Ezzel az email felhasználónévvel lesznek kiküldve."
     )
 
-    val mailgunAccountName = SettingProxy(componentSettingService, component,
-        "mailgunAccountName", "Rendezők",
-        fieldName = "Email teljes név", serverSideOnly = true,
+    val mailgunAccountName = StringSettingRef(componentSettingService, component,
+        "mailgunAccountName", "Rendezők", fieldName = "Email teljes név", serverSideOnly = true,
         description = "Ez a név lesz elküldve a felhasználóhoz"
     )
 
-    val mailgunDomain = SettingProxy(componentSettingService, component,
-        "mailgunDomain", "golya.sch-bme.hu",
-        fieldName = "Email domainje", serverSideOnly = true,
+    val mailgunDomain = StringSettingRef(componentSettingService, component,
+        "mailgunDomain", "golya.sch-bme.hu", fieldName = "Email domainje", serverSideOnly = true,
         description = "Ez a @ utáni rész. Fel kell konfigolva legyen, nem lehet akármit ideírni."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val kirmailGroup = SettingProxy(componentSettingService, component,
-        "kirmailGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Kir Mail beállítások",
-        description = ""
-    )
+    val kirmailGroup = ControlGroup(component, "kirmailGroup", fieldName = "Kir Mail beállítások")
 
-    val enableKirMail = SettingProxy(componentSettingService, component,
-        "enableKirMail", "false", type = SettingType.BOOLEAN,
-        fieldName = "Küldés Kir Maillel", serverSideOnly = true,
+    val enableKirMail = BooleanSettingRef(componentSettingService, component,
+        "enableKirMail", false, fieldName = "Küldés Kir Maillel", serverSideOnly = true,
         description = "Csak akkor működik ha token be van állítva"
     )
 
-    val kirmailToken = SettingProxy(componentSettingService, component,
-        "kirmailToken", "",
-        fieldName = "Kir Mail Token", serverSideOnly = true, minRoleToEdit = RoleType.SUPERUSER,
-        description = "Ez az access token. Generáld az admin.mail.kir-dev.hu-n!"
+    val kirmailToken = StringSettingRef(componentSettingService, component,
+        "kirmailToken", "", fieldName = "Kir Mail Token", serverSideOnly = true,
+        minRoleToEdit = RoleType.SUPERUSER, description = "Ez az access token. Generáld az admin.mail.kir-dev.hu-n!"
     )
 
-    val kirmailEmailAddress = SettingProxy(componentSettingService, component,
+    val kirmailEmailAddress = StringSettingRef(componentSettingService, component,
         "kirmailEmailAddress", "noreply-golyatabor@sch.bme.hu",
-        fieldName = "Kir Mail Email cím", serverSideOnly = true,
-        description = "Erről a címről fogja küldeni"
+        fieldName = "Kir Mail Email cím", serverSideOnly = true, description = "Erről a címről fogja küldeni"
     )
 
-    val kirmailAccountName = SettingProxy(componentSettingService, component,
-        "kirmailAccountName", "Rendezők",
-        fieldName = "Kir Mail Email teljes név", serverSideOnly = true,
+    val kirmailAccountName = StringSettingRef(componentSettingService, component,
+        "kirmailAccountName", "Rendezők", fieldName = "Kir Mail Email teljes név", serverSideOnly = true,
         description = "Ez a név lesz elküldve a felhasználóhoz"
     )
 
-    val kirmailReplyTo = SettingProxy(componentSettingService, component,
-        "kirmailReplyTo", "golyatabor@sch.bme.hu",
-        fieldName = "Kir Mail Válasz emailcím", serverSideOnly = true,
+    val kirmailReplyTo = StringSettingRef(componentSettingService, component,
+        "kirmailReplyTo", "golyatabor@sch.bme.hu", fieldName = "Kir Mail Válasz emailcím", serverSideOnly = true,
         description = "Erre küldjék a választ a felhasználók (reply-to)"
     )
 
-    val kirmailQueue = SettingProxy(componentSettingService, component,
-        "kirmailQueue", "ms-golya",
-        fieldName = "Kir Mail Queue", serverSideOnly = true,
+    val kirmailQueue = StringSettingRef(componentSettingService, component,
+        "kirmailQueue", "ms-golya", fieldName = "Kir Mail Queue", serverSideOnly = true,
         description = "Erre küldjék a választ a felhasználók (reply-to)"
     )
 

@@ -34,7 +34,7 @@ class AdmissionService(
         gate: CmschUser,
         token: String,
     ): AdmissionResponse {
-        if (admissionComponent.saveEntryLog.isValueTrue()) {
+        if (admissionComponent.saveEntryLog.getValue()) {
             admissionEntryRepository.save(
                 AdmissionEntryEntity(
                     userName = response.userEntity?.fullName ?: response.userName,

@@ -56,7 +56,7 @@ class EventApiController(
         ApiResponse(responseCode = "404", description = "No events found with this path")
     ])
     fun event(@PathVariable path: String, auth: Authentication?): ResponseEntity<SingleEventView> {
-        if (!eventComponent.enableDetailedView.isValueTrue())
+        if (!eventComponent.enableDetailedView.getValue())
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         val user = auth?.getUserOrNull()

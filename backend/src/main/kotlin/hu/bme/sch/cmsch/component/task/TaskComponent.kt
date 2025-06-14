@@ -2,10 +2,7 @@ package hu.bme.sch.cmsch.component.task
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -53,52 +50,43 @@ class TaskComponent(
         )
     }
 
-    val taskGroup = SettingProxy(componentSettingService, component,
-        "taskGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Feladatok",
-        description = ""
+    val taskGroup = ControlGroup(component, "taskGroup", fieldName = "Feladatok")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Feladatok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Feladatok",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Feladatok", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val langGroup = SettingProxy(componentSettingService, component,
-        "langGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Nyelvi beállítások",
-        description = ""
-    )
+    val langGroup = ControlGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
 
-    val profileRequiredTitle = SettingProxy(componentSettingService, component,
+    val profileRequiredTitle = StringSettingRef(componentSettingService, component,
         "profileRequiredTitle", "Kötelezően kitöltendő", type = SettingType.TEXT,
         fieldName = "Kötelező feladatok fejléc szövege", description = "Feladatok (PROFILE_REQUIRED) fejléc szövege"
     )
 
-    val profileRequiredMessage = SettingProxy(componentSettingService, component,
+    val profileRequiredMessage = StringSettingRef(componentSettingService, component,
         "profileRequiredMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Kötelező feladatok alatti szöveg",
         description = "Kötelező feladatok (PROFILE_REQUIRED) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs."
     )
 
-    val regularTitle = SettingProxy(componentSettingService, component,
+    val regularTitle = StringSettingRef(componentSettingService, component,
         "regularTitle", "Feladatok", type = SettingType.TEXT,
         fieldName = "Feladatok fejléc szövege", description = "Feladatok (REGULAR) fejléc szövege"
     )
 
-    val regularMessage = SettingProxy(componentSettingService, component,
+    val regularMessage = StringSettingRef(componentSettingService, component,
         "regularMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Feladatok alatti szöveg",
         description = "Feladatok (REGULAR) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs."
@@ -106,56 +94,46 @@ class TaskComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val exportGroup = SettingProxy(componentSettingService, component,
-        "exportGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Beadások exportálása",
-        description = ""
+    val exportGroup = ControlGroup(component, "exportGroup", fieldName = "Beadások exportálása")
+
+    val exportEnabled = BooleanSettingRef(componentSettingService, component,
+        "exportEnabled", false, serverSideOnly = true, fieldName = "Endpoint elérhető",
+        description = "Ha be van kapcsolva akkor, a /export-tasks endpoint elérhetővé válik"
     )
 
-    val exportEnabled = SettingProxy(componentSettingService, component,
-        "exportEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Endpoint elérhető", description = "Ha be van kapcsolva akkor, a /export-tasks endpoint elérhetővé válik"
+    val leadOrganizerQuote = StringSettingRef(componentSettingService, component,
+        "leadOrganizerQuote", "\"Gratulálunk a csapatoknak!\"\n\n- A főrendezők", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Főrendezők üzenete", description = "Ha üres akkor nincs ilyen"
     )
 
-    val leadOrganizerQuote = SettingProxy(componentSettingService, component,
-        "leadOrganizerQuote", "\"Gratulálunk a csapatoknak!\"\n\n- A főrendezők",
-        type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Főrendezők üzenete", description = "Ha üres akkor nincs ilyen"
-    )
-
-    val logoUrl = SettingProxy(componentSettingService, component,
+    val logoUrl = StringSettingRef(componentSettingService, component,
         "logoUrl", "https://", type = SettingType.URL,
         fieldName = "Logó URL-je", description = "Az esemény logójának az URL-je"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = SettingProxy(componentSettingService, component,
-        "logicGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Működés",
-        description = ""
-    )
+    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
 
-    val resubmissionEnabled = SettingProxy(componentSettingService, component,
-        "resubmissionEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Újraküldés lehetséges",
+    val resubmissionEnabled = BooleanSettingRef(componentSettingService, component,
+        "resubmissionEnabled", false, fieldName = "Újraküldés lehetséges",
         description = "A lejárati idő végéig újraküldhetőek a beadások, ha már javítva volt, akkor nullázódik a pont."
     )
 
-    val scoreVisible = SettingProxy(componentSettingService, component,
-        "scoreVisible", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Pontok látszódnak közben",
+    val scoreVisible = BooleanSettingRef(componentSettingService, component,
+        "scoreVisible", true, serverSideOnly = true, fieldName = "Pontok látszódnak közben",
         description = "A beadási határidő vége előtt is látszik a pont az értékelt feladatokra"
     )
 
-    val scoreVisibleAtAll = SettingProxy(componentSettingService, component,
-        "scoreVisibleAtAll", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Pontok látszódnak egyáltalán", description = "Bármikor látszódjon-e a megszerzett pont (ha ki van " +
+    val scoreVisibleAtAll = BooleanSettingRef(componentSettingService, component,
+        "scoreVisibleAtAll", true, serverSideOnly = true, fieldName = "Pontok látszódnak egyáltalán",
+        description = "Bármikor látszódjon-e a megszerzett pont (ha ki van " +
                 "kapcsolva az nem látszik egyáltalán a feladatnál, csak az összesítésben)"
     )
 
-    val enableViewAudit = SettingProxy(componentSettingService, component,
-        "enableViewAudit", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Feladatok megnyitásának logolása", description = "Mentésre kerüljön-e ha valaki megnyit egy feladatot"
+    val enableViewAudit = BooleanSettingRef(componentSettingService, component,
+        "enableViewAudit", false, serverSideOnly = true, fieldName = "Feladatok megnyitásának logolása",
+        description = "Mentésre kerüljön-e ha valaki megnyit egy feladatot"
     )
 
 }

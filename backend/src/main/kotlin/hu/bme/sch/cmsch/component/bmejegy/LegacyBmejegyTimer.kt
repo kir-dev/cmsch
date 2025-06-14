@@ -47,9 +47,9 @@ class LegacyBmejegyTimer(
     @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000 * 10)
     fun tick() {
         ++ticks
-        if (ticks > (bmejegyComponent.syncInterval.getIntValue(0))) {
+        if (ticks > (bmejegyComponent.syncInterval.getValue())) {
             ticks = 0
-            if (!bmejegyComponent.syncEnabled.isValueTrue()) {
+            if (!bmejegyComponent.syncEnabled.getValue()) {
                 log.info("[BMEJEGY] Synchronizing currently disabled")
                 return
             }

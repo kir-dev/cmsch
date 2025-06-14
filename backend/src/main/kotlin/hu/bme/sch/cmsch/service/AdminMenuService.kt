@@ -69,7 +69,7 @@ class AdminMenuService(
                     || environment.activeProfiles.contains("test")
                     || environment.activeProfiles.contains("dev")) {
                 "dev"
-            } else if (applicationComponent.isLive.isValueTrue()) {
+            } else if (applicationComponent.isLive.getValue()) {
                 "live"
             } else {
                 "staging"

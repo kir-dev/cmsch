@@ -127,7 +127,7 @@ class LocationService(
 
     fun findLocationsOfGroupName(group: String): List<MapMarker> {
         val locations = mutableListOf<MapMarker>()
-        val visibilityDuration = locationComponent.visibleDuration.getIntValue(default = 0)
+        val visibilityDuration = locationComponent.visibleDuration.getValue()
         val currentTime = clock.getTimeInSeconds()
 
         locations.addAll(tokenToLocationMapping.values
@@ -153,26 +153,26 @@ class LocationService(
     }
 
     private fun mapDisplayName(location: LocationEntity): String {
-        return if (locationComponent.showGroupName.isValueTrue() && location.groupName.isNotBlank()) {
-            if (locationComponent.showUserName.isValueTrue()) {
-                if (locationComponent.showAlias.isValueTrue() && location.alias.isNotBlank()) {
+        return if (locationComponent.showGroupName.getValue() && location.groupName.isNotBlank()) {
+            if (locationComponent.showUserName.getValue()) {
+                if (locationComponent.showAlias.getValue() && location.alias.isNotBlank()) {
                     "${location.userName} (${location.alias}) [${location.groupName}]"
                 } else {
                     "${location.userName} [${location.groupName}]"
                 }
-            } else if (locationComponent.showAlias.isValueTrue()) {
+            } else if (locationComponent.showAlias.getValue()) {
                 "${location.alias} [${location.groupName}]"
             } else {
                 location.groupName
             }
         } else {
-            if (locationComponent.showUserName.isValueTrue()) {
-                if (locationComponent.showAlias.isValueTrue() && location.alias.isNotBlank()) {
+            if (locationComponent.showUserName.getValue()) {
+                if (locationComponent.showAlias.getValue() && location.alias.isNotBlank()) {
                     "${location.userName} (${location.alias})"
                 } else {
                     location.userName
                 }
-            } else if (locationComponent.showAlias.isValueTrue()) {
+            } else if (locationComponent.showAlias.getValue()) {
                 location.alias
             } else {
                 ""

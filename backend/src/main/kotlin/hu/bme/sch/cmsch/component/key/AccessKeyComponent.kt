@@ -2,10 +2,7 @@ package hu.bme.sch.cmsch.component.key
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -49,75 +46,72 @@ class AccessKeyComponent(
         )
     }
 
-    val menuGroup = SettingProxy(componentSettingService, component,
-        "menuGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Menü megjelenése",
-        description = ""
+    val menuGroup = ControlGroup(component, "menuGroup", fieldName = "Menü megjelenése")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Azonosítás", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Azonosítás",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Azonosítás", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val appearanceGroup = SettingProxy(componentSettingService, component,
-        "appearanceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Megjelenés",
-        description = ""
-    )
+    val appearanceGroup = ControlGroup(component, "appearanceGroup", fieldName = "Megjelenés")
 
-    val disabledErrorMessage = SettingProxy(componentSettingService, component,
+    val disabledErrorMessage = StringSettingRef(
+        componentSettingService, component,
         "disabledErrorMessage", "Jelenleg nem lehet kódot beváltani",
         fieldName = "Kikapcsolt hibaüzenet", description = "Ez jelenik meg ha ki van kapcsolva",
         serverSideOnly = true,
     )
 
-    val invalidCodeErrorMessage = SettingProxy(componentSettingService, component,
+    val invalidCodeErrorMessage = StringSettingRef(
+        componentSettingService, component,
         "invalidCodeErrorMessage", "Nem megfelelő kód",
         fieldName = "Hibás kód hibaüzenet", description = "Ez jelenik meg ha hibás kódot írnak be",
         serverSideOnly = true,
     )
 
-    val alreadyUsedErrorMessage = SettingProxy(componentSettingService, component,
+    val alreadyUsedErrorMessage = StringSettingRef(
+        componentSettingService, component,
         "alreadyUsedErrorMessage", "Ez a kód már be lett váltva",
         fieldName = "Kód be lett váltva hibaüzenet",
         description = "Ez jelenik meg ha ez a kód már be lett váltva",
         serverSideOnly = true,
     )
 
-    val mustLogInErrorMessage = SettingProxy(componentSettingService, component,
+    val mustLogInErrorMessage = StringSettingRef(
+        componentSettingService, component,
         "mustLogInErrorMessage", "Nem vagy bejelentkezve",
         fieldName = "Nem lett bejelentkezve hibaüzenet",
         description = "Ez jelenik meg ha ez a nincs bejelentkezve",
         serverSideOnly = true,
     )
 
-    val youUsedErrorMessage = SettingProxy(componentSettingService, component,
+    val youUsedErrorMessage = StringSettingRef(
+        componentSettingService, component,
         "youUsedErrorMessage", "Te már használtál fel kódot",
         fieldName = "Te már használtál fel hibaüzenet",
         description = "Ez jelenik meg ha a beváltó már használt fel kódot",
         serverSideOnly = true,
     )
 
-    val topMessage = SettingProxy(componentSettingService, component,
+    val topMessage = StringSettingRef(componentSettingService, component,
         "topMessage", "",
         type = SettingType.LONG_TEXT_MARKDOWN, serverSideOnly = true,
         fieldName = "Lapon megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen."
     )
 
-    val fieldName = SettingProxy(componentSettingService, component,
+    val fieldName = StringSettingRef(
+        componentSettingService, component,
         "fieldName", "Kód",
         fieldName = "Mező neve", description = "Ez jelenik meg a beviteli mező felett",
         serverSideOnly = true,
@@ -125,23 +119,16 @@ class AccessKeyComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = SettingProxy(componentSettingService, component,
-        "logicGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Működés",
-        description = ""
-    )
+    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
 
-    val enabled = SettingProxy(componentSettingService, component,
-        "enabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Lehet beváltani",
+    val enabled = BooleanSettingRef(componentSettingService, component,
+        "enabled", false, serverSideOnly = true, fieldName = "Lehet beváltani",
         description = "Ha ez be van kapcsolva, akkor lehetséges csak beváltani kulcsokat"
     )
 
-    val canOneUserUseMultiple = SettingProxy(componentSettingService, component,
-        "canOneUserUseMultiple", "false", type = SettingType.BOOLEAN,
-        fieldName = "Egy felhasználó többet is beválthat", serverSideOnly = true,
-        description = "Ha ez be van kapcsolva, akkor több kódot is beválthat egy felhasználó," +
-                " de a szabályok felülírhatják az előző hatását."
+    val canOneUserUseMultiple = BooleanSettingRef(componentSettingService, component,
+        "canOneUserUseMultiple", false, fieldName = "Egy felhasználó többet is beválthat", serverSideOnly = true,
+        description = "Ha ez be van kapcsolva, akkor több kódot is beválthat egy felhasználó, de a szabályok felülírhatják az előző hatását."
     )
 
 }

@@ -7,8 +7,10 @@ import hu.bme.sch.cmsch.dto.SearchableResourceType
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.PermissionValidator
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
+import hu.bme.sch.cmsch.setting.MutableSetting
+import hu.bme.sch.cmsch.setting.Setting
+import hu.bme.sch.cmsch.setting.SettingRef
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
@@ -28,11 +30,11 @@ abstract class ComponentBase(
 
     internal val log = LoggerFactory.getLogger(javaClass)
 
-    open val menuDisplayName: SettingProxy? = null
+    open val menuDisplayName: SettingRef<String>? = null
 
-    abstract val minRole: MinRoleSettingProxy
+    abstract val minRole: MinRoleSettingRef
 
-    abstract val allSettings: List<SettingProxy>
+    abstract val allSettings: List<Setting<*>>
 
     val menuPriority: Int
         get() = env.getProperty("hu.bme.sch.cmsch.${component}.priority")?.toIntOrNull() ?: 0
@@ -70,16 +72,16 @@ abstract class ComponentBase(
 
     // This saves the default value if not present and loads the property into the cache if enabled
     private fun touchDefinedProperties() {
-        allSettings.forEach { it.getValue() }
+        allSettings.filterIsInstance<MutableSetting<*>>().forEach { it.getValue() }
     }
 
     private fun validateAllSettingsAdded() {
         val settingFields: List<String> = javaClass.declaredFields
-            .filter { SettingProxy::class.java.isAssignableFrom(it.type) }
+            .filter { SettingRef::class.java.isAssignableFrom(it.type) }
             .map {
                 val accessible = it.canAccess(this)
                 it.isAccessible = true
-                val property = (it[this] as SettingProxy).property
+                val property = (it[this] as Setting<*>).property
                 it.isAccessible = accessible
                 return@map property
             }.distinct()
@@ -98,7 +100,7 @@ abstract class ComponentBase(
     fun attachConstants(): Map<String, Any> {
         return allSettings
             .filter { !it.isServerSideOnly }
-            .associate { it.property to it.getMappedValue() }
+            .associate { it.property to it.getValue() }
     }
 
     open fun onPersist() {

@@ -2,11 +2,10 @@ package hu.bme.sch.cmsch.component.proto
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.ImplicitPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -25,7 +24,7 @@ class ProtoComponent(
     "proto",
     "/proto",
     "Prototípusok",
-    ControlPermissions.PERMISSION_CONTROL_APP,
+    ImplicitPermissions.PERMISSION_NOBODY,
     listOf(ProtoEntity::class),
     env
 ) {
@@ -39,15 +38,11 @@ class ProtoComponent(
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val protoGroup = SettingProxy(componentSettingService, component,
-        "protoGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Prototípusok",
-        description = ""
-    )
+    val protoGroup = ControlGroup(component, "protoGroup", fieldName = "Prototípusok")
 
 }

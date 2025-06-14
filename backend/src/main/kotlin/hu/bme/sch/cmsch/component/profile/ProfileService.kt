@@ -84,8 +84,7 @@ class ProfileService(
             tokens = tokenService.map { repo -> repo.getTokensForUser(user) }.orElse(null),
             collectedTokenCount = fetchCollectedTokenCount(user, group, tokenCategoryToDisplay).orElse(null),
             totalTokenCount = fetchTotalTokenCount(tokenCategoryToDisplay).orElse(null),
-            minTokenToComplete = tokenComponent.map { it.collectRequiredTokens.getValue().toIntOrNull() ?: Int.MAX_VALUE }
-                .orElse(null),
+            minTokenToComplete = tokenComponent.map { it.collectRequiredTokens.getValue().toInt() }.orElse(null),
 
             // Task component
             totalTaskCount = tasksService.map { it.getTotalTasksForUser(user) }.orElse(null),
@@ -116,15 +115,15 @@ class ProfileService(
 
     private fun mapQr(user: UserEntity): String? {
         val canSeeQr =
-            profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr.isValueTrue()
-        if (profileComponent.showQrOnlyIfTicketPresent.isValueTrue()
-            && (canSeeQr || profileComponent.showProfilePicture.isValueTrue())) {
+            profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr.getValue()
+        if (profileComponent.showQrOnlyIfTicketPresent.getValue()
+            && (canSeeQr || profileComponent.showProfilePicture.getValue())) {
 
             return if (admissionService.map { it.hasTicket(user.cmschId) }.orElse(false)) user.cmschId else null
         }
 
-        return if (canSeeQr || profileComponent.showProfilePicture.isValueTrue()) {
-            if (profileComponent.bmejegyQrIfPresent.isValueTrue())
+        return if (canSeeQr || profileComponent.showProfilePicture.getValue()) {
+            if (profileComponent.bmejegyQrIfPresent.getValue())
                 fetchBmejegyTicket(user)
             else user.cmschId
         } else null
@@ -186,7 +185,7 @@ class ProfileService(
     private fun fetchLocations(group: GroupEntity?) =
         locationService.map { repo ->
             repo.findLocationsOfGroup(group?.id ?: 0)
-                .filter { it.timestamp + profileComponent.locationTimeout.getIntValue(0) > clock.getTimeInSeconds() }
+                .filter { it.timestamp + profileComponent.locationTimeout.getValue() > clock.getTimeInSeconds() }
                 .map {
                     GroupMemberLocationDto(
                         it.alias.ifBlank { it.userName },

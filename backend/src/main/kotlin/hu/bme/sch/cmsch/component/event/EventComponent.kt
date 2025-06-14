@@ -2,10 +2,7 @@ package hu.bme.sch.cmsch.component.event
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -48,82 +45,62 @@ class EventComponent(
         )
     }
 
-    val eventsGroup = SettingProxy(componentSettingService, component,
-        "eventsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Események",
-        description = ""
+    val eventsGroup = ControlGroup(component, "eventsGroup", fieldName = "Események")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Programok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Programok",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Programok", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val appearanceGroup = SettingProxy(componentSettingService, component,
-        "appearanceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Megjelenés",
-        description = ""
+    val appearanceGroup = ControlGroup(component, "appearanceGroup", fieldName = "Megjelenés")
+
+    val seekToCurrentCurrent = BooleanSettingRef(componentSettingService, component,
+        "seekToCurrentCurrent", false, fieldName = "Tekerjen oda a jelenlegi programhoz"
     )
 
-    val seekToCurrentCurrent = SettingProxy(componentSettingService, component,
-        "seekToCurrentCurrent", "false", type = SettingType.BOOLEAN,
-        fieldName = "Tekerjen oda a jelenlegi programhoz"
+    val separateDays = BooleanSettingRef(componentSettingService, component,
+        "separateDays", false, fieldName = "Külön csoportosítva naponként"
     )
 
-    val separateDays = SettingProxy(componentSettingService, component,
-        "separateDays", "false", type = SettingType.BOOLEAN,
-        fieldName = "Külön csoportosítva naponként"
-    )
-
-    val topMessage = SettingProxy(componentSettingService, component,
+    val topMessage = StringSettingRef(componentSettingService, component,
         "topMessage", "Rövid szöveg a programokról általánosságban", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
-    val searchEnabled = SettingProxy(componentSettingService, component,
-        "searchEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Keresés elérhető",
+    val searchEnabled = BooleanSettingRef(componentSettingService, component,
+        "searchEnabled", false, fieldName = "Keresés elérhető",
         description = "Legyen-e kereső az oldal tetején"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = SettingProxy(componentSettingService, component,
-        "logicGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Működés",
-        description = ""
+    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
+
+    val enableDetailedView = BooleanSettingRef(componentSettingService, component,
+        "enableDetailedView", false, fieldName = "Elérhető a részletes nézet (külön lapon)"
     )
 
-    val enableDetailedView = SettingProxy(componentSettingService, component,
-        "enableDetailedView", "false", type = SettingType.BOOLEAN,
-        fieldName = "Elérhető a részletes nézet (külön lapon)"
+    val filterByCategory = BooleanSettingRef(componentSettingService, component,
+        "filterByCategory", false, fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni"
     )
 
-    val filterByCategory = SettingProxy(componentSettingService, component,
-        "filterByCategory", "false", type = SettingType.BOOLEAN,
-        fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni"
+    val filterByLocation = BooleanSettingRef(componentSettingService, component,
+        "filterByLocation", false, fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni"
     )
 
-    val filterByLocation = SettingProxy(componentSettingService, component,
-        "filterByLocation", "false", type = SettingType.BOOLEAN,
-        fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni"
-    )
-
-    val filterByDay = SettingProxy(componentSettingService, component,
-        "filterByDay", "false", type = SettingType.BOOLEAN,
-        fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni"
+    val filterByDay = BooleanSettingRef(componentSettingService, component,
+        "filterByDay", false, fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni"
     )
 
 }

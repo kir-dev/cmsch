@@ -3,11 +3,10 @@ package hu.bme.sch.cmsch.component.sheets
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.service.ImplicitPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -27,7 +26,7 @@ class SheetsComponent(
     "sheets",
     "/",
     "Sheets (beta)",
-    ControlPermissions.PERMISSION_CONTROL_EVENTS,
+    ImplicitPermissions.PERMISSION_NOBODY,
     listOf(EventEntity::class),
     env
 ) {
@@ -39,13 +38,9 @@ class SheetsComponent(
         )
     }
 
-    val sheetsGroup = SettingProxy(componentSettingService, component,
-        "sheetsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Sheets Integráció",
-        description = ""
-    )
+    val sheetsGroup = ControlGroup(component, "sheetsGroup", fieldName = "Sheets Integráció")
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "", minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )

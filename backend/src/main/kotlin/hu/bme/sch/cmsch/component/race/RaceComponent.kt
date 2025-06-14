@@ -4,10 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -50,83 +47,62 @@ class RaceComponent(
             freestyleGroup,
             freestyleCategoryName,
             freestyleCategoryDescription,
-
         )
     }
 
-    val raceGroup = SettingProxy(componentSettingService, component,
-        "raceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Verseny",
-        description = ""
+    val raceGroup = ControlGroup(component, "raceGroup", fieldName = "Verseny")
+
+    final val title = StringSettingRef(componentSettingService, component,
+        "title", "Sörmérés", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Sörmérés",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Sörmérés", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = SettingProxy(componentSettingService, component,
-        "displayGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Kijelzés",
-        description = ""
+    val displayGroup = ControlGroup(component, "displayGroup", fieldName = "Kijelzés")
+
+    val visible = BooleanSettingRef(componentSettingService, component,
+        "visible", false, fieldName = "Látható", description = "Leküldésre kerüljön-e a toplista"
     )
 
-    val visible = SettingProxy(componentSettingService, component,
-        "visible", "false", type = SettingType.BOOLEAN,
-        fieldName = "Látható",
-        description = "Leküldésre kerüljön-e a toplista"
-    )
-
-    val extraCategoriesVisible = SettingProxy(componentSettingService, component,
-        "extraCategoriesVisible", "false", type = SettingType.BOOLEAN,
-        fieldName = "Extra kategóriák láthatóak",
+    val extraCategoriesVisible = BooleanSettingRef(componentSettingService, component,
+        "extraCategoriesVisible", false, fieldName = "Extra kategóriák láthatóak",
         description = "Leküldésre kerüljön-e az extra kategóriás toplista"
     )
 
-    val ascendingOrder = SettingProxy(componentSettingService, component,
-        "ascendingOrder", "true", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Növekvő sorrend",
+    val ascendingOrder = BooleanSettingRef(componentSettingService, component,
+        "ascendingOrder", true, serverSideOnly = true, fieldName = "Növekvő sorrend",
         description = "A toplista elemei növekvő sorrendben vannak"
     )
 
-    val defaultCategoryDescription = SettingProxy(componentSettingService, component,
-        "defaultCategoryDescription", "", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Alapértelmezett kategória leírása",
-        description = ""
+    val defaultCategoryDescription = StringSettingRef(componentSettingService, component,
+        "defaultCategoryDescription", "",
+        type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Alapértelmezett kategória leírása",
     )
 
-    val searchEnabled = SettingProxy(componentSettingService, component,
-        "searchEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Keresés elérhető",
-        description = "Legyen-e kereső az oldal tetején"
+    val searchEnabled = BooleanSettingRef(componentSettingService, component,
+        "searchEnabled", false, fieldName = "Keresés elérhető", description = "Legyen-e kereső az oldal tetején"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val freestyleGroup = SettingProxy(componentSettingService, component,
-        "freestyleGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Szabad kategória",
-        description = ""
-    )
+    val freestyleGroup = ControlGroup(component, "freestyleGroup", fieldName = "Szabad kategória")
 
-    val freestyleCategoryName = SettingProxy(componentSettingService, component,
+    val freestyleCategoryName = StringSettingRef(componentSettingService, component,
         "freestyleCategoryName", "Funky mérés",
         fieldName = "Szabad kategória neve", description = "Ez lesz a szabad kategória neve, és a menü neve is"
     )
 
-    val freestyleCategoryDescription = SettingProxy(componentSettingService, component,
+    val freestyleCategoryDescription = StringSettingRef(componentSettingService, component,
         "freestyleCategoryDescription", "", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Szabad kategória leírása", description = "Ez lesz a szabad kategória leírása"
     )

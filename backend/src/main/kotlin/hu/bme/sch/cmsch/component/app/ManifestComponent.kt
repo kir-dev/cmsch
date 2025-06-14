@@ -3,10 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -48,93 +45,89 @@ class ManifestComponent(
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
+        "minRole", MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val manifestGroup = SettingProxy(componentSettingService, component,
-        "manifestGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "A manifest.json tartalma",
+    val manifestGroup = ControlGroup(component, "manifestGroup", fieldName = "A manifest.json tartalma",
         description = "Ha nem tudod mi ez, inkább ne állítgasd!"
     )
 
-    val name = SettingProxy(componentSettingService, component,
+    val name = StringSettingRef(componentSettingService, component,
         "name", "Király Oldal", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Teljes név", description = ""
     )
 
-    val shortName = SettingProxy(componentSettingService, component,
+    val shortName = StringSettingRef(componentSettingService, component,
         "shortName", "Király Oldal", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Rövid név", description = ""
     )
 
-    val description = SettingProxy(componentSettingService, component,
+    val description = StringSettingRef(componentSettingService, component,
         "description", "", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Leírás", description = ""
     )
 
-    val display = SettingProxy(componentSettingService, component,
+    val display = StringSettingRef(componentSettingService, component,
         "display", "browser", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Kijelzés módja", description = "Csak ez lehet: browser, standalone, minimal-ui, fullscreen"
     )
 
-    val applicationScope = SettingProxy(componentSettingService, component,
+    val applicationScope = StringSettingRef(componentSettingService, component,
         "applicationScope", "/", type = SettingType.TEXT, serverSideOnly = true,
         fieldName = "Application scope", description = ""
     )
 
-    val startUrl = SettingProxy(componentSettingService, component,
-        "startUrl", "/", type = SettingType.TEXT, serverSideOnly = true,
+    val startUrl = StringSettingRef(componentSettingService, component,
+        "startUrl", "/", type = SettingType.URL, serverSideOnly = true,
         fieldName = "Start url", description = ""
     )
 
-    val themeColor = SettingProxy(componentSettingService, component,
+    val themeColor = StringSettingRef(componentSettingService, component,
         "themeColor", "#888888", type = SettingType.COLOR, serverSideOnly = true,
         fieldName = "Téma színe", description = "Lehet különböző mint a stílus beállításokban"
     )
 
-    val backgroundColor = SettingProxy(componentSettingService, component,
+    val backgroundColor = StringSettingRef(componentSettingService, component,
         "backgroundColor", "#000000", type = SettingType.COLOR, serverSideOnly = true,
         fieldName = "Háttér színe", description = "Lehet különböző mint a stílus beállításokban"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val iconGroup = SettingProxy(componentSettingService, component,
-        "iconGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Ikonok",
+    val iconGroup = ControlGroup(component, "iconGroup", fieldName = "Ikonok",
         description = "Generáld ki az oldal ikonjait például ennek az oldalnak a segítségével: " +
                 "https://www.simicart.com/manifest-generator.html/"
     )
 
-    val favicon = SettingProxy(componentSettingService, component,
+    val favicon = StringSettingRef(componentSettingService, component,
         "favicon", "manifest/favicon.ico",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Favicon", description = "16x16-os ico fájl"
     )
 
-    val icon192 = SettingProxy(componentSettingService, component,
+    val icon192 = StringSettingRef(componentSettingService, component,
         "icon192", "manifest/icon-192x192.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 192", description = "192x192 pixeles png fájl"
     )
 
-    val icon256 = SettingProxy(componentSettingService, component,
+    val icon256 = StringSettingRef(componentSettingService, component,
         "icon256", "manifest/icon-256x256.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 256", description = "256x256 pixeles png fájl"
     )
 
-    val icon384 = SettingProxy(componentSettingService, component,
+    val icon384 = StringSettingRef(componentSettingService, component,
         "icon384", "manifest/icon-384x384.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 384", description = "384x384 pixeles png fájl"
     )
 
-    val icon512 = SettingProxy(componentSettingService, component,
+    val icon512 = StringSettingRef(componentSettingService, component,
         "icon512", "manifest/icon-512x512.png",
         type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 512", description = "512x512 pixeles png fájl"

@@ -3,9 +3,11 @@ package hu.bme.sch.cmsch.component.gallery
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
+import hu.bme.sch.cmsch.setting.SettingRef
 import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.StringSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -36,23 +38,19 @@ class GalleryComponent(
         )
     }
 
-    val galleryGroup = SettingProxy(componentSettingService, component,
-        "galleryGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Galéria",
-        description = ""
-    )
+    val galleryGroup = ControlGroup(component, "galleryGroup", fieldName = "Galéria")
 
-    final val title = SettingProxy(componentSettingService, component,
+    final val title = StringSettingRef(componentSettingService, component,
         "title", "Galéria",
         fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
+    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Galéria", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "",
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )

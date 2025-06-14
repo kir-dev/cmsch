@@ -3,10 +3,13 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.BooleanSettingRef
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
+import hu.bme.sch.cmsch.setting.SettingRef
 import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.StringSettingRef
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -59,146 +62,136 @@ class FooterComponent(
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
+        "minRole", MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val footerGroup = SettingProxy(componentSettingService, component,
-        "footerGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Lábléc", description = ""
+    val footerGroup = ControlGroup(component, "footerGroup", fieldName = "Lábléc")
+
+    val minimalisticFooter = BooleanSettingRef(componentSettingService, component,
+        "minimalisticFooter", false, fieldName = "Minimalisztikus lábléc",
+        description = "Ha be van kapcsolva, akkor nem foglal olyan sok helyet a footer"
     )
 
-    val minimalisticFooter = SettingProxy(componentSettingService, component,
-        "minimalisticFooter", "false", type = SettingType.BOOLEAN,
-        fieldName = "Minimalisztikus lábléc", description = "Ha be van kapcsolva, akkor nem foglal olyan sok helyet a footer"
-    )
-
-    val hostLogo = SettingProxy(componentSettingService, component,
-        "hostLogo", "https://warp.sch.bme.hu/img/blobs/redirect/", type = SettingType.TEXT,
+    val hostLogo = StringSettingRef(componentSettingService, component,
+        "hostLogo", "https://warp.sch.bme.hu/img/blobs/redirect/", type = SettingType.URL,
         fieldName = "Esemény szervezőjének a logója", description = "A kép URL-je"
     )
 
-    val hostAlt = SettingProxy(componentSettingService, component,
+    val hostAlt = StringSettingRef(componentSettingService, component,
         "hostAlt", "Szervező kör", type = SettingType.TEXT,
         fieldName = "Esemény szervezőjének alt szövege", description = "Ha nem tölt be a kép ez jelenik meg"
     )
 
-    val hostWebsiteUrl = SettingProxy(componentSettingService, component,
-        "hostWebsiteUrl", "https://kir-dev.sch.bme.hu/?ref=cmsch", type = SettingType.TEXT,
+    val hostWebsiteUrl = StringSettingRef(componentSettingService, component,
+        "hostWebsiteUrl", "https://kir-dev.sch.bme.hu/?ref=cmsch", type = SettingType.URL,
         fieldName = "Esemény szervezőjének oldala", description = "Az oldal url-je"
     )
 
-    val facebookUrl = SettingProxy(componentSettingService, component,
-        "facebookUrl", "", type = SettingType.TEXT,
+    val facebookUrl = StringSettingRef(componentSettingService, component,
+        "facebookUrl", "", type = SettingType.URL,
         fieldName = "Facebook url", description = "Ha üres, nem jelenik meg"
     )
 
-    val instagramUrl = SettingProxy(componentSettingService, component,
-        "instagramUrl", "", type = SettingType.TEXT,
+    val instagramUrl = StringSettingRef(componentSettingService, component,
+        "instagramUrl", "", type = SettingType.URL,
         fieldName = "Instagram url", description = "Ha üres, nem jelenik meg"
     )
 
-    val footerMessage = SettingProxy(componentSettingService, component,
+    val footerMessage = StringSettingRef(componentSettingService, component,
         "footerMessage", "email [at] sch.bme.hu\n2025", type = SettingType.LONG_TEXT,
         fieldName = "Footer szöveg", description = "Ez jelenik meg középen a footer alján"
     )
 
-    val devLogo = SettingProxy(componentSettingService, component,
+    val devLogo = StringSettingRef(componentSettingService, component,
         "devLogo", "https://warp.sch.bme.hu/img/blobs/redirect/",
         type = SettingType.TEXT, minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "A kir-dev logója", description = "A kép URL-je"
     )
 
-    val devAlt = SettingProxy(componentSettingService, component,
+    val devAlt = StringSettingRef(componentSettingService, component,
         "devAlt", "Kir-dev",
         type = SettingType.TEXT, minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "A kir-dev alt szövege", description = "Ha nem tölt be a kép ez jelenik meg"
     )
 
-    val devWebsiteUrl = SettingProxy(componentSettingService, component,
+    val devWebsiteUrl = StringSettingRef(componentSettingService, component,
         "devWebsiteUrl", "https://kir-dev.sch.bme.hu/?ref=cmsch",
-        type = SettingType.TEXT, minRoleToEdit = RoleType.SUPERUSER,
+        type = SettingType.URL, minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "A kir-dev oldala", description = "Az oldal url-je"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val sponsorGroup = SettingProxy(componentSettingService, component,
-        "sponsorGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Támogatók", description = "Az esemény támogatóinak logói (A lábléc felett jelenik meg)"
+    val sponsorGroup = ControlGroup(component, "sponsorGroup", fieldName = "Támogatók",
+        description = "Az esemény támogatóinak logói (A lábléc felett jelenik meg)"
     )
 
-    val sponsorTitle = SettingProxy(componentSettingService, component,
+    val sponsorTitle = StringSettingRef(componentSettingService, component,
         "sponsorTitle", "Támogatóink", type = SettingType.TEXT,
         fieldName = "Szponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
     )
 
-    val sponsorsEnabled = SettingProxy(componentSettingService, component,
-        "sponsorsEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Sponsorok láthatóak"
+    val sponsorsEnabled = BooleanSettingRef(componentSettingService, component,
+        "sponsorsEnabled", false, fieldName = "Sponsorok láthatóak"
     )
 
-    val sponsorLogoUrls = SettingProxy(componentSettingService, component,
+    val sponsorLogoUrls = StringSettingRef(componentSettingService, component,
         "sponsorLogoUrls", "url1,url2", type = SettingType.LONG_TEXT,
         fieldName = "Sponsor logók", description = "URL-ek vesszővel (,) elválasztva"
     )
 
-    val sponsorAlts = SettingProxy(componentSettingService, component,
+    val sponsorAlts = StringSettingRef(componentSettingService, component,
         "sponsorAlts", "alt1,alt2", type = SettingType.LONG_TEXT,
         fieldName = "Sponsor alt üzenetek", description = "Szövegek vesszővel (,) elválasztva"
     )
 
-    val sponsorWebsiteUrls = SettingProxy(componentSettingService, component,
+    val sponsorWebsiteUrls = StringSettingRef(componentSettingService, component,
         "sponsorWebsiteUrls", "url1,url2", type = SettingType.LONG_TEXT,
         fieldName = "Sponsor weblapok", description = "URL-ek vesszővel (,) elválasztva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val partnerGroup = SettingProxy(componentSettingService, component,
-        "partnerGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Partnerek", description = "Az esemény partnerei (A lábléc felett jelenik meg)"
+    val partnerGroup = ControlGroup(component, "partnerGroup", fieldName = "Partnerek",
+        description = "Az esemény partnerei (A lábléc felett jelenik meg)"
     )
 
-    val partnerTitle = SettingProxy(componentSettingService, component,
+    val partnerTitle = StringSettingRef(componentSettingService, component,
         "partnerTitle", "Partnereink", type = SettingType.TEXT,
         fieldName = "Szponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
     )
 
-    val vikEnabled = SettingProxy(componentSettingService, component,
-        "vikEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "BME VIK logó", description = "Legyen-e BME VIK logó a footerben"
+    val vikEnabled = BooleanSettingRef(componentSettingService, component,
+        "vikEnabled", false, fieldName = "BME VIK logó", description = "Legyen-e BME VIK logó a footerben"
     )
 
-    val bmeEnabled = SettingProxy(componentSettingService, component,
-        "bmeEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "BME logó", description = "Legyen-e BME logó a footerben"
+    val bmeEnabled = BooleanSettingRef(componentSettingService, component,
+        "bmeEnabled", false, fieldName = "BME logó", description = "Legyen-e BME logó a footerben"
     )
 
-    val schonherzEnabled = SettingProxy(componentSettingService, component,
-        "schonherzEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "Schönherz logó", description = "Legyen-e Schönherz logó a footerben"
+    val schonherzEnabled = BooleanSettingRef(componentSettingService, component,
+        "schonherzEnabled", false, fieldName = "Schönherz logó", description = "Legyen-e Schönherz logó a footerben"
     )
 
-    val schdesignEnabled = SettingProxy(componentSettingService, component,
-        "schdesignEnabled", "false", type = SettingType.BOOLEAN,
-        fieldName = "schdesign logó", description = "Legyen-e schdesign logó a footerben"
+    val schdesignEnabled = BooleanSettingRef(componentSettingService, component,
+        "schdesignEnabled", false, fieldName = "schdesign logó", description = "Legyen-e schdesign logó a footerben"
     )
 
-    val partnerLogoUrls = SettingProxy(componentSettingService, component,
+    val partnerLogoUrls = StringSettingRef(componentSettingService, component,
         "partnerLogoUrls", "url1,url2", type = SettingType.LONG_TEXT,
         fieldName = "Partner logók", description = "URL-ek vesszővel (,) elválasztva"
     )
 
-    val partnerAlts = SettingProxy(componentSettingService, component,
+    val partnerAlts = StringSettingRef(componentSettingService, component,
         "partnerAlts", "alt1,alt2", type = SettingType.LONG_TEXT,
         fieldName = "Partner alt üzenetek", description = "Szövegek vesszővel (,) elválasztva"
     )
 
-    val partnerWebsiteUrls = SettingProxy(componentSettingService, component,
+    val partnerWebsiteUrls = StringSettingRef(componentSettingService, component,
         "partnerWebsiteUrls", "url1,url2", type = SettingType.LONG_TEXT,
         fieldName = "Partner weblapok", description = "URL-ek vesszővel (,) elválasztva"
     )
