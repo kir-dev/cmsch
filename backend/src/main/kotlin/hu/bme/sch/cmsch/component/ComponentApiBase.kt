@@ -104,7 +104,7 @@ abstract class ComponentApiBase(
                 SettingType.IMAGE -> {
                     multipartRequest.fileMap[setting.property]?.let {
                         if (it.size > 0) {
-                            val (path, name) = setting.getValue().toString().split("/")
+                            val (path, name) = setting.getStringValue().split("/")
                             val url = storageService.saveNamedObject(path, name, it)
                             log.info("Uploading image {}.{} url: {}", setting.component, setting.property, url)
                             newValues.append(setting.property).append("=url@").append(url).append(", ")
