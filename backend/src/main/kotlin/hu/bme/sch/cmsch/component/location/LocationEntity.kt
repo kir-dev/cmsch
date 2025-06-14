@@ -118,7 +118,7 @@ data class LocationEntity(
     @Column(nullable = false, length = 16)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 16, order = 18, label = "Szín", type = InputType.COLOR)
-    @property:GenerateOverview(visible = false, renderer = OverviewType.COLOR)
+    @property:GenerateOverview(visible = false)
     var markerColor: String = "#000000",
 
     @ColumnDefault("''")
