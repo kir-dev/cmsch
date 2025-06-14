@@ -1,160 +1,183 @@
 package hu.bme.sch.cmsch.setting
 
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
+import kotlin.reflect.KProperty
 
 
-class StringSettingRef(
-    componentPropertyService: ComponentSettingService,
-    component: String,
-    property: String,
-    defaultValue: String = "",
-    strictConversion: Boolean = true,
-    cache: Boolean = true,
-    persist: Boolean = true,
-    serverSideOnly: Boolean = false,
-    type: SettingType = SettingType.TEXT,
-    fieldName: String = property,
-    description: String = "",
-    minRoleToEdit: RoleType = RoleType.ADMIN
-) : SettingRef<String>(
-    componentPropertyService = componentPropertyService,
-    serializer = StringSettingSerializer,
-    component = component,
-    property = property,
-    defaultValue = defaultValue,
-    strictConversion = strictConversion,
-    cache = cache,
-    persist = persist,
-    serverSideOnly = serverSideOnly,
-    type = type,
-    fieldName = fieldName,
-    description = description,
-    minRoleToEdit = minRoleToEdit,
-)
-
-class JsonSettingRef(
-    componentPropertyService: ComponentSettingService,
-    component: String,
-    property: String,
-    defaultValue: List<Map<String, Any>> = emptyList(),
-    strictConversion: Boolean = true,
-    cache: Boolean = true,
-    persist: Boolean = true,
-    serverSideOnly: Boolean = false,
-    type: SettingType = SettingType.JSON,
-    fieldName: String = property,
-    description: String = "",
-    minRoleToEdit: RoleType = RoleType.ADMIN
-) : SettingRef<List<Map<String, Any>>>(
-    componentPropertyService = componentPropertyService,
-    serializer = JsonSettingSerializer,
-    component = component,
-    property = property,
-    defaultValue = defaultValue,
-    strictConversion = strictConversion,
-    cache = cache,
-    persist = persist,
-    serverSideOnly = serverSideOnly,
-    type = type,
-    fieldName = fieldName,
-    description = description,
-    minRoleToEdit = minRoleToEdit,
-)
-
-class NumberSettingRef(
-    componentPropertyService: ComponentSettingService,
-    component: String,
-    property: String,
-    defaultValue: Long = 0,
-    strictConversion: Boolean = true,
-    cache: Boolean = true,
-    persist: Boolean = true,
-    serverSideOnly: Boolean = false,
-    type: SettingType = SettingType.NUMBER,
-    fieldName: String = property,
-    description: String = "",
-    minRoleToEdit: RoleType = RoleType.ADMIN
-) : SettingRef<Long>(
-    componentPropertyService = componentPropertyService,
-    serializer = LongSettingSerializer,
-    component = component,
-    property = property,
-    defaultValue = defaultValue,
-    strictConversion = strictConversion,
-    cache = cache,
-    persist = persist,
-    serverSideOnly = serverSideOnly,
-    type = type,
-    fieldName = fieldName,
-    description = description,
-    minRoleToEdit = minRoleToEdit,
-)
-
-class BooleanSettingRef(
-    componentPropertyService: ComponentSettingService,
-    component: String,
-    property: String,
-    defaultValue: Boolean = false,
-    strictConversion: Boolean = true,
-    cache: Boolean = true,
-    persist: Boolean = true,
-    serverSideOnly: Boolean = false,
-    type: SettingType = SettingType.BOOLEAN,
-    fieldName: String = property,
-    description: String = "",
-    minRoleToEdit: RoleType = RoleType.ADMIN
-) : SettingRef<Boolean>(
-    componentPropertyService = componentPropertyService,
-    serializer = BooleanSettingSerializer,
-    component = component,
-    property = property,
-    defaultValue = defaultValue,
-    strictConversion = strictConversion,
-    cache = cache,
-    persist = persist,
-    serverSideOnly = serverSideOnly,
-    type = type,
-    fieldName = fieldName,
-    description = description,
-    minRoleToEdit = minRoleToEdit,
+data class StringSettingRef(
+    private val componentPropertyService: ComponentSettingService,
+    private val component: String,
+    private val property: String,
+    private val defaultValue: String = "",
+    private val strictConversion: Boolean = true,
+    private val cache: Boolean = true,
+    private val persist: Boolean = true,
+    private val serverSideOnly: Boolean = false,
+    private val type: SettingType = SettingType.TEXT,
+    private val fieldName: String = property,
+    private val description: String = "",
+    private val minRoleToEdit: RoleType = RoleType.ADMIN
 ) {
 
-    fun <T> mapIfTrue(mapper: () -> T?): T? {
-        return if (getValue()) mapper.invoke() else null
-    }
+    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<String> =
+        SettingRef(
+            componentPropertyService = componentPropertyService,
+            serializer = StringSettingSerializer,
+            component = component,
+            property = property,
+            defaultValue = defaultValue,
+            strictConversion = strictConversion,
+            cache = cache,
+            persist = persist,
+            serverSideOnly = serverSideOnly,
+            type = type,
+            fieldName = fieldName,
+            description = description,
+            minRoleToEdit = minRoleToEdit,
+        )
+
+}
+
+data class JsonSettingRef(
+    private val componentPropertyService: ComponentSettingService,
+    private val component: String,
+    private val property: String,
+    private val defaultValue: List<Map<String, Any>> = emptyList(),
+    private val strictConversion: Boolean = true,
+    private val cache: Boolean = true,
+    private val persist: Boolean = true,
+    private val serverSideOnly: Boolean = false,
+    private val type: SettingType = SettingType.JSON,
+    private val fieldName: String = property,
+    private val description: String = "",
+    private val minRoleToEdit: RoleType = RoleType.ADMIN
+) {
+
+    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<List<Map<String, Any>>> =
+        SettingRef(
+            componentPropertyService = componentPropertyService,
+            serializer = JsonSettingSerializer,
+            component = component,
+            property = property,
+            defaultValue = defaultValue,
+            strictConversion = strictConversion,
+            cache = cache,
+            persist = persist,
+            serverSideOnly = serverSideOnly,
+            type = type,
+            fieldName = fieldName,
+            description = description,
+            minRoleToEdit = minRoleToEdit,
+        )
+
+}
+
+data class NumberSettingRef(
+    private val componentPropertyService: ComponentSettingService,
+    private val component: String,
+    private val property: String,
+    private val defaultValue: Long = 0,
+    private val strictConversion: Boolean = true,
+    private val cache: Boolean = true,
+    private val persist: Boolean = true,
+    private val serverSideOnly: Boolean = false,
+    private val type: SettingType = SettingType.NUMBER,
+    private val fieldName: String = property,
+    private val description: String = "",
+    private val minRoleToEdit: RoleType = RoleType.ADMIN
+) {
+
+    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Long> =
+        SettingRef(
+            componentPropertyService = componentPropertyService,
+            serializer = LongSettingSerializer,
+            component = component,
+            property = property,
+            defaultValue = defaultValue,
+            strictConversion = strictConversion,
+            cache = cache,
+            persist = persist,
+            serverSideOnly = serverSideOnly,
+            type = type,
+            fieldName = fieldName,
+            description = description,
+            minRoleToEdit = minRoleToEdit,
+        )
+
+}
+
+data class BooleanSettingRef(
+    private val componentPropertyService: ComponentSettingService,
+    private val component: String,
+    private val property: String,
+    private val defaultValue: Boolean = false,
+    private val strictConversion: Boolean = true,
+    private val cache: Boolean = true,
+    private val persist: Boolean = true,
+    private val serverSideOnly: Boolean = false,
+    private val type: SettingType = SettingType.BOOLEAN,
+    private val fieldName: String = property,
+    private val description: String = "",
+    private val minRoleToEdit: RoleType = RoleType.ADMIN
+) {
+
+    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Boolean> =
+        SettingRef(
+            componentPropertyService = componentPropertyService,
+            serializer = BooleanSettingSerializer,
+            component = component,
+            property = property,
+            defaultValue = defaultValue,
+            strictConversion = strictConversion,
+            cache = cache,
+            persist = persist,
+            serverSideOnly = serverSideOnly,
+            type = type,
+            fieldName = fieldName,
+            description = description,
+            minRoleToEdit = minRoleToEdit,
+        )
+
 
 }
 
 class MinRoleSettingRef(
-    componentPropertyService: ComponentSettingService,
-    component: String,
-    property: String,
-    defaultValue: String,
-    cache: Boolean = true,
-    fieldName: String = "",
-    description: String = "",
-    minRoleToEdit: RoleType = RoleType.STAFF,
-    val grantedForRoles: List<String> = listOf(RoleType.ADMIN.name, RoleType.SUPERUSER.name)
-) : SettingRef<String>(
-    componentPropertyService, StringSettingSerializer, component, property,
-    defaultValue = defaultValue, type = SettingType.MIN_ROLE,
-    fieldName = fieldName, description = description, cache = cache,
-    minRoleToEdit = minRoleToEdit, serverSideOnly = true, persist = true, strictConversion = true,
+    private val componentPropertyService: ComponentSettingService,
+    private val component: String,
+    private val property: String,
+    private val defaultValue: Set<RoleType>,
+    private val cache: Boolean = true,
+    private val fieldName: String = "",
+    private val description: String = "",
+    private val minRoleToEdit: RoleType = RoleType.STAFF,
+    private val grantedForRoles: Set<RoleType> = setOf(RoleType.ADMIN, RoleType.SUPERUSER)
 ) {
 
     companion object {
-        val ALL_ROLES by lazy { RoleType.entries.joinToString(",") { it.name } }
-        val ALL_ROLES_FROM_ATTENDEE by lazy {
-            RoleType.entries.filter { it.value >= RoleType.ATTENDEE.value }.joinToString(",") { it.name }
-        }
+        val ALL_ROLES by lazy { RoleType.entries.toSet() }
+        val ALL_ROLES_FROM_ATTENDEE by lazy { RoleType.entries.filter { it.value >= RoleType.ATTENDEE.value }.toSet() }
         val ALL_ROLES_FROM_PRIVILEGED by lazy {
-            RoleType.entries.filter { it.value >= RoleType.PRIVILEGED.value }.joinToString(",") { it.name }
+            RoleType.entries.filter { it.value >= RoleType.PRIVILEGED.value }.toSet()
         }
-        val ALL_POSSIBLE_ROLES by lazy { RoleType.entries.filter { it.value != RoleType.NOBODY.value } }
+        val ALL_POSSIBLE_ROLES by lazy { RoleType.entries.filter { it.value != RoleType.NOBODY.value }.toSet() }
     }
 
-    fun isAvailableForRole(role: RoleType): Boolean {
-        return getValue().split(",").contains(role.name) || grantedForRoles.contains(role.name)
-    }
+    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Set<RoleType>> =
+        SettingRef(
+            componentPropertyService,
+            RoleTypeSetSettingSerializer(grantedForRoles),
+            component,
+            property,
+            defaultValue = defaultValue,
+            type = SettingType.MIN_ROLE,
+            fieldName = fieldName,
+            description = description,
+            cache = cache,
+            minRoleToEdit = minRoleToEdit,
+            serverSideOnly = true,
+            persist = true,
+            strictConversion = true,
+        )
 
 }

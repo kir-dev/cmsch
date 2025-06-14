@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.setting
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
 
 interface SettingSerializer<T> {
@@ -27,13 +28,11 @@ object JsonSettingSerializer : SettingSerializer<List<Map<String, Any>>> {
             .fold(
                 onSuccess = { it },
                 onFailure = {
-                    if (strict) {
-                        log.error("Value {} cannot be converted to a JSON", value, it)
-                        return@fold defaultValue
-                    }
-                    throw IllegalArgumentException("Value $value cannot be converted to a boolean", it)
-                }
+                    if (strict) throw IllegalArgumentException("Value $value cannot be converted to JSON", it)
 
+                    log.error("Value {} cannot be converted to JSON", value, it)
+                    return@fold defaultValue
+                }
             )
 
     override fun serialize(value: List<Map<String, Any>>, strict: Boolean): String = writer.writeValueAsString(value)
@@ -45,6 +44,33 @@ object StringSettingSerializer : SettingSerializer<String> {
 
     override fun serialize(value: String, strict: Boolean): String = value
 
+}
+
+data class RoleTypeSetSettingSerializer(private val grantedRoles: Set<RoleType>) : SettingSerializer<Set<RoleType>> {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    override fun deserialize(value: String, defaultValue: Set<RoleType>, strict: Boolean): Set<RoleType> {
+        val parsedRoles = value
+            .splitToSequence(",")
+            .map { parseRoleType(it, strict) }
+            .filterNotNull()
+
+        return (parsedRoles + grantedRoles).toSet()
+    }
+
+    override fun serialize(value: Set<RoleType>, strict: Boolean): String = value.joinToString(separator = ",")
+
+    private fun parseRoleType(value: String, strict: Boolean): RoleType? {
+        return runCatching { RoleType.valueOf(value) }.fold(
+            onSuccess = { it },
+            onFailure = {
+                if (!strict) throw IllegalArgumentException("Value $value cannot be converted to RoleType", it)
+
+                log.error("Value {} cannot be converted to RoleType", value, it)
+                return@fold null
+            }
+        )
+    }
 }
 
 object BooleanSettingSerializer : SettingSerializer<Boolean> {
@@ -64,10 +90,10 @@ object BooleanSettingSerializer : SettingSerializer<Boolean> {
         }
 
         if (strict) {
-            throw IllegalArgumentException("Value $value cannot be converted to a boolean")
+            throw IllegalArgumentException("Value $value cannot be converted to Boolean")
         }
 
-        log.error("Value {} cannot be converted to a boolean", value)
+        log.error("Value {} cannot be converted to Boolean", value)
         return defaultValue
     }
 
@@ -85,10 +111,10 @@ object LongSettingSerializer : SettingSerializer<Long> {
         }
 
         if (strict) {
-            throw IllegalArgumentException("Value $value cannot be converted to a long")
+            throw IllegalArgumentException("Value $value cannot be converted to Long")
         }
 
-        log.error("Value {} cannot be converted to a long", value)
+        log.error("Value {} cannot be converted to Long", value)
         return defaultValue
     }
 

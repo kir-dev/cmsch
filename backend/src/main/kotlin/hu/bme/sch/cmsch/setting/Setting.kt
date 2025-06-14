@@ -14,7 +14,7 @@ interface Setting<T : Any> {
 
     fun getValue(): T
 
-//    operator fun getValue(thisRef: Any?, property: KProperty<*>) = getValue() // todo next step is using delegated properties
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = getValue()
 
     fun getStringValue(): String = getValue().toString()
 }
@@ -22,7 +22,11 @@ interface Setting<T : Any> {
 interface MutableSetting<T : Any> : Setting<T> {
     fun setValue(value: T)
 
-//    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = setValue(value) // todo next step is using delegated properties
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = setValue(value)
 
     fun parseAndSet(value: String)
+}
+
+fun <T> Setting<Boolean>.mapIfTrue(mapper: () -> T?): T? {
+    return if (getValue()) mapper.invoke() else null
 }
