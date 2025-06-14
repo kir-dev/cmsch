@@ -1,0 +1,38 @@
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="data" type="kotlin.Any"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
+
+    <div th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <div th:class="|input-container ${generateInput.icon != '' ? 'icon' : ''}|">
+            <input type="text"
+                   th:name="${property.name}"
+                   th:id="|input${index}|"
+                   th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+                   th:placeholder="${generateInput.placeholder}"
+                   th:disabled="${!generateInput.enabled || readOnly}"
+                   th:autocomplete="${generateInput.autocomplete}"
+                   th:unless="${entityMode}"
+                   data-coloris
+            />
+            <span th:if="${generateInput.icon != ''}" class="material-symbols-outlined" th:text="${generateInput.icon}">encrypted</span>
+        </div>
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Szín</span>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript (ext)" th:remove="tag">
+
+</object>

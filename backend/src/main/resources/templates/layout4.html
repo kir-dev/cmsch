@@ -23,6 +23,25 @@
     <link rel="stylesheet" href="../static/flatpickr_custom.css" th:href="@{/flatpickr_custom.css}">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="../static/js/admin-script-4.js" th:src="@{/js/admin-script-4.js}"></script>
+    <link rel="stylesheet" href="../static/coloris.min.css" th:href="@{/coloris.min.css}"/>
+    <style> /*Customizations for Coloris*/
+        .clr-dark {
+            background-color: var(--background-color);
+        }
+
+        .clr-field {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .clr-field > button {
+            box-sizing: border-box;
+            height: calc(100% - 4px); /* hacky, but it works */
+            margin-top: 2px;
+        }
+    </style>
+    </style>
+    <script src="../static/js/coloris.min.js" th:src="@{/js/coloris.min.js}"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -35,6 +54,30 @@
             --primary-darker-color: [[${context.brandColorDarker2}]];
         }
     </style>
+    <script>
+        Coloris({
+            format: 'auto',
+            formatToggle: true,
+            theme: 'large',
+            themeMode: 'dark',
+            clearButton: true,
+            closeButton: true,
+            swatches: [
+                "rgba(0, 0, 0, 0.36)",
+                "rgba(255, 255, 255, 0.36)",
+                "#718096",
+                "#E53E3E",
+                "#DD6B20",
+                "#D69E2E",
+                "#38A169",
+                "#319795",
+                "#3182ce",
+                "#00B5D8",
+                "#805AD5",
+                "#D53F8C",
+            ]
+        })
+    </script>
 </head>
 <body>
 
