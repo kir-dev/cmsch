@@ -20,6 +20,7 @@ class ServiceAccountComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "service-account",
     "/",
     "Service Account",
@@ -28,17 +29,9 @@ class ServiceAccountComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-        )
-    }
-
     /// -------------------------------------------------------------------------------------------------------------------
 
-    final override val minRole = MinRoleSettingRef(
-        componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 }

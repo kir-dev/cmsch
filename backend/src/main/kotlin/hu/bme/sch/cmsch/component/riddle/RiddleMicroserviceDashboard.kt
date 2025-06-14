@@ -197,12 +197,12 @@ class RiddleMicroserviceDashboard(
 
     private fun sendRequest(path: String, user: CmschUser?): String {
         val client = WebClient.builder()
-            .baseUrl(riddleComponent.microserviceNodeBaseUrl.getValue())
+            .baseUrl(riddleComponent.microserviceNodeBaseUrl)
             .defaultHeaders { header -> header.add("token", startupPropertyConfig.managementToken) }
             .build()
 
         val request = client.method(HttpMethod.POST)
-            .uri("${riddleComponent.microserviceNodeBaseUrl.getValue()}/remote-api/riddle/${path}")
+            .uri("${riddleComponent.microserviceNodeBaseUrl}/remote-api/riddle/${path}")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
 
         return retrieve(request, path, user)

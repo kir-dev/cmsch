@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.race.RaceCategoryRepository
 import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import hu.bme.sch.cmsch.util.transaction
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
@@ -62,7 +63,7 @@ class MenuService(
             .map {
                 MenuSettingItem(
                     it.javaClass.simpleName,
-                    it.menuDisplayName!!.getValue(), it.menuUrl, 0,
+                    it.menuDisplayName!!, it.menuUrl, 0,
                     visible = false, subMenu = false, external = false
                 )
             })

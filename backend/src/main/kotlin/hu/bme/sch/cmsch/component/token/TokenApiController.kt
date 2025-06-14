@@ -60,7 +60,7 @@ class TokenApiController(
         val token = request.getSession(true).getAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE)?.toString()
         request.getSession(true).setAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE, null)
         return if (token == null) {
-            "redirect:${applicationComponent.siteUrl.getValue()}?error=failed-to-redeem"
+            "redirect:${applicationComponent.siteUrl}?error=failed-to-redeem"
         } else {
             collectToken(auth, token)
         }
@@ -72,13 +72,13 @@ class TokenApiController(
             val user = auth?.getUserOrNull()
             if (user == null) {
                 request.getSession(true).setAttribute(SESSION_TOKEN_COLLECTOR_ATTRIBUTE, token)
-                "redirect:${applicationComponent.siteUrl.getValue()}login"
+                "redirect:${applicationComponent.siteUrl}login"
             } else {
                 collectToken(auth, token)
             }
         } catch (e: Throwable) {
             log.error("Failed to redeem token: '{}'", token, e)
-            "redirect:${applicationComponent.siteUrl.getValue()}login?error=failed-to-redeem"
+            "redirect:${applicationComponent.siteUrl}login?error=failed-to-redeem"
         }
     }
 
@@ -87,7 +87,7 @@ class TokenApiController(
             OwnershipType.USER -> {
                 val response = tokens.collectToken(auth.getUser(), token)
                 log.info("Token collected for USER '{}' token '{}'", auth.getUser().userName, token)
-                "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${response.status.name}" +
+                "redirect:${applicationComponent.siteUrl}token-scanned?status=${response.status.name}" +
                         "&title=${response.title?.urlEncode()}" +
                         "&description=${response.description?.urlEncode()}" +
                         "&icon=${response.iconUrl?.urlEncode()}"
@@ -95,7 +95,7 @@ class TokenApiController(
             OwnershipType.GROUP -> {
                 val response = tokens.collectTokenForGroup(auth.getUser(), token)
                 log.info("Token collected for GROUP by user '{}' token '{}'", auth.getUser().userName, token)
-                "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${response.status.name}" +
+                "redirect:${applicationComponent.siteUrl}token-scanned?status=${response.status.name}" +
                         "&title=${response.title?.urlEncode()}" +
                         "&description=${response.description?.urlEncode()}" +
                         "&icon=${response.iconUrl?.urlEncode()}"

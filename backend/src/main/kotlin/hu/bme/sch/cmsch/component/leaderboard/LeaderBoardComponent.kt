@@ -18,6 +18,7 @@ class LeaderBoardComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "leaderboard",
     "/leaderboard",
     "Toplista",
@@ -26,152 +27,99 @@ class LeaderBoardComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            leaderboardGroup,
-            title, minRole, menuDisplayName,
+    val leaderboardGroup by SettingGroup(fieldName = "Toplista")
 
-            logicGroup,
-            leaderboardEnabled,
-            leaderboardDetailsEnabled,
-            leaderboardDetailsByCategoryEnabled,
-            leaderboardFrozen,
-            showScores,
-
-            calcGroup,
-            tasksPercent,
-            riddlesPercent,
-            challengesPercent,
-            tokenPercent,
-
-            displayGroup,
-            minScoreToShow,
-            showUserBoard,
-            maxUserEntryToShow,
-            showGroupBoard,
-            maxGroupEntryToShow,
-            showGroupOfUser,
-            searchEnabled,
-            showTokenCountByRarity,
-            showTokenMaxCountByRarity
-        )
-    }
-
-    val leaderboardGroup = SettingGroup(component, "leaderboardGroup", fieldName = "Toplista")
-
-    final val title = StringSettingRef(componentSettingService, component,
-        "title", "Toplista", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    final var title by StringSettingRef("Toplista", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Toplista", serverSideOnly = true,
+    final override var menuDisplayName by StringSettingRef("Toplista", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "",
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    final override var minRole by MinRoleSettingRef(setOf(), fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = SettingGroup(component, "logicGroup", fieldName = "Működés")
+    val logicGroup by SettingGroup(fieldName = "Működés")
 
-    val leaderboardEnabled = BooleanSettingRef(componentSettingService, component,
-        "leaderboardEnabled", true,
+    var leaderboardEnabled by BooleanSettingRef(true,
         fieldName = "Toplista aktív", description = "A toplista leküldésre kerül"
     )
 
-    val leaderboardDetailsEnabled = BooleanSettingRef(componentSettingService, component,
-        "leaderboardDetailsEnabled", false,
+    var leaderboardDetailsEnabled by BooleanSettingRef(false,
         fieldName = "Toplista részletek aktív", description = "A részletes toplista leküldésre kerül (Csapatonként)"
     )
 
-    val leaderboardDetailsByCategoryEnabled = BooleanSettingRef(componentSettingService,
-        component, "leaderboardDetailsByCategoryEnabled", false, fieldName = "Toplista kategória szerint aktív",
+    var leaderboardDetailsByCategoryEnabled by BooleanSettingRef(false, fieldName = "Toplista kategória szerint aktív",
         description = "A részletes toplista leküldésre kerül (Kategóriánként)"
     )
 
-    val leaderboardFrozen = BooleanSettingRef(componentSettingService, component,
-        "leaderboardFrozen", true,
+    var leaderboardFrozen by BooleanSettingRef(true,
         fieldName = "Toplista befagyasztott", description = "A toplista értéke be van fagyasztva"
     )
 
-    val showScores = BooleanSettingRef(componentSettingService, component,
-        "showScores", false, fieldName = "Pontok mutatása",
+    var showScores by BooleanSettingRef(false, fieldName = "Pontok mutatása",
         description = "Ha igaz, akkor látszódnak a pontok, ha hamis, akkor csak a sorrend"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val calcGroup = SettingGroup(component, "calcGroup", fieldName = "Pont számítás")
+    val calcGroup by SettingGroup(fieldName = "Pont számítás")
 
-    val tasksPercent = NumberSettingRef(componentSettingService, component,
-        "tasksPercent", 100, serverSideOnly = true, strictConversion = false,
+    var tasksPercent by NumberSettingRef(100, serverSideOnly = true, strictConversion = false,
         fieldName = "Feladatok szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
-    val riddlesPercent = NumberSettingRef(componentSettingService, component,
-        "riddlesPercent", 100, serverSideOnly = true, strictConversion = false,
+    var riddlesPercent by NumberSettingRef(100, serverSideOnly = true, strictConversion = false,
         fieldName = "Riddle szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
-    val challengesPercent = NumberSettingRef(componentSettingService, component,
-        "challengesPercent", 100, serverSideOnly = true, strictConversion = false,
+    var challengesPercent by NumberSettingRef(100, serverSideOnly = true, strictConversion = false,
         fieldName = "Beadások szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
-    val tokenPercent = NumberSettingRef(componentSettingService, component,
-        "tokenPercent", 100, serverSideOnly = true, strictConversion = false,
+    var tokenPercent by NumberSettingRef(100, serverSideOnly = true, strictConversion = false,
         fieldName = "QR Kódok szorzó (%)", description = "100 = 1x, 0 = nem számít bele"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = SettingGroup(component, "displayGroup", fieldName = "Kijelzés")
+    val displayGroup by SettingGroup(fieldName = "Kijelzés")
 
-    val minScoreToShow = NumberSettingRef(componentSettingService, component,
-        "minScoreToShow", 1, fieldName = "Legalább ennyi ponttal", strictConversion = false,
+    var minScoreToShow by NumberSettingRef(1, fieldName = "Legalább ennyi ponttal", strictConversion = false,
         description = "Legalább ennyi ponttal mutassa a felhasználókat és csoportokat"
     )
 
-    val showUserBoard = BooleanSettingRef(componentSettingService, component,
-        "showUserBoard", false, fieldName = "Felhasználói toplista mutatása",
+    var showUserBoard by BooleanSettingRef(false, fieldName = "Felhasználói toplista mutatása",
         description = "Felhasználói toplista látható legyen-e"
     )
 
-    val maxUserEntryToShow = NumberSettingRef(componentSettingService, component,
-        "maxUserEntryToShow", -1, fieldName = "Toplista sorainak száma", strictConversion = false,
+    var maxUserEntryToShow by NumberSettingRef(-1, fieldName = "Toplista sorainak száma", strictConversion = false,
         description = "Hány felhasználót mutasson, -1 = az összeset"
     )
 
-    val showGroupBoard = BooleanSettingRef(componentSettingService, component,
-        "showGroupBoard", false, fieldName = "Csoport toplista mutatása",
+    var showGroupBoard by BooleanSettingRef(false, fieldName = "Csoport toplista mutatása",
         description = "Csoport toplista látható legyen-e"
     )
 
-    val maxGroupEntryToShow = NumberSettingRef(componentSettingService, component,
-        "maxGroupEntryToShow", -1, fieldName = "Toplista sorainak száma", strictConversion = false,
+    var maxGroupEntryToShow by NumberSettingRef(-1, fieldName = "Toplista sorainak száma", strictConversion = false,
         description = "Hány csoportot mutasson, -1 = az összeset"
     )
 
-    val showGroupOfUser = BooleanSettingRef(componentSettingService, component,
-        "showGroupOfUser", false, fieldName = "Felhasználó csoportjának kijelzése",
+    var showGroupOfUser by BooleanSettingRef(false, fieldName = "Felhasználó csoportjának kijelzése",
         description = "A felhasználói listán a felhasználó csoportja látható legyen-e"
     )
 
-    val searchEnabled = BooleanSettingRef(componentSettingService, component,
-        "searchEnabled", false, fieldName = "Keresés elérhető",
+    var searchEnabled by BooleanSettingRef(false, fieldName = "Keresés elérhető",
         description = "Legyen-e kereső az oldal tetején"
     )
 
-    val showTokenCountByRarity = BooleanSettingRef(componentSettingService, component,
-        "showTokenCountByRarity", false, fieldName = "Begyűjtött tokenek száma ritkaság szerint",
+    var showTokenCountByRarity by BooleanSettingRef(false, fieldName = "Begyűjtött tokenek száma ritkaság szerint",
         description = "Legyen-e látható a begyűjtött tokenek száma ritkaság szerint, módosítás után nyomj egy újraszámolást"
     )
 
-    val showTokenMaxCountByRarity = BooleanSettingRef(componentSettingService, component,
-        "showTokenMaxCountByRarity", false, fieldName = "Összes token szám ritkaság szerint",
+    var showTokenMaxCountByRarity by BooleanSettingRef(false, fieldName = "Összes token szám ritkaság szerint",
         description = "Legyen-e látható az összesen begyűjthető tokenek száma ritkaság szerint"
     )
 

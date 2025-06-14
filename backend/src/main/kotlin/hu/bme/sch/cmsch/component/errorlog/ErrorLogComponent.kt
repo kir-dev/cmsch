@@ -23,6 +23,7 @@ class ErrorLogComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "errorlog",
     "/errorlog",
     "Kliens hibaüzenetek",
@@ -31,25 +32,15 @@ class ErrorLogComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            errorLogGroup,
-            minRole,
-            receiveReports
-        )
-    }
-
-    val errorLogGroup = SettingGroup(component, "errorLogGroup", fieldName = "Kliens hibák")
+    val errorLogGroup by SettingGroup(fieldName = "Kliens hibák")
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES,  minRoleToEdit = RoleType.SUPERUSER,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,  minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "Jogosultságok", description = "Melyik roleok küldhetnek hibajelentéseket"
     )
 
-    val receiveReports = BooleanSettingRef(componentSettingService, component,
-        "receiveReports", true, fieldName = "Kliens hibajelentések fogadása", serverSideOnly = true
+    var receiveReports by BooleanSettingRef(true, fieldName = "Kliens hibajelentések fogadása", serverSideOnly = true
     )
 
 }

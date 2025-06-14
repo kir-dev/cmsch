@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.component.app.MenuSettingItem
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -20,6 +21,7 @@ class RaceComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "race",
     "/race",
     "Verseny",
@@ -32,78 +34,55 @@ class RaceComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            raceGroup,
-            title, menuDisplayName, minRole,
+    val raceGroup by SettingGroup(fieldName = "Verseny")
 
-            displayGroup,
-            visible,
-            extraCategoriesVisible,
-            ascendingOrder,
-            defaultCategoryDescription,
-            searchEnabled,
-
-            freestyleGroup,
-            freestyleCategoryName,
-            freestyleCategoryDescription,
-        )
-    }
-
-    val raceGroup = SettingGroup(component, "raceGroup", fieldName = "Verseny")
-
-    final val title = StringSettingRef(componentSettingService, component,
-        "title", "Sörmérés", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    final var title by StringSettingRef("Sörmérés",
+        fieldName = "Lap címe",
+        description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Sörmérés", serverSideOnly = true,
+    final override var menuDisplayName by StringSettingRef("Sörmérés", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "",
+    final override var minRole by MinRoleSettingRef(setOf(),
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = SettingGroup(component, "displayGroup", fieldName = "Kijelzés")
+    val displayGroup by SettingGroup(fieldName = "Kijelzés")
 
-    val visible = BooleanSettingRef(componentSettingService, component,
-        "visible", false, fieldName = "Látható", description = "Leküldésre kerüljön-e a toplista"
+    var visible by BooleanSettingRef(false, fieldName = "Látható", description = "Leküldésre kerüljön-e a toplista"
     )
 
-    val extraCategoriesVisible = BooleanSettingRef(componentSettingService, component,
-        "extraCategoriesVisible", false, fieldName = "Extra kategóriák láthatóak",
+    var extraCategoriesVisible by BooleanSettingRef(false, fieldName = "Extra kategóriák láthatóak",
         description = "Leküldésre kerüljön-e az extra kategóriás toplista"
     )
 
-    val ascendingOrder = BooleanSettingRef(componentSettingService, component,
-        "ascendingOrder", true, serverSideOnly = true, fieldName = "Növekvő sorrend",
+    var ascendingOrder by BooleanSettingRef(true, serverSideOnly = true, fieldName = "Növekvő sorrend",
         description = "A toplista elemei növekvő sorrendben vannak"
     )
 
-    val defaultCategoryDescription = StringSettingRef(componentSettingService, component,
-        "defaultCategoryDescription", "",
-        type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Alapértelmezett kategória leírása",
+    var defaultCategoryDescription by StringSettingRef(
+        "", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Alapértelmezett kategória leírása",
     )
 
-    val searchEnabled = BooleanSettingRef(componentSettingService, component,
-        "searchEnabled", false, fieldName = "Keresés elérhető", description = "Legyen-e kereső az oldal tetején"
+    var searchEnabled by BooleanSettingRef(false,
+        fieldName = "Keresés elérhető",
+        description = "Legyen-e kereső az oldal tetején"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val freestyleGroup = SettingGroup(component, "freestyleGroup", fieldName = "Szabad kategória")
+    val freestyleGroup by SettingGroup(fieldName = "Szabad kategória")
 
-    val freestyleCategoryName = StringSettingRef(componentSettingService, component,
-        "freestyleCategoryName", "Funky mérés",
+    var freestyleCategoryName by StringSettingRef("Funky mérés",
         fieldName = "Szabad kategória neve", description = "Ez lesz a szabad kategória neve, és a menü neve is"
     )
 
-    val freestyleCategoryDescription = StringSettingRef(componentSettingService, component,
-        "freestyleCategoryDescription", "", type = SettingType.LONG_TEXT_MARKDOWN,
+    var freestyleCategoryDescription by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Szabad kategória leírása", description = "Ez lesz a szabad kategória leírása"
     )
 
@@ -112,7 +91,7 @@ class RaceComponent(
             return listOf(
                 MenuSettingItem(
                     this.javaClass.simpleName + "@funky",
-                    freestyleCategoryName.getValue(), "/race/freestyle", 0,
+                    freestyleCategoryName, "/race/freestyle", 0,
                     visible = false, subMenu = false, external = false
                 )
             )

@@ -20,6 +20,8 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.util.isAvailableForRole
+import hu.bme.sch.cmsch.util.mapIfTrue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
@@ -53,7 +55,7 @@ class ProfileService(
     fun getProfileForUser(user: UserEntity): ProfileView {
         val group = user.group
         val leavable = fetchWhetherGroupLeavable(group)
-        val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType.getValue() }.orElse(ALL_TOKEN_TYPE)
+        val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType }.orElse(ALL_TOKEN_TYPE)
         val incompleteTasks = tasksService.map { it.getTasksThatNeedsToBeCompleted(user) }.orElse(null)
 
         return ProfileView(
@@ -84,7 +86,7 @@ class ProfileService(
             tokens = tokenService.map { repo -> repo.getTokensForUser(user) }.orElse(null),
             collectedTokenCount = fetchCollectedTokenCount(user, group, tokenCategoryToDisplay).orElse(null),
             totalTokenCount = fetchTotalTokenCount(tokenCategoryToDisplay).orElse(null),
-            minTokenToComplete = tokenComponent.map { it.collectRequiredTokens.getValue().toInt() }.orElse(null),
+            minTokenToComplete = tokenComponent.map { it.collectRequiredTokens.toInt() }.orElse(null),
 
             // Task component
             totalTaskCount = tasksService.map { it.getTotalTasksForUser(user) }.orElse(null),
@@ -115,15 +117,15 @@ class ProfileService(
 
     private fun mapQr(user: UserEntity): String? {
         val canSeeQr =
-            profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr.getValue()
-        if (profileComponent.showQrOnlyIfTicketPresent.getValue()
-            && (canSeeQr || profileComponent.showProfilePicture.getValue())) {
+            profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr
+        if (profileComponent.showQrOnlyIfTicketPresent
+            && (canSeeQr || profileComponent.showProfilePicture)) {
 
             return if (admissionService.map { it.hasTicket(user.cmschId) }.orElse(false)) user.cmschId else null
         }
 
-        return if (canSeeQr || profileComponent.showProfilePicture.getValue()) {
-            if (profileComponent.bmejegyQrIfPresent.getValue())
+        return if (canSeeQr || profileComponent.showProfilePicture) {
+            if (profileComponent.bmejegyQrIfPresent)
                 fetchBmejegyTicket(user)
             else user.cmschId
         } else null
@@ -166,7 +168,7 @@ class ProfileService(
     private fun fetchFallbackGroup() =
         profileComponent.selectionEnabled.mapIfTrue {
             groupRepository
-                .findByName(loginComponent.map { it.fallbackGroupName.getValue() }.orElse("Vendég"))
+                .findByName(loginComponent.map { it.fallbackGroupName }.orElse("Vendég"))
                 .map { it.id }
                 .orElse(null)
         }
@@ -185,7 +187,7 @@ class ProfileService(
     private fun fetchLocations(group: GroupEntity?) =
         locationService.map { repo ->
             repo.findLocationsOfGroup(group?.id ?: 0)
-                .filter { it.timestamp + profileComponent.locationTimeout.getValue() > clock.getTimeInSeconds() }
+                .filter { it.timestamp + profileComponent.locationTimeout > clock.getTimeInSeconds() }
                 .map {
                     GroupMemberLocationDto(
                         it.alias.ifBlank { it.userName },
@@ -223,7 +225,7 @@ class ProfileService(
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun changeAlias(user: UserEntity, newAlias: String): Boolean {
-        return if (newAlias.matches(Regex(profileComponent.aliasRegex.getValue()))) {
+        return if (newAlias.matches(Regex(profileComponent.aliasRegex))) {
             user.alias = newAlias.trim()
             userRepository.save(user)
             true

@@ -18,6 +18,7 @@ class HomeComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "home",
     "/home",
     "Kezdőlap",
@@ -26,84 +27,56 @@ class HomeComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            homeGroup,
-            title, menuDisplayName, minRole,
+    val homeGroup by SettingGroup(fieldName = "Kezdőlap")
 
-            displayGroup,
-            welcomeMessage,
-            youtubeVideoIds,
-            content,
-            showEvents,
-
-            newsEmbeddedComponentGroup,
-            maxVisibleCount,
-            showNews,
-            showGalleryImages,
-        )
-    }
-
-    val homeGroup = SettingGroup(component, "homeGroup", fieldName = "Kezdőlap")
-
-    final val title = StringSettingRef(componentSettingService, component,
-        "title", "Kezdőlap", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    final var title by StringSettingRef("Kezdőlap", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Kezdőlap", serverSideOnly = true,
+    final override var menuDisplayName by StringSettingRef("Kezdőlap", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = SettingGroup(component, "displayGroup", fieldName = "Megjelenés",
+    val displayGroup by SettingGroup(fieldName = "Megjelenés",
         description = "A kezdőlap megjelenése")
 
-    val welcomeMessage = StringSettingRef(componentSettingService, component,
-        "welcomeMessage", "Üdvözlünk a {} portálon", fieldName = "Üdvözlő üzenet",
+    var welcomeMessage by StringSettingRef("Üdvözlünk a {} portálon", fieldName = "Üdvözlő üzenet",
         description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
     )
 
-    val youtubeVideoIds = StringSettingRef(componentSettingService, component,
-        "youtubeVideoIds", "", fieldName = "Promó videó(k)",
+    var youtubeVideoIds by StringSettingRef("", fieldName = "Promó videó(k)",
         description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni" +
                 " pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)"
     )
 
-    val content = StringSettingRef(componentSettingService, component,
-        "content", "", type = SettingType.LONG_TEXT_MARKDOWN,
+    var content by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen."
     )
 
-    val showEvents = BooleanSettingRef(componentSettingService, component,
-        "showEvents", false, fieldName = "Események láthatóak",
+    var showEvents by BooleanSettingRef(false, fieldName = "Események láthatóak",
         description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon"
     )
 
-    val showGalleryImages = BooleanSettingRef(componentSettingService, component,
-        "showGalleryImages", false, fieldName = "Galéria képek láthatóak",
+    var showGalleryImages by BooleanSettingRef(false, fieldName = "Galéria képek láthatóak",
         description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val newsEmbeddedComponentGroup = SettingGroup(component, "embeddedGroup", fieldName = "Hírek rész",
+    val newsEmbeddedComponentGroup by SettingGroup(fieldName = "Hírek rész",
         description = "Csak akkor van hatása ha a news komponens be van kapcsolva"
     )
 
-    val maxVisibleCount = NumberSettingRef(componentSettingService, component,
-        "embeddedMaxVisibleCount", 3, serverSideOnly = true, strictConversion = false,
+    var maxVisibleCount by NumberSettingRef(3, serverSideOnly = true, strictConversion = false,
         fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hirdetés komponensben"
     )
 
-    val showNews = BooleanSettingRef(componentSettingService, component,
-        "showNews", false, fieldName = "Hírek láthatóak",
+    var showNews by BooleanSettingRef(false, fieldName = "Hírek láthatóak",
         description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon"
     )
 

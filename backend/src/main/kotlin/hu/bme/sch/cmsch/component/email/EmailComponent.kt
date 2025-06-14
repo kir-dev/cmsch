@@ -20,6 +20,7 @@ class EmailComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "email",
     "/",
     "Email",
@@ -28,95 +29,61 @@ class EmailComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-            emailGroup,
-            emailProvider,
+    val emailGroup by SettingGroup(fieldName = "Email küldés")
 
-            mailgunGroup,
-            enableMailgun,
-            mailgunEmailAccount,
-            mailgunAccountName,
-            mailgunDomain,
-
-            kirmailGroup,
-            enableKirMail,
-            kirmailToken,
-            kirmailEmailAddress,
-            kirmailAccountName,
-            kirmailReplyTo,
-            kirmailQueue,
-        )
-    }
-
-    val emailGroup = SettingGroup(component, "emailGroup", fieldName = "Email küldés")
-
-    val emailProvider = StringSettingRef(componentSettingService, component,
-        "emailProvider", "kirmail", fieldName = "Email szolgáltató", serverSideOnly = true,
+    var emailProvider by StringSettingRef("kirmail", fieldName = "Email szolgáltató", serverSideOnly = true,
         description = "Ezek lehetnek: kirmail, mailgun (ettől még be kell kapcsolni őket lentebb)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val mailgunGroup = SettingGroup(component, "mailgunGroup", fieldName = "Mailgun beállítások")
+    val mailgunGroup by SettingGroup(fieldName = "Mailgun beállítások")
 
-    val enableMailgun = BooleanSettingRef(componentSettingService, component,
-        "enableMailgun", false, fieldName = "Küldés Mailgunnal", serverSideOnly = true,
+    var enableMailgun by BooleanSettingRef(false, fieldName = "Küldés Mailgunnal", serverSideOnly = true,
         description = "Csak akkor működik ha API key meg van adva környezeti változónak"
     )
 
-    val mailgunEmailAccount = StringSettingRef(componentSettingService, component,
-        "mailgunEmailAccount", "noreply", fieldName = "Email felhasználó", serverSideOnly = true,
+    var mailgunEmailAccount by StringSettingRef("noreply", fieldName = "Email felhasználó", serverSideOnly = true,
         description = "Ezzel az email felhasználónévvel lesznek kiküldve."
     )
 
-    val mailgunAccountName = StringSettingRef(componentSettingService, component,
-        "mailgunAccountName", "Rendezők", fieldName = "Email teljes név", serverSideOnly = true,
+    var mailgunAccountName by StringSettingRef("Rendezők", fieldName = "Email teljes név", serverSideOnly = true,
         description = "Ez a név lesz elküldve a felhasználóhoz"
     )
 
-    val mailgunDomain = StringSettingRef(componentSettingService, component,
-        "mailgunDomain", "golya.sch-bme.hu", fieldName = "Email domainje", serverSideOnly = true,
+    var mailgunDomain by StringSettingRef("golya.sch-bme.hu", fieldName = "Email domainje", serverSideOnly = true,
         description = "Ez a @ utáni rész. Fel kell konfigolva legyen, nem lehet akármit ideírni."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val kirmailGroup = SettingGroup(component, "kirmailGroup", fieldName = "Kir Mail beállítások")
+    val kirmailGroup by SettingGroup(fieldName = "Kir Mail beállítások")
 
-    val enableKirMail = BooleanSettingRef(componentSettingService, component,
-        "enableKirMail", false, fieldName = "Küldés Kir Maillel", serverSideOnly = true,
+    var enableKirMail by BooleanSettingRef(false, fieldName = "Küldés Kir Maillel", serverSideOnly = true,
         description = "Csak akkor működik ha token be van állítva"
     )
 
-    val kirmailToken = StringSettingRef(componentSettingService, component,
-        "kirmailToken", "", fieldName = "Kir Mail Token", serverSideOnly = true,
+    var kirmailToken by StringSettingRef("", fieldName = "Kir Mail Token", serverSideOnly = true,
         minRoleToEdit = RoleType.SUPERUSER, description = "Ez az access token. Generáld az admin.mail.kir-dev.hu-n!"
     )
 
-    val kirmailEmailAddress = StringSettingRef(componentSettingService, component,
-        "kirmailEmailAddress", "noreply-golyatabor@sch.bme.hu",
+    var kirmailEmailAddress by StringSettingRef("noreply-golyatabor@sch.bme.hu",
         fieldName = "Kir Mail Email cím", serverSideOnly = true, description = "Erről a címről fogja küldeni"
     )
 
-    val kirmailAccountName = StringSettingRef(componentSettingService, component,
-        "kirmailAccountName", "Rendezők", fieldName = "Kir Mail Email teljes név", serverSideOnly = true,
+    var kirmailAccountName by StringSettingRef("Rendezők", fieldName = "Kir Mail Email teljes név", serverSideOnly = true,
         description = "Ez a név lesz elküldve a felhasználóhoz"
     )
 
-    val kirmailReplyTo = StringSettingRef(componentSettingService, component,
-        "kirmailReplyTo", "golyatabor@sch.bme.hu", fieldName = "Kir Mail Válasz emailcím", serverSideOnly = true,
+    var kirmailReplyTo by StringSettingRef("golyatabor@sch.bme.hu", fieldName = "Kir Mail Válasz emailcím", serverSideOnly = true,
         description = "Erre küldjék a választ a felhasználók (reply-to)"
     )
 
-    val kirmailQueue = StringSettingRef(componentSettingService, component,
-        "kirmailQueue", "ms-golya", fieldName = "Kir Mail Queue", serverSideOnly = true,
+    var kirmailQueue by StringSettingRef("ms-golya", fieldName = "Kir Mail Queue", serverSideOnly = true,
         description = "Erre küldjék a választ a felhasználók (reply-to)"
     )
 

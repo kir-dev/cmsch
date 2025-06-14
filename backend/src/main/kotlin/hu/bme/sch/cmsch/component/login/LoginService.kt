@@ -114,7 +114,7 @@ class LoginService(
         }
 
         // Grant admin by email
-        if (loginComponent.googleAdminAddresses.getValue().split(Regex(", *")).contains(user.email)) {
+        if (loginComponent.googleAdminAddresses.split(Regex(", *")).contains(user.email)) {
             log.info("Granting ADMIN for ${user.fullName}")
             user.role = RoleType.ADMIN
             user.detailsImported = true
@@ -124,7 +124,7 @@ class LoginService(
 
         // Assign a fallback group if the user still doesn't have one
         if (user.groupName.isBlank()) {
-            groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
+            groups.findByName(loginComponent.fallbackGroupName).ifPresent {
                 user.groupName = it.name
                 user.group = it
                 user.detailsImported = true
@@ -191,48 +191,48 @@ class LoginService(
 
         // Assign using unit-scope
         val bmeUnitScopes = profile.bmeunitscope
-        if (unitScopeComponent.unitScopeGrantsEnabled.getValue() && bmeUnitScopes != null) {
+        if (unitScopeComponent.unitScopeGrantsEnabled && bmeUnitScopes != null) {
             if (bmeUnitScopes.any { it.bme }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.bmeGrantRoleAttendee.getValue(),
-                    unitScopeComponent.bmeGrantRolePrivileged.getValue(),
-                    unitScopeComponent.bmeGrantGroupName.getValue())
+                    unitScopeComponent.bmeGrantRoleAttendee,
+                    unitScopeComponent.bmeGrantRolePrivileged,
+                    unitScopeComponent.bmeGrantGroupName)
             }
             if (bmeUnitScopes.any { it.active }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.activeGrantRoleAttendee.getValue(),
-                    unitScopeComponent.activeGrantRolePrivileged.getValue(),
-                    unitScopeComponent.activeGrantGroupName.getValue())
+                    unitScopeComponent.activeGrantRoleAttendee,
+                    unitScopeComponent.activeGrantRolePrivileged,
+                    unitScopeComponent.activeGrantGroupName)
             }
             if (bmeUnitScopes.any { it.newbie }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.newbieGrantRoleAttendee.getValue(),
-                    unitScopeComponent.newbieGrantRolePrivileged.getValue(),
-                    unitScopeComponent.newbieGrantGroupName.getValue())
+                    unitScopeComponent.newbieGrantRoleAttendee,
+                    unitScopeComponent.newbieGrantRolePrivileged,
+                    unitScopeComponent.newbieGrantGroupName)
             }
             if (bmeUnitScopes.any { it.vik }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vikGrantRoleAttendee.getValue(),
-                    unitScopeComponent.vikGrantRolePrivileged.getValue(),
-                    unitScopeComponent.vikGrantGroupName.getValue())
+                    unitScopeComponent.vikGrantRoleAttendee,
+                    unitScopeComponent.vikGrantRolePrivileged,
+                    unitScopeComponent.vikGrantGroupName)
             }
             if (bmeUnitScopes.any { it.vik && it.newbie }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vikNewbieGrantRoleAttendee.getValue(),
-                    unitScopeComponent.vikNewbieGrantRolePrivileged.getValue(),
-                    unitScopeComponent.vikNewbieGrantGroupName.getValue())
+                    unitScopeComponent.vikNewbieGrantRoleAttendee,
+                    unitScopeComponent.vikNewbieGrantRolePrivileged,
+                    unitScopeComponent.vikNewbieGrantGroupName)
             }
             if (bmeUnitScopes.any { it.vbk }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vbkGrantRoleAttendee.getValue(),
-                    unitScopeComponent.vbkGrantRolePrivileged.getValue(),
-                    unitScopeComponent.vbkGrantGroupName.getValue())
+                    unitScopeComponent.vbkGrantRoleAttendee,
+                    unitScopeComponent.vbkGrantRolePrivileged,
+                    unitScopeComponent.vbkGrantGroupName)
             }
             if (bmeUnitScopes.any { it.vbk && it.newbie }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vbkNewbieGrantRoleAttendee.getValue(),
-                    unitScopeComponent.vbkNewbieGrantRolePrivileged.getValue(),
-                    unitScopeComponent.vbkNewbieGrantGroupName.getValue())
+                    unitScopeComponent.vbkNewbieGrantRoleAttendee,
+                    unitScopeComponent.vbkNewbieGrantRolePrivileged,
+                    unitScopeComponent.vbkNewbieGrantGroupName)
             }
         }
         if (bmeUnitScopes != null) {
@@ -241,7 +241,7 @@ class LoginService(
 
         // Assign fallback group if user still don't have one
         if (user.groupName.isBlank()) {
-            groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
+            groups.findByName(loginComponent.fallbackGroupName).ifPresent {
                 user.groupName = it.name
                 user.group = it
             }
@@ -305,7 +305,7 @@ class LoginService(
         profile: ProfileResponse,
         user: UserEntity
     ) {
-        val staffGroups = loginComponent.staffGroups.getValue()
+        val staffGroups = loginComponent.staffGroups
             .split(',')
             .mapNotNull { it.toLongOrNull() }
             .toLongArray()
@@ -322,7 +322,7 @@ class LoginService(
             user.role = RoleType.STAFF
 
             if (user.groupName.isBlank()) {
-                groups.findByName(loginComponent.staffGroupName.getValue()).ifPresent {
+                groups.findByName(loginComponent.staffGroupName).ifPresent {
                     user.groupName = it.name
                     user.group = it
                 }
@@ -334,7 +334,7 @@ class LoginService(
         profile: ProfileResponse,
         user: UserEntity
     ) {
-        val adminGroups = loginComponent.adminGroups.getValue()
+        val adminGroups = loginComponent.adminGroups
             .split(',')
             .mapNotNull { it.toLongOrNull() }
             .toLongArray()
@@ -356,7 +356,7 @@ class LoginService(
         profile: ProfileResponse,
         user: UserEntity
     ) {
-        val organizerGroups = loginComponent.organizerGroups.getValue()
+        val organizerGroups = loginComponent.organizerGroups
             .split(',')
             .mapNotNull { it.toLongOrNull() }
             .toLongArray()
@@ -369,7 +369,7 @@ class LoginService(
             ?: false
 
         if (memberOfAnyOrganizerGroups && user.role.value < RoleType.STAFF.value) {
-            groups.findByName(loginComponent.organizerGroupName.getValue()).ifPresent {
+            groups.findByName(loginComponent.organizerGroupName).ifPresent {
                 log.info("Identified organizer: ${user.fullName}")
                 user.groupName = it.name
                 user.group = it
@@ -411,26 +411,26 @@ class LoginService(
         }
 
         // Grant admin by email
-        if (loginComponent.keycloakAdminAddresses.getValue().split(Regex(", *")).contains(user.email)) {
+        if (loginComponent.keycloakAdminAddresses.split(Regex(", *")).contains(user.email)) {
             log.info("Granting ADMIN for ${user.fullName}")
             user.role = RoleType.ADMIN
             user.detailsImported = true
         }
 
         // Grant roles by keycloak role names
-        if (profile.groups.contains(loginComponent.keycloakStaffRole.getValue())) {
+        if (profile.groups.contains(loginComponent.keycloakStaffRole)) {
             log.info("Granting STAFF for ${user.fullName}")
             user.role = RoleType.STAFF
             user.detailsImported = true
         }
 
-        if (profile.groups.contains(loginComponent.keycloakAdminRole.getValue())) {
+        if (profile.groups.contains(loginComponent.keycloakAdminRole)) {
             log.info("Granting ADMIN for ${user.fullName}")
             user.role = RoleType.ADMIN
             user.detailsImported = true
         }
 
-        if (profile.groups.contains(loginComponent.keycloakSuperuserRole.getValue())) {
+        if (profile.groups.contains(loginComponent.keycloakSuperuserRole)) {
             log.info("Granting SUPERUSER for ${user.fullName}")
             user.role = RoleType.SUPERUSER
             user.detailsImported = true
@@ -440,7 +440,7 @@ class LoginService(
 
         // Assign fallback group if user still don't have one
         if (user.groupName.isBlank()) {
-            groups.findByName(loginComponent.fallbackGroupName.getValue()).ifPresent {
+            groups.findByName(loginComponent.fallbackGroupName).ifPresent {
                 user.groupName = it.name
                 user.group = it
                 user.detailsImported = true

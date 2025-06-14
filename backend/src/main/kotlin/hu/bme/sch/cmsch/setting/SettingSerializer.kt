@@ -50,6 +50,8 @@ data class RoleTypeSetSettingSerializer(private val grantedRoles: Set<RoleType>)
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun deserialize(value: String, defaultValue: Set<RoleType>, strict: Boolean): Set<RoleType> {
+        if (value.isBlank()) return grantedRoles
+
         val parsedRoles = value
             .splitToSequence(",")
             .map { parseRoleType(it, strict) }

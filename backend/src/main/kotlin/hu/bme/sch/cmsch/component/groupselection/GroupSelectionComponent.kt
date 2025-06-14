@@ -20,6 +20,7 @@ class GroupSelectionComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "groupselection",
     "/",
     "Csapat választás",
@@ -28,16 +29,9 @@ class GroupSelectionComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-        )
-    }
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", RoleType.BASIC.name, minRoleToEdit = RoleType.STAFF,
+    final override var minRole by MinRoleSettingRef(setOf(RoleType.BASIC), minRoleToEdit = RoleType.STAFF,
         fieldName = "Jogosultságok", description = "Melyik roleokkal lehetséges a csoport választás"
     )
 

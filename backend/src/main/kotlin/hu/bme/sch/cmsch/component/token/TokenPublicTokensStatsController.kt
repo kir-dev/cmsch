@@ -47,7 +47,7 @@ class TokenPublicTokensStatsController(
                 id =    submissions[0].token?.id ?: 0,
                 token = submissions[0].token?.title ?: "n/a",
                 type =  submissions[0].token?.type ?: "n/a",
-                count = submissions.count { it.ownerUser?.groupName != loginComponent.organizerGroupName.getValue() }
+                count = submissions.count { it.ownerUser?.groupName != loginComponent.organizerGroupName }
             )
         }
         .filter { it.count > 0 }
@@ -71,7 +71,7 @@ class TokenPublicTokensStatsController(
     override fun view(model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
-        if (!user.isAdmin() && user.groupName != loginComponent.organizerGroupName.getValue()) {
+        if (!user.isAdmin() && user.groupName != loginComponent.organizerGroupName) {
             model.addAttribute("user", user)
             model.addAttribute("permission", "IN_ORGANIZER_GROUP")
             auditLog.admin403(user, component.component, "GET /$view", "IN_ORGANIZER_GROUP")

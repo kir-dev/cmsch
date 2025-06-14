@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -51,7 +52,7 @@ class NewsApiController(
         ApiResponse(responseCode = "403", description = "This endpoint is not available for the given auth header")
     ])
     fun newsArticle(@PathVariable path: String, auth: Authentication?): ResponseEntity<NewsEntity> {
-        if (!newsComponent.showDetails.getValue())
+        if (!newsComponent.showDetails)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         val user = auth?.getUserOrNull()

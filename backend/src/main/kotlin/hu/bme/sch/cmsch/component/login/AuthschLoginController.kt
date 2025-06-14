@@ -54,7 +54,7 @@ class AuthschLoginController(
 
     @GetMapping("/control/login")
     fun loginDefault(request: HttpServletRequest): String {
-        return "redirect:${applicationComponent.siteUrl.getValue()}login"
+        return "redirect:${applicationComponent.siteUrl}login"
     }
 
     @GetMapping("/control/logout")
@@ -71,7 +71,7 @@ class AuthschLoginController(
         } catch (e: Exception) {
             // It should be logged out anyway
         }
-        return "redirect:${applicationComponent.siteUrl.getValue()}?logged-out=true"
+        return "redirect:${applicationComponent.siteUrl}?logged-out=true"
     }
 
     @GetMapping("/control/open-site")
@@ -79,15 +79,15 @@ class AuthschLoginController(
         if (auth != null) {
             if (auth.principal !is CmschUser) {
                 log.error("User is not CmschUser {} {}", auth, auth.javaClass.simpleName)
-                return "redirect:${applicationComponent.siteUrl.getValue()}?error=cannot-generate-jwt"
+                return "redirect:${applicationComponent.siteUrl}?error=cannot-generate-jwt"
             }
             val jwtToken = jwtTokenProvider.createToken(auth.principal as CmschUser)
 
             response.addCookie(createJwtCookie(jwtToken))
 
-            return "redirect:${applicationComponent.siteUrl.getValue()}"
+            return "redirect:${applicationComponent.siteUrl}"
         }
-        return "redirect:${applicationComponent.siteUrl.getValue()}"
+        return "redirect:${applicationComponent.siteUrl}"
     }
 
     @ResponseBody
@@ -111,7 +111,7 @@ class AuthschLoginController(
             path = "/"
             maxAge = startupPropertyConfig.sessionValiditySeconds.toInt()
             secure = true
-            domain = getDomainFromUrl(applicationComponent.siteUrl.getValue())
+            domain = getDomainFromUrl(applicationComponent.siteUrl)
             setAttribute(Constants.COOKIE_SAME_SITE_ATTR, SameSiteCookies.LAX.value)
         }
     }

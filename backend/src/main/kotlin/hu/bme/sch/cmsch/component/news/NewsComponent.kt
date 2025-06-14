@@ -18,6 +18,7 @@ class NewsComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "news",
     "/news",
     "Hírek",
@@ -26,33 +27,21 @@ class NewsComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            newsGroup,
-            title, menuDisplayName, minRole,
-            showDetails,
-        )
-    }
+    val newsGroup by SettingGroup(fieldName = "Hírek")
 
-    val newsGroup = SettingGroup(component, "newsGroup", fieldName = "Hírek")
-
-    final val title = StringSettingRef(componentSettingService, component,
-        "title", "Hírek",
+    final var title by StringSettingRef("Hírek",
         fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Hírek", serverSideOnly = true,
+    final override var menuDisplayName by StringSettingRef("Hírek", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val showDetails = BooleanSettingRef(componentSettingService,
-        component, "showDetails", false, fieldName = "Részletes nézet",
+    var showDetails by BooleanSettingRef(false, fieldName = "Részletes nézet",
         description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is"
     )
 

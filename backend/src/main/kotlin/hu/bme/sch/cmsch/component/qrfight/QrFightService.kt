@@ -595,10 +595,10 @@ class QrFightService(
     }
 
     fun setIndulaschText() {
-        if (!qrFightComponent.indulaschTowerEnabled.getValue())
+        if (!qrFightComponent.indulaschTowerEnabled)
             return
 
-        val tower = qrTowerRepository.findAllBySelector(qrFightComponent.indulaschTowerSelector.getValue())
+        val tower = qrTowerRepository.findAllBySelector(qrFightComponent.indulaschTowerSelector)
             .firstOrNull()
             ?: return
 

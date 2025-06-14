@@ -26,7 +26,7 @@ class LocationApiController(
         val user = auth?.getUserOrNull() ?: return listOf()
         if (user.groupName.isEmpty())
             return listOf()
-        if (!profileComponent.map { it.showGroupLeadersLocations.getValue() }.orElse(false))
+        if (!profileComponent.map { it.showGroupLeadersLocations }.orElse(false))
             return listOf()
         return locationService.findLocationsOfGroupName(user.groupName)
     }

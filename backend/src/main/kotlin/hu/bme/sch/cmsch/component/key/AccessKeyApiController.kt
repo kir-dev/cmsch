@@ -2,6 +2,8 @@ package hu.bme.sch.cmsch.component.key
 
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
+import hu.bme.sch.cmsch.util.mapIfTrue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,20 +25,19 @@ class AccessKeyApiController(
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return ResponseEntity.ok(AccessKeyView(
-            title = accessKeyComponent.title.getValue(),
-            topMessage = accessKeyComponent.enabled
-                .mapIfTrue { accessKeyComponent.topMessage.getValue() } ?: "",
-            fieldName = accessKeyComponent.fieldName.getValue(),
-            enabled = accessKeyComponent.enabled.getValue(),
+            title = accessKeyComponent.title,
+            topMessage = accessKeyComponent.enabled.mapIfTrue { accessKeyComponent.topMessage } ?: "",
+            fieldName = accessKeyComponent.fieldName,
+            enabled = accessKeyComponent.enabled,
         ))
     }
 
     @PostMapping("/access-key")
     fun submitKey(auth: Authentication?, @RequestBody payload: AccessKeyRequest): AccessKeyResponse {
-        if (!accessKeyComponent.enabled.getValue()) {
+        if (!accessKeyComponent.enabled) {
             return AccessKeyResponse(
                 success = false,
-                reason = accessKeyComponent.disabledErrorMessage.getValue(),
+                reason = accessKeyComponent.disabledErrorMessage,
                 refreshSession = false
             )
         }
@@ -48,7 +49,7 @@ class AccessKeyApiController(
         if (user == null) {
             return AccessKeyResponse(
                 success = false,
-                reason = accessKeyComponent.mustLogInErrorMessage.getValue(),
+                reason = accessKeyComponent.mustLogInErrorMessage,
                 refreshSession = false
             )
         }

@@ -72,31 +72,31 @@ open class LeaderBoardService(
     }
 
     fun getBoardForGroups(): List<LeaderBoardAsGroupEntryDto> {
-        if (leaderBoardComponent.leaderboardEnabled.getValue())
+        if (leaderBoardComponent.leaderboardEnabled)
             return cachedTopListForGroups
         return listOf()
     }
 
     fun getBoardForUsers(): List<LeaderBoardAsUserEntryDto> {
-        if (leaderBoardComponent.leaderboardEnabled.getValue())
+        if (leaderBoardComponent.leaderboardEnabled)
             return cachedTopListForUsers
         return listOf()
     }
 
     fun getBoardDetailsForGroups(): List<TopListDetails> {
-        if (leaderBoardComponent.leaderboardDetailsEnabled.getValue())
+        if (leaderBoardComponent.leaderboardDetailsEnabled)
             return cachedDetailsForGroups
         return listOf()
     }
 
     fun getBoardDetailsForUsers(): List<TopListDetails> {
-        if (leaderBoardComponent.leaderboardDetailsEnabled.getValue())
+        if (leaderBoardComponent.leaderboardDetailsEnabled)
             return cachedDetailsForUsers
         return listOf()
     }
 
     fun getBoardDetailsByCategoryForGroups(): List<TopListByCategoryDetails> {
-        if (leaderBoardComponent.leaderboardDetailsByCategoryEnabled.getValue())
+        if (leaderBoardComponent.leaderboardDetailsByCategoryEnabled)
             return transpose(cachedDetailsForGroups)
         return listOf()
     }
@@ -110,7 +110,7 @@ open class LeaderBoardService(
     }
 
     fun getBoardDetailsByCategoryForUsers(): List<TopListByCategoryDetails> {
-        if (leaderBoardComponent.leaderboardDetailsByCategoryEnabled.getValue())
+        if (leaderBoardComponent.leaderboardDetailsByCategoryEnabled)
             return transpose(cachedDetailsForUsers)
         return listOf()
     }
@@ -124,13 +124,13 @@ open class LeaderBoardService(
     }
 
     fun getScoreOfGroup(groupName: String): Int? {
-        if (leaderBoardComponent.leaderboardEnabled.getValue())
+        if (leaderBoardComponent.leaderboardEnabled)
             return cachedTopListForGroups.find { it.name == groupName }?.totalScore ?: 0
         return null
     }
 
     fun getScoreOfUser(user: CmschUser): Int? {
-        if (leaderBoardComponent.leaderboardEnabled.getValue())
+        if (leaderBoardComponent.leaderboardEnabled)
             return cachedTopListForUsers.find { it.id == user.id }?.totalScore ?: 0
         return null
     }
@@ -139,7 +139,7 @@ open class LeaderBoardService(
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
     open fun recalculate() {
-        if (leaderBoardComponent.leaderboardFrozen.getValue()) {
+        if (leaderBoardComponent.leaderboardFrozen) {
             log.info("Recalculating is disabled now")
             return
         }
@@ -150,11 +150,11 @@ open class LeaderBoardService(
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForGroups() {
-        val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue() }.orElse(0) / 100f
+        val hintPercentage: Float = riddleComponent.map { it.hintScorePercent }.orElse(0) / 100f
         val details = mutableMapOf<Int, TopListDetails>()
         log.info("Recalculating group top list cache; hint:{}", hintPercentage)
 
-        val tasksPercent = leaderBoardComponent.tasksPercent.getValue() / 100.0f
+        val tasksPercent = leaderBoardComponent.tasksPercent / 100.0f
         val tasks = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.GROUP -> {
                 taskSubmissions.map { it.findAll() }.orElse(listOf())
@@ -169,13 +169,13 @@ open class LeaderBoardService(
             }
             OwnershipType.USER -> listOf()
         }
-        val tasksTitle = taskComponent.map { it.menuDisplayName.getValue() }.orElse("")
+        val tasksTitle = taskComponent.map { it.menuDisplayName }.orElse("")
         tasks.forEach { task ->
             details.computeIfAbsent(task.id) { key -> TopListDetails(key, task.name) }
                 .items.compute(tasksTitle) { _, value -> (value ?: 0) + task.taskScore }
         }
 
-        val riddlesPercent = leaderBoardComponent.riddlesPercent.getValue() / 100.0f
+        val riddlesPercent = leaderBoardComponent.riddlesPercent / 100.0f
         val riddleCache = riddleRepository.map { repo -> repo.findAll().associateBy { it.id } }.orElse(mapOf())
         val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> {
@@ -195,13 +195,13 @@ open class LeaderBoardService(
             }
             OwnershipType.USER -> listOf()
         }
-        val riddleTitle = riddleComponent.map { it.menuDisplayName.getValue() }.orElse("")
+        val riddleTitle = riddleComponent.map { it.menuDisplayName }.orElse("")
         riddles.forEach { riddle ->
             details.computeIfAbsent(riddle.id) { key -> TopListDetails(key, riddle.name) }
                 .items.compute(riddleTitle) { _, value -> (value ?: 0) + riddle.riddleScore }
         }
 
-        val challengesPercent = leaderBoardComponent.challengesPercent.getValue() / 100.0f
+        val challengesPercent = leaderBoardComponent.challengesPercent / 100.0f
         val challenges = when (startupPropertyConfig.challengeOwnershipMode) {
             OwnershipType.GROUP -> {
                 challengeSubmissions.map { it.findAll() }.orElse(listOf())
@@ -224,8 +224,8 @@ open class LeaderBoardService(
             OwnershipType.USER -> listOf()
         }
 
-        val tokenPercent = leaderBoardComponent.tokenPercent.getValue() / 100.0f
-        val tokenTitle = tokenComponent.map { it.menuDisplayName.getValue() }.orElse("")
+        val tokenPercent = leaderBoardComponent.tokenPercent / 100.0f
+        val tokenTitle = tokenComponent.map { it.menuDisplayName }.orElse("")
         val pointsFromTokens = when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.USER -> listOf()
             OwnershipType.GROUP -> {
@@ -241,7 +241,7 @@ open class LeaderBoardService(
                             val groupDetails = details.computeIfAbsent(groupId) { TopListDetails(groupId, groupName) }
                             groupDetails.items.compute(tokenTitle) { _, value -> (value ?: 0) + tokenScore }
 
-                            if (leaderBoardComponent.showTokenCountByRarity.getValue())
+                            if (leaderBoardComponent.showTokenCountByRarity)
                                 groupDetails.tokenRarities = tokens
                                     .groupBy { it.token?.rarity }
                                     .mapNotNull { (rarity, tokens) ->
@@ -285,11 +285,11 @@ open class LeaderBoardService(
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForUsers() {
-        val hintPercentage: Float = riddleComponent.map { it.hintScorePercent.getValue() }.orElse(0) / 100f
+        val hintPercentage: Float = riddleComponent.map { it.hintScorePercent }.orElse(0) / 100f
         log.info("Recalculating user top list cache; hint:{}", hintPercentage)
         val details = mutableMapOf<Int, TopListDetails>()
 
-        val tasksPercent = leaderBoardComponent.tasksPercent.getValue() / 100.0f
+        val tasksPercent = leaderBoardComponent.tasksPercent / 100.0f
         val tasks = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
@@ -306,12 +306,12 @@ open class LeaderBoardService(
                     }
             }
         }
-        val tasksTitle = taskComponent.map { it.menuDisplayName.getValue() }.orElse("")
+        val tasksTitle = taskComponent.map { it.menuDisplayName }.orElse("")
         tasks.forEach {
             details.computeIfAbsent(it.id) { key -> TopListDetails(key, it.name) }.items[tasksTitle] = it.taskScore
         }
 
-        val riddlesPercent = leaderBoardComponent.riddlesPercent.getValue() / 100.0f
+        val riddlesPercent = leaderBoardComponent.riddlesPercent / 100.0f
         val riddleCache = riddleRepository.map { repo -> repo.findAll().associateBy { it.id } }.orElse(mapOf())
         val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> listOf()
@@ -331,12 +331,12 @@ open class LeaderBoardService(
                     }
             }
         }
-        val riddleTitle = riddleComponent.map { it.menuDisplayName.getValue() }.orElse("")
+        val riddleTitle = riddleComponent.map { it.menuDisplayName }.orElse("")
         riddles.forEach {
             details.computeIfAbsent(it.id) { key -> TopListDetails(key, it.name) }.items[riddleTitle] = it.riddleScore
         }
 
-        val challengesPercent = leaderBoardComponent.challengesPercent.getValue() / 100.0f
+        val challengesPercent = leaderBoardComponent.challengesPercent / 100.0f
         val challenges = when (startupPropertyConfig.challengeOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
@@ -361,7 +361,7 @@ open class LeaderBoardService(
             }
         }
 
-        val tokenPercent = leaderBoardComponent.tokenPercent.getValue() / 100.0f
+        val tokenPercent = leaderBoardComponent.tokenPercent / 100.0f
         val tokens = when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
@@ -377,7 +377,7 @@ open class LeaderBoardService(
                     }
             }
         }
-        val tokenTitle = tokenComponent.map { it.menuDisplayName.getValue() }.orElse("")
+        val tokenTitle = tokenComponent.map { it.menuDisplayName }.orElse("")
         tokens.forEach {
             details.computeIfAbsent(it.id) { key -> TopListDetails(key, it.name) }.items[tokenTitle] = it.tokenScore
         }

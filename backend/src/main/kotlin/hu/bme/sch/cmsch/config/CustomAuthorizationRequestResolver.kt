@@ -56,7 +56,7 @@ class CustomAuthorizationRequestResolver(
     private fun customizeAuthorizationRequest(request: OAuth2AuthorizationRequest, clientRegistrationId: String): OAuth2AuthorizationRequest? {
         return when(clientRegistrationId) {
             AUTHSCH -> {
-                if (loginComponent.onlyBmeProvider.getValue()) {
+                if (loginComponent.onlyBmeProvider) {
                     val target = OAuth2AuthorizationRequest
                         .from(request)
                         .scopes(loginComponent.authschScopes.map { it.scope }.toSet())

@@ -6,33 +6,30 @@ import kotlin.reflect.KProperty
 
 
 data class StringSettingRef(
-    private val componentPropertyService: ComponentSettingService,
-    private val component: String,
-    private val property: String,
     private val defaultValue: String = "",
     private val strictConversion: Boolean = true,
     private val cache: Boolean = true,
     private val persist: Boolean = true,
     private val serverSideOnly: Boolean = false,
     private val type: SettingType = SettingType.TEXT,
-    private val fieldName: String = property,
+    private val fieldName: String? = null,
     private val description: String = "",
     private val minRoleToEdit: RoleType = RoleType.ADMIN
-) {
+) : SettingRegisteringLoader<SettingRef<String>>() {
 
-    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<String> =
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<String> =
         SettingRef(
-            componentPropertyService = componentPropertyService,
+            componentPropertyService = thisRef.componentSettingService,
             serializer = StringSettingSerializer,
-            component = component,
-            property = property,
+            component = thisRef.component,
+            property = prop.name,
             defaultValue = defaultValue,
             strictConversion = strictConversion,
             cache = cache,
             persist = persist,
             serverSideOnly = serverSideOnly,
             type = type,
-            fieldName = fieldName,
+            fieldName = fieldName ?: prop.name,
             description = description,
             minRoleToEdit = minRoleToEdit,
         )
@@ -40,33 +37,30 @@ data class StringSettingRef(
 }
 
 data class JsonSettingRef(
-    private val componentPropertyService: ComponentSettingService,
-    private val component: String,
-    private val property: String,
     private val defaultValue: List<Map<String, Any>> = emptyList(),
     private val strictConversion: Boolean = true,
     private val cache: Boolean = true,
     private val persist: Boolean = true,
     private val serverSideOnly: Boolean = false,
     private val type: SettingType = SettingType.JSON,
-    private val fieldName: String = property,
+    private val fieldName: String? = null,
     private val description: String = "",
     private val minRoleToEdit: RoleType = RoleType.ADMIN
-) {
+) : SettingRegisteringLoader<SettingRef<List<Map<String, Any>>>>() {
 
-    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<List<Map<String, Any>>> =
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<List<Map<String, Any>>> =
         SettingRef(
-            componentPropertyService = componentPropertyService,
+            componentPropertyService = thisRef.componentSettingService,
             serializer = JsonSettingSerializer,
-            component = component,
-            property = property,
+            component = thisRef.component,
+            property = prop.name,
             defaultValue = defaultValue,
             strictConversion = strictConversion,
             cache = cache,
             persist = persist,
             serverSideOnly = serverSideOnly,
             type = type,
-            fieldName = fieldName,
+            fieldName = fieldName ?: prop.name,
             description = description,
             minRoleToEdit = minRoleToEdit,
         )
@@ -74,33 +68,30 @@ data class JsonSettingRef(
 }
 
 data class NumberSettingRef(
-    private val componentPropertyService: ComponentSettingService,
-    private val component: String,
-    private val property: String,
     private val defaultValue: Long = 0,
     private val strictConversion: Boolean = true,
     private val cache: Boolean = true,
     private val persist: Boolean = true,
     private val serverSideOnly: Boolean = false,
     private val type: SettingType = SettingType.NUMBER,
-    private val fieldName: String = property,
+    private val fieldName: String? = null,
     private val description: String = "",
     private val minRoleToEdit: RoleType = RoleType.ADMIN
-) {
+) : SettingRegisteringLoader<SettingRef<Long>>() {
 
-    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Long> =
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Long> =
         SettingRef(
-            componentPropertyService = componentPropertyService,
+            componentPropertyService = thisRef.componentSettingService,
             serializer = LongSettingSerializer,
-            component = component,
-            property = property,
+            component = thisRef.component,
+            property = prop.name,
             defaultValue = defaultValue,
             strictConversion = strictConversion,
             cache = cache,
             persist = persist,
             serverSideOnly = serverSideOnly,
             type = type,
-            fieldName = fieldName,
+            fieldName = fieldName ?: prop.name,
             description = description,
             minRoleToEdit = minRoleToEdit,
         )
@@ -108,33 +99,30 @@ data class NumberSettingRef(
 }
 
 data class BooleanSettingRef(
-    private val componentPropertyService: ComponentSettingService,
-    private val component: String,
-    private val property: String,
     private val defaultValue: Boolean = false,
     private val strictConversion: Boolean = true,
     private val cache: Boolean = true,
     private val persist: Boolean = true,
     private val serverSideOnly: Boolean = false,
     private val type: SettingType = SettingType.BOOLEAN,
-    private val fieldName: String = property,
+    private val fieldName: String? = null,
     private val description: String = "",
     private val minRoleToEdit: RoleType = RoleType.ADMIN
-) {
+) : SettingRegisteringLoader<SettingRef<Boolean>>() {
 
-    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Boolean> =
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Boolean> =
         SettingRef(
-            componentPropertyService = componentPropertyService,
+            componentPropertyService = thisRef.componentSettingService,
             serializer = BooleanSettingSerializer,
-            component = component,
-            property = property,
+            component = thisRef.component,
+            property = prop.name,
             defaultValue = defaultValue,
             strictConversion = strictConversion,
             cache = cache,
             persist = persist,
             serverSideOnly = serverSideOnly,
             type = type,
-            fieldName = fieldName,
+            fieldName = fieldName ?: prop.name,
             description = description,
             minRoleToEdit = minRoleToEdit,
         )
@@ -143,16 +131,14 @@ data class BooleanSettingRef(
 }
 
 class MinRoleSettingRef(
-    private val componentPropertyService: ComponentSettingService,
-    private val component: String,
-    private val property: String,
     private val defaultValue: Set<RoleType>,
     private val cache: Boolean = true,
-    private val fieldName: String = "",
+    private val fieldName: String? = null,
     private val description: String = "",
     private val minRoleToEdit: RoleType = RoleType.STAFF,
     private val grantedForRoles: Set<RoleType> = setOf(RoleType.ADMIN, RoleType.SUPERUSER)
-) {
+) : SettingRegisteringLoader<SettingRef<Set<RoleType>>>() {
+
 
     companion object {
         val ALL_ROLES by lazy { RoleType.entries.toSet() }
@@ -163,15 +149,15 @@ class MinRoleSettingRef(
         val ALL_POSSIBLE_ROLES by lazy { RoleType.entries.filter { it.value != RoleType.NOBODY.value }.toSet() }
     }
 
-    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Set<RoleType>> =
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Set<RoleType>> =
         SettingRef(
-            componentPropertyService,
-            RoleTypeSetSettingSerializer(grantedForRoles),
-            component,
-            property,
+            componentPropertyService = thisRef.componentSettingService,
+            serializer = RoleTypeSetSettingSerializer(grantedForRoles),
+            component = thisRef.component,
+            property = prop.name,
             defaultValue = defaultValue,
             type = SettingType.MIN_ROLE,
-            fieldName = fieldName,
+            fieldName = fieldName ?: prop.name,
             description = description,
             cache = cache,
             minRoleToEdit = minRoleToEdit,

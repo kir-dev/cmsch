@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.setting
 
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import kotlin.reflect.KProperty
 
@@ -27,6 +28,14 @@ interface MutableSetting<T : Any> : Setting<T> {
     fun parseAndSet(value: String)
 }
 
-fun <T> Setting<Boolean>.mapIfTrue(mapper: () -> T?): T? {
-    return if (getValue()) mapper.invoke() else null
+abstract class SettingRegisteringLoader<T : Setting<*>> {
+    operator fun provideDelegate(thisRef: ComponentBase, prop: KProperty<*>): T {
+        val setting = provideSetting(thisRef, prop)
+        thisRef.registerSetting(setting)
+        return setting
+    }
+
+
+    protected abstract fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): T
+
 }

@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.profile
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -50,7 +51,7 @@ class ProfileApiController(
         if (!profileComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        if (!profileComponent.aliasChangeEnabled.getValue())
+        if (!profileComponent.aliasChangeEnabled)
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return ResponseEntity.ok(profileService.changeAlias(user, body.alias))

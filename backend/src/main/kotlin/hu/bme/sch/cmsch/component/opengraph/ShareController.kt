@@ -20,7 +20,7 @@ class ShareController(
         return openGraphService.findExtraPage(url)
             .map {
                 fillModelWithCommon(model, it)
-                model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}page/${url}")
+                model.addAttribute("redirectUrl", "${applicationComponent.siteUrl}page/${url}")
                 return@map "openGraph"
             }
             .orElse("redirect:/404")
@@ -31,7 +31,7 @@ class ShareController(
         return openGraphService.findEvent(url)
             .map {
                 fillModelWithCommon(model, it)
-                model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}event/${url}")
+                model.addAttribute("redirectUrl", "${applicationComponent.siteUrl}event/${url}")
                 return@map "openGraph"
             }
             .orElse("redirect:/404")
@@ -42,10 +42,10 @@ class ShareController(
         return openGraphService.findNews(url)
             .map { resource ->
                 fillModelWithCommon(model, resource)
-                if (newsComponent.map { it.showDetails.getValue() }.orElse(false)) {
-                    model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news/${url}")
+                if (newsComponent.map { it.showDetails }.orElse(false)) {
+                    model.addAttribute("redirectUrl", "${applicationComponent.siteUrl}news/${url}")
                 } else {
-                    model.addAttribute("redirectUrl", "${applicationComponent.siteUrl.getValue()}news#${url}")
+                    model.addAttribute("redirectUrl", "${applicationComponent.siteUrl}news#${url}")
                 }
                 return@map "openGraph"
             }

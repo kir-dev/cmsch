@@ -81,7 +81,7 @@ class LegacyBmejegyService(
                     orderKey = cell["order_key"] ?: "",
                     email = cell["email"] ?: "",
                     qrCode = cell["voucher_code"] ?: "INVALID",
-                    photoId = cell[bmejegy.szigFieldName.getValue()]?.uppercase() ?: "",
+                    photoId = cell[bmejegy.szigFieldName]?.uppercase() ?: "",
                     date = cell["post_date"] ?: "",
                     registered = clock.getTimeInSeconds(),
                     idId = cell["id"] ?: "",
@@ -109,23 +109,23 @@ class LegacyBmejegyService(
         val changedUsers = mutableListOf<UserEntity>()
         val userToTicketMapping = mutableListOf<Pair<UserEntity, BmejegyRecordEntity>>()
 
-        if (bmejegy.completeByPhotoId.getValue()) {
+        if (bmejegy.completeByPhotoId) {
             log.info("[BMEJEGY] Completing by photoId")
 
             val reader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
             val forms = formService.getSelectedForms()
 
-            val group1 = if (bmejegy.grantGroupName1.getValue().isNotBlank())
-                groupRepository.findByName(bmejegy.grantGroupName1.getValue()).orElse(null) else null
-            val group2 = if (bmejegy.grantGroupName2.getValue().isNotBlank())
-                groupRepository.findByName(bmejegy.grantGroupName2.getValue()).orElse(null) else null
-            val group3 = if (bmejegy.grantGroupName3.getValue().isNotBlank())
-                groupRepository.findByName(bmejegy.grantGroupName3.getValue()).orElse(null) else null
+            val group1 = if (bmejegy.grantGroupName1.isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName1).orElse(null) else null
+            val group2 = if (bmejegy.grantGroupName2.isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName2).orElse(null) else null
+            val group3 = if (bmejegy.grantGroupName3.isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName3).orElse(null) else null
 
             forms.forEach { form ->
                 formService.getSubmissions(form).forEach { raw ->
                     val submission = reader.readValue<MutableMap<String, String>>(raw.submission)
-                    val photoId = (submission[bmejegy.szigFieldName.getValue()] ?: "").uppercase()
+                    val photoId = (submission[bmejegy.szigFieldName] ?: "").uppercase()
                     val ticket = unmatched.firstOrNull { it.photoId == photoId }
                     if (ticket != null) {
                         ticket.matchedUserId = raw.submitterUserId ?: 0
@@ -166,12 +166,12 @@ class LegacyBmejegyService(
             val user = userEntityOptional.orElseThrow()
             var changed = false
 
-            if (bmejegy.forOrder1.getValue().isNotBlank() && item.contains(bmejegy.forOrder1.getValue())) {
-                if (bmejegy.grantAttendee1.getValue() && user.role.value < RoleType.STAFF.value) {
+            if (bmejegy.forOrder1.isNotBlank() && item.contains(bmejegy.forOrder1)) {
+                if (bmejegy.grantAttendee1 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged1.getValue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged1 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -182,12 +182,12 @@ class LegacyBmejegyService(
                 }
             }
 
-            if (bmejegy.forOrder2.getValue().isNotBlank() && item.contains(bmejegy.forOrder2.getValue())) {
-                if (bmejegy.grantAttendee2.getValue() && user.role.value < RoleType.STAFF.value) {
+            if (bmejegy.forOrder2.isNotBlank() && item.contains(bmejegy.forOrder2)) {
+                if (bmejegy.grantAttendee2 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged2.getValue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged2 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -198,12 +198,12 @@ class LegacyBmejegyService(
                 }
             }
 
-            if (bmejegy.forOrder3.getValue().isNotBlank() && item.contains(bmejegy.forOrder3.getValue())) {
-                if (bmejegy.grantAttendee3.getValue() && user.role.value < RoleType.STAFF.value) {
+            if (bmejegy.forOrder3.isNotBlank() && item.contains(bmejegy.forOrder3)) {
+                if (bmejegy.grantAttendee3 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged3.getValue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged3 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -226,7 +226,7 @@ class LegacyBmejegyService(
         log.info("[BMEJEGY] Fetching started")
 
         val strategies: ExchangeStrategies = ExchangeStrategies.builder()
-            .codecs { codecs -> codecs.defaultCodecs().maxInMemorySize(bmejegy.bufferSize.getValue().toInt()) }
+            .codecs { codecs -> codecs.defaultCodecs().maxInMemorySize(bmejegy.bufferSize.toInt()) }
             .build()
 
         val client = WebClient.builder()
@@ -322,8 +322,8 @@ class LegacyBmejegyService(
                 )
                 .body(
                     BodyInserters.fromFormData("_search", "false")
-                        .with("nd", bmejegy.minTimestamp.getStringValue())
-                        .with("rows", bmejegy.countToFetch.getStringValue())
+                        .with("nd", bmejegy.minTimestamp.toString())
+                        .with("rows", bmejegy.countToFetch.toString())
                         .with("page", page.toString())
                         .with("sidx", "")
                         .with("sord", "asc")

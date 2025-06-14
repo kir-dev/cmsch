@@ -22,6 +22,7 @@ class DebtComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "debt",
     "/debt",
     "Tartozások",
@@ -30,35 +31,20 @@ class DebtComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            debtGroup,
-            title,
-            menuDisplayName,
-            minRole,
-            topMessage,
-        )
-    }
+    val debtGroup by SettingGroup(fieldName = "Tartozások", description = "Jelenleg nincs mit beállítani itt")
 
-    val debtGroup = SettingGroup(component, "debtGroup", fieldName = "Tartozások",
-        description = "Jelenleg nincs mit beállítani itt")
-
-    final val title = StringSettingRef(componentSettingService, component,
-        "title", "Fogyasztás", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    final var title by StringSettingRef("Fogyasztás", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Fogyasztás", serverSideOnly = true,
+    final override var menuDisplayName by StringSettingRef("Fogyasztás", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "",
+    final override var minRole by MinRoleSettingRef(setOf(),
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val topMessage = StringSettingRef(componentSettingService, component,
-        "topMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
+    var topMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
     )
 

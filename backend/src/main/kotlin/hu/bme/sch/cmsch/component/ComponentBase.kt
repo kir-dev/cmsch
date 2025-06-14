@@ -7,10 +7,9 @@ import hu.bme.sch.cmsch.dto.SearchableResourceType
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.PermissionValidator
-import hu.bme.sch.cmsch.setting.MinRoleSettingRef
+import hu.bme.sch.cmsch.setting.ComponentSettingService
 import hu.bme.sch.cmsch.setting.MutableSetting
 import hu.bme.sch.cmsch.setting.Setting
-import hu.bme.sch.cmsch.setting.SettingRef
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
@@ -20,6 +19,7 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 
 abstract class ComponentBase(
+    val componentSettingService: ComponentSettingService,
     val component: String,
     val menuUrl: String,
     private val componentName: String,
@@ -30,11 +30,11 @@ abstract class ComponentBase(
 
     internal val log = LoggerFactory.getLogger(javaClass)
 
-    open val menuDisplayName: SettingRef<String>? = null
+    open val menuDisplayName: String? = null
 
-    abstract val minRole: MinRoleSettingRef
+    abstract val minRole: Set<RoleType>
 
-    abstract val allSettings: List<Setting<*>>
+    val allSettings: MutableList<Setting<*>> = mutableListOf()
 
     val menuPriority: Int
         get() = env.getProperty("hu.bme.sch.cmsch.${component}.priority")?.toIntOrNull() ?: 0
@@ -99,6 +99,8 @@ abstract class ComponentBase(
             )
         }
     }
+
+    fun registerSetting(setting: Setting<*>) = allSettings.add(setting)
 
     fun attachConstants(): Map<String, Any> {
         return allSettings

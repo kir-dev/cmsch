@@ -19,20 +19,20 @@ class EmailService(
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val emailProviders = emailProviders.associateBy { it.getProviderName() }
-    private val selectedProvider get() = emailProviders[emailComponent.emailProvider.getValue()]
+    private val selectedProvider get() = emailProviders[emailComponent.emailProvider]
     private val mustacheFactory = DefaultMustacheFactory()
 
     @Async
     fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         selectedProvider?.sendTextEmail(responsible, subject, content, to) ?: run {
-            log.info("Unknown provider ${emailComponent.emailProvider.getValue()}")
+            log.info("Unknown provider ${emailComponent.emailProvider}")
         }
     }
 
     @Async
     fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         selectedProvider?.sendHtmlEmail(responsible, subject, content, to) ?: run {
-            log.info("Unknown provider ${emailComponent.emailProvider.getValue()}")
+            log.info("Unknown provider ${emailComponent.emailProvider}")
         }
     }
 

@@ -18,6 +18,7 @@ class PushNotificationComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "pushnotification",
     "/pushnotification",
     "Push Értesítések",
@@ -26,59 +27,35 @@ class PushNotificationComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            notificationsGroup,
-            minRole,
-            notificationsEnabled,
-            permissionRequestGroup,
-            permissionPromptText,
-            permissionAcceptText,
-            permissionDenyText,
-            permissionAllowNeverShowAgain
-        )
-    }
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(
-        componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
 
-    val notificationsGroup = SettingGroup(component, "notificationsGroup", fieldName = "Értesítés beállítások")
+    val notificationsGroup by SettingGroup(fieldName = "Értesítés beállítások")
 
-    val notificationsEnabled = BooleanSettingRef(componentSettingService, component,
-        "notificationsEnabled", true, fieldName = "Értesítések engedélyezése a felhasználói felületen",
+    var notificationsEnabled by BooleanSettingRef(true,
+        fieldName = "Értesítések engedélyezése a felhasználói felületen",
         description = "A felhasználók csak akkor kapnak push notificationokat, ha ez az opció engedélyezve van"
     )
 
-    val permissionRequestGroup = SettingGroup(component, "permissionRequestGroup",
-        fieldName = "Jogosultságkérés beállítások")
+    val permissionRequestGroup by SettingGroup(fieldName = "Jogosultságkérés beállítások")
 
-    val permissionPromptText = StringSettingRef(
-        componentSettingService, component,
-        "permissionPromptText", "Szeretnél értesítéseket kapni?", fieldName = "Engedélykérés szövege",
+    var permissionPromptText by StringSettingRef("Szeretnél értesítéseket kapni?", fieldName = "Engedélykérés szövege",
         description = "Ne legyen hosszú, mert csúnyán néz ki mobilokon! Ez a szöveg jelenik meg, amikor az alkalmazás engedélyt kér a felhasználótól értesítésekhez."
     )
 
-    val permissionAcceptText = StringSettingRef(
-        componentSettingService, component,
-        "permissionAcceptText", "Igen", fieldName = "Engedély megadás gomb szöveg",
+    var permissionAcceptText by StringSettingRef("Igen", fieldName = "Engedély megadás gomb szöveg",
         description = "Ez a szöveg jelenik meg azon a gombon, amivel engedélyt tudnak adni a felhasználók"
     )
 
-    val permissionDenyText = StringSettingRef(
-        componentSettingService, component,
-        "permissionDenyText", "Nem", fieldName = "Események tiltása gomb szöveg",
+    var permissionDenyText by StringSettingRef("Nem", fieldName = "Események tiltása gomb szöveg",
         description = "Ez a szöveg jelenik meg azon a gombon, amivel letiltják az értesítéseket a felhasználók (ha üres nem jelenik meg)"
     )
 
-    val permissionAllowNeverShowAgain = BooleanSettingRef(
-        componentSettingService, component,
-        "permissionAllowNeverShowAgain", true, fieldName = "Tiltás megjegyzése",
+    var permissionAllowNeverShowAgain by BooleanSettingRef(true, fieldName = "Tiltás megjegyzése",
         description = "Ha a felhasználó letiltotta az értesítéseket, akkor többet nem nem kérdez rá az alkalmazás"
     )
 

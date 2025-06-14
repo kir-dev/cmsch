@@ -28,7 +28,7 @@ class MessagingService(
         callback: (MessageResponse) -> Unit = {},
     ) {
         val client = WebClient.builder()
-            .baseUrl(proxyBaseUrl ?: messagingComponent.proxyBaseUrl.getValue())
+            .baseUrl(proxyBaseUrl ?: messagingComponent.proxyBaseUrl)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .defaultHeader(HttpHeaders.USER_AGENT, "AuthSchKotlinAPI")
             .build()
@@ -40,7 +40,7 @@ class MessagingService(
                 BodyInserters.fromValue(
                     writer.writeValueAsString(
                         SimpleMessageDto(
-                            token = proxyToken ?: messagingComponent.proxyToken.getValue(),
+                            token = proxyToken ?: messagingComponent.proxyToken,
                             target = target,
                             message = message
                         )

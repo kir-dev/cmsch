@@ -18,8 +18,8 @@ class WarningApiController(
     @GetMapping("/warning")
     fun warning(): WarningView {
         return WarningView(
-            message = applicationComponent.warningMessage.getValue(),
-            type = applicationComponent.warningLevel.getValue()
+            message = applicationComponent.warningMessage,
+            type = applicationComponent.warningLevel
         )
     }
 

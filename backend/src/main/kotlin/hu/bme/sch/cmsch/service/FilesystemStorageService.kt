@@ -126,7 +126,7 @@ class FilesystemStorageService(
     private fun constructObjectUrl(path: String, name: String) = constructObjectUrl(getObjectName(path, name))
 
     private fun constructObjectUrl(fullName: String): String =
-        UriComponentsBuilder.fromUriString(applicationComponent.adminSiteUrl.getValue())
+        UriComponentsBuilder.fromUriString(applicationComponent.adminSiteUrl)
             .pathSegment(StorageService.OBJECT_SERVE_PATH, fullName)
             .build()
             .toUriString()

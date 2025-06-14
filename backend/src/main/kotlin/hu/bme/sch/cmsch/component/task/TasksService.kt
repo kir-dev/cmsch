@@ -195,7 +195,7 @@ class TasksService(
             val submission = previous.get()
             if (submission.approved)
                 return TaskSubmissionStatus.ALREADY_APPROVED
-            if (!submission.rejected && !taskComponent.resubmissionEnabled.getValue())
+            if (!submission.rejected && !taskComponent.resubmissionEnabled)
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
             return updateSubmission(user, task, answer, file, submission)
 
@@ -223,7 +223,7 @@ class TasksService(
             val submission = previous.get()
             if (submission.approved)
                 return TaskSubmissionStatus.ALREADY_APPROVED
-            if (!submission.rejected && !taskComponent.resubmissionEnabled.getValue())
+            if (!submission.rejected && !taskComponent.resubmissionEnabled)
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
             return updateSubmission(user, task, answer, file, submission)
 

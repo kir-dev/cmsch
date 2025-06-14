@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.team
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -74,7 +75,7 @@ class TeamApiController(
         val groupId = user.groupId
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
-        if (!teamComponent.showTeamDetails.getValue())
+        if (!teamComponent.showTeamDetails)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return teamService.showTeam(groupId, user)?.let { ResponseEntity.ok(it) }
@@ -86,7 +87,7 @@ class TeamApiController(
         val user = auth?.getUserOrNull()
         if (!teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        if (!teamComponent.showTeamDetails.getValue())
+        if (!teamComponent.showTeamDetails)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return teamService.showTeam(teamId, user)?.let { ResponseEntity.ok(it) }
@@ -98,7 +99,7 @@ class TeamApiController(
         val user = auth?.getUserOrNull()
         if (!teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(listOf())
-        if (!teamComponent.showTeamsAtAll.getValue())
+        if (!teamComponent.showTeamsAtAll)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return ResponseEntity.ok(teamService.listAllTeams())

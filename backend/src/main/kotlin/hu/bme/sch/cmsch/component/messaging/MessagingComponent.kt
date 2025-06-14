@@ -19,6 +19,7 @@ class MessagingComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "messaging",
     "",
     "Értesítések",
@@ -27,34 +28,21 @@ class MessagingComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            settingGroup,
-            minRole,
-
-            proxyBaseUrl,
-            proxyToken,
-        )
-    }
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val settingGroup = SettingGroup(component, "settingGroup", fieldName = "Proxy adatai")
+    val settingGroup by SettingGroup(fieldName = "Proxy adatai")
 
-    val proxyBaseUrl = StringSettingRef(componentSettingService, component,
-        "proxyBaseUrl", "http://localhost:8080", type = SettingType.URL,
+    var proxyBaseUrl by StringSettingRef("http://localhost:8080", type = SettingType.URL,
         fieldName = "A proxy elérhetősége", serverSideOnly = true
     )
 
-    val proxyToken = StringSettingRef(componentSettingService, component,
-        "proxyToken", "", fieldName = "Token a proxyhoz", serverSideOnly = true
+    var proxyToken by StringSettingRef("", fieldName = "Token a proxyhoz", serverSideOnly = true
     )
 
 }

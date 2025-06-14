@@ -198,7 +198,7 @@ class RiddleBusinessLogicService(
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
             ?: return null
 
-        if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled.getValue()))
+        if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled))
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CANNOT_SKIP, null)
 
         if (banStatus == SubmissionModerationStatus.SHADOW_BAN) {
@@ -207,7 +207,7 @@ class RiddleBusinessLogicService(
         val submission = riddleCacheManager.findMappingByOwnerUserIdAndRiddleId(user.id, riddleId)
         if (submission != null) {
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
-                if (riddleComponent.saveFailedAttempts.getValue()) {
+                if (riddleComponent.saveFailedAttempts) {
                     submission.attemptCount += 1
                     submission.completedAt = clock.getTimeInSeconds()
                     riddleCacheManager.updateMapping(submission, lazyPersist = true)
@@ -234,7 +234,7 @@ class RiddleBusinessLogicService(
                 return null
             val userEntity = userService.getById(user.internalId)
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
-                if (riddleComponent.saveFailedAttempts.getValue()) {
+                if (riddleComponent.saveFailedAttempts) {
                     riddleCacheManager.createNewMapping(
                         RiddleMappingEntity(
                             0, riddle.id, userEntity.id, 0,
@@ -281,7 +281,7 @@ class RiddleBusinessLogicService(
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
             ?: return null
 
-        if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled.getValue()))
+        if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled))
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CANNOT_SKIP, null)
 
         if (banStatus == SubmissionModerationStatus.SHADOW_BAN) {
@@ -291,7 +291,7 @@ class RiddleBusinessLogicService(
         val submission = riddleCacheManager.findMappingByOwnerGroupIdAndRiddleId(groupId, riddleId)
         if (submission != null) {
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
-                if (riddleComponent.saveFailedAttempts.getValue()) {
+                if (riddleComponent.saveFailedAttempts) {
                     submission.attemptCount += 1
                     submission.completedAt = clock.getTimeInSeconds()
                     riddleCacheManager.updateMapping(submission, lazyPersist = true)
@@ -317,7 +317,7 @@ class RiddleBusinessLogicService(
             if (nextId != riddle.id)
                 return null
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
-                if (riddleComponent.saveFailedAttempts.getValue()) {
+                if (riddleComponent.saveFailedAttempts) {
                     riddleCacheManager.createNewMapping(
                         RiddleMappingEntity(
                             0, riddle.id, 0, groupId,
@@ -345,22 +345,22 @@ class RiddleBusinessLogicService(
 
     private fun cannotSkip(riddle: RiddleEntity): Boolean {
         return riddleCacheManager.countAllMappingByCompletedNotSkippedAndRiddleId(riddle.id) <
-                riddleComponent.skipAfterGroupsSolved.getValue()
+                riddleComponent.skipAfterGroupsSolved
     }
 
     private fun checkSolutionIsWrong(solution: String, riddle: RiddleEntity): Boolean {
         var transformedSubmittedSolution = solution
         var transformedRiddleSolution = riddle.solution
 
-        if (riddleComponent.ignoreAccent.getValue()) {
+        if (riddleComponent.ignoreAccent) {
             transformedSubmittedSolution = replaceAccent(transformedSubmittedSolution)
             transformedRiddleSolution = replaceAccent(transformedRiddleSolution)
         }
-        if (riddleComponent.ignoreCase.getValue()) {
+        if (riddleComponent.ignoreCase) {
             transformedSubmittedSolution = transformedSubmittedSolution.lowercase()
             transformedRiddleSolution = transformedRiddleSolution.lowercase()
         }
-        if (riddleComponent.ignoreWhitespace.getValue()) {
+        if (riddleComponent.ignoreWhitespace) {
             transformedSubmittedSolution = transformedSubmittedSolution
                 .replace(" ", "")
                 .replace("-", "")

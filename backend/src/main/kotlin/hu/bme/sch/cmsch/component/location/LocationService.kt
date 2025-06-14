@@ -83,18 +83,18 @@ class LocationService(
 
     private fun resolveColor(groupName: String): String {
         return when (groupName) {
-            locationComponent.blackGroupName.getValue()  -> { "#000000" }
-            locationComponent.blueGroupName.getValue()   -> { "#5fa8d3" }
-            locationComponent.cyanGroupName.getValue()   -> { "#70d6ff" }
-            locationComponent.pinkGroupName.getValue()   -> { "#ff70a6" }
-            locationComponent.orangeGroupName.getValue() -> { "#f8961e" }
-            locationComponent.greenGroupName.getValue()  -> { "#a7c957" }
-            locationComponent.redGroupName.getValue()    -> { "#ef233c" }
-            locationComponent.whiteGroupName.getValue()  -> { "#ffffff" }
-            locationComponent.yellowGroupName.getValue() -> { "#fee440" }
-            locationComponent.purpleGroupName.getValue() -> { "#9d4edd" }
-            locationComponent.grayGroupName.getValue()   -> { "#c0c0c0" }
-            else -> { locationComponent.defaultGroupColor.getValue() }
+            locationComponent.blackGroupName  -> { "#000000" }
+            locationComponent.blueGroupName   -> { "#5fa8d3" }
+            locationComponent.cyanGroupName   -> { "#70d6ff" }
+            locationComponent.pinkGroupName   -> { "#ff70a6" }
+            locationComponent.orangeGroupName -> { "#f8961e" }
+            locationComponent.greenGroupName  -> { "#a7c957" }
+            locationComponent.redGroupName    -> { "#ef233c" }
+            locationComponent.whiteGroupName  -> { "#ffffff" }
+            locationComponent.yellowGroupName -> { "#fee440" }
+            locationComponent.purpleGroupName -> { "#9d4edd" }
+            locationComponent.grayGroupName   -> { "#c0c0c0" }
+            else -> { locationComponent.defaultGroupColor }
         }
     }
 
@@ -127,7 +127,7 @@ class LocationService(
 
     fun findLocationsOfGroupName(group: String): List<MapMarker> {
         val locations = mutableListOf<MapMarker>()
-        val visibilityDuration = locationComponent.visibleDuration.getValue()
+        val visibilityDuration = locationComponent.visibleDuration
         val currentTime = clock.getTimeInSeconds()
 
         locations.addAll(tokenToLocationMapping.values
@@ -153,26 +153,26 @@ class LocationService(
     }
 
     private fun mapDisplayName(location: LocationEntity): String {
-        return if (locationComponent.showGroupName.getValue() && location.groupName.isNotBlank()) {
-            if (locationComponent.showUserName.getValue()) {
-                if (locationComponent.showAlias.getValue() && location.alias.isNotBlank()) {
+        return if (locationComponent.showGroupName && location.groupName.isNotBlank()) {
+            if (locationComponent.showUserName) {
+                if (locationComponent.showAlias && location.alias.isNotBlank()) {
                     "${location.userName} (${location.alias}) [${location.groupName}]"
                 } else {
                     "${location.userName} [${location.groupName}]"
                 }
-            } else if (locationComponent.showAlias.getValue()) {
+            } else if (locationComponent.showAlias) {
                 "${location.alias} [${location.groupName}]"
             } else {
                 location.groupName
             }
         } else {
-            if (locationComponent.showUserName.getValue()) {
-                if (locationComponent.showAlias.getValue() && location.alias.isNotBlank()) {
+            if (locationComponent.showUserName) {
+                if (locationComponent.showAlias && location.alias.isNotBlank()) {
                     "${location.userName} (${location.alias})"
                 } else {
                     location.userName
                 }
-            } else if (locationComponent.showAlias.getValue()) {
+            } else if (locationComponent.showAlias) {
                 location.alias
             } else {
                 ""

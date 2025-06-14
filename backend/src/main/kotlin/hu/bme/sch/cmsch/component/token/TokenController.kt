@@ -64,7 +64,7 @@ class TokenController(
 
     override fun onDetailsView(entity: CmschUser, model: Model) {
         model.addAttribute("ext", TokenDetailsExtension(
-            qrFrontendBaseUrl = tokenComponent.qrFrontendBaseUrl.getValue())
+            qrFrontendBaseUrl = tokenComponent.qrFrontendBaseUrl)
         )
     }
 

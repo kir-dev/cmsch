@@ -20,7 +20,7 @@ class ExportTasksController(
 
     @GetMapping("/export-tasks")
     fun tasks(auth: Authentication, model: Model): String {
-        if (!taskComponent.exportEnabled.getValue())
+        if (!taskComponent.exportEnabled)
             return "redirect:/"
 
         val user = auth.getUser()
@@ -30,8 +30,8 @@ class ExportTasksController(
                 .indexOfFirst { it.name == user.groupName } + 1 }
             .orElse(0))
 
-        model.addAttribute("notes", markdownToHtml(taskComponent.leadOrganizerQuote.getValue()))
-        model.addAttribute("logoUrl", taskComponent.logoUrl.getValue())
+        model.addAttribute("notes", markdownToHtml(taskComponent.leadOrganizerQuote))
+        model.addAttribute("logoUrl", taskComponent.logoUrl)
         model.addAttribute("tasks", listOf<SubmittedTaskEntity>())
         user.groupId?.also { groupId -> model.addAttribute("tasks", tasks.getAllSubmissions(groupId).sortedBy { it.categoryId }) }
         model.addAttribute("categories", tasks.getAllCategories().groupBy { it.categoryId })

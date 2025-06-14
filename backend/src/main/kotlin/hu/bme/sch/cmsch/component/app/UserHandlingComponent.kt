@@ -17,6 +17,7 @@ class UserHandlingComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "userHandling",
     "/",
     "Felhasználó kezelés",
@@ -25,16 +26,9 @@ class UserHandlingComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-        )
-    }
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.SUPERUSER,
+    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 

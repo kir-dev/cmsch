@@ -54,35 +54,35 @@ class AdminMenuService(
         Runtime.version().toString(),
         0,
         0,
-        applicationComponent.adminBrandColor.getValue(),
-        darkenHexColor(applicationComponent.adminBrandColor.getValue(), 90),
-        darkenHexColor(applicationComponent.adminBrandColor.getValue(), 80)
+        applicationComponent.adminBrandColor,
+        darkenHexColor(applicationComponent.adminBrandColor, 90),
+        darkenHexColor(applicationComponent.adminBrandColor, 80)
     )
 
     @PostConstruct
     fun invalidateSiteContext() {
         siteContext = SiteContext(
-            applicationComponent.siteName.getValue()
-                    + (if (applicationComponent.adminPanelName.getValue().isNotBlank())
-                        " - ${applicationComponent.adminPanelName.getValue()}" else ""),
+            applicationComponent.siteName
+                    + (if (applicationComponent.adminPanelName.isNotBlank())
+                        " - ${applicationComponent.adminPanelName}" else ""),
             if (environment.activeProfiles.contains("internal")
                     || environment.activeProfiles.contains("test")
                     || environment.activeProfiles.contains("dev")) {
                 "dev"
-            } else if (applicationComponent.isLive.getValue()) {
+            } else if (applicationComponent.isLive) {
                 "live"
             } else {
                 "staging"
             },
-            applicationComponent.motd.getValue(),
-            applicationComponent.adminSiteUrl.getValue(),
-            applicationComponent.siteUrl.getValue(),
+            applicationComponent.motd,
+            applicationComponent.adminSiteUrl,
+            applicationComponent.siteUrl,
             buildProperties?.version ?: "n/a",
             stats.map { it.rpm }.orElse(0),
             stats.map { it.usersIn5Minutes }.orElse(0),
-            applicationComponent.adminBrandColor.getValue(),
-            darkenHexColor(applicationComponent.adminBrandColor.getValue(), 90),
-            darkenHexColor(applicationComponent.adminBrandColor.getValue(), 80)
+            applicationComponent.adminBrandColor,
+            darkenHexColor(applicationComponent.adminBrandColor, 90),
+            darkenHexColor(applicationComponent.adminBrandColor, 80)
         )
     }
 

@@ -21,6 +21,7 @@ class ChallengeComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "challenge",
     "/",
     "Beadások",
@@ -29,19 +30,11 @@ class ChallengeComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            challengeGroup,
-            minRole,
-        )
-    }
-
-    val challengeGroup = SettingGroup(component, "challengeGroup", fieldName = "Beadások")
+    val challengeGroup by SettingGroup(fieldName = "Beadások")
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 

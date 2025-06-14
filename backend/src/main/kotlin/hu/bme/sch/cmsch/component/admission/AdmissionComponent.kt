@@ -19,6 +19,7 @@ class AdmissionComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "admission",
     "/",
     "Beléptetés",
@@ -27,195 +28,134 @@ class AdmissionComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-
-            controlGroup,
-            onlyAcceptApprovedForms,
-            saveEntryLog,
-
-            groupAccessGroup,
-            userGroups,
-            vipGroups,
-            organizerGroups,
-            performerGroups,
-            leadOrganizerGroups,
-
-            userAccessGroup,
-            userUsers,
-            vipUsers,
-            organizerUsers,
-            performerUsers,
-            leadOrganizerUsers,
-
-            roleGroup,
-            grantUserByDefault,
-            grantUserByAttendee,
-            grantUserByPrivileged,
-            grantUserByStaff,
-            grantOrganizerByStaff,
-            grantOrganizerByAdmin,
-
-            banListGroup,
-            bannedGroups,
-            bannedUsers,
-
-            ticketGroup,
-            ticketShowEntryCount,
-            ticketAllowBmejegy,
-        )
-    }
-
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val controlGroup = SettingGroup(component, "controlGroup", fieldName = "Beléptetés működése", description = "")
+    val controlGroup by SettingGroup(fieldName = "Beléptetés működése")
 
-    val onlyAcceptApprovedForms = BooleanSettingRef(componentSettingService, component,
-        "onlyAcceptApprovedForms", defaultValue = false, fieldName = "Csak az elfogadott formok számítanak",
+    var onlyAcceptApprovedForms by BooleanSettingRef(defaultValue = false,
+        fieldName = "Csak az elfogadott formok számítanak",
         description = "Ha be van kapcsolva, akkor csak az elfogadott és nem elutasított formok számítanak. Csak akkor működik, ha a forms komponens be van kapcsolva."
     )
 
-    val saveEntryLog = BooleanSettingRef(componentSettingService, component,
-        "saveEntryLog", true, fieldName = "Beléptetések mentése",
+    var saveEntryLog by BooleanSettingRef(defaultValue = true, fieldName = "Beléptetések mentése",
         description = "Ha be van kapcsolva, akkor minden beengedés logolva van"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val groupAccessGroup = SettingGroup(component, "groupAccessGroup", fieldName = "Csoportok hozzáférése",
+    val groupAccessGroup by SettingGroup(fieldName = "Csoportok hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
-    val userGroups = StringSettingRef(componentSettingService, component,
-        "userGroups", "", fieldName = "USER hozzáférésű csoportok",
+    var userGroups by StringSettingRef(defaultValue = "", fieldName = "USER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val vipGroups = StringSettingRef(componentSettingService, component,
-        "vipGroups", "", fieldName = "VIP hozzáférésű csoportok",
+    var vipGroups by StringSettingRef(defaultValue = "", fieldName = "VIP hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val performerGroups = StringSettingRef(componentSettingService, component,
-        "performerGroups", "", fieldName = "PERFORMER hozzáférésű csoportok",
+    var performerGroups by StringSettingRef(defaultValue = "", fieldName = "PERFORMER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val organizerGroups = StringSettingRef(componentSettingService, component,
-        "organizerGroups", "", fieldName = "ORGANIZER hozzáférésű csoportok",
+    var organizerGroups by StringSettingRef(defaultValue = "", fieldName = "ORGANIZER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val leadOrganizerGroups = StringSettingRef(componentSettingService, component,
-        "leadOrganizerGroups", "", fieldName = "LEAD_ORGANIZER hozzáférésű csoportok",
+    var leadOrganizerGroups by StringSettingRef(defaultValue = "", fieldName = "LEAD_ORGANIZER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val userAccessGroup = SettingGroup(component, "userAccessGroup", fieldName = "Felhasználók hozzáférése",
+    val userAccessGroup by SettingGroup(fieldName = "Felhasználók hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
-    val vipUsers = StringSettingRef(componentSettingService, component,
-        "vipUsers", "", fieldName = "USER hozzáférésű felhasználók",
+    var vipUsers by StringSettingRef(defaultValue = "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val performerUsers = StringSettingRef(componentSettingService, component,
-        "performerUsers", "", fieldName = "USER hozzáférésű felhasználók",
+    var performerUsers by StringSettingRef(defaultValue = "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val organizerUsers = StringSettingRef(componentSettingService, component,
-        "organizerUsers", "", fieldName = "USER hozzáférésű felhasználók",
+    var organizerUsers by StringSettingRef(defaultValue = "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val leadOrganizerUsers = StringSettingRef(componentSettingService, component,
-        "leadOrganizerUsers", "", fieldName = "USER hozzáférésű felhasználók",
+    var leadOrganizerUsers by StringSettingRef(defaultValue = "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val userUsers = StringSettingRef(componentSettingService, component,
-        "userUsers", "", fieldName = "USER hozzáférésű felhasználók",
+    var userUsers by StringSettingRef(defaultValue = "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val roleGroup = SettingGroup(component, "roleGroup", fieldName = "Szerepek hozzáférése",
+    val roleGroup by SettingGroup(fieldName = "Szerepek hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
-    val grantUserByDefault = BooleanSettingRef(componentSettingService, component,
-        "grantUserByDefault", false, fieldName = "USER hozzáférés alapértelmezetten",
+    var grantUserByDefault by BooleanSettingRef(defaultValue = false, fieldName = "USER hozzáférés alapértelmezetten",
         description = "Ha be van kapcsolva, akkor minden (REGULAR+) felhasználó jogosult a belépésre alapból"
     )
 
-    val grantUserByAttendee = BooleanSettingRef(componentSettingService, component,
-        "grantUserByAttendee", false, fieldName = "USER hozzáférés résztvevőknek",
+    var grantUserByAttendee by BooleanSettingRef(defaultValue = false, fieldName = "USER hozzáférés résztvevőknek",
         description = "Ha be van kapcsolva, akkor minden résztvevő (ATTENDEE+) felhasználó jogosult a belépésre"
     )
 
-    val grantUserByPrivileged = BooleanSettingRef(componentSettingService, component,
-        "grantUserByPrivileged", false, fieldName = "USER hozzáférés privileged résztvevőknek",
+    var grantUserByPrivileged by BooleanSettingRef(defaultValue = false,
+        fieldName = "USER hozzáférés privileged résztvevőknek",
         description = "Ha be van kapcsolva, akkor minden résztvevő (PRIVILEGED+) felhasználó jogosult a belépésre"
     )
 
-    val grantUserByStaff = BooleanSettingRef(componentSettingService, component,
-        "grantUserByStaff", false, fieldName = "USER hozzáférés szervezőknek",
+    var grantUserByStaff by BooleanSettingRef(defaultValue = false, fieldName = "USER hozzáférés szervezőknek",
         description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhasználó jogosult a belépésre"
     )
 
-    val grantOrganizerByStaff = BooleanSettingRef(componentSettingService, component,
-        "grantOrganizerByStaff", false, fieldName = "ORGANIZER hozzáférés szervezőknek",
+    var grantOrganizerByStaff by BooleanSettingRef(defaultValue = false,
+        fieldName = "ORGANIZER hozzáférés szervezőknek",
         description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhasználó jogosult a szervező rangra"
     )
 
-    val grantOrganizerByAdmin = BooleanSettingRef(componentSettingService, component,
-        "grantOrganizerByAdmin", false, fieldName = "ORGANIZER hozzáférés adminoknak",
+    var grantOrganizerByAdmin by BooleanSettingRef(defaultValue = false, fieldName = "ORGANIZER hozzáférés adminoknak",
         description = "Ha be van kapcsolva, akkor minden szervező (ADMIN+) felhasználó jogosult a szervező rangra"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val banListGroup = SettingGroup(component, "banListGroup", fieldName = "Tiltó lista",
+    val banListGroup by SettingGroup(
+        fieldName = "Tiltó lista",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
-    val bannedGroups = StringSettingRef(componentSettingService, component,
-        "bannedGroups", "",fieldName = "Kitiltott csoportok",
+    var bannedGroups by StringSettingRef(defaultValue = "", fieldName = "Kitiltott csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
-    val bannedUsers = StringSettingRef(componentSettingService, component,
-        "bannedUsers", "", fieldName = "Kitiltott felhasználók",
+    var bannedUsers by StringSettingRef(defaultValue = "", fieldName = "Kitiltott felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val ticketGroup = SettingGroup(component, "ticketGroup", fieldName = "Jegyek",
-        description = "A jegyellenőrzés menü beállításai")
+    val ticketGroup by SettingGroup(fieldName = "Jegyek", description = "A jegyellenőrzés menü beállításai")
 
-    val ticketShowEntryCount = BooleanSettingRef(componentSettingService, component,
-        "ticketShowEntryCount", true, fieldName = "Belépések számának mutatása",
+    var ticketShowEntryCount by BooleanSettingRef(defaultValue = true, fieldName = "Belépések számának mutatása",
         description = "Beolvasáskor mutatja a beolvasónak", serverSideOnly = true
     )
 
-    val ticketAllowBmejegy = BooleanSettingRef(componentSettingService, component,
-        "ticketAllowBmejegy", true, fieldName = "BME Jegyesek beengedése",
+    var ticketAllowBmejegy by BooleanSettingRef(defaultValue = true, fieldName = "BME Jegyesek beengedése",
         description = "Csak akkor működik, ha a bmejegy komponens be van kapcsolva", serverSideOnly = true
     )
 

@@ -18,6 +18,7 @@ class EventComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "event",
     "/event",
     "Események",
@@ -25,82 +26,50 @@ class EventComponent(
     listOf(EventEntity::class),
     env
 ) {
+    val eventsGroup by SettingGroup(fieldName = "Események")
 
-    final override val allSettings by lazy {
-        listOf(
-            eventsGroup,
-            title, menuDisplayName, minRole,
-
-            appearanceGroup,
-            seekToCurrentCurrent,
-            separateDays,
-            topMessage,
-            searchEnabled,
-
-            logicGroup,
-            enableDetailedView,
-            filterByCategory,
-            filterByLocation,
-            filterByDay
-        )
-    }
-
-    val eventsGroup = SettingGroup(component, "eventsGroup", fieldName = "Események")
-
-    final val title = StringSettingRef(componentSettingService, component,
-        "title", "Programok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    final var title by StringSettingRef("Programok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Programok", serverSideOnly = true,
+    final override var menuDisplayName by StringSettingRef("Programok", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "",
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    final override var minRole by MinRoleSettingRef(setOf(), fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val appearanceGroup = SettingGroup(component, "appearanceGroup", fieldName = "Megjelenés")
+    val appearanceGroup by SettingGroup(fieldName = "Megjelenés")
 
-    val seekToCurrentCurrent = BooleanSettingRef(componentSettingService, component,
-        "seekToCurrentCurrent", false, fieldName = "Tekerjen oda a jelenlegi programhoz"
+    var seekToCurrentCurrent by BooleanSettingRef(false, fieldName = "Tekerjen oda a jelenlegi programhoz"
     )
 
-    val separateDays = BooleanSettingRef(componentSettingService, component,
-        "separateDays", false, fieldName = "Külön csoportosítva naponként"
+    var separateDays by BooleanSettingRef(false, fieldName = "Külön csoportosítva naponként"
     )
 
-    val topMessage = StringSettingRef(componentSettingService, component,
-        "topMessage", "Rövid szöveg a programokról általánosságban", type = SettingType.LONG_TEXT_MARKDOWN,
+    var topMessage by StringSettingRef("Rövid szöveg a programokról általánosságban", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
-    val searchEnabled = BooleanSettingRef(componentSettingService, component,
-        "searchEnabled", false, fieldName = "Keresés elérhető",
+    var searchEnabled by BooleanSettingRef(false, fieldName = "Keresés elérhető",
         description = "Legyen-e kereső az oldal tetején"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = SettingGroup(component, "logicGroup", fieldName = "Működés")
+    val logicGroup by SettingGroup(fieldName = "Működés")
 
-    val enableDetailedView = BooleanSettingRef(componentSettingService, component,
-        "enableDetailedView", false, fieldName = "Elérhető a részletes nézet (külön lapon)"
+    var enableDetailedView by BooleanSettingRef(false, fieldName = "Elérhető a részletes nézet (külön lapon)"
     )
 
-    val filterByCategory = BooleanSettingRef(componentSettingService, component,
-        "filterByCategory", false, fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni"
+    var filterByCategory by BooleanSettingRef(false, fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni"
     )
 
-    val filterByLocation = BooleanSettingRef(componentSettingService, component,
-        "filterByLocation", false, fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni"
+    var filterByLocation by BooleanSettingRef(false, fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni"
     )
 
-    val filterByDay = BooleanSettingRef(componentSettingService, component,
-        "filterByDay", false, fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni"
+    var filterByDay by BooleanSettingRef(false, fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni"
     )
 
 }

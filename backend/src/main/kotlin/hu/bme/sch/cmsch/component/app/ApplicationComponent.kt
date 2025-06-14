@@ -13,6 +13,7 @@ class ApplicationComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "app",
     "/app",
     "Alkalmazás",
@@ -29,113 +30,81 @@ class ApplicationComponent(
         const val DATA_SOURCE_CATEGORY = "ApplicationComponent.data"
     }
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-
-            warningMessageGroup,
-            warningMessage,
-            warningLevel,
-
-            adminGroup,
-            adminPanelName,
-            isLive,
-            siteUrl,
-            adminSiteUrl,
-            adminBrandColor,
-            motd,
-            staffMessage,
-            documentsForOrganizers,
-
-            siteGroup,
-            siteName,
-            defaultComponent,
-        )
-    }
-
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+    final override var minRole by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
+        minRoleToEdit = RoleType.NOBODY,
+        fieldName = "Jogosultságok",
+        description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val warningMessageGroup = SettingGroup(component, "warningMessageGroup", fieldName = "Figyelmeztető üzenet")
+    val warningMessageGroup by SettingGroup(fieldName = "Figyelmeztető üzenet")
 
-    val warningMessage = StringSettingRef(componentSettingService, component,
-        "warningMessage", "", fieldName = "Megjelenő üzenet"
+    var warningMessage by StringSettingRef(defaultValue = "", fieldName = "Megjelenő üzenet"
     )
 
-    val warningLevel = StringSettingRef(componentSettingService, component,
-        "warningLevel", "", fieldName = "Üzenet fontossági szintje",
+    var warningLevel by StringSettingRef(defaultValue = "", fieldName = "Üzenet fontossági szintje",
         description = "lehet: success, info, warning, error"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val siteGroup = SettingGroup(component, "siteGroup", fieldName = "Oldal beállítások")
+    val siteGroup by SettingGroup(fieldName = "Oldal beállítások")
 
-    val siteName = StringSettingRef(componentSettingService, component,
-        "siteName", "Király Esemény", fieldName = "Oldal neve", description = "Oldal vagy esemény neve"
+    var siteName by StringSettingRef(defaultValue = "Király Esemény", fieldName = "Oldal neve",
+        description = "Oldal vagy esemény neve"
     )
 
-    val defaultComponent = StringSettingRef(componentSettingService, component,
-        "defaultComponent", "/home", fieldName = "Kezdő komponens",
+    var defaultComponent by StringSettingRef(defaultValue = "/home", fieldName = "Kezdő komponens",
         description = "Az a komponens ami kezdőlapként töltődik be"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val adminGroup = SettingGroup(component, "adminGroup", fieldName = "Admin oldal beállításai")
+    val adminGroup by SettingGroup(fieldName = "Admin oldal beállításai")
 
-    val adminPanelName = StringSettingRef(componentSettingService, component,
-        "adminPanelName", "ADMIN", serverSideOnly = true, fieldName = "Admin panel neve",
-        description = "Az admin panel neve"
+    var adminPanelName by StringSettingRef(defaultValue = "ADMIN",
+        serverSideOnly = true, fieldName = "Admin panel neve", description = "Az admin panel neve"
     )
 
-    val isLive = BooleanSettingRef(componentSettingService, component,
-        "isLive", false, serverSideOnly = true,
+    var isLive by BooleanSettingRef(defaultValue = false, serverSideOnly = true,
         fieldName = "Production oldal", description = "Ha be van kapcsolva akkor az oldal productionben van"
     )
 
-    val siteUrl = StringSettingRef(componentSettingService, component,
-        "siteUrl", "http://localhost:3000/", serverSideOnly = true, fieldName = "Oldal URL-je",
+    var siteUrl by StringSettingRef(defaultValue = "http://localhost:3000/",
+        serverSideOnly = true, fieldName = "Oldal URL-je",
         description = "Az elején van protokoll megnevezés és / jellel végződik"
     )
 
-    val adminSiteUrl = StringSettingRef(componentSettingService, component,
-        "adminSiteUrl", "http://localhost:8080/", serverSideOnly = true, fieldName = "Admin Oldal URL-je",
+    var adminSiteUrl by StringSettingRef(defaultValue = "http://localhost:8080/",
+        serverSideOnly = true, fieldName = "Admin Oldal URL-je",
         description = "Az elején van protokoll megnevezés és / jellel végződik"
     )
 
-    val adminBrandColor = StringSettingRef(componentSettingService, component,
-        "adminBrandColor", "#00F460", type = SettingType.COLOR, serverSideOnly = true,
+    var adminBrandColor by StringSettingRef(defaultValue = "#00F460", type = SettingType.COLOR, serverSideOnly = true,
         fieldName = "Admin menü színe", description = "Ez lesz az admin oldal színe"
     )
 
-    val motd = StringSettingRef(componentSettingService, component,
-        "motd", "Message of the day", serverSideOnly = true, fieldName = "MOTD",
+    var motd by StringSettingRef(defaultValue = "Message of the day", serverSideOnly = true, fieldName = "MOTD",
         description = "Ez jelenik meg belépés után"
     )
 
-    val staffMessage = StringSettingRef(componentSettingService, component,
-        "staffMessage", "...", type = SettingType.LONG_TEXT_MARKDOWN, serverSideOnly = true,
-        fieldName = "Szolgálati közlemény", description = "Ez fog megjelenni az admin oldal kezdőlapján"
+    var staffMessage by StringSettingRef(defaultValue = "...", type = SettingType.LONG_TEXT_MARKDOWN,
+        serverSideOnly = true, fieldName = "Szolgálati közlemény",
+        description = "Ez fog megjelenni az admin oldal kezdőlapján"
     )
 
-    val documentsForOrganizers = StringSettingRef(componentSettingService, component,
-        "documentsForOrganizers", "[]", type = SettingType.LONG_TEXT,
+    var documentsForOrganizers by StringSettingRef(defaultValue = "[]", type = SettingType.LONG_TEXT,
         serverSideOnly = true, fieldName = "Linkelt doksik",
         description = "Linkelt doksik az admin oldal kezdőlapján. Ikonok: sheets, docs, drive, calendar, forms, youtube, slides. Formátum: [{\"type\":\"sheets\",\"url\":\"https://xy\",\"title\":\"Title\",\"visible\":true}]"
     )
 
     override fun onPersist() {
         super.onPersist()
-        if (adminBrandColor.getValue().isEmpty()) {
-            adminBrandColor.setValue(generateColor(adminSiteUrl.getValue()))
+        if (adminBrandColor.isEmpty()) {
+            adminBrandColor = generateColor(adminSiteUrl)
         }
     }
 

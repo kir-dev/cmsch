@@ -127,11 +127,11 @@ class TokenAdminTokensByUsersOfGroupsController(
 
         val font = PdfFontFactory.createFont("OpenSans-Regular.ttf")
         val header = Paragraph()
-        storageService.readObject(tokenComponent.reportLogo.getValue()).map {
+        storageService.readObject(tokenComponent.reportLogo).map {
             Image(ImageDataFactory.create(it)).scaleToFit(70f, 70f)
         }.ifPresent(header::add)
 
-        val eventName = tokenComponent.reportTitle.getValue()
+        val eventName = tokenComponent.reportTitle
         header.add(Paragraph("${eventName}\nJELENLÉTI - ${group.name}")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE)
@@ -154,9 +154,9 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(20f))
 
-        val description = tokenComponent.reportDescription.getValue()
-        val minTokenToComplete = tokenComponent.collectRequiredTokens.getValue().toInt()
-        val preferredTokenType = tokenComponent.collectRequiredType.getValue()
+        val description = tokenComponent.reportDescription
+        val minTokenToComplete = tokenComponent.collectRequiredTokens.toInt()
+        val preferredTokenType = tokenComponent.collectRequiredType
         val signed = tokensByUsers
             .filter { it.value.count { t -> preferredTokenType == ALL_TOKEN_TYPE || t.token?.type == preferredTokenType } >= minTokenToComplete }
             .count()
@@ -172,7 +172,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             .setFont(font)
             .setFontSize(12f))
 
-        val columns = tokenComponent.reportSummaryTableColumns.getValue().split(",")
+        val columns = tokenComponent.reportSummaryTableColumns.split(",")
             .map { it.trim().lowercase() }
             .filter { supportedColumns.contains(it) }
 
@@ -228,7 +228,7 @@ class TokenAdminTokensByUsersOfGroupsController(
             document.add(userTable)
         }
 
-        val footerText = tokenComponent.reportFooterText.getValue()
+        val footerText = tokenComponent.reportFooterText
         document.add(Paragraph("${footerText}\nhello@kir-dev.hu | https://kir-dev.hu")
             .setTextAlignment(TextAlignment.CENTER)
             .setFont(font)

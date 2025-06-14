@@ -20,6 +20,7 @@ class RiddleComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "riddle",
     "/riddle",
     "Riddleök",
@@ -28,159 +29,116 @@ class RiddleComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            riddleGroup,
-            title, menuDisplayName, minRole,
+    val riddleGroup by SettingGroup(fieldName = "Riddleök")
 
-            shadowBanModerationGroup,
-            userShadowBanList,
-            groupShadowBanList,
-
-            banModerationGroup,
-            userBanList,
-            groupBanList,
-
-            scoringGroup,
-            hintScorePercent,
-            saveFailedAttempts,
-
-            answerGroup,
-            ignoreCase,
-            ignoreWhitespace,
-            ignoreAccent,
-
-            skipGroup,
-            skipEnabled,
-            skipAfterGroupsSolved,
-
-            microserviceGroup,
-            microserviceNodeBaseUrl,
-            microserviceSyncEnabled,
-        )
-    }
-
-    val riddleGroup = SettingGroup(component, "riddleGroup", fieldName = "Riddleök")
-
-    final val title = StringSettingRef(componentSettingService, component,
-        "title", "Riddleök", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    final var title by StringSettingRef("Riddleök",
+        fieldName = "Lap címe",
+        description = "Ez jelenik meg a böngésző címsorában"
     )
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Riddleök", serverSideOnly = true,
+    final override var menuDisplayName by StringSettingRef("Riddleök", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", "",
+    final override var minRole by MinRoleSettingRef(setOf(),
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val shadowBanModerationGroup = SettingGroup(component, "shadowBanModerationGroup",
-        fieldName = "Riddle beadások moderálása - Shadow Ban",
+    val shadowBanModerationGroup by SettingGroup(fieldName = "Riddle beadások moderálása - Shadow Ban",
         description = "Küldjük el pihenni a \"túl aktív\" játékosokat, de csak titokban. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
 
-    val userShadowBanList = StringSettingRef(componentSettingService, component,
-        "userShadowBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+    var userShadowBanList by StringSettingRef("", serverSideOnly = true, type = SettingType.LONG_TEXT,
         fieldName = "Tiltott játékosok listája",
         description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani"
     )
 
-    val groupShadowBanList = StringSettingRef(componentSettingService, component,
-        "groupShadowBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+    var groupShadowBanList by StringSettingRef("", serverSideOnly = true, type = SettingType.LONG_TEXT,
         fieldName = "Tiltott csoportok listája",
         description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val banModerationGroup = SettingGroup(component, "banModerationGroup",
-        fieldName = "Riddle beadások moderálása - Ban",
+    val banModerationGroup by SettingGroup(fieldName = "Riddle beadások moderálása - Ban",
         description = "Küldjük el pihenni a \"túl aktív\" játékosokat. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
 
-    val userBanList = StringSettingRef(componentSettingService, component,
-        "userBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+    var userBanList by StringSettingRef("", serverSideOnly = true, type = SettingType.LONG_TEXT,
         fieldName = "Tiltott játékosok listája",
         description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani"
     )
 
-    val groupBanList = StringSettingRef(componentSettingService, component,
-        "groupBanList", "", serverSideOnly = true, type = SettingType.LONG_TEXT,
+    var groupBanList by StringSettingRef("", serverSideOnly = true, type = SettingType.LONG_TEXT,
         fieldName = "Tiltott csoportok listája",
         description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val scoringGroup = SettingGroup(component, "scoringGroup", fieldName = "Pontozás")
+    val scoringGroup by SettingGroup(fieldName = "Pontozás")
 
-    val hintScorePercent = NumberSettingRef(componentSettingService, component,
-        "hintScorePercent", 100, serverSideOnly = true, fieldName = "Hint pont érték", strictConversion = false,
+    var hintScorePercent by NumberSettingRef(100,
+        serverSideOnly = true,
+        fieldName = "Hint pont érték",
+        strictConversion = false,
         description = "Ennyi százaléka lesz a hinttel megoldott riddle pont értéke a hint nélkül megoldottnak"
     )
 
-    val saveFailedAttempts = BooleanSettingRef(componentSettingService, component,
-        "saveFailedAttempts", false, fieldName = "Hibás válaszok számának mentése",
+    var saveFailedAttempts by BooleanSettingRef(false, fieldName = "Hibás válaszok számának mentése",
         description = "Jelentős plusz erőforrással jár ennek a használata ha sokan riddleöznek"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val answerGroup = SettingGroup(component, "answerGroup", fieldName = "Válaszok ellenőrzése",
+    val answerGroup by SettingGroup(fieldName = "Válaszok ellenőrzése",
         description = "A transzformációt a beküldött és a riddleben található megoldásra is futtatjuk," +
                 " tehát nem kell pl. ékezetek nélkülire átírni a megoldásokat."
     )
 
-    val ignoreCase = BooleanSettingRef(componentSettingService, component,
-        "ignoreCase", true, fieldName = "Kis/nagy betű ignorálása",
+    var ignoreCase by BooleanSettingRef(true, fieldName = "Kis/nagy betű ignorálása",
         description = "A válaszoknál nem számít a kis- és nagybetű"
     )
 
-    val ignoreWhitespace = BooleanSettingRef(componentSettingService, component,
-        "ignoreWhitespace", false, fieldName = "Elválasztás ignorálása",
+    var ignoreWhitespace by BooleanSettingRef(false, fieldName = "Elválasztás ignorálása",
         description = "A válaszoknál nem számít a szavak elválasztása (szóköz, kötőjel, &, +, vessző)"
     )
 
-    val ignoreAccent = BooleanSettingRef(componentSettingService, component,
-        "ignoreAccent", false, fieldName = "Ékezetek ignorálása",
+    var ignoreAccent by BooleanSettingRef(false, fieldName = "Ékezetek ignorálása",
         description = "A válaszoknál nem számítanak az ékezetek (áéíóöőúüű)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val skipGroup = SettingGroup(component, "skipGroup", fieldName = "Átugrás funkció",
+    val skipGroup by SettingGroup(fieldName = "Átugrás funkció",
         description = "Bizonyos megoldó létszám fölött átugorható a riddle"
     )
 
-    val skipEnabled = BooleanSettingRef(componentSettingService, component,
-        "skipEnabled", true, fieldName = "Átugrás bekapcsolva",
+    var skipEnabled by BooleanSettingRef(true, fieldName = "Átugrás bekapcsolva",
         description = "A riddle átugrás gomb elérhető"
     )
 
-    val skipAfterGroupsSolved = NumberSettingRef(componentSettingService, component,
-        "skipAfterGroupsSolved", 20, fieldName = "Átugrás ennyi megoldó után", strictConversion = false,
+    var skipAfterGroupsSolved by NumberSettingRef(20,
+        fieldName = "Átugrás ennyi megoldó után",
+        strictConversion = false,
         description = "Ennyi csapat vagy felhasználó megoldása után elérhető a gomb"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val microserviceGroup = SettingGroup(component, "microserviceGroup", fieldName = "Riddle microservice",
+    val microserviceGroup by SettingGroup(fieldName = "Riddle microservice",
         description = "A riddle megoldások kiszervezhetőek egy külön microservicebe"
     )
 
-    val microserviceNodeBaseUrl = StringSettingRef(componentSettingService, component,
-        "microserviceNodeBaseUrl", "http://<pod>.<namespace>.svc.cluster.local",
+    var microserviceNodeBaseUrl by StringSettingRef("http://<pod>.<namespace>.svc.cluster.local",
         serverSideOnly = true, type = SettingType.URL,
         fieldName = "Riddle node base URL-je",
         description = "Ezen a címen érhető el clusteren belül a riddle node. Ez a formátum: http://<pod>.<namespace>.svc.cluster.local"
     )
 
-    val microserviceSyncEnabled = BooleanSettingRef(componentSettingService, component,
-        "microserviceSyncEnabled", false, fieldName = "Beállítások szinkronizációja",
+    var microserviceSyncEnabled by BooleanSettingRef(false, fieldName = "Beállítások szinkronizációja",
         description = "Ha egy riddle módosul akkor küld például értesítést a nodenak, hogy invalidálja a cachet (nincs implementálva)"
     )
 
@@ -195,9 +153,9 @@ class RiddleComponent(
     }
 
     fun updateBanLists() {
-        riddleModerationService.setGroupBans(groupBanList.getValue())
-        riddleModerationService.setGroupShadowBans(groupShadowBanList.getValue())
-        riddleModerationService.setUserBans(userBanList.getValue())
-        riddleModerationService.setUserShadowBans(userShadowBanList.getValue())
+        riddleModerationService.setGroupBans(groupBanList)
+        riddleModerationService.setGroupShadowBans(groupShadowBanList)
+        riddleModerationService.setUserBans(userBanList)
+        riddleModerationService.setUserShadowBans(userShadowBanList)
     }
 }

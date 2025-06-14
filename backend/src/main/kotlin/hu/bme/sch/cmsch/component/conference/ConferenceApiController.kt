@@ -18,37 +18,37 @@ class ConferenceApiController(
         val confEntities = conferenceService.fetchConferenceData()
         return IndexPageData(
             previousConferences = PreviousConferences(
-                sectionTitle = conferenceComponent.previousConferencesSectionTitle.getValue(),
+                sectionTitle = conferenceComponent.previousConferencesSectionTitle,
                 conferences = confEntities.previousConferences,
             ),
             registration = Registration(
-                buttonText = conferenceComponent.registrationButtonText.getValue(),
-                cooltixEventId = conferenceComponent.registrationCooltixEventId.getValue(),
+                buttonText = conferenceComponent.registrationButtonText,
+                cooltixEventId = conferenceComponent.registrationCooltixEventId,
             ),
             mobilApp = MobileApp(
-                description = conferenceComponent.mobileAppDescription.getValue(),
-                androidUrl = conferenceComponent.mobileAppAndroidUrl.getValue(),
-                iosUrl = conferenceComponent.mobileAppIosUrl.getValue(),
+                description = conferenceComponent.mobileAppDescription,
+                androidUrl = conferenceComponent.mobileAppAndroidUrl,
+                iosUrl = conferenceComponent.mobileAppIosUrl,
             ),
             giveaway = Giveaway(
-                sectionTitle = conferenceComponent.giveawaySectionTitle.getValue(),
-                description = conferenceComponent.giveawayDescription.getValue(),
-                pictureUrl = conferenceComponent.giveawayPictureUrl.getValue(),
-                rules = conferenceComponent.giveawayRules.getValue(),
+                sectionTitle = conferenceComponent.giveawaySectionTitle,
+                description = conferenceComponent.giveawayDescription,
+                pictureUrl = conferenceComponent.giveawayPictureUrl,
+                rules = conferenceComponent.giveawayRules,
             ),
             promoVideo = PromoVideo(
-                sectionTitle = conferenceComponent.promoVideoSectionTitle.getValue(),
-                youtubeUrl = conferenceComponent.promoVideoYoutubeUrl.getValue(),
-                description = conferenceComponent.promoVideoDescription.getValue(),
+                sectionTitle = conferenceComponent.promoVideoSectionTitle,
+                youtubeUrl = conferenceComponent.promoVideoYoutubeUrl,
+                description = conferenceComponent.promoVideoDescription,
             ),
             sponsors = Sponsors(
-                sectionTitle = conferenceComponent.sponsorsSectionTitle.getValue(),
+                sectionTitle = conferenceComponent.sponsorsSectionTitle,
                 companies = confEntities.sponsors,
             ),
             organisers = confEntities.organisers,
             featuredPresentation = FeaturedPresentation(
-                sectionTitle = conferenceComponent.featuredPresentationSectionTitle.getValue(),
-                description = conferenceComponent.featuredPresentationDescription.getValue(),
+                sectionTitle = conferenceComponent.featuredPresentationSectionTitle,
+                description = conferenceComponent.featuredPresentationDescription,
                 presentation = confEntities.featuredPresentation,
             ),
             presentations = confEntities.presentations

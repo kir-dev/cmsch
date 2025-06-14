@@ -19,6 +19,7 @@ class ConferenceComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "conference",
     "/",
     "Konferencia",
@@ -33,154 +34,97 @@ class ConferenceComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            conferenceGroup,
-            minRole,
-
-            previousConferencesGroup,
-            previousConferencesSectionTitle,
-
-            registrationGroup,
-            registrationButtonText,
-            registrationCooltixEventId,
-
-            mobileAppGroup,
-            mobileAppDescription,
-            mobileAppAndroidUrl,
-            mobileAppIosUrl,
-
-            giveawayGroup,
-            giveawaySectionTitle,
-            giveawayDescription,
-            giveawayPictureUrl,
-            giveawayRules,
-
-            promoVideoGroup,
-            promoVideoSectionTitle,
-            promoVideoYoutubeUrl,
-            promoVideoDescription,
-
-            sponsorsGroup,
-            sponsorsSectionTitle,
-
-            featuredPresentationGroup,
-            featuredPresentationSectionTitle,
-            featuredPresentationDescription,
-            featuredPresentationSelector,
-        )
-    }
-
-    val conferenceGroup = SettingGroup(component, "conferenceGroup", fieldName = "Konferencia")
+    val conferenceGroup by SettingGroup(fieldName = "Konferencia")
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingRef(componentSettingService, component,
-        "minRole", MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val previousConferencesGroup = SettingGroup(component, "previousConferencesGroup",
-        fieldName = "Korábbi konferenciák")
+    val previousConferencesGroup by SettingGroup(        fieldName = "Korábbi konferenciák")
 
-    val previousConferencesSectionTitle = StringSettingRef(componentSettingService, component,
-        "previousConferencesSectionTitle", "Korábbi Konferenciák", fieldName = "previousConferences.sectionTitle mező"
+    var previousConferencesSectionTitle by StringSettingRef("Korábbi Konferenciák", fieldName = "previousConferences.sectionTitle mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val registrationGroup = SettingGroup(component, "registrationGroup", fieldName = "Regisztráció")
+    val registrationGroup by SettingGroup(fieldName = "Regisztráció")
 
-    val registrationButtonText = StringSettingRef(componentSettingService, component,
-        "registrationButtonText", "Regisztráció", fieldName = "registration.buttonText mező"
+    var registrationButtonText by StringSettingRef("Regisztráció", fieldName = "registration.buttonText mező"
     )
 
-    val registrationCooltixEventId = StringSettingRef(componentSettingService, component,
-        "registrationCooltixEventId", "https://url.com/", type = SettingType.URL,
+    var registrationCooltixEventId by StringSettingRef("https://url.com/", type = SettingType.URL,
         fieldName = "registration.cooltixEventId mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val mobileAppGroup = SettingGroup(component, "mobileAppGroup", fieldName = "Mobil App")
+    val mobileAppGroup by SettingGroup(fieldName = "Mobil App")
 
-    val mobileAppDescription = StringSettingRef(componentSettingService, component,
-        "mobileAppDescription", "Regisztráció", fieldName = "mobileApp.description mező"
+    var mobileAppDescription by StringSettingRef("Regisztráció", fieldName = "mobileApp.description mező"
     )
 
-    val mobileAppAndroidUrl = StringSettingRef(componentSettingService, component,
-        "mobileAppAndroidUrl", "https://", type = SettingType.URL, fieldName = "mobileApp.androidUrl mező"
+    var mobileAppAndroidUrl by StringSettingRef("https://", type = SettingType.URL, fieldName = "mobileApp.androidUrl mező"
     )
 
-    val mobileAppIosUrl = StringSettingRef(componentSettingService, component,
-        "mobileAppIosUrl", "https://", type = SettingType.URL, fieldName = "mobileApp.iosUrl mező"
+    var mobileAppIosUrl by StringSettingRef("https://", type = SettingType.URL, fieldName = "mobileApp.iosUrl mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val giveawayGroup = SettingGroup(component, "giveawayGroup", fieldName = "Nyereményjáték")
+    val giveawayGroup by SettingGroup(fieldName = "Nyereményjáték")
 
-    val giveawaySectionTitle = StringSettingRef(componentSettingService, component,
-        "giveawaySectionTitle", "Nyereményjáték", fieldName = "giveaway.sectionTitle mező"
+    var giveawaySectionTitle by StringSettingRef("Nyereményjáték", fieldName = "giveaway.sectionTitle mező"
     )
 
-    val giveawayDescription = StringSettingRef(componentSettingService, component,
-        "giveawayDescription", "Nyereményjáték leírása ide jön", type = SettingType.LONG_TEXT,
+    var giveawayDescription by StringSettingRef("Nyereményjáték leírása ide jön", type = SettingType.LONG_TEXT,
         fieldName = "giveaway.description mező"
     )
 
-    val giveawayPictureUrl = StringSettingRef(componentSettingService, component,
-        "giveawayPictureUrl", "https://", type = SettingType.URL, fieldName = "giveaway.pictureUrl mező"
+    var giveawayPictureUrl by StringSettingRef("https://", type = SettingType.URL, fieldName = "giveaway.pictureUrl mező"
     )
 
-    val giveawayRules = StringSettingRef(componentSettingService, component,
-        "giveawayRules", "", type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "giveaway.rules mező"
+    var giveawayRules by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "giveaway.rules mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val promoVideoGroup = SettingGroup(component, "promoVideoGroup", fieldName = "Promó videó")
+    val promoVideoGroup by SettingGroup(fieldName = "Promó videó")
 
-    val promoVideoSectionTitle = StringSettingRef(componentSettingService, component,
-        "promoVideoSectionTitle", "Promóciós Videó", fieldName = "promoVideo.sectionTitle mező"
+    var promoVideoSectionTitle by StringSettingRef("Promóciós Videó", fieldName = "promoVideo.sectionTitle mező"
     )
 
-    val promoVideoYoutubeUrl = StringSettingRef(componentSettingService, component,
-        "promoVideoYoutubeUrl", "https://www.youtube.com/embed/xxxxxx", type = SettingType.URL,
+    var promoVideoYoutubeUrl by StringSettingRef("https://www.youtube.com/embed/xxxxxx", type = SettingType.URL,
         fieldName = "promoVideo.youtubeUrl mező", description = "Beágyazható URL-nek kell lennie." +
                 " A legjobb ha a Youtubeos megosztandó iframe kódjából másolod ki!"
     )
 
-    val promoVideoDescription = StringSettingRef(componentSettingService, component,
-        "promoVideoDescription", "Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
+    var promoVideoDescription by StringSettingRef("Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
         fieldName = "promoVideo.description mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val sponsorsGroup = SettingGroup(component, "sponsorsGroup", fieldName = "Támogatók")
+    val sponsorsGroup by SettingGroup(fieldName = "Támogatók")
 
-    val sponsorsSectionTitle = StringSettingRef(componentSettingService, component,
-        "sponsorsSectionTitle", "Támogatók", fieldName = "sponsors.sectionTitle mező"
+    var sponsorsSectionTitle by StringSettingRef("Támogatók", fieldName = "sponsors.sectionTitle mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val featuredPresentationGroup = SettingGroup(component, "featuredPresentationGroup", fieldName = "Kiemelt előadás")
+    val featuredPresentationGroup by SettingGroup(fieldName = "Kiemelt előadás")
 
-    val featuredPresentationSectionTitle = StringSettingRef(componentSettingService, component,
-        "featuredPresentationSectionTitle", "Promóciós Videó", fieldName = "featuredPresentation.sectionTitle mező"
+    var featuredPresentationSectionTitle by StringSettingRef("Promóciós Videó", fieldName = "featuredPresentation.sectionTitle mező"
     )
 
-    val featuredPresentationDescription = StringSettingRef(componentSettingService, component,
-        "featuredPresentationDescription", "Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
+    var featuredPresentationDescription by StringSettingRef("Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
         fieldName = "featuredPresentation.description mező"
     )
 
-    val featuredPresentationSelector = StringSettingRef(componentSettingService, component,
-        "featuredPresentationSelector", "presentation-1", fieldName = "Kiemelt előadás selectorja"
+    var featuredPresentationSelector by StringSettingRef("presentation-1", fieldName = "Kiemelt előadás selectorja"
     )
 
 }

@@ -5,8 +5,10 @@ import hu.bme.sch.cmsch.admin.dashboard.DashboardFormCard
 import hu.bme.sch.cmsch.component.form.FormElementType
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.UserService
+import hu.bme.sch.cmsch.setting.Setting
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
@@ -68,6 +70,10 @@ fun String.urlEncode(): String {
 fun String.urlDecode(): String {
     return URLDecoder.decode(this, StandardCharsets.UTF_8)
 }
+
+fun <T> Boolean.mapIfTrue(mapper: () -> T?): T? = if (this) mapper.invoke() else null
+
+fun Set<RoleType>.isAvailableForRole(role: RoleType): Boolean = role in this
 
 private val markdownExtensions = listOf(TablesExtension.create())
 private val markdownParser: Parser = Parser.builder().extensions(markdownExtensions).build()
