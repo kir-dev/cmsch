@@ -34,7 +34,6 @@ class ErrorLogComponent(
     final override val allSettings by lazy {
         listOf(
             errorLogGroup,
-            menuDisplayName,
             minRole,
             receiveReports
         )
@@ -42,10 +41,7 @@ class ErrorLogComponent(
 
     val errorLogGroup = SettingGroup(component, "errorLogGroup", fieldName = "Kliens hibák")
 
-    final override val menuDisplayName = StringSettingRef(componentSettingService, component,
-        "menuDisplayName", "Kliens hibák", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+    final override val menuDisplayName = null
 
     final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", MinRoleSettingRef.ALL_ROLES,  minRoleToEdit = RoleType.SUPERUSER,
