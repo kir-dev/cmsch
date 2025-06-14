@@ -16,7 +16,7 @@ abstract class DummySetting<T : Any>(
 
 }
 
-data class ControlGroup(
+data class SettingGroup(
     override val component: String,
     override val property: String,
     override val fieldName: String,

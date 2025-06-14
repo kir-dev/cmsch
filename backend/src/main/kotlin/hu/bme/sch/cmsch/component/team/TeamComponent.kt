@@ -120,7 +120,7 @@ class TeamComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val myTeamGroup = ControlGroup(component, "myTeamGroup", fieldName = "Csapatom")
+    val myTeamGroup = SettingGroup(component, "myTeamGroup", fieldName = "Csapatom")
 
     val myTitle = StringSettingRef(componentSettingService, component,
         "myTitle", "Csapatom", fieldName = "Csapatom lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -138,7 +138,7 @@ class TeamComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamListGroup = ControlGroup(component, "teamListGroup", fieldName = "Csapat lista")
+    val teamListGroup = SettingGroup(component, "teamListGroup", fieldName = "Csapat lista")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Csapatok", fieldName = "Csapatok lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -176,7 +176,7 @@ class TeamComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamCreateGroup = ControlGroup(component, "teamCreateGroup", fieldName = "Csapat létrehozás")
+    val teamCreateGroup = SettingGroup(component, "teamCreateGroup", fieldName = "Csapat létrehozás")
 
     val createTitle = StringSettingRef(componentSettingService, component,
         "createTitle", "Csapat készítés",
@@ -244,13 +244,13 @@ class TeamComponent(
     )
 
     val nameRegex = StringSettingRef(componentSettingService, component,
-        "nameRegex", "^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]{1,32}\$", type = SettingType.TEXT, serverSideOnly = true,
+        "nameRegex", "^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]{1,32}$", serverSideOnly = true,
         fieldName = "Csapatnév regex", description = "Ez alapján megy majd a validálás"
     )
 
     val nameBlocklist = StringSettingRef(componentSettingService, component,
-        "nameBlocklist", "test, dev", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Tiltott nevek", description = "Tiltott csapatnevek vesszővel elválasztva"
+        "nameBlocklist", "test, dev", serverSideOnly = true, fieldName = "Tiltott nevek",
+        description = "Tiltott csapatnevek vesszővel elválasztva"
     )
 
     val racesByDefault = BooleanSettingRef(componentSettingService, component,
@@ -265,7 +265,7 @@ class TeamComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamAdminGroup = ControlGroup(component, "teamAdminGroup", fieldName = "Csapat admin felület")
+    val teamAdminGroup = SettingGroup(component, "teamAdminGroup", fieldName = "Csapat admin felület")
 
     val adminTitle = StringSettingRef(componentSettingService, component,
         "adminTitle", "Csapatom kezelése",
@@ -314,7 +314,7 @@ class TeamComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamDetailsGroup = ControlGroup(component, "teamDetailsGroup", fieldName = "Csapat adatlap")
+    val teamDetailsGroup = SettingGroup(component, "teamDetailsGroup", fieldName = "Csapat adatlap")
 
     val showTeamDetails = BooleanSettingRef(componentSettingService, component,
         "showTeamDetails", false, fieldName = "Csoport részleteinek mutatása",
@@ -343,7 +343,7 @@ class TeamComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val statGroup = ControlGroup(component, "statGroup", fieldName = "Csapat statisztika")
+    val statGroup = SettingGroup(component, "statGroup", fieldName = "Csapat statisztika")
 
     val membersStatEnabled = BooleanSettingRef(componentSettingService, component,
         "membersStatEnabled", false, serverSideOnly = true, fieldName = "Tagok számának kijelzése",

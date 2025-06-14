@@ -3,14 +3,7 @@ package hu.bme.sch.cmsch.component.bmejegy
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.BooleanSettingRef
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
-import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.NumberSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
-import hu.bme.sch.cmsch.setting.SettingType
-import hu.bme.sch.cmsch.setting.StringSettingRef
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -79,7 +72,7 @@ class BmejegyComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
+    val logicGroup = SettingGroup(component, "logicGroup", fieldName = "Működés")
 
     val syncEnabled = BooleanSettingRef(componentSettingService,
         component, "syncEnabled", false, fieldName = "Szinkronizáció",
@@ -93,22 +86,23 @@ class BmejegyComponent(
 
     val bufferSize = NumberSettingRef(componentSettingService, component,
         "bufferSize", 524288, serverSideOnly = true, strictConversion = false,
-        fieldName = "Buffer méret", description = "[ADVANCED] Az API válasz mérete. Alapból 262144, de ez 300 entryig elég csak (kb)."
+        fieldName = "Buffer méret",
+        description = "[ADVANCED] Az API válasz mérete. Alapból 262144, de ez 300 entryig elég csak (kb)."
     )
 
     val completeByNeptun = BooleanSettingRef(componentSettingService, component,
-        "completeByNeptun", false, serverSideOnly = true,
-        fieldName = "Keresés NEPTUN alapján", description = "Neptun alapján keresi a fizetett jegyeket (NINCS IMPLEMENTÁLVA)"
+        "completeByNeptun", false, serverSideOnly = true, fieldName = "Keresés NEPTUN alapján",
+        description = "Neptun alapján keresi a fizetett jegyeket (NINCS IMPLEMENTÁLVA)"
     )
 
     val completeByEmail = BooleanSettingRef(componentSettingService, component,
-        "completeByEmail", false, serverSideOnly = true,
-        fieldName = "Keresés EMAIL alapján", description = "Email alapján keresi a fizetett jegyeket (NINCS IMPLEMENTÁLVA)"
+        "completeByEmail", false, serverSideOnly = true, fieldName = "Keresés EMAIL alapján",
+        description = "Email alapján keresi a fizetett jegyeket (NINCS IMPLEMENTÁLVA)"
     )
 
     val completeByPhotoId = BooleanSettingRef(componentSettingService, component,
-        "completeByPhotoId", false, serverSideOnly = true,
-        fieldName = "NEM TÁMOGATOTT | Keresés SZIGSZÁM alapján", description = "Szigszám alapján keresi a fizetett jegyeket (ellenőrizni kell, hogy jó-e a formátum)"
+        "completeByPhotoId", false, serverSideOnly = true, fieldName = "NEM TÁMOGATOTT | Keresés SZIGSZÁM alapján",
+        description = "Szigszám alapján keresi a fizetett jegyeket (ellenőrizni kell, hogy jó-e a formátum)"
     )
 
     val minTimestamp = NumberSettingRef(componentSettingService, component,
@@ -133,74 +127,74 @@ class BmejegyComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val grantGroup1 = ControlGroup(component, "grantGroup1", fieldName = "Fizetés utáni művelet #1")
+    val grantGroup1 = SettingGroup(component, "grantGroup1", fieldName = "Fizetés utáni művelet #1")
 
     val forOrder1 = StringSettingRef(componentSettingService, component,
-        "forOrder1", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
+        "forOrder1", "", serverSideOnly = true, fieldName = "Termék neve",
+        description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
     )
 
     val grantAttendee1 = BooleanSettingRef(componentSettingService, component,
-        "grantAttendee1", false, serverSideOnly = true,
-        fieldName = "Adjon-e ATTENDEE ROLE-t", description = "Adjon-e a felhasználónak ATTENDEE ROLE-t? (ha nincs neki magasabb)"
+        "grantAttendee1", false, serverSideOnly = true, fieldName = "Adjon-e ATTENDEE ROLE-t",
+        description = "Adjon-e a felhasználónak ATTENDEE ROLE-t? (ha nincs neki magasabb)"
     )
 
     val grantPrivileged1 = BooleanSettingRef(componentSettingService, component,
-        "grantPrivileged1", false, serverSideOnly = true,
-        fieldName = "Adjon-e PRIVILEGED ROLE-t", description = "Adjon-e a felhasználónak PRIVILEGED ROLE-t? (ha nincs neki magasabb)"
+        "grantPrivileged1", false, serverSideOnly = true, fieldName = "Adjon-e PRIVILEGED ROLE-t",
+        description = "Adjon-e a felhasználónak PRIVILEGED ROLE-t? (ha nincs neki magasabb)"
     )
 
     val grantGroupName1 = StringSettingRef(componentSettingService, component,
-        "grantGroupName1", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Csoportba helyezés", description = "Csoport tagság állítása (ha üres akkor nem állít)"
+        "grantGroupName1", "", serverSideOnly = true, fieldName = "Csoportba helyezés",
+        description = "Csoport tagság állítása (ha üres akkor nem állít)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val grantGroup2 = ControlGroup(component, "grantGroup2", fieldName = "Fizetés utáni művelet #2")
+    val grantGroup2 = SettingGroup(component, "grantGroup2", fieldName = "Fizetés utáni művelet #2")
 
     val forOrder2 = StringSettingRef(componentSettingService, component,
-        "forOrder2", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
+        "forOrder2", "", serverSideOnly = true, fieldName = "Termék neve",
+        description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
     )
 
     val grantAttendee2 = BooleanSettingRef(componentSettingService, component,
-        "grantAttendee2", false, serverSideOnly = true,
-        fieldName = "Adjon-e ATTENDEE ROLE-t", description = "Adjon-e a felhasználónak ATTENDEE ROLE-t? (ha nincs neki magasabb)"
+        "grantAttendee2", false, serverSideOnly = true, fieldName = "Adjon-e ATTENDEE ROLE-t",
+        description = "Adjon-e a felhasználónak ATTENDEE ROLE-t? (ha nincs neki magasabb)"
     )
 
     val grantPrivileged2 = BooleanSettingRef(componentSettingService, component,
-        "grantPrivileged2", false, serverSideOnly = true,
-        fieldName = "Adjon-e PRIVILEGED ROLE-t", description = "Adjon-e a felhasználónak PRIVILEGED ROLE-t? (ha nincs neki magasabb)"
+        "grantPrivileged2", false, serverSideOnly = true, fieldName = "Adjon-e PRIVILEGED ROLE-t",
+        description = "Adjon-e a felhasználónak PRIVILEGED ROLE-t? (ha nincs neki magasabb)"
     )
 
     val grantGroupName2 = StringSettingRef(componentSettingService, component,
-        "grantGroupName2", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Csoportba helyezés", description = "Csoport tagság állítása (ha üres akkor nem állít)"
+        "grantGroupName2", "", serverSideOnly = true, fieldName = "Csoportba helyezés",
+        description = "Csoport tagság állítása (ha üres akkor nem állít)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val grantGroup3 = ControlGroup(component, "grantGroup3", fieldName = "Fizetés utáni művelet #3")
+    val grantGroup3 = SettingGroup(component, "grantGroup3", fieldName = "Fizetés utáni művelet #3")
 
     val forOrder3 = StringSettingRef(componentSettingService, component,
-        "forOrder3", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Termék neve", description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
+        "forOrder3", "", serverSideOnly = true, fieldName = "Termék neve",
+        description = "Ezzel a névvel szerepel a BME JEGY oldalon (tartalmazás, üres = ki van kapcsolva)"
     )
 
     val grantAttendee3 = BooleanSettingRef(componentSettingService, component,
-        "grantAttendee3", false, serverSideOnly = true,
-        fieldName = "Adjon-e ATTENDEE ROLE-t", description = "Adjon-e a felhasználónak ATTENDEE ROLE-t? (ha nincs neki magasabb)"
+        "grantAttendee3", false, serverSideOnly = true, fieldName = "Adjon-e ATTENDEE ROLE-t",
+        description = "Adjon-e a felhasználónak ATTENDEE ROLE-t? (ha nincs neki magasabb)"
     )
 
     val grantPrivileged3 = BooleanSettingRef(componentSettingService, component,
-        "grantPrivileged3", false, serverSideOnly = true,
-        fieldName = "Adjon-e PRIVILEGED ROLE-t", description = "Adjon-e a felhasználónak PRIVILEGED ROLE-t? (ha nincs neki magasabb)"
+        "grantPrivileged3", false, serverSideOnly = true, fieldName = "Adjon-e PRIVILEGED ROLE-t",
+        description = "Adjon-e a felhasználónak PRIVILEGED ROLE-t? (ha nincs neki magasabb)"
     )
 
     val grantGroupName3 = StringSettingRef(componentSettingService, component,
-        "grantGroupName3", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Csoportba helyezés", description = "Csoport tagság állítása (ha üres akkor nem állít)"
+        "grantGroupName3", "", serverSideOnly = true, fieldName = "Csoportba helyezés",
+        description = "Csoport tagság állítása (ha üres akkor nem állít)"
     )
 
 }

@@ -44,7 +44,7 @@ class QrFightComponent(
         )
     }
 
-    val qrFightGroup = ControlGroup(component, "qrFightGroup", fieldName = "QR Fight")
+    val qrFightGroup = SettingGroup(component, "qrFightGroup", fieldName = "QR Fight")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "QR Fight",
@@ -73,13 +73,13 @@ class QrFightComponent(
     )
 
     val apiTokens = StringSettingRef(componentSettingService, component,
-        "apiTokens", "tower:token", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "API tokenek", description = "Formátum: towerSelector:token, ..."
+        "apiTokens", "tower:token", serverSideOnly = true, fieldName = "API tokenek",
+        description = "Formátum: towerSelector:token, ..."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val indulaschGroup = ControlGroup(component, "indulaschGroup", fieldName = "Indulásch integráció")
+    val indulaschGroup = SettingGroup(component, "indulaschGroup", fieldName = "Indulásch integráció")
 
     val indulaschTowerEnabled = BooleanSettingRef(componentSettingService, component,
         "indulaschTowerEnabled", false, serverSideOnly = true, fieldName = "Indulásch torony",
@@ -87,9 +87,8 @@ class QrFightComponent(
     )
 
     val indulaschTowerSelector = StringSettingRef(componentSettingService, component,
-        "indulaschTowerSelector", "indulasch",
-        type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Torony selector", description = "Melyik torony legyen az InduláSch torony?"
+        "indulaschTowerSelector", "indulasch", serverSideOnly = true, fieldName = "Torony selector",
+        description = "Melyik torony legyen az InduláSch torony?"
     )
 
     val indulaschKioskId = StringSettingRef(componentSettingService,

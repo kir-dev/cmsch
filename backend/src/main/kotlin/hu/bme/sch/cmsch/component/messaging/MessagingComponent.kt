@@ -46,7 +46,7 @@ class MessagingComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val settingGroup = ControlGroup(component, "settingGroup", fieldName = "Proxy adatai")
+    val settingGroup = SettingGroup(component, "settingGroup", fieldName = "Proxy adatai")
 
     val proxyBaseUrl = StringSettingRef(componentSettingService, component,
         "proxyBaseUrl", "http://localhost:8080", type = SettingType.URL,
@@ -54,7 +54,7 @@ class MessagingComponent(
     )
 
     val proxyToken = StringSettingRef(componentSettingService, component,
-        "proxyToken", "", type = SettingType.TEXT, fieldName = "Token a proxyhoz", serverSideOnly = true
+        "proxyToken", "", fieldName = "Token a proxyhoz", serverSideOnly = true
     )
 
 }

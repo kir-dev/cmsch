@@ -53,7 +53,7 @@ class TokenComponent(
         )
     }
 
-    val tokenGroup = ControlGroup(component, "tokenGroup", fieldName = "Tokenek")
+    val tokenGroup = SettingGroup(component, "tokenGroup", fieldName = "Tokenek")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "QR kódok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -77,7 +77,7 @@ class TokenComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val collectTokensGroup = ControlGroup(component, "collectTokensGroup", fieldName = "Pecsét gyűjtés",
+    val collectTokensGroup = SettingGroup(component, "collectTokensGroup", fieldName = "Pecsét gyűjtés",
         description = "Csak akkor írd át ha tudod mit csinálsz! Ha elrontod nem fog beengedni, szóval óvatosan!"
     )
 
@@ -91,21 +91,13 @@ class TokenComponent(
         description = "Ha min. ennyi pecséttel rendelkezik akkor megvan a státusz"
     )
 
-    val collectRequiredType = StringSettingRef(componentSettingService,
-        component,
-        "collectType",
-        "*",
-        serverSideOnly = false,
-        type = SettingType.TEXT,
-        fieldName = "Pecsét token típusa",
+    val collectRequiredType = StringSettingRef(componentSettingService, component,
+        "collectType", "*", serverSideOnly = false, fieldName = "Pecsét token típusa",
         description = "Ebből a fajtából kell összegyűjteni az n darabot; Ha '*' akkor bármilyen típust elfogad."
     )
 
-    val minTokenNotEnoughMessage = StringSettingRef(componentSettingService,
-        component,
-        "minTokenMsg",
-        "Még {} darab kell a tanköri jelenléthez",
-        type = SettingType.LONG_TEXT,
+    val minTokenNotEnoughMessage = StringSettingRef(componentSettingService, component,
+        "minTokenMsg", "Még {} darab kell a tanköri jelenléthez", type = SettingType.LONG_TEXT,
         fieldName = "'Nincs elég' üzenet",
         description = "Az üzenet ha még nincs elérve a cél, {} = a szám amennyi kell még"
     )
@@ -117,7 +109,7 @@ class TokenComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val styleGroup = ControlGroup(component, "styleGroup", fieldName = "Stílus",
+    val styleGroup = SettingGroup(component, "styleGroup", fieldName = "Stílus",
         description = "Hogy jelenjenek meg a tokenek"
     )
 
@@ -127,19 +119,19 @@ class TokenComponent(
     )
 
     val defaultTokenIcon = StringSettingRef(componentSettingService, component,
-        "defaultIcon", "stamp", type = SettingType.TEXT,
-        fieldName = "Alapértelmezett ikon", description = "Azoknak a tokeneknek ahova nincs egyedi megadva"
+        "defaultIcon", "stamp", fieldName = "Alapértelmezett ikon",
+        description = "Azoknak a tokeneknek ahova nincs egyedi megadva"
     )
 
     val defaultTestTokenIcon = StringSettingRef(componentSettingService, component,
-        "defaultTestIcon", "rocket", type = SettingType.TEXT, fieldName = "Alapértelmezett test ikon",
+        "defaultTestIcon", "rocket", fieldName = "Alapértelmezett test ikon",
         description = "Azoknak a teszt tokeneknek ahova nincs egyedi megadva (0-100 egész szám)"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val reportGroup =
-        ControlGroup(component, "reportGroup", fieldName = "Jelenléti ív", description = "Jelenléti ív beállítások")
+        SettingGroup(component, "reportGroup", fieldName = "Jelenléti ív", description = "Jelenléti ív beállítások")
 
     final val reportTitle = StringSettingRef(componentSettingService, component,
         "reportTitle", "GÓLYAKÖRTE 2025", fieldName = "Jelenléti ív címe", description = "Ez lesz a jelenléti ív címe"

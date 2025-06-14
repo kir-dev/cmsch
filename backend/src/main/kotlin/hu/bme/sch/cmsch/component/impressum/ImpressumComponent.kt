@@ -52,7 +52,7 @@ class ImpressumComponent(
         )
     }
 
-    val impressumGroup = ControlGroup(component, "impressumGroup", fieldName = "Impresszum")
+    val impressumGroup = SettingGroup(component, "impressumGroup", fieldName = "Impresszum")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Impressum", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -74,10 +74,8 @@ class ImpressumComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val developersGroup = StringSettingRef(componentSettingService, component,
-        "developersGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Fejlesztők", description = "A fejlesztők nem szerkeszthetőek a webes felületről, csak a profilképük"
-    )
+    val developersGroup = SettingGroup(component, "developersGroup", fieldName = "Fejlesztők",
+        description = "A fejlesztők nem szerkeszthetőek a webes felületről, csak a profilképük")
 
     val developerSchamiUrl = StringSettingRef(componentSettingService, component,
         "developerSchamiUrl", "https://warp.sch.bme.hu/kir-dev/profiles/schami.png", type = SettingType.URL,
@@ -132,9 +130,7 @@ class ImpressumComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val organizerGroup = StringSettingRef(componentSettingService, component,
-        "organizerGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Rendezők",
+    val organizerGroup = SettingGroup(component, "organizerGroup", fieldName = "Rendezők",
         description = "A rendezvény főrendezőit és egyéb rendezőit is meg lehet adni"
     )
 

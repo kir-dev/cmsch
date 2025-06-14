@@ -44,7 +44,7 @@ class HomeComponent(
         )
     }
 
-    val homeGroup = ControlGroup(component, "homeGroup", fieldName = "Kezdőlap")
+    val homeGroup = SettingGroup(component, "homeGroup", fieldName = "Kezdőlap")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Kezdőlap", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -62,22 +62,16 @@ class HomeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = StringSettingRef(componentSettingService, component,
-        "displayGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Megjelenés", description = "A kezdőlap megjelenése"
-    )
+    val displayGroup = SettingGroup(component, "displayGroup", fieldName = "Megjelenés",
+        description = "A kezdőlap megjelenése")
 
     val welcomeMessage = StringSettingRef(componentSettingService, component,
-        "welcomeMessage", "Üdvözlünk a {} portálon", type = SettingType.TEXT,
-        fieldName = "Üdvözlő üzenet", description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
+        "welcomeMessage", "Üdvözlünk a {} portálon", fieldName = "Üdvözlő üzenet",
+        description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
     )
 
-    val youtubeVideoIds = StringSettingRef(componentSettingService,
-        component,
-        "youtubeVideoIds",
-        "",
-        type = SettingType.TEXT,
-        fieldName = "Promó videó(k)",
+    val youtubeVideoIds = StringSettingRef(componentSettingService, component,
+        "youtubeVideoIds", "", fieldName = "Promó videó(k)",
         description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni" +
                 " pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)"
     )
@@ -99,7 +93,7 @@ class HomeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val newsEmbeddedComponentGroup = ControlGroup(component, "embeddedGroup", fieldName = "Hírek rész",
+    val newsEmbeddedComponentGroup = SettingGroup(component, "embeddedGroup", fieldName = "Hírek rész",
         description = "Csak akkor van hatása ha a news komponens be van kapcsolva"
     )
 

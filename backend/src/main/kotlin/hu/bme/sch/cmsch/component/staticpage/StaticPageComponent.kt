@@ -2,13 +2,10 @@ package hu.bme.sch.cmsch.component.staticpage
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
-import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.ImplicitPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.SettingGroup
 import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
-import hu.bme.sch.cmsch.setting.SettingType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -39,7 +36,7 @@ class StaticPageComponent(
         )
     }
 
-    val staticPageGroup = ControlGroup( component, "staticPageGroup", fieldName = "Statikus Oldalak",
+    val staticPageGroup = SettingGroup( component, "staticPageGroup", fieldName = "Statikus Oldalak",
         description = "Jelenleg nincs mit beállítani itt"
     )
 

@@ -71,7 +71,7 @@ class ConferenceComponent(
         )
     }
 
-    val conferenceGroup = ControlGroup(component, "conferenceGroup", fieldName = "Konferencia")
+    val conferenceGroup = SettingGroup(component, "conferenceGroup", fieldName = "Konferencia")
 
     final override val menuDisplayName = null
 
@@ -82,78 +82,69 @@ class ConferenceComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val previousConferencesGroup = ControlGroup(component, "previousConferencesGroup",
+    val previousConferencesGroup = SettingGroup(component, "previousConferencesGroup",
         fieldName = "Korábbi konferenciák")
 
     val previousConferencesSectionTitle = StringSettingRef(componentSettingService, component,
-        "previousConferencesSectionTitle", "Korábbi Konferenciák", type = SettingType.TEXT,
-        fieldName = "previousConferences.sectionTitle mező", description = ""
+        "previousConferencesSectionTitle", "Korábbi Konferenciák", fieldName = "previousConferences.sectionTitle mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val registrationGroup = ControlGroup(component, "registrationGroup", fieldName = "Regisztráció")
+    val registrationGroup = SettingGroup(component, "registrationGroup", fieldName = "Regisztráció")
 
     val registrationButtonText = StringSettingRef(componentSettingService, component,
-        "registrationButtonText", "Regisztráció", type = SettingType.TEXT,
-        fieldName = "registration.buttonText mező", description = ""
+        "registrationButtonText", "Regisztráció", fieldName = "registration.buttonText mező"
     )
 
     val registrationCooltixEventId = StringSettingRef(componentSettingService, component,
         "registrationCooltixEventId", "https://url.com/", type = SettingType.URL,
-        fieldName = "registration.cooltixEventId mező", description = ""
+        fieldName = "registration.cooltixEventId mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val mobileAppGroup = ControlGroup(component, "mobileAppGroup", fieldName = "Mobil App")
+    val mobileAppGroup = SettingGroup(component, "mobileAppGroup", fieldName = "Mobil App")
 
     val mobileAppDescription = StringSettingRef(componentSettingService, component,
-        "mobileAppDescription", "Regisztráció", type = SettingType.TEXT,
-        fieldName = "mobileApp.description mező", description = ""
+        "mobileAppDescription", "Regisztráció", fieldName = "mobileApp.description mező"
     )
 
     val mobileAppAndroidUrl = StringSettingRef(componentSettingService, component,
-        "mobileAppAndroidUrl", "https://", type = SettingType.URL,
-        fieldName = "mobileApp.androidUrl mező", description = ""
+        "mobileAppAndroidUrl", "https://", type = SettingType.URL, fieldName = "mobileApp.androidUrl mező"
     )
 
     val mobileAppIosUrl = StringSettingRef(componentSettingService, component,
-        "mobileAppIosUrl", "https://", type = SettingType.URL,
-        fieldName = "mobileApp.iosUrl mező", description = ""
+        "mobileAppIosUrl", "https://", type = SettingType.URL, fieldName = "mobileApp.iosUrl mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val giveawayGroup = ControlGroup(component, "giveawayGroup", fieldName = "Nyereményjáték")
+    val giveawayGroup = SettingGroup(component, "giveawayGroup", fieldName = "Nyereményjáték")
 
     val giveawaySectionTitle = StringSettingRef(componentSettingService, component,
-        "giveawaySectionTitle", "Nyereményjáték", type = SettingType.TEXT,
-        fieldName = "giveaway.sectionTitle mező", description = ""
+        "giveawaySectionTitle", "Nyereményjáték", fieldName = "giveaway.sectionTitle mező"
     )
 
     val giveawayDescription = StringSettingRef(componentSettingService, component,
         "giveawayDescription", "Nyereményjáték leírása ide jön", type = SettingType.LONG_TEXT,
-        fieldName = "giveaway.description mező", description = ""
+        fieldName = "giveaway.description mező"
     )
 
     val giveawayPictureUrl = StringSettingRef(componentSettingService, component,
-        "giveawayPictureUrl", "https://", type = SettingType.URL,
-        fieldName = "giveaway.pictureUrl mező", description = ""
+        "giveawayPictureUrl", "https://", type = SettingType.URL, fieldName = "giveaway.pictureUrl mező"
     )
 
     val giveawayRules = StringSettingRef(componentSettingService, component,
-        "giveawayRules", "", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "giveaway.rules mező", description = ""
+        "giveawayRules", "", type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "giveaway.rules mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val promoVideoGroup = ControlGroup(component, "promoVideoGroup", fieldName = "Promó videó")
+    val promoVideoGroup = SettingGroup(component, "promoVideoGroup", fieldName = "Promó videó")
 
     val promoVideoSectionTitle = StringSettingRef(componentSettingService, component,
-        "promoVideoSectionTitle", "Promóciós Videó", type = SettingType.TEXT,
-        fieldName = "promoVideo.sectionTitle mező", description = ""
+        "promoVideoSectionTitle", "Promóciós Videó", fieldName = "promoVideo.sectionTitle mező"
     )
 
     val promoVideoYoutubeUrl = StringSettingRef(componentSettingService, component,
@@ -164,35 +155,32 @@ class ConferenceComponent(
 
     val promoVideoDescription = StringSettingRef(componentSettingService, component,
         "promoVideoDescription", "Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
-        fieldName = "promoVideo.description mező", description = ""
+        fieldName = "promoVideo.description mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val sponsorsGroup = ControlGroup(component, "sponsorsGroup", fieldName = "Támogatók")
+    val sponsorsGroup = SettingGroup(component, "sponsorsGroup", fieldName = "Támogatók")
 
     val sponsorsSectionTitle = StringSettingRef(componentSettingService, component,
-        "sponsorsSectionTitle", "Támogatók", type = SettingType.TEXT,
-        fieldName = "sponsors.sectionTitle mező", description = ""
+        "sponsorsSectionTitle", "Támogatók", fieldName = "sponsors.sectionTitle mező"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val featuredPresentationGroup = ControlGroup(component, "featuredPresentationGroup", fieldName = "Kiemelt előadás")
+    val featuredPresentationGroup = SettingGroup(component, "featuredPresentationGroup", fieldName = "Kiemelt előadás")
 
     val featuredPresentationSectionTitle = StringSettingRef(componentSettingService, component,
-        "featuredPresentationSectionTitle", "Promóciós Videó", type = SettingType.TEXT,
-        fieldName = "featuredPresentation.sectionTitle mező", description = ""
+        "featuredPresentationSectionTitle", "Promóciós Videó", fieldName = "featuredPresentation.sectionTitle mező"
     )
 
     val featuredPresentationDescription = StringSettingRef(componentSettingService, component,
         "featuredPresentationDescription", "Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
-        fieldName = "featuredPresentation.description mező", description = ""
+        fieldName = "featuredPresentation.description mező"
     )
 
     val featuredPresentationSelector = StringSettingRef(componentSettingService, component,
-        "featuredPresentationSelector", "presentation-1", type = SettingType.TEXT,
-        fieldName = "Kiemelt előadás selectorja", description = ""
+        "featuredPresentationSelector", "presentation-1", fieldName = "Kiemelt előadás selectorja"
     )
 
 }

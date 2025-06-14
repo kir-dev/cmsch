@@ -52,38 +52,33 @@ class ManifestComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val manifestGroup = ControlGroup(component, "manifestGroup", fieldName = "A manifest.json tartalma",
+    val manifestGroup = SettingGroup(component, "manifestGroup", fieldName = "A manifest.json tartalma",
         description = "Ha nem tudod mi ez, inkább ne állítgasd!"
     )
 
     val name = StringSettingRef(componentSettingService, component,
-        "name", "Király Oldal", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Teljes név", description = ""
+        "name", "Király Oldal", serverSideOnly = true, fieldName = "Teljes név"
     )
 
     val shortName = StringSettingRef(componentSettingService, component,
-        "shortName", "Király Oldal", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Rövid név", description = ""
+        "shortName", "Király Oldal", serverSideOnly = true, fieldName = "Rövid név"
     )
 
     val description = StringSettingRef(componentSettingService, component,
-        "description", "", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Leírás", description = ""
+        "description", "", serverSideOnly = true, fieldName = "Leírás"
     )
 
     val display = StringSettingRef(componentSettingService, component,
-        "display", "browser", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Kijelzés módja", description = "Csak ez lehet: browser, standalone, minimal-ui, fullscreen"
+        "display", "browser", serverSideOnly = true, fieldName = "Kijelzés módja",
+        description = "Csak ez lehet: browser, standalone, minimal-ui, fullscreen"
     )
 
     val applicationScope = StringSettingRef(componentSettingService, component,
-        "applicationScope", "/", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Application scope", description = ""
+        "applicationScope", "/", serverSideOnly = true, fieldName = "Application scope"
     )
 
     val startUrl = StringSettingRef(componentSettingService, component,
-        "startUrl", "/", type = SettingType.URL, serverSideOnly = true,
-        fieldName = "Start url", description = ""
+        "startUrl", "/", type = SettingType.URL, serverSideOnly = true, fieldName = "Start url"
     )
 
     val themeColor = StringSettingRef(componentSettingService, component,
@@ -98,38 +93,32 @@ class ManifestComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val iconGroup = ControlGroup(component, "iconGroup", fieldName = "Ikonok",
-        description = "Generáld ki az oldal ikonjait például ennek az oldalnak a segítségével: " +
-                "https://www.simicart.com/manifest-generator.html/"
+    val iconGroup = SettingGroup(component, "iconGroup", fieldName = "Ikonok",
+        description = "Generáld ki az oldal ikonjait például ennek az oldalnak a segítségével: https://www.simicart.com/manifest-generator.html/"
     )
 
     val favicon = StringSettingRef(componentSettingService, component,
-        "favicon", "manifest/favicon.ico",
-        type = SettingType.IMAGE, serverSideOnly = true, persist = false,
+        "favicon", "manifest/favicon.ico", type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Favicon", description = "16x16-os ico fájl"
     )
 
     val icon192 = StringSettingRef(componentSettingService, component,
-        "icon192", "manifest/icon-192x192.png",
-        type = SettingType.IMAGE, serverSideOnly = true, persist = false,
+        "icon192", "manifest/icon-192x192.png", type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 192", description = "192x192 pixeles png fájl"
     )
 
     val icon256 = StringSettingRef(componentSettingService, component,
-        "icon256", "manifest/icon-256x256.png",
-        type = SettingType.IMAGE, serverSideOnly = true, persist = false,
+        "icon256", "manifest/icon-256x256.png", type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 256", description = "256x256 pixeles png fájl"
     )
 
     val icon384 = StringSettingRef(componentSettingService, component,
-        "icon384", "manifest/icon-384x384.png",
-        type = SettingType.IMAGE, serverSideOnly = true, persist = false,
+        "icon384", "manifest/icon-384x384.png", type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 384", description = "384x384 pixeles png fájl"
     )
 
     val icon512 = StringSettingRef(componentSettingService, component,
-        "icon512", "manifest/icon-512x512.png",
-        type = SettingType.IMAGE, serverSideOnly = true, persist = false,
+        "icon512", "manifest/icon-512x512.png", type = SettingType.IMAGE, serverSideOnly = true, persist = false,
         fieldName = "Ikon 512", description = "512x512 pixeles png fájl"
     )
 

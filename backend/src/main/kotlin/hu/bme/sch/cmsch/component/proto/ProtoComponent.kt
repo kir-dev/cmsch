@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ImplicitPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.SettingGroup
 import hu.bme.sch.cmsch.setting.MinRoleSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -43,6 +43,6 @@ class ProtoComponent(
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val protoGroup = ControlGroup(component, "protoGroup", fieldName = "Prototípusok")
+    val protoGroup = SettingGroup(component, "protoGroup", fieldName = "Prototípusok")
 
 }

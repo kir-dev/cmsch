@@ -5,10 +5,8 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.BooleanSettingRef
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.SettingGroup
 import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
-import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.setting.StringSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -42,7 +40,7 @@ class ErrorLogComponent(
         )
     }
 
-    val errorLogGroup = ControlGroup(component, "errorLogGroup", fieldName = "Kliens hibák")
+    val errorLogGroup = SettingGroup(component, "errorLogGroup", fieldName = "Kliens hibák")
 
     final override val menuDisplayName = StringSettingRef(componentSettingService, component,
         "menuDisplayName", "Kliens hibák", serverSideOnly = true,

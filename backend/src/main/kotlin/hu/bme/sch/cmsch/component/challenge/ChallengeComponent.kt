@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ImplicitPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.SettingGroup
 import hu.bme.sch.cmsch.setting.MinRoleSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -36,7 +36,7 @@ class ChallengeComponent(
         )
     }
 
-    val challengeGroup = ControlGroup(component, "challengeGroup", fieldName = "Beadások")
+    val challengeGroup = SettingGroup(component, "challengeGroup", fieldName = "Beadások")
 
     final override val menuDisplayName = null
 

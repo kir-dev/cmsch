@@ -44,7 +44,7 @@ class CommunitiesComponent(
         )
     }
 
-    val communitiesGroup = ControlGroup(component, "communitiesGroup", fieldName = "Körök")
+    val communitiesGroup = SettingGroup(component, "communitiesGroup", fieldName = "Körök")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Körök",
@@ -68,7 +68,7 @@ class CommunitiesComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val resortGroup = ControlGroup(component, "resortGroup", fieldName = "Reszortok")
+    val resortGroup = SettingGroup(component, "resortGroup", fieldName = "Reszortok")
 
     final val titleResort = StringSettingRef(componentSettingService, component,
         "titleResort", "Reszortok",

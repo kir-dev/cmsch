@@ -50,7 +50,7 @@ class EmailComponent(
         )
     }
 
-    val emailGroup = ControlGroup(component, "emailGroup", fieldName = "Email küldés")
+    val emailGroup = SettingGroup(component, "emailGroup", fieldName = "Email küldés")
 
     val emailProvider = StringSettingRef(componentSettingService, component,
         "emailProvider", "kirmail", fieldName = "Email szolgáltató", serverSideOnly = true,
@@ -64,10 +64,7 @@ class EmailComponent(
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val mailgunGroup = StringSettingRef(
-        componentSettingService, component, "mailgunGroup",
-        "", type = SettingType.COMPONENT_GROUP, persist = false, fieldName = "Mailgun beállítások",
-    )
+    val mailgunGroup = SettingGroup(component, "mailgunGroup", fieldName = "Mailgun beállítások")
 
     val enableMailgun = BooleanSettingRef(componentSettingService, component,
         "enableMailgun", false, fieldName = "Küldés Mailgunnal", serverSideOnly = true,
@@ -91,7 +88,7 @@ class EmailComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val kirmailGroup = ControlGroup(component, "kirmailGroup", fieldName = "Kir Mail beállítások")
+    val kirmailGroup = SettingGroup(component, "kirmailGroup", fieldName = "Kir Mail beállítások")
 
     val enableKirMail = BooleanSettingRef(componentSettingService, component,
         "enableKirMail", false, fieldName = "Küldés Kir Maillel", serverSideOnly = true,

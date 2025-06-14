@@ -50,7 +50,7 @@ class TaskComponent(
         )
     }
 
-    val taskGroup = ControlGroup(component, "taskGroup", fieldName = "Feladatok")
+    val taskGroup = SettingGroup(component, "taskGroup", fieldName = "Feladatok")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Feladatok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -68,11 +68,11 @@ class TaskComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val langGroup = ControlGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
+    val langGroup = SettingGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
 
     val profileRequiredTitle = StringSettingRef(componentSettingService, component,
-        "profileRequiredTitle", "Kötelezően kitöltendő", type = SettingType.TEXT,
-        fieldName = "Kötelező feladatok fejléc szövege", description = "Feladatok (PROFILE_REQUIRED) fejléc szövege"
+        "profileRequiredTitle", "Kötelezően kitöltendő", fieldName = "Kötelező feladatok fejléc szövege",
+        description = "Feladatok (PROFILE_REQUIRED) fejléc szövege"
     )
 
     val profileRequiredMessage = StringSettingRef(componentSettingService, component,
@@ -82,8 +82,8 @@ class TaskComponent(
     )
 
     val regularTitle = StringSettingRef(componentSettingService, component,
-        "regularTitle", "Feladatok", type = SettingType.TEXT,
-        fieldName = "Feladatok fejléc szövege", description = "Feladatok (REGULAR) fejléc szövege"
+        "regularTitle", "Feladatok", fieldName = "Feladatok fejléc szövege",
+        description = "Feladatok (REGULAR) fejléc szövege"
     )
 
     val regularMessage = StringSettingRef(componentSettingService, component,
@@ -94,7 +94,7 @@ class TaskComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val exportGroup = ControlGroup(component, "exportGroup", fieldName = "Beadások exportálása")
+    val exportGroup = SettingGroup(component, "exportGroup", fieldName = "Beadások exportálása")
 
     val exportEnabled = BooleanSettingRef(componentSettingService, component,
         "exportEnabled", false, serverSideOnly = true, fieldName = "Endpoint elérhető",
@@ -113,7 +113,7 @@ class TaskComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
+    val logicGroup = SettingGroup(component, "logicGroup", fieldName = "Működés")
 
     val resubmissionEnabled = BooleanSettingRef(componentSettingService, component,
         "resubmissionEnabled", false, fieldName = "Újraküldés lehetséges",

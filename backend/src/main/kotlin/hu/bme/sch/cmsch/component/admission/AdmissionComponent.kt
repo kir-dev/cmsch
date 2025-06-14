@@ -78,7 +78,7 @@ class AdmissionComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val controlGroup = ControlGroup(component, "controlGroup", fieldName = "Beléptetés működése", description = "")
+    val controlGroup = SettingGroup(component, "controlGroup", fieldName = "Beléptetés működése", description = "")
 
     val onlyAcceptApprovedForms = BooleanSettingRef(componentSettingService, component,
         "onlyAcceptApprovedForms", defaultValue = false, fieldName = "Csak az elfogadott formok számítanak",
@@ -92,69 +92,69 @@ class AdmissionComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val groupAccessGroup = ControlGroup(component, "groupAccessGroup", fieldName = "Csoportok hozzáférése",
+    val groupAccessGroup = SettingGroup(component, "groupAccessGroup", fieldName = "Csoportok hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
     val userGroups = StringSettingRef(componentSettingService, component,
-        "userGroups", "", type = SettingType.TEXT, fieldName = "USER hozzáférésű csoportok",
+        "userGroups", "", fieldName = "USER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
     val vipGroups = StringSettingRef(componentSettingService, component,
-        "vipGroups", "", type = SettingType.TEXT, fieldName = "VIP hozzáférésű csoportok",
+        "vipGroups", "", fieldName = "VIP hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
     val performerGroups = StringSettingRef(componentSettingService, component,
-        "performerGroups", "", type = SettingType.TEXT, fieldName = "PERFORMER hozzáférésű csoportok",
+        "performerGroups", "", fieldName = "PERFORMER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
     val organizerGroups = StringSettingRef(componentSettingService, component,
-        "organizerGroups", "", type = SettingType.TEXT, fieldName = "ORGANIZER hozzáférésű csoportok",
+        "organizerGroups", "", fieldName = "ORGANIZER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
     val leadOrganizerGroups = StringSettingRef(componentSettingService, component,
-        "leadOrganizerGroups", "", type = SettingType.TEXT, fieldName = "LEAD_ORGANIZER hozzáférésű csoportok",
+        "leadOrganizerGroups", "", fieldName = "LEAD_ORGANIZER hozzáférésű csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val userAccessGroup = ControlGroup(component, "userAccessGroup", fieldName = "Felhasználók hozzáférése",
+    val userAccessGroup = SettingGroup(component, "userAccessGroup", fieldName = "Felhasználók hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
     val vipUsers = StringSettingRef(componentSettingService, component,
-        "vipUsers", "", type = SettingType.TEXT, fieldName = "USER hozzáférésű felhasználók",
+        "vipUsers", "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     val performerUsers = StringSettingRef(componentSettingService, component,
-        "performerUsers", "", type = SettingType.TEXT, fieldName = "USER hozzáférésű felhasználók",
+        "performerUsers", "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     val organizerUsers = StringSettingRef(componentSettingService, component,
-        "organizerUsers", "", type = SettingType.TEXT, fieldName = "USER hozzáférésű felhasználók",
+        "organizerUsers", "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     val leadOrganizerUsers = StringSettingRef(componentSettingService, component,
-        "leadOrganizerUsers", "", type = SettingType.TEXT, fieldName = "USER hozzáférésű felhasználók",
+        "leadOrganizerUsers", "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     val userUsers = StringSettingRef(componentSettingService, component,
-        "userUsers", "", type = SettingType.TEXT, fieldName = "USER hozzáférésű felhasználók",
+        "userUsers", "", fieldName = "USER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val roleGroup = ControlGroup(component, "roleGroup", fieldName = "Szerepek hozzáférése",
+    val roleGroup = SettingGroup(component, "roleGroup", fieldName = "Szerepek hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
@@ -190,24 +190,23 @@ class AdmissionComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val banListGroup = ControlGroup(component, "banListGroup", fieldName = "Tiltó lista",
+    val banListGroup = SettingGroup(component, "banListGroup", fieldName = "Tiltó lista",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni"
     )
 
     val bannedGroups = StringSettingRef(componentSettingService, component,
-        "bannedGroups", "", type = SettingType.TEXT, fieldName = "Kitiltott csoportok",
+        "bannedGroups", "",fieldName = "Kitiltott csoportok",
         description = "A csoportok nevei felsorolva és vesszővel (,) elválasztva"
     )
 
     val bannedUsers = StringSettingRef(componentSettingService, component,
-        "bannedUsers", "", type = SettingType.TEXT,
-        fieldName = "Kitiltott felhasználók",
+        "bannedUsers", "", fieldName = "Kitiltott felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val ticketGroup = ControlGroup(component, "ticketGroup", fieldName = "Jegyek",
+    val ticketGroup = SettingGroup(component, "ticketGroup", fieldName = "Jegyek",
         description = "A jegyellenőrzés menü beállításai")
 
     val ticketShowEntryCount = BooleanSettingRef(componentSettingService, component,

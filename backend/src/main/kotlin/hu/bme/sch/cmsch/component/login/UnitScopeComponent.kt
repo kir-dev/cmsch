@@ -80,7 +80,7 @@ class UnitScopeComponent(
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    val unitScopeGroup = ControlGroup(component, "unitScopeGroup", fieldName = "Jogviszonyok")
+    val unitScopeGroup = SettingGroup(component, "unitScopeGroup", fieldName = "Jogviszonyok")
 
     val unitScopeGrantsEnabled = BooleanSettingRef(componentSettingService, component,
         "unitScopeGrantsEnabled", false, serverSideOnly = true, fieldName = "Jogok adása",
@@ -89,7 +89,7 @@ class UnitScopeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val bmeGroup = ControlGroup(component, "bmeGroup", fieldName = "BME-s felhasználók",
+    val bmeGroup = SettingGroup(component, "bmeGroup", fieldName = "BME-s felhasználók",
         description = "Érvényesülési sorrend: 1. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
 
@@ -112,7 +112,7 @@ class UnitScopeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val activeGroup = ControlGroup(component, "activeGroup", fieldName = "Aktív hallgató felhasználók",
+    val activeGroup = SettingGroup(component, "activeGroup", fieldName = "Aktív hallgató felhasználók",
         description = "Érvényesülési sorrend: 2. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
 
@@ -135,7 +135,7 @@ class UnitScopeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val newbieGroup = ControlGroup(component, "newbieGroup", fieldName = "Első éves felhasználók",
+    val newbieGroup = SettingGroup(component, "newbieGroup", fieldName = "Első éves felhasználók",
         description = "Érvényesülési sorrend: 3. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
 
@@ -158,7 +158,7 @@ class UnitScopeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vikGroup = ControlGroup(component, "vikGroup", fieldName = "VIK-es felhasználók",
+    val vikGroup = SettingGroup(component, "vikGroup", fieldName = "VIK-es felhasználók",
         description = "Érvényesülési sorrend: 4. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
 
@@ -181,7 +181,7 @@ class UnitScopeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vikNewbieGroup = ControlGroup(component, "vikNewbieGroup", fieldName = "VIK-es elsőéves felhasználók",
+    val vikNewbieGroup = SettingGroup(component, "vikNewbieGroup", fieldName = "VIK-es elsőéves felhasználók",
         description = "Érvényesülési sorrend: 5. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
 
@@ -203,7 +203,7 @@ class UnitScopeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vbkGroup = ControlGroup(component, "vbkGroup", fieldName = "VBK-s felhasználók",
+    val vbkGroup = SettingGroup(component, "vbkGroup", fieldName = "VBK-s felhasználók",
         description = "Érvényesülési sorrend: 6. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
 
@@ -226,7 +226,7 @@ class UnitScopeComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vbkNewbieGroup = ControlGroup(component, "vbkNewbieGroup", fieldName = "VBK-s elsőéves felhasználók",
+    val vbkNewbieGroup = SettingGroup(component, "vbkNewbieGroup", fieldName = "VBK-s elsőéves felhasználók",
         description = "Érvényesülési sorrend: 7. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
     )
 

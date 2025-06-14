@@ -3,9 +3,8 @@ package hu.bme.sch.cmsch.component.debt
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.SettingGroup
 import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
 import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.setting.StringSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -41,7 +40,7 @@ class DebtComponent(
         )
     }
 
-    val debtGroup = ControlGroup(component, "debtGroup", fieldName = "Tartozások",
+    val debtGroup = SettingGroup(component, "debtGroup", fieldName = "Tartozások",
         description = "Jelenleg nincs mit beállítani itt")
 
     final val title = StringSettingRef(componentSettingService, component,

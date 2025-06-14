@@ -60,7 +60,7 @@ class RiddleComponent(
         )
     }
 
-    val riddleGroup = ControlGroup(component, "riddleGroup", fieldName = "Riddleök")
+    val riddleGroup = SettingGroup(component, "riddleGroup", fieldName = "Riddleök")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Riddleök", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -78,7 +78,7 @@ class RiddleComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val shadowBanModerationGroup = ControlGroup(component, "shadowBanModerationGroup",
+    val shadowBanModerationGroup = SettingGroup(component, "shadowBanModerationGroup",
         fieldName = "Riddle beadások moderálása - Shadow Ban",
         description = "Küldjük el pihenni a \"túl aktív\" játékosokat, de csak titokban. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
@@ -97,7 +97,7 @@ class RiddleComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val banModerationGroup = ControlGroup(component, "banModerationGroup",
+    val banModerationGroup = SettingGroup(component, "banModerationGroup",
         fieldName = "Riddle beadások moderálása - Ban",
         description = "Küldjük el pihenni a \"túl aktív\" játékosokat. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!"
     )
@@ -116,7 +116,7 @@ class RiddleComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val scoringGroup = ControlGroup(component, "scoringGroup", fieldName = "Pontozás")
+    val scoringGroup = SettingGroup(component, "scoringGroup", fieldName = "Pontozás")
 
     val hintScorePercent = NumberSettingRef(componentSettingService, component,
         "hintScorePercent", 100, serverSideOnly = true, fieldName = "Hint pont érték", strictConversion = false,
@@ -130,7 +130,7 @@ class RiddleComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val answerGroup = ControlGroup(component, "answerGroup", fieldName = "Válaszok ellenőrzése",
+    val answerGroup = SettingGroup(component, "answerGroup", fieldName = "Válaszok ellenőrzése",
         description = "A transzformációt a beküldött és a riddleben található megoldásra is futtatjuk," +
                 " tehát nem kell pl. ékezetek nélkülire átírni a megoldásokat."
     )
@@ -152,7 +152,7 @@ class RiddleComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val skipGroup = ControlGroup(component, "skipGroup", fieldName = "Átugrás funkció",
+    val skipGroup = SettingGroup(component, "skipGroup", fieldName = "Átugrás funkció",
         description = "Bizonyos megoldó létszám fölött átugorható a riddle"
     )
 
@@ -168,7 +168,7 @@ class RiddleComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val microserviceGroup = ControlGroup(component, "microserviceGroup", fieldName = "Riddle microservice",
+    val microserviceGroup = SettingGroup(component, "microserviceGroup", fieldName = "Riddle microservice",
         description = "A riddle megoldások kiszervezhetőek egy külön microservicebe"
     )
 

@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.SettingGroup
 import hu.bme.sch.cmsch.setting.MinRoleSettingRef
 import hu.bme.sch.cmsch.setting.StringSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -59,7 +59,7 @@ class FormComponent(
 
     // -------------------------------------------------------------------------------------------------------------------
 
-    val langGroup = ControlGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
+    val langGroup = SettingGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
 
     val langTooEarly = StringSettingRef(componentSettingService, component,
         "langTooEarly", "A jelentkezés még nem tölthető ki",

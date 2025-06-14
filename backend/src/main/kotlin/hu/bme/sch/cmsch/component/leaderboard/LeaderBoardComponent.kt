@@ -57,7 +57,7 @@ class LeaderBoardComponent(
         )
     }
 
-    val leaderboardGroup = ControlGroup(component, "leaderboardGroup", fieldName = "Toplista")
+    val leaderboardGroup = SettingGroup(component, "leaderboardGroup", fieldName = "Toplista")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Toplista", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -75,7 +75,7 @@ class LeaderBoardComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
+    val logicGroup = SettingGroup(component, "logicGroup", fieldName = "Működés")
 
     val leaderboardEnabled = BooleanSettingRef(componentSettingService, component,
         "leaderboardEnabled", true,
@@ -104,7 +104,7 @@ class LeaderBoardComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val calcGroup = ControlGroup(component, "calcGroup", fieldName = "Pont számítás")
+    val calcGroup = SettingGroup(component, "calcGroup", fieldName = "Pont számítás")
 
     val tasksPercent = NumberSettingRef(componentSettingService, component,
         "tasksPercent", 100, serverSideOnly = true, strictConversion = false,
@@ -128,7 +128,7 @@ class LeaderBoardComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = ControlGroup(component, "displayGroup", fieldName = "Kijelzés")
+    val displayGroup = SettingGroup(component, "displayGroup", fieldName = "Kijelzés")
 
     val minScoreToShow = NumberSettingRef(componentSettingService, component,
         "minScoreToShow", 1, fieldName = "Legalább ennyi ponttal", strictConversion = false,

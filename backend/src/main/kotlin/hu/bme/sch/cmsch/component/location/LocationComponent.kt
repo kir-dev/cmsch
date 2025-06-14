@@ -68,7 +68,7 @@ class LocationComponent(
         fieldName = "Térkép menü neve", description = "Ez lesz a neve a menünek"
     )
 
-    val locationGroup = ControlGroup(component, "locationGroup", fieldName = "Helymegosztás")
+    val locationGroup = SettingGroup(component, "locationGroup", fieldName = "Helymegosztás")
 
     final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", MinRoleSettingRef.ALL_ROLES,
@@ -77,7 +77,7 @@ class LocationComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val appearanceGroup = ControlGroup(component, "appearanceGroup", fieldName = "Megjelenés")
+    val appearanceGroup = SettingGroup(component, "appearanceGroup", fieldName = "Megjelenés")
 
     val topMessage = StringSettingRef(componentSettingService, component,
         "topMessage", "", type = SettingType.LONG_TEXT_MARKDOWN,
@@ -91,7 +91,7 @@ class LocationComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val colorGroup = ControlGroup(component, "colorGroup", fieldName = "Csoport színek")
+    val colorGroup = SettingGroup(component, "colorGroup", fieldName = "Csoport színek")
 
     val defaultGroupColor = StringSettingRef(componentSettingService, component,
         "defaultGroupColor", "#FF0000", type = SettingType.COLOR,
@@ -99,63 +99,52 @@ class LocationComponent(
     )
 
     val blackGroupName = StringSettingRef(componentSettingService, component,
-        "blackGroupName", "LEAD", type = SettingType.TEXT,
-        fieldName = "Fekete csoport színe", serverSideOnly = true
+        "blackGroupName", "LEAD", fieldName = "Fekete csoport színe", serverSideOnly = true
     )
 
     val blueGroupName = StringSettingRef(componentSettingService, component,
-        "blueGroupName", "SENIOR", type = SettingType.TEXT,
-        fieldName = "Kék csoport neve", serverSideOnly = true
+        "blueGroupName", "SENIOR", fieldName = "Kék csoport neve", serverSideOnly = true
     )
 
     val cyanGroupName = StringSettingRef(componentSettingService, component,
-        "cyanGroupName", "CONTROL", type = SettingType.TEXT,
-        fieldName = "Türkiz csoport neve", serverSideOnly = true
+        "cyanGroupName", "CONTROL", fieldName = "Türkiz csoport neve", serverSideOnly = true
     )
 
     val pinkGroupName = StringSettingRef(componentSettingService, component,
-        "pinkGroupName", "SUPPORT", type = SettingType.TEXT,
-        fieldName = "Rózsaszín csoport neve", serverSideOnly = true
+        "pinkGroupName", "SUPPORT", fieldName = "Rózsaszín csoport neve", serverSideOnly = true
     )
 
     val orangeGroupName = StringSettingRef(componentSettingService, component,
-        "orangeGroupName", "KIRDEV", type = SettingType.TEXT,
-        fieldName = "Narancs csoport neve", serverSideOnly = true
+        "orangeGroupName", "KIRDEV", fieldName = "Narancs csoport neve", serverSideOnly = true
     )
 
     val greenGroupName = StringSettingRef(componentSettingService, component,
-        "greenGroupName", "", type = SettingType.TEXT,
-        fieldName = "Zöld csoport neve", serverSideOnly = true
+        "greenGroupName", "", fieldName = "Zöld csoport neve", serverSideOnly = true
     )
 
     val redGroupName = StringSettingRef(componentSettingService, component,
-        "redGroupName", "", type = SettingType.TEXT,
-        fieldName = "Piros csoport neve", serverSideOnly = true
+        "redGroupName", "", fieldName = "Piros csoport neve", serverSideOnly = true
     )
 
     val whiteGroupName = StringSettingRef(componentSettingService, component,
-        "whiteGroupName", "", type = SettingType.TEXT,
-        fieldName = "Fehér csoport neve", serverSideOnly = true
+        "whiteGroupName", "", fieldName = "Fehér csoport neve", serverSideOnly = true
     )
 
     val yellowGroupName = StringSettingRef(componentSettingService, component,
-        "yellowGroupName", "", type = SettingType.TEXT,
-        fieldName = "Sárga csoport neve", serverSideOnly = true
+        "yellowGroupName", "", fieldName = "Sárga csoport neve", serverSideOnly = true
     )
 
     val purpleGroupName = StringSettingRef(componentSettingService, component,
-        "purpleGroupName", "", type = SettingType.TEXT,
-        fieldName = "Lila csoport neve", serverSideOnly = true
+        "purpleGroupName", "", fieldName = "Lila csoport neve", serverSideOnly = true
     )
 
     val grayGroupName = StringSettingRef(componentSettingService, component,
-        "grayGroupName", "", type = SettingType.TEXT,
-        fieldName = "Szürke csoport neve", serverSideOnly = true
+        "grayGroupName", "", fieldName = "Szürke csoport neve", serverSideOnly = true
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val appGroup = ControlGroup(component, "appGroup", fieldName = "Tracker alkalmazás")
+    val appGroup = SettingGroup(component, "appGroup", fieldName = "Tracker alkalmazás")
 
     val installGuide = StringSettingRef(componentSettingService, component,
         "installGuide",
@@ -178,7 +167,7 @@ class LocationComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = ControlGroup(component, "displayGroup", fieldName = "Megjelenítés")
+    val displayGroup = SettingGroup(component, "displayGroup", fieldName = "Megjelenítés")
 
     val showUserName = BooleanSettingRef(componentSettingService, component,
         "showUserName", false, fieldName = "Felhasználó nevének kiírása", serverSideOnly = true,

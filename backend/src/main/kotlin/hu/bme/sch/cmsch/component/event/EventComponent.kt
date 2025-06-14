@@ -45,7 +45,7 @@ class EventComponent(
         )
     }
 
-    val eventsGroup = ControlGroup(component, "eventsGroup", fieldName = "Események")
+    val eventsGroup = SettingGroup(component, "eventsGroup", fieldName = "Események")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Programok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -63,7 +63,7 @@ class EventComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val appearanceGroup = ControlGroup(component, "appearanceGroup", fieldName = "Megjelenés")
+    val appearanceGroup = SettingGroup(component, "appearanceGroup", fieldName = "Megjelenés")
 
     val seekToCurrentCurrent = BooleanSettingRef(componentSettingService, component,
         "seekToCurrentCurrent", false, fieldName = "Tekerjen oda a jelenlegi programhoz"
@@ -85,7 +85,7 @@ class EventComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
+    val logicGroup = SettingGroup(component, "logicGroup", fieldName = "Működés")
 
     val enableDetailedView = BooleanSettingRef(componentSettingService, component,
         "enableDetailedView", false, fieldName = "Elérhető a részletes nézet (külön lapon)"

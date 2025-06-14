@@ -48,14 +48,14 @@ class PushNotificationComponent(
     )
 
 
-    val notificationsGroup = ControlGroup(component, "notificationsGroup", fieldName = "Értesítés beállítások")
+    val notificationsGroup = SettingGroup(component, "notificationsGroup", fieldName = "Értesítés beállítások")
 
     val notificationsEnabled = BooleanSettingRef(componentSettingService, component,
         "notificationsEnabled", true, fieldName = "Értesítések engedélyezése a felhasználói felületen",
         description = "A felhasználók csak akkor kapnak push notificationokat, ha ez az opció engedélyezve van"
     )
 
-    val permissionRequestGroup = ControlGroup(component, "permissionRequestGroup",
+    val permissionRequestGroup = SettingGroup(component, "permissionRequestGroup",
         fieldName = "Jogosultságkérés beállítások")
 
     val permissionPromptText = StringSettingRef(

@@ -34,7 +34,7 @@ class NewsComponent(
         )
     }
 
-    val newsGroup = ControlGroup(component, "newsGroup", fieldName = "Hírek")
+    val newsGroup = SettingGroup(component, "newsGroup", fieldName = "Hírek")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Hírek",

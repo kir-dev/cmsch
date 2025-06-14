@@ -49,7 +49,7 @@ class CountdownComponent(
         return (keepOnAfterCountdownOver.getValue() || !isCountdownOver)
     }
 
-    val countdownGroup = ControlGroup(component, "countdownGroup", fieldName = "Visszaszámlálás")
+    val countdownGroup = SettingGroup(component, "countdownGroup", fieldName = "Visszaszámlálás")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Hamarosan", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -67,15 +67,10 @@ class CountdownComponent(
         "enabled", false, fieldName = "Bekapcsolva", description = "Legyen aktív a visszaszámlálás komponens"
     )
 
-    val showOnlyCountdownForRoles = MinRoleSettingRef(componentSettingService,
-        component,
-        "showOnlyCountdownForRoles",
-        MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Kinek legyen erőltetett",
-        description = "Ezek a roleok számára más komponensek ne legyenek elérhetőek. " +
-                "Csak akkor működik, ha be van kapcsolva a komponens.",
-        minRoleToEdit = RoleType.STAFF,
-        grantedForRoles = ArrayList() // Thymeleaf doesn't like emptyList() (EmptyList)
+    val showOnlyCountdownForRoles = MinRoleSettingRef(componentSettingService, component,
+        "showOnlyCountdownForRoles", MinRoleSettingRef.ALL_ROLES, fieldName = "Kinek legyen erőltetett",
+        description = "Ezek a roleok számára más komponensek ne legyenek elérhetőek. Csak akkor működik, ha be van kapcsolva a komponens.",
+        minRoleToEdit = RoleType.STAFF, grantedForRoles = ArrayList()
     )
 
     val keepOnAfterCountdownOver = BooleanSettingRef(componentSettingService, component,
@@ -83,12 +78,8 @@ class CountdownComponent(
         description = "Ha be van kapcsolva és erőltetett a visszaszámláló a felhasználó, akkor a lejárta után sem enged az oldalhoz hozzáférni"
     )
 
-    val topMessage = StringSettingRef(componentSettingService,
-        component,
-        "topMessage",
-        "Az esemény kezdetéig hátralévő idő:",
-        type = SettingType.TEXT,
-        fieldName = "Oldal tetején megjelenő szöveg",
+    val topMessage = StringSettingRef(componentSettingService, component,
+        "topMessage", "Az esemény kezdetéig hátralévő idő:", fieldName = "Oldal tetején megjelenő szöveg",
         description = "Ha üres akkor nincs ilyen. A [[ és ]] jelek között írt szöveg brand színű lesz."
     )
 

@@ -3,10 +3,8 @@ package hu.bme.sch.cmsch.component.gallery
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
+import hu.bme.sch.cmsch.setting.SettingGroup
 import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
-import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.setting.StringSettingRef
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
@@ -38,7 +36,7 @@ class GalleryComponent(
         )
     }
 
-    val galleryGroup = ControlGroup(component, "galleryGroup", fieldName = "Galéria")
+    val galleryGroup = SettingGroup(component, "galleryGroup", fieldName = "Galéria")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Galéria",

@@ -3,13 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.BooleanSettingRef
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
-import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
-import hu.bme.sch.cmsch.setting.SettingType
-import hu.bme.sch.cmsch.setting.StringSettingRef
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -81,7 +75,7 @@ class StylingComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val lightGroup = ControlGroup(component, "lightGroup", fieldName = "Világos téma",
+    val lightGroup = SettingGroup(component, "lightGroup", fieldName = "Világos téma",
         description = "Az oldal világos stílusának színei, háttérképek"
     )
 
@@ -96,8 +90,8 @@ class StylingComponent(
     )
 
     val lightContainerFilter = StringSettingRef(componentSettingService, component,
-        "lightContainerFilter", "", type = SettingType.TEXT,
-        fieldName = "A lapra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+        "lightContainerFilter", "", fieldName = "A lapra alkalmazott filter",
+        description = "CSS backdrop-filter, például blur(8px)"
     )
 
     val lightNavbarColor = StringSettingRef(componentSettingService, component,
@@ -106,8 +100,8 @@ class StylingComponent(
     )
 
     val lightNavbarFilter = StringSettingRef(componentSettingService, component,
-        "lightNavbarFilter", "", type = SettingType.TEXT,
-        fieldName = "A navbarra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+        "lightNavbarFilter", "", fieldName = "A navbarra alkalmazott filter",
+        description = "CSS backdrop-filter, például blur(8px)"
     )
 
     val lightFooterBackground = StringSettingRef(componentSettingService, component,
@@ -116,8 +110,8 @@ class StylingComponent(
     )
 
     val lightFooterFilter = StringSettingRef(componentSettingService, component,
-        "lightFooterFilter", "", type = SettingType.TEXT,
-        fieldName = "A footerre alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+        "lightFooterFilter", "", fieldName = "A footerre alkalmazott filter",
+        description = "CSS backdrop-filter, például blur(8px)"
     )
 
     val lightFooterShadowColor = StringSettingRef(componentSettingService, component,
@@ -135,36 +129,35 @@ class StylingComponent(
         fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre"
     )
 
-    val lightBackgroundUrl = StringSettingRef(componentSettingService, component,
-        "lightBackgroundUrl", "", type = SettingType.URL,
-        fieldName = "Háttérkép", description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva."
+    val lightBackgroundUrl = StringSettingRef(componentSettingService,
+        component, "lightBackgroundUrl", "", type = SettingType.URL, fieldName = "Háttérkép",
+        description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 
-    val lightMobileBackgroundUrl = StringSettingRef(componentSettingService, component,
-        "lightMobileBackgroundUrl", "", type = SettingType.URL,
-        fieldName = "Mobil háttérkép", description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
+    val lightMobileBackgroundUrl = StringSettingRef(componentSettingService,
+        component, "lightMobileBackgroundUrl", "", type = SettingType.URL, fieldName = "Mobil háttérkép",
+        description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 
-    val lightLogoUrl = StringSettingRef(componentSettingService, component,
-        "lightLogoUrl", "", type = SettingType.URL,
-        fieldName = "Oldal logója", description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg."
+    val lightLogoUrl = StringSettingRef(componentSettingService,
+        component, "lightLogoUrl", "", type = SettingType.URL, fieldName = "Oldal logója",
+        description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val darkGroup = ControlGroup(component, "darkGroup", fieldName = "Sötét téma",
+    val darkGroup = SettingGroup(component, "darkGroup", fieldName = "Sötét téma",
         description = "Az oldal sötét stílusának színei, háttérképek"
     )
 
     val darkModeEnabled = BooleanSettingRef(componentSettingService, component,
-        "darkModeEnabled", true, type = SettingType.BOOLEAN,
-        fieldName = "Sötét téma elérhető", description = "Ha ez ki van kapcsolva, akkor nincs téma váltó"
+        "darkModeEnabled", true, fieldName = "Sötét téma elérhető",
+        description = "Ha ez ki van kapcsolva, akkor nincs téma váltó"
     )
 
     val deviceTheme = BooleanSettingRef(componentSettingService, component,
-        "deviceTheme", false, type = SettingType.BOOLEAN,
-        fieldName = "Séma az eszköz alapján", description = "Ha be van kapcsolva, akkor lekéri, " +
-                "hogy világos vagy sötét módban fut az eszköz. Csak akkor működik ha a sötét mód be van kapcsolva."
+        "deviceTheme", false, fieldName = "Séma az eszköz alapján",
+        description = "Ha be van kapcsolva, akkor lekéri, hogy világos vagy sötét módban fut az eszköz. Csak akkor működik ha a sötét mód be van kapcsolva."
     )
 
     val forceDarkMode = BooleanSettingRef(componentSettingService,
@@ -183,8 +176,8 @@ class StylingComponent(
     )
 
     val darkContainerFilter = StringSettingRef(componentSettingService, component,
-        "darkContainerFilter", "", type = SettingType.TEXT,
-        fieldName = "A lapra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+        "darkContainerFilter", "", fieldName = "A lapra alkalmazott filter",
+        description = "CSS backdrop-filter, például blur(8px)"
     )
 
     val darkNavbarColor = StringSettingRef(componentSettingService, component,
@@ -193,8 +186,8 @@ class StylingComponent(
     )
 
     val darkNavbarFilter = StringSettingRef(componentSettingService, component,
-        "darkNavbarFilter", "", type = SettingType.TEXT,
-        fieldName = "A navbarra alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+        "darkNavbarFilter", "", fieldName = "A navbarra alkalmazott filter",
+        description = "CSS backdrop-filter, például blur(8px)"
     )
 
     val darkFooterBackground = StringSettingRef(componentSettingService, component,
@@ -203,8 +196,8 @@ class StylingComponent(
     )
 
     val darkFooterFilter = StringSettingRef(componentSettingService, component,
-        "darkFooterFilter", "", type = SettingType.TEXT,
-        fieldName = "A footerre alkalmazott filter", description = "CSS backdrop-filter, például blur(8px)"
+        "darkFooterFilter", "", fieldName = "A footerre alkalmazott filter",
+        description = "CSS backdrop-filter, például blur(8px)"
     )
 
     val darkFooterShadowColor = StringSettingRef(componentSettingService, component,
@@ -218,44 +211,45 @@ class StylingComponent(
     )
 
     val darkBackgroundUrl = StringSettingRef(componentSettingService, component,
-        "darkBackgroundUrl", "", type = SettingType.URL,
-        fieldName = "Háttérkép", description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva."
+        "darkBackgroundUrl", "", type = SettingType.URL, fieldName = "Háttérkép",
+        description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 
     val darkMobileBackgroundUrl = StringSettingRef(componentSettingService, component,
-        "darkMobileBackgroundUrl", "", type = SettingType.URL,
-        fieldName = "Mobil háttérkép", description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
+        "darkMobileBackgroundUrl", "", type = SettingType.URL, fieldName = "Mobil háttérkép",
+        description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva."
     )
 
     val darkLogoUrl = StringSettingRef(componentSettingService, component,
-        "darkLogoUrl", "", type = SettingType.URL,
-        fieldName = "Oldal logója", description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg."
+        "darkLogoUrl", "", type = SettingType.URL, fieldName = "Oldal logója",
+        description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg."
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val typographyGroup = ControlGroup(component, "typographyGroup", fieldName = "Tipográfia",
+    val typographyGroup = SettingGroup(component, "typographyGroup", fieldName = "Tipográfia",
         description = "Betűtípusok nevei, elérhetősége és vastagsága"
     )
 
     val mainFontName = StringSettingRef(componentSettingService, component,
-        "mainFontName", "'Open Sans', sans-serif", type = SettingType.TEXT,
-        fieldName = "Általános betűtípus", description = "Az általános (pl. szöveg blockokban megjelenő) betűtípus neve"
+        "mainFontName", "'Open Sans', sans-serif", fieldName = "Általános betűtípus",
+        description = "Az általános (pl. szöveg blockokban megjelenő) betűtípus neve"
     )
 
     val mainFontCdn = StringSettingRef(componentSettingService, component,
-        "mainFontCdn", "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap", type = SettingType.URL,
-        fieldName = "Általános betűtípus CDN", description = "Az általános betűtípus CDN URL-je", serverSideOnly = true
+        "mainFontCdn", "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap",
+        type = SettingType.URL, fieldName = "Általános betűtípus CDN",
+        description = "Az általános betűtípus CDN URL-je", serverSideOnly = true
     )
 
     val mainFontWeight = StringSettingRef(componentSettingService, component,
-        "mainFontWeight", "300", type = SettingType.NUMBER,
-        fieldName = "Általános betűtípus vastagsága", description = "Az általános betűtípus vastagsága"
+        "mainFontWeight", "300", fieldName = "Általános betűtípus vastagsága",
+        description = "Az általános betűtípus vastagsága"
     )
 
     val displayFontName = StringSettingRef(componentSettingService, component,
-        "displayFontName", "'Bebas Neue', cursive", type = SettingType.TEXT,
-        fieldName = "Kiemelt betűtípus", description = "A kiemelt (pl. fejlécként megjelenő) betűtípus neve. Ha üres akkor az általános lesz használva."
+        "displayFontName", "'Bebas Neue', cursive", fieldName = "Kiemelt betűtípus",
+        description = "A kiemelt (pl. fejlécként megjelenő) betűtípus neve. Ha üres akkor az általános lesz használva."
     )
 
     val displayFontCdn = StringSettingRef(componentSettingService, component,
@@ -264,8 +258,8 @@ class StylingComponent(
     )
 
     val displayFontWeight = StringSettingRef(componentSettingService, component,
-        "displayFontWeight", "400", type = SettingType.NUMBER,
-        fieldName = "Kiemelt betűtípus vastagsága", description = "A kiemelt betűtípus vastagsága"
+        "displayFontWeight", "400", fieldName = "Kiemelt betűtípus vastagsága",
+        description = "A kiemelt betűtípus vastagsága"
     )
 
 }

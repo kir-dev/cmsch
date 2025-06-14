@@ -3,13 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.BooleanSettingRef
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
-import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
-import hu.bme.sch.cmsch.setting.SettingType
-import hu.bme.sch.cmsch.setting.StringSettingRef
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -69,7 +63,7 @@ class FooterComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val footerGroup = ControlGroup(component, "footerGroup", fieldName = "Lábléc")
+    val footerGroup = SettingGroup(component, "footerGroup", fieldName = "Lábléc")
 
     val minimalisticFooter = BooleanSettingRef(componentSettingService, component,
         "minimalisticFooter", false, fieldName = "Minimalisztikus lábléc",
@@ -82,8 +76,8 @@ class FooterComponent(
     )
 
     val hostAlt = StringSettingRef(componentSettingService, component,
-        "hostAlt", "Szervező kör", type = SettingType.TEXT,
-        fieldName = "Esemény szervezőjének alt szövege", description = "Ha nem tölt be a kép ez jelenik meg"
+        "hostAlt", "Szervező kör", fieldName = "Esemény szervezőjének alt szövege",
+        description = "Ha nem tölt be a kép ez jelenik meg"
     )
 
     val hostWebsiteUrl = StringSettingRef(componentSettingService, component,
@@ -108,31 +102,28 @@ class FooterComponent(
 
     val devLogo = StringSettingRef(componentSettingService, component,
         "devLogo", "https://warp.sch.bme.hu/img/blobs/redirect/",
-        type = SettingType.TEXT, minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "A kir-dev logója", description = "A kép URL-je"
+        minRoleToEdit = RoleType.SUPERUSER, fieldName = "A kir-dev logója", description = "A kép URL-je"
     )
 
     val devAlt = StringSettingRef(componentSettingService, component,
-        "devAlt", "Kir-dev",
-        type = SettingType.TEXT, minRoleToEdit = RoleType.SUPERUSER,
+        "devAlt", "Kir-dev", minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "A kir-dev alt szövege", description = "Ha nem tölt be a kép ez jelenik meg"
     )
 
     val devWebsiteUrl = StringSettingRef(componentSettingService, component,
-        "devWebsiteUrl", "https://kir-dev.sch.bme.hu/?ref=cmsch",
-        type = SettingType.URL, minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "A kir-dev oldala", description = "Az oldal url-je"
+        "devWebsiteUrl", "https://kir-dev.sch.bme.hu/?ref=cmsch", type = SettingType.URL,
+        minRoleToEdit = RoleType.SUPERUSER, fieldName = "A kir-dev oldala", description = "Az oldal url-je"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val sponsorGroup = ControlGroup(component, "sponsorGroup", fieldName = "Támogatók",
+    val sponsorGroup = SettingGroup(component, "sponsorGroup", fieldName = "Támogatók",
         description = "Az esemény támogatóinak logói (A lábléc felett jelenik meg)"
     )
 
     val sponsorTitle = StringSettingRef(componentSettingService, component,
-        "sponsorTitle", "Támogatóink", type = SettingType.TEXT,
-        fieldName = "Szponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
+        "sponsorTitle", "Támogatóink", fieldName = "Szponzorok fejléc",
+        description = "Ez a szöveg jelenik meg a szponzorok felett"
     )
 
     val sponsorsEnabled = BooleanSettingRef(componentSettingService, component,
@@ -156,13 +147,13 @@ class FooterComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val partnerGroup = ControlGroup(component, "partnerGroup", fieldName = "Partnerek",
+    val partnerGroup = SettingGroup(component, "partnerGroup", fieldName = "Partnerek",
         description = "Az esemény partnerei (A lábléc felett jelenik meg)"
     )
 
     val partnerTitle = StringSettingRef(componentSettingService, component,
-        "partnerTitle", "Partnereink", type = SettingType.TEXT,
-        fieldName = "Szponzorok fejléc", description = "Ez a szöveg jelenik meg a szponzorok felett"
+        "partnerTitle", "Partnereink", fieldName = "Szponzorok fejléc",
+        description = "Ez a szöveg jelenik meg a szponzorok felett"
     )
 
     val vikEnabled = BooleanSettingRef(componentSettingService, component,

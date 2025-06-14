@@ -50,7 +50,7 @@ class RaceComponent(
         )
     }
 
-    val raceGroup = ControlGroup(component, "raceGroup", fieldName = "Verseny")
+    val raceGroup = SettingGroup(component, "raceGroup", fieldName = "Verseny")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Sörmérés", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -68,7 +68,7 @@ class RaceComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = ControlGroup(component, "displayGroup", fieldName = "Kijelzés")
+    val displayGroup = SettingGroup(component, "displayGroup", fieldName = "Kijelzés")
 
     val visible = BooleanSettingRef(componentSettingService, component,
         "visible", false, fieldName = "Látható", description = "Leküldésre kerüljön-e a toplista"
@@ -95,7 +95,7 @@ class RaceComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val freestyleGroup = ControlGroup(component, "freestyleGroup", fieldName = "Szabad kategória")
+    val freestyleGroup = SettingGroup(component, "freestyleGroup", fieldName = "Szabad kategória")
 
     val freestyleCategoryName = StringSettingRef(componentSettingService, component,
         "freestyleCategoryName", "Funky mérés",

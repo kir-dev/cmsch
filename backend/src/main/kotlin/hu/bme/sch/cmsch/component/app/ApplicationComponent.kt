@@ -3,13 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.BooleanSettingRef
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.ControlGroup
-import hu.bme.sch.cmsch.setting.MinRoleSettingRef
-import hu.bme.sch.cmsch.setting.SettingRef
-import hu.bme.sch.cmsch.setting.SettingType
-import hu.bme.sch.cmsch.setting.StringSettingRef
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import java.security.MessageDigest
@@ -69,39 +63,37 @@ class ApplicationComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val warningMessageGroup = ControlGroup(component, "warningMessageGroup", fieldName = "Figyelmeztető üzenet")
+    val warningMessageGroup = SettingGroup(component, "warningMessageGroup", fieldName = "Figyelmeztető üzenet")
 
     val warningMessage = StringSettingRef(componentSettingService, component,
-        "warningMessage", "", type = SettingType.TEXT,
-        fieldName = "Megjelenő üzenet"
+        "warningMessage", "", fieldName = "Megjelenő üzenet"
     )
 
     val warningLevel = StringSettingRef(componentSettingService, component,
-        "warningLevel", "", type = SettingType.TEXT,
-        fieldName = "Üzenet fontossági szintje", description = "lehet: success, info, warning, error"
+        "warningLevel", "", fieldName = "Üzenet fontossági szintje",
+        description = "lehet: success, info, warning, error"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val siteGroup = ControlGroup(component, "siteGroup", fieldName = "Oldal beállítások")
+    val siteGroup = SettingGroup(component, "siteGroup", fieldName = "Oldal beállítások")
 
     val siteName = StringSettingRef(componentSettingService, component,
-        "siteName", "Király Esemény", type = SettingType.TEXT,
-        fieldName = "Oldal neve", description = "Oldal vagy esemény neve"
+        "siteName", "Király Esemény", fieldName = "Oldal neve", description = "Oldal vagy esemény neve"
     )
 
     val defaultComponent = StringSettingRef(componentSettingService, component,
-        "defaultComponent", "/home", type = SettingType.TEXT,
-        fieldName = "Kezdő komponens", description = "Az a komponens ami kezdőlapként töltődik be"
+        "defaultComponent", "/home", fieldName = "Kezdő komponens",
+        description = "Az a komponens ami kezdőlapként töltődik be"
     )
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val adminGroup = ControlGroup(component, "adminGroup", fieldName = "Admin oldal beállításai")
+    val adminGroup = SettingGroup(component, "adminGroup", fieldName = "Admin oldal beállításai")
 
     val adminPanelName = StringSettingRef(componentSettingService, component,
-        "adminPanelName", "ADMIN", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Admin panel neve", description = "Az admin panel neve"
+        "adminPanelName", "ADMIN", serverSideOnly = true, fieldName = "Admin panel neve",
+        description = "Az admin panel neve"
     )
 
     val isLive = BooleanSettingRef(componentSettingService, component,
@@ -110,13 +102,13 @@ class ApplicationComponent(
     )
 
     val siteUrl = StringSettingRef(componentSettingService, component,
-        "siteUrl", "http://localhost:3000/", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
+        "siteUrl", "http://localhost:3000/", serverSideOnly = true, fieldName = "Oldal URL-je",
+        description = "Az elején van protokoll megnevezés és / jellel végződik"
     )
 
     val adminSiteUrl = StringSettingRef(componentSettingService, component,
-        "adminSiteUrl", "http://localhost:8080/", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Admin Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
+        "adminSiteUrl", "http://localhost:8080/", serverSideOnly = true, fieldName = "Admin Oldal URL-je",
+        description = "Az elején van protokoll megnevezés és / jellel végződik"
     )
 
     val adminBrandColor = StringSettingRef(componentSettingService, component,
@@ -125,8 +117,8 @@ class ApplicationComponent(
     )
 
     val motd = StringSettingRef(componentSettingService, component,
-        "motd", "Message of the day", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "MOTD", description = "Ez jelenik meg belépés után"
+        "motd", "Message of the day", serverSideOnly = true, fieldName = "MOTD",
+        description = "Ez jelenik meg belépés után"
     )
 
     val staffMessage = StringSettingRef(componentSettingService, component,
@@ -135,8 +127,9 @@ class ApplicationComponent(
     )
 
     val documentsForOrganizers = StringSettingRef(componentSettingService, component,
-        "documentsForOrganizers", "[]", type = SettingType.LONG_TEXT, serverSideOnly = true,
-        fieldName = "Linkelt doksik", description = "Linkelt doksik az admin oldal kezdőlapján. Ikonok: sheets, docs, drive, calendar, forms, youtube, slides. Formátum: [{\"type\":\"sheets\",\"url\":\"https://xy\",\"title\":\"Title\",\"visible\":true}]"
+        "documentsForOrganizers", "[]", type = SettingType.LONG_TEXT,
+        serverSideOnly = true, fieldName = "Linkelt doksik",
+        description = "Linkelt doksik az admin oldal kezdőlapján. Ikonok: sheets, docs, drive, calendar, forms, youtube, slides. Formátum: [{\"type\":\"sheets\",\"url\":\"https://xy\",\"title\":\"Title\",\"visible\":true}]"
     )
 
     override fun onPersist() {

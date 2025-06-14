@@ -83,7 +83,7 @@ class ProfileComponent(
         )
     }
 
-    val profileGroup = ControlGroup(component, "profileGroup", fieldName = "Profil")
+    val profileGroup = SettingGroup(component, "profileGroup", fieldName = "Profil")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Profil", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -100,7 +100,7 @@ class ProfileComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val countersGroup = ControlGroup(component, "countersGroup", fieldName = "Számlálók",
+    val countersGroup = SettingGroup(component, "countersGroup", fieldName = "Számlálók",
         description = "Kör alakú progressbarok amik bizonyos haladást mutatnak, a komponenseknek is be kell kapcsolva legyenek, hogy az itteni beállítások működjenek"
     )
 
@@ -139,7 +139,7 @@ class ProfileComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val profileFieldsGroup = ControlGroup(component, "profileFieldsGroup",
+    val profileFieldsGroup = SettingGroup(component, "profileFieldsGroup",
         fieldName = "Profil adatok", description = "Milyen adatok jelenjenek meg a felhasználóról a profilban"
     )
 
@@ -221,8 +221,7 @@ class ProfileComponent(
     )
 
     val messageBoxLevel = StringSettingRef(componentSettingService, component,
-        "messageBoxLevel", "", type = SettingType.TEXT,
-        fieldName = "Üzenet doboz típusa", description = "success, info, warning, error"
+        "messageBoxLevel", "", fieldName = "Üzenet doboz típusa", description = "success, info, warning, error"
     )
 
     val showGroupMessage = BooleanSettingRef(componentSettingService, component,
@@ -237,7 +236,7 @@ class ProfileComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val groupLeadersGroup = ControlGroup(component, "groupLeadersGroup", fieldName = "Csoport vezetők adatai")
+    val groupLeadersGroup = SettingGroup(component, "groupLeadersGroup", fieldName = "Csoport vezetők adatai")
 
     val showGroupLeaders = BooleanSettingRef(componentSettingService, component,
         "showGroupName", false,
@@ -261,7 +260,7 @@ class ProfileComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val tokenGoalGroup = ControlGroup(component, "tokenGoalGroup", fieldName = "A token célt kiírja üzenetként",
+    val tokenGoalGroup = SettingGroup(component, "tokenGoalGroup", fieldName = "A token célt kiírja üzenetként",
         description = "Tipikusan tanköri jelenétre használt funkció; a szám meghatározása a token komponens része (A token komponensnek is be kell kapcsolva legyen, hogy ez működjön)"
     )
 
@@ -286,7 +285,7 @@ class ProfileComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val fillProfileGroup = ControlGroup(component, "fillProfileGroup", fieldName = "Profil kitöltöttsége",
+    val fillProfileGroup = SettingGroup(component, "fillProfileGroup", fieldName = "Profil kitöltöttsége",
         description = "Ha egy Feladat Kategória PROFILE_REQUIRED-re van állítva, akkor a benne lévő feladatok szükségesek ahhoz, hogy a profil teljes legyen."
     )
 
@@ -313,7 +312,7 @@ class ProfileComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val groupSelectionGroup = ControlGroup(component, "groupSelectionGroup", fieldName = "Csoport választása",
+    val groupSelectionGroup = SettingGroup(component, "groupSelectionGroup", fieldName = "Csoport választása",
         description = "Ez a kategória csak akkor lesz használható, hogyha a 'groupselection' komponens be van kapcsolva."
     )
 

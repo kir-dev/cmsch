@@ -46,7 +46,7 @@ class AccessKeyComponent(
         )
     }
 
-    val menuGroup = ControlGroup(component, "menuGroup", fieldName = "Menü megjelenése")
+    val menuGroup = SettingGroup(component, "menuGroup", fieldName = "Menü megjelenése")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Azonosítás", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -64,7 +64,7 @@ class AccessKeyComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val appearanceGroup = ControlGroup(component, "appearanceGroup", fieldName = "Megjelenés")
+    val appearanceGroup = SettingGroup(component, "appearanceGroup", fieldName = "Megjelenés")
 
     val disabledErrorMessage = StringSettingRef(
         componentSettingService, component,
@@ -119,7 +119,7 @@ class AccessKeyComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val logicGroup = ControlGroup(component, "logicGroup", fieldName = "Működés")
+    val logicGroup = SettingGroup(component, "logicGroup", fieldName = "Működés")
 
     val enabled = BooleanSettingRef(componentSettingService, component,
         "enabled", false, serverSideOnly = true, fieldName = "Lehet beváltani",

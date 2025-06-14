@@ -66,7 +66,7 @@ class LoginComponent(
         )
     }
 
-    val loginGroup = ControlGroup(component, "loginGroup", fieldName = "Belépés")
+    val loginGroup = SettingGroup(component, "loginGroup", fieldName = "Belépés")
 
     final val title = StringSettingRef(componentSettingService, component,
         "title", "Belépés", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
@@ -84,15 +84,14 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val authschGroup = ControlGroup(component, "authschGroup", fieldName = "AuthSCH",
+    val authschGroup = SettingGroup(component, "authschGroup", fieldName = "AuthSCH",
         description = "Csak akkor írd át ha tudod mit csinálsz! Ha elrontod nem fog beengedni, szóval óvatosan!"
     )
 
     val authschScopesRaw = StringSettingRef(componentSettingService, component,
         "authschScopes",
         listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT).joinToString(","),
-        type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Oauth scopeok",
+        serverSideOnly = true, fieldName = "Oauth scopeok",
         description = "Ezek lesznek elkérve a providertől; ezek vannak: " + Scope.entries.joinToString(", ") { it.name }
     )
 
@@ -127,7 +126,7 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val googleSsoGroup = ControlGroup(component, "googleSsoGroup", fieldName = "Google SSO",
+    val googleSsoGroup = SettingGroup(component, "googleSsoGroup", fieldName = "Google SSO",
         description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan"
     )
 
@@ -144,7 +143,7 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val keycloakGroup = ControlGroup(component, "keycloakGroup", fieldName = "Keycloak",
+    val keycloakGroup = SettingGroup(component, "keycloakGroup", fieldName = "Keycloak",
         description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan"
     )
 
@@ -181,7 +180,7 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val grantRoleGroup = ControlGroup(component, "grantRoleGroup", fieldName = "Automatikus ROLE",
+    val grantRoleGroup = SettingGroup(component, "grantRoleGroup", fieldName = "Automatikus ROLE",
         description = "ROLE = Az oldalhoz való hozzáférés szintje"
     )
 
@@ -206,7 +205,7 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val grantGroupGroup = ControlGroup(component, "grantGroupGroup", fieldName = "Automatikus GROUP",
+    val grantGroupGroup = SettingGroup(component, "grantGroupGroup", fieldName = "Automatikus GROUP",
         description = "GROUP = Csoport az oldalon belül; először a direkt hozzárendelés, aztán a csoport tagság alapján nézi"
     )
 
@@ -235,7 +234,7 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val langGroup = ControlGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
+    val langGroup = SettingGroup(component, "langGroup", fieldName = "Nyelvi beállítások")
 
     val topMessage = StringSettingRef(componentSettingService, component,
         "topMessage", "### Válassz belépési módot!", type = SettingType.LONG_TEXT_MARKDOWN,

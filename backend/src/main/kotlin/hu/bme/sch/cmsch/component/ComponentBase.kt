@@ -77,7 +77,7 @@ abstract class ComponentBase(
 
     private fun validateAllSettingsAdded() {
         val settingFields: List<String> = javaClass.declaredFields
-            .filter { SettingRef::class.java.isAssignableFrom(it.type) }
+            .filter { MutableSetting::class.java.isAssignableFrom(it.type) }
             .map {
                 val accessible = it.canAccess(this)
                 it.isAccessible = true
@@ -85,7 +85,10 @@ abstract class ComponentBase(
                 it.isAccessible = accessible
                 return@map property
             }.distinct()
-        val providedSettings = allSettings.map { it.property }.distinct()
+        val providedSettings = allSettings
+            .filter { MutableSetting::class.java.isAssignableFrom(it.javaClass) }
+            .map { it.property }
+            .distinct()
 
         if (settingFields.count() != providedSettings.count()) {
             log.error(
