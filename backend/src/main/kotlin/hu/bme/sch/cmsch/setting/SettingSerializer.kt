@@ -17,7 +17,7 @@ object JsonSettingSerializer : SettingSerializer<List<Map<String, Any>>> {
 
     private val anyObjectReference = object : TypeReference<Map<String, Any>>() {}
     private val reader = jacksonObjectMapper().readerFor(anyObjectReference)
-    private val writer = jacksonObjectMapper().writerFor(anyObjectReference)
+    private val writer = jacksonObjectMapper().writer()
 
     override fun deserialize(
         value: String,
@@ -36,7 +36,6 @@ object JsonSettingSerializer : SettingSerializer<List<Map<String, Any>>> {
             )
 
     override fun serialize(value: List<Map<String, Any>>, strict: Boolean): String = writer.writeValueAsString(value)
-
 }
 
 object StringSettingSerializer : SettingSerializer<String> {
@@ -46,7 +45,7 @@ object StringSettingSerializer : SettingSerializer<String> {
 
 }
 
-data class RoleTypeSetSettingSerializer(private val grantedRoles: Set<RoleType>) : SettingSerializer<Set<RoleType>> {
+data class RoleTypeSetSettingSerializer(val grantedRoles: Set<RoleType>) : SettingSerializer<Set<RoleType>> {
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun deserialize(value: String, defaultValue: Set<RoleType>, strict: Boolean): Set<RoleType> {
