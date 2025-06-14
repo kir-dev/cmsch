@@ -129,7 +129,7 @@ class ApplicationComponent(
     )
 
     val adminBrandColor = SettingProxy(componentSettingService, component,
-        "adminBrandColor", "#00F460", type = SettingType.TEXT, serverSideOnly = true,
+        "adminBrandColor", "#00F460", type = SettingType.COLOR, serverSideOnly = true,
         fieldName = "Admin menü színe", description = "Ez lesz az admin oldal színe"
     )
 

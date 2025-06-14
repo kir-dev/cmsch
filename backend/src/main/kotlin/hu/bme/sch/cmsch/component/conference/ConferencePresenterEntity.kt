@@ -19,8 +19,8 @@ data class ConferencePresenterEntity(
     @field:JsonIgnore
     @GeneratedValue
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -60,7 +60,7 @@ data class ConferencePresenterEntity(
 
     @field:JsonIgnore
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Látható")
+    @property:GenerateInput(type = InputType.SWITCH, order = 6, label = "Látható")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var visible: Boolean = false

@@ -25,15 +25,15 @@ data class EventEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Url",
             note = "Csupa nem ékezetes kisbetű és kötőjel megengedett. " +
-                    "Oldal megosztása: https://BASE_URL/share/event/{URL}", interpreter = INTERPRETER_PATH)
+                    "Oldal megosztása: https://BASE_URL/share/event/{URL}", interpreter = InputInterpreter.PATH)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var url: String = "",
@@ -54,14 +54,14 @@ data class EventEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Mikor lesz a program?")
+    @property:GenerateInput(type = InputType.DATE, order = 4, label = "Mikor lesz a program?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var timestampStart: Long = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Meddig tart a program?")
+    @property:GenerateInput(type = InputType.DATE, order = 5, label = "Meddig tart a program?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var timestampEnd: Long = 0,
@@ -75,14 +75,14 @@ data class EventEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 8, label = "Rövid leírás")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 8, label = "Rövid leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var previewDescription: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 9, label = "Hosszú leírás")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT_MARKDOWN, order = 9, label = "Hosszú leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var description: String = "",
@@ -101,13 +101,13 @@ data class EventEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 12, label = "Előnézeti kép", fileId = "0", fileType = "image")
+    @property:GenerateInput(type = InputType.FILE, order = 12, label = "Előnézeti kép", fileId = "0", fileType = "image")
     @property:GenerateOverview(visible = false)
     var previewImageUrl: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 13, label = "Teljes kép", fileId = "1", fileType = "image")
+    @property:GenerateInput(type = InputType.FILE, order = 13, label = "Teljes kép", fileId = "1", fileType = "image")
     @property:GenerateOverview(visible = false)
     var fullImageUrl: String = "",
 
@@ -125,14 +125,14 @@ data class EventEntity(
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 16, label = "OG:Description")
+    @property:GenerateInput(type = InputType.TEXT, order = 16, label = "OG:Description")
     @property:GenerateOverview(visible = false)
     override var ogDescription: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 17, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 17, label = "Látható")
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var visible: Boolean = false,
 
@@ -140,7 +140,7 @@ data class EventEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 18, label = "Minimum rang a megtekintéshez",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 18, label = "Minimum rang a megtekintéshez",
             note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező",
             source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)

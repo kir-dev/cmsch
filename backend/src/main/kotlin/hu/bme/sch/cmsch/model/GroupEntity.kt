@@ -24,8 +24,8 @@ data class GroupEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -40,7 +40,7 @@ data class GroupEntity(
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @property:GenerateInput(
-        type = INPUT_TYPE_BLOCK_SELECT,
+        type = InputType.BLOCK_SELECT,
         order = 2,
         label = "Típus",
         source = ["UNKNOWN", "IT", "EE", "BPROF"]
@@ -98,7 +98,7 @@ data class GroupEntity(
     @field:JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, targetEntity = UserEntity::class, mappedBy = "group")
     @property:GenerateInput(
-        type = INPUT_TYPE_LIST_ENTITIES, order = 12, label = "Csoport tagjai",
+        type = InputType.LIST_ENTITIES, order = 12, label = "Csoport tagjai",
         ignore = true, enabled = false, entitySource = "UserEntity"
     )
     @property:GenerateOverview(visible = false)
@@ -106,7 +106,7 @@ data class GroupEntity(
 
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Játszik a csoport a versenyben?")
+    @property:GenerateInput(type = InputType.SWITCH, order = 13, label = "Játszik a csoport a versenyben?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var races: Boolean = false,
@@ -114,7 +114,7 @@ data class GroupEntity(
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
     @property:GenerateInput(
-        type = INPUT_TYPE_SWITCH,
+        type = InputType.SWITCH,
         order = 14,
         label = "Kiválasztható",
         note = "Szabadon válaszható a csoport"
@@ -126,7 +126,7 @@ data class GroupEntity(
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
     @property:GenerateInput(
-        type = INPUT_TYPE_SWITCH,
+        type = InputType.SWITCH,
         order = 15,
         label = "Elhagyható",
         note = "A csoport tagjai megváltoztathatják a csoportjukat"
@@ -138,7 +138,7 @@ data class GroupEntity(
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
     @property:GenerateInput(
-        type = INPUT_TYPE_SWITCH,
+        type = InputType.SWITCH,
         order = 16,
         label = "Felhasználó készítette",
         note = "A csoportot egy felhasználó hozta létre és nem egy admin"
@@ -149,7 +149,7 @@ data class GroupEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
+    @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = InputType.BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var profileTopMessage: String = "",
@@ -157,7 +157,7 @@ data class GroupEntity(
     @Column(nullable = true)
     @field:JsonView(value = [Edit::class])
     @property:GenerateInput(
-        type = INPUT_TYPE_NUMBER,
+        type = InputType.NUMBER,
         order = 20,
         label = "Csoport létszáma",
         note = "Amennyiben nem üres, a ranglistánál a pontok le lesznek ezen értékkel osztva",

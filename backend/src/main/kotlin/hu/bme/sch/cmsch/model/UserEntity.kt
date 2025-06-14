@@ -83,8 +83,8 @@ data class UserEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -134,7 +134,7 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7, label = "Jogkör",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 7, label = "Jogkör",
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
         note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
@@ -143,7 +143,7 @@ data class UserEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 8, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
+    @property:GenerateInput(type = InputType.ENTITY_SELECT, order = 8, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
     @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3, useForSearch = true)
     @property:ImportFormat
     override var groupName: String = "",
@@ -155,7 +155,7 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW", "PURPLE" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW", "PURPLE" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var guild: GuildType = GuildType.UNKNOWN,
@@ -163,7 +163,7 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 10, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 10, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN,
@@ -190,21 +190,21 @@ data class UserEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 15, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
+    @property:GenerateInput(order = 15, label = "Egyedi szöveg a profilhoz", type = InputType.BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var profileTopMessage: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Importált adatok", note = "Volt-e már máshonnan importálva adat")
+    @property:GenerateInput(type = InputType.SWITCH, order = 16, label = "Importált adatok", note = "Volt-e már máshonnan importálva adat")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var detailsImported: Boolean = false,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 17, label = "Konfigurációs beállítások", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateInput(order = 17, label = "Konfigurációs beállítások", type = InputType.BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var config: String = "",
@@ -212,20 +212,20 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
     @ColumnDefault("''")
-    @property:GenerateInput(order = 18, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSION_GROUPS, maxLength = 20000)
+    @property:GenerateInput(order = 18, label = "Jogosultságok", enabled = true, type = InputType.PERMISSION_GROUPS, maxLength = 20000)
     @property:ImportFormat
     var permissionGroups: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(order = 19, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS, maxLength = 20000)
+    @property:GenerateInput(order = 19, label = "Jogosultságok", enabled = true, type = InputType.PERMISSIONS, maxLength = 20000)
     @property:ImportFormat
     var permissions: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @ColumnDefault("false")
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 20, label = "Service Account", note = "Lehet-e API keyekkel irányitani")
+    @property:GenerateInput(type = InputType.SWITCH, order = 20, label = "Service Account", note = "Lehet-e API keyekkel irányitani")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var isServiceAccount: Boolean = false,

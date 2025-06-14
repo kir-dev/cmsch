@@ -110,6 +110,8 @@ class SecurityConfig(
                 "/ol.css",
                 "/tracker.css",
                 "/scanner.css",
+                "/coloris.min.css",
+                "/coloris.min.js",
                 "/redirect/beacon",
                 "/actuator/prometheus",
                 "/actuator/health/liveness",

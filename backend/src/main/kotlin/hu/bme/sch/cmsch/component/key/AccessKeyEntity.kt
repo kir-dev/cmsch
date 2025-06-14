@@ -23,8 +23,8 @@ data class AccessKeyEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -46,7 +46,7 @@ data class AccessKeyEntity(
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 128, order = 10, label = "Felhasználó ID-je",
-        type = INPUT_TYPE_NUMBER, defaultValue = "0")
+        type = InputType.NUMBER, defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var usedByUserId: Int = 0,
@@ -61,7 +61,7 @@ data class AccessKeyEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 4, label = "Csoport átállítása",
+    @property:GenerateInput(type = InputType.SWITCH, order = 4, label = "Csoport átállítása",
         note = "Ha be van kapcsolva, akkor az alább látható csoportot fogja beállítani a kitöltőnek")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -76,7 +76,7 @@ data class AccessKeyEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Szerep átállítása",
+    @property:GenerateInput(type = InputType.SWITCH, order = 6, label = "Szerep átállítása",
         note = "Ha be van kapcsolva, akkor az alább látható szerepet fogja beállítani a kitöltőnek")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -86,7 +86,7 @@ data class AccessKeyEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 7,
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 7,
         label = "Szerepkör",
         source = [ "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ],
         defaultValue = "ATTENDEE")
@@ -96,7 +96,7 @@ data class AccessKeyEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 12, label = "Mikor használta fel", defaultValue = "0")
+    @property:GenerateInput(type = InputType.DATE, order = 12, label = "Mikor használta fel", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var usedAt: Long = 0,

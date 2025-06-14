@@ -14,8 +14,8 @@ data class ExtraMenuEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -30,7 +30,7 @@ data class ExtraMenuEntity(
     var url: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Külső hivatkozás", note = "A menü külső címre továbbítson-e át")
+    @property:GenerateInput(type = InputType.SWITCH, order = 3, label = "Külső hivatkozás", note = "A menü külső címre továbbítson-e át")
     @property:GenerateOverview(visible = false)
     var external: Boolean = false,
 

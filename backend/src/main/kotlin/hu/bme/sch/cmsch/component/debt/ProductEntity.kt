@@ -30,8 +30,8 @@ data class ProductEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ data class ProductEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Ár", min = 1, defaultValue = "100", note = "JMF-ben természetesen")
+    @property:GenerateInput(type = InputType.NUMBER, order = 2, label = "Ár", min = 1, defaultValue = "100", note = "JMF-ben természetesen")
     @property:GenerateOverview(columnName = "Ár", order = 1, centered = true)
     @property:ImportFormat
     var price: Int = 0,
@@ -51,35 +51,35 @@ data class ProductEntity(
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Típus", source = [ "MERCH", "FOOD", "OTHER" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 3, label = "Típus", source = [ "MERCH", "FOOD", "OTHER" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var type: ProductType = ProductType.OTHER,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 4, label = "Termék leírása")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 4, label = "Termék leírása")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var description: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_FILE, order = 5, label = "Kép a termékről")
+    @property:GenerateInput(type = InputType.FILE, order = 5, label = "Kép a termékről")
     @property:GenerateOverview(visible = false)
     var imageUrl: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Elérhető")
-    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 6, label = "Elérhető")
+    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var available: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 7, label = "Látható")
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var visible: Boolean = false,
 
