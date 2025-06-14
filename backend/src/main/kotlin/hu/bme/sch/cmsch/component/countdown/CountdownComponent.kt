@@ -84,7 +84,7 @@ class CountdownComponent(
     )
 
     val timeToCountTo = NumberSettingRef(componentSettingService, component,
-        "timeToCountTo", 0, fieldName = "Visszaszámlálás eddig", strictConversion = false
+        "timeToCountTo", 0, type = SettingType.DATE_TIME, fieldName = "Visszaszámlálás eddig", strictConversion = false
     )
 
     val imageUrl = StringSettingRef(componentSettingService, component,
