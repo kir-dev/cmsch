@@ -14,7 +14,7 @@ export const StampComponent: FC<StampComponentProps> = ({ title, type }: StampCo
   const stampCorner = useColorModeValue('gray.800', 'gray.200')
   const component = useConfigContext()?.components.token
 
-  const icon: IconType = type === component?.collectType ? FaStamp : FaRocket
+  const icon: IconType = type === component?.collectRequiredType ? FaStamp : FaRocket
 
   return (
     <Box maxW="md" minW={['100%', 'md']} borderRadius="lg" bg={backgroundBase}>

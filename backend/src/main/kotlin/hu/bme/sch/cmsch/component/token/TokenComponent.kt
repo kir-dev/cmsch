@@ -81,11 +81,11 @@ class TokenComponent(
         description = "Ha a csoportos gyűjtés be van kapcsolva akkor kiírja-e, Látszódjon-e hogy ki szerezte meg a tokent?"
     )
 
-    var defaultTokenIcon by StringSettingRef("stamp", fieldName = "Alapértelmezett ikon",
+    var defaultIcon by StringSettingRef("stamp", fieldName = "Alapértelmezett ikon",
         description = "Azoknak a tokeneknek ahova nincs egyedi megadva"
     )
 
-    var defaultTestTokenIcon by StringSettingRef("rocket", fieldName = "Alapértelmezett test ikon",
+    var defaultTestIcon by StringSettingRef("rocket", fieldName = "Alapértelmezett test ikon",
         description = "Azoknak a teszt tokeneknek ahova nincs egyedi megadva (0-100 egész szám)"
     )
 
