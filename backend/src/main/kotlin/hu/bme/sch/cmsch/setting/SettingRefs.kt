@@ -32,6 +32,35 @@ class StringSettingRef(
     minRoleToEdit = minRoleToEdit,
 )
 
+class JsonSettingRef(
+    componentPropertyService: ComponentSettingService,
+    component: String,
+    property: String,
+    defaultValue: List<Map<String, Any>> = emptyList(),
+    strictConversion: Boolean = true,
+    cache: Boolean = true,
+    persist: Boolean = true,
+    serverSideOnly: Boolean = false,
+    type: SettingType = SettingType.JSON,
+    fieldName: String = property,
+    description: String = "",
+    minRoleToEdit: RoleType = RoleType.ADMIN
+) : SettingRef<List<Map<String, Any>>>(
+    componentPropertyService = componentPropertyService,
+    serializer = JsonSettingSerializer,
+    component = component,
+    property = property,
+    defaultValue = defaultValue,
+    strictConversion = strictConversion,
+    cache = cache,
+    persist = persist,
+    serverSideOnly = serverSideOnly,
+    type = type,
+    fieldName = fieldName,
+    description = description,
+    minRoleToEdit = minRoleToEdit,
+)
+
 class NumberSettingRef(
     componentPropertyService: ComponentSettingService,
     component: String,

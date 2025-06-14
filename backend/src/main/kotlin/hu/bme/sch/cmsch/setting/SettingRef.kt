@@ -1,11 +1,6 @@
 package hu.bme.sch.cmsch.setting
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ObjectReader
-import hu.bme.sch.cmsch.component.impressum.OrganizerDto
 import hu.bme.sch.cmsch.model.RoleType
-
-val multiplePeopleMapper: ObjectReader = ObjectMapper().readerForListOf(OrganizerDto::class.java)
 
 enum class SettingType {
     TEXT,
@@ -14,29 +9,14 @@ enum class SettingType {
     LONG_TEXT,
     LONG_TEXT_MARKDOWN,
     IMAGE,
-    NUMBER {
-        override fun process(value: String) = value.toLongOrNull() ?: 0
-    },
-    BOOLEAN {
-        override fun process(value: String) = value.equals("true", ignoreCase = true)
-    },
+    NUMBER,
+    BOOLEAN,
     MIN_ROLE,
     COMPONENT_GROUP,
-    MULTIPLE_PEOPLE {
-        override fun process(value: String): List<OrganizerDto> = try {
-            multiplePeopleMapper.readValue(value)
-        } catch (e: Throwable) {
-            listOf()
-        }
-    },
-    DATE_TIME {
-        override fun process(value: String) = value.toLongOrNull() ?: 0
-    },
+    JSON,
+    DATE_TIME,
     COMPONENT_NAME,
-    BOOLEAN_JSON_LIST;
-
-    open fun process(value: String): Any = value
-
+    BOOLEAN_JSON_LIST
 }
 
 open class SettingRef<T : Any>(

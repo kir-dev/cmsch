@@ -134,9 +134,8 @@ class ImpressumComponent(
         description = "A rendezvény főrendezőit és egyéb rendezőit is meg lehet adni"
     )
 
-    val leadOrganizers = StringSettingRef(componentSettingService, component,
-        "leadOrganizers", "[]", type = SettingType.MULTIPLE_PEOPLE,
-        fieldName = "A főrendezők"
+    val leadOrganizers = JsonSettingRef(componentSettingService, component,
+        "leadOrganizers", listOf(), fieldName = "A főrendezők"
     )
 
     val leadOrganizersMessage = StringSettingRef(componentSettingService, component,
@@ -146,15 +145,12 @@ class ImpressumComponent(
         fieldName = "A főrendezők alatt megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
     )
 
-    val otherOrganizers = StringSettingRef(componentSettingService, component,
-        "otherOrganizers", "[]", type = SettingType.MULTIPLE_PEOPLE,
-        fieldName = "További rendezők"
+    val otherOrganizers = JsonSettingRef(componentSettingService, component,
+        "otherOrganizers", listOf(), fieldName = "További rendezők"
     )
 
     val otherOrganizersMessage = StringSettingRef(componentSettingService, component,
-        "otherOrganizersMessage",
-        "És még további N rendező!",
-        type = SettingType.LONG_TEXT_MARKDOWN,
+        "otherOrganizersMessage", "És még további N rendező!", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "A további rendezők alatt megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
     )
 }

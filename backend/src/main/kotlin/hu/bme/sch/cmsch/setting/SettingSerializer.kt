@@ -1,11 +1,42 @@
 package hu.bme.sch.cmsch.setting
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.slf4j.LoggerFactory
 
 interface SettingSerializer<T> {
     fun serialize(value: T, strict: Boolean): String
 
     fun deserialize(value: String, defaultValue: T, strict: Boolean): T
+
+}
+
+object JsonSettingSerializer : SettingSerializer<List<Map<String, Any>>> {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    private val anyObjectReference = object : TypeReference<Map<String, Any>>() {}
+    private val reader = jacksonObjectMapper().readerFor(anyObjectReference)
+    private val writer = jacksonObjectMapper().writerFor(anyObjectReference)
+
+    override fun deserialize(
+        value: String,
+        defaultValue: List<Map<String, Any>>,
+        strict: Boolean
+    ): List<Map<String, Any>> =
+        runCatching { reader.readValues<Map<String, Any>>(value).asSequence().toList() }
+            .fold(
+                onSuccess = { it },
+                onFailure = {
+                    if (strict) {
+                        log.error("Value {} cannot be converted to a JSON", value, it)
+                        return@fold defaultValue
+                    }
+                    throw IllegalArgumentException("Value $value cannot be converted to a boolean", it)
+                }
+
+            )
+
+    override fun serialize(value: List<Map<String, Any>>, strict: Boolean): String = writer.writeValueAsString(value)
 
 }
 
