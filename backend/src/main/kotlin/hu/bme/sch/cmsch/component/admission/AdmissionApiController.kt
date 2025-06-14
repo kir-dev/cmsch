@@ -148,7 +148,7 @@ class AdmissionApiController(
         var additionalInfo = ""
 
         val admissionResponse = transactionManager.transaction(readOnly = true) {
-            if (legacyBmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
+            if (legacyBmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.getValue()) {
                 val ticket = legacyBmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
                 if (ticket.isEmpty) {
                     AdmissionResponse(
@@ -181,7 +181,7 @@ class AdmissionApiController(
             }
         }
         admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
-        if (admissionComponent.ticketShowEntryCount.isValueTrue()) {
+        if (admissionComponent.ticketShowEntryCount.getValue()) {
             val count = admissionService.countEntries(resolve.cmschId)
             admissionResponse.groupName = if (count > 1) "NEM ELSŐ!!! (${count}.)" else "($count)"
         }
@@ -341,7 +341,7 @@ class AdmissionApiController(
                 formId = formId
             )
         }
-        if (admissionComponent.onlyAcceptApprovedForms.isValueTrue() && (!response.accepted || response.rejected)) {
+        if (admissionComponent.onlyAcceptApprovedForms.getValue() && (!response.accepted || response.rejected)) {
             return AdmissionResponse(
                 groupName = "FILLED, NOT ACCEPTED",
                 userName = "FILLED, NOT ACCEPTED",
@@ -449,22 +449,22 @@ class AdmissionApiController(
         user: UserEntity,
         grants: MutableSet<EntryRole>
     ) {
-        if (admissionComponent.grantUserByDefault.isValueTrue() && user.role.value >= RoleType.BASIC.value)
+        if (admissionComponent.grantUserByDefault.getValue() && user.role.value >= RoleType.BASIC.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantUserByAttendee.isValueTrue() && user.role.value >= RoleType.ATTENDEE.value)
+        if (admissionComponent.grantUserByAttendee.getValue() && user.role.value >= RoleType.ATTENDEE.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantUserByPrivileged.isValueTrue() && user.role.value >= RoleType.PRIVILEGED.value)
+        if (admissionComponent.grantUserByPrivileged.getValue() && user.role.value >= RoleType.PRIVILEGED.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantUserByStaff.isValueTrue() && user.role.value >= RoleType.STAFF.value)
+        if (admissionComponent.grantUserByStaff.getValue() && user.role.value >= RoleType.STAFF.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantOrganizerByStaff.isValueTrue() && user.role.value >= RoleType.STAFF.value)
+        if (admissionComponent.grantOrganizerByStaff.getValue() && user.role.value >= RoleType.STAFF.value)
             grants.add(EntryRole.ORGANIZER)
 
-        if (admissionComponent.grantOrganizerByAdmin.isValueTrue() && user.role.value >= RoleType.ADMIN.value)
+        if (admissionComponent.grantOrganizerByAdmin.getValue() && user.role.value >= RoleType.ADMIN.value)
             grants.add(EntryRole.ORGANIZER)
     }
 

@@ -77,7 +77,7 @@ class CheersBmejegyService(
         val changedUsers = mutableListOf<UserEntity>()
         val userToTicketMapping = mutableListOf<Pair<UserEntity, BmejegyRecordEntity>>()
 
-        if (bmejegy.completeByEmail.isValueTrue()) {
+        if (bmejegy.completeByEmail.getValue()) {
             log.info("[CHEERS] Completing by email")
 
             val reader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
@@ -135,11 +135,11 @@ class CheersBmejegyService(
             var changed = false
 
             if (bmejegy.forOrder1.getValue().isNotBlank() && item.contains(bmejegy.forOrder1.getValue())) {
-                if (bmejegy.grantAttendee1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantAttendee1.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged1.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -151,11 +151,11 @@ class CheersBmejegyService(
             }
 
             if (bmejegy.forOrder2.getValue().isNotBlank() && item.contains(bmejegy.forOrder2.getValue())) {
-                if (bmejegy.grantAttendee2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantAttendee2.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged2.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -167,11 +167,11 @@ class CheersBmejegyService(
             }
 
             if (bmejegy.forOrder3.getValue().isNotBlank() && item.contains(bmejegy.forOrder3.getValue())) {
-                if (bmejegy.grantAttendee3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantAttendee3.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged3.getValue() && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }

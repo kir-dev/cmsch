@@ -37,9 +37,9 @@ class EntrypointController(
     fun authorize(model: Model, @RequestParam(defaultValue = "") error: String, response: HttpServletResponse): String {
         model.addAttribute("siteName", applicationComponent.siteName.getValue())
         model.addAttribute("error", error)
-        val googleEnabled = loginComponent.googleSsoEnabled.isValueTrue()
-        val keycloakEnabled = loginComponent.keycloakEnabled.isValueTrue()
-        val authschEnabled = loginComponent.authschPromoted.isValueTrue()
+        val googleEnabled = loginComponent.googleSsoEnabled.getValue()
+        val keycloakEnabled = loginComponent.keycloakEnabled.getValue()
+        val authschEnabled = loginComponent.authschPromoted.getValue()
 
         // AuthSCH option must always be available, so it's fine if we don't check it, otherwise nobody can log in
         if (!googleEnabled && !keycloakEnabled)

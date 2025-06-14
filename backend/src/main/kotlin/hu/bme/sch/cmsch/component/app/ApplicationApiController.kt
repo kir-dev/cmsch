@@ -98,7 +98,7 @@ class ApplicationApiController(
         return ResponseEntity.ok(applicationService.getUserAuthInfo(jwtUser, actualUser))
     }
 
-    private fun appComponentFields() =
+    private fun appComponentFields(): Map<String, Any> =
         mapOf(applicationComponent.defaultComponent.property to applicationComponent.defaultComponent.getValue())
 
     @GetMapping("/app/font-display.css")

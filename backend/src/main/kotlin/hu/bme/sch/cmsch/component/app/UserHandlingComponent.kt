@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
 import jakarta.annotation.PostConstruct
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -33,7 +33,7 @@ class UserHandlingComponent(
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
+    final override val minRole = MinRoleSettingRef(componentSettingService, component,
         "minRole", "", minRoleToEdit = RoleType.SUPERUSER,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
     )

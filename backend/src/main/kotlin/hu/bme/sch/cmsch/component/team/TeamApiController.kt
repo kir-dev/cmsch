@@ -74,7 +74,7 @@ class TeamApiController(
         val groupId = user.groupId
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
-        if (!teamComponent.showTeamDetails.isValueTrue())
+        if (!teamComponent.showTeamDetails.getValue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return teamService.showTeam(groupId, user)?.let { ResponseEntity.ok(it) }
@@ -86,7 +86,7 @@ class TeamApiController(
         val user = auth?.getUserOrNull()
         if (!teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        if (!teamComponent.showTeamDetails.isValueTrue())
+        if (!teamComponent.showTeamDetails.getValue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return teamService.showTeam(teamId, user)?.let { ResponseEntity.ok(it) }
@@ -98,7 +98,7 @@ class TeamApiController(
         val user = auth?.getUserOrNull()
         if (!teamComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(listOf())
-        if (!teamComponent.showTeamsAtAll.isValueTrue())
+        if (!teamComponent.showTeamsAtAll.getValue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return ResponseEntity.ok(teamService.listAllTeams())

@@ -16,7 +16,7 @@ import hu.bme.sch.cmsch.repository.UserDetailsByInternalIdMappingRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
-import hu.bme.sch.cmsch.setting.SettingProxy
+import hu.bme.sch.cmsch.setting.SettingRef
 import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -191,48 +191,48 @@ class LoginService(
 
         // Assign using unit-scope
         val bmeUnitScopes = profile.bmeunitscope
-        if (unitScopeComponent.unitScopeGrantsEnabled.isValueTrue() && bmeUnitScopes != null) {
+        if (unitScopeComponent.unitScopeGrantsEnabled.getValue() && bmeUnitScopes != null) {
             if (bmeUnitScopes.any { it.bme }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.bmeGrantRoleAttendee,
-                    unitScopeComponent.bmeGrantRolePrivileged,
-                    unitScopeComponent.bmeGrantGroupName)
+                    unitScopeComponent.bmeGrantRoleAttendee.getValue(),
+                    unitScopeComponent.bmeGrantRolePrivileged.getValue(),
+                    unitScopeComponent.bmeGrantGroupName.getValue())
             }
             if (bmeUnitScopes.any { it.active }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.activeGrantRoleAttendee,
-                    unitScopeComponent.activeGrantRolePrivileged,
-                    unitScopeComponent.activeGrantGroupName)
+                    unitScopeComponent.activeGrantRoleAttendee.getValue(),
+                    unitScopeComponent.activeGrantRolePrivileged.getValue(),
+                    unitScopeComponent.activeGrantGroupName.getValue())
             }
             if (bmeUnitScopes.any { it.newbie }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.newbieGrantRoleAttendee,
-                    unitScopeComponent.newbieGrantRolePrivileged,
-                    unitScopeComponent.newbieGrantGroupName)
+                    unitScopeComponent.newbieGrantRoleAttendee.getValue(),
+                    unitScopeComponent.newbieGrantRolePrivileged.getValue(),
+                    unitScopeComponent.newbieGrantGroupName.getValue())
             }
             if (bmeUnitScopes.any { it.vik }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vikGrantRoleAttendee,
-                    unitScopeComponent.vikGrantRolePrivileged,
-                    unitScopeComponent.vikGrantGroupName)
+                    unitScopeComponent.vikGrantRoleAttendee.getValue(),
+                    unitScopeComponent.vikGrantRolePrivileged.getValue(),
+                    unitScopeComponent.vikGrantGroupName.getValue())
             }
             if (bmeUnitScopes.any { it.vik && it.newbie }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vikNewbieGrantRoleAttendee,
-                    unitScopeComponent.vikNewbieGrantRolePrivileged,
-                    unitScopeComponent.vikNewbieGrantGroupName)
+                    unitScopeComponent.vikNewbieGrantRoleAttendee.getValue(),
+                    unitScopeComponent.vikNewbieGrantRolePrivileged.getValue(),
+                    unitScopeComponent.vikNewbieGrantGroupName.getValue())
             }
             if (bmeUnitScopes.any { it.vbk }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vbkGrantRoleAttendee,
-                    unitScopeComponent.vbkGrantRolePrivileged,
-                    unitScopeComponent.vbkGrantGroupName)
+                    unitScopeComponent.vbkGrantRoleAttendee.getValue(),
+                    unitScopeComponent.vbkGrantRolePrivileged.getValue(),
+                    unitScopeComponent.vbkGrantGroupName.getValue())
             }
             if (bmeUnitScopes.any { it.vbk && it.newbie }) {
                 processUnitScopeStatus(user,
-                    unitScopeComponent.vbkNewbieGrantRoleAttendee,
-                    unitScopeComponent.vbkNewbieGrantRolePrivileged,
-                    unitScopeComponent.vbkNewbieGrantGroupName)
+                    unitScopeComponent.vbkNewbieGrantRoleAttendee.getValue(),
+                    unitScopeComponent.vbkNewbieGrantRolePrivileged.getValue(),
+                    unitScopeComponent.vbkNewbieGrantGroupName.getValue())
             }
         }
         if (bmeUnitScopes != null) {
@@ -285,16 +285,16 @@ class LoginService(
 
     private fun processUnitScopeStatus(
         user: UserEntity,
-        grantRoleAttendee: SettingProxy,
-        grantRolePrivileged: SettingProxy,
-        grantGroupName: SettingProxy
+        grantRoleAttendee: Boolean,
+        grantRolePrivileged: Boolean,
+        grantGroupName: String
     ) {
-        if (grantRoleAttendee.isValueTrue() && user.role < RoleType.STAFF)
+        if (grantRoleAttendee && user.role < RoleType.STAFF)
             user.role = RoleType.ATTENDEE
-        if (grantRolePrivileged.isValueTrue() && user.role < RoleType.STAFF)
+        if (grantRolePrivileged && user.role < RoleType.STAFF)
             user.role = RoleType.PRIVILEGED
-        if (grantGroupName.getValue().isNotBlank() && user.group?.leaveable != false) {
-            groups.findByName(grantGroupName.getValue()).ifPresent {
+        if (grantGroupName.isNotBlank() && user.group?.leaveable != false) {
+            groups.findByName(grantGroupName).ifPresent {
                 user.groupName = it.name
                 user.group = it
             }

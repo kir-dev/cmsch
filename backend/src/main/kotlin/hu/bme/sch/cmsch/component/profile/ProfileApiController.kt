@@ -50,7 +50,7 @@ class ProfileApiController(
         if (!profileComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
-        if (!profileComponent.aliasChangeEnabled.isValueTrue())
+        if (!profileComponent.aliasChangeEnabled.getValue())
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return ResponseEntity.ok(profileService.changeAlias(user, body.alias))

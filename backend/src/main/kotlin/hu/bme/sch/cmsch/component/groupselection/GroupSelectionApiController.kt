@@ -23,7 +23,7 @@ class GroupSelectionApiController(
         val user = auth?.getUserEntityFromDatabaseOrNull()
             ?: return GroupSelectionResponse(GroupSelectionResponseType.UNAUTHORIZED)
 
-        if (!profileComponent.map { it.selectionEnabled.isValueTrue() }.orElse(false)
+        if (!profileComponent.map { it.selectionEnabled.getValue() }.orElse(false)
                 || !profileComponent.map { it.minRole.isAvailableForRole(user.role) }.orElse(false)) {
             return GroupSelectionResponse(GroupSelectionResponseType.PERMISSION_DENIED)
         }

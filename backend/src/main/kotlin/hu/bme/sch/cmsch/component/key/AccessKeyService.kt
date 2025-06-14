@@ -29,7 +29,7 @@ class AccessKeyService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [SQLException::class], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun validateKey(user: CmschUser, inputKey: String): AccessKeyResponse {
         val key = inputKey.trim()
@@ -42,8 +42,8 @@ class AccessKeyService(
             )
         }
 
-        if (!accessKeyComponent.canOneUserUseMultiple.isValueTrue()
-                && accessKeyRepository.findTop1ByUsedByUserId(user.id).isNotEmpty()) {
+        if (!accessKeyComponent.canOneUserUseMultiple.getValue()
+            && accessKeyRepository.findTop1ByUsedByUserId(user.id).isNotEmpty()) {
 
             auditLogService.fine(user, ACCESS_KEY, "user already used a key")
             log.info("User {} already used a key", user.userName)

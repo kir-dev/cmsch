@@ -27,13 +27,13 @@ class AccessKeyApiController(
             topMessage = accessKeyComponent.enabled
                 .mapIfTrue { accessKeyComponent.topMessage.getValue() } ?: "",
             fieldName = accessKeyComponent.fieldName.getValue(),
-            enabled = accessKeyComponent.enabled.isValueTrue(),
+            enabled = accessKeyComponent.enabled.getValue(),
         ))
     }
 
     @PostMapping("/access-key")
     fun submitKey(auth: Authentication?, @RequestBody payload: AccessKeyRequest): AccessKeyResponse {
-        if (!accessKeyComponent.enabled.isValueTrue()) {
+        if (!accessKeyComponent.enabled.getValue()) {
             return AccessKeyResponse(
                 success = false,
                 reason = accessKeyComponent.disabledErrorMessage.getValue(),

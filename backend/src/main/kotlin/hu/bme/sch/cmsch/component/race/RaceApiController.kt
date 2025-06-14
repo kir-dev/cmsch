@@ -29,7 +29,7 @@ class RaceApiController(
     fun race(auth: Authentication?): ResponseEntity<RaceView> {
         val user = auth?.getUserOrNull()
 
-        if (!raceComponent.visible.isValueTrue())
+        if (!raceComponent.visible.getValue())
             return ResponseEntity.ok(RaceView())
 
         if (!raceComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
@@ -46,7 +46,7 @@ class RaceApiController(
     fun raceByCategory(@PathVariable category: String, auth: Authentication?): ResponseEntity<RaceView> {
         val user = auth?.getUserOrNull()
 
-        if (!raceComponent.extraCategoriesVisible.isValueTrue())
+        if (!raceComponent.extraCategoriesVisible.getValue())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         if (!raceComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
@@ -67,7 +67,7 @@ class RaceApiController(
     fun freestyleRace(auth: Authentication?): ResponseEntity<FreestyleRaceView> {
         val user = auth?.getUserOrNull()
 
-        if (!raceComponent.visible.isValueTrue())
+        if (!raceComponent.visible.getValue())
             return ResponseEntity.ok(FreestyleRaceView())
 
         if (!raceComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
@@ -84,7 +84,7 @@ class RaceApiController(
     fun raceByTeam(auth: Authentication?, @PathVariable teamId: Int): ResponseEntity<RaceView> {
         val user = auth?.getUserOrNull()
 
-        if (!raceComponent.visible.isValueTrue())
+        if (!raceComponent.visible.getValue())
             return ResponseEntity.ok(RaceView())
 
         if (!raceComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))

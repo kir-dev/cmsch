@@ -18,7 +18,7 @@ class ErrorLogService(
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     fun submit(message: String, stack: String, userAgent: String, href: String, role: RoleType) {
-        if (!errorLogComponent.receiveReports.isValueTrue()) return
+        if (!errorLogComponent.receiveReports.getValue()) return
 
         val existingLog = errorLogRepository
             .findByMessageAndStackAndUserAgentAndHrefAndRole(message, stack, userAgent, href, role).getOrNull()

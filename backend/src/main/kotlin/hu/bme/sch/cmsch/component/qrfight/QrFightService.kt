@@ -540,7 +540,7 @@ class QrFightService(
                     state[tower.ownerUserId.toString()] = (state[tower.ownerUserId.toString()] ?: 0) + 10
                     tower.state = serializeState(state)
                     tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: "0"
-                    tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
+                    tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value } ?: 0) * TIMER_OCCURRENCE
                     tower
                 }
                 qrTowerRepository.saveAll(updated)
@@ -554,7 +554,7 @@ class QrFightService(
                     state[tower.ownerGroupName] = (state[tower.ownerGroupName] ?: 0) + 1
                     tower.state = serializeState(state)
                     tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: ""
-                    tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value }?.toInt() ?: 0) * TIMER_OCCURRENCE
+                    tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value } ?: 0) * TIMER_OCCURRENCE
                     tower
                 }
                 qrTowerRepository.saveAll(updated)
@@ -595,7 +595,7 @@ class QrFightService(
     }
 
     fun setIndulaschText() {
-        if (!qrFightComponent.indulaschTowerEnabled.isValueTrue())
+        if (!qrFightComponent.indulaschTowerEnabled.getValue())
             return
 
         val tower = qrTowerRepository.findAllBySelector(qrFightComponent.indulaschTowerSelector.getValue())

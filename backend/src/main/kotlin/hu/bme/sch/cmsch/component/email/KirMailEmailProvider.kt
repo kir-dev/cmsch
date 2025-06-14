@@ -29,7 +29,7 @@ class KirMailEmailProvider(
     override fun getProviderName() = "kirmail"
 
     override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableKirMail.isValueTrue())
+        if (!emailComponent.enableKirMail.getValue())
             return
 
         logSend(to, subject, content, responsible)
@@ -61,7 +61,7 @@ class KirMailEmailProvider(
     }
 
     override fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableKirMail.isValueTrue())
+        if (!emailComponent.enableKirMail.getValue())
             return
 
         logSend(to, subject, content, responsible)

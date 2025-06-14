@@ -24,11 +24,11 @@ class HomeApiController(
     @GetMapping("/home/news")
     fun home(auth: Authentication?): List<NewsEntity> {
         val user = auth.getUserOrNull()
-        if (!homeComponent.showNews.isValueTrue())
+        if (!homeComponent.showNews.getValue())
             return listOf()
         return newsService.map { it.fetchNews(user) }
             .orElse(listOf())
-            .take(homeComponent.maxVisibleCount.getValue().toIntOrNull() ?: 0)
+            .take(homeComponent.maxVisibleCount.getValue().toInt())
     }
 
 }

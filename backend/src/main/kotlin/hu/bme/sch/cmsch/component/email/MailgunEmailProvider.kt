@@ -30,7 +30,7 @@ class MailgunEmailProvider(
     override fun getProviderName() = "mailgun"
 
     override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableMailgun.isValueTrue())
+        if (!emailComponent.enableMailgun.getValue())
             return
 
         val formData = LinkedMultiValueMap<String, String>()
@@ -48,7 +48,7 @@ class MailgunEmailProvider(
     }
 
     override fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableMailgun.isValueTrue())
+        if (!emailComponent.enableMailgun.getValue())
             return
 
         val formData = LinkedMultiValueMap<String, String>()

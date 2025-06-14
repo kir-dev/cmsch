@@ -395,7 +395,7 @@
                                 <div style="clear:both"></div>
                                 <label class="switch">
                                     <input type="checkbox"
-                                           th:checked="${input.isValueTrue()}"
+                                           th:checked="${input.getValue()}"
                                            th:name="${input.property}"
                                            th:id="${input.property}" />
                                     <span class="slider"></span>
@@ -456,7 +456,7 @@
                                 <span class="note" th:text="${input.description}" style="margin-bottom: 20px;"></span>
 
                                 <table>
-                                    <tr th:each="role : ${T(hu.bme.sch.cmsch.setting.MinRoleSettingProxy).Companion.ALL_POSSIBLE_ROLES}">
+                                    <tr th:each="role : ${T(hu.bme.sch.cmsch.setting.MinRoleSettingRef).Companion.ALL_POSSIBLE_ROLES}">
 
                                         <td th:text="${role.name()}" th:class="${input.grantedForRoles.contains(role.name()) ? 'disabled' : ''}">BASIC</td>
                                         <td>

@@ -26,7 +26,7 @@ class LeaderBoardApiController(
     fun leaderboard(auth: Authentication?): ResponseEntity<LeaderBoardView> {
         val user = auth?.getUserOrNull()
 
-        if (!leaderBoardComponent.leaderboardEnabled.isValueTrue())
+        if (!leaderBoardComponent.leaderboardEnabled.getValue())
             return ResponseEntity.ok(LeaderBoardView())
 
         if (!leaderBoardComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
@@ -37,9 +37,9 @@ class LeaderBoardApiController(
 
         return ResponseEntity.ok(LeaderBoardView(
             userScore = userScore,
-            userBoard = if (leaderBoardComponent.showUserBoard.isValueTrue()) fetchUserBoard() else null,
+            userBoard = if (leaderBoardComponent.showUserBoard.getValue()) fetchUserBoard() else null,
             groupScore = groupScore,
-            groupBoard = if (leaderBoardComponent.showGroupBoard.isValueTrue()) fetchGroupBoard() else null
+            groupBoard = if (leaderBoardComponent.showGroupBoard.getValue()) fetchGroupBoard() else null
         ))
     }
 
@@ -47,7 +47,7 @@ class LeaderBoardApiController(
     fun detailedLeaderboard(auth: Authentication?): ResponseEntity<DetailedLeaderBoardView> {
         val user = auth?.getUserOrNull()
 
-        if (!leaderBoardComponent.leaderboardDetailsEnabled.isValueTrue())
+        if (!leaderBoardComponent.leaderboardDetailsEnabled.getValue())
             return ResponseEntity.ok(DetailedLeaderBoardView())
 
         if (!leaderBoardComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
@@ -65,7 +65,7 @@ class LeaderBoardApiController(
     fun detailedLeaderboardByCategory(auth: Authentication?): ResponseEntity<DetailedCategoryLeaderBoardView> {
         val user = auth?.getUserOrNull()
 
-        if (!leaderBoardComponent.leaderboardDetailsByCategoryEnabled.isValueTrue())
+        if (!leaderBoardComponent.leaderboardDetailsByCategoryEnabled.getValue())
             return ResponseEntity.ok(DetailedCategoryLeaderBoardView())
 
         if (!leaderBoardComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
@@ -80,19 +80,19 @@ class LeaderBoardApiController(
     }
 
     private fun fetchUserScore(user: CmschUser): Int? {
-        if (!leaderBoardComponent.showUserBoard.isValueTrue())
+        if (!leaderBoardComponent.showUserBoard.getValue())
             return null
         return leaderBoardService.getScoreOfUser(user)
     }
 
     private fun fetchUserBoard(): List<LeaderBoardEntryDto> {
-        var limit = leaderBoardComponent.maxUserEntryToShow.getIntValue(0)
+        var limit = leaderBoardComponent.maxUserEntryToShow.getValue().toInt()
         if (limit < 0)
             limit = Int.MAX_VALUE
-        val minScore = leaderBoardComponent.minScoreToShow.getIntValue(0)
+        val minScore = leaderBoardComponent.minScoreToShow.getValue().toInt()
 
-        val showGroupName = leaderBoardComponent.showGroupOfUser.isValueTrue()
-        if (leaderBoardComponent.showScores.isValueTrue()) {
+        val showGroupName = leaderBoardComponent.showGroupOfUser.getValue()
+        if (leaderBoardComponent.showScores.getValue()) {
             return leaderBoardService.getBoardForUsers()
                 .take(limit)
                 .filter { it.totalScore >= minScore }
@@ -118,18 +118,18 @@ class LeaderBoardApiController(
     }
 
     private fun fetchGroupScore(groupName: String): Int? {
-        if (!leaderBoardComponent.showGroupBoard.isValueTrue())
+        if (!leaderBoardComponent.showGroupBoard.getValue())
             return null
         return leaderBoardService.getScoreOfGroup(groupName)
     }
 
     private fun fetchGroupBoard(): List<LeaderBoardEntryDto> {
-        var limit = leaderBoardComponent.maxGroupEntryToShow.getIntValue(0)
+        var limit = leaderBoardComponent.maxGroupEntryToShow.getValue().toInt()
         if (limit < 0)
             limit = Int.MAX_VALUE
-        val minScore = leaderBoardComponent.minScoreToShow.getIntValue(0)
+        val minScore = leaderBoardComponent.minScoreToShow.getValue().toInt()
 
-        if (leaderBoardComponent.showScores.isValueTrue())
+        if (leaderBoardComponent.showScores.getValue())
             return leaderBoardService.getBoardForGroups()
                 .take(limit)
                 .filter { it.totalScore >= minScore }
