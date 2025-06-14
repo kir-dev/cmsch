@@ -269,6 +269,7 @@
                                        th:data-param1="|color_${input.property}|" th:data-param2="${input.property}"
                                        th:onchange="|recalculateColor(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|"
                                        autocomplete="off"
+                                       data-coloris
                                 />
                                 <div class="color-watch" th:id="|color_${input.property}|"></div>
                                 <span class="note" th:text="${input.description}"></span>

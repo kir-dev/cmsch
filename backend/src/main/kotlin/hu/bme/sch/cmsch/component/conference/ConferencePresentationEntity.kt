@@ -38,13 +38,13 @@ data class ConferencePresentationEntity(
     @field:JsonIgnore
     @GeneratedValue
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
     @ColumnDefault("false")
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "Szünet-e?",
+    @property:GenerateInput(type = InputType.SWITCH, order = 10, label = "Szünet-e?",
         note = "Amennyiben előadások közötti szünetet szeretnél felvenni, kapcsold be")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -65,7 +65,7 @@ data class ConferencePresentationEntity(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Terem", source = [ "IB028", "IB025", "OTHERS" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 3, label = "Terem", source = [ "IB028", "IB025", "OTHERS" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var room: RoomType = RoomType.OTHERS,
@@ -73,7 +73,7 @@ data class ConferencePresentationEntity(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Nyelv", source = [ "HU", "EN" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 4, label = "Nyelv", source = [ "HU", "EN" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var language: LanguageType = LanguageType.HU,
@@ -91,7 +91,7 @@ data class ConferencePresentationEntity(
     var endTime: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(order = 7, type = INPUT_TYPE_BLOCK_TEXT, label = "Leírás", enabled = true)
+    @property:GenerateInput(order = 7, type = InputType.BLOCK_TEXT, label = "Leírás", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var description: String = "",
@@ -122,7 +122,7 @@ data class ConferencePresentationEntity(
 
     @field:JsonIgnore
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 10, label = "Látható")
+    @property:GenerateInput(type = InputType.SWITCH, order = 10, label = "Látható")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var visible: Boolean = false,

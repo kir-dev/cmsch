@@ -23,8 +23,8 @@ data class TicketEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -43,7 +43,7 @@ data class TicketEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Profil QR kód használata")
+    @property:GenerateInput(type = InputType.SWITCH, order = 3, label = "Profil QR kód használata")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var useCmschId: Boolean = false,
@@ -59,7 +59,7 @@ data class TicketEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5,
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 5,
         label = "Belépési jogosultság",
         source = [ "BANNED", "CANNOT_ATTEND", "USER", "ORGANIZER", "VIP", "PERFORMER", "LEAD_ORGANIZER" ])
     @property:GenerateOverview(visible = false)

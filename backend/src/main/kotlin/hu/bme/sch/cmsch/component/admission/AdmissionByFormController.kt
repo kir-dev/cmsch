@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.admission
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.GenerateOverview
-import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
+import hu.bme.sch.cmsch.admin.OverviewType
 import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
@@ -29,7 +29,7 @@ import java.util.*
 
 data class AdmissionFormEntry(
 
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @property:GenerateOverview(columnName = "Form neve", order = 1)

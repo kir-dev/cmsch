@@ -25,8 +25,8 @@ data class RiddleCategoryEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -38,15 +38,15 @@ data class RiddleCategoryEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je")
+    @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 2, label = "Kategória id-je")
     @property:GenerateOverview(columnName = "Kategória", order = 2)
     @property:ImportFormat
     var categoryId: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Látható-e a riddle kategória")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 3, label = "Látható-e a riddle kategória")
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var visible: Boolean = false,
 
@@ -54,7 +54,7 @@ data class RiddleCategoryEntity(
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Minimum rang",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 4, label = "Minimum rang",
         note = "GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező ",
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ])
     @property:GenerateOverview(visible = false)

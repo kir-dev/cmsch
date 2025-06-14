@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.controller.userhandling
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.GenerateOverview
-import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
+import hu.bme.sch.cmsch.admin.OverviewType
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.ControlAction
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 
 data class PermissionGroupsForUsersDto(
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @property:GenerateOverview(columnName = "Teljes név", order = 1, useForSearch = true)

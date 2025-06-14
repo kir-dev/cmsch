@@ -22,8 +22,8 @@ data class QrLevelEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -43,21 +43,21 @@ data class QrLevelEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Szint elérhető", note = "Az endpointok működnek-e hozzá")
-    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 3, label = "Szint elérhető", note = "Az endpointok működnek-e hozzá")
+    @property:GenerateOverview(columnName = "Elérhető", order = 2, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var enabled: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 4, label = "Szint látható", note = "A felületen látható-e")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 4, label = "Szint látható", note = "A felületen látható-e")
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var visible: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, name = "`order`")
-    @property:GenerateInput(order = 5, label = "Sorrend", type = INPUT_TYPE_NUMBER, defaultValue = "0",
+    @property:GenerateInput(order = 5, label = "Sorrend", type = InputType.NUMBER, defaultValue = "0",
         note = "Egész szám, ami alapján rendezve lesz")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -65,21 +65,21 @@ data class QrLevelEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Elérhető ekkortól")
+    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Elérhető ekkortól")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Elérhető eddig")
+    @property:GenerateInput(type = InputType.DATE, order = 7, label = "Elérhető eddig")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableTo: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 8, label = "Min. token a teljesítéshez")
+    @property:GenerateInput(type = InputType.NUMBER, order = 8, label = "Min. token a teljesítéshez")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var minAmountToComplete: Int = 0,
@@ -93,28 +93,28 @@ data class QrLevelEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 10, label = "Leírás amég nem elérhető")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT_MARKDOWN, order = 10, label = "Leírás amég nem elérhető")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var hintBeforeEnabled: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 11, label = "Leírás ha elérhető")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT_MARKDOWN, order = 11, label = "Leírás ha elérhető")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var hintWhileOpen: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 12, label = "Leírás miután teljesítve lett")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT_MARKDOWN, order = 12, label = "Leírás miután teljesítve lett")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var hintAfterCompleted: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 13, label = "Extra szint",
+    @property:GenerateInput(type = InputType.SWITCH, order = 13, label = "Extra szint",
         note = "Külön látszanak a sima szintektől")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat

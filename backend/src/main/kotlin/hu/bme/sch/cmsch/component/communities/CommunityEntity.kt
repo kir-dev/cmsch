@@ -24,8 +24,8 @@ data class CommunityEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -37,7 +37,7 @@ data class CommunityEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 2, label = "Név rejtett",
+    @property:GenerateInput(type = InputType.SWITCH, order = 2, label = "Név rejtett",
         note = "El legyen rejtve a név az oldalon vagy ne (csak a logó elég)")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -45,14 +45,14 @@ data class CommunityEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "Rövid leírás")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 3, label = "Rövid leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var shortDescription: String = "",
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 4, label = "Teljes leírás")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT_MARKDOWN, order = 4, label = "Teljes leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var descriptionParagraphs: String = "",
@@ -95,7 +95,7 @@ data class CommunityEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 10, label = "Tagok száma")
+    @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 10, label = "Tagok száma")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var members: Int = 0,
@@ -141,7 +141,7 @@ data class CommunityEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(order = 16, type = INPUT_TYPE_BLOCK_TEXT, label = "Képek URL-jei", enabled = true,
+    @property:GenerateInput(order = 16, type = InputType.BLOCK_TEXT, label = "Képek URL-jei", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -150,7 +150,7 @@ data class CommunityEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(order = 17, type = INPUT_TYPE_BLOCK_TEXT, label = "Videók URL-jei", enabled = true,
+    @property:GenerateInput(order = 17, type = InputType.BLOCK_TEXT, label = "Videók URL-jei", enabled = true,
         note = "Az értékeket vesszővel elválasztva írd be (pl: alma, körte, barack)")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -159,21 +159,21 @@ data class CommunityEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 18, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 18, label = "Látható")
+    @property:GenerateOverview(columnName = "Látható", order = 2, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var visible: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 19, label = "Reszort ID-je")
+    @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 19, label = "Reszort ID-je")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var resortId: Int = 0,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class, Preview::class ])
-    @property:GenerateInput(order = 20, type = INPUT_TYPE_BLOCK_TEXT, label = "Kulcsszavak", enabled = true)
+    @property:GenerateInput(order = 20, type = InputType.BLOCK_TEXT, label = "Kulcsszavak", enabled = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     @get:JsonSerialize(using = StringToArraySerializer::class)

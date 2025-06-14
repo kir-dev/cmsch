@@ -20,8 +20,8 @@ data class BmejegyRecordEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id : Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -82,7 +82,7 @@ data class BmejegyRecordEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 9, label = "Beérkezett ekkor")
+    @property:GenerateInput(type = InputType.DATE, order = 9, label = "Beérkezett ekkor")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var registered: Long = 0,
@@ -117,7 +117,7 @@ data class BmejegyRecordEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 14, label = "Beazonosított user ID-ja",
+    @property:GenerateInput(type = InputType.NUMBER, order = 14, label = "Beazonosított user ID-ja",
         note = "Csak akkor írd át ha tudod mit csinálsz")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -126,7 +126,7 @@ data class BmejegyRecordEntity(
     @ColumnDefault("''")
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 15, label = "Összes adat")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 15, label = "Összes adat")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var rawData: String = "",

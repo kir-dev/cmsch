@@ -26,13 +26,13 @@ data class LocationEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     var userId: Int = 0,
 
     @Column(nullable = false)
@@ -54,54 +54,54 @@ data class LocationEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 9, label = "Longitude", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 9, label = "Longitude", type = InputType.FLOAT)
     @property:GenerateOverview(columnName = "Longitude", order = 4)
     var longitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 8, label = "Latitude", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 8, label = "Latitude", type = InputType.FLOAT)
     @property:GenerateOverview(columnName = "Latitude", order = 3)
     var latitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 10, label = "Magasság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 10, label = "Magasság", defaultValue = "0", type = InputType.FLOAT)
     @property:GenerateOverview(visible = false)
     var altitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 11, label = "Pontosság", defaultValue = "0", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 11, label = "Pontosság", defaultValue = "0", type = InputType.FLOAT)
     @property:GenerateOverview(columnName = "Pontosság", order = 5)
     var accuracy: Float = 0.0f,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 12, label = "Magasság pontossága", defaultValue = "0", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 12, label = "Magasság pontossága", defaultValue = "0", type = InputType.FLOAT)
     @property:GenerateOverview(visible = false)
     var altitudeAccuracy: Float = 0.0f,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 13, label = "Haladási irány", defaultValue = "0", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 13, label = "Haladási irány", defaultValue = "0", type = InputType.FLOAT)
     @property:GenerateOverview(visible = false)
     var heading: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 32, order = 14, label = "Sebesség", defaultValue = "0", type = INPUT_TYPE_FLOAT)
+    @property:GenerateInput(maxLength = 32, order = 14, label = "Sebesség", defaultValue = "0", type = InputType.FLOAT)
     @property:GenerateOverview(visible = false)
     var speed: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 15, label = "Helyzet frissült ekkor")
-    @property:GenerateOverview(columnName = "Frissült", order = 6, renderer = OVERVIEW_TYPE_DATE, centered = true)
+    @property:GenerateInput(type = InputType.DATE, order = 15, label = "Helyzet frissült ekkor")
+    @property:GenerateOverview(columnName = "Frissült", order = 6, renderer = OverviewType.DATE, centered = true)
     var timestamp: Long = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 16, label = "Publikus helyzet",
+    @property:GenerateInput(type = InputType.SWITCH, order = 16, label = "Publikus helyzet",
         note = "Minden felhasználó látja a térképén")
     @property:GenerateOverview(columnName = "Publikus", order = 6)
     var broadcast: Boolean = false,
@@ -109,7 +109,7 @@ data class LocationEntity(
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 17, label = "Forma",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 17, label = "Forma",
         source = [ "CIRCLE", "SQUARE", "INFO", "CAR", "CROSSHAIRS", "CAMP", "TOWER", "MARKER", "HOME" ])
     @property:GenerateOverview(visible = false)
     var markerShape: MapMarkerShape = MapMarkerShape.CIRCLE,
@@ -117,14 +117,14 @@ data class LocationEntity(
     @ColumnDefault("''")
     @Column(nullable = false, length = 16)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(maxLength = 16, order = 18, label = "Szín")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateInput(maxLength = 16, order = 18, label = "Szín", type = InputType.COLOR)
+    @property:GenerateOverview(visible = false, renderer = OverviewType.COLOR)
     var markerColor: String = "#000000",
 
     @ColumnDefault("''")
     @Column(nullable = false, length = 64)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(order = 19, label = "Leírás", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateInput(order = 19, label = "Leírás", type = InputType.BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     var description: String = "",
 

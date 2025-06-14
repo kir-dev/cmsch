@@ -21,8 +21,8 @@ data class GalleryEntity(
     @GeneratedValue
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
@@ -34,15 +34,15 @@ data class GalleryEntity(
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 2, label = "Ezek a képek szerepelnek először")
-    @property:GenerateOverview(columnName = "Kiemelt", order = 2, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 2, label = "Ezek a képek szerepelnek először")
+    @property:GenerateOverview(columnName = "Kiemelt", order = 2, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var highlighted: Boolean = false,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 3, label = "Megjelenhet a kezdőlapon")
-    @property:GenerateOverview(columnName = "Kezdőlapra", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 3, label = "Megjelenhet a kezdőlapon")
+    @property:GenerateOverview(columnName = "Kezdőlapra", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var showOnHomePage: Boolean = false,
 

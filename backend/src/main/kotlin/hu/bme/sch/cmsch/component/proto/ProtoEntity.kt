@@ -20,8 +20,8 @@ data class ProtoEntity(
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -36,7 +36,7 @@ data class ProtoEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 2, label = "Válasz",
+    @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 2, label = "Válasz",
         note = "Ez a válasz jelenik meg a megadott útvonalon.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -52,7 +52,7 @@ data class ProtoEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 4, label = "HTTP code",
+    @property:GenerateInput(type = InputType.NUMBER, order = 4, label = "HTTP code",
         note = "HTTP válasz kódja", defaultValue = "200")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -60,8 +60,8 @@ data class ProtoEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Aktív")
-    @property:GenerateOverview(columnName = "Aktív", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 5, label = "Aktív")
+    @property:GenerateOverview(columnName = "Aktív", order = 5, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var enabled: Boolean = false,
 

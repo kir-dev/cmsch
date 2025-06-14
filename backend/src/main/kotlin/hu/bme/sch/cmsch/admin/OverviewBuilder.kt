@@ -24,8 +24,8 @@ class OverviewBuilder<T : Any>(val type: KClass<T>) {
             "title" to it.second.columnName,
             "field" to it.first.name,
             "hozAlign" to it.second.alignment(),
-            "sorter" to it.second.sorter(),
-            *it.second.extra()
+            "sorter" to it.second.renderer.sorter,
+            *it.second.renderer.formatSettings
         )
     }
 

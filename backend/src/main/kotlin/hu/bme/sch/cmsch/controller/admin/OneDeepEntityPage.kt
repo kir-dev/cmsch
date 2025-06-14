@@ -82,8 +82,8 @@ fun filterForSearchableFields(field: Method): Boolean {
         ?: return false
     return overviewAnnotation.visible
             && overviewAnnotation.useForSearch
-            && (overviewAnnotation.renderer == OVERVIEW_TYPE_TEXT
-                || overviewAnnotation.renderer == OVERVIEW_TYPE_NUMBER
+            && (overviewAnnotation.renderer == OverviewType.TEXT
+                || overviewAnnotation.renderer == OverviewType.NUMBER
             )
 }
 
@@ -673,7 +673,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             if (input.ignore || input.minimumRole.value > user.role.value) return@forEach
 
             when {
-                input.interpreter == INTERPRETER_INHERIT && input.type == INPUT_TYPE_FILE -> {
+                input.interpreter == InputInterpreter.INHERIT && input.type == InputType.FILE -> {
                     when (input.fileId) {
                         "0" -> saveFileForEntity(delete0, file0, property, entity, newValues)
                         "1" -> saveFileForEntity(delete1, file1, property, entity, newValues)
@@ -681,13 +681,13 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     }
                 }
 
-                (input.interpreter == INTERPRETER_INHERIT || input.interpreter == INTERPRETER_SEARCH) && input.type != INPUT_TYPE_FILE -> {
+                (input.interpreter == InputInterpreter.INHERIT || input.interpreter == InputInterpreter.SEARCH) && input.type != InputType.FILE -> {
                     property.setter.call(entity, property.getter.call(dto))
                     newValues.append(property.name).append("=").append(property.getter.call(dto)?.toString()
                         ?.replace("\r", "")?.replace("\n", "") ?: "<null>").append(", ")
                 }
 
-                input.interpreter == INTERPRETER_PATH -> {
+                input.interpreter == InputInterpreter.PATH -> {
                     val value = property.getter.call(dto)
                         ?.toString()
                         ?.lowercase()
@@ -697,7 +697,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     newValues.append(property.name).append("=").append(value).append(", ")
                 }
 
-                input.interpreter == INTERPRETER_CUSTOM -> {
+                input.interpreter == InputInterpreter.CUSTOM -> {
                     handleCustomInterpreter(it, newValues)
                 }
             }

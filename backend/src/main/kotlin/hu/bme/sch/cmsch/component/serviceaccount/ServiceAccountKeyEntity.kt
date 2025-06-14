@@ -22,24 +22,24 @@ data class ServiceAccountKeyEntity(
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
     @property:GenerateInput(
-        type = INPUT_TYPE_NUMBER, order = 1, label = "Felhasználó azonosítója", defaultValue = "0",
+        type = InputType.NUMBER, order = 1, label = "Felhasználó azonosítója", defaultValue = "0",
         note = "A fiók azonosítója, amihez a kulcs tartozik, csak akkor működik, ha a felhasználó service account"
     )
-    @property:GenerateOverview(visible = true, columnName = "Felhasználó azonosító", renderer = OVERVIEW_TYPE_NUMBER)
+    @property:GenerateOverview(visible = true, columnName = "Felhasználó azonosító", renderer = OverviewType.NUMBER)
     @property:ImportFormat
     var userId: Int = 0,
 
     @field:JsonView(value = [Edit::class, Preview::class])
     @Column(nullable = false)
     @property:GenerateInput(
-        maxLength = 255, order = 2, label = "Kulcs", interpreter = INTERPRETER_PATH,
+        maxLength = 255, order = 2, label = "Kulcs", interpreter = InputInterpreter.PATH,
         note = "Ezt kell megadni az x-cmsch-service-account-key headerben (openssl rand -hex 32)"
     )
     @property:GenerateOverview(visible = false)
@@ -49,10 +49,10 @@ data class ServiceAccountKeyEntity(
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
     @property:GenerateInput(
-        type = INPUT_TYPE_DATE, order = 3, label = "Meddig valid",
+        type = InputType.DATE, order = 3, label = "Meddig valid",
         note = "Eddig az időpontig lehet használni ezt a kulcsot", defaultValue = "0"
     )
-    @property:GenerateOverview(visible = true, columnName = "Eddig érvényes", renderer = OVERVIEW_TYPE_DATE)
+    @property:GenerateOverview(visible = true, columnName = "Eddig érvényes", renderer = OverviewType.DATE)
     @property:ImportFormat
     var validUntil: Long = 0,
 ) : ManagedEntity {

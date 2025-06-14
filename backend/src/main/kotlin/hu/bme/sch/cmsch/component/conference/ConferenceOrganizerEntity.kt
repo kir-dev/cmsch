@@ -19,8 +19,8 @@ data class ConferenceOrganizerEntity(
     @field:JsonIgnore
     @GeneratedValue
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -48,14 +48,14 @@ data class ConferenceOrganizerEntity(
     var pictureUrl: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 5, label = "Prioritás", defaultValue = "0")
+    @property:GenerateInput(type = InputType.NUMBER, order = 5, label = "Prioritás", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var priority: Int = 0,
 
     @field:JsonIgnore
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 6, label = "Látható")
+    @property:GenerateInput(type = InputType.SWITCH, order = 6, label = "Látható")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var visible: Boolean = false

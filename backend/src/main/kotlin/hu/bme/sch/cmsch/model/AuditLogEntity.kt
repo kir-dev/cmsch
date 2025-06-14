@@ -18,8 +18,8 @@ data class AuditLogEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -45,15 +45,15 @@ data class AuditLogEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class, FullDetails::class, Preview::class])
-    @property:GenerateInput(order = 4, label = "Tartalom", type = INPUT_TYPE_BLOCK_TEXT)
+    @property:GenerateInput(order = 4, label = "Tartalom", type = InputType.BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var content: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class, FullDetails::class, Preview::class])
-    @property:GenerateInput(order = 5, label = "Időbélyeg", type = INPUT_TYPE_DATE)
-    @property:GenerateOverview(columnName = "Időbélyeg", order = 3, renderer = OVERVIEW_TYPE_DATE, centered = true)
+    @property:GenerateInput(order = 5, label = "Időbélyeg", type = InputType.DATE)
+    @property:GenerateOverview(columnName = "Időbélyeg", order = 3, renderer = OverviewType.DATE, centered = true)
     @property:ImportFormat
     var timestamp: Long = 0L,
 ) : ManagedEntity {
