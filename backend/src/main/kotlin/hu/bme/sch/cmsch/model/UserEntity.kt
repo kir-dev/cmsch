@@ -10,13 +10,12 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.PermissionGroupService
 import hu.bme.sch.cmsch.service.StaffPermissions
-import org.hibernate.Hibernate
-import org.springframework.core.env.Environment
-import java.lang.RuntimeException
 import jakarta.persistence.*
+import org.hibernate.Hibernate
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
+import org.springframework.core.env.Environment
 
 enum class RoleType(val value: Int, val displayName: String, val description: String) {
     GUEST(0, "Vendég", "Nem bejelentkezett felhasználó"),

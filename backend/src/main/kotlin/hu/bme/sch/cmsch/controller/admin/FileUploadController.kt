@@ -3,14 +3,13 @@ package hu.bme.sch.cmsch.controller.admin
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.urlEncode
 import jakarta.annotation.PostConstruct
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -82,7 +81,7 @@ class FileUploadController(
             val newName = renameFile(keepNames, file.originalFilename ?: "", name)
             storageService.saveNamedObject("public", newName, file).ifPresent { newNames.add(it) }
         }
-        val links = newNames.joinToString(",") { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) }
+        val links = newNames.joinToString(",") { it.urlEncode() }
         return "redirect:/admin/control/upload-file?uploaded=${links}"
     }
 
@@ -95,7 +94,7 @@ class FileUploadController(
                 .uppercase() + "_${Random().nextLong().absoluteValue.toString(36).uppercase()}"
 
         val extension = originalFilename.substringAfterLast(".")
-        return "$newName.$extension"
+        return "${newName.urlEncode()}.$extension"
     }
 
 }

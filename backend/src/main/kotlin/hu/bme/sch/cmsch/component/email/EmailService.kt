@@ -11,7 +11,7 @@ import java.io.StringWriter
 
 @Service
 @ConditionalOnBean(EmailComponent::class)
-open class EmailService(
+class EmailService(
     private val emailTemplateRepository: EmailTemplateRepository,
     private val emailComponent: EmailComponent,
     emailProviders: List<EmailProvider>,
@@ -23,21 +23,21 @@ open class EmailService(
     private val mustacheFactory = DefaultMustacheFactory()
 
     @Async
-    open fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
+    fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         selectedProvider?.sendTextEmail(responsible, subject, content, to) ?: run {
             log.info("Unknown provider ${emailComponent.emailProvider.getValue()}")
         }
     }
 
     @Async
-    open fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
+    fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         selectedProvider?.sendHtmlEmail(responsible, subject, content, to) ?: run {
             log.info("Unknown provider ${emailComponent.emailProvider.getValue()}")
         }
     }
 
     @Transactional(readOnly = true)
-    open fun getTemplateBySelector(selector: String): EmailTemplateEntity? {
+    fun getTemplateBySelector(selector: String): EmailTemplateEntity? {
         return emailTemplateRepository.findTop1BySelector(selector).firstOrNull()
     }
 

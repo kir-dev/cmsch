@@ -1,6 +1,9 @@
 package hu.bme.sch.cmsch.component.token
 
-import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.admin.GenerateOverview
+import hu.bme.sch.cmsch.admin.ImportFormat
+import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_DATE
+import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
 import hu.bme.sch.cmsch.model.IdentifiableEntity
 
 data class TokenPropertyRawView(

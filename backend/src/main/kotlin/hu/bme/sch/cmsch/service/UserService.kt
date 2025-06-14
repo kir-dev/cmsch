@@ -3,12 +3,12 @@ package hu.bme.sch.cmsch.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.UserConfig
-import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
-import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
-import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
+import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.repository.UserSelectorView
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable

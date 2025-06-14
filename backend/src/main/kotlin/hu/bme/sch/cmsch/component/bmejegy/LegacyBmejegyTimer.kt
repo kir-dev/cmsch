@@ -10,7 +10,7 @@ import java.util.concurrent.Executors
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
 @ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "true", matchIfMissing = false)
-open class LegacyBmejegyTimer(
+class LegacyBmejegyTimer(
     private val legacyBmejegyService: LegacyBmejegyService,
     private val bmejegyComponent: BmejegyComponent
 ) {
@@ -45,7 +45,7 @@ open class LegacyBmejegyTimer(
     }
 
     @Scheduled(fixedRate = 1000 * 60, initialDelay = 1000 * 10)
-    open fun tick() {
+    fun tick() {
         ++ticks
         if (ticks > (bmejegyComponent.syncInterval.getIntValue(0))) {
             ticks = 0

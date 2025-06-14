@@ -6,8 +6,4 @@ import org.springframework.stereotype.Service
 @Service
 class CmschBackupService(
     private val realEntities: List<RealEntityController>
-) {
-
-
-
-}
+)

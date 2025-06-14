@@ -17,12 +17,12 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
-import java.util.Optional
+import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(FormComponent::class)
-open class FormService(
+class FormService(
     private val formRepository: FormRepository,
     private val responseRepository: ResponseRepository,
     private val userRepository: UserRepository,
@@ -42,21 +42,21 @@ open class FormService(
     private val selectionGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
 
     @Transactional(readOnly = true)
-    open fun getAllForms(role: RoleType): List<FormEntity> {
+    fun getAllForms(role: RoleType): List<FormEntity> {
         val now = clock.getTimeInSeconds()
         return formRepository.findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
 
     @Transactional(readOnly = true)
-    open fun getAllAdvertised(role: RoleType): List<FormEntity> {
+    fun getAllAdvertised(role: RoleType): List<FormEntity> {
         val now = clock.getTimeInSeconds()
         return formRepository.findAllByAdvertizedTrueAndOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now, now)
             .filter { (it.minRole.value <= role.value && it.maxRole.value >= role.value) || role.isAdmin }
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun fetchForm(user: CmschUser?, path: String): FormView {
+    fun fetchForm(user: CmschUser?, path: String): FormView {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
             ?: return FormView(status = FormStatus.NOT_FOUND)
 
@@ -141,7 +141,7 @@ open class FormService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitForm(user: CmschUser?, path: String, data: Map<String, String>, update: Boolean): FormSubmissionResult {
+    fun submitForm(user: CmschUser?, path: String, data: Map<String, String>, update: Boolean): FormSubmissionResult {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
             ?: return FormSubmissionResult(FormSubmissionStatus.FORM_NOT_AVAILABLE, 1)
 
@@ -403,38 +403,38 @@ open class FormService(
     }
 
     @Transactional(readOnly = true)
-    open fun getSelectedForms(): List<FormEntity> {
+    fun getSelectedForms(): List<FormEntity> {
         return formRepository.findAllBySelectedTrue()
     }
 
     @Transactional(readOnly = true)
-    open fun getForm(formId: Int): FormEntity? {
+    fun getForm(formId: Int): FormEntity? {
         return formRepository.findById(formId).getOrNull()
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissions(form: FormEntity): List<ResponseEntity> {
+    fun getSubmissions(form: FormEntity): List<ResponseEntity> {
         return responseRepository.findAllByFormId(form.id)
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionCount(form: FormEntity): Long {
+    fun getSubmissionCount(form: FormEntity): Long {
         return responseRepository.countByFormId(form.id)
     }
 
     @Transactional(readOnly = true)
-    open fun getResponsesById(id: Int) = responseRepository.findAllByFormId(id)
+    fun getResponsesById(id: Int) = responseRepository.findAllByFormId(id)
 
     @Transactional(readOnly = true)
-    open fun getAllResponses(): List<ResponseEntity> = responseRepository.findAll()
+    fun getAllResponses(): List<ResponseEntity> = responseRepository.findAll()
 
     @Transactional(readOnly = true)
-    open fun doesGroupFilled(groupId: Int, formId: Int): Boolean {
+    fun doesGroupFilled(groupId: Int, formId: Int): Boolean {
         return responseRepository.countTop1ByFormIdAndSubmitterGroupId(formId, groupId) > 0
     }
 
     @Transactional(readOnly = true)
-    open fun doesUserFilled(userId: Int, formId: Int): Boolean {
+    fun doesUserFilled(userId: Int, formId: Int): Boolean {
         return responseRepository.countTop1ByFormIdAndSubmitterUserId(formId, userId) > 0
     }
 

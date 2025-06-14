@@ -18,7 +18,7 @@ import kotlin.reflect.full.memberProperties
 
 @Service
 @ConditionalOnBean(AdmissionComponent::class)
-open class AdmissionService(
+class AdmissionService(
     private val admissionEntryRepository: AdmissionEntryRepository,
     private val clock: TimeService,
     private val auditLogService: AuditLogService,
@@ -29,7 +29,7 @@ open class AdmissionService(
 ) {
 
     @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
-    open fun logEntryAttempt(
+    fun logEntryAttempt(
         response: AdmissionResponse,
         gate: CmschUser,
         token: String,
@@ -59,7 +59,7 @@ open class AdmissionService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun generateAdmissionExportForForm(id: Int): ByteArrayOutputStream {
+    fun generateAdmissionExportForForm(id: Int): ByteArrayOutputStream {
         val outputStream = ByteArrayOutputStream()
         val responses = responseRepository.orElseThrow().findAllByFormIdOrderByLineAsc(id)
         val admissions = admissionEntryRepository.findAllByFormIdAndAllowedTrue(id)
@@ -101,7 +101,7 @@ open class AdmissionService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun getTicketByQr(cmschId: String): TicketEntity? {
+    fun getTicketByQr(cmschId: String): TicketEntity? {
         val user = userRepository.findByCmschId(cmschId).getOrNull()
         if (user == null) {
             return ticketRepository.findTop1ByQrCodeAndUseCmschIdTrue(cmschId).firstOrNull()
@@ -118,12 +118,12 @@ open class AdmissionService(
 
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun countEntries(cmschId: String): Long {
+    fun countEntries(cmschId: String): Long {
         return admissionEntryRepository.countAllByToken(cmschId)
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun hasTicket(cmschId: String): Boolean {
+    fun hasTicket(cmschId: String): Boolean {
         return getTicketByQr(cmschId) != null
     }
 

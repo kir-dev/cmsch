@@ -24,7 +24,7 @@ import org.springframework.transaction.PlatformTransactionManager
 import java.util.*
 
 @Service
-open class LoginService(
+class LoginService(
     private val users: UserService,
     private val profileService: UserProfileGeneratorService,
     private val groupToUserMapping: GroupToUserMappingRepository,

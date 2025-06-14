@@ -34,7 +34,7 @@ const val CV_TAG = "cv"
     havingValue = "true",
     matchIfMissing = false
 )
-open class NovaIntegrationService(
+class NovaIntegrationService(
     private val responseRepository: ResponseRepository,
     private val formRepository: FormRepository,
     private val userRepository: UserRepository,
@@ -48,7 +48,7 @@ open class NovaIntegrationService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun updateSubmissions(emails: List<String>): Int {
+    fun updateSubmissions(emails: List<String>): Int {
         val form = formRepository.findAll().firstOrNull { it.selected }
 
         if (form == null) {
@@ -76,7 +76,7 @@ open class NovaIntegrationService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun fetchSubmissions(): List<FilledOutFormDto> {
+    fun fetchSubmissions(): List<FilledOutFormDto> {
         val form = formRepository.findAll().firstOrNull { it.selected }
 
         if (form == null) {
@@ -153,7 +153,7 @@ open class NovaIntegrationService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun setPaymentStatus(email: String, status: Boolean, rejectionMessage: String?) {
+    fun setPaymentStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = formRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with non empty url")
@@ -175,7 +175,7 @@ open class NovaIntegrationService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun setDetailsStatus(email: String, status: Boolean, rejectionMessage: String?) {
+    fun setDetailsStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = formRepository.findAll().firstOrNull { it.selected }
         if (form == null) {
             log.info("[NOVA/VALID-USERS] Form not found with non empty url")
@@ -197,7 +197,7 @@ open class NovaIntegrationService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun setAvatarStatus(email: String, status: Boolean, rejectionMessage: String?) {
+    fun setAvatarStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return
 
         taskRepository.ifPresent { tasks ->
@@ -220,7 +220,7 @@ open class NovaIntegrationService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun setCvStatus(email: String, status: Boolean, rejectionMessage: String?) {
+    fun setCvStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return
 
         taskRepository.ifPresent { tasks ->

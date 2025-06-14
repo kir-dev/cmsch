@@ -8,17 +8,15 @@ import hu.bme.sch.cmsch.component.form.FormElement
 import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.util.transaction
+import hu.bme.sch.cmsch.util.urlEncode
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
 import java.io.IOException
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -60,7 +58,7 @@ class SheetsUpdaterService(
                 .build()
 
             val request = Request.Builder()
-                .url("$url?postData=${URLEncoder.encode(getPostData(sheetsUpdateRequest), StandardCharsets.UTF_8)}")
+                .url("$url?postData=${getPostData(sheetsUpdateRequest)?.urlEncode()}")
                 .post(ByteArray(0).toRequestBody())
                 .build()
 
@@ -188,7 +186,7 @@ class SheetsUpdaterService(
             .build()
 
         val request = Request.Builder()
-            .url("${sheet.url}?postData=${URLEncoder.encode(postData, StandardCharsets.UTF_8)}")
+            .url("${sheet.url}?postData=${postData?.urlEncode()}")
             .post(ByteArray(0).toRequestBody())
             .build()
         return Pair(client, request)

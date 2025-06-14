@@ -4,9 +4,9 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.ControlPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 @Entity
 @Table(name="extraMenus")

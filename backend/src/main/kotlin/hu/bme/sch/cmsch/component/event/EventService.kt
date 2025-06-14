@@ -8,16 +8,16 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @ConditionalOnBean(EventComponent::class)
-open class EventService(
+class EventService(
     private val eventsRepository: EventRepository
 ) {
 
     @Transactional(readOnly = true)
-    open fun fetchEvents(user: CmschUser?) =
+    fun fetchEvents(user: CmschUser?) =
         eventsRepository.findAllByVisibleTrueOrderByTimestampStart()
             .filter { (user?.role ?: RoleType.GUEST).value >= it.minRole.value }
 
     @Transactional(readOnly = true)
-    open fun getSpecificEvent(path: String) = eventsRepository.findByUrl(path)
+    fun getSpecificEvent(path: String) = eventsRepository.findByUrl(path)
 
 }

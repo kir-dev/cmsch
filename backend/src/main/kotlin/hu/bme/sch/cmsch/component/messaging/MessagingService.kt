@@ -20,7 +20,7 @@ class MessagingService(
     private val writer = ObjectMapper().writerFor(SimpleMessageDto::class.java)
 
     @Async
-    open fun sendSimpleMessage(
+    fun sendSimpleMessage(
         target: List<String>,
         message: String,
         proxyBaseUrl: String?,

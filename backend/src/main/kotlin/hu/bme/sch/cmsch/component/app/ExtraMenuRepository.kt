@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @ConditionalOnBean(ApplicationComponent::class)
-interface ExtraMenuRepository : CrudRepository<ExtraMenuEntity, Int>, EntityPageDataSource<ExtraMenuEntity, Int> {
-
-}
+interface ExtraMenuRepository : CrudRepository<ExtraMenuEntity, Int>, EntityPageDataSource<ExtraMenuEntity, Int>

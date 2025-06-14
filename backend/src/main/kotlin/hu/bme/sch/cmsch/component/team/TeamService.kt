@@ -34,7 +34,7 @@ val TEAM_LEADER = "Csapatkapitány"
 
 @Service
 @ConditionalOnBean(TeamComponent::class)
-open class TeamService(
+class TeamService(
     private val teamComponent: TeamComponent,
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
@@ -58,7 +58,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun createTeam(user: UserEntity, name: String): TeamCreationStatus {
+    fun createTeam(user: UserEntity, name: String): TeamCreationStatus {
         if (user.group?.leaveable == false)
             return TeamCreationStatus.ALREADY_IN_GROUP
 
@@ -118,7 +118,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun joinTeam(user: UserEntity, groupId: Int): TeamJoinStatus {
+    fun joinTeam(user: UserEntity, groupId: Int): TeamJoinStatus {
         if (user.group?.leaveable == false)
             return TeamJoinStatus.ALREADY_IN_GROUP
 
@@ -142,7 +142,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun cancelJoin(user: CmschUser): TeamJoinStatus {
+    fun cancelJoin(user: CmschUser): TeamJoinStatus {
         if (!teamComponent.joinEnabled.isValueTrue())
             return TeamJoinStatus.JOINING_DISABLED
 
@@ -153,7 +153,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun leaveTeam(user: CmschUser): TeamLeaveStatus {
+    fun leaveTeam(user: CmschUser): TeamLeaveStatus {
         if (!teamComponent.leaveEnabled.isValueTrue())
             return TeamLeaveStatus.LEAVING_DISABLED
 
@@ -169,7 +169,7 @@ open class TeamService(
     }
 
     @Transactional(readOnly = true)
-    open fun listAllTeams(): List<TeamListView> {
+    fun listAllTeams(): List<TeamListView> {
         if (!teamComponent.showTeamsAtAll.isValueTrue())
             return listOf()
 
@@ -217,7 +217,7 @@ open class TeamService(
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun showTeam(teamId: Int, user: CmschUser?): OptionalTeamView? {
+    fun showTeam(teamId: Int, user: CmschUser?): OptionalTeamView? {
         val team = groupRepository.findById(teamId)
         if (team.isEmpty)
             return null
@@ -406,7 +406,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun acceptJoin(userId: Int, group: GroupEntity?): Boolean {
+    fun acceptJoin(userId: Int, group: GroupEntity?): Boolean {
         if (group == null)
             return false
 
@@ -433,7 +433,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun rejectJoin(userId: Int, groupId: Int?, groupName: String): Boolean {
+    fun rejectJoin(userId: Int, groupId: Int?, groupName: String): Boolean {
         if (groupId == null)
             return false
 
@@ -448,7 +448,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun toggleUserPermissions(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
+    fun toggleUserPermissions(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
             return false
 
@@ -491,7 +491,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun promoteLeader(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
+    fun promoteLeader(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
             return false
 
@@ -533,7 +533,7 @@ open class TeamService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun kickUser(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
+    fun kickUser(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
             return false
 
@@ -573,7 +573,7 @@ open class TeamService(
     }
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
+    fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
         val groupId = user.groupId ?: throw IllegalStateException("The user is not member of a group yet")
 
         if (logo != null && !teamComponent.teamLogoUploadEnabled.isValueTrue()) {

@@ -8,15 +8,14 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import hu.bme.sch.cmsch.util.markdownToHtml
+import hu.bme.sch.cmsch.util.urlEncode
 import jakarta.annotation.PostConstruct
-import org.apache.catalina.util.URLEncoder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import java.nio.charset.StandardCharsets
 
 @Controller
 @RequestMapping("/admin/control/share-location")
@@ -64,7 +63,7 @@ class LocationSharingController(
         model.addAttribute("androidAppUrl", locationComponent.androidAppUrl.getValue())
         model.addAttribute("iosAppUrl", locationComponent.iosAppUrl.getValue())
         val apiEndpoint = "${appComponent.adminSiteUrl.getValue()}api/location"
-        val apiEndpointUrlEncoded = URLEncoder.QUERY.encode(apiEndpoint, StandardCharsets.UTF_8)
+        val apiEndpointUrlEncoded = apiEndpoint.urlEncode()
         model.addAttribute("appOpenUrl", "cmsch-tracker://?key=${accessToken}&endpoint=${apiEndpointUrlEncoded}")
 
         return "shareLocation"

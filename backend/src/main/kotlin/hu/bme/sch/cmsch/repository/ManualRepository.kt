@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.repository
 
-import java.lang.UnsupportedOperationException
 import java.util.*
 
 abstract class ManualRepository<T, ID> : EntityPageDataSource<T, ID> {

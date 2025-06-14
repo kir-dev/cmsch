@@ -141,10 +141,7 @@ class UserController(
 
         // only superusers are allowed to interact with service accounts
         val isServiceAccount = oldEntity?.isServiceAccount == true || newEntity?.isServiceAccount == true
-        if (user.role != RoleType.SUPERUSER && isServiceAccount) {
-            return false
-        }
-        return true
+        return !(user.role != RoleType.SUPERUSER && isServiceAccount)
     }
 
     override fun fetchOverview(user: CmschUser): Iterable<UserEntity> {

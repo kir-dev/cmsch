@@ -6,17 +6,17 @@ import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_LEADERBOARD
 import hu.bme.sch.cmsch.util.getUser
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.transaction.PlatformTransactionManager
 
 @Controller
 @RequestMapping("/admin/control/user-toplist")
@@ -59,7 +59,7 @@ class LeaderBoardUserController(
         ButtonAction(
             "Újraszámol",
             "refresh",
-            ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
+            PERMISSION_CONTROL_LEADERBOARD,
             500,
             "refresh",
             true

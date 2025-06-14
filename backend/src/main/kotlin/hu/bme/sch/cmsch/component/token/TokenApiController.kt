@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.urlEncode
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -14,8 +15,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 const val SESSION_TOKEN_COLLECTOR_ATTRIBUTE = "TOKEN_COLLECTOR_ATTRIBUTE"
 
@@ -89,17 +88,17 @@ class TokenApiController(
                 val response = tokens.collectToken(auth.getUser(), token)
                 log.info("Token collected for USER '{}' token '{}'", auth.getUser().userName, token)
                 "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${response.status.name}" +
-                        "&title=${URLEncoder.encode(response.title ?: "", StandardCharsets.UTF_8.toString())}" +
-                        "&description=${URLEncoder.encode(response.description ?: "", StandardCharsets.UTF_8.toString())}" +
-                        "&icon=${URLEncoder.encode(response.iconUrl ?: "", StandardCharsets.UTF_8.toString())}"
+                        "&title=${response.title?.urlEncode()}" +
+                        "&description=${response.description?.urlEncode()}" +
+                        "&icon=${response.iconUrl?.urlEncode()}"
             }
             OwnershipType.GROUP -> {
                 val response = tokens.collectTokenForGroup(auth.getUser(), token)
                 log.info("Token collected for GROUP by user '{}' token '{}'", auth.getUser().userName, token)
                 "redirect:${applicationComponent.siteUrl.getValue()}token-scanned?status=${response.status.name}" +
-                        "&title=${URLEncoder.encode(response.title ?: "", StandardCharsets.UTF_8.toString())}" +
-                        "&description=${URLEncoder.encode(response.description ?: "", StandardCharsets.UTF_8.toString())}" +
-                        "&icon=${URLEncoder.encode(response.iconUrl ?: "", StandardCharsets.UTF_8.toString())}"
+                        "&title=${response.title?.urlEncode()}" +
+                        "&description=${response.description?.urlEncode()}" +
+                        "&icon=${response.iconUrl?.urlEncode()}"
             }
         }
     }

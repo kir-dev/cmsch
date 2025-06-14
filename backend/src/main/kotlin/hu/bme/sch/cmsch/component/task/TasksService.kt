@@ -24,7 +24,7 @@ private const val target = "task"
 
 @Service
 @ConditionalOnBean(TaskComponent::class)
-open class TasksService(
+class TasksService(
     private val taskRepository: TaskEntityRepository,
     private val submitted: SubmittedTaskRepository,
     private val categories: TaskCategoryRepository,
@@ -40,40 +40,40 @@ open class TasksService(
 
 
     @Transactional(readOnly = true)
-    open fun getById(id: Int): Optional<TaskEntity> {
+    fun getById(id: Int): Optional<TaskEntity> {
         return taskRepository.findById(id)
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForUserOrNull(user: CmschUser, task: TaskEntity): SubmittedTaskEntity? {
+    fun getSubmissionForUserOrNull(user: CmschUser, task: TaskEntity): SubmittedTaskEntity? {
         return submitted.findByTask_IdAndUserId(task.id, user.id).orElse(null)
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmissionForGroupOrNull(groupId: Int, task: TaskEntity): SubmittedTaskEntity? {
+    fun getSubmissionForGroupOrNull(groupId: Int, task: TaskEntity): SubmittedTaskEntity? {
         return submitted.findByTask_IdAndGroupId(task.id, groupId).orElse(null)
     }
 
     @Transactional(readOnly = true)
-    open fun getHighlightedOnes(groupId: Int): List<TaskEntityWrapperDto> {
+    fun getHighlightedOnes(groupId: Int): List<TaskEntityWrapperDto> {
         return taskRepository.findAllByHighlightedTrueAndVisibleTrue()
                 .map { findSubmissionStatusForGroup(it, groupId) }
     }
 
     @Transactional(readOnly = true)
-    open fun getAllTasks() = taskRepository.findAllByVisibleTrue()
+    fun getAllTasks() = taskRepository.findAllByVisibleTrue()
 
     @Transactional(readOnly = true)
-    open fun getAllTasksNameView() = taskRepository.findAllTaskNameView()
+    fun getAllTasksNameView() = taskRepository.findAllTaskNameView()
 
     @Transactional(readOnly = true)
-    open fun getAllTasksForGuests(): List<TaskEntityWrapperDto> {
+    fun getAllTasksForGuests(): List<TaskEntityWrapperDto> {
         return taskRepository.findAllByVisibleTrue()
                 .map { TaskEntityWrapperDto(it, TaskStatus.NOT_LOGGED_IN, "") }
     }
 
     @Transactional(readOnly = true)
-    open fun getAllTasksForGroup(groupId: Int, categoryId: Int): List<TaskEntityWrapperDto> {
+    fun getAllTasksForGroup(groupId: Int, categoryId: Int): List<TaskEntityWrapperDto> {
         val allTasks = taskRepository.findAllByVisibleTrueAndCategoryIdOrderByOrder(categoryId)
         val taskIds = allTasks.map { it.id }
         val submissions = submitted.findAllByTask_IdInAndGroupId(taskIds, groupId).associateBy { it.task?.id ?: 0 }
@@ -81,7 +81,7 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getAllTasksForUser(user: CmschUser, categoryId: Int): List<TaskEntityWrapperDto> {
+    fun getAllTasksForUser(user: CmschUser, categoryId: Int): List<TaskEntityWrapperDto> {
         val allTasks = taskRepository.findAllByVisibleTrueAndCategoryIdOrderByOrder(categoryId)
         val taskIds = allTasks.map { it.id }
         val submissions = submitted.findAllByTask_IdInAndUserId(taskIds, user.id).associateBy { it.task?.id ?: 0 }
@@ -119,7 +119,7 @@ open class TasksService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitTaskReview(
+    fun submitTaskReview(
         taskId: Int,
         userId: Int?,
         groupId: Int?,
@@ -175,7 +175,7 @@ open class TasksService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitTaskForGroup(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
+    fun submitTaskForGroup(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
         val groupId = user.groupId
             ?: return TaskSubmissionStatus.NO_ASSOCIATE_GROUP
         val task = taskRepository.findById(answer.taskId).orElse(null)
@@ -205,7 +205,7 @@ open class TasksService(
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun submitTaskForUser(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
+    fun submitTaskForUser(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
@@ -521,7 +521,7 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoriesForGroupInRange(groupId: Int, now: Long, advertisedOnly: Boolean = false, userRole: RoleType): List<TaskCategoryDto> {
+    fun getCategoriesForGroupInRange(groupId: Int, now: Long, advertisedOnly: Boolean = false, userRole: RoleType): List<TaskCategoryDto> {
 
         val submissionSummaries = submitted.findSubmissionSummaryByGroupId(groupId)
         val submissionByCategory = submissionSummaries.associateBy({ it.categoryId }, { it })
@@ -558,7 +558,7 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoriesForUserInTimeRange(userId: Int, now: Long, userRole: RoleType): List<TaskCategoryDto> {
+    fun getCategoriesForUserInTimeRange(userId: Int, now: Long, userRole: RoleType): List<TaskCategoryDto> {
         val submissionSummaries = submitted.findSubmissionSummaryByUserId(userId)
         val submissionByCategory = submissionSummaries.associateBy({ it.categoryId }, { it })
 
@@ -590,48 +590,48 @@ open class TasksService(
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoryName(categoryId: Int): String {
+    fun getCategoryName(categoryId: Int): String {
         return categories.findAllByCategoryId(categoryId).map { it.name }.firstOrNull() ?: "Nincs ilyen"
     }
 
     @Transactional(readOnly = true)
-    open fun getCategoryAvailableFrom(categoryId: Int): Long {
+    fun getCategoryAvailableFrom(categoryId: Int): Long {
         return categories.findAllByCategoryId(categoryId).map { it.availableFrom }.firstOrNull() ?: 0
     }
 
     @Transactional(readOnly = true)
-    open fun getCategory(categoryId: Int): TaskCategoryEntity? {
+    fun getCategory(categoryId: Int): TaskCategoryEntity? {
         return categories.findAllByCategoryId(categoryId).firstOrNull()
     }
 
     @Transactional(readOnly = true)
-    open fun getAllSubmissions(groupId: Int): List<SubmittedTaskEntity> {
+    fun getAllSubmissions(groupId: Int): List<SubmittedTaskEntity> {
         return submitted.findAllByGroupId(groupId)
     }
 
     @Transactional(readOnly = true)
-    open fun getAllCategories(): List<TaskCategoryEntity> {
+    fun getAllCategories(): List<TaskCategoryEntity> {
         return categories.findAll()
             .sortedBy { it.categoryId }
     }
 
     @Transactional(readOnly = true)
-    open fun getTotalTasksForUser(user: UserEntity): Int {
+    fun getTotalTasksForUser(user: UserEntity): Int {
         return taskRepository.countAllByVisibleTrue()
     }
 
     @Transactional(readOnly = true)
-    open fun getSubmittedTasksForUser(user: CmschUser): Int {
+    fun getSubmittedTasksForUser(user: CmschUser): Int {
         return submitted.countAllByUserIdAndRejectedFalseAndApprovedFalse(user.id)
     }
 
     @Transactional(readOnly = true)
-    open fun getCompletedTasksForUser(user: CmschUser): Int {
+    fun getCompletedTasksForUser(user: CmschUser): Int {
         return submitted.countAllByUserIdAndRejectedFalseAndApprovedTrue(user.id)
     }
 
     @Transactional(readOnly = true)
-    open fun getTasksThatNeedsToBeCompleted(user: UserEntity): List<String> {
+    fun getTasksThatNeedsToBeCompleted(user: UserEntity): List<String> {
         return categories.findAllByType(TaskCategoryType.PROFILE_REQUIRED)
             .flatMap { taskRepository.findAllByCategoryIdAndVisibleTrue(it.categoryId) }
             .filter { task -> submitted.findByTask_IdAndUserId(task.id, user.id)
