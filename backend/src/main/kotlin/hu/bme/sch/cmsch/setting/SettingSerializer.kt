@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.setting
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
@@ -14,7 +15,7 @@ interface SettingSerializer<T> {
 class JsonSettingSerializer<T> : SettingSerializer<T> {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    private val reader = jacksonObjectMapper().reader()
+    private val reader = jacksonObjectMapper().readerFor(object : TypeReference<T>() {})
     private val writer = jacksonObjectMapper().writer()
 
     override fun deserialize(
