@@ -14,6 +14,7 @@ enum class SettingType {
     MIN_ROLE,
     COMPONENT_GROUP,
     JSON,
+    MULTIPLE_PEOPLE,
     DATE_TIME,
     COMPONENT_NAME,
     BOOLEAN_JSON_LIST

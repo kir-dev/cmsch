@@ -36,55 +36,42 @@ class RaceComponent(
 
     val raceGroup by SettingGroup(fieldName = "Verseny")
 
-    final var title by StringSettingRef("Sörmérés",
-        fieldName = "Lap címe",
-        description = "Ez jelenik meg a böngésző címsorában"
-    )
+    final var title by StringSettingRef("Sörmérés", fieldName = "Lap címe",
+        description = "Ez jelenik meg a böngésző címsorában")
 
     final override var menuDisplayName by StringSettingRef("Sörmérés", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(setOf(),
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val displayGroup by SettingGroup(fieldName = "Kijelzés")
 
-    var visible by BooleanSettingRef(false, fieldName = "Látható", description = "Leküldésre kerüljön-e a toplista"
-    )
+    var visible by BooleanSettingRef(fieldName = "Látható", description = "Leküldésre kerüljön-e a toplista")
 
-    var extraCategoriesVisible by BooleanSettingRef(false, fieldName = "Extra kategóriák láthatóak",
-        description = "Leküldésre kerüljön-e az extra kategóriás toplista"
-    )
+    var extraCategoriesVisible by BooleanSettingRef(fieldName = "Extra kategóriák láthatóak",
+        description = "Leküldésre kerüljön-e az extra kategóriás toplista")
 
     var ascendingOrder by BooleanSettingRef(true, serverSideOnly = true, fieldName = "Növekvő sorrend",
-        description = "A toplista elemei növekvő sorrendben vannak"
-    )
+        description = "A toplista elemei növekvő sorrendben vannak")
 
-    var defaultCategoryDescription by StringSettingRef(
-        "", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Alapértelmezett kategória leírása",
-    )
+    var defaultCategoryDescription by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Alapértelmezett kategória leírása")
 
-    var searchEnabled by BooleanSettingRef(false,
-        fieldName = "Keresés elérhető",
-        description = "Legyen-e kereső az oldal tetején"
-    )
+    var searchEnabled by BooleanSettingRef(fieldName = "Keresés elérhető",
+        description = "Legyen-e kereső az oldal tetején")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val freestyleGroup by SettingGroup(fieldName = "Szabad kategória")
 
     var freestyleCategoryName by StringSettingRef("Funky mérés",
-        fieldName = "Szabad kategória neve", description = "Ez lesz a szabad kategória neve, és a menü neve is"
-    )
+        fieldName = "Szabad kategória neve", description = "Ez lesz a szabad kategória neve, és a menü neve is")
 
     var freestyleCategoryDescription by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Szabad kategória leírása", description = "Ez lesz a szabad kategória leírása"
-    )
+        fieldName = "Szabad kategória leírása", description = "Ez lesz a szabad kategória leírása")
 
     override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
         if (minRole.isAvailableForRole(role) || role.isAdmin) {

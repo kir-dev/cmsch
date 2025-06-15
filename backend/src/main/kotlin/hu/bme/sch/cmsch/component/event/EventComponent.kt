@@ -28,48 +28,40 @@ class EventComponent(
 ) {
     val eventsGroup by SettingGroup(fieldName = "Események")
 
-    final var title by StringSettingRef("Programok", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
+    final var title by StringSettingRef("Programok",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
     final override var menuDisplayName by StringSettingRef("Programok", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    final override var minRole by MinRoleSettingRef(setOf(), fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final override var minRole by MinRoleSettingRef(setOf(),
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val appearanceGroup by SettingGroup(fieldName = "Megjelenés")
 
-    var seekToCurrentCurrent by BooleanSettingRef(false, fieldName = "Tekerjen oda a jelenlegi programhoz"
-    )
+    var seekToCurrentCurrent by BooleanSettingRef(fieldName = "Tekerjen oda a jelenlegi programhoz")
 
-    var separateDays by BooleanSettingRef(false, fieldName = "Külön csoportosítva naponként"
-    )
+    var separateDays by BooleanSettingRef(fieldName = "Külön csoportosítva naponként")
 
-    var topMessage by StringSettingRef("Rövid szöveg a programokról általánosságban", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen"
-    )
+    var topMessage by StringSettingRef("Rövid szöveg a programokról általánosságban",
+        type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Oldal tetején megjelenő szöveg",
+        description = "Ha üres akkor nincs ilyen")
 
-    var searchEnabled by BooleanSettingRef(false, fieldName = "Keresés elérhető",
-        description = "Legyen-e kereső az oldal tetején"
-    )
+    var searchEnabled by BooleanSettingRef(fieldName = "Keresés elérhető",
+        description = "Legyen-e kereső az oldal tetején")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val logicGroup by SettingGroup(fieldName = "Működés")
 
-    var enableDetailedView by BooleanSettingRef(false, fieldName = "Elérhető a részletes nézet (külön lapon)"
-    )
+    var enableDetailedView by BooleanSettingRef(fieldName = "Elérhető a részletes nézet (külön lapon)")
 
-    var filterByCategory by BooleanSettingRef(false, fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni"
-    )
+    var filterByCategory by BooleanSettingRef(fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni")
 
-    var filterByLocation by BooleanSettingRef(false, fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni"
-    )
+    var filterByLocation by BooleanSettingRef(fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni")
 
-    var filterByDay by BooleanSettingRef(false, fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni"
-    )
+    var filterByDay by BooleanSettingRef(fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni")
 
 }

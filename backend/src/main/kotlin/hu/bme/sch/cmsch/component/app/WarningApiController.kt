@@ -17,10 +17,7 @@ class WarningApiController(
     @JsonView(Preview::class)
     @GetMapping("/warning")
     fun warning(): WarningView {
-        return WarningView(
-            message = applicationComponent.warningMessage,
-            type = applicationComponent.warningLevel
-        )
+        return WarningView(message = applicationComponent.warningMessage, type = applicationComponent.warningLevel)
     }
 
 }

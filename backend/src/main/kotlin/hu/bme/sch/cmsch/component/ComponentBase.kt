@@ -32,7 +32,7 @@ abstract class ComponentBase(
 
     open val menuDisplayName: String? = null
 
-    abstract val minRole: Set<RoleType>
+    abstract var minRole: Set<RoleType>
 
     val allSettings: MutableList<Setting<*>> = mutableListOf()
 

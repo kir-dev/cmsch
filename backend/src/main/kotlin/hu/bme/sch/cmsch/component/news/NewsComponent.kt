@@ -30,19 +30,15 @@ class NewsComponent(
     val newsGroup by SettingGroup(fieldName = "Hírek")
 
     final var title by StringSettingRef("Hírek",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
     final override var menuDisplayName by StringSettingRef("Hírek", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
-    var showDetails by BooleanSettingRef(false, fieldName = "Részletes nézet",
-        description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is"
-    )
+    var showDetails by BooleanSettingRef(fieldName = "Részletes nézet",
+        description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is")
 
 }

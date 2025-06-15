@@ -32,6 +32,5 @@ class ServiceAccountComponent(
     /// -------------------------------------------------------------------------------------------------------------------
 
     final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 }

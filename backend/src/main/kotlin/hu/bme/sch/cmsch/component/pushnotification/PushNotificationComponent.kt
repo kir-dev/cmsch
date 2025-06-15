@@ -30,33 +30,27 @@ class PushNotificationComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
 
     val notificationsGroup by SettingGroup(fieldName = "Értesítés beállítások")
 
     var notificationsEnabled by BooleanSettingRef(true,
         fieldName = "Értesítések engedélyezése a felhasználói felületen",
-        description = "A felhasználók csak akkor kapnak push notificationokat, ha ez az opció engedélyezve van"
-    )
+        description = "A felhasználók csak akkor kapnak push notificationokat, ha ez az opció engedélyezve van")
 
     val permissionRequestGroup by SettingGroup(fieldName = "Jogosultságkérés beállítások")
 
     var permissionPromptText by StringSettingRef("Szeretnél értesítéseket kapni?", fieldName = "Engedélykérés szövege",
-        description = "Ne legyen hosszú, mert csúnyán néz ki mobilokon! Ez a szöveg jelenik meg, amikor az alkalmazás engedélyt kér a felhasználótól értesítésekhez."
-    )
+        description = "Ne legyen hosszú, mert csúnyán néz ki mobilokon! Ez a szöveg jelenik meg, amikor az alkalmazás engedélyt kér a felhasználótól értesítésekhez.")
 
     var permissionAcceptText by StringSettingRef("Igen", fieldName = "Engedély megadás gomb szöveg",
-        description = "Ez a szöveg jelenik meg azon a gombon, amivel engedélyt tudnak adni a felhasználók"
-    )
+        description = "Ez a szöveg jelenik meg azon a gombon, amivel engedélyt tudnak adni a felhasználók")
 
     var permissionDenyText by StringSettingRef("Nem", fieldName = "Események tiltása gomb szöveg",
-        description = "Ez a szöveg jelenik meg azon a gombon, amivel letiltják az értesítéseket a felhasználók (ha üres nem jelenik meg)"
-    )
+        description = "Ez a szöveg jelenik meg azon a gombon, amivel letiltják az értesítéseket a felhasználók (ha üres nem jelenik meg)")
 
     var permissionAllowNeverShowAgain by BooleanSettingRef(true, fieldName = "Tiltás megjegyzése",
-        description = "Ha a felhasználó letiltotta az értesítéseket, akkor többet nem nem kérdez rá az alkalmazás"
-    )
+        description = "Ha a felhasználó letiltotta az értesítéseket, akkor többet nem nem kérdez rá az alkalmazás")
 
 }

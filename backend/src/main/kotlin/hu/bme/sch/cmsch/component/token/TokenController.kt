@@ -41,13 +41,13 @@ class TokenController(
     objectMapper,
     env,
 
-    showPermission =   StaffPermissions.PERMISSION_SHOW_TOKENS,
+    showPermission = StaffPermissions.PERMISSION_SHOW_TOKENS,
     createPermission = StaffPermissions.PERMISSION_CREATE_TOKENS,
-    editPermission =   StaffPermissions.PERMISSION_EDIT_TOKENS,
+    editPermission = StaffPermissions.PERMISSION_EDIT_TOKENS,
     deletePermission = StaffPermissions.PERMISSION_DELETE_TOKENS,
 
     createEnabled = true,
-    editEnabled   = true,
+    editEnabled = true,
     deleteEnabled = true,
     importEnabled = true,
     exportEnabled = true,
@@ -63,9 +63,7 @@ class TokenController(
     )
 
     override fun onDetailsView(entity: CmschUser, model: Model) {
-        model.addAttribute("ext", TokenDetailsExtension(
-            qrFrontendBaseUrl = tokenComponent.qrFrontendBaseUrl)
-        )
+        model.addAttribute("ext", TokenDetailsExtension(qrFrontendBaseUrl = tokenComponent.qrFrontendBaseUrl))
     }
 
 }

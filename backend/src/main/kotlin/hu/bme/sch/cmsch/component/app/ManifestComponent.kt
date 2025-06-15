@@ -30,26 +30,26 @@ class ManifestComponent(
     /// -------------------------------------------------------------------------------------------------------------------
 
     val manifestGroup by SettingGroup(fieldName = "A manifest.json tartalma",
-        description = "Ha nem tudod mi ez, inkább ne állítgasd!"
-    )
+        description = "Ha nem tudod mi ez, inkább ne állítgasd!")
 
-    var name by StringSettingRef("Király Oldal", serverSideOnly = true, fieldName = "Teljes név")
+    var name by StringSettingRef(defaultValue = "Király Oldal", serverSideOnly = true, fieldName = "Teljes név")
 
-    var shortName by StringSettingRef("Király Oldal", serverSideOnly = true, fieldName = "Rövid név")
+    var shortName by StringSettingRef(defaultValue = "Király Oldal", serverSideOnly = true, fieldName = "Rövid név")
 
-    var description by StringSettingRef("", serverSideOnly = true, fieldName = "Leírás")
+    var description by StringSettingRef(serverSideOnly = true, fieldName = "Leírás")
 
-    var display by StringSettingRef("browser", serverSideOnly = true, fieldName = "Kijelzés módja",
+    var display by StringSettingRef(defaultValue = "browser", serverSideOnly = true, fieldName = "Kijelzés módja",
         description = "Csak ez lehet: browser, standalone, minimal-ui, fullscreen")
 
-    var applicationScope by StringSettingRef("/", serverSideOnly = true, fieldName = "Application scope")
+    var applicationScope by StringSettingRef(defaultValue = "/", serverSideOnly = true, fieldName = "Application scope")
 
-    var startUrl by StringSettingRef("/", type = SettingType.URL, serverSideOnly = true, fieldName = "Start url")
+    var startUrl by StringSettingRef(defaultValue = "/", type = SettingType.URL, serverSideOnly = true,
+        fieldName = "Start url")
 
-    var themeColor by StringSettingRef("#888888", type = SettingType.COLOR, serverSideOnly = true,
+    var themeColor by StringSettingRef(defaultValue = "#888888", type = SettingType.COLOR, serverSideOnly = true,
         fieldName = "Téma színe", description = "Lehet különböző mint a stílus beállításokban")
 
-    var backgroundColor by StringSettingRef("#000000", type = SettingType.COLOR, serverSideOnly = true,
+    var backgroundColor by StringSettingRef(defaultValue = "#000000", type = SettingType.COLOR, serverSideOnly = true,
         fieldName = "Háttér színe", description = "Lehet különböző mint a stílus beállításokban")
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -58,42 +58,19 @@ class ManifestComponent(
         description = "Generáld ki az oldal ikonjait például ennek az oldalnak a segítségével: https://www.simicart.com/manifest-generator.html/"
     )
 
-    var favicon by StringSettingRef("manifest/favicon.ico",
-        type = SettingType.IMAGE,
-        serverSideOnly = true,
-        persist = false,
-        fieldName = "Favicon",
-        description = "16x16-os ico fájl"
-    )
+    var favicon by StringSettingRef(defaultValue = "manifest/favicon.ico", type = SettingType.IMAGE,
+        serverSideOnly = true, persist = false, fieldName = "Favicon", description = "16x16-os ico fájl")
 
-    var icon192 by StringSettingRef("manifest/icon-192x192.png",
-        type = SettingType.IMAGE,
-        serverSideOnly = true,
-        persist = false,
-        fieldName = "Ikon 192",
-        description = "192x192 pixeles png fájl"
-    )
+    var icon192 by StringSettingRef(defaultValue = "manifest/icon-192x192.png", type = SettingType.IMAGE,
+        serverSideOnly = true, persist = false, fieldName = "Ikon 192", description = "192x192 pixeles png fájl")
 
-    var icon256 by StringSettingRef("manifest/icon-256x256.png",
-        type = SettingType.IMAGE,
-        serverSideOnly = true,
-        persist = false,
-        fieldName = "Ikon 256",
-        description = "256x256 pixeles png fájl"
-    )
+    var icon256 by StringSettingRef(defaultValue = "manifest/icon-256x256.png", type = SettingType.IMAGE,
+        serverSideOnly = true, persist = false, fieldName = "Ikon 256", description = "256x256 pixeles png fájl")
 
-    var icon384 by StringSettingRef("manifest/icon-384x384.png",
-        type = SettingType.IMAGE,
-        serverSideOnly = true,
-        persist = false,
-        fieldName = "Ikon 384",
-        description = "384x384 pixeles png fájl"
-    )
+    var icon384 by StringSettingRef(defaultValue = "manifest/icon-384x384.png", type = SettingType.IMAGE,
+        serverSideOnly = true, persist = false, fieldName = "Ikon 384", description = "384x384 pixeles png fájl")
 
-    var icon512 by StringSettingRef("manifest/icon-512x512.png",
-        type = SettingType.IMAGE, serverSideOnly = true, persist = false,
-        fieldName = "Ikon 512",
-        description = "512x512 pixeles png fájl"
-    )
+    var icon512 by StringSettingRef(defaultValue = "manifest/icon-512x512.png", type = SettingType.IMAGE,
+        serverSideOnly = true, persist = false, fieldName = "Ikon 512", description = "512x512 pixeles png fájl")
 
 }

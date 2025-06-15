@@ -29,55 +29,43 @@ class HomeComponent(
 
     val homeGroup by SettingGroup(fieldName = "Kezdőlap")
 
-    final var title by StringSettingRef("Kezdőlap", fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
+    final var title by StringSettingRef("Kezdőlap",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
     final override var menuDisplayName by StringSettingRef("Kezdőlap", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup by SettingGroup(fieldName = "Megjelenés",
-        description = "A kezdőlap megjelenése")
+    val displayGroup by SettingGroup(fieldName = "Megjelenés", description = "A kezdőlap megjelenése")
 
     var welcomeMessage by StringSettingRef("Üdvözlünk a {} portálon", fieldName = "Üdvözlő üzenet",
-        description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
-    )
+        description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére")
 
-    var youtubeVideoIds by StringSettingRef("", fieldName = "Promó videó(k)",
-        description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni" +
-                " pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)"
-    )
+    var youtubeVideoIds by StringSettingRef(fieldName = "Promó videó(k)",
+        description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)")
 
-    var content by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen."
-    )
+    var content by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen.")
 
-    var showEvents by BooleanSettingRef(false, fieldName = "Események láthatóak",
-        description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon"
-    )
+    var showEvents by BooleanSettingRef(fieldName = "Események láthatóak",
+        description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon")
 
-    var showGalleryImages by BooleanSettingRef(false, fieldName = "Galéria képek láthatóak",
-        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek"
-    )
+    var showGalleryImages by BooleanSettingRef(fieldName = "Galéria képek láthatóak",
+        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val newsEmbeddedComponentGroup by SettingGroup(fieldName = "Hírek rész",
-        description = "Csak akkor van hatása ha a news komponens be van kapcsolva"
-    )
+        description = "Csak akkor van hatása ha a news komponens be van kapcsolva")
 
     var maxVisibleCount by NumberSettingRef(3, serverSideOnly = true, strictConversion = false,
-        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hirdetés komponensben"
-    )
+        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hirdetés komponensben")
 
-    var showNews by BooleanSettingRef(false, fieldName = "Hírek láthatóak",
-        description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon"
-    )
+    var showNews by BooleanSettingRef(fieldName = "Hírek láthatóak",
+        description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon")
 
 }

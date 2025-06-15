@@ -31,18 +31,15 @@ class MessagingComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val settingGroup by SettingGroup(fieldName = "Proxy adatai")
 
     var proxyBaseUrl by StringSettingRef("http://localhost:8080", type = SettingType.URL,
-        fieldName = "A proxy elérhetősége", serverSideOnly = true
-    )
+        fieldName = "A proxy elérhetősége", serverSideOnly = true)
 
-    var proxyToken by StringSettingRef("", fieldName = "Token a proxyhoz", serverSideOnly = true
-    )
+    var proxyToken by StringSettingRef("", fieldName = "Token a proxyhoz", serverSideOnly = true)
 
 }

@@ -29,12 +29,12 @@ class UserHandlingComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     @PostConstruct
     fun menuSetup() {
-        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuCategory("Felhasználó kezelés", this.menuPriority))
+        adminMenuService.registerCategory(javaClass.simpleName,
+            AdminMenuCategory("Felhasználó kezelés", this.menuPriority))
     }
 
 }

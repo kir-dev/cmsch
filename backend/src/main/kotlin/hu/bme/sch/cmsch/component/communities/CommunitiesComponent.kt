@@ -32,41 +32,35 @@ class CommunitiesComponent(
 
     val communitiesGroup by SettingGroup(fieldName = "Körök")
 
-    final var title by StringSettingRef("Körök",
-        fieldName = "Körök lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
+    final var title by StringSettingRef(defaultValue = "Körök",
+        fieldName = "Körök lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
-    final override var menuDisplayName by StringSettingRef("Körök", serverSideOnly = true,
-        fieldName = "Körök menü neve", description = "Ez lesz a neve a menünek"
-    )
+    final override var menuDisplayName by StringSettingRef(defaultValue = "Körök", serverSideOnly = true,
+        fieldName = "Körök menü neve", description = "Ez lesz a neve a menünek")
 
-    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final override var minRole by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
-    final var description by StringSettingRef("A körök fogják össze az azonos érdeklődési körű hallgatókat. A körök a Schönherz Kollégiumban működnek.",
-        fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon", type = SettingType.LONG_TEXT_MARKDOWN
-    )
+    final var description by StringSettingRef(defaultValue = "A körök fogják össze az azonos érdeklődési körű hallgatókat. A körök a Schönherz Kollégiumban működnek.",
+        fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon",
+        type = SettingType.LONG_TEXT_MARKDOWN)
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val resortGroup by SettingGroup(fieldName = "Reszortok")
 
-    final var titleResort by StringSettingRef("Reszortok",
-        fieldName = "Reszortok lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
+    final var titleResort by StringSettingRef(defaultValue = "Reszortok",
+        fieldName = "Reszortok lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
-    final var menuDisplayNameResort by StringSettingRef("Reszortok", serverSideOnly = true,
-        fieldName = "Reszortok menü neve", description = "Ez lesz a neve a menünek"
-    )
+    final var menuDisplayNameResort by StringSettingRef(defaultValue = "Reszortok", serverSideOnly = true,
+        fieldName = "Reszortok menü neve", description = "Ez lesz a neve a menünek")
 
-    final var minRoleResort by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final var minRoleResort by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
-    final var descriptionResort by StringSettingRef("Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.",
-        fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon", type = SettingType.LONG_TEXT_MARKDOWN
-    )
+    final var descriptionResort by StringSettingRef(defaultValue = "Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.",
+        fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon",
+        type = SettingType.LONG_TEXT_MARKDOWN)
 
     override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
         val result = mutableListOf<MenuSettingItem>()

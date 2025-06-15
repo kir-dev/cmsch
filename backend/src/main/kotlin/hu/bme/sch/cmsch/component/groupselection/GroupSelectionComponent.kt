@@ -32,7 +32,6 @@ class GroupSelectionComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(setOf(RoleType.BASIC), minRoleToEdit = RoleType.STAFF,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal lehetséges a csoport választás"
-    )
+        fieldName = "Jogosultságok", description = "Melyik roleokkal lehetséges a csoport választás")
 
 }

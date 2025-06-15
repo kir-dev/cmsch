@@ -38,49 +38,36 @@ class CountdownComponent(
 
     val countdownGroup by SettingGroup(fieldName = "Visszaszámlálás")
 
-    final var title by StringSettingRef("Hamarosan",
-        fieldName = "Lap címe",
-        description = "Ez jelenik meg a böngésző címsorában"
-    )
+    final var title by StringSettingRef("Hamarosan", fieldName = "Lap címe",
+        description = "Ez jelenik meg a böngésző címsorában")
 
     final override val menuDisplayName = null
 
-    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal",
-        minRoleToEdit = RoleType.NOBODY
-    )
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, fieldName = "Jogosultságok",
+        description = "Melyik roleokkal nyitható meg az oldal", minRoleToEdit = RoleType.NOBODY)
 
-    var enabled by BooleanSettingRef(false,
-        fieldName = "Bekapcsolva",
-        description = "Legyen aktív a visszaszámlálás komponens"
-    )
+    var enabled by BooleanSettingRef(false, fieldName = "Bekapcsolva",
+        description = "Legyen aktív a visszaszámlálás komponens")
 
     var showOnlyCountdownForRoles by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Kinek legyen erőltetett",
         description = "Ezek a roleok számára más komponensek ne legyenek elérhetőek. Csak akkor működik, ha be van kapcsolva a komponens.",
-        minRoleToEdit = RoleType.STAFF,
-        grantedForRoles = setOf()
-    )
+        minRoleToEdit = RoleType.STAFF, grantedForRoles = setOf())
 
     var keepOnAfterCountdownOver by BooleanSettingRef(false, fieldName = "Ne engedjen be az oldalra lejárat után",
-        description = "Ha be van kapcsolva és erőltetett a visszaszámláló a felhasználó, akkor a lejárta után sem enged az oldalhoz hozzáférni"
-    )
+        description = "Ha be van kapcsolva és erőltetett a visszaszámláló a felhasználó, akkor a lejárta után sem enged az oldalhoz hozzáférni")
 
     var topMessage by StringSettingRef("Az esemény kezdetéig hátralévő idő:",
         fieldName = "Oldal tetején megjelenő szöveg",
-        description = "Ha üres akkor nincs ilyen. A [[ és ]] jelek között írt szöveg brand színű lesz."
-    )
+        description = "Ha üres akkor nincs ilyen. A [[ és ]] jelek között írt szöveg brand színű lesz.")
 
-    var timeToCountTo by NumberSettingRef(0, type = SettingType.DATE_TIME,
-        fieldName = "Visszaszámlálás eddig", strictConversion = false
-    )
+    var timeToCountTo by NumberSettingRef(type = SettingType.DATE_TIME,
+        fieldName = "Visszaszámlálás eddig", strictConversion = false)
 
     var imageUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/cmsch/countdown-bg.png", type = SettingType.URL,
-        fieldName = "Háttérkép URL-je", description = ""
-    )
+        fieldName = "Háttérkép URL-je", description = "")
 
     var blurredImage by BooleanSettingRef(true, fieldName = "Elmosott háttér",
-        description = "A háttérkép legyen elmosva (gaussian blur)"
-    )
+        description = "A háttérkép legyen elmosva (gaussian blur)")
 
 }
