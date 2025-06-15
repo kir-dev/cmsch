@@ -3,10 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import java.security.MessageDigest
@@ -16,6 +13,7 @@ class ApplicationComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "app",
     "/app",
     "Alkalmazás",
@@ -32,126 +30,69 @@ class ApplicationComponent(
         const val DATA_SOURCE_CATEGORY = "ApplicationComponent.data"
     }
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-
-            warningMessageGroup,
-            warningMessage,
-            warningLevel,
-
-            adminGroup,
-            adminPanelName,
-            isLive,
-            siteUrl,
-            adminSiteUrl,
-            adminBrandColor,
-            motd,
-            staffMessage,
-            documentsForOrganizers,
-
-            siteGroup,
-            siteName,
-            defaultComponent,
-        )
-    }
-
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final override var minRole by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
+        fieldName = "Jogosultságok", minRoleToEdit = RoleType.NOBODY,
+        description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val warningMessageGroup = SettingProxy(componentSettingService, component,
-        "warningMessageGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Figyelmeztető üzenet",
-        description = ""
-    )
+    val warningMessageGroup by SettingGroup(fieldName = "Figyelmeztető üzenet")
 
-    val warningMessage = SettingProxy(componentSettingService, component,
-        "warningMessage", "", type = SettingType.TEXT,
-        fieldName = "Megjelenő üzenet"
-    )
+    var warningMessage by StringSettingRef(fieldName = "Megjelenő üzenet")
 
-    val warningLevel = SettingProxy(componentSettingService, component,
-        "warningLevel", "", type = SettingType.TEXT,
-        fieldName = "Üzenet fontossági szintje", description = "lehet: success, info, warning, error"
-    )
+    var warningLevel by StringSettingRef(fieldName = "Üzenet fontossági szintje",
+        description = "lehet: success, info, warning, error")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val siteGroup = SettingProxy(componentSettingService, component,
-        "siteGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Oldal beállítások",
-        description = ""
-    )
+    val siteGroup by SettingGroup(fieldName = "Oldal beállítások")
 
-    val siteName = SettingProxy(componentSettingService, component,
-        "siteName", "Király Esemény", type = SettingType.TEXT,
-        fieldName = "Oldal neve", description = "Oldal vagy esemény neve"
-    )
+    var siteName by StringSettingRef(defaultValue = "Király Esemény", fieldName = "Oldal neve",
+        description = "Oldal vagy esemény neve")
 
-    val defaultComponent = SettingProxy(componentSettingService, component,
-        "defaultComponent", "/home", type = SettingType.TEXT,
-        fieldName = "Kezdő komponens", description = "Az a komponens ami kezdőlapként töltődik be"
-    )
+    var defaultComponent by StringSettingRef(defaultValue = "/home", fieldName = "Kezdő komponens",
+        description = "Az a komponens ami kezdőlapként töltődik be")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val adminGroup = SettingProxy(componentSettingService, component,
-        "adminGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Admin oldal beállításai",
-        description = ""
+    val adminGroup by SettingGroup(fieldName = "Admin oldal beállításai")
+
+    var adminPanelName by StringSettingRef(defaultValue = "ADMIN", fieldName = "Admin panel neve",
+        description = "Az admin panel neve", serverSideOnly = true)
+
+    var isLive by BooleanSettingRef(fieldName = "Production oldal",
+        description = "Ha be van kapcsolva akkor az oldal productionben van", serverSideOnly = true)
+
+    var siteUrl by StringSettingRef(defaultValue = "http://localhost:3000/",
+        fieldName = "Oldal URL-je",
+        description = "Az elején van protokoll megnevezés és / jellel végződik", serverSideOnly = true)
+
+    var adminSiteUrl by StringSettingRef(defaultValue = "http://localhost:8080/",
+        fieldName = "Admin Oldal URL-je",
+        description = "Az elején van protokoll megnevezés és / jellel végződik", serverSideOnly = true)
+
+    var adminBrandColor by StringSettingRef(
+        defaultValue = "#00F460", type = SettingType.COLOR,
+        fieldName = "Admin menü színe", description = "Ez lesz az admin oldal színe", serverSideOnly = true,
     )
 
-    val adminPanelName = SettingProxy(componentSettingService, component,
-        "adminPanelName", "ADMIN", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Admin panel neve", description = "Az admin panel neve"
-    )
+    var motd by StringSettingRef(defaultValue = "Message of the day", fieldName = "MOTD",
+        description = "Ez jelenik meg belépés után", serverSideOnly = true)
 
-    val isLive = SettingProxy(componentSettingService, component,
-        "isLive", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Production oldal", description = "Ha be van kapcsolva akkor az oldal productionben van"
-    )
+    var staffMessage by StringSettingRef(defaultValue = "...", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Szolgálati közlemény",
+        description = "Ez fog megjelenni az admin oldal kezdőlapján", serverSideOnly = true)
 
-    val siteUrl = SettingProxy(componentSettingService, component,
-        "siteUrl", "http://localhost:3000/", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
-    )
-
-    val adminSiteUrl = SettingProxy(componentSettingService, component,
-        "adminSiteUrl", "http://localhost:8080/", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "Admin Oldal URL-je", description = "Az elején van protokoll megnevezés és / jellel végződik"
-    )
-
-    val adminBrandColor = SettingProxy(componentSettingService, component,
-        "adminBrandColor", "#00F460", type = SettingType.COLOR, serverSideOnly = true,
-        fieldName = "Admin menü színe", description = "Ez lesz az admin oldal színe"
-    )
-
-    val motd = SettingProxy(componentSettingService, component,
-        "motd", "Message of the day", type = SettingType.TEXT, serverSideOnly = true,
-        fieldName = "MOTD", description = "Ez jelenik meg belépés után"
-    )
-
-    val staffMessage = SettingProxy(componentSettingService, component,
-        "staffMessage", "...", type = SettingType.LONG_TEXT_MARKDOWN, serverSideOnly = true,
-        fieldName = "Szolgálati közlemény", description = "Ez fog megjelenni az admin oldal kezdőlapján"
-    )
-
-    val documentsForOrganizers = SettingProxy(componentSettingService, component,
-        "documentsForOrganizers", "[]", type = SettingType.LONG_TEXT, serverSideOnly = true,
-        fieldName = "Linkelt doksik", description = "Linkelt doksik az admin oldal kezdőlapján. Ikonok: sheets, docs, drive, calendar, forms, youtube, slides. Formátum: [{\"type\":\"sheets\",\"url\":\"https://xy\",\"title\":\"Title\",\"visible\":true}]"
-    )
+    var documentsForOrganizers by StringSettingRef(defaultValue = "[]", type = SettingType.LONG_TEXT,
+        fieldName = "Linkelt doksik", serverSideOnly = true,
+        description = "Linkelt doksik az admin oldal kezdőlapján. Ikonok: sheets, docs, drive, calendar, forms, youtube, slides. Formátum: [{\"type\":\"sheets\",\"url\":\"https://xy\",\"title\":\"Title\",\"visible\":true}]")
 
     override fun onPersist() {
         super.onPersist()
-        if (adminBrandColor.getValue().isEmpty()) {
-            adminBrandColor.setValue(generateColor(adminSiteUrl.getValue()))
+        if (adminBrandColor.isEmpty()) {
+            adminBrandColor = generateColor(adminSiteUrl)
         }
     }
 

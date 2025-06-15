@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus

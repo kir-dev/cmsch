@@ -29,7 +29,7 @@ class AccessKeyService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [SQLException::class], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun validateKey(user: CmschUser, inputKey: String): AccessKeyResponse {
         val key = inputKey.trim()
@@ -37,18 +37,18 @@ class AccessKeyService(
             auditLogService.fine(user, ACCESS_KEY, "user tried an empty key")
             log.info("User {} tried an empty key", user.userName)
             return AccessKeyResponse(success = false,
-                reason = accessKeyComponent.invalidCodeErrorMessage.getValue(),
+                reason = accessKeyComponent.invalidCodeErrorMessage,
                 refreshSession = false
             )
         }
 
-        if (!accessKeyComponent.canOneUserUseMultiple.isValueTrue()
-                && accessKeyRepository.findTop1ByUsedByUserId(user.id).isNotEmpty()) {
+        if (!accessKeyComponent.canOneUserUseMultiple
+            && accessKeyRepository.findTop1ByUsedByUserId(user.id).isNotEmpty()) {
 
             auditLogService.fine(user, ACCESS_KEY, "user already used a key")
             log.info("User {} already used a key", user.userName)
             return AccessKeyResponse(success = false,
-                reason = accessKeyComponent.youUsedErrorMessage.getValue(),
+                reason = accessKeyComponent.youUsedErrorMessage,
                 refreshSession = false
             )
         }
@@ -58,7 +58,7 @@ class AccessKeyService(
             auditLogService.fine(user, ACCESS_KEY, "invalid key: '$key'")
             log.info("User {} invalid key: {}", user.userName, key)
             return AccessKeyResponse(success = false,
-                reason = accessKeyComponent.invalidCodeErrorMessage.getValue(),
+                reason = accessKeyComponent.invalidCodeErrorMessage,
                 refreshSession = false
             )
         }
@@ -67,7 +67,7 @@ class AccessKeyService(
             auditLogService.fine(user, ACCESS_KEY, "already used key: $key by ${selectedKey.usedByUserName}")
             log.info("User {} already used key: {} by user {}", user.userName, key, selectedKey.usedByUserName)
             return AccessKeyResponse(success = false,
-                reason = accessKeyComponent.alreadyUsedErrorMessage.getValue(),
+                reason = accessKeyComponent.alreadyUsedErrorMessage,
                 refreshSession = false
             )
         }

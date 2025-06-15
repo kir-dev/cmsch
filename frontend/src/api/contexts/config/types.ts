@@ -203,9 +203,9 @@ export interface Profile {
   messageBoxLevel: string
   showGroupName: boolean
   showGroupLeadersLocations: boolean
-  showMinimumToken: boolean
-  minTokenMsg: string
-  minTokenAchievedMsg: string
+  showMinimumTokenMessage: boolean
+  minTokenNotEnoughMessage: string
+  minTokenDoneMessage: string
   profileIncomplete: string
   showIncompleteProfile: boolean
   profileComplete: string
@@ -257,11 +257,11 @@ export interface Task {
 
 export interface Token {
   title: string
-  collectFeature: boolean
-  collectType: string
-  collectRequired: string
-  minTokenMsg: string
-  minTokenAchievedMsg: string
+  collectFeatureEnabled: boolean
+  collectRequiredType: string
+  collectRequiredTokens: string
+  minTokenNotEnoughMessage: string
+  minTokenDoneMessage: string
   defaultIcon: string
   defaultTestIcon: string
 }

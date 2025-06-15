@@ -231,7 +231,7 @@
                                 <input type="text"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:value="${input.getValue()}"
+                                       th:value="${input.getStringValue()}"
                                        autocomplete="off"
                                 />
                                 <span class="note" th:text="${input.description}"></span>
@@ -248,7 +248,7 @@
                                 <input type="text"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:value="${input.getValue()}"
+                                       th:value="${input.getStringValue()}"
                                        autocomplete="off"
                                 />
                                 <span class="note" th:text="${input.description}"></span>
@@ -265,7 +265,7 @@
                                 <input type="text"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:value="${input.getValue()}"
+                                       th:value="${input.getStringValue()}"
                                        th:data-param1="|color_${input.property}|" th:data-param2="${input.property}"
                                        th:onchange="|recalculateColor(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|"
                                        autocomplete="off"
@@ -289,7 +289,7 @@
                                 <input type="number"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:value="${input.getValue()}"
+                                       th:value="${input.getStringValue()}"
                                        autocomplete="off"
                                        required
                                 />
@@ -338,7 +338,7 @@
                                        class="datetime-picker"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:value="${input.getValue()}"
+                                       th:value="${input.getStringValue()}"
                                        autocomplete="off"
                                        required
                                 />
@@ -356,7 +356,7 @@
                                 <textarea
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:text="${input.getValue()}"
+                                       th:text="${input.getStringValue()}"
                                        autocomplete="off">
                                 </textarea>
                                 <span class="note" th:text="${input.description}"></span>
@@ -373,7 +373,7 @@
                                 <textarea
                                         th:name="${input.property}"
                                         th:id="${input.property}"
-                                        th:text="${input.getValue()}"
+                                        th:text="${input.getStringValue()}"
                                         autocomplete="off">
                                 </textarea>
                                 <span class="note" th:text="${input.description}"></span>
@@ -395,7 +395,7 @@
                                 <div style="clear:both"></div>
                                 <label class="switch">
                                     <input type="checkbox"
-                                           th:checked="${input.isValueTrue()}"
+                                           th:checked="${input.getStringValue()}"
                                            th:name="${input.property}"
                                            th:id="${input.property}" />
                                     <span class="slider"></span>
@@ -414,7 +414,7 @@
                                 <div style="clear:both"></div>
                                 <select th:name="${input.property}"
                                         th:id="${input.property}">
-                                    <option th:each="opt : ${componentNames}" th:value="${opt}" th:text="${opt}" th:selected="${input.getValue() == opt}"></option>
+                                    <option th:each="opt : ${componentNames}" th:value="${opt}" th:text="${opt}" th:selected="${input.getStringValue() == opt}"></option>
                                 </select>
                                 <span class="note" th:text="${input.description}"></span>
                             </div>
@@ -436,7 +436,7 @@
                                 <input type="text"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:value="${input.getValue()}"
+                                       th:value="${input.getStringValue()}"
                                        autocomplete="off"
                                        style="display: none"
                                 />
@@ -456,19 +456,19 @@
                                 <span class="note" th:text="${input.description}" style="margin-bottom: 20px;"></span>
 
                                 <table>
-                                    <tr th:each="role : ${T(hu.bme.sch.cmsch.setting.MinRoleSettingProxy).Companion.ALL_POSSIBLE_ROLES}">
+                                    <tr th:each="role : ${T(hu.bme.sch.cmsch.setting.MinRoleSettingRef).Companion.ALL_POSSIBLE_ROLES}">
 
-                                        <td th:text="${role.name()}" th:class="${input.grantedForRoles.contains(role.name()) ? 'disabled' : ''}">BASIC</td>
+                                        <td th:text="${role.name()}" th:class="${input.serializer.grantedRoles.contains(role) ? 'disabled' : ''}">BASIC</td>
                                         <td>
-                                            <label th:class="|switch ${input.grantedForRoles.contains(role.name()) ? 'disabled' : ''}|"
+                                            <label th:class="|switch ${input.serializer.grantedRoles.contains(role) ? 'disabled' : ''}|"
                                                    th:data-param1="${input.property}" th:data-param2="${role.name()}"
                                                    th:onclick="|changeRoleField(this.getAttribute('data-param1'), this.getAttribute('data-param2'))|">
                                                 <input type="checkbox"
-                                                       th:disabled="${input.grantedForRoles.contains(role.name())}"
-                                                       th:checked="${input.grantedForRoles.contains(role.name())}"
+                                                       th:disabled="${input.serializer.grantedRoles.contains(role)}"
+                                                       th:checked="${input.serializer.grantedRoles.contains(role)}"
                                                        th:name="|${input.property}_${role.name()}|"
-                                                       th:id="|${input.property}_${role.name()}${input.grantedForRoles.contains(role.name()) ? '_' : ''}|"/>
-                                                <span th:class="|slider ${input.grantedForRoles.contains(role.name()) ? 'disabled' : ''}|"></span>
+                                                       th:id="|${input.property}_${role.name()}${input.serializer.grantedRoles.contains(role) ? '_' : ''}|"/>
+                                                <span th:class="|slider ${input.serializer.grantedRoles.contains(role) ? 'disabled' : ''}|"></span>
                                             </label>
                                         </td>
                                     </tr>
@@ -477,7 +477,7 @@
                                 <input type="text"
                                        th:name="${input.property}"
                                        th:id="${input.property}"
-                                       th:value="${input.getValue()}"
+                                       th:value="${input.getStringValue()}"
                                        autocomplete="off"
                                        style="display: none"
                                 />
@@ -538,7 +538,7 @@
                             <input type="text"
                                    th:name="${input.property}"
                                    th:id="${input.property}"
-                                   th:value="${input.getValue()}"
+                                   th:value="${input.getStringValue()}"
                                    autocomplete="off"
                                    th:data-prop="${input.property}"
                                    onchange="loadBoolList(this.getAttribute('data-prop'))"

@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
 import jakarta.annotation.PostConstruct
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -17,6 +17,7 @@ class UserHandlingComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "userHandling",
     "/",
     "Felhasználó kezelés",
@@ -25,22 +26,15 @@ class UserHandlingComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            minRole,
-        )
-    }
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", "", minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.SUPERUSER,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     @PostConstruct
     fun menuSetup() {
-        adminMenuService.registerCategory(javaClass.simpleName, AdminMenuCategory("Felhasználó kezelés", this.menuPriority))
+        adminMenuService.registerCategory(javaClass.simpleName,
+            AdminMenuCategory("Felhasználó kezelés", this.menuPriority))
     }
 
 }

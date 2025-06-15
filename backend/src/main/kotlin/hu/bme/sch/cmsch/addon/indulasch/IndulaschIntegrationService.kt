@@ -52,13 +52,13 @@ class IndulaschIntegrationService(
 
     @Async
     fun setTextOnWidget(widgetData: IndulaschTextWidgetDto){
-        if(qrFightComponent.indulaschApiKey.getValue().isEmpty() || qrFightComponent.indulaschKioskId.getValue().isEmpty()) return
+        if(qrFightComponent.indulaschApiKey.isEmpty() || qrFightComponent.indulaschKioskId.isEmpty()) return
         val response: String? = indulaschApi.patch()
             .uri { uriBuilder ->
-                uriBuilder.path("/admin/kiosk/${qrFightComponent.indulaschKioskId.getValue()}/widget")
+                uriBuilder.path("/admin/kiosk/${qrFightComponent.indulaschKioskId}/widget")
                     .build()
             }
-            .header("Authorization", "Api-Key ${qrFightComponent.indulaschApiKey.getValue()}")
+            .header("Authorization", "Api-Key ${qrFightComponent.indulaschApiKey}")
             .contentType(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromValue(widgetData))
             .retrieve()

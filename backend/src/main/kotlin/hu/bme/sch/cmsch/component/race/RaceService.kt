@@ -30,16 +30,16 @@ open class RaceService(
 
         return if (user == null) {
             RaceView(
-                categoryName = raceComponent.title.getValue(),
-                description = raceComponent.defaultCategoryDescription.getValue(),
+                categoryName = raceComponent.title,
+                description = raceComponent.defaultCategoryDescription,
                 place = null, bestTime = null, board = board
             )
         } else {
             val groupId = user.groupId ?: -1
             val place = board.indexOfFirst { it.id == groupId }
             RaceView(
-                categoryName = raceComponent.title.getValue(),
-                description = raceComponent.defaultCategoryDescription.getValue(),
+                categoryName = raceComponent.title,
+                description = raceComponent.defaultCategoryDescription,
                 place = if (place < 0) null else (place + 1),
                 bestTime = board.find { it.id == groupId }?.time,
                 board = board
@@ -51,8 +51,8 @@ open class RaceService(
     open fun getFreestyleViewForGroups(): FreestyleRaceView {
         val board = getFreestyleBoardForGroups()
         return FreestyleRaceView(
-            raceComponent.title.getValue(),
-            raceComponent.defaultCategoryDescription.getValue(),
+            raceComponent.title,
+            raceComponent.defaultCategoryDescription,
             board
         )
     }
@@ -99,7 +99,7 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getBoardForGroups(category: String) = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getBoardForGroups(category: String) = if (raceComponent.ascendingOrder) {
         raceRecordRepository.findAllByCategory(category)
             .groupBy { it.groupId }
             .map { submission ->
@@ -128,7 +128,7 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getFreestyleBoardForGroups() = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getFreestyleBoardForGroups() = if (raceComponent.ascendingOrder) {
         freestyleRaceRecordRepository.findAll()
             .map { submission ->
                 FreestyleRaceEntryDto(
@@ -158,14 +158,14 @@ open class RaceService(
 
         return if (user == null) {
             RaceView(
-                raceComponent.title.getValue(),
-                raceComponent.defaultCategoryDescription.getValue(),
+                raceComponent.title,
+                raceComponent.defaultCategoryDescription,
                 null, null, board)
         } else {
             val place = board.indexOfFirst { it.id == user.id }
             RaceView(
-                raceComponent.title.getValue(),
-                raceComponent.defaultCategoryDescription.getValue(),
+                raceComponent.title,
+                raceComponent.defaultCategoryDescription,
                 if (place < 0) null else (place + 1),
                 board.find { it.id == user.id }?.time,
                 board
@@ -198,14 +198,14 @@ open class RaceService(
     open fun getFreestyleViewForUsers(): FreestyleRaceView {
         val board = getFreestyleBoardForUsers()
         return FreestyleRaceView(
-            categoryName = raceComponent.freestyleCategoryName.getValue(),
-            description = raceComponent.freestyleCategoryDescription.getValue(),
+            categoryName = raceComponent.freestyleCategoryName,
+            description = raceComponent.freestyleCategoryDescription,
             board = board
         )
     }
 
     @Transactional(readOnly = true)
-    open fun getBoardForUsers(category: String, fetchEmail: Boolean) = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getBoardForUsers(category: String, fetchEmail: Boolean) = if (raceComponent.ascendingOrder) {
         raceRecordRepository.findAllByCategory(category)
             .groupBy { it.userId }
             .map { submission ->
@@ -240,7 +240,7 @@ open class RaceService(
     }
 
     @Transactional(readOnly = true)
-    open fun getFreestyleBoardForUsers() = if (raceComponent.ascendingOrder.isValueTrue()) {
+    open fun getFreestyleBoardForUsers() = if (raceComponent.ascendingOrder) {
         freestyleRaceRecordRepository.findAll()
             .map { submission ->
                 FreestyleRaceEntryDto(

@@ -77,23 +77,23 @@ class CheersBmejegyService(
         val changedUsers = mutableListOf<UserEntity>()
         val userToTicketMapping = mutableListOf<Pair<UserEntity, BmejegyRecordEntity>>()
 
-        if (bmejegy.completeByEmail.isValueTrue()) {
+        if (bmejegy.completeByEmail) {
             log.info("[CHEERS] Completing by email")
 
             val reader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
             val forms = formService.getSelectedForms()
 
-            val group1 = if (bmejegy.grantGroupName1.getValue().isNotBlank())
-                groupRepository.findByName(bmejegy.grantGroupName1.getValue()).orElse(null) else null
-            val group2 = if (bmejegy.grantGroupName2.getValue().isNotBlank())
-                groupRepository.findByName(bmejegy.grantGroupName2.getValue()).orElse(null) else null
-            val group3 = if (bmejegy.grantGroupName3.getValue().isNotBlank())
-                groupRepository.findByName(bmejegy.grantGroupName3.getValue()).orElse(null) else null
+            val group1 = if (bmejegy.grantGroupName1.isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName1).orElse(null) else null
+            val group2 = if (bmejegy.grantGroupName2.isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName2).orElse(null) else null
+            val group3 = if (bmejegy.grantGroupName3.isNotBlank())
+                groupRepository.findByName(bmejegy.grantGroupName3).orElse(null) else null
 
             forms.forEach { form ->
                 formService.getSubmissions(form).forEach { raw ->
                     val submission = reader.readValue<MutableMap<String, String>>(raw.submission)
-                    val email = (submission[bmejegy.emailFieldName.getValue()] ?: "").uppercase()
+                    val email = (submission[bmejegy.emailFieldName] ?: "").uppercase()
                     val ticket = unmatched.firstOrNull { it.email == email }
                     if (ticket != null) {
                         ticket.matchedUserId = raw.submitterUserId ?: 0
@@ -134,12 +134,12 @@ class CheersBmejegyService(
             val user = userEntityOptional.orElseThrow()
             var changed = false
 
-            if (bmejegy.forOrder1.getValue().isNotBlank() && item.contains(bmejegy.forOrder1.getValue())) {
-                if (bmejegy.grantAttendee1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+            if (bmejegy.forOrder1.isNotBlank() && item.contains(bmejegy.forOrder1)) {
+                if (bmejegy.grantAttendee1 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged1.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged1 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -150,12 +150,12 @@ class CheersBmejegyService(
                 }
             }
 
-            if (bmejegy.forOrder2.getValue().isNotBlank() && item.contains(bmejegy.forOrder2.getValue())) {
-                if (bmejegy.grantAttendee2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+            if (bmejegy.forOrder2.isNotBlank() && item.contains(bmejegy.forOrder2)) {
+                if (bmejegy.grantAttendee2 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged2.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged2 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }
@@ -166,12 +166,12 @@ class CheersBmejegyService(
                 }
             }
 
-            if (bmejegy.forOrder3.getValue().isNotBlank() && item.contains(bmejegy.forOrder3.getValue())) {
-                if (bmejegy.grantAttendee3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+            if (bmejegy.forOrder3.isNotBlank() && item.contains(bmejegy.forOrder3)) {
+                if (bmejegy.grantAttendee3 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.ATTENDEE
                     changed = true
                 }
-                if (bmejegy.grantPrivileged3.isValueTrue() && user.role.value < RoleType.STAFF.value) {
+                if (bmejegy.grantPrivileged3 && user.role.value < RoleType.STAFF.value) {
                     user.role = RoleType.PRIVILEGED
                     changed = true
                 }

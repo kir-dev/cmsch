@@ -3,10 +3,7 @@ package hu.bme.sch.cmsch.component.login
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -23,6 +20,7 @@ class UnitScopeComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "unit-scope",
     "/",
     "Jogviszonyok",
@@ -31,251 +29,127 @@ class UnitScopeComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            unitScopeGroup,
-            minRole,
-
-            unitScopeGrantsEnabled,
-
-            bmeGroup,
-            bmeGrantRoleAttendee,
-            bmeGrantRolePrivileged,
-            bmeGrantGroupName,
-
-            activeGroup,
-            activeGrantRoleAttendee,
-            activeGrantRolePrivileged,
-            activeGrantGroupName,
-
-            newbieGroup,
-            newbieGrantRoleAttendee,
-            newbieGrantRolePrivileged,
-            newbieGrantGroupName,
-
-            vikGroup,
-            vikGrantRoleAttendee,
-            vikGrantRolePrivileged,
-            vikGrantGroupName,
-
-            vikNewbieGroup,
-            vikNewbieGrantRoleAttendee,
-            vikNewbieGrantRolePrivileged,
-            vikNewbieGrantGroupName,
-
-            vbkGroup,
-            vbkGrantRoleAttendee,
-            vbkGrantRolePrivileged,
-            vbkGrantGroupName,
-
-            vbkNewbieGroup,
-            vbkNewbieGrantRoleAttendee,
-            vbkNewbieGrantRolePrivileged,
-            vbkNewbieGrantGroupName,
-
-        )
-    }
-
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
-    val unitScopeGroup = SettingProxy(componentSettingService, component,
-        "unitScopeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Jogviszonyok",
-        description = ""
-    )
+    val unitScopeGroup by SettingGroup(fieldName = "Jogviszonyok")
 
-    val unitScopeGrantsEnabled = SettingProxy(componentSettingService, component,
-        "unitScopeGrantsEnabled", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = "Jogok adása", description = "Jogok adása hallgatói státusz alapján, csak akkor, " +
-                "ha ez a kapcsoló aktív és BME_UNIT_SCOPE scope elérhető"
-    )
+    var unitScopeGrantsEnabled by BooleanSettingRef(false, serverSideOnly = true, fieldName = "Jogok adása",
+        description = "Jogok adása hallgatói státusz alapján, csak akkor, ha ez a kapcsoló aktív és BME_UNIT_SCOPE scope elérhető")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val bmeGroup = SettingProxy(componentSettingService, component,
-        "bmeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "BME-s felhasználók",
-        description = "Érvényesülési sorrend: 1. " +
-                "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
-    )
+    val bmeGroup by SettingGroup(fieldName = "BME-s felhasználók",
+        description = "Érvényesülési sorrend: 1. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider")
 
-    val bmeGrantRoleAttendee = SettingProxy(componentSettingService, component,
-        "bmeGrantRoleAttendee", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = ATTENDEE_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a BME-sek " +
-                "ATTENDEE jogot kapnak (ha a ROLE < STAFF)"
-    )
+    var bmeGrantRoleAttendee by BooleanSettingRef(false, serverSideOnly = true, fieldName = ATTENDEE_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a BME-sek ATTENDEE jogot kapnak (ha a ROLE < STAFF)")
 
-    val bmeGrantRolePrivileged = SettingProxy(componentSettingService, component,
-        "bmeGrantRolePrivileged", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = PRIVILEGED_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a BME-sek" +
-                " PRIVILEGED jogot kapnak (ha a ROLE < STAFF)"
-    )
 
-    val bmeGrantGroupName = SettingProxy(componentSettingService, component,
-        "bmeGrantGroupName", "", serverSideOnly = true,
-        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION
-    )
+    var bmeGrantRolePrivileged by BooleanSettingRef(false, serverSideOnly = true, fieldName = PRIVILEGED_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a BME-sek PRIVILEGED jogot kapnak (ha a ROLE < STAFF)")
+
+
+    var bmeGrantGroupName by StringSettingRef(serverSideOnly = true,
+        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION)
 
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val activeGroup = SettingProxy(componentSettingService, component,
-        "activeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "Aktív hallgató felhasználók",
-        description = "Érvényesülési sorrend: 2. " +
-                "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
-    )
+    val activeGroup by SettingGroup(fieldName = "Aktív hallgató felhasználók",
+        description = "Érvényesülési sorrend: 2. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider")
 
-    val activeGrantRoleAttendee = SettingProxy(componentSettingService, component,
-        "activeGrantRoleAttendee", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = ATTENDEE_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az aktív hallgatók " +
-                "ATTENDEE jogot kapnak (ha a ROLE < STAFF)"
-    )
+    var activeGrantRoleAttendee by BooleanSettingRef(false, serverSideOnly = true, fieldName = ATTENDEE_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az aktív hallgatók ATTENDEE jogot kapnak (ha a ROLE < STAFF)")
 
-    val activeGrantRolePrivileged = SettingProxy(componentSettingService, component,
-        "activeGrantRolePrivileged", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = PRIVILEGED_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az aktív hallgatók " +
-                "PRIVILEGED jogot kapnak (ha a ROLE < STAFF)"
-    )
 
-    val activeGrantGroupName = SettingProxy(componentSettingService, component,
-        "activeGrantGroupName", "", serverSideOnly = true,
-        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION
-    )
+    var activeGrantRolePrivileged by BooleanSettingRef(false, serverSideOnly = true, fieldName = PRIVILEGED_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az aktív hallgatók PRIVILEGED jogot kapnak (ha a ROLE < STAFF)")
+
+
+    var activeGrantGroupName by StringSettingRef(serverSideOnly = true,
+        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION)
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val newbieGroup = SettingProxy(componentSettingService, component,
-        "newbieGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "Első éves felhasználók",
-        description = "Érvényesülési sorrend: 3. " +
-                "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
-    )
+    val newbieGroup by SettingGroup(fieldName = "Első éves felhasználók",
+        description = "Érvényesülési sorrend: 3. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider")
 
-    val newbieGrantRoleAttendee = SettingProxy(componentSettingService, component,
-        "newbieGrantRoleAttendee", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = ATTENDEE_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőévesek " +
-                "ATTENDEE jogot kapnak (ha a ROLE < STAFF)"
-    )
+    var newbieGrantRoleAttendee by BooleanSettingRef(false, serverSideOnly = true, fieldName = ATTENDEE_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőévesek ATTENDEE jogot kapnak (ha a ROLE < STAFF)")
 
-    val newbieGrantRolePrivileged = SettingProxy(componentSettingService, component,
-        "newbieGrantRolePrivileged", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = PRIVILEGED_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőévesek " +
-                "PRIVILEGED jogot kapnak (ha a ROLE < STAFF)"
-    )
 
-    val newbieGrantGroupName = SettingProxy(componentSettingService, component,
-        "newbieGrantGroupName", "", serverSideOnly = true,
-        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION
-    )
+    var newbieGrantRolePrivileged by BooleanSettingRef(false, serverSideOnly = true, fieldName = PRIVILEGED_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőévesek PRIVILEGED jogot kapnak (ha a ROLE < STAFF)")
+
+
+    var newbieGrantGroupName by StringSettingRef(serverSideOnly = true,
+        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION)
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vikGroup = SettingProxy(componentSettingService, component,
-        "vikGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "VIK-es felhasználók",
-        description = "Érvényesülési sorrend: 4. " +
-                "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
-    )
+    val vikGroup by SettingGroup(fieldName = "VIK-es felhasználók",
+        description = "Érvényesülési sorrend: 4. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider")
 
-    val vikGrantRoleAttendee = SettingProxy(componentSettingService, component,
-        "vikGrantRoleAttendee", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = ATTENDEE_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VIK-esek " +
-                "ATTENDEE jogot kapnak (ha a ROLE < STAFF)"
-    )
+    var vikGrantRoleAttendee by BooleanSettingRef(false, serverSideOnly = true, fieldName = ATTENDEE_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VIK-esek ATTENDEE jogot kapnak (ha a ROLE < STAFF)")
 
-    val vikGrantRolePrivileged = SettingProxy(componentSettingService, component,
-        "vikGrantRolePrivileged", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = PRIVILEGED_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VIK-esek " +
-                "PRIVILEGED jogot kapnak(ha a ROLE < STAFF)"
-    )
 
-    val vikGrantGroupName = SettingProxy(componentSettingService, component,
-        "vikGrantGroupName", "", serverSideOnly = true,
-        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION
-    )
+    var vikGrantRolePrivileged by BooleanSettingRef(false, serverSideOnly = true, fieldName = PRIVILEGED_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VIK-esek PRIVILEGED jogot kapnak(ha a ROLE < STAFF)")
+
+
+    var vikGrantGroupName by StringSettingRef(serverSideOnly = true,
+        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION)
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vikNewbieGroup = SettingProxy(componentSettingService, component,
-        "vikNewbieGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "VIK-es elsőéves felhasználók",
-        description = "Érvényesülési sorrend: 5. " +
-                "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
-    )
+    val vikNewbieGroup by SettingGroup(fieldName = "VIK-es elsőéves felhasználók",
+        description = "Érvényesülési sorrend: 5. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider")
 
-    val vikNewbieGrantRoleAttendee = SettingProxy(componentSettingService, component,
-        "vikNewbieGrantRoleAttendee", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = ATTENDEE_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VIK-esek " +
-                "ATTENDEE jogot kapnak (ha a ROLE < STAFF)"
-    )
+    var vikNewbieGrantRoleAttendee by BooleanSettingRef(false, serverSideOnly = true, fieldName = ATTENDEE_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VIK-esek ATTENDEE jogot kapnak (ha a ROLE < STAFF)")
 
-    val vikNewbieGrantRolePrivileged = SettingProxy(componentSettingService, component,
-        "vikNewbieGrantRolePrivileged", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = PRIVILEGED_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VIK-esek " +
-                "PRIVILEGED jogot kapnak(ha a ROLE < STAFF)"
-    )
 
-    val vikNewbieGrantGroupName = SettingProxy(componentSettingService, component,
-        "vikNewbieGrantGroupName", "", serverSideOnly = true,
-        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION
-    )
+    var vikNewbieGrantRolePrivileged by BooleanSettingRef(false, serverSideOnly = true, fieldName = PRIVILEGED_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VIK-esek PRIVILEGED jogot kapnak(ha a ROLE < STAFF)")
+
+
+    var vikNewbieGrantGroupName by StringSettingRef(serverSideOnly = true,
+        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION)
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vbkGroup = SettingProxy(componentSettingService, component,
-        "vbkGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "VBK-s felhasználók",
-        description = "Érvényesülési sorrend: 6. " +
-                "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
-    )
+    val vbkGroup by SettingGroup(fieldName = "VBK-s felhasználók",
+        description = "Érvényesülési sorrend: 6. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider")
 
-    val vbkGrantRoleAttendee = SettingProxy(componentSettingService, component,
-        "vbkGrantRoleAttendee", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = ATTENDEE_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VBK-sok " +
-                "ATTENDEE jogot kapnak (ha a ROLE < STAFF)"
-    )
+    var vbkGrantRoleAttendee by BooleanSettingRef(false, serverSideOnly = true, fieldName = ATTENDEE_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VBK-sok ATTENDEE jogot kapnak (ha a ROLE < STAFF)")
 
-    val vbkGrantRolePrivileged = SettingProxy(componentSettingService, component,
-        "vbkGrantRolePrivileged", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = PRIVILEGED_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VBK-sok " +
-                "PRIVILEGED jogot kapnak (ha a ROLE < STAFF)"
-    )
 
-    val vbkGrantGroupName = SettingProxy(componentSettingService, component,
-        "vbkGrantGroupName", "", serverSideOnly = true,
-        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION
-    )
+    var vbkGrantRolePrivileged by BooleanSettingRef(false, serverSideOnly = true, fieldName = PRIVILEGED_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél a VBK-sok PRIVILEGED jogot kapnak (ha a ROLE < STAFF)")
+
+
+    var vbkGrantGroupName by StringSettingRef(serverSideOnly = true,
+        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION)
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val vbkNewbieGroup = SettingProxy(componentSettingService, component,
-        "vbkNewbieGroup", "", type = SettingType.COMPONENT_GROUP, persist = false, serverSideOnly = true,
-        fieldName = "VBK-s elsőéves felhasználók",
-        description = "Érvényesülési sorrend: 7. " +
-                "Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider"
-    )
+    val vbkNewbieGroup by SettingGroup(fieldName = "VBK-s elsőéves felhasználók",
+        description = "Érvényesülési sorrend: 7. Csak akkor működik, ha a BME_UNIT_SCOPE aktiválva van és authsch a provider")
 
-    val vbkNewbieGrantRoleAttendee = SettingProxy(componentSettingService, component,
-        "vbkNewbieGrantRoleAttendee", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = ATTENDEE_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VBK-sok " +
-                "ATTENDEE jogot kapnak (ha a ROLE < STAFF)"
-    )
+    var vbkNewbieGrantRoleAttendee by BooleanSettingRef(false, serverSideOnly = true, fieldName = ATTENDEE_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VBK-sok ATTENDEE jogot kapnak (ha a ROLE < STAFF)")
 
-    val vbkNewbieGrantRolePrivileged = SettingProxy(componentSettingService, component,
-        "vbkNewbieGrantRolePrivileged", "false", type = SettingType.BOOLEAN, serverSideOnly = true,
-        fieldName = PRIVILEGED_NAME, description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VBK-sok " +
-                "PRIVILEGED jogot kapnak (ha a ROLE < STAFF)"
-    )
 
-    val vbkNewbieGrantGroupName = SettingProxy(componentSettingService, component,
-        "vbkNewbieGrantGroupName", "", serverSideOnly = true,
-        fieldName = MOVE_TO_GROUP, description = MOVE_DESCRIPTION
-    )
+    var vbkNewbieGrantRolePrivileged by BooleanSettingRef(false, serverSideOnly = true, fieldName = PRIVILEGED_NAME,
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél az elsőéves VBK-sok PRIVILEGED jogot kapnak (ha a ROLE < STAFF)")
+
+
+    var vbkNewbieGrantGroupName by StringSettingRef(serverSideOnly = true, fieldName = MOVE_TO_GROUP,
+        description = MOVE_DESCRIPTION)
 
 }

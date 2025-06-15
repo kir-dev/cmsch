@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.errorlog
 
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication

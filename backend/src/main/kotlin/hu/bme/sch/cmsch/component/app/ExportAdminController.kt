@@ -2,6 +2,8 @@ package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.setting.MutableSetting
+import hu.bme.sch.cmsch.setting.SettingRef
 import hu.bme.sch.cmsch.util.getUser
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletResponse
@@ -73,7 +75,8 @@ class ExportAdminController(
         if (!permissionControl.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
-        response.setHeader("Content-Disposition", "attachment; filename=\"application-live-${clock.getTime()}.properties\"")
+        response.setHeader("Content-Disposition",
+            "attachment; filename=\"application-live-${clock.getTime()}.properties\"")
 
         val charset = if (useIsoEncoding) StandardCharsets.ISO_8859_1 else StandardCharsets.UTF_8
         response.contentType = MediaType(MediaType.APPLICATION_OCTET_STREAM, charset).toString()
@@ -86,8 +89,9 @@ class ExportAdminController(
             .associateWith { it.allSettings }
             .flatMap { component ->
                 component.value
-                    .filter { it.persist }
-                    .map { "hu.bme.sch.cmsch.${component.key.component}.${it.property}" to it.getValue() }
+                    .filterIsInstance(MutableSetting::class.java)
+                    .filter { it !is SettingRef<*> || it.persist }
+                    .map { "hu.bme.sch.cmsch.${component.key.component}.${it.property}" to it.getStringValue() }
             }
             .forEach { properties.setProperty(it.first, it.second) }
 

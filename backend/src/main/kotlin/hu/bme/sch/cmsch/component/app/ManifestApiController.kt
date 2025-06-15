@@ -18,14 +18,14 @@ class ManifestApiController(
     @GetMapping("/manifest.json")
     fun manifestJson(): ManifestJsonView {
         return ManifestJsonView(
-            theme_color = manifestComponent.themeColor.getValue(),
-            background_color = manifestComponent.backgroundColor.getValue(),
-            display = manifestComponent.display.getValue(),
-            scope = manifestComponent.applicationScope.getValue(),
-            start_url = manifestComponent.startUrl.getValue(),
-            name = manifestComponent.name.getValue(),
-            short_name = manifestComponent.shortName.getValue(),
-            description = manifestComponent.description.getValue(),
+            theme_color = manifestComponent.themeColor,
+            background_color = manifestComponent.backgroundColor,
+            display = manifestComponent.display,
+            scope = manifestComponent.applicationScope,
+            start_url = manifestComponent.startUrl,
+            name = manifestComponent.name,
+            short_name = manifestComponent.shortName,
+            description = manifestComponent.description,
             icons = listOf(
                 ManifestIconView(
                     src = storageService.getObjectUrl("manifest/icon-192x192.png").orElse(""),

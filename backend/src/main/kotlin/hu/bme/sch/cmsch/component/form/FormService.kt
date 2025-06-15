@@ -115,7 +115,7 @@ class FormService(
                     status = FormStatus.SUBMITTED,
                     message = form.submittedMessage
                             + (if (!entity.detailsValidated && entity.rejectionMessage.isNotBlank())
-                                    ("\n\n " + formComponent.langMessageFromOrganizers.getValue() + entity.rejectionMessage) else "")
+                                    ("\n\n " + formComponent.langMessageFromOrganizers + entity.rejectionMessage) else "")
                 )
             }
         }

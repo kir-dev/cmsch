@@ -50,7 +50,7 @@ class FileUploadController(
 
         model.addAttribute("user", user)
         model.addAttribute("uploaded", uploaded)
-        model.addAttribute("baseUrl", applicationComponent.adminSiteUrl.getValue())
+        model.addAttribute("baseUrl", applicationComponent.adminSiteUrl)
         model.addAttribute("permission", permissionControl.permissionString)
 
         return "uploadFile"

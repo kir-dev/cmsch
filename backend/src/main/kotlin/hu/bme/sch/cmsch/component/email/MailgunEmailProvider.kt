@@ -30,17 +30,17 @@ class MailgunEmailProvider(
     override fun getProviderName() = "mailgun"
 
     override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableMailgun.isValueTrue())
+        if (!emailComponent.enableMailgun)
             return
 
         val formData = LinkedMultiValueMap<String, String>()
-        formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
+        formData.add("from", "${emailComponent.mailgunAccountName} <${emailComponent.mailgunEmailAccount}@${emailComponent.mailgunDomain}>")
         formData.put("to", to)
         formData.add("subject", subject)
         formData.add("text", content)
 
         val request = client.method(HttpMethod.POST)
-            .uri("${emailComponent.mailgunDomain.getValue()}/messages")
+            .uri("${emailComponent.mailgunDomain}/messages")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .bodyValue(formData)
 
@@ -48,17 +48,17 @@ class MailgunEmailProvider(
     }
 
     override fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableMailgun.isValueTrue())
+        if (!emailComponent.enableMailgun)
             return
 
         val formData = LinkedMultiValueMap<String, String>()
-        formData.add("from", "${emailComponent.mailgunAccountName.getValue()} <${emailComponent.mailgunEmailAccount.getValue()}@${emailComponent.mailgunDomain.getValue()}>")
+        formData.add("from", "${emailComponent.mailgunAccountName} <${emailComponent.mailgunEmailAccount}@${emailComponent.mailgunDomain}>")
         formData.put("to", to)
         formData.add("subject", subject)
         formData.add("html", content)
 
         val request = client.method(HttpMethod.POST)
-            .uri("${emailComponent.mailgunDomain.getValue()}/messages")
+            .uri("${emailComponent.mailgunDomain}/messages")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .bodyValue(formData)
 

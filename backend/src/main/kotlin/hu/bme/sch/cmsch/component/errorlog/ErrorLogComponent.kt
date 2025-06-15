@@ -3,10 +3,10 @@ package hu.bme.sch.cmsch.component.errorlog
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.BooleanSettingRef
 import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.MinRoleSettingRef
+import hu.bme.sch.cmsch.setting.SettingGroup
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -22,6 +22,7 @@ class ErrorLogComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "errorlog",
     "/errorlog",
     "Kliens hibaüzenetek",
@@ -30,28 +31,13 @@ class ErrorLogComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(errorLogGroup, menuDisplayName, minRole, receiveReports)
-    }
+    val errorLogGroup by SettingGroup(fieldName = "Kliens hibák")
 
-    val errorLogGroup = SettingProxy(componentSettingService, component,
-        "errorLogGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Kliens hibák",
-        description = ""
-    )
+    final override val menuDisplayName = null
 
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Kliens hibák", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.SUPERUSER,
+        fieldName = "Jogosultságok", description = "Melyik roleok küldhetnek hibajelentéseket")
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES,  minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "Jogosultságok", description = "Melyik roleok küldhetnek hibajelentéseket"
-    )
-
-    val receiveReports = SettingProxy(componentSettingService, component, "receiveReports", "true",
-        type = SettingType.BOOLEAN, fieldName = "Kliens hibajelentések fogadása", serverSideOnly = true
-    )
+    var receiveReports by BooleanSettingRef(true, fieldName = "Kliens hibajelentések fogadása", serverSideOnly = true)
 
 }

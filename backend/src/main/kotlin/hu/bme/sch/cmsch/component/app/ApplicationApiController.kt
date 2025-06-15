@@ -15,6 +15,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -98,20 +99,20 @@ class ApplicationApiController(
         return ResponseEntity.ok(applicationService.getUserAuthInfo(jwtUser, actualUser))
     }
 
-    private fun appComponentFields() =
-        mapOf(applicationComponent.defaultComponent.property to applicationComponent.defaultComponent.getValue())
+    private fun appComponentFields(): Map<String, Any> =
+        mapOf("defaultComponent" to applicationComponent.defaultComponent)
 
     @GetMapping("/app/font-display.css")
     fun getDisplayFont(): ResponseEntity<Any> {
         val headers = HttpHeaders()
-        headers.location = URI.create(stylingComponent.displayFontCdn.rawValue)
+        headers.location = URI.create(stylingComponent.displayFontCdn)
         return ResponseEntity.status(HttpStatusCode.valueOf(303)).headers(headers).build()
     }
 
     @GetMapping("/app/font-main.css")
     fun getMainFont(): ResponseEntity<Any> {
         val headers = HttpHeaders()
-        headers.location = URI.create(stylingComponent.mainFontCdn.rawValue)
+        headers.location = URI.create(stylingComponent.mainFontCdn)
         return ResponseEntity.status(HttpStatusCode.valueOf(303)).headers(headers).build()
     }
 
