@@ -72,6 +72,10 @@ class ProfileComponent(
     var showFullName by BooleanSettingRef(true, fieldName = "Teljes név látható",
         description = "Ha ez hamis, akkor a neve helyett a profil menü címe jelenik meg")
 
+    var showGuild by BooleanSettingRef(fieldName = "Gárda látható", description = "Ki van írva, hogy melyik gárda")
+
+    var showMajor by BooleanSettingRef(fieldName = "Szak látható", description = "Ki van írva, hogy melyik szakra jár")
+
     var showAlias by BooleanSettingRef(fieldName = "Becenév látható",
         description = "Ha van nickneve, akkor ki legyen-e írva")
 
@@ -83,10 +87,6 @@ class ProfileComponent(
 
     var showGroup by BooleanSettingRef(fieldName = "Csoport tagság látható",
         description = "Ki van írva, hogy melyik csoportnak a tagja")
-
-    var showGuild by BooleanSettingRef(fieldName = "Gárda látható", description = "Ki van írva, hogy melyik gárda")
-
-    var showMajor by BooleanSettingRef(fieldName = "Szak látható", description = "Ki van írva, hogy melyik szakra jár")
 
     var showNeptun by BooleanSettingRef(fieldName = "Neptun kód látható", description = "Ki van írva a neptunkódja")
 
@@ -109,6 +109,12 @@ class ProfileComponent(
     var bmejegyQrIfPresent by BooleanSettingRef(serverSideOnly = true,
         fieldName = "BMEJEGY kód küldése", description = "A bmejegyes voucher kód leküldése, ha van valid jegye")
 
+    var showGroupMessage by BooleanSettingRef(serverSideOnly = true,
+        fieldName = "Csoporthoz üzenet mutatása", description = "A csoporthoz tartozó üzenet kijelzése a profilban")
+
+    var showUserMessage by BooleanSettingRef(serverSideOnly = true, fieldName = "Felhasználói üzenet mutatása",
+        description = "A felhasználóhoz tartozó üzenet kijelzése a profilban")
+
     var groupTitle by StringSettingRef("Tankör", fieldName = "Csoport név",
         description = "Csoport, csapat vagy tankör a csoport. Így fog megjelenni.")
 
@@ -117,12 +123,6 @@ class ProfileComponent(
 
     var messageBoxLevel by StringSettingRef(fieldName = "Üzenet doboz típusa",
         description = "success, info, warning, error")
-
-    var showGroupMessage by BooleanSettingRef(serverSideOnly = true,
-        fieldName = "Csoporthoz üzenet mutatása", description = "A csoporthoz tartozó üzenet kijelzése a profilban")
-
-    var showUserMessage by BooleanSettingRef(serverSideOnly = true, fieldName = "Felhasználói üzenet mutatása",
-        description = "A felhasználóhoz tartozó üzenet kijelzése a profilban")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

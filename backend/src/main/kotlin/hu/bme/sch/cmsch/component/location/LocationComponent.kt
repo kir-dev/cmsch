@@ -27,10 +27,11 @@ class LocationComponent(
     env
 ) {
 
+    val locationGroup by SettingGroup(fieldName = "Helymegosztás")
+
     final override var menuDisplayName by StringSettingRef("Térkép", serverSideOnly = true,
         fieldName = "Térkép menü neve", description = "Ez lesz a neve a menünek")
 
-    val locationGroup by SettingGroup(fieldName = "Helymegosztás")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")

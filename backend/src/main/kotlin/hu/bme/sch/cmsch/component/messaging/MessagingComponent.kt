@@ -28,6 +28,8 @@ class MessagingComponent(
     env
 ) {
 
+    val settingGroup by SettingGroup(fieldName = "Proxy adatai")
+
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
@@ -35,7 +37,6 @@ class MessagingComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val settingGroup by SettingGroup(fieldName = "Proxy adatai")
 
     var proxyBaseUrl by StringSettingRef("http://localhost:8080", type = SettingType.URL,
         fieldName = "A proxy elérhetősége", serverSideOnly = true)

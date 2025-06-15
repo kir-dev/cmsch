@@ -27,13 +27,12 @@ class PushNotificationComponent(
     env
 ) {
 
+    val notificationsGroup by SettingGroup(fieldName = "Értesítés beállítások")
+
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
-
-
-    val notificationsGroup by SettingGroup(fieldName = "Értesítés beállítások")
 
     var notificationsEnabled by BooleanSettingRef(true,
         fieldName = "Értesítések engedélyezése a felhasználói felületen",

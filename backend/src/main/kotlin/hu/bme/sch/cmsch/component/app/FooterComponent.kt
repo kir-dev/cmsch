@@ -21,6 +21,8 @@ class FooterComponent(
     env
 ) {
 
+    val footerGroup by SettingGroup(fieldName = "Lábléc")
+
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
@@ -28,10 +30,6 @@ class FooterComponent(
         fieldName = "Jogosultságok",
         description = "Melyik roleokkal nyitható meg az oldal"
     )
-
-    /// -------------------------------------------------------------------------------------------------------------------
-
-    val footerGroup by SettingGroup(fieldName = "Lábléc")
 
     var minimalisticFooter by BooleanSettingRef(fieldName = "Minimalisztikus lábléc",
         description = "Ha be van kapcsolva, akkor nem foglal olyan sok helyet a footer")

@@ -51,11 +51,13 @@ class HomeComponent(
     var content by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen.")
 
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val eventsEmbeddedComponentGroup by SettingGroup(fieldName = "Események rész",
+        description = "Csak akkor van hatása ha a event komponens be van kapcsolva")
+
     var showEvents by BooleanSettingRef(fieldName = "Események láthatóak",
         description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon")
-
-    var showGalleryImages by BooleanSettingRef(fieldName = "Galéria képek láthatóak",
-        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
@@ -68,4 +70,11 @@ class HomeComponent(
     var showNews by BooleanSettingRef(fieldName = "Hírek láthatóak",
         description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon")
 
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val galleryEmbeddedComponentGroup by SettingGroup(fieldName = "Galéria rész",
+        description = "Csak akkor van hatása ha a gallery komponens be van kapcsolva")
+
+    var showGalleryImages by BooleanSettingRef(fieldName = "Galéria képek láthatóak",
+        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek")
 }
