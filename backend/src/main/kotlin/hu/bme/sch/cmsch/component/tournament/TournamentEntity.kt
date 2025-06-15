@@ -94,6 +94,6 @@ data class TournamentEntity(
 
     @PreRemove
     fun preRemove() {
-
+        getTournamentService().deleteStagesForTournament(this)
     }
 }

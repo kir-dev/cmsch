@@ -97,8 +97,8 @@ open class TournamentService(
     }
 
     @Transactional
-    fun deleteStagesForTournament(tournamentId: Int) {
-        stageRepository.deleteAllByTournamentId(tournamentId)
+    fun deleteStagesForTournament(tournament: TournamentEntity) {
+        stageRepository.deleteAllByTournamentId(tournament.id)
     }
 
 }
