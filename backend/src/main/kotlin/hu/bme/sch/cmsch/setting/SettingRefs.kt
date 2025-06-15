@@ -36,8 +36,8 @@ data class StringSettingRef(
 
 }
 
-data class JsonSettingRef(
-    private val defaultValue: List<Map<String, Any>> = emptyList(),
+data class JsonSettingRef<T : Any>(
+    private val defaultValue: T,
     private val strictConversion: Boolean = true,
     private val cache: Boolean = true,
     private val persist: Boolean = true,
@@ -46,12 +46,12 @@ data class JsonSettingRef(
     private val fieldName: String? = null,
     private val description: String = "",
     private val minRoleToEdit: RoleType = RoleType.ADMIN
-) : SettingRegisteringLoader<SettingRef<List<Map<String, Any>>>>() {
+) : SettingRegisteringLoader<SettingRef<T>>() {
 
-    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<List<Map<String, Any>>> =
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<T> =
         SettingRef(
             componentPropertyService = thisRef.componentSettingService,
-            serializer = JsonSettingSerializer,
+            serializer = JsonSettingSerializer(),
             component = thisRef.component,
             property = prop.name,
             defaultValue = defaultValue,

@@ -84,13 +84,15 @@ class ImpressumComponent(
     val organizerGroup by SettingGroup(fieldName = "Rendezők",
         description = "A rendezvény főrendezőit és egyéb rendezőit is meg lehet adni")
 
-    var leadOrganizers by JsonSettingRef(fieldName = "A főrendezők", type = SettingType.MULTIPLE_PEOPLE)
+    var leadOrganizers by JsonSettingRef<List<OrganizerDto>>(listOf(),
+        fieldName = "A főrendezők", type = SettingType.MULTIPLE_PEOPLE)
 
     var leadOrganizersMessage by StringSettingRef("A rendezvénnyel kapcsolatos kérdéseket és észrevételeket szívesen fogadjuk a **TODO [@] sch.bme.hu** címen!",
         type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "A főrendezők alatt megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
 
-    var otherOrganizers by JsonSettingRef(fieldName = "További rendezők", type = SettingType.MULTIPLE_PEOPLE)
+    var otherOrganizers by JsonSettingRef<List<OrganizerDto>>(listOf(),
+        fieldName = "További rendezők", type = SettingType.MULTIPLE_PEOPLE)
 
     var otherOrganizersMessage by StringSettingRef("És még további N rendező!", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "A további rendezők alatt megjelenő szöveg", description = "Ha üres akkor nincs ilyen")

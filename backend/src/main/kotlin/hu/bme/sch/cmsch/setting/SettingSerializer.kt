@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.setting
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
@@ -12,30 +11,28 @@ interface SettingSerializer<T> {
 
 }
 
-object JsonSettingSerializer : SettingSerializer<List<Map<String, Any>>> {
+class JsonSettingSerializer<T> : SettingSerializer<T> {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    private val anyObjectReference = object : TypeReference<Map<String, Any>>() {}
-    private val reader = jacksonObjectMapper().readerFor(anyObjectReference)
+    private val reader = jacksonObjectMapper().reader()
     private val writer = jacksonObjectMapper().writer()
 
     override fun deserialize(
         value: String,
-        defaultValue: List<Map<String, Any>>,
+        defaultValue: T,
         strict: Boolean
-    ): List<Map<String, Any>> =
-        runCatching { reader.readValues<Map<String, Any>>(value).asSequence().toList() }
-            .fold(
-                onSuccess = { it },
-                onFailure = {
-                    if (strict) throw IllegalArgumentException("Value $value cannot be converted to JSON", it)
+    ): T = runCatching { reader.readValue<T>(value) }
+        .fold(
+            onSuccess = { it },
+            onFailure = {
+                if (strict) throw IllegalArgumentException("Value $value cannot be converted to JSON", it)
 
-                    log.error("Value {} cannot be converted to JSON", value, it)
-                    return@fold defaultValue
-                }
-            )
+                log.error("Value {} cannot be converted to JSON", value, it)
+                return@fold defaultValue
+            }
+        )
 
-    override fun serialize(value: List<Map<String, Any>>, strict: Boolean): String = writer.writeValueAsString(value)
+    override fun serialize(value: T, strict: Boolean): String = writer.writeValueAsString(value)
 }
 
 object StringSettingSerializer : SettingSerializer<String> {
