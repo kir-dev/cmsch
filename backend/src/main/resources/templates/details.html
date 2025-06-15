@@ -5,7 +5,7 @@
 <body>
 
 <object th:each="input : ${inputs}" th:remove="tag">
-    <script th:replace="~{('component/details/' + ${input.second.type.value}) :: detailsSegmentScript(${ext}) }" th:remove="tag"></script>
+    <script th:replace="~{('component/details/' + ${input.second.type}) :: detailsSegmentScript(${ext}) }" th:remove="tag"></script>
 </object>
 
 <div th:replace="~{layout4 :: mobile(null)}"></div>
@@ -43,7 +43,7 @@
 
                         <object th:if="${user.role.value >= input.second.minimumRole.value}" th:remove="tag">
 
-                            <object th:replace="~{('component/details/' + ${input.second.type.value}) :: detailsSegment (${iter.index}, ${data}, ${input.first}, ${input.second}, ${editMode}, ${entityMode}, ${duplicateMode}, ${readOnly}, ${ext})}" th:remove="tag"></object>
+                            <object th:replace="~{('component/details/' + ${input.second.type}) :: detailsSegment (${iter.index}, ${data}, ${input.first}, ${input.second}, ${editMode}, ${entityMode}, ${duplicateMode}, ${readOnly}, ${ext})}" th:remove="tag"></object>
 
                         </object>
 

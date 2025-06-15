@@ -77,7 +77,7 @@ class TokenComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val reportGroup = SettingGroup(fieldName = "Jelenléti ív", description = "Jelenléti ív beállítások")
+    val reportGroup by SettingGroup(fieldName = "Jelenléti ív", description = "Jelenléti ív beállítások")
 
     final var reportTitle by StringSettingRef("GÓLYAKÖRTE 2025",
         fieldName = "Jelenléti ív címe", description = "Ez lesz a jelenléti ív címe")
