@@ -66,6 +66,15 @@ open class TournamentService(
         )
     }
 
+    fun isTeamRegistered(tournamentId: Int, teamId: Int): Boolean {
+        val tournament = tournamentRepository.findById(tournamentId)
+        if (tournament.isEmpty) {
+            return false
+        }
+        val participants = tournament.get().participants
+        return participants.split("\n").any { it.contains("\"teamId\":$teamId") }
+    }
+
 
     @Transactional
     fun teamRegister(tournamentId: Int, teamId: Int, teamName: String): Boolean {

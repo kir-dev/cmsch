@@ -49,6 +49,13 @@ data class TournamentEntity(
     var location: String = "",
 
     @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = INPUT_TYPE_SWITCH, visible = true, ignore = true)
+    @property:GenerateOverview(columnName = "Joinable", order = 2)
+    @property:ImportFormat
+    var joinable: Boolean = false,
+
+    @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(columnName = "Résztvevők száma", order = 5)

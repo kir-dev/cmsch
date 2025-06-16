@@ -117,12 +117,26 @@ class TournamentApiController(
         if (team == null) {
             return ResponseEntity.notFound().build()
         }
-        if (user.groupId != team.id || user.role.value < RoleType.PRIVILEGED.value) {
-            return ResponseEntity.status(401).body("Not authorized, user must be group admin of the team")
+        val tournament = tournamentService.findById(tournamentId).getOrNull()
+        if (tournament == null) {
+            return ResponseEntity.notFound().build()
         }
-        val result = tournamentService.teamRegister(tournamentId, teamId, "")
+
+        if( tournamentService.isTeamRegistered(tournamentId, teamId)) {
+            return ResponseEntity.badRequest().build()
+        }
+
+        if (user.groupId != team.id || user.role.value < RoleType.PRIVILEGED.value) {
+            return ResponseEntity.status(401).build()
+        }
+
+        if (!tournament.joinable) {
+            return ResponseEntity.badRequest().body("Tournament is not joinable")
+        }
+
+        val result = tournamentService.teamRegister(tournamentId, teamId, team.name)
         return if (result) {
-            ResponseEntity.ok("Team registered successfully")
+            ResponseEntity.ok().build()
         } else {
             ResponseEntity.badRequest().body("Failed to register team")
         }
