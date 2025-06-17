@@ -94,12 +94,11 @@ abstract class ComponentApiBase(
         component.allSettings.forEach { setting ->
             when (setting.type) {
                 SettingType.BOOLEAN -> {
-                    allRequestParams[setting.property]?.let {
-                        val value = allRequestParams[setting.property] != "off"
-                        log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, value)
-                        newValues.append(setting.property).append("=").append(value).append(", ")
-                        (setting as MutableSetting<*>).parseAndSet(if (value) "true" else "false")
-                    }
+                    val value = allRequestParams[setting.property] != null &&
+                            allRequestParams[setting.property] != "off"
+                    log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, value)
+                    newValues.append(setting.property).append("=").append(value).append(", ")
+                    (setting as MutableSetting<*>).parseAndSet(if (value) "true" else "false")
                 }
                 SettingType.IMAGE -> {
                     multipartRequest.fileMap[setting.property]?.let {

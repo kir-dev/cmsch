@@ -312,7 +312,7 @@
                                        th:id="${input.property}"
                                 />
                                 <span class="note" th:text="${input.description}"></span>
-                                <img th:src="|/cdn/${input.rawValue}|" />
+                                <img th:src="|/cdn/${input.value}|" />
                                 <script th:inline="javascript">
                                     let id = /*[[${input.property}]]*/ '';
                                     document.getElementById(id).addEventListener('change', function() {
