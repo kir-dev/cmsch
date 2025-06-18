@@ -71,7 +71,7 @@ class CheersBmejegyService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun updateUserStatuses() {
+    fun updateUserStatuses() {
         val unmatched = bmejegyRecordRepository.findAllByMatchedUserId(0)
         val changedTickets = mutableListOf<BmejegyRecordEntity>()
         val changedUsers = mutableListOf<UserEntity>()

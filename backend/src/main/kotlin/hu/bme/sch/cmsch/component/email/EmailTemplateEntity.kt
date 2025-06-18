@@ -27,8 +27,8 @@ class EmailTemplateEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -50,7 +50,7 @@ class EmailTemplateEntity(
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 3, label = "Tartalom",
-        note = "Ez az email tartalma, a változókat {{variable}} formátumban kell feltüntetni", type = INPUT_TYPE_BLOCK_TEXT)
+        note = "Ez az email tartalma, a változókat {{variable}} formátumban kell feltüntetni", type = InputType.BLOCK_TEXT)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var template: String = "",
@@ -58,7 +58,7 @@ class EmailTemplateEntity(
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 4, label = "Formátum", source = [ "TEXT", "HTML" ], defaultValue = "TEXT")
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 4, label = "Formátum", source = [ "TEXT", "HTML" ], defaultValue = "TEXT")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var mode: EmailMode = EmailMode.TEXT

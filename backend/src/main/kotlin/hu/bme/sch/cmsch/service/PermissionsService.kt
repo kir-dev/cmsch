@@ -24,8 +24,8 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.messaging.MessagingComponent
 import hu.bme.sch.cmsch.component.news.NewsComponent
 import hu.bme.sch.cmsch.component.profile.ProfileComponent
-import hu.bme.sch.cmsch.component.pushnotification.PushNotificationComponent
 import hu.bme.sch.cmsch.component.proto.ProtoComponent
+import hu.bme.sch.cmsch.component.pushnotification.PushNotificationComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
@@ -50,7 +50,7 @@ class PermissionsService(
     final val allPermissions = listOf(allControlPermissions, allStaffPermissions).flatten()
 }
 
-class PermissionValidator constructor(
+class PermissionValidator(
     val permissionString: String = "",
     val description: String = "",
     val component: KClass<out ComponentBase>? = null,

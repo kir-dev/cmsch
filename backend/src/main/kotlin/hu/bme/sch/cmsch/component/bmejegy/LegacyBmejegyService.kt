@@ -38,7 +38,7 @@ const val LEGACY_BMEJEGY_CONFIG_PROPERTY = "hu.bme.sch.cmsch.legacy-bmejegy-url"
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
 @ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "true", matchIfMissing = false)
-open class LegacyBmejegyService(
+class LegacyBmejegyService(
     @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.username:}") private val bmejegyUsername: String,
     @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.password:}") private val bmejegyPassword: String,
     private val bmejegy: BmejegyComponent,
@@ -61,13 +61,13 @@ open class LegacyBmejegyService(
     }
 
     @Transactional(readOnly = true)
-    open fun findUserByVoucher(qr: String): Optional<BmejegyRecordEntity> {
+    fun findUserByVoucher(qr: String): Optional<BmejegyRecordEntity> {
         return Optional.ofNullable(bmejegyRecordRepository.findAllByQrCode(qr).firstOrNull())
     }
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun updateTickets(tickets: BmeJegyResponse) {
+    fun updateTickets(tickets: BmeJegyResponse) {
         val registered = bmejegyRecordRepository.findAll().associateBy { it.itemId }
         val newTickets = mutableListOf<BmejegyRecordEntity>()
         tickets.rows?.forEach {
@@ -103,7 +103,7 @@ open class LegacyBmejegyService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun updateUserStatuses() {
+    fun updateUserStatuses() {
         val unmatched = bmejegyRecordRepository.findAllByMatchedUserId(0)
         val changedTickets = mutableListOf<BmejegyRecordEntity>()
         val changedUsers = mutableListOf<UserEntity>()
@@ -349,7 +349,7 @@ open class LegacyBmejegyService(
     }
 
     @Transactional(readOnly = true)
-    open fun findVoucherByUser(userId: Int): Optional<String> {
+    fun findVoucherByUser(userId: Int): Optional<String> {
         return Optional.ofNullable(bmejegyRecordRepository.findAllByMatchedUserId(userId).firstOrNull())
             .map { it.qrCode }
     }

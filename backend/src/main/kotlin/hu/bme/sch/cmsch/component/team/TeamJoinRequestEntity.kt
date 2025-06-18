@@ -8,10 +8,10 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 @Entity
 @Table(name="teamJoinRequests")
@@ -21,8 +21,8 @@ data class TeamJoinRequestEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -34,7 +34,7 @@ data class TeamJoinRequestEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Felhasználó ID-je")
+    @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 2, label = "Felhasználó ID-je")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var userId: Int = 0,
@@ -48,7 +48,7 @@ data class TeamJoinRequestEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 4, label = "Csapat ID-je")
+    @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 4, label = "Csapat ID-je")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var groupId: Int = 0,

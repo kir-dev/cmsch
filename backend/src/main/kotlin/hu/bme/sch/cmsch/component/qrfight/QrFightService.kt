@@ -29,7 +29,7 @@ private const val NOBODY = "senki"
 
 @Service
 @ConditionalOnBean(QrFightComponent::class)
-open class QrFightService(
+class QrFightService(
     private val qrTowerRepository: QrTowerRepository,
     private val qrLevelRepository: QrLevelRepository,
     private val userRepository: UserRepository,
@@ -45,7 +45,7 @@ open class QrFightService(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Transactional(readOnly = true)
-    open fun getLevelsForGroups(groupId: Int?, groupName: String): QrFightOverviewView {
+    fun getLevelsForGroups(groupId: Int?, groupName: String): QrFightOverviewView {
         val levels = qrLevelRepository.findAllByVisibleTrueAndEnabledTrue()
             .sortedBy { it.order }
 
@@ -103,7 +103,7 @@ open class QrFightService(
     }
 
     @Transactional(readOnly = true)
-    open fun getLevelsForUsers(user: CmschUser?): QrFightOverviewView {
+    fun getLevelsForUsers(user: CmschUser?): QrFightOverviewView {
         val levels = qrLevelRepository.findAllByVisibleTrueAndEnabledTrue()
             .sortedBy { it.order }
 
@@ -525,7 +525,7 @@ open class QrFightService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun executeTowerTimer() {
+    fun executeTowerTimer() {
         log.info("Tower time!")
         val now = clock.getTimeInSeconds()
         val towers = qrTowerRepository.findAllByRecordTimeTrue()
@@ -573,7 +573,7 @@ open class QrFightService(
     }
 
     @Transactional(readOnly = true)
-    open fun getTowerDetails(selector: String): QrFightTowerDto {
+    fun getTowerDetails(selector: String): QrFightTowerDto {
         val tower = qrTowerRepository.findAllBySelector(selector).firstOrNull()
             ?: return QrFightTowerDto("TOWER NOT FOUND")
         return when (startupPropertyConfig.tokenOwnershipMode) {
@@ -611,12 +611,12 @@ open class QrFightService(
     }
 
     @Transactional(readOnly = true)
-    open fun getQrCountForGroup(groupId: Int): Int {
+    fun getQrCountForGroup(groupId: Int): Int {
         return tokenPropertyRepository.map { it.countAllByOwnerGroup_Id(groupId) }.orElse(0)
     }
 
     @Transactional(readOnly = true)
-    open fun getTowerCountForGroup(groupId: Int): Int {
+    fun getTowerCountForGroup(groupId: Int): Int {
         return qrTowerRepository.countAllByOwnerGroupId(groupId)
     }
 

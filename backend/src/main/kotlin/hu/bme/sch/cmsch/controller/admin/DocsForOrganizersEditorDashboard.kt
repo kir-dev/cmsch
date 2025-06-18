@@ -7,5 +7,4 @@ data class DocsForOrganizers(
     val visible: Boolean,
 )
 
-class DocsForOrganizersEditorDashboard {
-}
+class DocsForOrganizersEditorDashboard

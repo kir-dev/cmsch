@@ -37,7 +37,7 @@ data class IndulaschTextWidgetDto(
 
 @Service
 @ConditionalOnBean(QrFightComponent::class)
-open class IndulaschIntegrationService(
+class IndulaschIntegrationService(
     private val qrFightComponent: QrFightComponent,
     private val objectMapper: ObjectMapper
 ) {
@@ -51,7 +51,7 @@ open class IndulaschIntegrationService(
         .build()
 
     @Async
-    open fun setTextOnWidget(widgetData: IndulaschTextWidgetDto){
+    fun setTextOnWidget(widgetData: IndulaschTextWidgetDto){
         if(qrFightComponent.indulaschApiKey.getValue().isEmpty() || qrFightComponent.indulaschKioskId.getValue().isEmpty()) return
         val response: String? = indulaschApi.patch()
             .uri { uriBuilder ->

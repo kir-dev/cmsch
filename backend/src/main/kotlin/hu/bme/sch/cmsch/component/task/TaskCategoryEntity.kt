@@ -9,13 +9,13 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
-import org.hibernate.Hibernate
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.core.env.Environment
 import jakarta.persistence.*
+import org.hibernate.Hibernate
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.core.env.Environment
 
 enum class TaskCategoryType {
     REGULAR,
@@ -30,8 +30,8 @@ data class TaskCategoryEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ data class TaskCategoryEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 0, order = 2, label = "Kategória id-je. " +
+    @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 2, label = "Kategória id-je. " +
             "Egyedinek kell lennie, különben összeakad a rendszer!")
     @property:GenerateOverview(columnName = "ID", order = 2)
     @property:ImportFormat
@@ -52,29 +52,29 @@ data class TaskCategoryEntity(
     @Column(nullable = false, columnDefinition = "TEXT")
     @ColumnDefault("''")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var description: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Beadhatóak ekkortól", defaultValue = "0")
+    @property:GenerateInput(type = InputType.DATE, order = 4, label = "Beadhatóak ekkortól", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 5, label = "Beadhatóak eddig", defaultValue = "0")
-    @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OVERVIEW_TYPE_DATE)
+    @property:GenerateInput(type = InputType.DATE, order = 5, label = "Beadhatóak eddig", defaultValue = "0")
+    @property:GenerateOverview(columnName = "Eddig", order = 3, renderer = OverviewType.DATE)
     @property:ImportFormat
     var availableTo: Long = 0,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Típus", source = [ "REGULAR", "PROFILE_REQUIRED" ],
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 6, label = "Típus", source = [ "REGULAR", "PROFILE_REQUIRED" ],
         note = "A PROFILE_REQUIRED olyan task ami a többi feladattól külön jelenik meg, és külön van mutatva a profil oldalon. " +
                 "Ideális profilkép vagy motivációs levél feltöltéshez.")
     @property:GenerateOverview(visible = false)
@@ -84,7 +84,7 @@ data class TaskCategoryEntity(
     @ColumnDefault("false")
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Hírdetett",
+    @property:GenerateInput(type = InputType.SWITCH, order = 7, label = "Hírdetett",
         note = "Külön kijelzésre kerülnek bizonyos helyeken az oldalon (pl. team komponens)")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -95,7 +95,7 @@ data class TaskCategoryEntity(
     @ColumnDefault("'BASIC'")
     @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8,
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 8,
         label = "Minimum rang a megtekintéshez",
         defaultValue = "BASIC",
         note = "A ranggal rendelkező már megtekintheti (BASIC = belépett, STAFF = rendező)",
@@ -109,7 +109,7 @@ data class TaskCategoryEntity(
     @ColumnDefault("'SUPERUSER'")
     @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 9,
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 9,
         label = "Maximum rang a megtekintéshez",
         defaultValue = "SUPERUSER",
         note = "A ranggal rendelkező még megtekintheti (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező)",

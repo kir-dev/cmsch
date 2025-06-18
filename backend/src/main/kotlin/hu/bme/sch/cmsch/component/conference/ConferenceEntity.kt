@@ -18,8 +18,8 @@ data class ConferenceEntity(
     @field:JsonIgnore
     @GeneratedValue
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -29,7 +29,7 @@ data class ConferenceEntity(
     var title: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 2, label = "Prioritás", defaultValue = "0")
+    @property:GenerateInput(type = InputType.NUMBER, order = 2, label = "Prioritás", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var priority: Int = 0,

@@ -1,11 +1,11 @@
 package hu.bme.sch.cmsch.component.home
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.component.task.TaskEntityWrapperDto
 import hu.bme.sch.cmsch.component.event.EventEntity
-import hu.bme.sch.cmsch.component.news.NewsEntity
-import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardAsGroupEntryDto
+import hu.bme.sch.cmsch.component.news.NewsEntity
+import hu.bme.sch.cmsch.component.task.TaskEntityWrapperDto
+import hu.bme.sch.cmsch.dto.Preview
 
 data class LegacyHomeView(
 

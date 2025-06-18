@@ -3,8 +3,8 @@ package hu.bme.sch.cmsch.component.token
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.GenerateInput
 import hu.bme.sch.cmsch.admin.GenerateOverview
-import hu.bme.sch.cmsch.admin.INPUT_TYPE_HIDDEN
-import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
+import hu.bme.sch.cmsch.admin.InputType
+import hu.bme.sch.cmsch.admin.OverviewType
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -13,10 +13,10 @@ import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 @Entity
 @Table(name="tokenProperties")
@@ -27,8 +27,8 @@ data class TokenPropertyEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])

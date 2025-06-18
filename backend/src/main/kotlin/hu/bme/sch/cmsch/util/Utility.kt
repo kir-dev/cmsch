@@ -11,17 +11,14 @@ import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
-import org.springframework.core.io.ClassPathResource
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.bodyToMono
-import java.io.InputStream
+import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.util.*
 import kotlin.math.min
 
 
@@ -55,14 +52,21 @@ fun Authentication?.getUserEntityFromDatabaseOrNull(): UserEntity? {
     return if (this == null) null else DI.instance.userService.findById(this.name).orElse(null)
 }
 
-fun Map<String, String>.urlEncode(): String = this.entries.joinToString("&") {
-    URLEncoder.encode(it.key, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(it.value, StandardCharsets.UTF_8)
-}
+fun Map<String, String>.urlEncode(): String =
+    this.entries.joinToString("&") { it.key.urlEncode() + "=" + it.value.urlEncode() }
 
 fun fetchFile(url: String): Result<ByteArray?> = runCatching {
     WebClient.create()
         .get().uri(url)
         .retrieve().bodyToMono<ByteArray>().block()
+}
+
+fun String.urlEncode(): String {
+    return URLEncoder.encode(this, StandardCharsets.UTF_8)
+}
+
+fun String.urlDecode(): String {
+    return URLDecoder.decode(this, StandardCharsets.UTF_8)
 }
 
 private val markdownExtensions = listOf(TablesExtension.create())

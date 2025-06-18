@@ -7,7 +7,6 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
@@ -21,8 +20,8 @@ data class UserDetailsByInternalIdMappingEntity(
     @Id
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -43,7 +42,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 3, label = "Jogkör",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 3, label = "Jogkör",
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ],
         note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
@@ -52,7 +51,7 @@ data class UserDetailsByInternalIdMappingEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_ENTITY_SELECT, order = 4, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
+    @property:GenerateInput(type = InputType.ENTITY_SELECT, order = 4, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
     @property:GenerateOverview(columnName = "Csoport", centered = true, order = 2)
     var groupName: String? = null,
 
@@ -64,7 +63,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 5, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW" ])
     @property:GenerateOverview(columnName = "Gárda", centered = true, order = 3)
     @property:ImportFormat
     var guild: GuildType? = null,
@@ -72,14 +71,14 @@ data class UserDetailsByInternalIdMappingEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 6, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 6, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var major: MajorType? = null,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(order = 7, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS)
+    @property:GenerateInput(order = 7, label = "Jogosultságok", enabled = true, type = InputType.PERMISSIONS)
     @property:ImportFormat
     var permissions: String? = null,
 
@@ -91,7 +90,7 @@ data class UserDetailsByInternalIdMappingEntity(
 
     @Column(columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 9, label = "Egyedi szöveg a profilhoz", type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN)
+    @property:GenerateInput(order = 9, label = "Egyedi szöveg a profilhoz", type = InputType.BLOCK_TEXT_MARKDOWN)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var profileTopMessage: String? = null,

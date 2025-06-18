@@ -31,7 +31,7 @@ import java.util.*
 
 @Service
 @ConditionalOnBean(ProfileComponent::class)
-open class ProfileService(
+class ProfileService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val profileComponent: ProfileComponent,
@@ -50,7 +50,7 @@ open class ProfileService(
 ) {
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    open fun getProfileForUser(user: UserEntity): ProfileView {
+    fun getProfileForUser(user: UserEntity): ProfileView {
         val group = user.group
         val leavable = fetchWhetherGroupLeavable(group)
         val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType.getValue() }.orElse(ALL_TOKEN_TYPE)
@@ -223,7 +223,7 @@ open class ProfileService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun changeAlias(user: UserEntity, newAlias: String): Boolean {
+    fun changeAlias(user: UserEntity, newAlias: String): Boolean {
         return if (newAlias.matches(Regex(profileComponent.aliasRegex.getValue()))) {
             user.alias = newAlias.trim()
             userRepository.save(user)

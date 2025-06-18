@@ -20,8 +20,8 @@ class SheetsEntity(
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -47,15 +47,15 @@ class SheetsEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 4, label = "Űrlap Id-je", type = INPUT_TYPE_NUMBER, note = "Melyik form triggerelje. Ha 0-akkor nem fogja egyik sem.", defaultValue = "0")
+    @property:GenerateInput(order = 4, label = "Űrlap Id-je", type = InputType.NUMBER, note = "Melyik form triggerelje. Ha 0-akkor nem fogja egyik sem.", defaultValue = "0")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var formTrigger: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 5, label = "Aktív", type = INPUT_TYPE_SWITCH, note = "Csak akkor triggerel ha ez be van kapcsolva")
-    @property:GenerateOverview(order = 2, columnName = "Aktív", centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(order = 5, label = "Aktív", type = InputType.SWITCH, note = "Csak akkor triggerel ha ez be van kapcsolva")
+    @property:GenerateOverview(order = 2, columnName = "Aktív", centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var enabled: Boolean = false,
 

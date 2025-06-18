@@ -42,7 +42,7 @@ import java.util.*
 @Configuration
 @EnableRetry(order = Ordered.HIGHEST_PRECEDENCE)
 @ConditionalOnBean(LoginComponent::class)
-open class SecurityConfig(
+class SecurityConfig(
     private val clientRegistrationRepository: ClientRegistrationRepository,
     private val objectMapper: ObjectMapper,
     private val jwtTokenProvider: JwtTokenProvider,
@@ -110,6 +110,8 @@ open class SecurityConfig(
                 "/ol.css",
                 "/tracker.css",
                 "/scanner.css",
+                "/coloris.min.css",
+                "/coloris.min.js",
                 "/redirect/beacon",
                 "/actuator/prometheus",
                 "/actuator/health/liveness",

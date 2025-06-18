@@ -18,13 +18,13 @@ data class TeamIntroductionEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Beküldve ekkor", enabled = false, ignore = true)
-    @property:GenerateOverview(visible = true, renderer = OVERVIEW_TYPE_DATE, columnName = "Létrehozva", order = 6)
+    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Beküldve ekkor", enabled = false, ignore = true)
+    @property:GenerateOverview(visible = true, renderer = OverviewType.DATE, columnName = "Létrehozva", order = 6)
     @property:ImportFormat
     var creationDate: Long = 0,
 
@@ -32,36 +32,36 @@ data class TeamIntroductionEntity(
     var group: GroupEntity? = null,
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(order = 17, label = "Bemutatkozás", type = INPUT_TYPE_BLOCK_TEXT)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_TEXT, columnName = "Bemutatkozás", order = 2)
+    @property:GenerateInput(order = 17, label = "Bemutatkozás", type = InputType.BLOCK_TEXT)
+    @property:GenerateOverview(renderer = OverviewType.TEXT, columnName = "Bemutatkozás", order = 2)
     @property:ImportFormat
     var introduction: String = "",
 
     @property:GenerateInput(order = 19, label = "Logó url", enabled = true)
-    @property:GenerateOverview(columnName = "Logó", renderer = OVERVIEW_TYPE_IMAGE)
+    @property:GenerateOverview(columnName = "Logó", renderer = OverviewType.IMAGE)
     @property:ImportFormat
     var logo: String? = null,
 
     @Column(nullable = false)
     @property:GenerateInput(
-        type = INPUT_TYPE_SWITCH,
+        type = InputType.SWITCH,
         order = 8,
         label = "Elfogadva",
         note = "Ha ez igaz az felülírja az elutasított státuszt"
     )
-    @property:GenerateOverview(columnName = "Elfogadva", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateOverview(columnName = "Elfogadva", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var approved: Boolean = false,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Elutasítva")
-    @property:GenerateOverview(columnName = "Elutasítva", order = 4, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 9, label = "Elutasítva")
+    @property:GenerateOverview(columnName = "Elutasítva", order = 4, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var rejected: Boolean = false,
 
     @Column(nullable = false)
     @property:GenerateInput(
-        type = INPUT_TYPE_BLOCK_TEXT,
+        type = InputType.BLOCK_TEXT,
         order = 7,
         label = "Elutasítás oka",
     )

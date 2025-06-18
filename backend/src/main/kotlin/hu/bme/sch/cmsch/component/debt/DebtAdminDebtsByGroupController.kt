@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/admin/control/debts-by-group")
@@ -64,7 +64,7 @@ class DebtAdminDebtsByGroupController(
     objectMapper,
     env,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_DEBTS,
+    showPermission = PERMISSION_EDIT_DEBTS,
     createPermission = ImplicitPermissions.PERMISSION_NOBODY,
     editPermission =   PERMISSION_EDIT_DEBTS,
     deletePermission = ImplicitPermissions.PERMISSION_NOBODY,

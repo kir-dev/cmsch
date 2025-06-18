@@ -28,27 +28,27 @@ data class ErrorLogEntity(
     @GeneratedValue
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false, length = 2048)
-    @property:GenerateInput(maxLength = 512, type = INPUT_TYPE_BLOCK_TEXT, order = 1, label = "Hiba")
+    @property:GenerateInput(maxLength = 512, type = InputType.BLOCK_TEXT, order = 1, label = "Hiba")
     @property:GenerateOverview(columnName = "Hiba", order = 1, useForSearch = true)
     @property:ImportFormat
     var message: String = "",
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false, length = 25000)
-    @property:GenerateInput(maxLength = 2048, type = INPUT_TYPE_BLOCK_TEXT, order = 2, label = "Stacktrace")
+    @property:GenerateInput(maxLength = 2048, type = InputType.BLOCK_TEXT, order = 2, label = "Stacktrace")
     @property:GenerateOverview(visible = false, columnName = "Stacktrace", order = 2, useForSearch = true)
     @property:ImportFormat
     var stack: String = "",
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false, length = 1024)
-    @property:GenerateInput(maxLength = 512, type = INPUT_TYPE_BLOCK_TEXT, order = 3, label = "User Agent")
+    @property:GenerateInput(maxLength = 512, type = InputType.BLOCK_TEXT, order = 3, label = "User Agent")
     @property:GenerateOverview(visible = false, columnName = "User Agent", order = 3, useForSearch = true)
     @property:ImportFormat
     var userAgent: String = "",
@@ -64,7 +64,7 @@ data class ErrorLogEntity(
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(
-        type = INPUT_TYPE_BLOCK_SELECT, order = 5, label = "Jogkör",
+        type = InputType.BLOCK_SELECT, order = 5, label = "Jogkör",
         source = ["GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER"],
         minimumRole = RoleType.ADMIN, note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog"
     )
@@ -74,24 +74,24 @@ data class ErrorLogEntity(
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, order = 6, label = "Ennyiszer jelentve")
+    @property:GenerateInput(type = InputType.NUMBER, order = 6, label = "Ennyiszer jelentve")
     @property:GenerateOverview(
         visible = true,
         columnName = "Ennyiszer jelentve",
         order = 6,
-        renderer = OVERVIEW_TYPE_NUMBER
+        renderer = OverviewType.NUMBER
     )
     @property:ImportFormat
     var count: Long = 1,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 7, label = "Utoljára jelentve")
+    @property:GenerateInput(type = InputType.DATE, order = 7, label = "Utoljára jelentve")
     @property:GenerateOverview(
         visible = true,
         columnName = "Utoljára jelentve",
         order = 7,
-        renderer = OVERVIEW_TYPE_DATE
+        renderer = OverviewType.DATE
     )
     @property:ImportFormat
     var lastReportedAt: Long = 0,

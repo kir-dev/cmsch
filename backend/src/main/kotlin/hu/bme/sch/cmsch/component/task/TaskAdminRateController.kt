@@ -137,7 +137,7 @@ class TaskAdminRateController(
             ?: (transactionManager.transaction(readOnly = true) { taskRepository.findById(id) })
                 .orElseThrow()
                 .title
-        model.addAttribute("description", "Feladat: $taskTitle");
+        model.addAttribute("description", "Feladat: $taskTitle")
 
         return "overview4"
     }

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
-import hu.bme.sch.cmsch.dto.FullDetails
-import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
@@ -18,8 +16,8 @@ class PermissionGroupEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -38,7 +36,7 @@ class PermissionGroupEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(order = 3, label = "Jogosultságok", enabled = true, type = INPUT_TYPE_PERMISSIONS, maxLength = 20000)
+    @property:GenerateInput(order = 3, label = "Jogosultságok", enabled = true, type = InputType.PERMISSIONS, maxLength = 20000)
     @property:ImportFormat
     var permissions: String = "",
 ) : ManagedEntity {

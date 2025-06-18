@@ -1,7 +1,8 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.bme.sch.cmsch.admin.*
+import hu.bme.sch.cmsch.admin.ImportFormat
+import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.GroupRepository
@@ -9,15 +10,17 @@ import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.transaction
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
-import jakarta.servlet.http.HttpServletResponse
-import java.util.*
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
+import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 @Controller

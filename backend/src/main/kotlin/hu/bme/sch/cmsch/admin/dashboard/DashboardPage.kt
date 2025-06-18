@@ -4,8 +4,12 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.service.*
+import hu.bme.sch.cmsch.service.AdminMenuEntry
+import hu.bme.sch.cmsch.service.AdminMenuService
+import hu.bme.sch.cmsch.service.AuditLogService
+import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.urlEncode
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
@@ -15,10 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import org.thymeleaf.util.StringUtils
 import java.io.ByteArrayOutputStream
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 abstract class DashboardPage(
     var view: String,
@@ -151,17 +152,13 @@ abstract class DashboardPage(
         return outputStream.toByteArray()
     }
 
-    fun encodeMessage(message: String): String {
-        return URLEncoder.encode(message, StandardCharsets.UTF_8)
-    }
-
     companion object {
         fun dashboardPage(view: String, card: Int = -1, message: String? = null): String {
             val anchor = if (card >= 0) "#${card}" else ""
             return if (message == null) {
                 "redirect:/admin/control/$view$anchor"
             } else {
-                "redirect:/admin/control/$view?card=$card&message=${URLEncoder.encode(message, StandardCharsets.UTF_8)}${anchor}"
+                "redirect:/admin/control/$view?card=$card&message=${message.urlEncode()}${anchor}"
             }
         }
     }

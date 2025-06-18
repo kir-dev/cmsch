@@ -24,7 +24,7 @@ const val ALL_TOKEN_TYPE = "*"
 
 @Service
 @ConditionalOnBean(TokenComponent::class)
-open class TokenCollectorService(
+class TokenCollectorService(
     private val tokenRepository: TokenRepository,
     private val tokenPropertyRepository: TokenPropertyRepository,
     private val groupRepository: GroupRepository,
@@ -37,7 +37,7 @@ open class TokenCollectorService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun collectToken(user: CmschUser, token: String): TokenSubmittedView {
+    fun collectToken(user: CmschUser, token: String): TokenSubmittedView {
         val tokenEntity = tokenRepository.findAllByTokenAndVisibleTrue(token).firstOrNull()
         if (tokenEntity != null) {
             if (!isTokenActive(tokenEntity)) {
@@ -61,7 +61,7 @@ open class TokenCollectorService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    open fun collectTokenForGroup(user: CmschUser, token: String): TokenSubmittedView {
+    fun collectTokenForGroup(user: CmschUser, token: String): TokenSubmittedView {
         val groupEntity = user.groupId?.let { groupId -> groupRepository.findById(groupId).getOrNull() }
             ?: return TokenSubmittedView(TokenCollectorStatus.CANNOT_COLLECT, null, null, null)
 
@@ -86,7 +86,7 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
-    open fun getTokensForUser(user: CmschUser): List<TokenDto> {
+    fun getTokensForUser(user: CmschUser): List<TokenDto> {
         return tokenPropertyRepository.findAllByOwnerUser_Id(user.id)
             .map {
                 TokenDto(
@@ -98,12 +98,12 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
-    open fun countTokensForUser(user: CmschUser): Int {
+    fun countTokensForUser(user: CmschUser): Int {
         return tokenPropertyRepository.countAllByOwnerUser_Id(user.id)
     }
 
     @Transactional(readOnly = true)
-    open fun getTokensForGroup(group: GroupEntity): List<TokenDto> {
+    fun getTokensForGroup(group: GroupEntity): List<TokenDto> {
         return tokenPropertyRepository.findAllByOwnerGroup_Id(group.id)
             .map {
                 TokenDto(
@@ -115,32 +115,32 @@ open class TokenCollectorService(
     }
 
     @Transactional(readOnly = true)
-    open fun countTokensForGroup(group: GroupEntity): Int {
+    fun countTokensForGroup(group: GroupEntity): Int {
         return tokenPropertyRepository.countAllByOwnerGroup_Id(group.id)
     }
 
     @Transactional(readOnly = true)
-    open fun getTokensForUserWithCategory(user: CmschUser, category: String): Int {
+    fun getTokensForUserWithCategory(user: CmschUser, category: String): Int {
         return tokenPropertyRepository.countAllByOwnerUser_IdAndToken_Type(user.id, category)
     }
 
     @Transactional(readOnly = true)
-    open fun getTokensForGroupWithCategory(group: GroupEntity, category: String): Int {
+    fun getTokensForGroupWithCategory(group: GroupEntity, category: String): Int {
         return tokenPropertyRepository.countAllByOwnerGroup_IdAndToken_Type(group.id, category)
     }
 
     @Transactional(readOnly = true)
-    open fun getTotalTokenCount(): Int {
+    fun getTotalTokenCount(): Int {
         return tokenRepository.countAllByVisibleTrue().toInt()
     }
 
     @Transactional(readOnly = true)
-    open fun getTotalTokenCountWithCategory(category: String): Int {
+    fun getTotalTokenCountWithCategory(category: String): Int {
         return tokenRepository.countAllByTypeAndVisibleTrue(category).toInt()
     }
 
     @Transactional(readOnly = true)
-    open fun getTokenViewForUser(user: CmschUser): TokenView {
+    fun getTokenViewForUser(user: CmschUser): TokenView {
         val tokenCategoryToDisplay = tokenComponent.collectRequiredType.getValue()
         return TokenView(
             tokens = getTokensForUser(user),

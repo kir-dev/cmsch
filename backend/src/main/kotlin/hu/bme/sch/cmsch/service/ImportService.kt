@@ -9,12 +9,12 @@ import java.io.InputStream
 import kotlin.reflect.KClass
 
 @Service
-open class ImportService {
+class ImportService {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Transactional(rollbackFor = [Throwable::class])
-    open fun <T : Any> importEntities(
+    fun <T : Any> importEntities(
         repo: EntityPageDataSource<T, Int>,
         stream: InputStream,
         type: KClass<T>

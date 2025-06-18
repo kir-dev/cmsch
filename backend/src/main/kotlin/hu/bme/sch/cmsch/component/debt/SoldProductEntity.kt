@@ -7,11 +7,11 @@ import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
-import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name="soldProducts")
@@ -20,8 +20,8 @@ data class SoldProductEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     @property:ImportFormat
     override var id: Int = 0,
 
@@ -86,39 +86,39 @@ data class SoldProductEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 5, label = "Átadva")
+    @property:GenerateInput(type = InputType.SWITCH, order = 5, label = "Átadva")
     @property:ImportFormat
     var shipped: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
     @property:ImportFormat
     var shippedAt: Long = 0,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 7, label = "Fizetve")
-    @property:GenerateOverview(columnName = "Fizetve", order = 5, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 7, label = "Fizetve")
+    @property:GenerateOverview(columnName = "Fizetve", order = 5, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var payed: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
     @property:ImportFormat
     var payedAt: Long = 0,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 9, label = "Lezárva")
-    @property:GenerateOverview(columnName = "Lezárva", order = 6, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 9, label = "Lezárva")
+    @property:GenerateOverview(columnName = "Lezárva", order = 6, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var finsihed: Boolean = false,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT, order = 10, label = "Napló", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 10, label = "Napló", enabled = false, ignore = true)
     @property:ImportFormat
     var log: String = "",
 

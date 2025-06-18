@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.util.getUser
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartRequest
-import jakarta.annotation.PostConstruct
 
 abstract class ComponentApiBase(
     val adminMenuService: AdminMenuService,

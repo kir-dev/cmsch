@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.GenerateOverview
-import hu.bme.sch.cmsch.admin.OVERVIEW_TYPE_ID
+import hu.bme.sch.cmsch.admin.OverviewType
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 
 data class FormVotesDto(
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @property:GenerateOverview(columnName = "Űrlap neve", order = 1, useForSearch = true)

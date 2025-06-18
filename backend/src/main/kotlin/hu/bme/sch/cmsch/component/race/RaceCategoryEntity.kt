@@ -8,10 +8,10 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import jakarta.persistence.*
 
 @Entity
 @Table(name="raceCategories")
@@ -21,8 +21,8 @@ data class RaceCategoryEntity(
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
@@ -35,14 +35,14 @@ data class RaceCategoryEntity(
     @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 64, order = 2, label = "Slug (url)",
-        note = "Csupa nem ékezetes kisbetű és kötőjel megengedett.", interpreter = INTERPRETER_PATH)
+        note = "Csupa nem ékezetes kisbetű és kötőjel megengedett.", interpreter = InputInterpreter.PATH)
     @property:GenerateOverview(columnName = "Slug", order = 1)
     @property:ImportFormat
     var slug: String = "",
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false, columnDefinition = "TEXT")
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás",
+    @property:GenerateInput(type = InputType.BLOCK_TEXT_MARKDOWN, order = 3, label = "Leírás",
         note = "Meg fog jelenni a kategória menüjének tetején")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -50,8 +50,8 @@ data class RaceCategoryEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, order = 4, label = "Látható-e a kategória")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OVERVIEW_TYPE_BOOLEAN)
+    @property:GenerateInput(type = InputType.SWITCH, order = 4, label = "Látható-e a kategória")
+    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var visible: Boolean = false
 

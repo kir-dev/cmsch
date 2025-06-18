@@ -61,7 +61,7 @@ const val A_DAY = 60 * 60 * 24
 
 @Profile("test")
 @Configuration
-open class TestConfig(
+class TestConfig(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
     private val groupToUserMapping: GroupToUserMappingRepository,
@@ -95,7 +95,7 @@ open class TestConfig(
     private var inited: Boolean = false
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    open fun init() {
+    fun init() {
         if (userRepository.findAll().toList().isNotEmpty())
             return
 
@@ -144,7 +144,7 @@ open class TestConfig(
     }
 
     @Scheduled(fixedDelay = 3000L)
-    open fun delayedInit() {
+    fun delayedInit() {
         if (inited)
             return
         inited = true

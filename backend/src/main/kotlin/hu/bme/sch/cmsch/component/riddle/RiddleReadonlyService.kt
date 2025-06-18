@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @ConditionalOnBean(RiddleComponent::class)
-open class RiddleReadonlyService(
+class RiddleReadonlyService(
     private val riddleEntityRepository: RiddleEntityRepository,
     private val riddleMappingRepository: RiddleMappingRepository
 ) {
@@ -14,7 +14,7 @@ open class RiddleReadonlyService(
     data class RiddleDetails(val all: Int, val solved: Int, val skipped: Int)
 
     @Transactional(readOnly = true)
-    open fun getRiddleDetails(groupId: Int): RiddleDetails {
+    fun getRiddleDetails(groupId: Int): RiddleDetails {
         return RiddleDetails(
             riddleEntityRepository.count().toInt(),
             riddleMappingRepository.countAllByOwnerGroupIdAndCompletedTrue(groupId),
