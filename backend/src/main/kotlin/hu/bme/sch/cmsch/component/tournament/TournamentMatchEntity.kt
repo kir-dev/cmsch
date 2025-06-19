@@ -30,31 +30,31 @@ data class TournamentMatchEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID")
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID")
     override var id: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "Game ID")
+    @property:GenerateInput(type = InputType.NUMBER, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "Game ID")
     @property:ImportFormat
     var gameId: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 1, label = "Stage ID")
+    @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 1, label = "Stage ID")
     @property:GenerateOverview(columnName = "Stage ID", order = 1)
     @property:ImportFormat
     var stageId: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 1, label = "Level")
+    @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 1, label = "Level")
     @property:GenerateOverview(columnName = "Level", order = 1)
     @property:ImportFormat
     var level: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = Int.MIN_VALUE, order = 2, label = "Home seed")
+    @property:GenerateInput(type = InputType.NUMBER, min = Int.MIN_VALUE, order = 2, label = "Home seed")
     var homeSeed: Int = 0,
 
     @Column(nullable = true)
@@ -62,13 +62,13 @@ data class TournamentMatchEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 2, label = "Home team name")
+    @property:GenerateInput(type = InputType.TEXT, order = 2, label = "Home team name")
     @property:GenerateOverview(columnName = "Home team name", order = 2)
     @property:ImportFormat
     var homeTeamName: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = Int.MIN_VALUE, order = 3, label = "Away seed")
+    @property:GenerateInput(type = InputType.NUMBER, min = Int.MIN_VALUE, order = 3, label = "Away seed")
     var awaySeed: Int = 0,
 
     @Column(nullable = true)
@@ -76,21 +76,21 @@ data class TournamentMatchEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, min = 1, order = 3, label = "Away team name")
+    @property:GenerateInput(type = InputType.TEXT, min = 1, order = 3, label = "Away team name")
     @property:GenerateOverview(columnName = "Away team name", order = 3)
     @property:ImportFormat
     var awayTeamName: String = "",
 
     @Column(nullable = true)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_DATE, order = 4, label = "Kickoff time")
+    @property:GenerateInput(type = InputType.DATE, order = 4, label = "Kickoff time")
     @property:GenerateOverview(columnName = "Kickoff time", order = 4)
     @property:ImportFormat
     var kickoffTime: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_TEXT, order = 5, label = "Location")
+    @property:GenerateInput(type = InputType.TEXT, order = 5, label = "Location")
     @property:GenerateOverview(columnName = "Location", order = 5)
     @property:ImportFormat
     var location: String = "",
@@ -109,7 +109,7 @@ data class TournamentMatchEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_BLOCK_SELECT, order = 8, label = "Match status",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 8, label = "Match status",
         source = [ "NOT_STARTED", "FIRST_HALF", "HT", "SECOND_HALF", "FT", "EXTRA_TIME", "AET", "PENALTY_KICKS", "AP", "IN_PROGRESS", "CANCELLED" ],
         visible = false, ignore = true
     )

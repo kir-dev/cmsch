@@ -34,8 +34,8 @@ data class KnockoutStageEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_ID, columnName = "ID")
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID")
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -46,28 +46,28 @@ data class KnockoutStageEntity(
     var name: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 2, label = "Verseny ID")
+    @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 2, label = "Verseny ID")
     @property:GenerateOverview(columnName = "Verseny ID", order = 2, centered = true)
     @property:ImportFormat
     var tournamentId: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 3, label = "Szint")
+    @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 3, label = "Szint")
     @property:GenerateOverview(columnName = "Szint", order = 3, centered = true)
     @property:ImportFormat
     var level: Int = 1, //ie. Csoportkör-1, Csoportkör-2, Kieséses szakasz-3
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = INPUT_TYPE_NUMBER, min = 1, order = 3, label = "Résztvevők száma", note = "Legfeljebb annyi csapat, mint a versenyen résztvevők száma")
+    @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 3, label = "Résztvevők száma", note = "Legfeljebb annyi csapat, mint a versenyen résztvevők száma")
     @property:GenerateOverview(columnName = "RésztvevőSzám", order = 3, centered = true)
     @property:ImportFormat
     var participantCount: Int = 1,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var participants: String = "",

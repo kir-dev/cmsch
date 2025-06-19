@@ -23,8 +23,8 @@ data class TournamentEntity(
     @GeneratedValue
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(renderer = OVERVIEW_TYPE_NUMBER, columnName = "ID", order = -1)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
@@ -50,28 +50,28 @@ data class TournamentEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_SWITCH, visible = true, ignore = true)
+    @property:GenerateInput(type = InputType.SWITCH, visible = true, ignore = true)
     @property:GenerateOverview(columnName = "Joinable", order = 2)
     @property:ImportFormat
     var joinable: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(columnName = "Résztvevők száma", order = 5)
     @property:ImportFormat
     var participantCount: Int = 0,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var participants: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = INPUT_TYPE_HIDDEN, visible = true, ignore = true)
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var status: Int = 0,
