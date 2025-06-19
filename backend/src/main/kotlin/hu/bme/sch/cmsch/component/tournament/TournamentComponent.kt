@@ -34,7 +34,11 @@ class TournamentComponent (
         )
     }
 
-    final override val menuDisplayName = null
+    final override val menuDisplayName = SettingProxy(
+        componentSettingService, component,
+        "menuDisplayName", "Sportversenyek", serverSideOnly = true,
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
+    )
 
     final val tournamentGroup = SettingProxy(componentSettingService, component,
         "tournamentGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
