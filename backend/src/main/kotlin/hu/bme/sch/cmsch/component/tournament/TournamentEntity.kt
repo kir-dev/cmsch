@@ -37,21 +37,21 @@ data class TournamentEntity(
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 3, label = "Verseny leírása")
-    @property:GenerateOverview(columnName = "Leírás", order = 3)
+    @property:GenerateOverview(columnName = "Leírás", order = 2)
     @property:ImportFormat
     var description: String = "",
 
     @Column(nullable = true)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 64, order = 4, label = "Verseny helyszíne")
-    @property:GenerateOverview(columnName = "Helyszín", order = 4)
+    @property:GenerateOverview(columnName = "Helyszín", order = 3)
     @property:ImportFormat
     var location: String = "",
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = InputType.SWITCH, visible = true, ignore = true)
-    @property:GenerateOverview(columnName = "Joinable", order = 2)
+    @property:GenerateInput(type = InputType.SWITCH, order = 5, label = "Lehet-e jelentkezni")
+    @property:GenerateOverview(columnName = "Joinable", order = 4)
     @property:ImportFormat
     var joinable: Boolean = false,
 

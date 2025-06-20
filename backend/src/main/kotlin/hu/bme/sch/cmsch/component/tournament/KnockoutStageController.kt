@@ -9,11 +9,23 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImportService
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.StorageService
+import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.TransactionDefinition
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartFile
 
 
 @Controller
@@ -66,7 +78,7 @@ class KnockoutStageController(
     editPermission =   StaffPermissions.PERMISSION_EDIT_TOURNAMENTS,
     deletePermission = StaffPermissions.PERMISSION_DELETE_TOURNAMENTS,
 
-    createEnabled = true,
+    createEnabled = false,
     editEnabled = true,
     deleteEnabled = true,
     importEnabled = false,
@@ -76,5 +88,128 @@ class KnockoutStageController(
 ) {
     override fun fetchSublist(id: Int): Iterable<KnockoutStageEntity> {
         return stageRepository.findAllByTournamentId(id)
+    }
+
+    @GetMapping("/view/{id}")
+    override fun view(model: Model, auth: Authentication, @PathVariable id: Int): String {
+        val createButtonAction = ButtonAction(
+            "Új kiesési szakasz a tornához",
+            "create/$id",
+            createPermission,
+            99,
+            "add_box",
+            true
+        )
+        val newButtonActions = mutableListOf<ButtonAction>()
+        for (buttonAction in buttonActions)
+            newButtonActions.add(buttonAction)
+        newButtonActions.add(createButtonAction)
+
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (viewPermission.validate(user).not()) {
+            model.addAttribute("permission", viewPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/view/$id", viewPermission.permissionString)
+            return "admin403"
+        }
+
+        model.addAttribute("title", titlePlural)
+        model.addAttribute("titleSingular", titleSingular)
+        model.addAttribute("description", description)
+        model.addAttribute("view", view)
+
+        model.addAttribute("columnData", descriptor.getColumns())
+        val overview = transactionManager.transaction(readOnly = true) { filterOverview(user, fetchSublist(id)) }
+        model.addAttribute("tableData", descriptor.getTableData(overview))
+
+        model.addAttribute("user", user)
+        model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
+        model.addAttribute("allControlActions", controlActions)
+        model.addAttribute("buttonActions", newButtonActions.filter { it.permission.validate(user) })
+
+        attachPermissionInfo(model)
+
+        return "overview4"
+    }
+
+    @GetMapping("/create/{tournamentId}")
+    fun createStagePage(model: Model, auth: Authentication, @PathVariable tournamentId: Int): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (editPermission.validate(user).not()) {
+            model.addAttribute("permission", editPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/create/$tournamentId", showPermission.permissionString)
+            return "admin403"
+        }
+
+        if (!editEnabled)
+            return "redirect:/admin/control/$view/"
+
+        val entity = KnockoutStageEntity(tournamentId =  tournamentId)
+
+        val actualEntity = onPreEdit(entity)
+        model.addAttribute("data", actualEntity)
+        if (!editPermissionCheck(user, actualEntity, null)) {
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/create/$tournamentId",
+                "editPermissionCheck() validation")
+            return "admin403"
+        }
+
+        model.addAttribute("title", titleSingular)
+        model.addAttribute("editMode", false)
+        model.addAttribute("duplicateMode", false)
+        model.addAttribute("view", view)
+        model.addAttribute("inputs", descriptor.getInputs())
+        model.addAttribute("mappings", entitySourceMapping)
+        model.addAttribute("user", user)
+        model.addAttribute("readOnly", false)
+        model.addAttribute("entityMode", false)
+
+        onDetailsView(user, model)
+        return "details"
+    }
+
+    @Override
+    @PostMapping("/create", headers =  ["Referer"])
+    fun create(@ModelAttribute(binding = false) dto: KnockoutStageEntity,
+               @RequestParam(required = false) file0: MultipartFile?,
+               @RequestParam(required = false) file1: MultipartFile?,
+               model: Model,
+               auth: Authentication,
+               @RequestHeader("Referer") referer: String,
+    ): String {
+        val tournamentId = referer.substringAfterLast("/create/").toIntOrNull()
+            ?: return "redirect:/admin/control/$view"
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (createPermission.validate(user).not()) {
+            model.addAttribute("permission", createPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/create", createPermission.permissionString)
+            return "admin403"
+        }
+
+        if (!editPermissionCheck(user, null, dto)) {
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/create", "editPermissionCheck() validation")
+            return "admin403"
+        }
+
+        val entity = KnockoutStageEntity()
+        dto.tournamentId = tournamentId
+        val newValues = StringBuilder("entity new value: ")
+        updateEntity(descriptor, user, entity, dto, newValues, false, file0, false, file1)
+        entity.id = 0
+        if (onEntityPreSave(entity, auth)) {
+            auditLog.create(user, component.component, newValues.toString())
+            transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
+                dataSource.save(entity)
+            }
+        }
+        onEntityChanged(entity)
+        return "redirect:/admin/control/$view"
     }
 }
