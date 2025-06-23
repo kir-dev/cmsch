@@ -3,14 +3,18 @@ package hu.bme.sch.cmsch.component.tournament
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.team.TeamService
+import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.util.getUserOrNull
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,6 +27,7 @@ import kotlin.jvm.optionals.getOrNull
 @ConditionalOnBean(TournamentComponent::class)
 class TournamentApiController(
     private val tournamentComponent: TournamentComponent,
+    private val startupPropertyConfig: StartupPropertyConfig,
     private val tournamentService: TournamentService,
     private val stageService: KnockoutStageService,
     private val groupRepository: GroupRepository,
@@ -98,47 +103,17 @@ class TournamentApiController(
         ) }))
     }
 
-    @PostMapping("/tournament/{tournamentId}/register/{teamId}")
-    @Operation(
-        summary = "Register a team for a tournament.",
-    )
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Team registered successfully"),
-        ApiResponse(responseCode = "401", description = "Not authorized, user must be group admin of the team"),
-        ApiResponse(responseCode = "404", description = "Tournament or team not found"),
-        ApiResponse(responseCode = "400", description = "Bad request, team already registered")
-    ])
+    @PostMapping("/tournament/{tournamentId}/register")
     fun registerTeam(
         @PathVariable tournamentId: Int,
-        @PathVariable teamId: Int,
-        user: CmschUser
-    ): ResponseEntity<String> {
-        val team = groupRepository.findById(teamId).getOrNull()
-        if (team == null) {
-            return ResponseEntity.notFound().build()
-        }
-        val tournament = tournamentService.findById(tournamentId).getOrNull()
-        if (tournament == null) {
-            return ResponseEntity.notFound().build()
-        }
+        auth: Authentication?
+    ): TournamentJoinStatus {
+        val user = auth?.getUserOrNull()
+            ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
 
-        if( tournamentService.isTeamRegistered(tournamentId, teamId)) {
-            return ResponseEntity.badRequest().build()
-        }
-
-        if (user.groupId != team.id || user.role.value < RoleType.PRIVILEGED.value) {
-            return ResponseEntity.status(401).build()
-        }
-
-        if (!tournament.joinable) {
-            return ResponseEntity.badRequest().body("Tournament is not joinable")
-        }
-
-        val result = tournamentService.teamRegister(tournamentId, teamId, team.name)
-        return if (result) {
-            ResponseEntity.ok().build()
-        } else {
-            ResponseEntity.badRequest().body("Failed to register team")
+        return when (startupPropertyConfig.tournamentOwnershipMode){
+            OwnershipType.GROUP -> tournamentService.teamRegister(tournamentId, user)
+            OwnershipType.USER -> tournamentService.userRegister(tournamentId, user)
         }
     }
 

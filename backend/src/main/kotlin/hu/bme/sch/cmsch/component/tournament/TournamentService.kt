@@ -1,12 +1,18 @@
 package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.repository.GroupRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLException
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(TournamentComponent::class)
@@ -66,37 +72,52 @@ open class TournamentService(
         )
     }
 
-    fun isTeamRegistered(tournamentId: Int, teamId: Int): Boolean {
-        val tournament = tournamentRepository.findById(tournamentId)
-        if (tournament.isEmpty) {
-            return false
-        }
-        val participants = tournament.get().participants
-        return participants.split("\n").any { it.contains("\"teamId\":$teamId") }
-    }
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    fun teamRegister(tournamentId: Int, user: CmschUser): TournamentJoinStatus {
+        val tournament = tournamentRepository.findById(tournamentId).getOrNull()
+            ?: return TournamentJoinStatus.TOURNAMENT_NOT_FOUND
 
+        val groupId = user.groupId
+            ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
+        val team = groupRepository.findById(groupId).getOrNull()
+            ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
 
-    @Transactional
-    fun teamRegister(tournamentId: Int, teamId: Int, teamName: String): Boolean {
-        val tournament = tournamentRepository.findById(tournamentId)
-        if (tournament.isEmpty) {
-            return false
-        }
-        val group = groupRepository.findById(teamId)
-        if (group.isEmpty) {
-            return false
-        }
-        val participants = tournament.get().participants
+        val participants = tournament.participants
         val parsed = mutableListOf<ParticipantDto>()
         parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
+        if (parsed.any { it.teamId == groupId }) {
+            return TournamentJoinStatus.ALREADY_JOINED
+        }
 
-        parsed.add(ParticipantDto(teamId, teamName))
+        parsed.add(ParticipantDto(groupId, team.name))
 
-        tournament.get().participants = parsed.joinToString("\n") { objectMapper.writeValueAsString(it) }
-        tournament.get().participantCount = parsed.size
+        tournament.participants = parsed.joinToString("\n") { objectMapper.writeValueAsString(it) }
+        tournament.participantCount = parsed.size
 
-        tournamentRepository.save(tournament.get())
-        return true
+        tournamentRepository.save(tournament)
+        return TournamentJoinStatus.OK
+    }
+
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    fun userRegister(tournamentId: Int, user: CmschUser): TournamentJoinStatus {
+        val tournament = tournamentRepository.findById(tournamentId).getOrNull()
+            ?: return TournamentJoinStatus.TOURNAMENT_NOT_FOUND
+
+        val participants = tournament.participants
+        val parsed = mutableListOf<ParticipantDto>()
+        parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
+        if (parsed.any { it.teamId == user.id }) {
+            return TournamentJoinStatus.ALREADY_JOINED
+        }
+        parsed.add(ParticipantDto(user.id, user.userName))
+
+        tournament.participants = parsed.joinToString("\n") { objectMapper.writeValueAsString(it) }
+        tournament.participantCount = parsed.size
+
+        tournamentRepository.save(tournament)
+        return TournamentJoinStatus.OK
     }
 
     companion object{
