@@ -19,6 +19,24 @@ export type ParticipantView = {
   teamName: string
 }
 
+export enum TournamentResponses {
+  OK = 'OK',
+  JOINING_DISABLED = 'JOINING_DISABLED',
+  ALREADY_JOINED = 'ALREADY_JOINED',
+  NOT_JOINABLE = 'NOT_JOINABLE',
+  INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
+  ERROR = 'ERROR'
+}
+
+export const TournamentResponseMessages: Record<TournamentResponses, string> = {
+  [TournamentResponses.OK]: 'Sikeresen csatlakoztál a versenyhez.',
+  [TournamentResponses.JOINING_DISABLED]: 'A versenyhez való csatlakozás jelenleg le van tiltva.',
+  [TournamentResponses.ALREADY_JOINED]: 'Már csatlakoztál ehhez a versenyhez.',
+  [TournamentResponses.NOT_JOINABLE]: 'A versenyhez való csatlakozás nem lehetséges.',
+  [TournamentResponses.INSUFFICIENT_PERMISSIONS]: 'Nincs elég jogosultságod ehhez a művelethez.',
+  [TournamentResponses.ERROR]: 'Hiba történt a művelet végrehajtása során.'
+}
+
 export enum StageStatus {
   CREATED= 'CREATED',
   DRAFT = 'DRAFT',
