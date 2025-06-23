@@ -72,44 +72,6 @@ class TournamentApiController(
 
         return tournamentService.showTournament(tournamentId, user)?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-
-        /*val tournament = tournamentService.findById(tournamentId)
-        if (tournament.isEmpty) {
-            return ResponseEntity.notFound().build()
-        }
-        val stages = stageService.findStagesByTournamentId(tournamentId)
-        return ResponseEntity.ok(TournamentDetailedView(
-            TournamentWithParticipants(
-            tournament.get().id,
-            tournament.get().title,
-            tournament.get().description,
-            tournament.get().location,
-            tournament.get().joinable,
-            tournament.get().participantCount,
-            tournamentService.getParticipants(tournamentId),
-            tournament.get().status
-        ), stages.map { KnockoutStageDetailedView(
-            it.id,
-            it.name,
-            it.level,
-            it.participantCount,
-            it.nextRound,
-            it.status,
-            stageService.findMatchesByStageId(it.id).map { MatchDto(
-                it.id,
-                it.gameId,
-                it.kickoffTime,
-                it.level,
-                it.location,
-                it.homeSeed,
-                it.awaySeed,
-                if(it.homeTeamId!=null) ParticipantDto(it.homeTeamId!!, it.homeTeamName) else null,
-                if(it.awayTeamId!=null) ParticipantDto(it.awayTeamId!!, it.awayTeamName) else null,
-                it.homeTeamScore,
-                it.awayTeamScore,
-                it.status
-            ) }
-        ) }))*/
     }
 
     @PostMapping("/tournament/register")

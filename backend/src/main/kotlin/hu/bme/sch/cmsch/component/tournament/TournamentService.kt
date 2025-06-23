@@ -2,6 +2,8 @@ package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -24,7 +26,8 @@ open class TournamentService(
     private val groupRepository: GroupRepository,
     private val tournamentComponent: TournamentComponent,
     private val objectMapper: ObjectMapper,
-    private val stageService: KnockoutStageService
+    private val stageService: KnockoutStageService,
+    private val startupPropertyConfig: StartupPropertyConfig
 ) {
     @Transactional(readOnly = true)
     open fun findAll(): List<TournamentEntity> {
@@ -70,8 +73,17 @@ open class TournamentService(
     }
 
     private fun mapTournament(tournament: TournamentEntity, user: CmschUser?): TournamentDetailedView {
-        val joinEnabled = tournament.joinable && (user?.role ?: RoleType.GUEST) >= RoleType.PRIVILEGED
         val participants = tournament.participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) }
+
+        val playerId = when (startupPropertyConfig.tournamentOwnershipMode){
+            OwnershipType.GROUP -> user?.groupId ?: null
+            OwnershipType.USER -> user?.id ?: null
+        }
+        val isJoined = participants.any { it.teamId == playerId }
+        val joinEnabled = tournament.joinable && !isJoined &&
+            ((user?.role ?: RoleType.GUEST) >= RoleType.PRIVILEGED ||
+            (startupPropertyConfig.tournamentOwnershipMode == OwnershipType.USER && (user?.role ?: RoleType.GUEST) >= RoleType.BASIC))
+
         val stages = stageRepository.findAllByTournamentId(tournament.id)
             .sortedBy { it.level }
 
@@ -81,7 +93,8 @@ open class TournamentService(
                 tournament.title,
                 tournament.description,
                 tournament.location,
-                tournament.joinable,
+                joinEnabled,
+                isJoined,
                 tournament.participantCount,
                 getParticipants(tournament.id),
                 tournament.status
