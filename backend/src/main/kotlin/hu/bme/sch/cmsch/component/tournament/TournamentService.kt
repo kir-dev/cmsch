@@ -2,9 +2,11 @@ package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
+import org.springframework.http.ResponseEntity
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
@@ -21,7 +23,8 @@ open class TournamentService(
     private val stageRepository: KnockoutStageRepository,
     private val groupRepository: GroupRepository,
     private val tournamentComponent: TournamentComponent,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val stageService: KnockoutStageService
 ) {
     @Transactional(readOnly = true)
     open fun findAll(): List<TournamentEntity> {
@@ -31,6 +34,79 @@ open class TournamentService(
     @Transactional(readOnly = true)
     fun findById(tournamentId: Int): Optional<TournamentEntity> {
         return tournamentRepository.findById(tournamentId)
+    }
+
+
+    @Transactional(readOnly = true)
+    fun listAllTournaments(): List<TournamentPreviewView> {
+        if (!tournamentComponent.showTournamentsAtAll.isValueTrue()) {
+            return listOf()
+        }
+
+        var tournaments = tournamentRepository.findAll()
+            .filter { it.visible }.map {
+            TournamentPreviewView(
+                it.id,
+                it.title,
+                it.description,
+                it.location,
+                it.status
+            )
+        }
+        return tournaments
+    }
+
+
+    @Transactional(readOnly = true)
+    fun showTournament(tournamentId: Int, user: CmschUser?): OptionalTournamentView? {
+        val tournament = tournamentRepository.findById(tournamentId).getOrNull()
+            ?: return null
+
+        return if (tournament.visible && tournamentComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST)){
+            OptionalTournamentView(true, mapTournament(tournament, user))
+        } else {
+            OptionalTournamentView(false, null)
+        }
+    }
+
+    private fun mapTournament(tournament: TournamentEntity, user: CmschUser?): TournamentDetailedView {
+        val joinEnabled = tournament.joinable && (user?.role ?: RoleType.GUEST) >= RoleType.PRIVILEGED
+        val participants = tournament.participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) }
+        val stages = stageRepository.findAllByTournamentId(tournament.id)
+            .sortedBy { it.level }
+
+        return TournamentDetailedView(
+            TournamentWithParticipants(
+                tournament.id,
+                tournament.title,
+                tournament.description,
+                tournament.location,
+                tournament.joinable,
+                tournament.participantCount,
+                getParticipants(tournament.id),
+                tournament.status
+            ), stages.map { KnockoutStageDetailedView(
+                it.id,
+                it.name,
+                it.level,
+                it.participantCount,
+                it.nextRound,
+                it.status,
+                stageService.findMatchesByStageId(it.id).map { MatchDto(
+                    it.id,
+                    it.gameId,
+                    it.kickoffTime,
+                    it.level,
+                    it.location,
+                    it.homeSeed,
+                    it.awaySeed,
+                    if(it.homeTeamId!=null) ParticipantDto(it.homeTeamId!!, it.homeTeamName) else null,
+                    if(it.awayTeamId!=null) ParticipantDto(it.awayTeamId!!, it.awayTeamName) else null,
+                    it.homeTeamScore,
+                    it.awayTeamScore,
+                    it.status
+                ) }
+            ) })
     }
 
     @Transactional(readOnly = true)

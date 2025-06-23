@@ -56,9 +56,16 @@ data class TournamentEntity(
     var joinable: Boolean = false,
 
     @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class ])
+    @property:GenerateInput(type = InputType.SWITCH, order = 6, label = "Látható")
+    @property:GenerateOverview(columnName = "Visible", order = 5)
+    @property:ImportFormat
+    var visible: Boolean = false,
+
+    @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(columnName = "Résztvevők száma", order = 5)
+    @property:GenerateOverview(columnName = "Résztvevők száma", order = 6)
     @property:ImportFormat
     var participantCount: Int = 0,
 

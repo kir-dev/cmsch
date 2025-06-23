@@ -5,6 +5,7 @@ data class TournamentWithParticipants(
     val title: String,
     val description: String,
     val location: String,
+    val joinable: Boolean,
     val participantCount: Int,
     val participants: List<ParticipantDto>,
     val status: Int,
@@ -39,4 +40,9 @@ data class KnockoutStageDetailedView(
 data class TournamentDetailedView(
     val tournament: TournamentWithParticipants,
     val stages: List<KnockoutStageDetailedView>,
+)
+
+data class OptionalTournamentView (
+    val visible: Boolean,
+    val tournament: TournamentDetailedView?
 )

@@ -50,4 +50,9 @@ class TournamentComponent (
         "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.ADMIN,
         fieldName = "Minimum jogosultság", description = "A komponens eléréséhez szükséges minimum jogosultság"
     )
+
+    val showTournamentsAtAll = SettingProxy(componentSettingService, component,
+        "showTournamentsAtAll", "true", type = SettingType.BOOLEAN, serverSideOnly =  true,
+        fieldName = "Versenylista megjelenítése", description = "Ha ki van kapcsolva, akkor a versenylista nincsen leküldve",
+    )
 }
