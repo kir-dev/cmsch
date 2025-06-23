@@ -14,7 +14,6 @@ import kotlin.random.Random
 @Service
 @ConditionalOnBean(TournamentComponent::class)
 class KnockoutStageService(
-    private val tournamentService: TournamentService,
     private val stageRepository: KnockoutStageRepository,
     private val matchRepository: TournamentMatchRepository,
     private val objectMapper: ObjectMapper
@@ -64,7 +63,7 @@ class KnockoutStageService(
     @Transactional
     fun getTeamsForStage(stage: KnockoutStageEntity){
         val teamSeeds = (1..stage.participantCount).asIterable().shuffled().toList()
-        var participants = tournamentService.getResultsFromLevel(stage.tournamentId, stage.level - 1)
+        var participants = getResultsFromLevel(stage.tournamentId, stage.level - 1)
         if (participants.size >= stage.participantCount) {
             participants = participants.subList(0, stage.participantCount).map { StageResultDto(it.teamId, it.teamName) }
         }
@@ -73,6 +72,26 @@ class KnockoutStageService(
         }
         stage.participants = participants.joinToString("\n") { objectMapper.writeValueAsString(it) }
         stageRepository.save(stage)
+    }
+
+    @Transactional(readOnly = true)
+    fun getResultsFromLevel(tournamentId: Int, level: Int): List<StageResultDto> {
+        if (level < 1) {
+            return getParticipants(tournamentId).map { StageResultDto(it.teamId, it.teamName) }
+        }
+        val stages = stageRepository.findAllByTournamentIdAndLevel(tournamentId, level)
+        if (stages.isEmpty()) {
+            return emptyList()
+        }
+        return stages.flatMap { it.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) } }.sortedWith(
+            compareBy(
+                { it.position },
+                { it.points },
+                { it.won },
+                { it.goalDifference },
+                { it.goalsFor }
+            )
+        )
     }
 
     @Transactional
@@ -89,8 +108,6 @@ class KnockoutStageService(
             matchRepository.save(match)
         }
     }
-
-    fun getTournamentService(): TournamentService = tournamentService
 
     fun findById(id: Int): KnockoutStageEntity? {
         //return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
@@ -113,24 +130,6 @@ class KnockoutStageService(
             matches.addAll(matchRepository.findAllByStageId(stage.id))
         }
         return matches
-    }
-
-    fun getAggregatedMatchesByTournamentId(): List<MatchGroupDto> {
-        val tournaments = tournamentService.findAll().associateBy { it.id }
-        val stages = stageRepository.findAll().associateBy { it.id }
-        val aggregatedByStageId = matchRepository.findAllAggregated()
-        val aggregated = mutableMapOf<Int, Long>()
-        for(aggregatedStage in aggregatedByStageId) {
-            aggregated[stages[aggregatedStage.stageId]!!.tournamentId] = aggregated.getOrDefault(stages[aggregatedStage.stageId]!!.tournamentId, 0) + aggregatedStage.matchCount
-        }
-        return aggregated.map {
-            MatchGroupDto(
-                it.key,
-                tournaments[it.key]?.title ?:"",
-                tournaments[it.key]?.location ?:"",
-                it.value.toInt()
-                )
-        }.sortedByDescending { it.matchCount }
     }
 
     @Transactional

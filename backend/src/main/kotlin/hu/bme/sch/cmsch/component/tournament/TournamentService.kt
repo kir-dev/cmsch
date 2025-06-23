@@ -27,7 +27,8 @@ open class TournamentService(
     private val tournamentComponent: TournamentComponent,
     private val objectMapper: ObjectMapper,
     private val stageService: KnockoutStageService,
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val matchRepository: TournamentMatchRepository
 ) {
     @Transactional(readOnly = true)
     open fun findAll(): List<TournamentEntity> {
@@ -140,26 +141,24 @@ open class TournamentService(
         return stage.get().participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
     }
 
-
-    @Transactional(readOnly = true)
-    fun getResultsFromLevel(tournamentId: Int, level: Int): List<StageResultDto> {
-        if (level < 1) {
-            return getParticipants(tournamentId).map { StageResultDto(it.teamId, it.teamName) }
+    fun getAggregatedMatchesByTournamentId(): List<MatchGroupDto> {
+        val tournaments = findAll().associateBy { it.id }
+        val stages = stageRepository.findAll().associateBy { it.id }
+        val aggregatedByStageId = matchRepository.findAllAggregated()
+        val aggregated = mutableMapOf<Int, Long>()
+        for(aggregatedStage in aggregatedByStageId) {
+            aggregated[stages[aggregatedStage.stageId]!!.tournamentId] = aggregated.getOrDefault(stages[aggregatedStage.stageId]!!.tournamentId, 0) + aggregatedStage.matchCount
         }
-        val stages = stageRepository.findAllByTournamentIdAndLevel(tournamentId, level)
-        if (stages.isEmpty()) {
-            return emptyList()
-        }
-        return stages.flatMap { it.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) } }.sortedWith(
-            compareBy(
-                { it.position },
-                { it.points },
-                { it.won },
-                { it.goalDifference },
-                { it.goalsFor }
+        return aggregated.map {
+            MatchGroupDto(
+                it.key,
+                tournaments[it.key]?.title ?:"",
+                tournaments[it.key]?.location ?:"",
+                it.value.toInt()
             )
-        )
+        }.sortedByDescending { it.matchCount }
     }
+
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)

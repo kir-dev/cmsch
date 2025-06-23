@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @ConditionalOnBean(TournamentComponent::class)
 class TournamentMatchController(
     private val matchRepository: TournamentMatchRepository,
-    private val tournamentRepository: TournamentRepository,
+    private val tournamentService: TournamentService,
     private val stageService: KnockoutStageService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -38,7 +38,7 @@ class TournamentMatchController(
     transactionManager,
     object : ManualRepository<MatchGroupDto, Int>() {
         override fun findAll(): Iterable<MatchGroupDto> {
-            return stageService.getAggregatedMatchesByTournamentId()
+            return tournamentService.getAggregatedMatchesByTournamentId()
         }
     },
     matchRepository,

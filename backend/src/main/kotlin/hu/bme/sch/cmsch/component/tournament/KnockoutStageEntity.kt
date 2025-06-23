@@ -89,7 +89,6 @@ data class KnockoutStageEntity(
     fun rounds() = ceil(log2(participantCount.toDouble())).toInt()
     fun matches() = participantCount - 1
     fun getStageService() = KnockoutStageService.getBean()
-    fun tournament(): TournamentEntity = getStageService().getTournamentService().findById(tournamentId).orElse(null)
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "KnockoutStage",
