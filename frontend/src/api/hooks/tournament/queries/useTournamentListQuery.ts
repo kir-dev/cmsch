@@ -1,8 +1,8 @@
-import { TournamentPreview } from '../../../util/views/tournament.view.ts'
+import { TournamentPreview } from '../../../../util/views/tournament.view.ts'
 import { useQuery } from '@tanstack/react-query'
-import { QueryKeys } from '../queryKeys.ts'
+import { QueryKeys } from '../../queryKeys.ts'
 import axios from 'axios'
-import { ApiPaths } from '../../../util/paths.ts'
+import { ApiPaths } from '../../../../util/paths.ts'
 
 
 export const useTournamentListQuery = () => {

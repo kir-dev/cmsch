@@ -11,7 +11,10 @@ export type TournamentWithParticipantsView = {
   title: string
   description: string
   location: string
+  joinEnabled: boolean
+  isJoined: boolean
   participants: ParticipantView[]
+  status: number
 }
 
 export type ParticipantView = {
@@ -23,6 +26,7 @@ export enum TournamentResponses {
   OK = 'OK',
   JOINING_DISABLED = 'JOINING_DISABLED',
   ALREADY_JOINED = 'ALREADY_JOINED',
+  TOURNAMENT_NOT_FOUND = 'TOURNAMENT_NOT_FOUND',
   NOT_JOINABLE = 'NOT_JOINABLE',
   INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
   ERROR = 'ERROR'
@@ -32,6 +36,7 @@ export const TournamentResponseMessages: Record<TournamentResponses, string> = {
   [TournamentResponses.OK]: 'Sikeresen csatlakoztál a versenyhez.',
   [TournamentResponses.JOINING_DISABLED]: 'A versenyhez való csatlakozás jelenleg le van tiltva.',
   [TournamentResponses.ALREADY_JOINED]: 'Már csatlakoztál ehhez a versenyhez.',
+  [TournamentResponses.TOURNAMENT_NOT_FOUND]: 'A verseny nem található.',
   [TournamentResponses.NOT_JOINABLE]: 'A versenyhez való csatlakozás nem lehetséges.',
   [TournamentResponses.INSUFFICIENT_PERMISSIONS]: 'Nincs elég jogosultságod ehhez a művelethez.',
   [TournamentResponses.ERROR]: 'Hiba történt a művelet végrehajtása során.'
@@ -81,5 +86,10 @@ export type TournamentStageView = {
 export type TournamentDetailsView = {
   tournament: TournamentWithParticipantsView
   stages: TournamentStageView[]
+}
+
+export type OptionalTournamentView = {
+  visible: boolean
+  tournament?: TournamentDetailsView
 }
 

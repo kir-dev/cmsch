@@ -1,4 +1,4 @@
-import { useTournamentListQuery } from '../../api/hooks/tournament/useTournamentListQuery.ts'
+import { useTournamentListQuery } from '../../api/hooks/tournament/queries/useTournamentListQuery.ts'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import {Box, Heading, LinkOverlay, VStack} from '@chakra-ui/react'
 import { TournamentPreview } from '../../util/views/tournament.view.ts'
