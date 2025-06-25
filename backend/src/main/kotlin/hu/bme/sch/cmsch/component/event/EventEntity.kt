@@ -23,7 +23,7 @@ import org.springframework.core.env.Environment
 data class EventEntity(
     @Id
     @GeneratedValue
-    @field:JsonView(value = [ Edit::class ])
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
