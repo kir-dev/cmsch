@@ -256,7 +256,7 @@
                                th:each="entry : ${category.value}"
                                th:data-search="${entry.title}"
                                th:href="|${entry.target}|"
-                               th:class="${userContext.favoriteMenus.contains(entry.title) ? 'favorite' : ''}"><span class="material-symbols-outlined" th:text="${entry.icon}">dashboard</span><span th:text="${entry.title}">Dashboard</span></a>
+                               th:class="${#lists.contains(userContext.favoriteMenus, entry.title) ? 'favorite' : ''}"><span class="material-symbols-outlined" th:text="${entry.icon}">dashboard</span><span th:text="${entry.title}">Dashboard</span></a>
                         </div>
                     </object>
                 </div>

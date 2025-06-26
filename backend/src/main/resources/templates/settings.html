@@ -24,7 +24,7 @@
                             <td th:text="${favorite}" class="basic-padding"></td>
                             <td class="basic-padding">
                                 <span class="material-symbols-outlined color-yellow star-button"
-                                      th:class="|material-symbols-outlined color-yellow star-button ${userContext.favoriteMenus.contains(favorite) ? 'favorite' : ''}|"
+                                      th:class="|material-symbols-outlined color-yellow star-button ${#lists.contains(userContext.favoriteMenus, favorite) ? 'favorite' : ''}|"
                                       id="star-page"
                                       th:data-star="${favorite}"
                                       onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>

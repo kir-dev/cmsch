@@ -19,7 +19,7 @@
         <div class="content">
             <h1 th:class="${wide ? '' : 'narrow'}"><ins th:text="${title}">Dashboard</ins>
                 <span class="material-symbols-outlined color-yellow star-button"
-                      th:class="|material-symbols-outlined color-yellow star-button ${userContext.favoriteMenus.contains(title) ? 'favorite' : ''}|"
+                      th:class="|material-symbols-outlined color-yellow star-button ${#lists.contains(userContext.favoriteMenus, title) ? 'favorite' : ''}|"
                       id="star-page"
                       th:data-star="${title}"
                       onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>
