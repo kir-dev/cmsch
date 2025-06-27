@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
+import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
 import org.springframework.http.ResponseEntity
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
 import java.util.*
+import kotlin.collections.listOf
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -26,7 +28,6 @@ open class TournamentService(
     private val groupRepository: GroupRepository,
     private val tournamentComponent: TournamentComponent,
     private val objectMapper: ObjectMapper,
-    private val stageService: KnockoutStageService,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val matchRepository: TournamentMatchRepository
 ) {
@@ -74,7 +75,7 @@ open class TournamentService(
     }
 
     private fun mapTournament(tournament: TournamentEntity, user: CmschUser?): TournamentDetailedView {
-        val participants = tournament.participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) }
+        val participants = if (tournament.participants != "") tournament.participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) } else listOf()
 
         val playerId = when (startupPropertyConfig.tournamentOwnershipMode){
             OwnershipType.GROUP -> user?.groupId ?: null
@@ -106,7 +107,7 @@ open class TournamentService(
                 it.participantCount,
                 it.nextRound,
                 it.status,
-                stageService.findMatchesByStageId(it.id).map { MatchDto(
+                matchRepository.findAllByStageId(it.id).map { MatchDto(
                     it.id,
                     it.gameId,
                     it.kickoffTime,
@@ -173,7 +174,7 @@ open class TournamentService(
 
         val participants = tournament.participants
         val parsed = mutableListOf<ParticipantDto>()
-        parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
+        if(participants != "") parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
         if (parsed.any { it.teamId == groupId }) {
             return TournamentJoinStatus.ALREADY_JOINED
         }

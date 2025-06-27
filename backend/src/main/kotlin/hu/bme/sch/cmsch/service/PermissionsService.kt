@@ -1621,13 +1621,6 @@ object StaffPermissions : PermissionGroup {
         component = TournamentComponent::class
     )
 
-    val PERMISSION_EDIT_TOURNAMENT_PARTICIPANTS = PermissionValidator(
-        "TOURNAMENT_PARTICIPANTS_SHOW",
-        "Verseny résztvevők kezelése",
-        readOnly = true,
-        component = TournamentComponent::class
-    )
-
     val PERMISSION_SET_SEEDS = PermissionValidator(
         "TOURNAMENT_SET_SEEDS",
         "Versenyzők seedjeinek állítása",
@@ -1635,23 +1628,16 @@ object StaffPermissions : PermissionGroup {
         component = TournamentComponent::class
     )
 
-    val PERMISSION_GENERATE_GROUPS = PermissionValidator(
-        "TOURNAMENT_GENERATE_GROUPS",
-        "Verseny csoportok generálása",
-        readOnly = false,
+    val PERMISSION_SHOW_BRACKETS = PermissionValidator(
+        "TOURNAMENT_SHOW_BRACKETS",
+        "Verseny táblák megtekintése",
+        readOnly = true,
         component = TournamentComponent::class
     )
 
     val PERMISSION_GENERATE_BRACKETS = PermissionValidator(
         "TOURNAMENT_GENERATE_BRACKETS",
         "Verseny táblák generálása",
-        readOnly = false,
-        component = TournamentComponent::class
-    )
-
-    val PERMISSION_GENERATE_MATCHES = PermissionValidator(
-        "TOURNAMENT_GENERATE_MATCHES",
-        "Verseny meccsek generálása",
         readOnly = false,
         component = TournamentComponent::class
     )
@@ -1842,11 +1828,9 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_CREATE_TOURNAMENTS,
         PERMISSION_DELETE_TOURNAMENTS,
         PERMISSION_EDIT_TOURNAMENTS,
-        PERMISSION_EDIT_TOURNAMENT_PARTICIPANTS,
         PERMISSION_SET_SEEDS,
-        PERMISSION_GENERATE_GROUPS,
+        PERMISSION_SHOW_BRACKETS,
         PERMISSION_GENERATE_BRACKETS,
-        PERMISSION_GENERATE_MATCHES,
         PERMISSION_EDIT_RESULTS,
     )
 

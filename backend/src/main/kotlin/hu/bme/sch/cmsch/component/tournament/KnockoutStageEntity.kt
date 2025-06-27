@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
+import jakarta.transaction.Transactional
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import kotlin.math.ceil
@@ -72,6 +73,14 @@ data class KnockoutStageEntity(
     @property:ImportFormat
     var participants: String = "",
 
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @field:JsonView(value = [ FullDetails::class ])
+    @property:GenerateInput(type = InputType.HIDDEN, visible = false, ignore = true)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var seeds: String = "",
+
+
     @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateOverview(columnName = "Következő kör", order = 4, centered = true)
@@ -115,6 +124,15 @@ data class KnockoutStageEntity(
     @PrePersist
     fun prePersist() {
         getStageService().createMatchesForStage(this)
+        val teamSeeds = (1..participantCount).asIterable().shuffled().toList()
+        var participants = getStageService().getResultsForStage(this)
+        if (participants.size >= participantCount) {
+            participants = participants.subList(0, participantCount).map { StageResultDto(it.teamId, it.teamName) }
+        }
+        for (i in 0 until participantCount) {
+            participants[i].initialSeed = teamSeeds[i]
+        }
+        this.participants = participants.joinToString("\n") { getStageService().objectMapper.writeValueAsString(it) }
     }
 
     @PreRemove

@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
+import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile
 @ConditionalOnBean(TournamentComponent::class)
 class KnockoutStageController(
     private val stageRepository: KnockoutStageRepository,
+    private val stageService: KnockoutStageService,
     private val tournamentRepository: TournamentRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -85,6 +87,18 @@ class KnockoutStageController(
     exportEnabled = false,
 
     adminMenuIcon = "lan",
+
+    innerControlActions = mutableListOf(
+        ControlAction(
+            name = "Seedek kezelése",
+            endpoint = "seed/{id}",
+            icon = "sort_by_alpha",
+            permission = StaffPermissions.PERMISSION_SHOW_BRACKETS,
+            order = 200,
+            newPage = false,
+            usageString = "A kiesési szakasz seedjeinek kezelése"
+        )
+    )
 ) {
     override fun fetchSublist(id: Int): Iterable<KnockoutStageEntity> {
         return stageRepository.findAllByTournamentId(id)
@@ -212,4 +226,36 @@ class KnockoutStageController(
         onEntityChanged(entity)
         return "redirect:/admin/control/$view"
     }
+
+
+    @GetMapping("/seed/{id}")
+    fun seedPage(model: Model, auth: Authentication, @PathVariable id: Int): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if(!StaffPermissions.PERMISSION_SHOW_BRACKETS.validate(user) ) {
+            model.addAttribute("permission", StaffPermissions.PERMISSION_GENERATE_BRACKETS.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/seed/$id", StaffPermissions.PERMISSION_GENERATE_BRACKETS.permissionString)
+            return "admin403"
+        }
+        val stage = stageRepository.findById(id)
+            ?: return "redirect:/admin/control/$view"
+        val readOnly = !StaffPermissions.PERMISSION_SET_SEEDS.validate(user) || stage.get().status >= StageStatus.SET
+        val teams = stageService.getParticipants(id)
+        val tournament = tournamentRepository.findById(stage.get().tournamentId)
+            ?: return "redirect:/admin/control/$view"
+        model.addAttribute("title", "Kiesési szakasz seedek")
+        model.addAttribute("view", view)
+        model.addAttribute("readOnly", readOnly)
+        model.addAttribute("entityMode", false)
+        model.addAttribute("tournamentTitle", tournament.get().title)
+        model.addAttribute("stageLevel", stage.get().level)
+        model.addAttribute("stageTitle", stage.get().name)
+        model.addAttribute("teams", teams)
+
+        return "seedSettings"
+    }
+
+
+
 }

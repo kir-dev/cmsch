@@ -73,6 +73,7 @@ dependencies {
     implementation("org.commonmark:commonmark:0.24.0")
     implementation("org.commonmark:commonmark-ext-gfm-tables:0.24.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")

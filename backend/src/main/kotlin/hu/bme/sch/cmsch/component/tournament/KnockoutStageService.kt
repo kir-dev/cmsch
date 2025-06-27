@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.pow
 import kotlin.random.Random
@@ -15,8 +16,9 @@ import kotlin.random.Random
 @ConditionalOnBean(TournamentComponent::class)
 class KnockoutStageService(
     private val stageRepository: KnockoutStageRepository,
+    private val tournamentService: TournamentService,
     private val matchRepository: TournamentMatchRepository,
-    private val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper
 ): ApplicationContextAware {
 
     @Transactional
@@ -61,52 +63,76 @@ class KnockoutStageService(
     }
 
     @Transactional
-    fun getTeamsForStage(stage: KnockoutStageEntity){
+    fun updateSeedsForStage(stageId: Int, seeds: List<SeededParticipantDto>) {
+        val stage = findById(stageId) ?: throw IllegalArgumentException("No stage found with id $stageId")
+        if (seeds.size != stage.participantCount) {
+
+        }
+
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun transferTeamsForStage(stage: KnockoutStageEntity){
         val teamSeeds = (1..stage.participantCount).asIterable().shuffled().toList()
-        var participants = getResultsFromLevel(stage.tournamentId, stage.level - 1)
+        var participants = getResultsForStage(stage)
         if (participants.size >= stage.participantCount) {
             participants = participants.subList(0, stage.participantCount).map { StageResultDto(it.teamId, it.teamName) }
         }
         for (i in 0 until stage.participantCount) {
-            participants[i].seed = teamSeeds[i]
+            participants[i].initialSeed = teamSeeds[i]
         }
         stage.participants = participants.joinToString("\n") { objectMapper.writeValueAsString(it) }
         stageRepository.save(stage)
     }
 
     @Transactional(readOnly = true)
-    fun getResultsFromLevel(tournamentId: Int, level: Int): List<StageResultDto> {
-        if (level < 1) {
-            return getParticipants(tournamentId).map { StageResultDto(it.teamId, it.teamName) }
+    fun getResultsForStage(stage: KnockoutStageEntity): List<StageResultDto> {
+        if (stage.level <= 1) {
+            return tournamentService.getParticipants(stage.tournamentId)
+                .mapIndexed { index, participant ->
+                    StageResultDto(
+                        participant.teamId,
+                        participant.teamName,
+                        stage.id,
+                        initialSeed = index + 1,
+                        detailedStats = Optional.empty()
+                    )
+                }
         }
-        val stages = stageRepository.findAllByTournamentIdAndLevel(tournamentId, level)
+        val stages = stageRepository.findAllByTournamentIdAndLevel(stage.tournamentId, stage.level - 1)
         if (stages.isEmpty()) {
             return emptyList()
         }
-        return stages.flatMap { it.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) } }.sortedWith(
-            compareBy(
-                { it.position },
-                { it.points },
-                { it.won },
-                { it.goalDifference },
-                { it.goalsFor }
-            )
-        )
+        return stages.flatMap { it.participants.split("\n")
+            .map { objectMapper.readValue(it, StageResultDto::class.java) } }
+            .sorted()
     }
 
     @Transactional
     fun calculateTeamsFromSeeds(stage: KnockoutStageEntity) {
         val matches = matchRepository.findAllByStageId(stage.id)
-        val teams = stage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
+        val seeds = getSeeds(stage)
         for (match in matches){
-            val homeTeam = teams.find { it.seed == match.homeSeed }
-            val awayTeam = teams.find { it.seed == match.awaySeed }
+            val homeTeam = seeds[match.homeSeed]
+            val awayTeam = seeds[match.awaySeed]
             match.homeTeamId = homeTeam?.teamId
             match.homeTeamName = homeTeam?.teamName ?: "TBD"
             match.awayTeamId = awayTeam?.teamId
             match.awayTeamName = awayTeam?.teamName ?: "TBD"
             matchRepository.save(match)
         }
+    }
+
+    fun getSeeds(stage: KnockoutStageEntity): Map<Int, ParticipantDto>{
+        val seeds = mutableMapOf<Int, ParticipantDto>()
+        stage.seeds.split("\n").forEach {
+            val participant = objectMapper.readValue(it, SeededParticipantDto::class.java)
+            seeds[participant.seed] = ParticipantDto(
+                teamId = participant.teamId,
+                teamName = participant.teamName
+            )
+        }
+        return seeds
     }
 
     fun findById(id: Int): KnockoutStageEntity? {
