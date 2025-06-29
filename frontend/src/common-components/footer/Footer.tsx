@@ -35,21 +35,19 @@ export const Footer = () => {
             flexDirection={['column', null, 'row']}
           >
             {component?.sponsorsEnabled && sponsors.length > 0 && (
-              <Box w={['full', null, '50%']}>
+              <Box w={['full', null, null]}>
                 <Heading textAlign="center" mb={3} mt={0}>
                   {component.sponsorTitle}
                 </Heading>
                 <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
-                  {sponsors.map((sp, index) => (
-                    <a href={sp.url} key={index} target="_blank" referrerPolicy="origin">
-                      <Image m={5} src={sp.image} alt={sp.alt} maxH={20} maxW={32} loading="lazy" />
-                    </a>
+                  {sponsors.map((sponsor) => (
+                    <SponsorImage {...sponsor} />
                   ))}
                 </Flex>
               </Box>
             )}
             {partnersVisible && (
-              <Box w={['full', null, '50%']}>
+              <Box w={['full', null, null]}>
                 <Heading textAlign="center" mb={3} mt={[10, null, 0]}>
                   {component.partnerTitle}
                 </Heading>
@@ -58,10 +56,8 @@ export const Footer = () => {
                   {component.vikEnabled && <PartnerLogo name="vik" />}
                   {component.schonherzEnabled && <PartnerLogo name="schonherz" />}
                   {component.schdesignEnabled && <PartnerLogo name="schdesign" />}
-                  {partners.map((partner, index) => (
-                    <a href={partner.url} key={index} target="_blank" referrerPolicy="origin">
-                      <Image m={5} src={partner.image} alt={partner.alt} maxH={20} maxW={32} loading="lazy" />
-                    </a>
+                  {partners.map((partner) => (
+                    <SponsorImage {...partner} />
                   ))}
                 </Flex>
               </Box>
@@ -105,4 +101,17 @@ export const Footer = () => {
       </Text>
     </Flex>
   )
+}
+
+function SponsorImage({ image, alt, url }: { image: string; alt: string; url: string }) {
+  const img = <Image key={image} m={5} src={image} alt={alt} maxH={20} maxW={32} loading="lazy" />
+  if (url) {
+    return (
+      <a href={url} key={url} target="_blank" referrerPolicy="origin">
+        {img}
+      </a>
+    )
+  }
+
+  return img
 }
