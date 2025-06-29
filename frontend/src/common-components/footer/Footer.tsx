@@ -104,7 +104,7 @@ export const Footer = () => {
 }
 
 function SponsorImage({ image, alt, url }: { image: string; alt: string; url: string }) {
-  const img = <Image key={image} m={5} src={image} alt={alt} maxH={20} maxW={32} loading="lazy" />
+  const img = <Image key={image} m={5} src={image} alt={alt} maxH={24} maxW={52} loading="lazy" />
   if (url) {
     return (
       <a href={url} key={url} target="_blank" referrerPolicy="origin">
