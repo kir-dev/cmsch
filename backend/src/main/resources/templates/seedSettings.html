@@ -30,7 +30,7 @@
   }
 
   function flipWithPrevious(id) {
-    const currentRow = document.getElementById(`row_${id}`);
+    const currentRow = document.getElementById(`team_${id}`);
     const previousRow = currentRow.previousElementSibling;
 
     if (previousRow && previousRow.id !== 'header') {
@@ -91,20 +91,18 @@
           <div class="table-container menu-table">
             <table cellspacing="0">
               <tr id="header">
-                <th>Seed</th>
                 <th>Csapat</th>
                 <th th:if="${stageLevel>1}">Előző eredmény</th>
                 <th></th>
                 <th>Kiemelt csapat</th>
               </tr>
-              <tr th:each="team,iter: ${teams}" th:id="|team_${iter.index + 1}|" th:style="|opacity: ${team.highlighted ? 1.0 : 0.6}|">
-                <td th:text="${iter.index + 1}">sorszám</td>
+              <tr th:each="team,iter: ${teams}" th:id="|team_${iter.index}|" th:style="|opacity: ${team.highlighted ? 1.0 : 0.6}|">
                 <td th:text="${team.teamName}">csapatnév</td>
-                <td>todo</td>
+                <td th:if="${stageLevel>1}">todo</td>
                 <td>
                   <input type="number" th:value="${team.initialSeed}"
-                         th:id="|order_${iter.index + 1}|"
-                         th:name="|order_${iter.index + 1}|"
+                         th:id="|order_${iter.index}|"
+                         th:name="|order_${iter.index}|"
                          style="text-align: center; max-width: 60px"
                          class="hidden order-number"
                   />
@@ -115,9 +113,9 @@
                   <label class="switch">
                     <input type="checkbox"
                            th:checked="${team.highlighted}"
-                           th:id="|highlighted_${iter.index + 1}|"
-                           th:name="|highlighted_${iter.index + 1}|"
-                           th:data-id="${iter.index + 1}"
+                           th:id="|highlighted_${iter.index}|"
+                           th:name="|highlighted_${iter.index}|"
+                           th:data-id="${iter.index}"
                            onclick="changeVisibility(this.getAttribute('data-id'))"
                     />
                     <span class="slider"></span>
