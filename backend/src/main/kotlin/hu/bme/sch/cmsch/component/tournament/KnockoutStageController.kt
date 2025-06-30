@@ -241,7 +241,7 @@ class KnockoutStageController(
         val stage = stageRepository.findById(id)
             ?: return "redirect:/admin/control/$view"
         val readOnly = !StaffPermissions.PERMISSION_SET_SEEDS.validate(user) || stage.get().status >= StageStatus.SET
-        val teams = stageService.getParticipants(id)
+        val teams = stageService.getParticipants(id).sortedBy { it.initialSeed }
         val tournament = tournamentRepository.findById(stage.get().tournamentId)
             ?: return "redirect:/admin/control/$view"
         model.addAttribute("title", "Kiesési szakasz seedek")
@@ -257,5 +257,60 @@ class KnockoutStageController(
     }
 
 
+    @PostMapping("/seed/{id}")
+    fun editSeed(
+        @PathVariable id: Int,
+        @RequestParam allRequestParams: Map<String, String>,
+        model: Model,
+        auth: Authentication
+    ): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if(!StaffPermissions.PERMISSION_SET_SEEDS.validate(user) ) {
+            model.addAttribute("permission", StaffPermissions.PERMISSION_SET_SEEDS.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/seed/$id", StaffPermissions.PERMISSION_SET_SEEDS.permissionString)
+            return "admin403"
+        }
+        val stage = stageRepository.findById(id)
+            ?: return "redirect:/admin/control/$view"
+        if (stage.get().status >= StageStatus.SET) {
+            model.addAttribute("error", "A szakasz már be lett állítva, nem lehet módosítani a seedeket.")
+            return "redirect:/admin/control/$view/seed/${id}"
+        }
+
+        val dto = mutableListOf<StageResultDto>()
+        var i = 0
+        while (allRequestParams["id_$i"] != null && allRequestParams["order_$i"] != null) {
+            val teamId = allRequestParams["id_$i"]!!.toInt()
+            val teamName = allRequestParams["name_$i"] ?: ""
+            val initialSeed = allRequestParams["order_$i"]?.toIntOrNull()?: 0
+            val highlighted = allRequestParams["highlighted_$i"] != null && allRequestParams["highlighted_$i"] != "off"
+            dto.add(StageResultDto(
+                teamId, teamName,
+                stage.get().id,
+                highlighted = highlighted,
+                initialSeed = initialSeed + 1 // Adjusting seed to be positive
+            ))
+            i++
+        }
+
+        val updatedSeeds = dto.map { it.initialSeed }.toSet()
+        if (updatedSeeds.size != dto.size) {
+            model.addAttribute("error", "Minden seednek egyedinek kell lennie.")
+            return "redirect:/admin/control/$view/seed/${id}"
+        }
+        val stageEntity = stage.get()
+        if (onEntityPreSave(stageEntity, auth)) {
+            transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
+                stageService.setInitialSeeds(stageEntity, dto, user)
+            }
+            auditLog.edit(user, component.component+"seed", dto.toString())
+        } else {
+            model.addAttribute("error", "A szakasz nem lett frissítve.")
+        }
+        onEntityChanged(stageEntity)
+        return "redirect:/admin/control/$view/seed/${id}"
+    }
 
 }
