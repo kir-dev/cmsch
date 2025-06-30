@@ -1,6 +1,8 @@
 package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.service.StaffPermissions
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
@@ -63,12 +65,16 @@ class KnockoutStageService(
     }
 
     @Transactional
-    fun updateSeedsForStage(stageId: Int, seeds: List<SeededParticipantDto>) {
-        val stage = findById(stageId) ?: throw IllegalArgumentException("No stage found with id $stageId")
+    fun setInitialSeeds(stage: KnockoutStageEntity, seeds: List<StageResultDto>, user: CmschUser) {
+        if (StaffPermissions.PERMISSION_SET_SEEDS.validate(user).not()){
+            throw IllegalArgumentException("User does not have permission to set seeds.")
+        }
         if (seeds.size != stage.participantCount) {
-
+            throw IllegalArgumentException("Number of seeds must match the participant count of the stage.")
         }
 
+        stage.participants = seeds.joinToString("\n") { objectMapper.writeValueAsString(it) }
+        stageRepository.save(stage)
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
