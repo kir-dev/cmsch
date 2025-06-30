@@ -2,10 +2,7 @@ package hu.bme.sch.cmsch.component.news
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -21,6 +18,7 @@ class NewsComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "news",
     "/news",
     "Hírek",
@@ -29,39 +27,18 @@ class NewsComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            newsGroup,
-            title, menuDisplayName, minRole,
-            showDetails,
-        )
-    }
+    val newsGroup by SettingGroup(fieldName = "Hírek")
 
-    val newsGroup = SettingProxy(componentSettingService, component,
-        "newsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Hírek",
-        description = ""
-    )
+    final var title by StringSettingRef("Hírek",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Hírek",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
+    final override var menuDisplayName by StringSettingRef("Hírek", serverSideOnly = true,
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Hírek", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
-
-    val showDetails = SettingProxy(componentSettingService, component,
-        "showDetails", "false", type = SettingType.BOOLEAN,
-        fieldName = "Részletes nézet",
-        description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is"
-    )
+    var showDetails by BooleanSettingRef(fieldName = "Részletes nézet",
+        description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is")
 
 }

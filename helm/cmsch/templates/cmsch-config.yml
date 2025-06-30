@@ -33,7 +33,7 @@ data:
   LOAD_ACCESS_KEYS: {{ .Values.load.access_keys | quote }}
   LOAD_ADMISSION: {{ .Values.load.admission | quote }}
   LOAD_BMEJEGY: {{ .Values.load.bmejegy | quote }}
-  LOAD_CHALLANGE: {{ .Values.load.challange | quote }}
+  LOAD_CHALLENGE: {{ .Values.load.challenge | quote }}
   LOAD_COMMUNITIES: {{ .Values.load.communities | quote }}
   LOAD_CONFERENCE: {{ .Values.load.conference | quote }}
   LOAD_COUNTDOWN: {{ .Values.load.countdown | quote }}

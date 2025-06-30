@@ -25,7 +25,7 @@ class LocationDeepLinkController(
 
         val user = auth.getUserEntityFromDatabase()
         val accessToken = user.cmschId.substring(startupPropertyConfig.profileQrPrefix.length)
-        val apiEndpoint = "${appComponent.adminSiteUrl.getValue()}api/location"
+        val apiEndpoint = "${appComponent.adminSiteUrl}api/location"
 
         return "redirect:cmsch-tracker://?key=${accessToken}&endpoint=${apiEndpoint.urlEncode()}"
     }

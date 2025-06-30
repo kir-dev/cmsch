@@ -62,14 +62,14 @@ class TeamService(
         if (user.group?.leaveable == false)
             return TeamCreationStatus.ALREADY_IN_GROUP
 
-        if (!teamComponent.creationEnabled.isValueTrue())
+        if (!teamComponent.creationEnabled)
             return TeamCreationStatus.CREATION_DISABLED
 
         val finalName = name.trim()
-        if (finalName.length > 64 || !finalName.matches(Regex(teamComponent.nameRegex.getValue())))
+        if (finalName.length > 64 || !finalName.matches(Regex(teamComponent.nameRegex)))
             return TeamCreationStatus.INVALID_NAME
 
-        if (teamComponent.nameBlocklist.getValue().lowercase().split(Regex(", *")).contains(finalName.lowercase())) {
+        if (teamComponent.nameBlocklist.lowercase().split(Regex(", *")).contains(finalName.lowercase())) {
             log.info("Failed to create group with denied name: '{}' by user '{}'", finalName, user.fullName)
             return TeamCreationStatus.USED_NAME
         }
@@ -83,8 +83,8 @@ class TeamService(
             0, finalName, MajorType.UNKNOWN,
             "${user.fullName}||", "", "", "",
             "", listOf(),
-            teamComponent.racesByDefault.isValueTrue(),
-            teamComponent.selectableByDefault.isValueTrue(),
+            teamComponent.racesByDefault,
+            teamComponent.selectableByDefault,
             leaveable = false,
             manuallyCreated = true,
             profileTopMessage = ""
@@ -102,7 +102,7 @@ class TeamService(
         return userRepository.findByInternalId(user.internalId).map {
             it.groupName = groupEntity.name
             it.group = groupEntity
-            if (teamComponent.grantPrivilegedRole.isValueTrue() && it.role.value < RoleType.PRIVILEGED.value) {
+            if (teamComponent.grantPrivilegedRole && it.role.value < RoleType.PRIVILEGED.value) {
                 log.info("Group '{}' #{} successfully created by user '{}' (PRIVILEGED granted)", finalName, groupEntity.id, user.fullName)
                 it.role = RoleType.PRIVILEGED
             } else {
@@ -122,7 +122,7 @@ class TeamService(
         if (user.group?.leaveable == false)
             return TeamJoinStatus.ALREADY_IN_GROUP
 
-        if (!teamComponent.joinEnabled.isValueTrue())
+        if (!teamComponent.joinEnabled)
             return TeamJoinStatus.JOINING_DISABLED
 
         val group = groupRepository.findById(groupId)
@@ -143,7 +143,7 @@ class TeamService(
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun cancelJoin(user: CmschUser): TeamJoinStatus {
-        if (!teamComponent.joinEnabled.isValueTrue())
+        if (!teamComponent.joinEnabled)
             return TeamJoinStatus.JOINING_DISABLED
 
         teamJoinRequestRepository.deleteAllByUserId(user.id)
@@ -154,7 +154,7 @@ class TeamService(
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun leaveTeam(user: CmschUser): TeamLeaveStatus {
-        if (!teamComponent.leaveEnabled.isValueTrue())
+        if (!teamComponent.leaveEnabled)
             return TeamLeaveStatus.LEAVING_DISABLED
 
         if (user.role == RoleType.PRIVILEGED)
@@ -170,24 +170,24 @@ class TeamService(
 
     @Transactional(readOnly = true)
     fun listAllTeams(): List<TeamListView> {
-        if (!teamComponent.showTeamsAtAll.isValueTrue())
+        if (!teamComponent.showTeamsAtAll)
             return listOf()
 
-        var teams = if (teamComponent.showNotRacingTeams.isValueTrue()) {
-            if (teamComponent.showNotManualTeams.isValueTrue()) {
+        var teams = if (teamComponent.showNotRacingTeams) {
+            if (teamComponent.showNotManualTeams) {
                 groupRepository.findAllThatExists()
             } else {
                 groupRepository.findAllThatManuallyCreated()
             }
         } else {
-            if (teamComponent.showNotManualTeams.isValueTrue()) {
+            if (teamComponent.showNotManualTeams) {
                 groupRepository.findAllThatRaces()
             } else {
                 groupRepository.findAllThatRacesAndManuallyCreated()
             }
         }
 
-        if (teamComponent.sortByName.isValueTrue())
+        if (teamComponent.sortByName)
             teams = teams.sortedBy { it.name }
 
         val introductions = teamIntroductionRepository.findAll()
@@ -207,11 +207,11 @@ class TeamService(
     }
 
     private fun showThisTeam(team: GroupEntity): Boolean {
-        if (!teamComponent.showTeamsAtAll.isValueTrue())
+        if (!teamComponent.showTeamsAtAll)
             return false
-        if (!teamComponent.showNotRacingTeams.isValueTrue() && !team.races)
+        if (!teamComponent.showNotRacingTeams && !team.races)
             return false
-        if (!teamComponent.showNotManualTeams.isValueTrue() && team.manuallyCreated != true)
+        if (!teamComponent.showNotManualTeams && team.manuallyCreated != true)
             return false
         return true
     }
@@ -232,16 +232,16 @@ class TeamService(
     private fun mapTeam(team: GroupEntity, user: CmschUser?, ownTeam: Boolean): TeamView {
         val joinCancellable = user != null && teamJoinRequestRepository.existsByUserIdAndGroupId(user.id, team.id)
         val joinEnabled = user != null
-                && teamComponent.joinEnabled.isValueTrue()
+                && teamComponent.joinEnabled
                 && (getTeam(user.groupId)?.leaveable ?: true)
                 && user.role.value < RoleType.PRIVILEGED.value
                 && !joinCancellable
         val leaveEnabled = user != null
-                && teamComponent.leaveEnabled.isValueTrue()
+                && teamComponent.leaveEnabled
                 && user.groupId == team.id
                 && user.role.value < RoleType.PRIVILEGED.value
         val score = leaderBoardService.map { it.getScoreOfGroup(team.name) }.orElse(null)
-        val members = if (teamComponent.showTeamMembersPublicly.isValueTrue() || ownTeam) mapMembers(team, user?.id) else null
+        val members = if (teamComponent.showTeamMembersPublicly || ownTeam) mapMembers(team, user?.id) else null
         val requests = if (user != null && user.role.value >= RoleType.PRIVILEGED.value && ownTeam) mapRequests(team) else null
 
         val introductions = teamIntroductionRepository.findIntroductionsForGroup(team.id)
@@ -267,9 +267,9 @@ class TeamService(
             joinCancellable = joinCancellable,
             ownTeam = ownTeam,
             stats = mapStats(team),
-            taskCategories = if (ownTeam && teamComponent.showTasks.isValueTrue() && user != null) mapTasks(team, user) else listOf(),
-            forms = if (user != null && ownTeam && teamComponent.showAdvertisedForms.isValueTrue()) mapForms(user) else listOf(),
-            leaderNotes = if (ownTeam && ((user?.role?.value ?: RoleType.GUEST.value) >= RoleType.PRIVILEGED.value)) teamComponent.leaderNotes.getValue() else ""
+            taskCategories = if (ownTeam && teamComponent.showTasks && user != null) mapTasks(team, user) else listOf(),
+            forms = if (user != null && ownTeam && teamComponent.showAdvertisedForms) mapForms(user) else listOf(),
+            leaderNotes = if (ownTeam && ((user?.role?.value ?: RoleType.GUEST.value) >= RoleType.PRIVILEGED.value)) teamComponent.leaderNotes else ""
         )
     }
 
@@ -317,10 +317,10 @@ class TeamService(
     private fun mapStats(group: GroupEntity): List<TeamStatView> {
         val stats = mutableListOf<TeamStatView>()
 
-        if (teamComponent.membersStatEnabled.isValueTrue()) {
+        if (teamComponent.membersStatEnabled) {
             stats.add(
                 TeamStatView(
-                    teamComponent.membersStatHeader.getValue(),
+                    teamComponent.membersStatHeader,
                     "${userRepository.countAllByGroup(group)} db",
                     null,
                     null
@@ -328,19 +328,19 @@ class TeamService(
             )
         }
 
-        if (teamComponent.placeStatEnabled.isValueTrue()) {
+        if (teamComponent.placeStatEnabled) {
             val place = leaderBoardService.map { it.getPlaceOfGroup(group) }.orElse(0)
             if (place > 0)
-                stats.add(TeamStatView(teamComponent.placeStatHeader.getValue(), "$place.", null, "/leaderboard"))
+                stats.add(TeamStatView(teamComponent.placeStatHeader, "$place.", null, "/leaderboard"))
         }
 
-        if (teamComponent.scoreStatEnabled.isValueTrue()) {
+        if (teamComponent.scoreStatEnabled) {
             val score = leaderBoardService.map { it.getScoreOfGroup(group.name) }.orElse(null)
             if (score != null)
-                stats.add(TeamStatView(teamComponent.scoreStatHeader.getValue(), "$score pont", null, "/leaderboard"))
+                stats.add(TeamStatView(teamComponent.scoreStatHeader, "$score pont", null, "/leaderboard"))
         }
 
-        if (teamComponent.raceStatEnabled.isValueTrue()) {
+        if (teamComponent.raceStatEnabled) {
             val race = raceService
                 .map { service ->
                     when (startupPropertyConfig.raceOwnershipMode) {
@@ -353,7 +353,7 @@ class TeamService(
             if (race != null)
                 stats.add(
                     TeamStatView(
-                        teamComponent.raceStatHeader.getValue(),
+                        teamComponent.raceStatHeader,
                         race.name,
                         "${race.time} mp",
                         "/race"
@@ -361,16 +361,16 @@ class TeamService(
                 )
         }
 
-        if (teamComponent.qrFightStatEnabled.isValueTrue()) {
+        if (teamComponent.qrFightStatEnabled) {
             qrFightService.ifPresent { qrs ->
                 stats.add(TeamStatView(
-                    name = teamComponent.qrTokenStatHeader.getValue(),
+                    name = teamComponent.qrTokenStatHeader,
                     value1 = "${qrs.getQrCountForGroup(group.id)} db",
                     value2 = null,
                     navigate = "/qr-fight"
                 ))
                 stats.add(TeamStatView(
-                    name = teamComponent.qrTowerStatHeader.getValue(),
+                    name = teamComponent.qrTowerStatHeader,
                     value1 = "${qrs.getTowerCountForGroup(group.id)} db",
                     value2 = null,
                     navigate = "/qrfight"
@@ -378,11 +378,11 @@ class TeamService(
             }
         }
 
-        if (teamComponent.riddleStatEnabled.isValueTrue()) {
+        if (teamComponent.riddleStatEnabled) {
             riddleReadonlyService.ifPresent { riddles ->
                 val details = riddles.getRiddleDetails(group.id)
                 stats.add(TeamStatView(
-                    name = teamComponent.riddleStatHeader.getValue(),
+                    name = teamComponent.riddleStatHeader,
                     value1 = "${details.solved} db",
                     value2 = "Ebből átugrott ${details.skipped} db",
                     percentage = if (details.all == 0) 1f else (details.solved / details.all).toFloat(),
@@ -423,7 +423,7 @@ class TeamService(
     fun addUserToGroup(user: UserEntity, group: GroupEntity) {
         user.groupName = group.name
         user.group = group
-        if (teamComponent.grantAttendeeRole.isValueTrue() && user.role.value <= RoleType.ATTENDEE.value) {
+        if (teamComponent.grantAttendeeRole && user.role.value <= RoleType.ATTENDEE.value) {
             log.info("User '{}' accepted for group '{}' (ATTENDEE granted)", user.fullName, group.name)
             user.role = RoleType.ATTENDEE
         } else {
@@ -458,7 +458,7 @@ class TeamService(
             return false
         }
 
-        if (!teamComponent.togglePermissionEnabled.isValueTrue()) {
+        if (!teamComponent.togglePermissionEnabled) {
             log.info("Failed to switch user permissions '{}' from '{}' by '{}', reason: disabled by config",
                 adminUser.userName, groupName, adminUser.userName)
             return false
@@ -482,7 +482,7 @@ class TeamService(
             log.info("User '{}' is now group leader at '{}' by '{}'", user.fullName, groupName, adminUser.userName)
             true
         } else {
-            user.role = if (teamComponent.grantPrivilegedRole.isValueTrue()) RoleType.ATTENDEE else RoleType.BASIC
+            user.role = if (teamComponent.grantPrivilegedRole) RoleType.ATTENDEE else RoleType.BASIC
             userRepository.save(user)
             log.info("User '{}' is now regular group member at '{}' by '{}'", user.fullName, groupName, adminUser.userName)
             true
@@ -501,7 +501,7 @@ class TeamService(
             return false
         }
 
-        if (!teamComponent.promoteLeadershipEnabled.isValueTrue()) {
+        if (!teamComponent.promoteLeadershipEnabled) {
             log.info("Failed to promote leadership to user '{}' from '{}' by '{}', reason: disabled by config",
                 adminUser.userName, groupName, adminUser.userName)
             return false
@@ -522,7 +522,7 @@ class TeamService(
 
         val adminUserEntity = userRepository.findById(adminUser.id).orElse(null)
         if (adminUserEntity.role.value < RoleType.STAFF.value)
-            adminUserEntity.role = if (teamComponent.grantPrivilegedRole.isValueTrue()) RoleType.ATTENDEE else RoleType.BASIC
+            adminUserEntity.role = if (teamComponent.grantPrivilegedRole) RoleType.ATTENDEE else RoleType.BASIC
         userRepository.save(adminUserEntity)
 
         val group = groupRepository.findById(groupId).orElseThrow()
@@ -543,7 +543,7 @@ class TeamService(
             return false
         }
 
-        if (!teamComponent.kickEnabled.isValueTrue()) {
+        if (!teamComponent.kickEnabled) {
             log.info("Failed to kick user '{}' from '{}' by '{}', reason: disabled by config",
                 adminUser.userName, groupName, adminUser.userName)
             return false
@@ -576,7 +576,7 @@ class TeamService(
     fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
         val groupId = user.groupId ?: throw IllegalStateException("The user is not member of a group yet")
 
-        if (logo != null && !teamComponent.teamLogoUploadEnabled.isValueTrue()) {
+        if (logo != null && !teamComponent.teamLogoUploadEnabled) {
             return TeamEditStatus.ERROR
         }
         if (logo != null && !isImageNameValid(logo)) {

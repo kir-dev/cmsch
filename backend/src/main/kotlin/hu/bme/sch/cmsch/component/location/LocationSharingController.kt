@@ -59,10 +59,10 @@ class LocationSharingController(
         val accessToken = user.cmschId.substring(startupPropertyConfig.profileQrPrefix.length)
         model.addAttribute("user", user)
         model.addAttribute("accessToken", accessToken)
-        model.addAttribute("installGuide", markdownToHtml(locationComponent.installGuide.getValue()))
-        model.addAttribute("androidAppUrl", locationComponent.androidAppUrl.getValue())
-        model.addAttribute("iosAppUrl", locationComponent.iosAppUrl.getValue())
-        val apiEndpoint = "${appComponent.adminSiteUrl.getValue()}api/location"
+        model.addAttribute("installGuide", markdownToHtml(locationComponent.installGuide))
+        model.addAttribute("androidAppUrl", locationComponent.androidAppUrl)
+        model.addAttribute("iosAppUrl", locationComponent.iosAppUrl)
+        val apiEndpoint = "${appComponent.adminSiteUrl}api/location"
         val apiEndpointUrlEncoded = apiEndpoint.urlEncode()
         model.addAttribute("appOpenUrl", "cmsch-tracker://?key=${accessToken}&endpoint=${apiEndpointUrlEncoded}")
 

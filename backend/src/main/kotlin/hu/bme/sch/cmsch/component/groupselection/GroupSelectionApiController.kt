@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.groupselection
 
 import hu.bme.sch.cmsch.component.profile.ProfileComponent
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,7 +24,7 @@ class GroupSelectionApiController(
         val user = auth?.getUserEntityFromDatabaseOrNull()
             ?: return GroupSelectionResponse(GroupSelectionResponseType.UNAUTHORIZED)
 
-        if (!profileComponent.map { it.selectionEnabled.isValueTrue() }.orElse(false)
+        if (!profileComponent.map { it.selectionEnabled }.orElse(false)
                 || !profileComponent.map { it.minRole.isAvailableForRole(user.role) }.orElse(false)) {
             return GroupSelectionResponse(GroupSelectionResponseType.PERMISSION_DENIED)
         }

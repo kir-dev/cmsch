@@ -30,7 +30,7 @@ class ConferenceService(
         val organisers = conferenceOrganizerRepository.findAllByVisibleTrue()
 
         val featuredPresentation = conferencePresentationRepository
-            .findTop1BySelector(conferenceComponent.featuredPresentationSelector.getValue())
+            .findTop1BySelector(conferenceComponent.featuredPresentationSelector)
             .firstOrNull()
             ?.let { fetchPresentation(it) }
 

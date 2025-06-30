@@ -16,7 +16,7 @@
         </label>
         <div style="clear: both"></div>
         <div th:class="|input-container ${generateInput.icon != '' ? 'icon' : ''}|">
-            <input th:type="${generateInput.type.value}"
+            <input th:type="${generateInput.type}"
                    th:name="${property.name}"
                    th:id="|input${index}|"
                    th:max="${generateInput.max}"

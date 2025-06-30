@@ -16,7 +16,7 @@
         </label>
         <div style="clear: both"></div>
         <div th:class="|input-container ${generateInput.icon != '' ? 'icon' : ''}|">
-            <input th:type="${generateInput.type.value}"
+            <input th:type="${generateInput.type}"
                    th:name="${property.name}"
                    th:id="|input${index}|"
                    th:maxlength="${generateInput.maxLength}"
@@ -32,7 +32,7 @@
         <span class="note type-note" th:if="${entityMode}">Típus: Szöveg</span>
     </div>
 
-    <div th:if="${generateInput.type.value == 'text' && property.name == 'cmschId'}"
+    <div th:if="${generateInput.type == 'text' && property.name == 'cmschId'}"
          th:class="|field-group ${generateInput.style}|"
          th:unless="${entityMode}">
         <img src="#"

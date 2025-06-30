@@ -2,10 +2,7 @@ package hu.bme.sch.cmsch.component.home
 
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -21,6 +18,7 @@ class HomeComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "home",
     "/home",
     "Kezdőlap",
@@ -29,99 +27,54 @@ class HomeComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            homeGroup,
-            title, menuDisplayName, minRole,
+    val homeGroup by SettingGroup(fieldName = "Kezdőlap")
 
-            displayGroup,
-            welcomeMessage,
-            youtubeVideoIds,
-            content,
-            showEvents,
+    final var title by StringSettingRef("Kezdőlap",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
-            newsEmbeddedComponentGroup,
-            maxVisibleCount,
-            showNews,
-            showGalleryImages,
-        )
-    }
+    final override var menuDisplayName by StringSettingRef("Kezdőlap", serverSideOnly = true,
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    val homeGroup = SettingProxy(componentSettingService, component,
-        "homeGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Kezdőlap",
-        description = ""
-    )
-
-    final val title = SettingProxy(componentSettingService, component,
-        "title", "Kezdőlap",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
-    )
-
-    final override val menuDisplayName = SettingProxy(componentSettingService, component,
-        "menuDisplayName", "Kezdőlap", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
-    )
-
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val displayGroup = SettingProxy(componentSettingService, component,
-        "displayGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Megjelenés",
-        description = "A kezdőlap megjelenése"
-    )
+    val displayGroup by SettingGroup(fieldName = "Megjelenés", description = "A kezdőlap megjelenése")
 
-    val welcomeMessage = SettingProxy(componentSettingService, component,
-        "welcomeMessage", "Üdvözlünk a {} portálon", type = SettingType.TEXT,
-        fieldName = "Üdvözlő üzenet", description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére"
-    )
+    var welcomeMessage by StringSettingRef("Üdvözlünk a {} portálon", fieldName = "Üdvözlő üzenet",
+        description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére")
 
-    val youtubeVideoIds = SettingProxy(componentSettingService, component,
-        "youtubeVideoIds", "", type = SettingType.TEXT,
-        fieldName = "Promó videó(k)", description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni" +
-                " pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)"
-    )
+    var youtubeVideoIds by StringSettingRef(fieldName = "Promó videó(k)",
+        description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)")
 
-    val content = SettingProxy(componentSettingService, component,
-        "content", "",
-        type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen."
-    )
-
-    val showEvents = SettingProxy(componentSettingService, component,
-        "showEvents", "false", type = SettingType.BOOLEAN,
-        fieldName = "Események láthatóak",
-        description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon"
-    )
-
-    val showGalleryImages = SettingProxy(componentSettingService, component,
-        "showGalleryImages", "false", type = SettingType.BOOLEAN,
-        fieldName = "Galéria képek láthatóak",
-        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek"
-    )
+    var content by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val newsEmbeddedComponentGroup = SettingProxy(componentSettingService, component,
-        "embeddedGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Hírek rész",
-        description = "Csak akkor van hatása ha a news komponens be van kapcsolva"
-    )
+    val eventsEmbeddedComponentGroup by SettingGroup(fieldName = "Események rész",
+        description = "Csak akkor van hatása ha a event komponens be van kapcsolva")
 
-    val maxVisibleCount = SettingProxy(componentSettingService, component,
-        "embeddedMaxVisibleCount", "3", serverSideOnly = true, type = SettingType.NUMBER,
-        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hirdetés komponensben"
-    )
+    var showEvents by BooleanSettingRef(fieldName = "Események láthatóak",
+        description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon")
 
-    val showNews = SettingProxy(componentSettingService, component,
-        "showNews", "false", type = SettingType.BOOLEAN,
-        fieldName = "Hírek láthatóak",
-        description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon"
-    )
+    /// -------------------------------------------------------------------------------------------------------------------
 
+    val newsEmbeddedComponentGroup by SettingGroup(fieldName = "Hírek rész",
+        description = "Csak akkor van hatása ha a news komponens be van kapcsolva")
+
+    var maxVisibleCount by NumberSettingRef(3, serverSideOnly = true, strictConversion = false,
+        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hirdetés komponensben")
+
+    var showNews by BooleanSettingRef(fieldName = "Hírek láthatóak",
+        description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon")
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val galleryEmbeddedComponentGroup by SettingGroup(fieldName = "Galéria rész",
+        description = "Csak akkor van hatása ha a gallery komponens be van kapcsolva")
+
+    var showGalleryImages by BooleanSettingRef(fieldName = "Galéria képek láthatóak",
+        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek")
 }

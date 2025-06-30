@@ -92,18 +92,18 @@ class TrackingMapController(
     }
 
     private fun attachComponentProperties(model: Model) {
-        model.addAttribute("defaultGroupColor", locationComponent.defaultGroupColor.getValue())
-        model.addAttribute("blackGroupName", locationComponent.blackGroupName.getValue())
-        model.addAttribute("blueGroupName", locationComponent.blueGroupName.getValue())
-        model.addAttribute("cyanGroupName", locationComponent.cyanGroupName.getValue())
-        model.addAttribute("pinkGroupName", locationComponent.pinkGroupName.getValue())
-        model.addAttribute("orangeGroupName", locationComponent.orangeGroupName.getValue())
-        model.addAttribute("greenGroupName", locationComponent.greenGroupName.getValue())
-        model.addAttribute("redGroupName", locationComponent.redGroupName.getValue())
-        model.addAttribute("whiteGroupName", locationComponent.whiteGroupName.getValue())
-        model.addAttribute("yellowGroupName", locationComponent.yellowGroupName.getValue())
-        model.addAttribute("purpleGroupName", locationComponent.purpleGroupName.getValue())
-        model.addAttribute("grayGroupName", locationComponent.grayGroupName.getValue())
+        model.addAttribute("defaultGroupColor", locationComponent.defaultGroupColor)
+        model.addAttribute("blackGroupName", locationComponent.blackGroupName)
+        model.addAttribute("blueGroupName", locationComponent.blueGroupName)
+        model.addAttribute("cyanGroupName", locationComponent.cyanGroupName)
+        model.addAttribute("pinkGroupName", locationComponent.pinkGroupName)
+        model.addAttribute("orangeGroupName", locationComponent.orangeGroupName)
+        model.addAttribute("greenGroupName", locationComponent.greenGroupName)
+        model.addAttribute("redGroupName", locationComponent.redGroupName)
+        model.addAttribute("whiteGroupName", locationComponent.whiteGroupName)
+        model.addAttribute("yellowGroupName", locationComponent.yellowGroupName)
+        model.addAttribute("purpleGroupName", locationComponent.purpleGroupName)
+        model.addAttribute("grayGroupName", locationComponent.grayGroupName)
     }
 
 }

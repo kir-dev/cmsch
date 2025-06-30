@@ -39,7 +39,7 @@ class QrFightApiController(
             log.info("[QRFIGHT] No token presents")
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
-        if (!qrFightComponent.apiTokens.getValue().split(", *").contains("$selector:$token")) {
+        if (!qrFightComponent.apiTokens.split(", *").contains("$selector:$token")) {
             log.info("[QRFIGHT] Invalid token '$selector:$token'")
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(QrFightTowerDto())
         }

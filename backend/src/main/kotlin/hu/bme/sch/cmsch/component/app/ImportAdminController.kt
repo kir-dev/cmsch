@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.MutableSetting
 import hu.bme.sch.cmsch.util.getUser
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
@@ -138,9 +139,11 @@ class ImportAdminController(
     private fun importFromMap(propertiesMap: MutableMap<String, String>, user: CmschUser): Int {
         var imported = 0
         components.forEach { component ->
-            component.allSettings.forEach { setting ->
+            component.allSettings
+                .filterIsInstance<MutableSetting<*>>()
+                .forEach { setting ->
                 propertiesMap["hu.bme.sch.cmsch.${component.component}.${setting.property}"]?.let {
-                    setting.setValue(it)
+                    setting.parseAndSet(it)
                     ++imported
 
                     val action = "set ${component.component}.${setting.property} to '${it}'"

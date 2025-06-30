@@ -14,7 +14,7 @@
         <div class="content">
             <h1 class="narrow"><ins>Fájlfeltöltés</ins>
                 <span class="material-symbols-outlined color-yellow star-button"
-                      th:class="|material-symbols-outlined color-yellow star-button ${userContext.favoriteMenus.contains('Fájlfeltöltés') ? 'favorite' : ''}|"
+                      th:class="|material-symbols-outlined color-yellow star-button ${#lists.contains(userContext.favoriteMenus, 'Fájlfeltöltés') ? 'favorite' : ''}|"
                       id="star-page"
                       data-star="Fájlfeltöltés"
                       onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>

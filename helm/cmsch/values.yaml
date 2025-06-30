@@ -132,7 +132,7 @@ load:
   access_keys: false
   admission: false
   bmejegy: false
-  challange: false
+  challenge: false
   communities: false
   conference: false
   countdown: false

@@ -3,10 +3,7 @@ package hu.bme.sch.cmsch.component.conference
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
-import hu.bme.sch.cmsch.setting.ComponentSettingService
-import hu.bme.sch.cmsch.setting.MinRoleSettingProxy
-import hu.bme.sch.cmsch.setting.SettingProxy
-import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -22,6 +19,7 @@ class ConferenceComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "conference",
     "/",
     "Konferencia",
@@ -36,197 +34,83 @@ class ConferenceComponent(
     env
 ) {
 
-    final override val allSettings by lazy {
-        listOf(
-            conferenceGroup,
-            minRole,
-
-            previousConferencesGroup,
-            previousConferencesSectionTitle,
-
-            registrationGroup,
-            registrationButtonText,
-            registrationCooltixEventId,
-
-            mobileAppGroup,
-            mobileAppDescription,
-            mobileAppAndroidUrl,
-            mobileAppIosUrl,
-
-            giveawayGroup,
-            giveawaySectionTitle,
-            giveawayDescription,
-            giveawayPictureUrl,
-            giveawayRules,
-
-            promoVideoGroup,
-            promoVideoSectionTitle,
-            promoVideoYoutubeUrl,
-            promoVideoDescription,
-
-            sponsorsGroup,
-            sponsorsSectionTitle,
-
-            featuredPresentationGroup,
-            featuredPresentationSectionTitle,
-            featuredPresentationDescription,
-            featuredPresentationSelector,
-        )
-    }
-
-    val conferenceGroup = SettingProxy(componentSettingService, component,
-        "conferenceGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Konferencia",
-        description = ""
-    )
+    val conferenceGroup by SettingGroup(fieldName = "Konferencia")
 
     final override val menuDisplayName = null
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
-    )
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val previousConferencesGroup = SettingProxy(componentSettingService, component,
-        "previousConferencesGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Korábbi konferenciák",
-        description = ""
-    )
+    val previousConferencesGroup by SettingGroup(fieldName = "Korábbi konferenciák")
 
-    val previousConferencesSectionTitle = SettingProxy(componentSettingService, component,
-        "previousConferencesSectionTitle", "Korábbi Konferenciák", type = SettingType.TEXT,
-        fieldName = "previousConferences.sectionTitle mező", description = ""
-    )
+    var previousConferencesSectionTitle by StringSettingRef("Korábbi Konferenciák",
+        fieldName = "previousConferences.sectionTitle mező")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val registrationGroup = SettingProxy(componentSettingService, component,
-        "registrationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Regisztráció",
-        description = ""
-    )
+    val registrationGroup by SettingGroup(fieldName = "Regisztráció")
 
-    val registrationButtonText = SettingProxy(componentSettingService, component,
-        "registrationButtonText", "Regisztráció", type = SettingType.TEXT,
-        fieldName = "registration.buttonText mező", description = ""
-    )
+    var registrationButtonText by StringSettingRef("Regisztráció", fieldName = "registration.buttonText mező")
 
-    val registrationCooltixEventId = SettingProxy(componentSettingService, component,
-        "registrationCooltixEventId", "https://url.com/", type = SettingType.TEXT,
-        fieldName = "registration.cooltixEventId mező", description = ""
-    )
+    var registrationCooltixEventId by StringSettingRef("https://url.com/", type = SettingType.URL,
+        fieldName = "registration.cooltixEventId mező")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val mobileAppGroup = SettingProxy(componentSettingService, component,
-        "mobileAppGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Mobil App",
-        description = ""
-    )
+    val mobileAppGroup by SettingGroup(fieldName = "Mobil App")
 
-    val mobileAppDescription = SettingProxy(componentSettingService, component,
-        "mobileAppDescription", "Regisztráció", type = SettingType.TEXT,
-        fieldName = "mobileApp.description mező", description = ""
-    )
+    var mobileAppDescription by StringSettingRef("Regisztráció", fieldName = "mobileApp.description mező")
 
-    val mobileAppAndroidUrl = SettingProxy(componentSettingService, component,
-        "mobileAppAndroidUrl", "https://", type = SettingType.TEXT,
-        fieldName = "mobileApp.androidUrl mező", description = ""
-    )
+    var mobileAppAndroidUrl by StringSettingRef("https://",
+        type = SettingType.URL, fieldName = "mobileApp.androidUrl mező")
 
-    val mobileAppIosUrl = SettingProxy(componentSettingService, component,
-        "mobileAppIosUrl", "https://", type = SettingType.TEXT,
-        fieldName = "mobileApp.iosUrl mező", description = ""
-    )
+    var mobileAppIosUrl by StringSettingRef("https://", type = SettingType.URL, fieldName = "mobileApp.iosUrl mező")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val giveawayGroup = SettingProxy(componentSettingService, component,
-        "giveawayGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Nyereményjáték",
-        description = ""
-    )
+    val giveawayGroup by SettingGroup(fieldName = "Nyereményjáték")
 
-    val giveawaySectionTitle = SettingProxy(componentSettingService, component,
-        "giveawaySectionTitle", "Nyereményjáték", type = SettingType.TEXT,
-        fieldName = "giveaway.sectionTitle mező", description = ""
-    )
+    var giveawaySectionTitle by StringSettingRef("Nyereményjáték", fieldName = "giveaway.sectionTitle mező")
 
-    val giveawayDescription = SettingProxy(componentSettingService, component,
-        "giveawayDescription", "Nyereményjáték leírása ide jön", type = SettingType.LONG_TEXT,
-        fieldName = "giveaway.description mező", description = ""
-    )
+    var giveawayDescription by StringSettingRef("Nyereményjáték leírása ide jön", type = SettingType.LONG_TEXT,
+        fieldName = "giveaway.description mező")
 
-    val giveawayPictureUrl = SettingProxy(componentSettingService, component,
-        "giveawayPictureUrl", "https://", type = SettingType.TEXT,
-        fieldName = "giveaway.pictureUrl mező", description = ""
-    )
+    var giveawayPictureUrl by StringSettingRef("https://", type = SettingType.URL,
+        fieldName = "giveaway.pictureUrl mező")
 
-    val giveawayRules = SettingProxy(componentSettingService, component,
-        "giveawayRules", "", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "giveaway.rules mező", description = ""
-    )
+    var giveawayRules by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "giveaway.rules mező")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val promoVideoGroup = SettingProxy(componentSettingService, component,
-        "promoVideoGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Promó videó",
-        description = ""
-    )
+    val promoVideoGroup by SettingGroup(fieldName = "Promó videó")
 
-    val promoVideoSectionTitle = SettingProxy(componentSettingService, component,
-        "promoVideoSectionTitle", "Promóciós Videó", type = SettingType.TEXT,
-        fieldName = "promoVideo.sectionTitle mező", description = ""
-    )
+    var promoVideoSectionTitle by StringSettingRef("Promóciós Videó", fieldName = "promoVideo.sectionTitle mező")
 
-    val promoVideoYoutubeUrl = SettingProxy(componentSettingService, component,
-        "promoVideoYoutubeUrl", "https://www.youtube.com/embed/xxxxxx", type = SettingType.TEXT,
-        fieldName = "promoVideo.youtubeUrl mező", description = "Beágyazható URL-nek kell lennie." +
-                " A legjobb ha a Youtubeos megosztandó iframe kódjából másolod ki!"
-    )
+    var promoVideoYoutubeUrl by StringSettingRef("https://www.youtube.com/embed/xxxxxx", type = SettingType.URL,
+        fieldName = "promoVideo.youtubeUrl mező",
+        description = "Beágyazható URL-nek kell lennie. A legjobb ha a Youtubeos megosztandó iframe kódjából másolod ki!")
 
-    val promoVideoDescription = SettingProxy(componentSettingService, component,
-        "promoVideoDescription", "Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
-        fieldName = "promoVideo.description mező", description = ""
-    )
+    var promoVideoDescription by StringSettingRef("Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
+        fieldName = "promoVideo.description mező")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val sponsorsGroup = SettingProxy(componentSettingService, component,
-        "sponsorsGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Támogatók",
-        description = ""
-    )
+    val sponsorsGroup by SettingGroup(fieldName = "Támogatók")
 
-    val sponsorsSectionTitle = SettingProxy(componentSettingService, component,
-        "sponsorsSectionTitle", "Támogatók", type = SettingType.TEXT,
-        fieldName = "sponsors.sectionTitle mező", description = ""
-    )
+    var sponsorsSectionTitle by StringSettingRef("Támogatók", fieldName = "sponsors.sectionTitle mező")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val featuredPresentationGroup = SettingProxy(componentSettingService, component,
-        "featuredPresentationGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Kiemelt előadás",
-        description = ""
-    )
+    val featuredPresentationGroup by SettingGroup(fieldName = "Kiemelt előadás")
 
-    val featuredPresentationSectionTitle = SettingProxy(componentSettingService, component,
-        "featuredPresentationSectionTitle", "Promóciós Videó", type = SettingType.TEXT,
-        fieldName = "featuredPresentation.sectionTitle mező", description = ""
-    )
+    var featuredPresentationSectionTitle by StringSettingRef("Promóciós Videó",
+        fieldName = "featuredPresentation.sectionTitle mező")
 
-    val featuredPresentationDescription = SettingProxy(componentSettingService, component,
-        "featuredPresentationDescription", "Promóciós Videó leírása ide jön", type = SettingType.LONG_TEXT,
-        fieldName = "featuredPresentation.description mező", description = ""
-    )
+    var featuredPresentationDescription by StringSettingRef("Promóciós Videó leírása ide jön",
+        type = SettingType.LONG_TEXT, fieldName = "featuredPresentation.description mező")
 
-    val featuredPresentationSelector = SettingProxy(componentSettingService, component,
-        "featuredPresentationSelector", "presentation-1", type = SettingType.TEXT,
-        fieldName = "Kiemelt előadás selectorja", description = ""
-    )
+    var featuredPresentationSelector by StringSettingRef("presentation-1", fieldName = "Kiemelt előadás selectorja")
 
 }

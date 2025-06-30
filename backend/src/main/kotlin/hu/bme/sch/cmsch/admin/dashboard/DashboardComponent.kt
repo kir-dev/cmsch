@@ -10,5 +10,5 @@ interface DashboardComponent {
 }
 
 fun pascalToKebab(input: String) = input.mapIndexed { index, c ->
-        if (c.isUpperCase() && index != 0) "-${c.lowercaseChar()}" else c.lowercaseChar().toString()
-    }.joinToString("")
+    if (c.isUpperCase() && index != 0) "-${c.lowercaseChar()}" else c.lowercaseChar().toString()
+}.joinToString("")

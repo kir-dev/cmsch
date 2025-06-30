@@ -148,7 +148,7 @@ class AdmissionApiController(
         var additionalInfo = ""
 
         val admissionResponse = transactionManager.transaction(readOnly = true) {
-            if (legacyBmejegyService.isPresent && admissionComponent.ticketAllowBmejegy.isValueTrue()) {
+            if (legacyBmejegyService.isPresent && admissionComponent.ticketAllowBmejegy) {
                 val ticket = legacyBmejegyService.flatMap { it.findUserByVoucher(resolve.cmschId) }
                 if (ticket.isEmpty) {
                     AdmissionResponse(
@@ -181,7 +181,7 @@ class AdmissionApiController(
             }
         }
         admissionService.logEntryAttempt(admissionResponse, auth.getUser(), resolve.cmschId)
-        if (admissionComponent.ticketShowEntryCount.isValueTrue()) {
+        if (admissionComponent.ticketShowEntryCount) {
             val count = admissionService.countEntries(resolve.cmschId)
             admissionResponse.groupName = if (count > 1) "NEM ELSŐ!!! (${count}.)" else "($count)"
         }
@@ -341,7 +341,7 @@ class AdmissionApiController(
                 formId = formId
             )
         }
-        if (admissionComponent.onlyAcceptApprovedForms.isValueTrue() && (!response.accepted || response.rejected)) {
+        if (admissionComponent.onlyAcceptApprovedForms && (!response.accepted || response.rejected)) {
             return AdmissionResponse(
                 groupName = "FILLED, NOT ACCEPTED",
                 userName = "FILLED, NOT ACCEPTED",
@@ -384,13 +384,13 @@ class AdmissionApiController(
     }
 
     private fun isBanned(cmschId: String, groupName: String): Boolean {
-        if (cmschId.isNotEmpty() && admissionComponent.bannedUsers.getValue().lowercase().split(Regex(", *"))
+        if (cmschId.isNotEmpty() && admissionComponent.bannedUsers.lowercase().split(Regex(", *"))
                 .contains(cmschId.lowercase())
         ) {
             log.info("User $cmschId BANNED by user-ban-list")
             return true
         }
-        if (groupName.isNotEmpty() && admissionComponent.bannedGroups.getValue().lowercase().split(Regex(", *"))
+        if (groupName.isNotEmpty() && admissionComponent.bannedGroups.lowercase().split(Regex(", *"))
                 .contains(groupName.lowercase())
         ) {
             log.info("User $cmschId BANNED by group-ban-list for they group: $groupName")
@@ -406,19 +406,19 @@ class AdmissionApiController(
         if (cmschId.isEmpty())
             return
 
-        if (admissionComponent.userUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId))
+        if (admissionComponent.userUsers.lowercase().split(Regex(", *")).contains(cmschId))
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.vipUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId))
+        if (admissionComponent.vipUsers.lowercase().split(Regex(", *")).contains(cmschId))
             grants.add(EntryRole.VIP)
 
-        if (admissionComponent.performerUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId))
+        if (admissionComponent.performerUsers.lowercase().split(Regex(", *")).contains(cmschId))
             grants.add(EntryRole.PERFORMER)
 
-        if (admissionComponent.organizerUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId))
+        if (admissionComponent.organizerUsers.lowercase().split(Regex(", *")).contains(cmschId))
             grants.add(EntryRole.ORGANIZER)
 
-        if (admissionComponent.leadOrganizerUsers.getValue().lowercase().split(Regex(", *")).contains(cmschId))
+        if (admissionComponent.leadOrganizerUsers.lowercase().split(Regex(", *")).contains(cmschId))
             grants.add(EntryRole.LEAD_ORGANIZER)
     }
 
@@ -429,19 +429,19 @@ class AdmissionApiController(
         if (groupName.isEmpty())
             return
 
-        if (admissionComponent.userGroups.getValue().lowercase().split(Regex(", *")).contains(groupName))
+        if (admissionComponent.userGroups.lowercase().split(Regex(", *")).contains(groupName))
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.vipGroups.getValue().lowercase().split(Regex(", *")).contains(groupName))
+        if (admissionComponent.vipGroups.lowercase().split(Regex(", *")).contains(groupName))
             grants.add(EntryRole.VIP)
 
-        if (admissionComponent.performerGroups.getValue().lowercase().split(Regex(", *")).contains(groupName))
+        if (admissionComponent.performerGroups.lowercase().split(Regex(", *")).contains(groupName))
             grants.add(EntryRole.PERFORMER)
 
-        if (admissionComponent.organizerGroups.getValue().lowercase().split(Regex(", *")).contains(groupName))
+        if (admissionComponent.organizerGroups.lowercase().split(Regex(", *")).contains(groupName))
             grants.add(EntryRole.ORGANIZER)
 
-        if (admissionComponent.leadOrganizerGroups.getValue().lowercase().split(Regex(", *")).contains(groupName))
+        if (admissionComponent.leadOrganizerGroups.lowercase().split(Regex(", *")).contains(groupName))
             grants.add(EntryRole.LEAD_ORGANIZER)
     }
 
@@ -449,22 +449,22 @@ class AdmissionApiController(
         user: UserEntity,
         grants: MutableSet<EntryRole>
     ) {
-        if (admissionComponent.grantUserByDefault.isValueTrue() && user.role.value >= RoleType.BASIC.value)
+        if (admissionComponent.grantUserByDefault && user.role.value >= RoleType.BASIC.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantUserByAttendee.isValueTrue() && user.role.value >= RoleType.ATTENDEE.value)
+        if (admissionComponent.grantUserByAttendee && user.role.value >= RoleType.ATTENDEE.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantUserByPrivileged.isValueTrue() && user.role.value >= RoleType.PRIVILEGED.value)
+        if (admissionComponent.grantUserByPrivileged && user.role.value >= RoleType.PRIVILEGED.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantUserByStaff.isValueTrue() && user.role.value >= RoleType.STAFF.value)
+        if (admissionComponent.grantUserByStaff && user.role.value >= RoleType.STAFF.value)
             grants.add(EntryRole.USER)
 
-        if (admissionComponent.grantOrganizerByStaff.isValueTrue() && user.role.value >= RoleType.STAFF.value)
+        if (admissionComponent.grantOrganizerByStaff && user.role.value >= RoleType.STAFF.value)
             grants.add(EntryRole.ORGANIZER)
 
-        if (admissionComponent.grantOrganizerByAdmin.isValueTrue() && user.role.value >= RoleType.ADMIN.value)
+        if (admissionComponent.grantOrganizerByAdmin && user.role.value >= RoleType.ADMIN.value)
             grants.add(EntryRole.ORGANIZER)
     }
 

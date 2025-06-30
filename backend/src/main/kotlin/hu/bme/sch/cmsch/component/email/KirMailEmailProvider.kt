@@ -29,7 +29,7 @@ class KirMailEmailProvider(
     override fun getProviderName() = "kirmail"
 
     override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableKirMail.isValueTrue())
+        if (!emailComponent.enableKirMail)
             return
 
         logSend(to, subject, content, responsible)
@@ -37,14 +37,14 @@ class KirMailEmailProvider(
         for (target in to) {
             val requestBody = KirMailEmail(
                 from = KirMailFrom(
-                    name = emailComponent.kirmailAccountName.getValue(),
-                    email = emailComponent.kirmailEmailAddress.getValue(),
+                    name = emailComponent.kirmailAccountName,
+                    email = emailComponent.kirmailEmailAddress,
                 ),
                 to = target,
                 subject = subject,
                 html = content,
-                replyTo = emailComponent.kirmailReplyTo.getValue(),
-                queue = emailComponent.kirmailQueue.getValue(),
+                replyTo = emailComponent.kirmailReplyTo,
+                queue = emailComponent.kirmailQueue,
             )
 
             val jsonRequestBody = objectMapper.writeValueAsString(requestBody)
@@ -52,7 +52,7 @@ class KirMailEmailProvider(
             val request = Request.Builder()
                 .url("https://mail.kir-dev.hu/api/send")
                 .post(body)
-                .addHeader(HttpHeaders.AUTHORIZATION, "Api-Key ${emailComponent.kirmailToken.getValue()}")
+                .addHeader(HttpHeaders.AUTHORIZATION, "Api-Key ${emailComponent.kirmailToken}")
                 .addHeader(HttpHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE)
                 .build()
 
@@ -61,7 +61,7 @@ class KirMailEmailProvider(
     }
 
     override fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        if (!emailComponent.enableKirMail.isValueTrue())
+        if (!emailComponent.enableKirMail)
             return
 
         logSend(to, subject, content, responsible)
@@ -69,14 +69,14 @@ class KirMailEmailProvider(
         for (target in to) {
             val requestBody = KirMailEmail(
                 from = KirMailFrom(
-                    name = emailComponent.kirmailAccountName.getValue(),
-                    email = emailComponent.kirmailEmailAddress.getValue(),
+                    name = emailComponent.kirmailAccountName,
+                    email = emailComponent.kirmailEmailAddress,
                 ),
                 to = target,
                 subject = subject,
                 html = content,
-                replyTo = emailComponent.kirmailReplyTo.getValue(),
-                queue = emailComponent.kirmailQueue.getValue(),
+                replyTo = emailComponent.kirmailReplyTo,
+                queue = emailComponent.kirmailQueue,
             )
 
             val jsonRequestBody = objectMapper.writeValueAsString(requestBody)
@@ -84,7 +84,7 @@ class KirMailEmailProvider(
             val request = Request.Builder()
                 .url("https://mail.kir-dev.hu/api/send")
                 .post(body)
-                .addHeader(HttpHeaders.AUTHORIZATION, "Api-Key ${emailComponent.kirmailToken.getValue()}")
+                .addHeader(HttpHeaders.AUTHORIZATION, "Api-Key ${emailComponent.kirmailToken}")
                 .addHeader(HttpHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON_VALUE)
                 .build()
 

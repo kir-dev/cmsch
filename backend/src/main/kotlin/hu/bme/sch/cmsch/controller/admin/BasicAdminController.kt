@@ -70,9 +70,9 @@ class BasicAdminController(
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("user", user)
 
-        model.addAttribute("staffMessage", markdownToHtml(applicationComponent.staffMessage.getValue()))
+        model.addAttribute("staffMessage", markdownToHtml(applicationComponent.staffMessage))
         model.addAttribute("docs", docsReader
-            .readValue<List<DocsForOrganizers>>(applicationComponent.documentsForOrganizers.getValue())
+            .readValue<List<DocsForOrganizers>>(applicationComponent.documentsForOrganizers)
             .filter { it.visible })
 
         return "admin"

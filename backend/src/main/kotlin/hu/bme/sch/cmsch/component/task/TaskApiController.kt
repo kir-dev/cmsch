@@ -111,7 +111,7 @@ class TaskApiController(
         val task = taskOptional.orElse(null)
         if (task == null || taskOptional.orElse(null)?.visible?.not() == true)
             return SingleTaskView(task = null, submission = null)
-        if (taskComponent.enableViewAudit.isValueTrue()) {
+        if (taskComponent.enableViewAudit) {
             auditLogService.fine(user, taskComponent.component, "Opened task ${task.id}@${task.title}")
         }
 
@@ -146,8 +146,7 @@ class TaskApiController(
         now: Long
     ) = SubmittedTaskEntityDto(
         sub,
-        taskComponent.scoreVisibleAtAll.isValueTrue()
-                && (taskComponent.scoreVisible.isValueTrue() || (sub.approved && task.availableTo < now))
+        taskComponent.scoreVisibleAtAll && (taskComponent.scoreVisible || (sub.approved && task.availableTo < now))
     )
 
     @PostMapping("/task/submit")
