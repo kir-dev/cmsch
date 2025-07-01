@@ -1,6 +1,6 @@
 import { Button, Heading, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'

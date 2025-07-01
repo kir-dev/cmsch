@@ -1,5 +1,5 @@
 import { Grid, GridItem, LinkBox, LinkOverlay, Text, useColorModeValue } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { AbsolutePaths } from '../../../util/paths'
 import { EventListView } from '../../../util/views/event.view'

@@ -1,21 +1,14 @@
 import { FC, PropsWithChildren } from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { usePersistentStyleSetting } from '../../util/configs/themeStyle.config.ts'
 
 export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
-  const config = useConfigContext()
-  const textColor = useColorModeValue(config.components.style.lightTextColor, config.components.style.darkTextColor)
-  const background = useColorModeValue(config.components.style.lightBackgroundColor, config.components.style.darkBackgroundColor)
+  const { persistentStyle: theme } = usePersistentStyleSetting()
+  const textColor = useColorModeValue(theme?.lightTextColor, theme?.darkTextColor)
+  const background = useColorModeValue(theme?.lightBackgroundColor, theme?.darkBackgroundColor)
 
-  const backgroundImage = useColorModeValue(
-    `url(${config.components.style.lightBackgroundUrl})`,
-    `url(${config.components.style.darkBackgroundUrl})`
-  )
-
-  const mobileBackgroundImage = useColorModeValue(
-    `url(${config.components.style.lightMobileBackgroundUrl})`,
-    `url(${config.components.style.darkMobileBackgroundUrl})`
-  )
+  const backgroundImage = useColorModeValue(`url(${theme?.lightBackgroundUrl})`, `url(${theme?.darkBackgroundUrl})`)
+  const mobileBackgroundImage = useColorModeValue(`url(${theme?.lightMobileBackgroundUrl})`, `url(${theme?.darkMobileBackgroundUrl})`)
 
   return (
     <>

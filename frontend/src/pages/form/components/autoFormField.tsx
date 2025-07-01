@@ -6,7 +6,7 @@ import { VotingField } from '../../../common-components/VotingField'
 import { isCheckbox, isGridField } from '../../../util/core-functions.util'
 import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
 import { GridField } from './GridField'
-import { useStyleFromContext } from '../../../api/contexts/config/ConfigContext.tsx'
+import { useStyle } from '../../../api/contexts/config/ConfigContext.tsx'
 
 interface AutoFormFieldProps {
   fieldProps: FormField
@@ -20,7 +20,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
   let defaultValue = isCheckbox(fieldProps.type) ? fieldProps.defaultValue === 'true' : fieldProps.defaultValue
   let requiredValue = fieldProps.required
 
-  const style = useStyleFromContext()
+  const style = useStyle()
   const checkboxBorderColor = useColorModeValue(style?.lightTextColor, style?.darkTextColor) ?? '#888'
   if (submittedValue) {
     if (isCheckbox(fieldProps.type)) defaultValue = submittedValue === 'true'

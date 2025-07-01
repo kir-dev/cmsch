@@ -1,12 +1,13 @@
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import Clock from './components/clock'
-import { Center, Flex, Heading, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Center, Flex, Heading, VStack } from '@chakra-ui/react'
 import { PropsWithChildren, useMemo } from 'react'
 import { parseTopMessage } from './countdown.util'
 
 const CountdownPage = ({ children }: PropsWithChildren) => {
   const config = useConfigContext()
+
   const component = config?.components?.countdown
   const countTo = useMemo(() => {
     try {
@@ -32,9 +33,9 @@ const CountdownPage = ({ children }: PropsWithChildren) => {
           backgroundImage={`url(${component.imageUrl})`}
           filter={component.blurredImage ? 'blur(15px)' : undefined}
         />
-        <Flex flexDirection="column" h="100%" w="100%" zIndex={1} backgroundColor={useColorModeValue('#FFFFFFAA', '#000000AA')}>
+        <Flex flexDirection="column" h="100%" w="100%" zIndex={1}>
           <Center h="100vh">
-            <VStack w="100%" maxH="100%" overflow="auto" color={useColorModeValue('#000000', '#FFFFFF')}>
+            <VStack w="100%" maxH="100%" overflow="auto">
               <Heading textAlign="center">{parseTopMessage(component.topMessage)}</Heading>
               <Clock countTo={countTo} />
             </VStack>

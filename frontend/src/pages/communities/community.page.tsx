@@ -1,6 +1,6 @@
 import { Image } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { DataSheet } from './components/DataSheet'

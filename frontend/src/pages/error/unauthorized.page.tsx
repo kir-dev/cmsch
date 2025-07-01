@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, Heading, Text } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { l } from '../../util/language'

@@ -1,5 +1,5 @@
 import { CmschContainer, CmschContainerProps } from './CmschContainer'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { RoleType } from '../../util/views/profile.view'
 import { LoginRequired } from '../LoginRequired'

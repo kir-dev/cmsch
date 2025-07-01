@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Flex, HStack, Text, useColorModeValue } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { AbsolutePaths } from '../../../util/paths'
 import { TaskCategoryPreview } from '../../../util/views/task.view'
 

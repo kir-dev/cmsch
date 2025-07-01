@@ -1,5 +1,5 @@
 import { TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'

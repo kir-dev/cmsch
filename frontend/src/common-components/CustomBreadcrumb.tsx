@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, SpaceProps, useColorModeValue } from '@chakra-ui/react'
 import { FC } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 type BreadcrumbProps = {
   items: {

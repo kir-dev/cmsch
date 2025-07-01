@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router'
 import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'

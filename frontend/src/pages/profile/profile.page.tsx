@@ -15,7 +15,7 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router'
 
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -53,7 +53,8 @@ const ProfilePage = ({}: Props) => {
     refetch()
   }, [])
 
-  const component = useConfigContext()?.components.profile
+  const config = useConfigContext()?.components
+  const component = config.profile
 
   if (!component) return <ComponentUnavailable />
   if (profileError || profileLoading || !profile) return <PageStatus isLoading={profileLoading} isError={!!profileError} title="Profil" />
@@ -107,13 +108,13 @@ const ProfilePage = ({}: Props) => {
             </Text>
           )}
         </Box>
-        <VStack py={2} alignItems={{ base: 'flex-start', md: 'flex-end' }} mt={{ base: 5, md: 0 }}>
+        <VStack ml={{ base: 0, md: 'auto' }} mr={{ base: 'auto', md: 0 }} py={2} alignItems="stretch" mt={{ base: 5, md: 0 }}>
           {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
             <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
               Admin panel
             </LinkButton>
           )}
-          {profile.groupSelectionAllowed && (
+          {config?.groupselection && profile.groupSelectionAllowed && (
             <LinkButton colorScheme="brand" href={AbsolutePaths.CHANGE_GROUP}>
               {component?.groupTitle} módosítása
             </LinkButton>

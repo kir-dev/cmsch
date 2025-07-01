@@ -1,7 +1,7 @@
 import { Box, ButtonGroup, Heading } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router'
 import { MessageTypes, useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'

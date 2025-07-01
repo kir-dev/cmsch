@@ -1,6 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { useDisclosure, Link as ChakraLink, Grid, GridItem, Box } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'

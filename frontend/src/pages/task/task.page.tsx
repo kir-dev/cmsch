@@ -18,7 +18,7 @@ import {
 import { lazy, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Controller, SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTaskFullDetailsQuery } from '../../api/hooks/task/useTaskFullDetailsQuery'
 import { useTaskSubmissionMutation } from '../../api/hooks/task/useTaskSubmissionMutation'

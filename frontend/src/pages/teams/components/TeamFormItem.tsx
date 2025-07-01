@@ -1,6 +1,6 @@
 import { Box, Flex, HStack, Text } from '@chakra-ui/react'
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { formatHu, joinPath, useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { TeamFormView } from '../../../util/views/team.view'

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { PropsWithChildren } from 'react'
 
 interface LinkComponentProps extends PropsWithChildren {

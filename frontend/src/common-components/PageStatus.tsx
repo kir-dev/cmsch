@@ -1,6 +1,6 @@
 import { LoadingPage } from '../pages/loading/loading.page'
 import { l } from '../util/language'
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router'
 import { AbsolutePaths } from '../util/paths'
 import { useServiceContext } from '../api/contexts/service/ServiceContext'
 
