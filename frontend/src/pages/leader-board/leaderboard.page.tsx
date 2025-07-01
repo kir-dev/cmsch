@@ -8,7 +8,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
 import LeaderboardByCategoryPage from './leaderboardByCategory.page.tsx'
 import LeaderboardByUserOrGroupPage from './leaderboardByUserOrGroup.page.tsx'
-import { useMatch, useNavigate } from 'react-router-dom'
+import { useMatch, useNavigate } from 'react-router'
 
 const LeaderboardPage = () => {
   const component = useConfigContext()?.components.leaderboard

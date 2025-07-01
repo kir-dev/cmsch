@@ -1,6 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { AbsolutePaths } from '../../../util/paths'
 import { l } from '../../../util/language'
 

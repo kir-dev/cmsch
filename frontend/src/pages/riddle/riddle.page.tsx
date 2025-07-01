@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { FormEvent, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRiddleDetailsQuery } from '../../api/hooks/riddle/useRiddleDeatilsQuery'
 import { useRiddleHintQuery } from '../../api/hooks/riddle/useRiddleHintQuery'

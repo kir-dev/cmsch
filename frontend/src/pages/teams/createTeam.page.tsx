@@ -2,7 +2,7 @@ import { Button, FormControl, FormLabel, Heading, HStack, Input, Text, VStack } 
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTeamCreate } from '../../api/hooks/team/actions/useTeamCreate'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'

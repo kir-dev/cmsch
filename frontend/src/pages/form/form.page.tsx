@@ -2,7 +2,7 @@ import { Box, Button, Divider, Flex, FormControl, FormLabel, Heading, useToast }
 import { FunctionComponent, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FormProvider, useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useFormPage } from '../../api/hooks/form/useFormPage'
 import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'

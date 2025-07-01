@@ -1,6 +1,6 @@
 import { Box, GridItem, Heading, HStack, Icon, Image, LinkBox, LinkOverlay } from '@chakra-ui/react'
 import { FaExclamation } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'

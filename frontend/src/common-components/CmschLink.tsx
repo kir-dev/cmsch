@@ -1,5 +1,5 @@
 import { Link as ChakraLink, LinkProps, useColorModeValue } from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router'
 
 type Props = {
   isExternal?: boolean

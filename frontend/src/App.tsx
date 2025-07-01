@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router'
 import { CmschLayout } from './common-components/layout/CmschLayout'
 import { ErrorPage } from './pages/error/error.page'
 import HomePage from './pages/home/home.page'
@@ -7,7 +7,6 @@ import LoginPage from './pages/login/login.page'
 import CountdownPage from './pages/countdown/countdown.page'
 import IndexPage from './pages/index/index.page'
 import { l } from './util/language'
-import { AppBackground } from './common-components/layout/AppBackground'
 import { Paths } from './util/paths.ts'
 import AccessKeyPage from './pages/access-key/accessKey.page.tsx'
 import CommunityPage from './pages/communities/community.page.tsx'
@@ -49,7 +48,6 @@ import DebtPage from './pages/debt/debt.page.tsx'
 
 export function App() {
   return (
-    <AppBackground>
       <CountdownPage>
         <CmschLayout>
           <Suspense>
@@ -142,6 +140,5 @@ export function App() {
           </Suspense>
         </CmschLayout>
       </CountdownPage>
-    </AppBackground>
   )
 }

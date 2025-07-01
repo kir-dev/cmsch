@@ -1,6 +1,6 @@
 import { Button, ButtonProps } from '@chakra-ui/react'
 import { FC } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 export type LinkProps = {
   external?: boolean

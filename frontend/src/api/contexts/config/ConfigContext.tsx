@@ -45,4 +45,8 @@ export const useConfigContext = () => {
   return ctx
 }
 
-export const useStyleFromContext = () => useContext(ConfigContext)?.components?.style
+export const useStyle = () => {
+  const context = useContext(ConfigContext)?.components?.style
+  const persistent = usePersistentStyleSetting().persistentStyle
+  return context || persistent
+}

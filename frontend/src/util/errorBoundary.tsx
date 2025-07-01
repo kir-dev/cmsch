@@ -1,7 +1,6 @@
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { ButtonGroup, Heading, Text } from '@chakra-ui/react'
-import { LinkButton } from '../common-components/LinkButton'
+import { Heading, Text } from '@chakra-ui/react'
 import { CmschPage } from '../common-components/layout/CmschPage'
 import { l } from './language'
 
@@ -36,7 +35,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
         <CmschPage>
           <Helmet title="Hiba" />
           <Heading textAlign="center">{l('error-boundary-title')}</Heading>
-          <Text textAlign="center" color="gray.500" marginTop={10}>
+          <Text textAlign="center" marginTop={10}>
             {l('error-boundary-message')}
           </Text>
           {!import.meta.env.PROD &&
@@ -45,17 +44,6 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
                 {err[0]}: {String(err[1])}
               </pre>
             ))}
-          <ButtonGroup justifyContent="center" marginTop={10}>
-            <LinkButton
-              onClick={() => {
-                this.setState({ hasError: false })
-              }}
-              href="/"
-              colorScheme="brand"
-            >
-              Főoldal
-            </LinkButton>
-          </ButtonGroup>
         </CmschPage>
       )
     }

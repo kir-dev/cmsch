@@ -2,7 +2,7 @@ import { Box, Flex, useColorModeValue } from '@chakra-ui/react'
 import { useEventListQuery } from '../api/hooks/event/useEventListQuery'
 import { isCurrentEvent, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { PulsingDot } from './PulsingDot'
 
 export default function CurrentEventCard() {

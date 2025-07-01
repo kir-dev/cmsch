@@ -1,7 +1,7 @@
 import { Box, Button, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { FaGoogle, FaKey, FaSignInAlt } from 'react-icons/fa'
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router'
 
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'

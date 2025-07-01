@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRaceByTeamQuery } from '../../api/hooks/race/useRaceByTeamQuery'

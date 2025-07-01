@@ -1,5 +1,5 @@
 import { Card, CardBody, CardHeader, CardProps, Heading, useColorModeValue } from '@chakra-ui/react'
-import { useStyleFromContext } from '../../api/contexts/config/ConfigContext.tsx'
+import { useStyle } from '../../api/contexts/config/ConfigContext.tsx'
 
 export interface CmschContainerProps extends CardProps {
   title?: string
@@ -7,7 +7,7 @@ export interface CmschContainerProps extends CardProps {
 }
 
 export const CmschContainer = ({ children, title, disablePadding, ...props }: CmschContainerProps) => {
-  const theme = useStyleFromContext()
+  const theme = useStyle()
   return (
     <Card
       flexDirection="column"

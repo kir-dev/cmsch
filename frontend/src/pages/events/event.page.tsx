@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import { useEventQuery } from '../../api/hooks/event/useEventQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'

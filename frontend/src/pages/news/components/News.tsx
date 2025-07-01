@@ -1,5 +1,5 @@
 import { Button, Heading, Image, Text } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'

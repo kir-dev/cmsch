@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { l } from '../../util/language'
@@ -11,12 +11,9 @@ import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
 import { EnableNotifications } from '../EnableNotifications'
 import { ScrollToTop } from './ScrollToTop'
+import { ErrorBoundary } from '../../util/errorBoundary.tsx'
 
-interface CmschLayoutProps extends PropsWithChildren {
-  background?: string
-}
-
-export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
+export const CmschLayout = ({ children }: PropsWithChildren) => {
   const config = useConfigContext()
   const { sendMessage } = useServiceContext()
   const component = config?.components.app
@@ -32,10 +29,12 @@ export const CmschLayout = ({ background, children }: CmschLayoutProps) => {
       <Flex direction="column" minHeight="100vh">
         <ScrollToTop />
         <Navbar />
-        <Box background={background} flex={1} pb={20}>
-          <Warning />
-          <EnableNotifications />
-          {children}
+        <Box flex={1} pb={20}>
+          <ErrorBoundary>
+            <Warning />
+            <EnableNotifications />
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </ErrorBoundary>
         </Box>
         <Footer />
       </Flex>

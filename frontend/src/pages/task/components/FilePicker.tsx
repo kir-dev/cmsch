@@ -1,7 +1,6 @@
 // from https://github.com/PedroDBFlores/chakra-ui-file-picker
 
 import { Button, Input, InputGroup, InputGroupProps, InputRightElement } from '@chakra-ui/react'
-import PropTypes from 'prop-types'
 import { ChangeEvent, Component, createRef, FC } from 'react'
 
 interface FilePickerProps {
@@ -117,8 +116,3 @@ const ClearButton: FC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) 
     <Button onClick={onButtonClick}>{clearButtonLabel ?? 'Clear'}</Button>
   </InputRightElement>
 )
-
-ClearButton.propTypes = {
-  clearButtonLabel: PropTypes.string,
-  onButtonClick: PropTypes.func.isRequired
-}
