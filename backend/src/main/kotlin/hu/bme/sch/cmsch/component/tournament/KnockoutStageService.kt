@@ -27,6 +27,73 @@ class KnockoutStageService(
     val objectMapper: ObjectMapper
 ): ApplicationContextAware {
 
+    fun findById(id: Int): KnockoutStageEntity? {
+        //return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
+        return stageRepository.findById(id).getOrNull()
+    }
+
+    fun findStagesByTournamentId(tournamentId: Int): List<KnockoutStageEntity> {
+        return stageRepository.findAllByTournamentId(tournamentId)
+    }
+
+    fun findMatchesByStageId(stageId: Int): List<TournamentMatchEntity> {
+        return matchRepository.findAllByStageId(stageId)
+    }
+
+    companion object {
+        private var applicationContext: ApplicationContext? = null
+
+        fun getBean(): KnockoutStageService = applicationContext?.getBean(KnockoutStageService::class.java)
+            ?: throw IllegalStateException("Application context is not initialized.")
+    }
+
+    override fun setApplicationContext(context: ApplicationContext) {
+        applicationContext = context
+    }
+
+    fun getParticipants(stageId: Int): List<StageResultDto> {
+        val stage = findById(stageId)
+        if (stage == null || stage.participants.isEmpty()) {
+            return emptyList()
+        }
+        return stage!!.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
+    }
+
+    @Transactional(readOnly = true)
+    fun getResultsForStage(stage: KnockoutStageEntity): List<StageResultDto> {
+        if (stage.level <= 1) {
+            return tournamentService.getParticipants(stage.tournamentId)
+                .mapIndexed { index, participant ->
+                    StageResultDto(
+                        participant.teamId,
+                        participant.teamName,
+                        stage.id,
+                        initialSeed = index + 1,
+                        detailedStats = Optional.empty()
+                    )
+                }
+        }
+        val prevStage = stageRepository.findByTournamentIdAndLevel(stage.tournamentId, stage.level - 1).getOrNull()?:return emptyList()
+        if (prevStage.participants == "") {
+            return emptyList()
+        }
+        return prevStage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
+    }
+
+    fun transferTeamsForStage(stage: KnockoutStageEntity): String {
+        val teamSeeds = (1..stage.participantCount).asIterable().toList()
+        var participants = getResultsForStage(stage)
+        if (participants.size >= stage.participantCount) {
+            participants = participants.subList(0, stage.participantCount).map { StageResultDto(it.teamId, it.teamName) }
+        }
+        for (i in 0 until stage.participantCount) {
+            participants[i].initialSeed = teamSeeds[i]
+        }
+        stage.participants = participants.joinToString("\n") { objectMapper.writeValueAsString(it) }
+        return stage.participants
+    }
+
+
     @Transactional
     fun createMatchesForStage(stage: KnockoutStageEntity) {
         val firstRound = 2.0.pow(stage.rounds() - 1).toInt()
@@ -82,66 +149,16 @@ class KnockoutStageService(
         stageRepository.save(stage)
     }
 
-    fun transferTeamsForStage(stage: KnockoutStageEntity): String {
-        val teamSeeds = (1..stage.participantCount).asIterable().toList()
-        var participants = getResultsForStage(stage)
-        if (participants.size >= stage.participantCount) {
-            participants = participants.subList(0, stage.participantCount).map { StageResultDto(it.teamId, it.teamName) }
-        }
-        for (i in 0 until stage.participantCount) {
-            participants[i].initialSeed = teamSeeds[i]
-        }
-        stage.participants = participants.joinToString("\n") { objectMapper.writeValueAsString(it) }
-        return stage.participants
-    }
-
-    @Transactional(readOnly = true)
-    fun getResultsForStage(stage: KnockoutStageEntity): List<StageResultDto> {
-        if (stage.level <= 1) {
-            return tournamentService.getParticipants(stage.tournamentId)
-                .mapIndexed { index, participant ->
-                    StageResultDto(
-                        participant.teamId,
-                        participant.teamName,
-                        stage.id,
-                        initialSeed = index + 1,
-                        detailedStats = Optional.empty()
-                    )
-                }
-        }
-        val prevStage = stageRepository.findByTournamentIdAndLevel(stage.tournamentId, stage.level - 1).getOrNull()?:return emptyList()
-        if (prevStage.participants == "") {
-            return emptyList()
-        }
-        return prevStage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
-    }
-
-
-    fun calculateTeamsFromSeeds(stage: KnockoutStageEntity) {
-        val actualMatches = matchRepository.findAllByStageId(stage.id)
-        val seeds = getSeeds(stage)
-        for (match in actualMatches) {
-            val homeTeam = seeds[match.homeSeed]
-            val awayTeam = seeds[match.awaySeed]
-            match.homeTeamId = homeTeam?.teamId
-            match.homeTeamName = homeTeam?.teamName ?: "TBD"
-            match.awayTeamId = awayTeam?.teamId
-            match.awayTeamName = awayTeam?.teamName ?: "TBD"
-        }
-        matchRepository.saveAll(actualMatches)
-    }
-
-
     fun setSeeds(stage: KnockoutStageEntity): String {
         val matches = matchRepository.findAllByStageId(stage.id)
         val seeds = mutableListOf<SeededParticipantDto>()
         seeds.addAll(
             stage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
-            .map { SeededParticipantDto(
-                seed = it.initialSeed,
-                teamId = it.teamId,
-                teamName = it.teamName
-            ) } )
+                .map { SeededParticipantDto(
+                    seed = it.initialSeed,
+                    teamId = it.teamId,
+                    teamName = it.teamName
+                ) } )
         seeds.add(SeededParticipantDto(
             seed = 0,
             teamId = 0,
@@ -160,6 +177,22 @@ class KnockoutStageService(
         return seeds.joinToString("\n") { objectMapper.writeValueAsString(it) }
     }
 
+
+    fun calculateTeamsFromSeeds(stage: KnockoutStageEntity) {
+        val actualMatches = matchRepository.findAllByStageId(stage.id)
+        val seeds = getSeeds(stage)
+        for (match in actualMatches) {
+            val homeTeam = seeds[match.homeSeed]
+            val awayTeam = seeds[match.awaySeed]
+            match.homeTeamId = homeTeam?.teamId
+            match.homeTeamName = homeTeam?.teamName ?: "TBD"
+            match.awayTeamId = awayTeam?.teamId
+            match.awayTeamName = awayTeam?.teamName ?: "TBD"
+        }
+        matchRepository.saveAll(actualMatches)
+    }
+
+
     fun getSeeds(stage: KnockoutStageEntity): Map<Int, ParticipantDto>{
         val seeds = mutableMapOf<Int, ParticipantDto>()
         if (stage.seeds == ""){
@@ -175,20 +208,6 @@ class KnockoutStageService(
         return seeds
     }
 
-    fun findById(id: Int): KnockoutStageEntity? {
-        //return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
-        return stageRepository.findById(id).getOrNull()
-    }
-
-    fun getParticipants(stageId: Int): List<StageResultDto> {
-        val stage = findById(stageId)
-        if (stage == null || stage.participants.isEmpty()) {
-            return emptyList()
-        }
-        return stage!!.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
-    }
-
-
     fun getMatchesByStageTournamentId(tournamentId: Int): List<TournamentMatchEntity> {
         val stages = stageRepository.findAllByTournamentId(tournamentId)
         val matches = mutableListOf<TournamentMatchEntity>()
@@ -201,25 +220,6 @@ class KnockoutStageService(
     @Transactional
     fun deleteMatchesForStage(stage: KnockoutStageEntity) {
         matchRepository.deleteAllByStageId(stage.id)
-    }
-
-    companion object {
-        private var applicationContext: ApplicationContext? = null
-
-        fun getBean(): KnockoutStageService = applicationContext?.getBean(KnockoutStageService::class.java)
-            ?: throw IllegalStateException("Application context is not initialized.")
-    }
-
-    override fun setApplicationContext(context: ApplicationContext) {
-        applicationContext = context
-    }
-
-    fun findStagesByTournamentId(tournamentId: Int): List<KnockoutStageEntity> {
-        return stageRepository.findAllByTournamentId(tournamentId)
-    }
-
-    fun findMatchesByStageId(stageId: Int): List<TournamentMatchEntity> {
-        return matchRepository.findAllByStageId(stageId)
     }
 
     @Scheduled(fixedRate = 1000 * 60 * 10)
