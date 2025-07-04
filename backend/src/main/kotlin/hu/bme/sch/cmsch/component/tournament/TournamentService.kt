@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
@@ -44,7 +45,7 @@ open class TournamentService(
 
     @Transactional(readOnly = true)
     fun listAllTournaments(): List<TournamentPreviewView> {
-        if (!tournamentComponent.showTournamentsAtAll.isValueTrue()) {
+        if (!tournamentComponent.showTournamentsAtAll) {
             return listOf()
         }
 

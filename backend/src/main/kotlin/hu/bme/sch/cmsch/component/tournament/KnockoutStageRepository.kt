@@ -32,8 +32,7 @@ interface KnockoutStageRepository : CrudRepository<KnockoutStageEntity, Int>,
     fun findAllAggregated(): List<StageCountDto>
 
 
-    @Query("select k from KnockoutStageEntity k where k.tournamentId = ?1 and k.level = ?2")
-    fun findAllByTournamentIdAndLevel(tournamentId: Int, level: Int): List<KnockoutStageEntity>
+    fun findByTournamentIdAndLevel(tournamentId: Int, level: Int): Optional<KnockoutStageEntity>
 
     fun deleteAllByTournamentId(tournamentId: Int): Int
 

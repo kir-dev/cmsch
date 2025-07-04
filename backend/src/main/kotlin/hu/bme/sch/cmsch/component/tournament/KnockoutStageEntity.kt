@@ -123,16 +123,10 @@ data class KnockoutStageEntity(
 
     @PrePersist
     fun prePersist() {
+        this.participants = getStageService().transferTeamsForStage(this)
         getStageService().createMatchesForStage(this)
-        val teamSeeds = (1..participantCount).asIterable().shuffled().toList()
-        var participants = getStageService().getResultsForStage(this)
-        if (participants.size >= participantCount) {
-            participants = participants.subList(0, participantCount).map { StageResultDto(it.teamId, it.teamName) }
-        }
-        for (i in 0 until participantCount) {
-            participants[i].initialSeed = teamSeeds[i]
-        }
-        this.participants = participants.joinToString("\n") { getStageService().objectMapper.writeValueAsString(it) }
+        this.seeds = getStageService().setSeeds(this)
+        getStageService().calculateTeamsFromSeeds(this)
     }
 
     @PreRemove

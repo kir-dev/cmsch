@@ -13,10 +13,7 @@ import org.springframework.core.env.Environment
 
 enum class MatchStatus {
     NOT_STARTED,
-    HT,
-    FT,
-    AET,
-    AP,
+    FINISHED,
     IN_PROGRESS,
     CANCELLED
 }
@@ -121,13 +118,13 @@ data class TournamentMatchEntity(
 
     fun stage(): KnockoutStageEntity? = KnockoutStageService.getBean().findById(stageId)
 
-    @PrePersist
+    /*@PrePersist
     @PreUpdate
     fun setTeams() {
         val teams = KnockoutStageService.getBean().getParticipants(stageId)
         homeTeamId = teams.find { it.teamName == homeTeamName }?.teamId
         awayTeamId = teams.find { it.teamName == awayTeamName }?.teamId
-    }
+    }*/
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TournamentMatch",
@@ -149,13 +146,17 @@ data class TournamentMatchEntity(
 
     override fun hashCode(): Int = javaClass.hashCode()
 
-    fun winnerId(): Int? {
+    fun winner(): ParticipantDto? {
         return when {
-            status in listOf(MatchStatus.NOT_STARTED, MatchStatus.IN_PROGRESS, MatchStatus.CANCELLED) -> null
+            homeSeed == null || awaySeed == null -> null // No teams set
+            homeTeamId == null || awayTeamId == null -> null // No teams set
+            homeSeed == 0 -> ParticipantDto(awayTeamId!!, awayTeamName)
+            awaySeed == 0 -> ParticipantDto(homeTeamId!!, homeTeamName)
+            status != MatchStatus.FINISHED -> null
             homeTeamScore == null || awayTeamScore == null -> null
-            homeTeamScore!! > awayTeamScore!! -> homeTeamId
-            homeTeamScore!! < awayTeamScore!! -> awayTeamId
-            else -> null
+            homeTeamScore!! > awayTeamScore!! -> ParticipantDto(homeTeamId ?: 0, homeTeamName)
+            awayTeamScore!! > homeTeamScore!! -> ParticipantDto(awayTeamId ?: 0, awayTeamName)
+            else -> null // Draw or no winner
         }
     }
 

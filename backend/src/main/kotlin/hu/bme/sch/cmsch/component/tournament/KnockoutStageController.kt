@@ -294,6 +294,9 @@ class KnockoutStageController(
         if (onEntityPreSave(stageEntity, auth)) {
             transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
                 stageService.setInitialSeeds(stageEntity, dto, user)
+                stageEntity.seeds=stageService.setSeeds(stageEntity)
+                stageRepository.save(stageEntity)
+                stageService.calculateTeamsFromSeeds(stageEntity)
             }
             auditLog.edit(user, component.component+"seed", dto.toString())
         } else {

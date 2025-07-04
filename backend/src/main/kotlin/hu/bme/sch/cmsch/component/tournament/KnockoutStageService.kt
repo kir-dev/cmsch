@@ -3,13 +3,16 @@ package hu.bme.sch.cmsch.component.tournament
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.util.Optional
+import kotlin.collections.map
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.pow
 import kotlin.random.Random
@@ -19,6 +22,7 @@ import kotlin.random.Random
 class KnockoutStageService(
     private val stageRepository: KnockoutStageRepository,
     private val tournamentService: TournamentService,
+    private val clock: TimeService,
     private val matchRepository: TournamentMatchRepository,
     val objectMapper: ObjectMapper
 ): ApplicationContextAware {
@@ -48,7 +52,7 @@ class KnockoutStageService(
             ))
         }
         var roundMatches = firstRound; j = 1; k = 2
-        for (i in firstRound+1 until gameCount+1){
+        for (i in firstRound+1 until gameCount){
             matches.add(TournamentMatchEntity(
                 gameId = i,
                 stageId = stage.id,
@@ -61,6 +65,7 @@ class KnockoutStageService(
                 roundMatches += roundMatches/2
             }
         }
+        //calculateTeamsFromSeeds(stage, matches)
         matchRepository.saveAll(matches)
     }
 
@@ -77,9 +82,8 @@ class KnockoutStageService(
         stageRepository.save(stage)
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun transferTeamsForStage(stage: KnockoutStageEntity){
-        val teamSeeds = (1..stage.participantCount).asIterable().shuffled().toList()
+    fun transferTeamsForStage(stage: KnockoutStageEntity): String {
+        val teamSeeds = (1..stage.participantCount).asIterable().toList()
         var participants = getResultsForStage(stage)
         if (participants.size >= stage.participantCount) {
             participants = participants.subList(0, stage.participantCount).map { StageResultDto(it.teamId, it.teamName) }
@@ -88,7 +92,7 @@ class KnockoutStageService(
             participants[i].initialSeed = teamSeeds[i]
         }
         stage.participants = participants.joinToString("\n") { objectMapper.writeValueAsString(it) }
-        stageRepository.save(stage)
+        return stage.participants
     }
 
     @Transactional(readOnly = true)
@@ -105,32 +109,62 @@ class KnockoutStageService(
                     )
                 }
         }
-        val stages = stageRepository.findAllByTournamentIdAndLevel(stage.tournamentId, stage.level - 1)
-        if (stages.isEmpty()) {
+        val prevStage = stageRepository.findByTournamentIdAndLevel(stage.tournamentId, stage.level - 1).getOrNull()?:return emptyList()
+        if (prevStage.participants == "") {
             return emptyList()
         }
-        return stages.flatMap { it.participants.split("\n")
-            .map { objectMapper.readValue(it, StageResultDto::class.java) } }
-            .sorted()
+        return prevStage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
     }
 
-    @Transactional
+
     fun calculateTeamsFromSeeds(stage: KnockoutStageEntity) {
-        val matches = matchRepository.findAllByStageId(stage.id)
+        val actualMatches = matchRepository.findAllByStageId(stage.id)
         val seeds = getSeeds(stage)
-        for (match in matches){
+        for (match in actualMatches) {
             val homeTeam = seeds[match.homeSeed]
             val awayTeam = seeds[match.awaySeed]
             match.homeTeamId = homeTeam?.teamId
             match.homeTeamName = homeTeam?.teamName ?: "TBD"
             match.awayTeamId = awayTeam?.teamId
             match.awayTeamName = awayTeam?.teamName ?: "TBD"
-            matchRepository.save(match)
         }
+        matchRepository.saveAll(actualMatches)
+    }
+
+
+    fun setSeeds(stage: KnockoutStageEntity): String {
+        val matches = matchRepository.findAllByStageId(stage.id)
+        val seeds = mutableListOf<SeededParticipantDto>()
+        seeds.addAll(
+            stage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
+            .map { SeededParticipantDto(
+                seed = it.initialSeed,
+                teamId = it.teamId,
+                teamName = it.teamName
+            ) } )
+        seeds.add(SeededParticipantDto(
+            seed = 0,
+            teamId = 0,
+            teamName = "ByeGame"
+        )) // Placeholder for bye slots))
+        for (match in matches) {
+            val winner = match.winner()
+            if (winner != null) {
+                seeds.add(winner.let { SeededParticipantDto(
+                    seed = -match.gameId,
+                    teamId = it.teamId,
+                    teamName = it.teamName
+                ) })
+            }
+        }
+        return seeds.joinToString("\n") { objectMapper.writeValueAsString(it) }
     }
 
     fun getSeeds(stage: KnockoutStageEntity): Map<Int, ParticipantDto>{
         val seeds = mutableMapOf<Int, ParticipantDto>()
+        if (stage.seeds == ""){
+            return emptyMap()
+        }
         stage.seeds.split("\n").forEach {
             val participant = objectMapper.readValue(it, SeededParticipantDto::class.java)
             seeds[participant.seed] = ParticipantDto(
@@ -186,5 +220,23 @@ class KnockoutStageService(
 
     fun findMatchesByStageId(stageId: Int): List<TournamentMatchEntity> {
         return matchRepository.findAllByStageId(stageId)
+    }
+
+    @Scheduled(fixedRate = 1000 * 60 * 10)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun updateSeeds(){
+        val stages = stageRepository.findAll()
+        for (stage in stages) {
+            if (stage.status == StageStatus.ONGOING) {
+                val matches = matchRepository.findAllByStageId(stage.id)
+                if (matches.isEmpty()) {
+                    continue
+                }
+                val updatedSeeds = setSeeds(stage)
+                stage.seeds = updatedSeeds
+                calculateTeamsFromSeeds(stage)
+                stageRepository.save(stage)
+            }
+        }
     }
 }

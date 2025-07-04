@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.util.getUserOrNull
+import hu.bme.sch.cmsch.util.isAvailableForRole
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -46,7 +47,7 @@ class TournamentApiController(
         val user = auth?.getUserOrNull()
         if (!tournamentComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(listOf())
-        if (!tournamentComponent.showTournamentsAtAll.isValueTrue()) {
+        if (!tournamentComponent.showTournamentsAtAll) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
 

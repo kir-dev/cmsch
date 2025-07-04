@@ -1,9 +1,8 @@
 package hu.bme.sch.cmsch.component.tournament
 
-import hu.bme.sch.cmsch.component.*
-import hu.bme.sch.cmsch.setting.*
-import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
+import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -20,6 +19,7 @@ class TournamentComponent (
     componentSettingService: ComponentSettingService,
     env: Environment
 ) : ComponentBase(
+    componentSettingService,
     "tournament",
     "/tournament",
     "Tournament",
@@ -27,32 +27,21 @@ class TournamentComponent (
     listOf(),
     env
 ){
-    final override val allSettings by lazy {
-        listOf(
-            tournamentGroup,
-            minRole,
-        )
-    }
 
-    final override val menuDisplayName = SettingProxy(
-        componentSettingService, component,
-        "menuDisplayName", "Sportversenyek", serverSideOnly = true,
+    val tournamentGroup by SettingGroup(fieldName = "Versenyek")
+    final var title by StringSettingRef("Sportversenyek",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában")
+    final override var menuDisplayName by StringSettingRef(
+        "Sportversenyek", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
     )
-
-    final val tournamentGroup = SettingProxy(componentSettingService, component,
-        "tournamentGroup", "", type = SettingType.COMPONENT_GROUP, persist = false,
-        fieldName = "Tournament",
-        description = "Jelenleg nincs mit beállítani itt"
+    final override var minRole by MinRoleSettingRef(
+        setOf(), fieldName = "Jogosultságok",
+        description = "Melyik roleokkal nyitható meg az oldal"
     )
 
-    final override val minRole = MinRoleSettingProxy(componentSettingService, component,
-        "minRole", MinRoleSettingProxy.ALL_ROLES, minRoleToEdit = RoleType.ADMIN,
-        fieldName = "Minimum jogosultság", description = "A komponens eléréséhez szükséges minimum jogosultság"
-    )
-
-    val showTournamentsAtAll = SettingProxy(componentSettingService, component,
-        "showTournamentsAtAll", "true", type = SettingType.BOOLEAN, serverSideOnly =  true,
-        fieldName = "Versenylista megjelenítése", description = "Ha ki van kapcsolva, akkor a versenylista nincsen leküldve",
+    var showTournamentsAtAll by BooleanSettingRef(
+        false, fieldName = "Leküldött",
+        description = "Ha igaz, akkor leküldésre kerülnek a versenyek"
     )
 }
