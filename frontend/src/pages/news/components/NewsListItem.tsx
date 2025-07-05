@@ -12,16 +12,18 @@ type Props = {
   useLink?: boolean
 }
 
-const NewsListItem = ({ news, fontSize, useLink }: Props) => {
+export const NewsListItem = ({ news, fontSize, useLink }: Props) => {
   return (
     <GridItem as={LinkBox} borderRadius="base" borderColor={news.highlighted ? 'brand.200' : 'whiteAlpha.200'} borderWidth="1px" p={4}>
       <Box display="flex" flexDirection={['column-reverse', 'column-reverse', 'row']} gap={4}>
         {news.imageUrl && <Image borderRadius="md" w={32} h={32} objectFit="cover" objectPosition="center" src={news.imageUrl} />}
         <Box w="full">
           <HStack justifyContent="space-between">
-            <Box fontSize="sm" mb={2} fontWeight={300}>
-              Közzétéve: {stringifyTimeStamp(news.timestamp)}
-            </Box>
+            {!!news.timestamp && (
+              <Box fontSize="sm" mb={2} fontWeight={300}>
+                Közzétéve: {stringifyTimeStamp(news.timestamp)}
+              </Box>
+            )}
             {news.highlighted && (
               <Box>
                 <Icon as={FaExclamation} color="brand.200" w={8} h={8} />
@@ -47,5 +49,3 @@ const NewsListItem = ({ news, fontSize, useLink }: Props) => {
     </GridItem>
   )
 }
-
-export default NewsListItem
