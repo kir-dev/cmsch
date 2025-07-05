@@ -17,6 +17,7 @@ import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import kotlin.jvm.optionals.getOrNull
 
 
 @Controller
@@ -228,19 +229,19 @@ class KnockoutStageController(
             auditLog.admin403(user, component.component, "GET /$view/seed/$id", StaffPermissions.PERMISSION_GENERATE_BRACKETS.permissionString)
             return "admin403"
         }
-        val stage = stageRepository.findById(id)
+        val stage = stageRepository.findById(id).getOrNull()
             ?: return "redirect:/admin/control/$view"
-        val readOnly = !StaffPermissions.PERMISSION_SET_SEEDS.validate(user) || stage.get().status >= StageStatus.SET
+        val readOnly = !StaffPermissions.PERMISSION_SET_SEEDS.validate(user) || stage.status >= StageStatus.SET
         val teams = stageService.getParticipants(id).sortedBy { it.initialSeed }
-        val tournament = tournamentRepository.findById(stage.get().tournamentId)
+        val tournament = tournamentRepository.findById(stage.tournamentId)
             ?: return "redirect:/admin/control/$view"
         model.addAttribute("title", "Kiesési szakasz seedek")
         model.addAttribute("view", view)
         model.addAttribute("readOnly", readOnly)
         model.addAttribute("entityMode", false)
         model.addAttribute("tournamentTitle", tournament.get().title)
-        model.addAttribute("stageLevel", stage.get().level)
-        model.addAttribute("stageTitle", stage.get().name)
+        model.addAttribute("stageLevel", stage.level)
+        model.addAttribute("stageTitle", stage.name)
         model.addAttribute("teams", teams)
 
         return "seedSettings"

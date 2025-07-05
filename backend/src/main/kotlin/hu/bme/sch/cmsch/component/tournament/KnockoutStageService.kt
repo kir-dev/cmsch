@@ -217,6 +217,18 @@ class KnockoutStageService(
         return matches
     }
 
+    fun getUpcomingMatchesByTournamentId(tournamentId: Int): List<TournamentMatchEntity> {
+        val stages = stageRepository.findAllByTournamentId(tournamentId)
+        val matches = mutableListOf<TournamentMatchEntity>()
+        for (stage in stages) {
+            matches.addAll(matchRepository.findAllByStageId(stage.id).filter { it.startTime > clock.now() })
+        }
+        matches.filter { it.status in listOf(MatchStatus.IN_PROGRESS, MatchStatus.NOT_STARTED) }
+            .filter { (it.kickoffTime - clock.getTime()) in -3*60*60*1000L..3*60*60*1000L }
+
+        return matches.sortedBy { it.kickoffTime }
+    }
+
     @Transactional
     fun deleteMatchesForStage(stage: KnockoutStageEntity) {
         matchRepository.deleteAllByStageId(stage.id)

@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="~{layout4 :: head(${context.siteName})}">
+</head>
+<body>
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<script>
+
+</script>
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}"></div>
+
+        <div class="content">
+            <h1 class="narrow" th:text="|Verseny mérkőzéseinek kezelése|">Match admin</h1>
+
+            <div class="content">
+                <object th:remove="tag">
+                    <label class="card-label">Verseny</label>
+                    <p th:text="${tournament.title}">Tournament title</p>
+                </object>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="narrow">Mérkőzések</h2>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+</body>
