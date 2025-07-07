@@ -28,7 +28,35 @@
             <div class="card-header">
                 <h2 class="narrow">Mérkőzések</h2>
             </div>
+            <div class="table-container">
+                <table cellspacing="0">
+                    <tr id="header">
+                        <th>MatchId</th>
+                        <th>Round</th>
+                        <th>Team1</th>
+                        <th>Team2</th>
+                        <th>Field</th>
+                        <th>KickoffTime</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr th:each="match : ${matches}" id="match_${match.id}">
+                        <td th:text="${match.gameId}">Match ID</td>
+                        <td th:text="${match.level}">Round</td>
+                        <td th:text="${match.homeTeamName}">Team 1</td>
+                        <td th:text="${match.awayTeamName}">Team 2</td>
+                        <td th:text="${match.location}">Field</td>
+                        <td th:text="${match.kickoffTime}">Kickoff Time</td>
+                        <td th:text="${match.status}">Status</td>
+                        <td>
+                            <a href="/admin/control/tournament-match/score/${match.id}" class="control-action">
+                                <span class="material-symbols-outlined">grade</span>
+                            </a>
+                        </td>
+                    </tr>
 
+                </table>
+            </div>
 
         </div>
     </div>

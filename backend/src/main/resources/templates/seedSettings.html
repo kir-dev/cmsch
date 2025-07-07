@@ -91,17 +91,23 @@
           <div class="table-container menu-table">
             <table cellspacing="0">
               <tr id="header">
+                <th>Seed</th>
                 <th>Csapat</th>
                 <th th:if="${stageLevel>1}">Előző eredmény</th>
                 <th></th>
-                <th>Kiemelt csapat</th>
+<!--                <th>Kiemelt csapat</th>-->
               </tr>
-              <tr th:each="team,iter: ${teams}" th:id="|team_${iter.index}|" th:style="|opacity: ${team.highlighted ? 1.0 : 0.6}|">
+              <tr th:each="team,iter: ${teams}" th:id="|team_${iter.index}|" th:style="|opacity: ${team.teamId!=0 ? 1.0 : 0.6}|">
+                <td th:text="${team.initialSeed}">seed</td>
                 <td th:text="${team.teamName}">
                   csapatnév
                 </td>
                 <td th:if="${stageLevel>1}">todo</td>
                 <td>
+                  <input type="hidden" th:name="|id_${iter.index}|" th:value="${team.teamId}">
+                  <input type="hidden" th:name="|name_${iter.index}|" th:value="${team.teamName}">
+                  <input type="hidden" th:name="|stageId_${iter.index}|" th:value="${team.stageId}">
+                  <input type="hidden" th:name="|stats_${iter.index}|" th:value="${team.detailedStats}">
                   <input type="number" th:value="${iter.index}"
                          th:id="|order_${iter.index}|"
                          th:name="|order_${iter.index}|"
@@ -111,21 +117,16 @@
                   <button type="button" class="btn btn-icon" th:data-id="${iter.index}" onclick="flipWithPrevious(this.getAttribute('data-id'))"><span class="material-symbols-outlined">arrow_drop_up</span></button>
                   <button type="button" class="btn btn-icon" th:data-id="${iter.index}" onclick="flipWithNext(this.getAttribute('data-id'))"><span class="material-symbols-outlined">arrow_drop_down</span></button>
                 </td>
-                <td>
-                  <input type="hidden" th:name="|id_${iter.index}|" th:value="${team.teamId}">
-                  <input type="hidden" th:name="|name_${iter.index}|" th:value="${team.teamName}">
-                  <input type="hidden" th:name="|stageId_${iter.index}|" th:value="${team.stageId}">
-                  <input type="hidden" th:name="|stats_${iter.index}|" th:value="${team.detailedStats}">
+                <!--<td>
                   <label class="switch">
                     <input type="checkbox"
                            th:checked="${team.highlighted}"
                            th:id="|highlighted_${iter.index}|"
                            th:name="|highlighted_${iter.index}|"
                            th:data-id="${iter.index}"
-                           onclick="changeVisibility(this.getAttribute('data-id'))"
                     />
                     <span class="slider"></span>
-                  </label>
+                  </label>-->
                 </td>
               </tr>
 

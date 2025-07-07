@@ -121,6 +121,38 @@ class TournamentMatchController(
         model.addAttribute("matches", matches)
         model.addAttribute("user", user)
 
-        return "redirect:/admin/control/tournament-match/" //TODO
+        return "matchAdmin"
+    }
+
+    @GetMapping("/score/{id}")
+    fun scoreMatchPage(@PathVariable id: Int, model: Model, auth: Authentication): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if(StaffPermissions.PERMISSION_EDIT_RESULTS.validate(user).not()){
+            model.addAttribute("permission", viewPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/score/$id", viewPermission.permissionString)
+            return "admin403"
+        }
+
+        model.addAttribute("title", titlePlural)
+        model.addAttribute("titleSingular", titleSingular)
+        model.addAttribute("view", view)
+        model.addAttribute("user", user)
+
+        val match = transactionManager.transaction(readOnly = true) {
+            matchRepository.findById(id).getOrNull()?: return "redirect:/admin/control/tournament-match/"
+        }
+        val stage = match.stage()
+        if (stage == null) {
+            model.addAttribute("error", "A mérkőzés nem tartozik érvényes szakaszhoz.")
+            return "error"
+        }
+        model.addAttribute("match", match)
+        model.addAttribute("stage", stage)
+
+
+        //TODO
+        return "redirect:/admin/control/tournament-match/admin/${stage.tournamentId}"
     }
 }
