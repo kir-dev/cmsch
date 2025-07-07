@@ -89,7 +89,12 @@ class KnockoutStageService(
         for (i in 0 until stage.participantCount) {
             participants[i].initialSeed = teamSeeds[i]
         }
-        stage.participants = participants.joinToString("\n") { objectMapper.writeValueAsString(it) }
+        val parts = mutableListOf<StageResultDto>()
+        parts.addAll(participants)
+        for (i in stage.participantCount+1 until 2.0.pow(stage.rounds()).toInt() + 1) {
+            parts.add(StageResultDto(teamId = 0, teamName = "ByeGame", initialSeed = i))
+        }
+        stage.participants = parts.joinToString("\n") { objectMapper.writeValueAsString(it) }
         return stage.participants
     }
 
@@ -103,22 +108,17 @@ class KnockoutStageService(
         val byeGames = (1..firstRound).asIterable().shuffled().subList(0,byeSlotCount).sorted()
         val matches = mutableListOf<TournamentMatchEntity>()
 
-        var j = 1; var k = 0
+        var j = 1;
         for (i in 1 until firstRound+1){
             matches.add(TournamentMatchEntity(
                 gameId = i,
                 stageId = stage.id,
                 level = 1,
                 homeSeed = j++,
-                awaySeed = if (byeGames.size>k && byeGames[k] == i) {
-                    k++
-                    0
-                } else {
-                    j++
-                }
+                awaySeed = j++
             ))
         }
-        var roundMatches = firstRound; j = 1; k = 2
+        var roundMatches = firstRound; j = 1; var k = 2
         for (i in firstRound+1 until gameCount){
             matches.add(TournamentMatchEntity(
                 gameId = i,
@@ -141,7 +141,7 @@ class KnockoutStageService(
         if (StaffPermissions.PERMISSION_SET_SEEDS.validate(user).not()){
             throw IllegalArgumentException("User does not have permission to set seeds.")
         }
-        if (seeds.size != stage.participantCount) {
+        if (seeds.size != 2.0.pow(stage.rounds()).toInt()) {
             throw IllegalArgumentException("Number of seeds must match the participant count of the stage.")
         }
 
@@ -159,11 +159,6 @@ class KnockoutStageService(
                     teamId = it.teamId,
                     teamName = it.teamName
                 ) } )
-        seeds.add(SeededParticipantDto(
-            seed = 0,
-            teamId = 0,
-            teamName = "ByeGame"
-        )) // Placeholder for bye slots))
         for (match in matches) {
             val winner = match.winner()
             if (winner != null) {
@@ -221,7 +216,7 @@ class KnockoutStageService(
         val stages = stageRepository.findAllByTournamentId(tournamentId)
         val matches = mutableListOf<TournamentMatchEntity>()
         for (stage in stages) {
-            matches.addAll(matchRepository.findAllByStageId(stage.id).filter { it.startTime > clock.now() })
+            matches.addAll(matchRepository.findAllByStageId(stage.id).filter { it.kickoffTime > clock.getTime() })
         }
         matches.filter { it.status in listOf(MatchStatus.IN_PROGRESS, MatchStatus.NOT_STARTED) }
             .filter { (it.kickoffTime - clock.getTime()) in -3*60*60*1000L..3*60*60*1000L }

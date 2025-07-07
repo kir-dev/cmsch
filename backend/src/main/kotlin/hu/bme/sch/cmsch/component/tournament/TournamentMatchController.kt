@@ -80,10 +80,10 @@ class TournamentMatchController(
     )
 ) {
     override fun fetchSublist(id: Int): Iterable<TournamentMatchEntity> {
-        return stageService.getUpcomingMatchesByTournamentId(id)
+        return stageService.getMatchesByStageTournamentId(id)
     }
 
-    private val matchAdminControlActions = mutableListOf(
+    /*private val matchAdminControlActions = mutableListOf(
         ControlAction(
             "Eredmény felvitele",
             "score/{id}",
@@ -93,7 +93,7 @@ class TournamentMatchController(
             false,
             "Mérkőzés eredményének felvitele"
         )
-    )
+    )*/
 
     @GetMapping("/admin/{id}")
     fun matchAdminPage(@PathVariable id: Int, model: Model, auth: Authentication): String {
@@ -119,8 +119,6 @@ class TournamentMatchController(
 
         model.addAttribute("tournament", tournament)
         model.addAttribute("matches", matches)
-        model.addAttribute("controlActions", matchAdminControlActions.filter { it.permission.validate(user) })
-        model.addAttribute("allControlActions", matchAdminControlActions)
         model.addAttribute("user", user)
 
         return "redirect:/admin/control/tournament-match/" //TODO

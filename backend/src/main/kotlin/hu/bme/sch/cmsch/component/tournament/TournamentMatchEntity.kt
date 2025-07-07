@@ -107,7 +107,7 @@ data class TournamentMatchEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 8, label = "Match status",
-        source = [ "NOT_STARTED", "FIRST_HALF", "HT", "SECOND_HALF", "FT", "EXTRA_TIME", "AET", "PENALTY_KICKS", "AP", "IN_PROGRESS", "CANCELLED" ],
+        source = [ "NOT_STARTED", "FINISHED", "IN_PROGRESS", "CANCELLED" ],
         visible = false, ignore = true
     )
     @property:GenerateOverview(columnName = "Match status", order = 8)
