@@ -114,7 +114,8 @@ class TournamentMatchController(
             tournamentService.findById(id).getOrNull()?: return "redirect:/admin/control/tournament-match/"
         }
         val matches = transactionManager.transaction(readOnly = true) {
-            stageService.getUpcomingMatchesByTournamentId(id)
+            //stageService.getUpcomingMatchesByTournamentId(id)
+            stageService.getMatchesByStageTournamentId(id)
         }
 
         model.addAttribute("tournament", tournament)
@@ -153,6 +154,6 @@ class TournamentMatchController(
 
 
         //TODO
-        return "redirect:/admin/control/tournament-match/admin/${stage.tournamentId}"
+        return "matchScore"
     }
 }

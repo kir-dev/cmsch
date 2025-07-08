@@ -307,4 +307,21 @@ class KnockoutStageController(
         return "redirect:/admin/control/$view/seed/${id}"
     }
 
+    /*@PostMapping("/finalize-seeds/{id}")
+    fun finalizeSeeds(
+        @PathVariable id: Int,
+        model: Model,
+        auth: Authentication
+    ): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if(StaffPermissions.PERMISSION_SET_SEEDS.validate(user).not()) {
+            model.addAttribute("permission", StaffPermissions.PERMISSION_SET_SEEDS.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/finalize-seeds/$id", StaffPermissions.PERMISSION_SET_SEEDS.permissionString)
+            return "admin403"
+        }
+
+    }
+*/
 }
