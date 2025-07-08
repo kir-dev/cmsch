@@ -13,7 +13,7 @@ import kotlin.jvm.optionals.getOrNull
 class ComponentSettingService(
     private val env: Environment,
     private val componentSettingRepository: ComponentSettingRepository,
-    @Qualifier(DATABASE_SETTING_CACHE) private val settingCache: Optional<SettingCache>
+    @param:Qualifier(DATABASE_SETTING_CACHE) private val settingCache: Optional<SettingCache>
 ) {
 
     fun <T : Any> getBaseValue(setting: SettingRef<T>, defaultValue: T): T =

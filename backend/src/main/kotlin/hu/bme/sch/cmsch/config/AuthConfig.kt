@@ -13,29 +13,29 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 
 @Configuration
 class AuthConfig(
-    @Value("\${spring.security.oauth2.client.registration.authsch.client-id:}") private val authschId: String,
-    @Value("\${spring.security.oauth2.client.registration.authsch.client-secret:}") private val authschSecret: String,
-    @Value("\${spring.security.oauth2.client.registration.authsch.redirect-uri:}") private val authschRedirectUrl: String,
-    @Value("\${spring.security.oauth2.client.provider.authsch.authorization-uri:}") private val authschAuthorizationUrl: String,
-    @Value("\${spring.security.oauth2.client.provider.authsch.token-uri:}") private val authschTokenUri: String,
+    @param:Value("\${spring.security.oauth2.client.registration.authsch.client-id:}") private val authschId: String,
+    @param:Value("\${spring.security.oauth2.client.registration.authsch.client-secret:}") private val authschSecret: String,
+    @param:Value("\${spring.security.oauth2.client.registration.authsch.redirect-uri:}") private val authschRedirectUrl: String,
+    @param:Value("\${spring.security.oauth2.client.provider.authsch.authorization-uri:}") private val authschAuthorizationUrl: String,
+    @param:Value("\${spring.security.oauth2.client.provider.authsch.token-uri:}") private val authschTokenUri: String,
 
-    @Value("\${spring.security.oauth2.client.registration.google.client-id:}") private val googleId: String,
-    @Value("\${spring.security.oauth2.client.registration.google.client-secret:}") private val googleSecret: String,
-    @Value("\${spring.security.oauth2.client.registration.google.redirect-uri:}") private val googleRedirectUrl: String,
-    @Value("\${spring.security.oauth2.client.provider.google.authorization-uri:https://accounts.google.com/o/oauth2/auth}") private val googleAuthorizationUrl: String,
-    @Value("\${spring.security.oauth2.client.provider.google.token-uri:https://accounts.google.com/o/oauth2/token}") private val googleTokenUri: String,
+    @param:Value("\${spring.security.oauth2.client.registration.google.client-id:}") private val googleId: String,
+    @param:Value("\${spring.security.oauth2.client.registration.google.client-secret:}") private val googleSecret: String,
+    @param:Value("\${spring.security.oauth2.client.registration.google.redirect-uri:}") private val googleRedirectUrl: String,
+    @param:Value("\${spring.security.oauth2.client.provider.google.authorization-uri:https://accounts.google.com/o/oauth2/auth}") private val googleAuthorizationUrl: String,
+    @param:Value("\${spring.security.oauth2.client.provider.google.token-uri:https://accounts.google.com/o/oauth2/token}") private val googleTokenUri: String,
 
-    @Value("\${spring.security.oauth2.client.registration.keycloak.client-id:}") private val keycloakId: String,
-    @Value("\${spring.security.oauth2.client.registration.keycloak.client-secret:}") private val keycloakSecret: String,
-    @Value("\${spring.security.oauth2.client.registration.keycloak.redirect-uri:}") private val keycloakRedirectUrl: String,
-    @Value("\${spring.security.oauth2.client.registration.keycloak.scope:openid, profile, email}") private val keycloakScope: List<String>,
-    @Value("\${spring.security.oauth2.client.provider.keycloak.token-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/token}") private val keycloakTokenUri: String,
-    @Value("\${spring.security.oauth2.client.provider.keycloak.authorization-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/auth}") private val keycloakAuthorizationUrl: String,
-    @Value("\${spring.security.oauth2.client.provider.keycloak.jwk-set-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/certs}") private val keycloakJwkSet: String,
-    @Value("\${spring.security.oauth2.client.provider.keycloak.user-name-attribute:}") private val keycloakUserAttributeName: String,
-    @Value("\${custom.keycloak.issuer:http://localhost:8081/auth/realms/master}") private val keycloakIssuer: String,
+    @param:Value("\${spring.security.oauth2.client.registration.keycloak.client-id:}") private val keycloakId: String,
+    @param:Value("\${spring.security.oauth2.client.registration.keycloak.client-secret:}") private val keycloakSecret: String,
+    @param:Value("\${spring.security.oauth2.client.registration.keycloak.redirect-uri:}") private val keycloakRedirectUrl: String,
+    @param:Value("\${spring.security.oauth2.client.registration.keycloak.scope:openid, profile, email}") private val keycloakScope: List<String>,
+    @param:Value("\${spring.security.oauth2.client.provider.keycloak.token-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/token}") private val keycloakTokenUri: String,
+    @param:Value("\${spring.security.oauth2.client.provider.keycloak.authorization-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/auth}") private val keycloakAuthorizationUrl: String,
+    @param:Value("\${spring.security.oauth2.client.provider.keycloak.jwk-set-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/certs}") private val keycloakJwkSet: String,
+    @param:Value("\${spring.security.oauth2.client.provider.keycloak.user-name-attribute:}") private val keycloakUserAttributeName: String,
+    @param:Value("\${custom.keycloak.issuer:http://localhost:8081/auth/realms/master}") private val keycloakIssuer: String,
 
-    @Value("\${authsch.config.user-info-uri:https://auth.sch.bme.hu/api/profile}") private val userInfoUri: String,
+    @param:Value("\${authsch.config.user-info-uri:https://auth.sch.bme.hu/api/profile}") private val userInfoUri: String,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)

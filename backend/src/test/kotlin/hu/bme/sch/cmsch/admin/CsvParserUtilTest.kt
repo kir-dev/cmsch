@@ -24,7 +24,7 @@ data class TestData(
     @property:ImportFormat
     val name: String = "",
 
-    @JsonView(value = [ Edit::class ])
+    @param:JsonView(value = [ Edit::class ])
     val notInCsv: String = "",
 )
 
