@@ -7,9 +7,12 @@
 <div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
 
 <script>
-  function changeVisibility(id) {
-    const tr = document.getElementById(`team_${id}`);
-    tr.style.opacity = document.getElementById(`highlighted_${id}`).checked ? '1.0' : '0.6';
+  function lockSeedFinalize(){
+    const finalizeButton = document.querySelector('.btn-danger');
+    if (finalizeButton) {
+      finalizeButton.disabled = true;
+      finalizeButton.classList.add('disabled');
+    }
   }
 
   function flipWithNext(id) {
@@ -27,6 +30,7 @@
       document.querySelector(`#${nextRow.id} input[type="number"]`).value = document.getElementById(`order_${id}`).value;
       document.getElementById(`order_${id}`).value = tempOrder;
     }
+    lockSeedFinalize();
   }
 
   function flipWithPrevious(id) {
@@ -44,6 +48,7 @@
       document.querySelector(`#${previousRow.id} input[type="number"]`).value = document.getElementById(`order_${id}`).value;
       document.getElementById(`order_${id}`).value = tempOrder;
     }
+    lockSeedFinalize();
   }
 
   function finalizeSeeds() {

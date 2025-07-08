@@ -15,20 +15,40 @@
             <h1 class="narrow" th:text="|Mérkőzés eredményének bevitele|"></h1>
 
             <div class="card wide-false">
-                <object th:remove="tag">
+                <!--<object th:remove="tag">
                     <label class="card-label">Verseny</label>
                     <p th:text="${tournament.title}">Tournament title</p>
-                </object>
+                </object>-->
                 <object th:remove="tag">
                     <label class="card-label">Szakasz</label>
-                    <p th:text="${stage.title}">Stage title</p>
+                    <p th:text="${stage.name}">Stage title</p>
+                </object>
+                <object th:remove="tag">
+                    <label class="card-label">Kör</label>
+                    <p th:text="${match.level}">Round</p>
+                </object>
+                <object th:remove="tag">
+                    <label class="card-label">Időpont</label>
+                    <p th:text="${match.kickoffTime}">Kickoff Time</p>
+                </object>
+                <object th:remove="tag">
+                    <label class="card-label">Helyszín</label>
+                    <p th:text="${match.location}">Field</p>
                 </object>
             </div>
-
-            <div class="card">
-                <form th:action="@{/admin/control/tournament-match/score/{id}(id=${match.id})}" method="post">
-
-                </form>
+            <div class="flex">
+                <div class="card wide-false">
+                    <div class="card-content">
+                        <label class="card-label">Csapat 1</label>
+                        <p th:text="${match.homeTeamName}">Home Team</p>
+                    </div>
+                </div>
+                <div class="card wide-false">
+                    <div class="card-content">
+                        <label class="card-label">Csapat 2</label>
+                        <p th:text="${match.awayTeamName}">Away Team</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
