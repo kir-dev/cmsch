@@ -445,27 +445,9 @@ class AdmissionApiController(
             grants.add(EntryRole.LEAD_ORGANIZER)
     }
 
-    private fun addGrantsByRole(
-        user: UserEntity,
-        grants: MutableSet<EntryRole>
-    ) {
-        if (admissionComponent.grantUserByDefault && user.role.value >= RoleType.BASIC.value)
-            grants.add(EntryRole.USER)
-
-        if (admissionComponent.grantUserByAttendee && user.role.value >= RoleType.ATTENDEE.value)
-            grants.add(EntryRole.USER)
-
-        if (admissionComponent.grantUserByPrivileged && user.role.value >= RoleType.PRIVILEGED.value)
-            grants.add(EntryRole.USER)
-
-        if (admissionComponent.grantUserByStaff && user.role.value >= RoleType.STAFF.value)
-            grants.add(EntryRole.USER)
-
-        if (admissionComponent.grantOrganizerByStaff && user.role.value >= RoleType.STAFF.value)
-            grants.add(EntryRole.ORGANIZER)
-
-        if (admissionComponent.grantOrganizerByAdmin && user.role.value >= RoleType.ADMIN.value)
-            grants.add(EntryRole.ORGANIZER)
+    private fun addGrantsByRole(user: UserEntity, grants: MutableSet<EntryRole>) {
+        if (user.role.value >= admissionComponent.grantUserTo.value) grants.add(EntryRole.USER)
+        if (user.role.value >= admissionComponent.grantOrganizerTo.value) grants.add(EntryRole.ORGANIZER)
     }
 
 }
