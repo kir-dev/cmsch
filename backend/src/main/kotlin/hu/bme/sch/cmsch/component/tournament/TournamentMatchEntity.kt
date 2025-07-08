@@ -150,8 +150,8 @@ data class TournamentMatchEntity(
         return when {
             homeSeed == null || awaySeed == null -> null // No teams set
             homeTeamId == null || awayTeamId == null -> null // No teams set
-            homeSeed == 0 -> ParticipantDto(awayTeamId!!, awayTeamName)
-            awaySeed == 0 -> ParticipantDto(homeTeamId!!, homeTeamName)
+            homeTeamId == 0 -> ParticipantDto(awayTeamId!!, awayTeamName)
+            awayTeamId == 0 -> ParticipantDto(homeTeamId!!, homeTeamName)
             status != MatchStatus.FINISHED -> null
             homeTeamScore == null || awayTeamScore == null -> null
             homeTeamScore!! > awayTeamScore!! -> ParticipantDto(homeTeamId ?: 0, homeTeamName)
