@@ -914,6 +914,12 @@ a.btn {
     cursor: pointer;
 }
 
+button.btn.disabled {
+    background-color: var(--dark-4);
+    color: var(--lighter-text-color);
+    cursor: not-allowed;
+}
+
 button.btn:hover,
 input[type="submit"].btn:hover,
 a.btn:hover {
@@ -1698,6 +1704,13 @@ form ul {
     background-color: var(--dark-4);
     width: 100%;
     font-weight: 300;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .hidden {
