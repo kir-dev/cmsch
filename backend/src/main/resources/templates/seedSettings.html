@@ -51,12 +51,20 @@
     lockSeedFinalize();
   }
 
-  function finalizeSeeds() {
-    fetch("@{/admin/control/knockout-stage/finalize-seeds/}"+stage.id, {
+  function getCsrfToken() {
+    const token = document.querySelector('meta[name="_csrf"]');
+    const header = document.querySelector('meta[name="_csrf_header"]');
+    return token && header ? {header: header.content, token: token.content} : null;
+  }
+
+  function finalizeSeeds(stageId) {
+    const csrf = getCsrfToken();
+    fetch("@{/admin/control/knockout-stage/finalize-seeds/}"+stageId, {
       method: 'POST',
-      headers: {
+      headers: Object.assign({
         'Content-Type': 'application/json'
-      },
+      }, csrf ? {[csrf.header]: csrf.token} : {}),
+      credentials: 'same-origin',
       body: JSON.stringify({})
     }).then(response => {
       if (response.ok) {
@@ -84,8 +92,8 @@
 
         <object th:remove="tag">
           <label class="card-label">Szakasz</label>
-          <p th:text="${stageLevel}" class="highlight"></p>
-          <p th:text="${stageTitle}" class="highlight"></p>
+          <p th:text="${stage.level}" class="highlight"></p>
+          <p th:text="${stage.name}" class="highlight"></p>
         </object>
       </div>
 
@@ -151,7 +159,7 @@
               <ins>VISSZA</ins>
             </a>
             <object th:if="${not readOnly && not entityMode}" th:remove="tag">
-              <button type="button" class="btn btn-danger" onclick="finalizeSeeds()">
+              <button type="button" class="btn btn-danger" onclick="finalizeSeeds(stage.id)">
                 <span class="material-symbols-outlined">check</span>
                 <ins>SEEDEK VÉGLEGESÍTÉSE</ins>
               </button>

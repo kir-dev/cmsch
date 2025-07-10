@@ -112,7 +112,7 @@ data class TournamentMatchEntity(
     )
     @property:GenerateOverview(columnName = "Match status", order = 8)
     @property:ImportFormat
-    val status: MatchStatus = MatchStatus.NOT_STARTED,
+    var status: MatchStatus = MatchStatus.NOT_STARTED,
 
 ): ManagedEntity{
 

@@ -240,8 +240,7 @@ class KnockoutStageController(
         model.addAttribute("readOnly", readOnly)
         model.addAttribute("entityMode", false)
         model.addAttribute("tournamentTitle", tournament.get().title)
-        model.addAttribute("stageLevel", stage.level)
-        model.addAttribute("stageTitle", stage.name)
+        model.addAttribute("stage", stage)
         model.addAttribute("teams", teams)
 
         return "seedSettings"
@@ -307,7 +306,7 @@ class KnockoutStageController(
         return "redirect:/admin/control/$view/seed/${id}"
     }
 
-    /*@PostMapping("/finalize-seeds/{id}")
+    @PostMapping("/finalize-seeds/{id}")
     fun finalizeSeeds(
         @PathVariable id: Int,
         model: Model,
@@ -322,6 +321,28 @@ class KnockoutStageController(
             return "admin403"
         }
 
+        val stage = stageRepository.findById(id).getOrNull()
+            ?: return "redirect:/admin/control/$view"
+        if (stage.status >= StageStatus.SET) {
+            model.addAttribute("error", "A szakasz már be lett állítva, nem lehet módosítani a seedeket.")
+            return "redirect:/admin/control/$view/seed/${id}"
+        }
+        if (stage.participants.isBlank()) {
+            model.addAttribute("error", "Nincsenek beállítva a seedek.")
+            return "redirect:/admin/control/$view/seed/${id}"
+        }
+        if (onEntityPreSave(stage, auth)) {
+            transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
+                stage.status = StageStatus.SET
+                stageRepository.save(stage)
+                stageService.onSeedsFinalized(stage)
+                stageService.calculateTeamsFromSeeds(stage)
+            }
+            auditLog.edit(user, component.component+"finalize-seeds", "Szakasz seedjei beállítva.")
+        } else {
+            model.addAttribute("error", "A szakasz nem lett frissítve.")
+        }
+
+        return "redirect:/admin/control/$view/seed/${id}"
     }
-*/
 }

@@ -33,10 +33,10 @@
                 </object>
                 <object th:remove="tag">
                     <label class="card-label">Helyszín</label>
-                    <p th:text="${match.location}">Field</p>
+                    <p th:text="${match.location?:'TBD'}">Field</p>
                 </object>
             </div>
-            <div class="flex">
+            <div class="flex-row">
                 <div class="card wide-false">
                     <div class="card-content">
                         <label class="card-label">Csapat 1</label>

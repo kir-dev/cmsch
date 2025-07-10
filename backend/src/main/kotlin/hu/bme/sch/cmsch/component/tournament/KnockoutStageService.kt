@@ -246,4 +246,32 @@ class KnockoutStageService(
             }
         }
     }
+
+    fun onSeedsFinalized(stage: KnockoutStageEntity) {
+        val matches = matchRepository.findAllByStageId(stage.id)
+        if (matches.isEmpty()) {
+            throw IllegalStateException("No matches found for stage ${stage.id} when finalizing seeds.")
+        }
+
+        for (match in matches) {
+            val winner = match.winner()
+            if (winner != null) {
+                if (winner.teamId == match.homeTeamId){
+                    match.homeTeamScore = 3
+                    match.awayTeamScore = 0
+                    match.status = MatchStatus.FINISHED
+                    matchRepository.save(match)
+                } else if (winner.teamId == match.awayTeamId) {
+                    match.homeTeamScore = 0
+                    match.awayTeamScore = 3
+                    match.status = MatchStatus.FINISHED
+                    matchRepository.save(match)
+                } else {
+                    // Handle case where winner is not one of the teams in the match
+                    throw IllegalStateException("Winner team ID ${winner.teamId} does not match any team in match ${match.id}.")
+                }
+            }
+        }
+
+    }
 }
