@@ -2,7 +2,7 @@ import { Box, Button, Center, Heading, HStack, Image, Select, Stack, Text, useTo
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useRiddleHistoryQuery } from '../../api/hooks/riddle/useRiddleHistoryQuery'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'

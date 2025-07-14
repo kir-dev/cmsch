@@ -14,7 +14,7 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { AbsolutePaths } from '../../util/paths'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'

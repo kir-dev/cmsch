@@ -1,7 +1,7 @@
-import { Box, Button, FormControl, FormLabel, Heading, HStack, Input, useColorModeValue, useToast } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, FormControl, FormLabel, Heading, Input, useToast } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useAliasChangeMutation } from '../../api/hooks/alias/useAliasChangeMutation'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -15,7 +15,6 @@ export const AliasChangePage = () => {
   const navigate = useNavigate()
   const toast = useToast()
   const submissionMutation = useAliasChangeMutation()
-  const borderColor = useColorModeValue('gray.200', 'gray.600')
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
   const component = useConfigContext()?.components.profile
@@ -66,9 +65,9 @@ export const AliasChangePage = () => {
     <CmschPage>
       <Helmet title="Becenév módosítása" />
       <Heading my={5}>Becenév módosítása</Heading>
-      <Box as="form" borderWidth={2} borderColor={borderColor} borderRadius="md" p={5} mt={5} onSubmit={onSubmitAlias}>
+      <Box display="flex" flexDirection="column" as="form" onSubmit={onSubmitAlias}>
         <FormControl>
-          <FormLabel htmlFor="alias">Becenév:</FormLabel>
+          <FormLabel htmlFor="alias">Add meg a beceneved:</FormLabel>
           <Input
             id="alias"
             name="alias"
@@ -78,18 +77,14 @@ export const AliasChangePage = () => {
             onChange={(e) => setAlias(e.target.value)}
           />
         </FormControl>
-
-        <HStack spacing={3} mt={10}>
-          <Button type="submit" colorScheme="brand" width="100%">
+        <ButtonGroup mt={8} spacing={3} alignSelf="center">
+          <Button type="submit" colorScheme="brand">
             Mentés
           </Button>
-          <Button type="button" onClick={removeAlias} colorScheme="red" width="100%">
+          <Button type="button" onClick={removeAlias} colorScheme="red" variant="outline">
             Törlés
           </Button>
-          <Button type="button" onClick={() => navigate(AbsolutePaths.PROFILE)} colorScheme="gray" width="100%">
-            Mégse
-          </Button>
-        </HStack>
+        </ButtonGroup>
       </Box>
     </CmschPage>
   )

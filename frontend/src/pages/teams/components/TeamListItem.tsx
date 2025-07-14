@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Box, Heading, HStack, Image, Spacer, VStack } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 

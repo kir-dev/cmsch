@@ -1,4 +1,4 @@
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router'
 
 import { useTeamDetails } from '../../api/hooks/team/queries/useTeamDetails'
 import { TeamDetailsCore } from './components/TeamDetailsCore'

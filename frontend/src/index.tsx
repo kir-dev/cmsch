@@ -2,7 +2,7 @@ import { ColorModeScript } from '@chakra-ui/react'
 import React from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './api/contexts/auth/AuthContext'
 
 import { App } from './App'
@@ -14,6 +14,7 @@ import { ServiceProvider } from './api/contexts/service/ServiceContext'
 import { HelmetProvider } from 'react-helmet-async'
 import { ErrorBoundary } from './util/errorBoundary'
 import { PushNotificationHandler } from './common-components/PushNotificationHandler.tsx'
+import { AppBackground } from './common-components/layout/AppBackground.tsx'
 
 initAxios()
 
@@ -23,24 +24,26 @@ root.render(
   <React.StrictMode>
     <ColorModeScript />
     <ThemeConfig>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <BrowserRouter>
-            <ServiceProvider>
-              <ConfigProvider>
+      <AppBackground>
+        <QueryClientProvider client={queryClient}>
+          <HelmetProvider>
+            <BrowserRouter>
+              <ServiceProvider>
                 <ErrorBoundary>
-                  <AuthProvider>
-                    <PushNotificationHandler>
-                      <App />
-                      <ReactQueryDevtools />
-                    </PushNotificationHandler>
-                  </AuthProvider>
+                  <ConfigProvider>
+                    <AuthProvider>
+                      <PushNotificationHandler>
+                        <App />
+                        <ReactQueryDevtools />
+                      </PushNotificationHandler>
+                    </AuthProvider>
+                  </ConfigProvider>
                 </ErrorBoundary>
-              </ConfigProvider>
-            </ServiceProvider>
-          </BrowserRouter>
-        </HelmetProvider>
-      </QueryClientProvider>
+              </ServiceProvider>
+            </BrowserRouter>
+          </HelmetProvider>
+        </QueryClientProvider>
+      </AppBackground>
     </ThemeConfig>
   </React.StrictMode>
 )

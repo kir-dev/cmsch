@@ -1,5 +1,5 @@
 import { Box, Heading, LinkBox, LinkOverlay, Text, useColorModeValue } from '@chakra-ui/react'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { EventIndicator } from '../../../common-components/EventIndicator'
 import { isCurrentEvent, isUpcomingEvent, stringifyTimeRange } from '../../../util/core-functions.util'

@@ -2,7 +2,7 @@ import { Box, Button, Divider, Flex, Grid, Heading, Image, Text, useColorModeVal
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { useTeamAcceptJoin } from '../../../api/hooks/team/actions/useTeamAcceptJoin'
 import { useTeamCancelJoin } from '../../../api/hooks/team/actions/useTeamCancelJoin'

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.0"
+    id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.owasp.dependencycheck") version "12.1.1"
     kotlin("jvm") version "2.1.21"
@@ -17,7 +17,7 @@ group = "hu.bme.sch"
 val ghRef: String? = System.getenv("GITHUB_REF")
 version = if (ghRef != null && ghRef.startsWith("refs/tags/v")) ghRef.substring(11) else "dev"
 
-java.sourceCompatibility = JavaVersion.VERSION_23
+java.sourceCompatibility = JavaVersion.VERSION_24
 
 springBoot {
     buildInfo()
@@ -99,8 +99,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
-    buildpacks = listOf("docker.io/paketobuildpacks/adoptium", "urn:cnb:builder:paketo-buildpacks/java")
-    builder = "paketobuildpacks/builder-jammy-base"
+    builder = "bellsoft/buildpacks.builder:glibc"
     environment = mapOf(
         "BP_NATIVE_IMAGE" to "false",
         "CDS_TRAINING_JAVA_TOOL_OPTIONS" to "-Dspring.profiles.include=prewarm",

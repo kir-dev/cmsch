@@ -1,7 +1,7 @@
 import { Box, FormLabel, Input, Textarea, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { Control, Controller, FieldArrayWithId, UseFieldArrayReplace } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
 import { AbsolutePaths } from '../../../util/paths'

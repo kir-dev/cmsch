@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Fade, Heading, Spinner, useColorModeValue } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { QRScanResultComponent } from './components/QRScanResultComponent'

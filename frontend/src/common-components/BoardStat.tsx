@@ -1,5 +1,5 @@
 import { Stat, StatHelpText, StatLabel, StatNumber, StatProps } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useOpaqueBackground } from '../util/core-functions.util'
 
 interface BoardStatProps extends StatProps {

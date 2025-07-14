@@ -18,6 +18,12 @@ const Clock = ({ countTo }: ClockProps) => {
   }, [])
   return (
     <Flex flexDirection={['column', 'row']} alignItems="center" justifyContent="center">
+      {(duration.years || 0) > 0 && (
+        <>
+          <ClockSegment value={duration.years?.toString()} label={'év'} />
+          <Dash />
+        </>
+      )}
       {(duration.months || 0) > 0 && (
         <>
           <ClockSegment value={duration.months?.toString()} label={'hónap'} />
@@ -41,10 +47,11 @@ interface ClockSegmentProps {
 }
 
 const ClockSegment = ({ value, label }: ClockSegmentProps) => {
+  const valueText = (value || '00').padStart(2, '0')
   return (
     <VStack w="20%" mx={10} my={5}>
       <Heading fontSize={60} verticalAlign="center" lineHeight={10}>
-        {value || '00'}
+        {valueText}
       </Heading>
       <Text>{label}</Text>
     </VStack>
