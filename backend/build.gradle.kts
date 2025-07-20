@@ -17,7 +17,7 @@ group = "hu.bme.sch"
 val ghRef: String? = System.getenv("GITHUB_REF")
 version = if (ghRef != null && ghRef.startsWith("refs/tags/v")) ghRef.substring(11) else "dev"
 
-java.sourceCompatibility = JavaVersion.VERSION_24
+java.sourceCompatibility = JavaVersion.VERSION_23
 
 springBoot {
     buildInfo()
