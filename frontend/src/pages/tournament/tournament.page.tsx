@@ -1,5 +1,5 @@
 import {useTournamentQuery} from "../../api/hooks/tournament/queries/useTournamentQuery.ts";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {toInteger} from "lodash";
 import {PageStatus} from "../../common-components/PageStatus.tsx";
 import Tournament from "./components/Tournament.tsx";

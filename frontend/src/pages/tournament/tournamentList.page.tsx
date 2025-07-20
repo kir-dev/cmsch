@@ -6,7 +6,7 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
 import { Helmet } from 'react-helmet-async'
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import {AbsolutePaths} from "../../util/paths.ts";
 
 
