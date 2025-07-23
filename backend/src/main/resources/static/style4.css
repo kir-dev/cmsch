@@ -989,6 +989,15 @@ a.btn-danger:hover {
     color: var(--primary-color);
 }
 
+.form-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+}
+
 form label,
 .flagged-label {
     display: block;
