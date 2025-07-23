@@ -284,6 +284,11 @@ class KnockoutStageController(
             ))
             i++
         }
+        val stageStatus: StageStatus = allRequestParams["stageStatus"]!!.let { when (it) {
+            "CREATED" -> StageStatus.CREATED
+            "SET" -> StageStatus.SET
+            else -> return "error"
+        }}
 
         val updatedSeeds = dto.map { it.initialSeed }.toSet()
         if (updatedSeeds.size != dto.size) {
@@ -295,7 +300,10 @@ class KnockoutStageController(
             transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
                 stageService.setInitialSeeds(stageEntity, dto, user)
                 stageEntity.seeds=stageService.setSeeds(stageEntity)
+                stageEntity.status= stageStatus
                 stageRepository.save(stageEntity)
+                if (stageStatus == StageStatus.SET)
+                    stageService.onSeedsFinalized(stageEntity)
                 stageService.calculateTeamsFromSeeds(stageEntity)
             }
             auditLog.edit(user, component.component+"seed", dto.toString())
