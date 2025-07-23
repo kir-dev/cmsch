@@ -2,7 +2,6 @@ package hu.bme.sch.cmsch.component.email
 
 import com.github.mustachejava.DefaultMustacheFactory
 import hu.bme.sch.cmsch.component.login.CmschUser
-import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -14,26 +13,25 @@ import java.io.StringWriter
 class EmailService(
     private val emailTemplateRepository: EmailTemplateRepository,
     private val emailComponent: EmailComponent,
-    emailProviders: List<EmailProvider>,
+    private val kirMail: KirMailEmailProvider,
+    private val mailgun: MailgunEmailProvider
 ) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
-    private val emailProviders = emailProviders.associateBy { it.getProviderName() }
-    private val selectedProvider get() = emailProviders[emailComponent.emailProvider]
     private val mustacheFactory = DefaultMustacheFactory()
+    private val selectedProvider
+        get() = when (emailComponent.provider) {
+            EmailProviderType.KIR_MAIL -> kirMail
+            EmailProviderType.MAILGUN -> mailgun
+        }
 
     @Async
     fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        selectedProvider?.sendTextEmail(responsible, subject, content, to) ?: run {
-            log.info("Unknown provider ${emailComponent.emailProvider}")
-        }
+        selectedProvider.sendTextEmail(responsible, subject, content, to)
     }
 
     @Async
     fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
-        selectedProvider?.sendHtmlEmail(responsible, subject, content, to) ?: run {
-            log.info("Unknown provider ${emailComponent.emailProvider}")
-        }
+        selectedProvider.sendHtmlEmail(responsible, subject, content, to)
     }
 
     @Transactional(readOnly = true)

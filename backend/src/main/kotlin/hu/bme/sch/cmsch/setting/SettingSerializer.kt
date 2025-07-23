@@ -43,6 +43,42 @@ object StringSettingSerializer : SettingSerializer<String> {
 
 }
 
+data class SelectSettingSerializer(private val options: Set<String>) : SettingSerializer<String> {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    override fun deserialize(value: String, defaultValue: String, strict: Boolean): String {
+        if (options.contains(value)) return value
+
+        if (strict) {
+            throw IllegalArgumentException("Value $value is not in allowed options $options")
+        }
+
+        log.error("Value {} is not in allowed options {}", value, options)
+        return value
+    }
+
+    override fun serialize(value: String, strict: Boolean): String = value
+
+}
+
+class EnumSettingSerializer<T>(private val clazz: Class<T>) : SettingSerializer<T> where T : Enum<T> {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    override fun serialize(value: T, strict: Boolean): String = value.name
+
+    override fun deserialize(value: String, defaultValue: T, strict: Boolean): T =
+        runCatching { java.lang.Enum.valueOf(clazz, value) }
+            .fold(
+                onSuccess = { it },
+                onFailure = {
+                    if (strict) throw IllegalArgumentException("Value $value cannot be converted to enum $clazz", it)
+
+                    log.error("Value {} cannot be converted to {}", value, clazz, it)
+                    return@fold defaultValue
+                }
+            )
+}
+
 data class RoleTypeSetSettingSerializer(val grantedRoles: Set<RoleType>) : SettingSerializer<Set<RoleType>> {
     private val log = LoggerFactory.getLogger(javaClass)
 

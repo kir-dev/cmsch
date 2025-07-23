@@ -90,23 +90,11 @@ class AdmissionComponent(
     val roleGroup by SettingGroup(fieldName = "Szerepek hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni")
 
-    var grantUserByDefault by BooleanSettingRef(fieldName = "USER hozzáférés alapértelmezetten",
-        description = "Ha be van kapcsolva, akkor minden (REGULAR+) felhasználó jogosult a belépésre alapból")
+    var grantUserTo by EnumSettingRef(RoleType.SUPERUSER, fieldName = "USER hozzáférés",
+        description = "A kiválasztott rangtól és felette mindenki USER hozzáférést kap")
 
-    var grantUserByAttendee by BooleanSettingRef(fieldName = "USER hozzáférés résztvevőknek",
-        description = "Ha be van kapcsolva, akkor minden résztvevő (ATTENDEE+) felhasználó jogosult a belépésre")
-
-    var grantUserByPrivileged by BooleanSettingRef(fieldName = "USER hozzáférés privileged résztvevőknek",
-        description = "Ha be van kapcsolva, akkor minden résztvevő (PRIVILEGED+) felhasználó jogosult a belépésre")
-
-    var grantUserByStaff by BooleanSettingRef(fieldName = "USER hozzáférés szervezőknek",
-        description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhasználó jogosult a belépésre")
-
-    var grantOrganizerByStaff by BooleanSettingRef(fieldName = "ORGANIZER hozzáférés szervezőknek",
-        description = "Ha be van kapcsolva, akkor minden szervező (STAFF+) felhasználó jogosult a szervező rangra")
-
-    var grantOrganizerByAdmin by BooleanSettingRef(fieldName = "ORGANIZER hozzáférés adminoknak",
-        description = "Ha be van kapcsolva, akkor minden szervező (ADMIN+) felhasználó jogosult a szervező rangra")
+    var grantOrganizerTo by EnumSettingRef(RoleType.SUPERUSER, fieldName = "ORGANIZER hozzáférés",
+        description = "A kiválasztott rangtól és felette mindenki ORGANIZER hozzáférést kap")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

@@ -34,8 +34,7 @@ class EmailComponent(
     final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.NOBODY,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
-    var emailProvider by StringSettingRef("kirmail", fieldName = "Email szolgáltató", serverSideOnly = true,
-        description = "Ezek lehetnek: kirmail, mailgun (ettől még be kell kapcsolni őket lentebb)")
+    var provider by EnumSettingRef(EmailProviderType.KIR_MAIL, fieldName = "Email szolgáltató", serverSideOnly = true)
 
     /// -------------------------------------------------------------------------------------------------------------------
 

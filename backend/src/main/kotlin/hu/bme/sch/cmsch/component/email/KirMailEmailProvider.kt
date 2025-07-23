@@ -26,8 +26,6 @@ class KirMailEmailProvider(
     private val objectMapper = jacksonObjectMapper()
     private val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
 
-    override fun getProviderName() = "kirmail"
-
     override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         if (!emailComponent.enableKirMail)
             return
