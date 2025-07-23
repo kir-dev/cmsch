@@ -6,9 +6,6 @@
 <div th:replace="~{layout4 :: mobile(null)}"></div>
 <div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
 
-<script>
-
-</script>
 <div class="group">
     <div class="app">
         <div th:replace="~{layout4 :: menus(${userContext}, ${context})}"></div>
@@ -40,7 +37,7 @@
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
-                        <tr th:each="match : ${matches}" th:id="|match_${match.id}|">
+                        <tr th:each="match : ${matches}" th:id="|match_${match.id}|" style="height: 50px;">
                             <td th:text="${match.gameId}">Match ID</td>
                             <td th:text="${match.level}">Round</td>
                             <td th:text="${match.homeTeamName}">Team 1</td>
