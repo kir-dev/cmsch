@@ -2,7 +2,7 @@ import { Box, Flex, Heading, Image, Text, useColorModeValue } from '@chakra-ui/r
 import { useMemo } from 'react'
 import { FaHeart } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { BUGREPORT_URL, HIDE_KIR_DEV_IN_FOOTER } from '../../util/configs/environment.config'
+import { HIDE_KIR_DEV_IN_FOOTER } from '../../util/configs/environment.config'
 import Markdown from '../Markdown'
 import { OrganizerLogo } from './OrganizerLogo'
 import { PartnerLogo } from './PartnerLogo'
@@ -13,6 +13,7 @@ export const Footer = () => {
   const component = config?.components.footer
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   const partners = useMemo(() => parseSponsors(component?.partnerLogoUrls, component?.partnerAlts, component?.partnerWebsiteUrls), [config])
+  console.log(partners)
   const backdropFilter = useColorModeValue(config?.components?.style?.lightFooterFilter, config?.components?.style?.darkFooterFilter)
   const background = useColorModeValue(config?.components?.style?.lightFooterBackground, config?.components?.style?.darkFooterBackground)
   const bgShadowColor = useColorModeValue(
@@ -89,7 +90,7 @@ export const Footer = () => {
             <OrganizerLogo
               imageSrc={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')}
               websiteUrl={component.devWebsiteUrl}
-              contactUrl={BUGREPORT_URL}
+              contactUrl={component.bugReportUrl}
               minimalistic={component.minimalisticFooter}
             />
           )}

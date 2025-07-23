@@ -11,10 +11,12 @@ interface OrganizerLogoProps {
 }
 
 export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, instagramUrl, facebookUrl }: OrganizerLogoProps) {
+  const hasSocialUrls = facebookUrl || instagramUrl
+  const hasUrls = websiteUrl || contactUrl || facebookUrl || instagramUrl || hasSocialUrls
   return (
     <HStack align="center">
       <Image src={imageSrc} w={32} h={32} objectPosition="center" objectFit="contain" />
-      {!minimalistic && (
+      {!minimalistic && hasUrls && (
         <>
           <Divider orientation="vertical" h={20} />
           <VStack align="flex-start">
@@ -28,7 +30,7 @@ export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, 
                 Kapcsolat
               </Link>
             )}
-            {(facebookUrl || instagramUrl) && (
+            {hasSocialUrls && (
               <HStack>
                 {facebookUrl && (
                   <Link href={facebookUrl}>
