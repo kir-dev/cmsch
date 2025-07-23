@@ -8,7 +8,7 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.service.ControlPermissions
 import jakarta.persistence.*
-import org.hibernate.proxy.HibernateProxy
+import org.hibernate.Hibernate
 import org.springframework.core.env.Environment
 
 @Entity
@@ -67,21 +67,13 @@ data class AuditLogEntity(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null) return false
-        val oEffectiveClass =
-            if (other is HibernateProxy) other.hibernateLazyInitializer.persistentClass else other.javaClass
-        val thisEffectiveClass =
-            if (this is HibernateProxy) this.hibernateLazyInitializer.persistentClass else this.javaClass
-        if (thisEffectiveClass != oEffectiveClass) return false
-        if (other.javaClass != this.javaClass) {
-            return false
-        }
+        if (Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as AuditLogEntity
 
-        return id != null && id == other.id
+        return id == other.id
     }
 
-    override fun hashCode(): Int =
-        if (this is HibernateProxy) this.hibernateLazyInitializer.persistentClass.hashCode() else javaClass.hashCode()
+    override fun hashCode(): Int = Hibernate.getClass(this).hashCode()
 
     @Override
     override fun toString(): String {

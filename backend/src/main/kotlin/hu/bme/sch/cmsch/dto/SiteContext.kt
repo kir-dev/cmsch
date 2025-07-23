@@ -51,9 +51,9 @@ data class SearchableResource(
 )
 
 data class UserConfig(
-    @JsonProperty(required = false)
+    @param:JsonProperty(required = false)
     var favoriteMenus: MutableList<String> = mutableListOf(),
 
-    @JsonProperty(required = false)
+    @param:JsonProperty(required = false)
     var dismissedMotd: String = ""
 )
