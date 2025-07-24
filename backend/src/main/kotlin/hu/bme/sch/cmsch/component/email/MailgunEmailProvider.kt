@@ -27,8 +27,6 @@ class MailgunEmailProvider(
         .defaultHeaders { header -> header.setBasicAuth("api", startupPropertyConfig.mailgunToken) }
         .build()
 
-    override fun getProviderName() = "mailgun"
-
     override fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         if (!emailComponent.enableMailgun)
             return

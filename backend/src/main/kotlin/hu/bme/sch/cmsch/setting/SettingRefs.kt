@@ -36,6 +36,73 @@ data class StringSettingRef(
 
 }
 
+data class SelectSettingRef(
+    private val defaultValue: String,
+    private val options: Set<String>,
+    private val strictConversion: Boolean = true,
+    private val cache: Boolean = true,
+    private val persist: Boolean = true,
+    private val serverSideOnly: Boolean = false,
+    private val type: SettingType = SettingType.SELECT,
+    private val fieldName: String? = null,
+    private val description: String = "",
+    private val minRoleToEdit: RoleType = RoleType.ADMIN,
+) : SettingRegisteringLoader<SettingRef<String>>() {
+
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<String> =
+        object : SettingRef<String>(
+            componentPropertyService = thisRef.componentSettingService,
+            serializer = SelectSettingSerializer(options),
+            component = thisRef.component,
+            property = prop.name,
+            defaultValue = defaultValue,
+            strictConversion = strictConversion,
+            cache = cache,
+            persist = persist,
+            serverSideOnly = serverSideOnly,
+            type = type,
+            fieldName = fieldName ?: prop.name,
+            description = description,
+            minRoleToEdit = minRoleToEdit,
+        ) {
+            val options = SelectSettingRef::options
+        }
+
+}
+
+data class EnumSettingRef<T>(
+    private val defaultValue: T,
+    private val strictConversion: Boolean = true,
+    private val cache: Boolean = true,
+    private val persist: Boolean = true,
+    private val serverSideOnly: Boolean = false,
+    private val type: SettingType = SettingType.SELECT,
+    private val fieldName: String? = null,
+    private val description: String = "",
+    private val minRoleToEdit: RoleType = RoleType.ADMIN
+) : SettingRegisteringLoader<SettingRef<T>>() where T : Enum<T> {
+
+    override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<T> =
+        object : SettingRef<T>(
+            componentPropertyService = thisRef.componentSettingService,
+            serializer = EnumSettingSerializer(defaultValue.javaClass),
+            component = thisRef.component,
+            property = prop.name,
+            defaultValue = defaultValue,
+            strictConversion = strictConversion,
+            cache = cache,
+            persist = persist,
+            serverSideOnly = serverSideOnly,
+            type = type,
+            fieldName = fieldName ?: prop.name,
+            description = description,
+            minRoleToEdit = minRoleToEdit,
+        ) {
+            val options = defaultValue.javaClass.enumConstants
+        }
+
+}
+
 data class JsonSettingRef<T : Any>(
     private val defaultValue: T,
     private val strictConversion: Boolean = true,

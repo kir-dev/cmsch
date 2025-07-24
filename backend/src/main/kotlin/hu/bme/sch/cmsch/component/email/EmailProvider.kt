@@ -2,9 +2,11 @@ package hu.bme.sch.cmsch.component.email
 
 import hu.bme.sch.cmsch.component.login.CmschUser
 
-interface EmailProvider {
+enum class EmailProviderType {
+    KIR_MAIL, MAILGUN
+}
 
-    fun getProviderName(): String
+interface EmailProvider {
 
     fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>)
 

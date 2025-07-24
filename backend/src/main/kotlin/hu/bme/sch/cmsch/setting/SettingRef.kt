@@ -3,21 +3,22 @@ package hu.bme.sch.cmsch.setting
 import hu.bme.sch.cmsch.model.RoleType
 
 enum class SettingType {
-    TEXT,
-    URL,
+    BOOLEAN,
+    BOOLEAN_JSON_LIST,
     COLOR,
+    COMPONENT_GROUP,
+    COMPONENT_NAME,
+    DATE_TIME,
+    IMAGE,
+    JSON,
     LONG_TEXT,
     LONG_TEXT_MARKDOWN,
-    IMAGE,
-    NUMBER,
-    BOOLEAN,
     MIN_ROLE,
-    COMPONENT_GROUP,
-    JSON,
     MULTIPLE_PEOPLE,
-    DATE_TIME,
-    COMPONENT_NAME,
-    BOOLEAN_JSON_LIST
+    NUMBER,
+    SELECT,
+    TEXT,
+    URL,
 }
 
 open class SettingRef<T : Any>(

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
     matchIfMissing = false
 )
 class NovaIntegrationController(
-    @Value("\${hu.bme.sch.cmsch.token.nova-in:}") private val validTokenIn: String,
+    @param:Value("\${hu.bme.sch.cmsch.token.nova-in:}") private val validTokenIn: String,
     private val service: NovaIntegrationService
 ) {
 

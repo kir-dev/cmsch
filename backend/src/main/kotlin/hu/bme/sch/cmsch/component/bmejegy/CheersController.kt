@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/cheers")
 @ConditionalOnBean(BmejegyComponent::class)
 class CheersController(
-    @Value("\${hu.bme.sch.cmsch.component.bmejegy.cheers.token:}") private val token: String,
+    @param:Value("\${hu.bme.sch.cmsch.component.bmejegy.cheers.token:}") private val token: String,
     private val cheersBmejegyService: CheersBmejegyService
 ) {
 

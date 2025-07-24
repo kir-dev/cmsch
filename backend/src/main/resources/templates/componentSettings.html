@@ -404,6 +404,25 @@
                                 <div style="clear:both"></div>
                             </div>
 
+                            <div th:if="${input.type.name() == 'SELECT'}" class="field-group"
+                                 th:id="|_${input.property}|">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <select th:id="|input.property|" th:name="${input.property}">
+                                    <option th:each="opt : ${input?.options}"
+                                            th:value="${opt}"
+                                            th:text="${opt}"
+                                            th:selected="${#strings.equals(input.getStringValue(), opt)}"></option>
+                                </select>
+                                <span class="note" th:text="${input.description}"></span>
+                                <div style="clear:both"></div>
+                            </div>
+
                             <div th:if="${input.type.name() == 'COMPONENT_NAME'}" class="field-group" th:id="|_${input.property}|">
                                 <label th:for="${input.property}"
                                        th:text="${input.fieldName}">

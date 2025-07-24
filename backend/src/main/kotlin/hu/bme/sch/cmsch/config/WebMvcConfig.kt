@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class WebMvcConfig(
-    @Value("\${cmsch.frontend.production-url:*}") private val productionUrl: String,
-    @Value("\${cmsch.backend.allowed-origin-patterns:*}") private val allowedOrigins: List<String>
+    @param:Value("\${cmsch.frontend.production-url:*}") private val productionUrl: String,
+    @param:Value("\${cmsch.backend.allowed-origin-patterns:*}") private val allowedOrigins: List<String>
 ) : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {

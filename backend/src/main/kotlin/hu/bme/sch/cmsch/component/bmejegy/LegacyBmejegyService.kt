@@ -39,8 +39,8 @@ const val LEGACY_BMEJEGY_CONFIG_PROPERTY = "hu.bme.sch.cmsch.legacy-bmejegy-url"
 @ConditionalOnBean(BmejegyComponent::class)
 @ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "true", matchIfMissing = false)
 class LegacyBmejegyService(
-    @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.username:}") private val bmejegyUsername: String,
-    @Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.password:}") private val bmejegyPassword: String,
+    @param:Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.username:}") private val bmejegyUsername: String,
+    @param:Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.password:}") private val bmejegyPassword: String,
     private val bmejegy: BmejegyComponent,
     private val objectMapper: ObjectMapper,
     private val clock: TimeService,
