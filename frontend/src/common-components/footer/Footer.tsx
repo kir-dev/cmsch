@@ -13,7 +13,7 @@ export const Footer = () => {
   const component = config?.components.footer
   const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
   const partners = useMemo(() => parseSponsors(component?.partnerLogoUrls, component?.partnerAlts, component?.partnerWebsiteUrls), [config])
-  console.log(partners)
+
   const backdropFilter = useColorModeValue(config?.components?.style?.lightFooterFilter, config?.components?.style?.darkFooterFilter)
   const background = useColorModeValue(config?.components?.style?.lightFooterBackground, config?.components?.style?.darkFooterBackground)
   const bgShadowColor = useColorModeValue(
