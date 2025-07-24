@@ -83,7 +83,7 @@ const ProfilePage = ({}: Props) => {
                 ? component.profileComplete
                 : templateStringReplace(component.profileIncomplete, profile.incompleteTasks?.join(', '))}
             </Box>
-            {!profile.profileIsComplete && (
+            {!profile.profileIsComplete && !!config.task && (
               <Flex flex={1} justifyContent="end">
                 <LinkButton href={AbsolutePaths.TASKS} ml={5} colorScheme="red">
                   Feladatok
