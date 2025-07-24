@@ -23,7 +23,9 @@ const TaskCategoryListPage = () => {
 
   const required = prCategories.length > 0 && (
     <>
-      <Heading>{component.profileRequiredTitle}</Heading>
+      <Heading as="h1" variant="main-title">
+        {component.profileRequiredTitle}
+      </Heading>
       {component.profileRequiredMessage && <Markdown text={component.profileRequiredMessage} />}
       <VStack spacing={4} mt={5} align="stretch">
         {prCategories.map((category) => (

@@ -24,17 +24,20 @@ import { PageStatus } from '../../common-components/PageStatus'
 import Markdown from '../../common-components/Markdown'
 import { AccessKeyResponse } from '../../util/views/accessKey'
 import { l } from '../../util/language'
+import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()
+  const tokenRefresh = useTokenRefresh()
   const [value, setValue] = useState<string>()
   const [error, setError] = useState<string>()
   const toast = useToast()
   const navigate = useNavigate()
 
-  const onData = (response: AccessKeyResponse) => {
+  const onData = async (response: AccessKeyResponse) => {
     if (response.success) {
       if (response.refreshSession) {
+        await tokenRefresh.mutateAsync()
         refetch()
       }
       toast({ title: l('access-token-success'), status: 'success' })
