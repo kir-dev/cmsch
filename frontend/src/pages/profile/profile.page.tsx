@@ -86,7 +86,7 @@ const ProfilePage = ({}: Props) => {
             {!profile.profileIsComplete && !!config.task && (
               <Flex flex={1} justifyContent="end">
                 <LinkButton href={AbsolutePaths.TASKS} ml={5} colorScheme="red">
-                  Feladatok
+                  {config.task.title}
                 </LinkButton>
               </Flex>
             )}
