@@ -229,7 +229,7 @@ class KnockoutStageService(
         matchRepository.deleteAllByStageId(stage.id)
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 20) // Every 20 minutes
+    /*@Scheduled(fixedRate = 1000 * 60 * 20) // Every 20 minutes
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun updateSeeds(){
         val stages = stageRepository.findAll()
@@ -245,7 +245,7 @@ class KnockoutStageService(
                 stageRepository.save(stage)
             }
         }
-    }
+    }*/
 
     fun onSeedsFinalized(stage: KnockoutStageEntity) {
         val matches = matchRepository.findAllByStageId(stage.id)

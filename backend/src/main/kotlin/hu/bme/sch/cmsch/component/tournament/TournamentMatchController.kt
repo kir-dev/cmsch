@@ -12,10 +12,14 @@ import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.TransactionDefinition
+import org.springframework.transaction.annotation.Isolation
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import kotlin.jvm.optionals.getOrNull
 
 @Controller
@@ -32,7 +36,8 @@ class TournamentMatchController(
     objectMapper: ObjectMapper,
     transactionManager: PlatformTransactionManager,
     storageService: StorageService,
-    env: Environment
+    env: Environment,
+    private val knockoutStageRepository: KnockoutStageRepository
 ) : TwoDeepEntityPage<MatchGroupDto, TournamentMatchEntity>(
     "tournament-match",
     MatchGroupDto::class,
@@ -95,6 +100,43 @@ class TournamentMatchController(
         )
     )*/
 
+
+    @GetMapping("/show/{id}")
+    override fun show(
+        @PathVariable id: Int,
+        model: Model,
+        auth: Authentication
+    ): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if(StaffPermissions.PERMISSION_SHOW_TOURNAMENTS.validate(user).not()){
+            model.addAttribute("permission", viewPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "GET /$view/show/$id", viewPermission.permissionString)
+            return "admin403"
+        }
+
+        model.addAttribute("title", titlePlural)
+        model.addAttribute("titleSingular", titleSingular)
+        model.addAttribute("view", view)
+
+        model.addAttribute("user", user)
+        val match = transactionManager.transaction(readOnly = true) {
+            matchRepository.findById(id).getOrNull() ?: return "redirect:/admin/control/tournament-match/"
+        }
+        val stage = match.stage()
+        if (stage == null) {
+            model.addAttribute("error", "A mérkőzés nem tartozik érvényes szakaszhoz.")
+            return "error"
+        }
+        model.addAttribute("match", match)
+        model.addAttribute("stage", stage)
+        model.addAttribute("editMode", true)
+
+        return "matchScore"
+    }
+
+
     @GetMapping("/admin/{id}")
     fun matchAdminPage(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
@@ -151,9 +193,59 @@ class TournamentMatchController(
         }
         model.addAttribute("match", match)
         model.addAttribute("stage", stage)
+        model.addAttribute("readOnly", false)
 
-
-        //TODO
         return "matchScore"
     }
+
+    @PostMapping("/score/{id}")
+    fun scoreMatch(
+        @PathVariable id: Int,
+        @RequestParam allRequestParams: Map<String, String>,
+        model: Model,
+        auth: Authentication
+    ): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if(StaffPermissions.PERMISSION_EDIT_RESULTS.validate(user).not()){
+            model.addAttribute("permission", viewPermission.permissionString)
+            model.addAttribute("user", user)
+            auditLog.admin403(user, component.component, "POST /$view/score/$id", viewPermission.permissionString)
+            return "admin403"
+        }
+        val match = matchRepository.findById(id).getOrNull()?: return "redirect:/admin/control/$view"
+        val stage = stageService.findById(match.stageId) ?: return "redirect:/admin/control/$view"
+
+        if (match.status == MatchStatus.FINISHED || match.status == MatchStatus.CANCELLED) {
+            model.addAttribute("error", "A mérkőzés már befejeződött vagy elmaradt, nem lehet új eredményt rögzíteni.")
+            return "error"
+        }
+
+        match.homeTeamScore = allRequestParams["homeTeamScore"]?.toIntOrNull()
+        match.awayTeamScore = allRequestParams["awayTeamScore"]?.toIntOrNull()
+        match.status = when(allRequestParams["matchStatus"]){
+            "FINISHED" -> MatchStatus.FINISHED
+            "IN_PROGRESS" -> MatchStatus.IN_PROGRESS
+            else -> MatchStatus.NOT_STARTED
+        }
+
+        if (onEntityPreSave(match, auth)){
+            transactionManager.transaction(isolation = TransactionDefinition.ISOLATION_READ_COMMITTED, propagation = TransactionDefinition.PROPAGATION_REQUIRES_NEW) {
+                matchRepository.save(match)
+                if (match.status == MatchStatus.FINISHED) {
+                    // If the match is finished, we need to update the stage and tournament
+                    val winner = match.winner()
+                    if (winner != null) {
+                        val updatedSeeds = stageService.setSeeds(stage)
+                        stage.seeds = updatedSeeds
+                        stageService.calculateTeamsFromSeeds(stage)
+                        knockoutStageRepository.save(stage)
+                    }
+                }
+            }
+        }
+
+        return "redirect:/admin/control/tournament-match"
+    }
+
 }

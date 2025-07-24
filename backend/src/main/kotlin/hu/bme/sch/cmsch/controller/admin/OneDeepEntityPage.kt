@@ -358,7 +358,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     @GetMapping("/show/{id}")
-    fun show(@PathVariable id: Int, model: Model, auth: Authentication): String {
+    open fun show(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {

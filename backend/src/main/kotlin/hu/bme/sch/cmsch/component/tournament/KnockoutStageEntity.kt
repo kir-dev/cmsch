@@ -18,7 +18,6 @@ import kotlin.math.log2
 
 enum class StageStatus {
     CREATED,
-    DRAFT,
     SET,
     ONGOING,
     FINISHED,
