@@ -74,6 +74,6 @@ class EmailComponent(
         description = "Erre küldjék a választ a felhasználók (reply-to)")
 
     var kirmailQueue by StringSettingRef("ms-golya", fieldName = "Kir Mail Queue", serverSideOnly = true,
-        description = "Erre küldjék a választ a felhasználók (reply-to)")
+        description = "Küldő üzenetsor neve")
 
 }
