@@ -17,4 +17,5 @@ data class CheersTicket(
     var buyerId: String? = null,
     var buyerEmail: String? = null,
     var buyerName: String? = null,
+    var linkerCode: String? = null,
 )
