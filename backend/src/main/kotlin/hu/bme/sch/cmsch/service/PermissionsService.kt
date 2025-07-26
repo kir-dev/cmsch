@@ -34,6 +34,7 @@ import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
 import hu.bme.sch.cmsch.component.team.TeamComponent
 import hu.bme.sch.cmsch.component.token.TokenComponent
+import hu.bme.sch.cmsch.component.tournament.TournamentComponent
 import hu.bme.sch.cmsch.extending.CmschPermissionSource
 import hu.bme.sch.cmsch.util.DI
 import org.springframework.stereotype.Component
@@ -54,8 +55,8 @@ class PermissionValidator(
     val description: String = "",
     val component: KClass<out ComponentBase>? = null,
     val readOnly: Boolean = false, // Note: this is just a label but used for giving read-only permissions
-    val validate: Function1<CmschUser, Boolean> = {
-            user -> user.isAdmin() || (permissionString.isNotEmpty() && user.hasPermission(permissionString))
+    val validate: Function1<CmschUser, Boolean> = { user ->
+        user.isAdmin() || (permissionString.isNotEmpty() && user.hasPermission(permissionString))
     }
 )
 
@@ -90,20 +91,20 @@ object ImplicitPermissions : PermissionGroup {
     val PERMISSION_IMPLICIT_HAS_GROUP = PermissionValidator(
         description = "The user has a group",
         readOnly = false,
-        permissionString = "HAS_GROUP")
-            { user -> DI.instance.userService.getById(user.internalId).group != null }
+        permissionString = "HAS_GROUP"
+    ) { user -> DI.instance.userService.getById(user.internalId).group != null }
 
     val PERMISSION_IMPLICIT_ANYONE = PermissionValidator(
         description = "Everyone has this permission",
         readOnly = false,
-        permissionString = "ANYONE")
-            { _ -> true }
+        permissionString = "ANYONE"
+    ) { _ -> true }
 
     val PERMISSION_NOBODY = PermissionValidator(
         description = "Nobody has this permission",
         readOnly = false,
-        permissionString = "NOBODY")
-            { _ -> false }
+        permissionString = "NOBODY"
+    ) { _ -> false }
 
     val PERMISSION_SUPERUSER_ONLY = PermissionValidator { user -> user.isSuperuser() }
 
@@ -431,6 +432,13 @@ object ControlPermissions : PermissionGroup {
         component = SheetsComponent::class
     )
 
+    val PERMISSION_CONTROL_TOURNAMENT = PermissionValidator(
+        "TOURNAMENT_CONTROL",
+        "Tournament komponens testreszabása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -475,6 +483,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_PROTO,
         PERMISSION_CONTROL_CONFERENCE,
         PERMISSION_CONTROL_SHEETS,
+        PERMISSION_CONTROL_TOURNAMENT,
     )
 
 }
@@ -1582,6 +1591,64 @@ object StaffPermissions : PermissionGroup {
         component = SheetsComponent::class
     )
 
+    /// TournamentComponent
+
+    val PERMISSION_SHOW_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_SHOW",
+        "Versenyek megtekintése",
+        readOnly = true,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_CREATE_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_CREATE",
+        "Versenyek létrehozása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_DELETE_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_DELETE",
+        "Versenyek törlése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_EDIT_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_EDIT",
+        "Versenyek szerkesztése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_SET_SEEDS = PermissionValidator(
+        "TOURNAMENT_SET_SEEDS",
+        "Versenyzők seedjeinek állítása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_SHOW_BRACKETS = PermissionValidator(
+        "TOURNAMENT_SHOW_BRACKETS",
+        "Verseny táblák megtekintése",
+        readOnly = true,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_GENERATE_BRACKETS = PermissionValidator(
+        "TOURNAMENT_GENERATE_BRACKETS",
+        "Verseny táblák generálása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_EDIT_RESULTS = PermissionValidator(
+        "TOURNAMENT_EDIT_RESULTS",
+        "Verseny eredmények szerkesztése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_SHOW_TASKS,
@@ -1756,6 +1823,15 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_SHEETS,
         PERMISSION_CREATE_SHEETS,
         PERMISSION_DELETE_SHEETS,
+
+        PERMISSION_SHOW_TOURNAMENTS,
+        PERMISSION_CREATE_TOURNAMENTS,
+        PERMISSION_DELETE_TOURNAMENTS,
+        PERMISSION_EDIT_TOURNAMENTS,
+        PERMISSION_SET_SEEDS,
+        PERMISSION_SHOW_BRACKETS,
+        PERMISSION_GENERATE_BRACKETS,
+        PERMISSION_EDIT_RESULTS,
     )
 
 }

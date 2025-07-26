@@ -40,6 +40,7 @@ export interface Components {
   qrFight: QrFight
   communities: Communities
   footer: Footer
+  tournament: Tournament
 }
 
 export interface App {
@@ -349,4 +350,8 @@ export interface Communities {
   description:string
   titleResort: string
   descriptionResort: string
+}
+
+export interface Tournament {
+  title: string
 }

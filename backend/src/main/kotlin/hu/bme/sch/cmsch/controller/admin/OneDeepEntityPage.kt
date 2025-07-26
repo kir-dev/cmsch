@@ -358,7 +358,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     @GetMapping("/show/{id}")
-    fun show(@PathVariable id: Int, model: Model, auth: Authentication): String {
+    open fun show(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (showPermission.validate(user).not()) {
@@ -577,11 +577,11 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     @PostMapping("/create")
-    fun create(@ModelAttribute(binding = false) dto: T,
-               @RequestParam(required = false) file0: MultipartFile?,
-               @RequestParam(required = false) file1: MultipartFile?,
-               model: Model,
-               auth: Authentication,
+    open fun create(@ModelAttribute(binding = false) dto: T,
+                    @RequestParam(required = false) file0: MultipartFile?,
+                    @RequestParam(required = false) file1: MultipartFile?,
+                    model: Model,
+                    auth: Authentication,
     ): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)

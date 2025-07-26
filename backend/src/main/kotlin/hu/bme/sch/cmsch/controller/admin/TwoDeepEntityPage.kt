@@ -159,7 +159,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     }
 
     @GetMapping("/view/{id}")
-    fun view(model: Model, auth: Authentication, @PathVariable id: Int): String {
+    open fun view(model: Model, auth: Authentication, @PathVariable id: Int): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (viewPermission.validate(user).not()) {
