@@ -1,0 +1,43 @@
+package hu.bme.sch.cmsch.component.script.sandbox
+
+import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import com.fasterxml.jackson.dataformat.csv.CsvSchema
+import java.io.ByteArrayOutputStream
+
+class ScriptingCsvUtil {
+
+    fun generateCsv(
+        content: List<List<String>>,
+        columnSeperator: Char = ',',
+        lineSeparator: String = "\n",
+        quoteChar: Char = '"'
+    ): String {
+        val csvMapper = CsvMapper()
+        val csvSchema = CsvSchema.builder()
+            .setUseHeader(false)
+            .setColumnSeparator(columnSeperator)
+            .setLineSeparator(lineSeparator)
+            .setQuoteChar(quoteChar)
+            .build()
+        return csvMapper.writer(csvSchema).writeValueAsString(content)
+    }
+
+    inline fun <reified T> generateTypedCsv(
+        content: List<T>,
+        columnSeperator: Char = ',',
+        lineSeparator: String = "\n",
+        quoteChar: Char = '"'
+    ): String {
+        val csvMapper = CsvMapper()
+        val csvSchema = csvMapper.schemaFor(T::class.java)
+            .withHeader()
+            .withColumnSeparator(columnSeperator)
+            .withLineSeparator(lineSeparator)
+            .withQuoteChar(quoteChar)
+
+        return csvMapper.writerFor(csvMapper.typeFactory.constructCollectionType(List::class.java, T::class.java))
+            .with(csvSchema)
+            .writeValueAsString(content)
+    }
+
+}

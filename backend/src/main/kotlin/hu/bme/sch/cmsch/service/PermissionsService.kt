@@ -29,6 +29,7 @@ import hu.bme.sch.cmsch.component.pushnotification.PushNotificationComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
+import hu.bme.sch.cmsch.component.script.ScriptComponent
 import hu.bme.sch.cmsch.component.sheets.SheetsComponent
 import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
@@ -410,14 +411,14 @@ object ControlPermissions : PermissionGroup {
         "PROTO_CONTROL",
         "Prototípusok testreszabása",
         readOnly = false,
-        component = ApplicationComponent::class
+        component = ProtoComponent::class
     )
 
     val PERMISSION_CONTROL_CONFERENCE = PermissionValidator(
         "CONFERENCE_CONTROL",
         "Konferencia testreszabása",
         readOnly = false,
-        component = ApplicationComponent::class
+        component = ConferenceComponent::class
     )
 
     val PERMISSION_CONTROL_SHEETS = PermissionValidator(
@@ -425,6 +426,13 @@ object ControlPermissions : PermissionGroup {
         "Sheets integráció testreszabása",
         readOnly = false,
         component = SheetsComponent::class
+    )
+
+    val PERMISSION_CONTROL_SCRIPT = PermissionValidator(
+        "SCRIPT_CONTROL",
+        "Scriptek testreszabása",
+        readOnly = false,
+        component = ScriptComponent::class
     )
 
     override fun allPermissions() = listOf(
@@ -471,6 +479,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_PROTO,
         PERMISSION_CONTROL_CONFERENCE,
         PERMISSION_CONTROL_SHEETS,
+        PERMISSION_CONTROL_SCRIPT,
     )
 
 }
@@ -1434,28 +1443,28 @@ object StaffPermissions : PermissionGroup {
         "ACCESS_KEYS_SHOW",
         "Hozzáférési kulcsok megtekintése",
         readOnly = true,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     val PERMISSION_EDIT_ACCESS_KEYS = PermissionValidator(
         "ACCESS_KEYS_EDIT",
         "Hozzáférési kulcsok szerkesztése",
         readOnly = false,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     val PERMISSION_CREATE_ACCESS_KEYS = PermissionValidator(
         "ACCESS_KEYS_CREATE",
         "Hozzáférési kulcsok létrehozása",
         readOnly = false,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     val PERMISSION_DELETE_ACCESS_KEYS = PermissionValidator(
         "ACCESS_KEYS_DELETE",
         "Hozzáférési kulcsok törlése",
         readOnly = false,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     /// EventComponent
@@ -1576,6 +1585,36 @@ object StaffPermissions : PermissionGroup {
         "Sheets integrációk törlése",
         readOnly = false,
         component = SheetsComponent::class
+    )
+
+    /// ScriptComponent
+
+    val PERMISSION_SHOW_SCRIPTS = PermissionValidator(
+        "SCRIPTS_SHOW",
+        "Scriptek megtekintése",
+        readOnly = true,
+        component = ScriptComponent::class
+    )
+
+    val PERMISSION_EDIT_SCRIPTS = PermissionValidator(
+        "SCRIPTS_EDIT",
+        "Scriptek szerkesztése",
+        readOnly = false,
+        component = ScriptComponent::class
+    )
+
+    val PERMISSION_CREATE_SCRIPTS = PermissionValidator(
+        "SCRIPTS_CREATE",
+        "Scriptek létrehozása",
+        readOnly = false,
+        component = ScriptComponent::class
+    )
+
+    val PERMISSION_DELETE_SCRIPTS = PermissionValidator(
+        "SCRIPTS_DELETE",
+        "Scriptek törlése",
+        readOnly = false,
+        component = ScriptComponent::class
     )
 
     override fun allPermissions() = listOf(
@@ -1752,6 +1791,11 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_SHEETS,
         PERMISSION_CREATE_SHEETS,
         PERMISSION_DELETE_SHEETS,
+
+        PERMISSION_SHOW_SCRIPTS,
+        PERMISSION_EDIT_SCRIPTS,
+        PERMISSION_CREATE_SCRIPTS,
+        PERMISSION_DELETE_SCRIPTS,
     )
 
 }
