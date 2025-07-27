@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -101,7 +102,7 @@ data class AccessKeyEntity(
     @property:ImportFormat
     var usedAt: Long = 0,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "AccessKey",
@@ -121,6 +122,10 @@ data class AccessKeyEntity(
 
     override fun toString(): String {
         return "AccessKeyEntity(id=$id, accessKey='$accessKey', usedByUserName='$usedByUserName', usedAt=$usedAt)"
+    }
+
+    override fun duplicate(): AccessKeyEntity {
+        return this.copy()
     }
 
 }
