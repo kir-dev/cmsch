@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.debt
 
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.dto.CmschIdBuyRequest
-import hu.bme.sch.cmsch.dto.NeptunBuyRequest
 import hu.bme.sch.cmsch.dto.ResolveRequest
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserOrNull

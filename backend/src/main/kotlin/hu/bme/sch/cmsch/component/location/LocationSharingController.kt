@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.service.AdminMenuEntry
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.ImplicitPermissions.PERMISSION_IMPLICIT_HAS_GROUP
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import hu.bme.sch.cmsch.util.markdownToHtml
 import hu.bme.sch.cmsch.util.urlEncode
@@ -25,8 +26,9 @@ class LocationSharingController(
     private val locationComponent: LocationComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val auditLogService: AuditLogService,
-    private val appComponent: ApplicationComponent
-) {
+    private val appComponent: ApplicationComponent,
+    private val userService: UserService,
+    ) {
 
     private val view = "share-location"
     private val titlePlural = "Helymeghatározás"
@@ -47,7 +49,7 @@ class LocationSharingController(
 
     @GetMapping("")
     fun shareLocation(model: Model, auth: Authentication): String {
-        val user = auth.getUserEntityFromDatabase()
+        val user = auth.getUserEntityFromDatabase(userService)
         adminMenuService.addPartsForMenu(user, model)
         if (permissionControl.validate(user).not()) {
             model.addAttribute("permission", permissionControl.permissionString)
