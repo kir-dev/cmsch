@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component
 
+import hu.bme.sch.cmsch.admin.dashboard.DashboardDocsCard
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.*
@@ -28,10 +29,13 @@ abstract class ComponentApiBase(
     private val componentCategory: String = componentClass.simpleName,
     private val menuService: MenuService,
     private val auditLogService: AuditLogService,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    private val documentationMarkdown: String? = null,
+    documentationMenuName: String? = null
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+    private val docsTitle = documentationMenuName ?: "$componentCategoryName Dokumentáció"
 
     @PostConstruct
     fun init() {
@@ -42,14 +46,52 @@ abstract class ComponentApiBase(
             )
         }
         adminMenuService.registerEntry(
-            componentCategory, AdminMenuEntry(
-                componentMenuName, componentMenuIcon,
-                "/admin/control/component/${component.component}/settings",
-                componentMenuPriority,
-                permissionToShow
+            componentCategory,
+            AdminMenuEntry(
+                componentMenuName, componentMenuIcon, "/admin/control/component/${component.component}/settings",
+                componentMenuPriority, permissionToShow
             )
         )
+        if (documentationMarkdown != null) {
+            adminMenuService.registerEntry(
+                componentCategory,
+                AdminMenuEntry(
+                    docsTitle, "docs", "/admin/control/component/${component.component}/docs",
+                    componentMenuPriority, permissionToShow
+                )
+            )
+        }
         onInit()
+    }
+
+    @GetMapping("/docs")
+    fun docs(auth: Authentication, model: Model): String {
+        val user = auth.getUser()
+        adminMenuService.addPartsForMenu(user, model)
+        if (permissionToShow.validate(user).not()) {
+            model.addAttribute("permission", permissionToShow.permissionString)
+            model.addAttribute("user", user)
+            auditLogService.admin403(
+                user, component.component, "GET ${component.component}/docs", permissionToShow.permissionString
+            )
+            return "admin403"
+        }
+
+        model.addAttribute("title", docsTitle)
+        model.addAttribute("wide", true)
+
+        val components = listOf(
+            DashboardDocsCard(
+                0,
+                true,
+                componentCategoryName,
+                markdownContent = documentationMarkdown ?: "## Ehhez a komponenshez nincs dokumentáció! 💀",
+            ),
+        )
+        model.addAttribute("components", components)
+        model.addAttribute("user", user)
+
+        return "dashboard"
     }
 
     @GetMapping("/settings")
@@ -100,6 +142,7 @@ abstract class ComponentApiBase(
                     newValues.append(setting.property).append("=").append(value).append(", ")
                     (setting as MutableSetting<*>).parseAndSet(if (value) "true" else "false")
                 }
+
                 SettingType.IMAGE -> {
                     multipartRequest.fileMap[setting.property]?.let {
                         if (it.size > 0) {
@@ -110,6 +153,7 @@ abstract class ComponentApiBase(
                         }
                     }
                 }
+
                 else -> {
                     allRequestParams[setting.property]?.let {
                         log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, it)
