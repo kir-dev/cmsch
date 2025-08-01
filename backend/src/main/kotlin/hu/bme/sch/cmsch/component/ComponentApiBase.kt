@@ -78,20 +78,9 @@ abstract class ComponentApiBase(
         }
 
         model.addAttribute("title", docsTitle)
-        model.addAttribute("wide", true)
+        model.addAttribute("markdownContent", documentationMarkdown)
 
-        val components = listOf(
-            DashboardDocsCard(
-                0,
-                true,
-                componentCategoryName,
-                markdownContent = documentationMarkdown ?: "## Ehhez a komponenshez nincs dokumentáció! 💀",
-            ),
-        )
-        model.addAttribute("components", components)
-        model.addAttribute("user", user)
-
-        return "dashboard"
+        return "docs"
     }
 
     @GetMapping("/settings")
