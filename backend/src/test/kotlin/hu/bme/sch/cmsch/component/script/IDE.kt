@@ -18,8 +18,9 @@ fun scriptWriter(
 
     }
 
+    context.info("Users:")
     context.readOnlyDb.repository(UserRepository::class).findAll().forEach { user ->
-
+        context.info("- ${user.fullName}")
     }
 
 }

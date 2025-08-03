@@ -23,8 +23,6 @@ class ScriptTestConfiguration(
             name = "Maven Example",
             script = """
                 @file:Repository("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-                
-                
                 @file:DependsOn("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
                 
     

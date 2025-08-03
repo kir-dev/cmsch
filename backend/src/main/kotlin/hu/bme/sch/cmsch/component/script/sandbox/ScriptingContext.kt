@@ -12,7 +12,7 @@ import kotlin.script.experimental.api.ScriptDiagnostic.Severity
 class ScriptingContext(
     val readOnlyDb: ReadOnlyScriptingDbContext,
     val modifyingDb: ModifyingScriptingDbContext,
-    val updateLogs: (logs: List<ScriptLogLineDto>) -> Unit
+    private val updateLogs: (logs: List<ScriptLogLineDto>) -> Unit
 ) {
 
     val artifacts = mutableListOf<ScriptArtifact>()
@@ -116,12 +116,12 @@ class ModifyingScriptingDbContext(private val supportedRepos: List<CrudRepositor
 @Suppress("UNCHECKED_CAST")
 class ReadOnlyScriptingDbContext(private val supportedRepos: List<CrudRepository<*, *>>) {
 
-    fun <T : Duplicatable, ID : Any> repository(selectedRepo: KClass<out CrudRepository<T, ID>>): ReadOnlyRepositoryProxy<T, ID> {
+    fun <T, ID : Any> repository(selectedRepo: KClass<out CrudRepository<T, ID>>): ReadOnlyRepositoryProxy<T, ID> where T : Duplicatable {
         val proxied = (
-            supportedRepos.firstOrNull { repo ->
-                repo.javaClass.interfaces.any { selectedRepo.java.isAssignableFrom(it) }
-            } as? CrudRepository<T, ID>
-        ) ?: error("Cannot find repository for ${selectedRepo.java.canonicalName}")
+                supportedRepos.firstOrNull { repo ->
+                    repo.javaClass.interfaces.any { selectedRepo.java.isAssignableFrom(it) }
+                } as? CrudRepository<T, ID>
+                ) ?: error("Cannot find repository for ${selectedRepo.java.canonicalName}")
 
         return ReadOnlyRepositoryProxy(proxied)
     }

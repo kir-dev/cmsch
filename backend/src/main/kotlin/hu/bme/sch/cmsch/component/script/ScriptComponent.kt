@@ -27,7 +27,7 @@ class ScriptComponent(
     "Scriptek",
     ControlPermissions.PERMISSION_CONTROL_SCRIPT,
     listOf(ScriptEntity::class, ScriptResultEntity::class),
-    env
+    env,
 ) {
 
     final override val menuDisplayName = null
