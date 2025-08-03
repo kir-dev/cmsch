@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -69,7 +70,7 @@ data class TeamIntroductionEntity(
     @property:ImportFormat
     var rejectionReason: String = "",
 
-    ) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     @property:GenerateOverview(columnName = "Csapat", order = 0)
     val groupName get() = group?.name ?: ""
@@ -93,6 +94,10 @@ data class TeamIntroductionEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
+    }
+
+    override fun duplicate(): TeamIntroductionEntity {
+        return this.copy()
     }
 
 }

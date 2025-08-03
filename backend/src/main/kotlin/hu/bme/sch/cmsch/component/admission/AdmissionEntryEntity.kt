@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.form.FormEntity
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -102,7 +103,7 @@ data class AdmissionEntryEntity(
     @property:ImportFormat
     var gateUserId: Int = 0,
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "AdmissionEntry",
@@ -119,8 +120,13 @@ data class AdmissionEntryEntity(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String {
         return "AdmissionEntryEntity(id=$id, userName='$userName', timestamp=$timestamp)"
+    }
+
+    override fun duplicate(): AdmissionEntryEntity {
+        return this.copy()
     }
 
 }

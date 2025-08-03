@@ -94,7 +94,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var profileTopMessage: String? = null,
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     fun allDetailsImported(): Boolean {
         return  neptun != null &&
@@ -123,6 +123,10 @@ data class UserDetailsByInternalIdMappingEntity(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
+    override fun duplicate(): UserDetailsByInternalIdMappingEntity {
+        return this.copy()
+    }
 
     @Override
     override fun toString(): String {

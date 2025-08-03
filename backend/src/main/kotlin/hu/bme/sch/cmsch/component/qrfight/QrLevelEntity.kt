@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -120,7 +121,7 @@ data class QrLevelEntity(
     @property:ImportFormat
     var extraLevel: Boolean = false,
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "QRFightLevel",
@@ -141,6 +142,10 @@ data class QrLevelEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, name = '$displayName', category = $category)"
+    }
+
+    override fun duplicate(): QrLevelEntity {
+        return this.copy()
     }
 
 }

@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -112,7 +113,7 @@ data class SubmittedTaskEntity(
     @property:GenerateInput(order = 11, label = "Beadás történet", type = InputType.TASK_SUBMISSION_HISTORY)
     @property:GenerateOverview(visible = false)
     var submissionHistory: String = "",
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     @property:GenerateOverview(columnName = "Feladat", order = 0)
     val taskTitle get() = task?.title ?: ""
@@ -169,6 +170,10 @@ data class SubmittedTaskEntity(
 
     fun getUserSubmissionCount(): Int {
         return getImmutableHistory().count { !it.adminResponse }
+    }
+
+    override fun duplicate(): SubmittedTaskEntity {
+        return this.copy()
     }
 
 }

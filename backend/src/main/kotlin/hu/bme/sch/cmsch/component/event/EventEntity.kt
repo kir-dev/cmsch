@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.opengraph.OpenGraphResource
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -147,7 +148,7 @@ data class EventEntity(
     @property:ImportFormat
     var minRole: RoleType = RoleType.GUEST,
 
-): ManagedEntity, OpenGraphResource {
+): ManagedEntity, OpenGraphResource, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Event",
@@ -168,6 +169,10 @@ data class EventEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
+    }
+
+    override fun duplicate(): EventEntity {
+        return this.copy()
     }
 
 }

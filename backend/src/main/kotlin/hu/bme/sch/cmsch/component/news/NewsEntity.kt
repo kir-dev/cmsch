@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.opengraph.OpenGraphResource
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -118,7 +119,7 @@ data class NewsEntity(
     @property:GenerateOverview(visible = false)
     override var ogDescription: String = "",
 
-): ManagedEntity, OpenGraphResource {
+): ManagedEntity, OpenGraphResource, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "News",
@@ -140,4 +141,9 @@ data class NewsEntity(
     override fun toString(): String {
         return "id = $id, title = $title"
     }
+
+    override fun duplicate(): Duplicatable {
+        return this.copy()
+    }
+
 }

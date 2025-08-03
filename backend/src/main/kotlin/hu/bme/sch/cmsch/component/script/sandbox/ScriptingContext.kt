@@ -1,20 +1,98 @@
 package hu.bme.sch.cmsch.component.script.sandbox
 
+import hu.bme.sch.cmsch.component.script.ScriptLogLineDto
 import hu.bme.sch.cmsch.model.Duplicatable
 import org.springframework.data.repository.CrudRepository
-import kotlin.jvm.java
+import java.io.PrintWriter
+import java.io.StringWriter
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KClass
+import kotlin.script.experimental.api.ScriptDiagnostic.Severity
 
 class ScriptingContext(
     val readOnlyDb: ReadOnlyScriptingDbContext,
-    val modifyingDb: ModifyingScriptingDbContext
+    val modifyingDb: ModifyingScriptingDbContext,
+    val updateLogs: (logs: List<ScriptLogLineDto>) -> Unit
 ) {
 
     val artifacts = mutableListOf<ScriptArtifact>()
+    val logs = mutableListOf<ScriptLogLineDto>()
 
     fun publishArtifact(artifact: ScriptArtifact) {
         artifacts.add(artifact)
+    }
+
+    fun println(message: String) {
+        info(message)
+    }
+
+    fun info(message: String) {
+        logs.add(ScriptLogLineDto(
+            message = message,
+            severity = Severity.INFO,
+            exception = null,
+        ))
+        updateLogs(logs)
+    }
+
+    fun info(message: Any?) {
+        info(message.toString())
+    }
+
+    fun debug(message: String) {
+        logs.add(ScriptLogLineDto(
+            message = message,
+            severity = Severity.DEBUG,
+            exception = null,
+        ))
+        updateLogs(logs)
+    }
+
+    fun debug(message: Any?) {
+        debug(message.toString())
+    }
+
+    fun warn(message: String) {
+        logs.add(ScriptLogLineDto(
+            message = message,
+            severity = Severity.WARNING,
+            exception = null,
+        ))
+        updateLogs(logs)
+    }
+
+    fun warn(message: Any?) {
+        warn(message.toString())
+    }
+
+    fun error(message: String) {
+        logs.add(ScriptLogLineDto(
+            message = message,
+            severity = Severity.ERROR,
+            exception = null,
+        ))
+        updateLogs(logs)
+    }
+
+    fun error(message: Any?) {
+        error(message.toString())
+    }
+
+    fun error(message: String, exception: Exception?) {
+        logs.add(ScriptLogLineDto(
+            message = message,
+            severity = Severity.ERROR,
+            exception = exception?.message,
+        ))
+        updateLogs(logs)
+    }
+
+    fun printStackTrace(exception: Exception) {
+        val sw = StringWriter()
+        val pw = PrintWriter(sw)
+        exception.printStackTrace(pw)
+        pw.flush()
+        error(sw.toString())
     }
 
 }
@@ -65,11 +143,3 @@ class ReadOnlyRepositoryProxy<T : Duplicatable, ID : Any>(private val proxy: Cru
     }
 
 }
-
-//fun asd() {
-//    val scriptingContext = ScriptingContext(db = ScriptingReadOnlyDbContext())
-//    println(scriptingContext.readOnlyDb.repository(UserRepository::class).findAll().first().neptun)
-//    println(scriptingContext.readOnlyDb.repository(UserRepository::class).findById(12)?.neptun)
-//    println(scriptingContext.modifyingDb.repository(UserRepository::class).findAll().first().neptun)
-//    println(scriptingContext.modifyingDb.repository(UserRepository::class).findById(12)?.neptun)
-//}

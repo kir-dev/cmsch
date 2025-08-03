@@ -26,7 +26,7 @@ class ScriptComponent(
     "/script",
     "Scriptek",
     ControlPermissions.PERMISSION_CONTROL_SCRIPT,
-    listOf(ScriptEntity::class),
+    listOf(ScriptEntity::class, ScriptResultEntity::class),
     env
 ) {
 

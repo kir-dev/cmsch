@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.script
 
+import hu.bme.sch.cmsch.model.UserEntity
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -14,7 +15,8 @@ class ScriptServiceTest {
 
     @Test
     fun testScript() {
-        scriptService.executeScript(ScriptEntity(
+        val user = UserEntity(id = 69, fullName = "Test User")
+        scriptService.executeScript(user, ScriptEntity(
             name = "testScript",
             script = """
                 @file:Repository("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
@@ -51,13 +53,14 @@ class ScriptServiceTest {
             """.trimIndent(),
             readOnly = false,
             description = "",
-            components = "",
-        ))
+            entities = "*",
+        )).second.get()
     }
 
     @Test
     fun testScriptMavenDependency() {
-        scriptService.executeScript(ScriptEntity(
+        val user = UserEntity(id = 69, fullName = "Test User")
+        scriptService.executeScript(user, ScriptEntity(
             name = "testScript",
             script = """
                 @file:Repository("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
@@ -80,7 +83,7 @@ class ScriptServiceTest {
             """.trimIndent(),
             readOnly = true,
             description = "",
-            components = "",
-        ))
+            entities = "UserEntity",
+        )).second.get()
     }
 }

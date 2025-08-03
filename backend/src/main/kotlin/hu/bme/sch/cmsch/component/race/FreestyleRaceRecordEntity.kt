@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -74,7 +75,7 @@ data class FreestyleRaceRecordEntity(
     @property:ImportFormat
     var timestamp: Long = 0,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "FreestyleRaceRecord",
@@ -94,6 +95,10 @@ data class FreestyleRaceRecordEntity(
 
     override fun toString(): String {
         return "FreestyleRaceRecordEntity(id=$id, description='$description', userId=$userId, userName='$userName', groupId=$groupId, groupName='$groupName', time=$time)"
+    }
+
+    override fun duplicate(): FreestyleRaceRecordEntity {
+        return this.copy()
     }
 
 }

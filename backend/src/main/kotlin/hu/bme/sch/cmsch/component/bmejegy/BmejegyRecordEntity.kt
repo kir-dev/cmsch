@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -130,7 +131,7 @@ data class BmejegyRecordEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var rawData: String = "",
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "BmejegyRecord",
@@ -155,5 +156,8 @@ data class BmejegyRecordEntity(
         return "BmejegyRecordEntity(id=$id, item='$item', fullName='$fullName')"
     }
 
+    override fun duplicate(): BmejegyRecordEntity {
+        return this.copy()
+    }
 
 }

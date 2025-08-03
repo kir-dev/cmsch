@@ -1,0 +1,146 @@
+
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="data" type="kotlin.Any"-->
+<!--@thymesVar id="property" type="kotlin.reflect.KProperty1<kotlin.Any, kotlin.Any>"-->
+<!--@thymesVar id="generateInput" type="hu.bme.sch.cmsch.admin.GenerateInput"-->
+<!--@thymesVar id="editMode" type="boolean"-->
+<!--@thymesVar id="entityMode" type="boolean"-->
+<!--@thymesVar id="duplicateMode" type="boolean"-->
+<!--@thymesVar id="readOnly" type="boolean"-->
+
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
+
+    <div th:class="|field-group ${generateInput.style}${!generateInput.enabled || readOnly ? ' disabled' : ''}|"
+         th:id="|_${index}|">
+
+        <label th:for="|input${index}|"
+               th:text="${generateInput.label}">
+        </label>
+        <div style="clear: both"></div>
+        <textarea
+                th:name="${property.name}"
+                th:id="|input${index}|"
+                th:text="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
+                th:disabled="${!generateInput.enabled || readOnly}"
+                th:unless="${entityMode}"
+                style="display: none"
+        >
+        </textarea>
+
+        <div class="kotlin-editor" contenteditable="true" spellcheck="false">
+            <div>loading</div>
+        </div>
+
+        <script th:inline="javascript">
+            const el = document.querySelector('.kotlin-editor');
+            el.focus();
+            editor(el);
+            const defaultContent = /*[[${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}]]*/ '';
+            setEditorValue(el, defaultContent);
+
+            const index =  /*[[${index}]]*/ 0;
+            el.addEventListener('keyup', e => {
+                document.getElementById(`input${index}`).value = getEditorValue(el);
+            });
+        </script>
+
+        <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
+        <span class="note type-note" th:if="${entityMode}">Típus: Formázható szöveg</span>
+    </div>
+
+</object>
+
+<object th:fragment="detailsSegmentScript (ext)" th:remove="tag">
+
+    <script th:inline="javascript">
+        const js = el => {
+            for (const node of el.children) {
+                const s = node.innerText
+                    .replace(/(\/\/.*)/g, '<comment>$1</comment>')
+                    .replace(
+                        /\b(as|break|class|continue|do|else|false|for|fun|if|in|interface|is|null|object|package|return|super|this|throw|true|try|typealias|typeof|val|var|when|while|actual|abstract|annotation|companion|const|crossinline|data|enum|expect|external|final|infix|inline|inner|internal|lateinit|noinline|open|operator|out|override|private|protected|public|reified|sealed|suspend|tailrec|vararg|value|by|catch|constructor|delegate|dynamic|field|file|finally|get|import|init|param|property|receiver|set|setparam|where|\.info|\.error|\.warn|\.debug|context|json|csv|@file:Repository|@file:DependsOn)(?=[^\w])/g,
+                        '<keyword>$1</keyword>',
+                    )
+                    .replace(/(".*?"|'.*?'|`.*?`)/g, '<string>$1</string>')
+                    .replace(/\b(\d+)/g, '<number>$1</number>');
+                node.innerHTML = s.split('\n').join('<br/>');
+            }
+        };
+
+        const editor = (el, highlight = js, tab = '    ') => {
+            const caret = () => {
+                const range = window.getSelection().getRangeAt(0);
+                const prefix = range.cloneRange();
+                prefix.selectNodeContents(el);
+                prefix.setEnd(range.endContainer, range.endOffset);
+                return prefix.toString().length;
+            };
+
+            const setCaret = (pos, parent = el) => {
+                for (const node of parent.childNodes) {
+                    if (node.nodeType == Node.TEXT_NODE) {
+                        if (node.length >= pos) {
+                            const range = document.createRange();
+                            const sel = window.getSelection();
+                            range.setStart(node, pos);
+                            range.collapse(true);
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                            return -1;
+                        } else {
+                            pos = pos - node.length;
+                        }
+                    } else {
+                        pos = setCaret(pos, node);
+                        if (pos < 0) {
+                            return pos;
+                        }
+                    }
+                }
+                return pos;
+            };
+
+            highlight(el);
+
+            el.addEventListener('keydown', e => {
+                if (e.which === 9) {
+                    const pos = caret() + tab.length;
+                    const range = window.getSelection().getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(document.createTextNode(tab));
+                    highlight(el);
+                    setCaret(pos);
+                    e.preventDefault();
+                }
+            });
+
+            el.addEventListener('keyup', e => {
+                if (e.keyCode >= 0x30 || e.keyCode == 0x20) {
+                    const pos = caret();
+                    highlight(el);
+                    setCaret(pos);
+                }
+            });
+        };
+
+        const getEditorValue = (el) => {
+            const s = Array.from(el.children)
+                .map(child => child.textContent.replace(/\r?\n$/, ''))
+                .join('\n');
+            console.log(s);
+            return s;
+        };
+
+        const setEditorValue = (el, value) => {
+            el.innerHTML = '';
+            const lines = value.split('\n');
+            for (const line of lines) {
+                const div = document.createElement('div');
+                div.textContent = line;
+                el.appendChild(div);
+            }
+            js(el);
+        };
+    </script>
+
+</object>

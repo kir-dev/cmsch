@@ -32,14 +32,14 @@ class FormService(
     private val emailService: Optional<EmailService>
 ) {
 
-    internal val log = LoggerFactory.getLogger(javaClass)
+    internal final val log = LoggerFactory.getLogger(javaClass)
 
-    private val objectMapper = jacksonObjectMapper()
-    private val gridReader = objectMapper.readerFor(FormGridValue::class.java)
-    private val choiceGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
-    private val selectionGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
-    private val choiceGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, String>>() {})
-    private val selectionGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
+    private final val objectMapper = jacksonObjectMapper()
+    private final val gridReader = objectMapper.readerFor(FormGridValue::class.java)
+    private final val choiceGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
+    private final val selectionGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
+    private final val choiceGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, String>>() {})
+    private final val selectionGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
 
     @Transactional(readOnly = true)
     fun getAllForms(role: RoleType): List<FormEntity> {

@@ -1617,6 +1617,13 @@ object StaffPermissions : PermissionGroup {
         component = ScriptComponent::class
     )
 
+    val PERMISSION_EXECUTE_SCRIPTS = PermissionValidator(
+        "SCRIPTS_EXECUTE",
+        "Scriptek futtatása",
+        readOnly = false,
+        component = ScriptComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_SHOW_TASKS,
@@ -1796,6 +1803,7 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_SCRIPTS,
         PERMISSION_CREATE_SCRIPTS,
         PERMISSION_DELETE_SCRIPTS,
+        PERMISSION_EXECUTE_SCRIPTS,
     )
 
 }

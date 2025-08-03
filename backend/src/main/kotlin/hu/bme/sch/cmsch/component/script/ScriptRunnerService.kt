@@ -17,47 +17,74 @@ import kotlin.script.experimental.jvm.jvmTarget
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
 
+object ScriptHelper {
+    val resolver = CompoundDependenciesResolver(MavenDependenciesResolver())
 
-@Service
+    fun configureMavenDepsOnAnnotations(context: ScriptConfigurationRefinementContext): ResultWithDiagnostics<ScriptCompilationConfiguration> {
+        val annotations =
+            context.collectedData?.get(ScriptCollectedData.collectedAnnotations)?.takeIf { it.isNotEmpty() }
+                ?: return context.compilationConfiguration.asSuccess()
+        return runBlocking {
+            resolver.resolveFromScriptSourceAnnotations(annotations)
+        }.onSuccess {
+            context.compilationConfiguration.with {
+                dependencies.append(JvmDependency(it))
+            }.asSuccess()
+        }
+    }
+}
+
+class ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
+    {
+        defaultImports(DependsOn::class, Repository::class)
+        defaultImports(
+            "kotlin.math.*",
+            "hu.bme.sch.cmsch.model.*",
+            "hu.bme.sch.cmsch.repository.*",
+            "hu.bme.sch.cmsch.util.*",
+            "hu.bme.sch.cmsch.component.script.*",
+            "hu.bme.sch.cmsch.component.script.sandbox.*",
+            "hu.bme.sch.cmsch.component.bmejegy.*",
+            "hu.bme.sch.cmsch.component.challenge.*",
+            "hu.bme.sch.cmsch.component.communities.*",
+            "hu.bme.sch.cmsch.component.conference.*",
+            "hu.bme.sch.cmsch.component.debt.*",
+            "hu.bme.sch.cmsch.component.email.*",
+            "hu.bme.sch.cmsch.component.script.*",
+            "hu.bme.sch.cmsch.component.event.*",
+            "hu.bme.sch.cmsch.component.form.*",
+            "hu.bme.sch.cmsch.component.gallery.*",
+            "hu.bme.sch.cmsch.component.key.*",
+            "hu.bme.sch.cmsch.component.location.*",
+            "hu.bme.sch.cmsch.component.news.*",
+            "hu.bme.sch.cmsch.component.proto.*",
+            "hu.bme.sch.cmsch.component.qrfight.*",
+            "hu.bme.sch.cmsch.component.race.*",
+            "hu.bme.sch.cmsch.component.riddle.*",
+            "hu.bme.sch.cmsch.component.staticpage.*",
+            "hu.bme.sch.cmsch.component.task.*",
+            "hu.bme.sch.cmsch.component.team.*",
+            "hu.bme.sch.cmsch.component.token.*",
+        )
+        jvm {
+            dependenciesFromCurrentContext(wholeClasspath = true)
+            jvmTarget("24")
+        }
+        refineConfiguration {
+            onAnnotations(DependsOn::class, Repository::class, handler = ScriptHelper::configureMavenDepsOnAnnotations)
+        }
+    }
+)
+
+@KotlinScript(
+    fileExtension = "runtime.kts",
+    compilationConfiguration = ScriptWithMavenDepsConfiguration::class
+)
+abstract class ScriptWithMavenDeps
+
 class ScriptRunnerService {
 
-    object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
-        {
-            defaultImports(DependsOn::class, Repository::class)
-            defaultImports("kotlin.math.*", "hu.bme.sch.cmsch.component.script.sandbox.*", )
-            jvm {
-                dependenciesFromCurrentContext(wholeClasspath = true)
-                jvmTarget("24")
-            }
-            refineConfiguration {
-                onAnnotations(DependsOn::class, Repository::class, handler = ::configureMavenDepsOnAnnotations)
-            }
-        }
-    )
-
-    companion object {
-        fun configureMavenDepsOnAnnotations(context: ScriptConfigurationRefinementContext): ResultWithDiagnostics<ScriptCompilationConfiguration> {
-            val annotations = context.collectedData?.get(ScriptCollectedData.collectedAnnotations)?.takeIf { it.isNotEmpty() }
-                ?: return context.compilationConfiguration.asSuccess()
-            return runBlocking {
-                resolver.resolveFromScriptSourceAnnotations(annotations)
-            }.onSuccess {
-                context.compilationConfiguration.with {
-                    dependencies.append(JvmDependency(it))
-                }.asSuccess()
-            }
-        }
-
-        private val resolver = CompoundDependenciesResolver(MavenDependenciesResolver())
-    }
-
-    @KotlinScript(
-        fileExtension = "runtime.kts",
-        compilationConfiguration = ScriptWithMavenDepsConfiguration::class
-    )
-    abstract class ScriptWithMavenDeps
-
-    private final fun makeEvalConfig(context: Map<String, Any?>): ScriptEvaluationConfiguration {
+    fun makeEvalConfig(context: Map<String, Any?>): ScriptEvaluationConfiguration {
         return ScriptEvaluationConfiguration {
             providedProperties(context)
             constructorArgs()
@@ -65,7 +92,7 @@ class ScriptRunnerService {
         }
     }
 
-    final fun runScript(code: String, contextTypes: Map<String, KotlinType>, context: Map<String, Any?>): ResultWithDiagnostics<EvaluationResult> {
+    fun runScript(code: String, contextTypes: Map<String, KotlinType>, context: Map<String, Any?>): ResultWithDiagnostics<EvaluationResult> {
         val host = BasicJvmScriptingHost()
         val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<ScriptWithMavenDeps> {
             providedProperties(contextTypes)
