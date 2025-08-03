@@ -24,11 +24,11 @@ class KnockoutStageService(
     private val tournamentService: TournamentService,
     private val clock: TimeService,
     private val matchRepository: TournamentMatchRepository,
-    val objectMapper: ObjectMapper
+    val objectMapper: ObjectMapper,
+    private val tournamentComponent: TournamentComponent
 ): ApplicationContextAware {
 
     fun findById(id: Int): KnockoutStageEntity? {
-        //return stageRepository.findById(id).orElseThrow { IllegalArgumentException("No stage found with id $id") }
         return stageRepository.findById(id).getOrNull()
     }
 
@@ -69,7 +69,7 @@ class KnockoutStageService(
                         participant.teamName,
                         stage.id,
                         initialSeed = index + 1,
-                        detailedStats = Optional.empty()
+                        detailedStats = null
                     )
                 }
         }
@@ -218,8 +218,9 @@ class KnockoutStageService(
         for (stage in stages) {
             matches.addAll(matchRepository.findAllByStageId(stage.id).filter { it.kickoffTime > clock.getTime() })
         }
+        val timeFrame = tournamentComponent.closeMatchesTimeWindow * 60 * 1000L // Convert minutes to milliseconds
         matches.filter { it.status in listOf(MatchStatus.IN_PROGRESS, MatchStatus.NOT_STARTED) }
-            .filter { (it.kickoffTime - clock.getTime()) in -3*60*60*1000L..3*60*60*1000L }
+            .filter { (it.kickoffTime - clock.getTime()) in -timeFrame..timeFrame }
 
         return matches.sortedBy { it.kickoffTime }
     }
@@ -228,24 +229,6 @@ class KnockoutStageService(
     fun deleteMatchesForStage(stage: KnockoutStageEntity) {
         matchRepository.deleteAllByStageId(stage.id)
     }
-
-    /*@Scheduled(fixedRate = 1000 * 60 * 20) // Every 20 minutes
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun updateSeeds(){
-        val stages = stageRepository.findAll()
-        for (stage in stages) {
-            if (stage.status == StageStatus.ONGOING) {
-                val matches = matchRepository.findAllByStageId(stage.id)
-                if (matches.isEmpty()) {
-                    continue
-                }
-                val updatedSeeds = setSeeds(stage)
-                stage.seeds = updatedSeeds
-                calculateTeamsFromSeeds(stage)
-                stageRepository.save(stage)
-            }
-        }
-    }*/
 
     fun onSeedsFinalized(stage: KnockoutStageEntity) {
         val matches = matchRepository.findAllByStageId(stage.id)

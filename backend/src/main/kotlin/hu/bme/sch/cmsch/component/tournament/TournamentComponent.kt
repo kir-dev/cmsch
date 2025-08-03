@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.tournament
 
 import hu.bme.sch.cmsch.component.ComponentBase
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -26,11 +27,13 @@ class TournamentComponent (
     ControlPermissions.PERMISSION_CONTROL_TOURNAMENT,
     listOf(),
     env
-){
+) {
 
     val tournamentGroup by SettingGroup(fieldName = "Versenyek")
-    final var title by StringSettingRef("Sportversenyek",
-        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában")
+    final var title by StringSettingRef(
+        "Sportversenyek",
+        fieldName = "Lap címe", description = "Ez jelenik meg a böngésző címsorában"
+    )
     final override var menuDisplayName by StringSettingRef(
         "Sportversenyek", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek"
@@ -43,5 +46,11 @@ class TournamentComponent (
     var showTournamentsAtAll by BooleanSettingRef(
         false, fieldName = "Leküldött",
         description = "Ha igaz, akkor leküldésre kerülnek a versenyek"
+    )
+
+    var closeMatchesTimeWindow by NumberSettingRef(
+        defaultValue = 120, fieldName = "Közelgő mérkőzések időablaka",
+        description = "Mennyi időn belül közelgő mérkőzések jelenjenek meg a match admin oldalon",
+        minRoleToEdit = RoleType.ADMIN
     )
 }

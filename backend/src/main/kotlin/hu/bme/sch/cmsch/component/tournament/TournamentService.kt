@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.http.ResponseEntity
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
@@ -31,15 +32,15 @@ open class TournamentService(
     private val objectMapper: ObjectMapper,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val matchRepository: TournamentMatchRepository
-) {
+): ApplicationContextAware {
     @Transactional(readOnly = true)
     open fun findAll(): List<TournamentEntity> {
         return tournamentRepository.findAll()
     }
 
     @Transactional(readOnly = true)
-    fun findById(tournamentId: Int): Optional<TournamentEntity> {
-        return tournamentRepository.findById(tournamentId)
+    fun findById(tournamentId: Int): TournamentEntity? {
+        return tournamentRepository.findById(tournamentId).getOrNull()
     }
 
 
@@ -214,6 +215,10 @@ open class TournamentService(
         private var applicationContext: ApplicationContext? = null
         fun getBean(): TournamentService = applicationContext?.getBean(TournamentService::class.java)
             ?: throw IllegalStateException("TournamentService is not initialized. Make sure TournamentComponent is enabled and application context is set.")
+    }
+
+    override fun setApplicationContext(context: ApplicationContext) {
+        applicationContext = context
     }
 
     @Transactional

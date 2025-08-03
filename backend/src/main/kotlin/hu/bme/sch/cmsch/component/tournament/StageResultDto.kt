@@ -1,9 +1,6 @@
 package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import java.util.Optional
-import kotlin.jvm.optionals.getOrElse
-import kotlin.jvm.optionals.getOrNull
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 data class StageResultDto(
@@ -12,11 +9,11 @@ data class StageResultDto(
     val stageId: Int = 0,
     var highlighted: Boolean = false,
     var initialSeed: Int = 0,
-    var detailedStats: Optional<GroupStageResults> = Optional.empty()
+    var detailedStats: GroupStageResults? = null,
 ): Comparable<StageResultDto> {
     override fun compareTo(other: StageResultDto): Int {
         return compareValuesBy(this, other,
-            { it.detailedStats.getOrElse({ GroupStageResults() })}, {it.initialSeed}, {it.highlighted})
+            { it.detailedStats?:GroupStageResults()}, {it.initialSeed}, {it.highlighted})
     }
 }
 data class GroupStageResults(
