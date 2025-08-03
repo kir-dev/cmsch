@@ -68,7 +68,7 @@ class ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
         )
         jvm {
             dependenciesFromCurrentContext(wholeClasspath = true)
-            jvmTarget("24")
+            jvmTarget(Runtime.version().version().first().toString())
         }
         refineConfiguration {
             onAnnotations(DependsOn::class, Repository::class, handler = ScriptHelper::configureMavenDepsOnAnnotations)

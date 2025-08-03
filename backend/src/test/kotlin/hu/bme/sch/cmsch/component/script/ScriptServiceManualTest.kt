@@ -1,14 +1,19 @@
 package hu.bme.sch.cmsch.component.script
 
 import hu.bme.sch.cmsch.model.UserEntity
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
+@Disabled("""
+    This one is for testing the scrips locally. Not real scripts.
+    Don't commit changes.
+""")
 @SpringBootTest
-@ActiveProfiles("test", "internal")
-class ScriptServiceTest {
+@ActiveProfiles("test")
+class ScriptServiceManualTest {
 
     @Autowired
     lateinit var scriptService: ScriptService

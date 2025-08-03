@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import hu.bme.sch.cmsch.util.transaction
@@ -36,7 +37,8 @@ class ScriptRunnerDashboard(
     private val userRepository: UserRepository,
     private val scriptRepository: ScriptRepository,
     private val scriptService: ScriptService,
-    private val platformTransactionManager: PlatformTransactionManager
+    private val platformTransactionManager: PlatformTransactionManager,
+    private val userService: UserService
 ) : DashboardPage(
     "script-execute",
     "Script futtatása",
@@ -152,7 +154,7 @@ class ScriptRunnerDashboard(
 
     @PostMapping("/{scriptId}/execute")
     fun sendTemplate(auth: Authentication, @PathVariable scriptId: Int, @RequestParam allRequestParams: Map<String, String>): String {
-        val user = auth.getUserEntityFromDatabase()
+        val user = auth.getUserEntityFromDatabase(userService)
         if (!showPermission.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }

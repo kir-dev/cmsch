@@ -20,7 +20,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import java.util.Arrays
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -112,7 +111,6 @@ class ScriptsLogsDashboard(
 
         if (scriptResultEntity != null) {
             val artifact = artifactReader.readValue<List<ScriptArtifact>>(scriptResultEntity.artifacts).getOrNull(artifactId)
-            model.addAttribute("mimeType", artifact?.type)
             model.addAttribute("name", artifact?.artifactName)
 
             if (artifact?.type?.lowercase()?.trim() == "text/csv") {
@@ -135,20 +133,13 @@ class ScriptsLogsDashboard(
     final fun loadCsvAsList(csv: String): List<List<String>> {
         val mapper = CsvMapper()
         mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY)
-
         val schema = CsvSchema.emptySchema()
 
-        val it: MappingIterator<Array<String>> = mapper.readerFor(Array<String>::class.java)
+        val rows: MappingIterator<Array<String>> = mapper.readerFor(Array<String>::class.java)
             .with(schema)
             .readValues(csv)
 
-        val rows: MutableList<List<String>> = mutableListOf()
-        while (it.hasNext()) {
-            val row: Array<String> = it.next()!!
-            rows.add(row.toList())
-        }
-
-        return rows
+        return rows.asSequence().map { row -> row.toList() }.toList()
     }
 
 }

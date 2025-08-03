@@ -108,7 +108,7 @@ class ModifyingScriptingDbContext(private val supportedRepos: List<CrudRepositor
             supportedRepos.firstOrNull { repo ->
                 repo.javaClass.interfaces.any { selectedRepo.java.isAssignableFrom(it) }
             } as? CrudRepository<T, ID>
-        ) ?: error("cannot find repository for ${selectedRepo.java.canonicalName}")
+        ) ?: error("Cannot find repository for ${selectedRepo.java.canonicalName}")
     }
 
 }
@@ -121,7 +121,7 @@ class ReadOnlyScriptingDbContext(private val supportedRepos: List<CrudRepository
             supportedRepos.firstOrNull { repo ->
                 repo.javaClass.interfaces.any { selectedRepo.java.isAssignableFrom(it) }
             } as? CrudRepository<T, ID>
-        ) ?: error("cannot find repository for ${selectedRepo.java.canonicalName}")
+        ) ?: error("Cannot find repository for ${selectedRepo.java.canonicalName}")
 
         return ReadOnlyRepositoryProxy(proxied)
     }
