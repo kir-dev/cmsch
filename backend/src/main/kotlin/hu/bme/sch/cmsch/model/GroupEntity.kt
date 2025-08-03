@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
+import hu.bme.sch.cmsch.component.conference.ConferenceOrganizerEntity
+import hu.bme.sch.cmsch.component.gallery.GalleryEntity
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -160,6 +162,7 @@ data class GroupEntity(
         type = InputType.NUMBER,
         order = 20,
         label = "Csoport létszáma",
+        defaultValue = "0",
         note = "Amennyiben nem üres, a ranglistánál a pontok le lesznek ezen értékkel osztva",
         enabled = true
     )
@@ -167,7 +170,7 @@ data class GroupEntity(
     @property:ImportFormat
     var memberCount: Int? = null,
 
-    ) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Group",
@@ -189,4 +192,9 @@ data class GroupEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
+    override fun duplicate(): GroupEntity {
+        return this.copy()
+    }
+
 }

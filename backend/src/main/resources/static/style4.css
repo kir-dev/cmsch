@@ -1717,6 +1717,65 @@ form ul {
     margin-bottom: 20px;
 }
 
+.kotlin-editor {
+    font-family: monospace;
+    font-size: 12px;
+    outline: none;
+    overflow-y: auto;
+    padding-left: 48px;
+    counter-reset: line;
+    background-color: var(--dark-4);
+    overflow-x: auto;
+}
+
+.kotlin-editor div {
+    display: block;
+    position: relative;
+    white-space: pre;
+}
+
+.kotlin-editor div::before {
+    content: counter(line);
+    counter-increment: line;
+    position: absolute;
+    right: calc(100% + 16px);
+    opacity: 0.5;
+}
+
+.kotlin-editor keyword {
+    color: #dddddd;
+    font-weight: bold;
+}
+
+.kotlin-editor string {
+    color: var(--success-color);
+}
+
+.kotlin-editor string keyword {
+    color: var(--success-color) !important;
+    font-weight: normal;
+}
+
+.kotlin-editor number {
+    color: var(--alt-color);
+}
+
+.kotlin-editor comment {
+    color: var(--text-color) !important;
+}
+
+.kotlin-editor comment keyword {
+    color: var(--text-color) !important;
+}
+
+.kotlin-editor comment string {
+    color: var(--text-color) !important;
+}
+
+.kotlin-editor comment number {
+    color: var(--text-color) !important;
+}
+
 @media (max-width: 1023px) {
     .menu {
         display: none;

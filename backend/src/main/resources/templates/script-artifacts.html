@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+<object th:replace="~{layout4 :: head(${context.siteName})}" th:remove="tag">
+</object>
+
+<style>
+    .script-logs .text-editor {
+        font-family: monospace;
+        white-space: pre-wrap;
+        margin: 20px 0;
+        padding: 10px;
+        background: var(--dark-4);
+        border: 1px solid var(--dark-5);
+        border-radius: 5px;
+    }
+    .table-container {
+        overflow-x: scroll;
+    }
+    .table-container td {
+        padding: 4px 16px;
+    }
+</style>
+</head>
+<body>
+
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}">
+        </div>
+
+        <div class="content script-logs">
+            <h1 class=""><ins th:text="|Script: ${scriptName}|">Dashboard</ins></h1>
+
+            <div class="card wide">
+                <h4 th:text="|Artifact: ${name}|">Script futtatás</h4>
+
+                <div class="table-container" th:if="${contentTable != null}">
+                    <table cellspacing="0">
+                        <tr>
+                            <th th:each="th : ${contentTableHeader}" th:text="${th}"></th>
+                        </tr>
+                        <tr th:each="row : ${contentTable}">
+                            <td th:each="cell : ${row}" th:text="${cell}"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="text-editor" th:if="${contentText != null}" th:text="${contentText}">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -39,7 +39,7 @@ data class GuildToUserMappingEntity(
     @property:ImportFormat
     var guild: GuildType = GuildType.UNKNOWN
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "GuildToUser",
@@ -61,4 +61,9 @@ data class GuildToUserMappingEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
+    override fun duplicate(): GuildToUserMappingEntity {
+        return this.copy()
+    }
+
 }

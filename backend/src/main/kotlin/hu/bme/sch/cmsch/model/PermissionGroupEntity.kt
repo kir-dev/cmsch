@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment
 
 @Entity
 @Table(name = "permissionGroups")
-class PermissionGroupEntity(
+data class PermissionGroupEntity(
     @Id
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
@@ -39,7 +39,7 @@ class PermissionGroupEntity(
     @property:GenerateInput(order = 3, label = "Jogosultságok", enabled = true, type = InputType.PERMISSIONS, maxLength = 20000)
     @property:ImportFormat
     var permissions: String = "",
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "PermissionGroup",
@@ -59,5 +59,8 @@ class PermissionGroupEntity(
         return id
     }
 
+    override fun duplicate(): PermissionGroupEntity {
+        return this.copy()
+    }
 
 }
