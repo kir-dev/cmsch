@@ -81,8 +81,6 @@
     const rootPath = /*[[@{/}]]*/ '';
 
     function renderModel() {
-        console.log(model);
-
         if (model.result) {
             document.getElementById('result').textContent = model.result;
             document.getElementById('result').style.display = 'block';
@@ -195,7 +193,7 @@
         })
         .then(data => {
             model = data;
-            if (!model.success)
+            if (!model || model.running)
                 setTimeout(() => fetchData(scriptResultId), 2000);
             renderModel();
         })
@@ -231,7 +229,7 @@
             <div class="card wide-false">
                 <h4>Script futtatás</h4>
 
-                <p id="info-line">Szabó Gergely indította ekkor: 13:36</p>
+                <p id="info-line">...</p>
 
                 <div class="log" id="log"></div>
 

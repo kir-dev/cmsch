@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.script
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.script.sandbox.*
 import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.UserEntity
@@ -22,6 +23,7 @@ import kotlin.time.measureTimedValue
 @Service
 class ScriptService(
     private val repositories: List<CrudRepository<*, *>>,
+    private val components: List<ComponentBase>,
     private val scriptResultRepository: ScriptResultRepository,
     private val clock: TimeService,
     private val transactionManager: PlatformTransactionManager
@@ -75,8 +77,10 @@ class ScriptService(
                 ) {
                     scriptResultRepository.save(resultEntity)
                 }
+                System.gc()
                 return@submit
             }
+            System.gc()
 
             val result = timedResult.value
             resultEntity.duration = timedResult.duration.inWholeMilliseconds
@@ -125,6 +129,11 @@ class ScriptService(
     ): Pair<ScriptResultEntity, ScriptingContext> {
         log.info("Script runner {} | Start (triggered by {} {})", scriptEntity.id, userEntity?.id, userEntity?.fullName)
 
+        val supportedDependencies = scriptEntity.entities
+            .split(", *".toRegex())
+            .filter { it.isNotBlank() }
+            .map { it.lowercase() }
+
         val filteredRepositories = if (scriptEntity.entities.trim() == "*") {
             repositories.filter { repo ->
                 val type = ResolvableType.forClass(repo.javaClass).`as`(CrudRepository::class.java)
@@ -133,10 +142,6 @@ class ScriptService(
                 return@filter Duplicatable::class.java.isAssignableFrom(entityType)
             }
         } else {
-            val supportedEntities = scriptEntity.entities
-                .split(", *".toRegex())
-                .filter { it.isNotBlank() }
-                .map { it.lowercase() }
 
             repositories.filter { repo ->
                 val type = ResolvableType.forClass(repo.javaClass).`as`(CrudRepository::class.java)
@@ -145,11 +150,17 @@ class ScriptService(
                 if (!Duplicatable::class.java.isAssignableFrom(entityType))
                     return@filter false
                 val entityName = entityType.simpleName.lowercase()
-                entityName in supportedEntities
+                entityName in supportedDependencies
             }
         }
 
-        log.info("Script runner {} | Entities available: {} ", scriptEntity.id, repositories.mapNotNull { repo ->
+        val filteredComponents = if (scriptEntity.entities.trim() == "*") {
+            components
+        } else {
+            components.filter { it::class.simpleName in supportedDependencies }
+        }
+
+        log.info("Script runner {} | Entities available: {}", scriptEntity.id, repositories.mapNotNull { repo ->
             val type = ResolvableType.forClass(repo.javaClass).`as`(CrudRepository::class.java)
             val entityType = type.generics[0].resolve()
                 ?: return@mapNotNull null
@@ -158,12 +169,13 @@ class ScriptService(
             val entityName = entityType.simpleName
             entityName
         })
-        log.info("Script runner {} | Entities filtered: {} ", scriptEntity.id, filteredRepositories.map { repo ->
+        log.info("Script runner {} | Entities filtered: {}", scriptEntity.id, filteredRepositories.map { repo ->
             val type = ResolvableType.forClass(repo.javaClass).`as`(CrudRepository::class.java)
             val entityType = type.generics[0].resolve()
             val entityName = entityType?.simpleName
             entityName
         })
+        log.info("Script runner {} | Entities components: {}", scriptEntity.id, filteredComponents.map { component -> component::class.simpleName })
 
         log.info("Script runner {} | Result created", scriptEntity.id)
         val resultEntity = ScriptResultEntity(
@@ -178,6 +190,7 @@ class ScriptService(
         )
         scriptResultRepository.save(resultEntity)
 
+        // This one is required to sync log messages without waiting the script to stop
         val updateLogsCallback: (List<ScriptLogLineDto>) -> Unit = { logs ->
             transactionManager.transaction(readOnly = false) {
                 scriptResultRepository.updateLogsById(
@@ -190,12 +203,14 @@ class ScriptService(
         val context = if (scriptEntity.readOnly) {
             ScriptingContext(
                 modifyingDb = ModifyingScriptingDbContext(listOf(), true),
+                modifyingComponents = ModifyingScriptingComponentContext(listOf()),
                 readOnlyDb = ReadOnlyScriptingDbContext(filteredRepositories),
-                updateLogs = updateLogsCallback
+                updateLogs = updateLogsCallback,
             )
         } else {
             ScriptingContext(
                 modifyingDb = ModifyingScriptingDbContext(filteredRepositories, false),
+                modifyingComponents = ModifyingScriptingComponentContext(components),
                 readOnlyDb = ReadOnlyScriptingDbContext(filteredRepositories),
                 updateLogs = updateLogsCallback
             )
