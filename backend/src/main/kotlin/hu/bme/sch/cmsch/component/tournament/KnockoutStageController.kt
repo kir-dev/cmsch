@@ -17,6 +17,7 @@ import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.util.function.Supplier
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -203,18 +204,17 @@ class KnockoutStageController(
             return "admin403"
         }
 
-        val entity = KnockoutStageEntity()
         dto.tournamentId = tournamentId
         val newValues = StringBuilder("entity new value: ")
-        updateEntity(descriptor, user, entity, dto, newValues, false, file0, false, file1)
-        entity.id = 0
-        if (onEntityPreSave(entity, auth)) {
+        updateEntity(descriptor, user, dto, dto, newValues, false, file0, false, file1)
+        dto.id = 0
+        if (onEntityPreSave(dto, auth)) {
             auditLog.create(user, component.component, newValues.toString())
             transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
-                dataSource.save(entity)
+                dataSource.save(dto)
             }
         }
-        onEntityChanged(entity)
+        onEntityChanged(dto)
         return "redirect:/admin/control/$view"
     }
 
@@ -312,5 +312,18 @@ class KnockoutStageController(
         }
         onEntityChanged(stageEntity)
         return "redirect:/admin/control/$view/seed/${id}"
+    }
+
+    override fun onEntityPreSave(entity: KnockoutStageEntity, auth: Authentication): Boolean {
+        entity.participants = stageService.transferTeamsForStage(entity)
+        stageService.createMatchesForStage(entity)
+        entity.seeds = stageService.setSeeds(entity)
+        stageService.calculateTeamsFromSeeds(entity)
+        return super.onEntityPreSave(entity, auth)
+    }
+
+    override fun onEntityDeleted(entity: KnockoutStageEntity) {
+        stageService.deleteMatchesForStage(entity)
+        super.onEntityDeleted(entity)
     }
 }

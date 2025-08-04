@@ -95,8 +95,6 @@ data class KnockoutStageEntity(
 ): ManagedEntity {
 
     fun rounds() = ceil(log2(participantCount.toDouble())).toInt()
-    fun matches() = participantCount - 1
-    fun getStageService() = KnockoutStageService.getBean()
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "KnockoutStage",
@@ -117,20 +115,6 @@ data class KnockoutStageEntity(
 
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, name = $name, tournamentId = $tournamentId, participantCount = $participantCount)"
-    }
-
-
-    @PrePersist
-    fun prePersist() {
-        this.participants = getStageService().transferTeamsForStage(this)
-        getStageService().createMatchesForStage(this)
-        this.seeds = getStageService().setSeeds(this)
-        getStageService().calculateTeamsFromSeeds(this)
-    }
-
-    @PreRemove
-    fun preRemove() {
-        getStageService().deleteMatchesForStage(this)
     }
 
 }

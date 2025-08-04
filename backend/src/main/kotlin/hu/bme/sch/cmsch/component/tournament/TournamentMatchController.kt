@@ -102,7 +102,7 @@ class TournamentMatchController(
 
 
     @GetMapping("/show/{id}")
-    override fun show(
+    fun showPage(
         @PathVariable id: Int,
         model: Model,
         auth: Authentication

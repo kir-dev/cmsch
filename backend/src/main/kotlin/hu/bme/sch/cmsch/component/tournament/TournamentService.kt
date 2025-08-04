@@ -64,7 +64,7 @@ open class TournamentService(
     }
 
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     fun showTournament(tournamentId: Int, user: CmschUser?): OptionalTournamentView? {
         val tournament = tournamentRepository.findById(tournamentId).getOrNull()
             ?: return null

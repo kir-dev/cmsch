@@ -26,7 +26,7 @@ class KnockoutStageService(
     private val matchRepository: TournamentMatchRepository,
     val objectMapper: ObjectMapper,
     private val tournamentComponent: TournamentComponent
-): ApplicationContextAware {
+) {
 
     fun findById(id: Int): KnockoutStageEntity? {
         return stageRepository.findById(id).getOrNull()
@@ -38,17 +38,6 @@ class KnockoutStageService(
 
     fun findMatchesByStageId(stageId: Int): List<TournamentMatchEntity> {
         return matchRepository.findAllByStageId(stageId)
-    }
-
-    companion object {
-        private var applicationContext: ApplicationContext? = null
-
-        fun getBean(): KnockoutStageService = applicationContext?.getBean(KnockoutStageService::class.java)
-            ?: throw IllegalStateException("Application context is not initialized.")
-    }
-
-    override fun setApplicationContext(context: ApplicationContext) {
-        applicationContext = context
     }
 
     fun getParticipants(stageId: Int): List<StageResultDto> {
@@ -138,8 +127,8 @@ class KnockoutStageService(
 
     @Transactional
     fun setInitialSeeds(stage: KnockoutStageEntity, seeds: List<StageResultDto>, user: CmschUser) {
-        if (StaffPermissions.PERMISSION_SET_SEEDS.validate(user).not()){
-            throw IllegalArgumentException("User does not have permission to set seeds.")
+        require(StaffPermissions.PERMISSION_SET_SEEDS.validate(user)) {
+            "User does not have permission to set seeds."
         }
         if (seeds.size != 2.0.pow(stage.rounds()).toInt()) {
             throw IllegalArgumentException("Number of seeds must match the participant count of the stage.")
