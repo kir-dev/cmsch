@@ -55,22 +55,23 @@ class ScriptComponentController(
        
     Ebben az osztályban van a legtöbb segédfüggévény.
     
-    | Signature                                          | Leírás                                                     |
-    | -------------------------------------------------- | ---------------------------------------------------------- |
-    | `.info(message: String)`                           | Normál kiírás                                              |
-    | `.info(message: Any?)`                             | Normál kiírás, a toString()-et hívja meg                   |
-    | `.println(message: String)`                        | Alias az infohoz                                           |
-    | `.warn(message: String)`                           | Warning kiírás                                             |
-    | `.warn(message: Any?)`                             | Warning kiírás, a toString()-et hívja meg                  |
-    | `.error(message: String)`                          | Hiba kiírás                                                |
-    | `.error(message: Any?)`                            | Hiba kiírás, a toString()-et hívja meg                     |
-    | `.error(message: String?, exception: Exception?)`  | Hiba kiírás, az exception nevét is kiírja                  |
-    | `.printStackTrace(exception: Exception?)`          | Kiírja a teljes hívási láncot                              |
-    | `.debug(message: String) `                         | Csak hiba javításhoz, alapból nem látszik                  |
-    | `.debug(message: Any?)`                            | Csak hiba javításhoz, alapból nem látszik                  |
-    | `.publishArtifact(artifact: ScriptArtifact)`       | Fájl mentése a futáshoz                                    |
-    | `.readOnlyDb.repository(XyRepository::class)`      | Egy factory olyan repókhoz amik nem módosítanak a DB-ben   |
-    | `.modifyingDb.repository(XyRepository::class)`     | Egy factory olyan repókhoz amik tudnak módosítani a DB-ben |
+    | Signature                                            | Leírás                                                     |
+    | ---------------------------------------------------- | ---------------------------------------------------------- |
+    | `.info(message: String)`                             | Normál kiírás                                              |
+    | `.info(message: Any?)`                               | Normál kiírás, a toString()-et hívja meg                   |
+    | `.println(message: String)`                          | Alias az infohoz                                           |
+    | `.warn(message: String)`                             | Warning kiírás                                             |
+    | `.warn(message: Any?)`                               | Warning kiírás, a toString()-et hívja meg                  |
+    | `.error(message: String)`                            | Hiba kiírás                                                |
+    | `.error(message: Any?)`                              | Hiba kiírás, a toString()-et hívja meg                     |
+    | `.error(message: String?, exception: Exception?)`    | Hiba kiírás, az exception nevét is kiírja                  |
+    | `.printStackTrace(exception: Exception?)`            | Kiírja a teljes hívási láncot                              |
+    | `.debug(message: String) `                           | Csak hiba javításhoz, alapból nem látszik                  |
+    | `.debug(message: Any?)`                              | Csak hiba javításhoz, alapból nem látszik                  |
+    | `.publishArtifact(artifact: ScriptArtifact)`         | Fájl mentése a futáshoz                                    |
+    | `.readOnlyDb.repository(XyRepository::class)`        | Egy factory olyan repókhoz amik nem módosítanak a DB-ben   |
+    | `.modifyingDb.repository(XyRepository::class)`       | Egy factory olyan repókhoz amik tudnak módosítani a DB-ben |
+    | `.modifyingComponents.component(XyComponent::class)` | Factory az adott komponens konfigurációjához               |
     
     A `readOnlyDb` alatt csak a `findAll(): List<T>`, `findById(id: ID): T?` és a `findAllById(id: List<ID>): List<T>` 
     érhető el. A `modifyingDb` alatt a hivatkozott repó minden függvénye elérhető.
@@ -206,6 +207,12 @@ class ScriptComponentController(
             type = "application/json",
             content = contentJson,
         ))
+    ```
+    
+    #### Component konfigjának olvasása
+    
+    ```kotlin
+        context.modifyingComponents.component(TokenComponent::class).reportTitle
     ```
     
     #### Maven import

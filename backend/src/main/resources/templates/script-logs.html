@@ -187,6 +187,8 @@
         })
         .then(response => {
             if (!response.ok) {
+                document.getElementById('result').textContent = "A kapcsolat megszakadt a szerverrel";
+                document.getElementById('result').style.display = 'block';
                 throw new Error('Network response was not ok: ' + response.statusText);
             }
             return response.json();
