@@ -1,11 +1,10 @@
-
-  ______ .___  ___.      _______.  ______  __    __
- /      ||   \/   |     /       | /      ||  |  |  |
-|  ,----'|  \  /  |    |   (----`|  ,----'|  |__|  |
-|  |     |  |\/|  |     \   \    |  |     |   __   |
-|  `----.|  |  |  | .----)   |   |  `----.|  |  |  |
- \______||__|  |__| |_______/     \______||__|  |__|
-
+${AnsiColor.166}
+  ██████╗ ███╗   ███╗ ███████╗  ██████╗ ██╗  ██╗
+ ██╔════╝ ████╗ ████║ ██╔════╝ ██╔════╝ ██║  ██║
+ ██║      ██╔████╔██║ ███████╗ ██║      ███████║
+ ██║      ██║╚██╔╝██║ ╚════██║ ██║      ██╔══██║
+ ╚██████╗ ██║ ╚═╝ ██║ ███████║ ╚██████╗ ██║  ██║
+  ╚═════╝ ╚═╝     ╚═╝ ╚══════╝  ╚═════╝ ╚═╝  ╚═╝${AnsiColor.DEFAULT}
 ${application.title} ${application.version}
-Powered by Spring Boot ${spring-boot.version}
-Developed by Kir-Dev https://kir-dev.hu/
+Powered by ${AnsiColor.GREEN}Spring Boot ${spring-boot.version}${AnsiColor.DEFAULT}
+Developed by ${AnsiColor.166}Kir-Dev https://kir-dev.hu/${AnsiColor.DEFAULT}
