@@ -1,7 +1,8 @@
 package hu.bme.sch.cmsch.component.script
 
 import kotlinx.coroutines.runBlocking
-import org.springframework.stereotype.Service
+import java.io.File
+import java.net.URL
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.CompoundDependenciesResolver
@@ -34,7 +35,7 @@ object ScriptHelper {
     }
 }
 
-class ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
+object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
     {
         defaultImports(DependsOn::class, Repository::class)
         defaultImports(
@@ -67,7 +68,7 @@ class ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
             "hu.bme.sch.cmsch.component.token.*",
         )
         jvm {
-            dependenciesFromCurrentContext(wholeClasspath = true)
+            dependenciesFromCurrentContext(wholeClasspath = true, unpackJarCollections = true)
             jvmTarget(Runtime.version().version().first().toString())
         }
         refineConfiguration {

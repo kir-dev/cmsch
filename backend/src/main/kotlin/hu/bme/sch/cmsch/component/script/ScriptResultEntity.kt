@@ -57,12 +57,12 @@ data class ScriptResultEntity(
     @property:GenerateOverview(order = 5, columnName = "Sikeres", renderer = OverviewType.BOOLEAN)
     var success: Boolean = false,
 
-    @Column(nullable = false, columnDefinition = "LONGTEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 8, type = InputType.BLOCK_TEXT, label = "Artifactok", defaultValue = "[]")
     @property:GenerateOverview(visible = false)
     var artifacts: String = "",
 
-    @Column(nullable = false, columnDefinition = "LONGTEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @property:GenerateInput(order = 9, type = InputType.BLOCK_TEXT, label = "Logok", defaultValue = "[]")
     @property:GenerateOverview(visible = false)
     var logs: String = "",

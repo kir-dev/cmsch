@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.script
 
+import hu.bme.sch.cmsch.component.token.TokenComponent
 import hu.bme.sch.cmsch.repository.UserRepository
 
 /**
@@ -22,5 +23,7 @@ fun scriptWriter(
     context.readOnlyDb.repository(UserRepository::class).findAll().forEach { user ->
         context.info("- ${user.fullName}")
     }
+
+    context.info(context.modifyingComponents.component(TokenComponent::class).reportTitle)
 
 }

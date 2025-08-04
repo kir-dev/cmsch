@@ -51,6 +51,8 @@ class ScriptServiceManualTest {
                 val listOf = listOf(TestDto("asdasd", "b"), TestDto("asdasdcccc", "c"))
                 println(json.generatePrettyJson(listOf))
                 println(csv.generateTypedCsv(listOf))
+                
+                println(context.modifyingComponents.component(TokenComponent::class).reportTitle)
 
                 //println(context.modifyingDb.repository(UserRepository::class).findAll())
                 //println(context.readOnlyDb.repository(UserRepository::class).findAll())

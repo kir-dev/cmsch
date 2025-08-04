@@ -124,11 +124,9 @@
         };
 
         const getEditorValue = (el) => {
-            const s = Array.from(el.children)
+            return Array.from(el.children)
                 .map(child => child.textContent.replace(/\r?\n$/, ''))
                 .join('\n');
-            console.log(s);
-            return s;
         };
 
         const setEditorValue = (el, value) => {

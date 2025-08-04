@@ -2,7 +2,6 @@ package hu.bme.sch.cmsch.component.script.sandbox
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import java.io.ByteArrayOutputStream
 
 class ScriptingCsvUtil {
 

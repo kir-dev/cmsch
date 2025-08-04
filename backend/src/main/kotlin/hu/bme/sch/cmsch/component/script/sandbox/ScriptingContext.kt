@@ -1,7 +1,9 @@
 package hu.bme.sch.cmsch.component.script.sandbox
 
+import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.script.ScriptLogLineDto
 import hu.bme.sch.cmsch.model.Duplicatable
+import org.springframework.core.ResolvableType
 import org.springframework.data.repository.CrudRepository
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -12,6 +14,7 @@ import kotlin.script.experimental.api.ScriptDiagnostic.Severity
 class ScriptingContext(
     val readOnlyDb: ReadOnlyScriptingDbContext,
     val modifyingDb: ModifyingScriptingDbContext,
+    val modifyingComponents: ModifyingScriptingComponentContext,
     private val updateLogs: (logs: List<ScriptLogLineDto>) -> Unit
 ) {
 
@@ -100,14 +103,14 @@ class ScriptingContext(
 @Suppress("UNCHECKED_CAST")
 class ModifyingScriptingDbContext(private val supportedRepos: List<CrudRepository<*, *>>, private val readOnly: Boolean) {
 
-    fun <T, ID> repository(selectedRepo: KClass<out CrudRepository<T, ID>>): CrudRepository<T, ID> {
+    fun <T, ID, R : CrudRepository<T, ID>> repository(selectedRepo: KClass<out R>): R {
         if (readOnly)
             error("modifyingDb cannot be used in a read-only context")
 
         return (
             supportedRepos.firstOrNull { repo ->
                 repo.javaClass.interfaces.any { selectedRepo.java.isAssignableFrom(it) }
-            } as? CrudRepository<T, ID>
+            } as? R
         ) ?: error("Cannot find repository for ${selectedRepo.java.canonicalName}")
     }
 
@@ -118,10 +121,10 @@ class ReadOnlyScriptingDbContext(private val supportedRepos: List<CrudRepository
 
     fun <T, ID : Any> repository(selectedRepo: KClass<out CrudRepository<T, ID>>): ReadOnlyRepositoryProxy<T, ID> where T : Duplicatable {
         val proxied = (
-                supportedRepos.firstOrNull { repo ->
-                    repo.javaClass.interfaces.any { selectedRepo.java.isAssignableFrom(it) }
-                } as? CrudRepository<T, ID>
-                ) ?: error("Cannot find repository for ${selectedRepo.java.canonicalName}")
+            supportedRepos.firstOrNull { repo ->
+                repo.javaClass.interfaces.any { selectedRepo.java.isAssignableFrom(it) }
+            } as? CrudRepository<T, ID>
+        ) ?: error("Cannot find repository for ${selectedRepo.java.canonicalName}")
 
         return ReadOnlyRepositoryProxy(proxied)
     }
@@ -140,6 +143,20 @@ class ReadOnlyRepositoryProxy<T : Duplicatable, ID : Any>(private val proxy: Cru
 
     fun findAllById(id: List<ID>): List<T> {
         return proxy.findAllById(id).map { it.duplicate() as T }.toList()
+    }
+
+}
+
+@Suppress("UNCHECKED_CAST")
+class ModifyingScriptingComponentContext(
+    components: List<ComponentBase>
+) {
+
+    private val components: Map<KClass<out ComponentBase>, ComponentBase> = components.associateBy { it::class }
+
+    fun <R : ComponentBase> component(selectedComponent: KClass<out R>): R {
+        return components[selectedComponent] as R?
+            ?: error("Cannot find component for $selectedComponent")
     }
 
 }
