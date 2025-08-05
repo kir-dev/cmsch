@@ -29,7 +29,6 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     val tokenOwnershipMode: OwnershipType,
     val challengeOwnershipMode: OwnershipType,
     val raceOwnershipMode: OwnershipType,
-    val tournamentOwnershipMode: OwnershipType,
 
     // Increased session
     val increasedSessionTime: Int,

@@ -17,7 +17,6 @@ import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.util.function.Supplier
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -97,7 +96,7 @@ class KnockoutStageController(
     }
 
     @GetMapping("/view/{id}")
-    override fun view(model: Model, auth: Authentication, @PathVariable id: Int): String {
+    fun viewPage(model: Model, auth: Authentication, @PathVariable id: Int): String {
         val createButtonAction = ButtonAction(
             "Új kiesési szakasz a tornához",
             "create/$id",
@@ -233,13 +232,13 @@ class KnockoutStageController(
             ?: return "redirect:/admin/control/$view"
         val readOnly = !StaffPermissions.PERMISSION_SET_SEEDS.validate(user) || stage.status >= StageStatus.SET
         val teams = stageService.getParticipants(id).sortedBy { it.initialSeed }
-        val tournament = tournamentRepository.findById(stage.tournamentId)
+        val tournament = tournamentRepository.findById(stage.tournamentId).getOrNull()
             ?: return "redirect:/admin/control/$view"
         model.addAttribute("title", "Kiesési szakasz seedek")
         model.addAttribute("view", view)
         model.addAttribute("readOnly", readOnly)
         model.addAttribute("entityMode", false)
-        model.addAttribute("tournamentTitle", tournament.get().title)
+        model.addAttribute("tournamentTitle", tournament.title)
         model.addAttribute("stage", stage)
         model.addAttribute("teams", teams)
 
@@ -262,9 +261,9 @@ class KnockoutStageController(
             auditLog.admin403(user, component.component, "POST /$view/seed/$id", StaffPermissions.PERMISSION_SET_SEEDS.permissionString)
             return "admin403"
         }
-        val stage = stageRepository.findById(id)
+        val stage = stageRepository.findById(id).getOrNull()
             ?: return "redirect:/admin/control/$view"
-        if (stage.get().status >= StageStatus.SET) {
+        if (stage.status >= StageStatus.SET) {
             model.addAttribute("error", "A szakasz már be lett állítva, nem lehet módosítani a seedeket.")
             return "redirect:/admin/control/$view/seed/${id}"
         }
@@ -278,7 +277,7 @@ class KnockoutStageController(
             val highlighted = allRequestParams["highlighted_$i"] != null && allRequestParams["highlighted_$i"] != "off"
             dto.add(StageResultDto(
                 teamId, teamName,
-                stage.get().id,
+                stage.id,
                 highlighted = highlighted,
                 initialSeed = initialSeed + 1 // Adjusting seed to be positive
             ))
@@ -295,7 +294,7 @@ class KnockoutStageController(
             model.addAttribute("error", "Minden seednek egyedinek kell lennie.")
             return "redirect:/admin/control/$view/seed/${id}"
         }
-        val stageEntity = stage.get()
+        val stageEntity = stage
         if (onEntityPreSave(stageEntity, auth)) {
             transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
                 stageService.setInitialSeeds(stageEntity, dto, user)
