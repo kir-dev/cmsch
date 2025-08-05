@@ -22,7 +22,7 @@ import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable.tsx'
 import { Helmet } from 'react-helmet-async'
 import { CmschPage } from '../../../common-components/layout/CmschPage.tsx'
-import { useTournamentJoin } from '../../../api/hooks/tournament/actions/useTournamentJoin.ts'
+import { useTournamentJoinMutation } from '../../../api/hooks/tournament/actions/useTournamentJoinMutation.ts'
 import { FaSignInAlt } from 'react-icons/fa'
 
 
@@ -47,7 +47,23 @@ const Tournament = ({tournament, refetch = () => {}}: TournamentProps) => {
     }
   }
 
-  const { joinTournament, joinTournamentLoading } = useTournamentJoin(actionResponseCallback)
+  const joinMutation = useTournamentJoinMutation()
+
+  const joinTournament = () => {
+    if (tournament.tournament.joinEnabled){
+      joinMutation.mutate(tournament.tournament.id, {
+        onSuccess: (response: TournamentResponses) => {
+          actionResponseCallback(response)
+          if (response === TournamentResponses.OK) {
+            refetch()
+          }
+        },
+        onError: () => {
+          toast({ status: 'error', title: 'Hiba történt a versenyre való jelentkezés során.' })
+        }
+      })
+    }
+  }
 
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -66,12 +82,9 @@ const Tournament = ({tournament, refetch = () => {}}: TournamentProps) => {
           {tournament.tournament.joinEnabled && (
             <Button
               leftIcon={<FaSignInAlt />}
-              isLoading={joinTournamentLoading}
               colorScheme="brand"
-              onClick={()=>{
-                joinTournament(tournament.tournament.id)
-                refetch()
-              }}
+              onClick={joinTournament}
+              isDisabled={tournament.tournament.isJoined}
             >
               Jelentkezés a versenyre
             </Button>
