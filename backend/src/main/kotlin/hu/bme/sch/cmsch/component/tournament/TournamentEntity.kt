@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.component.tournament
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.google.j2objc.annotations.GenerateObjectiveCGenerics
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
+import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -82,6 +82,14 @@ data class TournamentEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var status: Int = 0,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 7, label = "Résztvevő típus",
+        source = ["GROUP", "USER"])
+    @property:GenerateOverview(columnName = "Résztvevő típus", order = 7)
+    @property:ImportFormat
+    var participantType: OwnershipType = OwnershipType.GROUP,
 
 ): ManagedEntity {
 

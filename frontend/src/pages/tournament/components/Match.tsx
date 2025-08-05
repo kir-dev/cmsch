@@ -1,31 +1,26 @@
-import {MatchView, ParticipantView} from "../../../util/views/tournament.view.ts";
-import {Box, Flex, Text} from "@chakra-ui/react";
+import { MatchView, ParticipantView } from '../../../util/views/tournament.view.ts'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { stringifyTimeStamp } from '../../../util/core-functions.util.ts'
 
 interface MatchProps {
   match: MatchView
 }
 
-const Match = ({match}: MatchProps) => {
-  const getScoreColor = (score1?: number, score2?: number) => {
-    if (match.status !== "COMPLETED" || score1 === undefined || score2 === undefined) return "gray.600"
-    return score1 > score2 ? "green.600" : "red.600"
-  }
+const getScoreColor = (match: MatchView, score1?: number, score2?: number) => {
+  if (match.status !== 'COMPLETED' || score1 === undefined || score2 === undefined) return 'gray.600'
+  return score1 > score2 ? 'green.600' : 'red.600'
+}
 
+const Match = ({ match }: MatchProps) => {
   const formatKickOffTime = (timestamp?: number) => {
-    if (!timestamp) return "TBD"
-    const date = new Date(timestamp)
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
+    if (!timestamp) return 'TBD'
+    return stringifyTimeStamp(timestamp)
   }
 
   const getParticipantName = (seed: number, participant?: ParticipantView) => {
     if (participant) return participant.teamName
     if (seed < 0) return `Winner of Game ${-seed}`
-    return "TBD"
+    return 'TBD'
   }
 
   return (
@@ -39,10 +34,10 @@ const Match = ({match}: MatchProps) => {
         </Text>
         <Text
           fontSize="sm"
-          color={getScoreColor(match.homeScore, match.awayScore)}
-          fontWeight={match.status === "COMPLETED" ? "bold" : "normal"}
+          color={getScoreColor(match, match.homeScore, match.awayScore)}
+          fontWeight={match.status === 'COMPLETED' ? 'bold' : 'normal'}
         >
-          {match.homeScore ?? "-"}
+          {match.homeScore ?? '-'}
         </Text>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
@@ -51,10 +46,10 @@ const Match = ({match}: MatchProps) => {
         </Text>
         <Text
           fontSize="sm"
-          color={getScoreColor(match.awayScore, match.homeScore)}
-          fontWeight={match.status === "COMPLETED" ? "bold" : "normal"}
+          color={getScoreColor(match, match.awayScore, match.homeScore)}
+          fontWeight={match.status === 'COMPLETED' ? 'bold' : 'normal'}
         >
-          {match.awayScore ?? "-"}
+          {match.awayScore ?? '-'}
         </Text>
       </Flex>
       <Flex justifyContent="space-between" mt={1}>
@@ -66,7 +61,7 @@ const Match = ({match}: MatchProps) => {
         </Text>
       </Flex>
       <Text fontSize="xs" color="gray.500" mt={1}>
-        {match.location!="" ? match.location : "Location TBD"}
+        {match.location != '' ? match.location : 'Location TBD'}
       </Text>
     </Box>
   )
