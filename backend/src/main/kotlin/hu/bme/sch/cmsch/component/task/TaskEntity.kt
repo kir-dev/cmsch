@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -188,7 +189,7 @@ data class TaskEntity(
     @property:ImportFormat
     var maxRole: RoleType = RoleType.SUPERUSER,
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Task",
@@ -209,4 +210,9 @@ data class TaskEntity(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
+    override fun duplicate(): TaskEntity {
+        return this.copy()
+    }
+
 }

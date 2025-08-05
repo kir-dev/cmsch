@@ -40,7 +40,7 @@ class FooterComponent(
     var hostAlt by StringSettingRef(defaultValue = "Szervező kör", fieldName = "Esemény szervezőjének alt szövege",
         description = "Ha nem tölt be a kép ez jelenik meg")
 
-    var hostWebsiteUrl by StringSettingRef(defaultValue = "https://kir-dev.sch.bme.hu/?ref=cmsch",
+    var hostWebsiteUrl by StringSettingRef(defaultValue = "https://kir-dev.hu/project/cmsch",
         type = SettingType.URL, fieldName = "Esemény szervezőjének oldala", description = "Az oldal url-je")
 
     var facebookUrl by StringSettingRef(type = SettingType.URL, fieldName = "Facebook url",
@@ -52,15 +52,13 @@ class FooterComponent(
     var footerMessage by StringSettingRef(defaultValue = "email [at] sch.bme.hu\n2025", type = SettingType.LONG_TEXT,
         fieldName = "Footer szöveg", description = "Ez jelenik meg középen a footer alján")
 
-    var devLogo by StringSettingRef(defaultValue = "https://warp.sch.bme.hu/img/blobs/redirect/",
-        minRoleToEdit = RoleType.SUPERUSER, fieldName = "A kir-dev logója", description = "A kép URL-je")
-
-    var devAlt by StringSettingRef(defaultValue = "Kir-dev", minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "A kir-dev alt szövege", description = "Ha nem tölt be a kép ez jelenik meg")
-
-    var devWebsiteUrl by StringSettingRef(defaultValue = "https://kir-dev.sch.bme.hu/?ref=cmsch",
+    var devWebsiteUrl by StringSettingRef(defaultValue = "https://kir-dev.hu/project/cmsch",
         type = SettingType.URL, minRoleToEdit = RoleType.SUPERUSER, fieldName = "A kir-dev oldala",
         description = "Az oldal url-je")
+
+    var bugReportURL by StringSettingRef(defaultValue = "https://kir-dev.hu/about/contact",
+        type = SettingType.URL, minRoleToEdit = RoleType.SUPERUSER, fieldName = "A kir-dev kapcsolat linkje",
+        description = "Kapcsolat link")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

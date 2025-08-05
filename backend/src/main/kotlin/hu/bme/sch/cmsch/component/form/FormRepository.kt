@@ -2,12 +2,12 @@ package hu.bme.sch.cmsch.component.form
 
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
 @ConditionalOnBean(FormComponent::class)
-interface FormRepository : JpaRepository<FormEntity, Int>,
+interface FormRepository : CrudRepository<FormEntity, Int>,
     EntityPageDataSource<FormEntity, Int> {
 
     fun findAllByOpenTrueAndAvailableFromLessThanAndAvailableUntilGreaterThan(now1: Long, now2: Long): List<FormEntity>

@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.ControlPermissions
 import jakarta.persistence.*
@@ -34,7 +35,7 @@ data class ExtraMenuEntity(
     @property:GenerateOverview(visible = false)
     var external: Boolean = false,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "ExtraMenu",
@@ -55,5 +56,9 @@ data class ExtraMenuEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
+    }
+
+    override fun duplicate(): ExtraMenuEntity {
+        return this.copy()
     }
 }

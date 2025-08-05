@@ -2,13 +2,13 @@ package hu.bme.sch.cmsch.component.form
 
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
 @ConditionalOnBean(FormComponent::class)
-interface ResponseRepository : JpaRepository<ResponseEntity, Int>,
+interface ResponseRepository : CrudRepository<ResponseEntity, Int>,
     EntityPageDataSource<ResponseEntity, Int> {
 
     fun findAllByFormId(formId: Int): List<ResponseEntity>
@@ -32,5 +32,7 @@ interface ResponseRepository : JpaRepository<ResponseEntity, Int>,
     fun findTop1ByFormIdOrderByLineDesc(formId: Int): List<ResponseEntity>
 
     fun findTop1ByFormIdAndEntryTokenOrderByLineDesc(formId: Int, entryToken: String): List<ResponseEntity>
+
+    override fun findAll(): List<ResponseEntity>
 
 }

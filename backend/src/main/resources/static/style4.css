@@ -1,8 +1,11 @@
 
-* {
+:root, body {
     margin: 0;
     padding: 0;
     border: 0;
+}
+
+* {
     scrollbar-width: none;
 }
 
@@ -152,7 +155,7 @@ scrollbar-corner,
 .right-panel .popover-container {
     width: 300px;
     background-color: var(--dark-2);
-    box-shadow: 10px 10px 21px 5px rgba(0,0,0,0.20);
+    box-shadow: 10px 10px 21px 5px rgba(0, 0, 0, 0.20);
     border-radius: 12px;
     display: flex;
     padding-top: 20px;
@@ -171,7 +174,7 @@ scrollbar-corner,
     height: 80px;
     object-fit: cover;
     border-radius: 50%;
-    box-shadow: 10px 10px 21px 5px rgba(0,0,0,0.30);
+    box-shadow: 10px 10px 21px 5px rgba(0, 0, 0, 0.30);
 }
 
 .right-panel .username {
@@ -230,6 +233,7 @@ scrollbar-corner,
     font-size: 16px;
     font-weight: 300;
     color: var(--light-text-color);
+    margin: 0;
 }
 
 .right-panel .profile-button-container {
@@ -272,7 +276,7 @@ scrollbar-corner,
     background-color: var(--card-light-background-color);
     color: #44494c;
     max-height: calc(100vh - 40px);
-    box-shadow: 10px 0 21px -10px rgba(0,0,0,0.4);
+    box-shadow: 10px 0 21px -10px rgba(0, 0, 0, 0.4);
     padding-top: 10px;
     flex-grow: 0;
 }
@@ -357,7 +361,7 @@ scrollbar-corner,
     flex-grow: 0;
     overflow-y: scroll;
     overflow-x: hidden;
-    box-shadow: 10px 0 21px -10px rgba(0,0,0,0.2);
+    box-shadow: 10px 0 21px -10px rgba(0, 0, 0, 0.2);
     padding: 0 20px;
     max-height: calc(100vh - 48px);
     background-color: var(--card-background-color);
@@ -373,16 +377,13 @@ scrollbar-corner,
 }
 
 .app > .content > h1 {
+    margin: 0;
     font-weight: 300;
 }
 
 .app > .content > h1 > span.favorite,
 table span.favorite {
-    font-variation-settings:
-            'FILL' 1,
-            'wght' 400,
-            'GRAD' 0,
-            'opsz' 48;
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }
 
 .app > .content > h1.narrow,
@@ -400,7 +401,7 @@ table span.favorite {
     border-radius: 1.5em;
     background-color: var(--card-background-color);
     padding: 1.8em;
-    box-shadow: 10px 10px 21px 5px rgba(0,0,0,0.20);
+    box-shadow: 10px 10px 21px 5px rgba(0, 0, 0, 0.20);
     margin: 20px 0;
 }
 
@@ -439,7 +440,7 @@ table span.favorite {
     font-weight: 500;
     color: #d6dddd;
     text-transform: uppercase;
-    margin-bottom: 1em;
+    margin: 0 0 1em;
 }
 
 .card > .desc {
@@ -495,7 +496,7 @@ table span.favorite {
     font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 0, 'opsz' 48;
     background-color: #181b1d;
     border-radius: 12px;
-    box-shadow: inset 3px 3px 28px 0 rgba(0,0,0,0.2);
+    box-shadow: inset 3px 3px 28px 0 rgba(0, 0, 0, 0.2);
     max-width: 120px;
     max-height: 120px;
     padding: 6px;
@@ -586,7 +587,7 @@ table span.favorite {
 }
 
 .badge {
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     padding: 4px 6px;
     display: inline-block;
     border-radius: 2px;
@@ -616,7 +617,7 @@ table span.favorite {
     margin: 30px auto;
     border-radius: 200px;
     border: 2px solid #4ab09e;
-    box-shadow: 10px 10px 21px 5px rgba(0,0,0,0.20);
+    box-shadow: 10px 10px 21px 5px rgba(0, 0, 0, 0.20);
 }
 
 .menu .search-note {
@@ -912,6 +913,7 @@ a.btn {
     transition: background-color 0.1s ease-out, color 0.1s ease-out;
     margin: 10px;
     cursor: pointer;
+    border: 0
 }
 
 button.btn.disabled {
@@ -1242,6 +1244,7 @@ form input[type="datetime-local"],
 form select,
 form textarea,
 #table-search-input {
+    border: 0;
     background-color: var(--dark-4);
     padding: 10px 14px;
     font-family: 'Roboto', sans-serif;
@@ -1703,12 +1706,14 @@ form ul {
 .dashboard-table tr:nth-of-type(2n) {
     background-color: var(--dark-5);
 }
+
 .dashboard-table td,
 .dashboard-table th {
     padding: 4px 10px;
     text-align: left;
     margin: 0;
 }
+
 .dashboard-table {
     background-color: var(--dark-4);
     width: 100%;
@@ -1734,17 +1739,79 @@ form ul {
     margin-bottom: 20px;
 }
 
+.kotlin-editor {
+    font-family: monospace;
+    font-size: 12px;
+    outline: none;
+    overflow-y: auto;
+    padding-left: 48px;
+    counter-reset: line;
+    background-color: var(--dark-4);
+    overflow-x: auto;
+}
+
+.kotlin-editor div {
+    display: block;
+    position: relative;
+    white-space: pre;
+}
+
+.kotlin-editor div::before {
+    content: counter(line);
+    counter-increment: line;
+    position: absolute;
+    right: calc(100% + 16px);
+    opacity: 0.5;
+}
+
+.kotlin-editor keyword {
+    color: #dddddd;
+    font-weight: bold;
+}
+
+.kotlin-editor string {
+    color: var(--success-color);
+}
+
+.kotlin-editor string keyword {
+    color: var(--success-color) !important;
+    font-weight: normal;
+}
+
+.kotlin-editor number {
+    color: var(--alt-color);
+}
+
+.kotlin-editor comment {
+    color: var(--text-color) !important;
+}
+
+.kotlin-editor comment keyword {
+    color: var(--text-color) !important;
+}
+
+.kotlin-editor comment string {
+    color: var(--text-color) !important;
+}
+
+.kotlin-editor comment number {
+    color: var(--text-color) !important;
+}
+
 @media (max-width: 1023px) {
     .menu {
         display: none;
     }
+
     .shortcuts-menu,
     .only-widescreen {
         display: none !important;
     }
+
     #motd {
         margin: 0 !important;
     }
+
     .menu {
         width: 100% !important;
         max-width: 100% !important;
@@ -1756,35 +1823,44 @@ form ul {
         z-index: 2000;
         padding: 0 !important;
     }
+
     #menu-results {
         margin: 0 20px;
     }
+
     .app > .content {
         padding: 40px 0;
     }
+
     .card {
         border-radius: 0;
         width: 100% !important;
         box-sizing: border-box;
     }
+
     h1,
     .details {
         text-align: center;
         padding-left: 20px;
         padding-right: 20px;
     }
+
     .menu > div > .menu-group a {
         max-width: unset;
     }
+
     .tabulator-row-odd {
         background-color: var(--dark-4) !important;
     }
+
     .tabulator-responsive-collapse strong {
         line-height: 1.7;
     }
+
     .button-group {
         text-align: center;
     }
+
     .nav > div.left-panel {
         background: var(--dark-4) !important;
     }

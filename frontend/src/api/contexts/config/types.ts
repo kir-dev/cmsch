@@ -51,9 +51,8 @@ export interface App {
 }
 
 export interface Footer {
-  devAlt: string
-  devLogo: string
   devWebsiteUrl: string
+  bugReportUrl: string
   facebookUrl: string
   footerMessage: string
   hostAlt: string

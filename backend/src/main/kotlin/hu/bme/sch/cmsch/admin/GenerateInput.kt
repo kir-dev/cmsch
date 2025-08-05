@@ -31,6 +31,7 @@ object InputType {
     const val SECTION_SEPARATOR = "section-separator"
     const val DOCS = "docs"
     const val TOKEN_QR_TEXT_FIELD = "token-qr-text-field"
+    const val KOTLIN_EDITOR = "kotlin-editor"
 }
 
 enum class InputInterpreter(val value: String) {

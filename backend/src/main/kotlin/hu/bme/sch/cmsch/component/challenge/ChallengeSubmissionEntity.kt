@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -72,7 +73,7 @@ data class ChallengeSubmissionEntity(
     @property:ImportFormat
     var tag: String = "",
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "ChallengeSubmission",
@@ -92,6 +93,10 @@ data class ChallengeSubmissionEntity(
 
     override fun toString(): String {
         return "ChallengeSubmissionEntity(id=$id, category='$category', userId=$userId, userName='$userName', groupId=$groupId, groupName='$groupName', score=$score, tag='$tag')"
+    }
+
+    override fun duplicate(): ChallengeSubmissionEntity {
+        return this.copy()
     }
 
 }

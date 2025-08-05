@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.StringToArraySerializer
@@ -164,7 +165,7 @@ data class OrganizationEntity(
     @property:ImportFormat
     var visible: Boolean = false,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Organization",
@@ -185,6 +186,10 @@ data class OrganizationEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, name = $name)"
+    }
+
+    override fun duplicate(): OrganizationEntity {
+        return this.copy()
     }
 
 }

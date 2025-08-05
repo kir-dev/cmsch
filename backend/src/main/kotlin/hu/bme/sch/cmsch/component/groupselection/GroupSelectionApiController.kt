@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.groupselection
 
 import hu.bme.sch.cmsch.component.profile.ProfileComponent
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -16,12 +17,13 @@ import java.util.*
 @ConditionalOnBean(GroupSelectionComponent::class)
 class GroupSelectionApiController(
     private val groupSelectionService: GroupSelectionService,
-    private val profileComponent: Optional<ProfileComponent>
+    private val profileComponent: Optional<ProfileComponent>,
+    private val userService: UserService,
 ) {
 
     @PostMapping("/group/select/{groupId}")
     fun selectGroup(@PathVariable groupId: Int, auth: Authentication?): GroupSelectionResponse {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
             ?: return GroupSelectionResponse(GroupSelectionResponseType.UNAUTHORIZED)
 
         if (!profileComponent.map { it.selectionEnabled }.orElse(false)

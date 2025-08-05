@@ -29,6 +29,7 @@ import hu.bme.sch.cmsch.component.pushnotification.PushNotificationComponent
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
 import hu.bme.sch.cmsch.component.race.RaceComponent
 import hu.bme.sch.cmsch.component.riddle.RiddleComponent
+import hu.bme.sch.cmsch.component.script.ScriptComponent
 import hu.bme.sch.cmsch.component.sheets.SheetsComponent
 import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
@@ -36,7 +37,6 @@ import hu.bme.sch.cmsch.component.team.TeamComponent
 import hu.bme.sch.cmsch.component.token.TokenComponent
 import hu.bme.sch.cmsch.component.tournament.TournamentComponent
 import hu.bme.sch.cmsch.extending.CmschPermissionSource
-import hu.bme.sch.cmsch.util.DI
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import kotlin.reflect.KClass
@@ -91,20 +91,17 @@ object ImplicitPermissions : PermissionGroup {
     val PERMISSION_IMPLICIT_HAS_GROUP = PermissionValidator(
         description = "The user has a group",
         readOnly = false,
-        permissionString = "HAS_GROUP"
-    ) { user -> DI.instance.userService.getById(user.internalId).group != null }
+        permissionString = "HAS_GROUP") { user -> user.groupId != null }
 
     val PERMISSION_IMPLICIT_ANYONE = PermissionValidator(
         description = "Everyone has this permission",
         readOnly = false,
-        permissionString = "ANYONE"
-    ) { _ -> true }
+        permissionString = "ANYONE") { _ -> true }
 
     val PERMISSION_NOBODY = PermissionValidator(
         description = "Nobody has this permission",
         readOnly = false,
-        permissionString = "NOBODY"
-    ) { _ -> false }
+        permissionString = "NOBODY") { _ -> false }
 
     val PERMISSION_SUPERUSER_ONLY = PermissionValidator { user -> user.isSuperuser() }
 
@@ -415,14 +412,14 @@ object ControlPermissions : PermissionGroup {
         "PROTO_CONTROL",
         "Prototípusok testreszabása",
         readOnly = false,
-        component = ApplicationComponent::class
+        component = ProtoComponent::class
     )
 
     val PERMISSION_CONTROL_CONFERENCE = PermissionValidator(
         "CONFERENCE_CONTROL",
         "Konferencia testreszabása",
         readOnly = false,
-        component = ApplicationComponent::class
+        component = ConferenceComponent::class
     )
 
     val PERMISSION_CONTROL_SHEETS = PermissionValidator(
@@ -437,6 +434,13 @@ object ControlPermissions : PermissionGroup {
         "Tournament komponens testreszabása",
         readOnly = false,
         component = TournamentComponent::class
+    )
+
+    val PERMISSION_CONTROL_SCRIPT = PermissionValidator(
+        "SCRIPT_CONTROL",
+        "Scriptek testreszabása",
+        readOnly = false,
+        component = ScriptComponent::class
     )
 
     override fun allPermissions() = listOf(
@@ -484,6 +488,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_CONFERENCE,
         PERMISSION_CONTROL_SHEETS,
         PERMISSION_CONTROL_TOURNAMENT,
+        PERMISSION_CONTROL_SCRIPT,
     )
 
 }
@@ -1447,28 +1452,28 @@ object StaffPermissions : PermissionGroup {
         "ACCESS_KEYS_SHOW",
         "Hozzáférési kulcsok megtekintése",
         readOnly = true,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     val PERMISSION_EDIT_ACCESS_KEYS = PermissionValidator(
         "ACCESS_KEYS_EDIT",
         "Hozzáférési kulcsok szerkesztése",
         readOnly = false,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     val PERMISSION_CREATE_ACCESS_KEYS = PermissionValidator(
         "ACCESS_KEYS_CREATE",
         "Hozzáférési kulcsok létrehozása",
         readOnly = false,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     val PERMISSION_DELETE_ACCESS_KEYS = PermissionValidator(
         "ACCESS_KEYS_DELETE",
         "Hozzáférési kulcsok törlése",
         readOnly = false,
-        component = TeamComponent::class
+        component = AccessKeyComponent::class
     )
 
     /// EventComponent
@@ -1647,6 +1652,43 @@ object StaffPermissions : PermissionGroup {
         "Verseny eredmények szerkesztése",
         readOnly = false,
         component = TournamentComponent::class
+    )
+
+    /// ScriptComponent
+
+    val PERMISSION_SHOW_SCRIPTS = PermissionValidator(
+        "SCRIPTS_SHOW",
+        "Scriptek megtekintése",
+        readOnly = true,
+        component = ScriptComponent::class
+    )
+
+    val PERMISSION_EDIT_SCRIPTS = PermissionValidator(
+        "SCRIPTS_EDIT",
+        "Scriptek szerkesztése",
+        readOnly = false,
+        component = ScriptComponent::class
+    )
+
+    val PERMISSION_CREATE_SCRIPTS = PermissionValidator(
+        "SCRIPTS_CREATE",
+        "Scriptek létrehozása",
+        readOnly = false,
+        component = ScriptComponent::class
+    )
+
+    val PERMISSION_DELETE_SCRIPTS = PermissionValidator(
+        "SCRIPTS_DELETE",
+        "Scriptek törlése",
+        readOnly = false,
+        component = ScriptComponent::class
+    )
+
+    val PERMISSION_EXECUTE_SCRIPTS = PermissionValidator(
+        "SCRIPTS_EXECUTE",
+        "Scriptek futtatása",
+        readOnly = false,
+        component = ScriptComponent::class
     )
 
     override fun allPermissions() = listOf(
@@ -1832,6 +1874,12 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_SHOW_BRACKETS,
         PERMISSION_GENERATE_BRACKETS,
         PERMISSION_EDIT_RESULTS,
+
+        PERMISSION_SHOW_SCRIPTS,
+        PERMISSION_EDIT_SCRIPTS,
+        PERMISSION_CREATE_SCRIPTS,
+        PERMISSION_DELETE_SCRIPTS,
+        PERMISSION_EXECUTE_SCRIPTS,
     )
 
 }

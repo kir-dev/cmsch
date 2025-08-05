@@ -230,7 +230,7 @@ data class UserEntity(
     @property:ImportFormat
     var isServiceAccount: Boolean = false,
 
-): ManagedEntity, CmschUser {
+): ManagedEntity, CmschUser, Duplicatable {
 
     override val groupId
         get() = group?.id
@@ -253,7 +253,11 @@ data class UserEntity(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id )"
+        return this::class.simpleName + "(id = $id, fullName = $fullName )"
+    }
+
+    override fun duplicate(): UserEntity {
+        return this.copy()
     }
 
     @get:Transient

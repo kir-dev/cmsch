@@ -30,7 +30,8 @@ private const val EXPIRED_OR_INVALID_TOKEN = "Expired or invalid JWT token"
 
 @Service
 class JwtTokenProvider(
-    private val startupPropertyConfig: StartupPropertyConfig
+    private val startupPropertyConfig: StartupPropertyConfig,
+    private val userService: UserService,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -134,7 +135,7 @@ class JwtTokenProvider(
     }
 
     fun refreshToken(auth: Authentication): String {
-        val user = auth.getUserEntityFromDatabase()
+        val user = auth.getUserEntityFromDatabase(userService)
         return createToken(
             userId = user.id,
             internalId = user.internalId,

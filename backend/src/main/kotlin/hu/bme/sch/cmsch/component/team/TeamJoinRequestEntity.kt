@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -53,7 +54,7 @@ data class TeamJoinRequestEntity(
     @property:ImportFormat
     var groupId: Int = 0,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TeamJoinRequest",
@@ -74,6 +75,10 @@ data class TeamJoinRequestEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, user = $userName, group = $groupName)"
+    }
+
+    override fun duplicate(): TeamJoinRequestEntity {
+        return this.copy()
     }
 
 }

@@ -4,7 +4,6 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string
   readonly VITE_DISABLE_APP_CONFIG_CACHE: string
   readonly VITE_APP_CONFIG_CACHE_TTL_SECONDS: string
-  readonly VITE_BUGREPORT_URL: string
   readonly VITE_HIDE_KIR_DEV_IN_FOOTER: string
   readonly VITE_CLIENT_BASE_URL: string
   readonly VITE_OFFICIAL_LANGUAGE: string

@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.PermissionGroupService
 import hu.bme.sch.cmsch.service.PermissionValidator
 import hu.bme.sch.cmsch.service.PermissionsService
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import org.slf4j.LoggerFactory
@@ -26,13 +27,14 @@ class SettingsController(
     private val staticPageService: Optional<StaticPageService>,
     private val permissionsService: PermissionsService,
     private val permissionGroupService: PermissionGroupService,
+    private val userService: UserService,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/settings")
     fun setting(model: Model, auth: Authentication): String {
-        val user = auth.getUserEntityFromDatabase()
+        val user = auth.getUserEntityFromDatabase(userService)
         adminMenuService.addPartsForMenu(user, model)
         model.addAttribute("user", user)
 
@@ -66,7 +68,7 @@ class SettingsController(
 
     @GetMapping("/settings/relog")
     fun refreshUserData(model: Model, auth: Authentication): String {
-        val user = auth.getUserEntityFromDatabase()
+        val user = auth.getUserEntityFromDatabase(userService)
 
         auth.getUser().refresh(user)
         adminMenuService.invalidateUser(user.internalId)
