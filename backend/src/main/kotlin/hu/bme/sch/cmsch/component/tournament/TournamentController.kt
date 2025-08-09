@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/admin/control/tournament")
 @ConditionalOnBean(TournamentComponent::class)
 class TournamentController(
+    private val tournamentService: TournamentService,
     repo: TournamentRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -57,4 +58,9 @@ class TournamentController(
     adminMenuIcon = "sports_esports",
     adminMenuPriority = 1,
     searchSettings = calculateSearchSettings<TournamentEntity>(true)
-)
+){
+    override fun onEntityDeleted(entity: TournamentEntity) {
+        tournamentService.deleteStagesForTournament(entity)
+        super.onEntityDeleted(entity)
+    }
+}

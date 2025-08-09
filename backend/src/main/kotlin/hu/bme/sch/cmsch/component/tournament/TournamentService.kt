@@ -197,4 +197,8 @@ class TournamentService(
         return TournamentJoinStatus.OK
     }
 
+    @Transactional
+    fun deleteStagesForTournament(tournament: TournamentEntity) {
+        stageRepository.deleteAllByTournamentId(tournament.id)
+    }
 }
