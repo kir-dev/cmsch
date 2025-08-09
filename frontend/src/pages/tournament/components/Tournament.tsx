@@ -1,23 +1,7 @@
-import {
-  TournamentDetailsView,
-  TournamentResponseMessages,
-  TournamentResponses
-} from '../../../util/views/tournament.view.ts'
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-  useToast
-} from '@chakra-ui/react'
-import KnockoutStage from "./KnockoutStage.tsx";
-import {useState} from "react";
+import { TournamentDetailsView, TournamentResponseMessages, TournamentResponses } from '../../../util/views/tournament.view.ts'
+import { Box, Button, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react'
+import KnockoutStage from './KnockoutStage.tsx'
+import { useState } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable.tsx'
 import { Helmet } from 'react-helmet-async'
@@ -25,13 +9,12 @@ import { CmschPage } from '../../../common-components/layout/CmschPage.tsx'
 import { useTournamentJoinMutation } from '../../../api/hooks/tournament/actions/useTournamentJoinMutation.ts'
 import { FaSignInAlt } from 'react-icons/fa'
 
-
 interface TournamentProps {
-  tournament: TournamentDetailsView,
+  tournament: TournamentDetailsView
   refetch?: () => void
 }
 
-const Tournament = ({tournament, refetch = () => {}}: TournamentProps) => {
+const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
   const toast = useToast()
   const { components } = useConfigContext()
   const tournamentComponent = components.tournament
@@ -50,7 +33,7 @@ const Tournament = ({tournament, refetch = () => {}}: TournamentProps) => {
   const joinMutation = useTournamentJoinMutation()
 
   const joinTournament = () => {
-    if (tournament.tournament.joinEnabled){
+    if (tournament.tournament.joinEnabled) {
       joinMutation.mutate(tournament.tournament.id, {
         onSuccess: (response: TournamentResponses) => {
           actionResponseCallback(response)
@@ -80,20 +63,12 @@ const Tournament = ({tournament, refetch = () => {}}: TournamentProps) => {
         <Text>{tournament.tournament.location}</Text>
         <Flex>
           {tournament.tournament.joinEnabled && (
-            <Button
-              leftIcon={<FaSignInAlt />}
-              colorScheme="brand"
-              onClick={joinTournament}
-              isDisabled={tournament.tournament.isJoined}
-            >
+            <Button leftIcon={<FaSignInAlt />} colorScheme="brand" onClick={joinTournament} isDisabled={tournament.tournament.isJoined}>
               Jelentkezés a versenyre
             </Button>
           )}
           {tournament.tournament.isJoined && (
-            <Button
-              colorScheme="brand"
-              isDisabled={true}
-            >
+            <Button colorScheme="brand" isDisabled={true}>
               Jelentkezve
             </Button>
           )}
@@ -101,31 +76,25 @@ const Tournament = ({tournament, refetch = () => {}}: TournamentProps) => {
         <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
           <TabList>
             <Tab>Résztvevők</Tab>
-            {
-              tournament.stages.map((stage) => (
-                <Tab key={stage.id}>{stage.name}</Tab>
-              ))
-            }
+            {tournament.stages.map((stage) => (
+              <Tab key={stage.id}>{stage.name}</Tab>
+            ))}
           </TabList>
           <TabPanels>
             <TabPanel px={100}>
-              {
-                tournament.tournament.participants.map((participant) => (
-                  <Box>
-                    <Heading as="h3" size="md" marginY={0.5} maxWidth="100%">
-                      {participant.teamName}
-                    </Heading>
-                  </Box>
-                ))
-              }
+              {tournament.tournament.participants.map((participant) => (
+                <Box key={participant.teamId}>
+                  <Heading as="h3" size="md" marginY={0.5} maxWidth="100%">
+                    {participant.teamName}
+                  </Heading>
+                </Box>
+              ))}
             </TabPanel>
-            {
-              tournament.stages.map((stage) => (
-                <TabPanel px={0} overflowX="auto" scrollBehavior="smooth">
-                  <KnockoutStage key={stage.id} stage={stage}/>
-                </TabPanel>
-              ))
-            }
+            {tournament.stages.map((stage) => (
+              <TabPanel px={0} overflowX="auto" scrollBehavior="smooth" key={stage.id}>
+                <KnockoutStage key={stage.id} stage={stage} />
+              </TabPanel>
+            ))}
           </TabPanels>
         </Tabs>
       </Flex>
