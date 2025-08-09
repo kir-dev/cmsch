@@ -17,7 +17,7 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(TournamentComponent::class)
-open class TournamentService(
+class TournamentService(
     private val tournamentRepository: TournamentRepository,
     private val stageRepository: KnockoutStageRepository,
     private val groupRepository: GroupRepository,
@@ -26,7 +26,7 @@ open class TournamentService(
     private val matchRepository: TournamentMatchRepository
 ){
     @Transactional(readOnly = true)
-    open fun findAll(): List<TournamentEntity> {
+    fun findAll(): List<TournamentEntity> {
         return tournamentRepository.findAll()
     }
 
@@ -42,7 +42,7 @@ open class TournamentService(
             return listOf()
         }
 
-        var tournaments = tournamentRepository.findAll()
+        val tournaments = tournamentRepository.findAll()
             .filter { it.visible }.map {
             TournamentPreviewView(
                 it.id,
@@ -72,8 +72,8 @@ open class TournamentService(
         val participants = if (tournament.participants != "") tournament.participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) } else listOf()
 
         val playerId = when (tournament.participantType) {
-            OwnershipType.GROUP -> user?.groupId ?: null
-            OwnershipType.USER -> user?.id ?: null
+            OwnershipType.GROUP -> user?.groupId
+            OwnershipType.USER -> user?.id
         }
         val isJoined = participants.any { it.teamId == playerId }
         val joinEnabled = tournament.joinable && !isJoined &&
