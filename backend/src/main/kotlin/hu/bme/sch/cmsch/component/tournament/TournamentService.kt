@@ -3,23 +3,16 @@ package hu.bme.sch.cmsch.component.tournament
 import com.fasterxml.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.OwnershipType
-import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.util.isAvailableForRole
-import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
-import org.springframework.http.ResponseEntity
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
-import java.util.*
-import kotlin.collections.listOf
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -30,9 +23,8 @@ open class TournamentService(
     private val groupRepository: GroupRepository,
     private val tournamentComponent: TournamentComponent,
     private val objectMapper: ObjectMapper,
-    private val startupPropertyConfig: StartupPropertyConfig,
     private val matchRepository: TournamentMatchRepository
-): ApplicationContextAware {
+){
     @Transactional(readOnly = true)
     open fun findAll(): List<TournamentEntity> {
         return tournamentRepository.findAll()
@@ -203,21 +195,6 @@ open class TournamentService(
 
         tournamentRepository.save(tournament)
         return TournamentJoinStatus.OK
-    }
-
-    companion object{
-        private var applicationContext: ApplicationContext? = null
-        fun getBean(): TournamentService = applicationContext?.getBean(TournamentService::class.java)
-            ?: throw IllegalStateException("TournamentService is not initialized. Make sure TournamentComponent is enabled and application context is set.")
-    }
-
-    override fun setApplicationContext(context: ApplicationContext) {
-        applicationContext = context
-    }
-
-    @Transactional
-    fun deleteStagesForTournament(tournament: TournamentEntity) {
-        stageRepository.deleteAllByTournamentId(tournament.id)
     }
 
 }
