@@ -916,6 +916,12 @@ a.btn {
     border: 0
 }
 
+button.btn.disabled {
+    background-color: var(--dark-4);
+    color: var(--lighter-text-color);
+    cursor: not-allowed;
+}
+
 button.btn:hover,
 input[type="submit"].btn:hover,
 a.btn:hover {
@@ -983,6 +989,15 @@ a.btn-danger:hover {
 
 .span-button:hover {
     color: var(--primary-color);
+}
+
+.form-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
 }
 
 form label,
@@ -1703,6 +1718,13 @@ form ul {
     background-color: var(--dark-4);
     width: 100%;
     font-weight: 300;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .hidden {
