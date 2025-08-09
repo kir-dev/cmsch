@@ -3,15 +3,10 @@ import { TournamentStageView, MatchView } from '../../../util/views/tournament.v
 import { Heading } from '@chakra-ui/react'
 import { groupBy, keys } from 'lodash'
 import KnockoutBracket from './KnockoutBracket.tsx'
+import { MatchTree } from '../util/matchTree.ts'
 
 interface TournamentBracketProps {
   stage: TournamentStageView
-}
-
-export type MatchTree = {
-  root: MatchView
-  lowerTree: MatchTree | null
-  upperTree: MatchTree | null
 }
 
 const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: TournamentBracketProps) => {
