@@ -124,7 +124,7 @@ class TournamentMatchController(
         val match = transactionManager.transaction(readOnly = true) {
             matchRepository.findById(id).getOrNull() ?: return "redirect:/admin/control/tournament-match/"
         }
-        val stage = match.stage()
+        val stage = stageService.findById(match.stageId)
         if (stage == null) {
             model.addAttribute("error", "A mérkőzés nem tartozik érvényes szakaszhoz.")
             return "error"
@@ -186,7 +186,7 @@ class TournamentMatchController(
         val match = transactionManager.transaction(readOnly = true) {
             matchRepository.findById(id).getOrNull()?: return "redirect:/admin/control/tournament-match/"
         }
-        val stage = match.stage()
+        val stage = stageService.findById(match.stageId)
         if (stage == null) {
             model.addAttribute("error", "A mérkőzés nem tartozik érvényes szakaszhoz.")
             return "error"

@@ -83,9 +83,11 @@ class TournamentApiController(
         val user = auth?.getUserOrNull()
             ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
 
-        return when (startupPropertyConfig.tournamentOwnershipMode){
-            OwnershipType.GROUP -> tournamentService.teamRegister(tournamentJoinDto.id, user)
-            OwnershipType.USER -> tournamentService.userRegister(tournamentJoinDto.id, user)
+        val tournament = tournamentService.findById(tournamentJoinDto.id)
+            ?: return TournamentJoinStatus.TOURNAMENT_NOT_FOUND
+        return when (tournament.participantType) {
+            OwnershipType.GROUP -> tournamentService.teamRegister(tournament, user)
+            OwnershipType.USER -> tournamentService.userRegister(tournament, user)
         }
     }
 

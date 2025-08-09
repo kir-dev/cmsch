@@ -79,14 +79,14 @@ open class TournamentService(
     private fun mapTournament(tournament: TournamentEntity, user: CmschUser?): TournamentDetailedView {
         val participants = if (tournament.participants != "") tournament.participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) } else listOf()
 
-        val playerId = when (startupPropertyConfig.tournamentOwnershipMode){
+        val playerId = when (tournament.participantType) {
             OwnershipType.GROUP -> user?.groupId ?: null
             OwnershipType.USER -> user?.id ?: null
         }
         val isJoined = participants.any { it.teamId == playerId }
         val joinEnabled = tournament.joinable && !isJoined &&
             ((user?.role ?: RoleType.GUEST) >= RoleType.PRIVILEGED ||
-            (startupPropertyConfig.tournamentOwnershipMode == OwnershipType.USER && (user?.role ?: RoleType.GUEST) >= RoleType.BASIC))
+            (tournament.participantType == OwnershipType.USER && (user?.role ?: RoleType.GUEST) >= RoleType.BASIC))
 
         val stages = stageRepository.findAllByTournamentId(tournament.id)
             .sortedBy { it.level }
@@ -165,10 +165,7 @@ open class TournamentService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    fun teamRegister(tournamentId: Int, user: CmschUser): TournamentJoinStatus {
-        val tournament = tournamentRepository.findById(tournamentId).getOrNull()
-            ?: return TournamentJoinStatus.TOURNAMENT_NOT_FOUND
-
+    fun teamRegister(tournament: TournamentEntity, user: CmschUser): TournamentJoinStatus {
         val groupId = user.groupId
             ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
         val team = groupRepository.findById(groupId).getOrNull()
@@ -192,10 +189,7 @@ open class TournamentService(
 
     @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
-    fun userRegister(tournamentId: Int, user: CmschUser): TournamentJoinStatus {
-        val tournament = tournamentRepository.findById(tournamentId).getOrNull()
-            ?: return TournamentJoinStatus.TOURNAMENT_NOT_FOUND
-
+    fun userRegister(tournament: TournamentEntity, user: CmschUser): TournamentJoinStatus {
         val participants = tournament.participants
         val parsed = mutableListOf<ParticipantDto>()
         parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
