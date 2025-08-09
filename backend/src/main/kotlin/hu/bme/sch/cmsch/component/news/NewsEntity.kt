@@ -142,7 +142,7 @@ data class NewsEntity(
         return "id = $id, title = $title"
     }
 
-    override fun duplicate(): Duplicatable {
+    override fun duplicate(): NewsEntity {
         return this.copy()
     }
 

@@ -90,7 +90,7 @@ fun filterForSearchableFields(field: Method): Boolean {
 const val INVALID_ID_ERROR = "Object with this id was not found in the database"
 
 open class OneDeepEntityPage<T : IdentifiableEntity>(
-    internal val view: String,
+    val view: String,
     internal val classType: KClass<T>,
     private val supplier: Supplier<T>,
     internal val titleSingular: String,
@@ -109,10 +109,10 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     internal val entitySourceMapping: Map<String, (T?) -> List<String>> =
         mapOf(Nothing::class.simpleName!! to { listOf() }),
 
-    internal val showPermission: PermissionValidator,
-    internal val createPermission: PermissionValidator,
-    internal val editPermission: PermissionValidator,
-    internal val deletePermission: PermissionValidator,
+    val showPermission: PermissionValidator,
+    val createPermission: PermissionValidator,
+    val editPermission: PermissionValidator,
+    val deletePermission: PermissionValidator,
 
     internal val showEnabled: Boolean = true,
     internal val createEnabled: Boolean = false,

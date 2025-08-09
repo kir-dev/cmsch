@@ -116,23 +116,23 @@ class ProfileService(
     }
 
     private fun mapQr(user: UserEntity): String? {
-        val canSeeQr =
-            profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr
-        if (profileComponent.showQrOnlyIfTicketPresent
-            && (canSeeQr || profileComponent.showProfilePicture)) {
+        val canSeeQr = profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr
 
+        if (profileComponent.showQrOnlyIfTicketPresent && (canSeeQr || profileComponent.showProfilePicture)) {
             return if (admissionService.map { it.hasTicket(user.cmschId) }.orElse(false)) user.cmschId else null
         }
 
         return if (canSeeQr || profileComponent.showProfilePicture) {
             if (profileComponent.bmejegyQrIfPresent)
                 fetchBmejegyTicket(user)
-            else user.cmschId
+            else
+                user.cmschId
         } else null
     }
 
     private fun fetchBmejegyTicket(user: UserEntity): String {
-        return legacyBmejegyService.flatMap { it.findVoucherByUser(user.id) }.orElse(user.cmschId)
+        return legacyBmejegyService.flatMap { it.findVoucherByUser(user.id) }
+            .orElse(if (profileComponent.noQrIfNoBmejegy) null else user.cmschId)
     }
 
     private fun fetchWhetherGroupLeavable(group: GroupEntity?) =
