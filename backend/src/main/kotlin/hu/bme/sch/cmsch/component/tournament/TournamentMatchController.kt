@@ -77,7 +77,18 @@ class TournamentMatchController(
             false,
             "Mérkőzések eredményeinek felvitele"
         )
-    )
+    ),
+    innerControlActions = mutableListOf(
+        ControlAction(
+            "Match show",
+            "show-match/{id}",
+            "grade",
+            StaffPermissions.PERMISSION_SHOW_TOURNAMENTS,
+            200,
+            false,
+            "Mérkőzés megtekintése"
+        )
+    ),
 ) {
     override fun fetchSublist(id: Int): Iterable<TournamentMatchEntity> {
         return stageService.getMatchesByStageTournamentId(id)
@@ -96,7 +107,7 @@ class TournamentMatchController(
     )*/
 
 
-    @GetMapping("/show/{id}")
+    @GetMapping("/show-match/{id}")
     fun showPage(
         @PathVariable id: Int,
         model: Model,
@@ -126,7 +137,7 @@ class TournamentMatchController(
         }
         model.addAttribute("match", match)
         model.addAttribute("stage", stage)
-        model.addAttribute("editMode", true)
+        model.addAttribute("readOnly", true)
 
         return "matchScore"
     }

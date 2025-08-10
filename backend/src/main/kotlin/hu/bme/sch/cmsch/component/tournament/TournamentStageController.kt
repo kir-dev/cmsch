@@ -71,6 +71,7 @@ class TournamentStageController(
     editPermission =   StaffPermissions.PERMISSION_EDIT_TOURNAMENTS,
     deletePermission = StaffPermissions.PERMISSION_DELETE_TOURNAMENTS,
 
+    viewEnabled = false,
     createEnabled = false,
     editEnabled = true,
     deleteEnabled = true,
@@ -78,6 +79,18 @@ class TournamentStageController(
     exportEnabled = false,
 
     adminMenuIcon = "lan",
+
+    outerControlActions = mutableListOf(
+        ControlAction(
+            name = "Torna szakaszainak kezelése",
+            endpoint = "view-page/{id}",
+            icon = "double_arrow",
+            permission = StaffPermissions.PERMISSION_SHOW_TOURNAMENTS,
+            order = 100,
+            newPage = false,
+            usageString = "A kiválasztott torna szakaszainak kezelése"
+        )
+    ),
 
     innerControlActions = mutableListOf(
         ControlAction(
@@ -95,20 +108,28 @@ class TournamentStageController(
         return stageRepository.findAllByTournamentId(id)
     }
 
-    @GetMapping("/view/{id}")
+    @GetMapping("/view-page/{id}")
     fun viewPage(model: Model, auth: Authentication, @PathVariable id: Int): String {
-        val createButtonAction = ButtonAction(
+        val createKnockoutButtonAction = ButtonAction(
             "Új kiesési szakasz a tornához",
-            "create/$id",
+            "create-knockout/$id",
             createPermission,
             99,
+            "add_box",
+            true
+        )
+        val createGroupButtonAction = ButtonAction(
+            "Új csoport a tornához",
+            "create-group/$id",
+            createPermission,
+            100,
             "add_box",
             true
         )
         val newButtonActions = mutableListOf<ButtonAction>()
         for (buttonAction in buttonActions)
             newButtonActions.add(buttonAction)
-        newButtonActions.add(createButtonAction)
+        newButtonActions.add(createKnockoutButtonAction)
 
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -138,7 +159,7 @@ class TournamentStageController(
         return "overview4"
     }
 
-    @GetMapping("/create/{tournamentId}")
+    @GetMapping(value = ["/create-knockout/{tournamentId}", "/create-group/{tournamentId}"])
     fun createStagePage(model: Model, auth: Authentication, @PathVariable tournamentId: Int): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -186,8 +207,17 @@ class TournamentStageController(
                auth: Authentication,
                @RequestHeader("Referer") referer: String,
     ): String {
-        val tournamentId = referer.substringAfterLast("/create/").toIntOrNull()
+        val toCreate = referer.substringAfterLast("/create-").split("/")
+        val stageType = toCreate.getOrNull(0)
+            ?.let { when (it) {
+                "knockout" -> StageType.KNOCKOUT
+                "group" -> StageType.GROUP_STAGE
+                else -> return "redirect:/admin/control/$view"
+            }} ?: return "redirect:/admin/control/$view"
+        val tournamentId = toCreate.getOrNull(1)?.toIntOrNull()
             ?: return "redirect:/admin/control/$view"
+//        val tournamentId = referer.substringAfterLast("/create/").toIntOrNull()
+//            ?: return "redirect:/admin/control/$view"
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (createPermission.validate(user).not()) {
@@ -204,6 +234,7 @@ class TournamentStageController(
         }
 
         dto.tournamentId = tournamentId
+        dto.type = stageType
         val newValues = StringBuilder("entity new value: ")
         updateEntity(descriptor, user, dto, dto, newValues, false, file0, false, file1)
         dto.id = 0
