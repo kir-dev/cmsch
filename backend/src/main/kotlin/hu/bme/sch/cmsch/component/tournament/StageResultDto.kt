@@ -9,9 +9,19 @@ data class StageResultDto(
     val stageId: Int = 0,
     var highlighted: Boolean = false,
     var initialSeed: Int = 0,
+    var highestSeed: Int = 0,
     var detailedStats: GroupStageResults? = null,
 ): Comparable<StageResultDto> {
     override fun compareTo(other: StageResultDto): Int {
+        if (this.stageId != other.stageId) {
+            return this.stageId.compareTo(other.stageId)
+        }
+        if (this.detailedStats == null && other.detailedStats == null) {
+            return -this.initialSeed.compareTo(other.highestSeed)
+        }
+        if (this.detailedStats == null) {
+            return -1 // null detailed stats are considered better (knockout stages are later)
+        }
         return compareValuesBy(this, other,
             { it.detailedStats?:GroupStageResults()}, {it.initialSeed}, {it.highlighted})
     }

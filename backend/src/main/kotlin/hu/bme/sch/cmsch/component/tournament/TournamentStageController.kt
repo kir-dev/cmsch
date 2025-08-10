@@ -21,11 +21,11 @@ import kotlin.jvm.optionals.getOrNull
 
 
 @Controller
-@RequestMapping("/admin/control/knockout-stage")
+@RequestMapping("/admin/control/tournament-stage")
 @ConditionalOnBean(TournamentComponent::class)
-class KnockoutStageController(
-    private val stageRepository: KnockoutStageRepository,
-    private val stageService: KnockoutStageService,
+class TournamentStageController(
+    private val stageRepository: TournamentStageRepository,
+    private val stageService: TournamentStageService,
     private val tournamentRepository: TournamentRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -35,19 +35,19 @@ class KnockoutStageController(
     transactionManager: PlatformTransactionManager,
     storageService: StorageService,
     env: Environment
-) : TwoDeepEntityPage<KnockoutGroupDto, KnockoutStageEntity>(
-    "knockout-stage",
-    KnockoutGroupDto::class,
-    KnockoutStageEntity::class, ::KnockoutStageEntity,
+) : TwoDeepEntityPage<StageGroupDto, TournamentStageEntity>(
+    "tournament-stage",
+    StageGroupDto::class,
+    TournamentStageEntity::class, ::TournamentStageEntity,
     "Kiesési szakasz", "Kiesési szakaszok",
     "A kiesési szakaszok kezelése.",
     transactionManager,
-    object : ManualRepository<KnockoutGroupDto, Int>() {
-        override fun findAll(): Iterable<KnockoutGroupDto> {
+    object : ManualRepository<StageGroupDto, Int>() {
+        override fun findAll(): Iterable<StageGroupDto> {
             val stages = stageRepository.findAllAggregated().associateBy { it.tournamentId }
             val tournaments = tournamentRepository.findAll()
             return tournaments.map {
-                KnockoutGroupDto(
+                StageGroupDto(
                     it.id,
                     it.title,
                     it.location,
@@ -91,7 +91,7 @@ class KnockoutStageController(
         )
     )
 ) {
-    override fun fetchSublist(id: Int): Iterable<KnockoutStageEntity> {
+    override fun fetchSublist(id: Int): Iterable<TournamentStageEntity> {
         return stageRepository.findAllByTournamentId(id)
     }
 
@@ -152,7 +152,7 @@ class KnockoutStageController(
         if (!editEnabled)
             return "redirect:/admin/control/$view/"
 
-        val entity = KnockoutStageEntity(tournamentId =  tournamentId)
+        val entity = TournamentStageEntity(tournamentId =  tournamentId)
 
         val actualEntity = onPreEdit(entity)
         model.addAttribute("data", actualEntity)
@@ -179,7 +179,7 @@ class KnockoutStageController(
 
     @Override
     @PostMapping("/create", headers =  ["Referer"])
-    fun create(@ModelAttribute(binding = false) dto: KnockoutStageEntity,
+    fun create(@ModelAttribute(binding = false) dto: TournamentStageEntity,
                @RequestParam(required = false) file0: MultipartFile?,
                @RequestParam(required = false) file1: MultipartFile?,
                model: Model,
@@ -313,7 +313,7 @@ class KnockoutStageController(
         return "redirect:/admin/control/$view/seed/${id}"
     }
 
-    override fun onEntityPreSave(entity: KnockoutStageEntity, auth: Authentication): Boolean {
+    override fun onEntityPreSave(entity: TournamentStageEntity, auth: Authentication): Boolean {
         entity.participants = stageService.transferTeamsForStage(entity)
         stageService.createMatchesForStage(entity)
         entity.seeds = stageService.setSeeds(entity)
@@ -321,7 +321,7 @@ class KnockoutStageController(
         return super.onEntityPreSave(entity, auth)
     }
 
-    override fun onEntityDeleted(entity: KnockoutStageEntity) {
+    override fun onEntityDeleted(entity: TournamentStageEntity) {
         stageService.deleteMatchesForStage(entity)
         super.onEntityDeleted(entity)
     }

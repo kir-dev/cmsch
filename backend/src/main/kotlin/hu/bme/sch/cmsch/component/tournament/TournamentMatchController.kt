@@ -23,7 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 class TournamentMatchController(
     private val matchRepository: TournamentMatchRepository,
     private val tournamentService: TournamentService,
-    private val stageService: KnockoutStageService,
+    private val stageService: TournamentStageService,
     importService: ImportService,
     adminMenuService: AdminMenuService,
     component: TournamentComponent,
@@ -32,7 +32,7 @@ class TournamentMatchController(
     transactionManager: PlatformTransactionManager,
     storageService: StorageService,
     env: Environment,
-    private val knockoutStageRepository: KnockoutStageRepository
+    private val tournamentStageRepository: TournamentStageRepository
 ) : TwoDeepEntityPage<MatchGroupDto, TournamentMatchEntity>(
     "tournament-match",
     MatchGroupDto::class,
@@ -234,7 +234,7 @@ class TournamentMatchController(
                         val updatedSeeds = stageService.setSeeds(stage)
                         stage.seeds = updatedSeeds
                         stageService.calculateTeamsFromSeeds(stage)
-                        knockoutStageRepository.save(stage)
+                        tournamentStageRepository.save(stage)
                     }
                 }
             }

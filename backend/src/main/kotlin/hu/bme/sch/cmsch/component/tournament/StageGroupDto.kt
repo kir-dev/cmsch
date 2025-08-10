@@ -4,7 +4,7 @@ import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewType
 import hu.bme.sch.cmsch.model.IdentifiableEntity
 
-data class KnockoutGroupDto(
+data class StageGroupDto(
 
     @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,

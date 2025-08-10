@@ -14,25 +14,27 @@ data class StageCountDto(
 
 @Repository
 @ConditionalOnBean(TournamentComponent::class)
-interface KnockoutStageRepository : CrudRepository<KnockoutStageEntity, Int>,
-    EntityPageDataSource<KnockoutStageEntity, Int> {
+interface TournamentStageRepository : CrudRepository<TournamentStageEntity, Int>,
+    EntityPageDataSource<TournamentStageEntity, Int> {
 
-    override fun findAll(): List<KnockoutStageEntity>
-    override fun findById(id: Int): Optional<KnockoutStageEntity>
-    fun findAllByTournamentId(tournamentId: Int): List<KnockoutStageEntity>
+    override fun findAll(): List<TournamentStageEntity>
+    override fun findById(id: Int): Optional<TournamentStageEntity>
+    fun findAllByTournamentId(tournamentId: Int): List<TournamentStageEntity>
 
-    @Query("""
+    @Query(
+        """
         SELECT NEW hu.bme.sch.cmsch.component.tournament.StageCountDto(
             s.tournamentId,
             COUNT(s.id)
         )
-        FROM KnockoutStageEntity s
+        FROM TournamentStageEntity s
         GROUP BY s.tournamentId
-    """)
+    """
+    )
     fun findAllAggregated(): List<StageCountDto>
 
 
-    fun findByTournamentIdAndLevel(tournamentId: Int, level: Int): Optional<KnockoutStageEntity>
+    fun findByTournamentIdAndLevel(tournamentId: Int, level: Int): Optional<TournamentStageEntity>
 
     fun deleteAllByTournamentId(tournamentId: Int): Int
 

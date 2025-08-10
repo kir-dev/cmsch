@@ -13,8 +13,8 @@ import kotlin.math.pow
 
 @Service
 @ConditionalOnBean(TournamentComponent::class)
-class KnockoutStageService(
-    private val stageRepository: KnockoutStageRepository,
+class TournamentStageService(
+    private val stageRepository: TournamentStageRepository,
     private val tournamentService: TournamentService,
     private val clock: TimeService,
     private val matchRepository: TournamentMatchRepository,
@@ -22,7 +22,7 @@ class KnockoutStageService(
     private val tournamentComponent: TournamentComponent
 ) {
 
-    fun findById(id: Int): KnockoutStageEntity? {
+    fun findById(id: Int): TournamentStageEntity? {
         return stageRepository.findById(id).getOrNull()
     }
 
@@ -34,7 +34,7 @@ class KnockoutStageService(
         return stage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
     }
 
-    fun getResultsForStage(stage: KnockoutStageEntity): List<StageResultDto> {
+    fun getResultsForStage(stage: TournamentStageEntity): List<StageResultDto> {
         if (stage.level <= 1) {
             return tournamentService.getParticipants(stage.tournamentId)
                 .mapIndexed { index, participant ->
@@ -55,7 +55,7 @@ class KnockoutStageService(
         return prevStage.participants.split("\n").map { objectMapper.readValue(it, StageResultDto::class.java) }
     }
 
-    fun transferTeamsForStage(stage: KnockoutStageEntity): String {
+    fun transferTeamsForStage(stage: TournamentStageEntity): String {
         val teamSeeds = (1..stage.participantCount).asIterable().toList()
         var participants = getResultsForStage(stage)
         if (participants.size >= stage.participantCount) {
@@ -76,7 +76,7 @@ class KnockoutStageService(
 
 
     @Transactional
-    fun createMatchesForStage(stage: KnockoutStageEntity) {
+    fun createMatchesForStage(stage: TournamentStageEntity) {
         val firstRoundGameCount = 2.0.pow(stage.rounds() - 1).toInt()
         val gameCount = 2 * firstRoundGameCount
         val matches = mutableListOf<TournamentMatchEntity>()
@@ -120,7 +120,7 @@ class KnockoutStageService(
     }
 
     @Transactional
-    fun setInitialSeeds(stage: KnockoutStageEntity, seeds: List<StageResultDto>, user: CmschUser) {
+    fun setInitialSeeds(stage: TournamentStageEntity, seeds: List<StageResultDto>, user: CmschUser) {
         require(StaffPermissions.PERMISSION_SET_SEEDS.validate(user)) {
             "User does not have permission to set seeds."
         }
@@ -132,7 +132,7 @@ class KnockoutStageService(
         stageRepository.save(stage)
     }
 
-    fun setSeeds(stage: KnockoutStageEntity): String {
+    fun setSeeds(stage: TournamentStageEntity): String {
         val matches = matchRepository.findAllByStageId(stage.id)
         val seeds = mutableListOf<SeededParticipantDto>()
         seeds.addAll(
@@ -160,7 +160,7 @@ class KnockoutStageService(
     }
 
 
-    fun calculateTeamsFromSeeds(stage: KnockoutStageEntity) {
+    fun calculateTeamsFromSeeds(stage: TournamentStageEntity) {
         val actualMatches = matchRepository.findAllByStageId(stage.id)
         val seeds = getSeeds(stage)
         for (match in actualMatches) {
@@ -175,7 +175,7 @@ class KnockoutStageService(
     }
 
 
-    fun getSeeds(stage: KnockoutStageEntity): Map<Int, ParticipantDto> {
+    fun getSeeds(stage: TournamentStageEntity): Map<Int, ParticipantDto> {
         val seeds = mutableMapOf<Int, ParticipantDto>()
         if (stage.seeds == "") {
             return emptyMap()
@@ -214,11 +214,11 @@ class KnockoutStageService(
     }
 
     @Transactional
-    fun deleteMatchesForStage(stage: KnockoutStageEntity) {
+    fun deleteMatchesForStage(stage: TournamentStageEntity) {
         matchRepository.deleteAllByStageId(stage.id)
     }
 
-    fun onSeedsFinalized(stage: KnockoutStageEntity) {
+    fun onSeedsFinalized(stage: TournamentStageEntity) {
         val matches = matchRepository.findAllByStageId(stage.id)
         if (matches.isEmpty()) {
             throw IllegalStateException("No matches found for stage ${stage.id} when finalizing seeds.")

@@ -85,7 +85,7 @@ class TestConfig(
     private val extraMenuRepository: ExtraMenuRepository,
     private val riddleCacheManager: Optional<RiddleCacheManager>,
     private val tournamentRepository: Optional<TournamentRepository>,
-    private val stageRepository: Optional<KnockoutStageRepository>,
+    private val stageRepository: Optional<TournamentStageRepository>,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val objectMapper: ObjectMapper,
 ) {
@@ -1175,7 +1175,7 @@ class TestConfig(
         extraMenuRepository.save(ExtraMenuEntity(0, "Facebook", "https://facebook.com/xddddddddddd", true))
     }
 
-    private fun addTournaments(repository: TournamentRepository, stageRepository: KnockoutStageRepository){
+    private fun addTournaments(repository: TournamentRepository, stageRepository: TournamentStageRepository){
         val participants1 = mutableListOf<ParticipantDto>()
         participants1.add(ParticipantDto(groupRepository.findByName("V10").orElseThrow().id, "V10"))
         participants1.add(ParticipantDto(groupRepository.findByName("I16").orElseThrow().id, "I16"))
@@ -1193,7 +1193,7 @@ class TestConfig(
             participantCount = participants1.size,
         )
         repository.save(tournament1)
-        val stage1 = KnockoutStageEntity(
+        val stage1 = TournamentStageEntity(
             name = "Kieséses szakasz",
             tournamentId = tournament1.id,
             level = 1,

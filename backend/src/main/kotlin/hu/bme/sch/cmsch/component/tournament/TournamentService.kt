@@ -19,7 +19,7 @@ import kotlin.jvm.optionals.getOrNull
 @ConditionalOnBean(TournamentComponent::class)
 class TournamentService(
     private val tournamentRepository: TournamentRepository,
-    private val stageRepository: KnockoutStageRepository,
+    private val stageRepository: TournamentStageRepository,
     private val groupRepository: GroupRepository,
     private val tournamentComponent: TournamentComponent,
     private val objectMapper: ObjectMapper,

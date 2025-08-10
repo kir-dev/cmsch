@@ -9,7 +9,6 @@ import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
-import jakarta.transaction.Transactional
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 import kotlin.math.ceil
@@ -26,9 +25,9 @@ enum class StageStatus {
 
 
 @Entity
-@Table(name = "knockout_stage")
+@Table(name = "tournament_stage")
 @ConditionalOnBean(TournamentComponent::class)
-data class KnockoutStageEntity(
+data class TournamentStageEntity(
 
     @Id
     @GeneratedValue
@@ -53,15 +52,22 @@ data class KnockoutStageEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(columnName = "Típus", order = 3, centered = true)
+    @property:ImportFormat
+    var type: StageType = StageType.KNOCKOUT,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 3, label = "Szint")
-    @property:GenerateOverview(columnName = "Szint", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "Szint", order = 4, centered = true)
     @property:ImportFormat
     var level: Int = 1, //ie. Csoportkör-1, Csoportkör-2, Kieséses szakasz-3
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 3, label = "Résztvevők száma", note = "Legfeljebb annyi csapat, mint a versenyen résztvevők száma")
-    @property:GenerateOverview(columnName = "RésztvevőSzám", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "RésztvevőSzám", order = 5, centered = true)
     @property:ImportFormat
     var participantCount: Int = 1,
 
@@ -82,13 +88,13 @@ data class KnockoutStageEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateOverview(columnName = "Következő kör", order = 4, centered = true)
+    @property:GenerateOverview(columnName = "Következő kör", order = 6, centered = true)
     @property:ImportFormat
     var nextRound: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateOverview(columnName = "Status", order = 5, centered = true)
+    @property:GenerateOverview(columnName = "Status", order = 7, centered = true)
     @property:ImportFormat
     var status: StageStatus = StageStatus.CREATED,
 
@@ -104,7 +110,7 @@ data class KnockoutStageEntity(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is KnockoutStageEntity) return false
+        if (other !is TournamentStageEntity) return false
 
         if (id != other.id) return false
 
@@ -117,4 +123,9 @@ data class KnockoutStageEntity(
         return this::class.simpleName + "(id = $id, name = $name, tournamentId = $tournamentId, participantCount = $participantCount)"
     }
 
+}
+
+enum class StageType {
+    KNOCKOUT,
+    GROUP_STAGE,
 }
