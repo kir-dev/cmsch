@@ -19,11 +19,17 @@ jobs:
       - name: Login to Docker Registry
         run: echo ${{ secrets.DOCKER_REGISTRY_PASSWORD }} | docker login -u ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password-stdin ${{ secrets.DOCKER_REGISTRY_URL }}
 
-      - name: Build and Push Docker Image
-        run: |
-          docker buildx create --use
-          docker buildx inspect --bootstrap
-          docker buildx build --platform linux/amd64 --push -t ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:rc -f ./backend/Dockerfile-build ./backend
+      - name: Set up JDK 24
+        uses: actions/setup-java@v3
+        with:
+          java-version: 24
+          distribution: temurin
+
+      - name: Build OCI Image
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean bootBuildImage --imageName=${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:rc
+          build-root-directory: backend
 
       - name: Push OCI Image
         run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:rc

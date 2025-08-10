@@ -2,11 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.3"
+    id("org.springframework.boot") version "3.5.4"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.owasp.dependencycheck") version "12.1.3"
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
+    kotlin("jvm") version "2.2.10"
+    kotlin("plugin.spring") version "2.2.10"
     id("org.sonarqube") version "6.2.0.5505"
 }
 
@@ -43,7 +43,7 @@ repositories {
 
 dependencies {
     implementation("com.google.firebase:firebase-admin:9.5.0")
-    implementation("software.amazon.awssdk:s3:2.31.77")
+    implementation("software.amazon.awssdk:s3:2.32.24")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -58,7 +58,7 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.squareup.okhttp3:okhttp:5.0.0")
+    implementation("com.squareup.okhttp3:okhttp:5.1.0")
     implementation("com.itextpdf:itext-core:9.2.0")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -66,24 +66,25 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.google.zxing:javase:3.5.3")
-    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     implementation("org.jetbrains.kotlin:kotlin-scripting-common")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+    implementation(platform("io.jsonwebtoken:jjwt-bom:0.12.7"))
+    implementation("io.jsonwebtoken:jjwt-api")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson")
     implementation("com.fasterxml.uuid:java-uuid-generator:5.1.0")
-    implementation("org.commonmark:commonmark:0.25.0")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.25.0")
+    implementation("org.commonmark:commonmark:0.25.1")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.25.1")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
     implementation("org.postgresql:postgresql")
-    implementation(platform("io.micrometer:micrometer-bom:1.15.1"))
+    implementation(platform("io.micrometer:micrometer-bom:1.15.3"))
     implementation("io.micrometer:micrometer-core")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.micrometer:micrometer-observation")
@@ -104,7 +105,8 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
-    builder = "bellsoft/buildpacks.builder:glibc"
+    buildpacks = listOf("docker.io/paketobuildpacks/adoptium", "urn:cnb:builder:paketo-buildpacks/java")
+    builder = "paketobuildpacks/builder-jammy-base"
     environment = mapOf(
         "BP_NATIVE_IMAGE" to "false",
         "CDS_TRAINING_JAVA_TOOL_OPTIONS" to "-Dspring.profiles.include=prewarm",
