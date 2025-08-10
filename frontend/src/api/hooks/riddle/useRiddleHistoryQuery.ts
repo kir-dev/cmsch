@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 import { NEW_RIDDLE_ENDPOINTS } from '../../../util/configs/environment.config'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
@@ -11,7 +11,7 @@ export const useRiddleHistoryQuery = () => {
     queryKey: [QueryKeys.RIDDLE_HISTORY],
     queryFn: async () => {
       const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'history') : joinPath(ApiPaths.RIDDLE_HISTORY)
-      const response = await axios.get<Object>(url)
+      const response = await axios.get<object>(url)
 
       return Object.entries(response.data).map(([key, value]) => ({ categoryName: key, submissions: value }))
     }

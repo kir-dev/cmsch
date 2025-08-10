@@ -1,6 +1,4 @@
-import * as React from 'react'
-import deepmerge from 'deepmerge'
-import { Components } from 'react-markdown'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   chakra,
   Checkbox,
@@ -20,6 +18,9 @@ import {
   Tr,
   UnorderedList
 } from '@chakra-ui/react'
+import deepmerge from 'deepmerge'
+import * as React from 'react'
+import { Components } from 'react-markdown'
 
 type GetCoreProps = {
   children?: React.ReactNode
@@ -30,6 +31,7 @@ function getCoreProps(props: GetCoreProps): any {
   return props['data-sourcepos'] ? { 'data-sourcepos': props['data-sourcepos'] } : {}
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const defaults: Components = {
   p: (props) => {
     const { children } = props

@@ -14,14 +14,14 @@ export function useSearch<T>(data: T[], searchFn: (data: T, searchWord: string) 
     } else {
       setFilteredData((d) => d.filter((item) => searchFn(item, search)))
     }
-  }, [search, data])
+  }, [searchFn, search, data])
 
   useEffect(() => {
     if (data) {
       if (inputRef.current) inputRef.current.value = ''
       setSearch('')
     }
-  }, [data])
+  }, [data, inputRef])
 
   return { inputRef, filteredData, handleInput, setSearch, search }
 }

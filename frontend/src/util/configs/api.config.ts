@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { QueryClient } from '@tanstack/react-query'
+import axios from 'axios'
 import { API_BASE_URL } from './environment.config'
 
 export const initAxios = () => {

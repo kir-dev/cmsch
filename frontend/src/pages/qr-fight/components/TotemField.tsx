@@ -1,6 +1,6 @@
-import type { Totem } from '../../../util/views/qrFight.view'
 import { Stat, StatHelpText, StatLabel, StatNumber, VStack } from '@chakra-ui/react'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
+import type { Totem } from '../../../util/views/qrFight.view'
 
 interface TotemFieldProps {
   totem: Totem

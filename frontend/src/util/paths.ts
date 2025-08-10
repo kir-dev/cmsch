@@ -94,5 +94,5 @@ export enum ApiPaths {
   MY_TEAM = '/api/team/my',
   TEAM = '/api/team',
   ALL_TEAMS = '/api/teams',
-  DEBTS = '/api/debts',
+  DEBTS = '/api/debts'
 }

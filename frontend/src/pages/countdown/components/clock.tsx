@@ -1,7 +1,7 @@
 import { Flex, Heading, Icon, Text, VStack } from '@chakra-ui/react'
 import { intervalToDuration } from 'date-fns'
+import { useCallback, useEffect, useState } from 'react'
 import { BsDashLg } from 'react-icons/bs'
-import { useEffect, useState } from 'react'
 
 interface ClockProps {
   countTo: Date
@@ -10,12 +10,16 @@ interface ClockProps {
 const Clock = ({ countTo }: ClockProps) => {
   const target = countTo.getTime() > Date.now() ? countTo : new Date()
   const [duration, setDuration] = useState(intervalToDuration({ start: new Date(), end: target }))
-  const update = () => {
+
+  const update = useCallback(() => {
     if (countTo.getTime() > Date.now()) setDuration(intervalToDuration({ start: new Date(), end: countTo }))
-  }
+  }, [countTo])
+
   useEffect(() => {
-    setInterval(update, 1000)
-  }, [])
+    const interval = setInterval(update, 1000)
+    return () => clearInterval(interval)
+  }, [update])
+
   return (
     <Flex flexDirection={['column', 'row']} alignItems="center" justifyContent="center">
       {(duration.years || 0) > 0 && (

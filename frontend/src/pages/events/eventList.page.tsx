@@ -18,21 +18,21 @@ import { Helmet } from 'react-helmet-async'
 import { FaCalendar } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
+import { SearchIcon } from '@chakra-ui/icons'
+import { createRef, useEffect, useState } from 'react'
 import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CustomTabButton } from '../../common-components/CustomTabButton'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { Paths } from '../../util/paths'
+import { EventListView } from '../../util/views/event.view'
 import { CardListItem } from './components/CardListItem'
 import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
 import { FILTER, mapper } from './util/filter'
-import { CustomTabButton } from '../../common-components/CustomTabButton'
-import { SearchIcon } from '@chakra-ui/icons'
-import { createRef, useEffect, useState } from 'react'
-import { EventListView } from '../../util/views/event.view'
 
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
@@ -42,8 +42,6 @@ const EventListPage = () => {
   const breakpoint = useBreakpoint()
   const inputRef = createRef<HTMLInputElement>()
   const [filteredEvents, setFilteredEvents] = useState<EventListView[] | undefined>()
-
-  if (!component) return <ComponentUnavailable />
 
   const availableFilters = []
   if (component.filterByCategory) availableFilters.push(FILTER.CATEGORY)
@@ -66,8 +64,9 @@ const EventListPage = () => {
 
   useEffect(() => {
     setFilteredEvents(upcomingEvents)
-  }, [data])
+  }, [upcomingEvents])
 
+  if (!component) return <ComponentUnavailable />
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
   return (
     <CmschPage>

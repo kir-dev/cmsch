@@ -8,13 +8,9 @@ export const ColorModeSwitcher = (props: Props) => {
   const { toggleColorMode } = useColorMode()
   const config = useConfigContext()
 
+  const icon = useColorModeValue(<SunIcon w={5} h={5} />, <MoonIcon w={5} h={5} />)
+
   return config?.components.style.darkModeEnabled ? (
-    <IconButton
-      aria-label="Sötét-világos mód váltás"
-      icon={useColorModeValue(<SunIcon w={5} h={5} />, <MoonIcon w={5} h={5} />)}
-      onClick={toggleColorMode}
-      variant="ghost"
-      {...props}
-    />
+    <IconButton aria-label="Sötét-világos mód váltás" icon={icon} onClick={toggleColorMode} variant="ghost" {...props} />
   ) : null
 }

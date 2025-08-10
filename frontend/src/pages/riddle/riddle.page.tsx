@@ -27,11 +27,11 @@ import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
+import { StopItModal } from '../../common-components/StopItModal'
 import { useOpaqueBackground } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { RiddleSubmissionStatus } from '../../util/views/riddle.view'
-import { StopItModal } from '../../common-components/StopItModal'
 
 const RiddlePage = () => {
   const { id } = useParams()

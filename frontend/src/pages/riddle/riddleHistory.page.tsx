@@ -25,10 +25,10 @@ const RiddleHistoryPage = () => {
     if (!loaded && query.isSuccess) {
       setLoaded(true)
       if (query.data.length > 0) {
-        setCategory(query.data!![0].categoryName)
+        setCategory(query.data![0].categoryName)
       }
     }
-  }, [query.isSuccess])
+  }, [loaded, query.data, query.isSuccess])
 
   useEffect(() => {
     setIndex(0)
@@ -39,7 +39,7 @@ const RiddleHistoryPage = () => {
       toast({ title: l('riddle-history-query-failed'), status: 'error' })
       navigate(AbsolutePaths.RIDDLE)
     }
-  }, [query.isError])
+  }, [navigate, query.isError, toast])
 
   if (query.isLoading || !query.data) {
     return <Loading />
@@ -65,7 +65,7 @@ const RiddleHistoryPage = () => {
         </Heading>
         <Stack direction={['column']}>
           <Select value={category} onChange={(e) => setCategory(e.target.value)} w="20rem">
-            {query.data!!.map((c) => (
+            {query.data!.map((c) => (
               <option value={c.categoryName} key={c.categoryName}>
                 {c.categoryName} ({c?.submissions?.length} megoldott riddle)
               </option>

@@ -9,7 +9,9 @@ export function useScanTokenMutation(onSuccess?: () => void, onError?: () => voi
       let token
       try {
         token = new URL(qrData).searchParams.get('token')
-      } catch (e) {}
+      } catch (e) {
+        console.error(e)
+      }
       token = token || qrData
       if (!token) throw new Error()
       const response = await axios.post<ScanResponseView>(joinPath('/api/token', token))

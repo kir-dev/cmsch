@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async'
 
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useNewsListQuery } from '../../api/hooks/news/useNewsListQuery'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import { PageStatus } from '../../common-components/PageStatus'
 import NewsList from './components/NewsList'
 import { sortNewsList } from './util/sortNewsList'
-import { PageStatus } from '../../common-components/PageStatus'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
 const NewsListPage = () => {
   const { data, isLoading, isError } = useNewsListQuery()

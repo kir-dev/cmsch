@@ -1,5 +1,6 @@
 import { Heading, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
+import { useMatch, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { BoardStat } from '../../common-components/BoardStat'
@@ -8,7 +9,6 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
 import LeaderboardByCategoryPage from './leaderboardByCategory.page.tsx'
 import LeaderboardByUserOrGroupPage from './leaderboardByUserOrGroup.page.tsx'
-import { useMatch, useNavigate } from 'react-router'
 
 const LeaderboardPage = () => {
   const component = useConfigContext()?.components.leaderboard

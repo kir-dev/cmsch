@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react'
-import { NavItemWithChildren } from './NavItemWithChildren'
-import { NavItemNoChildren } from './NavItemNoChildren'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
+import { NavItemNoChildren } from './NavItemNoChildren'
+import { NavItemWithChildren } from './NavItemWithChildren'
 
 export const DesktopNav = () => {
   const config = useConfigContext()

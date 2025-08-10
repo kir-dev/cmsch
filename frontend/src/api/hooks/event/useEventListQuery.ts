@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { ApiPaths } from '../../../util/paths'
 import { EventListView } from '../../../util/views/event.view'
 import { QueryKeys } from '../queryKeys'
-import { ApiPaths } from '../../../util/paths'
 
 export const useEventListQuery = () => {
   return useQuery<EventListView[], Error>({

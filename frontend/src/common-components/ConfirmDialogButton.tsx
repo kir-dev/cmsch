@@ -36,7 +36,7 @@ export const ConfirmDialogButton = ({
   confirmAction
 }: ConfirmDialogButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = useRef<any>(null)
+  const cancelRef = useRef(null)
 
   return (
     <>

@@ -4,12 +4,12 @@ import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useAliasChangeMutation } from '../../api/hooks/alias/useAliasChangeMutation'
+import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import { PageStatus } from '../../common-components/PageStatus'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { PageStatus } from '../../common-components/PageStatus'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
 
 export const AliasChangePage = () => {
   const navigate = useNavigate()

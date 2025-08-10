@@ -2,9 +2,9 @@ import { Box, FormLabel, Input, Textarea, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { Control, Controller, FieldArrayWithId, UseFieldArrayReplace } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import { AbsolutePaths } from '../../../util/paths'
 import { TaskFormatDescriptor } from '../../../util/views/task.view'
 import { FormInput } from '../task.page'
-import { AbsolutePaths } from '../../../util/paths'
 import { InputWithAddon } from './InputWithAddon'
 
 type CustomFormProps = {
@@ -24,6 +24,7 @@ export const CustomForm = ({ formatDescriptor, control, fields, replace }: Custo
         const inputFields: TaskFormatDescriptor[] = JSON.parse(formatDescriptor)
         replace(inputFields.map((field) => ({ value: '', ...field })))
       } catch (e) {
+        console.error(e)
         toast({
           title: 'Érvénytelen feladat',
           description: 'A feladat űrlapjának formátuma érvénytelen.',
@@ -33,7 +34,7 @@ export const CustomForm = ({ formatDescriptor, control, fields, replace }: Custo
         navigate(AbsolutePaths.TASKS)
       }
     }
-  }, [])
+  }, [formatDescriptor, navigate, replace, toast])
   return (
     <>
       {fields.map((f, idx) => (

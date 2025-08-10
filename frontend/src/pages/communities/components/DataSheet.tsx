@@ -4,10 +4,10 @@ import { FC, ReactNode } from 'react'
 import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
 
 import { LinkButton } from '../../../common-components/LinkButton'
-import { Community, Organization } from '../../../util/views/organization'
+import Markdown from '../../../common-components/Markdown'
 import { joinPath } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import Markdown from '../../../common-components/Markdown'
+import { Community, Organization } from '../../../util/views/organization'
 
 type DataSheetProps = {
   organization: Organization | Community

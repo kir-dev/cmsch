@@ -6,11 +6,11 @@ import { useTasksInCategoryQuery } from '../../api/hooks/task/useTasksInCategory
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown.tsx'
 import { PageStatus } from '../../common-components/PageStatus'
 import { useOpaqueBackground } from '../../util/core-functions.util'
 import { AbsolutePaths } from '../../util/paths'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
-import Markdown from '../../common-components/Markdown.tsx'
 
 const TaskCategoryPage = () => {
   const { id } = useParams()

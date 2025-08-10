@@ -18,7 +18,7 @@ export function WalletButton({ userId, type, name }: WalletButtonProps) {
     urlFactory.searchParams.append('name', name)
     urlFactory.searchParams.append('userId', userId)
     return urlFactory.toString()
-  }, [PASS_SERVER_URL, PASS_TEMPLATE, name, userId, type])
+  }, [name, userId, type])
 
   if (!url) return null
 
