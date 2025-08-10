@@ -5,11 +5,11 @@ import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useCommunityList } from '../../api/hooks/community/useCommunityList'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown.tsx'
 import { PageStatus } from '../../common-components/PageStatus'
 import { AbsolutePaths } from '../../util/paths'
 import { Community } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
-import Markdown from '../../common-components/Markdown.tsx'
 
 export default function CommunityListPage() {
   const config = useConfigContext()?.components.communities
@@ -37,7 +37,7 @@ export default function CommunityListPage() {
       setFilteredCommunities(data)
       if (inputRef.current) inputRef.current.value = ''
     }
-  }, [data])
+  }, [data, inputRef])
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
 

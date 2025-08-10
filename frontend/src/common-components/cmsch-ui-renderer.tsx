@@ -1,8 +1,9 @@
-import { CLIENT_BASE_URL } from '../util/configs/environment.config'
-import { CmschLink } from './CmschLink'
 import { Divider, ListItem, Table, TableContainer, UnorderedList, useColorModeValue } from '@chakra-ui/react'
-import ChakraUIRenderer from './chakra-md-renderer'
 import { PropsWithChildren, ReactNode } from 'react'
+import { Components } from 'react-markdown'
+import { CLIENT_BASE_URL } from '../util/configs/environment.config'
+import ChakraUIRenderer from './chakra-md-renderer'
+import { CmschLink } from './CmschLink'
 
 const sliceHref = (href: string, pattern: string): string => {
   if (href.indexOf(pattern) === 0) {
@@ -11,10 +12,10 @@ const sliceHref = (href: string, pattern: string): string => {
   return href
 }
 
-const cmschTheme: any = {
-  a: (props: { href: string; children: ReactNode }) => {
+const cmschTheme: Components = {
+  a: (props: { href?: string | undefined; children?: ReactNode }) => {
     const { href, children } = props
-    let slicedHref = href
+    let slicedHref = href || ''
     slicedHref = sliceHref(slicedHref, CLIENT_BASE_URL)
     slicedHref = sliceHref(slicedHref, CLIENT_BASE_URL.replace('https://', ''))
     if (slicedHref.length === 0) slicedHref = '/'
@@ -36,6 +37,7 @@ const cmschTheme: any = {
     return <ListItem>{children}</ListItem>
   },
   hr: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return <Divider my={3} borderColor={useColorModeValue('brand.800', 'brand.200')} borderBottomWidth={2} />
   },
   table: ({ children }: PropsWithChildren) => {

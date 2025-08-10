@@ -1,11 +1,12 @@
+import { Heading, Text } from '@chakra-ui/react'
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Heading, Text } from '@chakra-ui/react'
 import { CmschPage } from '../common-components/layout/CmschPage'
 import { l } from './language'
 
 interface State {
   hasError: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error?: any
 }
 
@@ -25,7 +26,8 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error(errorInfo)
 
-    const win: any = window
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any
     win.processAndReportError?.call(error.message, error.stack)
   }
 

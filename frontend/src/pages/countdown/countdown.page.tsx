@@ -1,8 +1,8 @@
+import { Center, Flex, Heading, VStack } from '@chakra-ui/react'
+import { PropsWithChildren, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import Clock from './components/clock'
-import { Center, Flex, Heading, VStack } from '@chakra-ui/react'
-import { PropsWithChildren, useMemo } from 'react'
 import { parseTopMessage } from './countdown.util'
 
 const CountdownPage = ({ children }: PropsWithChildren) => {
@@ -14,6 +14,7 @@ const CountdownPage = ({ children }: PropsWithChildren) => {
       if (!component) return new Date()
       return new Date(component?.timeToCountTo * 1000)
     } catch (e) {
+      console.error(e)
       return new Date()
     }
   }, [component])

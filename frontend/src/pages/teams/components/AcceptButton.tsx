@@ -1,5 +1,5 @@
-import { Button, Tooltip } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
+import { Button, Tooltip } from '@chakra-ui/react'
 
 interface AcceptButtonProps {
   onAccept: () => void

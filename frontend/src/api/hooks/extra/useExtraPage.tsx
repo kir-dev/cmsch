@@ -1,9 +1,9 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
-import { ExtraPageDto, ExtraPageView } from '../../../util/views/extraPage.view'
-import { QueryKeys } from '../queryKeys'
+import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
+import { ExtraPageDto, ExtraPageView } from '../../../util/views/extraPage.view'
+import { QueryKeys } from '../queryKeys'
 
 export const useExtraPage = (slug: string) => {
   return useQuery<ExtraPageView, Error>({

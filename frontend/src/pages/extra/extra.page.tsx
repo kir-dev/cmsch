@@ -1,20 +1,17 @@
-import { FunctionComponent } from 'react'
-import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Heading } from '@chakra-ui/react'
-import Markdown from '../../common-components/Markdown'
-import { Navigate, useParams } from 'react-router'
-import { useExtraPage } from '../../api/hooks/extra/useExtraPage'
 import { Helmet } from 'react-helmet-async'
+import { Navigate, useParams } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { RoleType, RoleTypeString } from '../../util/views/profile.view'
-import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { l } from '../../util/language'
+import { useExtraPage } from '../../api/hooks/extra/useExtraPage'
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
+import { l } from '../../util/language'
+import { AbsolutePaths } from '../../util/paths'
+import { RoleType, RoleTypeString } from '../../util/views/profile.view'
 
-interface ExtraPageProps {}
-
-const ExtraPage: FunctionComponent<ExtraPageProps> = () => {
+const ExtraPage = () => {
   const params = useParams()
   const { authInfo } = useAuthContext()
   const { data, isLoading, isError } = useExtraPage(params.slug || '')

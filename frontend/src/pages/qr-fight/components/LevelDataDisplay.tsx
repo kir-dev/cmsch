@@ -1,7 +1,7 @@
 import { Box, chakra, useColorModeValue } from '@chakra-ui/react'
+import { ResponsiveBar } from '@nivo/bar'
 import { useMemo } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { ResponsiveBar } from '@nivo/bar'
 
 interface LevelDataDisplayProps {
   teams: Record<string, number>

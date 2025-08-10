@@ -1,20 +1,20 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { FormSubmitResult } from '../../../util/views/form.view'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
+import { FormSubmitResult } from '../../../util/views/form.view'
 
-export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
+export const useFormSubmit = (slug: string) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<string>()
-  const submit = (formBody: Object, edit?: boolean) => {
+  const submit = (formBody: object, edit?: boolean) => {
     if (edit) {
       axios
         .put<FormSubmitResult>(joinPath(ApiPaths.FORM, slug), formBody)
         .then((res) => {
           setData(res.data)
         })
-        .catch(onError)
+        .catch(console.error)
         .finally(() => {
           setLoading(false)
         })
@@ -24,7 +24,7 @@ export const useFormSubmit = (slug: string, onError?: (err: any) => void) => {
         .then((res) => {
           setData(res.data)
         })
-        .catch(onError)
+        .catch(console.error)
         .finally(() => {
           setLoading(false)
         })

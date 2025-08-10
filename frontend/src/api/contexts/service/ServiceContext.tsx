@@ -1,9 +1,10 @@
 import { useToast } from '@chakra-ui/react'
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { AbsolutePaths } from '../../../util/paths'
 import { l } from '../../../util/language'
+import { AbsolutePaths } from '../../../util/paths'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export enum MessageTypes {
   GENERAL = 'general',
   AUTHENTICATION = 'authentication'
@@ -23,6 +24,7 @@ export type ServiceContextType = {
   type: MessageTypes
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ServiceContext = createContext<ServiceContextType>({
   sendMessage: () => {},
   clearMessage: () => {},
@@ -47,7 +49,7 @@ export const ServiceProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (message !== undefined) navigate(AbsolutePaths.ERROR)
-  }, [message])
+  }, [message, navigate])
 
   const clearMessage = () => {
     setMessage(undefined)
@@ -56,6 +58,7 @@ export const ServiceProvider = ({ children }: PropsWithChildren) => {
   return <ServiceContext.Provider value={{ sendMessage, clearMessage, type, message }}>{children}</ServiceContext.Provider>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function getToastTitle(type?: string) {
   switch (type) {
     case 'success':
@@ -69,6 +72,7 @@ export function getToastTitle(type?: string) {
   }
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useServiceContext = () => {
   return useContext<ServiceContextType>(ServiceContext)
 }

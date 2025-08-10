@@ -1,17 +1,12 @@
 import { ButtonGroup, Heading, Image, Text } from '@chakra-ui/react'
+import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
 import { EventIndicator } from '../../../common-components/EventIndicator'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
-import {
-  DETAILED_TIMESTAMP_OPTIONS,
-  isCurrentEvent,
-  isUpcomingEvent,
-  stringifyTimeStamp
-} from '../../../util/core-functions.util'
+import { DETAILED_TIMESTAMP_OPTIONS, isCurrentEvent, isUpcomingEvent, stringifyTimeStamp } from '../../../util/core-functions.util'
+import { AbsolutePaths } from '../../../util/paths'
 import { EventView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
-import { AbsolutePaths } from '../../../util/paths'
-import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
 
 interface EventProps {
   event: EventView

@@ -1,14 +1,14 @@
-import { useState } from 'react'
 import { Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VStack } from '@chakra-ui/react'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router'
-import { AbsolutePaths } from '../../util/paths'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
 import { useGroupChangeMutation } from '../../api/hooks/group-change/useGroupChangeMutation'
 import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import { LinkButton } from '../../common-components/LinkButton'
+import { AbsolutePaths } from '../../util/paths'
+import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
 
 export function ProfileGroupChangePage() {
   const { data: profile, refetch } = useProfileQuery()

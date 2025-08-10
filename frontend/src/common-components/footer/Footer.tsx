@@ -11,8 +11,14 @@ import parseSponsors from './utils/parseSponsors'
 export const Footer = () => {
   const config = useConfigContext()
   const component = config?.components.footer
-  const sponsors = useMemo(() => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls), [config])
-  const partners = useMemo(() => parseSponsors(component?.partnerLogoUrls, component?.partnerAlts, component?.partnerWebsiteUrls), [config])
+  const sponsors = useMemo(
+    () => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls),
+    [component?.sponsorAlts, component?.sponsorLogoUrls, component?.sponsorWebsiteUrls]
+  )
+  const partners = useMemo(
+    () => parseSponsors(component?.partnerLogoUrls, component?.partnerAlts, component?.partnerWebsiteUrls),
+    [component?.partnerAlts, component?.partnerLogoUrls, component?.partnerWebsiteUrls]
+  )
 
   const backdropFilter = useColorModeValue(config?.components?.style?.lightFooterFilter, config?.components?.style?.darkFooterFilter)
   const background = useColorModeValue(config?.components?.style?.lightFooterBackground, config?.components?.style?.darkFooterBackground)
@@ -20,7 +26,7 @@ export const Footer = () => {
     config?.components?.style?.lightFooterShadowColor,
     config?.components?.style?.darkFooterShadowColor
   )
-
+  const kirDevLogo = useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')
   if (!component) return null
 
   const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
@@ -88,7 +94,7 @@ export const Footer = () => {
           />
           {!HIDE_KIR_DEV_IN_FOOTER && (
             <OrganizerLogo
-              imageSrc={useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')}
+              imageSrc={kirDevLogo}
               websiteUrl={component.devWebsiteUrl}
               contactUrl={component.bugReportUrl}
               minimalistic={component.minimalisticFooter}

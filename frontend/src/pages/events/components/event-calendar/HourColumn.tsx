@@ -12,7 +12,7 @@ export function HourColumn({ position, ...props }: StackProps) {
       datesTemp.push(date)
     }
     return datesTemp
-  }, [])
+  }, [originDate])
 
   const minDate = originDate
   const maxDate = endOfDay(originDate)

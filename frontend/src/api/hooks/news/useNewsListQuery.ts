@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { ApiPaths } from '../../../util/paths'
 import { NewsArticleView } from '../../../util/views/news.view'
 import { QueryKeys } from '../queryKeys'
-import { ApiPaths } from '../../../util/paths'
 
 export const useNewsListQuery = () => {
   return useQuery<NewsArticleView[], Error>({

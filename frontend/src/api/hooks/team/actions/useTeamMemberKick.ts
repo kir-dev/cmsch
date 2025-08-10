@@ -6,7 +6,7 @@ export const useTeamMemberKick = (onSuccess: (response: boolean) => void, onErro
   const [error, setError] = useState<Error>()
   const kickMember = (id: number) => {
     setLoading(true)
-    axios
+    axios //todo
       .put<boolean>(`/api/team/admin/kick-user`, { id })
       .then((res) => {
         onSuccess(res.data)

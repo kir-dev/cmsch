@@ -1,12 +1,12 @@
 import { Box, Checkbox, Heading, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useLocationQuery } from '../../api/hooks/location/useLocationQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { MapContent } from '../../common-components/map/MapContent'
-import { l } from '../../util/language'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import Markdown from '../../common-components/Markdown'
+import { l } from '../../util/language'
 
 export default function MapPage() {
   const [showUserLocation, setShowUserLocation] = useState(false)

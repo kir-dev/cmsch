@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
+import { FC, PropsWithChildren } from 'react'
 import { usePersistentStyleSetting } from '../../util/configs/themeStyle.config.ts'
 
 export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
