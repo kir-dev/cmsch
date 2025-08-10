@@ -15,7 +15,8 @@ enum class MatchStatus {
     NOT_STARTED,
     FINISHED,
     IN_PROGRESS,
-    CANCELLED
+    CANCELLED,
+    BYE
 }
 
 @Entity
@@ -152,7 +153,7 @@ data class TournamentMatchEntity(
 
     fun isDraw(): Boolean {
         return when {
-            status in listOf(MatchStatus.NOT_STARTED, MatchStatus.IN_PROGRESS, MatchStatus.CANCELLED) -> false
+            status in listOf(MatchStatus.NOT_STARTED, MatchStatus.IN_PROGRESS, MatchStatus.CANCELLED, MatchStatus.BYE) -> false
             homeTeamScore == null || awayTeamScore == null -> false
             homeTeamScore!! == awayTeamScore!! -> true
             else -> false

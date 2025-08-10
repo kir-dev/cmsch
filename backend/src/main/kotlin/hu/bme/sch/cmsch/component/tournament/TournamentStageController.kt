@@ -345,14 +345,14 @@ class TournamentStageController(
         return "redirect:/admin/control/$view/seed/${id}"
     }
 
-    override fun onEntityPreSave(entity: TournamentStageEntity, auth: Authentication): Boolean {
+    override fun onEntityChanged(entity: TournamentStageEntity) {
         if (entity.type == StageType.KNOCKOUT) {
             entity.participants = stageService.transferTeamsForStage(entity)
             stageService.createMatchesForStage(entity)
             entity.seeds = stageService.setSeeds(entity)
             stageService.calculateTeamsFromSeeds(entity)
         }
-        return super.onEntityPreSave(entity, auth)
+        super.onEntityChanged(entity)
     }
 
     override fun onEntityDeleted(entity: TournamentStageEntity) {

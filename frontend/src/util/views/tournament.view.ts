@@ -43,12 +43,12 @@ export const TournamentResponseMessages: Record<TournamentResponses, string> = {
 }
 
 export enum StageStatus {
-  CREATED= 'CREATED',
+  CREATED = 'CREATED',
   DRAFT = 'DRAFT',
   SET = 'SET',
   ONGOING = 'ONGOING',
   FINISHED = 'FINISHED',
-  CANCELLED = 'CANCELLED',
+  CANCELLED = 'CANCELLED'
 }
 
 export enum MatchStatus {
@@ -56,6 +56,7 @@ export enum MatchStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   CANCELLED = 'CANCELLED',
   COMPLETED = 'COMPLETED',
+  BYE = 'BYE'
 }
 
 export type MatchView = {
@@ -92,4 +93,3 @@ export type OptionalTournamentView = {
   visible: boolean
   tournament?: TournamentDetailsView
 }
-

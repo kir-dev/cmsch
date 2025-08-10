@@ -23,6 +23,10 @@ const Match = ({ match }: MatchProps) => {
     return 'TBD'
   }
 
+  if (match.status === 'BYE') {
+    return <Box borderWidth="0" bg="white" width="64" p={2} borderRadius="lg"></Box>
+  }
+
   return (
     <Box borderWidth="1px" borderRadius="lg" p={2} width="64" bg="white">
       <Text fontSize="sm" color="gray.500">
