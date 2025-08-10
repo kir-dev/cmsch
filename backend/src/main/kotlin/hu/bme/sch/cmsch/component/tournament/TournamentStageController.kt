@@ -341,7 +341,7 @@ class TournamentStageController(
         } else {
             model.addAttribute("error", "A szakasz nem lett frissítve.")
         }
-        onEntityChanged(stageEntity)
+        //onEntityChanged(stageEntity)
         return "redirect:/admin/control/$view/seed/${id}"
     }
 
