@@ -11,6 +11,7 @@ import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
+import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -41,10 +42,16 @@ fun Map<String, String>.urlEncode(): String =
     this.entries.joinToString("&") { it.key.urlEncode() + "=" + it.value.urlEncode() }
 
 fun fetchFile(url: String): Result<ByteArray?> = runCatching {
-    WebClient.create()
-        .get().uri(url)
+    val webClient = WebClient.builder()
+        .codecs { configurer: ClientCodecConfigurer ->
+            configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)
+        }
+        .build()
+
+    webClient.get().uri(url)
         .retrieve().bodyToMono<ByteArray>().block()
 }
+
 
 fun String.urlEncode(): String {
     return URLEncoder.encode(this, StandardCharsets.UTF_8)
