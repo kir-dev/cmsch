@@ -130,6 +130,7 @@ class TournamentStageController(
         for (buttonAction in buttonActions)
             newButtonActions.add(buttonAction)
         newButtonActions.add(createKnockoutButtonAction)
+        newButtonActions.add(createGroupButtonAction)
 
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -345,10 +346,12 @@ class TournamentStageController(
     }
 
     override fun onEntityPreSave(entity: TournamentStageEntity, auth: Authentication): Boolean {
-        entity.participants = stageService.transferTeamsForStage(entity)
-        stageService.createMatchesForStage(entity)
-        entity.seeds = stageService.setSeeds(entity)
-        stageService.calculateTeamsFromSeeds(entity)
+        if (entity.type == StageType.KNOCKOUT) {
+            entity.participants = stageService.transferTeamsForStage(entity)
+            stageService.createMatchesForStage(entity)
+            entity.seeds = stageService.setSeeds(entity)
+            stageService.calculateTeamsFromSeeds(entity)
+        }
         return super.onEntityPreSave(entity, auth)
     }
 
