@@ -326,12 +326,12 @@ class TournamentStageController(
             model.addAttribute("error", "Minden seednek egyedinek kell lennie.")
             return "redirect:/admin/control/$view/seed/${id}"
         }
-        val stageEntity = stage
+        var stageEntity = stage
         if (onEntityPreSave(stageEntity, auth)) {
             transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_READ_COMMITTED) {
-                stageService.setInitialSeeds(stageEntity, dto, user)
-                stageEntity.seeds=stageService.setSeeds(stageEntity)
-                stageEntity.status= stageStatus
+                stageEntity = stageService.setInitialSeeds(stageEntity, dto, user)
+                stageEntity.seeds = stageService.setSeeds(stageEntity)
+                stageEntity.status = stageStatus
                 stageRepository.save(stageEntity)
                 if (stageStatus == StageStatus.SET)
                     stageService.onSeedsFinalized(stageEntity)

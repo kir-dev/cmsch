@@ -120,7 +120,7 @@ class TournamentStageService(
     }
 
     @Transactional
-    fun setInitialSeeds(stage: TournamentStageEntity, seeds: List<StageResultDto>, user: CmschUser) {
+    fun setInitialSeeds(stage: TournamentStageEntity, seeds: List<StageResultDto>, user: CmschUser): TournamentStageEntity {
         require(StaffPermissions.PERMISSION_SET_SEEDS.validate(user)) {
             "User does not have permission to set seeds."
         }
@@ -130,6 +130,7 @@ class TournamentStageService(
 
         stage.participants = seeds.joinToString("\n") { objectMapper.writeValueAsString(it) }
         stageRepository.save(stage)
+        return stage
     }
 
     fun setSeeds(stage: TournamentStageEntity): String {
