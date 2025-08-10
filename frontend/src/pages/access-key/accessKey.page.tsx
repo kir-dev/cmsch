@@ -1,4 +1,3 @@
-import { FormEvent, useState } from 'react'
 import {
   Alert,
   AlertDescription,
@@ -13,18 +12,19 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react'
+import { FormEvent, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router'
-import { AbsolutePaths } from '../../util/paths'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { CmschPage } from '../../common-components/layout/CmschPage'
 import { useAccessKeyMutation } from '../../api/hooks/access-key/useAccessKeyMutation'
 import { useAccessKey } from '../../api/hooks/access-key/useAccessKeyQuery'
-import { PageStatus } from '../../common-components/PageStatus'
-import Markdown from '../../common-components/Markdown'
-import { AccessKeyResponse } from '../../util/views/accessKey'
-import { l } from '../../util/language'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown'
+import { PageStatus } from '../../common-components/PageStatus'
+import { l } from '../../util/language'
+import { AbsolutePaths } from '../../util/paths'
+import { AccessKeyResponse } from '../../util/views/accessKey'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()

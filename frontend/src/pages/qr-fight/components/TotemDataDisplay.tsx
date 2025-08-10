@@ -1,5 +1,5 @@
-import { QrLevelDto } from '../../../util/views/qrFight.view'
 import { Flex, Heading, VStack } from '@chakra-ui/react'
+import { QrLevelDto } from '../../../util/views/qrFight.view'
 import { TotemField } from './TotemField'
 
 interface TotemDataDisplay {

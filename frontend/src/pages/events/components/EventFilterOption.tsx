@@ -19,7 +19,7 @@ export const EventFilterOption = ({ name, events, forceOpen }: EventFilterOption
     } else {
       onClose()
     }
-  }, [forceOpen])
+  }, [forceOpen, onClose, onOpen])
   const hasCurrentEvent = events.some(isCurrentEvent)
   const hasUpcomingEvent = events.some(isUpcomingEvent)
   return (

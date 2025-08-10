@@ -1,5 +1,5 @@
-import { VotingFieldOption } from '../util/views/form.view'
 import { Button, Collapse, Heading, HStack, Image, Radio, Stack, Text, VStack } from '@chakra-ui/react'
+import { VotingFieldOption } from '../util/views/form.view'
 
 interface VotingFieldProps {
   onChange: (value?: string) => void

@@ -1,6 +1,6 @@
-import { Tower } from '../../../util/views/qrFight.view'
 import { Divider, Stat, StatHelpText, StatLabel, StatNumber, VStack } from '@chakra-ui/react'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
+import { Tower } from '../../../util/views/qrFight.view'
 
 interface TowerFieldProps {
   tower: Tower

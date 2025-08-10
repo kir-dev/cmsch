@@ -1,59 +1,58 @@
 <!doctype html>
 <html lang="hu">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>%VITE_NAME%</title>
-  <meta name="description" content="%VITE_DESCRIPTION%" />
-  <link rel="icon" type="image/png" sizes="192x192" href="%VITE_API_BASE_URL%/cdn/manifest/icon-192x192.png" />
-  <link rel="icon" type="image/png" sizes="256x256" href="%VITE_API_BASE_URL%/cdn/manifest/icon-256x256.png" />
-  <link rel="icon" type="image/png" sizes="384x384" href="%VITE_API_BASE_URL%/cdn/manifest/icon-384x384.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="%VITE_API_BASE_URL%/cdn/manifest/icon-512x512.png" />
-  <link rel="icon" type="image/x-icon" href="%VITE_API_BASE_URL%/cdn/manifest/favicon.ico" />
-  <link rel="manifest" href="%VITE_API_BASE_URL%/manifest/manifest.json" />
-  <meta name="theme-color" content="%VITE_THEME_COLOR%" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="%VITE_API_BASE_URL%" />
-  <link href="%VITE_API_BASE_URL%/api/app/font-display.css" rel="stylesheet" />
-  <link href="%VITE_API_BASE_URL%/api/app/font-main.css" rel="stylesheet" />
-  <script defer data-domain="%VITE_PLAUSIBLE_URL%" src="https://visit.kir-dev.hu/js/script.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>%VITE_NAME%</title>
+    <meta name="description" content="%VITE_DESCRIPTION%" />
+    <link rel="icon" type="image/png" sizes="192x192" href="%VITE_API_BASE_URL%/cdn/manifest/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="%VITE_API_BASE_URL%/cdn/manifest/icon-256x256.png" />
+    <link rel="icon" type="image/png" sizes="384x384" href="%VITE_API_BASE_URL%/cdn/manifest/icon-384x384.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="%VITE_API_BASE_URL%/cdn/manifest/icon-512x512.png" />
+    <link rel="icon" type="image/x-icon" href="%VITE_API_BASE_URL%/cdn/manifest/favicon.ico" />
+    <link rel="manifest" href="%VITE_API_BASE_URL%/manifest/manifest.json" />
+    <meta name="theme-color" content="%VITE_THEME_COLOR%" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="%VITE_API_BASE_URL%" />
+    <link href="%VITE_API_BASE_URL%/api/app/font-display.css" rel="stylesheet" />
+    <link href="%VITE_API_BASE_URL%/api/app/font-main.css" rel="stylesheet" />
+    <script defer data-domain="%VITE_PLAUSIBLE_URL%" src="https://visit.kir-dev.hu/js/script.js"></script>
 
-  <script>
-    function reportError(message, stack) {
-      const report = {
-        message: message,
-        stack: stack,
-        userAgent: navigator.userAgent,
-        href: window.location.href
+    <script>
+      function reportError(message, stack) {
+        const report = {
+          message: message,
+          stack: stack,
+          userAgent: navigator.userAgent,
+          href: window.location.href
+        }
+
+        fetch('%VITE_API_BASE_URL%/api/error/submit', {
+          body: JSON.stringify(report),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        }).catch((err) => console.error('Failed to report error', err))
       }
 
-      fetch('%VITE_API_BASE_URL%/api/error/submit', {
-        body: JSON.stringify(report),
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      }).catch((err) => console.error('Failed to report error', err))
-    }
-
-    function processAndReportError(error) {
-      if (typeof error !== 'object') {
-        reportError(JSON.stringify(error), null)
-      } else {
-        const message = error.message || null
-        const stack = error.stack || null
-        reportError(message, stack)
+      function processAndReportError(error) {
+        if (typeof error !== 'object') {
+          reportError(JSON.stringify(error), null)
+        } else {
+          const message = error.message || null
+          const stack = error.stack || null
+          reportError(message, stack)
+        }
       }
-    }
 
-    window.addEventListener('unhandledrejection', (error) => processAndReportError(error.reason))
-    window.addEventListener('error', (error) => processAndReportError(error.error))
-  </script>
+      window.addEventListener('unhandledrejection', (error) => processAndReportError(error.reason))
+      window.addEventListener('error', (error) => processAndReportError(error.error))
+    </script>
 
-  <script type="module" src="/src/index.tsx"></script>
-</head>
-<body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
-
-</body>
+    <script type="module" src="/src/index.tsx"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
 </html>

@@ -6,7 +6,7 @@ export const useTeamTogglePermissions = (onSuccess: (response: boolean) => void,
   const [error, setError] = useState<Error>()
   const togglePermissions = (id: number) => {
     setLoading(true)
-    axios
+    axios //todo
       .put<boolean>(`/api/team/admin/toggle-permissions`, { id })
       .then((res) => {
         onSuccess(res.data)

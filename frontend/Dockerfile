@@ -1,5 +1,5 @@
 # Use a Node.js base image for building the application
-FROM node:16-alpine AS build
+FROM docker.io/node:22-alpine AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install dependencies
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application code to the working directory
 COPY . .
@@ -17,10 +17,10 @@ COPY . .
 RUN yarn build
 
 # Use a separate Nginx base image for serving the built application
-FROM nginx:alpine
+FROM docker.io/nginx:alpine
 
 # Copy the built application files to the Nginx web server directory
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

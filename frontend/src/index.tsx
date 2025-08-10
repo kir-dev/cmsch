@@ -1,20 +1,20 @@
 import { ColorModeScript } from '@chakra-ui/react'
-import React from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import React from 'react'
 import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './api/contexts/auth/AuthContext'
 
-import { App } from './App'
-import { initAxios, queryClient } from './util/configs/api.config'
 import { createRoot } from 'react-dom/client'
-import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
+import { HelmetProvider } from 'react-helmet-async'
+import { App } from './App'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
 import { ServiceProvider } from './api/contexts/service/ServiceContext'
-import { HelmetProvider } from 'react-helmet-async'
-import { ErrorBoundary } from './util/errorBoundary'
+import { ThemeConfig } from './api/contexts/themeConfig/ThemeConfig'
 import { PushNotificationHandler } from './common-components/PushNotificationHandler.tsx'
 import { AppBackground } from './common-components/layout/AppBackground.tsx'
+import { initAxios, queryClient } from './util/configs/api.config'
+import { ErrorBoundary } from './util/errorBoundary'
 
 initAxios()
 

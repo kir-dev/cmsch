@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 import { ApiPaths } from '../../../util/paths'
 import { MapDataItemView } from '../../../util/views/map.view'
 import { QueryKeys } from '../queryKeys'

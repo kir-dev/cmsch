@@ -1,5 +1,5 @@
-import { Link } from 'react-router'
 import { PropsWithChildren } from 'react'
+import { Link } from 'react-router'
 
 interface LinkComponentProps extends PropsWithChildren {
   url: string

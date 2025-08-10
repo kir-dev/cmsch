@@ -1,12 +1,12 @@
 import { Alert, AlertIcon, Checkbox, Flex, FormLabel, Input, Select, Text, Textarea, useColorModeValue } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { Control, useController } from 'react-hook-form'
+import { useStyle } from '../../../api/contexts/config/ConfigContext.tsx'
 import Markdown from '../../../common-components/Markdown'
 import { VotingField } from '../../../common-components/VotingField'
 import { isCheckbox, isGridField } from '../../../util/core-functions.util'
 import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
 import { GridField } from './GridField'
-import { useStyle } from '../../../api/contexts/config/ConfigContext.tsx'
 
 interface AutoFormFieldProps {
   fieldProps: FormField
@@ -102,17 +102,19 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     case FormFieldVariants.TEXT:
       component = <Input isInvalid={!!error} type="text" {...field} _placeholder={{ color: 'inherit' }} disabled={disabled} />
       break
-    case FormFieldVariants.VOTE:
+    case FormFieldVariants.VOTE: {
       let values: VotingFieldOption[] = []
       try {
         values = JSON.parse(fieldProps.values)
-      } catch (_) {
+      } catch (e) {
+        console.error(e)
         values = []
       }
       component = (
         <VotingField onChange={field.onChange} value={field.value} options={values} required={fieldProps.required} disabled={disabled} />
       )
       break
+    }
     case FormFieldVariants.INFO_BOX:
       component = (
         <Alert variant="left-accent" status="info">

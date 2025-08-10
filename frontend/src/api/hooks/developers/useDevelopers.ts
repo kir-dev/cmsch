@@ -1,5 +1,5 @@
-import { useConfigContext } from '../../contexts/config/ConfigContext'
 import { useMemo } from 'react'
+import { useConfigContext } from '../../contexts/config/ConfigContext'
 
 export type Dev = { name: string; img: string; tags: string[] }
 

@@ -1,7 +1,7 @@
-import { FormStatus, FormStatusLangKeys } from '../../../util/views/form.view'
 import { Badge } from '@chakra-ui/react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { Signup } from '../../../api/contexts/config/types'
+import { FormStatus, FormStatusLangKeys } from '../../../util/views/form.view'
 
 interface FormStatusBadgeProps {
   status: FormStatus

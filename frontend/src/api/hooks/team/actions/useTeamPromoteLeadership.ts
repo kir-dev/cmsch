@@ -6,7 +6,7 @@ export const useTeamPromoteLeadership = (onSuccess: (response: boolean) => void,
   const [error, setError] = useState<Error>()
   const promoteLeadership = (id: number) => {
     setLoading(true)
-    axios
+    axios //todo
       .put<boolean>(`/api/team/admin/switch-leadership`, { id })
       .then((res) => {
         onSuccess(res.data)

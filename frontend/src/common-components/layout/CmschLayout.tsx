@@ -4,14 +4,14 @@ import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
+import { ErrorBoundary } from '../../util/errorBoundary.tsx'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
+import { EnableNotifications } from '../EnableNotifications'
 import { Footer } from '../footer/Footer'
 import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
-import { EnableNotifications } from '../EnableNotifications'
 import { ScrollToTop } from './ScrollToTop'
-import { ErrorBoundary } from '../../util/errorBoundary.tsx'
 
 export const CmschLayout = ({ children }: PropsWithChildren) => {
   const config = useConfigContext()

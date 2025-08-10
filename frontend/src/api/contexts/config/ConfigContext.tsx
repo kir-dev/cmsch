@@ -1,10 +1,11 @@
 import { createContext, PropsWithChildren, useContext, useEffect } from 'react'
+import { LoadingView } from '../../../util/LoadingView.tsx'
+import { usePersistentStyleSetting } from '../../../util/configs/themeStyle.config.ts'
+import { l } from '../../../util/language.ts'
 import { useConfigQuery } from '../../hooks/config/useConfigQuery'
 import { ConfigDto } from './types'
-import { LoadingView } from '../../../util/LoadingView.tsx'
-import { l } from '../../../util/language.ts'
-import { usePersistentStyleSetting } from '../../../util/configs/themeStyle.config.ts'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
 
 export const ConfigProvider = ({ children }: PropsWithChildren) => {
@@ -37,6 +38,7 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useConfigContext = () => {
   const ctx = useContext(ConfigContext)
   if (typeof ctx === 'undefined') {
@@ -45,6 +47,7 @@ export const useConfigContext = () => {
   return ctx
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useStyle = () => {
   const context = useContext(ConfigContext)?.components?.style
   const persistent = usePersistentStyleSetting().persistentStyle

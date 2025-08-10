@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Flex, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
-import { FunctionComponent, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useParams } from 'react-router'
@@ -7,6 +7,8 @@ import { useFormPage } from '../../api/hooks/form/useFormPage'
 import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
 
+import { useAuthContext } from '../../api/contexts/auth/useAuthContext.ts'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
@@ -14,12 +16,8 @@ import { isCheckbox, isGridField } from '../../util/core-functions.util'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext.ts'
 
-interface FormPageProps {}
-
-const FormPage: FunctionComponent<FormPageProps> = () => {
+const FormPage = () => {
   const toast = useToast()
   const params = useParams()
   const formMethods = useForm()
@@ -37,13 +35,14 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
       tokenRefresh.mutate()
     }
     refetch()
-  }, [result])
+  }, [refetch, result, toast, tokenRefresh])
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Űrlap" />
 
   const { form, submission, message, status, detailsValidated } = data
   const available = form && form.availableFrom * 1000 < Date.now() && form.availableUntil * 1000 > Date.now() && !detailsValidated
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = (values: Record<string, any>) => {
     const newValues: Record<string, string> = {}
     Object.keys(values).forEach((v) => {
@@ -61,7 +60,6 @@ const FormPage: FunctionComponent<FormPageProps> = () => {
   }
 
   if (!isLoggedIn && status === FormStatus.NOT_FOUND) return <ComponentUnavailable />
-
 
   return (
     <CmschPage>

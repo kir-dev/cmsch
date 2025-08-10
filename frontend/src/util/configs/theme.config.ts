@@ -1,7 +1,7 @@
 import { extendTheme } from '@chakra-ui/react'
 import { mode } from '@chakra-ui/theme-tools'
-import { getColorShadesForColor } from '../core-functions.util.ts'
 import { Style } from '../../api/contexts/config/types.ts'
+import { getColorShadesForColor } from '../core-functions.util.ts'
 
 export const KirDevColor = '#F15A29'
 
@@ -9,6 +9,7 @@ export const getCustomTheme = (style?: Style) =>
   extendTheme(
     {
       styles: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         global: (props: any) => ({
           body: {
             color: mode(style?.lightTextColor ?? 'gray.900', style?.darkTextColor ?? 'whiteAlpha.900')(props),

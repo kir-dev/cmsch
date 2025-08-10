@@ -1,8 +1,8 @@
+import { Navigate } from 'react-router'
+import { useServiceContext } from '../api/contexts/service/ServiceContext'
 import { LoadingPage } from '../pages/loading/loading.page'
 import { l } from '../util/language'
-import { Navigate } from 'react-router'
 import { AbsolutePaths } from '../util/paths'
-import { useServiceContext } from '../api/contexts/service/ServiceContext'
 
 interface PageStatusProps {
   isLoading: boolean

@@ -1,7 +1,7 @@
-import { createContext, PropsWithChildren, useEffect } from 'react'
+import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { API_BASE_URL } from '../../../util/configs/environment.config'
-import { useAuthInfo } from '../../hooks/auth/useAuthInfo.ts'
 import { AuthState, UserAuthInfoView } from '../../../util/views/authInfo.view.ts'
+import { useAuthInfo } from '../../hooks/auth/useAuthInfo.ts'
 import { useTokenRefresh } from '../../hooks/useTokenRefresh.ts'
 
 export type AuthContextType = {
@@ -13,6 +13,7 @@ export type AuthContextType = {
   refetch: () => void
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   authInfo: undefined,
@@ -24,16 +25,25 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { isLoading: authInfoLoading, data: authInfo, error: authInfoError, refetch } = useAuthInfo()
-  const onLogout = async () => {
-    window.location.href = `${API_BASE_URL}/control/logout`
-  }
-  const tokenRefresh = useTokenRefresh()
+  const [shouldLogout, setShouldLogout] = useState(false)
+
+  useEffect(() => {
+    if (shouldLogout) {
+      window.location.href = `${API_BASE_URL}/control/logout`
+    }
+  }, [shouldLogout])
+
+  const onLogout = useCallback(async () => {
+    setShouldLogout(true)
+  }, [])
+
+  const { mutate } = useTokenRefresh()
   const authState = authInfo?.authState
   useEffect(() => {
     if (authState === AuthState.EXPIRED) {
-      tokenRefresh.mutate()
+      mutate()
     }
-  }, [authState])
+  }, [authState, mutate])
 
   return (
     <AuthContext.Provider

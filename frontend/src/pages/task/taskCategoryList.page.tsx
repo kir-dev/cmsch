@@ -1,13 +1,13 @@
 import { Heading, Text, VStack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { useTaskCategoriesQuery } from '../../api/hooks/task/useTaskCategoriesQuery'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useTaskCategoriesQuery } from '../../api/hooks/task/useTaskCategoriesQuery'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown'
+import { PageStatus } from '../../common-components/PageStatus'
 import { taskCategoryType } from '../../util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
-import Markdown from '../../common-components/Markdown'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { PageStatus } from '../../common-components/PageStatus'
 
 const TaskCategoryListPage = () => {
   const component = useConfigContext()?.components.task

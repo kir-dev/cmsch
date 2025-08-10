@@ -10,8 +10,9 @@ type CardListItemProps = {
 
 export const CardListItem = ({ data, link }: CardListItemProps) => {
   let logoSource
+  const logoColor = useColorModeValue(data.logo, data.darkLogo)
   if (data.logo) {
-    logoSource = data.darkLogo ? useColorModeValue(data.logo, data.darkLogo) : data.logo
+    logoSource = data.darkLogo ? logoColor : data.logo
   } else {
     logoSource = data.darkLogo
   }

@@ -15,7 +15,7 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   const toast = useToast()
   const [center, setCenter] = useState<[number, number]>([47.47303, 19.0531])
 
-  const userLocation = useGeolocated({
+  const { coords, getPosition, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
     positionOptions: {
       enableHighAccuracy: false
     },
@@ -25,18 +25,18 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   })
 
   useEffect(() => {
-    if (showUserLocation) userLocation.getPosition()
-  }, [showUserLocation])
+    if (showUserLocation) getPosition()
+  }, [showUserLocation, getPosition])
 
   useEffect(() => {
-    if (userLocation.coords) setCenter([userLocation.coords.latitude, userLocation.coords.longitude])
-  }, [userLocation.coords])
+    if (coords) setCenter([coords.latitude, coords.longitude])
+  }, [coords])
 
   useEffect(() => {
-    if (showUserLocation && userLocation.isGeolocationEnabled && !userLocation.isGeolocationAvailable) {
+    if (showUserLocation && isGeolocationEnabled && !isGeolocationAvailable) {
       toast({ title: l('location-sensor-denied'), status: 'error' })
     }
-  }, [showUserLocation, userLocation.isGeolocationAvailable, userLocation.isGeolocationEnabled])
+  }, [showUserLocation, isGeolocationAvailable, isGeolocationEnabled, toast])
 
   return (
     <Map center={center} provider={OSMHotProvider} height={400}>
@@ -46,8 +46,8 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
           <MapMarker color={mapDataItem.markerColor} text={mapDataItem.displayName} markerShape={mapDataItem.markerShape} />
         </Marker>
       ))}
-      {userLocation.coords && (
-        <Marker hover width={200} height={3} anchor={[userLocation.coords.latitude, userLocation.coords.longitude]}>
+      {coords && (
+        <Marker hover width={200} height={3} anchor={[coords.latitude, coords.longitude]}>
           <MapMarker color="blue.500" text="Te" markerShape={MapMarkerShape.PERSON} />
         </Marker>
       )}

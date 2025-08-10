@@ -21,6 +21,10 @@ const NewsList = ({ newsList }: NewsListProps) => {
     })
   }, [sortedNewsList, search])
   const inputRef = createRef<HTMLInputElement>()
+  const clearSearch = () => {
+    setSearch('')
+    if (inputRef.current?.value) inputRef.current.value = ''
+  }
   const handleInput = () => {
     const searchFieldValue = inputRef?.current?.value.toLowerCase()
     if (!searchFieldValue) setSearch('')
@@ -47,13 +51,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
           _placeholder={{ color: 'inherit' }}
         />
         {search && (
-          <InputRightElement
-            h="100%"
-            onClick={() => {
-              setSearch('')
-              if (inputRef.current?.value) inputRef.current.value = ''
-            }}
-          >
+          <InputRightElement h="100%" onClick={clearSearch}>
             <CloseIcon />
           </InputRightElement>
         )}

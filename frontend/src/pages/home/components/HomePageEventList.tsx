@@ -1,10 +1,10 @@
 import { Divider, Heading, Text, VStack } from '@chakra-ui/react'
-import { Schedule } from './Schedule.tsx'
+import { useMemo } from 'react'
+import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
+import { useEventListQuery } from '../../../api/hooks/event/useEventListQuery.ts'
 import { LinkButton } from '../../../common-components/LinkButton.tsx'
 import { AbsolutePaths } from '../../../util/paths.ts'
-import { useMemo } from 'react'
-import { useEventListQuery } from '../../../api/hooks/event/useEventListQuery.ts'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
+import { Schedule } from './Schedule.tsx'
 
 const isToday = (timeStamp: number) => new Date(timeStamp).toDateString() === new Date().toDateString()
 

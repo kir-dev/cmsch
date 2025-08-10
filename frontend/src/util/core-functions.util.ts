@@ -51,7 +51,7 @@ export function getColorShadesForColor(color: string) {
   const colors = new Values(color)
   const tints = colors.tints(21).reverse()
   const shades = colors.shades(21)
-  let result: Record<number, string> = {}
+  const result: Record<number, string> = {}
   tints.forEach((t, i) => {
     result[(i + 1) * 100] = t.hexString()
   })

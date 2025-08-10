@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { useSearchParams } from 'react-router'
 import { CmschPage } from '../../common-components/layout/CmschPage'
-import { ScanResponseView, ScanStatus } from '../../util/views/token.view'
-import { QRScanResultComponent } from './components/QRScanResultComponent'
 import { LinkButton } from '../../common-components/LinkButton'
 import { AbsolutePaths } from '../../util/paths'
+import { ScanResponseView, ScanStatus } from '../../util/views/token.view'
+import { QRScanResultComponent } from './components/QRScanResultComponent'
 
 const TokenScanResult = () => {
   const [searchParams] = useSearchParams()

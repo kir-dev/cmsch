@@ -1,7 +1,7 @@
 import { Box, BoxProps, Center, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { FunctionComponent } from 'react'
 import { getTextColorFromLuminance } from '../../util/color.utils'
 import { MapMarkerIcons, MapMarkerShape } from '../../util/views/map.view'
-import { FunctionComponent } from 'react'
 
 interface MapMarkerProps {
   color?: string
@@ -12,7 +12,7 @@ interface MapMarkerProps {
 export function MapMarker({ color = 'brand.600', text, markerShape = MapMarkerShape.CIRCLE }: MapMarkerProps) {
   let borderRadius: BoxProps['borderRadius'] = 'full'
   if (markerShape === MapMarkerShape.SQUARE) borderRadius = 'md'
-  let Icon: FunctionComponent<any> = () => null
+  let Icon: FunctionComponent<{ color: string; size: number }> = () => null
   if (Object.keys(MapMarkerIcons).includes(markerShape)) Icon = MapMarkerIcons[markerShape]
   const bg = useColorModeValue('white', 'gray.800')
 
