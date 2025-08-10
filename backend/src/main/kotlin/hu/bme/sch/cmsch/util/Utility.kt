@@ -18,6 +18,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 
 fun Authentication.getUser(): CmschUser {
@@ -33,7 +34,7 @@ fun Authentication.getUserEntityFromDatabase(userService: UserService): UserEnti
 }
 
 fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): UserEntity? {
-    return if (this == null) null else userService.findById(this.name).orElse(null)
+    return if (this == null) null else userService.findById(this.name).getOrNull()
 }
 
 fun Map<String, String>.urlEncode(): String =
