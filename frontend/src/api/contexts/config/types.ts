@@ -175,6 +175,7 @@ export interface Leaderboard {
   searchEnabled: boolean
   showTokenCountByRarity: boolean
   showTokenMaxCountByRarity: boolean
+  topMessage: string
 }
 
 export interface Profile {

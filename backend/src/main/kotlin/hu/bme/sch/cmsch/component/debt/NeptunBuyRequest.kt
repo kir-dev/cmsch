@@ -1,4 +1,4 @@
-package hu.bme.sch.cmsch.dto
+package hu.bme.sch.cmsch.component.debt
 
 data class NeptunBuyRequest(
     var productId: Int,

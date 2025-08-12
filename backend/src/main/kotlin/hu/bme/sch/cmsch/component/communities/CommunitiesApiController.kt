@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import kotlin.jvm.optionals.getOrNull
 
 @RestController
 @RequestMapping("/api")
@@ -37,7 +38,7 @@ class CommunitiesApiController(
     fun allCommunities(@PathVariable communityId: Int): CommunityEntity? {
         return organizationService.getCommunityById(communityId)
             .filter { it.visible }
-            .orElse(null)
+            .getOrNull()
     }
 
     @JsonView(FullDetails::class)
@@ -45,7 +46,7 @@ class CommunitiesApiController(
     fun allOrganizations(@PathVariable organizationId: Int): OrganizationEntity? {
         return organizationService.getOrganizationById(organizationId)
             .filter { it.visible }
-            .orElse(null)
+            .getOrNull()
     }
 
 }

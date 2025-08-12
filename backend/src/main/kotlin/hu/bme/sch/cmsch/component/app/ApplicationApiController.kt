@@ -13,6 +13,7 @@ import hu.bme.sch.cmsch.component.countdown.CountdownComponent
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import hu.bme.sch.cmsch.util.isAvailableForRole
@@ -39,7 +40,8 @@ class ApplicationApiController(
     private val clock: TimeService,
     private val stylingComponent: StylingComponent,
     private val applicationService: ApplicationService,
-    private val components: List<ComponentBase>
+    private val components: List<ComponentBase>,
+    private val userService: UserService,
 ) {
 
     private val componentWriter = ObjectMapper().writerFor(object : TypeReference<Map<String, Map<String, Any>>>() {})
@@ -95,7 +97,7 @@ class ApplicationApiController(
         val jwtUser = auth?.getUserOrNull()
             ?: return ResponseEntity.ok(UserAuthInfoView(authState = AuthState.LOGGED_OUT))
 
-        val actualUser = auth.getUserEntityFromDatabaseOrNull()
+        val actualUser = auth.getUserEntityFromDatabaseOrNull(userService)
         return ResponseEntity.ok(applicationService.getUserAuthInfo(jwtUser, actualUser))
     }
 

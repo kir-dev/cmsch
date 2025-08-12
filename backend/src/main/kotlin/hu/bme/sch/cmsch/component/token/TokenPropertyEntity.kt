@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.UserEntity
@@ -46,7 +47,7 @@ data class TokenPropertyEntity(
     @Column(nullable = false)
     var recieved: Long = 0
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TokenProperty",
@@ -68,4 +69,9 @@ data class TokenPropertyEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
+    override fun duplicate(): TokenPropertyEntity {
+        return this.copy()
+    }
+
 }

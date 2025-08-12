@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.opengraph.OpenGraphResource
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -120,7 +121,7 @@ data class StaticPageEntity(
     @property:ImportFormat
     override var ogDescription: String = ""
 
-): ManagedEntity, OpenGraphResource {
+): ManagedEntity, OpenGraphResource, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "StaticPage",
@@ -142,4 +143,9 @@ data class StaticPageEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
+    override fun duplicate(): StaticPageEntity {
+        return this.copy()
+    }
+    
 }

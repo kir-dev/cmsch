@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -92,7 +93,7 @@ data class ProductEntity(
     @property:ImportFormat
     var materialIcon: String = "payments"
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Product",
@@ -114,4 +115,9 @@ data class ProductEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
+    override fun duplicate(): ProductEntity {
+        return this.copy()
+    }
+
 }

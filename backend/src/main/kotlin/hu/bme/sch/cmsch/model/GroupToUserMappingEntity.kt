@@ -63,7 +63,7 @@ data class GroupToUserMappingEntity(
     @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "GroupToUser",
@@ -85,4 +85,9 @@ data class GroupToUserMappingEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
     }
+
+    override fun duplicate(): GroupToUserMappingEntity {
+        return this.copy()
+    }
+
 }

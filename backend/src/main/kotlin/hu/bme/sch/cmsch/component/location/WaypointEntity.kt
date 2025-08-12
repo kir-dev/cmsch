@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -104,7 +105,7 @@ data class WaypointEntity(
     @property:GenerateOverview(visible = false)
     var description: String = "",
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Location",
@@ -125,6 +126,10 @@ data class WaypointEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
+    }
+
+    override fun duplicate(): WaypointEntity {
+        return this.copy()
     }
 
     fun toMapMarker() = MapMarker(

@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.isAvailableForRole
 import io.swagger.v3.oas.annotations.Operation
@@ -18,7 +19,8 @@ import org.springframework.web.bind.annotation.*
 @ConditionalOnBean(ProfileComponent::class)
 class ProfileApiController(
     private val profileService: ProfileService,
-    private val profileComponent: ProfileComponent
+    private val profileComponent: ProfileComponent,
+    private val userService: UserService,
 ) {
 
     @JsonView(FullDetails::class)
@@ -32,7 +34,7 @@ class ProfileApiController(
                 "for the role that the user have")
     ])
     fun profile(auth: Authentication?): ResponseEntity<ProfileView> {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
             ?: return ResponseEntity.ok(ProfileView(loggedIn = false))
 
         if (!profileComponent.minRole.isAvailableForRole(user.role))
@@ -45,7 +47,7 @@ class ProfileApiController(
 
     @PutMapping("/profile/change-alias")
     fun changeAlias(@RequestBody body: ProfileChangeRequest, auth: Authentication?): ResponseEntity<Boolean> {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
             ?: return ResponseEntity.ok(false)
 
         if (!profileComponent.minRole.isAvailableForRole(user.role))

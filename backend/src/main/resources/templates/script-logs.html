@@ -1,0 +1,278 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+<object th:replace="~{layout4 :: head(${context.siteName})}" th:remove="tag">
+</object>
+
+<style>
+    .script-logs .status {
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+
+    .script-logs .log {
+        font-family: monospace;
+        white-space: pre-wrap;
+        margin: 20px 0;
+        padding: 10px;
+        background: var(--dark-4);
+        border: 1px solid var(--dark-5);
+        border-radius: 5px;
+    }
+
+    .script-logs .debug {
+        color: #757575;
+    }
+
+    .script-logs .info {
+        color: #dedede;
+    }
+
+    .script-logs .warning {
+        color: #f9a825;
+    }
+
+    .script-logs .error {
+        color: #d32f2f;
+    }
+
+    .script-logs table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .script-logs th, .script-logs td {
+        padding: 8px 12px;
+        border: 0 solid transparent;
+    }
+
+    .script-logs th {
+        background: var(--dark-3);
+    }
+
+    .script-logs .status.success {
+        color: var(--success-color);
+        text-align: center;
+    }
+    .script-logs .status.failed {
+        color: var(--danger-color);
+        text-align: center;
+    }
+
+    .script-logs table a {
+        color: var(--light-text-color) !important;
+    }
+
+    .script-logs table a:hover {
+        color: var(--primary-color) !important;
+    }
+</style>
+</head>
+<body>
+
+<script th:inline="javascript">
+    let model = {};
+    let scriptResultId = /*[[${scriptResultId}]]*/ 0;
+    let renderDebug = false;
+    const rootPath = /*[[@{/}]]*/ '';
+
+    function renderModel() {
+        if (model.result) {
+            document.getElementById('result').textContent = model.result;
+            document.getElementById('result').style.display = 'block';
+        } else {
+            document.getElementById('result').style.display = 'none';
+        }
+
+        if (model.logs) {
+            const logsJson = JSON.parse(model.logs);
+            let nextLog = '';
+            if (logsJson) {
+                logsJson.forEach((log) => {
+                    if (log.severity === 'DEBUG') {
+                        if (renderDebug)
+                            nextLog += `<div class="debug">[DEBUG] ${log.message}</div>`;
+                    } else if (log.severity === 'WARNING') {
+                        nextLog += `<div class="warning">[WARN ] ${log.message}</div>`;
+                    } else if (log.severity === 'INFO') {
+                        nextLog += `<div class="info">[INFO ] ${log.message}</div>`;
+                    } else if (log.severity === 'ERROR' || log.severity === 'FATAL') {
+                        nextLog += `<div class="error">[ERROR] ${log.message}</div>`;
+                    }
+                })
+            }
+            if (model.running) {
+                nextLog += `<span id="in-progress">${frames[index]}</span>`;
+            }
+            document.getElementById('log').innerHTML = nextLog;
+        }
+
+        if (model.userName && model.timestamp) {
+            const date = new Date(model.timestamp * 1000);
+            const localDate = date.toLocaleString();
+
+            document.getElementById('info-line').textContent = `${model.userName} indította ekkor: ${localDate}`;
+        }
+
+        if (model.running) {
+            document.getElementById('success').style.display = 'none';
+            document.getElementById('failed').style.display = 'none';
+        } else {
+            if (model.success) {
+                document.getElementById('success').textContent = `Sikeres (${model.duration} ms)`;
+                document.getElementById('success').style.display = 'block';
+                document.getElementById('failed').style.display = 'none';
+            } else {
+                document.getElementById('success').style.display = 'none';
+                document.getElementById('failed').textContent = `SIKERTELEN (${model.duration} ms)`;
+                document.getElementById('failed').style.display = 'block';
+            }
+        }
+
+        if (model.artifacts) {
+            const artifactJson = JSON.parse(model.artifacts)
+            if (artifactJson) {
+                let tableContent = "";
+                let artifactIndex = 0;
+
+                artifactJson.forEach((artifact) => {
+                    tableContent += `<tr><td>${artifact.artifactName}</td><td><a href="#" onclick="downloadArtifact(${artifactIndex}); return false">[Letölt]</a>`;
+                    if (artifact.type !== 'application/zip') {
+                        tableContent += `<a href="${rootPath}admin/control/script-logs/${scriptResultId}/artifact/${artifactIndex}" target="_blank">[Megnyit]</a>`;
+                    }
+                    tableContent += `</td></tr>`;
+                    artifactIndex += 1;
+                });
+
+                if (artifactIndex > 0) {
+                    const artifactsElement = document.getElementById('artifacts');
+                    artifactsElement.innerHTML = `
+                        <thead><tr><th>Név</th><th>Lehetőségek</th></tr></thead>
+                        <tbody>${tableContent}</tbody>
+                    `;
+                    artifactsElement.style.display = "table";
+                }
+            }
+        }
+    }
+
+    function downloadArtifact(artifactId) {
+        if (!model.artifacts)
+            return
+
+        const artifactJson = JSON.parse(model.artifacts)[artifactId]
+        if (!artifactJson)
+            return;
+
+        const blob = new Blob([artifactJson.content], { type: artifactJson.type });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = artifactJson.fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function fetchData(scriptResultId) {
+        fetch(`/api/script-logs/${scriptResultId}`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(response => {
+            if (!response.ok) {
+                document.getElementById('result').textContent = "A kapcsolat megszakadt a szerverrel";
+                document.getElementById('result').style.display = 'block';
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            model = data;
+            if (!model || model.running)
+                setTimeout(() => fetchData(scriptResultId), 2000);
+            renderModel();
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+
+    fetchData(scriptResultId);
+
+    const frames = ["| ", "| .", "| ..", "| ..."];
+    let index = 0;
+
+    setInterval(() => {
+        const element = document.getElementById('in-progress');
+        index = (index + 1) % frames.length;
+        if (element)
+            element.textContent = frames[index];
+    }, 500);
+</script>
+
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}">
+        </div>
+
+        <div class="content script-logs">
+            <h1 class="narrow"><ins th:text="${scriptName}">Dashboard</ins></h1>
+
+            <div class="card wide-false">
+                <h4>Script futtatás</h4>
+
+                <p id="info-line">...</p>
+
+                <div class="log" id="log"></div>
+
+                <p class="status success" id="success" style="display: none">Sikeres</p>
+                <p class="status failed" id="failed" style="display: none">SIKERTELEN</p>
+
+                <div class="log" id="result" style="display: none"></div>
+
+                <table id="artifacts" style="display: none">
+                    <thead>
+                    <tr>
+                        <th>Név</th>
+                        <th>Lehetőségek</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>data.json</td>
+                        <td>
+                            <a href="#" onclick="downloadArtifact(0); return false">[Letölt]</a>
+                            <a href="#">[Megnyit]</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="button-group" th:if="${enableEdit}">
+                    <button type="button" class="btn" onclick="window.location.href=`${rootPath}admin/control/scripts/edit/${model.scriptId}`;">
+                        <span class="material-symbols-outlined">edit</span>
+                        <ins>Script szerkesztése</ins>
+                    </button>
+                    <button type="button" class="btn" onclick="window.location.href=`${rootPath}admin/control/script-execute/${model.scriptId}`;">
+                        <span class="material-symbols-outlined">play_arrow</span>
+                        <ins>Újra futtatás</ins>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

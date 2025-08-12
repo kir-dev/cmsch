@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -129,7 +130,7 @@ data class TokenEntity(
     @property:ImportFormat
     var availableUntil: Long? = null,
 
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Token",
@@ -150,6 +151,10 @@ data class TokenEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
+    }
+
+    override fun duplicate(): TokenEntity {
+        return this.copy()
     }
 
 }

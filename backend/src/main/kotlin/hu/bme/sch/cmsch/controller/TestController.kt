@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.controller
 
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody
     matchIfMissing = false
 )
 @Controller
-class TestController {
+class TestController(private val userService: UserService) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -30,7 +31,7 @@ class TestController {
     @GetMapping("/control/test-user")
     fun testUser(auth: Authentication): String {
         log.info("test user endpoint was fired")
-        return auth.getUserEntityFromDatabaseOrNull()?.fullName ?: "not logged in"
+        return auth.getUserEntityFromDatabaseOrNull(userService)?.fullName ?: "not logged in"
     }
 
 }

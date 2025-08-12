@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.StringToArraySerializer
@@ -188,7 +189,7 @@ data class CommunityEntity(
     @get:JsonSerialize(using = StringToArraySerializer::class)
     var svgMapId: String = "",
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Community",
@@ -212,6 +213,10 @@ data class CommunityEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id )"
+    }
+
+    override fun duplicate(): CommunityEntity {
+        return this.copy()
     }
 
 }

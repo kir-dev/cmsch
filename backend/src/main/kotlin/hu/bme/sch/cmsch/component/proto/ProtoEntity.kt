@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -65,7 +66,7 @@ data class ProtoEntity(
     @property:ImportFormat
     var enabled: Boolean = false,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Proto",
@@ -86,6 +87,10 @@ data class ProtoEntity(
     @Override
     override fun toString(): String {
         return "id = $id, path = $path"
+    }
+
+    override fun duplicate(): ProtoEntity {
+        return this.copy()
     }
 
 }

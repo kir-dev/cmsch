@@ -4,39 +4,23 @@ import hu.bme.sch.cmsch.admin.dashboard.DashboardComponent
 import hu.bme.sch.cmsch.admin.dashboard.DashboardFormCard
 import hu.bme.sch.cmsch.component.form.FormElementType
 import hu.bme.sch.cmsch.component.login.CmschUser
-import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.UserService
-import hu.bme.sch.cmsch.setting.Setting
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
+import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.security.core.Authentication
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
-
-
-@Component
-final class DI(
-    val userService: UserService,
-    val startupPropertyConfig: StartupPropertyConfig
-) {
-    companion object {
-        lateinit var instance: DI
-    }
-
-    init {
-        instance = this
-    }
-}
 
 fun Authentication.getUser(): CmschUser {
     return this.principal as CmschUser
@@ -46,22 +30,28 @@ fun Authentication?.getUserOrNull(): CmschUser? {
     return if (this == null) null else (this.principal as? CmschUser)
 }
 
-fun Authentication.getUserEntityFromDatabase(): UserEntity {
-    return DI.instance.userService.getById(this.name)
+fun Authentication.getUserEntityFromDatabase(userService: UserService): UserEntity {
+    return userService.getById(this.name)
 }
 
-fun Authentication?.getUserEntityFromDatabaseOrNull(): UserEntity? {
-    return if (this == null) null else DI.instance.userService.findById(this.name).orElse(null)
+fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): UserEntity? {
+    return if (this == null) null else userService.findById(this.name).getOrNull()
 }
 
 fun Map<String, String>.urlEncode(): String =
     this.entries.joinToString("&") { it.key.urlEncode() + "=" + it.value.urlEncode() }
 
 fun fetchFile(url: String): Result<ByteArray?> = runCatching {
-    WebClient.create()
-        .get().uri(url)
+    val webClient = WebClient.builder()
+        .codecs { configurer: ClientCodecConfigurer ->
+            configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)
+        }
+        .build()
+
+    webClient.get().uri(url)
         .retrieve().bodyToMono<ByteArray>().block()
 }
+
 
 fun String.urlEncode(): String {
     return URLEncoder.encode(this, StandardCharsets.UTF_8)

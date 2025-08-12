@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.conference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -74,7 +75,7 @@ data class ConferenceCompanyEntity(
     @property:ImportFormat
     var visible: Boolean = false
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "ConferenceCompany",
@@ -95,6 +96,10 @@ data class ConferenceCompanyEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, name = $name)"
+    }
+
+    override fun duplicate(): ConferenceCompanyEntity {
+        return this.copy()
     }
 
 }

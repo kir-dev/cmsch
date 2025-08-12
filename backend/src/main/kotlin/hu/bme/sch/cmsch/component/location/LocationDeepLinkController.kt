@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabase
 import hu.bme.sch.cmsch.util.urlEncode
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 @ConditionalOnBean(LocationComponent::class)
 class LocationDeepLinkController(
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val appComponent: ApplicationComponent
+    private val appComponent: ApplicationComponent,
+    private val userService: UserService,
 ) {
 
     @GetMapping("/beacon")
@@ -23,7 +25,7 @@ class LocationDeepLinkController(
         if (auth == null)
             return "redirect:/control/login"
 
-        val user = auth.getUserEntityFromDatabase()
+        val user = auth.getUserEntityFromDatabase(userService)
         val accessToken = user.cmschId.substring(startupPropertyConfig.profileQrPrefix.length)
         val apiEndpoint = "${appComponent.adminSiteUrl}api/location"
 

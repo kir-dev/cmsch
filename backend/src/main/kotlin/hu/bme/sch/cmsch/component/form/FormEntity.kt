@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -232,7 +233,7 @@ data class FormEntity(
     @property:ImportFormat
     var advertized: Boolean = false,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Form",
@@ -252,6 +253,10 @@ data class FormEntity(
 
     override fun toString(): String {
         return "FormEntity(id=$id, name='$name', url='$url')"
+    }
+
+    override fun duplicate(): FormEntity {
+        return this.copy()
     }
 
 }

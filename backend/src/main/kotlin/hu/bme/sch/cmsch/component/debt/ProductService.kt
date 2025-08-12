@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrNull
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
@@ -28,18 +29,18 @@ open class ProductService(
 
     @Transactional
     open fun sellProductByCmschId(productId: Int, seller: CmschUser, cmschId: String): SellStatus {
-        val user = userRepository.findByCmschId(cmschId).orElse(null) ?: return SellStatus.BUYER_NOT_FOUND
+        val user = userRepository.findByCmschId(cmschId).getOrNull() ?: return SellStatus.BUYER_NOT_FOUND
         return sellProduct(productId, seller, user)
     }
 
     @Transactional
     open fun sellProductByNeptun(productId: Int, seller: CmschUser, neptun: String): SellStatus {
-        val user = userRepository.findByNeptun(neptun).orElse(null) ?: return SellStatus.BUYER_NOT_FOUND
+        val user = userRepository.findByNeptun(neptun).getOrNull() ?: return SellStatus.BUYER_NOT_FOUND
         return sellProduct(productId, seller, user)
     }
 
     private fun sellProduct(productId: Int, seller: CmschUser, buyer: CmschUser): SellStatus {
-        val product = productRepository.findById(productId).orElse(null) ?: return SellStatus.PRODUCT_NOT_FOUND
+        val product = productRepository.findById(productId).getOrNull() ?: return SellStatus.PRODUCT_NOT_FOUND
         if (product.available.not())
             return SellStatus.ITEM_NOT_AVAILABLE
         val groupId = buyer.groupId ?: return SellStatus.NOT_IN_GROUP

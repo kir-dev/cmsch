@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
+import java.util.Optional
 
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
@@ -188,6 +189,11 @@ class CheersBmejegyService(
             }
         }
         return null
+    }
+
+    @Transactional(readOnly = true)
+    fun findVoucherByUser(userId: Int): String? {
+        return bmejegyRecordRepository.findAllByMatchedUserId(userId).firstOrNull()?.qrCode
     }
 
 }

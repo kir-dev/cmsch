@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -72,7 +73,7 @@ data class TicketEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var comment: String = "",
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "TicketEntry",
@@ -95,6 +96,10 @@ data class TicketEntity(
 
     override fun toString(): String {
         return "TicketEntity(id=$id, owner='$owner', email='$email', useCmschId=$useCmschId, qrCode='$qrCode', grantType=$grantType, comment='$comment')"
+    }
+
+    override fun duplicate(): TicketEntity {
+        return this.copy()
     }
 
 }

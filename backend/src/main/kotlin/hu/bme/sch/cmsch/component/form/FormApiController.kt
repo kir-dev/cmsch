@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import org.slf4j.LoggerFactory
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api")
 @ConditionalOnBean(FormComponent::class)
 class FormApiController(
-    private val formService: FormService
+    private val formService: FormService,
+    private val userService: UserService,
 ) {
 
     internal val log = LoggerFactory.getLogger(javaClass)
@@ -42,7 +44,7 @@ class FormApiController(
         auth: Authentication?,
         @RequestBody data: Map<String, String>
     ): FormSubmissionStatus {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         return submitForm(false, path, user, data)
     }
 
@@ -52,7 +54,7 @@ class FormApiController(
         auth: Authentication?,
         @RequestBody data: Map<String, String>
     ): FormSubmissionStatus {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
             ?: return FormSubmissionStatus.FORM_NOT_AVAILABLE
         return submitForm(true, path, user, data)
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonValue
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -127,7 +128,7 @@ data class ConferencePresentationEntity(
     @property:ImportFormat
     var visible: Boolean = false,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     @Transient
     var presenter: ConferencePresenterEntity? = null
@@ -151,6 +152,10 @@ data class ConferencePresentationEntity(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, title = $title)"
+    }
+
+    override fun duplicate(): ConferencePresentationEntity {
+        return this.copy()
     }
 
 }

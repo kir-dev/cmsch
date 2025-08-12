@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.dto.Edit
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -15,7 +16,7 @@ import org.springframework.core.env.Environment
 @Entity
 @Table(name="sheets")
 @ConditionalOnBean(SheetsComponent::class)
-class SheetsEntity(
+data class SheetsEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @field:JsonView(value = [ Edit::class ])
@@ -59,7 +60,7 @@ class SheetsEntity(
     @property:ImportFormat
     var enabled: Boolean = false,
 
-) : ManagedEntity {
+) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "Sheets",
@@ -80,6 +81,10 @@ class SheetsEntity(
     @Override
     override fun toString(): String {
         return "id = $id, name = $name"
+    }
+
+    override fun duplicate(): SheetsEntity {
+        return this.copy()
     }
 
 }

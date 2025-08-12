@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.team
 
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import hu.bme.sch.cmsch.util.getUserOrNull
 import hu.bme.sch.cmsch.util.isAvailableForRole
@@ -16,13 +17,14 @@ import org.springframework.web.multipart.MultipartFile
 @ConditionalOnBean(TeamComponent::class)
 class TeamApiController(
     private val teamComponent: TeamComponent,
-    private val teamService: TeamService
+    private val teamService: TeamService,
+    private val userService: UserService,
 
 ) {
 
     @PostMapping("/team/create")
     fun createTeam(@RequestBody teamCreationDto: TeamCreationDto, auth: Authentication?): TeamCreationStatus {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.createMinRole.isAvailableForRole(user.role))
             return TeamCreationStatus.INSUFFICIENT_PERMISSIONS
 
@@ -31,7 +33,7 @@ class TeamApiController(
 
     @PostMapping("/team/join")
     fun joinTeam(@RequestBody teamJoinDto: TeamJoinDto, auth: Authentication?): TeamJoinStatus {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.minRole.isAvailableForRole(user.role))
             return TeamJoinStatus.INSUFFICIENT_PERMISSIONS
         return teamService.joinTeam(user, teamJoinDto.id)
@@ -43,7 +45,7 @@ class TeamApiController(
         @RequestParam logo: MultipartFile?,
         auth: Authentication?,
     ): TeamEditStatus {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || user.role.value < RoleType.PRIVILEGED.value)
             throw IllegalStateException("Insufficient permissions")
 
@@ -52,7 +54,7 @@ class TeamApiController(
 
     @PostMapping("/team/cancel-join")
     fun cancelJoinTeam(auth: Authentication?): TeamJoinStatus {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.minRole.isAvailableForRole(user.role))
             return TeamJoinStatus.INSUFFICIENT_PERMISSIONS
         return teamService.cancelJoin(user)
@@ -60,7 +62,7 @@ class TeamApiController(
 
     @PostMapping("/team/leave")
     fun leaveTeam(auth: Authentication?): TeamLeaveStatus {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.minRole.isAvailableForRole(user.role))
             return TeamLeaveStatus.INSUFFICIENT_PERMISSIONS
         return teamService.leaveTeam(user)
@@ -109,7 +111,7 @@ class TeamApiController(
 
     @PutMapping("/team/admin/accept-join")
     fun acceptJoin(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.acceptJoin(request.id, user.group)
@@ -117,7 +119,7 @@ class TeamApiController(
 
     @PutMapping("/team/admin/reject-join")
     fun rejectJoin(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.rejectJoin(request.id, user.groupId, user.groupName)
@@ -125,7 +127,7 @@ class TeamApiController(
 
     @PutMapping("/team/admin/toggle-permissions")
     fun togglePermissions(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.toggleUserPermissions(request.id, user.groupId, user.groupName, user)
@@ -133,7 +135,7 @@ class TeamApiController(
 
     @PutMapping("/team/admin/kick-user")
     fun kickUser(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.kickUser(request.id, user.groupId, user.groupName, user)
@@ -141,7 +143,7 @@ class TeamApiController(
 
     @PutMapping("/team/admin/switch-leadership")
     fun switchLeadership(@RequestBody request: UserIdRequest, auth: Authentication?): Boolean {
-        val user = auth?.getUserEntityFromDatabaseOrNull()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService)
         if (user == null || !teamComponent.adminMinRole.isAvailableForRole(user.role))
             return false
         return teamService.promoteLeader(request.id, user.groupId, user.groupName, user)

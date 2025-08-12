@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
+import hu.bme.sch.cmsch.model.Duplicatable
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
@@ -22,7 +23,7 @@ enum class EmailMode {
 @Entity
 @Table(name="emailTemplates")
 @ConditionalOnBean(EmailComponent::class)
-class EmailTemplateEntity(
+data class EmailTemplateEntity(
     @Id
     @GeneratedValue
     @field:JsonView(value = [ Edit::class ])
@@ -62,7 +63,7 @@ class EmailTemplateEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var mode: EmailMode = EmailMode.TEXT
-): ManagedEntity {
+): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "EmailTemplate",
@@ -84,4 +85,9 @@ class EmailTemplateEntity(
     override fun toString(): String {
         return this::class.simpleName + "(id = $id, selector = $selector )"
     }
+
+    override fun duplicate(): EmailTemplateEntity {
+        return this.copy()
+    }
+
 }
