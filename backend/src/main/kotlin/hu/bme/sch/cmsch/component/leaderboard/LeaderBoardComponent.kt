@@ -105,4 +105,8 @@ class LeaderBoardComponent(
     var showTokenMaxCountByRarity by BooleanSettingRef(fieldName = "Összes token szám ritkaság szerint",
         description = "Legyen-e látható az összesen begyűjthető tokenek száma ritkaság szerint")
 
+    var topMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Felső szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres akkor nincs ilyen.")
+
+
 }
