@@ -72,5 +72,5 @@ class TokenAdminTokensByTeamController(
     exportEnabled = false,
 
     adminMenuIcon = "local_activity",
-    adminMenuPriority = 4,
+    adminMenuPriority = 5,
 )

@@ -65,7 +65,7 @@ class TokenPublicTokensStatsController(
     env,
 
     adminMenuIcon = "approval",
-    adminMenuPriority = 10,
+    adminMenuPriority = 11,
 ) {
     @GetMapping("")
     override fun view(model: Model, auth: Authentication): String {
