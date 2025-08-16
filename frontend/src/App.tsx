@@ -44,6 +44,8 @@ import RaceByTeamPage from './pages/race/raceByTeam.page.tsx'
 import CreateTeamPage from './pages/teams/createTeam.page.tsx'
 import EditMyTeamPage from './pages/teams/editMyTeam.page.tsx'
 import MyTeamPage from './pages/teams/myTeam.page.tsx'
+import TournamentPage from "./pages/tournament/tournament.page.tsx";
+import TournamentListPage from "./pages/tournament/tournamentList.page.tsx";
 import DebtPage from './pages/debt/debt.page.tsx'
 
 export function App() {
@@ -128,6 +130,10 @@ export function App() {
                 <Route path={Paths.TOKEN}>
                   <Route index element={<TokenListPage />} />
                   <Route path="scan" element={<TokenScanPage />} />
+                </Route>
+                <Route path={Paths.TOURNAMENT}>
+                  <Route path=":id" element={<TournamentPage />} />
+                  <Route index element={<TournamentListPage />} />
                 </Route>
                 <Route index element={<IndexPage />} />
                 <Route path="login" element={<LoginPage />} />
