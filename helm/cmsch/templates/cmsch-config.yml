@@ -54,6 +54,7 @@ data:
   LOAD_TEAM: {{ .Values.load.team | quote }}
   LOAD_TOKEN: {{ .Values.load.token | quote }}
   LOAD_EVENT: {{ .Values.load.event | quote }}
+  LOAD_TOURNAMENT: {{ .Values.load.tournament | quote }}
   LOAD_PUSHNOTIFICATION: {{ .Values.load.pushnotification | quote }}
   LOAD_SHEETS: {{ .Values.load.sheets | quote }}
   LOAD_SERVICE_ACCOUNT: {{ .Values.load.serviceAccount | quote }}

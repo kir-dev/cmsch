@@ -140,26 +140,26 @@
         return enumElementMap[value] || "";
     }
 
-    let columData = /*[[${columnData}]]*/ [];
-    for (let columnId in columData) {
-        if (columData[columnId].formatter === 'tickCross') {
-            columData[columnId]['formatterParams'] = {
+    let columnData = /*[[${columnData}]]*/ [];
+    for (let columnId in columnData) {
+        if (columnData[columnId].formatter === 'tickCross') {
+            columnData[columnId]['formatterParams'] = {
                 allowEmpty: true,
                 allowTruthy: true,
                 tickElement: "<span class='material-symbols-outlined color-green'>done</span>",
                 crossElement: "<span class='material-symbols-outlined color-red'>close</span>",
             }
-        } else if (columData[columnId].formatter === 'enumIconsFormatter') {
-            columData[columnId]['formatter'] = enumIconsFormatter;
-        } else if (columData[columnId].formatter === 'datetime') {
-            columData[columnId]['formatter'] = timestampFormatter;
-            columData[columnId]['minWidth'] = 180;
+        } else if (columnData[columnId].formatter === 'enumIconsFormatter') {
+            columnData[columnId]['formatter'] = enumIconsFormatter;
+        } else if (columnData[columnId].formatter === 'datetime') {
+            columnData[columnId]['formatter'] = timestampFormatter;
+            columnData[columnId]['minWidth'] = 180;
         } else {
-            columData[columnId]['minWidth'] = 200;
+            columnData[columnId]['minWidth'] = 200;
         }
     }
     if (buttons.length !== 0) {
-        columData.push({
+        columnData.push({
             title: " ",
             field: "buttons",
             formatter: "html",
@@ -176,7 +176,7 @@
         autoColumns: false,
         layout: 'fitColumns',
         responsiveLayout: 'collapse',
-        columns: columData,
+        columns: columnData,
         height: "500px"
     });
 

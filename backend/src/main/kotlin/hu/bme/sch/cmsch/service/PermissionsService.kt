@@ -35,6 +35,7 @@ import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
 import hu.bme.sch.cmsch.component.team.TeamComponent
 import hu.bme.sch.cmsch.component.token.TokenComponent
+import hu.bme.sch.cmsch.component.tournament.TournamentComponent
 import hu.bme.sch.cmsch.extending.CmschPermissionSource
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
@@ -428,6 +429,13 @@ object ControlPermissions : PermissionGroup {
         component = SheetsComponent::class
     )
 
+    val PERMISSION_CONTROL_TOURNAMENT = PermissionValidator(
+        "TOURNAMENT_CONTROL",
+        "Tournament komponens testreszabása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
     val PERMISSION_CONTROL_SCRIPT = PermissionValidator(
         "SCRIPT_CONTROL",
         "Scriptek testreszabása",
@@ -479,6 +487,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_PROTO,
         PERMISSION_CONTROL_CONFERENCE,
         PERMISSION_CONTROL_SHEETS,
+        PERMISSION_CONTROL_TOURNAMENT,
         PERMISSION_CONTROL_SCRIPT,
     )
 
@@ -1587,6 +1596,64 @@ object StaffPermissions : PermissionGroup {
         component = SheetsComponent::class
     )
 
+    /// TournamentComponent
+
+    val PERMISSION_SHOW_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_SHOW",
+        "Versenyek megtekintése",
+        readOnly = true,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_CREATE_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_CREATE",
+        "Versenyek létrehozása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_DELETE_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_DELETE",
+        "Versenyek törlése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_EDIT_TOURNAMENTS = PermissionValidator(
+        "TOURNAMENTS_EDIT",
+        "Versenyek szerkesztése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_SET_SEEDS = PermissionValidator(
+        "TOURNAMENT_SET_SEEDS",
+        "Versenyzők seedjeinek állítása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_SHOW_BRACKETS = PermissionValidator(
+        "TOURNAMENT_SHOW_BRACKETS",
+        "Verseny táblák megtekintése",
+        readOnly = true,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_GENERATE_BRACKETS = PermissionValidator(
+        "TOURNAMENT_GENERATE_BRACKETS",
+        "Verseny táblák generálása",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
+    val PERMISSION_EDIT_RESULTS = PermissionValidator(
+        "TOURNAMENT_EDIT_RESULTS",
+        "Verseny eredmények szerkesztése",
+        readOnly = false,
+        component = TournamentComponent::class
+    )
+
     /// ScriptComponent
 
     val PERMISSION_SHOW_SCRIPTS = PermissionValidator(
@@ -1798,6 +1865,15 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_SHEETS,
         PERMISSION_CREATE_SHEETS,
         PERMISSION_DELETE_SHEETS,
+
+        PERMISSION_SHOW_TOURNAMENTS,
+        PERMISSION_CREATE_TOURNAMENTS,
+        PERMISSION_DELETE_TOURNAMENTS,
+        PERMISSION_EDIT_TOURNAMENTS,
+        PERMISSION_SET_SEEDS,
+        PERMISSION_SHOW_BRACKETS,
+        PERMISSION_GENERATE_BRACKETS,
+        PERMISSION_EDIT_RESULTS,
 
         PERMISSION_SHOW_SCRIPTS,
         PERMISSION_EDIT_SCRIPTS,
