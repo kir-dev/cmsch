@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 import { ApiPaths } from '../../../util/paths'
 import { RaceView } from '../../../util/views/race.view'
 import { QueryKeys } from '../queryKeys'

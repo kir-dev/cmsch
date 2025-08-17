@@ -12,7 +12,7 @@ const IndexPage = () => {
     if (location.pathname === '/logout') {
       onLogout()
     }
-  }, [location])
+  }, [location, onLogout])
 
   return <Navigate to={config?.components.app.defaultComponent || '/home'} />
 }

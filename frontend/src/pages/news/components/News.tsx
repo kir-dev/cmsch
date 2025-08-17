@@ -1,11 +1,11 @@
 import { Button, Heading, Image, Text } from '@chakra-ui/react'
+import { FaArrowLeft } from 'react-icons/fa'
 import { Link } from 'react-router'
 import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { NewsArticleView } from '../../../util/views/news.view'
-import { FaArrowLeft } from 'react-icons/fa'
 
 interface NewsProps {
   news: NewsArticleView

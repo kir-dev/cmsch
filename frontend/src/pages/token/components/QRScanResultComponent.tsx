@@ -1,7 +1,7 @@
 import { CheckCircleIcon, CloseIcon, InfoIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { Box, Center, Heading, Image, Text } from '@chakra-ui/react'
-import { ScanMessages, ScanResponseView, ScanStatus } from '../../../util/views/token.view'
 import Markdown from '../../../common-components/Markdown'
+import { ScanMessages, ScanResponseView, ScanStatus } from '../../../util/views/token.view'
 
 interface QrScanResultProps {
   isError?: boolean

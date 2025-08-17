@@ -1,7 +1,7 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
-import { LeaderBoardView } from '../../../util/views/leaderBoardView'
+import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
+import { LeaderBoardView } from '../../../util/views/leaderBoardView'
 import { QueryKeys } from '../queryKeys'
 
 type TempLeaderBoardItemView = {
@@ -9,7 +9,7 @@ type TempLeaderBoardItemView = {
   name: string
   groupName: string
   score?: number
-  items?: Object
+  items?: object
   total?: number
 }
 

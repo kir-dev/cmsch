@@ -111,6 +111,7 @@ type ClearButtonProps = Pick<FilePickerProps, 'clearButtonLabel'> & {
   onButtonClick: () => void
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ClearButton: FC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) => (
   <InputRightElement width="4.5rem">
     <Button onClick={onButtonClick}>{clearButtonLabel ?? 'Clear'}</Button>

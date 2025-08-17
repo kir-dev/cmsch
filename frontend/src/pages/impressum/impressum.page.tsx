@@ -2,12 +2,12 @@ import { Heading, Wrap } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useDevelopers } from '../../api/hooks/developers/useDevelopers'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
-import { useDevelopers } from '../../api/hooks/developers/useDevelopers'
-import { OrganizerSection } from './components/OrganizerSection'
 import { DeveloperWrapItem } from './components/DeveloperWrapItem'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { OrganizerSection } from './components/OrganizerSection'
 
 const ImpressumPage = () => {
   const config = useConfigContext()

@@ -1,13 +1,13 @@
 import { Heading, HStack, Text, VStack } from '@chakra-ui/react'
 
-import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
-import { LevelStatusBadge } from './LevelStatusBadge'
-import { LevelDataDisplay } from './LevelDataDisplay'
-import { TowerDataDisplay } from './TowerDataDisplay'
+import isEmpty from 'lodash/isEmpty'
 import Markdown from '../../../common-components/Markdown'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
-import isEmpty from 'lodash/isEmpty'
+import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
+import { LevelDataDisplay } from './LevelDataDisplay'
+import { LevelStatusBadge } from './LevelStatusBadge'
 import { TotemDataDisplay } from './TotemDataDisplay'
+import { TowerDataDisplay } from './TowerDataDisplay'
 
 interface DataDisplayWrapperProps {
   level: QrLevelDto

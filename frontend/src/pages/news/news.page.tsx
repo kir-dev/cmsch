@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import News from './components/News'
 import { useNewsQuery } from '../../api/hooks/news/useNewsQuery'
+import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
+import News from './components/News'
 
 const NewsPage = () => {
   const { id } = useParams()

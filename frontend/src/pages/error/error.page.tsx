@@ -25,7 +25,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
     // Clear the error from the context since the user has already been notified, and prepare for navigation
     clearMessage()
     // No need for deps because the clearError would clear this error page too
-  }, [])
+  }, [clearMessage, message, messageProp, type])
   // If there is no error ATM, redirect to home page
   if (clonedMessage === undefined) return <Navigate to="/" />
   // Display authentication page for the corresponding error type

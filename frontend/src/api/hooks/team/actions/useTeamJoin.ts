@@ -1,13 +1,13 @@
 import axios from 'axios'
-import { TeamResponses } from '../../../../util/views/team.view'
 import { useState } from 'react'
+import { TeamResponses } from '../../../../util/views/team.view'
 
 export const useTeamJoin = (onResponse: (response: TeamResponses) => void) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const joinTeam = (id: number) => {
     setLoading(true)
-    axios
+    axios //todo
       .post<TeamResponses>(`/api/team/join`, { id })
       .then((res) => {
         onResponse(res.data)

@@ -1,10 +1,10 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { useDisclosure, Link as ChakraLink, Grid, GridItem, Box } from '@chakra-ui/react'
+import { Box, Link as ChakraLink, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
+import { Fragment } from 'react'
 import { Link } from 'react-router'
 import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
-import { Fragment } from 'react'
 import { TokenRarityDisplay } from './TokenRarityDisplay.tsx'
 
 type CollapsableTableRowProps = {
@@ -27,18 +27,19 @@ export const CollapsableTableRow = ({
   showDescription
 }: CollapsableTableRowProps) => {
   const { isOpen, onToggle } = useDisclosure()
-  const bg = idx % 2 === 0 ? useOpaqueBackground(1) : undefined
+  const opaqueBackgroundColor = useOpaqueBackground(1)
+  const bg = idx % 2 === 0 ? opaqueBackgroundColor : undefined
   const isGroupLink = typeof data.groupId !== 'undefined'
 
   collapsable = (collapsable && data.items && data.items.length > 0) || false
 
-  let outerColTemplate: string[] = []
+  const outerColTemplate: string[] = []
   if (!categorized) outerColTemplate.push('[place] auto')
   outerColTemplate.push('[name] 1fr')
   if (showGroup) outerColTemplate.push('[group] 1fr')
   outerColTemplate.push('[score] auto [chevron] 20px')
 
-  let innerColTemplate: string[] = []
+  const innerColTemplate: string[] = []
   if (categorized) innerColTemplate.push('[place] auto')
   innerColTemplate.push('[name] 1fr [score] auto')
   if (!categorized) innerColTemplate.push('[chevron] 20px')

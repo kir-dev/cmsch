@@ -6,7 +6,7 @@ export const useTeamAcceptJoin = (onSuccess: (response: boolean) => void, onErro
   const [error, setError] = useState<Error>()
   const acceptJoin = (id: number) => {
     setLoading(true)
-    axios
+    axios //todo
       .put<boolean>(`/api/team/admin/accept-join`, { id })
       .then((res) => {
         onSuccess(res.data)

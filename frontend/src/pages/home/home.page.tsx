@@ -1,4 +1,4 @@
-import { Box, Heading, useColorModeValue } from '@chakra-ui/react'
+import { Box, Heading } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -9,8 +9,8 @@ import Markdown from '../../common-components/Markdown'
 import Clock from '../countdown/components/clock'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
 import HomePageEventList from './components/HomePageEventList.tsx'
-import HomePageNewsList from './components/HomePageNewsList.tsx'
 import HomePageGalleryCarousel from './components/HomePageGalleryCarousel.tsx'
+import HomePageNewsList from './components/HomePageNewsList.tsx'
 
 const HomePage = () => {
   const config = useConfigContext()
@@ -22,6 +22,7 @@ const HomePage = () => {
       if (!countdownConfig) return new Date()
       return new Date(countdownConfig?.timeToCountTo * 1000)
     } catch (e) {
+      console.error(e)
       return new Date()
     }
   }, [countdownConfig])
@@ -40,7 +41,7 @@ const HomePage = () => {
           {homeConfig?.welcomeMessage.split('{}')[0] + ' '}
           {homeConfig?.welcomeMessage.split('{}').length > 1 && (
             <>
-              <Heading as="span" color={useColorModeValue('brand.500', 'brand.500')} size="3xl">
+              <Heading as="span" color="brand.500" size="3xl">
                 {config?.components.app.siteName || 'CMSch'}
               </Heading>{' '}
               {homeConfig?.welcomeMessage.split('{}')[1]}

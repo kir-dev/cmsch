@@ -1,14 +1,15 @@
-import { Heading, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { Box, Heading, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
+import { useMatch, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
 import { BoardStat } from '../../common-components/BoardStat'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
+import Markdown from '../../common-components/Markdown.tsx'
 import { PageStatus } from '../../common-components/PageStatus'
 import LeaderboardByCategoryPage from './leaderboardByCategory.page.tsx'
 import LeaderboardByUserOrGroupPage from './leaderboardByUserOrGroup.page.tsx'
-import { useMatch, useNavigate } from 'react-router'
 
 const LeaderboardPage = () => {
   const component = useConfigContext()?.components.leaderboard
@@ -42,15 +43,23 @@ const LeaderboardPage = () => {
         {title}
       </Heading>
 
+      {component.topMessage ? (
+        <Box textAlign="center">
+          <Markdown text={component.topMessage} />
+        </Box>
+      ) : (
+        <></>
+      )}
+
       <HStack my={5}>
         {data?.userScore !== undefined && <BoardStat label="Saját pont" value={data.userScore} />}
-        {data?.groupScore !== undefined && <BoardStat label="Csapat pont" value={data.groupScore} />}
+        {data?.groupScore !== undefined && <BoardStat label="Szobád pontjai" value={data.groupScore} />}
       </HStack>
 
       <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
         <TabList>
-          <Tab>Csapatonként</Tab>
-          <Tab>Kategóriánként</Tab>
+          <Tab>Szobánként</Tab>
+          <Tab>Feladatonként</Tab>
         </TabList>
         <TabPanels>
           <TabPanel px={0}>

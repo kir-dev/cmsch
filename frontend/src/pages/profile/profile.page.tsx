@@ -17,44 +17,47 @@ import {
 import { Helmet } from 'react-helmet-async'
 import { Navigate, useNavigate } from 'react-router'
 
+import React, { useEffect } from 'react'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
-import { PresenceAlert } from '../../common-components/PresenceAlert'
-import { API_BASE_URL } from '../../util/configs/environment.config'
-import { GuildType, RoleType } from '../../util/views/profile.view'
-import { completedPercent, submittedPercent } from './util/percentFunctions'
-import { AbsolutePaths } from '../../util/paths'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import templateStringReplace from '../../util/templateStringReplace'
-import React, { useEffect } from 'react'
-import { GroupLeaderContactList } from './components/GroupLeaderContactList'
-import { ProfileQR } from './components/ProfileQR'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
+import { PresenceAlert } from '../../common-components/PresenceAlert'
+import { API_BASE_URL } from '../../util/configs/environment.config'
+import { AbsolutePaths } from '../../util/paths'
+import templateStringReplace from '../../util/templateStringReplace'
+import { GuildType, RoleType } from '../../util/views/profile.view'
+import { GroupLeaderContactList } from './components/GroupLeaderContactList'
+import { ProfileQR } from './components/ProfileQR'
+import { completedPercent, submittedPercent } from './util/percentFunctions'
 
 const Map = React.lazy(() => import('../../common-components/map/GroupMapContainer'))
 
-type Props = {}
-
-const ProfilePage = ({}: Props) => {
+const ProfilePage = () => {
   const { onLogout } = useAuthContext()
   const { isLoading: profileLoading, data: profile, error: profileError, refetch } = useProfileQuery()
   const navigate = useNavigate()
 
   useEffect(() => {
-    const savedPath = localStorage.getItem('path')
+    const savedPath = sessionStorage.getItem('path') // Only navigate back to path if it happened in the current session
     if (savedPath) {
-      localStorage.removeItem('path')
+      sessionStorage.removeItem('path')
       navigate(savedPath)
     }
     refetch()
-  }, [])
+  }, [navigate, refetch])
 
   const config = useConfigContext()?.components
   const component = config.profile
+
+  const brandColor = useColorModeValue('brand.500', 'brand.600')
+  const greenProgressColor = useColorModeValue('green.500', 'green.600')
+  const yellowProgressColor = useColorModeValue('yellow.400', 'yellow.500')
+  const progressBackground = useColorModeValue('gray.200', 'gray.500')
 
   if (!component) return <ComponentUnavailable />
   if (profileError || profileLoading || !profile) return <PageStatus isLoading={profileLoading} isError={!!profileError} title="Profil" />
@@ -162,29 +165,22 @@ const ProfilePage = ({}: Props) => {
                 fontWeight={500}
                 _hover={{
                   textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.600')
+                  color: brandColor
                 }}
               >
                 {component.taskCounterName}
               </Link>
               <Box>
                 <CircularProgress
-                  color={useColorModeValue('yellow.400', 'yellow.500')}
+                  color={yellowProgressColor}
                   size="10rem"
                   position="absolute"
                   value={submittedPercent(profile) + completedPercent(profile)}
-                  trackColor={useColorModeValue('gray.200', 'gray.500')}
+                  trackColor={progressBackground}
                 />
-                <CircularProgress
-                  color={useColorModeValue('green.500', 'green.600')}
-                  size="10rem"
-                  value={completedPercent(profile)}
-                  trackColor="transparent"
-                >
+                <CircularProgress color={greenProgressColor} size="10rem" value={completedPercent(profile)} trackColor="transparent">
                   <CircularProgressLabel
-                    color={
-                      submittedPercent(profile) + completedPercent(profile) === 0 ? 'gray.500' : useColorModeValue('green.500', 'green.600')
-                    }
+                    color={submittedPercent(profile) + completedPercent(profile) === 0 ? 'gray.500' : greenProgressColor}
                     pb={submittedPercent(profile) !== 0 ? '2.9rem' : '0'}
                   >
                     {Math.round(completedPercent(profile))}%
@@ -192,15 +188,9 @@ const ProfilePage = ({}: Props) => {
                   {submittedPercent(profile) !== 0 && (
                     <>
                       <CircularProgressLabel>
-                        <Box
-                          height="2px"
-                          backgroundColor={useColorModeValue('gray.200', 'gray.700')}
-                          width="70%"
-                          mx="auto"
-                          borderRadius="20%"
-                        />
+                        <Box height="2px" backgroundColor={progressBackground} width="70%" mx="auto" borderRadius="20%" />
                       </CircularProgressLabel>
-                      <CircularProgressLabel color={useColorModeValue('yellow.400', 'yellow.500')} pt="2.5rem">
+                      <CircularProgressLabel color={yellowProgressColor} pt="2.5rem">
                         {Math.round(submittedPercent(profile))}%
                       </CircularProgressLabel>
                     </>
@@ -220,20 +210,18 @@ const ProfilePage = ({}: Props) => {
                 fontWeight={500}
                 _hover={{
                   textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.600')
+                  color: brandColor
                 }}
               >
                 {component.riddleCounterName}
               </Link>
               <CircularProgress
-                color={useColorModeValue('green.500', 'green.600')}
+                color={greenProgressColor}
                 size="10rem"
                 value={(profile.completedRiddleCount / profile.totalRiddleCount) * 100}
-                trackColor={useColorModeValue('gray.200', 'gray.500')}
+                trackColor={progressBackground}
               >
-                <CircularProgressLabel
-                  color={profile.completedRiddleCount === 0 ? 'gray.500' : useColorModeValue('green.500', 'green.600')}
-                >
+                <CircularProgressLabel color={profile.completedRiddleCount === 0 ? 'gray.500' : greenProgressColor}>
                   {Math.round((profile.completedRiddleCount / profile.totalRiddleCount) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
@@ -249,18 +237,18 @@ const ProfilePage = ({}: Props) => {
                 fontWeight={500}
                 _hover={{
                   textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.600')
+                  color: brandColor
                 }}
               >
                 {component.tokenCounterName}
               </Link>
               <CircularProgress
-                color={useColorModeValue('green.500', 'green.600')}
+                color={greenProgressColor}
                 size="10rem"
                 value={(profile.collectedTokenCount / profile.totalTokenCount) * 100}
-                trackColor={useColorModeValue('gray.200', 'gray.500')}
+                trackColor={progressBackground}
               >
-                <CircularProgressLabel color={profile.collectedTokenCount === 0 ? 'gray.500' : useColorModeValue('green.500', 'green.600')}>
+                <CircularProgressLabel color={profile.collectedTokenCount === 0 ? 'gray.500' : greenProgressColor}>
                   {Math.round((profile.collectedTokenCount / profile.totalTokenCount) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>

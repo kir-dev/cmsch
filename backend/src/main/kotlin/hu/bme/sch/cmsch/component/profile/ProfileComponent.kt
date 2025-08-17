@@ -92,7 +92,7 @@ class ProfileComponent(
 
     var showEmail by BooleanSettingRef(fieldName = "Emailcím látható", description = "Legyen kiírva az emailcíme")
 
-    var showProfilePicture by BooleanSettingRef(fieldName = "Profil kép látható")
+    var showProfilePicture by BooleanSettingRef(fieldName = "Profil QR látható")
 
     var showQr by BooleanSettingRef(fieldName = "Egyedi QR kód látható",
         description = "Jelenlen meg a jegy. Ezt lehet használni a fizetéshez, meg belépés szabályozáshoz")
@@ -108,6 +108,9 @@ class ProfileComponent(
 
     var bmejegyQrIfPresent by BooleanSettingRef(serverSideOnly = true,
         fieldName = "BMEJEGY kód küldése", description = "A bmejegyes voucher kód leküldése, ha van valid jegye")
+
+    var noQrIfNoBmejegy by BooleanSettingRef(serverSideOnly = true,
+        fieldName = "Csak BMEJEGY kód küldése", description = "Ha nics bmejegyes voucher kód, akkor nem jelenik meg QR")
 
     var showGroupMessage by BooleanSettingRef(serverSideOnly = true,
         fieldName = "Csoporthoz üzenet mutatása", description = "A csoporthoz tartozó üzenet kijelzése a profilban")

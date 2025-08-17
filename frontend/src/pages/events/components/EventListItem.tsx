@@ -15,17 +15,14 @@ interface EventListItemProps {
 const EventListItem = ({ event, useLink }: EventListItemProps) => {
   const config = useConfigContext()
 
+  const previewBackground = useColorModeValue('#FFFFFFAA', '#00000080')
   if (typeof config === 'undefined') {
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
   const innerComponent = (
     <Box overflow="hidden" position="relative" as={LinkBox} w="100%" borderRadius="base" borderColor="whiteAlpha.200" borderWidth="1px">
-      <Box
-        backgroundImage={event.previewImageUrl ? event.previewImageUrl : undefined}
-        backgroundPosition="center"
-        backgroundSize="cover"
-      >
-        <Box p={4} bg={event.previewImageUrl ? useColorModeValue('#FFFFFFAA', '#00000080') : undefined}>
+      <Box backgroundImage={event.previewImageUrl ? event.previewImageUrl : undefined} backgroundPosition="center" backgroundSize="cover">
+        <Box p={4} bg={event.previewImageUrl ? previewBackground : undefined}>
           <Heading fontSize={25} my={0}>
             {useLink ? (
               <LinkOverlay as={Link} to={`${AbsolutePaths.EVENTS}/${event.url}`}>

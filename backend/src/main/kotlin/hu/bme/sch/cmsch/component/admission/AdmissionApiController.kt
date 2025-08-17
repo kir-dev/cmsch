@@ -144,6 +144,10 @@ class AdmissionApiController(
     @ResponseBody
     @PostMapping("/ticket-resolve")
     fun ticketResolve(@RequestBody resolve: ResolveRequest, auth: Authentication): AdmissionResponse {
+        val user = auth.getUser()
+        if (!StaffPermissions.PERMISSION_VALIDATE_ADMISSION.validate(user)) {
+            throw IllegalStateException("Insufficient permissions")
+        }
         log.info("Resolving ticket admission for: ${resolve.cmschId}")
         var additionalInfo = ""
 

@@ -11,6 +11,7 @@ import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
+import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -18,6 +19,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 
 fun Authentication.getUser(): CmschUser {
@@ -33,17 +35,23 @@ fun Authentication.getUserEntityFromDatabase(userService: UserService): UserEnti
 }
 
 fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): UserEntity? {
-    return if (this == null) null else userService.findById(this.name).orElse(null)
+    return if (this == null) null else userService.findById(this.name).getOrNull()
 }
 
 fun Map<String, String>.urlEncode(): String =
     this.entries.joinToString("&") { it.key.urlEncode() + "=" + it.value.urlEncode() }
 
 fun fetchFile(url: String): Result<ByteArray?> = runCatching {
-    WebClient.create()
-        .get().uri(url)
+    val webClient = WebClient.builder()
+        .codecs { configurer: ClientCodecConfigurer ->
+            configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)
+        }
+        .build()
+
+    webClient.get().uri(url)
         .retrieve().bodyToMono<ByteArray>().block()
 }
+
 
 fun String.urlEncode(): String {
     return URLEncoder.encode(this, StandardCharsets.UTF_8)

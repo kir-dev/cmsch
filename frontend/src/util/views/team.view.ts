@@ -31,7 +31,7 @@ export type TeamView = {
   coverUrl: string
   description: string
   descriptionRejected: boolean
-  descriptionRejectionReason?: String
+  descriptionRejectionReason?: string
   leaderNotes: string
   points: number
   members: TeamMemberView[]

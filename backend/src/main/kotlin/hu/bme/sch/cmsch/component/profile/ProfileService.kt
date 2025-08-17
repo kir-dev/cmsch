@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.profile
 
 import hu.bme.sch.cmsch.component.admission.AdmissionService
+import hu.bme.sch.cmsch.component.bmejegy.CheersBmejegyService
 import hu.bme.sch.cmsch.component.bmejegy.LegacyBmejegyService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(ProfileComponent::class)
@@ -48,7 +50,8 @@ class ProfileService(
     private val legacyBmejegyService: Optional<LegacyBmejegyService>,
     private val clock: TimeService,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val admissionService: Optional<AdmissionService>
+    private val admissionService: Optional<AdmissionService>,
+    private val cheersBmejegyService: CheersBmejegyService?
 ) {
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
@@ -116,23 +119,23 @@ class ProfileService(
     }
 
     private fun mapQr(user: UserEntity): String? {
-        val canSeeQr =
-            profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr
-        if (profileComponent.showQrOnlyIfTicketPresent
-            && (canSeeQr || profileComponent.showProfilePicture)) {
+        val canSeeQr = profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr
 
+        if (profileComponent.showQrOnlyIfTicketPresent && (canSeeQr || profileComponent.showProfilePicture)) {
             return if (admissionService.map { it.hasTicket(user.cmschId) }.orElse(false)) user.cmschId else null
         }
 
         return if (canSeeQr || profileComponent.showProfilePicture) {
             if (profileComponent.bmejegyQrIfPresent)
                 fetchBmejegyTicket(user)
-            else user.cmschId
+            else
+                user.cmschId
         } else null
     }
 
-    private fun fetchBmejegyTicket(user: UserEntity): String {
-        return legacyBmejegyService.flatMap { it.findVoucherByUser(user.id) }.orElse(user.cmschId)
+    private fun fetchBmejegyTicket(user: UserEntity): String? {
+        return cheersBmejegyService?.findVoucherByUser(user.id)
+            ?: if (profileComponent.noQrIfNoBmejegy) null else user.cmschId
     }
 
     private fun fetchWhetherGroupLeavable(group: GroupEntity?) =

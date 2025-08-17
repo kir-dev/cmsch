@@ -1,9 +1,9 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
-import { QueryKeys } from '../queryKeys'
+import axios from 'axios'
+import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
 import { Community } from '../../../util/views/organization'
-import { joinPath } from '../../../util/core-functions.util'
+import { QueryKeys } from '../queryKeys'
 
 export const useCommunity = (id: string) => {
   return useQuery<Community, Error>({

@@ -19,10 +19,10 @@ jobs:
     - name: Check out Git repository
       uses: actions/checkout@v3
 
-    - name: Set up Node.js 20
+    - name: Set up Node.js 22
       uses: actions/setup-node@v3
       with:
-        node-version: 20
+        node-version: 22
 
     - name: Set yarn version
       run: yarn set version 1.22.17

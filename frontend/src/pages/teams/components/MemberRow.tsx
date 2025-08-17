@@ -37,7 +37,7 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteL
   const onContinue = useRef(() => {})
   const [title, setTitle] = useState('')
   const [prompt, setPrompt] = useState('')
-  const cancelRef = useRef<any>(null)
+  const cancelRef = useRef(null)
   const dialogAction = (title: string, prompt: string, action: () => void) => {
     return () => {
       setTitle(title)
