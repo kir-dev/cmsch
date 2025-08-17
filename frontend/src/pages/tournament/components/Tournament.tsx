@@ -18,8 +18,7 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
   const toast = useToast()
   const { components } = useConfigContext()
   const tournamentComponent = components.tournament
-
-  if (!tournamentComponent) return <ComponentUnavailable />
+  const joinMutation = useTournamentJoinMutation()
 
   const actionResponseCallback = (response: TournamentResponses) => {
     if (response == TournamentResponses.OK) {
@@ -29,8 +28,6 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
       toast({ status: 'error', title: TournamentResponseMessages[response] })
     }
   }
-
-  const joinMutation = useTournamentJoinMutation()
 
   const joinTournament = () => {
     if (tournament.tournament.joinEnabled) {
@@ -53,6 +50,8 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
   const onTabSelected = (i: number) => {
     setTabIndex(i)
   }
+
+  if (!tournamentComponent) return <ComponentUnavailable />
 
   return (
     <CmschPage>

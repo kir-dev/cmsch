@@ -229,14 +229,10 @@ class TournamentStageService(
             val winner = match.winner()
             if (winner != null) {
                 if (winner.teamId == match.homeTeamId) {
-                    match.homeTeamScore = 3
-                    match.awayTeamScore = 0
-                    match.status = MatchStatus.FINISHED
+                    match.status = MatchStatus.BYE
                     matchRepository.save(match)
                 } else if (winner.teamId == match.awayTeamId) {
-                    match.homeTeamScore = 0
-                    match.awayTeamScore = 3
-                    match.status = MatchStatus.FINISHED
+                    match.status = MatchStatus.BYE
                     matchRepository.save(match)
                 } else {
                     // Handle case where winner is not one of the teams in the match
