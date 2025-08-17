@@ -1,5 +1,5 @@
-import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
 import { Badge } from '@chakra-ui/react'
+import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
 
 interface LevelStatusBadgeProps {
   level: QrLevelDto

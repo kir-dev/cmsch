@@ -1,16 +1,16 @@
 import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { FaQrcode } from 'react-icons/fa'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PresenceAlert } from '../../common-components/PresenceAlert'
-import { LinkButton } from '../../common-components/LinkButton'
-import { StampComponent } from './components/StampComponent'
-import { AbsolutePaths } from '../../util/paths'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { l } from '../../util/language'
 import { useTokensQuery } from '../../api/hooks/token/useTokensQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { CmschPage } from '../../common-components/layout/CmschPage'
+import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
+import { PresenceAlert } from '../../common-components/PresenceAlert'
+import { l } from '../../util/language'
+import { AbsolutePaths } from '../../util/paths'
+import { StampComponent } from './components/StampComponent'
 
 const TokenList = () => {
   const { data, isLoading, isError } = useTokensQuery()

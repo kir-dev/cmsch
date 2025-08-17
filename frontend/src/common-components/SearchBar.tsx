@@ -4,7 +4,12 @@ import { useSearch } from '../util/useSearch'
 
 interface SearchBarProps extends ReturnType<typeof useSearch>, InputGroupProps {}
 
-export function SearchBar({ inputRef, handleInput, setSearch, search, filteredData, ...inputGroupProps }: SearchBarProps) {
+export function SearchBar({ inputRef, handleInput, setSearch, search, ...inputGroupProps }: SearchBarProps) {
+  const clearSearch = () => {
+    handleInput()
+    setSearch('')
+    if (inputRef.current?.value) inputRef.current.value = ''
+  }
   return (
     <InputGroup {...inputGroupProps}>
       <InputLeftElement h="100%">
@@ -19,14 +24,7 @@ export function SearchBar({ inputRef, handleInput, setSearch, search, filteredDa
         autoFocus={true}
       />
       {search && (
-        <InputRightElement
-          h="100%"
-          onClick={() => {
-            handleInput()
-            setSearch('')
-            if (inputRef.current?.value) inputRef.current.value = ''
-          }}
-        >
+        <InputRightElement h="100%" onClick={clearSearch}>
           <CloseIcon />
         </InputRightElement>
       )}

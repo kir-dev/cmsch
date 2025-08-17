@@ -1,3 +1,7 @@
+import { initializeApp } from '@firebase/app'
+import { getMessaging, getToken, MessagePayload, Messaging, onMessage } from '@firebase/messaging'
+import axios from 'axios'
+import { ApiPaths } from '../paths.ts'
 import {
   FIREBASE_API_KEY,
   FIREBASE_APP_ID,
@@ -5,10 +9,6 @@ import {
   FIREBASE_SENDER_ID,
   FIREBASE_WEB_PUSH_PUBLIC_KEY
 } from './environment.config.ts'
-import { initializeApp } from '@firebase/app'
-import { getMessaging, getToken, MessagePayload, Messaging, onMessage } from '@firebase/messaging'
-import axios from 'axios'
-import { ApiPaths } from '../paths.ts'
 
 function getFirebaseConfig() {
   return {
@@ -59,7 +59,7 @@ export async function unsubscribeFromNotifications() {
   }
 }
 
-export async function getMessagingToken(messaging: Messaging): Promise<String | undefined> {
+export async function getMessagingToken(messaging: Messaging): Promise<string | undefined> {
   const registration = await registerServiceWorker()
   if (!registration) return
 

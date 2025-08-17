@@ -13,6 +13,7 @@ type CardListItemProps = {
 export const CardListItem = ({ title, open, toggle, showPulsingDot, pulsingDotColor }: CardListItemProps) => {
   const bg = useColorModeValue('#00000020', '#FFFFFF20')
   const hoverBg = useColorModeValue('#00000030', '#FFFFFF30')
+  const iconColor = useColorModeValue('gray.700', 'gray.300')
   return (
     <Box onClick={toggle} borderRadius="lg" padding={4} backgroundColor={bg} _hover={{ bg: hoverBg }} marginTop={2} cursor="pointer">
       <HStack>
@@ -23,9 +24,9 @@ export const CardListItem = ({ title, open, toggle, showPulsingDot, pulsingDotCo
         <HStack>
           {showPulsingDot && <PulsingDot color={pulsingDotColor} />}
           {open ? (
-            <ChevronUpIcon boxSize={{ base: 5, md: 8 }} color={useColorModeValue('gray.700', 'gray.300')} />
+            <ChevronUpIcon boxSize={{ base: 5, md: 8 }} color={iconColor} />
           ) : (
-            <ChevronDownIcon boxSize={{ base: 5, md: 8 }} color={useColorModeValue('gray.700', 'gray.300')} />
+            <ChevronDownIcon boxSize={{ base: 5, md: 8 }} color={iconColor} />
           )}
         </HStack>
       </HStack>

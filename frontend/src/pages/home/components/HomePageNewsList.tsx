@@ -1,8 +1,8 @@
 import { Grid } from '@chakra-ui/react'
+import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
+import { useHomeNews } from '../../../api/hooks/home/useHomeNews.tsx'
 import { NewsArticleView } from '../../../util/views/news.view.ts'
 import { NewsListItem } from '../../news/components/NewsListItem.tsx'
-import { useHomeNews } from '../../../api/hooks/home/useHomeNews.tsx'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
 
 const sortByHighlighted = (news: NewsArticleView[]) => {
   return news.sort((a, b) => {

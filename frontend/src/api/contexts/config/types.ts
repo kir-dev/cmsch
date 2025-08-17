@@ -271,9 +271,9 @@ export interface Debt {
   title: string
 }
 
-export interface UserHandling {}
+export type UserHandling = object
 
-export interface ExtraPage {}
+export type ExtraPage = object
 
 export interface Location {
   topMessage: string
@@ -347,7 +347,7 @@ export interface Signup {
 
 export interface Communities {
   title: string
-  description:string
+  description: string
   titleResort: string
   descriptionResort: string
 }

@@ -1,10 +1,10 @@
-import { FC, PropsWithChildren, useEffect } from 'react'
-import { areNotificationsSupported, disableNotifications, getCloudMessaging, initNotifications } from '../util/configs/firebase.config.ts'
-import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
-import { Alert, AlertDescription, AlertTitle, Box, Button, CloseButton, useToast } from '@chakra-ui/react'
-import { useAuthContext } from '../api/contexts/auth/useAuthContext.ts'
-import { MessagePayload } from '@firebase/messaging'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { Alert, AlertDescription, AlertTitle, Box, Button, CloseButton, useToast } from '@chakra-ui/react'
+import { MessagePayload } from '@firebase/messaging'
+import { FC, PropsWithChildren, useEffect } from 'react'
+import { useAuthContext } from '../api/contexts/auth/useAuthContext.ts'
+import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
+import { areNotificationsSupported, disableNotifications, getCloudMessaging, initNotifications } from '../util/configs/firebase.config.ts'
 
 export const PushNotificationHandler: FC<PropsWithChildren> = ({ children }) => {
   const authContext = useAuthContext()
@@ -29,7 +29,7 @@ export const PushNotificationHandler: FC<PropsWithChildren> = ({ children }) => 
     } else {
       disableNotifications()
     }
-  }, [authContext.isLoggedIn, config.components.pushnotification?.notificationsEnabled, hasPermission])
+  }, [authContext.isLoggedIn, config.components.pushnotification?.notificationsEnabled, hasPermission, toast])
   return <>{children}</>
 }
 

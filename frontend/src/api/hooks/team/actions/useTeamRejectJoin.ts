@@ -6,7 +6,7 @@ export const useTeamRejectJoin = (onSuccess: (response: boolean) => void, onErro
   const [error, setError] = useState<Error>()
   const rejectJoin = (id: number) => {
     setLoading(true)
-    axios
+    axios //todo
       .put<boolean>(`/api/team/admin/reject-join`, { id })
       .then((res) => {
         onSuccess(res.data)

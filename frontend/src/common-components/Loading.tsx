@@ -19,7 +19,7 @@ export const Loading = ({ timeout = 0, children }: LoadingProps) => {
     setTimeout(() => {
       setShow(true)
     }, timeout)
-  }, [setTimeout, timeout])
+  }, [timeout])
   if (!show) return null
   return children ? (
     <>{children}</>

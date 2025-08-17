@@ -10,23 +10,23 @@ type BreadcrumbProps = {
   }[]
 } & SpaceProps
 
-export const CustomBreadcrumb: FC<BreadcrumbProps> = ({ items, ...spaceProps }) => (
-  <Breadcrumb {...spaceProps} spacing={2} separator={<ChevronRightIcon color={useColorModeValue('brand.500', 'brand.400')} />}>
-    {items.map((item, idx) => (
-      <BreadcrumbItem key={idx}>
-        <BreadcrumbLink
-          as={Link}
-          to={item.to ? item.to : '#'}
-          fontSize="sm"
-          fontWeight={500}
-          _hover={{
-            textDecoration: 'none',
-            color: useColorModeValue('brand.500', 'brand.400')
-          }}
-        >
-          {item.title}
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-    ))}
-  </Breadcrumb>
-)
+export const CustomBreadcrumb: FC<BreadcrumbProps> = ({ items, ...spaceProps }) => {
+  const color = useColorModeValue('brand.500', 'brand.400')
+  return (
+    <Breadcrumb {...spaceProps} spacing={2} separator={<ChevronRightIcon color={useColorModeValue('brand.500', 'brand.400')} />}>
+      {items.map((item, idx) => (
+        <BreadcrumbItem key={idx}>
+          <BreadcrumbLink
+            as={Link}
+            to={item.to ? item.to : '#'}
+            fontSize="sm"
+            fontWeight={500}
+            _hover={{ textDecoration: 'none', color: color }}
+          >
+            {item.title}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      ))}
+    </Breadcrumb>
+  )
+}

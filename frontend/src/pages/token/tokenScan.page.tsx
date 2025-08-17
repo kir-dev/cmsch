@@ -3,13 +3,13 @@ import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { QRScanResultComponent } from './components/QRScanResultComponent'
-import { useScanTokenMutation } from '../../api/hooks/token/useScanTokenMutation'
 import { useEffect } from 'react'
-import { AbsolutePaths } from '../../util/paths'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { useScanTokenMutation } from '../../api/hooks/token/useScanTokenMutation'
+import { CmschPage } from '../../common-components/layout/CmschPage'
 import { QrReader } from '../../common-components/QrReader'
+import { AbsolutePaths } from '../../util/paths'
+import { QRScanResultComponent } from './components/QRScanResultComponent'
 
 const TokenScan = () => {
   const navigate = useNavigate()
@@ -29,7 +29,7 @@ const TokenScan = () => {
     if (params.has('token')) {
       mutate(location.href)
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, mutate])
 
   return (
     <CmschPage loginRequired>

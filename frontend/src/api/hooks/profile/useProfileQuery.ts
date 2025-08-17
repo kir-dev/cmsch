@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { ApiPaths } from '../../../util/paths'
 import { ProfileView } from '../../../util/views/profile.view'
 import { QueryKeys } from '../queryKeys'
-import { ApiPaths } from '../../../util/paths'
 
 export const useProfileQuery = () => {
   return useQuery<ProfileView, Error>({

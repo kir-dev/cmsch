@@ -1,10 +1,10 @@
-import { FC, PropsWithChildren } from 'react'
 import { Box, Button, ButtonGroup, Center, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
-import { Loading } from '../common-components/Loading.tsx'
-import { KirDevLogo } from '../assets/kir-dev-logo.tsx'
+import { FC, PropsWithChildren } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { l } from './language.ts'
+import { KirDevLogo } from '../assets/kir-dev-logo.tsx'
+import { Loading } from '../common-components/Loading.tsx'
 import { usePersistentStyleSetting } from './configs/themeStyle.config.ts'
+import { l } from './language.ts'
 
 export type LoadingViewProps = PropsWithChildren & {
   hasError: boolean
