@@ -39,7 +39,7 @@ data class GroupStageResults(
 ): Comparable<GroupStageResults> {
     override fun compareTo(other: GroupStageResults): Int {
         return compareValuesBy(this, other,
-            { it.position.inv() },
+            { -it.position.toInt() },
             { it.points },
             { it.won },
             { it.goalDifference },
