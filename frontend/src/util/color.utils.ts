@@ -1,3 +1,5 @@
+import Color, { ColorInstance } from 'color'
+
 export function hexToRgb(hex: string): [number, number, number] {
   // Remove the hash if it exists
   hex = hex.replace(/^#/, '')
@@ -9,6 +11,26 @@ export function hexToRgb(hex: string): [number, number, number] {
   const b = bigint & 255
 
   return [r, g, b]
+}
+
+export function rgbToHex(r: number, g: number, b: number): string {
+  const toHex = (n: number) => {
+    return Math.round(n).toString(16).padStart(2, '0')
+  }
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`
+}
+
+export function isValidHex(hex: string): boolean {
+  return /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{9})$/.test(hex)
+}
+
+export function useColor(hex: string | undefined): ColorInstance {
+  try {
+    return Color(hex)
+  } catch {
+    return Color('#FF9900')
+  }
 }
 
 export function getTextColorFromLuminance(backgroundColor: string) {

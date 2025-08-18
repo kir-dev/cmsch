@@ -1,4 +1,18 @@
-import { Box, Button, Divider, Flex, Grid, Heading, Image, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Heading,
+  Image,
+  Text,
+  useColorModeValue,
+  useToast,
+  VStack,
+  Wrap,
+  WrapItem
+} from '@chakra-ui/react'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
@@ -23,6 +37,7 @@ import { RoleType, RoleTypeString } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
 import { MemberRow } from './MemberRow'
 import { TeamFormItem } from './TeamFormItem'
+import TeamLabel from './TeamLabel.tsx'
 import { TeamStat } from './TeamStat'
 import { TeamTaskCategoryListItem } from './TeamTaskCategoryListItem'
 
@@ -93,6 +108,14 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Heading fontSize={25} my={0}>
               {team.name}
             </Heading>
+            <Wrap pt={2}>
+              {team.labels &&
+                team.labels.map((label, index) => (
+                  <WrapItem>
+                    <TeamLabel label={label} key={index} />
+                  </WrapItem>
+                ))}
+            </Wrap>
             <Text>{team.description}</Text>
           </Box>
           <Box>{team.logo && <Image maxW="128px" maxH="128px" src={team.logo} alt="Csapat logó" borderRadius="md" />}</Box>
