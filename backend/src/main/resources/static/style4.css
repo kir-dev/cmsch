@@ -427,6 +427,10 @@ table span.favorite {
     font-weight: normal;
 }
 
+.card.details-docs > p {
+    color: var(--lighter-text-color);
+}
+
 .card.md-card p {
     color: var(--text-color);
     font-weight: 400;
