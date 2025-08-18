@@ -51,6 +51,7 @@ export type TeamStatView = { name: string; value1: string; value2?: string; navi
 export type TeamListItemView = {
   id: number
   name: string
+  label?: string
   introduction?: string
   logo?: string
 }

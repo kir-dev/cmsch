@@ -1,4 +1,17 @@
-import { Box, Button, Divider, Flex, Grid, Heading, Image, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Heading,
+  HStack,
+  Image,
+  Text,
+  useColorModeValue,
+  useToast,
+  VStack
+} from '@chakra-ui/react'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
@@ -25,6 +38,7 @@ import { MemberRow } from './MemberRow'
 import { TeamFormItem } from './TeamFormItem'
 import { TeamStat } from './TeamStat'
 import { TeamTaskCategoryListItem } from './TeamTaskCategoryListItem'
+import TeamLabel from "./TeamLabel.tsx";
 
 interface TeamDetailsCoreProps {
   team: TeamView | undefined
@@ -89,9 +103,12 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
       <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
         <Box p={4} bg={bannerBlanket} display="flex" justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>
           <Box pb={4}>
-            <Heading fontSize={25} my={0}>
-              {team.name}
-            </Heading>
+            <HStack>
+              <Heading fontSize={25} my={0}>
+                {team.name}
+              </Heading>
+              {team.label && <TeamLabel text={team.label} />}
+            </HStack>
             <Text>{team.description}</Text>
           </Box>
           <Box>{team.logo && <Image maxW="128px" maxH="128px" src={team.logo} alt="Csapat logó" borderRadius="md" />}</Box>

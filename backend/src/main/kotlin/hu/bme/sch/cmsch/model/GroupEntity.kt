@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
-import hu.bme.sch.cmsch.component.conference.ConferenceOrganizerEntity
-import hu.bme.sch.cmsch.component.gallery.GalleryEntity
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -148,6 +146,16 @@ data class GroupEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var manuallyCreated: Boolean = false,
+
+    @Column
+    @field:JsonView(value = [Edit::class])
+    @property:GenerateInput(
+        maxLength = 32,
+        order = 17,
+        label = "A csoport címkéje",
+        note = "Amennyiben nem üres, a ranglistánál a pontok le lesznek ezen értékkel osztva"
+    )
+    var label: String? = null,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class])

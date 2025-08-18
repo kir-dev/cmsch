@@ -15,16 +15,16 @@ data class GroupNameView(
 interface GroupRepository : CrudRepository<GroupEntity, Int>,
     EntityPageDataSource<GroupEntity, Int> {
 
-    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name) from GroupEntity e")
+    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name, e.label) from GroupEntity e")
     fun findAllThatExists(): List<TeamListView>
 
-    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name) from GroupEntity e where e.races")
+    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name, e.label) from GroupEntity e where e.races")
     fun findAllThatRaces(): List<TeamListView>
 
-    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name) from GroupEntity e where e.races and e.manuallyCreated")
+    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name, e.label) from GroupEntity e where e.races and e.manuallyCreated")
     fun findAllThatRacesAndManuallyCreated(): List<TeamListView>
 
-    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name) from GroupEntity e where e.manuallyCreated")
+    @Query("select new hu.bme.sch.cmsch.component.team.TeamListView(e.id, e.name, e.label) from GroupEntity e where e.manuallyCreated")
     fun findAllThatManuallyCreated(): List<TeamListView>
 
     fun findByName(name: String): Optional<GroupEntity>

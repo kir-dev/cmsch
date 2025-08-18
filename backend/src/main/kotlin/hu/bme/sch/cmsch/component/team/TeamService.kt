@@ -254,6 +254,7 @@ class TeamService(
         return TeamView(
             id = team.id,
             name = team.name,
+            label = team.label,
             coverUrl = team.coverImageUrl,
             description = latestIntro?.introduction ?: "",
             descriptionRejected = if (ownTeam) descriptionRejected else false,
