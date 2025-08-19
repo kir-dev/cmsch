@@ -147,16 +147,6 @@ data class GroupEntity(
     @property:ImportFormat
     var manuallyCreated: Boolean = false,
 
-    @Column
-    @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(
-        maxLength = 32,
-        order = 17,
-        label = "A csoport címkéje",
-        note = "Amennyiben nem üres, a ranglistánál a pontok le lesznek ezen értékkel osztva"
-    )
-    var label: String? = null,
-
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class])
     @property:GenerateInput(order = 18, label = "Egyedi szöveg a profilhoz", type = InputType.BLOCK_TEXT_MARKDOWN)

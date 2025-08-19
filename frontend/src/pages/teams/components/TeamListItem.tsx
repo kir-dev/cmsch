@@ -26,11 +26,13 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
       >
         <HStack spacing={4}>
           <VStack align="flex-start" overflow="hidden">
-            <HStack>
+            <HStack spacing={4} alignItems="baseline">
               <Heading as="h3" size="md" marginY={0} maxWidth="100%">
                 {team.name}
               </Heading>
-              {team.label && <TeamLabel text={team.label} />}
+              {team.labels && team.labels.map((label, index) =>
+                <TeamLabel label={label} key={index} />
+              )}
             </HStack>
             {team.introduction && <Box>{team.introduction}</Box>}
           </VStack>

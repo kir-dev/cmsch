@@ -4,13 +4,11 @@ import {
   Divider,
   Flex,
   Grid,
-  Heading,
-  HStack,
-  Image,
+  Heading, Image,
   Text,
   useColorModeValue,
   useToast,
-  VStack
+  VStack, Wrap, WrapItem
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
@@ -103,12 +101,14 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
       <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
         <Box p={4} bg={bannerBlanket} display="flex" justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>
           <Box pb={4}>
-            <HStack>
-              <Heading fontSize={25} my={0}>
-                {team.name}
-              </Heading>
-              {team.label && <TeamLabel text={team.label} />}
-            </HStack>
+            <Heading fontSize={25} my={0}>
+              {team.name}
+            </Heading>
+            <Wrap pt={2}>
+              {team.labels && team.labels.map((label, index) =>
+                <WrapItem><TeamLabel label={label} key={index} /></WrapItem>
+              )}
+            </Wrap>
             <Text>{team.description}</Text>
           </Box>
           <Box>{team.logo && <Image maxW="128px" maxH="128px" src={team.logo} alt="Csapat logó" borderRadius="md" />}</Box>
