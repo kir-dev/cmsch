@@ -78,6 +78,12 @@ data class TournamentStageEntity(
     @property:ImportFormat
     var participants: String = "",
 
+    @Column(nullable = false)
+    @field:JsonView(value = [ FullDetails::class ])
+    @property:GenerateInput(type = InputType.NUMBER, min = 1, order = 4, label = "Csoportok száma", defaultValue = "1", note = "Csak csoportkör esetén számít")
+    @property:ImportFormat
+    var groupCount: Int = 1,
+
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ FullDetails::class ])
     @property:GenerateInput(type = InputType.HIDDEN, visible = false, ignore = true)
@@ -127,5 +133,5 @@ data class TournamentStageEntity(
 
 enum class StageType {
     KNOCKOUT,
-    GROUP_STAGE,
+    GROUP,
 }

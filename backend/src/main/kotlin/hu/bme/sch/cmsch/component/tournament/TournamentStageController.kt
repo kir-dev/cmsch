@@ -348,7 +348,7 @@ class TournamentStageController(
     override fun onEntityChanged(entity: TournamentStageEntity) {
         if (entity.type == StageType.KNOCKOUT) {
             entity.participants = stageService.transferTeamsForStage(entity)
-            stageService.createMatchesForStage(entity)
+            stageService.createMatchesForKnockoutStage(entity)
             entity.seeds = stageService.setSeeds(entity)
             stageService.calculateTeamsFromSeeds(entity)
         }

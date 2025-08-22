@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.collections.map
 import kotlin.jvm.optionals.getOrNull
+import kotlin.math.floor
 import kotlin.math.pow
 
 @Service
@@ -76,11 +77,20 @@ class TournamentStageService(
 
 
     @Transactional
-    fun createMatchesForStage(stage: TournamentStageEntity) {
+    fun createMatchesForKnockoutStage(stage: TournamentStageEntity) {
+        require(stage.type == StageType.KNOCKOUT){
+            "Stage type must be KNOCKOUT to create tree."
+        }
+        val prevMatches = matchRepository.findAllByStageId(stage.id)
+        if (prevMatches.isNotEmpty()) {
+            throw IllegalStateException("Matches already exist for stage ${stage.id}. Cannot create matches again.")
+        }
+        require(stage.participantCount > 1) {
+            "Stage must have at least two participants to create matches."
+        }
         val firstRoundGameCount = 2.0.pow(stage.rounds() - 1).toInt()
         val gameCount = 2 * firstRoundGameCount
         val matches = mutableListOf<TournamentMatchEntity>()
-
 
         // Create matches for the first round
         var j = 1
@@ -117,6 +127,30 @@ class TournamentStageService(
             }
         }
         matchRepository.saveAll(matches)
+    }
+
+
+    @Transactional
+    fun createRoundMatchesForGroupStageGroup(stage: TournamentStageEntity, group: Int) {
+        require(stage.type == StageType.GROUP) {
+            "Stage type must be GROUP to create round matches."
+        }
+        require(stage.groupCount < group) {
+            "Group number $group is out of bounds for stage with ${stage.groupCount} groups."
+        }
+        val matches = mutableListOf<TournamentMatchEntity>()
+        val groupSize = let {
+            val min = floor(stage.participantCount.toDouble() / stage.groupCount).toInt()
+            if (stage.participantCount % stage.groupCount < group) {
+                min + 1
+            } else {
+                min
+            }
+        }
+
+        val prevMatches = matchRepository.findAllByStageId(stage.id)
+
+
     }
 
     @Transactional
