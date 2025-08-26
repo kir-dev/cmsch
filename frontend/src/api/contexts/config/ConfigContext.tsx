@@ -27,7 +27,7 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   const is500Status = Math.floor(Number(error?.response?.status) / 100) === 5
   return (
     <LoadingView
-      isLoading={isLoading}
+      isLoading={isLoading || !data}
       hasError={isError}
       errorAction={refetch}
       errorMessage={is500Status ? l('error-service-unavailable') : l('error-connection-unsuccessful')}

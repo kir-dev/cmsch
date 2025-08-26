@@ -19,18 +19,6 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
   const backdropFilter = useColorModeValue(theme?.lightContainerFilter, theme?.darkContainerFilter)
   const bg = useColorModeValue('lightContainerBg', 'darkContainerBg')
 
-  if (isLoading) {
-    return (
-      <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
-        <VStack p={5} borderRadius={5} bg={bg} backdropFilter={backdropFilter}>
-          <Loading />
-          <Box w={40} maxH={40} my={3}>
-            <KirDevLogo />
-          </Box>
-        </VStack>
-      </Center>
-    )
-  }
   if (hasError) {
     return (
       <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
@@ -45,6 +33,18 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
               Újra
             </Button>
           </ButtonGroup>
+        </VStack>
+      </Center>
+    )
+  }
+  if (isLoading) {
+    return (
+      <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
+        <VStack p={5} borderRadius={5} bg={bg} backdropFilter={backdropFilter}>
+          <Loading />
+          <Box w={40} maxH={40} my={3}>
+            <KirDevLogo />
+          </Box>
         </VStack>
       </Center>
     )
