@@ -14,7 +14,7 @@ const IndexPage = () => {
     }
   }, [location, onLogout])
 
-  return <Navigate to={config?.components.app.defaultComponent || '/home'} />
+  return <Navigate to={config?.components?.app?.defaultComponent || '/home'} />
 }
 
 export default IndexPage

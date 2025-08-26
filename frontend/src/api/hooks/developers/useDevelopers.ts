@@ -5,7 +5,7 @@ export type Dev = { name: string; img: string; tags: string[] }
 
 export const useDevelopers = () => {
   const config = useConfigContext()
-  const impressumConfig = config?.components.impressum
+  const impressumConfig = config?.components?.impressum
   return useMemo<Dev[]>(() => {
     return [
       {

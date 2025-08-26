@@ -26,9 +26,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error(errorInfo)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any
-    win.processAndReportError?.call(error.message, error.stack)
+    window.processAndReportError?.(error)
   }
 
   render() {

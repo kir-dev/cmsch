@@ -12,7 +12,7 @@ import { RaceView } from '../../../util/views/race.view'
 
 type Props = {
   data: RaceView | undefined
-  component: Race
+  component?: Race
   isError: boolean
   isLoading: boolean
 }

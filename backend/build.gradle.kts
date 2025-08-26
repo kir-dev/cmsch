@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.4"
+    id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.owasp.dependencycheck") version "12.1.3"
     kotlin("jvm") version "2.2.10"
@@ -43,7 +43,7 @@ repositories {
 
 dependencies {
     implementation("com.google.firebase:firebase-admin:9.5.0")
-    implementation("software.amazon.awssdk:s3:2.32.24")
+    implementation("software.amazon.awssdk:s3:2.32.29")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -63,7 +63,7 @@ dependencies {
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.11")
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.google.zxing:javase:3.5.3")
     implementation("org.jetbrains.kotlin:kotlin-scripting-common")
@@ -72,7 +72,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation(platform("io.jsonwebtoken:jjwt-bom:0.12.7"))
+    implementation(platform("io.jsonwebtoken:jjwt-bom:0.13.0"))
     implementation("io.jsonwebtoken:jjwt-api")
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")

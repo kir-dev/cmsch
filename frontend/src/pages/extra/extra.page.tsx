@@ -19,7 +19,7 @@ const ExtraPage = () => {
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 
-  if (RoleType[data.minRole] > RoleType.GUEST && authInfo && RoleType[authInfo?.role ?? RoleTypeString.BASIC] < RoleType[data.minRole]) {
+  if (RoleType[data.minRole] > RoleType.GUEST && authInfo && RoleType[authInfo?.role ?? RoleTypeString.GUEST] < RoleType[data.minRole]) {
     sendMessage(l('no-permission'))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }

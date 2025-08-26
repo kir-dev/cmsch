@@ -27,7 +27,7 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   const is500Status = Math.floor(Number(error?.response?.status) / 100) === 5
   return (
     <LoadingView
-      isLoading={isLoading}
+      isLoading={isLoading || !data}
       hasError={isError}
       errorAction={refetch}
       errorMessage={is500Status ? l('error-service-unavailable') : l('error-connection-unsuccessful')}
@@ -39,11 +39,18 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useConfigContext = () => {
+export const useConfigContext = (): ConfigDto | undefined => {
   const ctx = useContext(ConfigContext)
-  if (typeof ctx === 'undefined') {
-    throw new Error('useConfigContext must be used within a ConfigProvider')
-  }
+
+  const isUndefined = typeof ctx === 'undefined'
+  useEffect(() => {
+    if (isUndefined) {
+      const error = new Error('useConfigContext must be used within a ConfigProvider')
+      console.trace(error)
+      window.processAndReportError?.(error)
+    }
+  }, [isUndefined])
+
   return ctx
 }
 

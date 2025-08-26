@@ -7,7 +7,7 @@ import RaceBoard from './components/RaceBoard'
 const RaceByTeamPage = () => {
   const params = useParams()
   const { isLoading, isError, data } = useRaceByTeamQuery(params.id ?? '')
-  const component = useConfigContext()?.components.race
+  const component = useConfigContext()?.components?.race
 
   return <RaceBoard data={data} component={component} isLoading={isLoading} isError={isError} />
 }

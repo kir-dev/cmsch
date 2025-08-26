@@ -9,7 +9,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 
 const LeaderboardByUserOrGroupPage = () => {
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
-  const component = useConfigContext()?.components.leaderboard
+  const component = useConfigContext()?.components?.leaderboard
   const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
 
   if (!component) return <ComponentUnavailable />

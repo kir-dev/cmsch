@@ -15,7 +15,7 @@ export const PushNotificationHandler: FC<PropsWithChildren> = ({ children }) => 
   useEffect(() => {
     if (!hasPermission) return
     if (!authContext.isLoggedIn) return
-    const shouldShowNotifications = config.components.pushnotification?.notificationsEnabled
+    const shouldShowNotifications = config?.components?.pushnotification?.notificationsEnabled
     if (shouldShowNotifications) {
       const messaging = getCloudMessaging()
       if (messaging === null) return
@@ -29,7 +29,7 @@ export const PushNotificationHandler: FC<PropsWithChildren> = ({ children }) => 
     } else {
       disableNotifications()
     }
-  }, [authContext.isLoggedIn, config.components.pushnotification?.notificationsEnabled, hasPermission, toast])
+  }, [authContext.isLoggedIn, config?.components?.pushnotification?.notificationsEnabled, hasPermission, toast])
   return <>{children}</>
 }
 

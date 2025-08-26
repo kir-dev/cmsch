@@ -12,7 +12,7 @@ interface NewsListProps {
 }
 
 const NewsList = ({ newsList }: NewsListProps) => {
-  const config = useConfigContext()
+  const news = useConfigContext()?.components?.news
   const [search, setSearch] = useState('')
   const sortedNewsList = useMemo(() => newsList.sort((a, b) => b.timestamp - a.timestamp), [newsList])
   const filteredNews = useMemo(() => {
@@ -36,7 +36,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
   return (
     <>
       <Heading as="h1" variant="main-title">
-        {config?.components.news.title}
+        {news?.title}
       </Heading>
       <InputGroup my={10}>
         <InputLeftElement h="100%">
@@ -58,13 +58,13 @@ const NewsList = ({ newsList }: NewsListProps) => {
       </InputGroup>
       <Grid templateColumns="repeat(1, 1fr)" gap={4}>
         {highlighted.map((n: NewsArticleView) => (
-          <NewsListItem news={n} fontSize="2xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
+          <NewsListItem news={n} fontSize="2xl" useLink={news?.showDetails} key={n.title + n.timestamp} />
         ))}
       </Grid>
       {highlighted.length > 0 && common.length > 0 && <Divider my={10} />}
       <Grid templateColumns="1fr" gap={4}>
         {common.map((n: NewsArticleView) => (
-          <NewsListItem news={n} fontSize="xl" useLink={config?.components.news.showDetails} key={n.title + n.timestamp} />
+          <NewsListItem news={n} fontSize="xl" useLink={news?.showDetails} key={n.title + n.timestamp} />
         ))}
       </Grid>
     </>
