@@ -3,7 +3,7 @@ import { RoleTypeString } from '../../../util/views/profile.view'
 export interface ConfigDto {
   role: RoleTypeString
   menu: Menu[]
-  components: Components
+  components?: Components
 }
 
 export interface Menu {
@@ -14,32 +14,32 @@ export interface Menu {
 }
 
 export interface Components {
-  app: App
-  style: Style
-  userHandling: UserHandling
-  countdown: Countdown
-  debt: Debt
-  event: Event
-  extraPage: ExtraPage
-  groupselection: GroupSelection
-  home: Home
-  gallery: Gallery
-  impressum: Impressum
-  leaderboard: Leaderboard
-  location: Location
-  login: Login
-  news: News
-  profile: Profile
-  race: Race
-  riddle: Riddle
-  form: Signup
-  task: Task
-  team: Team
-  token: Token
-  pushnotification: PushNotification
-  qrFight: QrFight
-  communities: Communities
-  footer: Footer
+  app?: App
+  style?: Style
+  userHandling?: UserHandling
+  countdown?: Countdown
+  debt?: Debt
+  event?: Event
+  extraPage?: ExtraPage
+  groupselection?: GroupSelection
+  home?: Home
+  gallery?: Gallery
+  impressum?: Impressum
+  leaderboard?: Leaderboard
+  location?: Location
+  login?: Login
+  news?: News
+  profile?: Profile
+  race?: Race
+  riddle?: Riddle
+  form?: Signup
+  task?: Task
+  team?: Team
+  token?: Token
+  pushnotification?: PushNotification
+  qrFight?: QrFight
+  communities?: Communities
+  footer?: Footer
 }
 
 export interface App {

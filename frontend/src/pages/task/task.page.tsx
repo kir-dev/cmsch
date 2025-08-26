@@ -57,7 +57,7 @@ const TaskPage = () => {
   const filePickerRef = useRef<FilePicker>(null)
   const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
 
-  const component = useConfigContext()?.components.task
+  const component = useConfigContext()?.components?.task
   const toast = useToast()
   const { id } = useParams()
   const { setValue, handleSubmit, control } = useForm<FormInput>()

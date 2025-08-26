@@ -15,7 +15,7 @@ import { StampComponent } from './components/StampComponent'
 const TokenList = () => {
   const { data, isLoading, isError } = useTokensQuery()
   const config = useConfigContext()
-  const component = config?.components.token
+  const component = config?.components?.token
 
   const calculate_progress = (acquired: number, total: number) => (total == 0 ? 100 : (100 * acquired) / total)
 

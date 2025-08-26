@@ -17,7 +17,7 @@ export const AliasChangePage = () => {
   const submissionMutation = useAliasChangeMutation()
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
-  const component = useConfigContext()?.components.profile
+  const component = useConfigContext()?.components?.profile
 
   if (!component) return <ComponentUnavailable />
 

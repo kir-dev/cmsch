@@ -7,7 +7,7 @@ import RaceBoard from './components/RaceBoard'
 const RacePage = () => {
   const params = useParams()
   const { isLoading, isError, data } = useRaceQuery(params.category ?? '')
-  const component = useConfigContext()?.components.race
+  const component = useConfigContext()?.components?.race
 
   return <RaceBoard data={data} component={component} isLoading={isLoading} isError={isError} />
 }

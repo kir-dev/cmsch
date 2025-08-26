@@ -10,7 +10,7 @@ type PresenceAlertProps = {
 
 export const PresenceAlert: FC<PresenceAlertProps> = ({ acquired, needed, mt = 5 }) => {
   const config = useConfigContext()
-  const component = config?.components.token
+  const component = config?.components?.token
   const messageParts = component?.minTokenNotEnoughMessage?.split('{}') || ['']
   if (acquired == null || needed == null || !component?.collectFeatureEnabled) return null
   else if (acquired < needed)

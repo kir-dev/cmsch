@@ -11,7 +11,7 @@ import { l } from '../../util/language'
 export default function MapPage() {
   const [showUserLocation, setShowUserLocation] = useState(false)
   const locationQuery = useLocationQuery()
-  const component = useConfigContext().components.location
+  const component = useConfigContext()?.components?.location
 
   return (
     <CmschPage>
@@ -19,14 +19,14 @@ export default function MapPage() {
       <Heading as="h1" variant="main-title">
         Térkép
       </Heading>
-      {component.topMessage && <Markdown text={component.topMessage} />}
+      {component?.topMessage && <Markdown text={component.topMessage} />}
       <Checkbox my={3} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
         {l('location-show-own')}
       </Checkbox>
       <MapContent mapData={locationQuery.data ?? []} showUserLocation={showUserLocation} />
       <Text>{l('location-description')}</Text>
       <Text>{l('location-privacy')}</Text>
-      {component.bottomMessage && (
+      {component?.bottomMessage && (
         <Box pt={4}>
           <Markdown text={component.bottomMessage} />
         </Box>

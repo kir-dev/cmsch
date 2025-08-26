@@ -18,7 +18,7 @@ const TaskCategoryPage = () => {
   const hoverBg = useOpaqueBackground(3)
   const { isLoading, isError, data } = useTasksInCategoryQuery(id || 'UNKNOWN')
 
-  const component = useConfigContext()?.components.task
+  const component = useConfigContext()?.components?.task
 
   if (!id) return <Navigate to={AbsolutePaths.TASKS} />
 

@@ -4,7 +4,7 @@ import RaceBoard from './components/RaceBoard'
 
 const FreestyleRace = () => {
   const { isLoading, isError, data } = useFreestyleRaceQuery()
-  const component = useConfigContext().components.race
+  const component = useConfigContext()?.components?.race
   return <RaceBoard data={data} component={component} isLoading={isLoading} isError={isError} />
 }
 

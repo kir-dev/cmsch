@@ -14,7 +14,7 @@ import { l } from '../../util/language'
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
   const config = useConfigContext()
-  const component = config?.components.login
+  const component = config?.components?.login
 
   if (!component) return <ComponentUnavailable />
 

@@ -14,8 +14,8 @@ import HomePageNewsList from './components/HomePageNewsList.tsx'
 
 const HomePage = () => {
   const config = useConfigContext()
-  const countdownConfig = config?.components.countdown
-  const homeConfig = config?.components.home
+  const countdownConfig = config?.components?.countdown
+  const homeConfig = config?.components?.home
 
   const countTo = useMemo(() => {
     try {
@@ -42,7 +42,7 @@ const HomePage = () => {
           {homeConfig?.welcomeMessage.split('{}').length > 1 && (
             <>
               <Heading as="span" color="brand.500" size="3xl">
-                {config?.components.app.siteName || 'CMSch'}
+                {config?.components?.app?.siteName || 'CMSch'}
               </Heading>{' '}
               {homeConfig?.welcomeMessage.split('{}')[1]}
             </>
@@ -55,7 +55,7 @@ const HomePage = () => {
           <Clock countTo={countTo} />
         </>
       )}
-      {homeConfig.showNews && config.components.news && <HomePageNewsList />}
+      {homeConfig.showNews && config?.components?.news && <HomePageNewsList />}
 
       {videoIds?.length > 0 && (
         <>
@@ -71,8 +71,8 @@ const HomePage = () => {
         </Box>
       )}
 
-      {homeConfig?.showEvents && config.components.event && <HomePageEventList />}
-      {homeConfig.showGalleryImages && config.components.gallery && <HomePageGalleryCarousel />}
+      {homeConfig?.showEvents && config?.components?.event && <HomePageEventList />}
+      {homeConfig.showGalleryImages && config?.components?.gallery && <HomePageGalleryCarousel />}
     </CmschPage>
   )
 }

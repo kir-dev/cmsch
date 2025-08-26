@@ -19,7 +19,7 @@ import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
 import { joinPath } from '../../../util/core-functions.util'
 import { AbsolutePaths, Paths } from '../../../util/paths'
-import { RoleType } from '../../../util/views/profile.view'
+import { RoleType, RoleTypeString } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
 import { MemberRow } from './MemberRow'
 import { TeamFormItem } from './TeamFormItem'
@@ -36,14 +36,15 @@ interface TeamDetailsCoreProps {
 
 export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetch = () => {} }: TeamDetailsCoreProps) {
   const toast = useToast()
-  const { components } = useConfigContext()
-  const teamComponent = components.team
-  const raceComponent = components.race
-  const userRole = useConfigContext().role
+  const config = useConfigContext()
+  const components = config?.components
+  const teamComponent = components?.team
+  const raceComponent = components?.race
+  const userRole = config?.role
   const navigate = useNavigate()
   const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
   const [isEditingMembers, setIsEditingMembers] = useState(false)
-  const isUserGroupAdmin = RoleType[userRole] >= RoleType.PRIVILEGED
+  const isUserGroupAdmin = RoleType[userRole || RoleTypeString.GUEST] >= RoleType.PRIVILEGED
 
   const actionResponseCallback = (response: TeamResponses) => {
     if (response == TeamResponses.OK) {

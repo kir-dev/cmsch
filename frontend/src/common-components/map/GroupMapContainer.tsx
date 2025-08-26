@@ -7,7 +7,7 @@ import { l } from '../../util/language'
 import { MapContent } from './MapContent'
 
 function GroupMapContainer() {
-  const profileConfig = useConfigContext()?.components.profile
+  const profileConfig = useConfigContext()?.components?.profile
   const [showUserLocation, setShowUserLocation] = useState(false)
   const locationQuery = useLocationQuery()
 

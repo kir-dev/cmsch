@@ -52,7 +52,7 @@ const ProfilePage = () => {
   }, [navigate, refetch])
 
   const config = useConfigContext()?.components
-  const component = config.profile
+  const component = config?.profile
 
   const brandColor = useColorModeValue('brand.500', 'brand.600')
   const greenProgressColor = useColorModeValue('green.500', 'green.600')

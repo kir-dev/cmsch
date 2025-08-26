@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Navigate } from 'react-router'
 import { useServiceContext } from '../api/contexts/service/ServiceContext'
 import { LoadingPage } from '../pages/loading/loading.page'
@@ -13,15 +14,23 @@ interface PageStatusProps {
 export function PageStatus({ isLoading, isError, title }: PageStatusProps) {
   const { sendMessage } = useServiceContext()
 
+  useEffect(() => {
+    if (isLoading) return
+    if (isError) {
+      sendMessage(l('page-load-failed', { title }))
+      return
+    }
+
+    sendMessage(l('page-load-failed-contact-developers', { title }))
+  }, [isLoading, isError, sendMessage, title])
+
   if (isLoading) {
     return <LoadingPage />
   }
 
   if (isError) {
-    sendMessage(l('page-load-failed', { title }))
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
 
-  sendMessage(l('page-load-failed-contact-developers', { title }))
   return <Navigate replace to={AbsolutePaths.ERROR} />
 }

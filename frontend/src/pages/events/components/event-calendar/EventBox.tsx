@@ -62,7 +62,7 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
         <PopoverCloseButton />
         <PopoverHeader isTruncated>{event.title}</PopoverHeader>
         <PopoverBody>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</PopoverBody>
-        {component.enableDetailedView && (
+        {component?.enableDetailedView && (
           <PopoverFooter>
             <LinkButton href={`${AbsolutePaths.EVENTS}/${event.url}`}>Részletek</LinkButton>
           </PopoverFooter>

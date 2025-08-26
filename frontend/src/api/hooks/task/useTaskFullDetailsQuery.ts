@@ -10,9 +10,6 @@ export const useTaskFullDetailsQuery = (taskId: string) => {
     queryKey: [QueryKeys.TASK_DETAILS, taskId],
     queryFn: async () => {
       const taskDetailsResponse = await axios.get<TaskFullDetailsView>(joinPath(ApiPaths.TASK_SUBMIT, taskId))
-      if (!taskDetailsResponse.data.task) {
-        throw new Error()
-      }
       return taskDetailsResponse.data
     }
   })

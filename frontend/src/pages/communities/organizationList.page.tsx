@@ -12,7 +12,7 @@ import { Organization } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function OrganizationListPage() {
-  const config = useConfigContext()?.components.communities
+  const config = useConfigContext()?.components?.communities
   const { data, isLoading, isError } = useOrganizationList()
   const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()

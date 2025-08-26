@@ -11,7 +11,7 @@ import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 
 export default function OrganizationPage() {
-  const config = useConfigContext()?.components.communities
+  const config = useConfigContext()?.components?.communities
   const params = useParams()
   const { data, isLoading, isError } = useOrganization(params.id || 'UNKNOWN')
 

@@ -10,7 +10,7 @@ import { AbsolutePaths } from '../../util/paths'
 
 export default function LeaderboardByCategoryPage() {
   const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
-  const component = useConfigContext()?.components.leaderboard
+  const component = useConfigContext()?.components?.leaderboard
 
   if (!component) return <ComponentUnavailable />
 

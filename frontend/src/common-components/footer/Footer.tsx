@@ -10,7 +10,7 @@ import parseSponsors from './utils/parseSponsors'
 
 export const Footer = () => {
   const config = useConfigContext()
-  const component = config?.components.footer
+  const component = config?.components?.footer
   const sponsors = useMemo(
     () => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls),
     [component?.sponsorAlts, component?.sponsorLogoUrls, component?.sponsorWebsiteUrls]
