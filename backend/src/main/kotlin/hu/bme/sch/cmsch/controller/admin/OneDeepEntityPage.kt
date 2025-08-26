@@ -577,11 +577,11 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     @PostMapping("/create")
-    open fun create(@ModelAttribute(binding = false) dto: T,
-                    @RequestParam(required = false) file0: MultipartFile?,
-                    @RequestParam(required = false) file1: MultipartFile?,
-                    model: Model,
-                    auth: Authentication,
+    fun create(@ModelAttribute(binding = false) dto: T,
+                @RequestParam(required = false) file0: MultipartFile?,
+                @RequestParam(required = false) file1: MultipartFile?,
+                model: Model,
+                auth: Authentication,
     ): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
