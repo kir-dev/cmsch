@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="~{layout4 :: head(${context.siteName})}">
+</head>
+<body>
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}"></div>
+
+        <div class="content">
+            <h1 class="narrow" th:text="|Verseny mérkőzéseinek kezelése|">Match admin</h1>
+
+            <div class="content">
+                <object th:remove="tag">
+                    <label class="card-label">Verseny</label>
+                    <p th:text="${tournament.title}">Tournament title</p>
+                </object>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="narrow">Mérkőzések</h2>
+                </div>
+                <div class="table-container">
+                    <table cellspacing="0">
+                        <tr id="header">
+                            <th>MatchId</th>
+                            <th>Round</th>
+                            <th>Team1</th>
+                            <th>Team2</th>
+                            <th>Field</th>
+                            <th>KickoffTime</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr th:each="match : ${matches}" th:id="|match_${match.id}|" style="height: 50px;">
+                            <td th:text="${match.gameId}">Match ID</td>
+                            <td th:text="${match.level}">Round</td>
+                            <td th:text="${match.homeTeamName}">Team 1</td>
+                            <td th:text="${match.awayTeamName}">Team 2</td>
+                            <td th:text="${match.location}">Field</td>
+                            <td th:text="${match.kickoffTime}">Kickoff Time</td>
+                            <td th:text="${match.status}">Status</td>
+                            <td>
+                                <a th:href="|@{/admin/control}/tournament-match/score/${match.id}|" class="control-action">
+                                    <span class="material-symbols-outlined">grade</span>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>

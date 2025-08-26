@@ -153,6 +153,7 @@ load:
   team: false
   token: false
   event: false
+  tournament: false
   pushnotification: false
   sheets: false
   serviceAccount: false

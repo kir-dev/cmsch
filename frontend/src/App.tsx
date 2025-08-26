@@ -45,6 +45,8 @@ import TokenScanPage from './pages/token/tokenScan.page.tsx'
 import TokenScanResultPage from './pages/token/tokenScanResult.page.tsx'
 import { l } from './util/language'
 import { Paths } from './util/paths.ts'
+import TournamentPage from "./pages/tournament/tournament.page.tsx";
+import TournamentListPage from "./pages/tournament/tournamentList.page.tsx";
 
 export function App() {
   return (
@@ -128,6 +130,10 @@ export function App() {
               <Route path={Paths.TOKEN}>
                 <Route index element={<TokenListPage />} />
                 <Route path="scan" element={<TokenScanPage />} />
+              </Route>
+              <Route path={Paths.TOURNAMENT}>
+                <Route path=":id" element={<TournamentPage />} />
+                <Route index element={<TournamentListPage />} />
               </Route>
               <Route index element={<IndexPage />} />
               <Route path="login" element={<LoginPage />} />

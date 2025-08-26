@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="~{layout4 :: head(${context.siteName})}"></head>
+<body>
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<script>
+    function matchScoreInput(){
+        document.getElementById('match-score-input').style.display = 'flex';
+        document.getElementById('away-forfeit').disabled = true;
+        document.getElementById('home-forfeit').disabled = true;
+    }
+    function hideMatchScoreInput(){
+        document.getElementById('match-score-input').style.display = 'none';
+        document.getElementById('away-forfeit').disabled = false;
+        document.getElementById('home-forfeit').disabled = false;
+    }
+</script>
+<style>
+    .content {
+        position: relative;
+    }
+    #match-score-input {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        height: 40%;
+        transform: translate(-50%, -40%);
+        z-index: 9999;
+        background-color: var(--card-background-color);
+        box-shadow: 5 4px 16px rgba(0,0,0,0.3);
+        padding: 2rem;
+        border-radius: 8px;
+        border: 3px solid rgb(0, 0, 0);
+        display: none;
+        flex-direction: column;
+        gap: 1.2rem;
+        align-items: stretch;
+    }
+</style>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}"></div>
+
+        <div class="content">
+            <form th:action="|@{/admin/control/tournament-match/score}/${match.id}|" method="post">
+                <h1 class="narrow" th:text="|Mérkőzés eredményének bevitele|"></h1>
+                <div class="form-popup" id="match-score-input" th:if="${match.status.name() == 'NOT_STARTED' or match.status.name() == 'IN_PROGRESS'}">
+                    <h2 th:text="|Mérkőzés eredményének bevitele - ${match.homeTeamName} vs ${match.awayTeamName}|">Match score input</h2>
+                    <label for="homeTeamScore">Csapat 1 gólok:</label>
+                    <input type="number" id="homeTeamScore" name="homeTeamScore" min="0" th:value="${match.homeTeamScore}" required>
+                    <label for="awayTeamScore">Csapat 2 gólok:</label>
+                    <input type="number" id="awayTeamScore" name="awayTeamScore" min="0" th:value="${match.awayTeamScore}" required>
+                    <input type="hidden" name="matchStatus" th:value="${match.status}" />
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary"
+                                th:onclick="|document.getElementsByName('matchStatus')[0].value='IN_PROGRESS'|">Eredmény mentése</button>
+                        <button type="submit" class="btn btn-danger"
+                                th:onclick="|document.getElementsByName('matchStatus')[0].value='FINISHED'|">Végeredmény mentése</button>
+                        <button type="button" class="btn btn-secondary cancel-btn" onclick="hideMatchScoreInput()">Bezárás</button>
+                    </div>
+                </div>
+                <div class="card wide-false">
+                    <!--<object th:remove="tag">
+                        <label class="card-label">Verseny</label>
+                        <p th:text="${tournament.title}">Tournament title</p>
+                    </object>-->
+                    <object th:remove="tag">
+                        <label class="card-label">Szakasz</label>
+                        <p th:text="${stage.name}" class="highlight">Stage title</p>
+                    </object>
+                    <object th:remove="tag">
+                        <label class="card-label">Kör</label>
+                        <p th:text="${match.level}" class="highlight">Round</p>
+                    </object>
+                    <object th:remove="tag">
+                        <label class="card-label">Időpont</label>
+                        <p th:text="${match.kickoffTime}" class="highlight">Kickoff Time</p>
+                    </object>
+                    <object th:remove="tag">
+                        <label class="card-label">Helyszín</label>
+                        <p th:text="${match.location?:'TBD'}" class="highlight">Field</p>
+                    </object>
+                    <object th:remove="tag">
+                        <label class="card-label">Státusz</label>
+                        <p th:text="${match.status}" class="highlight">Match Status</p>
+                    </object>
+                </div>
+                <div class="flex-row">
+                    <div class="card wide-false">
+                        <object th:remove="tag">
+                            <label class="card-label">Csapat 1</label>
+                            <p th:text="${match.homeTeamName}" class="highlight">Home Team</p>
+                        </object>
+                        <div th:if="${match.homeTeamScore!=null && match.awayTeamScore!=null}" th:remove="tag">
+                            <label class="card-label">Gólok</label>
+                            <p th:number="${match.homeTeamScore}" class="highlight">Home team goals</p>
+                        </div>
+                    </div>
+                    <div class="card wide-false">
+                        <object th:remove="tag">
+                            <label class="card-label">Csapat 2</label>
+                            <p th:text="${match.awayTeamName}" class="highlight">Away Team</p>
+                        </object>
+                        <object th:if="${match.homeTeamScore!=null && match.awayTeamScore!=null}" th:remove="tag">
+                            <label class="card-label">Gólok</label>
+                            <p th:number="${match.awayTeamScore}" class="highlight">Away team goals</p>
+                        </object>
+                    </div>
+                </div>
+                <div class="button-group" style="width: 80%;margin: 0 auto;">
+                    <div class="flex-row">
+                        <object th:if="${not readOnly}" th:remove="tag">
+                            <button id="away-forfeit" type="submit" class="btn btn-primary"
+                                th:onclick="|document.getElementsByName('homeTeamScore')[0].value=3;document.getElementsByName('awayTeamScore')[0].value=0;document.getElementsByName('matchStatus')[0].value='FINISHED';|">
+                                <span class="material-symbols-outlined">not_interested</span>
+                                <span>Csapat 2 nem jelent meg</span>
+                            </button>
+                        </object>
+                        <object th:if="${not readOnly}" th:remove="tag">
+                            <button id="home-forfeit" type="submit" class="btn btn-primary"
+                                th:onclick="|document.getElementsByName('homeTeamScore')[0].value=0;document.getElementsByName('awayTeamScore')[0].value=3;document.getElementsByName('matchStatus')[0].value='FINISHED';|">
+                                <span class="material-symbols-outlined">not_interested</span>
+                                <span>Csapat 1 nem jelent meg</span>
+                            </button>
+                        </object>
+                    </div>
+                    <object th:if="${not readOnly}" th:remove="tag">
+                        <button type="button" class="btn btn-primary" id="save-button" onclick="matchScoreInput()">
+                            <span class="material-symbols-outlined">save</span>
+                            <ins>Meccs eredményének bevitele</ins>
+                        </button>
+                    </object>
+                    <a href="#" class="btn btn-secondary" th:href="|@{/admin/control}/tournament-match|">
+                        <span class="material-symbols-outlined">undo</span>
+                        <ins>Vissza a mérkőzésekhez</ins>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
