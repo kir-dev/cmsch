@@ -13,7 +13,7 @@ import { AbsolutePaths } from '../../util/paths'
 import { DataDisplayWrapper } from './components/DataDisplayWrapper'
 
 export default function QrLevelsPage() {
-  const component = useConfigContext()?.components.qrFight
+  const component = useConfigContext()?.components?.qrFight
   const { data, isLoading, isError } = useQrLevelsQuery()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()

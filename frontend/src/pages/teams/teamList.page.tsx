@@ -13,7 +13,7 @@ import { TeamListItem } from './components/TeamListItem'
 
 export default function TeamListPage() {
   const config = useConfigContext()
-  const component = config?.components.team
+  const component = config?.components?.team
   const { data, isLoading, isError } = useTeamList()
   const searchArgs = useSearch<TeamListItemView>(data ?? [], (item, search) => item.name.toLowerCase().includes(search))
 

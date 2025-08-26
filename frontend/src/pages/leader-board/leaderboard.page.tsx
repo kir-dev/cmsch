@@ -12,7 +12,7 @@ import LeaderboardByCategoryPage from './leaderboardByCategory.page.tsx'
 import LeaderboardByUserOrGroupPage from './leaderboardByUserOrGroup.page.tsx'
 
 const LeaderboardPage = () => {
-  const component = useConfigContext()?.components.leaderboard
+  const component = useConfigContext()?.components?.leaderboard
   const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
   const byCategory = useMatch('/leaderboard/category')
   const navigate = useNavigate()

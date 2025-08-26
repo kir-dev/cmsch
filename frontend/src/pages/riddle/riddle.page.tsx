@@ -46,13 +46,11 @@ const RiddlePage = () => {
   const skipMutation = useRiddleSkipMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
   const boxBorder = useOpaqueBackground(1)
-  const {
-    components: { riddle: riddleConfig }
-  } = useConfigContext()
+  const riddleConfig = useConfigContext()?.components?.riddle
 
   if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
+  if (isError || isLoading || !data || !riddleConfig) return <PageStatus isLoading={isLoading} isError={isError || !riddleConfig} />
 
   const submitSolution = (event: FormEvent) => {
     if (!allowSubmission) return

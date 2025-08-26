@@ -44,9 +44,9 @@ const EventListPage = () => {
   const [filteredEvents, setFilteredEvents] = useState<EventListView[] | undefined>()
 
   const availableFilters = []
-  if (component.filterByCategory) availableFilters.push(FILTER.CATEGORY)
-  if (component.filterByLocation) availableFilters.push(FILTER.PLACE)
-  if (component.filterByDay) availableFilters.push(FILTER.DAY)
+  if (component?.filterByCategory) availableFilters.push(FILTER.CATEGORY)
+  if (component?.filterByLocation) availableFilters.push(FILTER.PLACE)
+  if (component?.filterByDay) availableFilters.push(FILTER.DAY)
 
   const pastEvents = data?.filter((event) => event.timestampEnd * 1000 < Date.now())
   const upcomingEvents = data?.filter((event) => event.timestampEnd * 1000 >= Date.now())

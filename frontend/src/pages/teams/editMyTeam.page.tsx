@@ -10,7 +10,7 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { AbsolutePaths } from '../../util/paths.ts'
-import { RoleType } from '../../util/views/profile.view'
+import { RoleType, RoleTypeString } from '../../util/views/profile.view'
 import { TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
 import { FilePicker } from '../task/components/FilePicker'
 
@@ -35,8 +35,8 @@ export default function EditMyTeamPage() {
       setRequestError(TeamResponseMessages[response as TeamResponses])
     }
   })
-  const component = config?.components.team
-  const isPrivileged = RoleType[config?.role ?? 0] >= RoleType.PRIVILEGED
+  const component = config?.components?.team
+  const isPrivileged = RoleType[config?.role ?? RoleTypeString.GUEST] >= RoleType.PRIVILEGED
   if (!component || !isPrivileged) return <ComponentUnavailable />
   if (!component.teamEditEnabled) return <Navigate to="/" replace />
 

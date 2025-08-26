@@ -32,7 +32,7 @@ export default function CreateTeamPage() {
       setRequestError(TeamResponseMessages[response as TeamResponses])
     }
   })
-  const component = config?.components.team
+  const component = config?.components?.team
   if (!component) return <ComponentUnavailable />
   if (!component.creationEnabled) return <Navigate to="/" replace />
 

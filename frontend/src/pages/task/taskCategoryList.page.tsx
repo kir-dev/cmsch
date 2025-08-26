@@ -10,7 +10,7 @@ import { taskCategoryType } from '../../util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
 
 const TaskCategoryListPage = () => {
-  const component = useConfigContext()?.components.task
+  const component = useConfigContext()?.components?.task
 
   const { isLoading, isError, data } = useTaskCategoriesQuery()
 

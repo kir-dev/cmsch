@@ -13,7 +13,7 @@ import { RiddleCategoryListItem } from './components/RiddleCategoryListItem'
 const RiddleCategoryList = () => {
   const navigate = useNavigate()
   const toast = useToast()
-  const component = useConfigContext()?.components.riddle
+  const component = useConfigContext()?.components?.riddle
   const { isLoading, isError, data } = useRiddleListQuery()
 
   if (!component) return <ComponentUnavailable />
