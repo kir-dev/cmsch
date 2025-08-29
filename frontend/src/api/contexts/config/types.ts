@@ -45,7 +45,7 @@ export interface Components {
 export interface App {
   defaultComponent: string
   siteName: string
-  warningLevel: string
+  warningLevel: 'warning' | 'info' | 'success' | 'error' | 'loading' | undefined
   warningMessage: string
 }
 
