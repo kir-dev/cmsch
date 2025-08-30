@@ -4,7 +4,6 @@
   "search.exclude": {
     "public/**": true,
     "node_modules/**": true,
-    "**/.yarn": true,
     "**/.pnp.*": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
