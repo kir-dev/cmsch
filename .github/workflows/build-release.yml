@@ -12,29 +12,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
 
       - name: Set up Docker Buildx
         with:
           cache-binary: false
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Registry
         run: echo ${{ secrets.DOCKER_REGISTRY_PASSWORD }} | docker login -u ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password-stdin ${{ secrets.DOCKER_REGISTRY_URL }}
 
       - name: Set up JDK 24
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           java-version: 24
           distribution: temurin
 
       - name: Build OCI Image
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: clean bootBuildImage --imageName=${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:release
-          build-root-directory: backend
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build OCI Image
+        working-directory: backend
+        run: ./gradlew clean bootBuildImage --imageName=${{ secrets.DOCKER_REGISTRY_URL }}/cmsch:release
 
       - name: Tag image with version
         if: ${{ startsWith(github.ref, 'refs/tags/v') }} # if this workflow was triggered by a new tag starting with "v"
