@@ -48,7 +48,7 @@ export const Footer = () => {
                 </Heading>
                 <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
                   {sponsors.map((sponsor) => (
-                    <SponsorImage {...sponsor} />
+                    <SponsorImage key={sponsor?.url} {...sponsor} />
                   ))}
                 </Flex>
               </Box>
