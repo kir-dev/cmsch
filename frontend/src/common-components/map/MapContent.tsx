@@ -39,7 +39,7 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   }, [showUserLocation, isGeolocationAvailable, isGeolocationEnabled, toast])
 
   return (
-    <Map center={center} provider={OSMHotProvider} height={400}>
+    <Map center={center} provider={OsmProvider} height={400} dprs={[1, 2]}>
       <ZoomControl />
       {mapData.map((mapDataItem) => (
         <Marker hover key={mapDataItem.displayName} width={200} height={3} anchor={[mapDataItem.latitude, mapDataItem.longitude]}>
@@ -55,6 +55,6 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   )
 }
 
-function OSMHotProvider(x: number, y: number, z: number) {
-  return `https://tile.openstreetmap.fr/hot/${z}/${x}/${y}.png`
+function OsmProvider(x: number, y: number, z: number) {
+  return `https://tile.openstreetmap.org/${z}/${x}/${y}.png`
 }

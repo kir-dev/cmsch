@@ -19,7 +19,7 @@ import { FaCalendar } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 import { SearchIcon } from '@chakra-ui/icons'
-import { createRef, useEffect, useState } from 'react'
+import { createRef, useEffect, useMemo, useState } from 'react'
 import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CustomTabButton } from '../../common-components/CustomTabButton'
@@ -48,8 +48,8 @@ const EventListPage = () => {
   if (component?.filterByLocation) availableFilters.push(FILTER.PLACE)
   if (component?.filterByDay) availableFilters.push(FILTER.DAY)
 
-  const pastEvents = data?.filter((event) => event.timestampEnd * 1000 < Date.now())
-  const upcomingEvents = data?.filter((event) => event.timestampEnd * 1000 >= Date.now())
+  const pastEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 < Date.now()), [data])
+  const upcomingEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 >= Date.now()), [data])
 
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
