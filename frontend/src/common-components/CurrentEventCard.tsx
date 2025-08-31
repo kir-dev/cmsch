@@ -1,5 +1,6 @@
 import { Box, Flex, useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router'
+import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
 import { useEventListQuery } from '../api/hooks/event/useEventListQuery'
 import { isCurrentEvent, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
@@ -7,6 +8,7 @@ import { PulsingDot } from './PulsingDot'
 
 export default function CurrentEventCard() {
   const { data, error } = useEventListQuery()
+  const enableDetailedView = useConfigContext()?.components?.event?.enableDetailedView
   const color = useColorModeValue('brand.800', 'white')
   const background = useOpaqueBackground(1)
   if (!data || error) return null
@@ -35,7 +37,7 @@ export default function CurrentEventCard() {
         {isVowel(currentEvents[0].title[0]) ? 'Az ' : 'A '}
         <b>
           {currentEvents.map((event, idx) => (
-            <Link key={event.url} to={`${AbsolutePaths.EVENTS}/${event.url}`}>
+            <Link key={event.url} to={enableDetailedView ? `${AbsolutePaths.EVENTS}/${event.url}` : AbsolutePaths.EVENTS}>
               {event.title + (idx == currentEvents.length - 1 ? ' ' : ', ')}
             </Link>
           ))}
