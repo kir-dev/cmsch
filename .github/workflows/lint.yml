@@ -24,20 +24,17 @@ jobs:
       with:
         node-version: 22
 
-    - name: Set yarn version
-      run: yarn set version 1.22.17
-
     - name: Install Node.js dependencies
-      run: yarn install --frozen-lockfile
+      run: npm ci
 
     - name: ESLint
-      run: yarn lint:eslint
+      run: npm run lint:eslint
 
     - name: Prettier
-      run: yarn lint:eslint
+      run: npm run lint:eslint
 
     - name: TSC
-      run: yarn lint:typescript
+      run: npm run lint:typescript
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarqube-scan-action@v5

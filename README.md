@@ -23,7 +23,7 @@ This makes reviewing the pull request, searching through the history and reverti
 Copy the `.env.example` file to `.env` and fill it with the required data.
 
 ```bash
-  yarn run build
+  npm run build
 ```
 
 ### Build the backend OCI image
@@ -132,11 +132,11 @@ You can leave the defaults for local development.
 Open a terminal in the `frontend` folder and pull the packages
 
 ```bash
-yarn
+npm install
 ```
 
 then start the frontend development server
 
 ```bash
-yarn start
+npm start
 ```
