@@ -31,7 +31,7 @@ class TokenController(
     "tokens",
     TokenEntity::class, ::TokenEntity,
     "Token", "Tokenek",
-    "Képrejtvény kategóriák kezelése.",
+    "Qr kódok kezelése.",
 
     transactionManager,
     repo,
