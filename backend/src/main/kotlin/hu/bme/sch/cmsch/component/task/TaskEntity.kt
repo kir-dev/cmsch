@@ -128,7 +128,7 @@ data class TaskEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = InputType.NUMBER, order = 10, label = "Max pont")
-    @property:GenerateOverview(columnName = "Max pont", order = 5, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Max pont", order = 5, centered = true)
     @property:ImportFormat
     var maxScore: Int = 0,
 
