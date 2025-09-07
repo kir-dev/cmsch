@@ -1,3 +1,6 @@
+import Color, { ColorInstance } from 'color'
+import { useStyle } from '../api/contexts/config/ConfigContext.tsx'
+
 export function hexToRgb(hex: string): [number, number, number] {
   // Remove the hash if it exists
   hex = hex.replace(/^#/, '')
@@ -9,6 +12,23 @@ export function hexToRgb(hex: string): [number, number, number] {
   const b = bigint & 255
 
   return [r, g, b]
+}
+
+export function useColor(hex: string | undefined): ColorInstance {
+  const style = useStyle()?.lightBrandingColor ?? '#FFAA00'
+  try {
+    return Color(hex)
+  } catch {
+    return Color(style)
+  }
+}
+
+function isDark(color: ColorInstance) {
+  return color.luminosity() < 0.4
+}
+
+export function useAltColor(color: ColorInstance): ColorInstance {
+  return isDark(color) ? color.lighten(0.6) : color.darken(0.5)
 }
 
 export function getTextColorFromLuminance(backgroundColor: string) {

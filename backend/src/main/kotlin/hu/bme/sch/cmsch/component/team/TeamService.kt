@@ -38,6 +38,7 @@ class TeamService(
     private val teamComponent: TeamComponent,
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
+    private val labelRepository: TeamLabelRepository,
     private val teamJoinRequestRepository: TeamJoinRequestRepository,
     private val teamIntroductionRepository: TeamIntroductionRepository,
     private val leaderBoardService: Optional<LeaderBoardService>,
@@ -195,7 +196,9 @@ class TeamService(
             .groupBy { it.group?.id ?: 0 }
             .map { entries -> entries.key to entries.value.maxBy { it.creationDate } }
             .toMap()
+
         teams.forEach { team ->
+            team.labels = labelRepository.findOnListByGroupId(team.id)
             val introduction = introductions[team.id]
             if (introduction != null) {
                 team.introduction = introduction.introduction
@@ -230,6 +233,8 @@ class TeamService(
     }
 
     private fun mapTeam(team: GroupEntity, user: CmschUser?, ownTeam: Boolean): TeamView {
+        val labels = labelRepository.findByGroupIdView(team.id)
+
         val joinCancellable = user != null && teamJoinRequestRepository.existsByUserIdAndGroupId(user.id, team.id)
         val joinEnabled = user != null
                 && teamComponent.joinEnabled
@@ -254,6 +259,7 @@ class TeamService(
         return TeamView(
             id = team.id,
             name = team.name,
+            labels = labels,
             coverUrl = team.coverImageUrl,
             description = latestIntro?.introduction ?: "",
             descriptionRejected = if (ownTeam) descriptionRejected else false,
