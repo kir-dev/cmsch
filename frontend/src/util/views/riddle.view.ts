@@ -24,7 +24,7 @@ export interface RiddleCategory {
   title: string
   completed: number
   total: number
-  nextRiddle?: number
+  nextRiddles: Riddle[]
 }
 
 export enum RiddleSubmissionStatus {
@@ -36,7 +36,7 @@ export enum RiddleSubmissionStatus {
 
 export interface RiddleSubmissionResult {
   status: RiddleSubmissionStatus
-  nextId?: number
+  nextRiddles: Riddle[]
 }
 
 export interface Hint {
