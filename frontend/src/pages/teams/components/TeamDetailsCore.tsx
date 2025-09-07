@@ -111,8 +111,8 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Wrap pt={2}>
               {team.labels &&
                 team.labels.map((label, index) => (
-                  <WrapItem>
-                    <TeamLabel label={label} key={index} />
+                  <WrapItem key={index}>
+                    <TeamLabel label={label} />
                   </WrapItem>
                 ))}
             </Wrap>

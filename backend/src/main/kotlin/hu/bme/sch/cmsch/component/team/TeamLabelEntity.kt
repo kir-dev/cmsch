@@ -1,12 +1,10 @@
 package hu.bme.sch.cmsch.component.team
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
-import hu.bme.sch.cmsch.model.GroupEntity
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.model.RoleType
 import jakarta.persistence.*
@@ -15,7 +13,7 @@ import org.springframework.core.env.Environment
 @Entity
 @Table(
     name = "teamLabel",
-    indexes = [Index(columnList = "name", unique = true)]
+    indexes = [Index(columnList = "groupId")]
 )
 data class TeamLabelEntity(
 
@@ -34,9 +32,10 @@ data class TeamLabelEntity(
     @property:ImportFormat
     var groupName: String = "",
 
-    @field:JsonIgnore
-    @ManyToOne(targetEntity = GroupEntity::class, fetch = FetchType.EAGER)
-    var group: GroupEntity? = null,
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:ImportFormat
+    @Column(nullable = true)
+    var groupId: Int? = null,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
@@ -49,8 +48,9 @@ data class TeamLabelEntity(
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @property:GenerateInput(
         order = 3,
+        type = InputType.COLOR,
         label = "Szín",
-        note = "A címke színe hex kódban megadva. Formátum #FFGGBB. Ha üresen hagyod, akkor az oldal színét fogja használni.",
+        note = "A címke színe hex kódban megadva. Formátum #RRGGBB. Ha üresen hagyod, akkor az oldal színét fogja használni.",
     )
     @property:ImportFormat
     var color: String = "",
@@ -78,9 +78,6 @@ data class TeamLabelEntity(
     var showList: Boolean = false,
 
 ) : ManagedEntity {
-
-    val groupId
-        get() = group?.id
 
     override fun getEntityConfig(env: Environment) = null
 

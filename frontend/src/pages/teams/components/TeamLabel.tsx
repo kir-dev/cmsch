@@ -1,12 +1,12 @@
 import { Box, Tooltip } from '@chakra-ui/react'
 import { ColorInstance } from 'color'
-import { useColor } from '../../../util/color.utils.ts'
+import { useAltColor, useColor } from '../../../util/color.utils.ts'
 import { TeamLabelView } from '../../../util/views/team.view.ts'
 
 const TeamLabel = ({ label }: { label: TeamLabelView }) => {
   const myColor: ColorInstance = useColor(label.color)
 
-  const [colorHex, darkColor] = [myColor.hex(), myColor.darken(0.5).hex()]
+  const [colorHex, darkColor] = [myColor.hex(), useAltColor(myColor).hex()]
 
   return label.desc ? (
     <LabelWithTooltip name={label.name} color={colorHex} darkColor={darkColor} desc={label.desc} />

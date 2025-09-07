@@ -1,4 +1,5 @@
 import Color, { ColorInstance } from 'color'
+import { useStyle } from '../api/contexts/config/ConfigContext.tsx'
 
 export function hexToRgb(hex: string): [number, number, number] {
   // Remove the hash if it exists
@@ -13,24 +14,21 @@ export function hexToRgb(hex: string): [number, number, number] {
   return [r, g, b]
 }
 
-export function rgbToHex(r: number, g: number, b: number): string {
-  const toHex = (n: number) => {
-    return Math.round(n).toString(16).padStart(2, '0')
-  }
-
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`
-}
-
-export function isValidHex(hex: string): boolean {
-  return /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{9})$/.test(hex)
-}
-
 export function useColor(hex: string | undefined): ColorInstance {
+  const style = useStyle()?.lightBrandingColor ?? '#FFAA00'
   try {
     return Color(hex)
   } catch {
-    return Color('#FF9900')
+    return Color(style)
   }
+}
+
+function isDark(color: ColorInstance) {
+  return color.luminosity() < 0.4
+}
+
+export function useAltColor(color: ColorInstance): ColorInstance {
+  return isDark(color) ? color.lighten(0.6) : color.darken(0.4)
 }
 
 export function getTextColorFromLuminance(backgroundColor: string) {

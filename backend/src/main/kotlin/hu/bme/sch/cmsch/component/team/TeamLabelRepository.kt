@@ -12,12 +12,12 @@ interface TeamLabelRepository : CrudRepository<TeamLabelEntity, Int>,
     @Query("select new hu.bme.sch.cmsch.component.team.TeamLabelView(e.id, e.name, e.color, e.desc) from TeamLabelEntity e")
     fun findAllThatExists(): List<TeamLabelView>
 
-    @Query("select e from TeamLabelEntity e where :groupId = e.group.id")
+    @Query("select e from TeamLabelEntity e where :groupId = e.groupId")
     fun findByGroupId(groupId: Int): List<TeamLabelEntity>
 
-    @Query("select new hu.bme.sch.cmsch.component.team.TeamLabelView(e.id, e.name, e.color, e.desc) from TeamLabelEntity e where e.group.id = :groupId")
+    @Query("select new hu.bme.sch.cmsch.component.team.TeamLabelView(e.id, e.name, e.color, e.desc) from TeamLabelEntity e where e.groupId = :groupId")
     fun findByGroupIdView(groupId: Int): List<TeamLabelView>
 
-    @Query("select new hu.bme.sch.cmsch.component.team.TeamLabelView(e.id, e.name, e.color, e.desc) from TeamLabelEntity e where e.group.id = :groupId and e.showList")
+    @Query("select new hu.bme.sch.cmsch.component.team.TeamLabelView(e.id, e.name, e.color, e.desc) from TeamLabelEntity e where e.groupId = :groupId and e.showList")
     fun findOnListByGroupId(groupId: Int): List<TeamLabelView>
 }

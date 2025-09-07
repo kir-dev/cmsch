@@ -51,7 +51,7 @@ class TeamLabelController(
     editPermission =   StaffPermissions.PERMISSION_EDIT_GROUPS,
     deletePermission = StaffPermissions.PERMISSION_EDIT_GROUPS,
 
-    entitySourceMapping = mapOf("GroupEntity" to { listOf("") + groupRepository.findAll().map { it.name }.toList() }),
+    entitySourceMapping = mapOf("GroupEntity" to { groupRepository.findAll().map { it.name }.toList() }),
 
     createEnabled = true,
     editEnabled   = true,
@@ -70,7 +70,7 @@ class TeamLabelController(
 
     override fun onEntityPreSave(entity: TeamLabelEntity, auth: Authentication): Boolean {
         transactionManager.transaction(readOnly = true) { groupRepository.findByName(entity.groupName) }.ifPresent {
-            entity.group = it
+            entity.groupId = it.id
         }
 
         return true
