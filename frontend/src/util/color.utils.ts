@@ -28,7 +28,7 @@ function isDark(color: ColorInstance) {
 }
 
 export function useAltColor(color: ColorInstance): ColorInstance {
-  return isDark(color) ? color.lighten(0.6) : color.darken(0.4)
+  return isDark(color) ? color.lighten(0.6) : color.darken(0.5)
 }
 
 export function getTextColorFromLuminance(backgroundColor: string) {
