@@ -37,19 +37,8 @@ const LabelComponent = ({ name, color, darkColor }: { name: string; color: strin
 const LabelWithTooltip = ({ name, color, darkColor, desc }: { name: string; color: string; darkColor: string; desc: string }) => {
   return (
     <Tooltip label={desc} aria-label={desc}>
-      <Box
-        border="2px solid"
-        bg={darkColor}
-        borderColor={color}
-        color={color}
-        px={3}
-        py={0.5}
-        borderRadius="xl"
-        fontWeight="bold"
-        fontSize={12}
-        letterSpacing={1.2}
-      >
-        {name}
+      <Box>
+        <LabelComponent name={name} color={color} darkColor={darkColor} />
       </Box>
     </Tooltip>
   )

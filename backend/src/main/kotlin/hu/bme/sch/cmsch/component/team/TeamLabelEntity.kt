@@ -50,7 +50,7 @@ data class TeamLabelEntity(
         order = 3,
         type = InputType.COLOR,
         label = "Szín",
-        note = "A címke színe hex kódban megadva. Formátum #RRGGBB. Ha üresen hagyod, akkor az oldal színét fogja használni.",
+        note = "A címke színe hex kódban megadva. Ha üresen hagyod, akkor az oldal színét fogja használni.",
     )
     @property:ImportFormat
     var color: String = "",
