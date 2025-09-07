@@ -509,6 +509,7 @@ class TasksService(
                         && !file.originalFilename!!.lowercase().endsWith(".jpg")
                         && !file.originalFilename!!.lowercase().endsWith(".jpeg")
                         && !file.originalFilename!!.lowercase().endsWith(".gif")
+                        && !file.originalFilename!!.lowercase().endsWith(".webp")
                 )
     }
 
