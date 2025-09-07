@@ -113,14 +113,14 @@ data class TaskEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 8, label = "Beadható ekkortól")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 8, label = "Beadható ekkortól")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 9, label = "Beadható eddig")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 9, label = "Beadható eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 4, renderer = OverviewType.DATE)
     @property:ImportFormat
     var availableTo: Long = 0,
