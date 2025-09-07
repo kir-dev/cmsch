@@ -366,7 +366,7 @@ const TaskPage = () => {
 export default TaskPage
 
 // null when the image was too big
-async function processImageForUpload(file: File, maxWidth = 1920, maxHeight = 1080, quality = 0.85): Promise<File | null> {
+async function processImageForUpload(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.85): Promise<File | null> {
   const maxBlobSize = 1024 * 1024 * 3
 
   const type = file.type.toLowerCase()
@@ -419,7 +419,7 @@ async function processImageForUpload(file: File, maxWidth = 1920, maxHeight = 10
   ctx.imageSmoothingQuality = 'high'
   ctx.drawImage(img, 0, 0, targetW, targetH)
 
-  // Safari doesn't support toBlob .webp
+  // Safari doesn't support canvas.toBlob() with WEBP
   // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob#browser_compatibility
   const isSafari = detectSafari()
   const outputType = isSafari ? 'image/jpeg' : 'image/webp'
@@ -427,7 +427,6 @@ async function processImageForUpload(file: File, maxWidth = 1920, maxHeight = 10
   const blob: Blob = await new Promise((resolve) => canvas.toBlob((b) => resolve(b || file), outputType, quality))
   if (!blob) return file
 
-  // Name adjustment: change extension accordingly
   const name = file.name.replace(/\.(jpg|jpeg|png|gif|webp)$/i, outputType === 'image/webp' ? '.webp' : '.jpg')
   return new File([blob], name, { type: outputType, lastModified: Date.now() })
 }
