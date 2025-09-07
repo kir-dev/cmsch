@@ -29,6 +29,7 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
   const component = useConfigContext()?.components?.event
   const eventBg = useColorModeValue('brand.500', 'brand.300')
   const eventTextColor = useColorModeValue('white', 'black')
+  const isShort = 100 - event.top - event.bottom < 5
   return (
     <Popover>
       <PopoverTrigger>
@@ -45,13 +46,15 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
           borderWidth={1}
           borderColor="brand.600"
           borderRadius="md"
-          p={1}
+          pt={isShort ? 0 : 1}
+          pb={1}
+          pl={1}
           color={eventTextColor}
         >
-          <Text fontSize="sm" fontWeight="bold" isTruncated>
+          <Text fontSize="sm" fontWeight="bold" whiteSpace="normal" wordBreak="break-all" lineHeight="1.1">
             {event.title}
           </Text>
-          <Text opacity={0.5}>
+          <Text opacity={0.5} whiteSpace="nowrap" overflow="hidden">
             {formatHu(event.timestampStart, 'HH:mm')} - {formatHu(event.timestampEnd, 'HH:mm')}
           </Text>
         </Box>
