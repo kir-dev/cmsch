@@ -93,7 +93,7 @@ data class ResponseEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Fizetve ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Fizetve ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var acceptedAt: Long = 0,
@@ -146,7 +146,7 @@ data class ResponseEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 12, label = "Adatok elfogadva ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 12, label = "Adatok elfogadva ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var detailsValidatedAt: Long = 0,

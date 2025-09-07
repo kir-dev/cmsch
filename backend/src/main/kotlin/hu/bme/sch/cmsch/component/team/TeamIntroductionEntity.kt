@@ -24,7 +24,7 @@ data class TeamIntroductionEntity(
     override var id: Int = 0,
 
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Beküldve ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Beküldve ekkor", enabled = false, ignore = true)
     @property:GenerateOverview(visible = true, renderer = OverviewType.DATE, columnName = "Létrehozva", order = 6)
     @property:ImportFormat
     var creationDate: Long = 0,
