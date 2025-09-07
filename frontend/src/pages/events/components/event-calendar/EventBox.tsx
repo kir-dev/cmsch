@@ -18,7 +18,7 @@ import { formatHu, stringifyTimeRange } from '../../../../util/core-functions.ut
 import { AbsolutePaths } from '../../../../util/paths'
 import { EventListView } from '../../../../util/views/event.view'
 
-export type EventBoxItem = EventListView & { top: number; bottom: number; conflictingEventsBefore?: number }
+export type EventBoxItem = EventListView & { top: number; bottom: number; width: number; left: number }
 
 interface EventBoxProps {
   boxRef?: RefObject<HTMLDivElement>
@@ -33,13 +33,12 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
     <Popover>
       <PopoverTrigger>
         <Box
-          ml={(event.conflictingEventsBefore ?? 0) * 2}
           ref={boxRef}
           overflow="hidden"
           key={event.url}
           position="absolute"
-          left={0}
-          right={0}
+          left={event.left + '%'}
+          width={event.width + '%'}
           top={event.top + '%'}
           bottom={event.bottom + '%'}
           bg={eventBg}
