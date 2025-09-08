@@ -136,7 +136,7 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label=submission.label
+                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -148,7 +148,7 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label=submission.label,
+                    label = submission.label,
                 )
             }
             .sortedByDescending { it.time }
@@ -251,7 +251,7 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label=submission.label
+                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -264,7 +264,7 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label=submission.label
+                    label = submission.label
                 )
             }
             .sortedByDescending { it.time }
