@@ -17,7 +17,7 @@ export function hexToRgb(hex: string): [number, number, number] {
 export function useColor(hex: string | undefined): ColorInstance {
   const style = useStyle()?.lightBrandingColor ?? '#FFAA00'
   try {
-    return Color(hex)
+    return hex ? Color(hex) : Color(style)
   } catch {
     return Color(style)
   }
