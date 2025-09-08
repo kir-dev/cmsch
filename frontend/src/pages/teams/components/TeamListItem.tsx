@@ -30,7 +30,8 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
               <Heading as="h3" size="md" marginY={0} maxWidth="100%">
                 {team.name}
               </Heading>
-              {team.labels && team.labels.map((label, index) => <TeamLabel label={label} key={index} />)}
+              {team.labels &&
+                team.labels.map((label, index) => <TeamLabel name={label.name} color={label.color} desc={label.desc} key={index} />)}
             </HStack>
             {team.introduction && <Box>{team.introduction}</Box>}
           </VStack>
