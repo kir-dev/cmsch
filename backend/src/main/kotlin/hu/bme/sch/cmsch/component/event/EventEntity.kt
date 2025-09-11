@@ -56,7 +56,7 @@ data class EventEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.DATE, order = 4, label = "Mikor lesz a program?")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(visible = true, columnName = "Időpont", order = 2, renderer = OverviewType.DATE, useForSearch = false)
     @property:ImportFormat
     var timestampStart: Long = 0,
 
@@ -70,7 +70,7 @@ data class EventEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(order = 7, label = "Helyszín")
-    @property:GenerateOverview(visible = false)
+    @property:GenerateOverview(visible = true, columnName = "Helyszín", order = 3, useForSearch = true)
     @property:ImportFormat
     var place: String = "",
 
@@ -133,7 +133,7 @@ data class EventEntity(
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.SWITCH, order = 17, label = "Látható")
-    @property:GenerateOverview(columnName = "Látható", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
+    @property:GenerateOverview(columnName = "Látható", order = 4, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
     var visible: Boolean = false,
 
