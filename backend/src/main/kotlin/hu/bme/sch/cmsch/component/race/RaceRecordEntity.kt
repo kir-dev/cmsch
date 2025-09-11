@@ -71,7 +71,7 @@ data class RaceRecordEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 5, label = "Időbélyeg", enabled = false, visible = false)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 5, label = "Időbélyeg", enabled = false, visible = false)
     @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OverviewType.DATE)
     @property:ImportFormat
     var timestamp: Long = 0,
