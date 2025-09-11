@@ -66,14 +66,14 @@ data class QrLevelEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Elérhető ekkortól")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Elérhető ekkortól")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 7, label = "Elérhető eddig")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 7, label = "Elérhető eddig")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableTo: Long = 0,

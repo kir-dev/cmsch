@@ -93,7 +93,7 @@ data class SoldProductEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
     @property:ImportFormat
     var shippedAt: Long = 0,
 
@@ -106,7 +106,7 @@ data class SoldProductEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
     @property:ImportFormat
     var payedAt: Long = 0,
 

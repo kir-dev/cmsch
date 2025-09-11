@@ -117,7 +117,7 @@ data class TokenEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @ColumnDefault("null")
     @Column(nullable = true, columnDefinition = "BIGINT")
-    @property:GenerateInput(type = InputType.DATE, order = 11, label = "Scannelhető innentől")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 11, label = "Scannelhető innentől")
     @property:GenerateOverview(columnName = "Ettől", order = 6, renderer = OverviewType.DATE)
     @property:ImportFormat
     var availableFrom: Long? = null,
@@ -125,7 +125,7 @@ data class TokenEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @ColumnDefault("null")
     @Column(nullable = true, columnDefinition = "BIGINT")
-    @property:GenerateInput(type = InputType.DATE, order = 12, label = "Scannelhető eddig")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 12, label = "Scannelhető eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 7, renderer = OverviewType.DATE)
     @property:ImportFormat
     var availableUntil: Long? = null,
