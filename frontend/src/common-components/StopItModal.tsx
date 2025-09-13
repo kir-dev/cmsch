@@ -1,5 +1,6 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import GetSomeHelp from '../assets/stop-it-get-some-help-just-stop.gif'
+import { useBrandColor } from '../util/core-functions.util.ts'
 
 type Props = {
   isOpen: boolean
@@ -7,6 +8,7 @@ type Props = {
 }
 
 export const StopItModal = ({ isOpen, onClose }: Props) => {
+  const brandColor = useBrandColor()
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -21,7 +23,7 @@ export const StopItModal = ({ isOpen, onClose }: Props) => {
           <Button colorScheme="gray" mr={3} onClick={onClose}>
             Oké
           </Button>
-          <Button colorScheme="brand" onClick={onClose}>
+          <Button colorScheme={brandColor} onClick={onClose}>
             Értettem
           </Button>
         </ModalFooter>

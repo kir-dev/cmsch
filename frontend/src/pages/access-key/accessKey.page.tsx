@@ -22,6 +22,7 @@ import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { AccessKeyResponse } from '../../util/views/accessKey'
@@ -33,6 +34,7 @@ function AccessKeyPage() {
   const [error, setError] = useState<string>()
   const toast = useToast()
   const navigate = useNavigate()
+  const brandColor = useBrandColor()
 
   const onData = async (response: AccessKeyResponse) => {
     if (response.success) {
@@ -93,7 +95,7 @@ function AccessKeyPage() {
             />
           </FormControl>
           <HStack>
-            <Button type="submit" colorScheme="brand" isLoading={query.isLoading} isDisabled={!query.data.enabled}>
+            <Button type="submit" colorScheme={brandColor} isLoading={query.isLoading} isDisabled={!query.data.enabled}>
               Beküldés
             </Button>
             {error && (

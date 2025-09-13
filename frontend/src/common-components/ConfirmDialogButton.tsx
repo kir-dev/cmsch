@@ -10,6 +10,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { useRef } from 'react'
+import { useBrandColor } from '../util/core-functions.util.ts'
 
 interface ConfirmDialogButtonProps {
   headerText?: string
@@ -37,6 +38,7 @@ export const ConfirmDialogButton = ({
 }: ConfirmDialogButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef(null)
+  const brandColor = useBrandColor()
 
   return (
     <>
@@ -60,7 +62,7 @@ export const ConfirmDialogButton = ({
             <Button ref={cancelRef} onClick={onClose}>
               {refuseButtonText}
             </Button>
-            <Button colorScheme="brand" ml={3} onClick={confirmAction}>
+            <Button colorScheme={brandColor} ml={3} onClick={confirmAction}>
               {confirmButtonText}
             </Button>
           </AlertDialogFooter>

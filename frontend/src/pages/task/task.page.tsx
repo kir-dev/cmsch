@@ -28,7 +28,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { stringifyTimeStamp } from '../../util/core-functions.util.ts'
+import { stringifyTimeStamp, useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
@@ -56,6 +56,7 @@ const TaskPage = () => {
   const [fileAnswer, setFileAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
   const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
+  const brandColor = useBrandColor()
 
   const component = useConfigContext()?.components?.task
   const toast = useToast()
@@ -293,7 +294,7 @@ const TaskPage = () => {
             <Box>
               {data.submission.imageUrlAnswer && <Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" />}
               {data.submission.fileUrlAnswer && (
-                <LinkButton href={data.submission.fileUrlAnswer} external colorScheme="brand" mt={5}>
+                <LinkButton href={data.submission.fileUrlAnswer} external colorScheme={brandColor} mt={5}>
                   Letöltés
                 </LinkButton>
               )}
@@ -330,7 +331,7 @@ const TaskPage = () => {
                 {textInput}
                 {fileInput}
                 <Flex justifyContent="end" mt={4}>
-                  <Button mt={3} colorScheme="brand" type="submit">
+                  <Button mt={3} colorScheme={brandColor} type="submit">
                     Küldés
                   </Button>
                 </Flex>

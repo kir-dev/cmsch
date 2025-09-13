@@ -1,9 +1,10 @@
-import { Center, Spinner, useColorModeValue } from '@chakra-ui/react'
+import { Center, Spinner } from '@chakra-ui/react'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { Loading } from '../../common-components/Loading'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 
 export function LoadingPage() {
-  const color = useColorModeValue('brand.500', 'brand.600')
+  const color = useBrandColor(500, 600)
 
   return (
     <Loading>
