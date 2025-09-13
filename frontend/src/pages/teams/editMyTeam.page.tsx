@@ -9,6 +9,7 @@ import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths.ts'
 import { RoleType, RoleTypeString } from '../../util/views/profile.view'
 import { TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
@@ -18,6 +19,7 @@ export default function EditMyTeamPage() {
   const navigate = useNavigate()
   const [requestError, setRequestError] = useState<string>()
   const [logo, setLogo] = useState<File>()
+  const brandColor = useBrandColor()
   const tokenRefresh = useTokenRefresh(() => {
     navigate(AbsolutePaths.MY_TEAM)
   })
@@ -72,7 +74,7 @@ export default function EditMyTeamPage() {
           )}
         </FormControl>
         <VStack alignItems="start">
-          <Button isLoading={teamEditLoading} type="submit" colorScheme="brand">
+          <Button isLoading={teamEditLoading} type="submit" colorScheme={brandColor}>
             Mentés
           </Button>
           <VStack alignItems="start">

@@ -5,6 +5,7 @@ import { useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 
 import { TeamListItemView } from '../../../util/views/team.view'
+import TeamLabel from './TeamLabel.tsx'
 
 type TeamListItemProps = {
   team: TeamListItemView
@@ -25,9 +26,13 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
       >
         <HStack spacing={4}>
           <VStack align="flex-start" overflow="hidden">
-            <Heading as="h3" size="md" marginY={0} maxWidth="100%">
-              {team.name}
-            </Heading>
+            <HStack spacing={4} alignItems="baseline">
+              <Heading as="h3" size="md" marginY={0} maxWidth="100%">
+                {team.name}
+              </Heading>
+              {team.labels &&
+                team.labels.map((label, index) => <TeamLabel name={label.name} color={label.color} desc={label.desc} key={index} />)}
+            </HStack>
             {team.introduction && <Box>{team.introduction}</Box>}
           </VStack>
           <Spacer />

@@ -135,7 +135,8 @@ open class RaceService(
                     submission.groupId ?: 0,
                     submission.groupName,
                     submission.groupName,
-                    submission.time
+                    submission.time,
+                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -146,7 +147,8 @@ open class RaceService(
                     submission.groupId ?: 0,
                     submission.groupName,
                     submission.groupName,
-                    submission.time
+                    submission.time,
+                    label = submission.label,
                 )
             }
             .sortedByDescending { it.time }
@@ -248,7 +250,8 @@ open class RaceService(
                     submission.userName,
                     submission.groupName,
                     submission.time,
-                    submission.description
+                    submission.description,
+                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -260,7 +263,8 @@ open class RaceService(
                     submission.userName,
                     submission.groupName,
                     submission.time,
-                    submission.description
+                    submission.description,
+                    label = submission.label
                 )
             }
             .sortedByDescending { it.time }

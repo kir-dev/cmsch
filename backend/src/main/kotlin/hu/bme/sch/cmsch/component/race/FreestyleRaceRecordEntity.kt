@@ -70,10 +70,17 @@ data class FreestyleRaceRecordEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Időbélyeg", enabled = false, visible = false)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Időbélyeg", enabled = false, visible = false)
     @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OverviewType.DATE)
     @property:ImportFormat
     var timestamp: Long = 0,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(order = 7, label = "Címke", note = "Név melletti címke, pl: Gólya, Lány etc.")
+    @property:GenerateOverview(columnName = "Címke", order = 6)
+    @property:ImportFormat
+    var label: String = "",
 
 ) : ManagedEntity, Duplicatable {
 

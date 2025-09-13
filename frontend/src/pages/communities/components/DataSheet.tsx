@@ -5,7 +5,7 @@ import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } fr
 
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
-import { joinPath } from '../../../util/core-functions.util'
+import { joinPath, useBrandColor } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 import { Community, Organization } from '../../../util/views/organization'
 
@@ -19,6 +19,7 @@ type DataSheetProps = {
  * @constructor
  */
 export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
+  const brandColor = useBrandColor()
   const isDataAvailable = organization.established || organization.email || organization.members || organization.interests
   return (
     <>
@@ -70,7 +71,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
           </LinkButton>
         )}
         {organization.application && (
-          <LinkButton href={organization.application} external leftIcon={<EditIcon />} colorScheme="brand">
+          <LinkButton href={organization.application} external leftIcon={<EditIcon />} colorScheme={brandColor}>
             Jelentkezés
           </LinkButton>
         )}

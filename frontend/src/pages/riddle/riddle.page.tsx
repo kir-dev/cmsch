@@ -28,7 +28,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { StopItModal } from '../../common-components/StopItModal'
-import { useOpaqueBackground } from '../../util/core-functions.util'
+import { useBrandColor, useOpaqueBackground } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { RiddleSubmissionStatus } from '../../util/views/riddle.view'
@@ -47,6 +47,7 @@ const RiddlePage = () => {
   const [allowSubmission, setAllowSubmission] = useState(true)
   const boxBorder = useOpaqueBackground(1)
   const riddleConfig = useConfigContext()?.components?.riddle
+  const brandColor = useBrandColor()
 
   if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
 
@@ -190,8 +191,8 @@ const RiddlePage = () => {
             />
           </FormControl>
 
-          <VStack spacing={5} mt={5}>
-            <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme="brand" width="100%">
+          <VStack spacing={5} mt={10}>
+            <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme={brandColor} width="100%">
               Beadom
             </Button>
             {hintQuery.isSuccess || data.hint ? (
@@ -201,7 +202,7 @@ const RiddlePage = () => {
               </Alert>
             ) : (
               <ConfirmDialogButton
-                buttonColorScheme="brand"
+                buttonColorScheme={brandColor}
                 buttonVariant="outline"
                 buttonWidth="100%"
                 buttonText="Hintet kérek"

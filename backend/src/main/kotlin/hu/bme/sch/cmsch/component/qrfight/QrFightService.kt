@@ -238,6 +238,31 @@ class QrFightService(
             return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
+        val dailyLimit = qrFightComponent.dailyTowerReadLimit
+        if (dailyLimit != -1L){
+            val history = towerEntity.history
+                .split("\n")
+                .map { it.split(";") }
+                .map {
+                    TokenPropertyRawView(
+                        ownerUserName = it[0],
+                        ownerUserId = it[1].toIntOrNull() ?: 0,
+                        ownerGroupName = it[2],
+                        ownerGroupId = it[3].toIntOrNull() ?: 0,
+                        timestamp = it[4].toLongOrNull() ?: 0,
+                        token = "",
+                        score = 0
+                    )
+                }
+                .filter { it.timestamp > clock.getTimeInSeconds() - 24 * 3600 }
+                .filter { it.ownerUserId == user.id }
+
+            if (history.size > dailyLimit){
+                log.info("Tower '{}' daily limit exceeded for user:{} (group:{})", towerEntity.selector, user.userName, groupName)
+                return TokenSubmittedView(QR_TOWER_DAILY_LIMIT_EXCEEDED, token.title, null, null)
+            }
+        }
+
         if (towerEntity.totem && towerEntity.ownerGroupId != 0) {
             log.info("Totem '{}' already enslaved so group:{} (user:{}) cannot capture it", token.title, groupName, user.userName)
             return TokenSubmittedView(getCapturedStatus(towerEntity), token.title, null, null)

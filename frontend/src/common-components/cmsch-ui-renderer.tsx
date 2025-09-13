@@ -1,7 +1,8 @@
-import { Divider, ListItem, Table, TableContainer, UnorderedList, useColorModeValue } from '@chakra-ui/react'
+import { Divider, ListItem, Table, TableContainer, UnorderedList } from '@chakra-ui/react'
 import { PropsWithChildren, ReactNode } from 'react'
 import { Components } from 'react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
+import { useBrandColor } from '../util/core-functions.util.ts'
 import ChakraUIRenderer from './chakra-md-renderer'
 import { CmschLink } from './CmschLink'
 
@@ -38,7 +39,7 @@ const cmschTheme: Components = {
   },
   hr: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return <Divider my={3} borderColor={useColorModeValue('brand.800', 'brand.200')} borderBottomWidth={2} />
+    return <Divider my={3} borderColor={useBrandColor(800, 200)} borderBottomWidth={2} />
   },
   table: ({ children }: PropsWithChildren) => {
     return (

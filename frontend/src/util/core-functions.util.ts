@@ -97,3 +97,6 @@ export function useOpaqueBackground(intensity: number = 1 | 2 | 3 | 4 | 5 | 6 | 
   }
   return useColorModeValue('#000000' + intensityHex, '#FFFFFF' + intensityHex)
 }
+
+export const useBrandColor = (lightShade?: number, darkShade?: number) =>
+  useColorModeValue(lightShade ? 'lightBrand.' + lightShade : 'lightBrand', darkShade ? 'darkBrand.' + darkShade : 'darkBrand')

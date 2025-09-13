@@ -9,6 +9,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { Loading } from '../../common-components/Loading'
 import Markdown from '../../common-components/Markdown'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { SpoilerText } from './components/SpoilerText'
@@ -19,6 +20,7 @@ const RiddleHistoryPage = () => {
   const [category, setCategory] = useState('')
   const [loaded, setLoaded] = useState(false)
   const [index, setIndex] = useState(0)
+  const brandColor = useBrandColor()
 
   const query = useRiddleHistoryQuery()
   useEffect(() => {
@@ -87,7 +89,7 @@ const RiddleHistoryPage = () => {
         <>
           <Text mt={2}>Ebben a kategóriában még nincsenek megoldott riddleök.</Text>
           <Center mt={3}>
-            <LinkButton colorScheme="brand" href={AbsolutePaths.RIDDLE}>
+            <LinkButton colorScheme={brandColor} href={AbsolutePaths.RIDDLE}>
               Összes riddle
             </LinkButton>
           </Center>
@@ -123,7 +125,7 @@ const RiddleHistoryPage = () => {
               </Button>
             </HStack>
             <Center>
-              <LinkButton colorScheme="brand" href={AbsolutePaths.RIDDLE}>
+              <LinkButton colorScheme={brandColor} href={AbsolutePaths.RIDDLE}>
                 Összes riddle
               </LinkButton>
             </Center>

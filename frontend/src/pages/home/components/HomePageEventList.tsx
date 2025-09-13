@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
 import { useEventListQuery } from '../../../api/hooks/event/useEventListQuery.ts'
 import { LinkButton } from '../../../common-components/LinkButton.tsx'
+import { useBrandColor } from '../../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../../util/paths.ts'
 import { Schedule } from './Schedule.tsx'
 
@@ -11,6 +12,7 @@ const isToday = (timeStamp: number) => new Date(timeStamp).toDateString() === ne
 export default function HomePageEventList() {
   const config = useConfigContext()
   const eventList = useEventListQuery()
+  const brandColor = useBrandColor()
 
   const events = useMemo(() => {
     const timestampCorrectedEventList = eventList.data?.map((li) => {
@@ -51,7 +53,7 @@ export default function HomePageEventList() {
             Nincs több esemény.
           </Text>
         )}
-        <LinkButton colorScheme="brand" href={AbsolutePaths.EVENTS}>
+        <LinkButton colorScheme={brandColor} href={AbsolutePaths.EVENTS}>
           Részletek
         </LinkButton>
       </VStack>
