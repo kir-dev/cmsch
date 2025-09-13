@@ -55,14 +55,14 @@ data class EventEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 4, label = "Mikor lesz a program?")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 4, label = "Mikor lesz a program?")
     @property:GenerateOverview(visible = true, columnName = "Időpont", order = 2, renderer = OverviewType.DATE, useForSearch = false)
     @property:ImportFormat
     var timestampStart: Long = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 5, label = "Meddig tart a program?")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 5, label = "Meddig tart a program?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var timestampEnd: Long = 0,
