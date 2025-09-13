@@ -16,6 +16,6 @@ data class RiddleSubmissionView(
     var status: RiddleSubmissionStatus = RiddleSubmissionStatus.WRONG,
 
     @field:JsonView(FullDetails::class)
-    var nextId: Int? = null
+    var nextRiddles: List<RiddleView> = listOf(),
 
 )
