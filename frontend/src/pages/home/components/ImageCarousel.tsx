@@ -1,6 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { Box, Button, ButtonGroup, Flex, IconButton, Image } from '@chakra-ui/react'
 import { useState } from 'react'
+import { useBrandColor } from '../../../util/core-functions.util.ts'
 
 type ImageCarouselProps = {
   images: string[]
@@ -52,24 +53,28 @@ type CurrentImageIndicatorDotProps = {
   onClick: (index: number) => void
 }
 
-const CurrentImageIndicatorDot = ({ index, currentIndex, onClick }: CurrentImageIndicatorDotProps) => (
-  <Button
-    height="10px"
-    width="10px"
-    padding={0}
-    borderWidth={2}
-    borderStyle="solid"
-    borderColor="brand.500"
-    borderRadius="full"
-    cursor="pointer"
-    transition="border-width .1s"
-    _hover={{ borderWidth: 10 }}
-    backgroundColor={index === currentIndex ? 'brand.500' : 'transparent'}
-    onClick={() => {
-      onClick(index)
-    }}
-  />
-)
+const CurrentImageIndicatorDot = ({ index, currentIndex, onClick }: CurrentImageIndicatorDotProps) => {
+  const brandColor = useBrandColor(500, 500)
+  return (
+    <Button
+      height="10px"
+      width="10px"
+      padding={0}
+      borderWidth={2}
+      borderStyle="solid"
+      borderColor={brandColor}
+      borderRadius="full"
+      cursor="pointer"
+      transition="border-width .1s"
+      _hover={{ borderWidth: 10 }}
+      backgroundColor={index === currentIndex ? brandColor : 'transparent'}
+      onClick={() => {
+        onClick(index)
+      }}
+    />
+  )
+}
+
 type DirectionButtonProps = {
   direction: Directions
   onClick: () => void
@@ -83,7 +88,7 @@ enum Directions {
 const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => (
   <IconButton
     icon={direction === Directions.LEFT ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-    colorScheme="brand"
+    colorScheme={useBrandColor()}
     onClick={onClick}
     padding={0}
     variant="ghost"

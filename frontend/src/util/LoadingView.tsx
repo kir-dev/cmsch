@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { KirDevLogo } from '../assets/kir-dev-logo.tsx'
 import { Loading } from '../common-components/Loading.tsx'
 import { usePersistentStyleSetting } from './configs/themeStyle.config.ts'
+import { useBrandColor } from './core-functions.util.ts'
 import { l } from './language.ts'
 
 export type LoadingViewProps = PropsWithChildren & {
@@ -18,6 +19,7 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
   const { persistentStyle: theme } = usePersistentStyleSetting()
   const backdropFilter = useColorModeValue(theme?.lightContainerFilter, theme?.darkContainerFilter)
   const bg = useColorModeValue('lightContainerBg', 'darkContainerBg')
+  const brandColor = useBrandColor()
 
   if (hasError) {
     return (
@@ -29,7 +31,7 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
             {errorMessage}
           </Text>
           <ButtonGroup justifyContent="center" marginTop={4}>
-            <Button colorScheme="brand" onClick={errorAction}>
+            <Button colorScheme={brandColor} onClick={errorAction}>
               Újra
             </Button>
           </ButtonGroup>

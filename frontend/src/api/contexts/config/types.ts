@@ -227,6 +227,7 @@ export interface Style {
   darkContainerColor: string
   darkContainerFilter: string
   darkTextColor: string
+  darkBrandingColor: string
   darkBackgroundUrl: string
   darkMobileBackgroundUrl: string
   darkLogoUrl: string

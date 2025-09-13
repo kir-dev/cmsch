@@ -4,12 +4,14 @@ import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { useSearchParams } from 'react-router'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import { ScanResponseView, ScanStatus } from '../../util/views/token.view'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 
 const TokenScanResult = () => {
   const [searchParams] = useSearchParams()
+  const brandColor = useBrandColor()
   const server_response: ScanResponseView = {
     title: searchParams.get('title') || undefined,
     status: (searchParams.get('status') || ScanStatus.WRONG) as ScanStatus
@@ -22,7 +24,7 @@ const TokenScanResult = () => {
         <LinkButton leftIcon={<FaArrowLeft />} href={AbsolutePaths.TOKEN}>
           Vissza
         </LinkButton>
-        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
+        <LinkButton colorScheme={brandColor} leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           Új QR-kód scannelése
         </LinkButton>
       </ButtonGroup>

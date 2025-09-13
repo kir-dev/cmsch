@@ -9,6 +9,7 @@ import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths.ts'
 import { CreateTeamDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
 
@@ -16,6 +17,7 @@ export default function CreateTeamPage() {
   const navigate = useNavigate()
   const [requestError, setRequestError] = useState<string>()
   const config = useConfigContext()
+  const brandColor = useBrandColor()
   const tokenRefresh = useTokenRefresh(() => {
     navigate(AbsolutePaths.MY_TEAM)
   })
@@ -53,7 +55,7 @@ export default function CreateTeamPage() {
           {errors.name?.message && <Text color="red">{errors.name.message}</Text>}
         </FormControl>
         <HStack>
-          <Button isLoading={createTeamLoading} type="submit" colorScheme="brand">
+          <Button isLoading={createTeamLoading} type="submit" colorScheme={brandColor}>
             Létrehozom!
           </Button>
           <VStack>

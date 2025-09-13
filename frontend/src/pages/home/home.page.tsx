@@ -6,6 +6,7 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import Clock from '../countdown/components/clock'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
 import HomePageEventList from './components/HomePageEventList.tsx'
@@ -16,6 +17,7 @@ const HomePage = () => {
   const config = useConfigContext()
   const countdownConfig = config?.components?.countdown
   const homeConfig = config?.components?.home
+  const brandColor = useBrandColor(500, 500)
 
   const countTo = useMemo(() => {
     try {
@@ -41,7 +43,7 @@ const HomePage = () => {
           {homeConfig?.welcomeMessage.split('{}')[0] + ' '}
           {homeConfig?.welcomeMessage.split('{}').length > 1 && (
             <>
-              <Heading as="span" color="brand.500" size="3xl">
+              <Heading as="span" color={brandColor} size="3xl">
                 {config?.components?.app?.siteName || 'CMSch'}
               </Heading>{' '}
               {homeConfig?.welcomeMessage.split('{}')[1]}

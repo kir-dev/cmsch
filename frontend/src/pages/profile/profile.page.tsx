@@ -28,6 +28,7 @@ import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { API_BASE_URL } from '../../util/configs/environment.config'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import templateStringReplace from '../../util/templateStringReplace'
 import { GuildType, RoleType } from '../../util/views/profile.view'
@@ -54,7 +55,7 @@ const ProfilePage = () => {
   const config = useConfigContext()?.components
   const component = config?.profile
 
-  const brandColor = useColorModeValue('brand.500', 'brand.600')
+  const brandColor = useBrandColor()
   const greenProgressColor = useColorModeValue('green.500', 'green.600')
   const yellowProgressColor = useColorModeValue('yellow.400', 'yellow.500')
   const progressBackground = useColorModeValue('gray.200', 'gray.500')
@@ -113,21 +114,21 @@ const ProfilePage = () => {
         </Box>
         <VStack ml={{ base: 0, md: 'auto' }} mr={{ base: 'auto', md: 0 }} py={2} alignItems="stretch" mt={{ base: 5, md: 0 }}>
           {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
-            <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
+            <LinkButton colorScheme={brandColor} href={`${API_BASE_URL}/admin/control`} external>
               Admin panel
             </LinkButton>
           )}
           {config?.groupselection && profile.groupSelectionAllowed && (
-            <LinkButton colorScheme="brand" href={AbsolutePaths.CHANGE_GROUP}>
+            <LinkButton colorScheme={brandColor} href={AbsolutePaths.CHANGE_GROUP}>
               {component?.groupTitle} módosítása
             </LinkButton>
           )}
           {component.aliasChangeEnabled && (
-            <LinkButton colorScheme="brand" href={AbsolutePaths.CHANGE_ALIAS}>
+            <LinkButton colorScheme={brandColor} href={AbsolutePaths.CHANGE_ALIAS}>
               Becenév módosítása
             </LinkButton>
           )}
-          <Button colorScheme="brand" variant="outline" onClick={onLogout}>
+          <Button colorScheme={brandColor} variant="outline" onClick={onLogout}>
             Kijelentkezés
           </Button>
         </VStack>

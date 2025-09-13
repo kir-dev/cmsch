@@ -7,6 +7,7 @@ import { useGroupChangeMutation } from '../../api/hooks/group-change/useGroupCha
 import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
 
@@ -16,6 +17,7 @@ export function ProfileGroupChangePage() {
   const [error, setError] = useState<string>()
   const { sendMessage } = useServiceContext()
   const navigate = useNavigate()
+  const brandColor = useBrandColor()
 
   const onData = (response: GroupChangeDTO) => {
     switch (response.status) {
@@ -80,7 +82,7 @@ export function ProfileGroupChangePage() {
           <ButtonGroup>
             <Button
               variant="ghost"
-              colorScheme="brand"
+              colorScheme={brandColor}
               onClick={() => {
                 setValue(profile?.fallbackGroup.toString())
               }}
@@ -89,7 +91,7 @@ export function ProfileGroupChangePage() {
             </Button>
           </ButtonGroup>
           <ButtonGroup>
-            <Button onClick={onSubmit} colorScheme="brand" isLoading={isPending}>
+            <Button onClick={onSubmit} colorScheme={brandColor} isLoading={isPending}>
               Mentés
             </Button>
             <LinkButton href={AbsolutePaths.PROFILE} colorScheme="red" variant="outline">

@@ -1,5 +1,6 @@
-import { Center, Spinner, useColorModeValue } from '@chakra-ui/react'
+import { Center, Spinner } from '@chakra-ui/react'
 import { ReactNode, useEffect, useState } from 'react'
+import { useBrandColor } from '../util/core-functions.util.ts'
 
 type LoadingProps = {
   timeout?: number
@@ -14,7 +15,7 @@ type LoadingProps = {
  */
 export const Loading = ({ timeout = 0, children }: LoadingProps) => {
   const [show, setShow] = useState<boolean>(false)
-  const color = useColorModeValue('brand.500', 'brand.600')
+  const color = useBrandColor(500, 600)
   useEffect(() => {
     setTimeout(() => {
       setShow(true)

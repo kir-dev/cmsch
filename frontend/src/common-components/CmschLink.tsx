@@ -1,5 +1,6 @@
-import { Link as ChakraLink, LinkProps, useColorModeValue } from '@chakra-ui/react'
+import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router'
+import { useBrandColor } from '../util/core-functions.util.ts'
 
 type Props = {
   isExternal?: boolean
@@ -8,7 +9,7 @@ type Props = {
 
 export const CmschLink = ({ isExternal, to, children, ...props }: Props) => {
   const Component = (
-    <ChakraLink as="span" color={useColorModeValue('brand.500', 'brand.300')} {...props}>
+    <ChakraLink as="span" color={useBrandColor(500, 300)} {...props}>
       {children}
     </ChakraLink>
   )

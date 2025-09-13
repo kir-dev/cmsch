@@ -31,7 +31,7 @@ import { CmschPage } from '../../../common-components/layout/CmschPage'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
-import { joinPath } from '../../../util/core-functions.util'
+import { joinPath, useBrandColor } from '../../../util/core-functions.util'
 import { AbsolutePaths, Paths } from '../../../util/paths'
 import { RoleType, RoleTypeString } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
@@ -60,6 +60,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
   const [isEditingMembers, setIsEditingMembers] = useState(false)
   const isUserGroupAdmin = RoleType[userRole || RoleTypeString.GUEST] >= RoleType.PRIVILEGED
+  const brandColor = useBrandColor()
 
   const actionResponseCallback = (response: TeamResponses) => {
     if (response == TeamResponses.OK) {
@@ -144,7 +145,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Button
               leftIcon={<FaSignInAlt />}
               isLoading={joinTeamLoading}
-              colorScheme="brand"
+              colorScheme={brandColor}
               onClick={() => {
                 joinTeam(team?.id)
                 refetch()
@@ -173,7 +174,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             </Button>
           )}
           {teamComponent.showRaceButton && (
-            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} ml={5} colorScheme="brand">
+            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} ml={5} colorScheme={brandColor}>
               {raceComponent?.title ?? 'Verseny'} eredmények
             </LinkButton>
           )}

@@ -6,11 +6,13 @@ import { CustomTabButton } from '../../common-components/CustomTabButton'
 
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 
 const LeaderboardByUserOrGroupPage = () => {
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const component = useConfigContext()?.components?.leaderboard
   const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
+  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -39,7 +41,7 @@ const LeaderboardByUserOrGroupPage = () => {
   return (
     <>
       {component.showUserBoard && component.showGroupBoard ? (
-        <Tabs size={tabsSize} variant="soft-rounded" colorScheme="brand">
+        <Tabs size={tabsSize} variant="soft-rounded" colorScheme={brandColor}>
           <TabList px="2rem">
             {data?.userBoard && <CustomTabButton>Egyéni</CustomTabButton>}
             {data?.groupBoard && <CustomTabButton>Csoportos</CustomTabButton>}

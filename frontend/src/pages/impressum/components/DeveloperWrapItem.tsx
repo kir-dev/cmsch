@@ -3,7 +3,7 @@ import { Dev } from '../../../api/hooks/developers/useDevelopers'
 import { API_BASE_URL } from '../../../util/configs/environment.config'
 import { KirDevColor } from '../../../util/configs/theme.config'
 
-type Props = {
+export type Props = {
   dev: Dev
 }
 

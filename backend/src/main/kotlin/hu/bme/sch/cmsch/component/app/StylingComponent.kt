@@ -111,6 +111,9 @@ class StylingComponent(
     var darkTextColor by StringSettingRef(defaultValue = "#000000", type = SettingType.COLOR,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe")
 
+    var darkBrandingColor by StringSettingRef(defaultValue = "#880000", type = SettingType.COLOR,
+        fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre")
+
     var darkBackgroundUrl by StringSettingRef(type = SettingType.URL, fieldName = "Háttérkép",
         description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva.")
 
