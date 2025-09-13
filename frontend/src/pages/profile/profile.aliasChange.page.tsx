@@ -8,6 +8,7 @@ import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 
@@ -18,6 +19,7 @@ export const AliasChangePage = () => {
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
   const component = useConfigContext()?.components?.profile
+  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -78,7 +80,7 @@ export const AliasChangePage = () => {
           />
         </FormControl>
         <ButtonGroup mt={8} spacing={3} alignSelf="center">
-          <Button type="submit" colorScheme="brand">
+          <Button type="submit" colorScheme={brandColor}>
             Mentés
           </Button>
           <Button type="button" onClick={removeAlias} colorScheme="red" variant="outline">

@@ -6,6 +6,7 @@ import { MessageTypes, useServiceContext } from '../../api/contexts/service/Serv
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { UnauthorizedPage } from './unauthorized.page'
 
@@ -17,6 +18,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   const { clearMessage, message, type } = useServiceContext()
   const [clonedMessage, setClonedMessage] = useState<string | undefined>('')
   const [clonedMessageType, setClonedMessageType] = useState<MessageTypes>(MessageTypes.GENERAL)
+  const brandColor = useBrandColor()
   useEffect(() => {
     // Cloning the error is needed to clear the error globally
     // The message from prop can override the message
@@ -40,7 +42,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
         <Markdown text={clonedMessage} />
       </Box>
       <ButtonGroup justifyContent="center" marginTop={10}>
-        <LinkButton href="/" colorScheme="brand">
+        <LinkButton href="/" colorScheme={brandColor}>
           Főoldal
         </LinkButton>
       </ButtonGroup>

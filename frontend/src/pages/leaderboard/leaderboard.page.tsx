@@ -8,6 +8,7 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown.tsx'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import LeaderboardByCategoryPage from './leaderboardByCategory.page.tsx'
 import LeaderboardByUserOrGroupPage from './leaderboardByUserOrGroup.page.tsx'
 
@@ -16,6 +17,7 @@ const LeaderboardPage = () => {
   const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
   const byCategory = useMatch('/leaderboard/category')
   const navigate = useNavigate()
+  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -56,7 +58,7 @@ const LeaderboardPage = () => {
         {data?.groupScore !== undefined && <BoardStat label="Tanköröd pontjai" value={data.groupScore} />}
       </HStack>
 
-      <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
+      <Tabs isLazy isFitted colorScheme={brandColor} variant="enclosed" index={tabIndex} onChange={onTabSelected}>
         <TabList>
           <Tab>Tankörönként</Tab>
           <Tab>Feladatonként</Tab>

@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Fade, Heading, Spinner, useColorModeValue } from '@chakra-ui/react'
+import { Button, ButtonGroup, Fade, Heading, Spinner } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
@@ -8,13 +8,15 @@ import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useScanTokenMutation } from '../../api/hooks/token/useScanTokenMutation'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { QrReader } from '../../common-components/QrReader'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 
 const TokenScan = () => {
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthContext()
-  const spinnerColor = useColorModeValue('brand.500', 'brand.600')
+  const spinnerColor = useBrandColor(500, 600)
+  const brandColor = useBrandColor()
   const { mutate, isPending, isError, reset, data, isIdle } = useScanTokenMutation()
 
   const handleScan = (qrData: string | null) => {
@@ -54,7 +56,7 @@ const TokenScan = () => {
           Vissza
         </Button>
         {!isIdle && (
-          <Button colorScheme="brand" leftIcon={<FaQrcode />} onClick={reset}>
+          <Button colorScheme={brandColor} leftIcon={<FaQrcode />} onClick={reset}>
             Új QR scannelése
           </Button>
         )}

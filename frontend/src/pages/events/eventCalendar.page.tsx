@@ -8,12 +8,14 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import { DayCalendar } from './components/event-calendar/DayCalendar'
 import { WeekCalendar } from './components/event-calendar/WeekCalendar'
 
 function EventCalendarPage() {
   const component = useConfigContext()?.components?.event
+  const brandColor = useBrandColor()
 
   const { isLoading, isError, data } = useEventListQuery()
 
@@ -23,7 +25,7 @@ function EventCalendarPage() {
   return (
     <CmschPage>
       <Helmet title="Naptár" />
-      <LinkButton colorScheme="brand" href={AbsolutePaths.EVENTS} leftIcon={<FaArrowLeft />}>
+      <LinkButton colorScheme={brandColor} href={AbsolutePaths.EVENTS} leftIcon={<FaArrowLeft />}>
         Vissza a listához
       </LinkButton>
       <Box mb={10}>

@@ -6,11 +6,13 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CustomTabButton } from '../../common-components/CustomTabButton'
 import { LeaderBoardTable } from '../../common-components/LeaderboardTable'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 
 export default function LeaderboardByCategoryPage() {
   const { data, isLoading, isError } = useLeaderBoardQuery('categorized')
   const component = useConfigContext()?.components?.leaderboard
+  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -42,7 +44,7 @@ export default function LeaderboardByCategoryPage() {
   return (
     <>
       {component.showUserBoard && component.showGroupBoard ? (
-        <Tabs size={{ base: 'sm', md: 'md' }} variant="soft-rounded" colorScheme="brand">
+        <Tabs size={{ base: 'sm', md: 'md' }} variant="soft-rounded" colorScheme={brandColor}>
           <TabList px="2rem">
             {data?.userBoard && <CustomTabButton>Egyéni</CustomTabButton>}
             {data?.groupBoard && <CustomTabButton>Csoportos</CustomTabButton>}

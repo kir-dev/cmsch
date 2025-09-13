@@ -14,7 +14,7 @@ import {
 import { RefObject } from 'react'
 import { useConfigContext } from '../../../../api/contexts/config/ConfigContext'
 import { LinkButton } from '../../../../common-components/LinkButton'
-import { formatHu, stringifyTimeRange } from '../../../../util/core-functions.util'
+import { formatHu, stringifyTimeRange, useBrandColor } from '../../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../../util/paths'
 import { EventListView } from '../../../../util/views/event.view'
 
@@ -27,7 +27,8 @@ interface EventBoxProps {
 
 export function EventBox({ event, boxRef }: EventBoxProps) {
   const component = useConfigContext()?.components?.event
-  const eventBg = useColorModeValue('brand.500', 'brand.300')
+  const eventBg = useBrandColor(500, 300)
+  const borderColor = useBrandColor(600, 600)
   const eventTextColor = useColorModeValue('white', 'black')
   const isShort = 100 - event.top - event.bottom < 5
   return (
@@ -44,7 +45,7 @@ export function EventBox({ event, boxRef }: EventBoxProps) {
           bottom={event.bottom + '%'}
           bg={eventBg}
           borderWidth={1}
-          borderColor="brand.600"
+          borderColor={borderColor}
           borderRadius="md"
           pt={isShort ? 0 : 1}
           pb={1}

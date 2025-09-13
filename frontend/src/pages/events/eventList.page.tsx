@@ -27,6 +27,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { Paths } from '../../util/paths'
 import { EventListView } from '../../util/views/event.view'
 import { CardListItem } from './components/CardListItem'
@@ -42,6 +43,7 @@ const EventListPage = () => {
   const breakpoint = useBreakpoint()
   const inputRef = createRef<HTMLInputElement>()
   const [filteredEvents, setFilteredEvents] = useState<EventListView[] | undefined>()
+  const brandColor = useBrandColor()
 
   const availableFilters = []
   if (component?.filterByCategory) availableFilters.push(FILTER.CATEGORY)
@@ -77,10 +79,10 @@ const EventListPage = () => {
         </Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
       </Box>
-      <LinkButton colorScheme="brand" mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
+      <LinkButton colorScheme={brandColor} mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
         Megtekintés a naptárban
       </LinkButton>
-      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
+      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme={brandColor}>
         {availableFilters.length > 0 && (
           <TabList>
             <CustomTabButton>Mind</CustomTabButton>

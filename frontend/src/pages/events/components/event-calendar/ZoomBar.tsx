@@ -1,5 +1,6 @@
 import { HStack, IconButton, Text } from '@chakra-ui/react'
 import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
+import { useBrandColor } from '../../../../util/core-functions.util.ts'
 
 interface ZoomBarProps {
   scale: number
@@ -8,11 +9,12 @@ interface ZoomBarProps {
 }
 
 export function ZoomBar({ scale, incrementScale, decrementScale }: ZoomBarProps) {
+  const brandColor = useBrandColor()
   return (
     <HStack justify="center" mt={2}>
-      <IconButton colorScheme="brand" aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
+      <IconButton colorScheme={brandColor} aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
       <Text>{Math.round(scale * 100)}%</Text>
-      <IconButton colorScheme="brand" aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
+      <IconButton colorScheme={brandColor} aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
     </HStack>
   )
 }
