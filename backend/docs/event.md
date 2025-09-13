@@ -1,37 +1,3 @@
-package hu.bme.sch.cmsch.component.event
-
-import hu.bme.sch.cmsch.component.ComponentApiBase
-import hu.bme.sch.cmsch.component.app.ApplicationComponent
-import hu.bme.sch.cmsch.component.app.MenuService
-import hu.bme.sch.cmsch.service.AdminMenuService
-import hu.bme.sch.cmsch.service.AuditLogService
-import hu.bme.sch.cmsch.service.ControlPermissions.PERMISSION_CONTROL_EVENTS
-import hu.bme.sch.cmsch.service.StorageService
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestMapping
-
-@Controller
-@RequestMapping("/admin/control/component/event")
-@ConditionalOnBean(EventComponent::class)
-class EventComponentController(
-    adminMenuService: AdminMenuService,
-    component: EventComponent,
-    menuService: MenuService,
-    auditLogService: AuditLogService,
-    storageService: StorageService,
-    appComponent: ApplicationComponent
-) : ComponentApiBase(
-    adminMenuService,
-    EventComponent::class.java,
-    component,
-    PERMISSION_CONTROL_EVENTS,
-    "Események",
-    "Események testreszabása",
-    menuService = menuService,
-    auditLogService = auditLogService,
-    storageService = storageService,
-    documentationMarkdown = """
 Az **Események** komponens segítségével a rendezvény/program összes eseményét rögzítheted és megjelenítheted a felhasználók számára.  
 Az adminfelületen keresztül kezelheted az eseményeket és testre szabhatod a megjelenést.
 
@@ -81,5 +47,3 @@ A lista tartalmazza az összes rögzített eseményt, státuszukkal együtt (lá
 - Ha **szűrési lehetőségeket** is bekapcsolsz (nap, helyszín, kategória), a felhasználók könnyebben navigálhatnak a programok között.
 - Az **importálás** hasznos nagy mennyiségű program gyors rögzítésére (pl. Excelből).
 - Az **időpontok** helyes beállítása kulcsfontosságú a felhasználói megjelenítéshez és az aktuális program kiemeléséhez.
-"""
-)
