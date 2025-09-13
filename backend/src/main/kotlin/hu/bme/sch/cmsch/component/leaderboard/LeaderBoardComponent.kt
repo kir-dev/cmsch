@@ -52,6 +52,9 @@ class LeaderBoardComponent(
     var leaderboardDetailsByCategoryEnabled by BooleanSettingRef(fieldName = "Toplista kategória szerint aktív",
         description = "A részletes toplista leküldésre kerül (Kategóriánként)")
 
+    var leaderBoardCategoryName by StringSettingRef("Kategóriánként",
+        fieldName = "Kategória megnevezése", description = "A kategória megnevezése a részletes toplistán: Kategóriánként, Feleadatonként stb.")
+
     var leaderboardFrozen by BooleanSettingRef(true, fieldName = "Toplista befagyasztott",
         description = "A toplista értéke be van fagyasztva")
 
@@ -89,6 +92,12 @@ class LeaderBoardComponent(
 
     var showGroupBoard by BooleanSettingRef(fieldName = "Csoport toplista mutatása",
         description = "Csoport toplista látható legyen-e")
+
+    var groupBoardName by StringSettingRef("Csoportok",
+        fieldName = "Csoport toplista neve", description = "A csoport toplista neve a menüben és az oldal tetején")
+
+    var myGroupName by StringSettingRef("Saját csoport",
+        fieldName = "Saját csoport neve", description = "A saját csoport neve: Tanköröd/Szobád/Csapatod")
 
     var maxGroupEntryToShow by NumberSettingRef(-1, fieldName = "Toplista sorainak száma", strictConversion = false,
         description = "Hány csoportot mutasson, -1 = az összeset")

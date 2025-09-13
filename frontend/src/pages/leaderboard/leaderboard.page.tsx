@@ -55,13 +55,13 @@ const LeaderboardPage = () => {
 
       <HStack my={5}>
         {data?.userScore !== undefined && <BoardStat label="Saját pont" value={data.userScore} />}
-        {data?.groupScore !== undefined && <BoardStat label="Tanköröd pontjai" value={data.groupScore} />}
+        {data?.groupScore !== undefined && <BoardStat label={`${component.myGroupName} pontjai`} value={data.groupScore} />}
       </HStack>
 
       <Tabs isLazy isFitted colorScheme={brandColor} variant="enclosed" index={tabIndex} onChange={onTabSelected}>
         <TabList>
-          <Tab>Tankörönként</Tab>
-          <Tab>Feladatonként</Tab>
+          <Tab value={component.groupBoardName}>Csapatonként</Tab>
+          <Tab value={component.leaderBoardCategoryName}>Kategóránként</Tab>
         </TabList>
         <TabPanels>
           <TabPanel px={0}>
