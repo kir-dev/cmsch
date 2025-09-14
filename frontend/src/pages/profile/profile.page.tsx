@@ -159,7 +159,7 @@ const ProfilePage = () => {
       {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={8} borderWidth={2} />}
 
       {component.showRaceStats && profile?.raceStat && (
-        <Grid templateColumns="1fr 3fr" gap={0}>
+        <Grid templateColumns={{ base: '1fr 1fr', sm: '1fr 2fr', md: '1fr 3fr' }}>
           <Text as="i">Mérés eredmény: </Text>
           <Text>
             <Text as="b">{profile?.raceStat}s</Text>
@@ -168,10 +168,14 @@ const ProfilePage = () => {
         </Grid>
       )}
       {component.showRaceStats && profile?.freestyleRaceStat && (
-        <Grid templateColumns="1fr 3fr" gap={0}>
-          <Text as="i">Funky Mérés eredmény: </Text>
+        <Grid templateColumns={{ base: '1fr 1fr', sm: '1fr 2fr', md: '1fr 3fr' }}>
+          <Text as="i" whiteSpace="nowrap">
+            Funky Mérés:{' '}
+          </Text>
           <Text>
-            <Text as="b">{profile.freestyleRaceStat}s</Text>
+            <Text as="b" whiteSpace="nowrap">
+              {profile.freestyleRaceStat}s
+            </Text>
             {profile.freestyleRaceDescription && <Text as="b" fontStyle="italic">{` (${profile.freestyleRaceDescription})`}</Text>}
           </Text>
         </Grid>
