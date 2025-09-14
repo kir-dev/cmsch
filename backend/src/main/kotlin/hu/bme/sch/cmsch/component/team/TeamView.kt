@@ -75,5 +75,5 @@ data class TeamLabelView(
     var id: Int = 0,
     var name: String = "",
     var color: String? = null,
-    var desc: String? = null,
+    var description: String? = null,
 )
