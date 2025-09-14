@@ -270,4 +270,25 @@ open class RaceService(
             .sortedByDescending { it.time }
     }
 
+    /**
+     * Shorthand query of freestyle record of the user with the given ID.
+     * This does not query all the users, just the user requested.
+     * @return FreestyleRaceEntryDto of the user with the given id, or null if not present.
+     */
+    @Transactional(readOnly = true)
+    open fun getFreestyleEntryOfUser(userId: Int): FreestyleRaceEntryDto? {
+        val entity = freestyleRaceRecordRepository.findByUserId(userId)
+
+        entity?.let {
+            return FreestyleRaceEntryDto(
+                id = it.id,
+                name = it.userName,
+                groupName = it.groupName,
+                time = it.time,
+                description = it.description,
+            )
+        }.run {
+            return null
+        }
+    }
 }

@@ -189,6 +189,7 @@ export interface Profile {
   showRiddles: boolean
   riddleCounterName: string
   showTokens: boolean
+  showRaceStats: boolean
   tokenCounterName: string
   showFullName: boolean
   showGuild: boolean

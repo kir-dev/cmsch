@@ -8,6 +8,7 @@ import {
   CircularProgressLabel,
   Divider,
   Flex,
+  Grid,
   Heading,
   Link,
   Text,
@@ -76,7 +77,7 @@ const ProfilePage = () => {
           {component.messageBoxContent}
         </Alert>
       )}
-      <PresenceAlert acquired={profile.collectedTokenCount} needed={profile.minTokenToComplete} mt={5} />
+      <PresenceAlert acquired={profile?.collectedTokenCount || 0} needed={profile?.minTokenToComplete || 0} mt={5} />
 
       {component?.showIncompleteProfile && (
         <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mb={5}>
@@ -104,7 +105,7 @@ const ProfilePage = () => {
           {component.showNeptun && <Text fontSize="xl">Neptun: {profile.neptun || 'nincs'}</Text>}
           {component.showEmail && <Text fontSize="xl">E-mail: {profile.email || 'nincs'}</Text>}
 
-          {component.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
+          {component.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile?.guild || 'UNKNOWN'] || 'nincs'}</Text>}
           {component.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
           {component.showGroup && (
             <Text fontSize="xl">
@@ -156,6 +157,26 @@ const ProfilePage = () => {
         </>
       )}
       {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={8} borderWidth={2} />}
+
+      {component.showRaceStats && profile?.raceStat && (
+        <Grid templateColumns="1fr 3fr" gap={0}>
+          <Text as="i">Mérés eredmény: </Text>
+          <Text>
+            <Text as="b">{profile?.raceStat}s</Text>
+            {profile.racePlacement && <Text as="b" fontStyle="italic">{` (${profile.racePlacement}. helyezett)`}</Text>}
+          </Text>
+        </Grid>
+      )}
+      {component.showRaceStats && profile?.freestyleRaceStat && (
+        <Grid templateColumns="1fr 3fr" gap={0}>
+          <Text as="i">Funky Mérés eredmény: </Text>
+          <Text>
+            <Text as="b">{profile.freestyleRaceStat}s</Text>
+            {profile.freestyleRaceDescription && <Text as="b" fontStyle="italic">{` (${profile.freestyleRaceDescription})`}</Text>}
+          </Text>
+        </Grid>
+      )}
+
       <Flex justify="center" alignItems="center" flexWrap="wrap">
         {component.showTasks && (
           <Center p={3}>
@@ -219,11 +240,11 @@ const ProfilePage = () => {
               <CircularProgress
                 color={greenProgressColor}
                 size="10rem"
-                value={(profile.completedRiddleCount / profile.totalRiddleCount) * 100}
+                value={((profile?.completedRiddleCount || 0) / (profile?.totalRiddleCount || 0)) * 100}
                 trackColor={progressBackground}
               >
                 <CircularProgressLabel color={profile.completedRiddleCount === 0 ? 'gray.500' : greenProgressColor}>
-                  {Math.round((profile.completedRiddleCount / profile.totalRiddleCount) * 100)}%
+                  {Math.round(((profile?.completedRiddleCount || 0) / (profile?.totalRiddleCount || 0)) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
             </Flex>
@@ -246,11 +267,11 @@ const ProfilePage = () => {
               <CircularProgress
                 color={greenProgressColor}
                 size="10rem"
-                value={(profile.collectedTokenCount / profile.totalTokenCount) * 100}
+                value={((profile?.collectedTokenCount || 0) / (profile?.totalTokenCount || 0)) * 100}
                 trackColor={progressBackground}
               >
                 <CircularProgressLabel color={profile.collectedTokenCount === 0 ? 'gray.500' : greenProgressColor}>
-                  {Math.round((profile.collectedTokenCount / profile.totalTokenCount) * 100)}%
+                  {Math.round(((profile?.collectedTokenCount || 0) / (profile?.totalTokenCount || 0)) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
             </Flex>
