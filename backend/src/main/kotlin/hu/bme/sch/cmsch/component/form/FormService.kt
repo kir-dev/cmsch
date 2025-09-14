@@ -216,7 +216,7 @@ class FormService(
 
                 when (field.type) {
                     FormElementType.NUMBER -> {
-                        if (!value.matches(Regex("[0-9]+")) && (value != "" || field.required)) {
+                        if (!value.matches(Regex("[0-9]+")) && (value!="" || field.required)) {
                             log.info("User {} invalid NUMBER value {} = '{}'", user?.id, field.fieldName, value)
                             return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 11)
                         }
