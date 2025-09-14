@@ -31,7 +31,7 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
                 {team.name}
               </Heading>
               {team.labels &&
-                team.labels.map((label, index) => <TeamLabel name={label.name} color={label.color} desc={label.desc} key={index} />)}
+                team.labels.map((label, index) => <TeamLabel name={label.name} color={label.color} desc={label.description} key={index} />)}
             </HStack>
             {team.introduction && <Box>{team.introduction}</Box>}
           </VStack>

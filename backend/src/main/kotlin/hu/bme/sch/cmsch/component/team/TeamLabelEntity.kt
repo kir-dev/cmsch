@@ -63,7 +63,7 @@ data class TeamLabelEntity(
         note = "Részletes leírás ami megjelenik, mikor az egeret a címkére görgetjük.",
     )
     @property:ImportFormat
-    var desc: String = "",
+    var description: String = "",
 
     @field:JsonView(value = [Edit::class])
     @Column(nullable = false)
