@@ -48,11 +48,8 @@ data class GalleryEntity(
     var showOnHomePage: Boolean = false,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
-    @Column(nullable = false)
-    @property:GenerateInput(
-        maxLength = 64, order = 4, label = "Url",
-        note = "A galériában tárolt kép linkje"
-    )
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @property:GenerateInput(order = 4, label = "Url", note = "A galériában tárolt kép linkje")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var url: String = "",

@@ -98,8 +98,8 @@ data class TokenEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @ColumnDefault("''")
-    @Column(nullable = false, length = 255)
-    @property:GenerateInput(maxLength = 255, order = 9, label = "Kijelzett kép URL-je",
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @property:GenerateInput(order = 9, label = "Kijelzett kép URL-je",
         note = "Ha nem üres, megjelenik beolvasás után")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
