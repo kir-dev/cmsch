@@ -163,11 +163,14 @@ export interface Leaderboard {
   leaderboardEnabled: string
   leaderboardDetailsEnabled: boolean
   leaderboardDetailsByCategoryEnabled: boolean
+  leaderBoardCategoryName: string
   leaderboardFrozen: string
   maxGroupEntryToShow: number
   maxUserEntryToShow: number
   minScoreToShow: number
   showGroupBoard: boolean
+  groupBoardName: string
+  myGroupName: string
   showScores: boolean
   showGroupOfUser: boolean
   showUserBoard: boolean
