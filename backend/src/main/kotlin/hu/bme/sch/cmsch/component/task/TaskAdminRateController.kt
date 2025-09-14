@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartRequest
 
 @Controller
 @RequestMapping("/admin/control/rate-tasks")
@@ -180,12 +181,12 @@ class TaskAdminRateController(
     }
 
     @PostMapping("/grade/{id}")
-    fun grade(@PathVariable id: Int,
-             @ModelAttribute(binding = false) dto: SubmittedTaskEntity,
-             model: Model,
-             auth: Authentication,
-             @RequestParam(defaultValue = "false") delete0: Boolean,
-             @RequestParam(defaultValue = "false") delete1: Boolean,
+    fun grade(
+        @PathVariable id: Int,
+        @ModelAttribute(binding = false) dto: SubmittedTaskEntity,
+        model: Model,
+        auth: Authentication,
+        multipartRequest: MultipartRequest,
     ): String {
         val user = auth.getUser()
         if (editPermission.validate(user).not()) {
@@ -202,7 +203,7 @@ class TaskAdminRateController(
         }
 
         val newValues = StringBuilder("grade new value: ")
-        updateEntity(descriptor, user, entity.get(), dto, newValues,  delete0, null, delete1, null)
+        updateEntity(descriptor, user, entity.get(), dto, newValues, multipartRequest)
         if (entity.get().approved && entity.get().rejected)
             entity.get().rejected = false
         saveChangeHistory(entity.get(), user.userName)
