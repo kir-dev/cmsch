@@ -23,11 +23,9 @@ import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.multipart.MultipartRequest
 import java.lang.reflect.Method
 import java.util.*
 import java.util.function.Supplier
-import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -579,11 +577,11 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     @PostMapping("/create")
-    fun create(
-        @ModelAttribute(binding = false) dto: T,
-        model: Model,
-        auth: Authentication,
-        multipartRequest: MultipartRequest,
+    fun create(@ModelAttribute(binding = false) dto: T,
+               @RequestParam(required = false) file0: MultipartFile?,
+               @RequestParam(required = false) file1: MultipartFile?,
+               model: Model,
+               auth: Authentication,
     ): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -605,7 +603,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
 
         val entity = supplier.get()
         val newValues = StringBuilder("entity new value: ")
-        updateEntity(descriptor, user, entity, dto, newValues, multipartRequest)
+        updateEntity(descriptor, user, entity, dto, newValues, false, file0, false, file1)
         entity.id = 0
         if (onEntityPreSave(entity, auth)) {
             auditLog.create(user, component.component, newValues.toString())
@@ -620,9 +618,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     @PostMapping("/edit/{id}")
     fun edit(@PathVariable id: Int,
              @ModelAttribute(binding = false) dto: T,
+             @RequestParam(required = false) file0: MultipartFile?,
+             @RequestParam(required = false) file1: MultipartFile?,
              model: Model,
              auth: Authentication,
-             multipartRequest: MultipartRequest
+             @RequestParam(defaultValue = "false") delete0: Boolean,
+             @RequestParam(defaultValue = "false") delete1: Boolean,
     ): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -648,7 +649,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "redirect:/admin/control/$view/"
 
         val newValues = StringBuilder("entity new value: ")
-        updateEntity(descriptor, user, actualEntity, dto, newValues, multipartRequest)
+        updateEntity(descriptor, user, actualEntity, dto, newValues, delete0, file0, delete1, file1)
         actualEntity.id = id
         if (onEntityPreSave(actualEntity, auth)) {
             auditLog.edit(user, component.component, newValues.toString())
@@ -661,12 +662,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
     }
 
     internal fun updateEntity(
-        descriptor: OverviewBuilder<T>,
-        user: CmschUser,
-        entity: T,
-        dto: T,
-        newValues: StringBuilder,
-        multipartRequest: MultipartRequest
+        descriptor: OverviewBuilder<T>, user: CmschUser, entity: T, dto: T, newValues: StringBuilder,
+        delete0: Boolean, file0: MultipartFile?,
+        delete1: Boolean, file1: MultipartFile?
     ) =
         descriptor.getInputs().forEach {
             val (property, input) = it
@@ -674,18 +672,22 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             if (property !is KMutableProperty1<out Any, *>) return@forEach
             if (input.ignore || input.minimumRole.value > user.role.value) return@forEach
 
-            when (input.interpreter) {
-                InputInterpreter.INHERIT if input.type == InputType.IMAGE_URL -> {
-                    val urlInputValue = property.getter.call(dto)
-                    val value = multipartRequest.fileMap[property.name]
-                        ?.let { file -> if (file.size > 0) file else null }
-                        ?.let { file -> storageService.saveObjectWithRandomName(view, file).getOrNull() }
-                        ?: urlInputValue
-                    property.setter.call(entity, value)
-                    newValues.append(property.name).append("=").append(value).append(", ")
+            when {
+                input.interpreter == InputInterpreter.INHERIT && input.type == InputType.FILE -> {
+                    when (input.fileId) {
+                        "0" -> saveFileForEntity(delete0, file0, property, entity, newValues)
+                        "1" -> saveFileForEntity(delete1, file1, property, entity, newValues)
+                        else -> log.error("Invalid file field name: file${input.fileId}")
+                    }
                 }
 
-                InputInterpreter.PATH -> {
+                (input.interpreter == InputInterpreter.INHERIT || input.interpreter == InputInterpreter.SEARCH) && input.type != InputType.FILE -> {
+                    property.setter.call(entity, property.getter.call(dto))
+                    newValues.append(property.name).append("=").append(property.getter.call(dto)?.toString()
+                        ?.replace("\r", "")?.replace("\n", "") ?: "<null>").append(", ")
+                }
+
+                input.interpreter == InputInterpreter.PATH -> {
                     val value = property.getter.call(dto)
                         ?.toString()
                         ?.lowercase()
@@ -695,13 +697,30 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     newValues.append(property.name).append("=").append(value).append(", ")
                 }
 
-                InputInterpreter.CUSTOM -> {
+                input.interpreter == InputInterpreter.CUSTOM -> {
                     handleCustomInterpreter(it, newValues)
                 }
-
-                else -> {}
             }
         }
+
+    private fun saveFileForEntity(
+        delete: Boolean,
+        file: MultipartFile?,
+        property: KMutableProperty1<out Any, *>,
+        entity: T,
+        newValues: StringBuilder
+    ) {
+        if (delete) {
+            property.setter.call(entity, "")
+        } else {
+            file?.let { file -> storageService.saveObjectWithRandomName(view, file) }
+                ?.ifPresent { url ->
+                    newValues.append(property.name).append("=name@").append(url).append(", ")
+                    property.setter.call(entity, url)
+                }
+        }
+    }
+
 
     @GetMapping("/resource")
     fun resource(model: Model, auth: Authentication): String {

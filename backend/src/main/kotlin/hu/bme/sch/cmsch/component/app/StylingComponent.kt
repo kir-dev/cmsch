@@ -61,13 +61,13 @@ class StylingComponent(
     var lightBrandingColor by StringSettingRef(defaultValue = "#880000", type = SettingType.COLOR,
         fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre")
 
-    var lightBackgroundUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Háttérkép",
+    var lightBackgroundUrl by StringSettingRef(type = SettingType.URL, fieldName = "Háttérkép",
         description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva.")
 
-    var lightMobileBackgroundUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Mobil háttérkép",
+    var lightMobileBackgroundUrl by StringSettingRef(type = SettingType.URL, fieldName = "Mobil háttérkép",
         description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva.")
 
-    var lightLogoUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Oldal logója",
+    var lightLogoUrl by StringSettingRef(type = SettingType.URL, fieldName = "Oldal logója",
         description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
@@ -114,13 +114,13 @@ class StylingComponent(
     var darkBrandingColor by StringSettingRef(defaultValue = "#880000", type = SettingType.COLOR,
         fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre")
 
-    var darkBackgroundUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Háttérkép",
+    var darkBackgroundUrl by StringSettingRef(type = SettingType.URL, fieldName = "Háttérkép",
         description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva.")
 
-    var darkMobileBackgroundUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Mobil háttérkép",
+    var darkMobileBackgroundUrl by StringSettingRef(type = SettingType.URL, fieldName = "Mobil háttérkép",
         description = "Mobilon megjelenő háttér URL-je. Ha üres, akkor nincs háttér beállítva.")
 
-    var darkLogoUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Oldal logója",
+    var darkLogoUrl by StringSettingRef(type = SettingType.URL, fieldName = "Oldal logója",
         description = "Oldalon megjelenő logó URL-je. Ha üres, akkor az oldal neve jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------

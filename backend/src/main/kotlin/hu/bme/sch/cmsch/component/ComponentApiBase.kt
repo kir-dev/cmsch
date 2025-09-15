@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component
 
+import hu.bme.sch.cmsch.admin.dashboard.DashboardDocsCard
 import hu.bme.sch.cmsch.component.app.MenuService
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.*
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartRequest
-import kotlin.jvm.optionals.getOrNull
 
 abstract class ComponentApiBase(
     val adminMenuService: AdminMenuService,
@@ -125,8 +125,8 @@ abstract class ComponentApiBase(
         component.allSettings.forEach { setting ->
             when (setting.type) {
                 SettingType.BOOLEAN -> {
-                    val property = allRequestParams[setting.property]
-                    val value = property != null && property != "off"
+                    val value = allRequestParams[setting.property] != null &&
+                            allRequestParams[setting.property] != "off"
                     log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, value)
                     newValues.append(setting.property).append("=").append(value).append(", ")
                     (setting as MutableSetting<*>).parseAndSet(if (value) "true" else "false")
@@ -140,22 +140,6 @@ abstract class ComponentApiBase(
                             log.info("Uploading image {}.{} url: {}", setting.component, setting.property, url)
                             newValues.append(setting.property).append("=url@").append(url).append(", ")
                         }
-                    }
-                }
-
-                SettingType.IMAGE_URL -> {
-                    val urlInputValue = allRequestParams[setting.property]
-                    val url = multipartRequest.fileMap[setting.property]
-                        ?.let { file ->
-                            if (file.size <= 0) return@let null
-                            log.info("Uploading image {}.{} name: {}", setting.component, setting.property, file.name)
-                            return@let storageService.saveObjectWithRandomName("public", file).getOrNull()
-                        }
-                        ?: urlInputValue
-                    url?.let {
-                        log.info("Changing the value of {}.{} to '{}'", setting.component, setting.property, it)
-                        newValues.append(setting.property).append("=").append(it).append(", ")
-                        (setting as MutableSetting<*>).parseAndSet(it)
                     }
                 }
 
