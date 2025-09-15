@@ -5,44 +5,49 @@ import { TokenView } from './token.view'
 import { TopListAbstractEntryView } from './toplistAbstractEntry.view'
 
 export interface ProfileView {
-  cmschId: string
+  cmschId?: string
   loggedIn: boolean
-  fullName: string
-  alias: string
-  email: string
-  neptun: string
-  guild: keyof typeof GuildType
-  major: MajorType
+  fullName?: string
+  alias?: string
+  email?: string
+  neptun?: string
+  guild?: keyof typeof GuildType
+  major?: MajorType
 
-  groupName: string
-  groupLeaders: GroupLeaderView[]
+  groupName?: string
+  groupLeaders?: GroupLeaderView[]
   groupSelectionAllowed: boolean
-  availableGroups: Record<number, string>
-  fallbackGroup: number
+  availableGroups?: Record<number, string>
+  fallbackGroup?: number
 
   role: keyof typeof RoleType
 
-  tokens: TokenView[]
-  minTokenToComplete: number
-  totalTokenCount: number
-  collectedTokenCount: number
+  tokens?: TokenView[]
+  minTokenToComplete?: number
+  totalTokenCount?: number
+  collectedTokenCount?: number
 
-  totalRiddleCount: number
-  completedRiddleCount: number
+  totalRiddleCount?: number
+  completedRiddleCount?: number
 
-  totalTaskCount: number
-  completedTaskCount: number
-  submittedTaskCount: number
+  totalTaskCount?: number
+  submittedTaskCount?: number
+  completedTaskCount?: number
 
-  locations: GroupMemberLocationView[]
-  debts: DebtView[]
-  leaderboard: TopListAbstractEntryView[]
+  racePlacement?: number
+  raceStat?: number
+  freestyleRaceDescription?: string
+  freestyleRaceStat?: number
 
-  profileIsComplete: boolean
+  locations?: GroupMemberLocationView[]
+  debts?: DebtView[]
+  leaderboard?: TopListAbstractEntryView[]
+
+  profileIsComplete?: boolean
   incompleteTasks?: string[]
 
-  groupMessage: string
-  userMessage: string
+  groupMessage?: string
+  userMessage?: string
 }
 
 //cannot compare roles if the enums values are strings use the RoleType[role] syntax

@@ -12,4 +12,5 @@ interface FreestyleRaceRecordRepository : CrudRepository<FreestyleRaceRecordEnti
 
     override fun findAll(): List<FreestyleRaceRecordEntity>
 
+    fun findByUserId(userId: Int): FreestyleRaceRecordEntity?
 }
