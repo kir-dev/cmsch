@@ -54,7 +54,7 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteL
             <Heading as="h3" size="md" marginY={0} maxWidth="100%">
               {member.name}
             </Heading>
-            {!onAccept && <Text>{member.admin ? 'Vezetőségi tag' : 'Tag'}</Text>}
+            {!onAccept && <Text>{member.isAdmin ? 'Vezetőségi tag' : 'Tag'}</Text>}
           </VStack>
           <Spacer />
           <HStack>
@@ -69,9 +69,9 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteL
             )}
             {onRoleChange && (
               <RoleButton
-                isAdmin={member.admin}
+                isAdmin={member.isAdmin}
                 onRoleChange={dialogAction(
-                  member.admin ? 'Jogosultság elvétele' : 'Jogosultság adása',
+                  member.isAdmin ? 'Jogosultság elvétele' : 'Jogosultság adása',
                   `Biztosan jogosultságot változtatsz nála: ${member.name}?`,
                   onRoleChange
                 )}

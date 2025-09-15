@@ -246,21 +246,21 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               key={m.id}
               member={m}
               onPromoteLeadership={
-                isEditingMembers && teamComponent?.promoteLeadershipEnabled && !m.admin && !m.you
+                isEditingMembers && teamComponent?.promoteLeadershipEnabled && !m.isAdmin && !m.isYou
                   ? () => {
                       promoteLeadership(m.id)
                     }
                   : undefined
               }
               onRoleChange={
-                isEditingMembers && teamComponent?.togglePermissionEnabled && !m.you
+                isEditingMembers && teamComponent?.togglePermissionEnabled && !m.isYou
                   ? () => {
                       togglePermissions(m.id)
                     }
                   : undefined
               }
               onDelete={
-                isEditingMembers && teamComponent?.kickEnabled && !m.admin && !m.you
+                isEditingMembers && teamComponent?.kickEnabled && !m.isAdmin && !m.isYou
                   ? () => {
                       kickMember(m.id)
                     }
