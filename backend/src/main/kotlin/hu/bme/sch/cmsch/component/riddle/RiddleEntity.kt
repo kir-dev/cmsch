@@ -37,7 +37,7 @@ data class RiddleEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.FILE, order = 2, label = "A képrejtvény", fileType = "image")
+    @property:GenerateInput(type = InputType.IMAGE_URL, order = 2, label = "A képrejtvény")
     @property:GenerateOverview(columnName = "Kép", order = 0, renderer = OverviewType.IMAGE)
     var imageUrl: String = "",
 
