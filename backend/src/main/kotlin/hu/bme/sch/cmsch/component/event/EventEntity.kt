@@ -102,13 +102,13 @@ data class EventEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.FILE, order = 12, label = "Előnézeti kép", fileId = "0", fileType = "image")
+    @property:GenerateInput(type = InputType.IMAGE_URL, order = 12, label = "Előnézeti kép")
     @property:GenerateOverview(visible = false)
     var previewImageUrl: String = "",
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.FILE, order = 13, label = "Teljes kép", fileId = "1", fileType = "image")
+    @property:GenerateInput(type = InputType.IMAGE_URL, order = 13, label = "Teljes kép")
     @property:GenerateOverview(visible = false)
     var fullImageUrl: String = "",
 
@@ -120,7 +120,7 @@ data class EventEntity(
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 15, label = "OG:Image")
+    @property:GenerateInput(order = 15, label = "OG:Image", type = InputType.IMAGE_URL)
     @property:GenerateOverview(visible = false)
     override var ogImage: String = "",
 
