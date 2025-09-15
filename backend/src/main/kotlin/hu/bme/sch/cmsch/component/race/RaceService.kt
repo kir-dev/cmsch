@@ -280,7 +280,7 @@ open class RaceService(
         val entity = freestyleRaceRecordRepository.findByUserId(userId)
 
         return entity?.let {
-            return FreestyleRaceEntryDto(
+            FreestyleRaceEntryDto(
                 id = it.id,
                 name = it.userName,
                 groupName = it.groupName,
