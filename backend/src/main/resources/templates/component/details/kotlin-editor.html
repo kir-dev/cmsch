@@ -32,16 +32,18 @@
         </div>
 
         <script th:inline="javascript">
-            const el = document.querySelector('.kotlin-editor');
-            el.focus();
-            editor(el);
-            const defaultContent = /*[[${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}]]*/ '';
-            setEditorValue(el, defaultContent);
+            (() => {
+                const el = document.querySelector('.kotlin-editor');
+                el.focus();
+                editor(el);
+                const defaultContent = /*[[${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}]]*/ '';
+                setEditorValue(el, defaultContent);
 
-            const index =  /*[[${index}]]*/ 0;
-            el.addEventListener('keyup', e => {
-                document.getElementById(`input${index}`).value = getEditorValue(el);
-            });
+                const index =  /*[[${index}]]*/ 0;
+                el.addEventListener('keyup', e => {
+                    document.getElementById(`input${index}`).value = getEditorValue(el);
+                });
+            })()
         </script>
 
         <span class="note" th:text="${generateInput.note}" th:if="${generateInput.note != ''}"></span>
