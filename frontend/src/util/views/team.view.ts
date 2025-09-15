@@ -65,8 +65,8 @@ export type TeamListItemView = {
 export type TeamMemberView = {
   name: string
   id: number
-  admin: boolean
-  you: boolean
+  isAdmin: boolean
+  isYou: boolean
 }
 
 export type TeamTaskCategoriesView = {
