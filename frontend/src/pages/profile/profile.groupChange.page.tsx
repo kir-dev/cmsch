@@ -72,24 +72,30 @@ export function ProfileGroupChangePage() {
                 setValue(evt.target.value)
               }}
             >
-              {Object.entries<string>(profile.availableGroups)?.map((entry) => (
-                <option key={entry[0]} value={entry[0]} selected={entry[1] === profile?.groupName}>
-                  {entry[1]}
-                </option>
-              ))}
+              {profile.availableGroups ? (
+                Object.entries<string>(profile.availableGroups)?.map((entry) => (
+                  <option key={entry[0]} value={entry[0]} selected={entry[1] === profile?.groupName}>
+                    {entry[1]}
+                  </option>
+                ))
+              ) : (
+                <Text>Nem találhatóak csoportok</Text>
+              )}
             </Select>
           </FormControl>
-          <ButtonGroup>
-            <Button
-              variant="ghost"
-              colorScheme={brandColor}
-              onClick={() => {
-                setValue(profile?.fallbackGroup.toString())
-              }}
-            >
-              Vendég vagyok
-            </Button>
-          </ButtonGroup>
+          {profile.fallbackGroup && (
+            <ButtonGroup>
+              <Button
+                variant="ghost"
+                colorScheme={brandColor}
+                onClick={() => {
+                  setValue(profile?.fallbackGroup?.toString() || '')
+                }}
+              >
+                Vendég vagyok
+              </Button>
+            </ButtonGroup>
+          )}
           <ButtonGroup>
             <Button onClick={onSubmit} colorScheme={brandColor} isLoading={isPending}>
               Mentés
