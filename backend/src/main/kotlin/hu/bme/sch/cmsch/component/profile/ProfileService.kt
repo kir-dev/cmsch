@@ -64,7 +64,7 @@ class ProfileService(
         val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType }.orElse(ALL_TOKEN_TYPE)
         val incompleteTasks = tasksService.map { it.getTasksThatNeedsToBeCompleted(user) }.orElse(null)
 
-        val raceView: RaceView = raceService.map { it.getViewForUsers(user) }.orElse(null)
+        val raceView: RaceView? = raceService.map { it.getViewForUsers(user) }.orElse(null)
         val freestyleRaceView: FreestyleRaceEntryDto? = raceService.map { it.getFreestyleEntryOfUser(user.id) }.orElse(null)
 
         return ProfileView(
@@ -114,8 +114,8 @@ class ProfileService(
             }.orElse(null),
 
             // Race component
-            racePlacement = raceView.place,
-            raceStat = raceView.bestTime,
+            racePlacement = raceView?.place,
+            raceStat = raceView?.bestTime,
             freestyleRaceDescription = freestyleRaceView?.description,
             freestyleRaceStat = freestyleRaceView?.time,
 

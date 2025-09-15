@@ -279,7 +279,7 @@ open class RaceService(
     open fun getFreestyleEntryOfUser(userId: Int): FreestyleRaceEntryDto? {
         val entity = freestyleRaceRecordRepository.findByUserId(userId)
 
-        entity?.let {
+        return entity?.let {
             return FreestyleRaceEntryDto(
                 id = it.id,
                 name = it.userName,
@@ -287,8 +287,6 @@ open class RaceService(
                 time = it.time,
                 description = it.description,
             )
-        }.run {
-            return null
         }
     }
 }
