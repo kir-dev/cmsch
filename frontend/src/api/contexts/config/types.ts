@@ -321,6 +321,7 @@ export interface Team {
   teamCreationTopMessage: string
   title: string
   togglePermissionEnabled: boolean
+  searchEnabled: boolean
 }
 
 export interface PushNotification {
