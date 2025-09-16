@@ -21,7 +21,7 @@ export function useSearch<T>(data: T[], searchFn: (data: T, searchWord: string) 
       if (inputRef.current) inputRef.current.value = ''
       setSearch('')
     }
-  }, [data, inputRef])
+  }, [data, inputRef.current])
 
   return { inputRef, filteredData, handleInput, setSearch, search }
 }
