@@ -674,8 +674,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             if (property !is KMutableProperty1<out Any, *>) return@forEach
             if (input.ignore || input.minimumRole.value > user.role.value) return@forEach
 
-            when (input.interpreter) {
-                InputInterpreter.INHERIT if input.type == InputType.IMAGE_URL -> {
+            when {
+                input.interpreter == InputInterpreter.INHERIT && input.type == InputType.IMAGE_URL -> {
                     val urlInputValue = property.getter.call(dto)
                     val value = multipartRequest.fileMap[property.name]
                         ?.let { file -> if (file.size > 0) file else null }
@@ -685,7 +685,14 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     newValues.append(property.name).append("=").append(value).append(", ")
                 }
 
-                InputInterpreter.PATH -> {
+                (input.interpreter == InputInterpreter.INHERIT || input.interpreter == InputInterpreter.SEARCH) && input.type != InputType.IMAGE_URL -> {
+                    property.setter.call(entity, property.getter.call(dto))
+                    newValues.append(property.name).append("=").append(property.getter.call(dto)?.toString()
+                        ?.replace("\r", "")?.replace("\n", "") ?: "<null>").append(", ")
+                }
+
+
+                input.interpreter == InputInterpreter.PATH -> {
                     val value = property.getter.call(dto)
                         ?.toString()
                         ?.lowercase()
@@ -695,11 +702,9 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     newValues.append(property.name).append("=").append(value).append(", ")
                 }
 
-                InputInterpreter.CUSTOM -> {
+                input.interpreter == InputInterpreter.CUSTOM -> {
                     handleCustomInterpreter(it, newValues)
                 }
-
-                else -> {}
             }
         }
 
