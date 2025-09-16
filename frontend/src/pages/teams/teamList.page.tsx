@@ -27,7 +27,7 @@ export default function TeamListPage() {
       <Heading as="h1" variant="main-title">
         {component.title}
       </Heading>
-      <SearchBar mt={5} {...searchArgs} />
+      {component.searchEnabled && <SearchBar mt={5} {...searchArgs} />}
       {searchArgs.filteredData?.map((team) => (
         <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />
       ))}

@@ -85,6 +85,9 @@ class TeamComponent(
     var showTeamsAtAll by BooleanSettingRef(serverSideOnly = true, fieldName = "Csapat lista kijelzése",
         description = "Ha ki van kapcsolva a akkor a csapat lista nincs leküldve")
 
+    var searchEnabled by BooleanSettingRef(true, fieldName = "Keresés engedélyezése",
+        description = "Ha be van kapcsolva, akkor lehet keresni a csapatok között")
+
     var showNotRacingTeams by BooleanSettingRef(serverSideOnly = true,
         fieldName = "Nem versenyző csapatok kijelzése", description = "Azoknak is a kijelzése akik nem versenyeznek")
 
