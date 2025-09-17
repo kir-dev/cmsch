@@ -8,7 +8,7 @@
 <!--@thymesVar id="duplicateMode" type="boolean"-->
 <!--@thymesVar id="readOnly" type="boolean"-->
 
-<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, required, ext)" th:remove="tag">
 
     <div th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
         <label th:text="${generateInput.label}">
@@ -25,6 +25,7 @@
                th:id="${property.name}"
                th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
                autocomplete="off"
+               th:required="${required?'required':null}"
                style="display: none"
                th:unless="${entityMode}"
                readonly

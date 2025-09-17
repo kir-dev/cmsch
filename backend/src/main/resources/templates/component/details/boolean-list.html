@@ -8,7 +8,7 @@
 <!--@thymesVar id="duplicateMode" type="boolean"-->
 <!--@thymesVar id="readOnly" type="boolean"-->
 
-<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, ext)" th:remove="tag">
+<object th:fragment="detailsSegment (index, data, property, generateInput, editMode, entityMode, duplicateMode, readOnly, required, ext)" th:remove="tag">
 
     <div th:class="|field-group ${generateInput.style}|" th:id="|_${index}|">
         <label th:for="|input${index}|"
@@ -57,6 +57,7 @@
                th:id="|input${index}|"
                th:value="${(!editMode && !duplicateMode) ? generateInput.defaultValue : property.get(data)}"
                th:unless="${entityMode}"
+               th:required="${required?'required':null}"
                autocomplete="off"
                th:data-prop="${index}"
                onchange="loadBoolList(this.getAttribute('data-prop'))"

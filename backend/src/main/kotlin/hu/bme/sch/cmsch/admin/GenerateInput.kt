@@ -61,6 +61,7 @@ annotation class GenerateInput(
     val visible: Boolean = true,
     val enabled: Boolean = true,
     val ignore: Boolean = false,
+    val required: Boolean = true,
     val interpreter: InputInterpreter = InputInterpreter.INHERIT,
     val source: Array<String> = [],
     val entitySource: String = "Nothing",

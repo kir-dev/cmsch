@@ -43,7 +43,7 @@
 
                         <object th:if="${user.role.value >= input.second.minimumRole.value}" th:remove="tag">
 
-                            <object th:replace="~{('component/details/' + ${input.second.type}) :: detailsSegment (${iter.index}, ${data}, ${input.first}, ${input.second}, ${editMode}, ${entityMode}, ${duplicateMode}, ${readOnly}, ${ext})}" th:remove="tag"></object>
+                            <object th:replace="~{('component/details/' + ${input.second.type}) :: detailsSegment (${iter.index}, ${data}, ${input.first}, ${input.second}, ${editMode}, ${entityMode}, ${duplicateMode}, ${readOnly}, ${required}, ${ext})}" th:remove="tag"></object>
 
                         </object>
 
