@@ -236,9 +236,7 @@ export interface Style {
   darkMobileBackgroundUrl: string
   darkLogoUrl: string
   mainFontName: string
-  mainFontWeight: number
   displayFontName: string
-  displayFontWeight: number
   lightNavbarFilter: string
   darkNavbarFilter: string
   lightNavbarColor: string
