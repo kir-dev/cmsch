@@ -66,7 +66,7 @@ class TaskComponent(
         type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Főrendezők üzenete",
         description = "Ha üres akkor nincs ilyen")
 
-    var logoUrl by StringSettingRef("", type = SettingType.IMAGE_URL,
+    var logoUrl by StringSettingRef("https://", type = SettingType.URL,
         fieldName = "Logó URL-je", description = "Az esemény logójának az URL-je")
 
     /// -------------------------------------------------------------------------------------------------------------------

@@ -66,7 +66,7 @@ data class ProductEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = InputType.IMAGE_URL, order = 5, label = "Kép a termékről")
+    @property:GenerateInput(type = InputType.FILE, order = 5, label = "Kép a termékről")
     @property:GenerateOverview(visible = false)
     var imageUrl: String = "",
 
