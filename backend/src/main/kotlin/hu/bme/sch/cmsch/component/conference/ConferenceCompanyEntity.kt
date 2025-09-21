@@ -39,7 +39,7 @@ data class ConferenceCompanyEntity(
     var name: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 255, order = 2, label = "Logó URL", type = InputType.IMAGE_URL)
+    @property:GenerateInput(maxLength = 255, order = 2, label = "Logó URL")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var logoUrl: String = "",

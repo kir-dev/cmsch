@@ -37,7 +37,7 @@ data class ConferencePresenterEntity(
     var rank: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 255, order = 3, label = "Fotó URL", type = InputType.IMAGE_URL)
+    @property:GenerateInput(maxLength = 255, order = 3, label = "Fotó URL")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var pictureUrl: String = "",

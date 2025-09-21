@@ -47,21 +47,29 @@ class ImpressumComponent(
     val developersGroup by SettingGroup(fieldName = "Fejlesztők",
         description = "A fejlesztők nem szerkeszthetőek a webes felületről, csak a profilképük")
 
-    var developerSchamiUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Schámi profilképe")
+    var developerSchamiUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/schami.png",
+        type = SettingType.URL, fieldName = "Schámi profilképe")
 
-    var developerBalintUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Bálint profilképe")
+    var developerBalintUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/balint.png",
+        type = SettingType.URL, fieldName = "Bálint profilképe")
 
-    var developerLaciUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Laci profilképe")
+    var developerLaciUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/laci.png",
+        type = SettingType.URL, fieldName = "Laci profilképe")
 
-    var developerBeniUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Beni profilképe")
+    var developerBeniUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/beni.png",
+        type = SettingType.URL, fieldName = "Beni profilképe")
 
-    var developerTriszUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Trisz profilképe")
+    var developerTriszUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/trisz.png",
+        type = SettingType.URL, fieldName = "Trisz profilképe")
 
-    var developerSamuUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Samu profilképe")
+    var developerSamuUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/samu.png",
+        type = SettingType.URL, fieldName = "Samu profilképe")
 
-    var developerDaniUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Dani profilképe")
+    var developerDaniUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/dani.png",
+        type = SettingType.URL, fieldName = "Dani profilképe")
 
-    var developerMateUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Máté profilképe")
+    var developerMateUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/profiles/mate.png",
+        type = SettingType.URL, fieldName = "Máté profilképe")
 
     var developersBottomMessage by StringSettingRef("Felhasznált technológiák: Kotlin, Spring-boot, Typescript és React. " +
             "Mint ahogy az összes többi projektünk, ez is [nyílt forráskódú](https://github.com/kir-dev/cmsch). " +
