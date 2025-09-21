@@ -77,7 +77,7 @@ class ConferenceComponent(
     var giveawayDescription by StringSettingRef("Nyereményjáték leírása ide jön", type = SettingType.LONG_TEXT,
         fieldName = "giveaway.description mező")
 
-    var giveawayPictureUrl by StringSettingRef("", type = SettingType.IMAGE_URL,
+    var giveawayPictureUrl by StringSettingRef("https://", type = SettingType.URL,
         fieldName = "giveaway.pictureUrl mező")
 
     var giveawayRules by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "giveaway.rules mező")

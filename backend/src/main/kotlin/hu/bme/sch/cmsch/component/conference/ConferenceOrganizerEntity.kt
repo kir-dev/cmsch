@@ -43,7 +43,7 @@ data class ConferenceOrganizerEntity(
     var emailAddress: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 255, order = 4, label = "Profilkép url", type = InputType.IMAGE_URL)
+    @property:GenerateInput(maxLength = 255, order = 4, label = "Profilkép url")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var pictureUrl: String = "",

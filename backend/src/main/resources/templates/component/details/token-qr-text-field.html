@@ -83,8 +83,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script th:inline="javascript">
 
+        const frontendBaseUrl = /*[[${ext.qrFrontendBaseUrl}]]*/'';
+
         function tokenQrTextField_qrPopulate(index) {
-            const frontendBaseUrl = /*[[${ext.qrFrontendBaseUrl}]]*/'';
             const text = document.getElementById(`input${index}`).value;
             if (!text) {
                 return;

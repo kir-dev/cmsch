@@ -64,7 +64,8 @@ class CountdownComponent(
     var timeToCountTo by NumberSettingRef(type = SettingType.DATE_TIME,
         fieldName = "Visszaszámlálás eddig", strictConversion = false)
 
-    var imageUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Háttérkép URL-je")
+    var imageUrl by StringSettingRef("https://warp.sch.bme.hu/kir-dev/cmsch/countdown-bg.png", type = SettingType.URL,
+        fieldName = "Háttérkép URL-je", description = "")
 
     var blurredImage by BooleanSettingRef(true, fieldName = "Elmosott háttér",
         description = "A háttérkép legyen elmosva (gaussian blur)")

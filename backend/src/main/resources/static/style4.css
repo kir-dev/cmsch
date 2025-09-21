@@ -1423,10 +1423,6 @@ form .file-name {
     font-size: 14px;
 }
 
-form .image-preview {
-    max-width: 120px;
-}
-
 form p,
 form li {
     color: var(--text-color);
