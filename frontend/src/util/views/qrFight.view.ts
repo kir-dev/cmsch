@@ -1,6 +1,7 @@
 export type QrDto = {
   mainLevels: QrLevelDto[]
   extraLevels: QrLevelDto[]
+  treasureHunts: QrLevelDto[]
 }
 
 export type QrLevelDto = {

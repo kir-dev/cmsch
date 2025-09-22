@@ -52,7 +52,7 @@ class QrFightService(
         return QrFightOverviewView(
             levels.filter { !it.extraLevel && !it.treasureHuntLevel }.map { mapLevel(it, groupId, groupName) },
             levels.filter { it.extraLevel }.map { mapLevel(it, groupId, groupName) },
-            levels.filter { it.treasureHuntLevel }.map { mapLevel(it, groupId, groupName) }
+            levels.filter { it.treasureHuntLevel && !it.extraLevel }.map { mapLevel(it, groupId, groupName) }
         )
     }
 
@@ -109,9 +109,9 @@ class QrFightService(
             .sortedBy { it.order }
 
         return QrFightOverviewView(
-            levels.filter { !it.extraLevel }.map { mapLevel(it, user) },
+            levels.filter { !it.extraLevel && !it.treasureHuntLevel }.map { mapLevel(it, user) },
             levels.filter { it.extraLevel }.map { mapLevel(it, user) },
-            levels.filter {}
+            levels.filter { it.treasureHuntLevel && !it.extraLevel }.map { mapLevel(it, user) }
         )
     }
 
