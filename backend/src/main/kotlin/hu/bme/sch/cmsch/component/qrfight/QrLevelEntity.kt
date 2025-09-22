@@ -121,6 +121,14 @@ data class QrLevelEntity(
     @property:ImportFormat
     var extraLevel: Boolean = false,
 
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = InputType.SWITCH, order = 14, label = "Treasure hunt szint",
+        note = "Olyan tokeneket tartalmazó szint, ahol az addig megszerzett tokenek adják a hintet a további tokenekhez")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var treasureHuntLevel: Boolean = false,
+
 ): ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(

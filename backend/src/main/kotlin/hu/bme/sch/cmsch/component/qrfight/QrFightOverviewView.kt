@@ -36,4 +36,6 @@ data class QrFightLevelView(
 data class QrFightOverviewView(
     val mainLevels: List<QrFightLevelView>,
     val extraLevels: List<QrFightLevelView>,
+
+    val treasureHuntLevels: List<QrFightLevelView>,
 )
