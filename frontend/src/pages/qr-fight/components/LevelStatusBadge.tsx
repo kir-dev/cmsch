@@ -1,14 +1,14 @@
 import { Badge } from '@chakra-ui/react'
-import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
+import { LevelStatus } from '../../../util/views/qrFight.view'
 
 interface LevelStatusBadgeProps {
-  level: QrLevelDto
+  levelStatus: LevelStatus
 }
 
-export function LevelStatusBadge({ level }: LevelStatusBadgeProps) {
+export function LevelStatusBadge({ levelStatus }: LevelStatusBadgeProps) {
   let label = 'Ismeretlen'
   let color = 'gray'
-  switch (level.status) {
+  switch (levelStatus) {
     case LevelStatus.OPEN:
       label = 'Elérhető'
       color = 'yellow'

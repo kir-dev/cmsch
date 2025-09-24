@@ -21,6 +21,10 @@ interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int>,
 
     fun findAllByToken_Type(type: String): List<TokenPropertyEntity>
 
+    fun findAllByOwnerUser_IdAndToken_Type(owner: Int, token: String): List<TokenPropertyEntity>
+
+    fun findAllByOwnerGroup_IdAndToken_Type(owner: Int, type: String): List<TokenPropertyEntity>
+
     fun countAllByOwnerUser_IdAndToken_Type(owner: Int, type: String): Int
 
     fun countAllByOwnerUser_IdAndToken_TypeAndToken_ActiveTargetTrue(owner: Int, type: String): Int
