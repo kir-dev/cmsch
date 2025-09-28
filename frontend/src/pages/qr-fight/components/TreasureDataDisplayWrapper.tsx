@@ -3,17 +3,15 @@ import { Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import isEmpty from 'lodash/isEmpty'
 import Markdown from '../../../common-components/Markdown'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
-import { LevelStatus, QrLevelDto } from '../../../util/views/qrFight.view'
+import { LevelStatus, QrTreasureHuntDto } from '../../../util/views/qrFight.view'
 import { LevelDataDisplay } from './LevelDataDisplay'
 import { LevelStatusBadge } from './LevelStatusBadge'
-import { TotemDataDisplay } from './TotemDataDisplay'
-import { TowerDataDisplay } from './TowerDataDisplay'
 
-interface DataDisplayWrapperProps {
-  level: QrLevelDto
+interface TreasureDataDisplayWrapperProps {
+  level: QrTreasureHuntDto
 }
 
-export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
+export function TreasureDataDisplayWrapper({ level }: TreasureDataDisplayWrapperProps) {
   const backgroundColor = useOpaqueBackground(3)
 
   return (
@@ -37,8 +35,16 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
         </VStack>
       </HStack>
       {!isEmpty(level.teams) && <LevelDataDisplay teams={level.teams} />}
-      {level.towers?.length > 0 && <TowerDataDisplay level={level} />}
-      {level.totems?.length > 0 && <TotemDataDisplay level={level} />}
+      <HStack justifyContent="flex-start" w="90%" m={5}>
+        <VStack align="flex-start">
+          <Heading fontSize="xl" m={0}>
+            Kincsek rejtekhelyei:
+          </Heading>
+          {level.foundTokens.map((token, index) => (
+            <Text key={index}>- {token}</Text>
+          ))}
+        </VStack>
+      </HStack>
     </VStack>
   )
 }
