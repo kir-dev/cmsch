@@ -50,8 +50,9 @@ class QrFightService(
             .sortedBy { it.order }
 
         return QrFightOverviewView(
-            levels.filter { !it.extraLevel }.map { mapLevel(it, groupId, groupName) },
-            levels.filter { it.extraLevel }.map { mapLevel(it, groupId, groupName) }
+            levels.filter { !it.extraLevel && !it.treasureHuntLevel }.map { mapLevel(it, groupId, groupName) },
+            levels.filter { it.extraLevel }.map { mapLevel(it, groupId, groupName) },
+            levels.filter { it.treasureHuntLevel && !it.extraLevel }.map { mapTreasureHunt(it, groupId, groupName) }
         )
     }
 
@@ -102,14 +103,47 @@ class QrFightService(
         )
     }
 
+    private fun mapTreasureHunt(level: QrLevelEntity, groupId: Int?, groupName: String): QrTreasureHuntLevelView {
+        val outOfDate = !clock.inRange(level.availableFrom, level.availableTo, clock.getTimeInSeconds())
+        val isOpen = groupId != null && isLevelOpenForGroup(level, groupId)
+        val isCompleted = groupId != null && isLevelCompletedForGroup(level, groupId)
+
+        val status = decideStatus(groupId, level, outOfDate, isOpen, isCompleted)
+
+        val teams = tokenPropertyRepository.orElseThrow().findAllByToken_Type(level.category)
+            .groupBy { it.ownerGroup?.name ?: "..." }
+            .map { it.key to it.value.count() }
+            .toMap()
+
+        val maxCollected = teams.maxOfOrNull { it.value } ?: 0
+        val foundTokens = tokenPropertyRepository.orElseThrow().findAllByOwnerGroup_IdAndToken_Type(groupId ?: -1, level.category)
+            .map { it.token!!.displayDescription }
+            .sorted()
+
+        return QrTreasureHuntLevelView(
+            name = level.displayName,
+            description = when (status) {
+                LevelStatus.OPEN -> level.hintWhileOpen
+                LevelStatus.COMPLETED -> level.hintAfterCompleted
+                else -> level.hintBeforeEnabled
+            },
+            tokenCount = teams[groupName] ?: 0,
+            status = status,
+            owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
+            teams = teams,
+            foundTokens = foundTokens
+        )
+    }
+
     @Transactional(readOnly = true)
     fun getLevelsForUsers(user: CmschUser?): QrFightOverviewView {
         val levels = qrLevelRepository.findAllByVisibleTrueAndEnabledTrue()
             .sortedBy { it.order }
 
         return QrFightOverviewView(
-            levels.filter { !it.extraLevel }.map { mapLevel(it, user) },
-            levels.filter { it.extraLevel }.map { mapLevel(it, user) }
+            levels.filter { !it.extraLevel && !it.treasureHuntLevel }.map { mapLevel(it, user) },
+            levels.filter { it.extraLevel }.map { mapLevel(it, user) },
+            levels.filter { it.treasureHuntLevel && !it.extraLevel }.map { mapTreasureHunt(it, user) }
         )
     }
 
@@ -159,6 +193,39 @@ class QrFightService(
             totems = totems
         )
     }
+
+    private fun mapTreasureHunt(level: QrLevelEntity, user: CmschUser?): QrTreasureHuntLevelView {
+        val outOfDate = !clock.inRange(level.availableFrom, level.availableTo, clock.getTimeInSeconds())
+        val isOpen = user != null && isLevelOpenForUser(level, user)
+        val isCompleted = user != null && isLevelCompletedForUser(level, user)
+
+        val status = decideStatus(user, level, outOfDate, isOpen, isCompleted)
+
+        val teams = tokenPropertyRepository.orElseThrow().findAllByToken_Type(level.category)
+            .groupBy { it.ownerUser?.id ?: -1 }
+            .map { (it.value.firstOrNull()?.ownerUser?.fullName ?: "...") to it.value.count() }
+            .toMap()
+
+        val maxCollected = teams.maxOfOrNull { it.value } ?: 0
+        val foundTokens = tokenPropertyRepository.orElseThrow().findAllByOwnerUser_IdAndToken_Type(user?.id ?: -1, level.category)
+            .map { it.token!!.displayDescription }
+            .sorted()
+
+        return QrTreasureHuntLevelView(
+            name = level.displayName,
+            description = when (status) {
+                LevelStatus.OPEN -> level.hintWhileOpen
+                LevelStatus.COMPLETED -> level.hintAfterCompleted
+                else -> level.hintBeforeEnabled
+            },
+            tokenCount = teams[user?.userName] ?: 0,
+            status = status,
+            owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
+            teams = teams,
+            foundTokens = foundTokens
+        )
+    }
+
 
     private fun decideStatus(
         entity: Any?,
