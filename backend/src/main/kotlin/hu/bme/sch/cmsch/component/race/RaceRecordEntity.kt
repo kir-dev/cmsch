@@ -76,6 +76,13 @@ data class RaceRecordEntity(
     @property:ImportFormat
     var timestamp: Long = 0,
 
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(order = 7, label = "Címke", note = "Név melletti címke, pl: Gólya, Lány etc.")
+    @property:GenerateOverview(columnName = "Címke", order = 6)
+    @property:ImportFormat
+    var label: String = "",
+
 ) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(

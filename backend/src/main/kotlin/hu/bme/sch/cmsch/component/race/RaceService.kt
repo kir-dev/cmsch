@@ -108,7 +108,8 @@ open class RaceService(
                     submission.value.first().groupName,
                     submission.value.first().groupName,
                     submission.value.minOf { it.time },
-                    email = ""
+                    email = "",
+                    submission.value.first().label,
                 )
             }
             .sortedBy { it.time }
@@ -121,7 +122,8 @@ open class RaceService(
                     submission.value.first().groupName,
                     submission.value.first().groupName,
                     submission.value.maxOf { it.time },
-                    email = ""
+                    email = "",
+                    submission.value.first().label,
                 )
             }
             .sortedByDescending { it.time }
@@ -136,7 +138,6 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -148,7 +149,6 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label = submission.label,
                 )
             }
             .sortedByDescending { it.time }
@@ -219,7 +219,8 @@ open class RaceService(
                     submission.value.first().userName,
                     submission.value.first().groupName,
                     submission.value.minOf { it.time },
-                    email
+                    email,
+                    submission.value.first().label,
                 )
             }
             .sortedBy { it.time }
@@ -235,7 +236,8 @@ open class RaceService(
                     submission.value.first().userName,
                     submission.value.first().groupName,
                     submission.value.maxOf { it.time },
-                    email
+                    email,
+                    submission.value.first().label,
                 )
             }
             .sortedByDescending { it.time }
@@ -251,7 +253,6 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -264,7 +265,6 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label = submission.label
                 )
             }
             .sortedByDescending { it.time }
