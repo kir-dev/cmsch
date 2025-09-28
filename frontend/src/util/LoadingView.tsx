@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { KirDevLogo } from '../assets/kir-dev-logo.tsx'
 import { Loading } from '../common-components/Loading.tsx'
 import { usePersistentStyleSetting } from './configs/themeStyle.config.ts'
+import { useBrandColor } from './core-functions.util.ts'
 import { l } from './language.ts'
 
 export type LoadingViewProps = PropsWithChildren & {
@@ -18,19 +19,8 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
   const { persistentStyle: theme } = usePersistentStyleSetting()
   const backdropFilter = useColorModeValue(theme?.lightContainerFilter, theme?.darkContainerFilter)
   const bg = useColorModeValue('lightContainerBg', 'darkContainerBg')
+  const brandColor = useBrandColor()
 
-  if (isLoading) {
-    return (
-      <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
-        <VStack p={5} borderRadius={5} bg={bg} backdropFilter={backdropFilter}>
-          <Loading />
-          <Box w={40} maxH={40} my={3}>
-            <KirDevLogo />
-          </Box>
-        </VStack>
-      </Center>
-    )
-  }
   if (hasError) {
     return (
       <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
@@ -41,10 +31,22 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
             {errorMessage}
           </Text>
           <ButtonGroup justifyContent="center" marginTop={4}>
-            <Button colorScheme="brand" onClick={errorAction}>
+            <Button colorScheme={brandColor} onClick={errorAction}>
               Újra
             </Button>
           </ButtonGroup>
+        </VStack>
+      </Center>
+    )
+  }
+  if (isLoading) {
+    return (
+      <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
+        <VStack p={5} borderRadius={5} bg={bg} backdropFilter={backdropFilter}>
+          <Loading />
+          <Box w={40} maxH={40} my={3}>
+            <KirDevLogo />
+          </Box>
         </VStack>
       </Center>
     )

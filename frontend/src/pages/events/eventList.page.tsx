@@ -19,7 +19,7 @@ import { FaCalendar } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 import { SearchIcon } from '@chakra-ui/icons'
-import { createRef, useEffect, useState } from 'react'
+import { createRef, useEffect, useMemo, useState } from 'react'
 import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CustomTabButton } from '../../common-components/CustomTabButton'
@@ -27,6 +27,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { Paths } from '../../util/paths'
 import { EventListView } from '../../util/views/event.view'
 import { CardListItem } from './components/CardListItem'
@@ -42,14 +43,15 @@ const EventListPage = () => {
   const breakpoint = useBreakpoint()
   const inputRef = createRef<HTMLInputElement>()
   const [filteredEvents, setFilteredEvents] = useState<EventListView[] | undefined>()
+  const brandColor = useBrandColor()
 
   const availableFilters = []
-  if (component.filterByCategory) availableFilters.push(FILTER.CATEGORY)
-  if (component.filterByLocation) availableFilters.push(FILTER.PLACE)
-  if (component.filterByDay) availableFilters.push(FILTER.DAY)
+  if (component?.filterByCategory) availableFilters.push(FILTER.CATEGORY)
+  if (component?.filterByLocation) availableFilters.push(FILTER.PLACE)
+  if (component?.filterByDay) availableFilters.push(FILTER.DAY)
 
-  const pastEvents = data?.filter((event) => event.timestampEnd * 1000 < Date.now())
-  const upcomingEvents = data?.filter((event) => event.timestampEnd * 1000 >= Date.now())
+  const pastEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 < Date.now()), [data])
+  const upcomingEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 >= Date.now()), [data])
 
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
@@ -77,10 +79,10 @@ const EventListPage = () => {
         </Heading>
         {component.topMessage && <Markdown text={component.topMessage} />}
       </Box>
-      <LinkButton colorScheme="brand" mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
+      <LinkButton colorScheme={brandColor} mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
         Megtekintés a naptárban
       </LinkButton>
-      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme="brand">
+      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme={brandColor}>
         {availableFilters.length > 0 && (
           <TabList>
             <CustomTabButton>Mind</CustomTabButton>

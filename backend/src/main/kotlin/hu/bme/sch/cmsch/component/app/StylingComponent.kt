@@ -111,6 +111,9 @@ class StylingComponent(
     var darkTextColor by StringSettingRef(defaultValue = "#000000", type = SettingType.COLOR,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe")
 
+    var darkBrandingColor by StringSettingRef(defaultValue = "#880000", type = SettingType.COLOR,
+        fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre")
+
     var darkBackgroundUrl by StringSettingRef(type = SettingType.URL, fieldName = "Háttérkép",
         description = "Nagy felbontáson megjelenő háttérkép URL-je. Ha üres, akkor nincs háttér beállítva.")
 
@@ -128,21 +131,15 @@ class StylingComponent(
     var mainFontName by StringSettingRef(defaultValue = "'Open Sans', sans-serif", fieldName = "Általános betűtípus",
         description = "Az általános (pl. szöveg blockokban megjelenő) betűtípus neve")
 
-    var mainFontCdn by StringSettingRef(defaultValue = "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap",
+    var mainFontCdn by StringSettingRef(defaultValue = "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap",
         type = SettingType.URL, fieldName = "Általános betűtípus CDN",
         description = "Az általános betűtípus CDN URL-je", serverSideOnly = true)
 
-    var mainFontWeight by StringSettingRef(defaultValue = "300", fieldName = "Általános betűtípus vastagsága",
-        description = "Az általános betűtípus vastagsága")
-
-    var displayFontName by StringSettingRef(defaultValue = "'Bebas Neue', cursive", fieldName = "Kiemelt betűtípus",
+    var displayFontName by StringSettingRef(defaultValue = "'Open Sans', sans-serif", fieldName = "Kiemelt betűtípus",
         description = "A kiemelt (pl. fejlécként megjelenő) betűtípus neve. Ha üres akkor az általános lesz használva.")
 
-    var displayFontCdn by StringSettingRef(defaultValue = "https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap",
+    var displayFontCdn by StringSettingRef(defaultValue = "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap",
         type = SettingType.URL, fieldName = "Kiemelt betűtípus CDN",
         description = "A kiemelt betűtípus CDN URL-je", serverSideOnly = true)
-
-    var displayFontWeight by StringSettingRef(defaultValue = "400", fieldName = "Kiemelt betűtípus vastagsága",
-        description = "A kiemelt betűtípus vastagsága")
 
 }

@@ -12,7 +12,7 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { isCheckbox, isGridField } from '../../util/core-functions.util'
+import { isCheckbox, isGridField, useBrandColor } from '../../util/core-functions.util'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
@@ -25,6 +25,7 @@ const FormPage = () => {
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
   const tokenRefresh = useTokenRefresh()
   const { isLoggedIn } = useAuthContext()
+  const brandColor = useBrandColor()
 
   useEffect(() => {
     if (result) {
@@ -35,7 +36,8 @@ const FormPage = () => {
       tokenRefresh.mutate()
     }
     refetch()
-  }, [refetch, result, toast, tokenRefresh])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result])
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Űrlap" />
 
@@ -97,7 +99,7 @@ const FormPage = () => {
                 </FormControl>
               ))}
               <Flex justifyContent="flex-end">
-                <Button colorScheme="brand" mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
+                <Button colorScheme={brandColor} mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
                   {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
                 </Button>
               </Flex>

@@ -2,7 +2,7 @@ import { Box, Heading, HStack, IconButton, useColorModeValue } from '@chakra-ui/
 import { addDays, addWeeks, endOfDay, startOfWeek } from 'date-fns'
 import { useMemo, useRef, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { formatHu } from '../../../../util/core-functions.util'
+import { formatHu, useBrandColor } from '../../../../util/core-functions.util'
 import { EventListView } from '../../../../util/views/event.view'
 import { CurrentDateBar } from './CurrentDateBar'
 import { EventBox, EventBoxItem } from './EventBox'
@@ -15,6 +15,7 @@ interface WeekCalendarProps {
 }
 
 export function WeekCalendar({ events }: WeekCalendarProps) {
+  const brandColor = useBrandColor()
   const [scale, setScale] = useState(1)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -51,11 +52,11 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
   return (
     <Box my={5} w="full" display={['none', null, 'block']}>
       <HStack justify="space-between">
-        <IconButton colorScheme="brand" aria-label="Előző hét" icon={<FaChevronLeft />} onClick={decrementWeek} />
+        <IconButton colorScheme={brandColor} aria-label="Előző hét" icon={<FaChevronLeft />} onClick={decrementWeek} />
         <Heading as="h2" size="md">
           {formatHu(startDate, 'MM. dd.')} - {formatHu(days[days.length - 1].date, 'MM. dd.')}
         </Heading>
-        <IconButton colorScheme="brand" aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
+        <IconButton colorScheme={brandColor} aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
       </HStack>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
       <HStack flex={1} maxH={830} overflowY="auto" overflowX="hidden" w="full" mt={5} align="flex-start">

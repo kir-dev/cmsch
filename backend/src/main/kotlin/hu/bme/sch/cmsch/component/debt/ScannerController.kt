@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("/admin/sell")
-@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
+@CrossOrigin(originPatterns = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 @ConditionalOnBean(DebtComponent::class)
 class ScannerController(
     private val userService: UserService,

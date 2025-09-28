@@ -7,6 +7,7 @@ import { useGroupChangeMutation } from '../../api/hooks/group-change/useGroupCha
 import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
 
@@ -16,6 +17,7 @@ export function ProfileGroupChangePage() {
   const [error, setError] = useState<string>()
   const { sendMessage } = useServiceContext()
   const navigate = useNavigate()
+  const brandColor = useBrandColor()
 
   const onData = (response: GroupChangeDTO) => {
     switch (response.status) {
@@ -70,26 +72,32 @@ export function ProfileGroupChangePage() {
                 setValue(evt.target.value)
               }}
             >
-              {Object.entries<string>(profile.availableGroups)?.map((entry) => (
-                <option key={entry[0]} value={entry[0]} selected={entry[1] === profile?.groupName}>
-                  {entry[1]}
-                </option>
-              ))}
+              {profile.availableGroups ? (
+                Object.entries<string>(profile.availableGroups)?.map((entry) => (
+                  <option key={entry[0]} value={entry[0]} selected={entry[1] === profile?.groupName}>
+                    {entry[1]}
+                  </option>
+                ))
+              ) : (
+                <Text>Nem találhatóak csoportok</Text>
+              )}
             </Select>
           </FormControl>
+          {profile.fallbackGroup && (
+            <ButtonGroup>
+              <Button
+                variant="ghost"
+                colorScheme={brandColor}
+                onClick={() => {
+                  setValue(profile?.fallbackGroup?.toString() || '')
+                }}
+              >
+                Vendég vagyok
+              </Button>
+            </ButtonGroup>
+          )}
           <ButtonGroup>
-            <Button
-              variant="ghost"
-              colorScheme="brand"
-              onClick={() => {
-                setValue(profile?.fallbackGroup.toString())
-              }}
-            >
-              Vendég vagyok
-            </Button>
-          </ButtonGroup>
-          <ButtonGroup>
-            <Button onClick={onSubmit} colorScheme="brand" isLoading={isPending}>
+            <Button onClick={onSubmit} colorScheme={brandColor} isLoading={isPending}>
               Mentés
             </Button>
             <LinkButton href={AbsolutePaths.PROFILE} colorScheme="red" variant="outline">

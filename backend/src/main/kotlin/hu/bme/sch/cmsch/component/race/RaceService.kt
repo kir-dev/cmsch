@@ -135,7 +135,8 @@ open class RaceService(
                     submission.groupId ?: 0,
                     submission.groupName,
                     submission.groupName,
-                    submission.time
+                    submission.time,
+                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -146,7 +147,8 @@ open class RaceService(
                     submission.groupId ?: 0,
                     submission.groupName,
                     submission.groupName,
-                    submission.time
+                    submission.time,
+                    label = submission.label,
                 )
             }
             .sortedByDescending { it.time }
@@ -248,7 +250,8 @@ open class RaceService(
                     submission.userName,
                     submission.groupName,
                     submission.time,
-                    submission.description
+                    submission.description,
+                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -260,10 +263,30 @@ open class RaceService(
                     submission.userName,
                     submission.groupName,
                     submission.time,
-                    submission.description
+                    submission.description,
+                    label = submission.label
                 )
             }
             .sortedByDescending { it.time }
     }
 
+    /**
+     * Shorthand query of freestyle record of the user with the given ID.
+     * This does not query all the users, just the user requested.
+     * @return FreestyleRaceEntryDto of the user with the given id, or null if not present.
+     */
+    @Transactional(readOnly = true)
+    open fun getFreestyleEntryOfUser(userId: Int): FreestyleRaceEntryDto? {
+        val entity = freestyleRaceRecordRepository.findByUserId(userId)
+
+        return entity?.let {
+            FreestyleRaceEntryDto(
+                id = it.id,
+                name = it.userName,
+                groupName = it.groupName,
+                time = it.time,
+                description = it.description,
+            )
+        }
+    }
 }

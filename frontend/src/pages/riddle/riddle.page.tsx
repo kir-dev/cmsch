@@ -28,7 +28,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { StopItModal } from '../../common-components/StopItModal'
-import { useOpaqueBackground } from '../../util/core-functions.util'
+import { useBrandColor, useOpaqueBackground } from '../../util/core-functions.util'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { RiddleSubmissionStatus } from '../../util/views/riddle.view'
@@ -46,13 +46,12 @@ const RiddlePage = () => {
   const skipMutation = useRiddleSkipMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
   const boxBorder = useOpaqueBackground(1)
-  const {
-    components: { riddle: riddleConfig }
-  } = useConfigContext()
+  const riddleConfig = useConfigContext()?.components?.riddle
+  const brandColor = useBrandColor()
 
   if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
+  if (isError || isLoading || !data || !riddleConfig) return <PageStatus isLoading={isLoading} isError={isError || !riddleConfig} />
 
   const submitSolution = (event: FormEvent) => {
     if (!allowSubmission) return
@@ -92,8 +91,8 @@ const RiddlePage = () => {
                 isClosable: true
               }) || null
           }
-          if (result.status === RiddleSubmissionStatus.CORRECT && result.nextId) {
-            navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
+          if (result.status === RiddleSubmissionStatus.CORRECT && result.nextRiddles.length) {
+            navigate(`${AbsolutePaths.RIDDLE}/solve/${result.nextRiddles[0].id}`)
             const input = document.getElementById('solution') as HTMLInputElement
             input.value = ''
             toast({
@@ -104,7 +103,7 @@ const RiddlePage = () => {
               isClosable: true
             })
           }
-          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextId) {
+          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextRiddles.length) {
             navigate(AbsolutePaths.RIDDLE)
             toast({
               title: l('riddle-completed-title'),
@@ -126,8 +125,8 @@ const RiddlePage = () => {
     if (riddleConfig.skipEnabled && data.skipPermitted) {
       skipMutation.mutate(id, {
         onSuccess: (result) => {
-          if (result.nextId) {
-            navigate(`${AbsolutePaths.RIDDLE}/${result.nextId}`)
+          if (result.nextRiddles.length) {
+            navigate(`${AbsolutePaths.RIDDLE}/solve/${result.nextRiddles[0].id}`)
             const input = document.getElementById('solution') as HTMLInputElement
             input.value = ''
             toast({
@@ -138,7 +137,7 @@ const RiddlePage = () => {
               isClosable: true
             })
           }
-          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextId) {
+          if (result.status === RiddleSubmissionStatus.CORRECT && !result.nextRiddles.length) {
             navigate(AbsolutePaths.RIDDLE)
             toast({
               title: l('riddle-completed-title'),
@@ -193,7 +192,7 @@ const RiddlePage = () => {
           </FormControl>
 
           <VStack spacing={5} mt={10}>
-            <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme="brand" width="100%">
+            <Button isLoading={!allowSubmission} loadingText="Küldés..." type="submit" colorScheme={brandColor} width="100%">
               Beadom
             </Button>
             {hintQuery.isSuccess || data.hint ? (
@@ -203,7 +202,7 @@ const RiddlePage = () => {
               </Alert>
             ) : (
               <ConfirmDialogButton
-                buttonColorScheme="brand"
+                buttonColorScheme={brandColor}
                 buttonVariant="outline"
                 buttonWidth="100%"
                 buttonText="Hintet kérek"
@@ -217,22 +216,22 @@ const RiddlePage = () => {
               <>
                 <Alert status="info" borderRadius="md">
                   <AlertIcon />
-                  Átugorhatjátok a riddlet, ha már {riddleConfig.skipAfterGroupsSolved} csapat megoldotta. Ilyenkor 0 pontot kaptok érte.
+                  Kihagyhatjátok a riddlet, ha már {riddleConfig.skipAfterGroupsSolved} csapat megoldotta. Ilyenkor 0 pontot kaptok érte.
                 </Alert>
                 {data.skipPermitted ? (
                   <ConfirmDialogButton
                     buttonColorScheme="gray"
                     buttonVariant="outline"
                     buttonWidth="100%"
-                    buttonText="Riddle átugrása"
-                    headerText="Riddle átugrása"
-                    bodyText="Biztosan átugrod ezt a riddlet? Így nem kaptok pontot érte."
-                    confirmButtonText="Riddle átugrása"
+                    buttonText="Riddle kihagyása"
+                    headerText="Riddle kihagyása"
+                    bodyText="Biztosan kihagyod ezt a riddlet? Így nem kaptok pontot érte."
+                    confirmButtonText="Riddle kihagyása"
                     confirmAction={skipSolution}
                   />
                 ) : (
                   <Button width="100%" colorScheme="gray" isDisabled>
-                    Riddle átugrása
+                    Riddle kihagyása
                   </Button>
                 )}
               </>

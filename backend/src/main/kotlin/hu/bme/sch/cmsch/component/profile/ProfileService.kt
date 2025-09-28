@@ -9,6 +9,9 @@ import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.LoginComponent
+import hu.bme.sch.cmsch.component.race.FreestyleRaceEntryDto
+import hu.bme.sch.cmsch.component.race.RaceService
+import hu.bme.sch.cmsch.component.race.RaceView
 import hu.bme.sch.cmsch.component.riddle.RiddleBusinessLogicService
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.token.ALL_TOKEN_TYPE
@@ -31,7 +34,6 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
 import java.util.*
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(ProfileComponent::class)
@@ -46,6 +48,7 @@ class ProfileService(
     private val tokenComponent: Optional<TokenComponent>,
     private val tasksService: Optional<TasksService>,
     private val riddleService: Optional<RiddleBusinessLogicService>,
+    private val raceService: Optional<RaceService>,
     private val loginComponent: Optional<LoginComponent>,
     private val legacyBmejegyService: Optional<LegacyBmejegyService>,
     private val clock: TimeService,
@@ -60,6 +63,9 @@ class ProfileService(
         val leavable = fetchWhetherGroupLeavable(group)
         val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType }.orElse(ALL_TOKEN_TYPE)
         val incompleteTasks = tasksService.map { it.getTasksThatNeedsToBeCompleted(user) }.orElse(null)
+
+        val raceView: RaceView? = raceService.map { it.getViewForUsers(user) }.orElse(null)
+        val freestyleRaceView: FreestyleRaceEntryDto? = raceService.map { it.getFreestyleEntryOfUser(user.id) }.orElse(null)
 
         return ProfileView(
             loggedIn = true,
@@ -106,6 +112,12 @@ class ProfileService(
                     OwnershipType.GROUP -> it.getCompletedRiddleCountGroup(user, user.groupId)
                 }
             }.orElse(null),
+
+            // Race component
+            racePlacement = raceView?.place,
+            raceStat = raceView?.bestTime,
+            freestyleRaceDescription = freestyleRaceView?.description,
+            freestyleRaceStat = freestyleRaceView?.time,
 
             // Locations component
             locations = profileComponent.showGroupLeadersLocations.mapIfTrue { fetchLocations(group).orElse(null) },

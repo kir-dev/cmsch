@@ -26,7 +26,7 @@ import kotlin.jvm.optionals.getOrNull
 
 @Controller
 @RequestMapping("/admin/admission")
-@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
+@CrossOrigin(originPatterns = ["*"], allowedHeaders = ["*"], allowCredentials = "false")
 @ConditionalOnBean(AdmissionComponent::class)
 class AdmissionApiController(
     private val userService: UserService,

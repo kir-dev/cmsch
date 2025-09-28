@@ -30,7 +30,7 @@ export function DataDisplayWrapper({ level }: DataDisplayWrapperProps) {
           <Heading m={0} fontSize="2xl">
             {level.name}
           </Heading>
-          <LevelStatusBadge level={level} />
+          <LevelStatusBadge levelStatus={level.status} />
           <Text>Birtokló: {level.owners}</Text>
           <Text>A te csapatodnak van: {level.tokenCount}db</Text>
           <Markdown text={level.description} />

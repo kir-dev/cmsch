@@ -10,7 +10,7 @@ import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 
 export default function CommunityPage() {
-  const config = useConfigContext()?.components.communities
+  const config = useConfigContext()?.components?.communities
   const params = useParams()
   const { data, isLoading, isError } = useCommunity(params.id || 'UNKNOWN')
   const breadcrumbItems = [

@@ -98,8 +98,8 @@ data class TokenEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @ColumnDefault("''")
-    @Column(nullable = false, length = 255)
-    @property:GenerateInput(maxLength = 255, order = 9, label = "Kijelzett kép URL-je",
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @property:GenerateInput(order = 9, label = "Kijelzett kép URL-je",
         note = "Ha nem üres, megjelenik beolvasás után")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -117,7 +117,7 @@ data class TokenEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @ColumnDefault("null")
     @Column(nullable = true, columnDefinition = "BIGINT")
-    @property:GenerateInput(type = InputType.DATE, order = 11, label = "Scannelhető innentől")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 11, label = "Scannelhető innentől")
     @property:GenerateOverview(columnName = "Ettől", order = 6, renderer = OverviewType.DATE)
     @property:ImportFormat
     var availableFrom: Long? = null,
@@ -125,7 +125,7 @@ data class TokenEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @ColumnDefault("null")
     @Column(nullable = true, columnDefinition = "BIGINT")
-    @property:GenerateInput(type = InputType.DATE, order = 12, label = "Scannelhető eddig")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 12, label = "Scannelhető eddig")
     @property:GenerateOverview(columnName = "Eddig", order = 7, renderer = OverviewType.DATE)
     @property:ImportFormat
     var availableUntil: Long? = null,

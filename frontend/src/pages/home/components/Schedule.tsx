@@ -1,6 +1,7 @@
-import { Grid, GridItem, LinkBox, LinkOverlay, Text, useColorModeValue } from '@chakra-ui/react'
+import { Grid, GridItem, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import { Link } from 'react-router'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
+import { useBrandColor } from '../../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../../util/paths'
 import { EventListView } from '../../../util/views/event.view'
 
@@ -29,7 +30,7 @@ type EventDisplayProps = {
 const EventDisplay = ({ event, verbose, useLink }: EventDisplayProps) => (
   <Grid templateColumns="repeat(2, auto)" gap={10} marginTop={10} as={LinkBox}>
     <GridItem textAlign="right">
-      <Text fontSize="2xl" color={useColorModeValue('brand.500', 'brand.600')}>
+      <Text fontSize="2xl" color={useBrandColor(500, 600)}>
         {verbose ? parseDate(event.timestampStart) : parseTime(event.timestampStart)}-{parseTime(event.timestampEnd)}
       </Text>
     </GridItem>

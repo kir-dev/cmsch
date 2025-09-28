@@ -79,6 +79,22 @@ data class ProfileView(
     @field:JsonView(FullDetails::class)
     val completedTaskCount: Int? = null,
 
+    // Race placement
+    @field:JsonView(FullDetails::class)
+    val racePlacement: Int? = null,
+
+    // Race stat given in seconds
+    @field:JsonView(FullDetails::class)
+    val raceStat: Float? = null,
+
+    // Freestyle (funky) race description
+    @field:JsonView(FullDetails::class)
+    val freestyleRaceDescription: String? = null,
+
+    // Freestyle (funky) race stat given in seconds
+    @field:JsonView(FullDetails::class)
+    val freestyleRaceStat: Float? = null,
+
     @field:JsonView(FullDetails::class)
     val profileIsComplete: Boolean? = null,
 

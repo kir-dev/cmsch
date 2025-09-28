@@ -48,9 +48,16 @@ export type TeamView = {
 
 export type TeamStatView = { name: string; value1: string; value2?: string; navigate?: string; percentage?: number }
 
+export type TeamLabelView = {
+  name: string
+  color?: string
+  description?: string
+}
+
 export type TeamListItemView = {
   id: number
   name: string
+  labels?: TeamLabelView[]
   introduction?: string
   logo?: string
 }
@@ -58,8 +65,8 @@ export type TeamListItemView = {
 export type TeamMemberView = {
   name: string
   id: number
-  admin: boolean
-  you: boolean
+  isAdmin: boolean
+  isYou: boolean
 }
 
 export type TeamTaskCategoriesView = {

@@ -48,6 +48,9 @@ class QrFightComponent(
     var apiTokens by StringSettingRef("tower:token", serverSideOnly = true, fieldName = "API tokenek",
         description = "Formátum: towerSelector:token, ...")
 
+    var dailyTowerReadLimit by NumberSettingRef(serverSideOnly = true, fieldName = "Napi torony beolvasás limit",
+        description = "Egy adott tornyot egy játékos naponta ennyiszer olvashat be. Ha -1, akkor bármennyiszer beolvasható bármelyik torony.")
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val indulaschGroup by SettingGroup(fieldName = "Indulásch integráció")

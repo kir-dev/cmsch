@@ -35,6 +35,7 @@ enum class TeamStatus {
 data class TeamView(
     var id: Int = 0,
     var name: String = "",
+    var labels: List<TeamLabelView> = emptyList(),
     val coverUrl: String = "",
     val description: String = "",
     var descriptionRejected: Boolean,
@@ -63,8 +64,16 @@ data class TeamMemberView(
 data class TeamListView(
     var id: Int = 0,
     var name: String = "",
+    var labels: List<TeamLabelView> = emptyList(),
     var introduction: String? = null,
     var logo: String? = null,
 ) {
-    constructor(id: Int, name: String) : this(id, name, null, null)
+    constructor(id: Int, name: String) : this(id, name, emptyList(), null, null)
 }
+
+data class TeamLabelView(
+    var id: Int = 0,
+    var name: String = "",
+    var color: String? = null,
+    var description: String? = null,
+)

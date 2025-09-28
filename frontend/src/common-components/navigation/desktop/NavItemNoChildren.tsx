@@ -1,5 +1,6 @@
-import { Box, chakra, useColorModeValue } from '@chakra-ui/react'
+import { Box, chakra } from '@chakra-ui/react'
 import { Menu } from '../../../api/contexts/config/types'
+import { useBrandColor } from '../../../util/core-functions.util.ts'
 import LinkComponent from '../LinkComponent'
 
 type Props = {
@@ -13,7 +14,7 @@ export const NavItemNoChildren = ({ menu }: Props) => {
         <chakra.span
           _hover={{
             textDecoration: 'none',
-            color: useColorModeValue('brand.500', 'brand.400')
+            color: useBrandColor(500, 400)
           }}
           whiteSpace="nowrap"
           fontSize="md"

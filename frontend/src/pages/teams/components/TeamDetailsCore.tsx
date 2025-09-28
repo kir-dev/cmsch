@@ -1,4 +1,18 @@
-import { Box, Button, Divider, Flex, Grid, Heading, Image, Text, useColorModeValue, useToast, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Heading,
+  Image,
+  Text,
+  useColorModeValue,
+  useToast,
+  VStack,
+  Wrap,
+  WrapItem
+} from '@chakra-ui/react'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
@@ -17,12 +31,13 @@ import { CmschPage } from '../../../common-components/layout/CmschPage'
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
-import { joinPath } from '../../../util/core-functions.util'
+import { joinPath, useBrandColor } from '../../../util/core-functions.util'
 import { AbsolutePaths, Paths } from '../../../util/paths'
-import { RoleType } from '../../../util/views/profile.view'
+import { RoleType, RoleTypeString } from '../../../util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
 import { MemberRow } from './MemberRow'
 import { TeamFormItem } from './TeamFormItem'
+import TeamLabel from './TeamLabel.tsx'
 import { TeamStat } from './TeamStat'
 import { TeamTaskCategoryListItem } from './TeamTaskCategoryListItem'
 
@@ -36,14 +51,16 @@ interface TeamDetailsCoreProps {
 
 export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetch = () => {} }: TeamDetailsCoreProps) {
   const toast = useToast()
-  const { components } = useConfigContext()
-  const teamComponent = components.team
-  const raceComponent = components.race
-  const userRole = useConfigContext().role
+  const config = useConfigContext()
+  const components = config?.components
+  const teamComponent = components?.team
+  const raceComponent = components?.race
+  const userRole = config?.role
   const navigate = useNavigate()
   const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
   const [isEditingMembers, setIsEditingMembers] = useState(false)
-  const isUserGroupAdmin = RoleType[userRole] >= RoleType.PRIVILEGED
+  const isUserGroupAdmin = RoleType[userRole || RoleTypeString.GUEST] >= RoleType.PRIVILEGED
+  const brandColor = useBrandColor()
 
   const actionResponseCallback = (response: TeamResponses) => {
     if (response == TeamResponses.OK) {
@@ -92,6 +109,14 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Heading fontSize={25} my={0}>
               {team.name}
             </Heading>
+            <Wrap pt={2}>
+              {team.labels &&
+                team.labels.map((label, index) => (
+                  <WrapItem key={index}>
+                    <TeamLabel name={label.name} color={label.color} desc={label.description} />
+                  </WrapItem>
+                ))}
+            </Wrap>
             <Text>{team.description}</Text>
           </Box>
           <Box>{team.logo && <Image maxW="128px" maxH="128px" src={team.logo} alt="Csapat logó" borderRadius="md" />}</Box>
@@ -120,7 +145,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             <Button
               leftIcon={<FaSignInAlt />}
               isLoading={joinTeamLoading}
-              colorScheme="brand"
+              colorScheme={brandColor}
               onClick={() => {
                 joinTeam(team?.id)
                 refetch()
@@ -149,7 +174,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             </Button>
           )}
           {teamComponent.showRaceButton && (
-            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} ml={5} colorScheme="brand">
+            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} ml={5} colorScheme={brandColor}>
               {raceComponent?.title ?? 'Verseny'} eredmények
             </LinkButton>
           )}
@@ -221,21 +246,21 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
               key={m.id}
               member={m}
               onPromoteLeadership={
-                isEditingMembers && teamComponent?.promoteLeadershipEnabled && !m.admin && !m.you
+                isEditingMembers && teamComponent?.promoteLeadershipEnabled && !m.isAdmin && !m.isYou
                   ? () => {
                       promoteLeadership(m.id)
                     }
                   : undefined
               }
               onRoleChange={
-                isEditingMembers && teamComponent?.togglePermissionEnabled && !m.you
+                isEditingMembers && teamComponent?.togglePermissionEnabled && !m.isYou
                   ? () => {
                       togglePermissions(m.id)
                     }
                   : undefined
               }
               onDelete={
-                isEditingMembers && teamComponent?.kickEnabled && !m.admin && !m.you
+                isEditingMembers && teamComponent?.kickEnabled && !m.isAdmin && !m.isYou
                   ? () => {
                       kickMember(m.id)
                     }

@@ -72,7 +72,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     case FormFieldVariants.MUST_AGREE:
       component = (
         <Flex alignItems="center" my={10}>
-          <Checkbox {...field} isInvalid={!!error} disabled={disabled} defaultChecked={!!defaultValue} />
+          <Checkbox {...field} isInvalid={!!error} borderColor={checkboxBorderColor} disabled={disabled} defaultChecked={!!defaultValue} />
           <FormLabel ml={3} mb={0} fontSize={20} htmlFor={fieldProps.fieldName}>
             {fieldProps.label}
           </FormLabel>

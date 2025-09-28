@@ -8,6 +8,7 @@ import {
   CircularProgressLabel,
   Divider,
   Flex,
+  Grid,
   Heading,
   Link,
   Text,
@@ -28,6 +29,7 @@ import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
 import { API_BASE_URL } from '../../util/configs/environment.config'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import templateStringReplace from '../../util/templateStringReplace'
 import { GuildType, RoleType } from '../../util/views/profile.view'
@@ -52,9 +54,9 @@ const ProfilePage = () => {
   }, [navigate, refetch])
 
   const config = useConfigContext()?.components
-  const component = config.profile
+  const component = config?.profile
 
-  const brandColor = useColorModeValue('brand.500', 'brand.600')
+  const brandColor = useBrandColor()
   const greenProgressColor = useColorModeValue('green.500', 'green.600')
   const yellowProgressColor = useColorModeValue('yellow.400', 'yellow.500')
   const progressBackground = useColorModeValue('gray.200', 'gray.500')
@@ -75,7 +77,7 @@ const ProfilePage = () => {
           {component.messageBoxContent}
         </Alert>
       )}
-      <PresenceAlert acquired={profile.collectedTokenCount} needed={profile.minTokenToComplete} mt={5} />
+      <PresenceAlert acquired={profile?.collectedTokenCount || 0} needed={profile?.minTokenToComplete || 0} mt={5} />
 
       {component?.showIncompleteProfile && (
         <Alert status={profile.profileIsComplete ? 'success' : 'error'} variant="left-accent" mb={5}>
@@ -103,7 +105,7 @@ const ProfilePage = () => {
           {component.showNeptun && <Text fontSize="xl">Neptun: {profile.neptun || 'nincs'}</Text>}
           {component.showEmail && <Text fontSize="xl">E-mail: {profile.email || 'nincs'}</Text>}
 
-          {component.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile.guild] || 'nincs'}</Text>}
+          {component.showGuild && <Text fontSize="xl">Gárda: {GuildType[profile?.guild || 'UNKNOWN'] || 'nincs'}</Text>}
           {component.showMajor && <Text fontSize="xl">Szak: {profile.major || 'nincs'}</Text>}
           {component.showGroup && (
             <Text fontSize="xl">
@@ -113,21 +115,21 @@ const ProfilePage = () => {
         </Box>
         <VStack ml={{ base: 0, md: 'auto' }} mr={{ base: 'auto', md: 0 }} py={2} alignItems="stretch" mt={{ base: 5, md: 0 }}>
           {profile.role && RoleType[profile.role] >= RoleType.STAFF && (
-            <LinkButton colorScheme="brand" href={`${API_BASE_URL}/admin/control`} external>
+            <LinkButton colorScheme={brandColor} href={`${API_BASE_URL}/admin/control`} external>
               Admin panel
             </LinkButton>
           )}
           {config?.groupselection && profile.groupSelectionAllowed && (
-            <LinkButton colorScheme="brand" href={AbsolutePaths.CHANGE_GROUP}>
+            <LinkButton colorScheme={brandColor} href={AbsolutePaths.CHANGE_GROUP}>
               {component?.groupTitle} módosítása
             </LinkButton>
           )}
           {component.aliasChangeEnabled && (
-            <LinkButton colorScheme="brand" href={AbsolutePaths.CHANGE_ALIAS}>
+            <LinkButton colorScheme={brandColor} href={AbsolutePaths.CHANGE_ALIAS}>
               Becenév módosítása
             </LinkButton>
           )}
-          <Button colorScheme="brand" variant="outline" onClick={onLogout}>
+          <Button colorScheme={brandColor} variant="outline" onClick={onLogout}>
             Kijelentkezés
           </Button>
         </VStack>
@@ -155,6 +157,30 @@ const ProfilePage = () => {
         </>
       )}
       {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={8} borderWidth={2} />}
+
+      {component.showRaceStats && profile?.raceStat && (
+        <Grid templateColumns={{ base: '1fr 1fr', sm: '1fr 2fr', md: '1fr 3fr' }}>
+          <Text as="i">Mérés eredmény: </Text>
+          <Text>
+            <Text as="b">{profile?.raceStat}s</Text>
+            {profile.racePlacement && <Text as="b" fontStyle="italic">{` (${profile.racePlacement}. helyezett)`}</Text>}
+          </Text>
+        </Grid>
+      )}
+      {component.showRaceStats && profile?.freestyleRaceStat && (
+        <Grid templateColumns={{ base: '1fr 1fr', sm: '1fr 2fr', md: '1fr 3fr' }}>
+          <Text as="i" whiteSpace="nowrap">
+            Funky Mérés:{' '}
+          </Text>
+          <Text>
+            <Text as="b" whiteSpace="nowrap">
+              {profile.freestyleRaceStat}s
+            </Text>
+            {profile.freestyleRaceDescription && <Text as="b" fontStyle="italic">{` (${profile.freestyleRaceDescription})`}</Text>}
+          </Text>
+        </Grid>
+      )}
+
       <Flex justify="center" alignItems="center" flexWrap="wrap">
         {component.showTasks && (
           <Center p={3}>
@@ -218,11 +244,11 @@ const ProfilePage = () => {
               <CircularProgress
                 color={greenProgressColor}
                 size="10rem"
-                value={(profile.completedRiddleCount / profile.totalRiddleCount) * 100}
+                value={((profile?.completedRiddleCount || 0) / (profile?.totalRiddleCount || 0)) * 100}
                 trackColor={progressBackground}
               >
                 <CircularProgressLabel color={profile.completedRiddleCount === 0 ? 'gray.500' : greenProgressColor}>
-                  {Math.round((profile.completedRiddleCount / profile.totalRiddleCount) * 100)}%
+                  {Math.round(((profile?.completedRiddleCount || 0) / (profile?.totalRiddleCount || 0)) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
             </Flex>
@@ -245,11 +271,11 @@ const ProfilePage = () => {
               <CircularProgress
                 color={greenProgressColor}
                 size="10rem"
-                value={(profile.collectedTokenCount / profile.totalTokenCount) * 100}
+                value={((profile?.collectedTokenCount || 0) / (profile?.totalTokenCount || 0)) * 100}
                 trackColor={progressBackground}
               >
                 <CircularProgressLabel color={profile.collectedTokenCount === 0 ? 'gray.500' : greenProgressColor}>
-                  {Math.round((profile.collectedTokenCount / profile.totalTokenCount) * 100)}%
+                  {Math.round(((profile?.collectedTokenCount || 0) / (profile?.totalTokenCount || 0)) * 100)}%
                 </CircularProgressLabel>
               </CircularProgress>
             </Flex>

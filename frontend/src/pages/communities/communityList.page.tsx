@@ -12,7 +12,7 @@ import { Community } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function CommunityListPage() {
-  const config = useConfigContext()?.components.communities
+  const config = useConfigContext()?.components?.communities
   const { data, isLoading, isError } = useCommunityList()
   const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()

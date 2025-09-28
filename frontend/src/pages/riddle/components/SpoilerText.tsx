@@ -9,13 +9,13 @@ type Props = {
 
 export const SpoilerText = ({ text }: Props) => {
   const { isOpen, onToggle, onClose } = useDisclosure()
-  const config = useConfigContext()
+  const style = useConfigContext()?.components?.style
 
   useEffect(() => {
     onClose()
   }, [onClose, text])
 
-  const hiddenColor = useColorModeValue(config.components.style.lightTextColor, config.components.style.darkTextColor)
+  const hiddenColor = useColorModeValue(style?.lightTextColor, style?.darkTextColor)
   return (
     <chakra.label onClick={onToggle} bgColor={isOpen ? undefined : hiddenColor} color={isOpen ? undefined : hiddenColor}>
       {text}

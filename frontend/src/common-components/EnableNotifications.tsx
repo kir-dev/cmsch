@@ -8,7 +8,7 @@ export const EnableNotifications = () => {
   if (!areNotificationsSupported()) return
   if (Notification.permission !== 'default') return null // we cannot ask again
 
-  const component = config.components.pushnotification
+  const component = config?.components?.pushnotification
   if (!component?.notificationsEnabled || !isOpen || !shouldShowAlert(component.permissionAllowNeverShowAgain)) return null
 
   const { permissionPromptText, permissionAcceptText, permissionDenyText } = component

@@ -10,7 +10,7 @@ import { sortNewsList } from './util/sortNewsList'
 
 const NewsListPage = () => {
   const { data, isLoading, isError } = useNewsListQuery()
-  const component = useConfigContext()?.components.news
+  const component = useConfigContext()?.components?.news
 
   if (!component) return <ComponentUnavailable />
 

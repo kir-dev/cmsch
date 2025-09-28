@@ -15,6 +15,7 @@ import { FaQrcode } from 'react-icons/fa'
 import QRCode from 'react-qr-code'
 import { Profile } from '../../../api/contexts/config/types'
 import { WalletButton } from '../../../common-components/WalletButton'
+import { useBrandColor } from '../../../util/core-functions.util.ts'
 import { ProfileView } from '../../../util/views/profile.view'
 
 export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
@@ -28,11 +29,11 @@ export const ProfileQR = ({ profile, component }: { profile: ProfileView; compon
         <Button mt={5} leftIcon={<FaQrcode />} onClick={onOpen}>
           QR kód felmutatása
         </Button>
-        <Text fontSize="sm" color="brand.300" my={5}>
+        <Text fontSize="sm" color={useBrandColor(300, 300)} my={5}>
           vagy
         </Text>
-        <WalletButton type="apple" name={profile.fullName} userId={profile.cmschId} />
-        <WalletButton type="google" name={profile.fullName} userId={profile.cmschId} />
+        {profile.fullName && profile.cmschId && <WalletButton type="apple" name={profile.fullName} userId={profile.cmschId} />}
+        {profile.fullName && profile.cmschId && <WalletButton type="google" name={profile.fullName} userId={profile.cmschId} />}
       </Center>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -41,11 +42,15 @@ export const ProfileQR = ({ profile, component }: { profile: ProfileView; compon
           <ModalHeader>{profile.fullName}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Center flexDirection="column">
-              <Box w="fit-content" maxW="100%" p={2} mb={5} borderRadius={3} backgroundColor="white">
-                <QRCode value={profile.cmschId} />
-              </Box>
-            </Center>
+            {profile.cmschId ? (
+              <Center flexDirection="column">
+                <Box w="fit-content" maxW="100%" p={2} mb={5} borderRadius={3} backgroundColor="white">
+                  <QRCode value={profile.cmschId} />
+                </Box>
+              </Center>
+            ) : (
+              <Text>Hiba: Cmsch azonosító nem található</Text>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

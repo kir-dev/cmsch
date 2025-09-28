@@ -40,6 +40,10 @@ class RiddleComponent(
     final override var minRole by MinRoleSettingRef(setOf(),
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
+    var visibleRiddlesPerCategory by NumberSettingRef(1, type = SettingType.NUMBER, fieldName = "Egyidőben mutatott riddleök száma",
+        description = "Kategóriánként ennyi kerül megjelenítésre egyidőben, ennyi közül lehet választani"
+    )
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val shadowBanModerationGroup by SettingGroup(fieldName = "Riddle beadások moderálása - Shadow Ban",

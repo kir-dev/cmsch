@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -16,10 +16,13 @@ import { ScrollToTop } from './ScrollToTop'
 export const CmschLayout = ({ children }: PropsWithChildren) => {
   const config = useConfigContext()
   const { sendMessage } = useServiceContext()
-  const component = config?.components.app
+  const component = config?.components?.app
+
+  useEffect(() => {
+    if (!component) sendMessage(l('component-unavailable'))
+  }, [component, sendMessage])
 
   if (!component) {
-    sendMessage(l('component-unavailable'))
     return <Navigate to={AbsolutePaths.ERROR} />
   }
 

@@ -3,7 +3,7 @@ import { RoleTypeString } from '../../../util/views/profile.view'
 export interface ConfigDto {
   role: RoleTypeString
   menu: Menu[]
-  components: Components
+  components?: Components
 }
 
 export interface Menu {
@@ -14,39 +14,39 @@ export interface Menu {
 }
 
 export interface Components {
-  app: App
-  style: Style
-  userHandling: UserHandling
-  countdown: Countdown
-  debt: Debt
-  event: Event
-  extraPage: ExtraPage
-  groupselection: GroupSelection
-  home: Home
-  gallery: Gallery
-  impressum: Impressum
-  leaderboard: Leaderboard
-  location: Location
-  login: Login
-  news: News
-  profile: Profile
-  race: Race
-  riddle: Riddle
-  form: Signup
-  task: Task
-  team: Team
-  token: Token
-  pushnotification: PushNotification
-  qrFight: QrFight
-  communities: Communities
-  footer: Footer
+  app?: App
+  style?: Style
+  userHandling?: UserHandling
+  countdown?: Countdown
+  debt?: Debt
+  event?: Event
+  extraPage?: ExtraPage
+  groupselection?: GroupSelection
+  home?: Home
+  gallery?: Gallery
+  impressum?: Impressum
+  leaderboard?: Leaderboard
+  location?: Location
+  login?: Login
+  news?: News
+  profile?: Profile
+  race?: Race
+  riddle?: Riddle
+  form?: Signup
+  task?: Task
+  team?: Team
+  token?: Token
+  pushnotification?: PushNotification
+  qrFight?: QrFight
+  communities?: Communities
+  footer?: Footer
   tournament: Tournament
 }
 
 export interface App {
   defaultComponent: string
   siteName: string
-  warningLevel: string
+  warningLevel: 'warning' | 'info' | 'success' | 'error' | 'loading' | undefined
   warningMessage: string
 }
 
@@ -164,11 +164,14 @@ export interface Leaderboard {
   leaderboardEnabled: string
   leaderboardDetailsEnabled: boolean
   leaderboardDetailsByCategoryEnabled: boolean
+  leaderBoardCategoryName: string
   leaderboardFrozen: string
   maxGroupEntryToShow: number
   maxUserEntryToShow: number
   minScoreToShow: number
   showGroupBoard: boolean
+  groupBoardName: string
+  myGroupName: string
   showScores: boolean
   showGroupOfUser: boolean
   showUserBoard: boolean
@@ -187,6 +190,7 @@ export interface Profile {
   showRiddles: boolean
   riddleCounterName: string
   showTokens: boolean
+  showRaceStats: boolean
   tokenCounterName: string
   showFullName: boolean
   showGuild: boolean
@@ -228,13 +232,12 @@ export interface Style {
   darkContainerColor: string
   darkContainerFilter: string
   darkTextColor: string
+  darkBrandingColor: string
   darkBackgroundUrl: string
   darkMobileBackgroundUrl: string
   darkLogoUrl: string
   mainFontName: string
-  mainFontWeight: number
   displayFontName: string
-  displayFontWeight: number
   lightNavbarFilter: string
   darkNavbarFilter: string
   lightNavbarColor: string
@@ -317,6 +320,7 @@ export interface Team {
   teamCreationTopMessage: string
   title: string
   togglePermissionEnabled: boolean
+  searchEnabled: boolean
 }
 
 export interface PushNotification {

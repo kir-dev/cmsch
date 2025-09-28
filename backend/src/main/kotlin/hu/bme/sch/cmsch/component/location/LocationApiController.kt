@@ -15,7 +15,7 @@ class LocationApiController(
     private val profileComponent: Optional<ProfileComponent>
 ) {
 
-    @CrossOrigin(origins = ["*"])
+    @CrossOrigin(originPatterns = ["*"])
     @PostMapping("/location")
     fun pushLocation(@RequestBody payload: LocationDto): LocationResponse {
         return locationService.pushLocation(payload)

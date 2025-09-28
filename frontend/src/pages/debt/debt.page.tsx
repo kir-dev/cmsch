@@ -11,8 +11,9 @@ import { ProfileQR } from '../profile/components/ProfileQR.tsx'
 import { DebtListItem } from './components/debt-list-item.tsx'
 
 const DebtPage = () => {
-  const debtComponent = useConfigContext()?.components.debt
-  const profileComponent = useConfigContext()?.components.profile
+  const components = useConfigContext()?.components
+  const debtComponent = components?.debt
+  const profileComponent = components?.profile
   const profileQuery = useProfileQuery()
   const { data, isError, isLoading } = useDebtQuery()
 
@@ -28,7 +29,7 @@ const DebtPage = () => {
       <Heading as="h1" variant="main-title">
         {title}
       </Heading>
-      {profileQuery.data && (
+      {profileQuery.data && !!profileComponent && (
         <>
           <Divider my={8} borderWidth={2} />
           <ProfileQR profile={profileQuery.data} component={profileComponent} />

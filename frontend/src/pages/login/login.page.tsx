@@ -9,12 +9,14 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { API_BASE_URL } from '../../util/configs/environment.config'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
   const config = useConfigContext()
-  const component = config?.components.login
+  const component = config?.components?.login
+  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -34,7 +36,7 @@ const LoginPage = () => {
         {component.authschPromoted && (
           <>
             <Button
-              colorScheme="brand"
+              colorScheme={brandColor}
               onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}
               leftIcon={<FaSignInAlt />}
             >
@@ -46,7 +48,7 @@ const LoginPage = () => {
         {component.googleSsoEnabled && (
           <>
             <Button
-              colorScheme="brand"
+              colorScheme={brandColor}
               onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/google`)}
               leftIcon={<FaGoogle />}
             >
@@ -58,7 +60,7 @@ const LoginPage = () => {
         {component.keycloakEnabled && (
           <>
             <Button
-              colorScheme="brand"
+              colorScheme={brandColor}
               onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/keycloak`)}
               leftIcon={<FaKey />}
             >

@@ -17,7 +17,7 @@ import FormPage from './pages/form/form.page.tsx'
 import HomePage from './pages/home/home.page'
 import ImpressumPage from './pages/impressum/impressum.page.tsx'
 import IndexPage from './pages/index/index.page'
-import LeaderboardPage from './pages/leader-board/leaderboard.page.tsx'
+import LeaderboardPage from './pages/leaderboard/leaderboard.page.tsx'
 import LoginPage from './pages/login/login.page'
 import MapPage from './pages/map/map.page.tsx'
 import NewsPage from './pages/news/news.page.tsx'
@@ -30,6 +30,7 @@ import FreestyleRacePage from './pages/race/freestyleRace.page.tsx'
 import RacePage from './pages/race/race.page.tsx'
 import RaceByTeamPage from './pages/race/raceByTeam.page.tsx'
 import RiddlePage from './pages/riddle/riddle.page.tsx'
+import RiddleCategoryPage from './pages/riddle/riddleCategory.page.tsx'
 import RiddleHistoryPage from './pages/riddle/riddleHistory.page.tsx'
 import RiddleListPage from './pages/riddle/riddleList.page.tsx'
 import TaskPage from './pages/task/task.page.tsx'
@@ -104,7 +105,8 @@ export function App() {
                 <Route index element={<RacePage />} />
               </Route>
               <Route path={Paths.RIDDLE}>
-                <Route path=":id" element={<RiddlePage />} />
+                <Route path="solve/:id" element={<RiddlePage />} />
+                <Route path="category/:id" element={<RiddleCategoryPage />} />
                 <Route path="history" element={<RiddleHistoryPage />} />
                 <Route index element={<RiddleListPage />} />
               </Route>

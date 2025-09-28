@@ -9,11 +9,11 @@ import { MobileNav } from './mobile/MobileNav'
 
 export const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure()
-  const config = useConfigContext()
-  const logoUrl = useColorModeValue(config?.components.style?.lightLogoUrl, config?.components.style?.darkLogoUrl)
-  const backdropFilter = useColorModeValue(config?.components.style?.lightNavbarFilter, config?.components.style?.darkNavbarFilter)
-  const background = useColorModeValue(config.components.style?.lightNavbarColor, config.components.style?.darkNavbarColor)
-  const textColor = useColorModeValue(config.components.style.lightTextColor, config.components.style.darkTextColor)
+  const components = useConfigContext()?.components
+  const logoUrl = useColorModeValue(components?.style?.lightLogoUrl, components?.style?.darkLogoUrl)
+  const backdropFilter = useColorModeValue(components?.style?.lightNavbarFilter, components?.style?.darkNavbarFilter)
+  const background = useColorModeValue(components?.style?.lightNavbarColor, components?.style?.darkNavbarColor)
+  const textColor = useColorModeValue(components?.style?.lightTextColor, components?.style?.darkTextColor)
   return (
     <Box
       mx="auto"
@@ -45,10 +45,10 @@ export const Navbar = () => {
         <Flex justify={{ base: 'center', md: 'start' }}>
           <Link to="/">
             {logoUrl ? (
-              <Image maxH={16} maxW={28} src={logoUrl} alt={config?.components.app.siteName} />
+              <Image maxH={16} maxW={28} src={logoUrl} alt={components?.app?.siteName} />
             ) : (
               <Heading as="h1" variant="main-title" my={2}>
-                {config?.components.app.siteName}
+                {components?.app?.siteName}
               </Heading>
             )}
           </Link>
@@ -59,7 +59,7 @@ export const Navbar = () => {
           </Flex>
         </Flex>
         <Flex flex={{ base: 1, md: 0 }} mr={{ base: -2, md: 0 }} justify="flex-end">
-          {!config?.components?.style?.forceDarkMode && <ColorModeSwitcher color={textColor} />}
+          {!components?.style?.forceDarkMode && <ColorModeSwitcher color={textColor} />}
         </Flex>
       </Flex>
       {/*The method in onClick hides the menu items when a menu item is clicked. Works for collapsible items too!*/}
@@ -72,7 +72,7 @@ export const Navbar = () => {
       >
         <MobileNav />
       </Collapse>
-      {!!config?.components?.event && <CurrentEventCard />}
+      {!!components?.event && <CurrentEventCard />}
     </Box>
   )
 }

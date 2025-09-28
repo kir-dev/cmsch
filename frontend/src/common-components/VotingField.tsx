@@ -1,4 +1,5 @@
 import { Button, Collapse, Heading, HStack, Image, Radio, Stack, Text, VStack } from '@chakra-ui/react'
+import { useBrandColor } from '../util/core-functions.util.ts'
 import { VotingFieldOption } from '../util/views/form.view'
 
 interface VotingFieldProps {
@@ -35,6 +36,8 @@ interface VotingFieldElementProps {
 }
 
 function VotingFieldElement({ onChange, selected, option }: VotingFieldElementProps) {
+  const brandColor = useBrandColor(200, 200)
+
   return (
     <Stack
       alignItems="center"
@@ -42,7 +45,7 @@ function VotingFieldElement({ onChange, selected, option }: VotingFieldElementPr
       gap={5}
       onClick={onChange}
       borderRadius="md"
-      borderColor={selected ? 'brand.200' : 'whiteAlpha.200'}
+      borderColor={selected ? brandColor : 'whiteAlpha.200'}
       borderWidth={1}
       position="relative"
       p={4}
@@ -54,7 +57,7 @@ function VotingFieldElement({ onChange, selected, option }: VotingFieldElementPr
         <Heading fontSize="3xl">{option.title}</Heading>
         <Text>{option.text}</Text>
       </VStack>
-      <Radio position="absolute" top={5} right={5} size="lg" isChecked={selected} colorScheme="brand" />
+      <Radio position="absolute" top={5} right={5} size="lg" isChecked={selected} colorScheme={useBrandColor()} />
     </Stack>
   )
 }

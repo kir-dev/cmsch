@@ -4,6 +4,18 @@ import { Style } from '../../api/contexts/config/types.ts'
 import { getColorShadesForColor } from '../core-functions.util.ts'
 
 export const KirDevColor = '#F15A29'
+const defaultBrand = {
+  50: '#d9fae7',
+  100: '#fcded4',
+  200: '#f9bda9',
+  300: '#f79c7f',
+  400: '#f47b54',
+  500: '#F15A29',
+  600: '#c14821',
+  700: '#913619',
+  800: '#602410',
+  900: '#301208'
+}
 
 export const getCustomTheme = (style?: Style) =>
   extendTheme(
@@ -18,18 +30,8 @@ export const getCustomTheme = (style?: Style) =>
         })
       },
       colors: {
-        brand: {
-          50: '#d9fae7',
-          100: '#fcded4',
-          200: '#f9bda9',
-          300: '#f79c7f',
-          400: '#f47b54',
-          500: '#F15A29',
-          600: '#c14821',
-          700: '#913619',
-          800: '#602410',
-          900: '#301208'
-        },
+        lightBrand: defaultBrand,
+        darkBrand: defaultBrand,
         kirDev: '#F15A29'
       },
       components: {
@@ -47,6 +49,8 @@ const getThemeExtensionFromStyle = (style?: Style) =>
   style && {
     colors: {
       brand: getColorShadesForColor(style.lightBrandingColor),
+      lightBrand: getColorShadesForColor(style.lightBrandingColor),
+      darkBrand: getColorShadesForColor(style.darkBrandingColor),
       lightContainerColor: getColorShadesForColor(style.lightContainerColor),
       lightContainerBg: style.lightContainerColor,
       darkContainerColor: getColorShadesForColor(style.darkContainerColor),

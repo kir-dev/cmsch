@@ -6,23 +6,28 @@ import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
+import { RiddleCategory } from '../../util/views/riddle.view.ts'
 import { RiddleCategoryListItem } from './components/RiddleCategoryListItem'
 
 const RiddleCategoryList = () => {
   const navigate = useNavigate()
   const toast = useToast()
-  const component = useConfigContext()?.components.riddle
+  const component = useConfigContext()?.components?.riddle
   const { isLoading, isError, data } = useRiddleListQuery()
+  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
-  const onRiddleCategoryClick = (nextRiddle?: number) => {
-    if (nextRiddle) {
-      navigate(`${AbsolutePaths.RIDDLE}/${nextRiddle}`)
+  const onRiddleCategoryClick = (category: RiddleCategory) => {
+    if (category.nextRiddles.length > 1) {
+      navigate(`${AbsolutePaths.RIDDLE}/category/${category.categoryId}`)
+    } else if (category.nextRiddles[0]) {
+      navigate(`${AbsolutePaths.RIDDLE}/solve/${category.nextRiddles[0].id}`)
     } else {
       toast({
         title: l('riddle-completed-category-title'),
@@ -41,7 +46,7 @@ const RiddleCategoryList = () => {
         <Heading as="h1" variant="main-title">
           Riddleök
         </Heading>
-        <Button colorScheme="brand" as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
+        <Button colorScheme={brandColor} as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
           Megoldott riddleök
         </Button>
       </Stack>
@@ -51,7 +56,7 @@ const RiddleCategoryList = () => {
             <RiddleCategoryListItem
               category={riddleCategory}
               key={riddleCategory.categoryId}
-              onClick={() => onRiddleCategoryClick(riddleCategory.nextRiddle)}
+              onClick={() => onRiddleCategoryClick(riddleCategory)}
             />
           ))
         ) : (

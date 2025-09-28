@@ -8,6 +8,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus'
 import { PresenceAlert } from '../../common-components/PresenceAlert'
+import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { StampComponent } from './components/StampComponent'
@@ -15,7 +16,8 @@ import { StampComponent } from './components/StampComponent'
 const TokenList = () => {
   const { data, isLoading, isError } = useTokensQuery()
   const config = useConfigContext()
-  const component = config?.components.token
+  const component = config?.components?.token
+  const brandColor = useBrandColor()
 
   const calculate_progress = (acquired: number, total: number) => (total == 0 ? 100 : (100 * acquired) / total)
 
@@ -30,19 +32,10 @@ const TokenList = () => {
         {component.title || 'QR kódok'}
       </Heading>
       <PresenceAlert acquired={data.collectedTokenCount} needed={data.minTokenToComplete} />
-      {/* <Paragraph>
-        A standoknál végzett aktív tevékenységért QR kódokat lehet beolvasni. Ha eleget összegyűjt, beválthatja egy tanköri jelenlétre.
-      </Paragraph> */}
-
       <ButtonGroup mt="5">
-        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
+        <LinkButton colorScheme={brandColor} leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
           QR kód beolvasása
         </LinkButton>
-        {/* {progress?.groupName === 'Kiállító' && (
-          <LinkButton colorScheme="brand" leftIcon={<FaStamp />} href="/control/stamps" external newTab={false}>
-            Pecsét statisztika
-          </LinkButton>
-        )} */}
       </ButtonGroup>
 
       <Heading as="h3" mt="10" size="lg">

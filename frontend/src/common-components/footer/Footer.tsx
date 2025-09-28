@@ -10,7 +10,7 @@ import parseSponsors from './utils/parseSponsors'
 
 export const Footer = () => {
   const config = useConfigContext()
-  const component = config?.components.footer
+  const component = config?.components?.footer
   const sponsors = useMemo(
     () => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls),
     [component?.sponsorAlts, component?.sponsorLogoUrls, component?.sponsorWebsiteUrls]
@@ -48,7 +48,7 @@ export const Footer = () => {
                 </Heading>
                 <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
                   {sponsors.map((sponsor) => (
-                    <SponsorImage {...sponsor} />
+                    <SponsorImage key={sponsor?.url} {...sponsor} />
                   ))}
                 </Flex>
               </Box>

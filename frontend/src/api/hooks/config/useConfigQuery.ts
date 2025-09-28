@@ -15,7 +15,8 @@ export const useConfigQuery = () => {
         saveCachedConfig(response.data)
       }
       return response.data
-    }
+    },
+    refetchOnWindowFocus: true
   })
 }
 

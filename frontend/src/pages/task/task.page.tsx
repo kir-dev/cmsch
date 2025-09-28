@@ -28,7 +28,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { stringifyTimeStamp } from '../../util/core-functions.util.ts'
+import { stringifyTimeStamp, useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
 import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
@@ -50,14 +50,15 @@ export interface FormInput {
 const getAcceptedFileType = (type?: taskType) => {
   if (type === taskType.ONLY_ZIP) return '.zip'
   else if (type === taskType.ONLY_PDF) return '.pdf'
-  else return 'image/jpeg,image/png,image/jpg,image/gif'
+  else return 'image/jpeg,image/png,image/jpg,image/gif,image/webp'
 }
 const TaskPage = () => {
   const [fileAnswer, setFileAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
   const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
+  const brandColor = useBrandColor()
 
-  const component = useConfigContext()?.components.task
+  const component = useConfigContext()?.components?.task
   const toast = useToast()
   const { id } = useParams()
   const { setValue, handleSubmit, control } = useForm<FormInput>()
@@ -97,7 +98,7 @@ const TaskPage = () => {
   const reviewed = data.status === taskStatus.ACCEPTED || data.status === taskStatus.REJECTED
   const localSubmission = data?.task?.format === taskFormat.NONE
 
-  const onSubmit: SubmitHandler<FormInput> = (values) => {
+  const onSubmit: SubmitHandler<FormInput> = async (values) => {
     if ((!fileAllowed || fileAnswer) && submissionAllowed) {
       const formData = new FormData()
       formData.append('taskId', id)
@@ -111,7 +112,27 @@ const TaskPage = () => {
           })
           return
         }
-        formData.append('file', fileAnswer)
+        try {
+          const processed = await processImageForUpload(fileAnswer)
+          if (processed === null) {
+            toast({
+              title: 'Fájl túl nagy',
+              description: 'Animált fájlok maximum 2 MB méretűek lehetnek. Próbáld meg .WEBP-be konvertálni.',
+              status: 'error',
+              isClosable: true
+            })
+            return
+          }
+          formData.append('file', processed)
+        } catch (e: unknown) {
+          toast({
+            title: 'Kép feldolgozási hiba',
+            description: (e as Error)?.message || 'Nem sikerült a kép optimalizálása.',
+            status: 'error',
+            isClosable: true
+          })
+          return
+        }
       }
       if (textAllowed) {
         switch (data.task?.format) {
@@ -293,7 +314,7 @@ const TaskPage = () => {
             <Box>
               {data.submission.imageUrlAnswer && <Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" />}
               {data.submission.fileUrlAnswer && (
-                <LinkButton href={data.submission.fileUrlAnswer} external colorScheme="brand" mt={5}>
+                <LinkButton href={data.submission.fileUrlAnswer} external colorScheme={brandColor} mt={5}>
                   Letöltés
                 </LinkButton>
               )}
@@ -330,7 +351,7 @@ const TaskPage = () => {
                 {textInput}
                 {fileInput}
                 <Flex justifyContent="end" mt={4}>
-                  <Button mt={3} colorScheme="brand" type="submit">
+                  <Button mt={3} colorScheme={brandColor} type="submit">
                     Küldés
                   </Button>
                 </Flex>
@@ -344,3 +365,86 @@ const TaskPage = () => {
 }
 
 export default TaskPage
+
+// null when the image was too big
+async function processImageForUpload(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.85): Promise<File | null> {
+  const maxBlobSize = 1024 * 1024 * 3
+
+  const type = file.type.toLowerCase()
+  if (!(type === 'image/jpeg' || type === 'image/jpg' || type === 'image/png' || type === 'image/gif' || type === 'image/webp')) {
+    return file
+  }
+
+  // GIF: can't optimize, only allow small uploads
+  if (type === 'image/gif') {
+    if (file.size > maxBlobSize) return null
+    return file
+  }
+
+  // WEBP: can't optimize animated webp, only allow small uploads
+  if (type === 'image/webp') {
+    const isAnim = await isAnimatedWebP(file)
+    if (isAnim) {
+      if (file.size > maxBlobSize) return null
+      return file
+    }
+  }
+
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (e) => reject(e)
+    reader.readAsDataURL(file)
+  })
+
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = document.createElement('img')
+    image.onload = () => resolve(image)
+    image.onerror = (e) => reject(e)
+    image.src = dataUrl
+  })
+
+  // Compute new dimensions keeping aspect ratio
+  const { width, height } = img
+  const scale = Math.min(maxWidth / width, maxHeight / height, 1)
+  const targetW = Math.floor(width * scale)
+  const targetH = Math.floor(height * scale)
+
+  // If no need to resize and file is not too big, we can still compress JPEG/PNG
+  const canvas = document.createElement('canvas')
+  canvas.width = targetW
+  canvas.height = targetH
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return file
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(img, 0, 0, targetW, targetH)
+
+  // Safari doesn't support canvas.toBlob() with WEBP
+  // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob#browser_compatibility
+  const isSafari = detectSafari()
+  const outputType = isSafari ? 'image/jpeg' : 'image/webp'
+
+  const blob: Blob = await new Promise((resolve) => canvas.toBlob((b) => resolve(b || file), outputType, quality))
+  if (!blob) return file
+
+  const name = file.name.replace(/\.(jpg|jpeg|png|gif|webp)$/i, outputType === 'image/webp' ? '.webp' : '.jpg')
+  return new File([blob], name, { type: outputType, lastModified: Date.now() })
+}
+
+function detectSafari(): boolean {
+  const ua = navigator.userAgent
+  const isSafari = /^((?!chrome|android).)*safari/i.test(ua)
+  // Also consider iOS Safari where Chrome uses Safari engine
+  const isIOS = /(ipad|iphone|ipod)/i.test(ua)
+  return isSafari || isIOS
+}
+
+async function isAnimatedWebP(file: File): Promise<boolean> {
+  // Parse minimal RIFF to check for ANIM chunk
+  const buffer = await file.slice(0, 512 * 1024).arrayBuffer()
+  const bytes = new Uint8Array(buffer)
+  // Look for 'ANIM' or 'ANMF' chunk tags which indicate animation
+  const text = new TextDecoder('ascii').decode(bytes)
+  return text.includes('ANIM') || text.includes('ANMF')
+}
