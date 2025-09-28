@@ -33,7 +33,18 @@ data class QrFightLevelView(
     val totems: List<TotemView> = listOf(),
 )
 
+data class QrTreasureHuntLevelView(
+    val name: String = "",
+    val description: String = "",
+    val tokenCount: Int = 0,
+    val status: LevelStatus = LevelStatus.NOT_LOGGED_IN,
+    val owners: String = "",
+    val teams: Map<String, Int> = mapOf(),
+    val foundTokens: List<String> = listOf(),
+)
+
 data class QrFightOverviewView(
     val mainLevels: List<QrFightLevelView>,
     val extraLevels: List<QrFightLevelView>,
+    val treasureHuntLevels: List<QrTreasureHuntLevelView>,
 )
