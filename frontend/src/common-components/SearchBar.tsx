@@ -4,7 +4,8 @@ import { useSearch } from '../util/useSearch'
 
 interface SearchBarProps extends ReturnType<typeof useSearch>, InputGroupProps {}
 
-export function SearchBar({ inputRef, handleInput, setSearch, search, ...inputGroupProps }: SearchBarProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function SearchBar({ inputRef, handleInput, setSearch, search, filteredData, ...inputGroupProps }: SearchBarProps) {
   const clearSearch = () => {
     handleInput()
     setSearch('')

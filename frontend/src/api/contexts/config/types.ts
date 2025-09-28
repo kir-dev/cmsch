@@ -189,6 +189,7 @@ export interface Profile {
   showRiddles: boolean
   riddleCounterName: string
   showTokens: boolean
+  showRaceStats: boolean
   tokenCounterName: string
   showFullName: boolean
   showGuild: boolean
@@ -235,9 +236,7 @@ export interface Style {
   darkMobileBackgroundUrl: string
   darkLogoUrl: string
   mainFontName: string
-  mainFontWeight: number
   displayFontName: string
-  displayFontWeight: number
   lightNavbarFilter: string
   darkNavbarFilter: string
   lightNavbarColor: string
@@ -320,6 +319,7 @@ export interface Team {
   teamCreationTopMessage: string
   title: string
   togglePermissionEnabled: boolean
+  searchEnabled: boolean
 }
 
 export interface PushNotification {

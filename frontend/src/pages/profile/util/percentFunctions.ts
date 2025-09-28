@@ -1,11 +1,7 @@
 import { ProfileView } from '../../../util/views/profile.view'
 
-export const submittedPercent = (profile: ProfileView) => {
-  const res = (profile.submittedTaskCount / profile.totalTaskCount) * 100
-  return isNaN(res) ? 0 : res
-}
+const percent = (dividend: number, divisor: number) => (divisor != 0 ? (dividend / divisor) * 100 : 0)
 
-export const completedPercent = (profile: ProfileView) => {
-  const res = (profile.completedTaskCount / profile.totalTaskCount) * 100
-  return isNaN(res) ? 0 : res
-}
+export const submittedPercent = (profile: ProfileView) => percent(profile?.submittedTaskCount || 0, profile.totalTaskCount || 0)
+
+export const completedPercent = (profile: ProfileView) => percent(profile?.completedTaskCount || 0, profile.totalTaskCount || 0)

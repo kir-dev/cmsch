@@ -64,6 +64,9 @@ class ProfileComponent(
     var tokenCounterCategory by StringSettingRef("default", serverSideOnly = true,
         fieldName = "Token számláló kategóriái", description = "Ebből a kategóriából látszódnak a tokenek, * = minden")
 
+    var showRaceStats by BooleanSettingRef(fieldName = "Mérés eredmény látható",
+        description = "Legyen-e látható a mérés eredmény?")
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val profileFieldsGroup by SettingGroup(fieldName = "Profil adatok",

@@ -36,7 +36,8 @@ const FormPage = () => {
       tokenRefresh.mutate()
     }
     refetch()
-  }, [refetch, result, toast, tokenRefresh])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result])
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Űrlap" />
 

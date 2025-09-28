@@ -11,11 +11,14 @@ import { useSearch } from '../../util/useSearch'
 import { TeamListItemView } from '../../util/views/team.view'
 import { TeamListItem } from './components/TeamListItem'
 
+const EmptyData: TeamListItemView[] = []
+const searchFn = (item: TeamListItemView, search: string) => item.name.toLowerCase().includes(search)
+
 export default function TeamListPage() {
   const config = useConfigContext()
   const component = config?.components?.team
   const { data, isLoading, isError } = useTeamList()
-  const searchArgs = useSearch<TeamListItemView>(data ?? [], (item, search) => item.name.toLowerCase().includes(search))
+  const searchArgs = useSearch<TeamListItemView>(data ?? EmptyData, searchFn)
 
   if (!component) return <ComponentUnavailable />
 
@@ -27,7 +30,7 @@ export default function TeamListPage() {
       <Heading as="h1" variant="main-title">
         {component.title}
       </Heading>
-      <SearchBar mt={5} {...searchArgs} />
+      {component.searchEnabled && <SearchBar mt={5} {...searchArgs} />}
       {searchArgs.filteredData?.map((team) => (
         <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />
       ))}
