@@ -41,7 +41,7 @@ export default function QrLevelsPage() {
         <TabList>
           <CustomTabButton>Fő szintek</CustomTabButton>
           <CustomTabButton>Extra szintek</CustomTabButton>
-          <CustomTabButton>Kincskeresések</CustomTabButton>
+          <CustomTabButton>Tour de QR</CustomTabButton>
         </TabList>
         <TabPanels>
           <TabPanel px={0}>
