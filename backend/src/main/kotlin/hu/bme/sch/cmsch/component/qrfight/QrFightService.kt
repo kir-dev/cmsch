@@ -27,6 +27,14 @@ const val TIMER_OCCURRENCE = 10
 
 private const val NOBODY = "senki"
 
+data class TowerHistoryEntry(
+    val userName: String = NOBODY,
+    val userId: Int = 0,
+    val ownerGroup: String = NOBODY,
+    val ownerGroupId: Int = 0,
+    val timestamp: Long = 0
+)
+
 @Service
 @ConditionalOnBean(QrFightComponent::class)
 class QrFightService(
@@ -309,20 +317,9 @@ class QrFightService(
         if (dailyLimit != -1L){
             val history = towerEntity.history
                 .split("\n")
-                .map { it.split(";") }
-                .map {
-                    TokenPropertyRawView(
-                        ownerUserName = it[0],
-                        ownerUserId = it[1].toIntOrNull() ?: 0,
-                        ownerGroupName = it[2],
-                        ownerGroupId = it[3].toIntOrNull() ?: 0,
-                        timestamp = it[4].toLongOrNull() ?: 0,
-                        token = "",
-                        score = 0
-                    )
-                }
+                .map { objectMapper.readValue(it, TowerHistoryEntry::class.java) }
                 .filter { it.timestamp > clock.getTimeInSeconds() - 24 * 3600 }
-                .filter { it.ownerUserId == user.id }
+                .filter { it.userId == user.id }
 
             if (history.size > dailyLimit){
                 log.info("Tower '{}' daily limit exceeded for user:{} (group:{})", towerEntity.selector, user.userName, groupName)
@@ -337,7 +334,7 @@ class QrFightService(
 
         towerEntity.ownerGroupId = groupId
         towerEntity.ownerGroupName = groupName
-        towerEntity.history += "${user.userName};${user.id};${groupName};${groupId};${clock.getTimeInSeconds()};\n"
+        towerEntity.history += objectMapper.writeValueAsString(towerEntity) + "\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' captured by group:{} (user:{})", token.title, groupName, user.userName)
         return TokenSubmittedView(
