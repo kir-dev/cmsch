@@ -317,9 +317,14 @@ class QrFightService(
         if (dailyLimit != -1L){
             val history = towerEntity.history
                 .split("\n")
-                .map { objectMapper.readValue(it, TowerHistoryEntry::class.java) }
-                .filter { it.timestamp > clock.getTimeInSeconds() - 24 * 3600 }
-                .filter { it.userId == user.id }
+                .let { if (!it.isEmpty() && it.first().isNotBlank()) {
+                    it.map { objectMapper.readValue(it, TowerHistoryEntry::class.java) }
+                        .filter { it.timestamp > clock.getTimeInSeconds() - 24 * 3600 }
+                        .filter { it.userId == user.id }
+                    } else {
+                    emptyList()
+                    }
+                }
 
             if (history.size > dailyLimit){
                 log.info("Tower '{}' daily limit exceeded for user:{} (group:{})", towerEntity.selector, user.userName, groupName)
