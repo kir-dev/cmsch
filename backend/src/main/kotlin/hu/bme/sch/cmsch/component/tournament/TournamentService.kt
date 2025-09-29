@@ -7,12 +7,10 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
-import java.sql.SQLException
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -96,10 +94,13 @@ class TournamentService(
                 tournament.status
             ), stages.map { KnockoutStageDetailedView(
                 it.id,
+                it.type,
                 it.name,
                 it.level,
                 it.participantCount,
+                it.participants.split("\n").map { p -> objectMapper.readValue(p, SeededParticipantDto::class.java) },
                 it.nextRound,
+                it.groupCount,
                 it.status,
                 matchRepository.findAllByStageId(it.id).map { MatchDto(
                     it.id,
@@ -155,7 +156,7 @@ class TournamentService(
     }
 
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun teamRegister(tournament: TournamentEntity, user: CmschUser): TournamentJoinStatus {
         val groupId = user.groupId
@@ -179,7 +180,7 @@ class TournamentService(
         return TournamentJoinStatus.OK
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun userRegister(tournament: TournamentEntity, user: CmschUser): TournamentJoinStatus {
         val participants = tournament.participants

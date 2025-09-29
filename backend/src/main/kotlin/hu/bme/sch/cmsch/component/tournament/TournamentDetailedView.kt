@@ -29,10 +29,13 @@ data class MatchDto(
 
 data class KnockoutStageDetailedView(
     val id: Int,
+    val type: StageType,
     val name: String,
     val level: Int,
     val participantCount: Int,
+    val participants: List<SeededParticipantDto>,
     val nextRound: Int,
+    val groupCount: Int,
     val status: StageStatus,
     val matches: List<MatchDto>,
 )

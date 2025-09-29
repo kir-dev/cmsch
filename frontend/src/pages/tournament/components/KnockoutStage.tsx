@@ -2,6 +2,8 @@ import React from 'react'
 import type { MatchTree } from '../util/matchTree'
 import KnockoutBracket from './KnockoutBracket.tsx'
 
+import { groupBy, keys } from 'lodash'
+
 type TournamentStageView = import('../../../util/views/tournament.view').TournamentStageView
 type MatchView = import('../../../util/views/tournament.view').MatchView
 
@@ -10,12 +12,8 @@ interface TournamentBracketProps {
 }
 
 const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: TournamentBracketProps) => {
-  const levels = stage.matches.reduce<Record<number, MatchView[]>>((acc, match) => {
-    ;(acc[match.level] ??= []).push(match)
-    return acc
-  }, {})
-  const levelNumbers = Object.keys(levels).map(Number)
-  const maxLevel = Math.max(...levelNumbers)
+  const levels = groupBy(stage.matches, (match: MatchView) => match.level)
+  const levelCount = keys(levels).length
 
   const buildTree = (level: number, rootNum: number): MatchTree => {
     const root = levels[level][rootNum]!
@@ -29,11 +27,11 @@ const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: Tourname
   }
 
   const trees: MatchTree[] = []
-  if (levelNumbers.length < 1) {
+  if (levelCount < 1) {
     return null
   }
-  for (let i = 0; i < (levels[maxLevel]?.length ?? 0); i++) {
-    trees.push(buildTree(maxLevel, i))
+  for (let i = 0; i < (levels[levelCount]?.length ?? 0); i++) {
+    trees.push(buildTree(levelCount, i))
   }
 
   return (

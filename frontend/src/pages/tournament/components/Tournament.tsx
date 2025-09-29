@@ -106,7 +106,8 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
           {tournament.stages.map((stage, index) =>
             tabIndex === index + 1 ? (
               <div key={stage.id} style={{ overflowX: 'auto', scrollBehavior: 'smooth' }}>
-                <KnockoutStage stage={stage} />
+                {stage.type === 'KNOCKOUT' && <KnockoutStage key={stage.id} stage={stage} />}
+                {stage.type === 'STAGE' && <GroupStage key={stage.id} stage={stage} />}
               </div>
             ) : null
           )}
