@@ -75,7 +75,7 @@ data class TokenEntity(
     @Column(nullable = false)
     @property:GenerateInput(order = 6, label = "Pont", type = InputType.NUMBER, defaultValue = "0",
         note = "Egész szám, hány pontot ér a megszerzése")
-    @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
+    @property:GenerateOverview(columnName = "Pont", renderer = OverviewType.NUMBER, order = 5, centered = true)
     @property:ImportFormat
     var score: Int? = 0,
 
