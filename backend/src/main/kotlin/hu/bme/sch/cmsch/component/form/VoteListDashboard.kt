@@ -25,7 +25,7 @@ data class FormVotesDto(
     @property:GenerateOverview(columnName = "Űrlap neve", order = 1, useForSearch = true)
     var name: String = "",
 
-    @property:GenerateOverview(columnName = "Kitöltések", order = 2, useForSearch = true)
+    @property:GenerateOverview(columnName = "Kitöltések", order = 2, useForSearch = true, renderer = OverviewType.NUMBER)
     var submissions: Long = 0,
 
 ) : IdentifiableEntity

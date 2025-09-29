@@ -12,10 +12,10 @@ data class CheckRatingVirtualEntity(
     @property:GenerateOverview(columnName = "Csoport", order = 1)
     var groupName: String = "",
 
-    @property:GenerateOverview(columnName = "Pont", order = 2)
+    @property:GenerateOverview(columnName = "Pont", order = 2, renderer = OverviewType.NUMBER)
     var score: Int = 0,
 
-    @property:GenerateOverview(columnName = "Kapható max", order = 3)
+    @property:GenerateOverview(columnName = "Kapható max", order = 3, renderer = OverviewType.NUMBER)
     var maxScore: Int = 0,
 
 ) : IdentifiableEntity
