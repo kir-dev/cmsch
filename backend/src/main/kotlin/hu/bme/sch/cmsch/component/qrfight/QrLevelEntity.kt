@@ -121,7 +121,7 @@ data class QrLevelEntity(
     @property:ImportFormat
     var extraLevel: Boolean = false,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition="tinyint(1) default 0")
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.SWITCH, order = 14, label = "Treasure hunt szint",
         note = "Olyan tokeneket tartalmazó szint, ahol az addig megszerzett tokenek adják a hintet a további tokenekhez")
