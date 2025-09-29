@@ -96,10 +96,13 @@ class TournamentService(
                 tournament.status
             ), stages.map { KnockoutStageDetailedView(
                 it.id,
+                it.type,
                 it.name,
                 it.level,
                 it.participantCount,
+                it.participants.split("\n").map { p -> objectMapper.readValue(p, SeededParticipantDto::class.java) },
                 it.nextRound,
+                it.groupCount,
                 it.status,
                 matchRepository.findAllByStageId(it.id).map { MatchDto(
                     it.id,

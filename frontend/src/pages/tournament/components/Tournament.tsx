@@ -1,13 +1,16 @@
-import { TournamentDetailsView, TournamentResponseMessages, TournamentResponses } from '../../../util/views/tournament.view.ts'
-import { Box, Button, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react'
-import KnockoutStage from './KnockoutStage.tsx'
+//import { Box, Button, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
-import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable.tsx'
 import { Helmet } from 'react-helmet-async'
+//import { FaSignInAlt } from 'react-icons/fa'
+import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
+//import { useTournamentJoinMutation } from '../../../api/hooks/tournament/actions/useTournamentJoinMutation.ts'
+import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable.tsx'
 import { CmschPage } from '../../../common-components/layout/CmschPage.tsx'
-import { useTournamentJoinMutation } from '../../../api/hooks/tournament/actions/useTournamentJoinMutation.ts'
-import { FaSignInAlt } from 'react-icons/fa'
+//import { TournamentDetailsView, TournamentResponseMessages, TournamentResponses } from '../../../util/views/tournament.view.ts'
+import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+import { TournamentDetailsView } from '../../../util/views/tournament.view.ts'
+import GroupStage from './GroupStage.tsx'
+import KnockoutStage from './KnockoutStage.tsx'
 
 interface TournamentProps {
   tournament: TournamentDetailsView
@@ -15,10 +18,9 @@ interface TournamentProps {
 }
 
 const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
-  const toast = useToast()
-  const { components } = useConfigContext()
-  const tournamentComponent = components.tournament
-  const joinMutation = useTournamentJoinMutation()
+  //const toast = useToast()
+  const tournamentComponent = useConfigContext()?.components?.tournament
+  /*const joinMutation = useTournamentJoinMutation()
 
   const actionResponseCallback = (response: TournamentResponses) => {
     if (response == TournamentResponses.OK) {
@@ -43,7 +45,7 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
         }
       })
     }
-  }
+  }*/
 
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -60,7 +62,7 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
         <Heading>{tournament.tournament.title}</Heading>
         <Text>{tournament.tournament.description}</Text>
         <Text>{tournament.tournament.location}</Text>
-        <Flex>
+        {/*<Flex>
           {tournament.tournament.joinEnabled && (
             <Button leftIcon={<FaSignInAlt />} colorScheme="brand" onClick={joinTournament} isDisabled={tournament.tournament.isJoined}>
               Jelentkezés a versenyre
@@ -71,7 +73,7 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
               Jelentkezve
             </Button>
           )}
-        </Flex>
+        </Flex>*/}
         <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
           <TabList>
             <Tab>Résztvevők</Tab>
@@ -91,7 +93,8 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
             </TabPanel>
             {tournament.stages.map((stage) => (
               <TabPanel px={0} overflowX="auto" scrollBehavior="smooth" key={stage.id}>
-                <KnockoutStage key={stage.id} stage={stage} />
+                {stage.type === 'KNOCKOUT' && <KnockoutStage key={stage.id} stage={stage} />}
+                {stage.type === 'STAGE' && <GroupStage key={stage.id} stage={stage} />}
               </TabPanel>
             ))}
           </TabPanels>

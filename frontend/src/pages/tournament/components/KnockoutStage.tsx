@@ -1,22 +1,22 @@
-import React from 'react'
-import { TournamentStageView, MatchView } from '../../../util/views/tournament.view.ts'
 import { Heading } from '@chakra-ui/react'
 import { groupBy, keys } from 'lodash'
-import KnockoutBracket from './KnockoutBracket.tsx'
+import React from 'react'
+import { MatchView, TournamentStageView } from '../../../util/views/tournament.view.ts'
 import { MatchTree } from '../util/matchTree.ts'
+import KnockoutBracket from './KnockoutBracket.tsx'
 
 interface TournamentBracketProps {
   stage: TournamentStageView
 }
 
 const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: TournamentBracketProps) => {
-  let levels = groupBy(stage.matches, (match: MatchView) => match.level)
-  let levelCount = keys(levels).length
+  const levels = groupBy(stage.matches, (match: MatchView) => match.level)
+  const levelCount = keys(levels).length
 
   const buildTree = (level: number, rootNum: number): MatchTree => {
-    let root = levels[level][rootNum]
-    let upperTree = level > 1 && levels[level - 1].length > 2 * rootNum ? buildTree(level - 1, 2 * rootNum) : null
-    let lowerTree = level > 1 && levels[level - 1].length > 2 * rootNum + 1 ? buildTree(level - 1, 2 * rootNum + 1) : null
+    const root = levels[level][rootNum]
+    const upperTree = level > 1 && levels[level - 1].length > 2 * rootNum ? buildTree(level - 1, 2 * rootNum) : null
+    const lowerTree = level > 1 && levels[level - 1].length > 2 * rootNum + 1 ? buildTree(level - 1, 2 * rootNum + 1) : null
     return {
       root: root,
       lowerTree: lowerTree,
@@ -24,7 +24,7 @@ const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: Tourname
     }
   }
 
-  let trees: MatchTree[] = []
+  const trees: MatchTree[] = []
   if (levelCount < 1) {
     return null
   }

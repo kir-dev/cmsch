@@ -22,6 +22,10 @@ export type ParticipantView = {
   teamName: string
 }
 
+export type SeededParticipantView = ParticipantView & {
+  seed: number
+}
+
 export enum TournamentResponses {
   OK = 'OK',
   JOINING_DISABLED = 'JOINING_DISABLED',
@@ -59,6 +63,11 @@ export enum MatchStatus {
   BYE = 'BYE'
 }
 
+export enum StageType {
+  KNOCKOUT = 'KNOCKOUT',
+  STAGE = 'STAGE'
+}
+
 export type MatchView = {
   id: number
   gameId: number
@@ -76,10 +85,13 @@ export type MatchView = {
 
 export type TournamentStageView = {
   id: number
+  type: StageType
   name: string
   level: number
   participantCount: number
+  participants: SeededParticipantView[]
   nextRound: number
+  groupCount: number
   status: StageStatus
   matches: MatchView[]
 }

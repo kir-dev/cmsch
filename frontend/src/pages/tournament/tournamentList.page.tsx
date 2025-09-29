@@ -1,14 +1,13 @@
-import { useTournamentListQuery } from '../../api/hooks/tournament/queries/useTournamentListQuery.ts'
+import { Box, Heading, LinkOverlay, VStack } from '@chakra-ui/react'
+import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
-import {Box, Heading, LinkOverlay, VStack} from '@chakra-ui/react'
-import { TournamentPreview } from '../../util/views/tournament.view.ts'
+import { useTournamentListQuery } from '../../api/hooks/tournament/queries/useTournamentListQuery.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
-import { Helmet } from 'react-helmet-async'
-import {Link} from "react-router";
-import {AbsolutePaths} from "../../util/paths.ts";
-
+import { AbsolutePaths } from '../../util/paths.ts'
+import { TournamentPreview } from '../../util/views/tournament.view.ts'
 
 const TournamentListPage = () => {
   const { isLoading, isError, data } = useTournamentListQuery()
@@ -19,7 +18,7 @@ const TournamentListPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
   return (
     <CmschPage>
-      <Helmet title={component.title ?? "Versenyek"} />
+      <Helmet title={component.title ?? 'Versenyek'} />
       <Box mb={5}>
         <Heading as="h1" variant="main-title" mb={5}>
           {component.title}
@@ -31,17 +30,15 @@ const TournamentListPage = () => {
       <VStack spacing={4} mt={5} align="stretch">
         {(data ?? []).length > 0 ? (
           data.map((tournament: TournamentPreview) => (
-          <Box key={tournament.id}>
-            <Heading as="h2" size="lg">
-              <LinkOverlay as={Link} to={`${AbsolutePaths.TOURNAMENTS}/${tournament.id}`}>
-                {tournament.title}
-              </LinkOverlay>
-            </Heading>
-            <Box>
-              {tournament.description}
+            <Box key={tournament.id}>
+              <Heading as="h2" size="lg">
+                <LinkOverlay as={Link} to={`${AbsolutePaths.TOURNAMENT}/${tournament.id}`}>
+                  {tournament.title}
+                </LinkOverlay>
+              </Heading>
+              <Box>{tournament.description}</Box>
             </Box>
-          </Box>
-        ))
+          ))
         ) : (
           <Box>Nincs egyetlen verseny sem.</Box>
         )}
