@@ -146,7 +146,7 @@ class FreestyleRaceRecordController(
 }
 
 private fun mapUsername(it: UserEntity) =
-    "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
+    "${it.fullNameWithAlias} | ${it.id} | [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
 
 private fun mapUsername(it: UserSelectorView) =
     "${it.fullNameWithAlias} | ${it.id} | [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
