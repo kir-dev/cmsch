@@ -448,7 +448,7 @@ class RiddleBusinessLogicService(
             .toMap()
 
         return categories.associate { category ->
-            category.title to submissions.getOrDefault(category.id, listOf())
+            category.title to submissions.getOrDefault(category.categoryId, listOf())
                         .map { riddle -> riddle to riddleCacheManager.getRiddleById(riddle.riddleId) }
                         .sortedBy { it.second?.order }
                         .mapNotNull { it.second?.let { riddle -> mapRiddle(it.first, riddle) } }
@@ -467,7 +467,7 @@ class RiddleBusinessLogicService(
             .toMap()
 
         return categories.associate { category ->
-            category.title to submissions.getOrDefault(category.id, listOf())
+            category.title to submissions.getOrDefault(category.categoryId, listOf())
                 .map { riddle -> riddle to riddleCacheManager.getRiddleById(riddle.riddleId) }
                 .sortedBy { it.second?.order }
                 .mapNotNull { it.second?.let { riddle -> mapRiddle(it.first, riddle) } }
