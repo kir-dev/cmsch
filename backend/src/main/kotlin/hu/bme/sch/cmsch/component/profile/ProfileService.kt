@@ -9,9 +9,8 @@ import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.LoginComponent
-import hu.bme.sch.cmsch.component.race.FreestyleRaceEntryDto
 import hu.bme.sch.cmsch.component.race.RaceService
-import hu.bme.sch.cmsch.component.race.RaceView
+import hu.bme.sch.cmsch.component.race.RaceStatsView
 import hu.bme.sch.cmsch.component.riddle.RiddleBusinessLogicService
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.component.token.ALL_TOKEN_TYPE
@@ -64,8 +63,7 @@ class ProfileService(
         val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType }.orElse(ALL_TOKEN_TYPE)
         val incompleteTasks = tasksService.map { it.getTasksThatNeedsToBeCompleted(user) }.orElse(null)
 
-        val raceView: RaceView? = raceService.map { it.getViewForUsers(user) }.orElse(null)
-        val freestyleRaceView: FreestyleRaceEntryDto? = raceService.map { it.getFreestyleEntryOfUser(user.id) }.orElse(null)
+        val raceStats: RaceStatsView? = raceService.map { it.getRaceStats(user) }.orElse(null)
 
         return ProfileView(
             loggedIn = true,
@@ -114,10 +112,7 @@ class ProfileService(
             }.orElse(null),
 
             // Race component
-            racePlacement = raceView?.place,
-            raceStat = raceView?.bestTime,
-            freestyleRaceDescription = freestyleRaceView?.description,
-            freestyleRaceStat = freestyleRaceView?.time,
+            raceStats = raceStats,
 
             // Locations component
             locations = profileComponent.showGroupLeadersLocations.mapIfTrue { fetchLocations(group).orElse(null) },

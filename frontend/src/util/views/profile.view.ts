@@ -34,10 +34,7 @@ export interface ProfileView {
   submittedTaskCount?: number
   completedTaskCount?: number
 
-  racePlacement?: number
-  raceStat?: number
-  freestyleRaceDescription?: string
-  freestyleRaceStat?: number
+  raceStats?: RaceStatsView
 
   locations?: GroupMemberLocationView[]
   debts?: DebtView[]
@@ -48,6 +45,15 @@ export interface ProfileView {
 
   groupMessage?: string
   userMessage?: string
+}
+
+export interface RaceStatsView {
+  bestTime: number
+  placement: number
+  timesParticipated: number
+  averageTime: number
+  deviation: number
+  kCaloriesPerSecond: number
 }
 
 //cannot compare roles if the enums values are strings use the RoleType[role] syntax

@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.profile
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardEntry
+import hu.bme.sch.cmsch.component.race.RaceStatsView
 import hu.bme.sch.cmsch.component.token.TokenDto
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.GuildType
@@ -79,21 +80,9 @@ data class ProfileView(
     @field:JsonView(FullDetails::class)
     val completedTaskCount: Int? = null,
 
-    // Race placement
+    // Race stats
     @field:JsonView(FullDetails::class)
-    val racePlacement: Int? = null,
-
-    // Race stat given in seconds
-    @field:JsonView(FullDetails::class)
-    val raceStat: Float? = null,
-
-    // Freestyle (funky) race description
-    @field:JsonView(FullDetails::class)
-    val freestyleRaceDescription: String? = null,
-
-    // Freestyle (funky) race stat given in seconds
-    @field:JsonView(FullDetails::class)
-    val freestyleRaceStat: Float? = null,
+    val raceStats: RaceStatsView? = null,
 
     @field:JsonView(FullDetails::class)
     val profileIsComplete: Boolean? = null,
