@@ -42,7 +42,7 @@ data class RaceRecordEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
-        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `id| Teljes Név [a/g] email` ahol az: a = authsch, g = google",
+        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `Teljes Név | id | [a/g] email` ahol az: a = authsch, g = google",
         interpreter = InputInterpreter.SEARCH)
     @property:GenerateOverview(columnName = "Felhasználó", order = 2, centered = true)
     @property:ImportFormat
