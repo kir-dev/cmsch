@@ -113,9 +113,10 @@ class ChallengeController(
         return true
     }
 
+
     private fun processUserSubmission(entity: ChallengeSubmissionEntity): Boolean {
         if (entity.userName.isNotBlank() && entity.userName != "-") {
-            val id = entity.userName.split("|")[0].trim().toIntOrNull() ?: 0
+            val id = entity.userName.split("|")[1].trim().toIntOrNull() ?: 0
             val user = transactionManager.transaction(readOnly = true) { users.findById(id) }
 
             if (user.isPresent) {
@@ -141,4 +142,4 @@ class ChallengeController(
 }
 
 private fun mapUsername(it: UserEntity) =
-    "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
+    "${it.fullNameWithAlias} | ${it.id} | [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
