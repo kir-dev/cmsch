@@ -334,7 +334,7 @@ class QrFightService(
 
         towerEntity.ownerGroupId = groupId
         towerEntity.ownerGroupName = groupName
-        towerEntity.history += objectMapper.writeValueAsString(towerEntity) + "\n"
+        towerEntity.history += objectMapper.writeValueAsString(TowerHistoryEntry(userName = user.userName, userId = user.id, ownerGroup = groupName, ownerGroupId = groupId, timestamp = clock.getTimeInSeconds())) + "\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' captured by group:{} (user:{})", token.title, groupName, user.userName)
         return TokenSubmittedView(
