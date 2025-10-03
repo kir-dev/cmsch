@@ -41,11 +41,6 @@ data class FreestyleRaceEntryDto(
     @property:ImportFormat
     var email: String = "",
 
-    @field:JsonView(FullDetails::class)
-    @property:GenerateOverview(columnName = "Címke", order = 6)
-    @property:ImportFormat
-    var label: String = "",
-
 ) : ManagedEntity {
 
     override fun getEntityConfig(env: Environment) = null
