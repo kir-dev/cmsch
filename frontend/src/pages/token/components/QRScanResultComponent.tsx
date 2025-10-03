@@ -46,6 +46,8 @@ export const QRScanResultComponent = ({ response, isError }: QrScanResultProps) 
           return <InfoIcon color="orange.500" boxSize="120px" />
         case ScanStatus.QR_FIGHT_TOTEM_LOCKED:
           return <InfoIcon color="orange.500" boxSize="120px" />
+        case ScanStatus.QR_TOWER_DAILY_LIMIT_EXCEEDED:
+          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
         default:
           return <WarningIcon color="red.500" boxSize="120px" />
       }
