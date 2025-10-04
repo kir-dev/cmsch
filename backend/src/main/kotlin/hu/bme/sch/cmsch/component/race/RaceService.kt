@@ -279,13 +279,18 @@ open class RaceService(
      */
     @Transactional(readOnly = true)
     open fun getRaceStats(user: CmschUser): RaceStatsView? {
+
+        // All records
         val records: List<RaceRecordEntity> = raceRecordRepository.findAll().sortedBy { it.time }
+
+        // All the records of this user
         var userRecords = records.filter { it.userId == user.id }
-
         if( userRecords.isEmpty() ) return null
+        val bestTime = userRecords.minBy { it.time }.time
 
-        val bestTime = records.minBy { it.time }.time
-        val placement = records.indexOfFirst { it.userId == user.id } + 1
+        // Best records of all users.
+        val bestTimes = records.groupBy { it.userId }.map { it.value.first() }.sortedBy { it.time } // Sort might be unnecessary, but just to be safe
+        val placement = bestTimes.indexOfFirst { it.userId == user.id } + 1
 
         val timesParticipated = userRecords.count()
 
