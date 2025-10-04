@@ -152,14 +152,6 @@ const ProfilePage = () => {
         </>
       )}
 
-      {component.showQr && profile.cmschId && (
-        <>
-          <Divider my={8} borderWidth={2} />
-          <ProfileQR profile={profile} component={component} />
-        </>
-      )}
-      {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={8} borderWidth={2} />}
-
       {component.showRaceStats && raceStats && (
         <>
           <Heading as="h2" size="md" fontWeight="bold" textAlign="center" textDecoration="underline" pb={2}>
@@ -192,6 +184,14 @@ const ProfilePage = () => {
           </Grid>
         </>
       )}
+
+      {component.showQr && profile.cmschId && (
+        <>
+          <Divider my={8} borderWidth={2} />
+          <ProfileQR profile={profile} component={component} />
+        </>
+      )}
+      {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={8} borderWidth={2} />}
 
       <Flex justify="center" alignItems="center" flexWrap="wrap">
         {component.showTasks && (
