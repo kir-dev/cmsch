@@ -44,8 +44,7 @@
                     const matchArray = findMatches(this.value, options);
                     select[0].append(...matchArray);
                 }
-                input.addEventListener('change', filterOptions);
-                input.addEventListener('keyup', filterOptions);
+                input.addEventListener('input', filterOptions);
             })();
         </script>
 
