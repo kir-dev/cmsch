@@ -28,7 +28,8 @@ export enum ScanStatus {
   QR_TOTEM_LOGGED = 'QR_TOTEM_LOGGED',
   QR_TOTEM_ENSLAVED = 'QR_TOTEM_ENSLAVED',
   QR_TOTEM_ALREADY_ENSLAVED = 'QR_TOTEM_ALREADY_ENSLAVED',
-  QR_FIGHT_TOTEM_LOCKED = 'QR_FIGHT_TOTEM_LOCKED'
+  QR_FIGHT_TOTEM_LOCKED = 'QR_FIGHT_TOTEM_LOCKED',
+  QR_TOWER_DAILY_LIMIT_EXCEEDED = 'QR_TOWER_DAILY_LIMIT_EXCEEDED'
 }
 
 export const ScanMessages: Record<ScanStatus, string> = {
@@ -48,7 +49,8 @@ export const ScanMessages: Record<ScanStatus, string> = {
   [ScanStatus.QR_TOWER_ALREADY_ENSLAVED]: 'Ez a QR torony már le van igázva',
   [ScanStatus.QR_TOTEM_ENSLAVED]: 'QR totem elfoglalva',
   [ScanStatus.QR_TOTEM_ALREADY_ENSLAVED]: 'Ez a QR totem már el van foglalva',
-  [ScanStatus.QR_FIGHT_TOTEM_LOCKED]: 'QR totem zárva'
+  [ScanStatus.QR_FIGHT_TOTEM_LOCKED]: 'QR totem zárva',
+  [ScanStatus.QR_TOWER_DAILY_LIMIT_EXCEEDED]: 'Ezt a tornyot az elmúlt 24 órában már elfoglaltad elégszer, próbáld meg holnap újra'
 }
 
 export interface ScanResponseView {
