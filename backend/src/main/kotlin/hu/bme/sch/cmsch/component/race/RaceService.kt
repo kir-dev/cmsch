@@ -110,7 +110,8 @@ open class RaceService(
                     submission.value.first().groupName,
                     submission.value.first().groupName,
                     submission.value.minOf { it.time },
-                    email = ""
+                    email = "",
+                    submission.value.first().label,
                 )
             }
             .sortedBy { it.time }
@@ -123,7 +124,8 @@ open class RaceService(
                     submission.value.first().groupName,
                     submission.value.first().groupName,
                     submission.value.maxOf { it.time },
-                    email = ""
+                    email = "",
+                    submission.value.first().label,
                 )
             }
             .sortedByDescending { it.time }
@@ -138,7 +140,6 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -150,7 +151,6 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label = submission.label,
                 )
             }
             .sortedByDescending { it.time }
@@ -221,7 +221,8 @@ open class RaceService(
                     submission.value.first().userName,
                     submission.value.first().groupName,
                     submission.value.minOf { it.time },
-                    email
+                    email,
+                    submission.value.first().label,
                 )
             }
             .sortedBy { it.time }
@@ -237,7 +238,8 @@ open class RaceService(
                     submission.value.first().userName,
                     submission.value.first().groupName,
                     submission.value.maxOf { it.time },
-                    email
+                    email,
+                    submission.value.first().label,
                 )
             }
             .sortedByDescending { it.time }
@@ -253,7 +255,6 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -266,7 +267,6 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label = submission.label
                 )
             }
             .sortedByDescending { it.time }
@@ -279,13 +279,18 @@ open class RaceService(
      */
     @Transactional(readOnly = true)
     open fun getRaceStats(user: CmschUser): RaceStatsView? {
+
+        // All records
         val records: List<RaceRecordEntity> = raceRecordRepository.findAll().sortedBy { it.time }
+
+        // All the records of this user
         var userRecords = records.filter { it.userId == user.id }
-
         if( userRecords.isEmpty() ) return null
+        val bestTime = userRecords.minBy { it.time }.time
 
-        val bestTime = records.minBy { it.time }.time
-        val placement = records.indexOfFirst { it.userId == user.id } + 1
+        // Best records of all users.
+        val bestTimes = records.groupBy { it.userId }.map { it.value.first() }.sortedBy { it.time } // Sort might be unnecessary, but just to be safe
+        val placement = bestTimes.indexOfFirst { it.userId == user.id } + 1
 
         val timesParticipated = userRecords.count()
 

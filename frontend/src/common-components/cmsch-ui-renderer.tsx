@@ -1,4 +1,4 @@
-import { Divider, ListItem, Table, TableContainer, UnorderedList } from '@chakra-ui/react'
+import { Divider, ListItem, OrderedList, Table, TableContainer, UnorderedList } from '@chakra-ui/react'
 import { PropsWithChildren, ReactNode } from 'react'
 import { Components } from 'react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
@@ -32,6 +32,13 @@ const cmschTheme: Components = {
       <UnorderedList mb={3} pl={3}>
         {children}
       </UnorderedList>
+    )
+  },
+  ol: ({ children }: PropsWithChildren) => {
+    return (
+      <OrderedList mb={3} pl={3}>
+        {children}
+      </OrderedList>
     )
   },
   li: ({ children }: PropsWithChildren) => {
