@@ -161,7 +161,7 @@ const ProfilePage = () => {
           <Text fontWeight="bold" textAlign="center">{`Legjobb idő: ${raceStats.bestTime}s`}</Text>
           <Text fontWeight="bold" fontStyle="italic" textAlign="center" pb={2}>{`${raceStats.placement}. helyezett`}</Text>
 
-          <Grid templateColumns={'1fr 1fr'} mx="30%" columnGap={5}>
+          <Grid templateColumns={'1fr 1fr'} columnGap={5}>
             <Text fontStyle="italic" textAlign="right">
               Mérések száma:
             </Text>

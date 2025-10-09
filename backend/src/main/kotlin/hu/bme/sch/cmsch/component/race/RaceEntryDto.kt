@@ -37,9 +37,14 @@ data class RaceEntryDto(
     var email: String = "",
 
     @field:JsonView(FullDetails::class)
-    @property:GenerateOverview(columnName = "Címke", order = 6)
+    @property:GenerateOverview(columnName = "Címke", order = 5)
     @property:ImportFormat
     var label: String = "",
+
+    @field:JsonView(FullDetails::class)
+    @property:GenerateOverview(columnName = "Címke színe", order = 6)
+    @property:ImportFormat
+    var labelColor: String? = "",
 
     ) : ManagedEntity {
 

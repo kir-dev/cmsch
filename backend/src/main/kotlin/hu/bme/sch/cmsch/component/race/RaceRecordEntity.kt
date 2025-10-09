@@ -28,7 +28,7 @@ data class RaceRecordEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 2, label = "Kategória", type = InputType.ENTITY_SELECT,
+    @property:GenerateInput(order = 1, label = "Kategória", type = InputType.ENTITY_SELECT,
         entitySource = "RaceCategoryEntity", note = "Az üres az alapértelmezett kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 1)
     @property:ImportFormat
@@ -78,10 +78,21 @@ data class RaceRecordEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 7, label = "Címke", note = "Név melletti címke, pl: Gólya, Lány etc.")
+    @property:GenerateInput(order = 6, label = "Címke", note = "Név melletti címke, pl: Gólya, Lány etc.")
     @property:GenerateOverview(columnName = "Címke", order = 6)
     @property:ImportFormat
     var label: String = "",
+
+    @Column(nullable = true, columnDefinition = "TEXT")
+    @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
+    @property:GenerateInput(
+        order = 7,
+        type = InputType.COLOR,
+        label = "Szín",
+        note = "A címke színe hex kódban megadva. Ha üresen hagyod, akkor az oldal színét fogja használni.",
+    )
+    @property:ImportFormat
+    var labelColor: String? = "",
 
 ) : ManagedEntity, Duplicatable {
 

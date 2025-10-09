@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSearch } from '../util/useSearch'
 import { LeaderBoardItemView } from '../util/views/leaderBoardView'
 import { CollapsableTableRow } from './CollapsableTableRow'
@@ -26,14 +26,17 @@ export const LeaderBoardTable = ({
 }: LeaderboardTableProps) => {
   const dataWithPosition = useMemo(() => data.map((item, index) => ({ ...item, position: index + 1 })), [data])
 
-  const searchArgs = useSearch(
-    dataWithPosition,
-    (item, searchWord) =>
+  const searchFunc = useCallback((item: LeaderBoardItemView, searchWord: string) => {
+    return (
       (item.name.toLowerCase().includes(searchWord) ||
         item.groupName?.toLowerCase().includes(searchWord) ||
-        item.description?.toLowerCase().includes(searchWord)) ??
+        item.description?.toLowerCase().includes(searchWord) ||
+        item.label?.toLowerCase().includes(searchWord)) ??
       false
-  )
+    )
+  }, [])
+
+  const searchArgs = useSearch(dataWithPosition, searchFunc)
 
   return (
     <>

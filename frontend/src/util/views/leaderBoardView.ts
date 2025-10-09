@@ -13,6 +13,7 @@ export type LeaderBoardItemView = {
   description?: string
   score?: number
   label?: string
+  labelColor?: string
   items?: LeaderBoardDetail[]
   total?: number
   tokenRarities?: { [key: string]: number }

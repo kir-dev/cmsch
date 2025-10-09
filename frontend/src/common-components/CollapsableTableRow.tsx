@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { Box, Link as ChakraLink, Grid, GridItem, HStack, useDisclosure } from '@chakra-ui/react'
+import { Box, Link as ChakraLink, Grid, GridItem, Stack, useDisclosure } from '@chakra-ui/react'
 import { Fragment } from 'react'
 import { Link } from 'react-router'
 import TeamLabel from '../pages/teams/components/TeamLabel.tsx'
@@ -37,14 +37,12 @@ export const CollapsableTableRow = ({
   const outerColTemplate: string[] = []
   if (!categorized) outerColTemplate.push('[place] auto')
   outerColTemplate.push('[name] 1fr')
-  if (data.label) outerColTemplate.push('[label] 1fr')
   if (showGroup) outerColTemplate.push('[group] 1fr')
   outerColTemplate.push('[score] auto [chevron] 20px')
 
   const innerColTemplate: string[] = []
   if (categorized) innerColTemplate.push('[place] auto')
   innerColTemplate.push('[name] 1fr [score] auto')
-  if (data.label) innerColTemplate.push('[label] 1fr')
   if (!categorized) innerColTemplate.push('[chevron] 20px')
   innerColTemplate.push('[end]')
 
@@ -63,9 +61,9 @@ export const CollapsableTableRow = ({
       >
         {!categorized && <GridItem>{data.position}.</GridItem>}
         <GridItem>
-          <HStack>
-            <Box>{data.name}</Box> {data.label && <TeamLabel name={data.label} />}
-          </HStack>
+          <Stack direction={['column', 'row']}>
+            <Box>{data.name}</Box> {data.label && <TeamLabel name={data.label} color={data.labelColor} />}
+          </Stack>
         </GridItem>
         {showGroup && data.groupName && (
           <GridItem gridColumn="group">
