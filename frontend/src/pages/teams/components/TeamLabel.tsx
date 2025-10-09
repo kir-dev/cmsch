@@ -27,6 +27,8 @@ const LabelComponent = ({ name, color, darkColor }: { name: string; color: strin
       fontWeight="bold"
       fontSize={12}
       letterSpacing={1.2}
+      width="fit-content"
+      height="fit-content"
     >
       {name}
     </Box>
