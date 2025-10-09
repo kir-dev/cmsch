@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Heading, HStack, Image, Spacer, VStack } from '@chakra-ui/react'
+import { Box, Heading, HStack, Image, Spacer, Stack, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
@@ -26,13 +26,13 @@ export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps)
       >
         <HStack spacing={4}>
           <VStack align="flex-start" overflow="hidden">
-            <HStack spacing={4} alignItems="baseline">
+            <Stack direction={['column', 'row']} spacing={[2, 4]} alignItems="baseline">
               <Heading as="h3" size="md" marginY={0} maxWidth="100%">
                 {team.name}
               </Heading>
               {team.labels &&
                 team.labels.map((label, index) => <TeamLabel name={label.name} color={label.color} desc={label.description} key={index} />)}
-            </HStack>
+            </Stack>
             {team.introduction && <Box>{team.introduction}</Box>}
           </VStack>
           <Spacer />

@@ -112,6 +112,7 @@ open class RaceService(
                     submission.value.minOf { it.time },
                     email = "",
                     submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedBy { it.time }
@@ -126,6 +127,7 @@ open class RaceService(
                     submission.value.maxOf { it.time },
                     email = "",
                     submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedByDescending { it.time }
@@ -223,6 +225,7 @@ open class RaceService(
                     submission.value.minOf { it.time },
                     email,
                     submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedBy { it.time }
@@ -240,6 +243,7 @@ open class RaceService(
                     submission.value.maxOf { it.time },
                     email,
                     submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedByDescending { it.time }
