@@ -14,6 +14,6 @@ interface OrganizationRepository : CrudRepository<OrganizationEntity, Int>,
 
     override fun findById(id: Int): Optional<OrganizationEntity>
 
-    override fun findAll(): List<OrganizationEntity>
+    override fun findAll(): MutableList<OrganizationEntity>
 
 }

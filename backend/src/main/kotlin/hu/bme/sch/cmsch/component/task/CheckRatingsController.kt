@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.task
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.SimpleEntityPage
 import hu.bme.sch.cmsch.dto.virtual.CheckRatingVirtualEntity
 import hu.bme.sch.cmsch.service.*

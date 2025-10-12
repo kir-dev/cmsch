@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.bmejegy
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.form.FormService
 import hu.bme.sch.cmsch.extending.BmeJegyListener
 import hu.bme.sch.cmsch.model.GroupEntity
@@ -12,18 +12,16 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
-import java.util.Optional
 
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
-@ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "false", matchIfMissing = true)
+@ConditionalOnBooleanProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = false, matchIfMissing = true)
 class CheersBmejegyService(
     private val bmejegyRecordRepository: BmejegyRecordRepository,
     private val formService: FormService,
@@ -70,7 +68,7 @@ class CheersBmejegyService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun updateUserStatuses() {
         val unmatched = bmejegyRecordRepository.findAllByMatchedUserId(0)

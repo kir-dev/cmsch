@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.font.PdfFont
 import com.itextpdf.kernel.font.PdfFontFactory

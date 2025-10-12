@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.controller.userhandling
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.login.CmschUser

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 interface RaceRecordRepository : CrudRepository<RaceRecordEntity, Int>,
     EntityPageDataSource<RaceRecordEntity, Int> {
 
-    override fun findAll(): List<RaceRecordEntity>
+    override fun findAll(): MutableIterable<RaceRecordEntity>
 
     fun findAllByCategory(category: String): List<RaceRecordEntity>
 

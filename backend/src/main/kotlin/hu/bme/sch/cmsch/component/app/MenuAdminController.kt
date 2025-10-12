@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.app
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import com.fasterxml.jackson.dataformat.csv.CsvSchema
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.dataformat.csv.CsvMapper
+import tools.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.admin.OverviewType

@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ObjectReader
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectReader
 import hu.bme.sch.cmsch.dto.FullDetails
 import org.slf4j.LoggerFactory
 

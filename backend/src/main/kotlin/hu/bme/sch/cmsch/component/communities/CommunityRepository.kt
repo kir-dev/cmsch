@@ -14,6 +14,6 @@ interface CommunityRepository : CrudRepository<CommunityEntity, Int>,
 
     override fun findById(id: Int): Optional<CommunityEntity>
 
-    override fun findAll(): List<CommunityEntity>
+    override fun findAll(): MutableList<CommunityEntity>
 
 }

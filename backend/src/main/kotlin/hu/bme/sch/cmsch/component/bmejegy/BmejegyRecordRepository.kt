@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 interface BmejegyRecordRepository : CrudRepository<BmejegyRecordEntity, Int>,
     EntityPageDataSource<BmejegyRecordEntity, Int> {
 
-    override fun findAll(): List<BmejegyRecordEntity>
+    override fun findAll(): MutableIterable<BmejegyRecordEntity>
 
     fun findAllByQrCode(qr: String): List<BmejegyRecordEntity>
 

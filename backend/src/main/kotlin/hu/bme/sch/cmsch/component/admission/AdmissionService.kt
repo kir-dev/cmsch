@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.admission
 
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import com.fasterxml.jackson.dataformat.csv.CsvSchema
+import tools.jackson.dataformat.csv.CsvMapper
+import tools.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.repository.UserRepository

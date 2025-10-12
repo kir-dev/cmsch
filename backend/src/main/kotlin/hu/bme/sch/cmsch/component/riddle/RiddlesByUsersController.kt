@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.riddle
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -37,7 +37,7 @@ class RiddlesByUsersController(
 
     transactionManager,
     object : ManualRepository<RiddleStatsVirtualEntity, Int>() {
-        override fun findAll(): Iterable<RiddleStatsVirtualEntity> {
+        override fun findAll(): MutableIterable<RiddleStatsVirtualEntity> {
             return transactionManager.transaction(readOnly = true) { riddleMappingRepository.findAll() }
                 .groupBy { it.ownerUserId }
                 .map { it.value }
@@ -50,7 +50,7 @@ class RiddlesByUsersController(
                         submissions.count { it.completed },
                         submissions.count { it.hintUsed }
                     )
-                }
+                }.toMutableList()
         }
 
         override fun delete(entity: RiddleStatsVirtualEntity) {

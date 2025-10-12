@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.component.sheets
 
-import com.fasterxml.jackson.core.JacksonException
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectReader
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.JacksonException
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectReader
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.form.FormElement
 import hu.bme.sch.cmsch.component.form.FormRepository
 import hu.bme.sch.cmsch.component.form.ResponseRepository
@@ -30,7 +30,7 @@ class SheetsUpdaterService(
     private val responseRepository: ResponseRepository
 ) {
 
-    private final val log = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
     private final val objectMapper = jacksonObjectMapper()
     private final val sheetsUpdateRequestWriter = objectMapper.writerFor(SheetsUpdateRequest::class.java)
     private final val sheetsUpdateResponseReader = objectMapper.readerFor(SheetsUpdateResponse::class.java)

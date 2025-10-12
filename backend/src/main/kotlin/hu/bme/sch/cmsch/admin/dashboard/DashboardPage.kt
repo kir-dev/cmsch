@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.admin.dashboard
 
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import com.fasterxml.jackson.dataformat.csv.CsvSchema
+import tools.jackson.dataformat.csv.CsvMapper
+import tools.jackson.dataformat.csv.CsvSchema
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.AdminMenuEntry

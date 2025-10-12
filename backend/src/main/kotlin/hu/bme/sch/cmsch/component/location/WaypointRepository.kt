@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository
 interface WaypointRepository : CrudRepository<WaypointEntity, Int>,
     EntityPageDataSource<WaypointEntity, Int> {
 
-    override fun findAll(): List<WaypointEntity>
+    override fun findAll(): MutableIterable<WaypointEntity>
 }

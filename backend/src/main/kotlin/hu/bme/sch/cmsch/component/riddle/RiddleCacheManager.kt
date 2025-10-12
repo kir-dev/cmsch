@@ -5,8 +5,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -59,7 +58,7 @@ class RiddleCacheManager(
         resetCache(persistMapping = false, overrideMappings = true)
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     fun resetCache(persistMapping: Boolean, overrideMappings: Boolean) {
         log.info("Getting all locks for 'resetCache({}, {})'", persistMapping, overrideMappings)

@@ -13,7 +13,7 @@ import java.util.*
 interface TokenPropertyRepository : CrudRepository<TokenPropertyEntity, Int>,
     EntityPageDataSource<TokenPropertyEntity, Int> {
 
-    override fun findAll(): List<TokenPropertyEntity>
+    override fun findAll(): MutableIterable<TokenPropertyEntity>
 
     fun findAllByOwnerUser_Id(owner: Int): List<TokenPropertyEntity>
 

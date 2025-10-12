@@ -72,10 +72,12 @@ class SettingsController(
 
         auth.getUser().refresh(user)
         adminMenuService.invalidateUser(user.internalId)
-        SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
-            auth.principal, auth.credentials,
-            mutableListOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
-        )
+        SecurityContextHolder.getContext().authentication = auth.principal?.let {
+            UsernamePasswordAuthenticationToken(
+                it, auth.credentials,
+                mutableListOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
+            )
+        }
         log.info("User ${user.fullName} has just relogged")
 
         return "redirect:/admin/control/settings"

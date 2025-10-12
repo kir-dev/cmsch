@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.form
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.email.EmailService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
@@ -11,8 +11,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -32,7 +31,7 @@ class FormService(
     private val emailService: Optional<EmailService>
 ) {
 
-    internal final val log = LoggerFactory.getLogger(javaClass)
+    internal val log = LoggerFactory.getLogger(javaClass)
 
     private final val objectMapper = jacksonObjectMapper()
     private final val gridReader = objectMapper.readerFor(FormGridValue::class.java)
@@ -148,7 +147,7 @@ class FormService(
     )
 
 
-    @Retryable(value = [SQLException::class], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun submitForm(user: CmschUser?, path: String, data: Map<String, String>, update: Boolean): FormSubmissionResult {
         val form = formRepository.findAllByUrl(path).getOrNull(0)

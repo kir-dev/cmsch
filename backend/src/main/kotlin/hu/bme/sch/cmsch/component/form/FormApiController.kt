@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType

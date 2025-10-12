@@ -14,9 +14,9 @@ import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.statistics.UserActivityFilter
 import org.apache.catalina.util.ServerInfo
-import org.springframework.boot.autoconfigure.web.ServerProperties
-import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties
 import org.springframework.boot.info.BuildProperties
+import org.springframework.boot.servlet.autoconfigure.MultipartProperties
+import org.springframework.boot.web.server.autoconfigure.ServerProperties
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -100,11 +100,7 @@ class InstanceInfoDashboard(
             listOf("Token ownership mode",          startupPropertyConfig.tokenOwnershipMode.name),
             listOf("Challenge ownership mode",      startupPropertyConfig.challengeOwnershipMode.name),
             listOf("Race ownership mode",           startupPropertyConfig.raceOwnershipMode.name),
-            listOf("Max threads",                   serverProperties?.tomcat?.threads?.max?.toString() ?: "n/a"),
-            listOf("Min spare threads",             serverProperties?.tomcat?.threads?.minSpare?.toString() ?: "n/a"),
-            listOf("Accept count",                  serverProperties?.tomcat?.acceptCount?.toString() ?: "n/a"),
-            listOf("Max connections",               serverProperties?.tomcat?.maxConnections?.toString() ?: "n/a"),
-            listOf("Max swallow size ( ͡° ͜ʖ ͡°)",  serverProperties?.tomcat?.maxSwallowSize?.toString() ?: "n/a"),
+            listOf("Max request header size",       serverProperties?.maxHttpRequestHeaderSize?.toString() ?: "n/a"),
             listOf("Max file size",                 multipartProperties?.maxFileSize?.toString() ?: "n/a"),
             listOf("Max request size",              multipartProperties?.maxRequestSize?.toString() ?: "n/a"),
             listOf("Datasource url",                env.getProperty("spring.datasource.url", "n/a")),

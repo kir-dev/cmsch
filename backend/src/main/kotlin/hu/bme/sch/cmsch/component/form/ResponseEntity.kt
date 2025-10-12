@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.admin.dashboard.SubmissionHistory
 import hu.bme.sch.cmsch.admin.dashboard.historyReader

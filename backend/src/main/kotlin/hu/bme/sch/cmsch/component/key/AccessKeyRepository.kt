@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 @ConditionalOnBean(AccessKeyComponent::class)
 interface AccessKeyRepository : CrudRepository<AccessKeyEntity, Int>, EntityPageDataSource<AccessKeyEntity, Int> {
 
-    override fun findAll(): List<AccessKeyEntity>
+    override fun findAll(): MutableIterable<AccessKeyEntity>
 
     fun findTop1ByUsedByUserId(userId: Int): List<AccessKeyEntity>
 

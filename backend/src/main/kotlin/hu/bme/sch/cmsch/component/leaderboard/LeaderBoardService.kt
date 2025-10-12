@@ -18,8 +18,7 @@ import hu.bme.sch.cmsch.util.CombinedKey
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -135,7 +134,7 @@ open class LeaderBoardService(
         return null
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
     open fun recalculate() {
@@ -147,7 +146,7 @@ open class LeaderBoardService(
         forceRecalculateForUsers()
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForGroups() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent }.orElse(0) / 100f
@@ -157,7 +156,7 @@ open class LeaderBoardService(
         val tasksPercent = leaderBoardComponent.tasksPercent / 100.0f
         val tasks = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.GROUP -> {
-                taskSubmissions.map { it.findAll() }.orElse(listOf())
+                taskSubmissions.map { it.findAll() }.orElse(mutableListOf())
                     .groupBy { CombinedKey(it.groupId ?: 0, it.groupName) }
                     .filter { groups.findByName(it.key.name).map { m -> m.races }.orElse(false) }
                     .map {
@@ -179,7 +178,7 @@ open class LeaderBoardService(
         val riddleCache = riddleRepository.map { repo -> repo.findAll().associateBy { it.id } }.orElse(mapOf())
         val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> {
-                riddleSubmissions.map { it.findAll() }.orElse(listOf())
+                riddleSubmissions.map { it.findAll() }.orElse(mutableListOf())
                     .groupBy { groups.findById(it.ownerGroupId).orElseThrow() }
                     .filter { it.key?.races ?: false }
                     .map { riddleGroup ->
@@ -204,7 +203,7 @@ open class LeaderBoardService(
         val challengesPercent = leaderBoardComponent.challengesPercent / 100.0f
         val challenges = when (startupPropertyConfig.challengeOwnershipMode) {
             OwnershipType.GROUP -> {
-                challengeSubmissions.map { it.findAll() }.orElse(listOf())
+                challengeSubmissions.map { it.findAll() }.orElse(mutableListOf())
                     .groupBy { CombinedKey(it.groupId ?: 0, it.groupName) }
                     .filter { groups.findByName(it.key.name).map { m -> m.races }.orElse(false) }
                     .map { entity ->
@@ -255,7 +254,7 @@ open class LeaderBoardService(
                                 tokenScore = tokenScore
                             )
                         }
-                }.orElse(listOf())
+                }.orElse(mutableListOf())
             }
         }
 
@@ -282,7 +281,7 @@ open class LeaderBoardService(
         log.info("Recalculating finished")
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForUsers() {
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent }.orElse(0) / 100f
@@ -293,7 +292,7 @@ open class LeaderBoardService(
         val tasks = when (startupPropertyConfig.taskOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
-                taskSubmissions.map { it.findAll() }.orElse(listOf())
+                taskSubmissions.map { it.findAll() }.orElse(mutableListOf())
                     .groupBy { it.userId }
                     .map { entity ->
                         val user = users.findById(entity.key ?: 0)
@@ -316,7 +315,7 @@ open class LeaderBoardService(
         val riddles = when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
-                riddleSubmissions.map { it.findAll() }.orElse(listOf())
+                riddleSubmissions.map { it.findAll() }.orElse(mutableListOf())
                     .groupBy { users.findById(it.ownerUserId).orElseThrow() }
                     .map { riddleGroup ->
                         LeaderBoardAsUserEntryDto(riddleGroup.key?.id ?: 0,
@@ -340,7 +339,7 @@ open class LeaderBoardService(
         val challenges = when (startupPropertyConfig.challengeOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
-                challengeSubmissions.map { it.findAll() }.orElse(listOf())
+                challengeSubmissions.map { it.findAll() }.orElse(mutableListOf())
                     .groupBy { it.userId }
                     .map { entity ->
                         entity.value.forEach { challenge ->
@@ -365,7 +364,7 @@ open class LeaderBoardService(
         val tokens = when (startupPropertyConfig.tokenOwnershipMode) {
             OwnershipType.GROUP -> listOf()
             OwnershipType.USER -> {
-                tokenSubmissions.map { it.findAll() }.orElse(listOf())
+                tokenSubmissions.map { it.findAll() }.orElse(mutableListOf())
                     .groupBy { it.ownerUser?.id ?: 0 }
                     .map { entity ->
                         LeaderBoardAsUserEntryDto(

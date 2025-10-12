@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.debt
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
@@ -38,7 +38,7 @@ class DebtAdminDebtsByGroupController(
 
     transactionManager,
     object : ManualRepository<DebtsByGroupVirtualEntity, Int>() {
-        override fun findAll(): Iterable<DebtsByGroupVirtualEntity> {
+        override fun findAll(): MutableIterable<DebtsByGroupVirtualEntity> {
             return soldProductRepository.findAll().groupBy { it.responsibleGroupId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
@@ -51,7 +51,7 @@ class DebtAdminDebtsByGroupController(
                         debts.filter { !it.payed }.sumOf { it.price },
                         debts.filter { !it.finsihed }.sumOf { it.price }
                     )
-                }
+                }.toMutableList()
         }
 
     },
