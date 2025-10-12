@@ -33,8 +33,8 @@ class TokenSubmissionsController(
 
     transactionManager,
     object : ManualRepository<TokenPropertyRawView, Int>() {
-        override fun findAll(): Iterable<TokenPropertyRawView> {
-            return repo.findAll().map { mapTokenProperty(it) }
+        override fun findAll(): MutableIterable<TokenPropertyRawView> {
+            return repo.findAll().map { mapTokenProperty(it) }.toMutableList()
         }
 
         override fun count(): Long {

@@ -27,8 +27,7 @@ class ConferenceSeedConfig(
 
     private fun addConference() {
         if (conferenceRepository.count() != 0L) return
-        conferenceRepository.saveAll(
-            listOf(
+        conferenceRepository.saveAll(mutableListOf(
                 ConferenceEntity(
                     title = "Test Conference 2022",
                     priority = 0,
@@ -51,7 +50,7 @@ class ConferenceSeedConfig(
     private fun addCompanies() {
         if (conferenceCompanyRepository.count() != 0L) return
         conferenceCompanyRepository.saveAll(
-            listOf(
+            mutableListOf(
                 ConferenceCompanyEntity(
                     name = "Test Company 1",
                     selector = "test-company-1",
@@ -91,7 +90,7 @@ class ConferenceSeedConfig(
     private fun addPresenters() {
         if (conferencePresenterRepository.count() != 0L) return
         conferencePresenterRepository.saveAll(
-            listOf(
+            mutableListOf(
                 ConferencePresenterEntity(
                     name = "Test Presenter 1",
                     selector = "test-presenter-1",
@@ -123,7 +122,7 @@ class ConferenceSeedConfig(
     private fun addPresentations() {
         if (conferencePresentationRepository.count() != 0L) return
         conferencePresentationRepository.saveAll(
-            listOf(
+            mutableListOf(
                 ConferencePresentationEntity(
                     slug = "test-presentation-1",
                     title = "Test Presentation 1",
@@ -196,7 +195,7 @@ class ConferenceSeedConfig(
     private fun addOrganizers() {
         if (conferenceOrganizerRepository.count() != 0L) return
         conferenceOrganizerRepository.saveAll(
-            listOf(
+            mutableListOf(
                 ConferenceOrganizerEntity(
                     name = "Test Organizer 1",
                     rank = "Test Rank 1",

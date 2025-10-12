@@ -37,7 +37,7 @@ class RiddlesByUsersController(
 
     transactionManager,
     object : ManualRepository<RiddleStatsVirtualEntity, Int>() {
-        override fun findAll(): Iterable<RiddleStatsVirtualEntity> {
+        override fun findAll(): MutableIterable<RiddleStatsVirtualEntity> {
             return transactionManager.transaction(readOnly = true) { riddleMappingRepository.findAll() }
                 .groupBy { it.ownerUserId }
                 .map { it.value }
@@ -50,7 +50,7 @@ class RiddlesByUsersController(
                         submissions.count { it.completed },
                         submissions.count { it.hintUsed }
                     )
-                }
+                }.toMutableList()
         }
 
         override fun delete(entity: RiddleStatsVirtualEntity) {

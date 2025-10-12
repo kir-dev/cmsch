@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 @ConditionalOnBean(ConferenceComponent::class)
 interface ConferenceRepository : CrudRepository<ConferenceEntity, Int>, EntityPageDataSource<ConferenceEntity, Int> {
-    override fun findAll(): List<ConferenceEntity>
+    override fun findAll(): MutableList<ConferenceEntity>
 }
 
 @Repository

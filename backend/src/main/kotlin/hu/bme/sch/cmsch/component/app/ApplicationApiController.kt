@@ -64,7 +64,7 @@ class ApplicationApiController(
                 return ApplicationConfigDto(
                     role = role,
                     menu = listOf(),
-                    components = componentWriter.writeValueAsString(components)
+                    components = components
                 )
             }
         }
@@ -74,7 +74,7 @@ class ApplicationApiController(
         return ApplicationConfigDto(
             role = role,
             menu = menuService.getCachedMenuForRole(role),
-            components = componentWriter.writeValueAsString(components)
+            components = components
         )
     }
 

@@ -134,7 +134,7 @@ class ReadOnlyScriptingDbContext(private val supportedRepos: List<CrudRepository
 class ReadOnlyRepositoryProxy<T : Duplicatable, ID : Any>(private val proxy: CrudRepository<T, ID>) {
 
     fun findAll(): List<T> {
-        return proxy.findAll().mapNotNull { if (it is T) { it.duplicate() as T } else null }.toList()
+        return proxy.findAll().mapNotNull { it.duplicate() as T }.toList()
     }
 
     fun findById(id: ID): T? {

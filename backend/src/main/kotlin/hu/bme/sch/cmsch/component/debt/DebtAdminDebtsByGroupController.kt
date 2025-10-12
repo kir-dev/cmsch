@@ -38,7 +38,7 @@ class DebtAdminDebtsByGroupController(
 
     transactionManager,
     object : ManualRepository<DebtsByGroupVirtualEntity, Int>() {
-        override fun findAll(): Iterable<DebtsByGroupVirtualEntity> {
+        override fun findAll(): MutableIterable<DebtsByGroupVirtualEntity> {
             return soldProductRepository.findAll().groupBy { it.responsibleGroupId }
                 .map { it.value }
                 .filter { it.isNotEmpty() }
@@ -51,7 +51,7 @@ class DebtAdminDebtsByGroupController(
                         debts.filter { !it.payed }.sumOf { it.price },
                         debts.filter { !it.finsihed }.sumOf { it.price }
                     )
-                }
+                }.toMutableList()
         }
 
     },

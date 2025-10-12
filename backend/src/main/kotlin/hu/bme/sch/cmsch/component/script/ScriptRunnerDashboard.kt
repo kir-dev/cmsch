@@ -52,7 +52,7 @@ class ScriptRunnerDashboard(
     ignoreFromMenu = true
 ) {
 
-    private final val log = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
 
     override fun getComponents(user: CmschUser, requestParams: Map<String, String>): List<DashboardComponent> {
         return listOf()

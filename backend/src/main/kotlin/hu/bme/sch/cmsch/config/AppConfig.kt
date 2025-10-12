@@ -24,10 +24,9 @@ class AppConfig {
 
     @Bean
     fun objectMapper(): ObjectMapper {
-        val objectMapper = ObjectMapper()
-        objectMapper.registerKotlinModule()
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        return objectMapper
+        return ObjectMapper()
+            .registerKotlinModule()
+            .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
     }
 
     @Bean
@@ -43,7 +42,7 @@ class AppConfig {
                 }
                 try {
                     return URI("https://$source").toURL()
-                } catch (ex: Exception) {
+                } catch (_: Exception) {
                     // Ignore
                 }
                 return null

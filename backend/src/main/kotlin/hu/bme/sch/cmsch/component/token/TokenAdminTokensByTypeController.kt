@@ -32,7 +32,7 @@ class TokenAdminTokensByTypeController(
 
     transactionManager,
     object : ManualRepository<TokenStatVirtualEntity, Int>() {
-        override fun findAll(): Iterable<TokenStatVirtualEntity> {
+        override fun findAll(): MutableIterable<TokenStatVirtualEntity> {
             return repo.findAll()
                 .groupBy { it.token?.id }
                 .map { it.value }
@@ -44,7 +44,7 @@ class TokenAdminTokensByTypeController(
                         tokenProperty[0].token?.type ?: "n/a",
                         tokenProperty.count()
                     )
-                }
+                }.toMutableList()
         }
 
         override fun delete(entity: TokenStatVirtualEntity) {

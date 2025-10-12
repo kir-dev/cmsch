@@ -37,11 +37,11 @@ class RaceLeaderBoardController(
     transactionManager,
     object : ManualRepository<RaceEntryDto, Int>() {
 
-        override fun findAll(): Iterable<RaceEntryDto> {
+        override fun findAll(): MutableList<RaceEntryDto> {
             return when (startupPropertyConfig.raceOwnershipMode) {
                 OwnershipType.USER -> raceService.getBoardForUsers(DEFAULT_CATEGORY, true)
                 OwnershipType.GROUP -> raceService.getBoardForGroups(DEFAULT_CATEGORY)
-            }
+            }.toMutableList()
         }
 
         override fun count() = findAll().count().toLong()

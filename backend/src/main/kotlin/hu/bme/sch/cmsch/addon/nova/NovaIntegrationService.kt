@@ -16,8 +16,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -46,7 +45,7 @@ class NovaIntegrationService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun updateSubmissions(emails: List<String>): Int {
         val form = formRepository.findAll().firstOrNull { it.selected }
@@ -74,7 +73,7 @@ class NovaIntegrationService(
         return successful
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     fun fetchSubmissions(): List<FilledOutFormDto> {
         val form = formRepository.findAll().firstOrNull { it.selected }
@@ -151,7 +150,7 @@ class NovaIntegrationService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun setPaymentStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = formRepository.findAll().firstOrNull { it.selected }
@@ -173,7 +172,7 @@ class NovaIntegrationService(
             }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun setDetailsStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val form = formRepository.findAll().firstOrNull { it.selected }
@@ -195,7 +194,7 @@ class NovaIntegrationService(
             }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun setAvatarStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return
@@ -218,7 +217,7 @@ class NovaIntegrationService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxAttempts = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun setCvStatus(email: String, status: Boolean, rejectionMessage: String?) {
         val user = userRepository.findByEmail(email).orElse(null) ?: return

@@ -46,7 +46,7 @@ class ResponsesController(
 
     transactionManager,
     object : ManualRepository<FormVirtualEntity, Int>() {
-        override fun findAll(): Iterable<FormVirtualEntity> {
+        override fun findAll(): MutableIterable<FormVirtualEntity> {
             return formService.getAllResponses()
                 .groupBy { it.formId }
                 .map { it.value }
@@ -64,7 +64,7 @@ class ResponsesController(
                                 responses.count { it.detailsValidated },
                             )
                         }.orElse(null)
-                }
+                }.toMutableList()
         }
 
     },
