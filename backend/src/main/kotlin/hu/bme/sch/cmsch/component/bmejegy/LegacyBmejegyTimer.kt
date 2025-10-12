@@ -2,14 +2,14 @@ package hu.bme.sch.cmsch.component.bmejegy
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.util.concurrent.Executors
 
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
-@ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "true", matchIfMissing = false)
+@ConditionalOnBooleanProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY])
 class LegacyBmejegyTimer(
     private val legacyBmejegyService: LegacyBmejegyService,
     private val bmejegyComponent: BmejegyComponent

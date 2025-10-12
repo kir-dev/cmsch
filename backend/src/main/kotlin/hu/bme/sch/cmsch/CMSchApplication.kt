@@ -4,8 +4,8 @@ import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.config.ComponentLoadConfig
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.persistence.autoconfigure.EntityScan
 import org.springframework.boot.runApplication
 
 @SpringBootApplication

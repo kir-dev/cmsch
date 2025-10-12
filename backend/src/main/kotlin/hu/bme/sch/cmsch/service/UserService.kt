@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.UserConfig
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
@@ -10,8 +10,7 @@ import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.repository.UserSelectorView
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -29,7 +28,7 @@ open class UserService(
 
     private val userConfigReader = objectMapper.readerFor(UserConfig::class.java)
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun save(user: UserEntity) {
         users.save(user)

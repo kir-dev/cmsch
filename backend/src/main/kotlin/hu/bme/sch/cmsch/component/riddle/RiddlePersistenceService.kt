@@ -1,8 +1,7 @@
 package hu.bme.sch.cmsch.component.riddle
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Propagation
@@ -16,7 +15,7 @@ class RiddlePersistenceService(
     private val riddleMappingRepository: RiddleMappingRepository,
 ) {
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     fun saveAllRiddleMapping(entities: MutableIterable<RiddleMappingEntity>) {
         riddleMappingRepository.saveAll(entities)

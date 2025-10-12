@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.form
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.sheets.SHEETS_WIZARD
 import hu.bme.sch.cmsch.component.sheets.SheetsComponent
 import hu.bme.sch.cmsch.component.sheets.SheetsUpdaterService

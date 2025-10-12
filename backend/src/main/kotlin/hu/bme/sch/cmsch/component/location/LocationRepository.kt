@@ -12,5 +12,5 @@ interface LocationRepository : CrudRepository<LocationEntity, Int>,
     EntityPageDataSource<LocationEntity, Int> {
 
     fun findByUserId(userId: Int): Optional<LocationEntity>
-    override fun findAll(): List<LocationEntity>
+    override fun findAll(): MutableIterable<LocationEntity>
 }
