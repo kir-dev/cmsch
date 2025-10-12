@@ -30,7 +30,7 @@ class SheetsUpdaterService(
     private val responseRepository: ResponseRepository
 ) {
 
-    private final val log = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
     private final val objectMapper = jacksonObjectMapper()
     private final val sheetsUpdateRequestWriter = objectMapper.writerFor(SheetsUpdateRequest::class.java)
     private final val sheetsUpdateResponseReader = objectMapper.readerFor(SheetsUpdateResponse::class.java)

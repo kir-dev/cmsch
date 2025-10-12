@@ -256,7 +256,7 @@ class TszImportDashboard(
                     group.staff3 = if (mappings.value.size > 2) mappings.value[2] else ""
                     group.staff4 = if (mappings.value.size > 3) mappings.value[3] else ""
                     return@map group
-                }
+                }.toMutableList()
                 groupRepository.saveAll(affectedGroups)
                 affectedSize = affectedGroups.size
             }

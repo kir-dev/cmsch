@@ -19,8 +19,7 @@ class StatisticsFilterConfig(
 
     @Bean
     fun userActivityFilterRegistration(): FilterRegistrationBean<UserActivityFilter> {
-        val registration = FilterRegistrationBean<UserActivityFilter>()
-        registration.filter = userActivityFilter.orElseThrow()
+        val registration = FilterRegistrationBean<UserActivityFilter>(userActivityFilter.orElseThrow())
         registration.addUrlPatterns("/api/*")
         return registration
     }

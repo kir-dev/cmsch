@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.5"
+    id("org.springframework.boot") version "4.0.0-M3"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.owasp.dependencycheck") version "12.1.3"
-    kotlin("jvm") version "2.2.10"
-    kotlin("plugin.spring") version "2.2.10"
-    id("org.sonarqube") version "6.2.0.5505"
+    id("org.owasp.dependencycheck") version "12.1.6"
+    kotlin("jvm") version "2.2.20"
+    kotlin("plugin.spring") version "2.2.20"
+    id("org.sonarqube") version "6.3.1.5724"
 }
 
 group = "hu.bme.sch"
@@ -42,9 +42,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.firebase:firebase-admin:9.5.0")
-    implementation("software.amazon.awssdk:s3:2.32.29")
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+    implementation("com.google.firebase:firebase-admin:9.7.0")
+    implementation("software.amazon.awssdk:s3:2.35.5")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.4")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -55,15 +55,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.squareup.okhttp3:okhttp:5.1.0")
-    implementation("com.itextpdf:itext-core:9.2.0")
+    implementation("com.squareup.okhttp3:okhttp:5.2.1")
+    implementation("com.itextpdf:itext-core:9.3.0")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.11")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0-M1")
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.google.zxing:javase:3.5.3")
     implementation("org.jetbrains.kotlin:kotlin-scripting-common")
@@ -76,15 +74,15 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api")
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
-    implementation("com.fasterxml.uuid:java-uuid-generator:5.1.0")
-    implementation("org.commonmark:commonmark:0.25.1")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.25.1")
+    implementation("com.fasterxml.uuid:java-uuid-generator:5.1.1")
+    implementation("org.commonmark:commonmark:0.26.0")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.26.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     runtimeOnly("com.h2database:h2")
     implementation("org.postgresql:postgresql")
-    implementation(platform("io.micrometer:micrometer-bom:1.15.3"))
+    implementation(platform("io.micrometer:micrometer-bom:1.15.4"))
     implementation("io.micrometer:micrometer-core")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.micrometer:micrometer-observation")

@@ -11,7 +11,7 @@ import java.util.*
 interface RaceCategoryRepository : CrudRepository<RaceCategoryEntity, Int>,
     EntityPageDataSource<RaceCategoryEntity, Int> {
 
-    override fun findAll(): List<RaceCategoryEntity>
+    override fun findAll(): MutableIterable<RaceCategoryEntity>
     fun findByVisibleTrueAndSlug(category: String): Optional<RaceCategoryEntity>
     override fun findById(id: Int): Optional<RaceCategoryEntity>
     fun findAllByVisibleTrue(): List<RaceCategoryEntity>

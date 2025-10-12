@@ -41,7 +41,7 @@ class TaskAdminRateController(
 
     transactionManager,
     object : ManualRepository<GradedTaskGroupDto, Int>() {
-        override fun findAll(): Iterable<GradedTaskGroupDto> {
+        override fun findAll(): MutableIterable<GradedTaskGroupDto> {
             val aggregatedResults = submittedRepository.findAllAggregated()
 
             return aggregatedResults.map {
@@ -52,7 +52,7 @@ class TaskAdminRateController(
                     it.rejectedCount.toInt(),
                     it.notGradedCount.toInt()
                 )
-            }.sortedByDescending { it.notGraded }.toList()
+            }.sortedByDescending { it.notGraded }.toMutableList()
         }
     },
     submittedRepository,

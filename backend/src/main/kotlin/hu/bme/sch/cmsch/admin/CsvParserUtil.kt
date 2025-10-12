@@ -57,7 +57,7 @@ class CsvParserUtil<T : Any>(private val type: KClass<T>) {
         return writer.writeValue(outputStream, data)
     }
 
-    fun importFromCsv(inputStream: InputStream): List<T> {
+    fun importFromCsv(inputStream: InputStream): MutableList<T> {
         val reader = mapper.readerFor(type.java).with(readerSchema)
         return reader.readValues<T>(inputStream).readAll()
     }

@@ -9,7 +9,7 @@ import java.util.*
 @Repository
 @ConditionalOnBean(EventComponent::class)
 interface EventRepository : CrudRepository<EventEntity, Int>, EntityPageDataSource<EventEntity, Int> {
-    override fun findAll(): List<EventEntity>
+    override fun findAll(): MutableIterable<EventEntity>
     fun findByUrl(url: String): Optional<EventEntity>
     fun findAllByVisibleTrueOrderByTimestampStart(): List<EventEntity>
 }

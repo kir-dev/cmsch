@@ -31,7 +31,7 @@ class ScriptService(
     private val transactionManager: PlatformTransactionManager
 ) {
 
-    private final val log = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
 
     private final val objectMapper = jacksonObjectMapper()
     private final val artifactWriter = objectMapper.writerFor(object : TypeReference<List<ScriptArtifact>>() {})

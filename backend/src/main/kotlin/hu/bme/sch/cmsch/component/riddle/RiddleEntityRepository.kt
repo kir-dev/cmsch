@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository
 interface RiddleEntityRepository : CrudRepository<RiddleEntity, Int>,
     EntityPageDataSource<RiddleEntity, Int> {
     
-    override fun findAll(): List<RiddleEntity>
+    override fun findAll(): MutableIterable<RiddleEntity>
 
 }
