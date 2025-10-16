@@ -128,14 +128,19 @@ class ResponsesController(
         }
 
         val objReader = objectMapper.readerFor(object : TypeReference<Map<String, Any>>() {})
-        val entries = formService.getResponsesById(id)
-            .map { objReader.readValue<Map<String, Any>>(it.submission) }
+        val responses = formService.getResponsesById(id)
+        val submissions = responses.map { objReader.readValue<Map<String, Any>>(it.submission) }
             .map { it.values }
             .toList()
+        val submitters = responses.map { listOf(it.submitterGroupId?:"", it.submitterGroupName, it.submitterUserId?:"", it.submitterUserName) }
 
-        val headers = objReader.readValue<Map<String, Any>>(formService.getResponsesById(id).firstOrNull()?.submission ?: "{}")
+        val entries = submitters.zip(submissions) { a, b -> a + b }
+
+        val header = objReader.readValue<Map<String, Any>>(formService.getResponsesById(id).firstOrNull()?.submission ?: "{}")
             .keys
             .joinToString(",")
+        val headers = "submitterGroupId,submitterGroupName,submitterUserId,submitterUserName,$header"
+
         val result = CsvMapper().writeValueAsString(entries)
         response.setHeader("Content-Disposition", "attachment; filename=\"form-${id}-responses.csv\"")
         return headers + "\n" + result
@@ -149,7 +154,9 @@ class ResponsesController(
             return "403"
         }
 
-        val entries = formService.getResponsesById(id).joinToString(",") { it.submission }
+        val entries = formService.getResponsesById(id)
+            .map { "{submitterGroupId:${it.submitterGroupId},submitterGroupName:${it.submitterGroupName},submitterUserId:${it.submitterUserId},submitterUserName:${it.submitterUserName},submission:${it.submission}}" }
+            .joinToString(",") { it }
 
         return "[${entries}]"
     }

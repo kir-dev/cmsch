@@ -68,6 +68,8 @@ const ProfilePage = () => {
     return <Navigate replace to="/" />
   }
 
+  const raceStats = profile?.raceStats
+
   return (
     <CmschPage loginRequired>
       <Helmet title={component.title} />
@@ -150,6 +152,39 @@ const ProfilePage = () => {
         </>
       )}
 
+      {component.showRaceStats && raceStats && (
+        <>
+          <Heading as="h2" size="md" fontWeight="bold" textAlign="center" textDecoration="underline" pb={2}>
+            Sörmérés
+          </Heading>
+
+          <Text fontWeight="bold" textAlign="center">{`Legjobb idő: ${raceStats.bestTime}s`}</Text>
+          <Text fontWeight="bold" fontStyle="italic" textAlign="center" pb={2}>{`${raceStats.placement}. helyezett`}</Text>
+
+          <Grid templateColumns={'1fr 1fr'} columnGap={5}>
+            <Text fontStyle="italic" textAlign="right">
+              Mérések száma:
+            </Text>
+            <Text>{` ${raceStats.timesParticipated}`}</Text>
+
+            <Text fontStyle="italic" textAlign="right">
+              Átlag idő:
+            </Text>
+            <Text>{`${raceStats.averageTime}s`}</Text>
+
+            <Text fontStyle="italic" textAlign="right">
+              Szórás:
+            </Text>
+            <Text>{`${raceStats.deviation}s`}</Text>
+
+            <Text fontStyle="italic" textAlign="right">
+              Kalória/másodperc:
+            </Text>
+            <Text>{`${raceStats.kCaloriesPerSecond} kcal/s`}</Text>
+          </Grid>
+        </>
+      )}
+
       {component.showQr && profile.cmschId && (
         <>
           <Divider my={8} borderWidth={2} />
@@ -157,29 +192,6 @@ const ProfilePage = () => {
         </>
       )}
       {(component.showTasks || component.showRiddles || component.showTokens) && <Divider my={8} borderWidth={2} />}
-
-      {component.showRaceStats && profile?.raceStat && (
-        <Grid templateColumns={{ base: '1fr 1fr', sm: '1fr 2fr', md: '1fr 3fr' }}>
-          <Text as="i">Mérés eredmény: </Text>
-          <Text>
-            <Text as="b">{profile?.raceStat}s</Text>
-            {profile.racePlacement && <Text as="b" fontStyle="italic">{` (${profile.racePlacement}. helyezett)`}</Text>}
-          </Text>
-        </Grid>
-      )}
-      {component.showRaceStats && profile?.freestyleRaceStat && (
-        <Grid templateColumns={{ base: '1fr 1fr', sm: '1fr 2fr', md: '1fr 3fr' }}>
-          <Text as="i" whiteSpace="nowrap">
-            Funky Mérés:{' '}
-          </Text>
-          <Text>
-            <Text as="b" whiteSpace="nowrap">
-              {profile.freestyleRaceStat}s
-            </Text>
-            {profile.freestyleRaceDescription && <Text as="b" fontStyle="italic">{` (${profile.freestyleRaceDescription})`}</Text>}
-          </Text>
-        </Grid>
-      )}
 
       <Flex justify="center" alignItems="center" flexWrap="wrap">
         {component.showTasks && (

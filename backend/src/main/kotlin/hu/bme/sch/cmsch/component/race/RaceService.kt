@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 const val DEFAULT_CATEGORY = ""
 
@@ -108,7 +110,9 @@ open class RaceService(
                     submission.value.first().groupName,
                     submission.value.first().groupName,
                     submission.value.minOf { it.time },
-                    email = ""
+                    email = "",
+                    submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedBy { it.time }
@@ -121,7 +125,9 @@ open class RaceService(
                     submission.value.first().groupName,
                     submission.value.first().groupName,
                     submission.value.maxOf { it.time },
-                    email = ""
+                    email = "",
+                    submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedByDescending { it.time }
@@ -136,7 +142,6 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -148,7 +153,6 @@ open class RaceService(
                     submission.groupName,
                     submission.groupName,
                     submission.time,
-                    label = submission.label,
                 )
             }
             .sortedByDescending { it.time }
@@ -219,7 +223,9 @@ open class RaceService(
                     submission.value.first().userName,
                     submission.value.first().groupName,
                     submission.value.minOf { it.time },
-                    email
+                    email,
+                    submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedBy { it.time }
@@ -235,7 +241,9 @@ open class RaceService(
                     submission.value.first().userName,
                     submission.value.first().groupName,
                     submission.value.maxOf { it.time },
-                    email
+                    email,
+                    submission.value.first().label,
+                    submission.value.first().labelColor
                 )
             }
             .sortedByDescending { it.time }
@@ -251,7 +259,6 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label = submission.label
                 )
             }
             .sortedBy { it.time }
@@ -264,29 +271,48 @@ open class RaceService(
                     submission.groupName,
                     submission.time,
                     submission.description,
-                    label = submission.label
                 )
             }
             .sortedByDescending { it.time }
     }
 
-    /**
-     * Shorthand query of freestyle record of the user with the given ID.
-     * This does not query all the users, just the user requested.
-     * @return FreestyleRaceEntryDto of the user with the given id, or null if not present.
+    /***
+     * Gets relevant statistics about race entries of the given user
+     * @param CmschUser whose stats we want to get
+     * @return RaceStatsView of the user, or null if the user has no submissions
      */
     @Transactional(readOnly = true)
-    open fun getFreestyleEntryOfUser(userId: Int): FreestyleRaceEntryDto? {
-        val entity = freestyleRaceRecordRepository.findByUserId(userId)
+    open fun getRaceStats(user: CmschUser): RaceStatsView? {
 
-        return entity?.let {
-            FreestyleRaceEntryDto(
-                id = it.id,
-                name = it.userName,
-                groupName = it.groupName,
-                time = it.time,
-                description = it.description,
-            )
-        }
+        // All records
+        val records: List<RaceRecordEntity> = raceRecordRepository.findAll().sortedBy { it.time }
+
+        // All the records of this user
+        var userRecords = records.filter { it.userId == user.id }
+        if( userRecords.isEmpty() ) return null
+        val bestTime = userRecords.minBy { it.time }.time
+
+        // Best records of all users.
+        val bestTimes = records.groupBy { it.userId }.map { it.value.first() }.sortedBy { it.time } // Sort might be unnecessary, but just to be safe
+        val placement = bestTimes.indexOfFirst { it.userId == user.id } + 1
+
+        val timesParticipated = userRecords.count()
+
+        val averageTime = userRecords.map { it.time }.average().toFloat()
+
+        val deviation = sqrt(userRecords.map { it.time }.map { (it - averageTime).pow(2) }.average()).toFloat()
+
+        // kcal of 0.5l of Soproni Lager
+        val kcalPerPortion = 164
+        val kCaloriesPerSecond = kcalPerPortion / bestTime
+
+        return RaceStatsView(
+            bestTime = bestTime,
+            placement = placement,
+            timesParticipated = timesParticipated,
+            averageTime = averageTime,
+            deviation = deviation,
+            kCaloriesPerSecond = kCaloriesPerSecond
+        )
     }
 }

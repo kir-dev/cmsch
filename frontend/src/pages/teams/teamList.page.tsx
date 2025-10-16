@@ -12,12 +12,21 @@ import { TeamListItemView } from '../../util/views/team.view'
 import { TeamListItem } from './components/TeamListItem'
 
 const EmptyData: TeamListItemView[] = []
+const searchFn = (item: TeamListItemView, search: string) => {
+  return (
+    (item.name.toLowerCase().includes(search) ||
+      item.labels?.some((label) => {
+        return label.name.toLowerCase().includes(search)
+      })) ??
+    false
+  )
+}
 
 export default function TeamListPage() {
   const config = useConfigContext()
   const component = config?.components?.team
   const { data, isLoading, isError } = useTeamList()
-  const searchArgs = useSearch<TeamListItemView>(data ?? EmptyData, (item, search) => item.name.toLowerCase().includes(search))
+  const searchArgs = useSearch<TeamListItemView>(data ?? EmptyData, searchFn)
 
   if (!component) return <ComponentUnavailable />
 

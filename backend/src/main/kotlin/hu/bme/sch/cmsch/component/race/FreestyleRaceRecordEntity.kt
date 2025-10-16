@@ -41,7 +41,7 @@ data class FreestyleRaceRecordEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
-        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `id| Teljes Név [a/g] email` ahol az: a = authsch, g = google",
+        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `Teljes Név | id | [a/g] email` ahol az: a = authsch, g = google",
         interpreter = InputInterpreter.SEARCH)
     @property:GenerateOverview(columnName = "Felhasználó", order = 2, centered = true)
     @property:ImportFormat
@@ -74,13 +74,6 @@ data class FreestyleRaceRecordEntity(
     @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OverviewType.DATE)
     @property:ImportFormat
     var timestamp: Long = 0,
-
-    @Column(nullable = false)
-    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 7, label = "Címke", note = "Név melletti címke, pl: Gólya, Lány etc.")
-    @property:GenerateOverview(columnName = "Címke", order = 6)
-    @property:ImportFormat
-    var label: String = "",
 
 ) : ManagedEntity, Duplicatable {
 

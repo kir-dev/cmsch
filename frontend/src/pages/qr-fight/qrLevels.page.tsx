@@ -12,6 +12,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
 import { DataDisplayWrapper } from './components/DataDisplayWrapper'
+import { TreasureDataDisplayWrapper } from './components/TreasureDataDisplayWrapper.tsx'
 
 export default function QrLevelsPage() {
   const component = useConfigContext()?.components?.qrFight
@@ -40,6 +41,7 @@ export default function QrLevelsPage() {
         <TabList>
           <CustomTabButton>Fő szintek</CustomTabButton>
           <CustomTabButton>Extra szintek</CustomTabButton>
+          <CustomTabButton>Tour de QR</CustomTabButton>
         </TabList>
         <TabPanels>
           <TabPanel px={0}>
@@ -50,6 +52,11 @@ export default function QrLevelsPage() {
           <TabPanel px={0}>
             {data.extraLevels.map((a) => (
               <DataDisplayWrapper level={a} key={a.name} />
+            ))}
+          </TabPanel>
+          <TabPanel>
+            {data.treasureHuntLevels.map((a) => (
+              <TreasureDataDisplayWrapper level={a} key={a.name} />
             ))}
           </TabPanel>
         </TabPanels>
