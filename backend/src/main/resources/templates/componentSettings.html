@@ -312,17 +312,79 @@
                                        th:id="${input.property}"
                                 />
                                 <span class="note" th:text="${input.description}"></span>
-                                <img th:src="|/cdn/${input.value}|" />
+                                <img class="image-preview" th:id="|image-preview-${input.property}|" onerror="this.src=''" th:src="${#strings.isEmpty(input.value) ? '' : '/cdn/' + input.value}" />
                                 <script th:inline="javascript">
-                                    let id = /*[[${input.property}]]*/ '';
-                                    document.getElementById(id).addEventListener('change', function() {
-                                        let fileNameSpan = document.getElementById(`file-name-${id}`);
-                                        if (this.files.length > 0) {
-                                            fileNameSpan.textContent = this.files[0].name;
-                                        } else {
+                                    (() => {
+                                        let id = /*[[${input.property}]]*/ '';
+                                        document.getElementById(id).addEventListener('change', function () {
+                                            let fileNameSpan = document.getElementById(`file-name-${id}`);
+                                            let filePreview = document.getElementById(`image-preview-${id}`);
+                                            if (this.files.length > 0) {
+                                                const file = this.files[0]
+                                                fileNameSpan.textContent = file.name;
+                                                filePreview.src = URL.createObjectURL(file)
+                                            } else {
+                                                fileNameSpan.textContent = '';
+                                                filePreview.src = ''
+                                            }
+                                        });
+                                    })()
+                                </script>
+                            </div>
+
+                            <div th:if="${input.type.name() == 'IMAGE_URL'}" class="field-group" th:id="|_${input.property}|">
+                                <label th:for="${input.property}"
+                                       th:text="${input.fieldName}">
+                                </label>
+                                <span th:class="|flagged-label ${input.isServerSideOnly ? 'green-label' : 'red-label'}|"
+                                      th:text="${input.isServerSideOnly ? 'PRIVATE': 'PUBLIC'}">
+                                </span>
+                                <div style="clear:both"></div>
+                                <input type="text"
+                                       th:name="${input.property}"
+                                       th:id="${input.property}"
+                                       th:value="${input.getStringValue()}"
+                                       placeholder="Kép URL"
+                                       autocomplete="off"
+                                />
+                                <div style="clear:both; text-align: center" class="note">VAGY</div>
+                                <input type="file"
+                                       class="file-input"
+                                       th:name="${input.property}"
+                                       th:id="|file-input-${input.property}|"
+                                />
+                                <span th:id="|file-name-${input.property}|" class="file-name"></span>
+                                <span class="note" th:text="${input.description}"></span>
+                                <img class="image-preview" th:id="|image-preview-${input.property}|" onerror="this.src=''" th:src="${input.value}" />
+                                <script th:inline="javascript">
+                                    (() => {
+                                        let id = /*[[${input.property}]]*/ '';
+                                        document.getElementById(id).addEventListener('change', function () {
+                                            let fileNameSpan = document.getElementById(`file-name-${id}`);
+                                            let fileInput = document.getElementById(`file-input-${id}`);
+                                            let filePreview = document.getElementById(`image-preview-${id}`);
+
                                             fileNameSpan.textContent = '';
-                                        }
-                                    });
+                                            fileInput.value = ''
+
+                                            filePreview.src = this.value
+                                        });
+                                        document.getElementById(`file-input-${id}`).addEventListener('change', function () {
+                                            let fileNameSpan = document.getElementById(`file-name-${id}`);
+                                            let fileUrlInput = document.getElementById(id);
+                                            let filePreview = document.getElementById(`image-preview-${id}`);
+
+                                            fileUrlInput.value = ''
+                                            if (this.files.length > 0) {
+                                                const file = this.files[0]
+                                                fileNameSpan.textContent = file.name;
+                                                filePreview.src = URL.createObjectURL(file)
+                                            } else {
+                                                fileNameSpan.textContent = '';
+                                                filePreview.src = '';
+                                            }
+                                        });
+                                    })()
                                 </script>
                             </div>
 

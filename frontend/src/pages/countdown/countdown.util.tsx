@@ -6,7 +6,11 @@ export const parseTopMessage = (topMessage: string) => {
   const coloredComponents = splits.map((partial) => {
     if (partial.match(/(\[\[.*?\]\])/)) {
       const coloredText = partial.substring(2, partial.length - 2)
-      return <chakra.span color={useBrandColor(400, 400)}>{coloredText}</chakra.span>
+      return (
+        <chakra.span id={coloredText} color={useBrandColor(400, 400)}>
+          {coloredText}
+        </chakra.span>
+      )
     } else {
       return <span>{partial}</span>
     }

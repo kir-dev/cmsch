@@ -81,6 +81,7 @@ export interface Countdown {
   topMessage: string
   timeToCountTo: number
   keepOnAfterCountdownOver: boolean
+  showRemainingTime: boolean
   imageUrl: string
   blurredImage: boolean
 }

@@ -91,7 +91,7 @@ data class GroupEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class, FullDetails::class])
-    @property:GenerateInput(order = 7, label = "Csoport borítóképe")
+    @property:GenerateInput(order = 7, label = "Csoport borítóképe", type = InputType.IMAGE_URL)
     @property:GenerateOverview(visible = false)
     var coverImageUrl: String = "",
 
