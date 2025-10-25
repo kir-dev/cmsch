@@ -34,11 +34,11 @@ const CountdownPage = ({ children }: PropsWithChildren) => {
           backgroundImage={`url(${component.imageUrl})`}
           filter={component.blurredImage ? 'blur(15px)' : undefined}
         />
-        <Flex flexDirection="column" h="100%" w="100%" zIndex={1}>
+        <Flex flexDirection="column" h="100%" w="100%" zIndex={1} overflow="auto">
           <Center h="100vh">
-            <VStack w="100%" maxH="100%" overflow="auto">
+            <VStack w="100%" maxH="100%">
               <Heading textAlign="center">{parseTopMessage(component.topMessage)}</Heading>
-              <Clock countTo={countTo} />
+              {component.showRemainingTime && <Clock countTo={countTo} />}
             </VStack>
           </Center>
         </Flex>

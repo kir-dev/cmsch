@@ -61,6 +61,8 @@ class CountdownComponent(
         fieldName = "Oldal tetején megjelenő szöveg",
         description = "Ha üres akkor nincs ilyen. A [[ és ]] jelek között írt szöveg brand színű lesz.")
 
+    var showRemainingTime by BooleanSettingRef(defaultValue = true, fieldName = "Hátralévő idő mutatása")
+
     var timeToCountTo by NumberSettingRef(type = SettingType.DATE_TIME,
         fieldName = "Visszaszámlálás eddig", strictConversion = false)
 

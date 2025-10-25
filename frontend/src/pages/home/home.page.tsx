@@ -51,7 +51,7 @@ const HomePage = () => {
           )}
         </Heading>
       )}
-      {countdownConfig?.enabled && (
+      {countdownConfig?.enabled && countdownConfig.showRemainingTime && (
         <>
           <Heading textAlign="center">{countdownConfig?.topMessage}</Heading>
           <Clock countTo={countTo} />
