@@ -31,34 +31,34 @@ class StylingComponent(
     val lightGroup by SettingGroup(fieldName = "Világos téma",
         description = "Az oldal világos stílusának színei, háttérképek")
 
-    var lightBackgroundColor by StringSettingRef(defaultValue = "#FFFFFF", type = SettingType.COLOR,
+    var lightBackgroundColor by StringSettingRef(defaultValue = "#ffffff", type = SettingType.COLOR,
         fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik")
 
-    var lightContainerColor by StringSettingRef(defaultValue = "transparent", type = SettingType.COLOR,
+    var lightContainerColor by StringSettingRef(defaultValue = "#f6f7f9", type = SettingType.COLOR,
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne")
 
     var lightContainerFilter by StringSettingRef(fieldName = "A lapra alkalmazott filter",
         description = "CSS backdrop-filter, például blur(8px)")
 
-    var lightNavbarColor by StringSettingRef(defaultValue = "transparent", type = SettingType.COLOR,
+    var lightNavbarColor by StringSettingRef(defaultValue = "#f6f7f9", type = SettingType.COLOR,
         fieldName = "Navbar színe", description = "A Navbar háttérszíne")
 
     var lightNavbarFilter by StringSettingRef(fieldName = "A navbarra alkalmazott filter",
         description = "CSS backdrop-filter, például blur(8px)")
 
-    var lightFooterBackground by StringSettingRef(defaultValue = "transparent", type = SettingType.COLOR,
+    var lightFooterBackground by StringSettingRef(defaultValue = "#f6f7f9", type = SettingType.COLOR,
         fieldName = "Footer színe", description = "A Footer háttérszíne")
 
     var lightFooterFilter by StringSettingRef(fieldName = "A footerre alkalmazott filter",
         description = "CSS backdrop-filter, például blur(8px)")
 
-    var lightFooterShadowColor by StringSettingRef(defaultValue = "#00000025", type = SettingType.COLOR,
+    var lightFooterShadowColor by StringSettingRef(defaultValue = "#00000005", type = SettingType.COLOR,
         fieldName = "Footer alsó sáv színe", description = "Footer legalsó sávjának a színe")
 
-    var lightTextColor by StringSettingRef(defaultValue = "#000000", type = SettingType.COLOR,
+    var lightTextColor by StringSettingRef(defaultValue = "#17181c", type = SettingType.COLOR,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe")
 
-    var lightBrandingColor by StringSettingRef(defaultValue = "#880000", type = SettingType.COLOR,
+    var lightBrandingColor by StringSettingRef(defaultValue = "#3d50f5", type = SettingType.COLOR,
         fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre")
 
     var lightBackgroundUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Háttérkép",
@@ -75,31 +75,31 @@ class StylingComponent(
     val darkGroup by SettingGroup(fieldName = "Sötét téma",
         description = "Az oldal sötét stílusának színei, háttérképek")
 
-    var darkModeEnabled by BooleanSettingRef(fieldName = "Sötét téma elérhető",
+    var darkModeEnabled by BooleanSettingRef(defaultValue = true, fieldName = "Sötét téma elérhető",
         description = "Ha ez ki van kapcsolva, akkor nincs téma váltó")
 
-    var deviceTheme by BooleanSettingRef(fieldName = "Séma az eszköz alapján",
+    var deviceTheme by BooleanSettingRef(defaultValue = true, fieldName = "Séma az eszköz alapján",
         description = "Ha be van kapcsolva, akkor lekéri, hogy világos vagy sötét módban fut az eszköz. Csak akkor működik ha a sötét mód be van kapcsolva.")
 
-    var forceDarkMode by BooleanSettingRef(fieldName = "Csak a sötét téma érhető el",
+    var forceDarkMode by BooleanSettingRef(defaultValue = true, fieldName = "Csak a sötét téma érhető el",
         description = "Ha be van kapcsolva, akkor csak a sötét téma használható")
 
-    var darkBackgroundColor by StringSettingRef(defaultValue = "#FFFFFF", type = SettingType.COLOR,
+    var darkBackgroundColor by StringSettingRef(defaultValue = "#030712", type = SettingType.COLOR,
         fieldName = "Háttérszín", description = "Az oldal hátterének a színe, ha nincs kép megadva, akkor ez látszik")
 
-    var darkContainerColor by StringSettingRef(defaultValue = "transparent", type = SettingType.COLOR,
+    var darkContainerColor by StringSettingRef(defaultValue = "#0f141e", type = SettingType.COLOR,
         fieldName = "Lap színe", description = "A lap tartamának háttérszíne")
 
     var darkContainerFilter by StringSettingRef(fieldName = "A lapra alkalmazott filter",
         description = "CSS backdrop-filter, például blur(8px)")
 
-    var darkNavbarColor by StringSettingRef(defaultValue = "transparent", type = SettingType.COLOR,
+    var darkNavbarColor by StringSettingRef(defaultValue = "#0f141e", type = SettingType.COLOR,
         fieldName = "Navbar színe", description = "A Navbar háttérszíne")
 
     var darkNavbarFilter by StringSettingRef(fieldName = "A navbarra alkalmazott filter",
         description = "CSS backdrop-filter, például blur(8px)")
 
-    var darkFooterBackground by StringSettingRef(defaultValue = "transparent", type = SettingType.COLOR,
+    var darkFooterBackground by StringSettingRef(defaultValue = "#0f141e", type = SettingType.COLOR,
         fieldName = "Footer színe", description = "A Footer háttérszíne")
 
     var darkFooterFilter by StringSettingRef(fieldName = "A footerre alkalmazott filter",
@@ -108,10 +108,10 @@ class StylingComponent(
     var darkFooterShadowColor by StringSettingRef(defaultValue = "#00000025", type = SettingType.COLOR,
         fieldName = "Footer alsó sáv színe", description = "Footer legalsó sávjának a színe")
 
-    var darkTextColor by StringSettingRef(defaultValue = "#000000", type = SettingType.COLOR,
+    var darkTextColor by StringSettingRef(defaultValue = "#ffffff", type = SettingType.COLOR,
         fieldName = "Szövegszín", description = "A megjelenő szövegek színe")
 
-    var darkBrandingColor by StringSettingRef(defaultValue = "#880000", type = SettingType.COLOR,
+    var darkBrandingColor by StringSettingRef(defaultValue = "#3d50f5", type = SettingType.COLOR,
         fieldName = "Brand szín", description = "Az oldal színes elemei ez alapján kerülnek kiszínezésre")
 
     var darkBackgroundUrl by StringSettingRef(type = SettingType.IMAGE_URL, fieldName = "Háttérkép",
