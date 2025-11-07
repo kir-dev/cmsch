@@ -61,7 +61,7 @@ data class ChallengeSubmissionEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.NUMBER, order = 4, label = "Adott pont")
+    @property:GenerateInput(type = InputType.NUMBER, min = Integer.MIN_VALUE, order = 4, label = "Adott pont")
     @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
     @property:ImportFormat
     var score: Int = 0,
