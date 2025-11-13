@@ -65,6 +65,7 @@ export const Navbar = () => {
       {/*The method in onClick hides the menu items when a menu item is clicked. Works for collapsible items too!*/}
       <Collapse
         in={isOpen}
+        color={textColor}
         animateOpacity
         onClick={(evt) => {
           if ((evt.target as Element).closest('.navitem')) onToggle()
