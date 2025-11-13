@@ -1,4 +1,4 @@
-import { chakra, Flex, useColorModeValue } from '@chakra-ui/react'
+import { chakra, Flex } from '@chakra-ui/react'
 import { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
 
@@ -17,7 +17,7 @@ export const NavItemNoChildren = ({ menu: { external, name, url } }: Props) => {
           textDecoration: 'none'
         }}
       >
-        <chakra.span className="navitem" color={useColorModeValue('gray.800', 'gray.200')}>
+        <chakra.span className="navitem">
           {name}
         </chakra.span>
       </Flex>
