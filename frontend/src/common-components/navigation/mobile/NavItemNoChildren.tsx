@@ -17,9 +17,7 @@ export const NavItemNoChildren = ({ menu: { external, name, url } }: Props) => {
           textDecoration: 'none'
         }}
       >
-        <chakra.span className="navitem">
-          {name}
-        </chakra.span>
+        <chakra.span className="navitem">{name}</chakra.span>
       </Flex>
     </LinkComponent>
   )
