@@ -59,21 +59,21 @@ data class RiddleEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = InputType.NUMBER, order = 5, label = "Pont")
-    @property:GenerateOverview(columnName = "Pont", order = 2, centered = true)
+    @property:GenerateOverview(columnName = "Pont", order = 2, centered = true, renderer = OverviewType.NUMBER)
     @property:ImportFormat
     var score: Int = 0,
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false, name = "`order`")
     @property:GenerateInput(type = InputType.NUMBER, order = 6, label = "Sorrend")
-    @property:GenerateOverview(columnName = "Sorrend", order = 3, centered = true)
+    @property:GenerateOverview(columnName = "Sorrend", order = 3, centered = true, renderer = OverviewType.NUMBER)
     @property:ImportFormat
     var order: Int = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 7, label = "Kategória id-je")
-    @property:GenerateOverview(columnName = "Kategória", order = 4, centered = true)
+    @property:GenerateOverview(columnName = "Kategória", order = 4, centered = true, renderer = OverviewType.NUMBER)
     @property:ImportFormat
     var categoryId: Int = 0,
 
