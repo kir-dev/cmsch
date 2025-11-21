@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.qrfight
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschIntegrationService
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschTextWidgetDto
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -15,8 +15,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -613,7 +612,7 @@ class QrFightService(
         return completedTokens >= level.minAmountToComplete
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun executeTowerTimer() {
         log.info("Tower time!")
@@ -632,7 +631,7 @@ class QrFightService(
                     tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: "0"
                     tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value } ?: 0) * TIMER_OCCURRENCE
                     tower
-                }
+                }.toMutableList()
                 qrTowerRepository.saveAll(updated)
                 log.info("Tower for USER timer executed, and updated {}/{} towers", updated.size, towers.size)
             }
@@ -646,7 +645,7 @@ class QrFightService(
                     tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: ""
                     tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value } ?: 0) * TIMER_OCCURRENCE
                     tower
-                }
+                }.toMutableList()
                 qrTowerRepository.saveAll(updated)
                 log.info("Tower for GROUP timer executed, and updated {}/{} towers", updated.size, towers.size)
             }

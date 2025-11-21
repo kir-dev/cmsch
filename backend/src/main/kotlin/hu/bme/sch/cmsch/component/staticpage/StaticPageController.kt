@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.staticpage
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings

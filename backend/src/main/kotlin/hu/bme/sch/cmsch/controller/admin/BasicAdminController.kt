@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.staticpage.StaticPageService
 import hu.bme.sch.cmsch.service.AdminMenuCategory

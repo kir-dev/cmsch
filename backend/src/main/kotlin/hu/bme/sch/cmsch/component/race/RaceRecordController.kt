@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.race
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage

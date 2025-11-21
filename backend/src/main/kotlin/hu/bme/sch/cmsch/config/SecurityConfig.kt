@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.component.login.LoginService
@@ -17,14 +17,11 @@ import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.JwtTokenProvider
 import hu.bme.sch.cmsch.service.StorageService
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.retry.annotation.EnableRetry
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -40,7 +37,6 @@ import java.util.*
 
 @EnableWebSecurity
 @Configuration
-@EnableRetry(order = Ordered.HIGHEST_PRECEDENCE)
 @ConditionalOnBean(LoginComponent::class)
 class SecurityConfig(
     private val clientRegistrationRepository: ClientRegistrationRepository,
@@ -51,7 +47,6 @@ class SecurityConfig(
     private val authschLoginService: LoginService,
     private val loginComponent: LoginComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    @param:Value("\${custom.keycloak.base-url:http://localhost:8081/auth/realms/master}") private val keycloakBaseUrl: String,
     private val auditLogService: AuditLogService
 ) {
 

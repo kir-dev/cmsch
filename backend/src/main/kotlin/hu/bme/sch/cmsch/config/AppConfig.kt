@@ -1,8 +1,5 @@
 package hu.bme.sch.cmsch.config
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.TypeDescriptor
@@ -13,9 +10,12 @@ import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
 import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.core.converter.ClaimConversionService
 import org.springframework.security.oauth2.jwt.*
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import java.net.URI
 import java.net.URL
-import java.util.*
+import java.util.Collections
 
 @Configuration
 @EnableScheduling
@@ -24,10 +24,9 @@ class AppConfig {
 
     @Bean
     fun objectMapper(): ObjectMapper {
-        val objectMapper = ObjectMapper()
-        objectMapper.registerKotlinModule()
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        return objectMapper
+        return JsonMapper.builder()
+            .addModule(kotlinModule { })
+            .build()
     }
 
     @Bean
@@ -43,7 +42,7 @@ class AppConfig {
                 }
                 try {
                     return URI("https://$source").toURL()
-                } catch (ex: Exception) {
+                } catch (_: Exception) {
                     // Ignore
                 }
                 return null

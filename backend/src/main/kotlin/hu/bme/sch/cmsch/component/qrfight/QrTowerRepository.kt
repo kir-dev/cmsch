@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 interface QrTowerRepository : CrudRepository<QrTowerEntity, Int>,
     EntityPageDataSource<QrTowerEntity, Int> {
 
-    override fun findAll(): List<QrTowerEntity>
+    override fun findAll(): MutableIterable<QrTowerEntity>
     fun findAllBySelector(selector: String): List<QrTowerEntity>
     fun findAllByCategory(category: String): List<QrTowerEntity>
     fun findAllByRecordTimeTrue(): List<QrTowerEntity>

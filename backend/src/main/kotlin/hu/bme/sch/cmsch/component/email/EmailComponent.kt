@@ -5,17 +5,12 @@ import hu.bme.sch.cmsch.component.event.EventEntity
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["email"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.email"])
 class EmailComponent(
     componentSettingService: ComponentSettingService,
     env: Environment

@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.task
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
@@ -42,7 +42,7 @@ class TaskAdminRateController(
 
     transactionManager,
     object : ManualRepository<GradedTaskGroupDto, Int>() {
-        override fun findAll(): Iterable<GradedTaskGroupDto> {
+        override fun findAll(): MutableIterable<GradedTaskGroupDto> {
             val aggregatedResults = submittedRepository.findAllAggregated()
 
             return aggregatedResults.map {
@@ -53,7 +53,7 @@ class TaskAdminRateController(
                     it.rejectedCount.toInt(),
                     it.notGradedCount.toInt()
                 )
-            }.sortedByDescending { it.notGraded }.toList()
+            }.sortedByDescending { it.notGraded }.toMutableList()
         }
     },
     submittedRepository,

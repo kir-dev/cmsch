@@ -3,18 +3,13 @@ package hu.bme.sch.cmsch.controller
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
 import org.slf4j.LoggerFactory
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["test"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.test"])
 @Controller
 class TestController(private val userService: UserService) {
 

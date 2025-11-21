@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 interface ProductRepository : CrudRepository<ProductEntity, Int>,
     EntityPageDataSource<ProductEntity, Int> {
 
-    override fun findAll(): List<ProductEntity>
+    override fun findAll(): MutableIterable<ProductEntity>
     fun findAllByType(type: ProductType): List<ProductEntity>
     fun findAllByTypeAndVisibleTrue(type: ProductType): List<ProductEntity>
 }

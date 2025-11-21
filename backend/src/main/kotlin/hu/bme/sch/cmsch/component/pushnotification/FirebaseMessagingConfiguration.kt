@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.retry.backoff.BackOffPolicyBuilder
-import org.springframework.retry.policy.SimpleRetryPolicy
-import org.springframework.retry.support.RetryTemplate
+import org.springframework.core.retry.RetryPolicy
+import org.springframework.core.retry.RetryTemplate
+import java.time.Duration
 
 @Configuration
 @ConditionalOnBean(PushNotificationComponent::class)
@@ -47,15 +47,14 @@ class FirebaseMessagingConfiguration {
     @Bean
     @ConditionalOnBean(PushNotificationComponent::class)
     fun retryTemplate(): RetryTemplate {
-        val retryPolicy = SimpleRetryPolicy(5)
-        val backOffPolicy = BackOffPolicyBuilder.newBuilder()
-            .delay(500L)
+        val retryPolicy = RetryPolicy.builder()
+            .maxRetries(5)
+            .delay(Duration.ofMillis(500))
             .multiplier(1.5)
             .build()
 
         val template = RetryTemplate()
         template.setRetryPolicy(retryPolicy)
-        template.setBackOffPolicy(backOffPolicy)
         return template
     }
 }

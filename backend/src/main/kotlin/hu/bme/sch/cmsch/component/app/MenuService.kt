@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.Isolation
@@ -131,7 +130,7 @@ class MenuService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun persistSettings(menus: List<MenuSettingItem>, role: RoleType) {
         menuRepository.deleteAllByRole(role)
@@ -197,7 +196,7 @@ class MenuService(
         var external: Boolean = false,
     )
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun importMenu(entries: List<MenuImportEntry>, rolesToInclude: List<RoleType>): Pair<Int, Int> {
         var imported = 0
