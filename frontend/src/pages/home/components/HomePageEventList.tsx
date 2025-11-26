@@ -19,6 +19,7 @@ export default function HomePageEventList() {
       const { timestampStart, timestampEnd, ...rest } = li
       return { timestampStart: timestampStart * 1000, timestampEnd: timestampEnd * 1000, ...rest }
     })
+    // eslint-disable-next-line react-hooks/purity
     return timestampCorrectedEventList?.filter((li) => li.timestampStart > Date.now()).sort((a, b) => a.timestampStart - b.timestampStart)
   }, [eventList.data])
 

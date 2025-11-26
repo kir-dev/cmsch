@@ -43,7 +43,12 @@ export function LevelDataDisplay({ teams }: LevelDataDisplayProps) {
           renderTick: ({ opacity, textAnchor, textX, textY, value, x, y }) => {
             return (
               <g transform={`translate(${x},${y})`} style={{ opacity }}>
-                <text style={{ fill: color, fontSize: 14 }} textAnchor={textAnchor as any} transform={`translate(${textX},${textY})`}>
+                <text
+                  style={{ fill: color, fontSize: 14 }}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  textAnchor={textAnchor as any}
+                  transform={`translate(${textX},${textY})`}
+                >
                   <chakra.tspan>{value.substring(0, 3)}</chakra.tspan>
                   <chakra.tspan display={{ base: 'none', md: 'block' }}>{value.substring(3)}</chakra.tspan>
                 </text>

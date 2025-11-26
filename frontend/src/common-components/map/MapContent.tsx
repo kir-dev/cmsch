@@ -29,6 +29,7 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
   }, [showUserLocation, getPosition])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (coords) setCenter([coords.latitude, coords.longitude])
   }, [coords])
 

@@ -32,6 +32,7 @@ export default function OrganizationListPage() {
 
   useEffect(() => {
     if (data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilteredOrganizations(data)
       if (inputRef.current) inputRef.current.value = ''
     }

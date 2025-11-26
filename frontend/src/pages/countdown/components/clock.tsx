@@ -8,6 +8,7 @@ interface ClockProps {
 }
 
 const Clock = ({ countTo }: ClockProps) => {
+  // eslint-disable-next-line react-hooks/purity
   const target = countTo.getTime() > Date.now() ? countTo : new Date()
   const [duration, setDuration] = useState(intervalToDuration({ start: new Date(), end: target }))
 

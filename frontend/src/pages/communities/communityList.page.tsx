@@ -34,6 +34,7 @@ export default function CommunityListPage() {
 
   useEffect(() => {
     if (data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilteredCommunities(data)
       if (inputRef.current) inputRef.current.value = ''
     }

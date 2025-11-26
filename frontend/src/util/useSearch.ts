@@ -10,6 +10,7 @@ export function useSearch<T>(data: T[], searchFn: (data: T, searchWord: string) 
 
   useEffect(() => {
     if (!data || !search) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilteredData(data)
     } else {
       setFilteredData(data.filter((item) => searchFn(item, search)))
@@ -19,6 +20,7 @@ export function useSearch<T>(data: T[], searchFn: (data: T, searchWord: string) 
   useEffect(() => {
     if (data) {
       if (inputRef.current) inputRef.current.value = ''
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSearch('')
     }
   }, [data])

@@ -21,6 +21,7 @@ export function MapMarker({ color, text, markerShape = MapMarkerShape.CIRCLE }: 
   return (
     <VStack w={200} spacing={1}>
       <Center h={6} w={6} borderRadius={borderRadius} borderColor="white" borderWidth="2px" boxSizing="border-box" bg={color ?? brandColor}>
+        {/* eslint-disable-next-line react-hooks/static-components */}
         <Icon color={getTextColorFromLuminance(color)} size={12} />
       </Center>
       {text && (

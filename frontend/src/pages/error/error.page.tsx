@@ -22,6 +22,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   useEffect(() => {
     // Cloning the error is needed to clear the error globally
     // The message from prop can override the message
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setClonedMessage(messageProp || message)
     setClonedMessageType(type || MessageTypes.GENERAL)
     // Clear the error from the context since the user has already been notified, and prepare for navigation

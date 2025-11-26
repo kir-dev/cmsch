@@ -18,6 +18,7 @@ const CountdownPage = ({ children }: PropsWithChildren) => {
       return new Date()
     }
   }, [component])
+  // eslint-disable-next-line react-hooks/purity
   if (component?.enabled && component?.showOnly && (component?.keepOnAfterCountdownOver || countTo.getTime() > Date.now())) {
     return (
       <Flex h="100%" w="100%">

@@ -7,6 +7,7 @@ interface CurrentDateBarProps {
 }
 
 export function CurrentDateBar({ maxTimestamp, minTimestamp }: CurrentDateBarProps) {
+  // eslint-disable-next-line react-hooks/purity
   const now = Date.now()
   if (now < minTimestamp || now > maxTimestamp) return null
   const position = calculatePosition(minTimestamp, maxTimestamp, now)

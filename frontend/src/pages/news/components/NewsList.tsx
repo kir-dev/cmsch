@@ -46,6 +46,7 @@ const NewsList = ({ newsList }: NewsListProps) => {
           ref={inputRef}
           placeholder="Keresés címre..."
           size="lg"
+          // eslint-disable-next-line react-hooks/refs
           onChange={debounce(handleInput, 500)}
           autoFocus={true}
           _placeholder={{ color: 'inherit' }}
