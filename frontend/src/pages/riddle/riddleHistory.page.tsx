@@ -25,6 +25,7 @@ const RiddleHistoryPage = () => {
   const query = useRiddleHistoryQuery()
   useEffect(() => {
     if (!loaded && query.isSuccess) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoaded(true)
       if (query.data.length > 0) {
         setCategory(query.data![0].categoryName)
@@ -33,6 +34,7 @@ const RiddleHistoryPage = () => {
   }, [loaded, query.data, query.isSuccess])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIndex(0)
   }, [category])
 

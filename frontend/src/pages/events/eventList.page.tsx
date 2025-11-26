@@ -50,7 +50,9 @@ const EventListPage = () => {
   if (component?.filterByLocation) availableFilters.push(FILTER.PLACE)
   if (component?.filterByDay) availableFilters.push(FILTER.DAY)
 
+  // eslint-disable-next-line react-hooks/purity
   const pastEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 < Date.now()), [data])
+  // eslint-disable-next-line react-hooks/purity
   const upcomingEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 >= Date.now()), [data])
 
   const handleInput = () => {

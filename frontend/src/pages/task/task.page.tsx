@@ -347,6 +347,7 @@ const TaskPage = () => {
             {localSubmission ? (
               <Text>Beadás személyesen!</Text>
             ) : (
+              // eslint-disable-next-line react-hooks/refs
               <form onSubmit={handleSubmit(onSubmit)}>
                 {textInput}
                 {fileInput}
