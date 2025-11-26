@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.script
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage

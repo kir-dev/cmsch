@@ -26,8 +26,7 @@ import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.isAvailableForRole
 import hu.bme.sch.cmsch.util.mapIfTrue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -42,14 +41,12 @@ class ProfileService(
     private val profileComponent: ProfileComponent,
     private val debtsRepository: Optional<SoldProductRepository>,
     private val locationService: Optional<LocationService>,
-    private val groupSelectionComponent: Optional<GroupSelectionComponent>,
     private val tokenService: Optional<TokenCollectorService>,
     private val tokenComponent: Optional<TokenComponent>,
     private val tasksService: Optional<TasksService>,
     private val riddleService: Optional<RiddleBusinessLogicService>,
     private val raceService: Optional<RaceService>,
     private val loginComponent: Optional<LoginComponent>,
-    private val legacyBmejegyService: Optional<LegacyBmejegyService>,
     private val clock: TimeService,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val admissionService: Optional<AdmissionService>,
@@ -232,7 +229,7 @@ class ProfileService(
             .associate { Pair(it.id, it.name) }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun changeAlias(user: UserEntity, newAlias: String): Boolean {
         return if (newAlias.matches(Regex(profileComponent.aliasRegex))) {

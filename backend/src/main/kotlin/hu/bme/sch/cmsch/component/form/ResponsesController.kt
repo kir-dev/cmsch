@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.form
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.dataformat.csv.CsvMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
@@ -46,7 +46,7 @@ class ResponsesController(
 
     transactionManager,
     object : ManualRepository<FormVirtualEntity, Int>() {
-        override fun findAll(): Iterable<FormVirtualEntity> {
+        override fun findAll(): MutableIterable<FormVirtualEntity> {
             return formService.getAllResponses()
                 .groupBy { it.formId }
                 .map { it.value }
@@ -64,7 +64,7 @@ class ResponsesController(
                                 responses.count { it.detailsValidated },
                             )
                         }.orElse(null)
-                }
+                }.toMutableList()
         }
 
     },

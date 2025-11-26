@@ -3,17 +3,12 @@ package hu.bme.sch.cmsch.component.token
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["token"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.token"])
 class TokenComponent(
     componentSettingService: ComponentSettingService,
     env: Environment

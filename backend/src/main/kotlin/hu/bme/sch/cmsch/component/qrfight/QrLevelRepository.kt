@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 interface QrLevelRepository : CrudRepository<QrLevelEntity, Int>,
     EntityPageDataSource<QrLevelEntity, Int> {
 
-    override fun findAll(): List<QrLevelEntity>
+    override fun findAll(): MutableIterable<QrLevelEntity>
     fun findAllByCategory(category: String): List<QrLevelEntity>
     fun findAllByVisibleTrueAndEnabledTrue(): List<QrLevelEntity>
 }

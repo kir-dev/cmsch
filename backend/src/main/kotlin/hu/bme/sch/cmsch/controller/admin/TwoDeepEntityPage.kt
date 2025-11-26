@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.IdentifiableEntity

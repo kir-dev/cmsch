@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.email
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.AuditLogService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

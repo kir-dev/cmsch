@@ -20,8 +20,7 @@ import hu.bme.sch.cmsch.service.StorageService
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -57,7 +56,7 @@ class TeamService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun createTeam(user: UserEntity, name: String): TeamCreationStatus {
         if (user.group?.leaveable == false)
@@ -117,7 +116,7 @@ class TeamService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun joinTeam(user: UserEntity, groupId: Int): TeamJoinStatus {
         if (user.group?.leaveable == false)
@@ -141,7 +140,7 @@ class TeamService(
         return TeamJoinStatus.OK
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun cancelJoin(user: CmschUser): TeamJoinStatus {
         if (!teamComponent.joinEnabled)
@@ -152,7 +151,7 @@ class TeamService(
         return TeamJoinStatus.OK
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun leaveTeam(user: CmschUser): TeamLeaveStatus {
         if (!teamComponent.leaveEnabled)
@@ -410,7 +409,7 @@ class TeamService(
             .map { TeamMemberView(it.userName, it.userId, isAdmin = false, isYou = false) }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun acceptJoin(userId: Int, group: GroupEntity?): Boolean {
         if (group == null)
@@ -437,7 +436,7 @@ class TeamService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun rejectJoin(userId: Int, groupId: Int?, groupName: String): Boolean {
         if (groupId == null)
@@ -452,7 +451,7 @@ class TeamService(
         return false
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun toggleUserPermissions(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
@@ -495,7 +494,7 @@ class TeamService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun promoteLeader(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
@@ -537,7 +536,7 @@ class TeamService(
         return true
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun kickUser(userId: Int, groupId: Int?, groupName: String, adminUser: CmschUser): Boolean {
         if (groupId == null)
@@ -577,7 +576,7 @@ class TeamService(
         log.info("User '{}' kicked from '{}', reason: by admin '{}'", user.fullName, groupName, adminUser.userName)
         return true
     }
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun setDescriptionAndLogo(description: String, logo: MultipartFile?, user: CmschUser): TeamEditStatus {
         val groupId = user.groupId ?: throw IllegalStateException("The user is not member of a group yet")

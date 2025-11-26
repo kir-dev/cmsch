@@ -13,7 +13,7 @@ import java.util.*
 interface ErrorLogRepository : CrudRepository<ErrorLogEntity, Int>, EntityPageDataSource<ErrorLogEntity, Int> {
 
     @Query("select e from ErrorLogEntity e order by e.lastReportedAt desc")
-    override fun findAll(): List<ErrorLogEntity>
+    override fun findAll(): MutableIterable<ErrorLogEntity>
 
     fun findByMessageAndStackAndUserAgentAndHrefAndRole(
         message: String,

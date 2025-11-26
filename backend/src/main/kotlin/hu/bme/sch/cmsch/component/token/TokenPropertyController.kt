@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.repository.ManualRepository
@@ -33,8 +33,8 @@ class TokenSubmissionsController(
 
     transactionManager,
     object : ManualRepository<TokenPropertyRawView, Int>() {
-        override fun findAll(): Iterable<TokenPropertyRawView> {
-            return repo.findAll().map { mapTokenProperty(it) }
+        override fun findAll(): MutableIterable<TokenPropertyRawView> {
+            return repo.findAll().map { mapTokenProperty(it) }.toMutableList()
         }
 
         override fun count(): Long {

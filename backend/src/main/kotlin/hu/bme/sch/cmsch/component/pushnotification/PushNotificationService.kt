@@ -6,7 +6,7 @@ import hu.bme.sch.cmsch.dto.CmschNotification
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.support.RetryTemplate
+import org.springframework.core.retry.RetryTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -53,7 +53,7 @@ class PushNotificationService(
 
         var tokensRemaining = tokens
         val sendResult = runCatching {
-            retryTemplate.execute<Unit, Exception> {
+            retryTemplate.execute {
                 log.debug("Attempting notification broadcast to {} devices...", tokensRemaining.size)
 
                 // The token limit per multicast message is 500

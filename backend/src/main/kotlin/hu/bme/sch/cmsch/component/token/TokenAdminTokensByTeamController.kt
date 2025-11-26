@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.repository.UserRepository
@@ -41,13 +41,13 @@ class TokenAdminTokensByTeamController(
 
     transactionManager,
     object : ManualRepository<UserGroupTokenCount, Int>() {
-        override fun findAll(): Iterable<UserGroupTokenCount> {
+        override fun findAll(): MutableIterable<UserGroupTokenCount> {
             transactionManager.transaction(readOnly = true) {
                 val data = repo.countByAllUserGroup()
                 data.forEach { it.memberCount = userRepository.findAllByGroupName(it.groupName).size }
                 val highestTeamMemberCount = data.maxByOrNull { it.correctedPoints }?.memberCount ?: 0
                 data.forEach { it.finalPoints = (it.correctedPoints * highestTeamMemberCount).toInt() }
-                return data
+                return data.toMutableList()
             }
         }
     },

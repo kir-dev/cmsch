@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.token
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.ManualRepository
@@ -34,7 +34,7 @@ class TokenAdminTokensByUsersController(
 
     transactionManager,
     object : ManualRepository<TokenListByUserVirtualEntity, Int>() {
-        override fun findAll(): Iterable<TokenListByUserVirtualEntity> {
+        override fun findAll(): MutableList<TokenListByUserVirtualEntity> {
             return repo.findAll()
                 .groupBy { it.ownerUser?.id ?: 0 }
                 .map { it.value }
@@ -47,7 +47,7 @@ class TokenAdminTokensByUsersController(
                         groupName,
                         tokenProperty.count()
                     )
-                }
+                }.toMutableList()
         }
 
         override fun delete(entity: TokenListByUserVirtualEntity) {

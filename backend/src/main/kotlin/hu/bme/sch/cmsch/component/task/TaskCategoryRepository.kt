@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 interface TaskCategoryRepository : CrudRepository<TaskCategoryEntity, Int>,
     EntityPageDataSource<TaskCategoryEntity, Int> {
 
-    override fun findAll(): List<TaskCategoryEntity>
+    override fun findAll(): MutableIterable<TaskCategoryEntity>
     fun findAllByAvailableFromLessThanAndAvailableToGreaterThan(availableFrom: Long, availableTo: Long): List<TaskCategoryEntity>
     fun findAllByCategoryId(categoryId: Int): List<TaskCategoryEntity>
     fun findAllByType(type: TaskCategoryType): List<TaskCategoryEntity>

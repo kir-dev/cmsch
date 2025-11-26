@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.script.sandbox
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 class ScriptingJsonUtil {
 

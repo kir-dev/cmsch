@@ -3,7 +3,7 @@ package hu.bme.sch.cmsch.component.script
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Configuration
 @ConditionalOnBean(ScriptComponent::class)

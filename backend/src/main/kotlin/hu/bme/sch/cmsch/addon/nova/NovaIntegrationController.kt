@@ -2,19 +2,14 @@ package hu.bme.sch.cmsch.addon.nova
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/nova")
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.ext",
-    name = ["nova"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.ext.nova"])
 class NovaIntegrationController(
     @param:Value("\${hu.bme.sch.cmsch.token.nova-in:}") private val validTokenIn: String,
     private val service: NovaIntegrationService

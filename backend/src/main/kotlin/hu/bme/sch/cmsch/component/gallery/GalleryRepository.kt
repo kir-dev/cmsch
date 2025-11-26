@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 @ConditionalOnBean(GalleryComponent::class)
 interface GalleryRepository : CrudRepository<GalleryEntity, Int>, EntityPageDataSource<GalleryEntity, Int> {
-    override fun findAll(): List<GalleryEntity>
+    override fun findAll(): MutableList<GalleryEntity>
 
     fun findByShowOnHomePage(showOnHomePage: Boolean): List<GalleryEntity>
 }
