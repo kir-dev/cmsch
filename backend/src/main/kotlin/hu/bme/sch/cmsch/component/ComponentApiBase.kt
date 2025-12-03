@@ -1,18 +1,26 @@
 package hu.bme.sch.cmsch.component
 
 import hu.bme.sch.cmsch.component.app.MenuService
+import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.dto.PermissionDeniedResponse
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.setting.MutableSetting
+import hu.bme.sch.cmsch.setting.Setting
 import hu.bme.sch.cmsch.setting.SettingType
+import hu.bme.sch.cmsch.util.addFields
 import hu.bme.sch.cmsch.util.getUser
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartRequest
 import kotlin.jvm.optionals.getOrNull
 
@@ -64,48 +72,88 @@ abstract class ComponentApiBase(
         onInit()
     }
 
-    @GetMapping("/docs")
+    data class ComponentDocsResponse(val title: String, val markdownContent: String?)
+
+    @GetMapping("/docs", produces = [MediaType.TEXT_HTML_VALUE])
     fun docs(auth: Authentication, model: Model): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (permissionToShow.validate(user).not()) {
-            model.addAttribute("permission", permissionToShow.permissionString)
-            model.addAttribute("user", user)
-            auditLogService.admin403(
-                user, component.component, "GET ${component.component}/docs", permissionToShow.permissionString
-            )
+            model.addFields(PermissionDeniedResponse(permissionToShow.permissionString, user))
+            logAccessDenied(user, "GET ${component.component}/docs")
             return "admin403"
         }
 
-        model.addAttribute("title", docsTitle)
-        model.addAttribute("markdownContent", documentationMarkdown)
+        model.addFields(ComponentDocsResponse(docsTitle, documentationMarkdown))
 
         return "docs"
     }
 
-    @GetMapping("/settings")
+    @ResponseBody
+    @GetMapping("/docs", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun docs(auth: Authentication): ResponseEntity<Any> {
+        val user = auth.getUser()
+
+        if (permissionToShow.validate(user).not()) {
+            logAccessDenied(user, "GET ${component.component}/docs")
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(PermissionDeniedResponse(permissionToShow.permissionString, user))
+        }
+
+        return ResponseEntity.ok(ComponentDocsResponse(docsTitle, documentationMarkdown))
+    }
+
+
+    data class ComponentSettingsResponse(
+        val component: String,
+        val title: String,
+        val settings: MutableList<Setting<*>>,
+        val user: CmschUser,
+        val permission: String
+    )
+
+    @GetMapping("/settings", produces = [MediaType.TEXT_HTML_VALUE])
     fun settings(auth: Authentication, model: Model): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (!permissionToShow.validate(user)) {
-            model.addAttribute("permission", permissionToShow.permissionString)
-            model.addAttribute("user", user)
-            auditLogService.admin403(user, component.component,
-                "GET ${component.component}/settings", permissionToShow.permissionString)
+            model.addFields(PermissionDeniedResponse(permissionToShow.permissionString, user))
+            logAccessDenied(user, "GET ${component.component}/settings")
             return "admin403"
         }
 
-        model.addAttribute("component", component.component)
-        model.addAttribute("title", componentMenuName)
-        model.addAttribute("settings", component.allSettings)
         model.addAttribute("componentNames", menuService.getComponentNames())
-        model.addAttribute("user", user)
-        model.addAttribute("permission", permissionToShow.permissionString)
-
+        model.addFields(ComponentSettingsResponse(
+            component.component,
+            componentMenuName,
+            component.allSettings,
+            user,
+            permissionToShow.permissionString,
+        ))
         return "componentSettings"
     }
 
-    @PostMapping("/settings")
+
+    @ResponseBody
+    @GetMapping("/settings", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun settings(auth: Authentication): ResponseEntity<Any> {
+        val user = auth.getUser()
+        if (!permissionToShow.validate(user)) {
+            logAccessDenied(user, "GET ${component.component}/settings")
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(PermissionDeniedResponse(permissionToShow.permissionString, user))
+        }
+
+        return ResponseEntity.ok(ComponentSettingsResponse(
+            component.component,
+            componentMenuName,
+            component.allSettings,
+            user,
+            permissionToShow.permissionString,
+        ))
+    }
+
+    @PostMapping("/settings", produces = [MediaType.TEXT_HTML_VALUE])
     fun update(
         auth: Authentication,
         model: Model,
@@ -115,12 +163,48 @@ abstract class ComponentApiBase(
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (!permissionToShow.validate(user)) {
-            model.addAttribute("permission", permissionToShow.permissionString)
-            model.addAttribute("user", user)
-            auditLogService.admin403(user, component.component,
-                "POST ${component.component}/settings", permissionToShow.permissionString)
+            model.addFields(PermissionDeniedResponse(permissionToShow.permissionString, user))
+            logAccessDenied(user, "POST ${component.component}/settings")
             return "admin403"
         }
+        saveComponentSettings(user, allRequestParams, multipartRequest)
+        return "redirect:/admin/control/component/${component.component}/settings"
+    }
+
+    @ResponseBody
+    @PostMapping("/settings", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun update(
+        auth: Authentication,
+        @RequestParam allRequestParams: Map<String, String>,
+        multipartRequest: MultipartRequest
+    ): ResponseEntity<Any> {
+        val user = auth.getUser()
+        if (!permissionToShow.validate(user)) {
+            logAccessDenied(user, "POST ${component.component}/settings")
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(PermissionDeniedResponse(permissionToShow.permissionString, user))
+        }
+        saveComponentSettings(user, allRequestParams, multipartRequest)
+
+        return ResponseEntity.ok().body(Any())
+    }
+
+    open fun onUpdate() {
+        // Settings updated
+    }
+
+    open fun onInit() {
+        // The component is loaded
+    }
+
+    private fun logAccessDenied(user: CmschUser, endpoint: String) =
+        auditLogService.admin403(user, component.component, endpoint, permissionToShow.permissionString)
+
+    private fun saveComponentSettings(
+        user: CmschUser,
+        allRequestParams: Map<String, String>,
+        multipartRequest: MultipartRequest,
+    ) {
         val newValues = StringBuilder("component-edit new value: ")
         component.allSettings.forEach { setting ->
             when (setting.type) {
@@ -172,15 +256,6 @@ abstract class ComponentApiBase(
         auditLogService.edit(user, component.component, newValues.toString())
         RoleType.entries.forEach { role -> menuService.regenerateMenuCache(role) }
         onUpdate()
-        return "redirect:/admin/control/component/${component.component}/settings"
-    }
-
-    open fun onUpdate() {
-        // Settings updated
-    }
-
-    open fun onInit() {
-        // The component is loaded
     }
 
 }

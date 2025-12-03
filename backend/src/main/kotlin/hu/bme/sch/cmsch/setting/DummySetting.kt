@@ -14,7 +14,7 @@ class DummySetting(
     override val isServerSideOnly: Boolean,
 ) : Setting<Any> {
 
-    override fun getValue() = throw NotImplementedError()
+    override fun getValue() = ""
 
 }
 
