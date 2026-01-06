@@ -67,7 +67,7 @@ class SheetsUpdaterService(
                     throw IOException("Unexpected code $response")
                 }
 
-                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body?.string())?.status
+                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body.string())?.status
                     ?: SheetsUpdateStatus.CONNECTION_ERROR
             }
         } catch (e: Exception) {
@@ -92,7 +92,7 @@ class SheetsUpdaterService(
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body?.string())?.status
+                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body.string())?.status
                     ?: SheetsUpdateStatus.CONNECTION_ERROR
             }
         } catch (e: Exception) {
@@ -117,7 +117,7 @@ class SheetsUpdaterService(
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body?.string())?.status
+                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body.string())?.status
                     ?: SheetsUpdateStatus.CONNECTION_ERROR
             }
         } catch (e: Exception) {
@@ -142,7 +142,7 @@ class SheetsUpdaterService(
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body?.string())?.status
+                return sheetsUpdateResponseReader.readValue<SheetsUpdateResponse>(response.body.string())?.status
                     ?: SheetsUpdateStatus.CONNECTION_ERROR
             }
         } catch (e: Exception) {

@@ -51,7 +51,7 @@ class AppConfig {
             }
 
             override fun getConvertibleTypes(): MutableSet<GenericConverter.ConvertiblePair>? {
-                return Collections.singleton(GenericConverter.ConvertiblePair(Object::class.java, URL::class.java))
+                return Collections.singleton(GenericConverter.ConvertiblePair(Any::class.java, URL::class.java))
             }
         })
 

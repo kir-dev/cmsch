@@ -3,7 +3,7 @@ COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle clean assemble bootJar
 
-FROM eclipse-temurin:24-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 MAINTAINER kir-dev@sch.bme.hu
 COPY --from=build /home/gradle/src/build/libs/cmsch.jar /opt/cmsch/
 WORKDIR /opt/cmsch
