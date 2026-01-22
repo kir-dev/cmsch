@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.communities
 
+import hu.bme.sch.cmsch.controller.admin.ControlAction
 import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/admin/control/community")
 @ConditionalOnBean(CommunitiesComponent::class)
 class CommunitiesController(
+    val tinderService: TinderService,
     repo: CommunityRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -53,5 +55,26 @@ class CommunitiesController(
     adminMenuIcon = "supervised_user_circle",
     adminMenuPriority = 1,
 
-    searchSettings = calculateSearchSettings<CommunityEntity>(false)
-)
+    searchSettings = calculateSearchSettings<CommunityEntity>(false),
+
+    controlActions = mutableListOf(
+        ControlAction(
+            name = "Válaszok megtekintése",
+            endpoint = "tinder/show/{id}",
+            icon = "label",
+            permission = StaffPermissions.PERMISSION_SHOW_COMMUNITIES,
+            order = 250,
+            usageString = "Tinder válaszok megtekintése",
+        ),
+        ControlAction(
+            name = "Válaszok szerkesztése",
+            endpoint = "tinder/edit/{id}",
+            icon = "rate_review",
+            permission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
+            order = 260,
+            usageString = "Tinder válaszok szerkesztése",
+        )
+    ),
+){
+
+}
