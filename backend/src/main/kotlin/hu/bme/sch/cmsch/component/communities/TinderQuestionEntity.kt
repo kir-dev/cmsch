@@ -1,11 +1,7 @@
 package hu.bme.sch.cmsch.component.communities
 
 import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.admin.GenerateInput
-import hu.bme.sch.cmsch.admin.GenerateOverview
-import hu.bme.sch.cmsch.admin.ImportFormat
-import hu.bme.sch.cmsch.admin.InputType
-import hu.bme.sch.cmsch.admin.OverviewType
+import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -15,7 +11,6 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 
 
@@ -42,7 +37,7 @@ data class TinderQuestionEntity(
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 2, label = "Válaszlehetőségek",
-        note = "Válaszlehetőségek sortöréssel elválasztva")
+        note = "Válaszlehetőségek vesszővel elválasztva")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var answerOptions: String = "",

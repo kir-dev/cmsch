@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.ObjectMapper
 import kotlin.collections.set
+import kotlin.jvm.optionals.getOrElse
 
 
 @Service
@@ -22,11 +23,13 @@ class TinderService(
 
     fun getAllQuestions() = questionRepository.findAll().toList()
 
+    fun getAnswerForCommunity(communityId: Int) = answerRepository.findByCommunityId(communityId)
+
     fun submitAnswers(update: Boolean, user: UserEntity, answers: TinderAnswerDto) {
         val questions = questionRepository.findAll().associateBy { it.id }
         for (answer in answers.answers) {
             val question = questions[answer.key] ?: continue
-            if (!question.answerOptions.split("\n").contains(answer.value)) {
+            if (answer.value!="" && !question.answerOptions.split(", *").contains(answer.value)) {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong answer option: ${answer.value}")
             }
         }
@@ -104,6 +107,22 @@ class TinderService(
             tinderAnswers = answers[it.id]!!.values.toList()
         ) }
         return communityProfiles
+    }
+
+    fun ensureCommunityAnswer(community: CommunityEntity): TinderAnswerEntity {
+        val existing = answerRepository.findByCommunityId(community.id)
+        return existing.getOrElse {
+            answerRepository.save(TinderAnswerEntity(
+                userId = null,
+                communityId = community.id,
+                communityName = community.name,
+                answers = "{}"
+            ))
+        }
+    }
+
+    fun updateCommunityAnswer(answer: TinderAnswerEntity) {
+        answerRepository.save(answer)
     }
 
 }

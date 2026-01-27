@@ -8,7 +8,7 @@ data class TinderQuestionDto(
     constructor(entity: TinderQuestionEntity) : this(
         id = entity.id,
         question = entity.question,
-        answers = entity.answerOptions.split("\n")
+        answers = entity.answerOptions.split(", *")
     )
 }
 
