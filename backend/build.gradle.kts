@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "4.0.1"
+    id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.owasp.dependencycheck") version "12.1.9"
+    id("org.owasp.dependencycheck") version "12.2.0"
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.spring") version "2.3.0"
     id("org.sonarqube") version "7.2.2.6593"
@@ -48,21 +48,24 @@ dependencies {
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.uuid:java-uuid-generator:5.2.0")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
-    implementation("com.google.firebase:firebase-admin:9.7.0")
+    implementation("com.google.firebase:firebase-admin:9.7.1") {
+        exclude(module = "google-cloud-firestore")
+        exclude(module = "google-cloud-storage")
+    }
     implementation("com.google.zxing:core:3.5.4")
     implementation("com.google.zxing:javase:3.5.4")
-    implementation("com.itextpdf:itext-core:9.4.0")
+    implementation("com.itextpdf:itext-core:9.5.0")
     implementation("com.squareup.okhttp3:okhttp:5.3.2")
     implementation(platform("io.jsonwebtoken:jjwt-bom:0.13.0"))
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
     implementation("io.jsonwebtoken:jjwt-api")
-    implementation(platform("io.micrometer:micrometer-bom:1.16.1"))
+    implementation(platform("io.micrometer:micrometer-bom:1.16.2"))
     runtimeOnly("io.micrometer:micrometer-core")
     runtimeOnly("io.micrometer:micrometer-observation")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.27.0")
-    implementation("org.commonmark:commonmark:0.27.0")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.27.1")
+    implementation("org.commonmark:commonmark:0.27.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-scripting-common")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
@@ -81,7 +84,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webclient")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("software.amazon.awssdk:s3:2.41.1")
+    implementation("software.amazon.awssdk:s3:2.41.19")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -101,14 +104,16 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
-    buildpacks = listOf("docker.io/paketobuildpacks/adoptium", "urn:cnb:builder:paketo-buildpacks/java")
-    builder = "paketobuildpacks/builder-jammy-base"
+    builder = "paketobuildpacks/builder-jammy-tiny:latest"
+
+    // FIXME: if you find a way to do this automatically, that would be nice :)
+    val jlinkModules = "java.base,java.desktop,java.instrument,java.net.http,java.prefs,java.rmi,java.scripting,java.security.jgss,java.sql.rowset,jdk.compiler,jdk.jfr,jdk.management,jdk.net,jdk.unsupported,jdk.charsets"
     environment = mapOf(
-        "BP_NATIVE_IMAGE" to "false",
-        "CDS_TRAINING_JAVA_TOOL_OPTIONS" to "-Dspring.profiles.include=prewarm",
-        "BP_JVM_CDS_ENABLED" to "true",
-        "BPL_JVM_CDS_ENABLED" to "true",
-        "BPL_JVM_THREAD_COUNT" to "25"
+        "BP_JVM_JLINK_ENABLED" to "true",
+        "BP_JVM_JLINK_ARGS" to "--no-man-pages --no-header-files --strip-debug --compress=1 --add-modules $jlinkModules",
+        "BPL_JVM_THREAD_COUNT" to "10",
+        "BP_JVM_VERSION" to "25",
+        "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8",
     )
 }
 
