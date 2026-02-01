@@ -104,16 +104,26 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
-    builder = "paketobuildpacks/builder-jammy-tiny:latest"
+    builder = "bellsoft/buildpacks.builder:musl"
 
-    // FIXME: if you find a way to do this automatically, that would be nice :)
-    val jlinkModules = "java.base,java.desktop,java.instrument,java.net.http,java.prefs,java.rmi,java.scripting,java.security.jgss,java.sql.rowset,jdk.compiler,jdk.jfr,jdk.management,jdk.net,jdk.unsupported,jdk.charsets"
     environment = mapOf(
-        "BP_JVM_JLINK_ENABLED" to "true",
-        "BP_JVM_JLINK_ARGS" to "--no-man-pages --no-header-files --strip-debug --compress=1 --add-modules $jlinkModules",
-        "BPL_JVM_THREAD_COUNT" to "10",
+        "BP_NATIVE_IMAGE" to "false",
+        "BP_JVM_AOTCACHE_ENABLED" to "true",
+        "BP_SPRING_AOT_ENABLED" to "false",
         "BP_JVM_VERSION" to "25",
-        "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8",
+
+        "LC_ALL" to "en_US.UTF-8",
+        "BPE_LC_ALL" to "en_US.UTF-8",
+
+        "BPE_BPL_JVM_THREAD_COUNT" to "50",
+        "BPE_BPL_JVM_HEAD_ROOM" to "5",
+        "BPE_BPL_JVM_LOADED_CLASS_COUNT" to "38000",
+
+        "TRAINING_RUN_JAVA_TOOL_OPTIONS" to "-XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders -Dspring.profiles.active=prewarm",
+
+        "BPE_PREPEND_JAVA_TOOL_OPTIONS" to "-XX:+UseSerialGC -XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders",
+        "BPE_DELIM_JAVA_TOOL_OPTIONS" to " ",
+        "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-XX:ReservedCodeCacheSize=30M -Xss200K -Xlog:cds=info -Xlog:aot=info -Xlog:class+path=info -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8",
     )
 }
 
