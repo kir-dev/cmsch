@@ -103,7 +103,7 @@ class ScriptingContext(
 @Suppress("UNCHECKED_CAST")
 class ModifyingScriptingDbContext(private val supportedRepos: List<CrudRepository<*, *>>, private val readOnly: Boolean) {
 
-    fun <T : Any, ID, R : CrudRepository<T, ID>> repository(selectedRepo: KClass<out R>): R {
+    fun <T : Any, ID : Any, R : CrudRepository<T, ID>> repository(selectedRepo: KClass<out R>): R {
         if (readOnly)
             error("modifyingDb cannot be used in a read-only context")
 

@@ -1,4 +1,4 @@
-FROM gradle:jdk24 as build
+FROM gradle:jdk25 as build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle clean assemble bootJar
@@ -14,5 +14,5 @@ RUN rm cmsch.jar
 WORKDIR /opt/cmsch/application
 RUN java "-Dspring.profiles.include=prewarm" "-XX:ArchiveClassesAtExit=application.jsa" "-XX:+UnlockExperimentalVMOptions" "-XX:+UseContainerSupport" "-XX:+UseSerialGC" "-XX:MaxRAMPercentage=90" "-Dspring.context.exit=onRefresh" -jar cmsch.jar
 
-ENTRYPOINT ["java", "-Dspring.profiles.include=docker", "-XX:SharedArchiveFile=application.jsa", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:+UseSerialGC", "-XX:MaxRAMPercentage=90", "-jar", "/opt/cmsch/application/cmsch.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.include=docker", "-XX:SharedArchiveFile=application.jsa", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=70", "-jar", "/opt/cmsch/application/cmsch.jar"]
 EXPOSE 80
