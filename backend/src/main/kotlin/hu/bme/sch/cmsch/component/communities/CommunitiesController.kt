@@ -7,7 +7,6 @@ import hu.bme.sch.cmsch.admin.dashboard.DashboardPermissionCard
 import hu.bme.sch.cmsch.component.form.FormElement
 import hu.bme.sch.cmsch.component.form.FormElementType
 import hu.bme.sch.cmsch.controller.admin.ControlAction
-import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.*
@@ -19,15 +18,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.transaction.TransactionDefinition
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import kotlin.jvm.optionals.getOrNull
 
 @Controller
@@ -106,6 +102,8 @@ class CommunitiesController(
         wide = false
     )
 
+    private val reader = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
+
     @GetMapping("/tinder/show/{id}")
     fun showTinderAnswers(@PathVariable id: Int, model: Model, auth: Authentication): String {
         val user = auth.getUser()
@@ -155,6 +153,7 @@ class CommunitiesController(
 
 
     @PostMapping("/tinder/edit/{id}/")
+    @Transactional
     fun editTinderAnswers(@PathVariable id: Int, @RequestParam params: Map<String, String>, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -165,16 +164,14 @@ class CommunitiesController(
             return "admin403"
         }
 
-        val questions = transactionManager.transaction(readOnly = true) { tinderService.getAllQuestions() }
-        val community = transactionManager.transaction(readOnly = true) { dataSource.findById(id).getOrNull() }
+        val questions = tinderService.getAllQuestions()
+        val community = dataSource.findById(id).getOrNull()
             ?: return "redirect:/admin/control/community"
-        val prevAnswer = transactionManager.transaction(readOnly = true) { tinderService.ensureCommunityAnswer(community) }
+        val prevAnswer = tinderService.ensureCommunityAnswer(community)
 
         val answer = mutableMapOf<Int, String>()
-        objectMapper.readerFor(object : TypeReference<Map<Int, String>>() {})
-            .readValue<Map<Int, String>>(prevAnswer.answers)
-            .entries
-            .forEach {
+        reader.readValue<Map<Int, String>>(prevAnswer.answers)
+            .entries.forEach {
                 answer[it.key] = it.value
             }
         for (question in questions) {
@@ -189,9 +186,7 @@ class CommunitiesController(
         prevAnswer.answers = objectMapper.writeValueAsString(answer)
 
         auditLog.edit(user, component.component, "$prevAnswer answers: $answer")
-        transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_SERIALIZABLE) {
-            tinderService.updateCommunityAnswer(prevAnswer)
-        }
+        tinderService.updateCommunityAnswer(prevAnswer)
         return "redirect:/admin/control/$view"
     }
 
@@ -224,8 +219,7 @@ class CommunitiesController(
     private fun getTinderEditComponent(communityId: Int): DashboardComponent {
         val answerEntity = transactionManager.transaction(readOnly = true) { tinderService.getAnswerForCommunity(communityId).getOrNull() }
             .let {
-                objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
-                    .readValue<Map<Int, String>>(it?.answers)
+                reader.readValue<Map<Int, String>>(it?.answers)
             }
             ?: return DashboardFormCard(
                 id = 3,
@@ -292,8 +286,7 @@ class CommunitiesController(
     private fun getTinderShowComponent(communityId: Int): DashboardComponent {
         val answerEntity = transactionManager.transaction(readOnly = true) { tinderService.getAnswerForCommunity(communityId).getOrNull() }
             .let {
-                objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
-                    .readValue<Map<Int, String>>(it?.answers)
+                reader.readValue<Map<Int, String>>(it?.answers)
             }
             ?: return DashboardFormCard(
                 id = 3,

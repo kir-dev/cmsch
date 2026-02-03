@@ -23,6 +23,11 @@ enum class TinderStatus{
     DISLIKED
 }
 
+data class TinderInteractionDto(
+    var communityId: Int = 0,
+    var liked: Boolean = true
+)
+
 data class CommunitiesTinderDto(
     var id: Int = 0,
     var name: String = "",
