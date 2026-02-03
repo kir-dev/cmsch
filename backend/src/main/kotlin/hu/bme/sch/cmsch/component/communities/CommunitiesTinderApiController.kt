@@ -29,7 +29,7 @@ class CommunitiesTinderApiController(
     fun submitAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
         tinderService.submitAnswers(false, user, answers)
         return ResponseEntity.ok().build()
@@ -39,7 +39,7 @@ class CommunitiesTinderApiController(
     fun updateAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
         tinderService.submitAnswers(true, user, answers)
         return ResponseEntity.ok().build()

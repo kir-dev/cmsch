@@ -65,28 +65,27 @@ class TinderService(
     }
 
     fun getTinderCommunities(user: UserEntity): List<CommunitiesTinderDto> {
-        val communities = communityRepository.findAll()
+        val reader = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
+        val communities = communityRepository.findAll().toList()
         val answerList = answerRepository.findAllWithCommunityIdNotNull()
         val answers = mutableMapOf<Int, Map<Int, String>>()
         for (answer in answerList) {
-            val ansMap = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
-                .readValue<Map<Int, String>>(answer.answers)
+            val ansMap = reader.readValue<Map<Int, String>>(answer.answers)
             answers[answer.communityId!!] = ansMap
         }
-        val userAnswer = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
-            .readValue<Map<Int, String>>(
-                answerRepository.findByUserId(user.id)
-                    .orElseThrow { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User has not answered the questions") }
-                    .answers
-            )
+        val userAnswer = reader.readValue<Map<Int, String>>(
+            answerRepository.findByUserId(user.id)
+                .orElseThrow { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User has not answered the questions") }
+                .answers
+        )
         val userInteractions = tinderInteractionRepository.findByUserId(user.id).associateBy { it.communityId }
 
         val communityProfiles = communities.map { CommunitiesTinderDto(
             id = it.id,
             name = it.name,
-            matchedAnswers = answers[it.id]!!.entries.count { ans ->
+            matchedAnswers = answers[it.id]?.entries?.count { ans ->
                 userAnswer[ans.key] == ans.value
-            },
+            } ?: 0,
             status = userInteractions[it.id]?.let { interaction ->
                 when (interaction.liked) {
                     true -> TinderStatus.LIKED
@@ -104,7 +103,7 @@ class TinderService(
             instagram = it.instagram,
             application = it.application,
             resortName = it.resortName,
-            tinderAnswers = answers[it.id]!!.values.toList()
+            tinderAnswers = answers[it.id]?.values?.toList() ?: emptyList()
         ) }
         return communityProfiles
     }

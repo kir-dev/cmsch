@@ -96,6 +96,9 @@ class CommunitiesController(
     ),
 ){
 
+    private val showDesc = "Tinder válaszok megtekintése"
+    private val editDesc = "Tinder válaszok szerkesztése"
+
     private val permissionCard = DashboardPermissionCard(
         id = 1,
         permission = showPermission.permissionString,
@@ -114,7 +117,7 @@ class CommunitiesController(
             return "admin403"
         }
 
-        model.addAttribute("title", "Tinder válaszok megtekintése")
+        model.addAttribute("title", showDesc)
         model.addAttribute("description", "Körhöz tartozó tinder válaszok megtekintése")
         model.addAttribute("view", "community/tinder/show/$id")
         model.addAttribute("user", user)
@@ -138,7 +141,7 @@ class CommunitiesController(
             return "admin403"
         }
 
-        model.addAttribute("title", "Tinder válaszok szerkesztése")
+        model.addAttribute("title", editDesc)
         model.addAttribute("description", "Körhöz tartozó tinder válaszok szerkesztése")
         model.addAttribute("view", "community/tinder/edit/$id")
         model.addAttribute("user", user)
@@ -251,7 +254,7 @@ class CommunitiesController(
         return DashboardFormCard(
             id = 3,
             wide = false,
-            title = "Tinder válaszok megtekintése",
+            title = editDesc,
             content = formElements,
             buttonCaption = "Mentés",
             method = "post",
@@ -318,7 +321,7 @@ class CommunitiesController(
         return DashboardFormCard(
             id = 3,
             wide = false,
-            title = "Tinder válaszok megtekintése",
+            title = showDesc,
             content = formElements,
             buttonCaption = "",
             method = "",
