@@ -14,14 +14,11 @@ import hu.bme.sch.cmsch.util.getUser
 import hu.bme.sch.cmsch.util.transaction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
-import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.ObjectMapper
 import kotlin.jvm.optionals.getOrNull
@@ -153,7 +150,6 @@ class CommunitiesController(
 
 
     @PostMapping("/tinder/edit/{id}/")
-    @Transactional
     fun editTinderAnswers(@PathVariable id: Int, @RequestParam params: Map<String, String>, model: Model, auth: Authentication): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
@@ -164,30 +160,7 @@ class CommunitiesController(
             return "admin403"
         }
 
-        val questions = tinderService.getAllQuestions()
-        val community = dataSource.findById(id).getOrNull()
-            ?: return "redirect:/admin/control/community"
-        val prevAnswer = tinderService.ensureCommunityAnswer(community)
-
-        val answer = mutableMapOf<Int, String>()
-        reader.readValue<Map<Int, String>>(prevAnswer.answers)
-            .entries.forEach {
-                answer[it.key] = it.value
-            }
-        for (question in questions) {
-            val ans = params["question_${question.id}"] ?: continue
-            val options = question.answerOptions.split(',').map { it.trim() }
-            if (options.contains(ans)) {
-                answer[question.id] = ans
-            } else if (ans != "") {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Hibás válaszlehetőség: $ans")
-            }
-        }
-        prevAnswer.answers = objectMapper.writeValueAsString(answer)
-
-        auditLog.edit(user, component.component, "$prevAnswer answers: $answer")
-        tinderService.updateCommunityAnswer(prevAnswer)
-        return "redirect:/admin/control/$view"
+        return tinderService.updateCommunityAnswer(user, id, params)
     }
 
 

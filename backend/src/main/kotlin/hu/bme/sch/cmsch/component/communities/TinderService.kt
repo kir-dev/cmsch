@@ -1,14 +1,18 @@
 package hu.bme.sch.cmsch.component.communities
 
+import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.AuditLogService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.ObjectMapper
 import kotlin.collections.set
 import kotlin.jvm.optionals.getOrElse
+import kotlin.jvm.optionals.getOrNull
 
 
 @Service
@@ -18,6 +22,7 @@ class TinderService(
     private val questionRepository: TinderQuestionRepository,
     private val answerRepository: TinderAnswerRepository,
     private val objectMapper: ObjectMapper,
+    private val auditLog: AuditLogService,
     private val tinderInteractionRepository: TinderInteractionRepository
 ) {
 
@@ -129,8 +134,34 @@ class TinderService(
         }
     }
 
-    fun updateCommunityAnswer(answer: TinderAnswerEntity) {
-        answerRepository.save(answer)
+    @Transactional
+    fun updateCommunityAnswer(user: CmschUser, communityId: Int, data: Map<String, String>): String {
+        val questions = getAllQuestions()
+        val community = communityRepository.findById(communityId).getOrNull()
+            ?: return "redirect:/admin/control/community"
+        val prevAnswer = ensureCommunityAnswer(community)
+
+        val answer = mutableMapOf<Int, String>()
+        reader.readValue<Map<Int, String>>(prevAnswer.answers)
+            .entries.forEach {
+                answer[it.key] = it.value
+            }
+        for (question in questions) {
+            val ans = data["question_${question.id}"] ?: continue
+            val options = question.answerOptions.split(',').map { it.trim() }
+            if (options.contains(ans)) {
+                answer[question.id] = ans
+            } else if (ans != "") {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Hibás válaszlehetőség: $ans")
+            }
+        }
+        prevAnswer.answers = objectMapper.writeValueAsString(answer)
+
+        auditLog.edit(user, "communities", "$prevAnswer answers: $answer")
+
+        answerRepository.save(prevAnswer)
+
+        return "redirect:/admin/control/community"
     }
 
     fun interactWithCommunity(user: UserEntity, interaction: TinderInteractionDto) {
