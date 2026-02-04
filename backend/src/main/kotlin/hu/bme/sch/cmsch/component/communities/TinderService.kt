@@ -28,10 +28,13 @@ class TinderService(
 
     private val reader = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
 
+    @Transactional(readOnly = true)
     fun getAllQuestions() = questionRepository.findAll().toList()
 
+    @Transactional(readOnly = true)
     fun getAnswerForCommunity(communityId: Int) = answerRepository.findByCommunityId(communityId)
 
+    @Transactional
     fun submitAnswers(update: Boolean, user: UserEntity, answers: TinderAnswerDto) {
         val questions = questionRepository.findAll().associateBy { it.id }
         for (answer in answers.answers) {
@@ -79,6 +82,7 @@ class TinderService(
         }
     }
 
+    @Transactional(readOnly = true)
     fun getTinderCommunities(user: UserEntity): List<CommunitiesTinderDto> {
         val communities = communityRepository.findAll().toList()
         val answerList = answerRepository.findAllWithCommunityIdNotNull()
@@ -122,6 +126,7 @@ class TinderService(
         return communityProfiles
     }
 
+    @Transactional
     fun ensureCommunityAnswer(community: CommunityEntity): TinderAnswerEntity {
         val existing = answerRepository.findByCommunityId(community.id)
         return existing.getOrElse {
@@ -164,6 +169,7 @@ class TinderService(
         return "redirect:/admin/control/community"
     }
 
+    @Transactional
     fun interactWithCommunity(user: UserEntity, interaction: TinderInteractionDto) {
         val community = communityRepository.findById(interaction.communityId).orElseThrow {
             ResponseStatusException(HttpStatus.BAD_REQUEST, "Community not found: ${interaction.communityId}")
