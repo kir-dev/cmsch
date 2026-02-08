@@ -1,5 +1,5 @@
 import { Avatar, HStack, Text, useColorModeValue, VStack, WrapItem } from '@chakra-ui/react'
-import { Organizer } from '../../../api/contexts/config/types'
+import type { Organizer } from '../../../api/contexts/config/types'
 
 type Props = {
   organizer: Organizer

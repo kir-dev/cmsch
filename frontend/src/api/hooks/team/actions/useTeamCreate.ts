@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { CreateTeamDto, TeamResponses } from '../../../../util/views/team.view'
+import { type CreateTeamDto, TeamResponses } from '../../../../util/views/team.view'
 
 export const useTeamCreate = (onResponse: (response: TeamResponses) => void) => {
   const [loading, setLoading] = useState(false)

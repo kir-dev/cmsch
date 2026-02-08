@@ -1,6 +1,5 @@
 import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Text, VStack } from '@chakra-ui/react'
 import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { Navigate, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -12,7 +11,7 @@ import Markdown from '../../common-components/Markdown'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths.ts'
 import { RoleType, RoleTypeString } from '../../util/views/profile.view'
-import { TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
+import { type TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
 import { FilePicker } from '../task/components/FilePicker'
 
 export default function EditMyTeamPage() {
@@ -38,13 +37,16 @@ export default function EditMyTeamPage() {
     }
   })
   const component = config?.components?.team
+  const app = config?.components?.app
   const isPrivileged = RoleType[config?.role ?? RoleTypeString.GUEST] >= RoleType.PRIVILEGED
   if (!component || !isPrivileged) return <ComponentUnavailable />
   if (!component.teamEditEnabled) return <Navigate to="/" replace />
 
   return (
     <CmschPage>
-      <Helmet title={component.teamEditTitle} />
+      <title>
+        {app?.siteName || 'CMSch'} | {component.teamEditTitle}
+      </title>
       <Heading>{component.teamEditTitle}</Heading>
       <Markdown text={component.teamEditTopMessage} />
       <Alert status="info" my={5}>

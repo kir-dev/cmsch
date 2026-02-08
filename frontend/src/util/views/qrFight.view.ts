@@ -39,10 +39,11 @@ export type Totem = {
   owner?: string
 }
 
-export enum LevelStatus {
-  NOT_LOGGED_IN = 'NOT_LOGGED_IN',
-  NOT_ENABLED = 'NOT_ENABLED',
-  NOT_UNLOCKED = 'NOT_UNLOCKED',
-  OPEN = 'OPEN',
-  COMPLETED = 'COMPLETED'
-}
+export const LevelStatus = {
+  NOT_LOGGED_IN: 'NOT_LOGGED_IN',
+  NOT_ENABLED: 'NOT_ENABLED',
+  NOT_UNLOCKED: 'NOT_UNLOCKED',
+  OPEN: 'OPEN',
+  COMPLETED: 'COMPLETED'
+} as const
+export type LevelStatus = (typeof LevelStatus)[keyof typeof LevelStatus]

@@ -12,10 +12,10 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { type SubmitEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useAccessKeyMutation } from '../../api/hooks/access-key/useAccessKeyMutation'
 import { useAccessKey } from '../../api/hooks/access-key/useAccessKeyQuery'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
@@ -25,7 +25,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { AccessKeyResponse } from '../../util/views/accessKey'
+import type { AccessKeyResponse } from '../../util/views/accessKey'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()
@@ -35,6 +35,7 @@ function AccessKeyPage() {
   const toast = useToast()
   const navigate = useNavigate()
   const brandColor = useBrandColor()
+  const appComponent = useConfigContext()?.components?.app
 
   const onData = async (response: AccessKeyResponse) => {
     if (response.success) {
@@ -55,7 +56,7 @@ function AccessKeyPage() {
   const mutation = useAccessKeyMutation(onData, onError)
   const query = useAccessKey()
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (value) {
       mutation.mutate({ key: value })
@@ -70,7 +71,9 @@ function AccessKeyPage() {
 
   return (
     <CmschPage>
-      <Helmet title={query.data.title} />
+      <title>
+        {appComponent?.siteName || 'CMSch'} | {query.data.title}
+      </title>
       <Heading as="h1" variant="main-title">
         {query.data.title}
       </Heading>

@@ -4,7 +4,7 @@ import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { EventIndicator } from '../../../common-components/EventIndicator'
 import { isCurrentEvent, isUpcomingEvent, stringifyTimeRange } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import { EventListView } from '../../../util/views/event.view'
+import type { EventListView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 
 interface EventListItemProps {

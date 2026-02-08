@@ -27,12 +27,13 @@ export interface RiddleCategory {
   nextRiddles: Riddle[]
 }
 
-export enum RiddleSubmissionStatus {
-  CORRECT = 'CORRECT',
-  WRONG = 'WRONG',
-  CANNOT_SKIP = 'CANNOT_SKIP',
-  SUBMITTER_BANNED = 'SUBMITTER_BANNED'
-}
+export const RiddleSubmissionStatus = {
+  CORRECT: 'CORRECT',
+  WRONG: 'WRONG',
+  CANNOT_SKIP: 'CANNOT_SKIP',
+  SUBMITTER_BANNED: 'SUBMITTER_BANNED'
+} as const
+export type RiddleSubmissionStatus = (typeof RiddleSubmissionStatus)[keyof typeof RiddleSubmissionStatus]
 
 export interface RiddleSubmissionResult {
   status: RiddleSubmissionStatus

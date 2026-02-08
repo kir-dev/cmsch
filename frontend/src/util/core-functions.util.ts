@@ -9,7 +9,7 @@ export const TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
   day: '2-digit',
   hour: '2-digit',
   minute: '2-digit'
-}
+} as const
 
 export const DETAILED_TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
   month: 'short',
@@ -17,18 +17,18 @@ export const DETAILED_TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
   hour: '2-digit',
   minute: '2-digit',
   weekday: 'long'
-}
+} as const
 
 export const GROUP_BY_DAY_OPTIONS: Intl.DateTimeFormatOptions = {
   month: 'short',
   day: '2-digit',
   weekday: 'long'
-}
+} as const
 
 export const HOUR_AND_MIN_OPTIONS: Intl.DateTimeFormatOptions = {
   hour: '2-digit',
   minute: '2-digit'
-}
+} as const
 
 export const stringifyTimeStamp = (timeStamp: number, options: Intl.DateTimeFormatOptions = TIMESTAMP_OPTIONS): string => {
   return new Date(timeStamp * 1000).toLocaleString('hu-HU', options)

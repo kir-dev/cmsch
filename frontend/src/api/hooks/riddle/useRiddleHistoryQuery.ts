@@ -3,7 +3,7 @@ import axios from 'axios'
 import { NEW_RIDDLE_ENDPOINTS } from '../../../util/configs/environment.config'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
-import { RiddleCategoryHistory } from '../../../util/views/riddle.view'
+import type { RiddleCategoryHistory } from '../../../util/views/riddle.view'
 import { QueryKeys } from '../queryKeys.ts'
 
 export const useRiddleHistoryQuery = () => {

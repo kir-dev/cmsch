@@ -1,4 +1,4 @@
-import { ProfileView } from '../../../util/views/profile.view'
+import type { ProfileView } from '../../../util/views/profile.view'
 
 const percent = (dividend: number, divisor: number) => (divisor != 0 ? (dividend / divisor) * 100 : 0)
 

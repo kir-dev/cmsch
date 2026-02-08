@@ -1,4 +1,4 @@
-import { HStack, SpaceProps, Tag } from '@chakra-ui/react'
+import { HStack, type SpaceProps, Tag } from '@chakra-ui/react'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
 
 interface EventTagsProps {

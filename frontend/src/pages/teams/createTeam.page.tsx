@@ -1,6 +1,5 @@
 import { Button, FormControl, FormLabel, Heading, HStack, Input, Text, VStack } from '@chakra-ui/react'
 import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { Navigate, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -11,7 +10,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths.ts'
-import { CreateTeamDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
+import { type CreateTeamDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
 
 export default function CreateTeamPage() {
   const navigate = useNavigate()
@@ -35,12 +34,15 @@ export default function CreateTeamPage() {
     }
   })
   const component = config?.components?.team
+  const app = config?.components?.app
   if (!component) return <ComponentUnavailable />
   if (!component.creationEnabled) return <Navigate to="/" replace />
 
   return (
     <CmschPage>
-      <Helmet title={component.createTitle} />
+      <title>
+        {app?.siteName || 'CMSch'} | {component.createTitle}
+      </title>
       <Heading>{component.createTitle}</Heading>
       <Markdown text={component.teamCreationTopMessage} />
       <form onSubmit={handleSubmit(createTeam)}>

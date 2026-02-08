@@ -1,14 +1,14 @@
 import { Divider, Flex, Heading } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { Helmet } from 'react-helmet-async'
-import { Race } from '../../../api/contexts/config/types'
+import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
+import type { Race } from '../../../api/contexts/config/types'
 import { BoardStat } from '../../../common-components/BoardStat'
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
 import { LeaderBoardTable } from '../../../common-components/LeaderboardTable'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
-import { RaceView } from '../../../util/views/race.view'
+import type { RaceView } from '../../../util/views/race.view'
 
 type Props = {
   data: RaceView | undefined
@@ -19,13 +19,16 @@ type Props = {
 
 const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
   const showDescription = useMemo(() => data?.board.some((i) => !!i.description), [data?.board])
+  const appComponent = useConfigContext()?.components?.app
 
   if (!component || !component.visible) return <ComponentUnavailable />
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
     <CmschPage>
-      <Helmet title={data.categoryName} />
+      <title>
+        {appComponent?.siteName || 'CMSch'} | {data.categoryName}
+      </title>
       <Heading as="h1" variant="main-title" mb={3}>
         {data.categoryName}
       </Heading>

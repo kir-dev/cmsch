@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Box, Heading, HStack, Image, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { Link } from 'react-router'
-import { Organization } from '../../../util/views/organization'
+import type { Organization } from '../../../util/views/organization'
 
 type CardListItemProps = {
   data: Organization

@@ -1,6 +1,5 @@
 import { Box, Checkbox, Heading, Text } from '@chakra-ui/react'
 import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useLocationQuery } from '../../api/hooks/location/useLocationQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -11,11 +10,15 @@ import { l } from '../../util/language'
 export default function MapPage() {
   const [showUserLocation, setShowUserLocation] = useState(false)
   const locationQuery = useLocationQuery()
-  const component = useConfigContext()?.components?.location
+  const config = useConfigContext()?.components
+  const component = config?.location
+  const app = config?.app
 
   return (
     <CmschPage>
-      <Helmet>Térkép</Helmet>
+      <title>
+        {app?.siteName || 'CMSch'} | {component?.title || 'Térkép'}
+      </title>
       <Heading as="h1" variant="main-title">
         Térkép
       </Heading>

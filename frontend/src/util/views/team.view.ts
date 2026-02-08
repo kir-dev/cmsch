@@ -1,4 +1,4 @@
-import { TaskCategoryPreview } from './task.view'
+import type { TaskCategoryPreview } from './task.view'
 
 export type TeamDashboardView = {
   memberCount: number
@@ -22,10 +22,11 @@ export type OptionalTeamView = {
   team?: TeamView
 }
 
-export enum TeamStatus {
-  PLAYING = 'PLAYING',
-  NOT_VISIBLE = 'NOT_VISIBLE'
-}
+export const TeamStatus = {
+  PLAYING: 'PLAYING',
+  NOT_VISIBLE: 'NOT_VISIBLE'
+} as const
+export type TeamStatus = (typeof TeamStatus)[keyof typeof TeamStatus]
 
 export type TeamView = {
   coverUrl: string
@@ -84,20 +85,21 @@ export type TeamFormView = {
   url: string
 }
 
-export enum TeamResponses {
-  ALREADY_IN_GROUP = 'ALREADY_IN_GROUP',
-  JOINING_DISABLED = 'JOINING_DISABLED',
-  NOT_JOINABLE = 'NOT_JOINABLE',
-  ALREADY_SUBMITTED_JOIN_REQUEST = 'ALREADY_SUBMITTED_JOIN_REQUEST',
-  OK = 'OK',
-  INVALID_NAME = 'INVALID_NAME',
-  USED_NAME = 'USED_NAME',
-  CREATION_DISABLED = 'CREATION_DISABLED',
-  INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
-  OK_RELOG_REQUIRED = 'OK_RELOG_REQUIRED',
-  LEAVE_DISABLED = 'LEAVE_DISABLED',
-  ERROR = 'ERROR'
-}
+export const TeamResponses = {
+  ALREADY_IN_GROUP: 'ALREADY_IN_GROUP',
+  JOINING_DISABLED: 'JOINING_DISABLED',
+  NOT_JOINABLE: 'NOT_JOINABLE',
+  ALREADY_SUBMITTED_JOIN_REQUEST: 'ALREADY_SUBMITTED_JOIN_REQUEST',
+  OK: 'OK',
+  INVALID_NAME: 'INVALID_NAME',
+  USED_NAME: 'USED_NAME',
+  CREATION_DISABLED: 'CREATION_DISABLED',
+  INSUFFICIENT_PERMISSIONS: 'INSUFFICIENT_PERMISSIONS',
+  OK_RELOG_REQUIRED: 'OK_RELOG_REQUIRED',
+  LEAVE_DISABLED: 'LEAVE_DISABLED',
+  ERROR: 'ERROR'
+} as const
+export type TeamResponses = (typeof TeamResponses)[keyof typeof TeamResponses]
 
 export const TeamResponseMessages: Record<TeamResponses, string> = {
   [TeamResponses.OK]: 'Sikeres művelet!',
@@ -112,7 +114,7 @@ export const TeamResponseMessages: Record<TeamResponses, string> = {
   [TeamResponses.OK_RELOG_REQUIRED]: 'Sikeres, újbóli bejelentkezés szükséges.',
   [TeamResponses.LEAVE_DISABLED]: 'Távozás letiltva.',
   [TeamResponses.ERROR]: 'Sikertelen művelet!'
-}
+} as const
 
 export interface CreateTeamDto {
   name: string

@@ -1,6 +1,6 @@
 import { Box, CloseButton, Flex, Heading, Text } from '@chakra-ui/react'
 import { forwardRef } from 'react'
-import { GroupMemberLocationView } from '../../../util/views/groupMemberLocation.view'
+import type { GroupMemberLocationView } from '../../../util/views/groupMemberLocation.view'
 import { timestampToTimePassedStr } from '../util/timestampToTimePassedStr'
 
 type PopupProps = {

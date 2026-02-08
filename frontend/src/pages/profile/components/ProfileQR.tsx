@@ -13,10 +13,10 @@ import {
 } from '@chakra-ui/react'
 import { FaQrcode } from 'react-icons/fa'
 import QRCode from 'react-qr-code'
-import { Profile } from '../../../api/contexts/config/types'
+import type { Profile } from '../../../api/contexts/config/types'
 import { WalletButton } from '../../../common-components/WalletButton'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
-import { ProfileView } from '../../../util/views/profile.view'
+import type { ProfileView } from '../../../util/views/profile.view'
 
 export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()

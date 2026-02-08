@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Flex, HStack, Text } from '@chakra-ui/react'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
-import { RiddleCategory } from '../../../util/views/riddle.view'
+import type { RiddleCategory } from '../../../util/views/riddle.view'
 
 interface RiddleCategoryListItemProps {
   category: RiddleCategory

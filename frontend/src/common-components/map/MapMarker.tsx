@@ -1,5 +1,5 @@
-import { Box, BoxProps, Center, Text, useColorModeValue, VStack } from '@chakra-ui/react'
-import { FunctionComponent } from 'react'
+import { Box, type BoxProps, Center, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import type { FunctionComponent } from 'react'
 import { getTextColorFromLuminance } from '../../util/color.utils'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { MapMarkerIcons, MapMarkerShape } from '../../util/views/map.view'

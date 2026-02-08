@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react'
 import deepmerge from 'deepmerge'
 import * as React from 'react'
-import { Components } from 'react-markdown'
+import type { Components } from 'react-markdown'
 
 type GetCoreProps = {
   children?: React.ReactNode
@@ -171,7 +171,7 @@ export const defaults: Components = {
   tr: (props) => <Tr>{props.children}</Tr>,
   td: (props) => <Td>{props.children}</Td>,
   th: (props) => <Th>{props.children}</Th>
-}
+} as const
 
 function ChakraUIRenderer(theme?: Components, merge = true): Components {
   const elements = {

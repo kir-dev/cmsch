@@ -1,5 +1,5 @@
 import { Box, Tooltip } from '@chakra-ui/react'
-import { ColorInstance } from 'color'
+import type { ColorInstance } from 'color'
 import { useAltColor, useColor } from '../../../util/color.utils.ts'
 
 const TeamLabel = ({ name, color, desc }: { name: string; color?: string; desc?: string }) => {

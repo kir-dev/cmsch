@@ -1,10 +1,11 @@
 import { RoleTypeString } from './profile.view.ts'
 
-export enum AuthState {
-  EXPIRED = 'EXPIRED',
-  LOGGED_IN = 'LOGGED_IN',
-  LOGGED_OUT = 'LOGGED_OUT'
-}
+export const AuthState = {
+  EXPIRED: 'EXPIRED',
+  LOGGED_IN: 'LOGGED_IN',
+  LOGGED_OUT: 'LOGGED_OUT'
+} as const
+export type AuthState = (typeof AuthState)[keyof typeof AuthState]
 
 export type UserAuthInfoView = {
   authState: AuthState

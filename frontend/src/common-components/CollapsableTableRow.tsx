@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import TeamLabel from '../pages/teams/components/TeamLabel.tsx'
 import { joinPath, useOpaqueBackground } from '../util/core-functions.util'
 import { AbsolutePaths } from '../util/paths'
-import { LeaderBoardItemView } from '../util/views/leaderBoardView'
+import type { LeaderBoardItemView } from '../util/views/leaderBoardView'
 import { TokenRarityDisplay } from './TokenRarityDisplay.tsx'
 
 type CollapsableTableRowProps = {
