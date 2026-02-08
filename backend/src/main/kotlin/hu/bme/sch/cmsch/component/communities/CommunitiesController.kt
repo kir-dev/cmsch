@@ -53,9 +53,9 @@ class CommunitiesController(
     objectMapper,
     env,
 
-    showPermission =   StaffPermissions.PERMISSION_SHOW_COMMUNITIES,
+    showPermission = StaffPermissions.PERMISSION_SHOW_COMMUNITIES,
     createPermission = StaffPermissions.PERMISSION_CREATE_COMMUNITIES,
-    editPermission =   StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
+    editPermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
     deletePermission = StaffPermissions.PERMISSION_DELETE_COMMUNITIES,
 
     createEnabled = true,
@@ -87,7 +87,7 @@ class CommunitiesController(
             usageString = "Tinder válaszok szerkesztése",
         )
     ),
-){
+) {
 
     private val showDesc = "Tinder válaszok megtekintése"
     private val editDesc = "Tinder válaszok szerkesztése"
@@ -99,7 +99,7 @@ class CommunitiesController(
         wide = false
     )
 
-    private val reader = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
+    private val reader = objectMapper.readerFor(object : TypeReference<Map<Int, String>>() {})
 
     @GetMapping("/tinder/show/{id}")
     fun showTinderAnswers(@PathVariable id: Int, model: Model, auth: Authentication): String {
@@ -150,7 +150,12 @@ class CommunitiesController(
 
 
     @PostMapping("/tinder/edit/{id}/")
-    fun editTinderAnswers(@PathVariable id: Int, @RequestParam params: Map<String, String>, model: Model, auth: Authentication): String {
+    fun editTinderAnswers(
+        @PathVariable id: Int,
+        @RequestParam params: Map<String, String>,
+        model: Model,
+        auth: Authentication
+    ): String {
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (editPermission.validate(user).not()) {
@@ -164,18 +169,19 @@ class CommunitiesController(
     }
 
 
-    private fun getTinderEditComponents(communityId: Int): List<DashboardComponent>{
-        val communityName = transactionManager.transaction(readOnly = true) { dataSource.findById(communityId).getOrNull()?.name }
-            ?: return listOf(
-                permissionCard,
-                DashboardCard(
-                    id = 2,
-                    wide = false,
-                    title = "Közösség nem található",
-                    description = "A megadott azonosítóval (id = $communityId) nincs közösség az adatbázisban.",
-                    content = listOf()
+    private fun getTinderEditComponents(communityId: Int): List<DashboardComponent> {
+        val communityName =
+            transactionManager.transaction(readOnly = true) { dataSource.findById(communityId).getOrNull()?.name }
+                ?: return listOf(
+                    permissionCard,
+                    DashboardCard(
+                        id = 2,
+                        wide = false,
+                        title = "Közösség nem található",
+                        description = "A megadott azonosítóval (id = $communityId) nincs közösség az adatbázisban.",
+                        content = listOf()
+                    )
                 )
-            )
         return listOf(
             permissionCard,
             DashboardCard(
@@ -190,7 +196,9 @@ class CommunitiesController(
     }
 
     private fun getTinderEditComponent(communityId: Int): DashboardComponent {
-        val answerEntity = transactionManager.transaction(readOnly = true) { tinderService.getAnswerForCommunity(communityId).getOrNull() }
+        val answerEntity = transactionManager.transaction(readOnly = true) {
+            tinderService.getAnswerForCommunity(communityId).getOrNull()
+        }
             .let {
                 reader.readValue<Map<Int, String>>(it?.answers)
             }
@@ -213,7 +221,7 @@ class CommunitiesController(
                 fieldName = "question_${question.id}",
                 label = question.question,
                 type = FormElementType.SELECT,
-                values = ","+question.answerOptions,
+                values = "," + question.answerOptions.split(',').joinToString(",") { it.trim() },
                 defaultValue = answerEntity[question.id] ?: ""
             ))
         }
@@ -231,18 +239,19 @@ class CommunitiesController(
     }
 
 
-    private fun getTinderShowComponents(communityId: Int): List<DashboardComponent>{
-        val communityName = transactionManager.transaction(readOnly = true) { dataSource.findById(communityId).getOrNull()?.name }
-            ?: return listOf(
-                permissionCard,
-                DashboardCard(
-                    id = 2,
-                    wide = false,
-                    title = "Közösség nem található",
-                    description = "A megadott azonosítóval (id = $communityId) nincs közösség az adatbázisban.",
-                    content = listOf()
+    private fun getTinderShowComponents(communityId: Int): List<DashboardComponent> {
+        val communityName =
+            transactionManager.transaction(readOnly = true) { dataSource.findById(communityId).getOrNull()?.name }
+                ?: return listOf(
+                    permissionCard,
+                    DashboardCard(
+                        id = 2,
+                        wide = false,
+                        title = "Közösség nem található",
+                        description = "A megadott azonosítóval (id = $communityId) nincs közösség az adatbázisban.",
+                        content = listOf()
+                    )
                 )
-            )
         return listOf(
             permissionCard,
             DashboardCard(
@@ -257,7 +266,9 @@ class CommunitiesController(
     }
 
     private fun getTinderShowComponent(communityId: Int): DashboardComponent {
-        val answerEntity = transactionManager.transaction(readOnly = true) { tinderService.getAnswerForCommunity(communityId).getOrNull() }
+        val answerEntity = transactionManager.transaction(readOnly = true) {
+            tinderService.getAnswerForCommunity(communityId).getOrNull()
+        }
             .let {
                 reader.readValue<Map<Int, String>>(it?.answers)
             }

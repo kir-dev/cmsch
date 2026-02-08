@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.ObjectMapper
-import kotlin.collections.set
 import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 
@@ -26,7 +25,7 @@ class TinderService(
     private val tinderInteractionRepository: TinderInteractionRepository
 ) {
 
-    private val reader = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
+    private val reader = objectMapper.readerFor(object : TypeReference<Map<Int, String>>() {})
 
     @Transactional(readOnly = true)
     fun getAllQuestions() = questionRepository.findAll().toList()
@@ -35,19 +34,19 @@ class TinderService(
     fun getAnswerForCommunity(communityId: Int) = answerRepository.findByCommunityId(communityId)
 
     @Transactional
-    fun submitAnswers(update: Boolean, user: UserEntity, answers: TinderAnswerDto) {
+    fun submitAnswers(update: Boolean, user: CmschUser, answers: TinderAnswerDto): TinderAnswerResponseStatus {
         val questions = questionRepository.findAll().associateBy { it.id }
         for (answer in answers.answers) {
             val question = questions[answer.key] ?: continue
-            if (answer.value!="" && !question.answerOptions.split(", *").contains(answer.value)) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong answer option: ${answer.value}")
+            if (answer.value != "" && !question.answerOptions.split(',').map { it.trim() }.contains(answer.value)) {
+                return TinderAnswerResponseStatus.INVALID_ANSWER
             }
         }
 
         val existing = answerRepository.findByUserId(user.id)
         if (!update) {
-            if (existing.isPresent){
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Answers already submitted")
+            if (existing.isPresent) {
+                return TinderAnswerResponseStatus.ERROR
             }
             val entity = TinderAnswerEntity(
                 userId = user.id,
@@ -80,6 +79,7 @@ class TinderService(
                 }
             )
         }
+        return TinderAnswerResponseStatus.OK
     }
 
     @Transactional(readOnly = true)
@@ -98,31 +98,33 @@ class TinderService(
         )
         val userInteractions = tinderInteractionRepository.findByUserId(user.id).associateBy { it.communityId }
 
-        val communityProfiles = communities.map { CommunitiesTinderDto(
-            id = it.id,
-            name = it.name,
-            matchedAnswers = answers[it.id]?.entries?.count { ans ->
-                userAnswer[ans.key] == ans.value
-            } ?: 0,
-            status = userInteractions[it.id]?.let { interaction ->
-                when (interaction.liked) {
-                    true -> TinderStatus.LIKED
-                    false -> TinderStatus.DISLIKED
-                }
-            } ?: TinderStatus.NOT_SEEN,
-            shortDescription = it.shortDescription,
-            descriptionParagraphs = it.descriptionParagraphs,
-            website = it.website,
-            logo = it.logo,
-            established = it.established,
-            email = it.email,
-            interests = it.interests.split(","),
-            facebook = it.facebook,
-            instagram = it.instagram,
-            application = it.application,
-            resortName = it.resortName,
-            tinderAnswers = answers[it.id]?.values?.toList() ?: emptyList()
-        ) }
+        val communityProfiles = communities.map {
+            CommunitiesTinderDto(
+                id = it.id,
+                name = it.name,
+                matchedAnswers = answers[it.id]?.entries?.count { ans ->
+                    userAnswer[ans.key] == ans.value
+                } ?: 0,
+                status = userInteractions[it.id]?.let { interaction ->
+                    when (interaction.liked) {
+                        true -> TinderStatus.LIKED
+                        false -> TinderStatus.DISLIKED
+                    }
+                } ?: TinderStatus.NOT_SEEN,
+                shortDescription = it.shortDescription,
+                descriptionParagraphs = it.descriptionParagraphs,
+                website = it.website,
+                logo = it.logo,
+                established = it.established,
+                email = it.email,
+                interests = it.interests.split(","),
+                facebook = it.facebook,
+                instagram = it.instagram,
+                application = it.application,
+                resortName = it.resortName,
+                tinderAnswers = answers[it.id]?.values?.toList() ?: emptyList()
+            )
+        }
         return communityProfiles
     }
 
@@ -152,7 +154,7 @@ class TinderService(
                 answer[it.key] = it.value
             }
         for (question in questions) {
-            val ans = data["question_${question.id}"] ?: continue
+            val ans = data["question_${question.id}"]?.trim() ?: continue
             val options = question.answerOptions.split(',').map { it.trim() }
             if (options.contains(ans)) {
                 answer[question.id] = ans
@@ -175,7 +177,10 @@ class TinderService(
             ResponseStatusException(HttpStatus.BAD_REQUEST, "Community not found: ${interaction.communityId}")
         }
         tinderInteractionRepository.findByCommunityIdAndUserId(community.id, user.id)
-            .ifPresent { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User has already swiped the community") }
+            .ifPresent {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "User has already swiped the community")
+            }
         val entity = TinderInteractionEntity(
             communityId = community.id,
             userId = user.id,

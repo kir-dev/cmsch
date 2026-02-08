@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.communities
 
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
+import hu.bme.sch.cmsch.util.getUserOrNull
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.ResponseEntity
@@ -29,30 +30,30 @@ class CommunitiesTinderApiController(
     fun submitAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
-    ): ResponseEntity<Unit> {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        tinderService.submitAnswers(false, user, answers)
-        return ResponseEntity.ok().build()
+    ): TinderAnswerResponse {
+        val user = auth?.getUserOrNull()
+            ?: return TinderAnswerResponse(TinderAnswerResponseStatus.NO_PERMISSION)
+        return TinderAnswerResponse(tinderService.submitAnswers(false, user, answers))
     }
 
     @PutMapping("/tinder/question")
     fun updateAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
-    ): ResponseEntity<Unit> {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        tinderService.submitAnswers(true, user, answers)
-        return ResponseEntity.ok().build()
+    ): TinderAnswerResponse {
+        val user = auth?.getUserOrNull()
+            ?: return TinderAnswerResponse(TinderAnswerResponseStatus.NO_PERMISSION)
+        return TinderAnswerResponse(tinderService.submitAnswers(true, user, answers))
     }
 
-    @GetMapping("tinder/communities")
+    @GetMapping("tinder/community")
     fun getTinderCommunities(auth: Authentication?): ResponseEntity<List<CommunitiesTinderDto>> {
         val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
         val res = tinderService.getTinderCommunities(user)
         return ResponseEntity.ok(res)
     }
 
-    @PostMapping("tinder/communities/interact")
+    @PostMapping("tinder/community/interact")
     fun interactWithCommunity(
         auth: Authentication?,
         @RequestBody interaction: TinderInteractionDto

@@ -8,13 +8,23 @@ data class TinderQuestionDto(
     constructor(entity: TinderQuestionEntity) : this(
         id = entity.id,
         question = entity.question,
-        answers = entity.answerOptions.split(", *")
+        answers = entity.answerOptions.split(',').map { it.trim() }
     )
 }
 
 data class TinderAnswerDto(
-    var userId: Int? = null,
     var answers: Map<Int, String> = emptyMap()
+)
+
+enum class TinderAnswerResponseStatus {
+    OK,
+    INVALID_ANSWER,
+    NO_PERMISSION,
+    ERROR
+}
+
+class TinderAnswerResponse(
+    var status: TinderAnswerResponseStatus
 )
 
 enum class TinderStatus{
