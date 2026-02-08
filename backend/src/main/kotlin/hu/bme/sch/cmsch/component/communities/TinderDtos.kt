@@ -13,8 +13,18 @@ data class TinderQuestionDto(
 }
 
 data class TinderAnswerDto(
-    var userId: Int? = null,
     var answers: Map<Int, String> = emptyMap()
+)
+
+enum class TinderAnswerResponseStatus {
+    OK,
+    INVALID_ANSWER,
+    NO_PERMISSION,
+    ERROR
+}
+
+class TinderAnswerResponse(
+    var status: TinderAnswerResponseStatus
 )
 
 enum class TinderStatus{

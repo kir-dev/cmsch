@@ -35,19 +35,19 @@ class TinderService(
     fun getAnswerForCommunity(communityId: Int) = answerRepository.findByCommunityId(communityId)
 
     @Transactional
-    fun submitAnswers(update: Boolean, user: UserEntity, answers: TinderAnswerDto) {
+    fun submitAnswers(update: Boolean, user: CmschUser, answers: TinderAnswerDto): TinderAnswerResponseStatus {
         val questions = questionRepository.findAll().associateBy { it.id }
         for (answer in answers.answers) {
             val question = questions[answer.key] ?: continue
             if (answer.value!="" && !question.answerOptions.split(", *").contains(answer.value)) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong answer option: ${answer.value}")
+                return TinderAnswerResponseStatus.INVALID_ANSWER
             }
         }
 
         val existing = answerRepository.findByUserId(user.id)
         if (!update) {
             if (existing.isPresent){
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Answers already submitted")
+                return TinderAnswerResponseStatus.ERROR
             }
             val entity = TinderAnswerEntity(
                 userId = user.id,
@@ -80,6 +80,7 @@ class TinderService(
                 }
             )
         }
+        return TinderAnswerResponseStatus.OK
     }
 
     @Transactional(readOnly = true)
