@@ -1,6 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react'
 import { PropsWithChildren, useEffect } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
@@ -28,7 +27,7 @@ export const CmschLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <Helmet titleTemplate={`%s | ${component.siteName || 'CMSch'}`} defaultTitle={component.siteName || 'CMSch'} />
+      <title>{component.siteName || 'CMSch'}</title>
       <Flex direction="column" minHeight="100vh">
         <ScrollToTop />
         <Navbar />

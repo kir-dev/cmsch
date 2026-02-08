@@ -16,7 +16,6 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { lazy, useEffect, useRef, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { Controller, SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { Navigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
@@ -58,7 +57,10 @@ const TaskPage = () => {
   const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
   const brandColor = useBrandColor()
 
-  const component = useConfigContext()?.components?.task
+  const config = useConfigContext()?.components
+  const component = config?.task
+  const app = config?.app
+
   const toast = useToast()
   const { id } = useParams()
   const { setValue, handleSubmit, control } = useForm<FormInput>()
@@ -278,7 +280,9 @@ const TaskPage = () => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title={data.task?.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {data.task?.title}
+      </title>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Flex my={5} justify="space-between" flexWrap="wrap" alignItems="center">
         <Box>

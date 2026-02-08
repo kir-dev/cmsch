@@ -280,6 +280,7 @@ export type UserHandling = object
 export type ExtraPage = object
 
 export interface Location {
+  title: string
   topMessage: string
   bottomMessage: string
 }

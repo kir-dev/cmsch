@@ -1,10 +1,10 @@
 import { Button, ButtonGroup, Fade, Heading, Spinner } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 
 import { useEffect } from 'react'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useScanTokenMutation } from '../../api/hooks/token/useScanTokenMutation'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { QrReader } from '../../common-components/QrReader'
@@ -18,6 +18,7 @@ const TokenScan = () => {
   const spinnerColor = useBrandColor(500, 600)
   const brandColor = useBrandColor()
   const { mutate, isPending, isError, reset, data, isIdle } = useScanTokenMutation()
+  const app = useConfigContext()?.components?.app
 
   const handleScan = (qrData: string | null) => {
     if (qrData) {
@@ -35,7 +36,7 @@ const TokenScan = () => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title="QR beolvasás" />
+      <title>{app?.siteName || 'CMSch'} | QR beolvasás</title>
       <Heading mb={5}>QR beolvasás</Heading>
       {isPending && <Spinner color={spinnerColor} size="xl" thickness="0.3rem" />}
       {isIdle && <QrReader onScan={handleScan} />}

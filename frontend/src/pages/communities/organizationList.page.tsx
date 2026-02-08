@@ -1,7 +1,6 @@
 import { SearchIcon } from '@chakra-ui/icons'
 import { Box, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import { createRef, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useOrganizationList } from '../../api/hooks/community/useOrganizationList'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -12,7 +11,9 @@ import { Organization } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function OrganizationListPage() {
-  const config = useConfigContext()?.components?.communities
+  const config = useConfigContext()?.components
+  const app = config?.app
+  const communities = config?.communities
   const { data, isLoading, isError } = useOrganizationList()
   const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()
@@ -38,13 +39,15 @@ export default function OrganizationListPage() {
     }
   }, [data, inputRef])
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
     <CmschPage>
-      <Helmet title={config?.titleResort} />
+      <title>
+        {app?.siteName || 'CMSch'} | {communities?.titleResort}
+      </title>{' '}
       <Heading as="h1" variant="main-title">
-        {config?.titleResort}
+        {communities?.titleResort}
       </Heading>
       <InputGroup mt={5}>
         <InputLeftElement h="100%">
@@ -59,9 +62,9 @@ export default function OrganizationListPage() {
           autoFocus={true}
         />
       </InputGroup>
-      {config?.descriptionResort && (
+      {communities?.descriptionResort && (
         <Box mt={5}>
-          <Markdown text={config?.descriptionResort} />
+          <Markdown text={communities?.descriptionResort} />
         </Box>
       )}
       {filteredOrganizations.map((organization) => (

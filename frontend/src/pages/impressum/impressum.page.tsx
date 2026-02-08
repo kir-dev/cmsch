@@ -1,5 +1,4 @@
 import { Heading, Wrap } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useDevelopers } from '../../api/hooks/developers/useDevelopers'
@@ -14,12 +13,15 @@ const ImpressumPage = () => {
   const developers = useDevelopers()
 
   const component = config?.components?.impressum
+  const appComponent = config?.components?.app
 
   if (!component) return <ComponentUnavailable />
 
   return (
     <CmschPage>
-      <Helmet title={component.title} />
+      <title>
+        {appComponent?.siteName || 'CMSch'} | {component?.title}
+      </title>
       <Heading as="h1" variant="main-title">
         {component.title}
       </Heading>

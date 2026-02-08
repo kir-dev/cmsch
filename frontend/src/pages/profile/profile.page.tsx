@@ -15,7 +15,7 @@ import {
   useColorModeValue,
   VStack
 } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
+
 import { Navigate, useNavigate } from 'react-router'
 
 import React, { useEffect } from 'react'
@@ -55,6 +55,7 @@ const ProfilePage = () => {
 
   const config = useConfigContext()?.components
   const component = config?.profile
+  const app = config?.app
 
   const brandColor = useBrandColor()
   const greenProgressColor = useColorModeValue('green.500', 'green.600')
@@ -72,7 +73,9 @@ const ProfilePage = () => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title={component.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {component?.title}
+      </title>
       {component.messageBoxContent && (
         <Alert status="info" variant="left-accent" mt={5}>
           <AlertIcon />

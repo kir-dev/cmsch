@@ -1,5 +1,4 @@
 import { Heading } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTeamList } from '../../api/hooks/team/queries/useTeamList'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
@@ -25,6 +24,7 @@ const searchFn = (item: TeamListItemView, search: string) => {
 export default function TeamListPage() {
   const config = useConfigContext()
   const component = config?.components?.team
+  const app = config?.components?.app
   const { data, isLoading, isError } = useTeamList()
   const searchArgs = useSearch<TeamListItemView>(data ?? EmptyData, searchFn)
 
@@ -34,7 +34,9 @@ export default function TeamListPage() {
 
   return (
     <CmschPage>
-      <Helmet title={component.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {component?.title}
+      </title>
       <Heading as="h1" variant="main-title">
         {component.title}
       </Heading>
