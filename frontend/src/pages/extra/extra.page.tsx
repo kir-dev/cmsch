@@ -1,7 +1,7 @@
 import { Heading } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { Navigate, useParams } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
+import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useExtraPage } from '../../api/hooks/extra/useExtraPage'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -12,6 +12,7 @@ import { AbsolutePaths } from '../../util/paths'
 import { RoleType, RoleTypeString } from '../../util/views/profile.view'
 
 const ExtraPage = () => {
+  const app = useConfigContext()?.components?.app
   const params = useParams()
   const { authInfo } = useAuthContext()
   const { data, isLoading, isError } = useExtraPage(params.slug || '')
@@ -25,7 +26,9 @@ const ExtraPage = () => {
   }
   return (
     <CmschPage>
-      <Helmet title={data.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {data.title}
+      </title>
       <Heading as="h1" variant="main-title">
         {data.title}
       </Heading>

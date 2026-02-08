@@ -14,7 +14,6 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import uniq from 'lodash/uniq'
-import { Helmet } from 'react-helmet-async'
 import { FaCalendar } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
@@ -37,7 +36,9 @@ import { FILTER, mapper } from './util/filter'
 
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
-  const component = useConfigContext()?.components?.event
+  const config = useConfigContext()?.components
+  const event = config?.event
+  const app = config?.app
   const { isOpen, onToggle } = useDisclosure()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
@@ -46,9 +47,9 @@ const EventListPage = () => {
   const brandColor = useBrandColor()
 
   const availableFilters = []
-  if (component?.filterByCategory) availableFilters.push(FILTER.CATEGORY)
-  if (component?.filterByLocation) availableFilters.push(FILTER.PLACE)
-  if (component?.filterByDay) availableFilters.push(FILTER.DAY)
+  if (event?.filterByCategory) availableFilters.push(FILTER.CATEGORY)
+  if (event?.filterByLocation) availableFilters.push(FILTER.PLACE)
+  if (event?.filterByDay) availableFilters.push(FILTER.DAY)
 
   // eslint-disable-next-line react-hooks/purity
   const pastEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 < Date.now()), [data])
@@ -70,16 +71,18 @@ const EventListPage = () => {
     setFilteredEvents(upcomingEvents)
   }, [upcomingEvents])
 
-  if (!component) return <ComponentUnavailable />
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
+  if (!event) return <ComponentUnavailable />
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={event.title} />
   return (
     <CmschPage>
-      <Helmet title={component.title ?? 'Események'} />
+      <title>
+        {app?.siteName || 'CMSch'} | {event.title ?? 'Események'}
+      </title>
       <Box mb={5}>
         <Heading as="h1" variant="main-title" mb={5}>
-          {component.title}
+          {event.title}
         </Heading>
-        {component.topMessage && <Markdown text={component.topMessage} />}
+        {event.topMessage && <Markdown text={event.topMessage} />}
       </Box>
       <LinkButton colorScheme={brandColor} mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
         Megtekintés a naptárban
@@ -88,15 +91,15 @@ const EventListPage = () => {
         {availableFilters.length > 0 && (
           <TabList>
             <CustomTabButton>Mind</CustomTabButton>
-            {component.filterByCategory && <CustomTabButton>Kategória szerint</CustomTabButton>}
-            {component.filterByLocation && <CustomTabButton>Helyszín szerint</CustomTabButton>}
-            {component.filterByDay && <CustomTabButton>Időpont szerint</CustomTabButton>}
+            {event.filterByCategory && <CustomTabButton>Kategória szerint</CustomTabButton>}
+            {event.filterByLocation && <CustomTabButton>Helyszín szerint</CustomTabButton>}
+            {event.filterByDay && <CustomTabButton>Időpont szerint</CustomTabButton>}
           </TabList>
         )}
 
         <TabPanels>
           <TabPanel p={0}>
-            {component.searchEnabled && (
+            {event.searchEnabled && (
               <InputGroup mt={5}>
                 <InputLeftElement h="100%">
                   <SearchIcon />

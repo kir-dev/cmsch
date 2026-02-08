@@ -1,6 +1,5 @@
 import { Box, ButtonGroup, Heading } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router'
 import { MessageTypes, useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -35,7 +34,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   if (clonedMessageType === MessageTypes.AUTHENTICATION) return <UnauthorizedPage />
   return (
     <CmschPage>
-      <Helmet title={l('error-page-helmet')} />
+      <title>{l('error-page-helmet')}</title>
       <Heading as="h1" variant="main-title" textAlign="center">
         {l('error-page-title')}
       </Heading>

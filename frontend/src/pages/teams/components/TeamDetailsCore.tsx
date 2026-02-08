@@ -14,7 +14,6 @@ import {
   WrapItem
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
@@ -55,6 +54,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   const components = config?.components
   const teamComponent = components?.team
   const raceComponent = components?.race
+  const app = components?.app
   const userRole = config?.role
   const navigate = useNavigate()
   const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
@@ -101,7 +101,9 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   const title = myTeam ? teamComponent.myTitle : undefined
   return (
     <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined}>
-      <Helmet title={title ?? team.name} />
+      <title>
+        {app?.siteName || 'CMSch'} | {title ?? team.name}
+      </title>
       {title && <Heading mb={5}>{title}</Heading>}
       <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
         <Box p={4} bg={bannerBlanket} display="flex" justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>

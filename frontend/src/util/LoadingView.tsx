@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, Center, Heading, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { FC, PropsWithChildren } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { KirDevLogo } from '../assets/kir-dev-logo.tsx'
 import { Loading } from '../common-components/Loading.tsx'
 import { usePersistentStyleSetting } from './configs/themeStyle.config.ts'
@@ -24,7 +23,7 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
   if (hasError) {
     return (
       <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
-        <Helmet title={l('error-page-helmet')} />
+        <title>{l('error-page-helmet')}</title>
         <VStack spacing={5} p={5} borderRadius={5} bg={bg} backdropFilter={backdropFilter}>
           <Heading textAlign="center">{errorTitle}</Heading>
           <Text textAlign="center" marginTop={4} maxW={96}>

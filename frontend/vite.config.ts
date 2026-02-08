@@ -1,15 +1,21 @@
 import legacy from '@vitejs/plugin-legacy'
-import react from '@vitejs/plugin-react-swc'
+import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), legacy({ modernPolyfills: true })],
-  build: {
-    rollupOptions: {
-      output: {
-        inlineDynamicImports: true
+  plugins: [
+    react({
+      babel: {
+        plugins: [['babel-plugin-react-compiler']]
       }
+    }),
+    legacy({ modernPolyfills: true })
+  ],
+  build: {
+    rolldownOptions: {
+      optimization: { inlineConst: true, pifeForModuleWrappers: true },
+      output: { inlineDynamicImports: true }
     }
   },
   server: {

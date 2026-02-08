@@ -1,5 +1,4 @@
 import { ButtonGroup, Heading, Progress, Stack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { FaQrcode } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTokensQuery } from '../../api/hooks/token/useTokensQuery'
@@ -17,6 +16,7 @@ const TokenList = () => {
   const { data, isLoading, isError } = useTokensQuery()
   const config = useConfigContext()
   const component = config?.components?.token
+  const app = config?.components?.app
   const brandColor = useBrandColor()
 
   const calculate_progress = (acquired: number, total: number) => (total == 0 ? 100 : (100 * acquired) / total)
@@ -27,7 +27,9 @@ const TokenList = () => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title={component.title || 'QR kódok'} />
+      <title>
+        {app?.siteName || 'CMSch'} | {component.title || 'QR kódok'}
+      </title>
       <Heading as="h1" variant="main-title">
         {component.title || 'QR kódok'}
       </Heading>

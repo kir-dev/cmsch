@@ -1,12 +1,13 @@
-import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router'
 
+import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useEventQuery } from '../../api/hooks/event/useEventQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
 import CurrentEvent from './components/CurrentEvent'
 
 const EventPage = () => {
+  const app = useConfigContext()?.components?.app
   const params = useParams()
   const { isLoading, isError, data } = useEventQuery(params.path!)
 
@@ -14,7 +15,9 @@ const EventPage = () => {
 
   return (
     <CmschPage position="relative">
-      <Helmet title={data.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {data?.title}
+      </title>
       <CurrentEvent event={data} />
     </CmschPage>
   )

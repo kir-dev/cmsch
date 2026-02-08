@@ -1,6 +1,5 @@
 import { Box, Heading } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
 
@@ -37,7 +36,6 @@ const HomePage = () => {
 
   return (
     <CmschPage>
-      <Helmet />
       {homeConfig?.welcomeMessage && (
         <Heading variant="main-title" as="h1" size="3xl" textAlign="center" marginTop={10} lineHeight="1.2">
           {homeConfig?.welcomeMessage.split('{}')[0] + ' '}

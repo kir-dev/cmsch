@@ -1,5 +1,4 @@
 import { Divider, Heading, Text } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useDebtQuery } from '../../api/hooks/debt/useDebtQuery.ts'
 import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
@@ -12,6 +11,7 @@ import { DebtListItem } from './components/debt-list-item.tsx'
 
 const DebtPage = () => {
   const components = useConfigContext()?.components
+  const appComponent = components?.app
   const debtComponent = components?.debt
   const profileComponent = components?.profile
   const profileQuery = useProfileQuery()
@@ -25,7 +25,9 @@ const DebtPage = () => {
 
   return (
     <CmschPage>
-      <Helmet title={title} />
+      <title>
+        {appComponent?.siteName || 'CMSch'} | {title}
+      </title>
       <Heading as="h1" variant="main-title">
         {title}
       </Heading>

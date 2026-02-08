@@ -1,5 +1,4 @@
 import { Box, Button, Text, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { FaGoogle, FaKey, FaSignInAlt } from 'react-icons/fa'
 import { Navigate } from 'react-router'
 
@@ -15,6 +14,7 @@ import { l } from '../../util/language'
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
   const config = useConfigContext()
+  const app = config?.components?.app
   const component = config?.components?.login
   const brandColor = useBrandColor()
 
@@ -24,7 +24,9 @@ const LoginPage = () => {
 
   return (
     <CmschPage>
-      <Helmet title={l('login-helmet')} />
+      <title>
+        {app?.siteName || 'CMSch'} | {l('login-helmet')}
+      </title>
       <VStack spacing={10} mb={10}>
         {component.topMessage ? (
           <Box textAlign="center">

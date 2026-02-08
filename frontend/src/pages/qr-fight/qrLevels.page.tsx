@@ -1,5 +1,4 @@
 import { Flex, Heading, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { FaQrcode } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useQrLevelsQuery } from '../../api/hooks/qr/useQrLevelsQuery'
@@ -15,7 +14,9 @@ import { DataDisplayWrapper } from './components/DataDisplayWrapper'
 import { TreasureDataDisplayWrapper } from './components/TreasureDataDisplayWrapper.tsx'
 
 export default function QrLevelsPage() {
-  const component = useConfigContext()?.components?.qrFight
+  const config = useConfigContext()?.components
+  const component = config?.qrFight
+  const app = config?.app
   const { data, isLoading, isError } = useQrLevelsQuery()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
@@ -27,7 +28,9 @@ export default function QrLevelsPage() {
 
   return (
     <CmschPage>
-      <Helmet>{component.title}</Helmet>
+      <title>
+        {app?.siteName || 'CMSch'} | {component.title}
+      </title>{' '}
       <Flex align="baseline" justifyContent="space-between" wrap="wrap">
         <Heading as="h1" variant="main-title" mt={5}>
           {component.title}
