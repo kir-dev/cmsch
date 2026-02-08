@@ -86,6 +86,8 @@ export enum ApiPaths {
   CHANGE_GROUP = '/api/group/select',
   COMMUNITY = '/api/community',
   ORGANIZATION = '/api/organization',
+  TINDER = '/api/tinder/community',
+  TINDER_QUESTION = '/api/tinder/question',
   ACCESS_KEY = '/api/access-key',
   HOME_NEWS = '/api/home/news',
   HOME_GALLERY = '/api/gallery/home',
