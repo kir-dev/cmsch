@@ -34,6 +34,10 @@ class TinderService(
     @Transactional(readOnly = true)
     fun getAnswerForCommunity(communityId: Int) = answerRepository.findByCommunityId(communityId)
 
+    @Transactional(readOnly = true)
+    fun getAnswerDtoForUser(userId: Int) = answerRepository.findByUserId(userId)
+        .map { TinderAnswerDto(reader.readValue(it.answers)) }
+
     @Transactional
     fun submitAnswers(update: Boolean, user: CmschUser, answers: TinderAnswerDto): TinderAnswerResponseStatus {
         val questions = questionRepository.findAll().associateBy { it.id }
@@ -94,7 +98,7 @@ class TinderService(
         }
         val userAnswer = reader.readValue<Map<Int, String>>(
             answerRepository.findByUserId(user.id)
-                .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "User has not answered the questions") }
+                .getOrElse { return emptyList() }
                 .answers
         )
         val userInteractions = tinderInteractionRepository.findByUserId(user.id).associateBy { it.communityId }

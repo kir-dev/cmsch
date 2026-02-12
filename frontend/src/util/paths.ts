@@ -88,6 +88,7 @@ export enum ApiPaths {
   ORGANIZATION = '/api/organization',
   TINDER = '/api/tinder/community',
   TINDER_QUESTION = '/api/tinder/question',
+  TINDER_ANSWERS = '/api/tinder/question/answers',
   TINDER_INTERACTION = '/api/tinder/community/interact',
   ACCESS_KEY = '/api/access-key',
   HOME_NEWS = '/api/home/news',

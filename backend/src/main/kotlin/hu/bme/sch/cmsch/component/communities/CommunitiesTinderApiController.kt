@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.Optional
+import kotlin.jvm.optionals.getOrElse
 
 @RestController
 @RequestMapping("/api")
@@ -21,12 +23,20 @@ class CommunitiesTinderApiController(
     private val userService: UserService
 ) {
 
-    @RequestMapping("/tinder/question")
+    @GetMapping("/tinder/question")
     fun allQuestions(): List<TinderQuestionDto> {
         return tinderService.getAllQuestions().map{ TinderQuestionDto(it) }
     }
 
-    @PostMapping("/tinder/question")
+    @GetMapping("/tinder/question/answers")
+    fun getAnswers(auth: Authentication?): TinderAnswerStatus {
+        val user = auth?.getUserOrNull() ?: return TinderAnswerStatus()
+        val answer: TinderAnswerDto = tinderService.getAnswerDtoForUser(user.id)
+            .getOrElse{return TinderAnswerStatus() }
+        return TinderAnswerStatus(answered = true, answer = answer)
+    }
+
+    @PostMapping("/tinder/question/anwers")
     fun submitAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
@@ -36,7 +46,7 @@ class CommunitiesTinderApiController(
         return TinderAnswerResponse(tinderService.submitAnswers(false, user, answers))
     }
 
-    @PutMapping("/tinder/question")
+    @PutMapping("/tinder/question/answers")
     fun updateAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
@@ -47,10 +57,9 @@ class CommunitiesTinderApiController(
     }
 
     @GetMapping("tinder/community")
-    fun getTinderCommunities(auth: Authentication?): ResponseEntity<List<CommunitiesTinderDto>> {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        val res = tinderService.getTinderCommunities(user)
-        return ResponseEntity.ok(res)
+    fun getTinderCommunities(auth: Authentication?): List<CommunitiesTinderDto> {
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return emptyList()
+        return tinderService.getTinderCommunities(user)
     }
 
     @PostMapping("tinder/community/interact")
@@ -58,7 +67,7 @@ class CommunitiesTinderApiController(
         auth: Authentication?,
         @RequestBody interaction: TinderInteractionDto
     ): Boolean {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return false
         return tinderService.interactWithCommunity(user, interaction)
     }
 

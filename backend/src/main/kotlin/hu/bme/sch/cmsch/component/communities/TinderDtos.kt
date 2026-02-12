@@ -16,6 +16,11 @@ data class TinderAnswerDto(
     var answers: Map<Int, String> = emptyMap()
 )
 
+class TinderAnswerStatus(
+    var answered: Boolean = false,
+    var answer: TinderAnswerDto? = null
+)
+
 enum class TinderAnswerResponseStatus {
     OK,
     INVALID_ANSWER,

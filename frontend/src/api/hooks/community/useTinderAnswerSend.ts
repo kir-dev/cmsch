@@ -10,9 +10,9 @@ interface SendAnswerResponse {
 
 export const useTinderAnswerSend = () => {
   return useMutation<SendAnswerResponse, Error, SendAnswerDto>({
-    mutationKey: [QueryKeys.TINDER_ANSWER_SUBMIT],
+    mutationKey: [QueryKeys.TINDER_ANSWERS],
     mutationFn: async (data: SendAnswerDto) => {
-      const res = await axios.post(ApiPaths.TINDER_QUESTION, data)
+      const res = await axios.post(ApiPaths.TINDER_ANSWERS, data)
       return res.data
     }
   })
