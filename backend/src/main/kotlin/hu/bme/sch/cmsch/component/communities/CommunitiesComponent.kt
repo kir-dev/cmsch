@@ -57,6 +57,14 @@ class CommunitiesComponent(
         fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon",
         type = SettingType.LONG_TEXT_MARKDOWN)
 
+    ///-------------------------------------------------------------------------------------------------------------------
+
+    val tinderGroup by SettingGroup(fieldName = "Tinder")
+
+    final var tinderEnabled by BooleanSettingRef(defaultValue = false, fieldName = "Tinder engedélyezése",
+        description = "Engedélyezi a körök és userek közötti tinder szerű párosítást")
+
+
     override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
         val result = mutableListOf<MenuSettingItem>()
         if (minRoleResort.isAvailableForRole(role) || role.isAdmin) {

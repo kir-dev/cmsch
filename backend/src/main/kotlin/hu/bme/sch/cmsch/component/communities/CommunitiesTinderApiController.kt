@@ -40,20 +40,20 @@ class CommunitiesTinderApiController(
     fun submitAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
-    ): TinderAnswerResponse {
+    ): TinderAnswerResponseStatus {
         val user = auth?.getUserOrNull()
-            ?: return TinderAnswerResponse(TinderAnswerResponseStatus.NO_PERMISSION)
-        return TinderAnswerResponse(tinderService.submitAnswers(false, user, answers))
+            ?: return TinderAnswerResponseStatus.NO_PERMISSION
+        return tinderService.submitAnswers(false, user, answers)
     }
 
     @PutMapping("/tinder/question/answers")
     fun updateAnswers(
         auth: Authentication?,
         @RequestBody answers: TinderAnswerDto
-    ): TinderAnswerResponse {
+    ): TinderAnswerResponseStatus {
         val user = auth?.getUserOrNull()
-            ?: return TinderAnswerResponse(TinderAnswerResponseStatus.NO_PERMISSION)
-        return TinderAnswerResponse(tinderService.submitAnswers(true, user, answers))
+            ?: return TinderAnswerResponseStatus.NO_PERMISSION
+        return tinderService.submitAnswers(true, user, answers)
     }
 
     @GetMapping("tinder/community")

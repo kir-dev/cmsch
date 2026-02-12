@@ -41,8 +41,17 @@ export interface SendAnswerDto {
 export enum SendAnswerResponseStatus {
   OK = 'OK',
   INVALID_ANSWER = 'INVALID_ANSWER',
+  TINDER_NOT_AVAILABLE = 'TINDER_NOT_AVAILABLE',
   NO_PERMISSION = 'NO_PERMISSION',
   ERROR = 'ERROR'
+}
+
+export const SendAnswerResponseMessage: Record<SendAnswerResponseStatus, string> = {
+  [SendAnswerResponseStatus.OK]: 'Válaszok sikeresen elmentve.',
+  [SendAnswerResponseStatus.INVALID_ANSWER]: 'Érvénytelen válasz(ok). Kérjük, ellenőrizze a válaszait.',
+  [SendAnswerResponseStatus.TINDER_NOT_AVAILABLE]: 'A Tinder jelenleg nem elérhető.',
+  [SendAnswerResponseStatus.NO_PERMISSION]: 'Nincs jogosultsága válaszokat küldeni.',
+  [SendAnswerResponseStatus.ERROR]: 'Hiba történt a válaszok mentése során. Kérjük, próbálja újra később.'
 }
 
 export interface TinderInteractionDto {

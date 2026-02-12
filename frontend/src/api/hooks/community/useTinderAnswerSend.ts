@@ -1,19 +1,22 @@
-import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
+import { useState } from 'react'
 import { ApiPaths } from '../../../util/paths.ts'
 import { type SendAnswerDto, SendAnswerResponseStatus } from '../../../util/views/tinder.ts'
-import { QueryKeys } from '../queryKeys.ts'
-
-interface SendAnswerResponse {
-  response: SendAnswerResponseStatus
-}
 
 export const useTinderAnswerSend = () => {
-  return useMutation<SendAnswerResponse, Error, SendAnswerDto>({
-    mutationKey: [QueryKeys.TINDER_ANSWERS],
-    mutationFn: async (data: SendAnswerDto) => {
-      const res = await axios.post(ApiPaths.TINDER_ANSWERS, data)
-      return res.data
+  const [data, setData] = useState<SendAnswerResponseStatus>()
+  const submit = (answers: SendAnswerDto, edit?: boolean) => {
+    if (edit) {
+      axios
+        .put<SendAnswerResponseStatus>(ApiPaths.TINDER_ANSWERS, answers)
+        .then((res) => setData(res.data))
+        .catch(console.error)
+    } else {
+      axios
+        .post<SendAnswerResponseStatus>(ApiPaths.TINDER_ANSWERS, answers)
+        .then((res) => setData(res.data))
+        .catch(console.error)
     }
-  })
+  }
+  return { response: data, submit }
 }

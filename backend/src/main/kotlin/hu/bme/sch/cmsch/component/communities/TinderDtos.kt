@@ -28,10 +28,6 @@ enum class TinderAnswerResponseStatus {
     ERROR
 }
 
-class TinderAnswerResponse(
-    var status: TinderAnswerResponseStatus
-)
-
 enum class TinderStatus{
     NOT_SEEN,
     LIKED,
