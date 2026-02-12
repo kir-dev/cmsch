@@ -1,5 +1,5 @@
 import { Checkbox, Radio } from '@chakra-ui/react'
-import { ChangeEvent } from 'react'
+import type { ChangeEvent } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
 

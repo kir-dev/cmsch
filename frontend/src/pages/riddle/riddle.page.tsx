@@ -9,12 +9,12 @@ import {
   Image,
   Input,
   Text,
-  ToastId,
+  type ToastId,
   useDisclosure,
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { FormEvent, useRef, useState } from 'react'
+import { type FormEvent, useRef, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRiddleDetailsQuery } from '../../api/hooks/riddle/useRiddleDeatilsQuery'

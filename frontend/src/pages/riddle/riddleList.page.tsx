@@ -8,7 +8,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { RiddleCategory } from '../../util/views/riddle.view.ts'
+import type { RiddleCategory } from '../../util/views/riddle.view.ts'
 import { RiddleCategoryListItem } from './components/RiddleCategoryListItem'
 
 const RiddleCategoryList = () => {

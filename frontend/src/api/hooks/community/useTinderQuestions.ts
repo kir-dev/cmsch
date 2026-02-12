@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { ApiPaths } from '../../../util/paths.ts'
-import { TinderQuestion } from '../../../util/views/tinder.ts'
+import type { TinderQuestion } from '../../../util/views/tinder.ts'
 import { QueryKeys } from '../queryKeys.ts'
-
 
 export const useTinderQuestions = () => {
   return useQuery<TinderQuestion[], Error>({

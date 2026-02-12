@@ -1,5 +1,5 @@
 import { Heading, Text } from '@chakra-ui/react'
-import React, { ErrorInfo, PropsWithChildren } from 'react'
+import React, { type ErrorInfo, type PropsWithChildren } from 'react'
 import { CmschPage } from '../common-components/layout/CmschPage'
 import { l } from './language'
 

@@ -1,5 +1,5 @@
 import { Flex, Heading, VStack } from '@chakra-ui/react'
-import { QrLevelDto } from '../../../util/views/qrFight.view'
+import type { QrLevelDto } from '../../../util/views/qrFight.view'
 import { TowerField } from './TowerField'
 
 interface TowerDataDisplay {

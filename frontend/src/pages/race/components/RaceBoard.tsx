@@ -1,14 +1,14 @@
 import { Divider, Flex, Heading } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
-import { Race } from '../../../api/contexts/config/types'
+import type { Race } from '../../../api/contexts/config/types'
 import { BoardStat } from '../../../common-components/BoardStat'
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
 import { CmschPage } from '../../../common-components/layout/CmschPage'
 import { LeaderBoardTable } from '../../../common-components/LeaderboardTable'
 import Markdown from '../../../common-components/Markdown'
 import { PageStatus } from '../../../common-components/PageStatus'
-import { RaceView } from '../../../util/views/race.view'
+import type { RaceView } from '../../../util/views/race.view'
 
 type Props = {
   data: RaceView | undefined

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
-import { Organization } from '../../../util/views/organization'
+import type { Organization } from '../../../util/views/organization'
 import { QueryKeys } from '../queryKeys'
 
 export const useOrganization = (id: string) => {

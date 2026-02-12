@@ -356,4 +356,5 @@ export interface Communities {
   description: string
   titleResort: string
   descriptionResort: string
+  tinderEnabled: boolean
 }

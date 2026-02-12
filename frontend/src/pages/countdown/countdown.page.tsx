@@ -1,5 +1,5 @@
 import { Center, Flex, Heading, VStack } from '@chakra-ui/react'
-import { PropsWithChildren, useMemo } from 'react'
+import { type PropsWithChildren, useMemo } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import Clock from './components/clock'
 import { parseTopMessage } from './countdown.util'

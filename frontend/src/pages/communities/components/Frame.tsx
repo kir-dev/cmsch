@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import { FC } from 'react'
+import type { FC } from 'react'
 
 type FrameProps = {
   id: string

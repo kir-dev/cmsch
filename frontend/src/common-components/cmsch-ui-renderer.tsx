@@ -1,6 +1,6 @@
 import { Divider, ListItem, OrderedList, Table, TableContainer, UnorderedList } from '@chakra-ui/react'
-import { PropsWithChildren, ReactNode } from 'react'
-import { Components } from 'react-markdown'
+import type { PropsWithChildren, ReactNode } from 'react'
+import type { Components } from 'react-markdown'
 import { CLIENT_BASE_URL } from '../util/configs/environment.config'
 import { useBrandColor } from '../util/core-functions.util.ts'
 import ChakraUIRenderer from './chakra-md-renderer'

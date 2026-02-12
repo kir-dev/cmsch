@@ -10,7 +10,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths.ts'
-import { CreateTeamDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
+import { type CreateTeamDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
 
 export default function CreateTeamPage() {
   const navigate = useNavigate()

@@ -1,4 +1,4 @@
-import { TopListAbstractEntryView } from './toplistAbstractEntry.view'
+import type { TopListAbstractEntryView } from './toplistAbstractEntry.view'
 
 export enum taskType {
   TEXT = 'TEXT',

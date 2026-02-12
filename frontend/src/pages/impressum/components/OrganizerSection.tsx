@@ -1,5 +1,5 @@
 import { Box, Heading, Wrap } from '@chakra-ui/react'
-import { Organizer } from '../../../api/contexts/config/types'
+import type { Organizer } from '../../../api/contexts/config/types'
 import Markdown from '../../../common-components/Markdown'
 import { OrganizerWrapItem } from './OrganizerWrapItem'
 

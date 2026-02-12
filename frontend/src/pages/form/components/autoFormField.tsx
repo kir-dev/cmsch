@@ -1,11 +1,11 @@
 import { Alert, AlertIcon, Checkbox, Flex, FormLabel, Input, Select, Text, Textarea, useColorModeValue } from '@chakra-ui/react'
-import { ReactNode } from 'react'
-import { Control, useController } from 'react-hook-form'
+import type { ReactNode } from 'react'
+import { type Control, useController } from 'react-hook-form'
 import { useStyle } from '../../../api/contexts/config/ConfigContext.tsx'
 import Markdown from '../../../common-components/Markdown'
 import { VotingField } from '../../../common-components/VotingField'
 import { isCheckbox, isGridField } from '../../../util/core-functions.util'
-import { FormField, FormFieldVariants, VotingFieldOption } from '../../../util/views/form.view'
+import { type FormField, FormFieldVariants, type VotingFieldOption } from '../../../util/views/form.view'
 import { GridField } from './GridField'
 
 interface AutoFormFieldProps {

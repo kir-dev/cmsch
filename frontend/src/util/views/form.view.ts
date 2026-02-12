@@ -1,4 +1,4 @@
-import { Signup } from '../../api/contexts/config/types'
+import type { Signup } from '../../api/contexts/config/types'
 
 export type FormData = {
   form?: Form

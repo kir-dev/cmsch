@@ -11,7 +11,7 @@ import Markdown from '../../common-components/Markdown'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths.ts'
 import { RoleType, RoleTypeString } from '../../util/views/profile.view'
-import { TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
+import { type TeamEditDto, TeamResponseMessages, TeamResponses } from '../../util/views/team.view'
 import { FilePicker } from '../task/components/FilePicker'
 
 export default function EditMyTeamPage() {

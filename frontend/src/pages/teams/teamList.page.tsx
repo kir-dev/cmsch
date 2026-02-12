@@ -7,7 +7,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { PageStatus } from '../../common-components/PageStatus'
 import { SearchBar } from '../../common-components/SearchBar'
 import { useSearch } from '../../util/useSearch'
-import { TeamListItemView } from '../../util/views/team.view'
+import type { TeamListItemView } from '../../util/views/team.view'
 import { TeamListItem } from './components/TeamListItem'
 
 const EmptyData: TeamListItemView[] = []

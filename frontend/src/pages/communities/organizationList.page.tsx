@@ -7,7 +7,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown.tsx'
 import { PageStatus } from '../../common-components/PageStatus'
 import { AbsolutePaths } from '../../util/paths'
-import { Organization } from '../../util/views/organization'
+import type { Organization } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function OrganizationListPage() {

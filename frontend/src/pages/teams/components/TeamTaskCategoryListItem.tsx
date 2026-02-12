@@ -2,7 +2,7 @@ import { Box, CircularProgress, Flex, HStack, Text } from '@chakra-ui/react'
 import { Link } from 'react-router'
 import { joinPath, useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import { TeamTaskCategoriesView } from '../../../util/views/team.view'
+import type { TeamTaskCategoriesView } from '../../../util/views/team.view'
 
 export const TeamTaskCategoryListItem = ({ category }: { category: TeamTaskCategoriesView }) => {
   const bg = useOpaqueBackground(1)

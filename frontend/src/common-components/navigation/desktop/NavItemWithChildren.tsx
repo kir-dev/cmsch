@@ -1,6 +1,6 @@
 import { Box, chakra, HStack, Icon, Popover, PopoverContent, PopoverTrigger, Stack, useColorModeValue } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
-import { Menu } from '../../../api/contexts/config/types'
+import type { Menu } from '../../../api/contexts/config/types'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
 import LinkComponent from '../LinkComponent'
 import { ChildNavItem } from './ChildNavItem'

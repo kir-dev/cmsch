@@ -1,4 +1,4 @@
-import { LeaderBoardItemView } from './leaderBoardView'
+import type { LeaderBoardItemView } from './leaderBoardView'
 
 export type RaceView = {
   categoryName: string

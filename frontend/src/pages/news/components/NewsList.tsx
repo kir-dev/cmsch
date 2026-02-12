@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce'
 import { createRef, useMemo, useState } from 'react'
 
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { NewsArticleView } from '../../../util/views/news.view'
+import type { NewsArticleView } from '../../../util/views/news.view'
 import { NewsListItem } from './NewsListItem'
 
 interface NewsListProps {

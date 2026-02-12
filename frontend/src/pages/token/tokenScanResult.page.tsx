@@ -6,7 +6,7 @@ import { CmschPage } from '../../common-components/layout/CmschPage'
 import { LinkButton } from '../../common-components/LinkButton'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
-import { ScanResponseView, ScanStatus } from '../../util/views/token.view'
+import { type ScanResponseView, ScanStatus } from '../../util/views/token.view'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 
 const TokenScanResult = () => {

@@ -10,8 +10,8 @@ import { LinkButton } from '../../common-components/LinkButton'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../util/paths'
-import { GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
-import { ProfileView } from '../../util/views/profile.view.ts'
+import { type GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
+import type { ProfileView } from '../../util/views/profile.view.ts'
 
 export function ProfileGroupChangePage() {
   const { isLoading, isError, data: profile, refetch } = useProfileQuery()

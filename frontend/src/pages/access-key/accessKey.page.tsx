@@ -12,7 +12,7 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { SubmitEvent, useState } from 'react'
+import { type SubmitEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
@@ -25,7 +25,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { AccessKeyResponse } from '../../util/views/accessKey'
+import type { AccessKeyResponse } from '../../util/views/accessKey'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()
