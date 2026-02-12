@@ -9,7 +9,7 @@ export interface TinderAnswer {
   answer: string
 }
 
-export enum TinderStatus {
+enum TinderStatus {
   NOT_SEEN = 'NOT_SEEN',
   LIKED = 'LIKED',
   DISLIKED = 'DISLIKED'
@@ -38,4 +38,14 @@ export interface SendAnswerDto {
   answers: Map<number, string>
 }
 
-export enum SendAnswerResponse {}
+export enum SendAnswerResponseStatus {
+  OK = 'OK',
+  INVALID_ANSWER = 'INVALID_ANSWER',
+  NO_PERMISSION = 'NO_PERMISSION',
+  ERROR = 'ERROR'
+}
+
+export interface TinderInteractionDto {
+  communityId: number
+  liked: boolean
+}

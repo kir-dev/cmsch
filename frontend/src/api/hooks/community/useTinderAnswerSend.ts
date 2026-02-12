@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { ApiPaths } from '../../../util/paths.ts'
-import { SendAnswerDto } from '../../../util/views/tinder.ts'
+import { type SendAnswerDto, SendAnswerResponseStatus } from '../../../util/views/tinder.ts'
 import { QueryKeys } from '../queryKeys.ts'
 
 interface SendAnswerResponse {
-  success: boolean
+  response: SendAnswerResponseStatus
 }
 
 export const useTinderAnswerSend = () => {

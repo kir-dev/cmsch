@@ -171,18 +171,18 @@ class TinderService(
     }
 
     @Transactional
-    fun interactWithCommunity(user: UserEntity, interaction: TinderInteractionDto) {
-        val community = communityRepository.findById(interaction.communityId).orElseThrow {
-            ResponseStatusException(HttpStatus.BAD_REQUEST, "Community not found: ${interaction.communityId}")
+    fun interactWithCommunity(user: UserEntity, interaction: TinderInteractionDto): Boolean {
+        val community = communityRepository.findById(interaction.communityId).getOrNull() ?: return false
+        if (tinderInteractionRepository.findByCommunityIdAndUserId(community.id, user.id).isPresent){
+            return false
         }
-        tinderInteractionRepository.findByCommunityIdAndUserId(community.id, user.id)
-            .ifPresent { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User has already swiped the community") }
         val entity = TinderInteractionEntity(
             communityId = community.id,
             userId = user.id,
             liked = interaction.liked
         )
         tinderInteractionRepository.save(entity)
+        return true
     }
 
 }

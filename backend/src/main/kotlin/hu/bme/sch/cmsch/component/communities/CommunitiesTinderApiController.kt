@@ -57,10 +57,9 @@ class CommunitiesTinderApiController(
     fun interactWithCommunity(
         auth: Authentication?,
         @RequestBody interaction: TinderInteractionDto
-    ): ResponseEntity<Unit> {
+    ): Boolean {
         val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        tinderService.interactWithCommunity(user, interaction)
-        return ResponseEntity.ok().build()
+        return tinderService.interactWithCommunity(user, interaction)
     }
 
 }
