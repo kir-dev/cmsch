@@ -1,15 +1,17 @@
-import { Box, Heading } from '@chakra-ui/react'
+import { Box, Button, Heading } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
+import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderCommunity } from '../../api/hooks/community/useTinderCommunity.ts'
 import { useTinderInteractionSend } from '../../api/hooks/community/useTinderInteractionSend.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
+import { AbsolutePaths } from '../../util/paths'
 import { type TinderCommunity } from '../../util/views/tinder.ts'
 import { TinderCard } from './components/TinderCard'
 
-const SWIPE_THRESHOLD = 200 // pixels required to trigger like/dislike
+const SWIPE_THRESHOLD = 220 // pixels required to trigger like/dislike
 
 const TinderPage = () => {
   const config = useConfigContext()?.components
@@ -249,9 +251,23 @@ const TinderPage = () => {
       <title>{config?.app?.siteName || 'CMSch'} | Tinder</title>
 
       <Box w="100%" mx="auto">
-        <Heading as="h1" variant="main-title" textAlign="center" mb={6}>
-          Kör tinder
-        </Heading>
+        <Box position="relative" mb={6}>
+          <Heading as="h1" variant="main-title" textAlign="center">
+            Kör tinder
+          </Heading>
+          <Button
+            as={Link}
+            to={`${AbsolutePaths.TINDER}/community`}
+            position="absolute"
+            top="50%"
+            right={2}
+            transform="translateY(-50%)"
+            size="lg"
+            aria-label="Tinder-matches-button"
+          >
+            Kedvelt körök
+          </Button>
+        </Box>
         {displayed.length === 0 ? (
           <div>No new communities to show.</div>
         ) : (
