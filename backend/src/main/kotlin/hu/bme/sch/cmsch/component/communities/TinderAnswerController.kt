@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.bind.annotation.RequestMapping
 import tools.jackson.databind.ObjectMapper
-
+import java.util.Optional
 
 
 @Controller
@@ -37,6 +37,12 @@ class TinderAnswerController(
     object: ManualRepository<TinderAnswerEntity, Int>(){
         override fun findAll(): MutableIterable<TinderAnswerEntity> {
             return repo.findAllWithUserIdNotNull()
+        }
+        override fun findById(id: Int): Optional<TinderAnswerEntity> {
+            return repo.findById(id)
+        }
+        override fun delete(entity: TinderAnswerEntity) {
+            repo.delete(entity)
         }
     },
     importService,

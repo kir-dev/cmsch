@@ -33,11 +33,6 @@ export interface TinderCommunity {
   resortName: string
   tinderAnswers: string[]
 }
-
-export interface SendAnswerDto {
-  answers: Map<number, string>
-}
-
 export enum SendAnswerResponseStatus {
   OK = 'OK',
   INVALID_ANSWER = 'INVALID_ANSWER',

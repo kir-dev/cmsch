@@ -1,6 +1,6 @@
-import { Box, Button, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
+import { Box, Button, FormControl, FormLabel, Heading, useToast, Wrap, WrapItem } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderAnswers } from '../../api/hooks/community/useTinderAnswers.ts'
 import { useTinderAnswerSend } from '../../api/hooks/community/useTinderAnswerSend.ts'
@@ -9,12 +9,13 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { useBrandColor } from '../../util/core-functions.util.ts'
-import { type SendAnswerDto, SendAnswerResponseMessage, SendAnswerResponseStatus } from '../../util/views/tinder.ts'
+import { SendAnswerResponseMessage, SendAnswerResponseStatus } from '../../util/views/tinder.ts'
 
 const TinderQuestionsPage = () => {
   const brandColor = useBrandColor()
   const toast = useToast()
   const formMethods = useForm<Record<string, string>>()
+  const { setValue, watch } = formMethods
 
   const config = useConfigContext()?.components
   const component = config?.communities
@@ -24,6 +25,17 @@ const TinderQuestionsPage = () => {
   const { data: questions, isLoading: questionsLoading, isError: questionsError } = useTinderQuestions()
   const { data: answersStatus, isLoading: answersLoading, isError: answersError, refetch: refetchAnswers } = useTinderAnswers()
   const { response, submit } = useTinderAnswerSend()
+
+  // Initialize form values from existing answers when data arrives
+  useEffect(() => {
+    if (!questions || !answersStatus) return
+    const defaults: Record<string, string> = {}
+    const existing = answersStatus?.answer || {}
+    for (const [k, v] of Object.entries(existing)) {
+      defaults[String(k)] = String(v)
+    }
+    formMethods.reset(defaults)
+  }, [questions, answersStatus, formMethods])
 
   // Ensure the effect is also registered unconditionally (before any early returns)
   useEffect(() => {
@@ -43,13 +55,8 @@ const TinderQuestionsPage = () => {
   const data = questions && answersStatus
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Tinder kérdések" />
 
-  const onSubmit: SubmitHandler<Record<string, string>> = async (values) => {
-    const map = new Map<number, string>()
-    for (const [k, v] of Object.entries(values || {})) {
-      const id = Number(k)
-      if (!Number.isNaN(id) && v != null && v !== '') map.set(id, v)
-    }
-    submit({ answers: map }, (answersStatus as { answered: boolean; answer: SendAnswerDto })?.answered)
+  const onSubmit = (values: Record<string, string>) => {
+    submit(values, answersStatus.answered)
   }
 
   return (
@@ -62,13 +69,36 @@ const TinderQuestionsPage = () => {
 
         <FormProvider {...formMethods}>
           <form onSubmit={formMethods.handleSubmit(onSubmit)}>
-            {questions.map((q) => (
-              <FormControl key={q.id} mt={5}>
-                <FormLabel mb={2} fontSize={20} htmlFor={String(q.id)}>
-                  {q.question}
-                </FormLabel>
-              </FormControl>
-            ))}
+            {questions.map((q) => {
+              const fieldKey = String(q.id)
+              const selected = watch(fieldKey) || ''
+
+              return (
+                <FormControl key={q.id} mt={5}>
+                  <FormLabel mb={2} fontSize={20} htmlFor={fieldKey}>
+                    {q.question}
+                  </FormLabel>
+
+                  {/* Options rendered as inline buttons; clicking sets the form value for the question */}
+                  <Wrap spacing={2} align="center">
+                    {q.options.map((opt) => (
+                      <WrapItem key={opt}>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => setValue(fieldKey, opt)}
+                          variant={selected === opt ? 'solid' : 'outline'}
+                          colorScheme={selected === opt ? brandColor : undefined}
+                          aria-pressed={selected === opt}
+                        >
+                          {opt}
+                        </Button>
+                      </WrapItem>
+                    ))}
+                  </Wrap>
+                </FormControl>
+              )
+            })}
 
             <Button mt={6} colorScheme={brandColor} isLoading={isLoading} type="submit">
               Mentés

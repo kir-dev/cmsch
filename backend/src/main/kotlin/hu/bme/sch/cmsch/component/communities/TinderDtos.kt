@@ -3,22 +3,18 @@ package hu.bme.sch.cmsch.component.communities
 data class TinderQuestionDto(
     var id: Int = 0,
     var question: String = "",
-    var answers: List<String> = emptyList()
+    var options: List<String> = emptyList()
 ) {
     constructor(entity: TinderQuestionEntity) : this(
         id = entity.id,
         question = entity.question,
-        answers = entity.answerOptions.split(", *")
+        options = entity.answerOptions.split(",").map { it.trim() }
     )
 }
 
-data class TinderAnswerDto(
-    var answers: Map<Int, String> = emptyMap()
-)
-
 class TinderAnswerStatus(
     var answered: Boolean = false,
-    var answer: TinderAnswerDto? = null
+    var answer: Map<String, String> = emptyMap()
 )
 
 enum class TinderAnswerResponseStatus {
