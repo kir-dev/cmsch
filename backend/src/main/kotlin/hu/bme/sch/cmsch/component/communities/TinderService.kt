@@ -190,4 +190,19 @@ class TinderService(
         return true
     }
 
+
+    @Transactional(readOnly = true)
+    fun getInteractionsByUser(userId: Int): List<TinderInteractionEntity> {
+        return tinderInteractionRepository.findByUserId(userId)
+    }
+
+     @Transactional(readOnly = true)
+     fun getInteractionsByCommunity(communityId: Int): List<TinderInteractionEntity> {
+         return tinderInteractionRepository.findByCommunityId(communityId)
+     }
+
+    @Transactional(readOnly = true)
+    fun getAllInteractions(): List<TinderInteractionEntity> {
+        return tinderInteractionRepository.findAll().toList()
+    }
 }
