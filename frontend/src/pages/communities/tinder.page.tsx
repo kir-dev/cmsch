@@ -1,3 +1,4 @@
+import { Box, Heading } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderCommunity } from '../../api/hooks/community/useTinderCommunity.ts'
@@ -171,11 +172,86 @@ const TinderPage = () => {
     activePointerId.current = null
   }
 
+  // Touch event fallbacks so older mobile browsers that don't support Pointer Events still work
+  const handleTouchStart = (e: React.TouchEvent, c: TinderCommunity) => {
+    if (swipe) return
+    // walk up to element node
+    let targetNode: Node | null = e.target as Node | null
+    while (targetNode && targetNode.nodeType !== Node.ELEMENT_NODE) {
+      targetNode = targetNode.parentNode
+    }
+    const el = targetNode as Element | null
+    if (el && el.closest && (el.closest('button, a, [role="button"], input, textarea, select') || el.closest('[data-no-drag]'))) {
+      return
+    }
+    const t = e.touches && e.touches[0]
+    if (!t) return
+    dragStartX.current = t.clientX
+    setDrag({ id: c.id, x: 0 })
+    e.preventDefault()
+  }
+
+  const handleTouchMove = (e: React.TouchEvent, c: TinderCommunity) => {
+    if (!drag || drag.id !== c.id) return
+    const startX = dragStartX.current
+    const t = e.touches && e.touches[0]
+    if (startX == null || !t) return
+    const dx = t.clientX - startX
+    setDrag({ id: c.id, x: dx })
+    e.preventDefault()
+
+    if (!swipe) {
+      if (dx > SWIPE_THRESHOLD) {
+        setDrag(null)
+        dragStartX.current = null
+        doLike(c)
+        return
+      }
+      if (dx < -SWIPE_THRESHOLD) {
+        setDrag(null)
+        dragStartX.current = null
+        doDislike(c)
+        return
+      }
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent, c: TinderCommunity) => {
+    if (!drag) return
+    const startX = dragStartX.current
+    const t = e.changedTouches && e.changedTouches[0]
+    if (startX == null || !t) {
+      setDrag(null)
+      dragStartX.current = null
+      return
+    }
+    const dx = t.clientX - startX
+    setDrag(null)
+    dragStartX.current = null
+
+    if (dx > SWIPE_THRESHOLD) {
+      doLike(c)
+      return
+    }
+    if (dx < -SWIPE_THRESHOLD) {
+      doDislike(c)
+      return
+    }
+  }
+
+  const handleTouchCancel = () => {
+    setDrag(null)
+    dragStartX.current = null
+  }
+
   return (
     <CmschPage loginRequired>
       <title>{config?.app?.siteName || 'CMSch'} | Tinder</title>
 
-      <div style={{ padding: '2rem' }}>
+      <Box w="100%" mx="auto">
+        <Heading as="h1" variant="main-title" textAlign="center" mb={6}>
+          Kör tinder
+        </Heading>
         {displayed.length === 0 ? (
           <div>No new communities to show.</div>
         ) : (
@@ -215,7 +291,12 @@ const TinderPage = () => {
                     onPointerDown: (e: React.PointerEvent) => handlePointerDown(e, c),
                     onPointerMove: (e: React.PointerEvent) => handlePointerMove(e, c),
                     onPointerUp: (e: React.PointerEvent) => handlePointerUp(e, c),
-                    onPointerCancel: handlePointerCancel
+                    onPointerCancel: handlePointerCancel,
+                    // touch fallbacks for mobile
+                    onTouchStart: (e: React.TouchEvent) => handleTouchStart(e, c),
+                    onTouchMove: (e: React.TouchEvent) => handleTouchMove(e, c),
+                    onTouchEnd: (e: React.TouchEvent) => handleTouchEnd(e, c),
+                    onTouchCancel: handleTouchCancel
                   }
                 : ({} as React.DOMAttributes<HTMLDivElement>)
 
@@ -234,7 +315,7 @@ const TinderPage = () => {
             })}
           </div>
         )}
-      </div>
+      </Box>
     </CmschPage>
   )
 }

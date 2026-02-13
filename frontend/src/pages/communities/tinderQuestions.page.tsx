@@ -76,7 +76,6 @@ const TinderQuestionsPage = () => {
                     {q.question}
                   </FormLabel>
 
-                  {/* Options rendered as inline buttons; clicking sets the form value for the question */}
                   <Wrap spacing={2} align="center">
                     {q.options.map((opt) => (
                       <WrapItem key={opt}>
