@@ -3,16 +3,21 @@ import type { TinderCommunity } from '../../../util/views/tinder'
 
 type Props = {
   data: TinderCommunity
+  depth?: number
   onLike?: (c: TinderCommunity) => void
   onDislike?: (c: TinderCommunity) => void
   className?: string
 }
 
-export const TinderCard: React.FC<Props> = ({ data, onLike, onDislike, className }) => {
+export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Props) => {
   // Prefer the typed `TinderCommunity` fields and use optional chaining/fallbacks.
-  const title = data?.name || (data as any)?.title || 'Unknown community'
-  const description = data?.shortDescription || (data as any)?.description || (data as any)?.bio || ''
-  const image = data?.logo || (data as any)?.imageUrl || (data as any)?.avatar || ''
+  const title = data?.name || 'Unknown community'
+  const description = data?.shortDescription || ''
+  const image = data?.logo || ''
+
+  // keep depth available (used as data attribute) but do not visually offset cards
+  const translateY = 0
+  const scale = 1
 
   const containerStyle: React.CSSProperties = {
     width: 320,
@@ -23,7 +28,9 @@ export const TinderCard: React.FC<Props> = ({ data, onLike, onDislike, className
     background: '#fff',
     display: 'flex',
     flexDirection: 'column',
-    userSelect: 'none'
+    userSelect: 'none',
+    transform: `translateY(${translateY}px) scale(${scale})`,
+    transition: 'transform 160ms ease'
   }
 
   const imageStyle: React.CSSProperties = {
@@ -50,7 +57,7 @@ export const TinderCard: React.FC<Props> = ({ data, onLike, onDislike, className
   }
 
   return (
-    <div className={className} style={containerStyle} role="article" aria-label={title}>
+    <div className={className} style={containerStyle} role="article" aria-label={title} data-depth={depth}>
       <div style={imageStyle} />
       <div style={bodyStyle}>
         <div style={{ fontWeight: 700, fontSize: 18 }}>{title}</div>
