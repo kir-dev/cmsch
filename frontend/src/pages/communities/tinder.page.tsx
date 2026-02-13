@@ -257,7 +257,7 @@ const TinderPage = () => {
           </Heading>
           <Button
             as={Link}
-            to={`${AbsolutePaths.TINDER}/community`}
+            to={`${AbsolutePaths.TINDER}/liked`}
             position="absolute"
             top="50%"
             right={2}
@@ -269,7 +269,7 @@ const TinderPage = () => {
           </Button>
         </Box>
         {displayed.length === 0 ? (
-          <div>No new communities to show.</div>
+          <div>Minden kört megtekintettél már. A kedvelt köröket megtekintheted összegyűjtve a fenti gombra kattintva.</div>
         ) : (
           <div style={stackContainerStyle} aria-live="polite">
             {displayed.map((c, idx) => {
