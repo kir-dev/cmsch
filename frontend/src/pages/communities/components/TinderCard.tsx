@@ -67,6 +67,8 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
 
         <div style={buttonsRow}>
           <button
+            data-no-drag
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={() => onDislike && onDislike(data)}
             style={{
               flex: 1,
@@ -82,6 +84,8 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
           </button>
 
           <button
+            data-no-drag
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={() => onLike && onLike(data)}
             style={{
               flex: 1,
