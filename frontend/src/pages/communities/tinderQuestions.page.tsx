@@ -21,12 +21,10 @@ const TinderQuestionsPage = () => {
   const component = config?.communities
   const app = config?.app
 
-  // Call hooks unconditionally to respect the rules of hooks
   const { data: questions, isLoading: questionsLoading, isError: questionsError } = useTinderQuestions()
   const { data: answersStatus, isLoading: answersLoading, isError: answersError, refetch: refetchAnswers } = useTinderAnswers()
   const { response, submit } = useTinderAnswerSend()
 
-  // Initialize form values from existing answers when data arrives
   useEffect(() => {
     if (!questions || !answersStatus) return
     const defaults: Record<string, string> = {}
@@ -37,7 +35,6 @@ const TinderQuestionsPage = () => {
     formMethods.reset(defaults)
   }, [questions, answersStatus, formMethods])
 
-  // Ensure the effect is also registered unconditionally (before any early returns)
   useEffect(() => {
     if (!response) return
 

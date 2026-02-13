@@ -128,7 +128,7 @@ class TinderService(
             application = it.application,
             resortName = it.resortName,
             tinderAnswers = answers[it.id]?.values?.toList() ?: emptyList()
-        ) }
+        ) }.sortedBy { it.status }
         return communityProfiles
     }
 

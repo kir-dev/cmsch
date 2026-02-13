@@ -1,0 +1,96 @@
+import React from 'react'
+import type { TinderCommunity } from '../../../util/views/tinder'
+
+type Props = {
+  data: TinderCommunity
+  onLike?: (c: TinderCommunity) => void
+  onDislike?: (c: TinderCommunity) => void
+  className?: string
+}
+
+export const TinderCard: React.FC<Props> = ({ data, onLike, onDislike, className }) => {
+  // Prefer the typed `TinderCommunity` fields and use optional chaining/fallbacks.
+  const title = data?.name || (data as any)?.title || 'Unknown community'
+  const description = data?.shortDescription || (data as any)?.description || (data as any)?.bio || ''
+  const image = data?.logo || (data as any)?.imageUrl || (data as any)?.avatar || ''
+
+  const containerStyle: React.CSSProperties = {
+    width: 320,
+    height: 460,
+    borderRadius: 12,
+    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+    overflow: 'hidden',
+    background: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    userSelect: 'none'
+  }
+
+  const imageStyle: React.CSSProperties = {
+    height: 300,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundImage: image ? `url(${image})` : undefined,
+    backgroundColor: '#efefef'
+  }
+
+  const bodyStyle: React.CSSProperties = {
+    padding: 12,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    flex: 1
+  }
+
+  const buttonsRow: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 8,
+    marginTop: 'auto'
+  }
+
+  return (
+    <div className={className} style={containerStyle} role="article" aria-label={title}>
+      <div style={imageStyle} />
+      <div style={bodyStyle}>
+        <div style={{ fontWeight: 700, fontSize: 18 }}>{title}</div>
+        <div style={{ color: '#555', fontSize: 14, lineHeight: 1.3, maxHeight: 72, overflow: 'hidden' }}>
+          {description || <span style={{ color: '#999' }}>No description</span>}
+        </div>
+
+        <div style={buttonsRow}>
+          <button
+            onClick={() => onDislike && onDislike(data)}
+            style={{
+              flex: 1,
+              padding: '8px 12px',
+              background: '#fff',
+              border: '1px solid #ddd',
+              borderRadius: 8,
+              cursor: 'pointer'
+            }}
+            aria-label="Dislike"
+          >
+            Dislike
+          </button>
+
+          <button
+            onClick={() => onLike && onLike(data)}
+            style={{
+              flex: 1,
+              padding: '8px 12px',
+              background: '#06b6d4',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 8,
+              cursor: 'pointer'
+            }}
+            aria-label="Like"
+          >
+            Like
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -9,11 +9,12 @@ export interface TinderAnswer {
   answer: string
 }
 
-enum TinderStatus {
-  NOT_SEEN = 'NOT_SEEN',
-  LIKED = 'LIKED',
-  DISLIKED = 'DISLIKED'
-}
+export const TinderStatus = {
+  NOT_SEEN: 'NOT_SEEN',
+  LIKED: 'LIKED',
+  DISLIKED: 'DISLIKED'
+} as const
+export type TinderStatus = (typeof TinderStatus)[keyof typeof TinderStatus]
 
 export interface TinderCommunity {
   id: number
@@ -33,13 +34,14 @@ export interface TinderCommunity {
   resortName: string
   tinderAnswers: string[]
 }
-export enum SendAnswerResponseStatus {
-  OK = 'OK',
-  INVALID_ANSWER = 'INVALID_ANSWER',
-  TINDER_NOT_AVAILABLE = 'TINDER_NOT_AVAILABLE',
-  NO_PERMISSION = 'NO_PERMISSION',
-  ERROR = 'ERROR'
-}
+export const SendAnswerResponseStatus = {
+  OK: 'OK',
+  INVALID_ANSWER: 'INVALID_ANSWER',
+  TINDER_NOT_AVAILABLE: 'TINDER_NOT_AVAILABLE',
+  NO_PERMISSION: 'NO_PERMISSION',
+  ERROR: 'ERROR'
+} as const
+export type SendAnswerResponseStatus = (typeof SendAnswerResponseStatus)[keyof typeof SendAnswerResponseStatus]
 
 export const SendAnswerResponseMessage: Record<SendAnswerResponseStatus, string> = {
   [SendAnswerResponseStatus.OK]: 'Válaszok sikeresen elmentve.',
