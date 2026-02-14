@@ -28,6 +28,7 @@ import kotlin.jvm.optionals.getOrNull
 @ConditionalOnBean(CommunitiesComponent::class)
 class CommunitiesController(
     val tinderService: TinderService,
+    val organizationService: OrganizationService,
     repo: CommunityRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -298,6 +299,13 @@ class CommunitiesController(
 
     override fun onEntityChanged(entity: CommunityEntity) {
         tinderService.ensureCommunityAnswer(entity)
+    }
+
+    override fun onEntityPreSave(entity: CommunityEntity, auth: Authentication): Boolean {
+        val resName = organizationService.getOrganizationById(entity.resortId)            .map { it.name }
+            .getOrNull() ?: return false
+        entity.resortName = resName
+        return true
     }
 
 }
