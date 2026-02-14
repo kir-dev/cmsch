@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, IconButton, Image, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { AspectRatio, Box, Heading, HStack, IconButton, Image, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { FaHeart, FaTimes } from 'react-icons/fa'
 
 import type { TinderCommunity } from '../../../util/views/tinder'
@@ -32,7 +32,7 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
       h="598px" /* 460 * 1.3 */
       borderRadius="16px" /* ~12 * 1.3 */
       boxShadow="lg"
-      overflowY="auto"
+      overflow="hidden"
       sx={{ WebkitOverflowScrolling: 'touch' }}
       userSelect="none"
       transition="transform 160ms ease"
@@ -40,23 +40,41 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
       flexDirection="column"
     >
       {image ? (
-        <Image src={image} alt={title} objectFit="cover" h="416px" w="100%" borderTopRadius="16px" />
+        <AspectRatio ratio={1} w="100%" borderTopRadius="16px" overflow="hidden">
+          <Image src={image} alt={title} objectFit="cover" width="100%" height="100%" />
+        </AspectRatio>
       ) : (
-        <Box h="416px" bg={placeholderBg} borderTopRadius="16px" />
+        <AspectRatio ratio={1} w="100%" borderTopRadius="16px" overflow="hidden">
+          <Box bg={placeholderBg} width="100%" height="100%" />
+        </AspectRatio>
       )}
 
-      <VStack align="stretch" p={3} flex="1">
-        <Heading as="h3" size="md">
-          {title}
-        </Heading>
+      {/* VStack becomes a column flex container. The top part scrolls, buttons stay outside the scroll area. */}
+      <VStack align="stretch" p={3} flex="1" display="flex" flexDirection="column">
+        <Box flex="1" overflowY="auto">
+          <Heading as="h3" size="md">
+            {title}
+          </Heading>
 
-        <Text fontSize="sm" color={infoColor}>
-          Alapítva: {data?.established ?? '—'}
-        </Text>
-        <Text fontSize="sm" color={infoColor}>
-          Reszort: {data?.resortName ?? '—'}
-        </Text>
+          <Text fontSize="sm" color={infoColor} mt={2}>
+            Alapítva: {data?.established ?? '—'}
+            <br />
+            Reszort: {data?.resortName ?? '—'}
+          </Text>
 
+          <Box
+            mt={2}
+            /* let the description area size naturally inside the scrollable box */
+            color={useColorModeValue('#555', '#ccc')}
+            fontSize="sm"
+            lineHeight="1.4"
+            aria-hidden={description.length === 0}
+          >
+            {description ? <Text whiteSpace="normal">{description}</Text> : <Text color="gray.400">No description</Text>}
+          </Box>
+        </Box>
+
+        {/* Buttons stay outside the scrollable Box so they're always visible */}
         <HStack justify="space-around" mt={2}>
           <IconButton
             data-no-drag
@@ -93,18 +111,6 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
             p={0}
           />
         </HStack>
-
-        <Box
-          mt={2}
-          h="182px"
-          overflowY="auto"
-          color={useColorModeValue('#555', '#ccc')}
-          fontSize="sm"
-          lineHeight="1.4"
-          aria-hidden={description.length === 0}
-        >
-          {description ? <Text whiteSpace="normal">{description}</Text> : <Text color="gray.400">No description</Text>}
-        </Box>
       </VStack>
     </Box>
   )
