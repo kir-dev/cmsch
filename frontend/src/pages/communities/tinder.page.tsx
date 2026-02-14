@@ -28,6 +28,8 @@ const TinderPage = () => {
   // current drag state (live during pointer move)
   const [drag, setDrag] = useState<{ id: number; x: number } | null>(null)
   const dragStartX = useRef<number | null>(null)
+  const dragStartY = useRef<number | null>(null)
+  const pendingDragId = useRef<number | null>(null)
   const activePointerId = useRef<number | null>(null)
 
   if (!component || !component.tinderEnabled) return <ComponentUnavailable />
@@ -40,8 +42,8 @@ const TinderPage = () => {
 
   // container for stacking cards
   const stackContainerStyle: React.CSSProperties = {
-    width: 320,
-    height: 460,
+    width: 416, // scaled to match card width (320 * 1.3)
+    height: 598, // scaled to match card height (460 * 1.3)
     position: 'relative',
     margin: '2rem auto'
   }
@@ -88,6 +90,12 @@ const TinderPage = () => {
     interact.mutate({ communityId: c.id, liked: false })
   }
 
+  // Pointer/touch handling improvements:
+  // - don't capture pointer or prevent default on down/start so normal page scroll still works
+  // - only begin a drag after movement exceeds START_THRESHOLD and is primarily horizontal
+  // - when a drag is recognized, capture pointer and prevent default to keep the card interaction
+  const START_THRESHOLD = 10
+
   const handlePointerDown = (e: React.PointerEvent, c: TinderCommunity) => {
     if (swipe) return
     let targetNode: Node | null = e.target as Node | null
@@ -98,18 +106,54 @@ const TinderPage = () => {
     if (el && el.closest && (el.closest('button, a, [role="button"], input, textarea, select') || el.closest('[data-no-drag]'))) {
       return
     }
-    e.currentTarget.setPointerCapture(e.pointerId)
-    activePointerId.current = e.pointerId
+    // record potential drag start but don't capture or prevent default yet
     dragStartX.current = e.clientX
-    setDrag({ id: c.id, x: 0 })
-    e.preventDefault()
+    dragStartY.current = e.clientY
+    pendingDragId.current = c.id
+    // ensure no active drag yet
+    activePointerId.current = null
   }
 
   const handlePointerMove = (e: React.PointerEvent, c: TinderCommunity) => {
-    if (!drag || activePointerId.current !== e.pointerId) return
     const startX = dragStartX.current
-    if (startX == null) return
+    const startY = dragStartY.current
+    if (startX == null || startY == null) return
+
     const dx = e.clientX - startX
+    const dy = e.clientY - startY
+
+    // if we haven't turned this into an active drag yet, decide whether to start
+    if (!drag) {
+      const absDx = Math.abs(dx)
+      const absDy = Math.abs(dy)
+      // still within jitter threshold
+      if (absDx < START_THRESHOLD && absDy < START_THRESHOLD) return
+
+      // if horizontal movement dominates, start capturing and dragging
+      if (absDx > absDy && absDx >= START_THRESHOLD && pendingDragId.current === c.id) {
+        try {
+          e.currentTarget.setPointerCapture(e.pointerId)
+        } catch {
+          /* ignore capture failures */
+        }
+        activePointerId.current = e.pointerId
+        pendingDragId.current = null
+        setDrag({ id: c.id, x: dx })
+        e.preventDefault()
+        return
+      }
+
+      // vertical movement dominates -> treat as scroll, clear pending and don't prevent default
+      if (absDy > absDx) {
+        pendingDragId.current = null
+        // let the browser handle scrolling
+        return
+      }
+    }
+
+    // if we have an active drag, only respond to the same pointer
+    if (!drag || activePointerId.current !== e.pointerId) return
+
     setDrag({ id: c.id, x: dx })
     e.preventDefault()
 
@@ -122,6 +166,7 @@ const TinderPage = () => {
         }
         setDrag(null)
         dragStartX.current = null
+        dragStartY.current = null
         activePointerId.current = null
         doLike(c)
         return
@@ -134,6 +179,7 @@ const TinderPage = () => {
         }
         setDrag(null)
         dragStartX.current = null
+        dragStartY.current = null
         activePointerId.current = null
         doDislike(c)
         return
@@ -142,7 +188,16 @@ const TinderPage = () => {
   }
 
   const handlePointerUp = (e: React.PointerEvent, c: TinderCommunity) => {
-    if (!drag) return
+    // if we never started a drag, just clear pending state
+    if (!drag) {
+      dragStartX.current = null
+      dragStartY.current = null
+      pendingDragId.current = null
+      return
+    }
+
+    if (activePointerId.current !== null && activePointerId.current !== e.pointerId) return
+
     try {
       e.currentTarget.releasePointerCapture(e.pointerId)
     } catch {
@@ -151,11 +206,15 @@ const TinderPage = () => {
     const startX = dragStartX.current
     if (startX == null) {
       setDrag(null)
+      dragStartX.current = null
+      dragStartY.current = null
+      activePointerId.current = null
       return
     }
     const dx = e.clientX - startX
     setDrag(null)
     dragStartX.current = null
+    dragStartY.current = null
     activePointerId.current = null
 
     if (dx > SWIPE_THRESHOLD) {
@@ -171,6 +230,8 @@ const TinderPage = () => {
   const handlePointerCancel = () => {
     setDrag(null)
     dragStartX.current = null
+    dragStartY.current = null
+    pendingDragId.current = null
     activePointerId.current = null
   }
 
@@ -188,17 +249,46 @@ const TinderPage = () => {
     }
     const t = e.touches && e.touches[0]
     if (!t) return
+    // record start coords but don't prevent default yet so the page can scroll
     dragStartX.current = t.clientX
-    setDrag({ id: c.id, x: 0 })
-    e.preventDefault()
+    dragStartY.current = t.clientY
+    pendingDragId.current = c.id
+    // don't call e.preventDefault() here
   }
 
   const handleTouchMove = (e: React.TouchEvent, c: TinderCommunity) => {
-    if (!drag || drag.id !== c.id) return
     const startX = dragStartX.current
+    const startY = dragStartY.current
     const t = e.touches && e.touches[0]
-    if (startX == null || !t) return
+    if (startX == null || startY == null || !t) return
+
     const dx = t.clientX - startX
+    const dy = t.clientY - startY
+
+    if (!drag) {
+      const absDx = Math.abs(dx)
+      const absDy = Math.abs(dy)
+      // still within jitter threshold
+      if (absDx < START_THRESHOLD && absDy < START_THRESHOLD) return
+
+      if (absDx > absDy && absDx >= START_THRESHOLD && pendingDragId.current === c.id) {
+        // start dragging on touch
+        pendingDragId.current = null
+        setDrag({ id: c.id, x: dx })
+        // prevent page scrolling when we decided to drag
+        e.preventDefault()
+        return
+      }
+
+      // vertical scroll dominates -> clear pending and allow default
+      if (absDy > absDx) {
+        pendingDragId.current = null
+        return
+      }
+    }
+
+    if (!drag || drag.id !== c.id) return
+
     setDrag({ id: c.id, x: dx })
     e.preventDefault()
 
@@ -206,12 +296,14 @@ const TinderPage = () => {
       if (dx > SWIPE_THRESHOLD) {
         setDrag(null)
         dragStartX.current = null
+        dragStartY.current = null
         doLike(c)
         return
       }
       if (dx < -SWIPE_THRESHOLD) {
         setDrag(null)
         dragStartX.current = null
+        dragStartY.current = null
         doDislike(c)
         return
       }
@@ -219,17 +311,26 @@ const TinderPage = () => {
   }
 
   const handleTouchEnd = (e: React.TouchEvent, c: TinderCommunity) => {
-    if (!drag) return
+    // if we never started a drag, just clear pending and allow default behavior
+    if (!drag) {
+      dragStartX.current = null
+      dragStartY.current = null
+      pendingDragId.current = null
+      return
+    }
+
     const startX = dragStartX.current
     const t = e.changedTouches && e.changedTouches[0]
     if (startX == null || !t) {
       setDrag(null)
       dragStartX.current = null
+      dragStartY.current = null
       return
     }
     const dx = t.clientX - startX
     setDrag(null)
     dragStartX.current = null
+    dragStartY.current = null
 
     if (dx > SWIPE_THRESHOLD) {
       doLike(c)
@@ -244,6 +345,8 @@ const TinderPage = () => {
   const handleTouchCancel = () => {
     setDrag(null)
     dragStartX.current = null
+    dragStartY.current = null
+    pendingDragId.current = null
   }
 
   return (
@@ -302,25 +405,27 @@ const TinderPage = () => {
                 }
               }
 
-              const handlers = isTop
-                ? {
-                    onPointerDown: (e: React.PointerEvent) => handlePointerDown(e, c),
-                    onPointerMove: (e: React.PointerEvent) => handlePointerMove(e, c),
-                    onPointerUp: (e: React.PointerEvent) => handlePointerUp(e, c),
-                    onPointerCancel: handlePointerCancel,
-                    // touch fallbacks for mobile
-                    onTouchStart: (e: React.TouchEvent) => handleTouchStart(e, c),
-                    onTouchMove: (e: React.TouchEvent) => handleTouchMove(e, c),
-                    onTouchEnd: (e: React.TouchEvent) => handleTouchEnd(e, c),
-                    onTouchCancel: handleTouchCancel
-                  }
-                : ({} as React.DOMAttributes<HTMLDivElement>)
+              // explicitly type handlers so the analyzer recognizes these props
+              let handlers: React.DOMAttributes<HTMLDivElement> = {}
+              if (isTop) {
+                handlers = {
+                  onPointerDown: (e: React.PointerEvent) => handlePointerDown(e, c),
+                  onPointerMove: (e: React.PointerEvent) => handlePointerMove(e, c),
+                  onPointerUp: (e: React.PointerEvent) => handlePointerUp(e, c),
+                  onPointerCancel: handlePointerCancel,
+                  // touch fallbacks for mobile
+                  onTouchStart: (e: React.TouchEvent) => handleTouchStart(e, c),
+                  onTouchMove: (e: React.TouchEvent) => handleTouchMove(e, c),
+                  onTouchEnd: (e: React.TouchEvent) => handleTouchEnd(e, c),
+                  onTouchCancel: handleTouchCancel
+                }
+              }
 
               if (!isTop) {
                 style.pointerEvents = 'none'
               } else {
-                // Prevent touch scrolling while dragging the top card on touch devices
-                style.touchAction = 'none'
+                // Allow vertical touch scrolling while still enabling horizontal drag detection
+                style.touchAction = 'pan-y'
               }
 
               return (

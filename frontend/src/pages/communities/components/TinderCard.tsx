@@ -1,4 +1,6 @@
-import React from 'react'
+import { Box, Heading, HStack, IconButton, Image, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { FaHeart, FaTimes } from 'react-icons/fa'
+
 import type { TinderCommunity } from '../../../util/views/tinder'
 
 type Props = {
@@ -15,93 +17,95 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
   const description = data?.shortDescription || ''
   const image = data?.logo || ''
 
-  // keep depth available (used as data attribute) but do not visually offset cards
-  const translateY = 0
-  const scale = 1
-
-  const containerStyle: React.CSSProperties = {
-    width: 320,
-    height: 460,
-    borderRadius: 12,
-    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-    overflow: 'hidden',
-    background: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    userSelect: 'none',
-    transform: `translateY(${translateY}px) scale(${scale})`,
-    transition: 'transform 160ms ease'
-  }
-
-  const imageStyle: React.CSSProperties = {
-    height: 300,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundImage: image ? `url(${image})` : undefined,
-    backgroundColor: '#efefef'
-  }
-
-  const bodyStyle: React.CSSProperties = {
-    padding: 12,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    flex: 1
-  }
-
-  const buttonsRow: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: 8,
-    marginTop: 'auto'
-  }
+  const bg = useColorModeValue('white', 'gray.800')
+  const infoColor = useColorModeValue('gray.600', 'gray.300')
+  const placeholderBg = useColorModeValue('#efefef', '#2A2A2A')
 
   return (
-    <div className={className} style={containerStyle} role="article" aria-label={title} data-depth={depth}>
-      <div style={imageStyle} />
-      <div style={bodyStyle}>
-        <div style={{ fontWeight: 700, fontSize: 18 }}>{title}</div>
-        <div style={{ color: '#555', fontSize: 14, lineHeight: 1.3, maxHeight: 72, overflow: 'hidden' }}>
-          {description || <span style={{ color: '#999' }}>No description</span>}
-        </div>
+    <Box
+      className={className}
+      role="article"
+      aria-label={title}
+      data-depth={depth}
+      bg={bg}
+      w="416px" /* 320 * 1.3 */
+      h="598px" /* 460 * 1.3 */
+      borderRadius="16px" /* ~12 * 1.3 */
+      boxShadow="lg"
+      overflowY="auto"
+      sx={{ WebkitOverflowScrolling: 'touch' }}
+      userSelect="none"
+      transition="transform 160ms ease"
+      display="flex"
+      flexDirection="column"
+    >
+      {image ? (
+        <Image src={image} alt={title} objectFit="cover" h="416px" w="100%" borderTopRadius="16px" />
+      ) : (
+        <Box h="416px" bg={placeholderBg} borderTopRadius="16px" />
+      )}
 
-        <div style={buttonsRow}>
-          <button
+      <VStack align="stretch" p={3} flex="1">
+        <Heading as="h3" size="md">
+          {title}
+        </Heading>
+
+        <Text fontSize="sm" color={infoColor}>
+          Alapítva: {data?.established ?? '—'}
+        </Text>
+        <Text fontSize="sm" color={infoColor}>
+          Reszort: {data?.resortName ?? '—'}
+        </Text>
+
+        <HStack justify="space-around" mt={2}>
+          <IconButton
             data-no-drag
             onPointerDown={(e) => e.stopPropagation()}
-            onClick={() => onDislike && onDislike(data)}
-            style={{
-              flex: 1,
-              padding: '8px 12px',
-              background: '#fff',
-              border: '1px solid #ddd',
-              borderRadius: 8,
-              cursor: 'pointer'
-            }}
             aria-label="Dislike"
-          >
-            Dislike
-          </button>
+            title="Dislike"
+            icon={<FaTimes />}
+            onClick={() => onDislike && onDislike(data)}
+            variant="outline"
+            colorScheme="red"
+            borderRadius="full"
+            w="56px" /* 44 * 1.3 ~= 57.2 -> 56 */
+            h="56px"
+            minW="56px"
+            minH="56px"
+            p={0}
+          />
 
-          <button
+          <IconButton
             data-no-drag
             onPointerDown={(e) => e.stopPropagation()}
-            onClick={() => onLike && onLike(data)}
-            style={{
-              flex: 1,
-              padding: '8px 12px',
-              background: '#06b6d4',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 8,
-              cursor: 'pointer'
-            }}
             aria-label="Like"
-          >
-            Like
-          </button>
-        </div>
-      </div>
-    </div>
+            title="Like"
+            icon={<FaHeart />}
+            onClick={() => onLike && onLike(data)}
+            bg="cyan.500"
+            color="white"
+            _hover={{ bg: 'cyan.600' }}
+            borderRadius="full"
+            w="56px"
+            h="56px"
+            minW="56px"
+            minH="56px"
+            p={0}
+          />
+        </HStack>
+
+        <Box
+          mt={2}
+          h="182px"
+          overflowY="auto"
+          color={useColorModeValue('#555', '#ccc')}
+          fontSize="sm"
+          lineHeight="1.4"
+          aria-hidden={description.length === 0}
+        >
+          {description ? <Text whiteSpace="normal">{description}</Text> : <Text color="gray.400">No description</Text>}
+        </Box>
+      </VStack>
+    </Box>
   )
 }
