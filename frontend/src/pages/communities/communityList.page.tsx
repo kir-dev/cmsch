@@ -1,6 +1,6 @@
 import { SearchIcon } from '@chakra-ui/icons'
 import { Box, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-import { createRef, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useCommunityList } from '../../api/hooks/community/useCommunityList'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
@@ -17,7 +17,7 @@ export default function CommunityListPage() {
   const communities = config?.communities
   const { data, isLoading, isError } = useCommunityList()
   const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(data || [])
-  const inputRef = createRef<HTMLInputElement>()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
