@@ -1,4 +1,4 @@
-import { Box, Button, Heading } from '@chakra-ui/react'
+import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
@@ -40,12 +40,17 @@ const TinderPage = () => {
   const unseen = communities.filter((c) => c.status === 'NOT_SEEN')
   const displayed = unseen.filter((c) => !removedIds.has(c.id))
 
-  // container for stacking cards
+  // container for stacking cards - responsive for mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const containerHeight = isMobile ? Math.min(598, window.innerHeight - 200) : 598
+
   const stackContainerStyle: React.CSSProperties = {
-    width: 416, // scaled to match card width (320 * 1.3)
-    height: 598, // scaled to match card height (460 * 1.3)
+    width: '100%',
+    maxWidth: 416,
+    height: containerHeight,
     position: 'relative',
-    margin: '2rem auto'
+    margin: '1rem auto',
+    padding: '0 0.5rem'
   }
 
   const cardWrapperBase = (index: number, total: number): React.CSSProperties => ({
@@ -353,26 +358,25 @@ const TinderPage = () => {
     <CmschPage loginRequired>
       <title>{config?.app?.siteName || 'CMSch'} | Tinder</title>
 
-      <Box w="100%" mx="auto">
-        <Box position="relative" mb={6}>
-          <Heading as="h1" variant="main-title" textAlign="center">
+      <Box w="100%" mx="auto" px={{ base: 2, md: 4 }}>
+        <Box position="relative" mb={6} display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" gap={4}>
+          <Heading as="h1" variant="main-title" textAlign="center" flex={{ base: 'none', md: 1 }}>
             Kör tinder
           </Heading>
           <Button
             as={Link}
             to={`${AbsolutePaths.TINDER}/liked`}
-            position="absolute"
-            top="50%"
-            right={2}
-            transform="translateY(-50%)"
-            size="lg"
+            size={{ base: 'md', md: 'lg' }}
             aria-label="Tinder-matches-button"
+            width={{ base: 'full', md: 'auto' }}
           >
             Kedvelt körök
           </Button>
         </Box>
         {displayed.length === 0 ? (
-          <div>Minden kört megtekintettél már. A kedvelt köröket megtekintheted összegyűjtve a fenti gombra kattintva.</div>
+          <Box px={4} py={8} textAlign="center">
+            <Text>Minden kört megtekintettél már. A kedvelt köröket megtekintheted összegyűjtve a fenti gombra kattintva.</Text>
+          </Box>
         ) : (
           <div style={stackContainerStyle} aria-live="polite">
             {displayed.map((c, idx) => {

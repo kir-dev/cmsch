@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderCommunity } from '../../api/hooks/community/useTinderCommunity.ts'
@@ -23,25 +23,52 @@ export default function LikedCommunityListPage() {
   return (
     <CmschPage loginRequired>
       <title>{app?.siteName || 'CMSch'} | Kedvelt közösségek</title>
-      <Box position="relative" mb={6}>
-        <Heading as="h1" variant="main-title">
-          Kör tinder
-        </Heading>
-        <Flex position="absolute" top="50%" right={2} transform="translateY(-50%)" gap={3}>
-          <Button as={Link} to={`${AbsolutePaths.TINDER}/community`} size="lg" aria-label="Tinder-matches-button">
-            Tinder
-          </Button>
-          <Button as={Link} to={`${AbsolutePaths.COMMUNITY}`} size="lg">
-            Összes kör megtekintése
-          </Button>
-        </Flex>
+      <Box w="100%" mx="auto" px={{ base: 2, md: 4 }}>
+        <Box
+          position="relative"
+          mb={6}
+          display="flex"
+          flexDirection={{ base: 'column', md: 'row' }}
+          alignItems={{ base: 'center', md: 'flex-start' }}
+          gap={4}
+        >
+          <Heading as="h1" variant="main-title" textAlign={{ base: 'center', md: 'left' }} flex={{ base: 'none', md: 1 }}>
+            Kör tinder
+          </Heading>
+          <Flex
+            flexDirection={{ base: 'column', sm: 'row' }}
+            gap={3}
+            width={{ base: 'full', md: 'auto' }}
+            position={{ base: 'relative', md: 'absolute' }}
+            top={{ base: 'auto', md: '50%' }}
+            right={{ base: 'auto', md: 2 }}
+            transform={{ base: 'none', md: 'translateY(-50%)' }}
+          >
+            <Button
+              as={Link}
+              to={`${AbsolutePaths.TINDER}/community`}
+              size={{ base: 'md', md: 'lg' }}
+              aria-label="Tinder-matches-button"
+              width={{ base: 'full', sm: 'auto' }}
+            >
+              Tinder
+            </Button>
+            <Button as={Link} to={`${AbsolutePaths.COMMUNITY}`} size={{ base: 'md', md: 'lg' }} width={{ base: 'full', sm: 'auto' }}>
+              Összes kör megtekintése
+            </Button>
+          </Flex>
+        </Box>
       </Box>
       {likedCommunities.length === 0 && (
-        <div>Nem kedveltél még egy kört sem. A fenti Tinder gombra kattintva kereshetsz a még nem látott körök közt.</div>
+        <Box px={{ base: 4, md: 0 }} py={8} textAlign="center">
+          <Text>Nem kedveltél még egy kört sem. A fenti Tinder gombra kattintva kereshetsz a még nem látott körök közt.</Text>
+        </Box>
       )}
-      {likedCommunities?.map((community) => (
-        <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITY}/${community.id}`} />
-      ))}
+      <Box px={{ base: 2, md: 0 }}>
+        {likedCommunities?.map((community) => (
+          <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITY}/${community.id}`} />
+        ))}
+      </Box>
     </CmschPage>
   )
 }
