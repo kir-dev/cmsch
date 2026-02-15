@@ -40,6 +40,9 @@ class CommunitiesComponent(
         fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon",
         type = SettingType.LONG_TEXT_MARKDOWN)
 
+    final var seachEnabled by BooleanSettingRef(defaultValue = false, fieldName = "Keresés engedélyezése",
+        description = "Engedélyezi a körök közötti keresést")
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val resortGroup by SettingGroup(fieldName = "Reszortok")
@@ -57,12 +60,33 @@ class CommunitiesComponent(
         fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon",
         type = SettingType.LONG_TEXT_MARKDOWN)
 
+    final var seachEnabledResort by BooleanSettingRef(defaultValue = false, fieldName = "Keresés engedélyezése",
+        description = "Engedélyezi a reszortok közötti keresést")
+
+    ///-------------------------------------------------------------------------------------------------------------------
+
+    val tinderGroup by SettingGroup(fieldName = "Tinder")
+
+    final var tinderEnabled by BooleanSettingRef(defaultValue = false, fieldName = "Tinder engedélyezése",
+        description = "Engedélyezi a körök és userek közötti tinder szerű párosítást")
+
+    final var minRoleTinder by MinRoleSettingRef(defaultValue = setOf(), fieldName = "Jogosultságok",
+        description = "Melyik roleokkal nyitható meg az oldal")
+
+
     override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
         val result = mutableListOf<MenuSettingItem>()
         if (minRoleResort.isAvailableForRole(role) || role.isAdmin) {
             result.add(MenuSettingItem(
                 this.javaClass.simpleName + "@org",
                 menuDisplayNameResort, "/organization", 0,
+                visible = false, subMenu = false, external = false
+            ))
+        }
+        if (tinderEnabled && (minRoleTinder.isAvailableForRole(role) || role.isAdmin)) {
+            result.add(MenuSettingItem(
+                this.javaClass.simpleName + "@tinder",
+                "Tinder", "/tinder", 0,
                 visible = false, subMenu = false, external = false
             ))
         }

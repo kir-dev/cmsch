@@ -1,5 +1,5 @@
 import { Alert, AlertIcon } from '@chakra-ui/react'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { useConfigContext } from '../api/contexts/config/ConfigContext'
 
 type PresenceAlertProps = {

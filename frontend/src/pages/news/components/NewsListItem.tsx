@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp, useBrandColor } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import { NewsArticleView } from '../../../util/views/news.view'
+import type { NewsArticleView } from '../../../util/views/news.view'
 
 type Props = {
   news: NewsArticleView

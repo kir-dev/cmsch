@@ -1,5 +1,5 @@
 import { Box, Flex, Select, Stack } from '@chakra-ui/react'
-import { Grammar, highlight, languages } from 'prismjs'
+import { type Grammar, highlight, languages } from 'prismjs'
 import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
 import 'prismjs/components/prism-csharp'

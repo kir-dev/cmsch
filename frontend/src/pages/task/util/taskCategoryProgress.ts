@@ -1,4 +1,4 @@
-import { TaskCategoryPreview } from '../../../util/views/task.view'
+import type { TaskCategoryPreview } from '../../../util/views/task.view'
 
 export const progress = (category: TaskCategoryPreview) => (category.approved + category.notGraded) / category.sum
 

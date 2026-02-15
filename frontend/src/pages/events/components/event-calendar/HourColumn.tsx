@@ -1,4 +1,4 @@
-import { Box, StackProps, Text } from '@chakra-ui/react'
+import { Box, type StackProps, Text } from '@chakra-ui/react'
 import { addHours, endOfDay, format, startOfDay } from 'date-fns'
 import { useMemo } from 'react'
 import { calculatePosition } from './utils'

@@ -1,4 +1,4 @@
-import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
+import { Link as ChakraLink, type LinkProps } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router'
 import { useBrandColor } from '../util/core-functions.util.ts'
 

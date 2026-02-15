@@ -1,7 +1,7 @@
 import { Box, Collapse, Stack, useDisclosure } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { isCurrentEvent, isUpcomingEvent } from '../../../util/core-functions.util'
-import { EventListView } from '../../../util/views/event.view'
+import type { EventListView } from '../../../util/views/event.view'
 import { CardListItem } from './CardListItem'
 import EventList from './EventList'
 

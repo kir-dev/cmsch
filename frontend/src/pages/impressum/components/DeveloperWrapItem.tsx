@@ -1,5 +1,5 @@
 import { Flex, HStack, Image, Tag, Text } from '@chakra-ui/react'
-import { Dev } from '../../../api/hooks/developers/useDevelopers'
+import type { Dev } from '../../../api/hooks/developers/useDevelopers'
 import { API_BASE_URL } from '../../../util/configs/environment.config'
 import { KirDevColor } from '../../../util/configs/theme.config'
 

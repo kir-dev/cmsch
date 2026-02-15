@@ -1,4 +1,4 @@
-import { Tab, TabProps } from '@chakra-ui/react'
+import { Tab, type TabProps } from '@chakra-ui/react'
 
 export function CustomTabButton({ color, ...props }: TabProps) {
   return <Tab color={color ?? 'chakra-body-text'} {...props} />

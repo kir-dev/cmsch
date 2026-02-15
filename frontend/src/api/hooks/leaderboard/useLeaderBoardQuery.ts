@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
-import { LeaderBoardView } from '../../../util/views/leaderBoardView'
+import type { LeaderBoardView } from '../../../util/views/leaderBoardView'
 import { QueryKeys } from '../queryKeys'
 
 type TempLeaderBoardItemView = {

@@ -1,5 +1,7 @@
 package hu.bme.sch.cmsch.component.communities
 
+import hu.bme.sch.cmsch.admin.GenerateOverview
+import hu.bme.sch.cmsch.admin.OverviewType
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -21,15 +23,19 @@ data class TinderInteractionEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false)
+    @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
     @Column(nullable = false)
+    @property:GenerateOverview(columnName = "Közösség ID", order = 1)
     var communityId: Int = 0,
 
     @Column(nullable = false)
+    @property:GenerateOverview(columnName = "Felhasználó ID", order = 2)
     var userId: Int = 0,
 
     @Column(nullable = false)
+    @property:GenerateOverview(renderer = OverviewType.BOOLEAN, columnName = "Liked", order = 3)
     var liked: Boolean = true,
 
     ): ManagedEntity {

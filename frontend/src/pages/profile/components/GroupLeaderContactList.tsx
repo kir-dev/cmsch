@@ -1,7 +1,7 @@
 import { Box, Heading, HStack, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { FaFacebook, FaPhone } from 'react-icons/fa'
 import { LinkButton } from '../../../common-components/LinkButton'
-import { ProfileView } from '../../../util/views/profile.view'
+import type { ProfileView } from '../../../util/views/profile.view'
 
 export const GroupLeaderContactList = ({ profile }: { profile: ProfileView }) => {
   const bg = useColorModeValue('#00000005', '#FFFFFF05')

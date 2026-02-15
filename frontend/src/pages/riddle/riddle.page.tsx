@@ -9,13 +9,12 @@ import {
   Image,
   Input,
   Text,
-  ToastId,
+  type ToastId,
   useDisclosure,
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { FormEvent, useRef, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { type FormEvent, useRef, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRiddleDetailsQuery } from '../../api/hooks/riddle/useRiddleDeatilsQuery'
@@ -46,7 +45,9 @@ const RiddlePage = () => {
   const skipMutation = useRiddleSkipMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
   const boxBorder = useOpaqueBackground(1)
-  const riddleConfig = useConfigContext()?.components?.riddle
+  const config = useConfigContext()?.components
+  const riddleConfig = config?.riddle
+  const app = config?.app
   const brandColor = useBrandColor()
 
   if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
@@ -167,7 +168,9 @@ const RiddlePage = () => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title={data.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {data.title}
+      </title>
       <CustomBreadcrumb items={breadcrumbItems} />
       <StopItModal isOpen={isOpen} onClose={onClose} />
       <Heading my={5}> {data.title} </Heading>

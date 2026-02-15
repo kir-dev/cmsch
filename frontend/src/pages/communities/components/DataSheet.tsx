@@ -1,13 +1,13 @@
 import { EditIcon, LinkIcon } from '@chakra-ui/icons'
 import { Box, Flex, Heading, HStack, Image, Link, Tag, useColorModeValue, VStack, Wrap } from '@chakra-ui/react'
-import { FC, ReactNode } from 'react'
+import type { FC, ReactNode } from 'react'
 import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
 
 import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { joinPath, useBrandColor } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import { Community, Organization } from '../../../util/views/organization'
+import type { Community, Organization } from '../../../util/views/organization'
 
 type DataSheetProps = {
   organization: Organization | Community

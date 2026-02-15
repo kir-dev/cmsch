@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
-import { ScanResponseView } from '../../../util/views/token.view'
+import type { ScanResponseView } from '../../../util/views/token.view'
 
 export function useScanTokenMutation(onSuccess?: () => void, onError?: () => void) {
   return useMutation({

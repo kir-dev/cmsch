@@ -1,5 +1,4 @@
 import { Badge, Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { Link, Navigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTasksInCategoryQuery } from '../../api/hooks/task/useTasksInCategoryQuery'
@@ -18,7 +17,9 @@ const TaskCategoryPage = () => {
   const hoverBg = useOpaqueBackground(3)
   const { isLoading, isError, data } = useTasksInCategoryQuery(id || 'UNKNOWN')
 
-  const component = useConfigContext()?.components?.task
+  const config = useConfigContext()?.components
+  const component = config?.task
+  const app = config?.app
 
   if (!id) return <Navigate to={AbsolutePaths.TASKS} />
 
@@ -38,7 +39,9 @@ const TaskCategoryPage = () => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title={data.categoryName} />
+      <title>
+        {app?.siteName || 'CMSch'} | {data.categoryName}
+      </title>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{data.categoryName}</Heading>
       {!!data.description && (

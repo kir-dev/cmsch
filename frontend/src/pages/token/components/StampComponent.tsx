@@ -1,7 +1,7 @@
 import { Box, Center, Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { FaRocket, FaStamp } from 'react-icons/fa'
-import { IconType } from 'react-icons/lib'
+import type { IconType } from 'react-icons/lib'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
 

@@ -1,5 +1,4 @@
 import { Heading, Text, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTaskCategoriesQuery } from '../../api/hooks/task/useTaskCategoriesQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
@@ -10,7 +9,9 @@ import { taskCategoryType } from '../../util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
 
 const TaskCategoryListPage = () => {
-  const component = useConfigContext()?.components?.task
+  const config = useConfigContext()?.components
+  const component = config?.task
+  const app = config?.app
 
   const { isLoading, isError, data } = useTaskCategoriesQuery()
 
@@ -37,7 +38,9 @@ const TaskCategoryListPage = () => {
 
   return (
     <CmschPage loginRequired>
-      <Helmet title={component.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {component?.title}
+      </title>
       {required}
       <Heading as="h1" variant="main-title">
         {component.regularTitle}

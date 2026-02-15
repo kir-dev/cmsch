@@ -1,6 +1,6 @@
 import { Box, Text } from '@chakra-ui/react'
 import { useOpaqueBackground } from '../../../util/core-functions.util.ts'
-import { Riddle } from '../../../util/views/riddle.view.ts'
+import type { Riddle } from '../../../util/views/riddle.view.ts'
 
 interface RiddleListItemProps {
   riddle: Riddle

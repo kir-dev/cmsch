@@ -1,7 +1,7 @@
-import { Box, CircularProgress, HStack, Stat, StatHelpText, StatLabel, StatNumber, StatProps } from '@chakra-ui/react'
+import { Box, CircularProgress, HStack, Stat, StatHelpText, StatLabel, StatNumber, type StatProps } from '@chakra-ui/react'
 import { Link } from 'react-router'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
-import { TeamStatView } from '../../../util/views/team.view'
+import type { TeamStatView } from '../../../util/views/team.view'
 
 interface TeamStatProps extends StatProps {
   stat: TeamStatView

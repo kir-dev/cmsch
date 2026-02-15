@@ -17,7 +17,7 @@ import {
 import { useRef, useState } from 'react'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
 
-import { TeamMemberView } from '../../../util/views/team.view'
+import type { TeamMemberView } from '../../../util/views/team.view'
 import { AcceptButton } from './AcceptButton'
 import { DeleteButton } from './DeleteButton'
 import { LeaderButton } from './LeaderButton'

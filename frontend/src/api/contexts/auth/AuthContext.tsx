@@ -1,6 +1,6 @@
-import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { createContext, type PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { API_BASE_URL } from '../../../util/configs/environment.config'
-import { AuthState, UserAuthInfoView } from '../../../util/views/authInfo.view.ts'
+import { AuthState, type UserAuthInfoView } from '../../../util/views/authInfo.view.ts'
 import { useAuthInfo } from '../../hooks/auth/useAuthInfo.ts'
 import { useTokenRefresh } from '../../hooks/useTokenRefresh.ts'
 

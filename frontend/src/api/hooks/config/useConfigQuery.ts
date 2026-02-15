@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios, { AxiosError } from 'axios'
 import { APP_CONFIG_CACHE_TTL_SECONDS, DISABLE_APP_CONFIG_CACHE } from '../../../util/configs/environment.config.ts'
 import { ApiPaths } from '../../../util/paths'
-import { ConfigDto } from '../../contexts/config/types'
+import type { ConfigDto } from '../../contexts/config/types'
 import { QueryKeys } from '../queryKeys'
 
 export const useConfigQuery = () => {

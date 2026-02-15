@@ -4,8 +4,11 @@ import { CmschLayout } from './common-components/layout/CmschLayout'
 import AccessKeyPage from './pages/access-key/accessKey.page.tsx'
 import CommunityPage from './pages/communities/community.page.tsx'
 import CommunityListPage from './pages/communities/communityList.page.tsx'
+import LikedCommunityListPage from './pages/communities/likedCommunityList.page.tsx'
 import OrganizationPage from './pages/communities/organization.page.tsx'
 import OrganizationListPage from './pages/communities/organizationList.page.tsx'
+import TinderPage from './pages/communities/tinder.page.tsx'
+import TinderQuestionsPage from './pages/communities/tinderQuestions.page.tsx'
 import CountdownPage from './pages/countdown/countdown.page'
 import DebtPage from './pages/debt/debt.page.tsx'
 import { ErrorPage } from './pages/error/error.page'
@@ -68,6 +71,12 @@ export function App() {
               <Route path={Paths.ORGANIZATION}>
                 <Route path=":id" element={<OrganizationPage />} />
                 <Route index element={<OrganizationListPage />} />
+              </Route>
+              <Route path={Paths.TINDER}>
+                <Route path="question" element={<TinderQuestionsPage />} />
+                <Route path="community" element={<TinderPage />} />
+                <Route path="liked" element={<LikedCommunityListPage />} />
+                <Route index element={<TinderPage />} />
               </Route>
               <Route path={Paths.EVENTS}>
                 <Route path=":path" element={<EventPage />} />

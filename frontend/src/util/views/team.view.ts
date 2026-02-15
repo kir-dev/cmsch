@@ -1,4 +1,4 @@
-import { TaskCategoryPreview } from './task.view'
+import type { TaskCategoryPreview } from './task.view'
 
 export type TeamDashboardView = {
   memberCount: number

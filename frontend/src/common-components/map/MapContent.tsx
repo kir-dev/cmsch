@@ -3,7 +3,7 @@ import { Map, Marker, ZoomControl } from 'pigeon-maps'
 import { useEffect, useState } from 'react'
 import { useGeolocated } from 'react-geolocated'
 import { l } from '../../util/language'
-import { MapDataItemView, MapMarkerShape } from '../../util/views/map.view'
+import { type MapDataItemView, MapMarkerShape } from '../../util/views/map.view'
 import { MapMarker } from './MapMarker'
 
 interface MapContentProps {

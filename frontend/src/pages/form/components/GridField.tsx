@@ -2,7 +2,7 @@ import { Grid, GridItem, Input } from '@chakra-ui/react'
 import { Fragment, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { PageStatus } from '../../../common-components/PageStatus'
-import { FormField, GridFieldValues } from '../../../util/views/form.view'
+import type { FormField, GridFieldValues } from '../../../util/views/form.view'
 import { GridFieldItem } from './GridFieldItem'
 
 type Props = {

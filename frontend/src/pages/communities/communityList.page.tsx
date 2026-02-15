@@ -1,21 +1,23 @@
 import { SearchIcon } from '@chakra-ui/icons'
 import { Box, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-import { createRef, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { useEffect, useRef, useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useCommunityList } from '../../api/hooks/community/useCommunityList'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown.tsx'
 import { PageStatus } from '../../common-components/PageStatus'
 import { AbsolutePaths } from '../../util/paths'
-import { Community } from '../../util/views/organization'
+import type { Community } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function CommunityListPage() {
-  const config = useConfigContext()?.components?.communities
+  const config = useConfigContext()?.components
+  const app = config?.app
+  const communities = config?.communities
   const { data, isLoading, isError } = useCommunityList()
   const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(data || [])
-  const inputRef = createRef<HTMLInputElement>()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleInput = () => {
     const search = inputRef?.current?.value.toLowerCase()
@@ -40,13 +42,17 @@ export default function CommunityListPage() {
     }
   }, [data, inputRef])
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+  if (!communities) return <ComponentUnavailable />
+
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
     <CmschPage>
-      <Helmet title={config?.title} />
+      <title>
+        {app?.siteName || 'CMSch'} | {communities?.title}
+      </title>
       <Heading as="h1" variant="main-title">
-        {config?.title}
+        {communities?.title}
       </Heading>
       <InputGroup mt={5}>
         <InputLeftElement h="100%">
@@ -61,9 +67,9 @@ export default function CommunityListPage() {
           autoFocus={true}
         />
       </InputGroup>
-      {config?.description && (
+      {communities?.description && (
         <Box mt={5}>
-          <Markdown text={config?.description} />
+          <Markdown text={communities?.description} />
         </Box>
       )}
       {filteredCommunities?.map((community) => (

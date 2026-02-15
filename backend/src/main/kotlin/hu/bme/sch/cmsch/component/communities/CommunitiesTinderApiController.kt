@@ -2,15 +2,11 @@ package hu.bme.sch.cmsch.component.communities
 
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.getUserEntityFromDatabaseOrNull
-import io.swagger.v3.oas.annotations.parameters.RequestBody
+import hu.bme.sch.cmsch.util.getUserOrNull
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import kotlin.jvm.optionals.getOrElse
 
 @RestController
 @RequestMapping("/api")
@@ -20,46 +16,52 @@ class CommunitiesTinderApiController(
     private val userService: UserService
 ) {
 
-    @RequestMapping("/tinder/question")
+    @GetMapping("/tinder/question")
     fun allQuestions(): List<TinderQuestionDto> {
         return tinderService.getAllQuestions().map{ TinderQuestionDto(it) }
     }
 
-    @PostMapping("/tinder/question")
+    @GetMapping("/tinder/question/answers")
+    fun getAnswers(auth: Authentication?): TinderAnswerStatus {
+        val user = auth?.getUserOrNull() ?: return TinderAnswerStatus()
+        val answer: Map<String, String> = tinderService.getAnswerMapForUser(user.id)
+            .getOrElse{return TinderAnswerStatus() }
+        return TinderAnswerStatus(answered = true, answer = answer)
+    }
+
+    @PostMapping("/tinder/question/answers")
     fun submitAnswers(
-        auth: Authentication?,
-        @RequestBody answers: TinderAnswerDto
-    ): ResponseEntity<Unit> {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        tinderService.submitAnswers(false, user, answers)
-        return ResponseEntity.ok().build()
+        @RequestBody data: Map<String, String>,
+        auth: Authentication?
+    ): TinderAnswerResponseStatus {
+        val user = auth?.getUserOrNull()
+            ?: return TinderAnswerResponseStatus.NO_PERMISSION
+        return tinderService.submitAnswers(false, user, data)
     }
 
-    @PutMapping("/tinder/question")
+    @PutMapping("/tinder/question/answers")
     fun updateAnswers(
-        auth: Authentication?,
-        @RequestBody answers: TinderAnswerDto
-    ): ResponseEntity<Unit> {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        tinderService.submitAnswers(true, user, answers)
-        return ResponseEntity.ok().build()
+        @RequestBody answers: Map<String, String>,
+        auth: Authentication?
+    ): TinderAnswerResponseStatus {
+        val user = auth?.getUserOrNull()
+            ?: return TinderAnswerResponseStatus.NO_PERMISSION
+        return tinderService.submitAnswers(true, user, answers)
     }
 
-    @GetMapping("tinder/communities")
-    fun getTinderCommunities(auth: Authentication?): ResponseEntity<List<CommunitiesTinderDto>> {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        val res = tinderService.getTinderCommunities(user)
-        return ResponseEntity.ok(res)
+    @GetMapping("/tinder/community")
+    fun getTinderCommunities(auth: Authentication?): List<CommunitiesTinderDto> {
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return emptyList()
+        return tinderService.getTinderCommunities(user)
     }
 
-    @PostMapping("tinder/communities/interact")
+    @PostMapping("/tinder/community/interact")
     fun interactWithCommunity(
         auth: Authentication?,
         @RequestBody interaction: TinderInteractionDto
-    ): ResponseEntity<Unit> {
-        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return ResponseEntity.status(401).build()
-        tinderService.interactWithCommunity(user, interaction)
-        return ResponseEntity.ok().build()
+    ): Boolean {
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return false
+        return tinderService.interactWithCommunity(user, interaction)
     }
 
 }

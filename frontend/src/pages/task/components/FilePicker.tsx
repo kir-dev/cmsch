@@ -1,7 +1,7 @@
 // from https://github.com/PedroDBFlores/chakra-ui-file-picker
 
-import { Button, Input, InputGroup, InputGroupProps, InputRightElement } from '@chakra-ui/react'
-import { ChangeEvent, Component, createRef, FC } from 'react'
+import { Button, Input, InputGroup, type InputGroupProps, InputRightElement } from '@chakra-ui/react'
+import { type ChangeEvent, Component, createRef, type FC } from 'react'
 
 interface FilePickerProps {
   onFileChange: (fileList: Array<File>) => void

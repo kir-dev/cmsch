@@ -11,17 +11,17 @@ import {
   Text,
   useColorModeValue
 } from '@chakra-ui/react'
-import { RefObject } from 'react'
+import type { RefObject } from 'react'
 import { useConfigContext } from '../../../../api/contexts/config/ConfigContext'
 import { LinkButton } from '../../../../common-components/LinkButton'
 import { formatHu, stringifyTimeRange, useBrandColor } from '../../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../../util/paths'
-import { EventListView } from '../../../../util/views/event.view'
+import type { EventListView } from '../../../../util/views/event.view'
 
 export type EventBoxItem = EventListView & { top: number; bottom: number; width: number; left: number }
 
 interface EventBoxProps {
-  boxRef?: RefObject<HTMLDivElement>
+  boxRef?: RefObject<HTMLDivElement | null>
   event: EventBoxItem
 }
 

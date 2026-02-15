@@ -1,8 +1,8 @@
-import { DebtView } from './debt.view'
-import { GroupLeaderView } from './groupLeader.view'
-import { GroupMemberLocationView } from './groupMemberLocation.view'
-import { TokenView } from './token.view'
-import { TopListAbstractEntryView } from './toplistAbstractEntry.view'
+import type { DebtView } from './debt.view'
+import type { GroupLeaderView } from './groupLeader.view'
+import type { GroupMemberLocationView } from './groupMemberLocation.view'
+import type { TokenView } from './token.view'
+import type { TopListAbstractEntryView } from './toplistAbstractEntry.view'
 
 export interface ProfileView {
   cmschId?: string

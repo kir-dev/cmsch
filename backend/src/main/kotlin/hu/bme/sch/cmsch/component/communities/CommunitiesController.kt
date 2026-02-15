@@ -28,6 +28,7 @@ import kotlin.jvm.optionals.getOrNull
 @ConditionalOnBean(CommunitiesComponent::class)
 class CommunitiesController(
     val tinderService: TinderService,
+    val organizationService: OrganizationService,
     repo: CommunityRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -99,7 +100,7 @@ class CommunitiesController(
         wide = false
     )
 
-    private val reader = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
+    private val reader = objectMapper.readerFor(object: TypeReference<Map<String, String>>(){})
 
     @GetMapping("/tinder/show/{id}")
     fun showTinderAnswers(@PathVariable id: Int, model: Model, auth: Authentication): String {
@@ -192,7 +193,7 @@ class CommunitiesController(
     private fun getTinderEditComponent(communityId: Int): DashboardComponent {
         val answerEntity = transactionManager.transaction(readOnly = true) { tinderService.getAnswerForCommunity(communityId).getOrNull() }
             .let {
-                reader.readValue<Map<Int, String>>(it?.answers)
+                reader.readValue<Map<String, String>>(it?.answers)
             }
             ?: return DashboardFormCard(
                 id = 3,
@@ -210,11 +211,11 @@ class CommunitiesController(
         val formElements = mutableListOf<FormElement>()
         for (question in questions) {
             formElements.add(FormElement(
-                fieldName = "question_${question.id}",
+                fieldName = question.question,
                 label = question.question,
                 type = FormElementType.SELECT,
                 values = ","+question.answerOptions,
-                defaultValue = answerEntity[question.id] ?: ""
+                defaultValue = answerEntity[question.question] ?: ""
             ))
         }
 
@@ -259,7 +260,7 @@ class CommunitiesController(
     private fun getTinderShowComponent(communityId: Int): DashboardComponent {
         val answerEntity = transactionManager.transaction(readOnly = true) { tinderService.getAnswerForCommunity(communityId).getOrNull() }
             .let {
-                reader.readValue<Map<Int, String>>(it?.answers)
+                reader.readValue<Map<String, String>>(it?.answers)
             }
             ?: return DashboardFormCard(
                 id = 3,
@@ -277,10 +278,10 @@ class CommunitiesController(
         for (i in 0..<questions.size) {
             val questionText = questions[i].question
             formElements.add(FormElement(
-                fieldName = "question_$i",
+                fieldName = questionText,
                 label = questionText,
                 type = FormElementType.INFO_BOX,
-                values = answerEntity[questions[i].id] ?: "Nincs válasz"
+                values = answerEntity[questions[i].question] ?: "Nincs válasz"
             ))
         }
 
@@ -298,6 +299,13 @@ class CommunitiesController(
 
     override fun onEntityChanged(entity: CommunityEntity) {
         tinderService.ensureCommunityAnswer(entity)
+    }
+
+    override fun onEntityPreSave(entity: CommunityEntity, auth: Authentication): Boolean {
+        val resName = organizationService.getOrganizationById(entity.resortId).map { it.name }
+            .getOrNull() ?: return false
+        entity.resortName = resName
+        return true
     }
 
 }

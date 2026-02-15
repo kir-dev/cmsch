@@ -5,7 +5,7 @@ import { LinkButton } from '../../../common-components/LinkButton'
 import Markdown from '../../../common-components/Markdown'
 import { DETAILED_TIMESTAMP_OPTIONS, isCurrentEvent, isUpcomingEvent, stringifyTimeStamp } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import { EventView } from '../../../util/views/event.view'
+import type { EventView } from '../../../util/views/event.view'
 import EventTags from './EventTags'
 
 interface EventProps {

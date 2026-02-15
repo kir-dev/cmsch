@@ -1,5 +1,4 @@
 import { Image } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useCommunity } from '../../api/hooks/community/useCommunity'
@@ -10,12 +9,14 @@ import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 
 export default function CommunityPage() {
-  const config = useConfigContext()?.components?.communities
+  const config = useConfigContext()?.components
+  const app = config?.app
+  const communities = config?.communities
   const params = useParams()
   const { data, isLoading, isError } = useCommunity(params.id || 'UNKNOWN')
   const breadcrumbItems = [
     {
-      title: config?.title,
+      title: communities?.title,
       to: '/community'
     },
     {
@@ -23,14 +24,15 @@ export default function CommunityPage() {
     }
   ]
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
     <CmschPage>
-      <Helmet title={data.name} />
+      <title>
+        {app?.siteName || 'CMSch'} | {data.name}
+      </title>
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={data} />
-
       {data.videoIds?.map((id) => (
         <Frame key={id} id={id} />
       ))}

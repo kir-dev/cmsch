@@ -1,4 +1,4 @@
-import Color, { ColorInstance } from 'color'
+import Color, { type ColorInstance } from 'color'
 import { useStyle } from '../api/contexts/config/ConfigContext.tsx'
 
 export function hexToRgb(hex: string): [number, number, number] {

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
-import { EventView } from '../../../util/views/event.view'
+import type { EventView } from '../../../util/views/event.view'
 import { QueryKeys } from '../queryKeys'
 
 export const useEventQuery = (path: string) => {

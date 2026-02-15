@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from '@chakra-ui/react'
-import { FC } from 'react'
+import { Button, type ButtonProps } from '@chakra-ui/react'
+import type { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 export type LinkProps = {

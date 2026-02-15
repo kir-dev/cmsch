@@ -1,5 +1,5 @@
 import { Center, Spinner } from '@chakra-ui/react'
-import { ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import { useBrandColor } from '../util/core-functions.util.ts'
 
 type LoadingProps = {

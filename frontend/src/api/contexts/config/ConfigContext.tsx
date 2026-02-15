@@ -1,9 +1,9 @@
-import { createContext, PropsWithChildren, useContext, useEffect } from 'react'
+import { createContext, type PropsWithChildren, useContext, useEffect } from 'react'
 import { LoadingView } from '../../../util/LoadingView.tsx'
 import { usePersistentStyleSetting } from '../../../util/configs/themeStyle.config.ts'
 import { l } from '../../../util/language.ts'
 import { useConfigQuery } from '../../hooks/config/useConfigQuery'
-import { ConfigDto } from './types'
+import type { ConfigDto } from './types'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)

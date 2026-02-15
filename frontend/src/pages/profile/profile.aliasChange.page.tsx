@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, FormControl, FormLabel, Heading, Input, useToast } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { type FormEvent, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useAliasChangeMutation } from '../../api/hooks/alias/useAliasChangeMutation'
@@ -18,7 +17,9 @@ export const AliasChangePage = () => {
   const submissionMutation = useAliasChangeMutation()
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
-  const component = useConfigContext()?.components?.profile
+  const config = useConfigContext()?.components
+  const component = config?.profile
+  const app = config?.app
   const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
@@ -65,7 +66,7 @@ export const AliasChangePage = () => {
 
   return (
     <CmschPage>
-      <Helmet title="Becenév módosítása" />
+      <title>{app?.siteName || 'CMSch'} | Becenév módosítása</title>
       <Heading my={5}>Becenév módosítása</Heading>
       <Box display="flex" flexDirection="column" as="form" onSubmit={onSubmitAlias}>
         <FormControl>

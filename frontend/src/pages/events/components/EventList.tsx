@@ -2,7 +2,7 @@ import { Box, Heading, VStack } from '@chakra-ui/react'
 import { isSameDay } from 'date-fns'
 import { useMemo } from 'react'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { EventListView } from '../../../util/views/event.view'
+import type { EventListView } from '../../../util/views/event.view'
 import EventListItem from './EventListItem'
 
 interface EventListProps {

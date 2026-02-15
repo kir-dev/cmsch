@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
 import { AbsolutePaths } from '../../../util/paths'
-import { EventListView } from '../../../util/views/event.view'
+import type { EventListView } from '../../../util/views/event.view'
 
 type ScheduleProps = {
   events: EventListView[]

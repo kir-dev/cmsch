@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, CardProps, Heading, useColorModeValue } from '@chakra-ui/react'
+import { Card, CardBody, CardHeader, type CardProps, Heading, useColorModeValue } from '@chakra-ui/react'
 import { useStyle } from '../../api/contexts/config/ConfigContext.tsx'
 
 export interface CmschContainerProps extends CardProps {

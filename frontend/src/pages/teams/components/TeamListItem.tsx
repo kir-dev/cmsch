@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
 
-import { TeamListItemView } from '../../../util/views/team.view'
+import type { TeamListItemView } from '../../../util/views/team.view'
 import TeamLabel from './TeamLabel.tsx'
 
 type TeamListItemProps = {

@@ -1,5 +1,5 @@
 import { Tab } from '@chakra-ui/react'
-import { PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
 
 export const CustomTab = ({ children }: PropsWithChildren) => {

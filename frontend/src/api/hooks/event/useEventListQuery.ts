@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { ApiPaths } from '../../../util/paths'
-import { EventListView } from '../../../util/views/event.view'
+import type { EventListView } from '../../../util/views/event.view'
 import { QueryKeys } from '../queryKeys'
 
 export const useEventListQuery = () => {

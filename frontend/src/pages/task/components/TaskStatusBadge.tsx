@@ -1,5 +1,5 @@
 import { Badge } from '@chakra-ui/react'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { taskStatus } from '../../../util/views/task.view'
 
 const STATUS_TEXT_MAP = new Map<taskStatus, string>([

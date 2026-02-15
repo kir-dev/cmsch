@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { TeamEditDto, TeamResponses } from '../../../../util/views/team.view'
+import { type TeamEditDto, TeamResponses } from '../../../../util/views/team.view'
 
 export const useTeamEdit = (onResponse: (response: TeamResponses) => void) => {
   const [loading, setLoading] = useState(false)

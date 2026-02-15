@@ -6,7 +6,6 @@ import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './api/contexts/auth/AuthContext'
 
 import { createRoot } from 'react-dom/client'
-import { HelmetProvider } from 'react-helmet-async'
 import { App } from './App'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
 import { ServiceProvider } from './api/contexts/service/ServiceContext'
@@ -26,22 +25,20 @@ root.render(
     <ThemeConfig>
       <AppBackground>
         <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <BrowserRouter>
-              <ServiceProvider>
-                <ErrorBoundary>
-                  <ConfigProvider>
-                    <AuthProvider>
-                      <PushNotificationHandler>
-                        <App />
-                        <ReactQueryDevtools />
-                      </PushNotificationHandler>
-                    </AuthProvider>
-                  </ConfigProvider>
-                </ErrorBoundary>
-              </ServiceProvider>
-            </BrowserRouter>
-          </HelmetProvider>
+          <BrowserRouter>
+            <ServiceProvider>
+              <ErrorBoundary>
+                <ConfigProvider>
+                  <AuthProvider>
+                    <PushNotificationHandler>
+                      <App />
+                      <ReactQueryDevtools />
+                    </PushNotificationHandler>
+                  </AuthProvider>
+                </ConfigProvider>
+              </ErrorBoundary>
+            </ServiceProvider>
+          </BrowserRouter>
         </QueryClientProvider>
       </AppBackground>
     </ThemeConfig>

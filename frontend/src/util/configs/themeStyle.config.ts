@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { Style } from '../../api/contexts/config/types.ts'
+import type { Style } from '../../api/contexts/config/types.ts'
 
 export type PersistentStyleSettingData = {
   persistentStyle?: Style

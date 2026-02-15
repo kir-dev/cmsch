@@ -2,7 +2,7 @@ import { Box, HStack, Text, useColorModeValue } from '@chakra-ui/react'
 import * as FaIcons from 'react-icons/fa'
 import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6'
 import { useOpaqueBackground } from '../../../util/core-functions.util.ts'
-import { DebtView } from '../../../util/views/debt.view.ts'
+import type { DebtView } from '../../../util/views/debt.view.ts'
 
 interface DebtListItemProps {
   item: DebtView

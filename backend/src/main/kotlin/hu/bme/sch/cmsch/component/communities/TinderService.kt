@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.ObjectMapper
+import java.util.Optional
+import kotlin.collections.forEach
 import kotlin.collections.set
 import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
@@ -26,7 +28,7 @@ class TinderService(
     private val tinderInteractionRepository: TinderInteractionRepository
 ) {
 
-    private val reader = objectMapper.readerFor(object: TypeReference<Map<Int, String>>(){})
+    private val reader = objectMapper.readerFor(object: TypeReference<Map<String, String>>(){})
 
     @Transactional(readOnly = true)
     fun getAllQuestions() = questionRepository.findAll().toList()
@@ -34,35 +36,39 @@ class TinderService(
     @Transactional(readOnly = true)
     fun getAnswerForCommunity(communityId: Int) = answerRepository.findByCommunityId(communityId)
 
+    @Transactional(readOnly = true)
+    fun getAnswerMapForUser(userId: Int): Optional<Map<String, String>> = answerRepository.findByUserId(userId)
+        .map { reader.readValue( it.answers ) }
+
     @Transactional
-    fun submitAnswers(update: Boolean, user: UserEntity, answers: TinderAnswerDto) {
-        val questions = questionRepository.findAll().associateBy { it.id }
-        for (answer in answers.answers) {
+    fun submitAnswers(update: Boolean, user: CmschUser, answers: Map<String, String>): TinderAnswerResponseStatus {
+        val questions = questionRepository.findAll().associateBy { it.question }
+        for (answer in answers) {
             val question = questions[answer.key] ?: continue
-            if (answer.value!="" && !question.answerOptions.split(", *").contains(answer.value)) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong answer option: ${answer.value}")
+            if (answer.value!="" && !question.answerOptions.split(",").map { it.trim() }.contains(answer.value)) {
+                return TinderAnswerResponseStatus.INVALID_ANSWER
             }
         }
 
         val existing = answerRepository.findByUserId(user.id)
         if (!update) {
             if (existing.isPresent){
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Answers already submitted")
+                return TinderAnswerResponseStatus.ERROR
             }
             val entity = TinderAnswerEntity(
                 userId = user.id,
-                communityId = null,
-                answers = objectMapper.writeValueAsString(answers.answers)
+                userName = user.userName,
+                answers = objectMapper.writeValueAsString(answers)
             )
             answerRepository.save(entity)
         } else {
-            val answer = mutableMapOf<Int, String>()
+            val answer = mutableMapOf<String, String>()
             existing.ifPresent {
-                reader.readValue<Map<Int, String>>(it.answers).forEach { (k, v) ->
+                reader.readValue<Map<String, String>>(it.answers).forEach { (k, v) ->
                     answer[k] = v
                 }
             }
-            for (ans in answers.answers) {
+            for (ans in answers) {
                 answer[ans.key] = ans.value
             }
             existing.ifPresentOrElse(
@@ -73,27 +79,28 @@ class TinderService(
                 {
                     val entity = TinderAnswerEntity(
                         userId = user.id,
-                        communityId = null,
+                        userName = user.userName,
                         answers = objectMapper.writeValueAsString(answer)
                     )
                     answerRepository.save(entity)
                 }
             )
         }
+        return TinderAnswerResponseStatus.OK
     }
 
     @Transactional(readOnly = true)
     fun getTinderCommunities(user: UserEntity): List<CommunitiesTinderDto> {
         val communities = communityRepository.findAll().toList()
         val answerList = answerRepository.findAllWithCommunityIdNotNull()
-        val answers = mutableMapOf<Int, Map<Int, String>>()
+        val answers = mutableMapOf<Int, Map<String, String>>()
         for (answer in answerList) {
-            val ansMap = reader.readValue<Map<Int, String>>(answer.answers)
+            val ansMap = reader.readValue<Map<String, String>>(answer.answers)
             answers[answer.communityId!!] = ansMap
         }
-        val userAnswer = reader.readValue<Map<Int, String>>(
+        val userAnswer = reader.readValue<Map<String, String>>(
             answerRepository.findByUserId(user.id)
-                .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST, "User has not answered the questions") }
+                .getOrElse { return emptyList() }
                 .answers
         )
         val userInteractions = tinderInteractionRepository.findByUserId(user.id).associateBy { it.communityId }
@@ -122,7 +129,7 @@ class TinderService(
             application = it.application,
             resortName = it.resortName,
             tinderAnswers = answers[it.id]?.values?.toList() ?: emptyList()
-        ) }
+        ) }.sortedBy { it.status }
         return communityProfiles
     }
 
@@ -146,16 +153,16 @@ class TinderService(
             ?: return "redirect:/admin/control/community"
         val prevAnswer = ensureCommunityAnswer(community)
 
-        val answer = mutableMapOf<Int, String>()
-        reader.readValue<Map<Int, String>>(prevAnswer.answers)
+        val answer = mutableMapOf<String, String>()
+        reader.readValue<Map<String, String>>(prevAnswer.answers)
             .entries.forEach {
                 answer[it.key] = it.value
             }
         for (question in questions) {
-            val ans = data["question_${question.id}"] ?: continue
+            val ans = data[question.question] ?: continue
             val options = question.answerOptions.split(',').map { it.trim() }
             if (options.contains(ans)) {
-                answer[question.id] = ans
+                answer[question.question] = ans
             } else if (ans != "") {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Hibás válaszlehetőség: $ans")
             }
@@ -170,18 +177,33 @@ class TinderService(
     }
 
     @Transactional
-    fun interactWithCommunity(user: UserEntity, interaction: TinderInteractionDto) {
-        val community = communityRepository.findById(interaction.communityId).orElseThrow {
-            ResponseStatusException(HttpStatus.BAD_REQUEST, "Community not found: ${interaction.communityId}")
+    fun interactWithCommunity(user: UserEntity, interaction: TinderInteractionDto): Boolean {
+        val community = communityRepository.findById(interaction.communityId).getOrNull() ?: return false
+        if (tinderInteractionRepository.findByCommunityIdAndUserId(community.id, user.id).isPresent){
+            return false
         }
-        tinderInteractionRepository.findByCommunityIdAndUserId(community.id, user.id)
-            .ifPresent { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User has already swiped the community") }
         val entity = TinderInteractionEntity(
             communityId = community.id,
             userId = user.id,
             liked = interaction.liked
         )
         tinderInteractionRepository.save(entity)
+        return true
     }
 
+
+    @Transactional(readOnly = true)
+    fun getInteractionsByUser(userId: Int): List<TinderInteractionEntity> {
+        return tinderInteractionRepository.findByUserId(userId)
+    }
+
+     @Transactional(readOnly = true)
+     fun getInteractionsByCommunity(communityId: Int): List<TinderInteractionEntity> {
+         return tinderInteractionRepository.findByCommunityId(communityId)
+     }
+
+    @Transactional(readOnly = true)
+    fun getAllInteractions(): List<TinderInteractionEntity> {
+        return tinderInteractionRepository.findAll().toList()
+    }
 }

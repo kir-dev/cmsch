@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
-import { TaskFullDetailsView } from '../../../util/views/task.view'
+import type { TaskFullDetailsView } from '../../../util/views/task.view'
 import { QueryKeys } from '../queryKeys'
 
 export const useTaskFullDetailsQuery = (taskId: string) => {
