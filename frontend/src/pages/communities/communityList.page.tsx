@@ -20,7 +20,7 @@ export default function CommunityListPage() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleInput = () => {
-    const search = inputRef?.current?.value.toLowerCase()
+    const search = inputRef.current?.value?.toLowerCase() || ''
     if (!data) {
       setFilteredCommunities([])
     } else if (!search) setFilteredCommunities(data)
@@ -29,7 +29,7 @@ export default function CommunityListPage() {
         data.filter((c) => {
           if (c.searchKeywords?.find((s) => s.toLowerCase().includes(search))) return true
           if (c.interests?.find((i) => i.toLowerCase().includes(search))) return true
-          return c.name.toLocaleLowerCase().includes(search)
+          return c.name.toLowerCase().includes(search)
         })
       )
   }
@@ -40,7 +40,7 @@ export default function CommunityListPage() {
       setFilteredCommunities(data)
       if (inputRef.current) inputRef.current.value = ''
     }
-  }, [data, inputRef])
+  }, [data])
 
   if (!communities) return <ComponentUnavailable />
 
