@@ -1,6 +1,6 @@
 import { SearchIcon } from '@chakra-ui/icons'
 import { Box, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-import { createRef, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useCommunityList } from '../../api/hooks/community/useCommunityList'
@@ -15,10 +15,10 @@ export default function CommunityListPage() {
   const config = useConfigContext()?.components?.communities
   const { data, isLoading, isError } = useCommunityList()
   const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(data || [])
-  const inputRef = createRef<HTMLInputElement>()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleInput = () => {
-    const search = inputRef?.current?.value.toLowerCase()
+    const search = inputRef.current?.value?.toLowerCase() || ''
     if (!data) {
       setFilteredCommunities([])
     } else if (!search) setFilteredCommunities(data)
@@ -27,7 +27,7 @@ export default function CommunityListPage() {
         data.filter((c) => {
           if (c.searchKeywords?.find((s) => s.toLowerCase().includes(search))) return true
           if (c.interests?.find((i) => i.toLowerCase().includes(search))) return true
-          return c.name.toLocaleLowerCase().includes(search)
+          return c.name.toLowerCase().includes(search)
         })
       )
   }
@@ -38,7 +38,7 @@ export default function CommunityListPage() {
       setFilteredCommunities(data)
       if (inputRef.current) inputRef.current.value = ''
     }
-  }, [data, inputRef])
+  }, [data])
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
 
