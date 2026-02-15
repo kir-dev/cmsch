@@ -3,6 +3,7 @@ import { Box, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/re
 import { createRef, useEffect, useState } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useCommunityList } from '../../api/hooks/community/useCommunityList'
+import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown.tsx'
 import { PageStatus } from '../../common-components/PageStatus'
@@ -40,6 +41,8 @@ export default function CommunityListPage() {
       if (inputRef.current) inputRef.current.value = ''
     }
   }, [data, inputRef])
+
+  if (!communities) return <ComponentUnavailable />
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 

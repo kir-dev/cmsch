@@ -354,7 +354,9 @@ export interface Signup {
 export interface Communities {
   title: string
   description: string
+  searchEnabled: boolean
   titleResort: string
   descriptionResort: string
+  searchEnabledResort: boolean
   tinderEnabled: boolean
 }

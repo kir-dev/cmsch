@@ -40,6 +40,9 @@ class CommunitiesComponent(
         fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon",
         type = SettingType.LONG_TEXT_MARKDOWN)
 
+    final var seachEnabled by BooleanSettingRef(defaultValue = false, fieldName = "Keresés engedélyezése",
+        description = "Engedélyezi a körök közötti keresést")
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val resortGroup by SettingGroup(fieldName = "Reszortok")
@@ -56,6 +59,9 @@ class CommunitiesComponent(
     final var descriptionResort by StringSettingRef(defaultValue = "Az egyes reszortok a hasonló jellegű köröket összefogó szervezetek.",
         fieldName = "Körök leírása", description = "Ez jelenik meg a körök lapon",
         type = SettingType.LONG_TEXT_MARKDOWN)
+
+    final var seachEnabledResort by BooleanSettingRef(defaultValue = false, fieldName = "Keresés engedélyezése",
+        description = "Engedélyezi a reszortok közötti keresést")
 
     ///-------------------------------------------------------------------------------------------------------------------
 
