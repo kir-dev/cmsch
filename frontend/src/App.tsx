@@ -76,6 +76,7 @@ export function App() {
                 <Route path="question" element={<TinderQuestionsPage />} />
                 <Route path="community" element={<TinderPage />} />
                 <Route path="liked" element={<LikedCommunityListPage />} />
+                <Route index element={<TinderPage />} />
               </Route>
               <Route path={Paths.EVENTS}>
                 <Route path=":path" element={<EventPage />} />

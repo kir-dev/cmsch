@@ -1,4 +1,5 @@
-import { Heading } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading } from '@chakra-ui/react'
+import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderCommunity } from '../../api/hooks/community/useTinderCommunity.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
@@ -22,9 +23,22 @@ export default function LikedCommunityListPage() {
   return (
     <CmschPage loginRequired>
       <title>{app?.siteName || 'CMSch'} | Kedvelt közösségek</title>
-      <Heading as="h1" variant="main-title">
-        Kedvelt közösségek
-      </Heading>
+      <Box position="relative" mb={6}>
+        <Heading as="h1" variant="main-title">
+          Kör tinder
+        </Heading>
+        <Flex position="absolute" top="50%" right={2} transform="translateY(-50%)" gap={3}>
+          <Button as={Link} to={`${AbsolutePaths.TINDER}/community`} size="lg" aria-label="Tinder-matches-button">
+            Tinder
+          </Button>
+          <Button as={Link} to={`${AbsolutePaths.COMMUNITY}`} size="lg">
+            Összes kör megtekintése
+          </Button>
+        </Flex>
+      </Box>
+      {likedCommunities.length === 0 && (
+        <div>Nem kedveltél még egy kört sem. A fenti Tinder gombra kattintva kereshetsz a még nem látott körök közt.</div>
+      )}
       {likedCommunities?.map((community) => (
         <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITY}/${community.id}`} />
       ))}

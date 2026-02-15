@@ -64,6 +64,9 @@ class CommunitiesComponent(
     final var tinderEnabled by BooleanSettingRef(defaultValue = false, fieldName = "Tinder engedélyezése",
         description = "Engedélyezi a körök és userek közötti tinder szerű párosítást")
 
+    final var minRoleTinder by MinRoleSettingRef(defaultValue = setOf(), fieldName = "Jogosultságok",
+        description = "Melyik roleokkal nyitható meg az oldal")
+
 
     override fun getAdditionalMenus(role: RoleType): List<MenuSettingItem> {
         val result = mutableListOf<MenuSettingItem>()
@@ -71,6 +74,13 @@ class CommunitiesComponent(
             result.add(MenuSettingItem(
                 this.javaClass.simpleName + "@org",
                 menuDisplayNameResort, "/organization", 0,
+                visible = false, subMenu = false, external = false
+            ))
+        }
+        if (tinderEnabled && (minRoleTinder.isAvailableForRole(role) || role.isAdmin)) {
+            result.add(MenuSettingItem(
+                this.javaClass.simpleName + "@tinder",
+                "Tinder", "/tinder", 0,
                 visible = false, subMenu = false, external = false
             ))
         }
