@@ -1,6 +1,5 @@
 import { Box, Button, Divider, Flex, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useParams } from 'react-router'
 import { useFormPage } from '../../api/hooks/form/useFormPage'
@@ -64,8 +63,7 @@ const FormPage = () => {
   if (!isLoggedIn && status === FormStatus.NOT_FOUND) return <ComponentUnavailable />
 
   return (
-    <CmschPage>
-      <Helmet title={form?.name || 'Űrlap'} />
+    <CmschPage title={form?.name || 'Űrlap'}>
       <Box w="100%" mx="auto">
         <Heading as="h1" variant="main-title">
           {form?.name || 'Űrlap'}

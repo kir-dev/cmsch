@@ -1,5 +1,4 @@
 import { Flex, Heading, TabList, TabPanel, TabPanels, Tabs, useBreakpoint, useBreakpointValue } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { FaQrcode } from 'react-icons/fa'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useQrLevelsQuery } from '../../api/hooks/qr/useQrLevelsQuery'
@@ -26,8 +25,7 @@ export default function QrLevelsPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
-    <CmschPage>
-      <Helmet>{component.title}</Helmet>
+    <CmschPage title={component.title}>
       <Flex align="baseline" justifyContent="space-between" wrap="wrap">
         <Heading as="h1" variant="main-title" mt={5}>
           {component.title}

@@ -1,5 +1,5 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
-import { Input, InputGroup, InputGroupProps, InputLeftElement, InputRightElement } from '@chakra-ui/react'
+import { Input, InputGroup, type InputGroupProps, InputLeftElement, InputRightElement } from '@chakra-ui/react'
 import { useSearch } from '../util/useSearch'
 
 interface SearchBarProps extends ReturnType<typeof useSearch>, InputGroupProps {}

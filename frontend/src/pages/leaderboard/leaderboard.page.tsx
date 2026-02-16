@@ -1,5 +1,4 @@
 import { Box, Heading, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { useMatch, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
@@ -39,12 +38,10 @@ const LeaderboardPage = () => {
   }
 
   return (
-    <CmschPage disablePadding={true}>
-      <Helmet title={title} />
+    <CmschPage disablePadding={true} title={title}>
       <Heading as="h1" variant="main-title" textAlign="center" m="2rem">
         {title}
       </Heading>
-
       {component.topMessage ? (
         <Box textAlign="center">
           <Markdown text={component.topMessage} />
@@ -52,12 +49,10 @@ const LeaderboardPage = () => {
       ) : (
         <></>
       )}
-
       <HStack my={5}>
         {data?.userScore !== undefined && <BoardStat label="Saját pont" value={data.userScore} />}
         {data?.groupScore !== undefined && <BoardStat label={`${component.myGroupName} pontjai`} value={data.groupScore} />}
       </HStack>
-
       <Tabs isLazy isFitted colorScheme={brandColor} variant="enclosed" index={tabIndex} onChange={onTabSelected}>
         <TabList>
           <Tab>{component.groupBoardName}</Tab>

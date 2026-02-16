@@ -280,6 +280,7 @@ export type UserHandling = object
 export type ExtraPage = object
 
 export interface Location {
+  title: string
   topMessage: string
   bottomMessage: string
 }
@@ -353,6 +354,9 @@ export interface Signup {
 export interface Communities {
   title: string
   description: string
+  searchEnabled: boolean
   titleResort: string
   descriptionResort: string
+  searchEnabledResort: boolean
+  tinderEnabled: boolean
 }

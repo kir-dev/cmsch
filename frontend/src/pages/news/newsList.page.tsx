@@ -1,5 +1,3 @@
-import { Helmet } from 'react-helmet-async'
-
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useNewsListQuery } from '../../api/hooks/news/useNewsListQuery'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
@@ -17,8 +15,7 @@ const NewsListPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component?.title} />
 
   return (
-    <CmschPage>
-      <Helmet title={component.title} />
+    <CmschPage title={component?.title}>
       <NewsList newsList={sortNewsList(data)} />
     </CmschPage>
   )

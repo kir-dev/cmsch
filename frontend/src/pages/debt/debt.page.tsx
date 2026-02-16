@@ -1,5 +1,4 @@
 import { Divider, Heading, Text } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useDebtQuery } from '../../api/hooks/debt/useDebtQuery.ts'
 import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
@@ -24,8 +23,7 @@ const DebtPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={title} />
 
   return (
-    <CmschPage>
-      <Helmet title={title} />
+    <CmschPage title={title}>
       <Heading as="h1" variant="main-title">
         {title}
       </Heading>

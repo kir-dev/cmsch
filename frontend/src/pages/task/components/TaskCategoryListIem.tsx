@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Flex, HStack, Text, useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router'
 import { AbsolutePaths } from '../../../util/paths'
-import { TaskCategoryPreview } from '../../../util/views/task.view'
+import type { TaskCategoryPreview } from '../../../util/views/task.view'
 
 export const TaskCategoryListItem = ({ category }: { category: TaskCategoryPreview }) => {
   const bg = useColorModeValue('#00000020', '#FFFFFF20')

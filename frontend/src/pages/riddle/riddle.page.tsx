@@ -9,13 +9,12 @@ import {
   Image,
   Input,
   Text,
-  ToastId,
+  type ToastId,
   useDisclosure,
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { FormEvent, useRef, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { type FormEvent, useRef, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRiddleDetailsQuery } from '../../api/hooks/riddle/useRiddleDeatilsQuery'
@@ -166,8 +165,7 @@ const RiddlePage = () => {
   ]
 
   return (
-    <CmschPage loginRequired>
-      <Helmet title={data.title} />
+    <CmschPage loginRequired={true} title={data.title}>
       <CustomBreadcrumb items={breadcrumbItems} />
       <StopItModal isOpen={isOpen} onClose={onClose} />
       <Heading my={5}> {data.title} </Heading>

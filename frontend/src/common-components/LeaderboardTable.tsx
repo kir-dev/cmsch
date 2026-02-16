@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react'
 import { useCallback, useMemo } from 'react'
 import { useSearch } from '../util/useSearch'
-import { LeaderBoardItemView } from '../util/views/leaderBoardView'
+import type { LeaderBoardItemView } from '../util/views/leaderBoardView'
 import { CollapsableTableRow } from './CollapsableTableRow'
 import { SearchBar } from './SearchBar'
 

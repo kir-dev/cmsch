@@ -1,10 +1,10 @@
 import { Box, FormLabel, Input, Textarea, useToast } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { Control, Controller, FieldArrayWithId, UseFieldArrayReplace } from 'react-hook-form'
+import { type Control, Controller, type FieldArrayWithId, type UseFieldArrayReplace } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { AbsolutePaths } from '../../../util/paths'
-import { TaskFormatDescriptor } from '../../../util/views/task.view'
-import { FormInput } from '../task.page'
+import type { TaskFormatDescriptor } from '../../../util/views/task.view'
+import type { FormInput } from '../task.page'
 import { InputWithAddon } from './InputWithAddon'
 
 type CustomFormProps = {

@@ -1,5 +1,4 @@
 import { Heading } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { Navigate, useParams } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
@@ -24,8 +23,7 @@ const ExtraPage = () => {
     return <Navigate replace to={AbsolutePaths.ERROR} />
   }
   return (
-    <CmschPage>
-      <Helmet title={data.title} />
+    <CmschPage title={data.title}>
       <Heading as="h1" variant="main-title">
         {data.title}
       </Heading>

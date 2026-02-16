@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, FormControl, FormLabel, Heading, Input, useToast } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { type FormEvent, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useAliasChangeMutation } from '../../api/hooks/alias/useAliasChangeMutation'
@@ -64,8 +63,7 @@ export const AliasChangePage = () => {
   }
 
   return (
-    <CmschPage>
-      <Helmet title="Becenév módosítása" />
+    <CmschPage title="Becenév módosítása">
       <Heading my={5}>Becenév módosítása</Heading>
       <Box display="flex" flexDirection="column" as="form" onSubmit={onSubmitAlias}>
         <FormControl>

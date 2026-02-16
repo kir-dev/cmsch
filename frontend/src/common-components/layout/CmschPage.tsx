@@ -1,16 +1,17 @@
 import { Navigate, Outlet } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { LoadingPage } from '../../pages/loading/loading.page'
+import { Title } from '../../util/TitleProvider.tsx'
 import { RoleType } from '../../util/views/profile.view'
 import { LoginRequired } from '../LoginRequired'
-import { CmschContainer, CmschContainerProps } from './CmschContainer'
+import { CmschContainer, type CmschContainerProps } from './CmschContainer'
 
 interface CmschPageProps extends CmschContainerProps {
   loginRequired?: boolean
   minRole?: RoleType
 }
 
-export const CmschPage = ({ loginRequired, children, minRole, ...props }: CmschPageProps) => {
+export const CmschPage = ({ children, loginRequired, minRole, title, ...props }: CmschPageProps) => {
   const { authInfo, authInfoLoading, isLoggedIn } = useAuthContext()
   if (loginRequired) {
     if (authInfoLoading) return <LoadingPage />
@@ -24,6 +25,7 @@ export const CmschPage = ({ loginRequired, children, minRole, ...props }: CmschP
 
   return (
     <CmschContainer {...props} pb={10}>
+      <Title text={title} />
       <Outlet />
       {children}
     </CmschContainer>

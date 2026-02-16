@@ -12,8 +12,7 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { type SubmitEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
 import { useAccessKeyMutation } from '../../api/hooks/access-key/useAccessKeyMutation'
@@ -25,7 +24,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { AccessKeyResponse } from '../../util/views/accessKey'
+import type { AccessKeyResponse } from '../../util/views/accessKey'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()
@@ -55,7 +54,7 @@ function AccessKeyPage() {
   const mutation = useAccessKeyMutation(onData, onError)
   const query = useAccessKey()
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (value) {
       mutation.mutate({ key: value })
@@ -69,8 +68,7 @@ function AccessKeyPage() {
   }
 
   return (
-    <CmschPage>
-      <Helmet title={query.data.title} />
+    <CmschPage title={query.data.title}>
       <Heading as="h1" variant="main-title">
         {query.data.title}
       </Heading>

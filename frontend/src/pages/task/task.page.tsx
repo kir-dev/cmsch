@@ -16,8 +16,7 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { lazy, useEffect, useRef, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
-import { Controller, SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'
+import { Controller, type SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { Navigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTaskFullDetailsQuery } from '../../api/hooks/task/useTaskFullDetailsQuery'
@@ -31,7 +30,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { stringifyTimeStamp, useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { taskFormat, TaskFormatDescriptor, taskStatus, taskType } from '../../util/views/task.view'
+import { TaskFormat, type TaskFormatDescriptor, TaskStatus, TaskType } from '../../util/views/task.view'
 import { CustomForm } from './components/CustomForm'
 import { FilePicker } from './components/FilePicker'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
@@ -47,9 +46,9 @@ export interface FormInput {
   } & TaskFormatDescriptor)[]
 }
 
-const getAcceptedFileType = (type?: taskType) => {
-  if (type === taskType.ONLY_ZIP) return '.zip'
-  else if (type === taskType.ONLY_PDF) return '.pdf'
+const getAcceptedFileType = (type?: TaskType) => {
+  if (type === TaskType.ONLY_ZIP) return '.zip'
+  else if (type === TaskType.ONLY_PDF) return '.pdf'
   else return 'image/jpeg,image/png,image/jpg,image/gif,image/webp'
 }
 const TaskPage = () => {
@@ -59,6 +58,7 @@ const TaskPage = () => {
   const brandColor = useBrandColor()
 
   const component = useConfigContext()?.components?.task
+
   const toast = useToast()
   const { id } = useParams()
   const { setValue, handleSubmit, control } = useForm<FormInput>()
@@ -71,7 +71,7 @@ const TaskPage = () => {
   const taskSubmissionMutation = useTaskSubmissionMutation()
   const { isLoading, isError, data, isSuccess, refetch } = useTaskFullDetailsQuery(id || 'UNKNOWN')
   useEffect(() => {
-    if (!isSuccess && data?.submission && data?.task?.format === taskFormat.CODE) {
+    if (!isSuccess && data?.submission && data?.task?.format === TaskFormat.CODE) {
       setCodeAnswer(data.submission.textAnswer)
     }
   }, [isSuccess, data])
@@ -83,20 +83,20 @@ const TaskPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   const expired = data.task?.availableTo ? data.task?.availableTo < new Date().valueOf() / 1000 : false
-  const textAllowed = data.task?.type === taskType.TEXT || data.task?.type === taskType.BOTH
+  const textAllowed = data.task?.type === TaskType.TEXT || data.task?.type === TaskType.BOTH
   const fileAllowed =
-    data.task?.type === taskType.IMAGE ||
-    data.task?.type === taskType.BOTH ||
-    data.task?.type === taskType.ONLY_PDF ||
-    data.task?.type === taskType.ONLY_ZIP
+    data.task?.type === TaskType.IMAGE ||
+    data.task?.type === TaskType.BOTH ||
+    data.task?.type === TaskType.ONLY_PDF ||
+    data.task?.type === TaskType.ONLY_ZIP
 
   const submissionAllowed =
-    (data?.status === taskStatus.NOT_SUBMITTED ||
-      data?.status === taskStatus.REJECTED ||
-      (component?.resubmissionEnabled && data.status === taskStatus.SUBMITTED)) &&
+    (data?.status === TaskStatus.NOT_SUBMITTED ||
+      data?.status === TaskStatus.REJECTED ||
+      (component?.resubmissionEnabled && data.status === TaskStatus.SUBMITTED)) &&
     !expired
-  const reviewed = data.status === taskStatus.ACCEPTED || data.status === taskStatus.REJECTED
-  const localSubmission = data?.task?.format === taskFormat.NONE
+  const reviewed = data.status === TaskStatus.ACCEPTED || data.status === TaskStatus.REJECTED
+  const localSubmission = data?.task?.format === TaskFormat.NONE
 
   const onSubmit: SubmitHandler<FormInput> = async (values) => {
     if ((!fileAllowed || fileAnswer) && submissionAllowed) {
@@ -136,7 +136,7 @@ const TaskPage = () => {
       }
       if (textAllowed) {
         switch (data.task?.format) {
-          case taskFormat.TEXT:
+          case TaskFormat.TEXT:
             if (values.textAnswer) {
               formData.append('textAnswer', values.textAnswer)
             } else {
@@ -149,7 +149,7 @@ const TaskPage = () => {
               return
             }
             break
-          case taskFormat.FORM:
+          case TaskFormat.FORM:
             if (customFormData) {
               formData.append(
                 'textAnswer',
@@ -157,7 +157,7 @@ const TaskPage = () => {
               )
             }
             break
-          case taskFormat.CODE:
+          case TaskFormat.CODE:
             if (codeAnswer) {
               formData.append('textAnswer', codeAnswer)
             } else {
@@ -216,7 +216,7 @@ const TaskPage = () => {
   let textInput = null
   if (textAllowed && data.task) {
     switch (data.task.format) {
-      case taskFormat.TEXT:
+      case TaskFormat.TEXT:
         textInput = (
           <Box mt={5}>
             <FormLabel htmlFor="textAnswer">Szöveges válasz</FormLabel>
@@ -228,10 +228,10 @@ const TaskPage = () => {
           </Box>
         )
         break
-      case taskFormat.FORM:
+      case TaskFormat.FORM:
         textInput = <CustomForm formatDescriptor={data.task.formatDescriptor} control={control} fields={fields} replace={replace} />
         break
-      case taskFormat.CODE:
+      case TaskFormat.CODE:
         textInput = <CodeEditor code={codeAnswer} setCode={setCodeAnswer} readonly={false} />
         break
     }
@@ -240,7 +240,7 @@ const TaskPage = () => {
   let submittedText = null
   if (textAllowed && data.submission) {
     submittedText =
-      data.task?.format === taskFormat.CODE ? (
+      data.task?.format === TaskFormat.CODE ? (
         <CodeEditor code={data.submission?.textAnswer} setCode={() => {}} readonly={true} />
       ) : (
         <Text mt={2} whiteSpace="pre-wrap">
@@ -277,8 +277,7 @@ const TaskPage = () => {
   ]
 
   return (
-    <CmschPage loginRequired>
-      <Helmet title={data.task?.title} />
+    <CmschPage loginRequired={true} title={data.task?.title}>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Flex my={5} justify="space-between" flexWrap="wrap" alignItems="center">
         <Box>
@@ -304,7 +303,7 @@ const TaskPage = () => {
           &nbsp;{data.task?.expectedResultDescription}
         </Text>
       )}
-      {data.status !== taskStatus.NOT_SUBMITTED && (
+      {data.status !== TaskStatus.NOT_SUBMITTED && (
         <>
           <Heading size="md" mt={8}>
             Beküldött megoldás
@@ -341,7 +340,7 @@ const TaskPage = () => {
       {submissionAllowed && (
         <>
           <Heading size="md" mt={5}>
-            {data.status === taskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
+            {data.status === TaskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
           </Heading>
           <Stack mt={5}>
             {localSubmission ? (

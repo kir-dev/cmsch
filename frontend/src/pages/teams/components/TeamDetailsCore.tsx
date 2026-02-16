@@ -14,7 +14,6 @@ import {
   WrapItem
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { FaSignInAlt, FaSignOutAlt, FaUndoAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
@@ -34,7 +33,7 @@ import { PageStatus } from '../../../common-components/PageStatus'
 import { joinPath, useBrandColor } from '../../../util/core-functions.util'
 import { AbsolutePaths, Paths } from '../../../util/paths'
 import { RoleType, RoleTypeString } from '../../../util/views/profile.view'
-import { TeamResponseMessages, TeamResponses, TeamView } from '../../../util/views/team.view'
+import { TeamResponseMessages, TeamResponses, type TeamView } from '../../../util/views/team.view'
 import { MemberRow } from './MemberRow'
 import { TeamFormItem } from './TeamFormItem'
 import TeamLabel from './TeamLabel.tsx'
@@ -100,8 +99,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={teamComponent.title} />
   const title = myTeam ? teamComponent.myTitle : undefined
   return (
-    <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined}>
-      <Helmet title={title ?? team.name} />
+    <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined} title={title ?? team.name}>
       {title && <Heading mb={5}>{title}</Heading>}
       <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
         <Box p={4} bg={bannerBlanket} display="flex" justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>

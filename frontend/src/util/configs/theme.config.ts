@@ -1,6 +1,6 @@
 import { extendTheme } from '@chakra-ui/react'
 import { mode } from '@chakra-ui/theme-tools'
-import { Style } from '../../api/contexts/config/types.ts'
+import type { Style } from '../../api/contexts/config/types.ts'
 import { getColorShadesForColor } from '../core-functions.util.ts'
 
 export const KirDevColor = '#F15A29'

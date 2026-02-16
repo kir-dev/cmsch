@@ -5,7 +5,7 @@ import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
 import Markdown from '../../../common-components/Markdown'
 import { stringifyTimeStamp, useBrandColor } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import { NewsArticleView } from '../../../util/views/news.view'
+import type { NewsArticleView } from '../../../util/views/news.view'
 
 interface NewsProps {
   news: NewsArticleView

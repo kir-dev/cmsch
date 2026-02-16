@@ -3,7 +3,7 @@ import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa'
 import { Link } from 'react-router'
 import { formatHu, joinPath, useOpaqueBackground } from '../../../util/core-functions.util'
 import { AbsolutePaths } from '../../../util/paths'
-import { TeamFormView } from '../../../util/views/team.view'
+import type { TeamFormView } from '../../../util/views/team.view'
 
 export function TeamFormItem({ form }: { form: TeamFormView }) {
   const bg = useOpaqueBackground(1)

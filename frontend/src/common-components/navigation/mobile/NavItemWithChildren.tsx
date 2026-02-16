@@ -1,7 +1,7 @@
 import { Collapse, Flex, Icon, Stack, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
 import { Link } from 'react-router'
-import { Menu } from '../../../api/contexts/config/types'
+import type { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
 
 type Props = {

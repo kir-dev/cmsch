@@ -1,6 +1,5 @@
 import { Box, Button, Center, Heading, HStack, Image, Select, Stack, Text, useToast, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 import { useRiddleHistoryQuery } from '../../api/hooks/riddle/useRiddleHistoryQuery'
@@ -60,8 +59,7 @@ const RiddleHistoryPage = () => {
     }
   ]
   return (
-    <CmschPage>
-      <Helmet title="Megoldott riddleök" />
+    <CmschPage title="Megoldott riddleök">
       <CustomBreadcrumb items={breadcrumbItems} />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'center']}>
         <Heading as="h1" variant="main-title" my={5}>
@@ -86,7 +84,6 @@ const RiddleHistoryPage = () => {
           )}
         </Stack>
       </Stack>
-
       {!riddle || !riddleList ? (
         <>
           <Text mt={2}>Ebben a kategóriában még nincsenek megoldott riddleök.</Text>

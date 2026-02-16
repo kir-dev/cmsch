@@ -1,59 +1,65 @@
-import { TopListAbstractEntryView } from './toplistAbstractEntry.view'
+import type { TopListAbstractEntryView } from './toplistAbstractEntry.view'
 
-export enum taskType {
-  TEXT = 'TEXT',
-  IMAGE = 'IMAGE',
-  BOTH = 'BOTH',
-  ONLY_PDF = 'ONLY_PDF',
-  ONLY_ZIP = 'ONLY_ZIP'
+export const TaskType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  BOTH: 'BOTH',
+  ONLY_PDF: 'ONLY_PDF',
+  ONLY_ZIP: 'ONLY_ZIP'
 }
+export type TaskType = (typeof TaskType)[keyof typeof TaskType]
 
-export enum taskFormat {
-  TEXT = 'TEXT',
-  NONE = 'NONE',
-  CODE = 'CODE',
-  FORM = 'FORM'
+export const TaskFormat = {
+  TEXT: 'TEXT',
+  NONE: 'NONE',
+  CODE: 'CODE',
+  FORM: 'FORM'
 }
+export type TaskFormat = (typeof TaskFormat)[keyof typeof TaskFormat]
 
-export enum taskStatus {
-  ACCEPTED = 'ACCEPTED',
-  NOT_LOGGED_IN = 'NOT_LOGGED_IN',
-  NOT_SUBMITTED = 'NOT_SUBMITTED',
-  REJECTED = 'REJECTED',
-  SUBMITTED = 'SUBMITTED'
+export const TaskStatus = {
+  ACCEPTED: 'ACCEPTED',
+  NOT_LOGGED_IN: 'NOT_LOGGED_IN',
+  NOT_SUBMITTED: 'NOT_SUBMITTED',
+  REJECTED: 'REJECTED',
+  SUBMITTED: 'SUBMITTED'
 }
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
 
-export enum taskSubmissionStatus {
-  OK = 'OK',
-  EMPTY_ANSWER = 'EMPTY_ANSWER',
-  INVALID_IMAGE = 'INVALID_IMAGE',
-  INVALID_PDF = 'INVALID_PDF',
-  INVALID_ZIP = 'INVALID_ZIP',
-  ALREADY_SUBMITTED = 'ALREADY_SUBMITTED',
-  ALREADY_APPROVED = 'ALREADY_APPROVED',
-  NO_ASSOCIATE_GROUP = 'NO_ASSOCIATE_GROUP',
-  INVALID_TASK_ID = 'INVALID_TASK_ID',
-  TOO_EARLY_OR_LATE = 'TOO_EARLY_OR_LATE',
-  NO_PERMISSION = 'NO_PERMISSION',
-  INVALID_BACKEND_CONFIG = 'INVALID_BACKEND_CONFIG'
+export const TaskSubmissionStatus = {
+  OK: 'OK',
+  EMPTY_ANSWER: 'EMPTY_ANSWER',
+  INVALID_IMAGE: 'INVALID_IMAGE',
+  INVALID_PDF: 'INVALID_PDF',
+  INVALID_ZIP: 'INVALID_ZIP',
+  ALREADY_SUBMITTED: 'ALREADY_SUBMITTED',
+  ALREADY_APPROVED: 'ALREADY_APPROVED',
+  NO_ASSOCIATE_GROUP: 'NO_ASSOCIATE_GROUP',
+  INVALID_TASK_ID: 'INVALID_TASK_ID',
+  TOO_EARLY_OR_LATE: 'TOO_EARLY_OR_LATE',
+  NO_PERMISSION: 'NO_PERMISSION',
+  INVALID_BACKEND_CONFIG: 'INVALID_BACKEND_CONFIG'
 }
+export type TaskSubmissionStatus = (typeof TaskSubmissionStatus)[keyof typeof TaskSubmissionStatus]
 
-export enum taskCategoryType {
-  REGULAR = 'REGULAR',
-  PROFILE_REQUIRED = 'PROFILE_REQUIRED'
+export const TaskCategoryType = {
+  REGULAR: 'REGULAR',
+  PROFILE_REQUIRED: 'PROFILE_REQUIRED'
 }
+export type TaskCategoryType = (typeof TaskCategoryType)[keyof typeof TaskCategoryType]
 
-export enum codeLanguage {
-  C = 'c',
-  CPP = 'cpp',
-  CSHARP = 'csharp',
-  JAVA = 'java',
-  JAVASCRIPT = 'javascript',
-  TYPESCRIPT = 'typescript',
-  SQL = 'sql',
-  KOTLIN = 'kotlin',
-  PYTHON = 'python'
+export const CodeLanguage = {
+  C: 'c',
+  CPP: 'cpp',
+  CSHARP: 'csharp',
+  JAVA: 'java',
+  JAVASCRIPT: 'javascript',
+  TYPESCRIPT: 'typescript',
+  SQL: 'sql',
+  KOTLIN: 'kotlin',
+  PYTHON: 'python'
 }
+export type CodeLanguage = (typeof CodeLanguage)[keyof typeof CodeLanguage]
 
 export interface TaskFormatDescriptor {
   title: string
@@ -70,7 +76,7 @@ export interface TaskCategoryPreview {
   notGraded: number
   rejected: number
   sum: number
-  type: taskCategoryType
+  type: TaskCategoryType
 }
 
 export interface TaskCategoryFullDetails {
@@ -94,8 +100,8 @@ export interface TaskEntity {
   categoryName?: string
   description: string
   expectedResultDescription: string
-  type: taskType
-  format: taskFormat
+  type: TaskType
+  format: TaskFormat
   formatDescriptor: string
   availableFrom: number
   availableTo: number
@@ -104,12 +110,12 @@ export interface TaskEntity {
 export interface TaskWrapper {
   task: TaskEntity
   response: string
-  status: taskStatus
+  status: TaskStatus
 }
 
 export interface TaskFullDetailsView {
   task?: TaskEntity
-  status: taskStatus
+  status: TaskStatus
   submission?: {
     id: number
     task?: TaskEntity

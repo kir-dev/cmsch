@@ -1,6 +1,6 @@
 import { endOfDay, isSameDay } from 'date-fns'
-import { EventListView } from '../../../../util/views/event.view'
-import { EventBoxItem } from './EventBox'
+import type { EventListView } from '../../../../util/views/event.view'
+import type { EventBoxItem } from './EventBox'
 
 export function calculatePosition(minTimestamp: number, maxTimestamp: number, timestamp: number) {
   return ((timestamp - minTimestamp) / (maxTimestamp - minTimestamp)) * 100

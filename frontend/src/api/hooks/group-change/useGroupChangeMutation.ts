@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import { joinPath } from '../../../util/core-functions.util'
 import { ApiPaths } from '../../../util/paths'
-import { GroupChangeDTO } from '../../../util/views/groupChange.view'
+import type { GroupChangeDTO } from '../../../util/views/groupChange.view'
 
 export function useGroupChangeMutation(onSuccess: (data: GroupChangeDTO) => void, onError: () => void) {
   return useMutation({

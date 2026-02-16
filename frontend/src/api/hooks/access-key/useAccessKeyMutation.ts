@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 
 import { ApiPaths } from '../../../util/paths'
-import { AccessKeyRequest, AccessKeyResponse } from '../../../util/views/accessKey'
+import type { AccessKeyRequest, AccessKeyResponse } from '../../../util/views/accessKey'
 import { QueryKeys } from '../queryKeys.ts'
 
 export function useAccessKeyMutation(onSuccess: (data: AccessKeyResponse) => void, onError: () => void) {

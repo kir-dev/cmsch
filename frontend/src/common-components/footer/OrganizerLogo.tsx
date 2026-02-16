@@ -17,7 +17,7 @@ export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, 
   const color = useBrandColor(500, 500)
   return (
     <HStack align="center">
-      <Image src={imageSrc} w={32} h={32} objectPosition="center" objectFit="contain" />
+      {imageSrc && <Image src={imageSrc} w={32} h={32} objectPosition="center" objectFit="contain" />}
       {!minimalistic && hasUrls && (
         <>
           <Divider orientation="vertical" h={20} />

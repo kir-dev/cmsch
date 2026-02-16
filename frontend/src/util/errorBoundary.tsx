@@ -1,6 +1,5 @@
 import { Heading, Text } from '@chakra-ui/react'
-import React, { ErrorInfo, PropsWithChildren } from 'react'
-import { Helmet } from 'react-helmet-async'
+import React, { type ErrorInfo, type PropsWithChildren } from 'react'
 import { CmschPage } from '../common-components/layout/CmschPage'
 import { l } from './language'
 
@@ -32,8 +31,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <CmschPage>
-          <Helmet title="Hiba" />
+        <CmschPage title="Hiba">
           <Heading textAlign="center">{l('error-boundary-title')}</Heading>
           <Text textAlign="center" marginTop={10}>
             {l('error-boundary-message')}

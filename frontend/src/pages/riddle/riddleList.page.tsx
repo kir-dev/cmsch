@@ -1,5 +1,4 @@
 import { Button, Heading, Stack, Text, useToast, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { Link, useNavigate } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery'
@@ -9,7 +8,7 @@ import { PageStatus } from '../../common-components/PageStatus'
 import { useBrandColor } from '../../util/core-functions.util.ts'
 import { l } from '../../util/language'
 import { AbsolutePaths } from '../../util/paths'
-import { RiddleCategory } from '../../util/views/riddle.view.ts'
+import type { RiddleCategory } from '../../util/views/riddle.view.ts'
 import { RiddleCategoryListItem } from './components/RiddleCategoryListItem'
 
 const RiddleCategoryList = () => {
@@ -40,8 +39,7 @@ const RiddleCategoryList = () => {
   }
 
   return (
-    <CmschPage>
-      <Helmet title="Riddleök" />
+    <CmschPage title={component?.title}>
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
         <Heading as="h1" variant="main-title">
           Riddleök

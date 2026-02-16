@@ -1,5 +1,5 @@
 import { Box, chakra } from '@chakra-ui/react'
-import { Menu } from '../../../api/contexts/config/types'
+import type { Menu } from '../../../api/contexts/config/types'
 import { useBrandColor } from '../../../util/core-functions.util.ts'
 import LinkComponent from '../LinkComponent'
 

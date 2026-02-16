@@ -1,20 +1,22 @@
 import { GROUP_BY_DAY_OPTIONS, stringifyTimeStamp } from '../../../util/core-functions.util'
-import { EventListView } from '../../../util/views/event.view'
+import type { EventListView } from '../../../util/views/event.view'
 
-export enum FILTER {
-  ALL = 'all',
-  CATEGORY = 'category',
-  PLACE = 'place',
-  DAY = 'day'
+export const Filter = {
+  ALL: 'all',
+  CATEGORY: 'category',
+  PLACE: 'place',
+  DAY: 'day'
 }
+export type Filter = (typeof Filter)[keyof typeof Filter]
 
-export const mapper = (f: FILTER, e: EventListView) => {
+export const mapper = (f: Filter, e: EventListView) => {
   switch (f) {
-    case FILTER.ALL:
+    case Filter.ALL:
       throw 'Cannot map if filter is set to all'
-    case FILTER.DAY:
+    case Filter.DAY:
       return stringifyTimeStamp(e.timestampStart, GROUP_BY_DAY_OPTIONS)
     default:
-      return e[f]
+      console.assert(Object.keys(e).includes(f))
+      return e[f as keyof EventListView].toString()
   }
 }

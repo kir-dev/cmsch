@@ -80,10 +80,11 @@ type DirectionButtonProps = {
   onClick: () => void
 }
 
-enum Directions {
-  LEFT = 'left',
-  RIGHT = 'right'
+const Directions = {
+  LEFT: 'left',
+  RIGHT: 'right'
 }
+type Directions = (typeof Directions)[keyof typeof Directions]
 
 const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => (
   <IconButton

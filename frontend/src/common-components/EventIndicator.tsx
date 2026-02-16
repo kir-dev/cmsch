@@ -1,4 +1,4 @@
-import { BoxProps, HStack, Text, useColorModeValue } from '@chakra-ui/react'
+import { type BoxProps, HStack, Text, useColorModeValue } from '@chakra-ui/react'
 import { PulsingDot } from './PulsingDot'
 
 interface EventIndicatorProps extends BoxProps {

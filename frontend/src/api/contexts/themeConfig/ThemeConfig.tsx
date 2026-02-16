@@ -1,17 +1,20 @@
 import { ChakraProvider, useColorMode } from '@chakra-ui/react'
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { type PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { getCustomTheme } from '../../../util/configs/theme.config.ts'
 import { getPersistentStyle, PersistentStyleSettingContext, savePersistentStyle } from '../../../util/configs/themeStyle.config.ts'
-import { Style } from '../config/types.ts'
+import type { Style } from '../config/types.ts'
 
 const ColorModeSetter = ({ children, style }: PropsWithChildren & { style?: Style }) => {
   const { colorMode, setColorMode } = useColorMode()
   useEffect(() => {
+    console.log(colorMode, setColorMode, style, style?.deviceTheme, style?.forceDarkMode)
     if (!setColorMode) return
     if (!style) return
     if (colorMode !== 'dark' && style.forceDarkMode) {
       setColorMode('dark')
-    } else if (!style.darkModeEnabled) setColorMode('white')
+    } else if (!style.darkModeEnabled && !style.forceDarkMode) {
+      setColorMode('white')
+    }
   }, [colorMode, setColorMode, style, style?.deviceTheme, style?.forceDarkMode])
 
   return <>{children}</>

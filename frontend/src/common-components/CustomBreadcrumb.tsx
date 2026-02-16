@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, SpaceProps } from '@chakra-ui/react'
-import { FC } from 'react'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, type SpaceProps } from '@chakra-ui/react'
+import type { FC } from 'react'
 import { Link } from 'react-router'
 import { useBrandColor } from '../util/core-functions.util.ts'
 

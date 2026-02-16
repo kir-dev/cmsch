@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { ApiPaths } from '../../../../util/paths.ts'
-import { TeamListItemView } from '../../../../util/views/team.view'
+import type { TeamListItemView } from '../../../../util/views/team.view'
 import { QueryKeys } from '../../queryKeys.ts'
 
 export const useTeamList = () => {

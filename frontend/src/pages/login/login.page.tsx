@@ -1,5 +1,4 @@
 import { Box, Button, Text, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { FaGoogle, FaKey, FaSignInAlt } from 'react-icons/fa'
 import { Navigate } from 'react-router'
 
@@ -14,8 +13,7 @@ import { l } from '../../util/language'
 
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
-  const config = useConfigContext()
-  const component = config?.components?.login
+  const component = useConfigContext()?.components?.login
   const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
@@ -23,8 +21,7 @@ const LoginPage = () => {
   if (isLoggedIn) return <Navigate replace to="/" />
 
   return (
-    <CmschPage>
-      <Helmet title={l('login-helmet')} />
+    <CmschPage title={l('login-helmet')}>
       <VStack spacing={10} mb={10}>
         {component.topMessage ? (
           <Box textAlign="center">

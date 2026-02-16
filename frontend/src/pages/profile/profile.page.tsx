@@ -15,7 +15,7 @@ import {
   useColorModeValue,
   VStack
 } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
+
 import { Navigate, useNavigate } from 'react-router'
 
 import React, { useEffect } from 'react'
@@ -71,8 +71,7 @@ const ProfilePage = () => {
   const raceStats = profile?.raceStats
 
   return (
-    <CmschPage loginRequired>
-      <Helmet title={component.title} />
+    <CmschPage loginRequired={true} title={component?.title}>
       {component.messageBoxContent && (
         <Alert status="info" variant="left-accent" mt={5}>
           <AlertIcon />

@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router'
 import { useNewsQuery } from '../../api/hooks/news/useNewsQuery'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -12,8 +11,7 @@ const NewsPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Hír" />
 
   return (
-    <CmschPage>
-      <Helmet title={data.title} />
+    <CmschPage title={data.title}>
       <News news={data} />
     </CmschPage>
   )

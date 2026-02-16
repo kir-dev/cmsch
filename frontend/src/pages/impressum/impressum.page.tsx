@@ -1,5 +1,4 @@
 import { Heading, Wrap } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useDevelopers } from '../../api/hooks/developers/useDevelopers'
@@ -10,16 +9,13 @@ import { DeveloperWrapItem } from './components/DeveloperWrapItem'
 import { OrganizerSection } from './components/OrganizerSection'
 
 const ImpressumPage = () => {
-  const config = useConfigContext()
   const developers = useDevelopers()
-
-  const component = config?.components?.impressum
+  const component = useConfigContext()?.components?.impressum
 
   if (!component) return <ComponentUnavailable />
 
   return (
-    <CmschPage>
-      <Helmet title={component.title} />
+    <CmschPage title={component?.title}>
       <Heading as="h1" variant="main-title">
         {component.title}
       </Heading>

@@ -1,5 +1,4 @@
 import { Button, Heading, Stack, Text, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery.ts'
@@ -32,8 +31,7 @@ const RiddleCategoryPage = () => {
     }
   ]
   return (
-    <CmschPage>
-      <Helmet title="Riddleök" />
+    <CmschPage title={component?.title}>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
         <Heading as="h1" variant="main-title">

@@ -1,5 +1,5 @@
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { IconButton, IconButtonProps, useColorMode, useColorModeValue } from '@chakra-ui/react'
+import { IconButton, type IconButtonProps, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 type Props = Omit<IconButtonProps, 'aria-label'>

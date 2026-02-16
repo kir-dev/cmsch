@@ -1,5 +1,4 @@
 import { Button, ButtonGroup, Fade, Heading, Spinner } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 
@@ -34,8 +33,7 @@ const TokenScan = () => {
   }, [isLoggedIn, mutate])
 
   return (
-    <CmschPage loginRequired>
-      <Helmet title="QR beolvasás" />
+    <CmschPage loginRequired={true} title="QR beolvasás">
       <Heading mb={5}>QR beolvasás</Heading>
       {isPending && <Spinner color={spinnerColor} size="xl" thickness="0.3rem" />}
       {isIdle && <QrReader onScan={handleScan} />}

@@ -1,5 +1,4 @@
 import { Badge, Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import { Link, Navigate, useParams } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import { useTasksInCategoryQuery } from '../../api/hooks/task/useTasksInCategoryQuery'
@@ -37,8 +36,7 @@ const TaskCategoryPage = () => {
   ]
 
   return (
-    <CmschPage loginRequired>
-      <Helmet title={data.categoryName} />
+    <CmschPage loginRequired={true} title={data.categoryName}>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{data.categoryName}</Heading>
       {!!data.description && (
