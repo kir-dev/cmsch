@@ -40,18 +40,19 @@ export type GridFieldValues = {
   }[]
 }
 
-export enum FormStatus {
-  NO_SUBMISSION = 'NO_SUBMISSION',
-  SUBMITTED = 'SUBMITTED',
-  REJECTED = 'REJECTED',
-  ACCEPTED = 'ACCEPTED',
-  TOO_EARLY = 'TOO_EARLY',
-  TOO_LATE = 'TOO_LATE',
-  NOT_ENABLED = 'NOT_ENABLED',
-  NOT_FOUND = 'NOT_FOUND',
-  FULL = 'FULL',
-  GROUP_NOT_PERMITTED = 'GROUP_NOT_PERMITTED'
+export const FormStatus = {
+  NO_SUBMISSION: 'NO_SUBMISSION',
+  SUBMITTED: 'SUBMITTED',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED',
+  TOO_EARLY: 'TOO_EARLY',
+  TOO_LATE: 'TOO_LATE',
+  NOT_ENABLED: 'NOT_ENABLED',
+  NOT_FOUND: 'NOT_FOUND',
+  FULL: 'FULL',
+  GROUP_NOT_PERMITTED: 'GROUP_NOT_PERMITTED'
 }
+export type FormStatus = (typeof FormStatus)[keyof typeof FormStatus]
 
 export const FormStatusLangKeys: Record<FormStatus, keyof Signup> = {
   [FormStatus.NO_SUBMISSION]: 'langNoSubmission',
@@ -66,35 +67,37 @@ export const FormStatusLangKeys: Record<FormStatus, keyof Signup> = {
   [FormStatus.GROUP_NOT_PERMITTED]: 'langGroupInsufficient'
 }
 
-export enum FormFieldVariants {
-  TEXT = 'TEXT',
-  VOTE = 'VOTE',
-  LONG_TEXT = 'LONG_TEXT',
-  NUMBER = 'NUMBER',
-  EMAIL = 'EMAIL',
-  PHONE = 'PHONE',
-  CHECKBOX = 'CHECKBOX',
-  SELECT = 'SELECT',
-  MUST_AGREE = 'MUST_AGREE',
-  INFO_BOX = 'INFO_BOX',
-  WARNING_BOX = 'WARNING_BOX',
-  TEXT_BOX = 'TEXT_BOX',
-  SECTION_START = 'SECTION_START',
-  CHOICE_GRID = 'CHOICE_GRID',
-  DATE = 'DATE',
-  SELECTION_GRID = 'SELECTION_GRID'
+export const FormFieldVariants = {
+  TEXT: 'TEXT',
+  VOTE: 'VOTE',
+  LONG_TEXT: 'LONG_TEXT',
+  NUMBER: 'NUMBER',
+  EMAIL: 'EMAIL',
+  PHONE: 'PHONE',
+  CHECKBOX: 'CHECKBOX',
+  SELECT: 'SELECT',
+  MUST_AGREE: 'MUST_AGREE',
+  INFO_BOX: 'INFO_BOX',
+  WARNING_BOX: 'WARNING_BOX',
+  TEXT_BOX: 'TEXT_BOX',
+  SECTION_START: 'SECTION_START',
+  CHOICE_GRID: 'CHOICE_GRID',
+  DATE: 'DATE',
+  SELECTION_GRID: 'SELECTION_GRID'
 }
+export type FormFieldVariants = (typeof FormFieldVariants)[keyof typeof FormFieldVariants]
 
-export enum FormSubmitResult {
-  OK = 'OK',
-  OK_RELOG_REQUIRED = 'OK_RELOG_REQUIRED',
-  ALREADY_SUBMITTED = 'ALREADY_SUBMITTED',
-  INVALID_VALUES = 'INVALID_VALUES',
-  FORM_NOT_AVAILABLE = 'FORM_NOT_AVAILABLE',
-  FORM_IS_FULL = 'FORM_IS_FULL',
-  EDIT_SUBMISSION_NOT_FOUND = 'EDIT_SUBMISSION_NOT_FOUND',
-  EDIT_CANNOT_BE_CHANGED = 'EDIT_CANNOT_BE_CHANGED'
+export const FormSubmitResult = {
+  OK: 'OK',
+  OK_RELOG_REQUIRED: 'OK_RELOG_REQUIRED',
+  ALREADY_SUBMITTED: 'ALREADY_SUBMITTED',
+  INVALID_VALUES: 'INVALID_VALUES',
+  FORM_NOT_AVAILABLE: 'FORM_NOT_AVAILABLE',
+  FORM_IS_FULL: 'FORM_IS_FULL',
+  EDIT_SUBMISSION_NOT_FOUND: 'EDIT_SUBMISSION_NOT_FOUND',
+  EDIT_CANNOT_BE_CHANGED: 'EDIT_CANNOT_BE_CHANGED'
 }
+export type FormSubmitResult = (typeof FormSubmitResult)[keyof typeof FormSubmitResult]
 
 export const FormSubmitMessage: Record<FormSubmitResult, string> = {
   OK: 'Sikeres beküldés!',

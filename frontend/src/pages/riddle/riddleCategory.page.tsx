@@ -12,9 +12,7 @@ import { RiddleListItem } from './components/RiddleListItem.tsx'
 const RiddleCategoryPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const config = useConfigContext()?.components
-  const component = config?.riddle
-  const app = config?.app
+  const component = useConfigContext()?.components?.riddle
   const { isLoading, isError, data } = useRiddleListQuery()
 
   if (!component) return <ComponentUnavailable />
@@ -33,10 +31,7 @@ const RiddleCategoryPage = () => {
     }
   ]
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component?.title}
-      </title>{' '}
+    <CmschPage title={component?.title}>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
         <Heading as="h1" variant="main-title">

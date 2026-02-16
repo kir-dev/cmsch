@@ -19,9 +19,7 @@ const TinderQuestionsPage = () => {
   const formMethods = useForm<Record<string, string>>()
   const { setValue, watch } = formMethods
 
-  const config = useConfigContext()?.components
-  const component = config?.communities
-  const app = config?.app
+  const component = useConfigContext()?.components?.communities
 
   const { data: questions, isLoading: questionsLoading, isError: questionsError } = useTinderQuestions()
   const { data: answersStatus, isLoading: answersLoading, isError: answersError, refetch: refetchAnswers } = useTinderAnswers()
@@ -64,8 +62,7 @@ const TinderQuestionsPage = () => {
   }
 
   return (
-    <CmschPage loginRequired>
-      <title>{app?.siteName || 'CMSch'} | Tinder kérdések</title>
+    <CmschPage loginRequired={true} title="Tinder kérdések">
       <Box w="100%" mx="auto">
         <Box
           position="relative"

@@ -5,6 +5,7 @@ import { Loading } from '../common-components/Loading.tsx'
 import { usePersistentStyleSetting } from './configs/themeStyle.config.ts'
 import { useBrandColor } from './core-functions.util.ts'
 import { l } from './language.ts'
+import { Title } from './TitleProvider.tsx'
 
 export type LoadingViewProps = PropsWithChildren & {
   hasError: boolean
@@ -23,7 +24,7 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
   if (hasError) {
     return (
       <Center flexDirection="column" h="100vh" backgroundPosition="center" backgroundSize="cover">
-        <title>{l('error-page-helmet')}</title>
+        <Title text={l('error-page-helmet')} />
         <VStack spacing={5} p={5} borderRadius={5} bg={bg} backdropFilter={backdropFilter}>
           <Heading textAlign="center">{errorTitle}</Heading>
           <Text textAlign="center" marginTop={4} maxW={96}>

@@ -16,18 +16,19 @@ export type MapDataItemView = {
   timestamp: number
 }
 
-export enum MapMarkerShape {
-  CIRCLE = 'CIRCLE',
-  SQUARE = 'SQUARE',
-  INFO = 'INFO',
-  CAR = 'CAR',
-  CROSSHAIRS = 'CROSSHAIRS',
-  CAMP = 'CAMP',
-  TOWER = 'TOWER',
-  MARKER = 'MARKER',
-  HOME = 'HOME',
-  PERSON = 'PERSON'
+export const MapMarkerShape = {
+  CIRCLE: 'CIRCLE',
+  SQUARE: 'SQUARE',
+  INFO: 'INFO',
+  CAR: 'CAR',
+  CROSSHAIRS: 'CROSSHAIRS',
+  CAMP: 'CAMP',
+  TOWER: 'TOWER',
+  MARKER: 'MARKER',
+  HOME: 'HOME',
+  PERSON: 'PERSON'
 }
+export type MapMarkerShape = (typeof MapMarkerShape)[keyof typeof MapMarkerShape]
 
 export const MapMarkerIcons: Record<MapMarkerShape, FunctionComponent> = {
   [MapMarkerShape.CIRCLE]: () => null,

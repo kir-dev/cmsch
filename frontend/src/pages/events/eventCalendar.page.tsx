@@ -13,9 +13,7 @@ import { DayCalendar } from './components/event-calendar/DayCalendar'
 import { WeekCalendar } from './components/event-calendar/WeekCalendar'
 
 function EventCalendarPage() {
-  const config = useConfigContext()?.components
-  const app = config?.app
-  const event = config?.event
+  const event = useConfigContext()?.components?.event
   const brandColor = useBrandColor()
 
   const { isLoading, isError, data } = useEventListQuery()
@@ -24,8 +22,7 @@ function EventCalendarPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={event.title} />
 
   return (
-    <CmschPage>
-      <title>{app?.siteName || 'CMSch'} | Naptár</title>
+    <CmschPage title="Naptár">
       <LinkButton colorScheme={brandColor} href={AbsolutePaths.EVENTS} leftIcon={<FaArrowLeft />}>
         Vissza a listához
       </LinkButton>

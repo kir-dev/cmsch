@@ -12,7 +12,7 @@ import 'prismjs/components/prism-typescript'
 import 'prismjs/themes/prism-okaidia.css'
 import { useState } from 'react'
 import Editor from 'react-simple-code-editor'
-import { codeLanguage } from '../../../util/views/task.view'
+import { CodeLanguage } from '../../../util/views/task.view'
 
 interface CodeEditorProps {
   code: string
@@ -21,32 +21,32 @@ interface CodeEditorProps {
 }
 
 const LANGUAGE_GRAMMAR_MAP = new Map<string, Grammar>([
-  [codeLanguage.C, languages.c],
-  [codeLanguage.CPP, languages.cpp],
-  [codeLanguage.CSHARP, languages.csharp],
-  [codeLanguage.JAVA, languages.java],
-  [codeLanguage.JAVASCRIPT, languages.javascript],
-  [codeLanguage.TYPESCRIPT, languages.typescript],
-  [codeLanguage.SQL, languages.sql],
-  [codeLanguage.KOTLIN, languages.kotlin],
-  [codeLanguage.PYTHON, languages.python]
+  [CodeLanguage.C, languages.c],
+  [CodeLanguage.CPP, languages.cpp],
+  [CodeLanguage.CSHARP, languages.csharp],
+  [CodeLanguage.JAVA, languages.java],
+  [CodeLanguage.JAVASCRIPT, languages.javascript],
+  [CodeLanguage.TYPESCRIPT, languages.typescript],
+  [CodeLanguage.SQL, languages.sql],
+  [CodeLanguage.KOTLIN, languages.kotlin],
+  [CodeLanguage.PYTHON, languages.python]
 ])
 
 const CodeEditor = ({ code, setCode, readonly }: CodeEditorProps) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(codeLanguage.C)
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(CodeLanguage.C)
   return (
     <Stack mt={5}>
       <Flex justify="flex-end">
         <Select onChange={(e) => setSelectedLanguage(e.target.value)} w="10rem" value={selectedLanguage}>
-          <option value={codeLanguage.C}>C</option>
-          <option value={codeLanguage.CPP}>C++</option>
-          <option value={codeLanguage.CSHARP}>C#</option>
-          <option value={codeLanguage.JAVA}>JAVA</option>
-          <option value={codeLanguage.JAVASCRIPT}>JavaScript</option>
-          <option value={codeLanguage.TYPESCRIPT}>TypeScript</option>
-          <option value={codeLanguage.SQL}>SQL</option>
-          <option value={codeLanguage.KOTLIN}>Kotlin</option>
-          <option value={codeLanguage.PYTHON}>Python</option>
+          <option value={CodeLanguage.C}>C</option>
+          <option value={CodeLanguage.CPP}>C++</option>
+          <option value={CodeLanguage.CSHARP}>C#</option>
+          <option value={CodeLanguage.JAVA}>JAVA</option>
+          <option value={CodeLanguage.JAVASCRIPT}>JavaScript</option>
+          <option value={CodeLanguage.TYPESCRIPT}>TypeScript</option>
+          <option value={CodeLanguage.SQL}>SQL</option>
+          <option value={CodeLanguage.KOTLIN}>Kotlin</option>
+          <option value={CodeLanguage.PYTHON}>Python</option>
         </Select>
       </Flex>
 

@@ -55,7 +55,6 @@ const ProfilePage = () => {
 
   const config = useConfigContext()?.components
   const component = config?.profile
-  const app = config?.app
 
   const brandColor = useBrandColor()
   const greenProgressColor = useColorModeValue('green.500', 'green.600')
@@ -72,10 +71,7 @@ const ProfilePage = () => {
   const raceStats = profile?.raceStats
 
   return (
-    <CmschPage loginRequired>
-      <title>
-        {app?.siteName || 'CMSch'} | {component?.title}
-      </title>
+    <CmschPage loginRequired={true} title={component?.title}>
       {component.messageBoxContent && (
         <Alert status="info" variant="left-accent" mt={5}>
           <AlertIcon />

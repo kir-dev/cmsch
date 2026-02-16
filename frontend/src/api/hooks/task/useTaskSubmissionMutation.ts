@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { ApiPaths } from '../../../util/paths'
-import { taskSubmissionStatus } from '../../../util/views/task.view'
+import type { TaskSubmissionStatus } from '../../../util/views/task.view.ts'
 import { QueryKeys } from '../queryKeys'
 
 interface TaskSubmissionResponse {
-  status: taskSubmissionStatus
+  status: TaskSubmissionStatus
 }
 
 export const useTaskSubmissionMutation = () => {

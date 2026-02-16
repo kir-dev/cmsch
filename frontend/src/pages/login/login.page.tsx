@@ -13,9 +13,7 @@ import { l } from '../../util/language'
 
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
-  const config = useConfigContext()
-  const app = config?.components?.app
-  const component = config?.components?.login
+  const component = useConfigContext()?.components?.login
   const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
@@ -23,10 +21,7 @@ const LoginPage = () => {
   if (isLoggedIn) return <Navigate replace to="/" />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {l('login-helmet')}
-      </title>
+    <CmschPage title={l('login-helmet')}>
       <VStack spacing={10} mb={10}>
         {component.topMessage ? (
           <Box textAlign="center">

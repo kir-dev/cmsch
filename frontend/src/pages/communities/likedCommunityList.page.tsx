@@ -10,9 +10,7 @@ import { TinderStatus } from '../../util/views/tinder.ts'
 import { CardListItem } from './components/CardListItem.tsx'
 
 export default function LikedCommunityListPage() {
-  const config = useConfigContext()?.components
-  const app = config?.app
-  const communities = config?.communities
+  const communities = useConfigContext()?.components?.communities
   const { data, isLoading, isError } = useTinderCommunity()
 
   if (!communities || !communities.tinderEnabled) return <ComponentUnavailable />
@@ -21,8 +19,7 @@ export default function LikedCommunityListPage() {
   const likedCommunities = data.filter((c) => c.status === TinderStatus.LIKED)
 
   return (
-    <CmschPage loginRequired>
-      <title>{app?.siteName || 'CMSch'} | Kedvelt közösségek</title>
+    <CmschPage loginRequired={true} title="Kedvelt közösségek">
       <Box w="100%" mx="auto" px={{ base: 2, md: 4 }}>
         <Box
           position="relative"

@@ -54,7 +54,6 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   const components = config?.components
   const teamComponent = components?.team
   const raceComponent = components?.race
-  const app = components?.app
   const userRole = config?.role
   const navigate = useNavigate()
   const bannerBlanket = useColorModeValue('#FFFFFFAA', '#00000080')
@@ -100,10 +99,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   if (error || isLoading || !team) return <PageStatus isLoading={isLoading} isError={!!error} title={teamComponent.title} />
   const title = myTeam ? teamComponent.myTitle : undefined
   return (
-    <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined}>
-      <title>
-        {app?.siteName || 'CMSch'} | {title ?? team.name}
-      </title>
+    <CmschPage minRole={myTeam ? RoleType.ATTENDEE : undefined} title={title ?? team.name}>
       {title && <Heading mb={5}>{title}</Heading>}
       <Box backgroundImage={team.coverUrl} backgroundPosition="center" backgroundSize="cover" borderRadius="lg" overflow="hidden">
         <Box p={4} bg={bannerBlanket} display="flex" justifyContent="space-between" flexDirection={{ base: 'column', md: 'row' }}>

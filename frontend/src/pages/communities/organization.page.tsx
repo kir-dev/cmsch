@@ -10,9 +10,7 @@ import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 
 export default function OrganizationPage() {
-  const config = useConfigContext()?.components
-  const app = config?.app
-  const communities = config?.communities
+  const communities = useConfigContext()?.components?.communities
   const params = useParams()
   const { data, isLoading, isError } = useOrganization(params.id || 'UNKNOWN')
 
@@ -29,10 +27,7 @@ export default function OrganizationPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.titleResort} />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {data.name}
-      </title>
+    <CmschPage title={data.name}>
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={data} />
 

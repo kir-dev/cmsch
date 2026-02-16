@@ -11,9 +11,7 @@ import type { Organization } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function OrganizationListPage() {
-  const config = useConfigContext()?.components
-  const app = config?.app
-  const communities = config?.communities
+  const communities = useConfigContext()?.components?.communities
   const { data, isLoading, isError } = useOrganizationList()
   const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>(data || [])
   const inputRef = createRef<HTMLInputElement>()
@@ -42,10 +40,7 @@ export default function OrganizationListPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {communities?.titleResort}
-      </title>{' '}
+    <CmschPage title={communities?.titleResort}>
       <Heading as="h1" variant="main-title">
         {communities?.titleResort}
       </Heading>

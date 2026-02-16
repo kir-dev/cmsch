@@ -22,9 +22,7 @@ const searchFn = (item: TeamListItemView, search: string) => {
 }
 
 export default function TeamListPage() {
-  const config = useConfigContext()
-  const component = config?.components?.team
-  const app = config?.components?.app
+  const component = useConfigContext()?.components?.team
   const { data, isLoading, isError } = useTeamList()
   const searchArgs = useSearch<TeamListItemView>(data ?? EmptyData, searchFn)
 
@@ -33,10 +31,7 @@ export default function TeamListPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component?.title}
-      </title>
+    <CmschPage title={component?.title}>
       <Heading as="h1" variant="main-title">
         {component.title}
       </Heading>

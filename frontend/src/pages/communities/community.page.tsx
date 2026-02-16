@@ -9,9 +9,7 @@ import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 
 export default function CommunityPage() {
-  const config = useConfigContext()?.components
-  const app = config?.app
-  const communities = config?.communities
+  const communities = useConfigContext()?.components?.communities
   const params = useParams()
   const { data, isLoading, isError } = useCommunity(params.id || 'UNKNOWN')
   const breadcrumbItems = [
@@ -27,10 +25,7 @@ export default function CommunityPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {data.name}
-      </title>
+    <CmschPage title={data.name}>
       <CustomBreadcrumb items={breadcrumbItems} mt={5} />
       <DataSheet organization={data} />
       {data.videoIds?.map((id) => (

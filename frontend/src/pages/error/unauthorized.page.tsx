@@ -10,8 +10,7 @@ export const UnauthorizedPage = () => {
   const brandColor = useBrandColor()
 
   return (
-    <CmschPage>
-      <title>{l('unauthorized-page-helmet')}</title>
+    <CmschPage title={l('unauthorized-page-helmet')}>
       <Heading as="h1" variant="main-title" textAlign="center">
         {l('unauthorized-page-title')}
       </Heading>

@@ -12,9 +12,7 @@ import type { Community } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function CommunityListPage() {
-  const config = useConfigContext()?.components
-  const app = config?.app
-  const communities = config?.communities
+  const communities = useConfigContext()?.components?.communities
   const { data, isLoading, isError } = useCommunityList()
   const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(data || [])
   const inputRef = useRef<HTMLInputElement>(null)
@@ -47,10 +45,7 @@ export default function CommunityListPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {communities?.title}
-      </title>
+    <CmschPage title={communities?.title}>
       <Heading as="h1" variant="main-title">
         {communities?.title}
       </Heading>

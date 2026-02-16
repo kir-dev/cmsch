@@ -8,19 +8,14 @@ import { sortNewsList } from './util/sortNewsList'
 
 const NewsListPage = () => {
   const { data, isLoading, isError } = useNewsListQuery()
-  const config = useConfigContext()?.components
-  const component = config?.news
-  const app = config?.app
+  const component = useConfigContext()?.components?.news
 
   if (!component) return <ComponentUnavailable />
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component?.title} />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component?.title}
-      </title>
+    <CmschPage title={component?.title}>
       <NewsList newsList={sortNewsList(data)} />
     </CmschPage>
   )

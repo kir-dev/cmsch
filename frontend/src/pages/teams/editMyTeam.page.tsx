@@ -37,16 +37,12 @@ export default function EditMyTeamPage() {
     }
   })
   const component = config?.components?.team
-  const app = config?.components?.app
   const isPrivileged = RoleType[config?.role ?? RoleTypeString.GUEST] >= RoleType.PRIVILEGED
   if (!component || !isPrivileged) return <ComponentUnavailable />
   if (!component.teamEditEnabled) return <Navigate to="/" replace />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component.teamEditTitle}
-      </title>
+    <CmschPage title={component.teamEditTitle}>
       <Heading>{component.teamEditTitle}</Heading>
       <Markdown text={component.teamEditTopMessage} />
       <Alert status="info" my={5}>

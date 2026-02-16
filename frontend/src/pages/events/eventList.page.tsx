@@ -32,13 +32,11 @@ import type { EventListView } from '../../util/views/event.view'
 import { CardListItem } from './components/CardListItem'
 import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
-import { FILTER, mapper } from './util/filter'
+import { Filter, mapper } from './util/filter'
 
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
-  const config = useConfigContext()?.components
-  const event = config?.event
-  const app = config?.app
+  const event = useConfigContext()?.components?.event
   const { isOpen, onToggle } = useDisclosure()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
@@ -47,9 +45,9 @@ const EventListPage = () => {
   const brandColor = useBrandColor()
 
   const availableFilters = []
-  if (event?.filterByCategory) availableFilters.push(FILTER.CATEGORY)
-  if (event?.filterByLocation) availableFilters.push(FILTER.PLACE)
-  if (event?.filterByDay) availableFilters.push(FILTER.DAY)
+  if (event?.filterByCategory) availableFilters.push(Filter.CATEGORY)
+  if (event?.filterByLocation) availableFilters.push(Filter.PLACE)
+  if (event?.filterByDay) availableFilters.push(Filter.DAY)
 
   // eslint-disable-next-line react-hooks/purity
   const pastEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 < Date.now()), [data])
@@ -74,10 +72,7 @@ const EventListPage = () => {
   if (!event) return <ComponentUnavailable />
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={event.title} />
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {event.title ?? 'Események'}
-      </title>
+    <CmschPage title={event.title ?? 'Események'}>
       <Box mb={5}>
         <Heading as="h1" variant="main-title" mb={5}>
           {event.title}
@@ -120,7 +115,7 @@ const EventListPage = () => {
             <TabPanel key={filter} p={0}>
               <Stack>
                 <CardListItem title="Mind" open={isOpen} toggle={onToggle} />
-                {filter === FILTER.DAY && <EventFilterOption name="Korábbi" events={pastEvents || []} forceOpen={isOpen} />}
+                {filter === Filter.DAY && <EventFilterOption name="Korábbi" events={pastEvents || []} forceOpen={isOpen} />}
                 {uniq(upcomingEvents?.map((event) => mapper(filter, event))).map((option) => (
                   <EventFilterOption
                     key={option}

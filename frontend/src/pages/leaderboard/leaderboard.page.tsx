@@ -12,9 +12,7 @@ import LeaderboardByCategoryPage from './leaderboardByCategory.page.tsx'
 import LeaderboardByUserOrGroupPage from './leaderboardByUserOrGroup.page.tsx'
 
 const LeaderboardPage = () => {
-  const config = useConfigContext()?.components
-  const app = config?.app
-  const component = config?.leaderboard
+  const component = useConfigContext()?.components?.leaderboard
   const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
   const byCategory = useMatch('/leaderboard/category')
   const navigate = useNavigate()
@@ -40,10 +38,7 @@ const LeaderboardPage = () => {
   }
 
   return (
-    <CmschPage disablePadding={true}>
-      <title>
-        {app?.siteName || 'CMSch'} | {title}
-      </title>
+    <CmschPage disablePadding={true} title={title}>
       <Heading as="h1" variant="main-title" textAlign="center" m="2rem">
         {title}
       </Heading>

@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { Route, Routes } from 'react-router'
+import { useConfigContext } from './api/contexts/config/ConfigContext.tsx'
 import { CmschLayout } from './common-components/layout/CmschLayout'
 import AccessKeyPage from './pages/access-key/accessKey.page.tsx'
 import CommunityPage from './pages/communities/community.page.tsx'
@@ -50,107 +51,111 @@ import TokenScanPage from './pages/token/tokenScan.page.tsx'
 import TokenScanResultPage from './pages/token/tokenScanResult.page.tsx'
 import { l } from './util/language'
 import { Paths } from './util/paths.ts'
+import { TitleProvider } from './util/TitleProvider.tsx'
 
 export function App() {
+  const appName = useConfigContext()?.components?.app?.siteName || 'CMSch'
   return (
-    <CountdownPage>
-      <CmschLayout>
-        <Suspense>
-          <Routes>
-            <Route path="/">
-              <Route path={Paths.HOME}>
-                <Route index element={<HomePage />} />
-              </Route>
-              <Route path={Paths.ACCESS_KEY} element={<AccessKeyPage />} />
-              <Route path={Paths.COMMUNITY}>
-                <Route path=":id" element={<CommunityPage />} />
-                <Route index element={<CommunityListPage />} />
-              </Route>
-              <Route path={Paths.DEBT}>
-                <Route index element={<DebtPage />} />
-              </Route>
-              <Route path={Paths.ORGANIZATION}>
-                <Route path=":id" element={<OrganizationPage />} />
-                <Route index element={<OrganizationListPage />} />
-              </Route>
-              <Route path={Paths.TINDER}>
-                <Route path="question" element={<TinderQuestionsPage />} />
-                <Route path="community" element={<TinderPage />} />
-                <Route path="liked" element={<LikedCommunityListPage />} />
-                <Route index element={<TinderRouter />} />
-              </Route>
-              <Route path={Paths.EVENTS}>
-                <Route path=":path" element={<EventPage />} />
-                <Route path={Paths.CALENDAR} element={<EventCalendarPage />} />
-                <Route index element={<EventListPage />} />
-              </Route>
-              <Route path={Paths.EXTRA_PAGE + '/:slug'}>
-                <Route index element={<ExtraPage />} />
-              </Route>
-              <Route path={Paths.FORM + '/:slug'}>
-                <Route index element={<FormPage />} />
-              </Route>
-              <Route path={Paths.IMPRESSUM}>
-                <Route index element={<ImpressumPage />} />
-              </Route>
-              <Route path={Paths.LEADER_BOARD + '/*'} element={<LeaderboardPage />} />
-              <Route path={Paths.MAP}>
-                <Route index element={<MapPage />} />
-              </Route>
-              <Route path={Paths.NEWS}>
-                <Route path=":id" element={<NewsPage />} />
-                <Route index element={<NewsListPage />} />
-              </Route>
-              <Route path={Paths.PROFILE}>
-                <Route path="change-group" element={<ProfileGroupChangePage />} />
-                <Route path="change-alias" element={<AliasChangePage />} />
-                <Route index element={<ProfilePage />} />
-              </Route>
-              <Route path={Paths.QR_FIGHT} element={<QrLevelsPage />} />
-              <Route path={Paths.RACE}>
-                <Route path="freestyle" element={<FreestyleRacePage />} />
-                <Route path=":category" element={<RacePage />} />
-                <Route index element={<RacePage />} />
-              </Route>
-              <Route path={Paths.RIDDLE}>
-                <Route path="solve/:id" element={<RiddlePage />} />
-                <Route path="category/:id" element={<RiddleCategoryPage />} />
-                <Route path="history" element={<RiddleHistoryPage />} />
-                <Route index element={<RiddleListPage />} />
-              </Route>
-              <Route path={Paths.TASKS}>
-                <Route path="category/:id" element={<TaskCategoryPage />} />
-                <Route path=":id" element={<TaskPage />} />
-                <Route index element={<TaskCategoryList />} />
-              </Route>
-              <Route path={Paths.CREATE_TEAM} element={<CreateTeamPage />} />
-              <Route path={Paths.EDIT_TEAM} element={<EditMyTeamPage />} />
-              <Route path={Paths.MY_TEAM}>
-                <Route index element={<MyTeamPage />} />
-                <Route path={Paths.RACE} element={<RaceByTeamPage />} />
-              </Route>
-              <Route path={Paths.TEAMS}>
-                <Route index element={<TeamListPage />} />
-                <Route path="details/:id">
-                  <Route index element={<TeamDetailsPage />} />
+    <TitleProvider titleTemplate={(title) => (title ? `${appName} | ${title}` : appName)}>
+      <CountdownPage>
+        <CmschLayout>
+          <Suspense>
+            <Routes>
+              <Route path="/">
+                <Route path={Paths.HOME}>
+                  <Route index element={<HomePage />} />
+                </Route>
+                <Route path={Paths.ACCESS_KEY} element={<AccessKeyPage />} />
+                <Route path={Paths.COMMUNITY}>
+                  <Route path=":id" element={<CommunityPage />} />
+                  <Route index element={<CommunityListPage />} />
+                </Route>
+                <Route path={Paths.DEBT}>
+                  <Route index element={<DebtPage />} />
+                </Route>
+                <Route path={Paths.ORGANIZATION}>
+                  <Route path=":id" element={<OrganizationPage />} />
+                  <Route index element={<OrganizationListPage />} />
+                </Route>
+                <Route path={Paths.TINDER}>
+                  <Route path="question" element={<TinderQuestionsPage />} />
+                  <Route path="community" element={<TinderPage />} />
+                  <Route path="liked" element={<LikedCommunityListPage />} />
+                  <Route index element={<TinderRouter />} />
+                </Route>
+                <Route path={Paths.EVENTS}>
+                  <Route path=":path" element={<EventPage />} />
+                  <Route path={Paths.CALENDAR} element={<EventCalendarPage />} />
+                  <Route index element={<EventListPage />} />
+                </Route>
+                <Route path={Paths.EXTRA_PAGE + '/:slug'}>
+                  <Route index element={<ExtraPage />} />
+                </Route>
+                <Route path={Paths.FORM + '/:slug'}>
+                  <Route index element={<FormPage />} />
+                </Route>
+                <Route path={Paths.IMPRESSUM}>
+                  <Route index element={<ImpressumPage />} />
+                </Route>
+                <Route path={Paths.LEADER_BOARD + '/*'} element={<LeaderboardPage />} />
+                <Route path={Paths.MAP}>
+                  <Route index element={<MapPage />} />
+                </Route>
+                <Route path={Paths.NEWS}>
+                  <Route path=":id" element={<NewsPage />} />
+                  <Route index element={<NewsListPage />} />
+                </Route>
+                <Route path={Paths.PROFILE}>
+                  <Route path="change-group" element={<ProfileGroupChangePage />} />
+                  <Route path="change-alias" element={<AliasChangePage />} />
+                  <Route index element={<ProfilePage />} />
+                </Route>
+                <Route path={Paths.QR_FIGHT} element={<QrLevelsPage />} />
+                <Route path={Paths.RACE}>
+                  <Route path="freestyle" element={<FreestyleRacePage />} />
+                  <Route path=":category" element={<RacePage />} />
+                  <Route index element={<RacePage />} />
+                </Route>
+                <Route path={Paths.RIDDLE}>
+                  <Route path="solve/:id" element={<RiddlePage />} />
+                  <Route path="category/:id" element={<RiddleCategoryPage />} />
+                  <Route path="history" element={<RiddleHistoryPage />} />
+                  <Route index element={<RiddleListPage />} />
+                </Route>
+                <Route path={Paths.TASKS}>
+                  <Route path="category/:id" element={<TaskCategoryPage />} />
+                  <Route path=":id" element={<TaskPage />} />
+                  <Route index element={<TaskCategoryList />} />
+                </Route>
+                <Route path={Paths.CREATE_TEAM} element={<CreateTeamPage />} />
+                <Route path={Paths.EDIT_TEAM} element={<EditMyTeamPage />} />
+                <Route path={Paths.MY_TEAM}>
+                  <Route index element={<MyTeamPage />} />
                   <Route path={Paths.RACE} element={<RaceByTeamPage />} />
                 </Route>
+                <Route path={Paths.TEAMS}>
+                  <Route index element={<TeamListPage />} />
+                  <Route path="details/:id">
+                    <Route index element={<TeamDetailsPage />} />
+                    <Route path={Paths.RACE} element={<RaceByTeamPage />} />
+                  </Route>
+                </Route>
+                <Route path={Paths.TOKEN_SCANNED} element={<TokenScanResultPage />} />
+                <Route path={Paths.TOKEN}>
+                  <Route index element={<TokenListPage />} />
+                  <Route path="scan" element={<TokenScanPage />} />
+                </Route>
+                <Route index element={<IndexPage />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="logout" element={<HomePage />} />
+                {/** Error handling pages */}
+                <Route path="error" element={<ErrorPage />} />
+                <Route path="*" element={<ErrorPage message={l('not-found-message')} />} />
               </Route>
-              <Route path={Paths.TOKEN_SCANNED} element={<TokenScanResultPage />} />
-              <Route path={Paths.TOKEN}>
-                <Route index element={<TokenListPage />} />
-                <Route path="scan" element={<TokenScanPage />} />
-              </Route>
-              <Route index element={<IndexPage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="logout" element={<HomePage />} />
-              {/** Error handling pages */}
-              <Route path="error" element={<ErrorPage />} />
-              <Route path="*" element={<ErrorPage message={l('not-found-message')} />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </CmschLayout>
-    </CountdownPage>
+            </Routes>
+          </Suspense>
+        </CmschLayout>
+      </CountdownPage>
+    </TitleProvider>
   )
 }

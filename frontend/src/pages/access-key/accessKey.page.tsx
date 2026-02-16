@@ -15,7 +15,6 @@ import {
 import { type SubmitEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useAccessKeyMutation } from '../../api/hooks/access-key/useAccessKeyMutation'
 import { useAccessKey } from '../../api/hooks/access-key/useAccessKeyQuery'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
@@ -35,7 +34,6 @@ function AccessKeyPage() {
   const toast = useToast()
   const navigate = useNavigate()
   const brandColor = useBrandColor()
-  const appComponent = useConfigContext()?.components?.app
 
   const onData = async (response: AccessKeyResponse) => {
     if (response.success) {
@@ -70,10 +68,7 @@ function AccessKeyPage() {
   }
 
   return (
-    <CmschPage>
-      <title>
-        {appComponent?.siteName || 'CMSch'} | {query.data.title}
-      </title>
+    <CmschPage title={query.data.title}>
       <Heading as="h1" variant="main-title">
         {query.data.title}
       </Heading>
