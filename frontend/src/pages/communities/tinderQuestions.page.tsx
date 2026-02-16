@@ -1,6 +1,7 @@
 import { Box, Button, FormControl, FormLabel, Heading, useToast, Wrap, WrapItem } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderAnswers } from '../../api/hooks/community/useTinderAnswers.ts'
 import { useTinderAnswerSend } from '../../api/hooks/community/useTinderAnswerSend.ts'
@@ -9,6 +10,7 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { useBrandColor } from '../../util/core-functions.util.ts'
+import { AbsolutePaths } from '../../util/paths.ts'
 import { SendAnswerResponseMessage, SendAnswerResponseStatus } from '../../util/views/tinder.ts'
 
 const TinderQuestionsPage = () => {
@@ -41,8 +43,13 @@ const TinderQuestionsPage = () => {
     const success = response === SendAnswerResponseStatus.OK
     const title = SendAnswerResponseMessage[response as SendAnswerResponseStatus]
     toast({ title, status: success ? 'success' : 'error' })
+    if (success && answersStatus?.answered) {
+      //redirect to /tinder/community
+      window.location.href = `${AbsolutePaths.TINDER}/community`
+      return
+    }
     refetchAnswers()
-  }, [response, refetchAnswers, toast])
+  }, [response, refetchAnswers, toast, answersStatus?.answered])
 
   // If the feature is disabled, show unavailable after hooks have been called
   if (!component || !component.tinderEnabled) return <ComponentUnavailable />
@@ -60,10 +67,31 @@ const TinderQuestionsPage = () => {
     <CmschPage loginRequired>
       <title>{app?.siteName || 'CMSch'} | Tinder kérdések</title>
       <Box w="100%" mx="auto">
-        <Heading as="h1" variant="main-title">
-          Tinder kérdések
-        </Heading>
-
+        <Box
+          position="relative"
+          mb={6}
+          display="flex"
+          flexDirection={{ base: 'column', sm: 'row' }}
+          alignItems={{ base: 'center', md: 'flex-start' }}
+          gap={4}
+        >
+          <Heading as="h1" variant="main-title">
+            Tinder kérdések
+          </Heading>
+          <Button
+            as={Link}
+            to={`${AbsolutePaths.TINDER}/community`}
+            size={{ base: 'md', md: 'lg' }}
+            aria-label="Tinder-matches-button"
+            width={{ base: 'full', sm: 'auto' }}
+            position={{ base: 'relative', sm: 'absolute' }}
+            top={{ base: 'auto', sm: '50%' }}
+            right={{ base: 'auto', sm: 2 }}
+            transform={{ base: 'none', sm: 'translateY(-30%)', md: 'translateY(-50%)' }}
+          >
+            Tinder
+          </Button>
+        </Box>
         <FormProvider {...formMethods}>
           <form onSubmit={formMethods.handleSubmit(onSubmit)}>
             {questions.map((q) => {

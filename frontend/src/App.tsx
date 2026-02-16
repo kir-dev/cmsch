@@ -9,6 +9,7 @@ import OrganizationPage from './pages/communities/organization.page.tsx'
 import OrganizationListPage from './pages/communities/organizationList.page.tsx'
 import TinderPage from './pages/communities/tinder.page.tsx'
 import TinderQuestionsPage from './pages/communities/tinderQuestions.page.tsx'
+import TinderRouter from './pages/communities/tinderRouter.tsx'
 import CountdownPage from './pages/countdown/countdown.page'
 import DebtPage from './pages/debt/debt.page.tsx'
 import { ErrorPage } from './pages/error/error.page'
@@ -76,7 +77,7 @@ export function App() {
                 <Route path="question" element={<TinderQuestionsPage />} />
                 <Route path="community" element={<TinderPage />} />
                 <Route path="liked" element={<LikedCommunityListPage />} />
-                <Route index element={<TinderPage />} />
+                <Route index element={<TinderRouter />} />
               </Route>
               <Route path={Paths.EVENTS}>
                 <Route path=":path" element={<EventPage />} />

@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
@@ -11,7 +11,7 @@ import { AbsolutePaths } from '../../util/paths'
 import { type TinderCommunity } from '../../util/views/tinder.ts'
 import { TinderCard } from './components/TinderCard'
 
-const SWIPE_THRESHOLD = 220 // pixels required to trigger like/dislike
+const SWIPE_THRESHOLD = 220
 
 const TinderPage = () => {
   const config = useConfigContext()?.components
@@ -20,12 +20,9 @@ const TinderPage = () => {
   const { data: communities, isLoading, isError } = useTinderCommunity()
   const interact = useTinderInteractionSend()
 
-  // swipe state to animate the current top card out
   const [swipe, setSwipe] = useState<{ id: number; dir: 'left' | 'right' } | null>(null)
-  // keep track of optimistically removed cards by id
   const [removedIds, setRemovedIds] = useState<Set<number>>(new Set())
 
-  // current drag state (live during pointer move)
   const [drag, setDrag] = useState<{ id: number; x: number } | null>(null)
   const dragStartX = useRef<number | null>(null)
   const dragStartY = useRef<number | null>(null)
@@ -36,11 +33,9 @@ const TinderPage = () => {
 
   if (isError || isLoading || !communities) return <PageStatus isLoading={isLoading} isError={isError} />
 
-  // Filter communities that are NOT_SEEN and not removed
   const unseen = communities.filter((c) => c.status === 'NOT_SEEN')
   const displayed = unseen.filter((c) => !removedIds.has(c.id))
 
-  // container for stacking cards - responsive for mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
   const containerHeight = isMobile ? Math.min(598, window.innerHeight - 200) : 598
 
@@ -62,14 +57,11 @@ const TinderPage = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    // ensure top card has highest z-index so it is visible
     zIndex: total - index,
-    // fully overlap so only top card appears visible
     transform: 'translateY(0)'
   })
 
   const removeCardAfterAnimation = (id: number) => {
-    // wait for animation to finish then mark as removed
     window.setTimeout(() => {
       setRemovedIds((prev) => {
         const copy = new Set(prev)
@@ -81,11 +73,8 @@ const TinderPage = () => {
   }
 
   const doLike = (c: TinderCommunity) => {
-    // start swipe animation to the right
     setSwipe({ id: c.id, dir: 'right' })
-    // optimistic removal after animation
     removeCardAfterAnimation(c.id)
-    // send interaction (fire-and-forget optimistic)
     interact.mutate({ communityId: c.id, liked: true })
   }
 
@@ -95,10 +84,6 @@ const TinderPage = () => {
     interact.mutate({ communityId: c.id, liked: false })
   }
 
-  // Pointer/touch handling improvements:
-  // - don't capture pointer or prevent default on down/start so normal page scroll still works
-  // - only begin a drag after movement exceeds START_THRESHOLD and is primarily horizontal
-  // - when a drag is recognized, capture pointer and prevent default to keep the card interaction
   const START_THRESHOLD = 10
 
   const handlePointerDown = (e: React.PointerEvent, c: TinderCommunity) => {
@@ -111,11 +96,9 @@ const TinderPage = () => {
     if (el && el.closest && (el.closest('button, a, [role="button"], input, textarea, select') || el.closest('[data-no-drag]'))) {
       return
     }
-    // record potential drag start but don't capture or prevent default yet
     dragStartX.current = e.clientX
     dragStartY.current = e.clientY
     pendingDragId.current = c.id
-    // ensure no active drag yet
     activePointerId.current = null
   }
 
@@ -127,14 +110,11 @@ const TinderPage = () => {
     const dx = e.clientX - startX
     const dy = e.clientY - startY
 
-    // if we haven't turned this into an active drag yet, decide whether to start
     if (!drag) {
       const absDx = Math.abs(dx)
       const absDy = Math.abs(dy)
-      // still within jitter threshold
       if (absDx < START_THRESHOLD && absDy < START_THRESHOLD) return
 
-      // if horizontal movement dominates, start capturing and dragging
       if (absDx > absDy && absDx >= START_THRESHOLD && pendingDragId.current === c.id) {
         try {
           e.currentTarget.setPointerCapture(e.pointerId)
@@ -148,15 +128,12 @@ const TinderPage = () => {
         return
       }
 
-      // vertical movement dominates -> treat as scroll, clear pending and don't prevent default
       if (absDy > absDx) {
         pendingDragId.current = null
-        // let the browser handle scrolling
         return
       }
     }
 
-    // if we have an active drag, only respond to the same pointer
     if (!drag || activePointerId.current !== e.pointerId) return
 
     setDrag({ id: c.id, x: dx })
@@ -193,7 +170,6 @@ const TinderPage = () => {
   }
 
   const handlePointerUp = (e: React.PointerEvent, c: TinderCommunity) => {
-    // if we never started a drag, just clear pending state
     if (!drag) {
       dragStartX.current = null
       dragStartY.current = null
@@ -240,10 +216,8 @@ const TinderPage = () => {
     activePointerId.current = null
   }
 
-  // Touch event fallbacks so older mobile browsers that don't support Pointer Events still work
   const handleTouchStart = (e: React.TouchEvent, c: TinderCommunity) => {
     if (swipe) return
-    // walk up to element node
     let targetNode: Node | null = e.target as Node | null
     while (targetNode && targetNode.nodeType !== Node.ELEMENT_NODE) {
       targetNode = targetNode.parentNode
@@ -254,11 +228,9 @@ const TinderPage = () => {
     }
     const t = e.touches && e.touches[0]
     if (!t) return
-    // record start coords but don't prevent default yet so the page can scroll
     dragStartX.current = t.clientX
     dragStartY.current = t.clientY
     pendingDragId.current = c.id
-    // don't call e.preventDefault() here
   }
 
   const handleTouchMove = (e: React.TouchEvent, c: TinderCommunity) => {
@@ -273,19 +245,15 @@ const TinderPage = () => {
     if (!drag) {
       const absDx = Math.abs(dx)
       const absDy = Math.abs(dy)
-      // still within jitter threshold
       if (absDx < START_THRESHOLD && absDy < START_THRESHOLD) return
 
       if (absDx > absDy && absDx >= START_THRESHOLD && pendingDragId.current === c.id) {
-        // start dragging on touch
         pendingDragId.current = null
         setDrag({ id: c.id, x: dx })
-        // prevent page scrolling when we decided to drag
         e.preventDefault()
         return
       }
 
-      // vertical scroll dominates -> clear pending and allow default
       if (absDy > absDx) {
         pendingDragId.current = null
         return
@@ -316,7 +284,6 @@ const TinderPage = () => {
   }
 
   const handleTouchEnd = (e: React.TouchEvent, c: TinderCommunity) => {
-    // if we never started a drag, just clear pending and allow default behavior
     if (!drag) {
       dragStartX.current = null
       dragStartY.current = null
@@ -359,19 +326,46 @@ const TinderPage = () => {
       <title>{config?.app?.siteName || 'CMSch'} | Tinder</title>
 
       <Box w="100%" mx="auto" px={{ base: 2, md: 4 }}>
-        <Box position="relative" mb={6} display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" gap={4}>
-          <Heading as="h1" variant="main-title" textAlign="center" flex={{ base: 'none', md: 1 }}>
+        <Box
+          position="relative"
+          mb={6}
+          display="flex"
+          flexDirection={{ base: 'column', sm: 'row' }}
+          alignItems={{ base: 'center', md: 'flex-start' }}
+          pb={10}
+          gap={4}
+        >
+          <Heading as="h1" variant="main-title" textAlign={{ base: 'center', sm: 'left' }} flex={{ base: 'none', md: 1 }}>
             Kör tinder
           </Heading>
-          <Button
-            as={Link}
-            to={`${AbsolutePaths.TINDER}/liked`}
-            size={{ base: 'md', md: 'lg' }}
-            aria-label="Tinder-matches-button"
-            width={{ base: 'full', md: 'auto' }}
+          <Flex
+            flexDirection={{ base: 'column', md: 'row' }}
+            gap={3}
+            width={{ base: 'full', sm: 'auto' }}
+            position={{ base: 'relative', sm: 'absolute' }}
+            top={{ base: 'auto', sm: '50%' }}
+            right={{ base: 'auto', sm: 2 }}
+            transform={{ base: 'none', sm: 'translateY(-50%)' }}
           >
-            Kedvelt körök
-          </Button>
+            <Button
+              as={Link}
+              to={`${AbsolutePaths.TINDER}/liked`}
+              size={{ base: 'md', md: 'lg' }}
+              aria-label="Tinder-matches-button"
+              width={{ base: 'full', sm: 'auto' }}
+            >
+              Kedvelt körök
+            </Button>
+            <Button
+              as={Link}
+              to={`${AbsolutePaths.TINDER}/question`}
+              size={{ base: 'md', md: 'lg' }}
+              width={{ base: 'full', sm: 'auto' }}
+              aria-label="Tinder-questions-button"
+            >
+              Válaszaid
+            </Button>
+          </Flex>
         </Box>
         {displayed.length === 0 ? (
           <Box px={4} py={8} textAlign="center">
@@ -409,7 +403,6 @@ const TinderPage = () => {
                 }
               }
 
-              // explicitly type handlers so the analyzer recognizes these props
               let handlers: React.DOMAttributes<HTMLDivElement> = {}
               if (isTop) {
                 handlers = {
@@ -428,7 +421,6 @@ const TinderPage = () => {
               if (!isTop) {
                 style.pointerEvents = 'none'
               } else {
-                // Allow vertical touch scrolling while still enabling horizontal drag detection
                 style.touchAction = 'pan-y'
               }
 

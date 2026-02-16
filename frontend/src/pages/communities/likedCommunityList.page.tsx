@@ -28,21 +28,21 @@ export default function LikedCommunityListPage() {
           position="relative"
           mb={6}
           display="flex"
-          flexDirection={{ base: 'column', md: 'row' }}
+          flexDirection={{ base: 'column', sm: 'row' }}
           alignItems={{ base: 'center', md: 'flex-start' }}
           gap={4}
         >
-          <Heading as="h1" variant="main-title" textAlign={{ base: 'center', md: 'left' }} flex={{ base: 'none', md: 1 }}>
+          <Heading as="h1" variant="main-title" textAlign={{ base: 'center', sm: 'left' }} flex={{ base: 'none', sm: 1 }}>
             Kör tinder
           </Heading>
           <Flex
-            flexDirection={{ base: 'column', sm: 'row' }}
+            flexDirection={{ base: 'column', md: 'row' }}
             gap={3}
-            width={{ base: 'full', md: 'auto' }}
-            position={{ base: 'relative', md: 'absolute' }}
-            top={{ base: 'auto', md: '50%' }}
-            right={{ base: 'auto', md: 2 }}
-            transform={{ base: 'none', md: 'translateY(-50%)' }}
+            width={{ base: 'full', sm: 'auto' }}
+            position={{ base: 'relative', sm: 'absolute' }}
+            top={{ base: 'auto', sm: '50%' }}
+            right={{ base: 'auto', sm: 2 }}
+            transform={{ base: 'none', sm: 'translateY(-30%)', md: 'translateY(-50%)' }}
           >
             <Button
               as={Link}
