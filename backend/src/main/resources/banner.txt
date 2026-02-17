@@ -4,7 +4,6 @@ ${AnsiColor.166}
  ██║      ██╔████╔██║ ███████╗ ██║      ███████║
  ██║      ██║╚██╔╝██║ ╚════██║ ██║      ██╔══██║
  ╚██████╗ ██║ ╚═╝ ██║ ███████║ ╚██████╗ ██║  ██║
-  ╚═════╝ ╚═╝     ╚═╝ ╚══════╝  ╚═════╝ ╚═╝  ╚═╝${AnsiColor.DEFAULT}
-${application.title} ${application.version}
-Powered by ${AnsiColor.GREEN}Spring Boot ${spring-boot.version}${AnsiColor.DEFAULT}
-Developed by ${AnsiColor.166}Kir-Dev https://kir-dev.hu/${AnsiColor.DEFAULT}
+  ╚═════╝ ╚═╝     ╚═╝ ╚══════╝  ╚═════╝ ╚═╝  ╚═╝ ${application.version}
+${AnsiBackground.GREEN}${AnsiColor.BLACK}   Powered by ${AnsiBackground.DEFAULT} ${AnsiStyle.BOLD}${AnsiColor.GREEN}Spring Boot ${spring-boot.version}${AnsiStyle.NORMAL}
+${AnsiColor.BLACK}${AnsiBackground.166} Developed by ${AnsiBackground.DEFAULT} ${AnsiStyle.BOLD}${AnsiColor.166}Kir-Dev https://kir-dev.hu/${AnsiColor.DEFAULT}${AnsiStyle.NORMAL}
