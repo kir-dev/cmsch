@@ -104,7 +104,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
-    builder = "bellsoft/buildpacks.builder:musl"
+    builder = "paketobuildpacks/builder-jammy-tiny:latest"
 
     environment = mapOf(
         "BP_NATIVE_IMAGE" to "false",
