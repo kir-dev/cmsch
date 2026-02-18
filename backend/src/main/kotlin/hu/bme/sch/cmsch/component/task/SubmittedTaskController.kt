@@ -3,6 +3,8 @@ package hu.bme.sch.cmsch.component.task
 import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.ImportFormat
 import hu.bme.sch.cmsch.admin.OverviewBuilder
+import hu.bme.sch.cmsch.config.OwnershipType
+import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 @RequestMapping("/admin/control/submitted-tasks")
 @ConditionalOnBean(TaskComponent::class)
 class SubmittedTaskController(
+    private val startupPropertyConfig: StartupPropertyConfig,
     repo: SubmittedTaskRepository,
     importService: ImportService,
     adminMenuService: AdminMenuService,
@@ -86,10 +89,10 @@ class SubmittedTaskController(
         var taskName: String = "",
 
         @property:ImportFormat
-        var groupId: Int = 0,
+        var submitterId: Int = 0,
 
         @property:ImportFormat
-        var groupName: String = "",
+        var submitterName: String = "",
 
         @property:ImportFormat
         var score: Int = 0,
@@ -123,21 +126,38 @@ class SubmittedTaskController(
             throw IllegalStateException("Insufficient permissions")
         }
         response.setHeader("Content-Disposition", "attachment; filename=\"$view-filtered-export.csv\"")
-        return filterDescriptor.exportToCsv(fetchOverview(user).map {
-            SubmittedTaskFilteredView(
-                it.task?.id ?: 0,
-                it.task?.title ?: "-",
-                it.groupId ?: 0,
-                it.groupName,
-                it.score,
-                it.approved,
-                it.rejected,
-                it.textAnswerLob,
-                it.imageUrlAnswer,
-                it.fileUrlAnswer,
-                it.response
-            )
-        }).toByteArray()
+        when (startupPropertyConfig.taskOwnershipMode) {
+            OwnershipType.GROUP -> return filterDescriptor.exportToCsv(fetchOverview(user).map {
+                SubmittedTaskFilteredView(
+                    it.task?.id ?: 0,
+                    it.task?.title ?: "-",
+                    it.groupId ?: 0,
+                    it.groupName,
+                    it.score,
+                    it.approved,
+                    it.rejected,
+                    it.textAnswerLob,
+                    it.imageUrlAnswer,
+                    it.fileUrlAnswer,
+                    it.response
+                )
+            }).toByteArray()
+            OwnershipType.USER -> return filterDescriptor.exportToCsv(fetchOverview(user).map {
+                SubmittedTaskFilteredView(
+                    it.task?.id ?: 0,
+                    it.task?.title ?: "-",
+                    it.userId ?: 0,
+                    it.userName,
+                    it.score,
+                    it.approved,
+                    it.rejected,
+                    it.textAnswerLob,
+                    it.imageUrlAnswer,
+                    it.fileUrlAnswer,
+                    it.response
+                )
+            }).toByteArray()
+        }
     }
 
 
