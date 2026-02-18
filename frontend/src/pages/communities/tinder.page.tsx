@@ -13,7 +13,7 @@ import { AbsolutePaths } from '../../util/paths'
 import { type TinderCommunity } from '../../util/views/tinder.ts'
 import { TinderCard } from './components/TinderCard'
 
-const SWIPE_THRESHOLD = 220
+const SWIPE_THRESHOLD = 150
 
 const TinderPage = () => {
   const config = useConfigContext()?.components
