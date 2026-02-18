@@ -220,4 +220,10 @@ class TinderService(
         }
         return this
     }
+
+    @Transactional
+    fun resetUserInteractions(userId: Int) {
+        val interactions = tinderInteractionRepository.findByUserId(userId)
+        tinderInteractionRepository.deleteAll(interactions)
+    }
 }

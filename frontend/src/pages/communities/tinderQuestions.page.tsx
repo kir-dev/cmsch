@@ -1,12 +1,14 @@
-import { Box, Button, FormControl, FormLabel, Heading, useToast, Wrap, WrapItem } from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, FormLabel, Heading, useToast, Wrap, WrapItem } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderAnswers } from '../../api/hooks/community/useTinderAnswers.ts'
 import { useTinderAnswerSend } from '../../api/hooks/community/useTinderAnswerSend.ts'
+import { useTinderInteractionReset } from '../../api/hooks/community/useTinderInteractionReset'
 import { useTinderQuestions } from '../../api/hooks/community/useTinderQuestions.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
+import { ConfirmDialogButton } from '../../common-components/ConfirmDialogButton'
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { useBrandColor } from '../../util/core-functions.util.ts'
@@ -24,6 +26,8 @@ const TinderQuestionsPage = () => {
   const { data: questions, isLoading: questionsLoading, isError: questionsError } = useTinderQuestions()
   const { data: answersStatus, isLoading: answersLoading, isError: answersError, refetch: refetchAnswers } = useTinderAnswers()
   const { response, submit } = useTinderAnswerSend()
+
+  const { mutateAsync: resetInteractions, isError: resetError } = useTinderInteractionReset()
 
   useEffect(() => {
     if (!questions || !answersStatus) return
@@ -53,12 +57,23 @@ const TinderQuestionsPage = () => {
   if (!component || !component.tinderEnabled) return <ComponentUnavailable />
 
   const isLoading = questionsLoading || answersLoading
-  const isError = questionsError || answersError
+  const isError = questionsError || answersError || resetError
   const data = questions && answersStatus
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Tinder kérdések" />
 
   const onSubmit = (values: Record<string, string>) => {
     submit(values, answersStatus.answered)
+  }
+
+  const handleReset = async () => {
+    try {
+      await resetInteractions()
+      toast({ title: 'Interakciók sikeresen törölve', status: 'success' })
+      refetchAnswers()
+    } catch (err) {
+      console.error(err)
+      toast({ title: 'Hiba történt az interakciók törlése során', status: 'error' })
+    }
   }
 
   return (
@@ -75,19 +90,38 @@ const TinderQuestionsPage = () => {
           <Heading as="h1" variant="main-title">
             Tinder kérdések
           </Heading>
-          <Button
-            as={Link}
-            to={`${AbsolutePaths.TINDER}/community`}
-            size={{ base: 'md', md: 'lg' }}
-            aria-label="Tinder-matches-button"
+          <Flex
+            flexDirection={{ base: 'column', md: 'row' }}
+            gap={3}
             width={{ base: 'full', sm: 'auto' }}
             position={{ base: 'relative', sm: 'absolute' }}
             top={{ base: 'auto', sm: '50%' }}
             right={{ base: 'auto', sm: 2 }}
             transform={{ base: 'none', sm: 'translateY(-30%)', md: 'translateY(-50%)' }}
           >
-            Tinder
-          </Button>
+            <Button
+              as={Link}
+              to={`${AbsolutePaths.TINDER}/community`}
+              size={{ base: 'md', md: 'lg' }}
+              aria-label="Tinder-matches-button"
+              width={{ base: 'full', sm: 'auto' }}
+            >
+              Tinder
+            </Button>
+
+            {/* Reset interactions: show a confirm dialog before calling the reset API */}
+            <ConfirmDialogButton
+              headerText="Interakciók törlése"
+              bodyText="Biztosan törölni szeretné az összes Tinder interakcióját? Ezt nem lehet visszacsinálni."
+              buttonText="Interakciók törlése"
+              buttonColorScheme="red"
+              buttonVariant="outline"
+              confirmButtonText="Törlés"
+              refuseButtonText="Mégse"
+              buttonWidth={{ base: 'full', sm: 'auto' }}
+              confirmAction={handleReset}
+            />
+          </Flex>
         </Box>
         <FormProvider {...formMethods}>
           <form onSubmit={formMethods.handleSubmit(onSubmit)}>

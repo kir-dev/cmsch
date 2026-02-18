@@ -7,9 +7,10 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  type ResponsiveValue,
   useDisclosure
 } from '@chakra-ui/react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useBrandColor } from '../util/core-functions.util.ts'
 
 interface ConfirmDialogButtonProps {
@@ -20,9 +21,10 @@ interface ConfirmDialogButtonProps {
   buttonVariant?: string
   confirmButtonText?: string
   refuseButtonText?: string
-  buttonWidth?: string
+  buttonWidth?: ResponsiveValue<string | number>
 
-  confirmAction(): void
+  // allow async confirm actions
+  confirmAction(): Promise<void> | void
 }
 
 export const ConfirmDialogButton = ({
@@ -39,6 +41,18 @@ export const ConfirmDialogButton = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef(null)
   const brandColor = useBrandColor()
+  const [isConfirming, setIsConfirming] = useState(false)
+
+  const handleConfirm = async () => {
+    try {
+      setIsConfirming(true)
+      // support sync and async confirmAction
+      await Promise.resolve(confirmAction())
+      onClose()
+    } finally {
+      setIsConfirming(false)
+    }
+  }
 
   return (
     <>
@@ -59,10 +73,10 @@ export const ConfirmDialogButton = ({
           <AlertDialogCloseButton />
           {bodyText && <AlertDialogBody>{bodyText}</AlertDialogBody>}
           <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
+            <Button ref={cancelRef} onClick={onClose} isDisabled={isConfirming}>
               {refuseButtonText}
             </Button>
-            <Button colorScheme={brandColor} ml={3} onClick={confirmAction}>
+            <Button colorScheme={brandColor} ml={3} onClick={handleConfirm} isLoading={isConfirming}>
               {confirmButtonText}
             </Button>
           </AlertDialogFooter>
