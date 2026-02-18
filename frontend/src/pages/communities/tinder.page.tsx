@@ -1,10 +1,12 @@
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useTinderCommunity } from '../../api/hooks/community/useTinderCommunity.ts'
+import { useTinderInteractionReset } from '../../api/hooks/community/useTinderInteractionReset.ts'
 import { useTinderInteractionSend } from '../../api/hooks/community/useTinderInteractionSend.ts'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
+import { ConfirmDialogButton } from '../../common-components/ConfirmDialogButton.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
 import { PageStatus } from '../../common-components/PageStatus.tsx'
 import { AbsolutePaths } from '../../util/paths'
@@ -17,8 +19,11 @@ const TinderPage = () => {
   const config = useConfigContext()?.components
   const component = config?.communities
 
-  const { data: communities, isLoading, isError } = useTinderCommunity()
+  const toast = useToast()
+
+  const { data: communities, isLoading, isError, refetch } = useTinderCommunity()
   const interact = useTinderInteractionSend()
+  const { mutateAsync: resetInteractions, isError: resetError } = useTinderInteractionReset()
 
   const [swipe, setSwipe] = useState<{ id: number; dir: 'left' | 'right' } | null>(null)
   const [removedIds, setRemovedIds] = useState<Set<number>>(new Set())
@@ -31,7 +36,7 @@ const TinderPage = () => {
 
   if (!component || !component.tinderEnabled) return <ComponentUnavailable />
 
-  if (isError || isLoading || !communities) return <PageStatus isLoading={isLoading} isError={isError} />
+  if (isError || resetError || isLoading || !communities) return <PageStatus isLoading={isLoading} isError={isError} />
 
   const unseen = communities.filter((c) => c.status === 'NOT_SEEN')
   const displayed = unseen.filter((c) => !removedIds.has(c.id))
@@ -321,6 +326,17 @@ const TinderPage = () => {
     pendingDragId.current = null
   }
 
+  const handleReset = async () => {
+    try {
+      await resetInteractions()
+      toast({ title: 'Interakciók sikeresen törölve', status: 'success' })
+      refetch()
+    } catch (err) {
+      console.error(err)
+      toast({ title: 'Interakciók törlése sikertelen', status: 'error' })
+    }
+  }
+
   return (
     <CmschPage loginRequired={true} title="Tinder">
       <Box w="100%" mx="auto" px={{ base: 2, md: 4 }}>
@@ -367,7 +383,23 @@ const TinderPage = () => {
         </Box>
         {displayed.length === 0 ? (
           <Box px={4} py={8} textAlign="center">
-            <Text>Minden kört megtekintettél már. A kedvelt köröket megtekintheted összegyűjtve a fenti gombra kattintva.</Text>
+            <Text>
+              Minden kört megtekintettél már. A kedvelt köröket megtekintheted összegyűjtve a fenti gombra kattintva. Az alábbi gombbal
+              pedig újrakezdheted a körök böngészését.
+            </Text>
+            <Box mt={8}>
+              <ConfirmDialogButton
+                headerText="Interakciók törlése"
+                bodyText="Biztosan törölni szeretné az összes Tinder interakcióját? Ezt nem lehet visszacsinálni."
+                buttonText="Interakciók törlése"
+                buttonColorScheme="red"
+                buttonVariant="outline"
+                confirmButtonText="Törlés"
+                refuseButtonText="Mégse"
+                buttonWidth={{ base: 'full', sm: 'auto' }}
+                confirmAction={handleReset}
+              />
+            </Box>
           </Box>
         ) : (
           <div style={stackContainerStyle} aria-live="polite">

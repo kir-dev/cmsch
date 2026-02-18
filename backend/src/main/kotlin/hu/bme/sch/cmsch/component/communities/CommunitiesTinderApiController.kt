@@ -64,4 +64,13 @@ class CommunitiesTinderApiController(
         return tinderService.interactWithCommunity(user, interaction)
     }
 
+    @PostMapping("/tinder/community/interact/reset")
+    fun resetInteractions(
+        auth: Authentication?
+    ): Boolean {
+        val user = auth?.getUserEntityFromDatabaseOrNull(userService) ?: return false
+        tinderService.resetUserInteractions(user.id)
+        return true
+    }
+
 }

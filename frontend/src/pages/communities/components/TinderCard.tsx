@@ -43,9 +43,28 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
       flexDirection="column"
     >
       {image ? (
-        <Image src={image} alt={title} width="100%" height="100%" marginTop={{ base: 4, md: 10 }} objectFit="contain" />
+        // Prevent the browser from starting a native drag from the image so card drag gestures work.
+        <Image
+          src={image}
+          alt={title}
+          width="100%"
+          height="100%"
+          marginTop={{ base: 4, md: 10 }}
+          objectFit="contain"
+          draggable={false}
+          onDragStart={(e) => e.preventDefault()}
+          sx={{ WebkitUserDrag: 'none' }}
+        />
       ) : (
-        <Box bg={placeholderBg} width="100%" height="100%" />
+        <Box
+          bg={placeholderBg}
+          width="100%"
+          height="100%"
+          // also prevent dragging the placeholder box
+          draggable={false}
+          onDragStart={(e) => e.preventDefault()}
+          sx={{ WebkitUserDrag: 'none' }}
+        />
       )}
 
       {/* VStack becomes a column flex container. The top part scrolls, buttons stay outside the scroll area. */}

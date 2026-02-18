@@ -207,7 +207,9 @@ const RiddlePage = () => {
                 headerText="Hint kérés"
                 bodyText="Biztos hintet szeretnél kérni?"
                 confirmButtonText="Hint kérése"
-                confirmAction={() => hintQuery.refetch()}
+                confirmAction={async () => {
+                  await hintQuery.refetch()
+                }}
               />
             )}
             {riddleConfig.skipEnabled && (
