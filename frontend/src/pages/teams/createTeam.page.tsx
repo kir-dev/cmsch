@@ -15,7 +15,6 @@ import { type CreateTeamDto, TeamResponseMessages, TeamResponses } from '../../u
 export default function CreateTeamPage() {
   const navigate = useNavigate()
   const [requestError, setRequestError] = useState<string>()
-  const config = useConfigContext()
   const brandColor = useBrandColor()
   const tokenRefresh = useTokenRefresh(() => {
     navigate(AbsolutePaths.MY_TEAM)
@@ -33,16 +32,12 @@ export default function CreateTeamPage() {
       setRequestError(TeamResponseMessages[response as TeamResponses])
     }
   })
-  const component = config?.components?.team
-  const app = config?.components?.app
+  const component = useConfigContext()?.components?.team
   if (!component) return <ComponentUnavailable />
   if (!component.creationEnabled) return <Navigate to="/" replace />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component.createTitle}
-      </title>
+    <CmschPage title={component.createTitle}>
       <Heading>{component.createTitle}</Heading>
       <Markdown text={component.teamCreationTopMessage} />
       <form onSubmit={handleSubmit(createTeam)}>

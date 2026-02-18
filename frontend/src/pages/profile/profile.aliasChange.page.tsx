@@ -17,9 +17,7 @@ export const AliasChangePage = () => {
   const submissionMutation = useAliasChangeMutation()
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
-  const config = useConfigContext()?.components
-  const component = config?.profile
-  const app = config?.app
+  const component = useConfigContext()?.components?.profile
   const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
@@ -65,8 +63,7 @@ export const AliasChangePage = () => {
   }
 
   return (
-    <CmschPage>
-      <title>{app?.siteName || 'CMSch'} | Becenév módosítása</title>
+    <CmschPage title="Becenév módosítása">
       <Heading my={5}>Becenév módosítása</Heading>
       <Box display="flex" flexDirection="column" as="form" onSubmit={onSubmitAlias}>
         <FormControl>

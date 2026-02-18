@@ -10,15 +10,10 @@ import { l } from '../../util/language'
 export default function MapPage() {
   const [showUserLocation, setShowUserLocation] = useState(false)
   const locationQuery = useLocationQuery()
-  const config = useConfigContext()?.components
-  const component = config?.location
-  const app = config?.app
+  const component = useConfigContext()?.components?.location
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component?.title || 'Térkép'}
-      </title>
+    <CmschPage title={component?.title || 'Térkép'}>
       <Heading as="h1" variant="main-title">
         Térkép
       </Heading>

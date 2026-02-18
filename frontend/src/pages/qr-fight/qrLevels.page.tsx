@@ -14,9 +14,7 @@ import { DataDisplayWrapper } from './components/DataDisplayWrapper'
 import { TreasureDataDisplayWrapper } from './components/TreasureDataDisplayWrapper.tsx'
 
 export default function QrLevelsPage() {
-  const config = useConfigContext()?.components
-  const component = config?.qrFight
-  const app = config?.app
+  const component = useConfigContext()?.components?.qrFight
   const { data, isLoading, isError } = useQrLevelsQuery()
   const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
   const breakpoint = useBreakpoint()
@@ -27,10 +25,7 @@ export default function QrLevelsPage() {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component.title}
-      </title>{' '}
+    <CmschPage title={component.title}>
       <Flex align="baseline" justifyContent="space-between" wrap="wrap">
         <Heading as="h1" variant="main-title" mt={5}>
           {component.title}

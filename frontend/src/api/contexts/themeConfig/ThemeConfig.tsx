@@ -7,11 +7,14 @@ import type { Style } from '../config/types.ts'
 const ColorModeSetter = ({ children, style }: PropsWithChildren & { style?: Style }) => {
   const { colorMode, setColorMode } = useColorMode()
   useEffect(() => {
+    console.log(colorMode, setColorMode, style, style?.deviceTheme, style?.forceDarkMode)
     if (!setColorMode) return
     if (!style) return
     if (colorMode !== 'dark' && style.forceDarkMode) {
       setColorMode('dark')
-    } else if (!style.darkModeEnabled) setColorMode('white')
+    } else if (!style.darkModeEnabled && !style.forceDarkMode) {
+      setColorMode('white')
+    }
   }, [colorMode, setColorMode, style, style?.deviceTheme, style?.forceDarkMode])
 
   return <>{children}</>

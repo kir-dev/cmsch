@@ -1,13 +1,12 @@
 import { Center, Flex, Heading, VStack } from '@chakra-ui/react'
 import { type PropsWithChildren, useMemo } from 'react'
 import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { Title } from '../../util/TitleProvider.tsx'
 import Clock from './components/clock'
 import { parseTopMessage } from './countdown.util'
 
 const CountdownPage = ({ children }: PropsWithChildren) => {
-  const config = useConfigContext()
-  const appComponent = config?.components?.app
-  const component = config?.components?.countdown
+  const component = useConfigContext()?.components?.countdown
   const countTo = useMemo(() => {
     try {
       if (!component) return new Date()
@@ -21,9 +20,7 @@ const CountdownPage = ({ children }: PropsWithChildren) => {
   if (component?.enabled && component?.showOnly && (component?.keepOnAfterCountdownOver || countTo.getTime() > Date.now())) {
     return (
       <Flex h="100%" w="100%">
-        <title>
-          {appComponent?.siteName || 'CMSch'} | {component?.title}
-        </title>
+        <Title text={component?.title} />
         <Flex
           position="absolute"
           h="100%"

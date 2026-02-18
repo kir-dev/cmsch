@@ -1,6 +1,5 @@
 import { Divider, Flex, Heading } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
 import type { Race } from '../../../api/contexts/config/types'
 import { BoardStat } from '../../../common-components/BoardStat'
 import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
@@ -19,16 +18,12 @@ type Props = {
 
 const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
   const showDescription = useMemo(() => data?.board.some((i) => !!i.description), [data?.board])
-  const appComponent = useConfigContext()?.components?.app
 
   if (!component || !component.visible) return <ComponentUnavailable />
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
-    <CmschPage>
-      <title>
-        {appComponent?.siteName || 'CMSch'} | {data.categoryName}
-      </title>
+    <CmschPage title={data.categoryName}>
       <Heading as="h1" variant="main-title" mb={3}>
         {data.categoryName}
       </Heading>

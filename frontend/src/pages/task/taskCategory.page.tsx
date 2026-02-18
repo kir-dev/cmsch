@@ -17,9 +17,7 @@ const TaskCategoryPage = () => {
   const hoverBg = useOpaqueBackground(3)
   const { isLoading, isError, data } = useTasksInCategoryQuery(id || 'UNKNOWN')
 
-  const config = useConfigContext()?.components
-  const component = config?.task
-  const app = config?.app
+  const component = useConfigContext()?.components?.task
 
   if (!id) return <Navigate to={AbsolutePaths.TASKS} />
 
@@ -38,10 +36,7 @@ const TaskCategoryPage = () => {
   ]
 
   return (
-    <CmschPage loginRequired>
-      <title>
-        {app?.siteName || 'CMSch'} | {data.categoryName}
-      </title>
+    <CmschPage loginRequired={true} title={data.categoryName}>
       <CustomBreadcrumb items={breadcrumbItems} />
       <Heading>{data.categoryName}</Heading>
       {!!data.description && (

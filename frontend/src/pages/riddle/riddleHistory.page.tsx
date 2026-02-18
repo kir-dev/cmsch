@@ -2,7 +2,6 @@ import { Box, Button, Center, Heading, HStack, Image, Select, Stack, Text, useTo
 import { useEffect, useState } from 'react'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useRiddleHistoryQuery } from '../../api/hooks/riddle/useRiddleHistoryQuery'
 import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
 import { CmschPage } from '../../common-components/layout/CmschPage'
@@ -21,7 +20,6 @@ const RiddleHistoryPage = () => {
   const [loaded, setLoaded] = useState(false)
   const [index, setIndex] = useState(0)
   const brandColor = useBrandColor()
-  const appComponent = useConfigContext()?.components?.app
 
   const query = useRiddleHistoryQuery()
   useEffect(() => {
@@ -61,8 +59,7 @@ const RiddleHistoryPage = () => {
     }
   ]
   return (
-    <CmschPage>
-      <title>{appComponent?.siteName || 'CMSch'} | Megoldott riddleök</title>
+    <CmschPage title="Megoldott riddleök">
       <CustomBreadcrumb items={breadcrumbItems} />
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'center']}>
         <Heading as="h1" variant="main-title" my={5}>

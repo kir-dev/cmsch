@@ -5,13 +5,11 @@ import { ComponentUnavailable } from '../../common-components/ComponentUnavailab
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
 import { PageStatus } from '../../common-components/PageStatus'
-import { taskCategoryType } from '../../util/views/task.view'
+import { TaskCategoryType } from '../../util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
 
 const TaskCategoryListPage = () => {
-  const config = useConfigContext()?.components
-  const component = config?.task
-  const app = config?.app
+  const component = useConfigContext()?.components?.task
 
   const { isLoading, isError, data } = useTaskCategoriesQuery()
 
@@ -19,8 +17,8 @@ const TaskCategoryListPage = () => {
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
-  const normalCategories = data.filter((c) => c.type == taskCategoryType.REGULAR)
-  const prCategories = data.filter((c) => c.type == taskCategoryType.PROFILE_REQUIRED)
+  const normalCategories = data.filter((c) => c.type == TaskCategoryType.REGULAR)
+  const prCategories = data.filter((c) => c.type == TaskCategoryType.PROFILE_REQUIRED)
 
   const required = prCategories.length > 0 && (
     <>
@@ -37,10 +35,7 @@ const TaskCategoryListPage = () => {
   )
 
   return (
-    <CmschPage loginRequired>
-      <title>
-        {app?.siteName || 'CMSch'} | {component?.title}
-      </title>
+    <CmschPage loginRequired={true} title={component?.title}>
       {required}
       <Heading as="h1" variant="main-title">
         {component.regularTitle}

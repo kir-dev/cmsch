@@ -31,8 +31,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <CmschPage>
-          <title>Hiba</title>
+        <CmschPage title="Hiba">
           <Heading textAlign="center">{l('error-boundary-title')}</Heading>
           <Text textAlign="center" marginTop={10}>
             {l('error-boundary-message')}

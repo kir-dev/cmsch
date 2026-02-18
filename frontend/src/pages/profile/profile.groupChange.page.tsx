@@ -1,7 +1,6 @@
 import { Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VStack } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useServiceContext } from '../../api/contexts/service/ServiceContext'
 import { useGroupChangeMutation } from '../../api/hooks/group-change/useGroupChangeMutation'
 import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
@@ -23,7 +22,6 @@ export function ProfileGroupChangePage() {
 }
 
 function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; refetch: () => void }) {
-  const app = useConfigContext()?.components?.app
   const availableGroups = profile.availableGroups
     ? Object.entries<string>(profile.availableGroups).toSorted((a, b) => a[1].localeCompare(b[1]))
     : []
@@ -66,8 +64,7 @@ function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; re
   }
 
   return (
-    <CmschPage>
-      <title>{app?.siteName || 'CMSch'} | Tankör beállítása</title>
+    <CmschPage title="Tankör beállítása">
       <Heading>Tankör beállítása</Heading>
       <Text mt={10} textAlign="center">
         Állítsd be a tankörödet, hogy részt vehess a feladatokban!

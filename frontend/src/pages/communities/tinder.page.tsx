@@ -322,9 +322,7 @@ const TinderPage = () => {
   }
 
   return (
-    <CmschPage loginRequired>
-      <title>{config?.app?.siteName || 'CMSch'} | Tinder</title>
-
+    <CmschPage loginRequired={true} title="Tinder">
       <Box w="100%" mx="auto" px={{ base: 2, md: 4 }}>
         <Box
           position="relative"

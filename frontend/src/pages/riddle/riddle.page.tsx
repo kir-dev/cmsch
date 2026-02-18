@@ -45,9 +45,7 @@ const RiddlePage = () => {
   const skipMutation = useRiddleSkipMutation()
   const [allowSubmission, setAllowSubmission] = useState(true)
   const boxBorder = useOpaqueBackground(1)
-  const config = useConfigContext()?.components
-  const riddleConfig = config?.riddle
-  const app = config?.app
+  const riddleConfig = useConfigContext()?.components?.riddle
   const brandColor = useBrandColor()
 
   if (!id) return <Navigate to={AbsolutePaths.RIDDLE} />
@@ -167,10 +165,7 @@ const RiddlePage = () => {
   ]
 
   return (
-    <CmschPage loginRequired>
-      <title>
-        {app?.siteName || 'CMSch'} | {data.title}
-      </title>
+    <CmschPage loginRequired={true} title={data.title}>
       <CustomBreadcrumb items={breadcrumbItems} />
       <StopItModal isOpen={isOpen} onClose={onClose} />
       <Heading my={5}> {data.title} </Heading>

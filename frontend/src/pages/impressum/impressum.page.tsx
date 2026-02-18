@@ -9,19 +9,13 @@ import { DeveloperWrapItem } from './components/DeveloperWrapItem'
 import { OrganizerSection } from './components/OrganizerSection'
 
 const ImpressumPage = () => {
-  const config = useConfigContext()
   const developers = useDevelopers()
-
-  const component = config?.components?.impressum
-  const appComponent = config?.components?.app
+  const component = useConfigContext()?.components?.impressum
 
   if (!component) return <ComponentUnavailable />
 
   return (
-    <CmschPage>
-      <title>
-        {appComponent?.siteName || 'CMSch'} | {component?.title}
-      </title>
+    <CmschPage title={component?.title}>
       <Heading as="h1" variant="main-title">
         {component.title}
       </Heading>

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router'
 
 import { useEffect } from 'react'
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { useScanTokenMutation } from '../../api/hooks/token/useScanTokenMutation'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import { QrReader } from '../../common-components/QrReader'
@@ -18,7 +17,6 @@ const TokenScan = () => {
   const spinnerColor = useBrandColor(500, 600)
   const brandColor = useBrandColor()
   const { mutate, isPending, isError, reset, data, isIdle } = useScanTokenMutation()
-  const app = useConfigContext()?.components?.app
 
   const handleScan = (qrData: string | null) => {
     if (qrData) {
@@ -35,8 +33,7 @@ const TokenScan = () => {
   }, [isLoggedIn, mutate])
 
   return (
-    <CmschPage loginRequired>
-      <title>{app?.siteName || 'CMSch'} | QR beolvasás</title>
+    <CmschPage loginRequired={true} title="QR beolvasás">
       <Heading mb={5}>QR beolvasás</Heading>
       {isPending && <Spinner color={spinnerColor} size="xl" thickness="0.3rem" />}
       {isIdle && <QrReader onScan={handleScan} />}

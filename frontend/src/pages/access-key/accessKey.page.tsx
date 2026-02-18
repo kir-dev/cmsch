@@ -70,10 +70,7 @@ function AccessKeyPage() {
   }
 
   return (
-    <CmschPage>
-      <title>
-        {appComponent?.siteName || 'CMSch'} | {query.data.title}
-      </title>
+    <CmschPage title={query.data.title}>
       <Heading as="h1" variant="main-title">
         {query.data.title}
       </Heading>

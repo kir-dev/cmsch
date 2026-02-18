@@ -27,7 +27,6 @@ export const CmschLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <title>{component.siteName || 'CMSch'}</title>
       <Flex direction="column" minHeight="100vh">
         <ScrollToTop />
         <Navbar />

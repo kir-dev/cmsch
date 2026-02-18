@@ -14,9 +14,7 @@ import { RiddleCategoryListItem } from './components/RiddleCategoryListItem'
 const RiddleCategoryList = () => {
   const navigate = useNavigate()
   const toast = useToast()
-  const config = useConfigContext()?.components
-  const component = config?.riddle
-  const app = config?.app
+  const component = useConfigContext()?.components?.riddle
   const { isLoading, isError, data } = useRiddleListQuery()
   const brandColor = useBrandColor()
 
@@ -41,10 +39,7 @@ const RiddleCategoryList = () => {
   }
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {component?.title}
-      </title>
+    <CmschPage title={component?.title}>
       <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
         <Heading as="h1" variant="main-title">
           Riddleök

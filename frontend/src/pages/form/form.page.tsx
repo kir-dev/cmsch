@@ -7,7 +7,6 @@ import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
 import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
 
 import { useAuthContext } from '../../api/contexts/auth/useAuthContext.ts'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
 import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
 import { CmschPage } from '../../common-components/layout/CmschPage'
 import Markdown from '../../common-components/Markdown'
@@ -18,7 +17,6 @@ import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
 
 const FormPage = () => {
-  const app = useConfigContext()?.components?.app
   const toast = useToast()
   const params = useParams()
   const formMethods = useForm()
@@ -65,10 +63,7 @@ const FormPage = () => {
   if (!isLoggedIn && status === FormStatus.NOT_FOUND) return <ComponentUnavailable />
 
   return (
-    <CmschPage>
-      <title>
-        {app?.siteName || 'CMSch'} | {form?.name || 'Űrlap'}
-      </title>
+    <CmschPage title={form?.name || 'Űrlap'}>
       <Box w="100%" mx="auto">
         <Heading as="h1" variant="main-title">
           {form?.name || 'Űrlap'}

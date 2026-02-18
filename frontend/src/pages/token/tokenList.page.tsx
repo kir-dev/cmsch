@@ -14,9 +14,7 @@ import { StampComponent } from './components/StampComponent'
 
 const TokenList = () => {
   const { data, isLoading, isError } = useTokensQuery()
-  const config = useConfigContext()
-  const component = config?.components?.token
-  const app = config?.components?.app
+  const component = useConfigContext()?.components?.token
   const brandColor = useBrandColor()
 
   const calculate_progress = (acquired: number, total: number) => (total == 0 ? 100 : (100 * acquired) / total)
@@ -26,10 +24,7 @@ const TokenList = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
   return (
-    <CmschPage loginRequired>
-      <title>
-        {app?.siteName || 'CMSch'} | {component.title || 'QR kódok'}
-      </title>
+    <CmschPage loginRequired={true} title={component.title || 'QR kódok'}>
       <Heading as="h1" variant="main-title">
         {component.title || 'QR kódok'}
       </Heading>

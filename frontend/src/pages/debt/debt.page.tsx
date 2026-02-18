@@ -11,7 +11,6 @@ import { DebtListItem } from './components/debt-list-item.tsx'
 
 const DebtPage = () => {
   const components = useConfigContext()?.components
-  const appComponent = components?.app
   const debtComponent = components?.debt
   const profileComponent = components?.profile
   const profileQuery = useProfileQuery()
@@ -24,10 +23,7 @@ const DebtPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={title} />
 
   return (
-    <CmschPage>
-      <title>
-        {appComponent?.siteName || 'CMSch'} | {title}
-      </title>
+    <CmschPage title={title}>
       <Heading as="h1" variant="main-title">
         {title}
       </Heading>

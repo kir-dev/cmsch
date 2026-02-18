@@ -5,10 +5,11 @@ import { l } from '../../../util/language'
 import { AbsolutePaths } from '../../../util/paths'
 
 // eslint-disable-next-line react-refresh/only-export-components
-export enum MessageTypes {
-  GENERAL = 'general',
-  AUTHENTICATION = 'authentication'
+export const MessageTypes = {
+  GENERAL: 'general',
+  AUTHENTICATION: 'authentication'
 }
+export type MessageTypes = (typeof MessageTypes)[keyof typeof MessageTypes]
 
 export interface MessageOptions {
   toast?: boolean

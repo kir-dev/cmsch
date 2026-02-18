@@ -33,8 +33,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   // Display authentication page for the corresponding error type
   if (clonedMessageType === MessageTypes.AUTHENTICATION) return <UnauthorizedPage />
   return (
-    <CmschPage>
-      <title>{l('error-page-helmet')}</title>
+    <CmschPage title={l('error-page-helmet')}>
       <Heading as="h1" variant="main-title" textAlign="center">
         {l('error-page-title')}
       </Heading>
