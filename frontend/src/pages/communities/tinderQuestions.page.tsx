@@ -92,11 +92,11 @@ const TinderQuestionsPage = () => {
         <FormProvider {...formMethods}>
           <form onSubmit={formMethods.handleSubmit(onSubmit)}>
             {questions.map((q) => {
-              const fieldKey = String(q.id)
+              const fieldKey = String(q.question)
               const selected = watch(fieldKey) || ''
 
               return (
-                <FormControl key={q.id} mt={5}>
+                <FormControl key={q.question} mt={5}>
                   <FormLabel mb={2} fontSize={20} htmlFor={fieldKey}>
                     {q.question}
                   </FormLabel>

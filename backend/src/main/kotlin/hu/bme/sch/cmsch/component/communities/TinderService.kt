@@ -43,7 +43,8 @@ class TinderService(
     @Transactional
     fun submitAnswers(update: Boolean, user: CmschUser, answers: Map<String, String>): TinderAnswerResponseStatus {
         val questions = questionRepository.findAll().associateBy { it.question }
-        for (answer in answers) {
+        val answerMap = answers.toMutableMap().filterKeys(questions.keys)
+        for (answer in answerMap) {
             val question = questions[answer.key] ?: continue
             if (answer.value!="" && !question.answerOptions.split(",").map { it.trim() }.contains(answer.value)) {
                 return TinderAnswerResponseStatus.INVALID_ANSWER
@@ -58,7 +59,7 @@ class TinderService(
             val entity = TinderAnswerEntity(
                 userId = user.id,
                 userName = user.userName,
-                answers = objectMapper.writeValueAsString(answers)
+                answers = objectMapper.writeValueAsString(answerMap)
             )
             answerRepository.save(entity)
         } else {
@@ -68,7 +69,8 @@ class TinderService(
                     answer[k] = v
                 }
             }
-            for (ans in answers) {
+            answer.filterKeys(questions.keys)
+            for (ans in answerMap) {
                 answer[ans.key] = ans.value
             }
             existing.ifPresentOrElse(
@@ -129,7 +131,7 @@ class TinderService(
             application = it.application,
             resortName = it.resortName,
             tinderAnswers = answers[it.id]?.values?.toList() ?: emptyList()
-        ) }.sortedBy { it.status }
+        ) }.sortedBy { it.status }.sortedByDescending { it.matchedAnswers }
         return communityProfiles
     }
 
@@ -158,6 +160,7 @@ class TinderService(
             .entries.forEach {
                 answer[it.key] = it.value
             }
+        answer.filterKeys(questions.map { it.question }.toSet())
         for (question in questions) {
             val ans = data[question.question] ?: continue
             val options = question.answerOptions.split(',').map { it.trim() }
@@ -205,5 +208,16 @@ class TinderService(
     @Transactional(readOnly = true)
     fun getAllInteractions(): List<TinderInteractionEntity> {
         return tinderInteractionRepository.findAll().toList()
+    }
+
+
+    fun <K,V> MutableMap<K,V>.filterKeys(validKeys: Set<K>): MutableMap<K,V> {
+        val keys = keys.toList()
+        for (key in keys) {
+            if (!validKeys.contains(key)) {
+                remove(key)
+            }
+        }
+        return this
     }
 }
