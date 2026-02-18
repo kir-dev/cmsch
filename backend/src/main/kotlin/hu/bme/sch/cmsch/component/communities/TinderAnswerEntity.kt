@@ -43,7 +43,7 @@ data class TinderAnswerEntity(
     @property:GenerateOverview(columnName = "Felhasználó", order = 2)
     var userName: String = "",
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(order = 3, label = "Válaszok", enabled = true, note="Id - válasz map objectmapperrel kódolva")
     @property:GenerateOverview(columnName = "Válaszok", order = 3)
