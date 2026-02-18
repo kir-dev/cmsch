@@ -21,7 +21,7 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
 
   const bg = useColorModeValue('white', 'gray.800')
   const infoColor = useColorModeValue('gray.600', 'gray.300')
-  const placeholderBg = useColorModeValue('#efefef', '#2A2A2A')
+  const placeholderBg = useColorModeValue('#efefef', '#efefef') // 2a2a2a should be, but no dark mode image rn
 
   return (
     <Box
@@ -51,6 +51,8 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
           height="100%"
           marginTop={{ base: 4, md: 10 }}
           objectFit="contain"
+          bg={placeholderBg}
+          p={{ base: 3, md: 6 }}
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
           sx={{ WebkitUserDrag: 'none' }}
