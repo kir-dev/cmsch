@@ -12,13 +12,13 @@ data class GradedTaskGroupDto(
     @property:GenerateOverview(columnName = "Cím", order = 1)
     var taskName: String = "",
 
-    @property:GenerateOverview(columnName = "OK", order = 2, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "OK", order = 2, centered = true)
     var approved: Int = 0,
 
-    @property:GenerateOverview(columnName = "Nem OK", order = 3, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Nem OK", order = 3, centered = true)
     var rejected: Int = 0,
 
-    @property:GenerateOverview(columnName = "Értékelésre vár", order = 4, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Értékelésre vár", order = 4, centered = true)
     var notGraded: Int = 0
 
 ) : IdentifiableEntity
