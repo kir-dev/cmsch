@@ -173,6 +173,7 @@ class TaskAdminRateController(
             model.addAttribute("data", entity.orElseThrow())
             model.addAttribute("taskTitle", entity.orElseThrow().task?.title)
             model.addAttribute("taskDescription", entity.orElseThrow().task?.description?.let { markdownToHtml(it) })
+            model.addAttribute("taskSolution", entity.orElseThrow().task?.solution?.let { markdownToHtml(it) })
             val maxScore = entity.orElseThrow().task?.maxScore ?: 0
             model.addAttribute("comment", "Feladványhoz tartozó max pont: $maxScore")
             model.addAttribute("maxScore", maxScore)
