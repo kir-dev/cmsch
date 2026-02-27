@@ -1,7 +1,7 @@
+import { ApiPaths } from '@/util/paths.ts'
 import { initializeApp } from '@firebase/app'
 import { getMessaging, getToken, type MessagePayload, type Messaging, onMessage } from '@firebase/messaging'
 import axios from 'axios'
-import { ApiPaths } from '../paths.ts'
 import {
   FIREBASE_API_KEY,
   FIREBASE_APP_ID,

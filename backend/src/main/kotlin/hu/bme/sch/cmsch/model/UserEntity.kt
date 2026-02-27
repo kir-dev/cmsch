@@ -230,6 +230,29 @@ data class UserEntity(
     @property:ImportFormat
     var isServiceAccount: Boolean = false,
 
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var password: String? = null,
+
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    @property:GenerateInput(type = InputType.SWITCH, order = 21, label = "Email megerősítve")
+    @property:ImportFormat
+    var emailConfirmed: Boolean = false,
+
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var confirmationToken: String? = null,
+
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var passwordResetToken: String? = null,
+
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var passwordResetTokenExpiration: Long? = null,
+
 ): ManagedEntity, CmschUser, Duplicatable {
 
     override val groupId

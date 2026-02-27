@@ -1,36 +1,26 @@
-import {
-  Alert,
-  AlertIcon,
-  Badge,
-  Box,
-  Button,
-  chakra,
-  Flex,
-  FormLabel,
-  Heading,
-  Image,
-  Stack,
-  Text,
-  Textarea,
-  useToast,
-  VStack
-} from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useTaskFullDetailsQuery } from '@/api/hooks/task/useTaskFullDetailsQuery'
+import { useTaskSubmissionMutation } from '@/api/hooks/task/useTaskSubmissionMutation'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CustomBreadcrumb } from '@/common-components/CustomBreadcrumb'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LinkButton } from '@/common-components/LinkButton'
+import Markdown from '@/common-components/Markdown'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/hooks/use-toast'
+import { stringifyTimeStamp } from '@/util/core-functions.util.ts'
+import { l } from '@/util/language'
+import { AbsolutePaths } from '@/util/paths'
+import { TaskFormat, type TaskFormatDescriptor, TaskStatus, TaskType } from '@/util/views/task.view'
+import { Info } from 'lucide-react'
 import { lazy, useEffect, useRef, useState } from 'react'
 import { Controller, type SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { Navigate, useParams } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useTaskFullDetailsQuery } from '../../api/hooks/task/useTaskFullDetailsQuery'
-import { useTaskSubmissionMutation } from '../../api/hooks/task/useTaskSubmissionMutation'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import Markdown from '../../common-components/Markdown'
-import { PageStatus } from '../../common-components/PageStatus'
-import { stringifyTimeStamp, useBrandColor } from '../../util/core-functions.util.ts'
-import { l } from '../../util/language'
-import { AbsolutePaths } from '../../util/paths'
-import { TaskFormat, type TaskFormatDescriptor, TaskStatus, TaskType } from '../../util/views/task.view'
 import { CustomForm } from './components/CustomForm'
 import { FilePicker } from './components/FilePicker'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
@@ -55,11 +45,10 @@ const TaskPage = () => {
   const [fileAnswer, setFileAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
   const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
-  const brandColor = useBrandColor()
 
   const component = useConfigContext()?.components?.task
 
-  const toast = useToast()
+  const { toast } = useToast()
   const { id } = useParams()
   const { setValue, handleSubmit, control } = useForm<FormInput>()
   const { fields, replace, update } = useFieldArray<FormInput>({
@@ -107,8 +96,7 @@ const TaskPage = () => {
           toast({
             title: l('task-too-large-title'),
             description: l('task-too-large-description'),
-            status: 'error',
-            isClosable: true
+            variant: 'destructive'
           })
           return
         }
@@ -118,8 +106,7 @@ const TaskPage = () => {
             toast({
               title: 'Fájl túl nagy',
               description: 'Animált fájlok maximum 2 MB méretűek lehetnek. Próbáld meg .WEBP-be konvertálni.',
-              status: 'error',
-              isClosable: true
+              variant: 'destructive'
             })
             return
           }
@@ -128,8 +115,7 @@ const TaskPage = () => {
           toast({
             title: 'Kép feldolgozási hiba',
             description: (e as Error)?.message || 'Nem sikerült a kép optimalizálása.',
-            status: 'error',
-            isClosable: true
+            variant: 'destructive'
           })
           return
         }
@@ -143,8 +129,7 @@ const TaskPage = () => {
               toast({
                 title: l('task-empty-title'),
                 description: l('task-empty-description'),
-                status: 'error',
-                isClosable: true
+                variant: 'destructive'
               })
               return
             }
@@ -164,8 +149,7 @@ const TaskPage = () => {
               toast({
                 title: l('task-empty-title'),
                 description: l('task-empty-description'),
-                status: 'error',
-                isClosable: true
+                variant: 'destructive'
               })
               return
             }
@@ -176,9 +160,7 @@ const TaskPage = () => {
         onSuccess: (result) => {
           if (result.status === 'OK') {
             toast({
-              title: 'Megoldás elküldve',
-              status: 'success',
-              isClosable: true
+              title: 'Megoldás elküldve'
             })
             setValue('textAnswer', '')
             if (filePickerRef.current) {
@@ -190,16 +172,14 @@ const TaskPage = () => {
           } else {
             toast({
               title: taskSubmissionResponseMap.get(result.status),
-              status: 'error',
-              isClosable: true
+              variant: 'destructive'
             })
           }
         },
         onError: (error) => {
           toast({
             title: error.message || 'Hiba a megoldása elküldése közben',
-            status: 'error',
-            isClosable: true
+            variant: 'destructive'
           })
         }
       })
@@ -207,8 +187,7 @@ const TaskPage = () => {
       toast({
         title: l('task-empty-title'),
         description: l('task-empty-description'),
-        status: 'error',
-        isClosable: true
+        variant: 'destructive'
       })
     }
   }
@@ -218,14 +197,14 @@ const TaskPage = () => {
     switch (data.task.format) {
       case TaskFormat.TEXT:
         textInput = (
-          <Box mt={5}>
-            <FormLabel htmlFor="textAnswer">Szöveges válasz</FormLabel>
+          <div className="mt-5 flex flex-col gap-2">
+            <Label htmlFor="textAnswer">Szöveges válasz</Label>
             <Controller
               name="textAnswer"
               control={control}
               render={({ field }) => <Textarea id="textAnswer" placeholder="Szöveges válasz" {...field} />}
             />
-          </Box>
+          </div>
         )
         break
       case TaskFormat.FORM:
@@ -243,15 +222,13 @@ const TaskPage = () => {
       data.task?.format === TaskFormat.CODE ? (
         <CodeEditor code={data.submission?.textAnswer} setCode={() => {}} readonly={true} />
       ) : (
-        <Text mt={2} whiteSpace="pre-wrap">
-          {data.submission.textAnswer}
-        </Text>
+        <p className="mt-2 whitespace-pre-wrap">{data.submission.textAnswer}</p>
       )
   }
 
   const fileInput = fileAllowed && (
-    <Box>
-      <FormLabel>Csatolt fájl</FormLabel>
+    <div className="flex flex-col gap-2">
+      <Label>Csatolt fájl</Label>
       <FilePicker
         onFileChange={(fileArray) => setFileAnswer(fileArray[0])}
         placeholder="Csatolt fájl"
@@ -259,7 +236,7 @@ const TaskPage = () => {
         accept={getAcceptedFileType(data.task?.type)}
         ref={filePickerRef}
       />
-    </Box>
+    </div>
   )
 
   const breadcrumbItems = [
@@ -279,85 +256,81 @@ const TaskPage = () => {
   return (
     <CmschPage loginRequired={true} title={data.task?.title}>
       <CustomBreadcrumb items={breadcrumbItems} />
-      <Flex my={5} justify="space-between" flexWrap="wrap" alignItems="center">
-        <Box>
-          <Heading my={0}>{data.task?.title}</Heading>
-        </Box>
-        <VStack flex={1} alignItems="end" py={2}>
-          <TaskStatusBadge status={data.status} fontSize="lg" />
+      <div className="my-5 flex flex-wrap items-center justify-between">
+        <div>
+          <h1 className="my-0 text-4xl font-bold tracking-tight">{data.task?.title}</h1>
+        </div>
+        <div className="flex flex-1 flex-col items-end py-2 gap-2">
+          <TaskStatusBadge status={data.status} />
           {expired && (
-            <Box>
-              <Badge ml={2} variant="solid" colorScheme="red" fontSize="lg">
+            <div>
+              <Badge className="ml-2" variant="destructive">
                 LEJÁRT
               </Badge>
-            </Box>
+            </div>
           )}
-        </VStack>
-      </Flex>
-      <Box mt={5}>
+        </div>
+      </div>
+      <div className="mt-5">
         <Markdown text={data.task?.description} />
-      </Box>
+      </div>
       {data.task?.expectedResultDescription && (
-        <Text size="sm" mt={5}>
-          <chakra.span fontWeight="bold">Beadandó formátum:</chakra.span>
+        <p className="mt-5 text-sm">
+          <span className="font-bold">Beadandó formátum:</span>
           &nbsp;{data.task?.expectedResultDescription}
-        </Text>
+        </p>
       )}
       {data.status !== TaskStatus.NOT_SUBMITTED && (
         <>
-          <Heading size="md" mt={8}>
-            Beküldött megoldás
-          </Heading>
+          <h2 className="mt-8 text-2xl font-bold">Beküldött megoldás</h2>
           {submittedText}
           {fileAllowed && data.submission && (
-            <Box>
-              {data.submission.imageUrlAnswer && <Image src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" />}
+            <div>
+              {data.submission.imageUrlAnswer && (
+                <img src={data.submission.imageUrlAnswer} alt="Beküldött megoldás" className="max-w-full" />
+              )}
               {data.submission.fileUrlAnswer && (
-                <LinkButton href={data.submission.fileUrlAnswer} external colorScheme={brandColor} mt={5}>
+                <LinkButton href={data.submission.fileUrlAnswer} external className="mt-5">
                   Letöltés
                 </LinkButton>
               )}
-            </Box>
+            </div>
           )}
         </>
       )}
       {reviewed && data.submission && (
         <>
-          <Heading size="md" mt={8}>
-            Értékelés
-          </Heading>
-          <Text mt={2}>Javító üzenete: {data.submission.response}</Text>
-          {typeof data.submission.score !== 'undefined' && <Text>Pont: {data.submission.score} pont</Text>}
+          <h2 className="mt-8 text-2xl font-bold">Értékelés</h2>
+          <p className="mt-2">Javító üzenete: {data.submission.response}</p>
+          {typeof data.submission.score !== 'undefined' && <p>Pont: {data.submission.score} pont</p>}
         </>
       )}
 
       {data.task?.availableTo && (
-        <Alert variant="left-accent" status="info" mt={5}>
-          <AlertIcon />A feladat beadási határideje: {stringifyTimeStamp(data.task?.availableTo || 0)}
+        <Alert className="mt-5 border-l-4">
+          <Info className="h-4 w-4" />
+          <AlertTitle>Határidő</AlertTitle>
+          <AlertDescription>A feladat beadási határideje: {stringifyTimeStamp(data.task?.availableTo || 0)}</AlertDescription>
         </Alert>
       )}
 
       {submissionAllowed && (
         <>
-          <Heading size="md" mt={5}>
-            {data.status === TaskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}
-          </Heading>
-          <Stack mt={5}>
+          <h2 className="mt-5 text-2xl font-bold">{data.status === TaskStatus.REJECTED ? 'Újra beküldés' : 'Beküldés'}</h2>
+          <div className="mt-5 flex flex-col gap-5">
             {localSubmission ? (
-              <Text>Beadás személyesen!</Text>
+              <p>Beadás személyesen!</p>
             ) : (
               // eslint-disable-next-line react-hooks/refs
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
                 {textInput}
                 {fileInput}
-                <Flex justifyContent="end" mt={4}>
-                  <Button mt={3} colorScheme={brandColor} type="submit">
-                    Küldés
-                  </Button>
-                </Flex>
+                <div className="mt-4 flex justify-end">
+                  <Button type="submit">Küldés</Button>
+                </div>
               </form>
             )}
-          </Stack>
+          </div>
         </>
       )}
     </CmschPage>

@@ -1,10 +1,11 @@
-import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
-import { Divider, Grid, Heading, Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react'
 import debounce from 'lodash/debounce'
+import { Search, X } from 'lucide-react'
 import { createRef, useMemo, useState } from 'react'
 
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import type { NewsArticleView } from '../../../util/views/news.view'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import type { NewsArticleView } from '@/util/views/news.view'
 import { NewsListItem } from './NewsListItem'
 
 interface NewsListProps {
@@ -35,39 +36,34 @@ const NewsList = ({ newsList }: NewsListProps) => {
 
   return (
     <>
-      <Heading as="h1" variant="main-title">
-        {news?.title}
-      </Heading>
-      <InputGroup my={10}>
-        <InputLeftElement h="100%">
-          <SearchIcon />
-        </InputLeftElement>
+      <h1 className="mb-5 text-4xl font-bold tracking-tight">{news?.title}</h1>
+      <div className="relative my-10 flex items-center">
+        <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
         <Input
           ref={inputRef}
           placeholder="Keresés címre..."
-          size="lg"
+          className="h-12 pl-10 pr-10"
           // eslint-disable-next-line react-hooks/refs
           onChange={debounce(handleInput, 500)}
           autoFocus={true}
-          _placeholder={{ color: 'inherit' }}
         />
         {search && (
-          <InputRightElement h="100%" onClick={clearSearch}>
-            <CloseIcon />
-          </InputRightElement>
+          <button onClick={clearSearch} className="absolute right-3 focus:outline-none">
+            <X className="h-4 w-4 text-muted-foreground" />
+          </button>
         )}
-      </InputGroup>
-      <Grid templateColumns="repeat(1, 1fr)" gap={4}>
+      </div>
+      <div className="grid grid-cols-1 gap-4">
         {highlighted.map((n: NewsArticleView) => (
           <NewsListItem news={n} fontSize="2xl" useLink={news?.showDetails} key={n.title + n.timestamp} />
         ))}
-      </Grid>
-      {highlighted.length > 0 && common.length > 0 && <Divider my={10} />}
-      <Grid templateColumns="1fr" gap={4}>
+      </div>
+      {highlighted.length > 0 && common.length > 0 && <Separator className="my-10" />}
+      <div className="grid grid-cols-1 gap-4">
         {common.map((n: NewsArticleView) => (
           <NewsListItem news={n} fontSize="xl" useLink={news?.showDetails} key={n.title + n.timestamp} />
         ))}
-      </Grid>
+      </div>
     </>
   )
 }

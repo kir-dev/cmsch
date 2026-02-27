@@ -1,23 +1,26 @@
-import { Box, Button, Divider, Flex, FormControl, FormLabel, Heading, useToast } from '@chakra-ui/react'
+import { useFormPage } from '@/api/hooks/form/useFormPage'
+import { useFormSubmit } from '@/api/hooks/form/useFormSubmit'
+import { useTokenRefresh } from '@/api/hooks/useTokenRefresh'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useParams } from 'react-router'
-import { useFormPage } from '../../api/hooks/form/useFormPage'
-import { useFormSubmit } from '../../api/hooks/form/useFormSubmit'
-import { useTokenRefresh } from '../../api/hooks/useTokenRefresh'
 
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext.ts'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown'
-import { PageStatus } from '../../common-components/PageStatus'
-import { isCheckbox, isGridField, useBrandColor } from '../../util/core-functions.util'
-import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '../../util/views/form.view'
+import { useAuthContext } from '@/api/contexts/auth/useAuthContext.ts'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable.tsx'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
+import { useToast } from '@/hooks/use-toast'
+import { isCheckbox, isGridField, useBrandColor } from '@/util/core-functions.util'
+import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '@/util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
 
 const FormPage = () => {
-  const toast = useToast()
+  const { toast } = useToast()
   const params = useParams()
   const formMethods = useForm()
   const { submit, submitLoading, result } = useFormSubmit(params.slug || '')
@@ -29,7 +32,7 @@ const FormPage = () => {
   useEffect(() => {
     if (result) {
       const success = result === FormSubmitResult.OK || result === FormSubmitResult.OK_RELOG_REQUIRED
-      toast({ title: FormSubmitMessage[result as FormSubmitResult], status: success ? 'success' : 'error' })
+      toast({ title: FormSubmitMessage[result as FormSubmitResult], variant: success ? 'default' : 'destructive' })
     }
     if (result === FormSubmitResult.OK_RELOG_REQUIRED) {
       tokenRefresh.mutate()
@@ -64,47 +67,56 @@ const FormPage = () => {
 
   return (
     <CmschPage title={form?.name || 'Űrlap'}>
-      <Box w="100%" mx="auto">
-        <Heading as="h1" variant="main-title">
-          {form?.name || 'Űrlap'}
-        </Heading>
-        <FormStatusBadge status={status} />
+      <div className="w-full mx-auto">
+        <h1 className="text-3xl font-bold font-heading">{form?.name || 'Űrlap'}</h1>
+        <div className="mt-2">
+          <FormStatusBadge status={status} />
+        </div>
 
         {(submission?.rejectionMessage || message) && (
-          <>
+          <div className="mt-5">
             <Markdown text={submission?.rejectionMessage || message} />
-          </>
+          </div>
         )}
 
         {form && (
           <FormProvider {...formMethods}>
-            <form onSubmit={formMethods.handleSubmit(onSubmit)}>
+            <form onSubmit={formMethods.handleSubmit(onSubmit)} className="mt-5">
               {form.formFields.map((formField) => (
-                <FormControl key={formField.fieldName} mt={5}>
-                  {formField.type === FormFieldVariants.SECTION_START && <Divider mt={10} />}
+                <div key={formField.fieldName} className="mt-5">
+                  {formField.type === FormFieldVariants.SECTION_START && <Separator className="mt-10 mb-5 h-px bg-border" />}
                   {formField.label && !isCheckbox(formField.type) && (
-                    <FormLabel mb={2} fontSize={formField.type === FormFieldVariants.SECTION_START ? 30 : 20} htmlFor={formField.fieldName}>
+                    <Label
+                      className={formField.type === FormFieldVariants.SECTION_START ? 'text-3xl' : 'text-xl'}
+                      htmlFor={formField.fieldName}
+                    >
                       {formField.label}
-                    </FormLabel>
+                    </Label>
                   )}
-                  <AutoFormField
-                    submittedValue={submission?.[formField.fieldName]}
-                    disabled={(status !== FormStatus.NO_SUBMISSION && formField.permanent) || !available}
-                    control={formMethods.control}
-                    fieldProps={formField}
-                  />
-                  {formField.note && <Markdown text={formField.note} />}
-                </FormControl>
+                  <div className="mt-2">
+                    <AutoFormField
+                      submittedValue={submission?.[formField.fieldName]}
+                      disabled={(status !== FormStatus.NO_SUBMISSION && formField.permanent) || !available}
+                      control={formMethods.control}
+                      fieldProps={formField}
+                    />
+                  </div>
+                  {formField.note && (
+                    <div className="mt-1 text-sm text-muted-foreground">
+                      <Markdown text={formField.note} />
+                    </div>
+                  )}
+                </div>
               ))}
-              <Flex justifyContent="flex-end">
-                <Button colorScheme={brandColor} mt={5} disabled={!available} type="submit" isLoading={submitLoading}>
+              <div className="flex justify-end mt-10">
+                <Button style={{ backgroundColor: brandColor }} disabled={!available || submitLoading} type="submit">
                   {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
                 </Button>
-              </Flex>
+              </div>
             </form>
           </FormProvider>
         )}
-      </Box>
+      </div>
     </CmschPage>
   )
 }

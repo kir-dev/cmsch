@@ -1,7 +1,8 @@
-import { Collapse, Flex, Icon, Stack, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react'
-import { FaChevronDown } from 'react-icons/fa'
+import type { Menu } from '@/api/contexts/config/types'
+import { cn } from '@/lib/utils'
+import { ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router'
-import type { Menu } from '../../../api/contexts/config/types'
 import LinkComponent from '../LinkComponent'
 
 type Props = {
@@ -9,35 +10,27 @@ type Props = {
 }
 
 export const NavItemWithChildren = ({ menu: { external, url, children, name } }: Props) => {
-  const { isOpen, onToggle } = useDisclosure()
+  const [isOpen, setIsOpen] = useState(false)
+  const onToggle = () => setIsOpen(!isOpen)
 
   return (
-    <div style={{ marginTop: '0 !important;' }} onClick={onToggle}>
+    <div className="mt-0" onClick={onToggle}>
       <LinkComponent url={url} external={external}>
-        <Flex
-          py={2}
-          justify="space-between"
-          align="center"
-          _hover={{
-            textDecoration: 'none'
-          }}
-        >
-          <Text color={useColorModeValue('gray.800', 'gray.200')}>{name}</Text>
-          <Icon as={FaChevronDown} transition="all .25s ease-in-out" transform={isOpen ? 'rotate(180deg)' : ''} w={4} h={4} />
-        </Flex>
+        <div className="flex py-2 justify-between items-center hover:no-underline cursor-pointer">
+          <span className="font-medium text-gray-800 dark:text-gray-200">{name}</span>
+          <ChevronDown className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')} />
+        </div>
       </LinkComponent>
 
-      <Collapse in={isOpen} animateOpacity style={{ marginTop: '0' }}>
-        <Stack pl={4} borderLeft={1} borderStyle="solid" borderColor={useColorModeValue('gray.200', 'gray.800')} align="start">
+      {isOpen && (
+        <div className="flex flex-col pl-4 border-l border-solid border-gray-200 dark:border-gray-800 items-start">
           {children.map((child) => (
-            <Link key={child.url} to={child.url || '#'} className="navitem" style={{ width: '100%' }}>
-              <Text key={child.url} py={2}>
-                {child.name}
-              </Text>
+            <Link key={child.url} to={child.url || '#'} className="navitem w-full" onClick={(e) => e.stopPropagation()}>
+              <span className="block py-2">{child.name}</span>
             </Link>
           ))}
-        </Stack>
-      </Collapse>
+        </div>
+      )}
     </div>
   )
 }

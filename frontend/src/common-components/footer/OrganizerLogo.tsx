@@ -1,6 +1,6 @@
-import { Divider, HStack, Image, Link, VStack } from '@chakra-ui/react'
-import { FaFacebook, FaInstagram } from 'react-icons/fa'
-import { useBrandColor } from '../../util/core-functions.util.ts'
+import { Separator } from '@/components/ui/separator'
+import { useBrandColor } from '@/util/core-functions.util.ts'
+import { Facebook, Instagram } from 'lucide-react'
 
 interface OrganizerLogoProps {
   imageSrc: string
@@ -14,41 +14,59 @@ interface OrganizerLogoProps {
 export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, instagramUrl, facebookUrl }: OrganizerLogoProps) {
   const hasSocialUrls = facebookUrl || instagramUrl
   const hasUrls = websiteUrl || contactUrl || facebookUrl || instagramUrl || hasSocialUrls
-  const color = useBrandColor(500, 500)
+  const color = useBrandColor()
   return (
-    <HStack align="center">
-      {imageSrc && <Image src={imageSrc} w={32} h={32} objectPosition="center" objectFit="contain" />}
+    <div className="flex flex-row items-center space-x-4">
+      {imageSrc && <img src={imageSrc} className="w-32 h-32 object-center object-contain" alt="Organizer logo" />}
       {!minimalistic && hasUrls && (
         <>
-          <Divider orientation="vertical" h={20} />
-          <VStack align="flex-start">
+          <Separator orientation="vertical" className="h-20 w-px bg-border" />
+          <div className="flex flex-col items-start space-y-1">
             {websiteUrl && (
-              <Link isExternal fontSize="xl" _hover={{ color: color, textDecorationLine: 'underline' }} href={websiteUrl}>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                className="text-xl hover:underline transition-colors"
+                style={{ '--hover-color': color } as React.CSSProperties}
+                onMouseEnter={(e) => (e.currentTarget.style.color = color)}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'inherit')}
+                href={websiteUrl}
+              >
                 Weboldal
-              </Link>
+              </a>
             )}
             {contactUrl && (
-              <Link isExternal fontSize="xl" _hover={{ color: color, textDecorationLine: 'underline' }} href={contactUrl}>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                className="text-xl hover:underline transition-colors"
+                style={{ '--hover-color': color } as React.CSSProperties}
+                onMouseEnter={(e) => (e.currentTarget.style.color = color)}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'inherit')}
+                href={contactUrl}
+              >
                 Kapcsolat
-              </Link>
+              </a>
             )}
             {hasSocialUrls && (
-              <HStack>
+              <div className="flex flex-row space-x-2">
                 {facebookUrl && (
-                  <Link href={facebookUrl}>
-                    <FaFacebook size={25} />
-                  </Link>
+                  <a href={facebookUrl} target="_blank" rel="noreferrer">
+                    <Facebook className="h-6 w-6" />
+                  </a>
                 )}
                 {instagramUrl && (
-                  <Link href={instagramUrl}>
-                    <FaInstagram size={25} />
-                  </Link>
+                  <a href={instagramUrl} target="_blank" rel="noreferrer">
+                    <Instagram className="h-6 w-6" />
+                  </a>
                 )}
-              </HStack>
+              </div>
             )}
-          </VStack>
+          </div>
         </>
       )}
-    </HStack>
+    </div>
   )
 }
+
+import React from 'react'

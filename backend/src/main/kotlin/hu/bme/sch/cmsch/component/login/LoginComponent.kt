@@ -87,23 +87,58 @@ class LoginComponent(
         description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan")
 
     var keycloakEnabled by BooleanSettingRef(false, fieldName = "Keycloak opció látszik",
-        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Keycloak")
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik a Keycloak")
 
     var keycloakAuthName by StringSettingRef("Belső",
         fieldName = "Keycloak gomb felirata", description = "Ezen a néven jelenik meg a bejelentkezési mód.")
 
-    var keycloakAdminAddresses by StringSettingRef(serverSideOnly = true, fieldName = "ADMIN jogú emailcímek",
-        description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél. Az emailcímek vesszővel felsorolva.")
+    var keycloakAdminAddresses by StringSettingRef(serverSideOnly = true, fieldName = "ADMIN jogú email-címek",
+        description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél. Az email-címek vesszővel felsorolva.")
 
     var keycloakSuperuserRole by StringSettingRef("superuser",
-        serverSideOnly = true, fieldName = "SUPERUSER keycloak rule neve",
+        serverSideOnly = true, fieldName = "SUPERUSER Keycloak role neve",
         description = "Csak Keycloak esetén! Ezeknek a felhasználóknak SYSADMIN joga lesz belépésnél.")
 
-    var keycloakAdminRole by StringSettingRef("admin", serverSideOnly = true, fieldName = "ADMIN keycloak rule neve",
+    var keycloakAdminRole by StringSettingRef("admin", serverSideOnly = true, fieldName = "ADMIN Keycloak role neve",
         description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél.")
 
-    var keycloakStaffRole by StringSettingRef("staff", serverSideOnly = true, fieldName = "STAFF keycloak rule neve",
+    var keycloakStaffRole by StringSettingRef("staff", serverSideOnly = true, fieldName = "STAFF Keycloak role neve",
         description = "Csak Keycloak esetén! Ezeknek a felhasználóknak STAFF joga lesz belépésnél.")
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val passwordGroup by SettingGroup(fieldName = "Emailes belépés",
+        description = "Emailes belépés és regisztráció kezelése")
+
+    var passwordEnabled by BooleanSettingRef(false, fieldName = "Emailes belépés látszik",
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az emailes belépés")
+
+    var emailConfirmationEnabled by BooleanSettingRef(false, fieldName = "Email megerősítés szükséges",
+        description = "Ha ez be van kapcsolva, akkor regisztráció után emailt kell megerősíteni")
+
+    var forgotPasswordEnabled by BooleanSettingRef(false, fieldName = "Elfelejtett jelszó",
+        description = "Ha ez be van kapcsolva, akkor lehet jelszó-visszaállítást kérni")
+
+    var emailConfirmationTemplate by StringSettingRef("confirm-email", serverSideOnly = true, fieldName = "Megerősítő email sablon",
+        description = "Az EmailComponentben lévő sablon selectorja")
+
+    var passwordResetTemplate by StringSettingRef("reset-password", serverSideOnly = true, fieldName = "Jelszó visszaállító email sablon",
+        description = "Az EmailComponentben lévő sablon selectorja")
+
+    var externalUrl by StringSettingRef("https://cmsch.hu", serverSideOnly = true, fieldName = "Külső URL",
+        description = "A weboldal külső címe, pl. https://cmsch.hu. A linkek generálásához kell.")
+
+    var captchaEnabled by BooleanSettingRef(false, fieldName = "Captcha bekapcsolva",
+        description = "Regisztrációnál captcha ellenőrzés")
+
+    var captchaSiteKey by StringSettingRef("", fieldName = "Captcha Site Key",
+        description = "A Google reCAPTCHA v2 site key-e")
+
+    var captchaSecretKey by StringSettingRef("", serverSideOnly = true, fieldName = "Captcha Secret Key",
+        description = "A Google reCAPTCHA v2 secret key-e")
+
+    var loginRateLimit by NumberSettingRef(5, fieldName = "Login rate limit (kérés/perc)",
+        description = "Hány bejelentkezési kísérlet engedélyezett percenként IP címenként")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

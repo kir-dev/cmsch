@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.service
 
-import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.dto.UserConfig
 import hu.bme.sch.cmsch.dto.virtual.GroupMemberVirtualEntity
@@ -14,6 +13,7 @@ import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.ObjectMapper
 import java.sql.SQLException
 import java.util.*
 
@@ -28,7 +28,7 @@ open class UserService(
 
     private val userConfigReader = objectMapper.readerFor(UserConfig::class.java)
 
-    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun save(user: UserEntity) {
         users.save(user)
@@ -43,6 +43,11 @@ open class UserService(
     @Transactional(readOnly = true)
     open fun findById(internalId: String): Optional<UserEntity> {
         return users.findByInternalId(internalId)
+    }
+
+    @Transactional(readOnly = true)
+    open fun findByEmail(email: String): Optional<UserEntity> {
+        return users.findByEmail(email)
     }
 
     @Transactional(readOnly = true)
@@ -62,17 +67,17 @@ open class UserService(
     @Transactional(readOnly = true)
     open fun allMembersOfGroup(groupName: String): Collection<GroupMemberVirtualEntity> {
         val mappings = groupMapping.findAllByGroupName(groupName)
-                .asSequence()
-                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun ?: "", findGuildFor(it.neptun ?: ""), "-") }
+            .asSequence()
+            .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun ?: "", findGuildFor(it.neptun ?: ""), "-") }
         val users = users.findAllByGroupName(groupName)
-                .asSequence()
-                .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, it.guild.displayName, resolveRoleStatus(it)) }
+            .asSequence()
+            .map { GroupMemberVirtualEntity(0, it.fullName, it.neptun, it.guild.displayName, resolveRoleStatus(it)) }
 
         return (mappings + users)
-                .groupBy { it.neptun }
-                .mapValues { (_, values) -> values.maxByOrNull { it.roleName }!! }
-                .values
-                .sortedBy { it.name }
+            .groupBy { it.neptun }
+            .mapValues { (_, values) -> values.maxByOrNull { it.roleName }!! }
+            .values
+            .sortedBy { it.name }
 
     }
 

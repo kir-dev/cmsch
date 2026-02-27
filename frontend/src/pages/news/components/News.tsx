@@ -1,18 +1,17 @@
-import { Button, Heading, Image, Text } from '@chakra-ui/react'
+import { CustomBreadcrumb } from '@/common-components/CustomBreadcrumb'
+import Markdown from '@/common-components/Markdown'
+import { Button } from '@/components/ui/button'
+import { stringifyTimeStamp } from '@/util/core-functions.util'
+import { AbsolutePaths } from '@/util/paths'
+import type { NewsArticleView } from '@/util/views/news.view'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link } from 'react-router'
-import { CustomBreadcrumb } from '../../../common-components/CustomBreadcrumb'
-import Markdown from '../../../common-components/Markdown'
-import { stringifyTimeStamp, useBrandColor } from '../../../util/core-functions.util'
-import { AbsolutePaths } from '../../../util/paths'
-import type { NewsArticleView } from '../../../util/views/news.view'
 
 interface NewsProps {
   news: NewsArticleView
 }
 
 const News = ({ news }: NewsProps) => {
-  const brandColor = useBrandColor()
   const breadcrumbItems = [
     {
       title: 'Hírek',
@@ -25,17 +24,16 @@ const News = ({ news }: NewsProps) => {
   return (
     <>
       <CustomBreadcrumb items={breadcrumbItems} />
-      <Text fontSize="xs" fontWeight={300} textAlign="end">
-        {stringifyTimeStamp(news.timestamp)}
-      </Text>
-      <Heading mb={2}>{news.title}</Heading>
-      {news.imageUrl && <Image mb={4} display="block" ml="auto" mr="auto" src={news.imageUrl} alt={news.title} maxH="20rem" maxW="full" />}
+      <p className="text-right text-xs font-light">{stringifyTimeStamp(news.timestamp)}</p>
+      <h1 className="mb-2 text-4xl font-bold tracking-tight">{news.title}</h1>
+      {news.imageUrl && <img className="mx-auto mb-4 block max-h-[20rem] max-w-full rounded-md" src={news.imageUrl} alt={news.title} />}
       <Markdown text={news.content} />
-      <Link to={AbsolutePaths.NEWS}>
-        <Button leftIcon={<FaArrowLeft />} colorScheme={brandColor} mt={4}>
+      <Button asChild className="mt-4">
+        <Link to={AbsolutePaths.NEWS}>
+          <FaArrowLeft className="mr-2" />
           Vissza a hírekhez
-        </Button>
-      </Link>
+        </Link>
+      </Button>
     </>
   )
 }

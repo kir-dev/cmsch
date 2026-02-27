@@ -1,10 +1,9 @@
-import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Heading, HStack, Image, Spacer, Stack, VStack } from '@chakra-ui/react'
+import { AbsolutePaths } from '@/util/paths'
+import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
-import { useOpaqueBackground } from '../../../util/core-functions.util'
-import { AbsolutePaths } from '../../../util/paths'
 
-import type { TeamListItemView } from '../../../util/views/team.view'
+import { cn } from '@/lib/utils'
+import type { TeamListItemView } from '@/util/views/team.view'
 import TeamLabel from './TeamLabel.tsx'
 
 type TeamListItemProps = {
@@ -13,45 +12,34 @@ type TeamListItemProps = {
 }
 
 export const TeamListItem = ({ team, detailEnabled = false }: TeamListItemProps) => {
-  const bg = useOpaqueBackground(1)
   return (
     <Link to={AbsolutePaths.TEAMS + '/details/' + team.id}>
-      <Box
-        borderRadius="lg"
-        padding={4}
-        backgroundColor={bg}
-        marginTop={5}
-        transition={detailEnabled ? 'transform .2s ease-in-out' : undefined}
-        _hover={{ transform: detailEnabled ? 'translateX(0.5em)' : undefined }}
+      <div
+        className={cn(
+          'mt-5 flex items-center justify-between rounded-lg bg-secondary text-secondary-foreground p-4 transition-transform border',
+          detailEnabled && 'hover:translate-x-2'
+        )}
       >
-        <HStack spacing={4}>
-          <VStack align="flex-start" overflow="hidden">
-            <Stack direction={['column', 'row']} spacing={[2, 4]} alignItems="baseline">
-              <Heading as="h3" size="md" marginY={0} maxWidth="100%">
-                {team.name}
-              </Heading>
-              {team.labels &&
-                team.labels.map((label, index) => <TeamLabel name={label.name} color={label.color} desc={label.description} key={index} />)}
-            </Stack>
-            {team.introduction && <Box>{team.introduction}</Box>}
-          </VStack>
-          <Spacer />
-          {team.logo && (
-            <Image
-              display="block"
-              src={team.logo}
-              alt={team.name}
-              w="64px"
-              h="64px"
-              objectFit="contain"
-              alignSelf="center"
-              borderRadius="md"
-              loading="lazy"
-            />
-          )}
-          {detailEnabled && <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />}
-        </HStack>
-      </Box>
+        <div className="flex items-center gap-4 overflow-hidden">
+          <div className="flex flex-col items-start gap-1 overflow-hidden">
+            <div className="flex flex-col items-baseline gap-2 md:flex-row md:gap-4">
+              <h3 className="max-w-full text-lg font-bold">{team.name}</h3>
+              <div className="flex flex-wrap gap-2">
+                {team.labels &&
+                  team.labels.map((label, index) => (
+                    <TeamLabel name={label.name} color={label.color} desc={label.description} key={index} />
+                  ))}
+              </div>
+            </div>
+            {team.introduction && <div className="text-muted-foreground">{team.introduction}</div>}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {team.logo && <img src={team.logo} alt={team.name} className="h-16 w-16 rounded-md object-contain" loading="lazy" />}
+          {detailEnabled && <ChevronRight className="h-10 w-10 text-muted-foreground/50 md:h-16 md:w-16" />}
+        </div>
+      </div>
     </Link>
   )
 }

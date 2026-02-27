@@ -30,5 +30,26 @@ class StylingComponentController(
     componentMenuPriority = 5,
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Stílus** komponens segítségével testre szabhatod a weboldal megjelenését CSS-ismeretek nélkül.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a témákat:
+
+- **Világos téma (Light Mode)** – színek (háttér, szöveg, brand), háttérképek és logók beállítása nappali módhoz.
+- **Sötét téma (Dark Mode)** – színek és képek éjszakai módhoz. Szabályozható, hogy a rendszer automatikusan kövesse-e az eszköz beállításait, vagy kényszerítve legyen valamelyik mód.
+- **Tipográfia** – az oldalon használt betűtípusok (fontok) és azok forrásának (CDN) megadása.
+
+## Funkciók
+
+- **Brand-szín** – egyetlen szín megadásával az egész oldal arculatát a rendezvényhez igazíthatod (gombok, linkek, kiemelések).
+- **Reszponzív hátterek** – külön háttérképet állíthatsz be asztali és mobil nézethez.
+
+## Használati tippek
+
+- Érdemes olyan **Brand-színt** választani, amely mindkét témában (világos/sötét) jól olvasható fehér vagy fekete szöveggel.
+- A **Tipográfia** beállításnál Google Fonts-linkeket használhatsz a legegyszerűbben.
+"""
 )

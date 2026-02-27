@@ -1,7 +1,7 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Button, ButtonGroup, Flex, IconButton, Image } from '@chakra-ui/react'
+import { Button } from '@/components/ui/button'
+import { useBrandColor } from '@/util/core-functions.util.ts'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
 
 type ImageCarouselProps = {
   images: string[]
@@ -21,29 +21,32 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   if (images.length === 0) return null
 
   return (
-    <Flex flexDirection="column" marginTop={10} overflowX="clip">
-      <Flex
-        width={`${images.length * 100}%`}
-        flexDirection="row"
-        transform={`translateX(-${(currentImageIndex / images.length) * 100}%)`}
-        transition="transform .5s"
-      >
-        {images.map((image) => (
-          <Box flex={1} key={image} alignItems="center" display="flex">
-            <Image src={image} w="100%" maxH="50rem" objectFit="contain" objectPosition="center" />
-          </Box>
-        ))}
-      </Flex>
-      <Flex paddingTop={5} alignItems="center" justify="space-between">
+    <div className="flex flex-col mt-10 overflow-hidden">
+      <div className="relative overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{
+            width: `${images.length * 100}%`,
+            transform: `translateX(-${(currentImageIndex / images.length) * 100}%)`
+          }}
+        >
+          {images.map((image) => (
+            <div className="flex-1 flex items-center justify-center" key={image}>
+              <img src={image} className="w-full max-h-[50rem] object-contain object-center" alt="" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex pt-5 items-center justify-between">
         <DirectionButton direction={Directions.LEFT} onClick={previousImage} />
-        <ButtonGroup display="flex" alignItems="center">
+        <div className="flex items-center space-x-2">
           {images.map((_image, index) => (
             <CurrentImageIndicatorDot key={index} index={index} currentIndex={currentImageIndex} onClick={setCurrentImageIndex} />
           ))}
-        </ButtonGroup>
+        </div>
         <DirectionButton direction={Directions.RIGHT} onClick={nextImage} />
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   )
 }
 
@@ -54,20 +57,14 @@ type CurrentImageIndicatorDotProps = {
 }
 
 const CurrentImageIndicatorDot = ({ index, currentIndex, onClick }: CurrentImageIndicatorDotProps) => {
-  const brandColor = useBrandColor(500, 500)
+  const brandColor = useBrandColor()
   return (
-    <Button
-      height="10px"
-      width="10px"
-      padding={0}
-      borderWidth={2}
-      borderStyle="solid"
-      borderColor={brandColor}
-      borderRadius="full"
-      cursor="pointer"
-      transition="border-width .1s"
-      _hover={{ borderWidth: 10 }}
-      backgroundColor={index === currentIndex ? brandColor : 'transparent'}
+    <button
+      className="h-[10px] w-[10px] p-0 border-2 border-solid rounded-full cursor-pointer transition-all hover:border-[5px]"
+      style={{
+        borderColor: brandColor,
+        backgroundColor: index === currentIndex ? brandColor : 'transparent'
+      }}
       onClick={() => {
         onClick(index)
       }}
@@ -86,13 +83,18 @@ const Directions = {
 }
 type Directions = (typeof Directions)[keyof typeof Directions]
 
-const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => (
-  <IconButton
-    icon={direction === Directions.LEFT ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-    colorScheme={useBrandColor()}
-    onClick={onClick}
-    padding={0}
-    variant="ghost"
-    aria-label={direction === Directions.LEFT ? 'Előző kép' : 'következő kép'}
-  />
-)
+const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => {
+  const brandColor = useBrandColor()
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={onClick}
+      className="p-0"
+      style={{ color: brandColor }}
+      aria-label={direction === Directions.LEFT ? 'Előző kép' : 'következő kép'}
+    >
+      {direction === Directions.LEFT ? <ChevronLeft /> : <ChevronRight />}
+    </Button>
+  )
+}

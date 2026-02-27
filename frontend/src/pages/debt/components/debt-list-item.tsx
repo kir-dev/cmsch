@@ -1,8 +1,6 @@
-import { Box, HStack, Text, useColorModeValue } from '@chakra-ui/react'
-import * as FaIcons from 'react-icons/fa'
-import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6'
-import { useOpaqueBackground } from '../../../util/core-functions.util.ts'
-import type { DebtView } from '../../../util/views/debt.view.ts'
+import { useOpaqueBackground } from '@/util/core-functions.util.ts'
+import type { DebtView } from '@/util/views/debt.view.ts'
+import { CheckCircle2, User, XCircle } from 'lucide-react'
 
 interface DebtListItemProps {
   item: DebtView
@@ -11,32 +9,24 @@ interface DebtListItemProps {
 export const DebtListItem = ({ item }: DebtListItemProps) => {
   const bg = useOpaqueBackground(1)
 
-  const red = useColorModeValue('red.500', 'red.300')
-  const green = useColorModeValue('green.500', 'green.300')
-
   return (
-    <Box borderRadius="lg" padding={4} backgroundColor={bg} marginTop={5}>
-      <HStack spacing={4} justify="space-between">
-        <Text isTruncated display="flex" alignItems="center" gap={1}>
-          <DebtIcon name="FaUser" />
+    <div className="rounded-lg p-4 mt-5" style={{ backgroundColor: bg }}>
+      <div className="flex flex-row space-x-4 justify-between items-center">
+        <div className="truncate flex items-center gap-1">
+          <User className="h-4 w-4" />
           {item.product}
-        </Text>
-        <Text>{item.price}&nbsp;JMF</Text>
+        </div>
+        <div>{item.price}&nbsp;JMF</div>
         {item.payed ? (
-          <Text color={green} display="flex" alignItems="center" gap={1} fontWeight="bold">
-            <FaCircleCheck /> Fizetve
-          </Text>
+          <div className="text-success flex items-center gap-1 font-bold">
+            <CheckCircle2 className="h-4 w-4" /> Fizetve
+          </div>
         ) : (
-          <Text color={red} display="flex" alignItems="center" gap={1} fontWeight="bold">
-            <FaCircleXmark /> Fizetetlen
-          </Text>
+          <div className="text-danger flex items-center gap-1 font-bold">
+            <XCircle className="h-4 w-4" /> Fizetetlen
+          </div>
         )}
-      </HStack>
-    </Box>
+      </div>
+    </div>
   )
-}
-
-function DebtIcon({ name }: { name: string }) {
-  const Icon = FaIcons[name as keyof typeof FaIcons] ?? null
-  return <Icon />
 }

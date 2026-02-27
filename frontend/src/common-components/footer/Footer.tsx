@@ -1,8 +1,8 @@
-import { Box, Flex, Heading, Image, Text, useColorModeValue } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { HIDE_KIR_DEV_IN_FOOTER } from '@/util/configs/environment.config'
+import { useColorModeValue } from '@/util/core-functions.util'
+import { Heart } from 'lucide-react'
 import { useMemo } from 'react'
-import { FaHeart } from 'react-icons/fa'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { HIDE_KIR_DEV_IN_FOOTER } from '../../util/configs/environment.config'
 import Markdown from '../Markdown'
 import { OrganizerLogo } from './OrganizerLogo'
 import { PartnerLogo } from './PartnerLogo'
@@ -32,59 +32,41 @@ export const Footer = () => {
   const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
   const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
   return (
-    <Flex flexDirection="column" align="center" w="full" backdropFilter={backdropFilter} bg={background}>
+    <footer className="flex flex-col items-center w-full" style={{ backdropFilter, backgroundColor: background }}>
       {topBarVisible && (
-        <Flex justify="center" w="full" bg={bgShadowColor} p={5}>
-          <Flex
-            maxWidth={['100%', '64rem']}
-            w="full"
-            justify={['flex-start', null, 'space-evenly']}
-            flexDirection={['column', null, 'row']}
-          >
+        <div className="flex justify-center w-full p-5" style={{ backgroundColor: bgShadowColor }}>
+          <div className="flex flex-col md:flex-row w-full max-w-full md:max-w-[64rem] justify-start md:justify-evenly">
             {component?.sponsorsEnabled && sponsors.length > 0 && (
-              <Box w={['full', null, null]}>
-                <Heading textAlign="center" mb={3} mt={0}>
-                  {component.sponsorTitle}
-                </Heading>
-                <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
+              <div className="w-full">
+                <h3 className="text-center font-bold text-xl mb-3 mt-0">{component.sponsorTitle}</h3>
+                <div className="flex justify-center items-center flex-wrap">
                   {sponsors.map((sponsor) => (
                     <SponsorImage key={sponsor?.url} {...sponsor} />
                   ))}
-                </Flex>
-              </Box>
+                </div>
+              </div>
             )}
             {partnersVisible && (
-              <Box w={['full', null, null]}>
-                <Heading textAlign="center" mb={3} mt={[10, null, 0]}>
-                  {component.partnerTitle}
-                </Heading>
-                <Flex justifyContent={'center'} alignItems="center" flexWrap="wrap">
+              <div className="w-full">
+                <h3 className="text-center font-bold text-xl mb-3 mt-10 md:mt-0">{component.partnerTitle}</h3>
+                <div className="flex justify-center items-center flex-wrap">
                   {component.bmeEnabled && <PartnerLogo name="bme" />}
                   {component.vikEnabled && <PartnerLogo name="vik" />}
                   {component.schonherzEnabled && <PartnerLogo name="schonherz" />}
                   {component.schdesignEnabled && <PartnerLogo name="schdesign" />}
-                  {partners.map((partner) => (
-                    <SponsorImage {...partner} />
+                  {partners.map((partner, idx) => (
+                    <SponsorImage key={idx} {...partner} />
                   ))}
-                </Flex>
-              </Box>
+                </div>
+              </div>
             )}
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       )}
-      <Flex
-        px={10}
-        py={5}
-        gap={5}
-        align="center"
-        maxWidth={['100%', '64rem']}
-        w="full"
-        justify="space-between"
-        flexDirection={['column', null, 'row']}
-      >
+      <div className="flex flex-col md:flex-row px-10 py-5 gap-5 items-center w-full max-w-full md:max-w-[64rem] justify-between">
         {component?.footerMessage && <Markdown text={component?.footerMessage} />}
 
-        <Flex w="full" justify="center" gap={5} align="center" flexDirection={['column', null, 'row']}>
+        <div className="flex flex-col md:flex-row w-full justify-center gap-5 items-center">
           <OrganizerLogo
             imageSrc={component?.hostLogo}
             websiteUrl={component?.hostWebsiteUrl}
@@ -100,21 +82,21 @@ export const Footer = () => {
               minimalistic={component.minimalisticFooter}
             />
           )}
-        </Flex>
-      </Flex>
-      <Text w="full" textAlign="center" p={3} bg={bgShadowColor}>
-        Made with <FaHeart style={{ display: 'inline' }} color="red" size="1rem" /> by Kir-Dev <br /> Minden jog fenntartva. &copy;{' '}
+        </div>
+      </div>
+      <div className="w-full text-center p-3 text-sm md:text-base" style={{ backgroundColor: bgShadowColor }}>
+        Made with <Heart className="inline h-4 w-4 text-red-500 fill-red-500" /> by Kir-Dev <br /> Minden jog fenntartva. &copy;{' '}
         {new Date().getFullYear()}
-      </Text>
-    </Flex>
+      </div>
+    </footer>
   )
 }
 
 function SponsorImage({ image, alt, url }: { image: string; alt: string; url: string }) {
-  const img = <Image key={image} m={5} src={image} alt={alt} maxH={24} maxW={52} loading="lazy" />
+  const img = <img key={image} className="m-5 max-h-24 max-w-[13rem] object-contain" src={image} alt={alt} loading="lazy" />
   if (url) {
     return (
-      <a href={url} key={url} target="_blank" referrerPolicy="origin">
+      <a href={url} key={url} target="_blank" rel="noreferrer" referrerPolicy="origin">
         {img}
       </a>
     )

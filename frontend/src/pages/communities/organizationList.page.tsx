@@ -1,13 +1,13 @@
-import { SearchIcon } from '@chakra-ui/icons'
-import { Box, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useOrganizationList } from '@/api/hooks/community/useOrganizationList'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown.tsx'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Input } from '@/components/ui/input'
+import { AbsolutePaths } from '@/util/paths'
+import type { Organization } from '@/util/views/organization'
+import { Search } from 'lucide-react'
 import { createRef, useEffect, useState } from 'react'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useOrganizationList } from '../../api/hooks/community/useOrganizationList'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown.tsx'
-import { PageStatus } from '../../common-components/PageStatus'
-import { AbsolutePaths } from '../../util/paths'
-import type { Organization } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function OrganizationListPage() {
@@ -35,36 +35,27 @@ export default function OrganizationListPage() {
       setFilteredOrganizations(data)
       if (inputRef.current) inputRef.current.value = ''
     }
-  }, [data, inputRef])
+  }, [data])
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
     <CmschPage title={communities?.titleResort}>
-      <Heading as="h1" variant="main-title">
-        {communities?.titleResort}
-      </Heading>
-      <InputGroup mt={5}>
-        <InputLeftElement h="100%">
-          <SearchIcon />
-        </InputLeftElement>
-        <Input
-          ref={inputRef}
-          placeholder="Keresés..."
-          size="lg"
-          onChange={handleInput}
-          _placeholder={{ color: 'inherit' }}
-          autoFocus={true}
-        />
-      </InputGroup>
+      <h1 className="text-3xl font-bold font-heading">{communities?.titleResort}</h1>
+      <div className="relative mt-5 flex items-center">
+        <Search className="absolute left-3 h-5 w-5 text-muted-foreground" />
+        <Input ref={inputRef} placeholder="Keresés..." className="pl-10 h-12 text-lg" onChange={handleInput} autoFocus={true} />
+      </div>
       {communities?.descriptionResort && (
-        <Box mt={5}>
+        <div className="mt-5">
           <Markdown text={communities?.descriptionResort} />
-        </Box>
+        </div>
       )}
-      {filteredOrganizations.map((organization) => (
-        <CardListItem key={organization.id} data={organization} link={`${AbsolutePaths.ORGANIZATION}/${organization.id}`} />
-      ))}
+      <div className="mt-5">
+        {filteredOrganizations.map((organization) => (
+          <CardListItem key={organization.id} data={organization} link={`${AbsolutePaths.ORGANIZATION}/${organization.id}`} />
+        ))}
+      </div>
     </CmschPage>
   )
 }

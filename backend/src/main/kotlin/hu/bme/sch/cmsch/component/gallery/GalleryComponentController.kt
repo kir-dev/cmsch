@@ -28,5 +28,35 @@ class GalleryComponentController(
     "Galéria testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Galéria** komponens a rendezvényen készült fotók és képek feltöltését és megjelenítését teszi lehetővé.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a galéria alapvető adatait:
+
+- **Lap címe** – a böngésző címsorában megjelenő szöveg.
+- **Menü neve** – a menüben látható név.
+- **Jogosultságok** – mely szerepkörökkel érhető el a galéria oldala.
+
+## Galéria kezelése
+
+A **Galéria** menüpont alatt töltheted fel a képeket:
+
+- **Új kép feltöltése** – új fotó rögzítése.
+- **Szerkesztés / Törlés** – képek adatainak módosítása vagy eltávolítása.
+
+## Kép feltöltése / szerkesztése
+
+- **Cím** – a kép neve vagy rövid leírása.
+- **Kép** – a fájl feltöltése.
+- **Látható** – ha be van kapcsolva, megjelenik a galériában.
+- **Kezdőlapra mehet** – ha be van kapcsolva, a kép megjelenhet a kezdőlapi carouselben is (ha a kezdőlap komponensnél ez engedélyezve van).
+
+## Használati tippek
+
+- Érdemes jó minőségű, de optimalizált méretű képeket feltölteni a gyors betöltés érdekében.
+- A **Kezdőlapra mehet** opcióval könnyen kiemelheted a rendezvény legjobb pillanatait a nyitóoldalon.
+"""
 )

@@ -28,5 +28,36 @@ class DebtComponentController(
     "Tartozások testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Tartozások** (vagy Fogyasztás) komponens a rendezvény alatt vásárolt termékek és az értük fizetendő összegek nyilvántartására szolgál.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a modult:
+
+- **Lap címe** – a böngésző címsorában megjelenő szöveg.
+- **Menü neve** – a menüben látható név.
+- **Jogosultságok** – mely szerepkörökkel érhető el a saját fogyasztás oldala.
+- **Oldal tetején megjelenő szöveg** – egyedi tájékoztató a fizetés módjáról vagy a határidőkről. Ha üres, nem jelenik meg.
+
+## Tartozások kezelése
+
+Két fő részből áll a rendszer:
+
+1. **Termékek** – itt veheted fel a megvásárolható tételeket (pl. "Póló", "Ételjegy", "Sör"). Megadható a név és az ár.
+2. **Eladott termékek** – a konkrét vásárlások listája. Itt látszik, hogy ki mit vett, és hogy kifizette-e már (fizetve státusz).
+
+## Termék létrehozása / szerkesztése
+
+- **Név** – a termék megnevezése.
+- **Ár** – a termék egységára.
+- **Típus** – kategória (opcionális).
+- **Látható** – elérhető-e a termék az eladáshoz.
+
+## Használati tippek
+
+- Ez a komponens kiválóan alkalmas "fogyasztási napló" vezetésére, ahol a résztvevők utólag, egyben rendezhetik a tartozásukat.
+- A **Fizetve** kapcsolóval követheted, hogy ki rendezte már a számláját.
+"""
 )

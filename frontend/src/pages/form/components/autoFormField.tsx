@@ -1,11 +1,16 @@
-import { Alert, AlertIcon, Checkbox, Flex, FormLabel, Input, Select, Text, Textarea, useColorModeValue } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import Markdown from '@/common-components/Markdown'
+import { VotingField } from '@/common-components/VotingField'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { isCheckbox, isGridField } from '@/util/core-functions.util'
+import { type FormField, FormFieldVariants, type VotingFieldOption } from '@/util/views/form.view'
+import { AlertTriangle, Info } from 'lucide-react'
+import { type ReactNode } from 'react'
 import { type Control, useController } from 'react-hook-form'
-import { useStyle } from '../../../api/contexts/config/ConfigContext.tsx'
-import Markdown from '../../../common-components/Markdown'
-import { VotingField } from '../../../common-components/VotingField'
-import { isCheckbox, isGridField } from '../../../util/core-functions.util'
-import { type FormField, FormFieldVariants, type VotingFieldOption } from '../../../util/views/form.view'
 import { GridField } from './GridField'
 
 interface AutoFormFieldProps {
@@ -20,8 +25,6 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
   let defaultValue = isCheckbox(fieldProps.type) ? fieldProps.defaultValue === 'true' : fieldProps.defaultValue
   let requiredValue = fieldProps.required
 
-  const style = useStyle()
-  const checkboxBorderColor = useColorModeValue(style?.lightTextColor, style?.darkTextColor) ?? '#888'
   if (submittedValue) {
     if (isCheckbox(fieldProps.type)) defaultValue = submittedValue === 'true'
     else if (isGridField(fieldProps.type)) defaultValue = JSON.parse(submittedValue)
@@ -54,53 +57,57 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
   switch (fieldProps.type) {
     case FormFieldVariants.CHECKBOX:
       component = (
-        <Flex alignItems="center" mt={10}>
-          <Checkbox {...field} isInvalid={!!error} borderColor={checkboxBorderColor} disabled={disabled} defaultChecked={!!defaultValue}>
-            <Text fontSize={20} ml={3}>
-              {fieldProps.label}
-            </Text>
-          </Checkbox>
-        </Flex>
+        <div className="flex items-center mt-10 space-x-3">
+          <Checkbox id={fieldProps.fieldName} checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />
+          <Label htmlFor={fieldProps.fieldName} className="text-xl font-normal cursor-pointer">
+            {fieldProps.label}
+          </Label>
+        </div>
       )
       break
     case FormFieldVariants.EMAIL:
-      component = <Input type="email" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
+      component = <Input type="email" {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
     case FormFieldVariants.LONG_TEXT:
-      component = <Textarea {...field} isInvalid={!!error} disabled={disabled} />
+      component = <Textarea {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
     case FormFieldVariants.MUST_AGREE:
       component = (
-        <Flex alignItems="center" my={10}>
-          <Checkbox {...field} isInvalid={!!error} borderColor={checkboxBorderColor} disabled={disabled} defaultChecked={!!defaultValue} />
-          <FormLabel ml={3} mb={0} fontSize={20} htmlFor={fieldProps.fieldName}>
+        <div className="flex items-center my-10 space-x-3">
+          <Checkbox id={fieldProps.fieldName} checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />
+          <Label htmlFor={fieldProps.fieldName} className="text-xl font-normal cursor-pointer">
             {fieldProps.label}
-          </FormLabel>
-        </Flex>
+          </Label>
+        </div>
       )
       break
     case FormFieldVariants.DATE:
-      component = <Input type="date" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
+      component = <Input type="date" {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
     case FormFieldVariants.NUMBER:
-      component = <Input type="number" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
+      component = <Input type="number" {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
     case FormFieldVariants.PHONE:
-      component = <Input type="phone" {...field} isInvalid={!!error} _placeholder={{ color: 'inherit' }} disabled={disabled} />
+      component = <Input type="tel" {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
     case FormFieldVariants.SELECT:
       component = (
-        <Select {...field} disabled={disabled}>
-          {selectValues.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
+        <Select onValueChange={field.onChange} value={field.value} disabled={disabled}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {selectValues.map((opt) => (
+              <SelectItem key={opt} value={opt}>
+                {opt}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
       )
       break
     case FormFieldVariants.TEXT:
-      component = <Input isInvalid={!!error} type="text" {...field} _placeholder={{ color: 'inherit' }} disabled={disabled} />
+      component = <Input type="text" {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
     case FormFieldVariants.VOTE: {
       let values: VotingFieldOption[] = []
@@ -117,17 +124,21 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     }
     case FormFieldVariants.INFO_BOX:
       component = (
-        <Alert variant="left-accent" status="info">
-          <AlertIcon />
-          <Markdown text={fieldProps.values} />
+        <Alert className="bg-info/10 border-l-4 border-l-info">
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            <Markdown text={fieldProps.values} />
+          </AlertDescription>
         </Alert>
       )
       break
     case FormFieldVariants.WARNING_BOX:
       component = (
-        <Alert variant="left-accent" status="warning">
-          <AlertIcon />
-          <Markdown text={fieldProps.values} />
+        <Alert className="bg-warning/10 border-l-4 border-l-warning">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            <Markdown text={fieldProps.values} />
+          </AlertDescription>
         </Alert>
       )
       break
@@ -135,7 +146,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       component = <Markdown text={fieldProps.values} />
       break
     case FormFieldVariants.SECTION_START:
-      component = <Text fontSize={30}>{fieldProps.values}</Text>
+      component = <span className="text-3xl font-bold">{fieldProps.values}</span>
       break
     case FormFieldVariants.SELECTION_GRID:
     case FormFieldVariants.CHOICE_GRID:
@@ -152,7 +163,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
   return (
     <>
       {component}
-      {error && <Text color="red">{error.message}</Text>}
+      {error && <p className="text-destructive mt-1">{error.message}</p>}
     </>
   )
 }

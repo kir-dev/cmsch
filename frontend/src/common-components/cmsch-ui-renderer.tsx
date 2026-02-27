@@ -1,8 +1,8 @@
-import { Divider, ListItem, OrderedList, Table, TableContainer, UnorderedList } from '@chakra-ui/react'
+import { Separator } from '@/components/ui/separator'
+import { CLIENT_BASE_URL } from '@/util/configs/environment.config'
+import { useBrandColor } from '@/util/core-functions.util.ts'
 import type { PropsWithChildren, ReactNode } from 'react'
 import type { Components } from 'react-markdown'
-import { CLIENT_BASE_URL } from '../util/configs/environment.config'
-import { useBrandColor } from '../util/core-functions.util.ts'
 import ChakraUIRenderer from './chakra-md-renderer'
 import { CmschLink } from './CmschLink'
 
@@ -28,31 +28,24 @@ const cmschTheme: Components = {
     )
   },
   ul: ({ children }: PropsWithChildren) => {
-    return (
-      <UnorderedList mb={3} pl={3}>
-        {children}
-      </UnorderedList>
-    )
+    return <ul className="mb-3 pl-5 list-disc">{children}</ul>
   },
   ol: ({ children }: PropsWithChildren) => {
-    return (
-      <OrderedList mb={3} pl={3}>
-        {children}
-      </OrderedList>
-    )
+    return <ol className="mb-3 pl-5 list-decimal">{children}</ol>
   },
   li: ({ children }: PropsWithChildren) => {
-    return <ListItem>{children}</ListItem>
+    return <li className="mb-1">{children}</li>
   },
   hr: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return <Divider my={3} borderColor={useBrandColor(800, 200)} borderBottomWidth={2} />
+    const color = useBrandColor()
+    return <Separator className="my-3 h-0.5" style={{ backgroundColor: color }} />
   },
   table: ({ children }: PropsWithChildren) => {
     return (
-      <TableContainer>
-        <Table>{children}</Table>
-      </TableContainer>
+      <div className="w-full overflow-auto my-4">
+        <table className="w-full border-collapse">{children}</table>
+      </div>
     )
   }
 }

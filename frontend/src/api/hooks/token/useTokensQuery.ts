@@ -1,8 +1,8 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { ApiPaths } from '@/util/paths'
+import type { TokenProgress } from '@/util/views/token.view'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { ApiPaths } from '../../../util/paths'
-import type { TokenProgress } from '../../../util/views/token.view'
-import { QueryKeys } from '../queryKeys'
 
 export const useTokensQuery = () => {
   return useQuery<TokenProgress, Error>({

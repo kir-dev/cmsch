@@ -1,7 +1,7 @@
+import { useTinderAnswers } from '@/api/hooks/community/useTinderAnswers.ts'
+import { PageStatus } from '@/common-components/PageStatus.tsx'
+import { AbsolutePaths } from '@/util/paths.ts'
 import { Navigate } from 'react-router'
-import { useTinderAnswers } from '../../api/hooks/community/useTinderAnswers.ts'
-import { PageStatus } from '../../common-components/PageStatus.tsx'
-import { AbsolutePaths } from '../../util/paths.ts'
 
 const TinderRouter = () => {
   const { data, isLoading, isError } = useTinderAnswers()

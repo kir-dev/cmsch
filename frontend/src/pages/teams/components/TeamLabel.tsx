@@ -1,6 +1,6 @@
-import { Box, Tooltip } from '@chakra-ui/react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useAltColor, useColor } from '@/util/color.utils.ts'
 import type { ColorInstance } from 'color'
-import { useAltColor, useColor } from '../../../util/color.utils.ts'
 
 const TeamLabel = ({ name, color, desc }: { name: string; color?: string; desc?: string }) => {
   const myColor: ColorInstance = useColor(color)
@@ -16,32 +16,33 @@ const TeamLabel = ({ name, color, desc }: { name: string; color?: string; desc?:
 
 const LabelComponent = ({ name, color, darkColor }: { name: string; color: string; darkColor: string }) => {
   return (
-    <Box
-      border="2px solid"
-      bg={darkColor}
-      borderColor={color}
-      color={color}
-      px={3}
-      py={0.5}
-      borderRadius="xl"
-      fontWeight="bold"
-      fontSize={12}
-      letterSpacing={1.2}
-      width="fit-content"
-      height="fit-content"
+    <div
+      className="rounded-xl border-2 px-3 py-0.5 text-[12px] font-bold tracking-[1.2px] w-fit h-fit"
+      style={{
+        backgroundColor: darkColor,
+        borderColor: color,
+        color: color
+      }}
     >
       {name}
-    </Box>
+    </div>
   )
 }
 
 const LabelWithTooltip = ({ name, color, darkColor, desc }: { name: string; color: string; darkColor: string; desc: string }) => {
   return (
-    <Tooltip label={desc} aria-label={desc}>
-      <Box>
-        <LabelComponent name={name} color={color} darkColor={darkColor} />
-      </Box>
-    </Tooltip>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div>
+            <LabelComponent name={name} color={color} darkColor={darkColor} />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{desc}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
