@@ -59,95 +59,95 @@ class TeamComponent(
         fieldName = "Csapatom lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
     var myMenuDisplayName by StringSettingRef("Csapatom", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
+        fieldName = "Menü neve", description = "A menüpont neve")
 
     var myMinRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES_FROM_ATTENDEE,
-        fieldName = "Csapatom menü jogosultságai", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Csapatom menü jogosultságai", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamListGroup by SettingGroup(fieldName = "Csapat lista")
+    val teamListGroup by SettingGroup(fieldName = "Csapatlista")
 
     final var title by StringSettingRef("Csapatok",
         fieldName = "Csapatok lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
     final override var menuDisplayName by StringSettingRef("Csapatok", serverSideOnly = true,
-        fieldName = "Csapatok menü neve", description = "Ez lesz a neve a menünek")
+        fieldName = "Csapatok menü neve", description = "A menüpont neve")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Csapatok menü jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Csapatok menü jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
-    var showTeamsAtAll by BooleanSettingRef(serverSideOnly = true, fieldName = "Csapat lista kijelzése",
-        description = "Ha ki van kapcsolva a akkor a csapat lista nincs leküldve")
+    var showTeamsAtAll by BooleanSettingRef(serverSideOnly = true, fieldName = "Csapatlista megjelenítése",
+        description = "Kikapcsolt állapotban a csapatlista nem kerül leküldésre a kliensnek")
 
     var searchEnabled by BooleanSettingRef(true, fieldName = "Keresés engedélyezése",
-        description = "Ha be van kapcsolva, akkor lehet keresni a csapatok között")
+        description = "Bekapcsolt állapotban lehet keresni a csapatok között")
 
     var showNotRacingTeams by BooleanSettingRef(serverSideOnly = true,
-        fieldName = "Nem versenyző csapatok kijelzése", description = "Azoknak is a kijelzése akik nem versenyeznek")
+        fieldName = "Nem versenyző csapatok megjelenítése", description = "A nem versenyző státuszú csapatok megjelenítése")
 
     var showNotManualTeams by BooleanSettingRef(serverSideOnly = true,
-        fieldName = "Admin által nevezett csapatok is látszanak",
-        description = "Azoknak is a kijelzése akiket az admin panelről neveztek")
+        fieldName = "Admin által nevezett csapatok megjelenítése",
+        description = "Az admin felületről létrehozott/nevezett csapatok megjelenítése")
 
-    var sortByName by BooleanSettingRef(serverSideOnly = true, fieldName = "Név alapján rendezés",
-        description = "Ha igaz, akkor ABC sorrendben vannak kiírva, ha hamis akkor pont alapján")
+    var sortByName by BooleanSettingRef(serverSideOnly = true, fieldName = "Rendezés név alapján",
+        description = "Bekapcsolt állapotban ABC sorrendben, kikapcsolva pontszám alapján történik a rendezés")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val teamCreateGroup by SettingGroup(fieldName = "Csapat létrehozás")
+    val teamCreateGroup by SettingGroup(fieldName = "Csapat létrehozása")
 
     var createTitle by StringSettingRef("Csapat készítés",
-        fieldName = "Csapat készítés lap címe", description = "Ez jelenik meg a böngésző címsorában")
+        fieldName = "Csapatkészítés lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
     var createMenuDisplayName by StringSettingRef("Csapat készítés", serverSideOnly = true,
-        fieldName = "Csapat készítés neve", description = "Ez lesz a neve a menünek")
+        fieldName = "Csapatkészítés menü neve", description = "A menüpont neve")
 
     var createMinRole by MinRoleSettingRef(setOf(RoleType.BASIC),
-        fieldName = "Csapat készítés menü jogosultságai", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Csapatkészítés menü jogosultságai", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var teamCreationTopMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Csapat készítés felső szöveg", description = "Ha üres, akkor nincs ilyen")
+        fieldName = "Csapatkészítés felső szöveg", description = "Ha üres, nem jelenik meg")
 
-    var creationEnabled by BooleanSettingRef(fieldName = "Csoport készítés engedélyezve",
-        description = "Ha igaz, lehet csapatot készíteni")
+    var creationEnabled by BooleanSettingRef(fieldName = "Csapatkészítés engedélyezve",
+        description = "Bekapcsolt állapotban a felhasználók hozhatnak létre csapatot")
 
-    var teamEditTitle by StringSettingRef("Csapat szerkesztése", fieldName = "Csoport adatainak szerkesztés lap címe",
-        description = "A csoport szerkesztési lapjának tetején megjelenő címe")
+    var teamEditTitle by StringSettingRef("Csapat szerkesztése", fieldName = "Csapatszerkesztés lap címe",
+        description = "A csapatszerkesztő oldal fejlécének szövege")
 
     var teamEditTopMessage by StringSettingRef("Adj meg leírást és logót!", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Csoport szerkesztés felső szöveg", description = "Ha üres, akkor nincs ilyen")
+        fieldName = "Csapatszerkesztés felső szöveg", description = "Ha üres, nem jelenik meg")
 
-    var teamEditEnabled by BooleanSettingRef(true, fieldName = "Csoport szerkesztés engedélyezése",
-        description = "Ha igaz, lehet a csapat leírását szerkeszteni")
+    var teamEditEnabled by BooleanSettingRef(true, fieldName = "Csapatszerkesztés engedélyezése",
+        description = "Bekapcsolt állapotban a csapat leírása szerkeszthető")
 
-    var teamLogoUploadEnabled by BooleanSettingRef(fieldName = "Csoport logó feltöltés engedélyezése",
-        description = "Ha igaz, lehet a vezetőknek logót feltölteni")
+    var teamLogoUploadEnabled by BooleanSettingRef(fieldName = "Csapatlogó feltöltés engedélyezése",
+        description = "Bekapcsolt állapotban a vezetők tölthetnek fel logót")
 
     var joinEnabled by BooleanSettingRef(fieldName = "Csatlakozás engedélyezve",
-        description = "Ha igaz, lehet csapathoz csatlakozni")
+        description = "Bekapcsolt állapotban engedélyezett a csatlakozás a csapatokhoz")
 
     var leaveEnabled by BooleanSettingRef(fieldName = "Kilépés engedélyezve",
-        description = "Ha igaz, lehet ki lehet lépni csapatból")
+        description = "Bekapcsolt állapotban engedélyezett a csapatból való kilépés")
 
     var grantPrivilegedRole by BooleanSettingRef(true, serverSideOnly = true,
-        fieldName = "PRIVILEGED jog a csapat készítőjének",
-        description = "Ha be val kapcsolva, akkor a csapat készítője PRIVILEGED jogot kap")
+        fieldName = "PRIVILEGED jog a csapatkészítőnek",
+        description = "Bekapcsolt állapotban a csapat létrehozója PRIVILEGED szerepkört kap")
 
     var grantAttendeeRole by BooleanSettingRef(true, serverSideOnly = true, fieldName = "ATTENDEE jog a csapattagoknak",
-        description = "Ha be val kapcsolva, akkor a csapat tagjai ATTENDEE jogot kapnak (onnantól él, hogy be lett kapcsolva)")
+        description = "Bekapcsolt állapotban a csapat tagjai ATTENDEE szerepkört kapnak")
 
     var nameRegex by StringSettingRef("^[A-Za-z0-9 _\\-ÁáÉéÍíÓóÖöŐőÚúÜüŰű]{1,32}$", serverSideOnly = true,
-        fieldName = "Csapatnév regex", description = "Ez alapján megy majd a validálás")
+        fieldName = "Csapatnév szabály (Regex)", description = "A csapatnév ellenőrzésére szolgáló reguláris kifejezés")
 
     var nameBlocklist by StringSettingRef("test, dev", serverSideOnly = true, fieldName = "Tiltott nevek",
         description = "Tiltott csapatnevek vesszővel elválasztva")
 
     var racesByDefault by BooleanSettingRef(true, fieldName = "Alapból versenyzik",
-        description = "Ha be van kapcsolva, akkor a csapat automatikusan versenyző státuszban van")
+        description = "Bekapcsolt állapotban az új csapatok automatikusan versenyző státuszt kapnak")
 
-    var selectableByDefault by BooleanSettingRef(true, fieldName = "Alapból lehet bele jelentkezni",
-        description = "Ha be van kapcsolva, akkor a csapatba automatikusan lehet jelentkezni")
+    var selectableByDefault by BooleanSettingRef(true, fieldName = "Alapból lehet jelentkezni",
+        description = "Bekapcsolt állapotban az új csapatokba automatikusan lehet jelentkezni")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
@@ -157,90 +157,90 @@ class TeamComponent(
         fieldName = "Admin lap címe", description = "Ez jelenik meg a böngésző címsorában")
 
     var adminMenuDisplayName by StringSettingRef("Csapatom kezelése", serverSideOnly = true,
-        fieldName = "Admin menü neve", description = "Ez lesz a neve a menünek")
+        fieldName = "Admin menü neve", description = "A menüpont neve")
 
     var adminMinRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES_FROM_PRIVILEGED,
-        fieldName = "Admin oldal jogosultságai", description = "Melyik roleokkal nyitható meg az admin oldal")
+        fieldName = "Admin oldal jogosultságai", description = "Mely szerepkörökkel nyitható meg az admin oldal")
 
-    var togglePermissionEnabled by BooleanSettingRef(true, fieldName = "Jogosultság adás állítása",
-        description = "Ha be van kapcsolva, akkor lehet jogosultságokat állítani")
+    var togglePermissionEnabled by BooleanSettingRef(true, fieldName = "Jogosultságok kezelése",
+        description = "Bekapcsolt állapotban a vezetők állíthatják a tagok jogosultságait")
 
-    var kickEnabled by BooleanSettingRef(true, fieldName = "Kidobás gomb",
-        description = "Ha be val kapcsolva, akkor csapat vezetők kirakhatnak embereket")
+    var kickEnabled by BooleanSettingRef(true, fieldName = "Tagok eltávolítása",
+        description = "Bekapcsolt állapotban a csapatvezetők eltávolíthatnak tagokat")
 
-    var promoteLeadershipEnabled by BooleanSettingRef(true, fieldName = "Jogosultság átadása",
-        description = "Ha be val kapcsolva, akkor át lehet adni a vezetőséget másnak")
+    var promoteLeadershipEnabled by BooleanSettingRef(true, fieldName = "Vezetőség átadása",
+        description = "Bekapcsolt állapotban a vezetés átadható más tagnak")
 
-    var leaderNotes by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Üzenet a CSK-knak",
-        description = "A csapat dashboardnál megjelenő üzenet a CSK-k nak. Ha üres nem látszik.")
+    var leaderNotes by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Üzenet a vezetőknek",
+        description = "A csapat dashboardon megjelenő üzenet a vezetők számára. Ha üres, nem jelenik meg.")
 
-    var showTasks by BooleanSettingRef(true, fieldName = "Feladatok mutatása",
-        description = "Ha be val kapcsolva, akkor az elvégzendő feladatok látszódnak")
+    var showTasks by BooleanSettingRef(true, fieldName = "Feladatok megjelenítése",
+        description = "Bekapcsolt állapotban az elvégzendő feladatok láthatóak")
 
-    var showAdvertisedForms by BooleanSettingRef(true, fieldName = "Formok mutatása",
-        description = "Ha be val kapcsolva, akkor a hírdetett flaggel ellátott formokat megjelenítjük a csapatnál")
+    var showAdvertisedForms by BooleanSettingRef(true, fieldName = "Űrlapok megjelenítése",
+        description = "Bekapcsolt állapotban a hirdetett űrlapok megjelennek a csapatnál")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val teamDetailsGroup by SettingGroup(fieldName = "Csapat adatlap")
 
-    var showTeamDetails by BooleanSettingRef(fieldName = "Csoport részleteinek mutatása",
-        description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek")
+    var showTeamDetails by BooleanSettingRef(fieldName = "Részletek megjelenítése",
+        description = "Bekapcsolt állapotban a csapatok adatai megtekinthetőek")
 
-    var showTeamMembersPublicly by BooleanSettingRef(fieldName = "Csoport tagjai publikusak",
-        description = "Ha be val kapcsolva, akkor a csapatok adatai megtekinthetőek")
+    var showTeamMembersPublicly by BooleanSettingRef(fieldName = "Tagok publikussá tétele",
+        description = "Bekapcsolt állapotban a csapatok taglistája bárki számára látható")
 
-    var showTeamScore by BooleanSettingRef(fieldName = "Csoport pontjának kijelzése",
-        description = "Ha be val kapcsolva, akkor az adatlapon kint lesz a csoport pontjainak a mutatója")
+    var showTeamScore by BooleanSettingRef(fieldName = "Pontszám megjelenítése",
+        description = "Bekapcsolt állapotban az adatlapon látható a csapat összpontszáma")
 
-    var showTeamScoreDetailsButton by BooleanSettingRef(fieldName = "Csoport részletes pontjaihoz gomb",
-        description = "Ha be val kapcsolva, akkor megjelenik egy gomb a csapat részletes pont listájához")
+    var showTeamScoreDetailsButton by BooleanSettingRef(fieldName = "Részletes pontszám gomb",
+        description = "Bekapcsolt állapotban megjelenik egy gomb a részletes pontszámokhoz")
 
-    var showRaceButton by BooleanSettingRef(false, fieldName = "Mérés gomb látszódik",
-        description = "Ha igaz, látszik a gomb")
+    var showRaceButton by BooleanSettingRef(false, fieldName = "Mérés gomb megjelenítése",
+        description = "Bekapcsolt állapotban látható a mérés gomb")
 
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val statGroup by SettingGroup(fieldName = "Csapat statisztika")
 
-    var membersStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Tagok számának kijelzése",
-        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hányan vannak")
+    var membersStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Tagok számának megjelenítése",
+        description = "Bekapcsolt állapotban látható a csapat létszáma")
 
     var membersStatHeader by StringSettingRef("Tagok", serverSideOnly = true,
-        fieldName = "Tagok fejléce", description = "Ez lesz a neve a statisztikának")
+        fieldName = "Tagok fejléce", description = "A statisztika megnevezése")
 
-    var placeStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Helyezés kijelzése",
-        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hanyadik a csapat (Leaderboard komponens kell hozzá)")
+    var placeStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Helyezés megjelenítése",
+        description = "Bekapcsolt állapotban látható a csapat helyezése (Leaderboard komponens szükséges)")
 
     var placeStatHeader by StringSettingRef("Helyezés", serverSideOnly = true,
-        fieldName = "Helyezés fejléce", description = "Ez lesz a neve a statisztikának")
+        fieldName = "Helyezés fejléce", description = "A statisztika megnevezése")
 
-    var scoreStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Pontszám kijelzése",
-        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hány pontja van a csapatnak (Leaderboard komponens kell hozzá)")
+    var scoreStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Pontszám megjelenítése",
+        description = "Bekapcsolt állapotban látható a csapat pontszáma (Leaderboard komponens szükséges)")
 
     var scoreStatHeader by StringSettingRef("Pontszám", serverSideOnly = true,
-        fieldName = "Pontszám fejléce", description = "Ez lesz a neve a statisztikának")
+        fieldName = "Pontszám fejléce", description = "A statisztika megnevezése")
 
-    var qrFightStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "QR Fight kijelzése",
-        description = "Ha be val kapcsolva, akkor a csapat által megszerzett pontok és tornyok látszódnak (QRFight komponens kell hozzá)")
+    var qrFightStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "QR Fight megjelenítése",
+        description = "Bekapcsolt állapotban láthatóak a megszerzett tornyok és pontok (QRFight komponens szükséges)")
 
     var qrTokenStatHeader by StringSettingRef("Megtalált QR kód", serverSideOnly = true,
-        fieldName = "QR kódok fejléce", description = "Ez lesz a neve a statisztikának")
+        fieldName = "QR kódok fejléce", description = "A statisztika megnevezése")
 
     var qrTowerStatHeader by StringSettingRef("Megszerzett tornyok", serverSideOnly = true,
-        fieldName = "Tornyok fejléce", description = "Ez lesz a neve a statisztikának")
+        fieldName = "Tornyok fejléce", description = "A statisztika megnevezése")
 
-    var raceStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Verseny eredmény kijelzése",
-        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy ki és milyen eredménnyel a legjobb (Verseny komponens kell hozzá)")
+    var raceStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Versenyeredmény megjelenítése",
+        description = "Bekapcsolt állapotban látható a legjobb versenyeredmény (Verseny komponens szükséges)")
 
     var raceStatHeader by StringSettingRef("Sörmérés", serverSideOnly = true,
-        fieldName = "Verseny fejléce", description = "Ez lesz a neve a statisztikának")
+        fieldName = "Verseny fejléce", description = "A statisztika megnevezése")
 
-    var riddleStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Riddle eredmény kijelzése",
-        description = "Ha be val kapcsolva, akkor a csapat mutatásánál látszik, hogy hogy állnak a ridleökkel (Riddle komponens kell hozzá)")
+    var riddleStatEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Riddle eredmény megjelenítése",
+        description = "Bekapcsolt állapotban látható a riddle haladás (Riddle komponens szükséges)")
 
     var riddleStatHeader by StringSettingRef("Riddleök", serverSideOnly = true,
-        fieldName = "Riddle fejléce", description = "Ez lesz a neve a statisztikának")
+        fieldName = "Riddle fejléce", description = "A statisztika megnevezése")
 
 }

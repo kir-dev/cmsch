@@ -1,6 +1,5 @@
-import { Heading, Text } from '@chakra-ui/react'
+import { CmschPage } from '@/common-components/layout/CmschPage'
 import React, { type ErrorInfo, type PropsWithChildren } from 'react'
-import { CmschPage } from '../common-components/layout/CmschPage'
 import { l } from './language'
 
 interface State {
@@ -32,13 +31,11 @@ export class ErrorBoundary extends React.Component<PropsWithChildren, State> {
     if (this.state.hasError) {
       return (
         <CmschPage title="Hiba">
-          <Heading textAlign="center">{l('error-boundary-title')}</Heading>
-          <Text textAlign="center" marginTop={10}>
-            {l('error-boundary-message')}
-          </Text>
+          <h2 className="mt-5 text-center text-3xl font-bold">{l('error-boundary-title')}</h2>
+          <p className="mt-10 text-center">{l('error-boundary-message')}</p>
           {!import.meta.env.PROD &&
             Object.entries(this.state.error).map((err) => (
-              <pre style={{ whiteSpace: 'pre-wrap' }}>
+              <pre key={err[0]} style={{ whiteSpace: 'pre-wrap' }}>
                 {err[0]}: {String(err[1])}
               </pre>
             ))}

@@ -1,6 +1,6 @@
+import { TeamResponses } from '@/util/views/team.view'
 import axios from 'axios'
 import { useState } from 'react'
-import { TeamResponses } from '../../../../util/views/team.view'
 
 export const useTeamLeave = (onResponse: (response: TeamResponses) => void) => {
   const [loading, setLoading] = useState(false)

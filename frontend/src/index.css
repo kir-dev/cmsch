@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: var(--light-bg, #ffffff);
+    --foreground: var(--light-text, #1a202c);
+
+    --card: var(--light-container-bg, #ffffff);
+    --card-foreground: var(--light-text, #1a202c);
+
+    --popover: var(--light-bg, #ffffff);
+    --popover-foreground: var(--light-text, #1a202c);
+
+    --primary: var(--light-primary, #f15a29);
+    --primary-foreground: var(--light-primary-foreground, #ffffff);
+
+    --secondary: var(--light-neutral, #edf2f7);
+    --secondary-foreground: var(--light-neutral-foreground, #1a202c);
+
+    --muted: var(--light-neutral, #edf2f7);
+    --muted-foreground: #718096;
+
+    --accent: var(--light-neutral, #edf2f7);
+    --accent-foreground: var(--light-neutral-foreground, #1a202c);
+
+    --success: var(--light-success, #48bb78);
+    --success-foreground: var(--light-success-foreground, #ffffff);
+
+    --warning: var(--light-warning, #ecc94b);
+    --warning-foreground: var(--light-warning-foreground, #ffffff);
+
+    --danger: var(--light-danger, #f56565);
+    --danger-foreground: var(--light-danger-foreground, #ffffff);
+
+    --info: var(--light-info, #4299e1);
+    --info-foreground: var(--light-info-foreground, #ffffff);
+
+    --destructive: var(--light-danger, #f56565);
+    --destructive-foreground: var(--light-danger-foreground, #ffffff);
+
+    --border: var(--light-border, #e2e8f0);
+    --input: var(--light-border, #e2e8f0);
+    --ring: var(--light-text, #1a202c);
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: var(--dark-bg, #171923);
+    --foreground: var(--dark-text, #ffffffeb);
+
+    --card: var(--dark-container-bg, #171923);
+    --card-foreground: var(--dark-text, #ffffffeb);
+
+    --popover: var(--dark-bg, #171923);
+    --popover-foreground: var(--dark-text, #ffffffeb);
+
+    --primary: var(--dark-primary, #f15a29);
+    --primary-foreground: var(--dark-primary-foreground, #ffffff);
+
+    --secondary: var(--dark-neutral, #2d3748);
+    --secondary-foreground: var(--dark-neutral-foreground, #ffffffeb);
+
+    --muted: var(--dark-neutral, #2d3748);
+    --muted-foreground: #a0aec0;
+
+    --accent: var(--dark-neutral, #2d3748);
+    --accent-foreground: var(--dark-neutral-foreground, #ffffffeb);
+
+    --success: var(--dark-success, #68d391);
+    --success-foreground: var(--dark-success-foreground, #1a202c);
+
+    --warning: var(--dark-warning, #faf089);
+    --warning-foreground: var(--dark-warning-foreground, #1a202c);
+
+    --danger: var(--dark-danger, #fc8181);
+    --danger-foreground: var(--dark-danger-foreground, #1a202c);
+
+    --info: var(--dark-info, #63b3ed);
+    --info-foreground: var(--dark-info-foreground, #1a202c);
+
+    --destructive: var(--dark-danger, #fc8181);
+    --destructive-foreground: var(--dark-danger-foreground, #1a202c);
+
+    --border: var(--dark-border, #2d3748);
+    --input: var(--dark-border, #2d3748);
+    --ring: var(--dark-text, #ffffffeb);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--main-font, inherit);
+  }
+}
+
+.font-heading {
+  font-family: var(--display-font, inherit);
+}
+
+[data-state='active'] {
+  background-color: var(--active-tab-bg, transparent) !important;
+}

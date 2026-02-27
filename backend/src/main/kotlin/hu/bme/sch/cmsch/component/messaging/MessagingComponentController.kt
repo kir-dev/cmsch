@@ -28,5 +28,24 @@ class MessagingComponentController(
     "Értesítések beállítása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+Az **Üzenetküldés** (Messaging) komponens egy külső üzenetküldő proxy (pl. Telegram bot, Matrix híd) kezelését teszi lehetővé.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a proxy kapcsolatot:
+
+- **Proxy elérhetősége** – a külső üzenetküldő szolgáltatás alap URL-je.
+- **Token a proxyhoz** – a hitelesítéshez szükséges egyedi kulcs.
+
+## Funkciók
+
+- **Integráció** – a rendszer ezen a proxyn keresztül képes üzeneteket továbbítani külső platformokra.
+- **Értesítések** – a belső eseményekről vagy rendszerüzenetekről küldhető tájékoztatás a konfigurált csatornákon.
+
+## Használati tippek
+
+- Ezt a komponenst általában csak akkor kell beállítani, ha a rendezvény szervezői egy külső csevegőalkalmazáson (pl. Telegram) keresztül szeretnének automatikus értesítéseket kapni a rendszer eseményeiről.
+"""
 )

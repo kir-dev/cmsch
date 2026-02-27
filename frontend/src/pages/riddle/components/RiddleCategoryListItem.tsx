@@ -1,6 +1,4 @@
-import { Box, CircularProgress, Flex, HStack, Text } from '@chakra-ui/react'
-import { useOpaqueBackground } from '../../../util/core-functions.util'
-import type { RiddleCategory } from '../../../util/views/riddle.view'
+import type { RiddleCategory } from '@/util/views/riddle.view'
 
 interface RiddleCategoryListItemProps {
   category: RiddleCategory
@@ -8,22 +6,42 @@ interface RiddleCategoryListItemProps {
 }
 
 export function RiddleCategoryListItem({ category, onClick }: RiddleCategoryListItemProps) {
-  const bg = useOpaqueBackground(1)
-  const hoverBg = useOpaqueBackground(2)
+  const percentage = (category.completed / category.total) * 100
+  const radius = 18
+  const circumference = 2 * Math.PI * radius
+  const strokeDashoffset = circumference - (percentage / 100) * circumference
 
   return (
-    <Box key={category.categoryId} bg={bg} px={6} py={2} borderRadius="md" cursor="pointer" _hover={{ bgColor: hoverBg }} onClick={onClick}>
-      <Flex align="center" justifyContent="space-between">
-        <Text fontWeight="bold" fontSize="xl">
-          {category.title}
-        </Text>
-        <HStack>
-          <Text fontWeight="bold">
+    <div
+      key={category.categoryId}
+      className="cursor-pointer rounded-md bg-secondary text-secondary-foreground px-6 py-2 transition-colors hover:bg-secondary/80 border"
+      onClick={onClick}
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-xl font-bold">{category.title}</span>
+        <div className="flex items-center gap-2">
+          <span className="font-bold">
             {category.completed}/{category.total}
-          </Text>
-          <CircularProgress size={10} value={category.completed} max={category.total} color="green.400" />
-        </HStack>
-      </Flex>
-    </Box>
+          </span>
+          <div className="relative flex h-10 w-10 items-center justify-center">
+            <svg className="h-full w-full -rotate-90 transform">
+              <circle className="text-border" strokeWidth="4" stroke="currentColor" fill="transparent" r={radius} cx="20" cy="20" />
+              <circle
+                className="text-success"
+                strokeWidth="4"
+                strokeDasharray={circumference}
+                style={{ strokeDashoffset }}
+                strokeLinecap="round"
+                stroke="currentColor"
+                fill="transparent"
+                r={radius}
+                cx="20"
+                cy="20"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

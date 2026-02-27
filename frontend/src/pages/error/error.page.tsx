@@ -1,12 +1,11 @@
-import { Box, ButtonGroup, Heading } from '@chakra-ui/react'
+import { MessageTypes, useServiceContext } from '@/api/contexts/service/ServiceContext'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LinkButton } from '@/common-components/LinkButton'
+import Markdown from '@/common-components/Markdown'
+import { useBrandColor } from '@/util/core-functions.util.ts'
+import { l } from '@/util/language'
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router'
-import { MessageTypes, useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import Markdown from '../../common-components/Markdown'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { l } from '../../util/language'
 import { UnauthorizedPage } from './unauthorized.page'
 
 type Props = {
@@ -34,17 +33,15 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   if (clonedMessageType === MessageTypes.AUTHENTICATION) return <UnauthorizedPage />
   return (
     <CmschPage title={l('error-page-helmet')}>
-      <Heading as="h1" variant="main-title" textAlign="center">
-        {l('error-page-title')}
-      </Heading>
-      <Box textAlign="center" color="gray.500" marginTop={10}>
+      <h1 className="text-3xl font-bold font-heading text-center">{l('error-page-title')}</h1>
+      <div className="text-center text-gray-500 mt-10">
         <Markdown text={clonedMessage} />
-      </Box>
-      <ButtonGroup justifyContent="center" marginTop={10}>
-        <LinkButton href="/" colorScheme={brandColor}>
+      </div>
+      <div className="flex justify-center mt-10">
+        <LinkButton href="/" style={{ backgroundColor: brandColor }}>
           Főoldal
         </LinkButton>
-      </ButtonGroup>
+      </div>
     </CmschPage>
   )
 }

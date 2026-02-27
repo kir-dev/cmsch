@@ -28,5 +28,37 @@ class FormComponentController(
     "Űrlapok testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+Az **Űrlapok** (jelentkezések) komponens segítségével egyedi adatbekérő íveket, regisztrációs űrlapokat vagy jelentkezési felületeket hozhatsz létre.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod az általános üzeneteket:
+
+- **Jogosultságok** – mely szerepkörökkel érhető el az űrlapok modul.
+- **Nyelvi beállítások** – testreszabhatók az űrlapok különböző állapotaihoz (túl korán, lejárt, betelt, elfogadva, elutasítva stb.) tartozó visszajelzések.
+
+## Űrlapok kezelése
+
+A **Űrlapok** menüpont alatt:
+
+1. **Űrlapok** – itt hozhatod létre magukat a kérdőíveket. Megadhatod a kitöltési időszakot, a férőhelyek számát és az űrlap felépítését (JSON-formátumban).
+2. **Beadott űrlapok** – a felhasználók által beküldött válaszok listája. Itt tudod elfogadni, elutasítani vagy módosítani a jelentkezéseket.
+
+## Űrlap létrehozása / szerkesztése
+
+- **URL** – az űrlap egyedi címe (pl. `regisztracio`). A frontenden a `/form/{url}` címen érhető el.
+- **Név** – az űrlap belső megnevezése.
+- **Időintervallum** – mikortól meddig tölthető ki.
+- **Férőhely** – hányan jelentkezhetnek összesen.
+- **Csoportos jelentkezés** – ha be van kapcsolva, a csapatkapitány az egész csapat nevében töltheti ki.
+- **Struktúra** – a kérdések és beviteli mezők definíciója.
+
+## Használati tippek
+
+- Az űrlapok felépítését egy speciális JSON-formátumban kell megadni, amely támogatja a szöveges bevitelt, választólistákat, fájlfeltöltést és jelölőnégyzeteket.
+- A **Hirdetett** opcióval az űrlap megjelenik a felhasználó profiljánál is, mint fontos teendő.
+- A beadott űrlapok exportálhatók (CSV-formátumban), így könnyen feldolgozhatók külső eszközökkel is.
+"""
 )

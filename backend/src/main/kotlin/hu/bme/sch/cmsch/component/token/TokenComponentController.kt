@@ -28,5 +28,42 @@ class TokenComponentController(
     "Tokenek testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Tokenek** (vagy QR kódok) komponens segítségével QR kódokat generálhatsz, amiket a felhasználók beolvashatnak. Ez használható pecsétgyűjtésre, jelenléti ívek készítésére vagy egyszerűen pontgyűjtésre.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a tokenek működését:
+
+- **Lap címe** – a böngésző címsorában megjelenő szöveg.
+- **Menü neve** – a menüben látható név.
+- **Jogosultságok** – mely szerepkörökkel érhető el a kódok oldala.
+- **QR frontend URL** – a generált QR kódok alapja.
+- **Pecsét gyűjtés** – beállítható, hogy egy bizonyos mennyiségű token összegyűjtése után egyedi üzenet jelenjen meg (pl. tanköri jelenlét igazolása).
+- **Stílus** – a megjelenítés testreszabása (ikonok, nevek láthatósága).
+- **Jelenléti ív** – a generálható PDF-alapú jelenléti ív (riport) testreszabása.
+
+## Tokenek kezelése
+
+A **Tokenek** menüpont alatt kezelheted a kódokat:
+
+- **Új token létrehozása** – új beolvasható kód rögzítése.
+- **Szerkesztés / Törlés** – meglévő kódok módosítása.
+- **Exportálás** – a tokenek listájának kimentése.
+
+## Token létrehozása / szerkesztése
+
+- **Cím** – a token neve (pl. "Kir-Dev stand").
+- **Token** – az egyedi azonosító, ami a QR kódban szerepel.
+- **Típus** – a token kategóriája (szűréshez és pecsétgyűjtéshez).
+- **Pont** – mennyit ér a beolvasás.
+- **Ikon** – egyedi ikon a tokenhez.
+- **Látható** – megjelenjen-e a felhasználónak, ha már megszerezte.
+
+## Használati tippek
+
+- A **Pecsét gyűjtés** funkcióval könnyen nyomon követhető, hogy a résztvevők meglátogatták-e a szükséges számú állomást.
+- A **Jelenléti ív** funkcióval PDF-et generálhatsz a résztvevők aktivitásáról.
+"""
 )

@@ -1,4 +1,3 @@
-import { Box } from '@chakra-ui/react'
 import type { FC } from 'react'
 
 type FrameProps = {
@@ -6,21 +5,12 @@ type FrameProps = {
 }
 
 export const Frame: FC<FrameProps> = ({ id }) => (
-  <Box mt={5} w="100%" pt="56.25%" position="relative">
+  <div className="mt-5 w-full pt-[56.25%] relative">
     <iframe
       src={`https://www.youtube.com/embed/${id}`}
       title="Körös tartalom"
-      allow=""
+      className="absolute inset-0 w-full h-full border-none"
       allowFullScreen
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        width: '100%',
-        height: '100%'
-      }}
     />
-  </Box>
+  </div>
 )

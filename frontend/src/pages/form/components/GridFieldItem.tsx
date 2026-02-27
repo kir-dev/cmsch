@@ -1,7 +1,7 @@
-import { Checkbox, Radio } from '@chakra-ui/react'
-import type { ChangeEvent } from 'react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useBrandColor } from '@/util/core-functions.util.ts'
 import { useFormContext } from 'react-hook-form'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
 
 type Props = {
   questionKey: string
@@ -15,22 +15,26 @@ export function GridFieldItem({ questionKey, optionKey, fieldName, disabled, rad
   const { setValue, watch } = useFormContext()
   const brandColor = useBrandColor()
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (radio) {
-      setValue(fieldName, { ...watch(fieldName), [questionKey]: optionKey })
-    } else {
-      setValue(fieldName, { ...watch(fieldName), [`${questionKey}_${optionKey}`]: e.target.checked })
-    }
+  if (radio) {
+    const currentValue = watch(fieldName)?.[questionKey]
+    return (
+      <RadioGroup
+        value={currentValue}
+        onValueChange={(val) => setValue(fieldName, { ...watch(fieldName), [questionKey]: val })}
+        disabled={disabled}
+      >
+        <RadioGroupItem value={optionKey} style={currentValue === optionKey ? { borderColor: brandColor, color: brandColor } : {}} />
+      </RadioGroup>
+    )
   }
 
-  return radio ? (
-    <Radio isChecked={watch(fieldName)?.[questionKey] === optionKey} onChange={onChange} colorScheme={brandColor} isDisabled={disabled} />
-  ) : (
+  const isChecked = watch(fieldName)?.[`${questionKey}_${optionKey}`]
+  return (
     <Checkbox
-      isChecked={watch(fieldName)?.[`${questionKey}_${optionKey}`]}
-      onChange={onChange}
-      colorScheme={brandColor}
-      isDisabled={disabled}
+      checked={isChecked}
+      onCheckedChange={(checked) => setValue(fieldName, { ...watch(fieldName), [`${questionKey}_${optionKey}`]: checked })}
+      disabled={disabled}
+      style={isChecked ? { borderColor: brandColor, backgroundColor: brandColor } : {}}
     />
   )
 }

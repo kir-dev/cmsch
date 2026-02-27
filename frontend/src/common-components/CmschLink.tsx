@@ -1,17 +1,20 @@
-import { Link as ChakraLink, type LinkProps } from '@chakra-ui/react'
+import { useBrandColor } from '@/util/core-functions.util.ts'
 import { Link as RouterLink } from 'react-router'
-import { useBrandColor } from '../util/core-functions.util.ts'
 
 type Props = {
   isExternal?: boolean
   to: string
-} & LinkProps
+  children: React.ReactNode
+  className?: string
+  style?: React.CSSProperties
+}
 
-export const CmschLink = ({ isExternal, to, children, ...props }: Props) => {
+export const CmschLink = ({ isExternal, to, children, className, style, ...props }: Props) => {
+  const color = useBrandColor()
   const Component = (
-    <ChakraLink as="span" color={useBrandColor(500, 300)} {...props}>
+    <span className={className} style={{ color, ...style }} {...props}>
       {children}
-    </ChakraLink>
+    </span>
   )
 
   return isExternal ? (

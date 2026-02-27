@@ -29,5 +29,26 @@ class FooterComponentController(
     insertComponentCategory = false,
     componentCategory = ApplicationComponent.STYLING_CATEGORY,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Lábléc** (Footer) komponens az oldal alján megjelenő információkat kezeli.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a láblécet:
+
+- **Lábléc** – alapvető adatok: szervező logója, linkje, közösségi média elérhetőségek és a copyright szöveg.
+- **Támogatók** – a rendezvény szponzorainak logói és weboldalai.
+- **Partnerek** – együttműködő partnerek (pl. BME, VIK, SCH) logóinak megjelenítése.
+
+## Funkciók
+
+- **Minimalisztikus lábléc** – ha be van kapcsolva, a lábléc kevesebb helyet foglal, és csak a legszükségesebb információkat mutatja.
+- **Dinamikus partnerek** – a szponzorok és partnerek listája vesszővel elválasztott URL-ek megadásával egyszerűen bővíthető.
+
+## Használati tippek
+
+- A **Támogatók** és **Partnerek** szekciókban figyelj arra, hogy a logók (URL), az alternatív szövegek (Alt) és a weboldal linkek sorrendje és darabszáma megegyezzen.
+- A **Hiba jelentése** link automatikusan a Kir-Dev kapcsolatfelvételi oldalára mutat, ezt érdemes meghagyni, hogy a felhasználók jelezhessék a technikai problémákat.
+"""
 )

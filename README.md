@@ -116,7 +116,7 @@ logging.level.web=DEBUG
 ```
 
 Your pekId can be found in the console log of the Spring app when signing in with AuthSCH.
-The`cmsch.website-default-url`property's IP address needs
+The `cmsch.website-default-url` property's IP address needs
 to be either `localhost` or the IP of your current device running your Spring app on your network.
 
 Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active Profiles to use (see image down below)

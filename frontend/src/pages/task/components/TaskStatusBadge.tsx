@@ -1,6 +1,7 @@
-import { Badge } from '@chakra-ui/react'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { TaskStatus } from '@/util/views/task.view'
 import type { FC } from 'react'
-import { TaskStatus } from '../../../util/views/task.view'
 
 const STATUS_TEXT_MAP = new Map<TaskStatus, string>([
   [TaskStatus.ACCEPTED, 'ELFOGADVA'],
@@ -10,21 +11,19 @@ const STATUS_TEXT_MAP = new Map<TaskStatus, string>([
   [TaskStatus.NOT_LOGGED_IN, 'ÖN NINCS BEJELENTKEZVE']
 ])
 
-const STATUS_COLOR_MAP = new Map<TaskStatus, string>([
-  [TaskStatus.ACCEPTED, 'green'],
-  [TaskStatus.NOT_SUBMITTED, 'gray'],
-  [TaskStatus.REJECTED, 'red'],
-  [TaskStatus.SUBMITTED, '#DE970B'], //dark yellow
-  [TaskStatus.NOT_LOGGED_IN, 'gray']
+const STATUS_CLASS_MAP = new Map<TaskStatus, string>([
+  [TaskStatus.ACCEPTED, 'bg-success text-success-foreground hover:bg-success/90'],
+  [TaskStatus.NOT_SUBMITTED, 'bg-secondary text-secondary-foreground hover:bg-secondary/90'],
+  [TaskStatus.REJECTED, 'bg-danger text-danger-foreground hover:bg-danger/90'],
+  [TaskStatus.SUBMITTED, 'bg-warning text-warning-foreground hover:bg-warning/90'],
+  [TaskStatus.NOT_LOGGED_IN, 'bg-secondary text-secondary-foreground hover:bg-secondary/90']
 ])
 
 type TaskStatusBadgeProps = {
   status: TaskStatus
-  fontSize: string
+  className?: string
 }
 
-export const TaskStatusBadge: FC<TaskStatusBadgeProps> = ({ status, fontSize }) => (
-  <Badge variant="solid" bg={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
-    {STATUS_TEXT_MAP.get(status)}
-  </Badge>
+export const TaskStatusBadge: FC<TaskStatusBadgeProps> = ({ status, className }) => (
+  <Badge className={cn('border-none', STATUS_CLASS_MAP.get(status), className)}>{STATUS_TEXT_MAP.get(status)}</Badge>
 )

@@ -1,10 +1,10 @@
-import { Divider, Heading, Text, VStack } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import { useEventListQuery } from '@/api/hooks/event/useEventListQuery.ts'
+import { LinkButton } from '@/common-components/LinkButton.tsx'
+import { Separator } from '@/components/ui/separator'
+import { useBrandColor } from '@/util/core-functions.util.ts'
+import { AbsolutePaths } from '@/util/paths.ts'
 import { useMemo } from 'react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
-import { useEventListQuery } from '../../../api/hooks/event/useEventListQuery.ts'
-import { LinkButton } from '../../../common-components/LinkButton.tsx'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
-import { AbsolutePaths } from '../../../util/paths.ts'
 import { Schedule } from './Schedule.tsx'
 
 const isToday = (timeStamp: number) => new Date(timeStamp).toDateString() === new Date().toDateString()
@@ -28,36 +28,22 @@ export default function HomePageEventList() {
 
   if (!eventList.data) return null
   return (
-    <VStack>
-      <Heading as="h2" size="lg" textAlign="center" mb={5} mt={20}>
-        {config?.components?.event?.title}
-      </Heading>
-      <VStack spacing={10}>
-        <Text textAlign="center" fontSize={25} fontWeight="bolder" marginTop={10}>
-          Mai nap
-        </Text>
-        {eventsToday.length > 0 ? (
-          <Schedule events={eventsToday} />
-        ) : (
-          <Text textAlign="center" opacity={0.7} marginTop={10}>
-            Nincs több esemény.
-          </Text>
-        )}
-        <Divider />
-        <Text textAlign="center" fontSize={25} fontWeight="bolder" marginTop={10}>
-          Később
-        </Text>
+    <div className="flex flex-col items-center">
+      <h2 className="text-2xl font-bold text-center mb-5 mt-20">{config?.components?.event?.title}</h2>
+      <div className="flex flex-col items-center space-y-10 w-full">
+        <p className="text-center text-3xl font-black mt-10">Mai nap</p>
+        {eventsToday.length > 0 ? <Schedule events={eventsToday} /> : <p className="text-center opacity-70 mt-10">Nincs több esemény.</p>}
+        <Separator />
+        <p className="text-center text-3xl font-black mt-10">Később</p>
         {eventsLater.length > 0 ? (
           <Schedule verbose events={eventsLater} />
         ) : (
-          <Text textAlign="center" opacity={0.7} marginTop={10}>
-            Nincs több esemény.
-          </Text>
+          <p className="text-center opacity-70 mt-10">Nincs több esemény.</p>
         )}
-        <LinkButton colorScheme={brandColor} href={AbsolutePaths.EVENTS}>
+        <LinkButton style={{ backgroundColor: brandColor }} href={AbsolutePaths.EVENTS}>
           Részletek
         </LinkButton>
-      </VStack>
-    </VStack>
+      </div>
+    </div>
   )
 }

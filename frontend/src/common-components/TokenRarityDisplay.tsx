@@ -1,5 +1,3 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
-
 const rarities = [
   {
     rarity: 'COMMON',
@@ -45,22 +43,12 @@ type TokenRarityChipProps = {
 // based on https://fortnite.fandom.com/wiki/Rarity
 const TokenRarityChip = ({ count, color, background }: TokenRarityChipProps) => {
   return (
-    <Box
-      display="inline-block"
-      borderRadius="4px 6px 4px 6px"
-      transform="skew(-10deg)"
-      w="fit-content"
-      h="fit-content"
-      p="1px 6px"
-      lineHeight="normal"
-      color={color}
-      background={background}
-      fontSize="1.1em"
+    <div
+      className="inline-block h-fit w-fit -skew-x-12 rounded-[4px_6px_4px_6px] px-1.5 py-px text-[1.1em] leading-normal"
+      style={{ color: color, background }}
     >
-      <Text as="span" fontWeight="900">
-        {count}
-      </Text>
-    </Box>
+      <span className="font-black">{count}</span>
+    </div>
   )
 }
 
@@ -70,12 +58,12 @@ interface TokenRarityDisplayProps {
 
 export const TokenRarityDisplay = ({ collected }: TokenRarityDisplayProps) => {
   return (
-    <Flex gap={1} wrap="wrap">
+    <div className="flex flex-wrap gap-1">
       {rarities
         .filter((rarity) => collected[rarity.rarity] > 0)
         .map((rarity) => (
           <TokenRarityChip key={rarity.rarity} count={collected[rarity.rarity]} color={rarity.color} background={rarity.background} />
         ))}
-    </Flex>
+    </div>
   )
 }

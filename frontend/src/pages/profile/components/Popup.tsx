@@ -1,7 +1,7 @@
-import { Box, CloseButton, Flex, Heading, Text } from '@chakra-ui/react'
+import { timestampToTimePassedStr } from '@/pages/profile/util/timestampToTimePassedStr'
+import type { GroupMemberLocationView } from '@/util/views/groupMemberLocation.view'
+import { X } from 'lucide-react'
 import { forwardRef } from 'react'
-import type { GroupMemberLocationView } from '../../../util/views/groupMemberLocation.view'
-import { timestampToTimePassedStr } from '../util/timestampToTimePassedStr'
 
 type PopupProps = {
   person?: GroupMemberLocationView
@@ -10,16 +10,16 @@ type PopupProps = {
 
 export const Popup = forwardRef<HTMLDivElement, PopupProps>(({ person, onClose }, ref) => {
   return (
-    <Box ref={ref} hidden={!person} bg="white" color="black" zIndex={1} borderRadius="1rem" p="0.5rem">
-      <Flex justify="space-between" align="center">
-        <Heading fontSize="sm" mt="0">
-          {person?.groupName || ''}
-        </Heading>
-        <CloseButton onClick={onClose} />
-      </Flex>
-      <Text>{person?.alias}</Text>
-      <Text>{person?.userName}</Text>
-      <Text as="i">{timestampToTimePassedStr(person?.timestamp)}</Text>
-    </Box>
+    <div ref={ref} className={`bg-popover text-popover-foreground z-10 rounded-2xl p-2 border shadow-md ${!person ? 'hidden' : ''}`}>
+      <div className="flex justify-between items-center">
+        <h4 className="text-sm font-bold m-0">{person?.groupName || ''}</h4>
+        <button onClick={onClose} className="p-1 hover:bg-accent rounded-full transition-colors">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <p>{person?.alias}</p>
+      <p>{person?.userName}</p>
+      <p className="italic">{timestampToTimePassedStr(person?.timestamp)}</p>
+    </div>
   )
 })

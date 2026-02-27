@@ -30,17 +30,17 @@ class ImpressumComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var topMessage by StringSettingRef("A weblapot a *CMSCH - általános rendezvény webapp* projekt keretein belül a " +
             "[kir-dev](https://kir-dev.sch.bme.hu/) *speed-run munkacsoportja* készítette.",
         type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val developersGroup by SettingGroup(fieldName = "Fejlesztők",
-        description = "A fejlesztők nem szerkeszthetőek a webes felületről, csak a profilképük")
+        description = "A fejlesztők listája nem szerkeszthető a webes felületről, csak a profilképek")
 
     var developerSchamiUrl by StringSettingRef("", type = SettingType.IMAGE_URL, fieldName = "Schámi profilképe")
 
@@ -62,26 +62,26 @@ class ImpressumComponent(
             "Mint ahogy az összes többi projektünk, ez is [nyílt forráskódú](https://github.com/kir-dev/cmsch). " +
             "Ha kérdésed van vagy érdekel a többi projektünk is, látogass el az [oldalunkra](https://kir-dev.sch.bme.hu/) " +
             "vagy keress fel minket személyesen!\n\n" +
-            "Az alkalmazás a KSZK Kubernetes clusterjében fut, köszönjük az erőforrást és a segítséget nekik ezúton is!",
+            "Az alkalmazás a KSZK Kubernetes clusterében fut, köszönjük az erőforrást és a segítséget nekik ezúton is!",
         type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "A fejlesztők alatt megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "A fejlesztők alatt megjelenő szöveg", description = "A fejlesztők szekció alatt megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val organizerGroup by SettingGroup(fieldName = "Rendezők",
-        description = "A rendezvény főrendezőit és egyéb rendezőit is meg lehet adni")
+        description = "A rendezvény főrendezőinek és további rendezőinek megadása")
 
     var leadOrganizers by JsonSettingRef<List<OrganizerDto>>(listOf(),
-        fieldName = "A főrendezők", type = SettingType.MULTIPLE_PEOPLE)
+        fieldName = "Főrendezők", type = SettingType.MULTIPLE_PEOPLE)
 
     var leadOrganizersMessage by StringSettingRef("A rendezvénnyel kapcsolatos kérdéseket és észrevételeket szívesen fogadjuk a **TODO [@] sch.bme.hu** címen!",
         type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "A főrendezők alatt megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "A főrendezők alatt megjelenő szöveg", description = "A főrendezők szekció alatt megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     var otherOrganizers by JsonSettingRef<List<OrganizerDto>>(listOf(),
         fieldName = "További rendezők", type = SettingType.MULTIPLE_PEOPLE)
 
     var otherOrganizersMessage by StringSettingRef("És még további N rendező!", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "A további rendezők alatt megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "A további rendezők alatt megjelenő szöveg", description = "A további rendezők szekció alatt megjelenő szöveg. Ha üres, nem jelenik meg.")
 
 }

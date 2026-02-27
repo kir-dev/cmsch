@@ -28,5 +28,26 @@ class PushNotificationComponentController(
     "Push Értesítések beállítása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Push-értesítések** komponens lehetővé teszi rövid üzenetek küldését közvetlenül a felhasználók készülékeire (böngészőn vagy mobilalkalmazáson keresztül).
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod az értesítések alapvető működését:
+
+- **Értesítések engedélyezése** – a rendszerszintű főkapcsoló a push-üzenetekhez.
+- **Jogosultságkérés beállításai** – testre szabható a felugró ablak szövege és a gombok feliratai, amivel a felhasználóktól engedélyt kérsz az értesítések küldésére.
+
+## Funkciók
+
+- **Célzott üzenetküldés** – küldhetsz üzenetet mindenkinek, vagy csak bizonyos csoportoknak/szerepköröknek.
+- **Firebase-integráció** – a háttérben a Google Firebase (FCM) szolgáltatása gondoskodik az üzenetek célba juttatásáról.
+
+## Használati tippek
+
+- Az **Engedélykérés szövege** legyen rövid és meggyőző, hogy a felhasználók szívesen iratkozzanak fel.
+- Ne küldj túl sok értesítést, mert a felhasználók hamar letilthatják azokat.
+- A push-értesítések kiválóan alkalmasak fontos programváltozások, azonnali hírek vagy eredményhirdetések közlésére.
+"""
 )

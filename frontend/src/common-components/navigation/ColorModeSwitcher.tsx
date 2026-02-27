@@ -1,16 +1,23 @@
-import { MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { IconButton, type IconButtonProps, useColorMode, useColorModeValue } from '@chakra-ui/react'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { usePersistentTheme } from '@/api/contexts/themeConfig/ThemeConfig'
+import { useIsLightMode } from '@/util/core-functions.util'
+import { Moon, Sun } from 'lucide-react'
 
-type Props = Omit<IconButtonProps, 'aria-label'>
-
-export const ColorModeSwitcher = (props: Props) => {
-  const { toggleColorMode } = useColorMode()
+export const ColorModeSwitcher = ({ color }: { color?: string }) => {
+  const { toggleColorMode } = usePersistentTheme()
   const config = useConfigContext()
+  const isLightMode = useIsLightMode()
 
-  const icon = useColorModeValue(<SunIcon w={5} h={5} />, <MoonIcon w={5} h={5} />)
+  if (!config?.components?.style?.darkModeEnabled) return null
 
-  return config?.components?.style?.darkModeEnabled ? (
-    <IconButton aria-label="Sötét-világos mód váltás" icon={icon} onClick={toggleColorMode} variant="ghost" {...props} />
-  ) : null
+  return (
+    <button
+      aria-label="Sötét-világos mód váltás"
+      onClick={toggleColorMode}
+      className="p-2 rounded-md hover:bg-accent transition-colors"
+      style={{ color }}
+    >
+      {isLightMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}{' '}
+    </button>
+  )
 }

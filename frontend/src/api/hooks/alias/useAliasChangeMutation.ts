@@ -1,7 +1,7 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { ApiPaths } from '@/util/paths'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { ApiPaths } from '../../../util/paths'
-import { QueryKeys } from '../queryKeys'
 
 export const useAliasChangeMutation = () => {
   return useMutation<boolean, Error, string>({

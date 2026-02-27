@@ -1,22 +1,10 @@
-import {
-  Box,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
-  PopoverTrigger,
-  Text,
-  useColorModeValue
-} from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { LinkButton } from '@/common-components/LinkButton'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { formatHu, stringifyTimeRange, useBrandColor, useColorModeValue } from '@/util/core-functions.util'
+import { AbsolutePaths } from '@/util/paths'
+import type { EventListView } from '@/util/views/event.view'
 import type { RefObject } from 'react'
-import { useConfigContext } from '../../../../api/contexts/config/ConfigContext'
-import { LinkButton } from '../../../../common-components/LinkButton'
-import { formatHu, stringifyTimeRange, useBrandColor } from '../../../../util/core-functions.util'
-import { AbsolutePaths } from '../../../../util/paths'
-import type { EventListView } from '../../../../util/views/event.view'
 
 export type EventBoxItem = EventListView & { top: number; bottom: number; width: number; left: number }
 
@@ -27,48 +15,39 @@ interface EventBoxProps {
 
 export function EventBox({ event, boxRef }: EventBoxProps) {
   const component = useConfigContext()?.components?.event
-  const eventBg = useBrandColor(500, 300)
-  const borderColor = useBrandColor(600, 600)
-  const eventTextColor = useColorModeValue('white', 'black')
+  const eventBg = useBrandColor()
+  const borderColor = useBrandColor()
+  const eventTextColor = useColorModeValue('text-primary-foreground', 'text-primary-foreground')
   const isShort = 100 - event.top - event.bottom < 5
   return (
     <Popover>
-      <PopoverTrigger>
-        <Box
+      <PopoverTrigger asChild>
+        <div
           ref={boxRef}
-          overflow="hidden"
-          key={event.url}
-          position="absolute"
-          left={event.left + '%'}
-          width={event.width + '%'}
-          top={event.top + '%'}
-          bottom={event.bottom + '%'}
-          bg={eventBg}
-          borderWidth={1}
-          borderColor={borderColor}
-          borderRadius="md"
-          pt={isShort ? 0 : 1}
-          pb={1}
-          pl={1}
-          color={eventTextColor}
+          className={`overflow-hidden absolute rounded-md p-1 border cursor-pointer ${eventTextColor}`}
+          style={{
+            left: event.left + '%',
+            width: event.width + '%',
+            top: event.top + '%',
+            bottom: event.bottom + '%',
+            backgroundColor: eventBg,
+            borderColor: borderColor,
+            paddingTop: isShort ? 0 : 4
+          }}
         >
-          <Text fontSize="sm" fontWeight="bold" whiteSpace="normal" wordBreak="break-all" lineHeight="1.1">
-            {event.title}
-          </Text>
-          <Text opacity={0.5} whiteSpace="nowrap" overflow="hidden">
+          <p className="text-sm font-bold break-all leading-[1.1]">{event.title}</p>
+          <p className="opacity-50 whitespace-nowrap overflow-hidden">
             {formatHu(event.timestampStart, 'HH:mm')} - {formatHu(event.timestampEnd, 'HH:mm')}
-          </Text>
-        </Box>
+          </p>
+        </div>
       </PopoverTrigger>
-      <PopoverContent>
-        <PopoverArrow />
-        <PopoverCloseButton />
-        <PopoverHeader isTruncated>{event.title}</PopoverHeader>
-        <PopoverBody>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</PopoverBody>
+      <PopoverContent className="w-64 p-4">
+        <h3 className="font-bold truncate">{event.title}</h3>
+        <p className="mt-2 text-sm text-muted-foreground">{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</p>
         {component?.enableDetailedView && (
-          <PopoverFooter>
+          <div className="mt-4 flex justify-end">
             <LinkButton href={`${AbsolutePaths.EVENTS}/${event.url}`}>Részletek</LinkButton>
-          </PopoverFooter>
+          </div>
         )}
       </PopoverContent>
     </Popover>

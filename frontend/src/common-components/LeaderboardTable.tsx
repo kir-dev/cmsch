@@ -1,7 +1,6 @@
-import { Box, Text } from '@chakra-ui/react'
+import { useSearch } from '@/util/useSearch'
+import type { LeaderBoardItemView } from '@/util/views/leaderBoardView'
 import { useCallback, useMemo } from 'react'
-import { useSearch } from '../util/useSearch'
-import type { LeaderBoardItemView } from '../util/views/leaderBoardView'
 import { CollapsableTableRow } from './CollapsableTableRow'
 import { SearchBar } from './SearchBar'
 
@@ -41,11 +40,11 @@ export const LeaderBoardTable = ({
   return (
     <>
       {searchEnabled && (
-        <Box mx={5}>
-          <SearchBar mb={5} {...searchArgs} />
-        </Box>
+        <div className="mx-5">
+          <SearchBar className="mb-5" {...searchArgs} />
+        </div>
       )}
-      <Box>
+      <div>
         {searchArgs.filteredData.map((item, idx) => (
           <CollapsableTableRow
             collapsable={detailed && (item.items || false) && item.items.length > 0}
@@ -58,8 +57,8 @@ export const LeaderBoardTable = ({
             showDescription={showDescription}
           />
         ))}
-      </Box>
-      {data.length === 0 && <Text>Nincs megjeleníthető információ.</Text>}
+      </div>
+      {data.length === 0 && <p className="p-5">Nincs megjeleníthető információ.</p>}
     </>
   )
 }

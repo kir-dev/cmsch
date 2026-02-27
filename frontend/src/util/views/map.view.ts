@@ -1,6 +1,3 @@
-import type { FunctionComponent } from 'react'
-import { FaBroadcastTower, FaCampground, FaCar, FaCrosshairs, FaHome, FaInfo, FaMarker, FaUser } from 'react-icons/fa'
-
 export type MapDataItemView = {
   accuracy: number
   altitude: number
@@ -29,16 +26,3 @@ export const MapMarkerShape = {
   PERSON: 'PERSON'
 }
 export type MapMarkerShape = (typeof MapMarkerShape)[keyof typeof MapMarkerShape]
-
-export const MapMarkerIcons: Record<MapMarkerShape, FunctionComponent> = {
-  [MapMarkerShape.CIRCLE]: () => null,
-  [MapMarkerShape.SQUARE]: () => null,
-  [MapMarkerShape.INFO]: FaInfo,
-  [MapMarkerShape.CAR]: FaCar,
-  [MapMarkerShape.CROSSHAIRS]: FaCrosshairs,
-  [MapMarkerShape.CAMP]: FaCampground,
-  [MapMarkerShape.TOWER]: FaBroadcastTower,
-  [MapMarkerShape.MARKER]: FaMarker,
-  [MapMarkerShape.HOME]: FaHome,
-  [MapMarkerShape.PERSON]: FaUser
-}

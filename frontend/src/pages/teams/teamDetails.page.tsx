@@ -1,8 +1,8 @@
 import { Navigate, useParams } from 'react-router'
 
-import { useTeamDetails } from '../../api/hooks/team/queries/useTeamDetails'
-import { AbsolutePaths } from '../../util/paths'
-import { TeamStatus } from '../../util/views/team.view'
+import { useTeamDetails } from '@/api/hooks/team/queries/useTeamDetails'
+import { AbsolutePaths } from '@/util/paths'
+import { TeamStatus } from '@/util/views/team.view'
 import { TeamDetailsCore } from './components/TeamDetailsCore'
 import { TeamIsNotPlaying } from './components/TeamIsNotPlaying'
 

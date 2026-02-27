@@ -1,18 +1,18 @@
-import { chakra } from '@chakra-ui/react'
-import { useBrandColor } from '../../util/core-functions.util.ts'
+import { useBrandColor } from '@/util/core-functions.util.ts'
 
 export const parseTopMessage = (topMessage: string) => {
   const splits = topMessage.split(/(\[\[.*?\]\])/g)
-  const coloredComponents = splits.map((partial) => {
+  const coloredComponents = splits.map((partial, idx) => {
     if (partial.match(/(\[\[.*?\]\])/)) {
       const coloredText = partial.substring(2, partial.length - 2)
+      const color = useBrandColor()
       return (
-        <chakra.span id={coloredText} color={useBrandColor(400, 400)}>
+        <span key={idx} id={coloredText} style={{ color }}>
           {coloredText}
-        </chakra.span>
+        </span>
       )
     } else {
-      return <span>{partial}</span>
+      return <span key={idx}>{partial}</span>
     }
   })
   return <>{coloredComponents}</>

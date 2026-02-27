@@ -1,23 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  chakra,
-  Checkbox,
-  Code,
-  Divider,
-  Heading,
-  Image,
-  Link,
-  ListItem,
-  OrderedList,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  UnorderedList
-} from '@chakra-ui/react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Separator } from '@/components/ui/separator'
 import deepmerge from 'deepmerge'
 import * as React from 'react'
 import type { Components } from 'react-markdown'
@@ -35,142 +18,146 @@ function getCoreProps(props: GetCoreProps): any {
 export const defaults: Components = {
   p: (props) => {
     const { children } = props
-    return <Text mb={2}>{children}</Text>
+    return (
+      <p className="mb-2" {...getCoreProps(props)}>
+        {children}
+      </p>
+    )
   },
   em: (props) => {
     const { children } = props
-    return <Text as="em">{children}</Text>
+    return <em {...getCoreProps(props)}>{children}</em>
   },
   blockquote: (props) => {
     const { children } = props
     return (
-      <Code as="blockquote" p={2}>
+      <blockquote className="border-l-4 border-gray-300 pl-4 italic my-4" {...getCoreProps(props)}>
         {children}
-      </Code>
+      </blockquote>
     )
   },
   code: (props) => {
     const { inline, children, className } = props as any
 
     if (inline) {
-      return <Code p={2} children={children} />
+      return (
+        <code className="bg-muted px-1.5 py-0.5 rounded-sm text-sm" {...getCoreProps(props)}>
+          {children}
+        </code>
+      )
     }
 
-    return <Code className={className} whiteSpace="break-spaces" display="block" w="full" p={2} children={children} />
+    return (
+      <pre className="bg-muted p-4 rounded-md overflow-x-auto my-4" {...getCoreProps(props)}>
+        <code className={className}>{children}</code>
+      </pre>
+    )
   },
   del: (props) => {
     const { children } = props
-    return <Text as="del">{children}</Text>
+    return <del {...getCoreProps(props)}>{children}</del>
   },
   hr: () => {
-    return <Divider />
+    return <Separator className="my-4" />
   },
-  a: Link,
-  img: Image,
+  a: (props) => <a className="text-primary hover:underline" {...props} />,
+  img: (props) => <img className="max-w-full h-auto rounded-lg my-4" {...props} />,
   text: (props) => {
     const { children } = props
-    return <Text as="span">{children}</Text>
+    return <span {...getCoreProps(props)}>{children}</span>
   },
   ul: (props) => {
-    const { ordered, children, depth } = props as any
-    const attrs = getCoreProps(props)
-    let Element = UnorderedList
-    let styleType = 'disc'
-    if (ordered) {
-      Element = OrderedList
-      styleType = 'decimal'
-    }
-    if (depth === 1) styleType = 'circle'
+    const { children } = props as any
     return (
-      <Element spacing={2} as={ordered ? 'ol' : 'ul'} styleType={styleType} pl={4} {...attrs}>
+      <ul className="list-disc pl-6 mb-4 space-y-1" {...getCoreProps(props)}>
         {children}
-      </Element>
+      </ul>
     )
   },
   ol: (props) => {
-    const { ordered, children, depth } = props as any
-    const attrs = getCoreProps(props)
-    let Element = UnorderedList
-    let styleType = 'disc'
-    if (ordered) {
-      Element = OrderedList
-      styleType = 'decimal'
-    }
-    if (depth === 1) styleType = 'circle'
+    const { children } = props as any
     return (
-      <Element spacing={2} as={ordered ? 'ol' : 'ul'} styleType={styleType} pl={4} {...attrs}>
+      <ol className="list-decimal pl-6 mb-4 space-y-1" {...getCoreProps(props)}>
         {children}
-      </Element>
+      </ol>
     )
   },
   li: (props) => {
     const { children, checked } = props as any
-    let checkbox = null
     if (checked !== null && checked !== undefined) {
-      checkbox = (
-        <Checkbox isChecked={checked} isReadOnly>
-          {children}
-        </Checkbox>
+      return (
+        <li className="flex items-center space-x-2 mb-1" {...getCoreProps(props)}>
+          <Checkbox checked={checked} disabled />
+          <span>{children}</span>
+        </li>
       )
     }
     return (
-      <ListItem {...getCoreProps(props)} listStyleType={checked !== null ? 'none' : 'inherit'}>
-        {checkbox || children}
-      </ListItem>
+      <li className="mb-1" {...getCoreProps(props)}>
+        {children}
+      </li>
     )
   },
   h1: (props) => {
     return (
-      <Heading my={4} as="h1" variant="main-title" size="2xl" {...getCoreProps(props)}>
+      <h1 className="text-4xl font-bold font-heading my-6" {...getCoreProps(props)}>
         {props.children}
-      </Heading>
+      </h1>
     )
   },
   h2: (props) => {
     return (
-      <Heading my={4} as="h2" size="xl" {...getCoreProps(props)}>
+      <h2 className="text-3xl font-bold font-heading my-5" {...getCoreProps(props)}>
         {props.children}
-      </Heading>
+      </h2>
     )
   },
   h3: (props) => {
     return (
-      <Heading my={4} as="h3" size="lg" {...getCoreProps(props)}>
+      <h3 className="text-2xl font-bold font-heading my-4" {...getCoreProps(props)}>
         {props.children}
-      </Heading>
+      </h3>
     )
   },
   h4: (props) => {
     return (
-      <Heading my={4} as="h4" size="md" {...getCoreProps(props)}>
+      <h4 className="text-xl font-bold font-heading my-3" {...getCoreProps(props)}>
         {props.children}
-      </Heading>
+      </h4>
     )
   },
   h5: (props) => {
     return (
-      <Heading my={4} as="h5" size="sm" {...getCoreProps(props)}>
+      <h5 className="text-lg font-bold font-heading my-2" {...getCoreProps(props)}>
         {props.children}
-      </Heading>
+      </h5>
     )
   },
   h6: (props) => {
     return (
-      <Heading my={4} as="h6" size="xs" {...getCoreProps(props)}>
+      <h6 className="text-base font-bold font-heading my-2" {...getCoreProps(props)}>
         {props.children}
-      </Heading>
+      </h6>
     )
   },
   pre: (props) => {
     const { children } = props
-    return <chakra.pre {...getCoreProps(props)}>{children}</chakra.pre>
+    return (
+      <pre className="whitespace-pre-wrap" {...getCoreProps(props)}>
+        {children}
+      </pre>
+    )
   },
-  table: Table,
-  thead: Thead,
-  tbody: Tbody,
-  tr: (props) => <Tr>{props.children}</Tr>,
-  td: (props) => <Td>{props.children}</Td>,
-  th: (props) => <Th>{props.children}</Th>
+  table: (props) => (
+    <div className="w-full overflow-x-auto my-4">
+      <table className="w-full border-collapse border border-border" {...props} />
+    </div>
+  ),
+  thead: (props) => <thead className="bg-muted" {...props} />,
+  tbody: (props) => <tbody {...props} />,
+  tr: (props) => <tr className="border-b border-border" {...props} />,
+  td: (props) => <td className="p-2 border border-border" {...props} />,
+  th: (props) => <th className="p-2 border border-border font-bold text-left" {...props} />
 }
 
 function ChakraUIRenderer(theme?: Components, merge = true): Components {

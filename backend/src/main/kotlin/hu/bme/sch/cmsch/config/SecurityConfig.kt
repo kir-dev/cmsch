@@ -23,9 +23,14 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.security.config.Customizer
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -33,6 +38,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.reactive.function.client.WebClient
+import hu.bme.sch.cmsch.component.login.CmschUserDetailsService
 import java.util.*
 
 @EnableWebSecurity
@@ -47,10 +53,28 @@ class SecurityConfig(
     private val authschLoginService: LoginService,
     private val loginComponent: LoginComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val auditLogService: AuditLogService
+    private val auditLogService: AuditLogService,
+    private val userDetailsService: CmschUserDetailsService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun authenticationProvider(): DaoAuthenticationProvider {
+        val authProvider = DaoAuthenticationProvider(userDetailsService)
+        authProvider.setPasswordEncoder(passwordEncoder())
+        return authProvider
+    }
+
+    @Bean
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
+        return config.authenticationManager
+    }
 
     var authschUserServiceClient = WebClient.builder()
         .baseUrl("https://auth.sch.bme.hu/api")

@@ -1,25 +1,25 @@
-import { Box, Button, Center, Heading, HStack, Image, Select, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { useRiddleHistoryQuery } from '@/api/hooks/riddle/useRiddleHistoryQuery'
+import { CustomBreadcrumb } from '@/common-components/CustomBreadcrumb'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LinkButton } from '@/common-components/LinkButton'
+import { Loading } from '@/common-components/Loading'
+import Markdown from '@/common-components/Markdown'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/hooks/use-toast'
+import { l } from '@/util/language'
+import { AbsolutePaths } from '@/util/paths'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
-import { useRiddleHistoryQuery } from '../../api/hooks/riddle/useRiddleHistoryQuery'
-import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import { Loading } from '../../common-components/Loading'
-import Markdown from '../../common-components/Markdown'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { l } from '../../util/language'
-import { AbsolutePaths } from '../../util/paths'
 import { SpoilerText } from './components/SpoilerText'
 
 const RiddleHistoryPage = () => {
-  const toast = useToast()
+  const { toast } = useToast()
   const navigate = useNavigate()
   const [category, setCategory] = useState('')
   const [loaded, setLoaded] = useState(false)
   const [index, setIndex] = useState(0)
-  const brandColor = useBrandColor()
 
   const query = useRiddleHistoryQuery()
   useEffect(() => {
@@ -39,7 +39,7 @@ const RiddleHistoryPage = () => {
 
   useEffect(() => {
     if (query.isError) {
-      toast({ title: l('riddle-history-query-failed'), status: 'error' })
+      toast({ title: l('riddle-history-query-failed'), variant: 'destructive' })
       navigate(AbsolutePaths.RIDDLE)
     }
   }, [navigate, query.isError, toast])
@@ -61,74 +61,79 @@ const RiddleHistoryPage = () => {
   return (
     <CmschPage title="Megoldott riddleök">
       <CustomBreadcrumb items={breadcrumbItems} />
-      <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'center']}>
-        <Heading as="h1" variant="main-title" my={5}>
-          Megoldott riddleök
-        </Heading>
-        <Stack direction={['column']}>
-          <Select value={category} onChange={(e) => setCategory(e.target.value)} w="20rem">
-            {query.data!.map((c) => (
-              <option value={c.categoryName} key={c.categoryName}>
-                {c.categoryName} ({c?.submissions?.length} megoldott riddle)
-              </option>
-            ))}
-          </Select>
-          {riddleList && riddle && (
-            <Select value={riddleList[index].title} onChange={(e) => setIndex(e.target.options.selectedIndex)} w="20rem">
-              {riddleList?.map((r, idx) => (
-                <option value={r.title} key={idx}>
-                  {r.title}
-                </option>
+      <div className="flex flex-col justify-between md:flex-row md:items-center">
+        <h1 className="my-5 text-4xl font-bold tracking-tight">Megoldott riddleök</h1>
+        <div className="flex flex-col gap-2">
+          <Select value={category} onValueChange={(val) => setCategory(val)}>
+            <SelectTrigger className="w-full md:w-[20rem]">
+              <SelectValue placeholder="Kategória választása" />
+            </SelectTrigger>
+            <SelectContent>
+              {query.data!.map((c) => (
+                <SelectItem value={c.categoryName} key={c.categoryName}>
+                  {c.categoryName} ({c?.submissions?.length} megoldott riddle)
+                </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+
+          {riddleList && riddle && (
+            <Select value={String(index)} onValueChange={(val) => setIndex(parseInt(val))}>
+              <SelectTrigger className="w-full md:w-[20rem]">
+                <SelectValue placeholder="Riddle választása" />
+              </SelectTrigger>
+              <SelectContent>
+                {riddleList?.map((r, idx) => (
+                  <SelectItem value={String(idx)} key={idx}>
+                    {r.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           )}
-        </Stack>
-      </Stack>
+        </div>
+      </div>
       {!riddle || !riddleList ? (
         <>
-          <Text mt={2}>Ebben a kategóriában még nincsenek megoldott riddleök.</Text>
-          <Center mt={3}>
-            <LinkButton colorScheme={brandColor} href={AbsolutePaths.RIDDLE}>
-              Összes riddle
-            </LinkButton>
-          </Center>
+          <p className="mt-2">Ebben a kategóriában még nincsenek megoldott riddleök.</p>
+          <div className="mt-3 flex justify-center">
+            <LinkButton href={AbsolutePaths.RIDDLE}>Összes riddle</LinkButton>
+          </div>
         </>
       ) : (
         <>
-          <Box maxW="100%" w="30rem" mx="auto">
-            <Heading my={5} size="lg">
-              {riddle.title}
-            </Heading>
-            {riddle.imageUrl && <Image width="100%" src={riddle.imageUrl} alt="Riddle Kép" borderRadius="md" />}
+          <div className="mx-auto w-full max-w-[30rem]">
+            <h2 className="my-5 text-2xl font-bold">{riddle.title}</h2>
+            {riddle.imageUrl && <img className="w-full rounded-md" src={riddle.imageUrl} alt="Riddle Kép" />}
 
-            <VStack mt={5} align="flex-start">
-              <Text>Sorszám: {index + 1}</Text>
-              <Text>Létrehozó: {riddle.creator || 'Nincs megadva'}</Text>
-              <Text>Első megoldó: {riddle.firstSolver || 'Nincs megadva'}</Text>
+            <div className="mt-5 flex flex-col items-start gap-1">
+              <p>Sorszám: {index + 1}</p>
+              <p>Létrehozó: {riddle.creator || 'Nincs megadva'}</p>
+              <p>Első megoldó: {riddle.firstSolver || 'Nincs megadva'}</p>
               {riddle.description && <Markdown text={riddle.description} />}
-              <Text>
-                Megoldás (kattintásra jelenik meg): <SpoilerText text={riddle.solution} />
-              </Text>
-              <Text>
+              <p>
+                Megoldás (kattintásra jelenik meg): <SpoilerText key={riddle.solution} text={riddle.solution} />
+              </p>
+              <p>
                 Hint{riddle.hint && ' (kattintásra jelenik meg)'}:{' '}
-                {riddle.hint ? <SpoilerText text={riddle.hint} /> : 'Nem lett felhasználva'}
-              </Text>
-            </VStack>
+                {riddle.hint ? <SpoilerText key={riddle.solution} text={riddle.hint} /> : 'Nem lett felhasználva'}
+              </p>
+            </div>
 
-            <HStack justify="space-between" my={3}>
-              <Button leftIcon={<FaArrowLeft />} onClick={() => setIndex(index - 1)} isDisabled={index === 0}>
+            <div className="my-3 flex justify-between">
+              <Button onClick={() => setIndex(index - 1)} disabled={index === 0}>
+                <FaArrowLeft className="mr-2" />
                 Előző
               </Button>
-              <Button rightIcon={<FaArrowRight />} onClick={() => setIndex(index + 1)} isDisabled={index === riddleList?.length - 1}>
+              <Button onClick={() => setIndex(index + 1)} disabled={index === riddleList?.length - 1}>
                 Következő
+                <FaArrowRight className="ml-2" />
               </Button>
-            </HStack>
-            <Center>
-              <LinkButton colorScheme={brandColor} href={AbsolutePaths.RIDDLE}>
-                Összes riddle
-              </LinkButton>
-            </Center>
-          </Box>
+            </div>
+            <div className="flex justify-center">
+              <LinkButton href={AbsolutePaths.RIDDLE}>Összes riddle</LinkButton>
+            </div>
+          </div>
         </>
       )}
     </CmschPage>

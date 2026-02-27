@@ -28,5 +28,26 @@ class ChallengeComponentController(
     "Beadások testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Beadások** (Challenge) komponens egyszerű, pontozható beadások kezelésére szolgál.
+
+## Beállítások
+
+A komponensnek nincsenek bonyolult globális beállításai:
+
+- **Jogosultságok** – mely szerepkörökkel érhető el a beadások modul.
+
+## Beadások kezelése
+
+A **Beadások** menüpont alatt:
+
+- **Beadások megtekintése** – láthatod a felhasználók által beküldött megoldásokat.
+- **Pontozás** – az adminisztrátorok pontot adhatnak a beküldött munkákra.
+
+## Használati tippek
+
+- Ezt a komponenst akkor használd, ha egyszerűbb, nem kategóriákba sorolt feladatokat akarsz beadatni a résztvevőkkel.
+- Ha komplexebb feladatkezelésre van szükséged (határidőkkel, kategóriákkal), használd a **Feladatok** komponenst.
+"""
 )

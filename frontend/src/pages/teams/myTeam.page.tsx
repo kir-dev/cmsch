@@ -1,5 +1,5 @@
-import { useMyTeam } from '../../api/hooks/team/queries/useMyTeam'
-import { TeamStatus } from '../../util/views/team.view'
+import { useMyTeam } from '@/api/hooks/team/queries/useMyTeam'
+import { TeamStatus } from '@/util/views/team.view'
 import { TeamDetailsCore } from './components/TeamDetailsCore'
 import { TeamIsNotPlaying } from './components/TeamIsNotPlaying'
 

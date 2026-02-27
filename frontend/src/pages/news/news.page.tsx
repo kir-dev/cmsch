@@ -1,7 +1,7 @@
+import { useNewsQuery } from '@/api/hooks/news/useNewsQuery'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
 import { useParams } from 'react-router'
-import { useNewsQuery } from '../../api/hooks/news/useNewsQuery'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
 import News from './components/News'
 
 const NewsPage = () => {

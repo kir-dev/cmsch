@@ -1,7 +1,6 @@
-import { Box, Collapse, Stack, useDisclosure } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { isCurrentEvent, isUpcomingEvent } from '../../../util/core-functions.util'
-import type { EventListView } from '../../../util/views/event.view'
+import { isCurrentEvent, isUpcomingEvent } from '@/util/core-functions.util'
+import type { EventListView } from '@/util/views/event.view'
+import { useEffect, useState } from 'react'
 import { CardListItem } from './CardListItem'
 import EventList from './EventList'
 
@@ -12,30 +11,31 @@ type EventFilterOptionProps = {
 }
 
 export const EventFilterOption = ({ name, events, forceOpen }: EventFilterOptionProps) => {
-  const { isOpen, onToggle, onOpen, onClose } = useDisclosure()
+  const [isOpen, setIsOpen] = useState(false)
+
   useEffect(() => {
-    if (forceOpen) {
-      onOpen()
-    } else {
-      onClose()
-    }
-  }, [forceOpen, onClose, onOpen])
+    setIsOpen(forceOpen)
+  }, [forceOpen])
+
   const hasCurrentEvent = events.some(isCurrentEvent)
   const hasUpcomingEvent = events.some(isUpcomingEvent)
+
   return (
-    <Stack spacing={0} my={0}>
+    <div className="my-0 flex flex-col gap-0">
       <CardListItem
         showPulsingDot={hasCurrentEvent || hasUpcomingEvent}
-        pulsingDotColor={hasUpcomingEvent ? 'yellow.400' : undefined}
+        pulsingDotColor={hasUpcomingEvent ? 'text-warning' : 'text-success'}
         title={name}
         open={isOpen}
-        toggle={onToggle}
+        toggle={() => setIsOpen(!isOpen)}
       />
-      <Collapse in={isOpen}>
-        <Box borderWidth="0px 2px 2px 2px" borderRadius="0 0 5px 5px" borderColor="whiteAlpha.200" padding={2}>
-          <EventList eventList={events} />
-        </Box>
-      </Collapse>
-    </Stack>
+      {isOpen && (
+        <div className="overflow-hidden">
+          <div className="rounded-b-[5px] border-x border-b border-border p-2">
+            <EventList eventList={events} />
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

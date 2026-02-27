@@ -31,45 +31,45 @@ class HomeComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val displayGroup by SettingGroup(fieldName = "Megjelenés", description = "A kezdőlap megjelenése")
 
     var welcomeMessage by StringSettingRef("Üdvözlünk a {} portálon", fieldName = "Üdvözlő üzenet",
-        description = "Ha üres akkor nincs, a {} pedig ki van cserélve az oldal nevére")
+        description = "A {} helyére az oldal neve kerül. Ha üres, nem jelenik meg.")
 
     var youtubeVideoIds by StringSettingRef(fieldName = "Promó videó(k)",
-        description = "Ha üres akkor nincs, csak youtube videó id-vel működik, ha többet szeretnél, vesszővel felsorolva tudod ezt megtenni pl: '8PhToFtwKvY' (A '?controls=0' az opcionális)")
+        description = "Csak YouTube videó ID-kkal működik. Több videó esetén vesszővel választandóak el. Például: '8PhToFtwKvY'. Ha üres, nem jelenik meg.")
 
     var content by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres akkor nincs ilyen.")
+        fieldName = "Megjelenő szöveg", description = "A kezdőlapon megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val eventsEmbeddedComponentGroup by SettingGroup(fieldName = "Események rész",
-        description = "Csak akkor van hatása ha a event komponens be van kapcsolva")
+        description = "Csak akkor van hatása, ha az események (event) komponens be van kapcsolva")
 
     var showEvents by BooleanSettingRef(fieldName = "Események láthatóak",
-        description = "Ha be van kapcsolva akkor az események láthatóak a kezdőlapon")
+        description = "Bekapcsolt állapotban az események láthatóak a kezdőlapon")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val newsEmbeddedComponentGroup by SettingGroup(fieldName = "Hírek rész",
-        description = "Csak akkor van hatása ha a news komponens be van kapcsolva")
+        description = "Csak akkor van hatása, ha a hírek (news) komponens be van kapcsolva")
 
     var maxVisibleCount by NumberSettingRef(3, serverSideOnly = true, strictConversion = false,
-        fieldName = "Max megjelenő hír", description = "Ennyi hír jelenik meg a főoldali hirdetés komponensben")
+        fieldName = "Max megjelenő hír", description = "A főoldali hírkomponensben megjelenő hírek maximális száma")
 
     var showNews by BooleanSettingRef(fieldName = "Hírek láthatóak",
-        description = "Ha be van kapcsolva akkor a hírek láthatóak a kezdőlapon")
+        description = "Bekapcsolt állapotban a hírek láthatóak a kezdőlapon")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val galleryEmbeddedComponentGroup by SettingGroup(fieldName = "Galéria rész",
-        description = "Csak akkor van hatása ha a gallery komponens be van kapcsolva")
+        description = "Csak akkor van hatása, ha a galéria (gallery) komponens be van kapcsolva")
 
     var showGalleryImages by BooleanSettingRef(fieldName = "Galéria képek láthatóak",
-        description = "Megjelennek egy carousel-ben azok a képek a galériából, melyeknél be van kapcsolva, hogy a kezdőlapra kerülhetnek")
+        description = "Megjeleníti egy carouselben azokat a galériaképeket, amelyeknél a kezdőlapon való megjelenítés engedélyezett")
 }

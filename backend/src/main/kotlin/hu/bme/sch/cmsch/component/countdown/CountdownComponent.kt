@@ -39,22 +39,22 @@ class CountdownComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, fieldName = "Jogosultságok",
-        description = "Melyik roleokkal nyitható meg az oldal", minRoleToEdit = RoleType.NOBODY)
+        description = "Mely szerepkörökkel nyitható meg az oldal", minRoleToEdit = RoleType.NOBODY)
 
     var enabled by BooleanSettingRef(false, fieldName = "Bekapcsolva",
-        description = "Legyen aktív a visszaszámlálás komponens")
+        description = "Aktív legyen-e a visszaszámlálás")
 
     var showOnlyCountdownForRoles by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Kinek legyen erőltetett",
-        description = "Ezek a roleok számára más komponensek ne legyenek elérhetőek. Csak akkor működik, ha be van kapcsolva a komponens.",
+        fieldName = "Kinek legyen kényszerített",
+        description = "A megadott szerepkörök számára csak a visszaszámláló oldal legyen elérhető. Csak akkor működik, ha a komponens be van kapcsolva.",
         minRoleToEdit = RoleType.STAFF, grantedForRoles = setOf())
 
     var keepOnAfterCountdownOver by BooleanSettingRef(false, fieldName = "Ne engedjen be az oldalra lejárat után",
-        description = "Ha be van kapcsolva és erőltetett a visszaszámláló a felhasználó, akkor a lejárta után sem enged az oldalhoz hozzáférni")
+        description = "Ha a visszaszámláló kényszerített, a lejárta után sem engedi a hozzáférést a többi oldalhoz")
 
     var topMessage by StringSettingRef("Az esemény kezdetéig hátralévő idő:",
         fieldName = "Oldal tetején megjelenő szöveg",
-        description = "Ha üres akkor nincs ilyen. A [[ és ]] jelek között írt szöveg brand színű lesz.")
+        description = "Az oldal tetején megjelenő szöveg. A [[ és ]] jelek közötti rész kiemelt színű lesz. Ha üres, nem jelenik meg.")
 
     var showRemainingTime by BooleanSettingRef(defaultValue = true, fieldName = "Hátralévő idő mutatása")
 

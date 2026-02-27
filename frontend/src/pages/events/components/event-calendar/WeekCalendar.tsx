@@ -1,9 +1,9 @@
-import { Box, Heading, HStack, IconButton, useColorModeValue } from '@chakra-ui/react'
+import { Button } from '@/components/ui/button'
+import { formatHu, useBrandColor, useColorModeValue } from '@/util/core-functions.util'
+import type { EventListView } from '@/util/views/event.view'
 import { addDays, addWeeks, endOfDay, startOfWeek } from 'date-fns'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { formatHu, useBrandColor } from '../../../../util/core-functions.util'
-import type { EventListView } from '../../../../util/views/event.view'
 import { CurrentDateBar } from './CurrentDateBar'
 import { EventBox, type EventBoxItem } from './EventBox'
 import { HourColumn } from './HourColumn'
@@ -21,7 +21,7 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
 
   const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }))
 
-  const bg = useColorModeValue('#00000005', '#FFFFFF05')
+  const bg = useColorModeValue('bg-black/[0.02]', 'dark:bg-white/[0.02]')
 
   const days = useMemo(() => {
     const daysTemp: { date: Date; events: EventBoxItem[] }[] = []
@@ -50,33 +50,37 @@ export function WeekCalendar({ events }: WeekCalendarProps) {
   }
 
   return (
-    <Box my={5} w="full" display={['none', null, 'block']}>
-      <HStack justify="space-between">
-        <IconButton colorScheme={brandColor} aria-label="Előző hét" icon={<FaChevronLeft />} onClick={decrementWeek} />
-        <Heading as="h2" size="md">
+    <div className="my-5 w-full hidden md:block">
+      <div className="flex justify-between items-center">
+        <Button variant="ghost" size="icon" aria-label="Előző hét" onClick={decrementWeek} style={{ color: brandColor }}>
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <h2 className="text-xl font-bold">
           {formatHu(startDate, 'MM. dd.')} - {formatHu(days[days.length - 1].date, 'MM. dd.')}
-        </Heading>
-        <IconButton colorScheme={brandColor} aria-label="Következő hét" icon={<FaChevronRight />} onClick={incrementWeek} />
-      </HStack>
+        </h2>
+        <Button variant="ghost" size="icon" aria-label="Következő hét" onClick={incrementWeek} style={{ color: brandColor }}>
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </div>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
-      <HStack flex={1} maxH={830} overflowY="auto" overflowX="hidden" w="full" mt={5} align="flex-start">
-        <HourColumn mt={30} h={scale * 800} />
-        <HStack flex={1} spacing={1} mt={5} justifyContent="space-evenly" align="flex-start">
+      <div className="flex flex-row max-h-[830px] overflow-y-auto overflow-x-hidden w-full mt-5 items-start">
+        <div className="mt-[30px]">
+          <HourColumn h={scale * 800} />
+        </div>
+        <div className="flex flex-1 mt-5 justify-evenly items-start space-x-1">
           {days.map((day) => (
-            <Box key={day.date.toISOString()} w="full">
-              <Heading h={30} textAlign="center" as="h3" size="sm" m={0}>
-                {formatHu(day.date, 'EEEE')}
-              </Heading>
-              <Box borderRadius="md" position="relative" h={scale * 800} bg={bg} p={2}>
+            <div key={day.date.toISOString()} className="w-full">
+              <h3 className="h-[30px] text-center text-sm font-bold m-0">{formatHu(day.date, 'EEEE')}</h3>
+              <div className={`rounded-md relative p-2 ${bg}`} style={{ height: scale * 800 }}>
                 <CurrentDateBar minTimestamp={day.date.getTime()} maxTimestamp={endOfDay(day.date).getTime()} />
                 {day.events.map((event) => (
                   <EventBox boxRef={ref} event={event} key={event.url} />
                 ))}
-              </Box>
-            </Box>
+              </div>
+            </div>
           ))}
-        </HStack>
-      </HStack>
-    </Box>
+        </div>
+      </div>
+    </div>
   )
 }
